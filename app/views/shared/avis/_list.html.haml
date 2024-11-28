@@ -42,10 +42,10 @@
               = t('relance_effectuee_le', scope: 'views.shared.avis', date: l(avis.reminded_at, format: '%d/%m/%y à %H:%M'))
           - if expert_or_instructeur.is_a?(Instructeur)
             - if avis.answer.blank?
-              = link_to(t('remind', scope: 'helpers.label'), remind_instructeur_avis_path(avis.procedure, avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('remind', scope: 'helpers.confirmation', email: avis.expert.email) })
+              = link_to(t('remind', scope: 'helpers.label'), remind_instructeur_avis_path(avis.procedure, params[:statut], avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('remind', scope: 'helpers.confirmation', email: avis.expert.email) })
 
               - if avis.revokable_by?(expert_or_instructeur)
-                = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('revoke', scope: 'helpers.confirmation', email: avis.expert.email) }, method: :patch)
+                = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, params[:statut], avis), class:'fr-btn fr-btn--sm fr-btn--tertiary-no-outline', data: { confirm: t('revoke', scope: 'helpers.confirmation', email: avis.expert.email) }, method: :patch)
 
         .border-left
           - if avis.introduction_file.attached?

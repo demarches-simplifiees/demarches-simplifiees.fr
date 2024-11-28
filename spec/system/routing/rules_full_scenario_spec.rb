@@ -216,7 +216,7 @@ describe 'The routing with rules', js: true do
     ## on the dossier itself
     click_on 'suivi'
     click_on litteraire_user.email
-    expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first))
+    expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first, statut: :suivis))
     expect(page).to have_text('Annotations privées')
     expect(find('.fr-tabs')).to have_css('span.notifications')
     log_out
@@ -231,7 +231,7 @@ describe 'The routing with rules', js: true do
 
     # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litteraire dossiers
     register_instructeur_and_log_in(alain.email)
-    visit instructeur_procedure_path(procedure, params: { statut: 'tous' })
+    visit instructeur_procedure_path(procedure, statut: 'tous')
     expect(page).to have_text(litteraire_user.email)
     expect(page).to have_text(scientifique_user.email)
 
@@ -239,7 +239,7 @@ describe 'The routing with rules', js: true do
     click_on scientifique_user.email
     click_on 'Suivre le dossier'
 
-    visit instructeur_procedure_path(procedure, params: { statut: 'tous' })
+    visit instructeur_procedure_path(procedure, statut: 'tous')
     click_on litteraire_user.email
     click_on 'Suivre le dossier'
     log_out

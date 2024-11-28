@@ -33,7 +33,8 @@ describe Instructeurs::DossiersController, type: :controller do
         params: {
           recipients: [recipient.id],
           procedure_id: procedure.id,
-          dossier_id: dossier.id
+          dossier_id: dossier.id,
+          statut: 'a-suivre'
         }
       )
     end
@@ -64,7 +65,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     subject do
       batch_operation
-      patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
     end
 
     it do
@@ -93,7 +94,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     subject do
       batch_operation
-      patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
     end
 
     it do
@@ -121,7 +122,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:batch_operation) {}
     before do
       batch_operation
-      patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
       dossier.reload
       instructeur.follow(dossier)
     end
@@ -142,7 +143,7 @@ describe Instructeurs::DossiersController, type: :controller do
     before do
       batch_operation
       dossier.update(archived: true)
-      patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
     end
 
     it { expect(dossier.reload.archived).to eq(false) }
@@ -162,7 +163,7 @@ describe Instructeurs::DossiersController, type: :controller do
     before do
       batch_operation
       sign_in(instructeur.user)
-      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream
+      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream
     end
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
@@ -208,7 +209,7 @@ describe Instructeurs::DossiersController, type: :controller do
       batch_operation
       sign_in(instructeur.user)
       post :repasser_en_construction,
-        params: { procedure_id: procedure.id, dossier_id: dossier.id },
+        params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' },
         format: :turbo_stream
     end
 
@@ -243,7 +244,7 @@ describe Instructeurs::DossiersController, type: :controller do
       sign_in current_user
       batch_operation
       post :repasser_en_instruction,
-      params: { procedure_id: procedure.id, dossier_id: dossier.id },
+      params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' },
       format: :turbo_stream
     end
 
@@ -297,7 +298,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'simple refusal' do
-        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'change state to refuse' do
           subject
@@ -321,7 +322,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'refusal with a justificatif' do
-        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif }, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'attachs a justificatif' do
           subject
@@ -336,7 +337,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       context 'with dossier in batch_operation' do
         let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
-        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
 
         it { expect { subject }.not_to change { dossier.reload.state } }
         it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
@@ -353,7 +354,7 @@ describe Instructeurs::DossiersController, type: :controller do
         sign_in(instructeur.user)
       end
       context 'without continuation' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier_for_tiers.id }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier_for_tiers.id, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'Notification email is sent' do
           expect(NotificationMailer).to receive(:send_sans_suite_notification)
@@ -379,7 +380,7 @@ describe Instructeurs::DossiersController, type: :controller do
         sign_in(instructeur.user)
       end
       context 'without continuation' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier_for_tiers_without_notif.id }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier_for_tiers_without_notif.id, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'Notification email is sent' do
           expect(NotificationMailer).to receive(:send_sans_suite_notification)
@@ -405,7 +406,7 @@ describe Instructeurs::DossiersController, type: :controller do
         sign_in(instructeur.user)
       end
       context 'with classer_sans_suite' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure_accuse_lecture.id, dossier_id: dossier_accuse_lecture.id }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure_accuse_lecture.id, dossier_id: dossier_accuse_lecture.id, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'Notification accuse de lecture email is sent and not the others' do
           expect(NotificationMailer).to receive(:send_accuse_lecture_notification)
@@ -433,7 +434,7 @@ describe Instructeurs::DossiersController, type: :controller do
         sign_in(instructeur.user)
       end
       context 'without attachment' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'change state to sans_suite' do
           subject
@@ -458,7 +459,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with attachment' do
-        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre', dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
 
         it 'change state to sans_suite' do
           subject
@@ -484,7 +485,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(NotificationMailer).to receive(:deliver_later)
       end
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
 
       it 'change state to accepte' do
         subject
@@ -532,7 +533,8 @@ describe Instructeurs::DossiersController, type: :controller do
             process_action: "accepter",
             procedure_id: procedure.id,
             dossier_id: dossier.id,
-            dossier: { motivation: "Yallah" }
+            dossier: { motivation: "Yallah" },
+            statut: 'a-suivre'
           }, format: :turbo_stream
         end
 
@@ -546,7 +548,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with an attachment' do
-        subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
+        subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif }, statut: 'a-suivre' }, format: :turbo_stream }
 
         it 'change state to accepte' do
           subject
@@ -564,7 +566,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:procedure) { create(:procedure, :published, for_individual: false, instructeurs: instructeurs) }
       let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure: procedure, as_degraded_mode: true) }
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id }, format: :turbo_stream }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
 
       context "with accepter" do
         it 'warns about the error' do
@@ -583,7 +585,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       before { allow(dossier).to receive(:after_accepter) }
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: :turbo_stream }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif }, statut: 'a-suivre' }, format: :turbo_stream }
 
       it 'does not close it again' do
         subject
@@ -604,7 +606,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     subject do
       post :pending_correction, params: {
-        procedure_id: procedure.id, dossier_id: dossier.id,
+        procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre',
         dossier: { motivation: message, justificatif_motivation: justificatif },
         reason:
       }, format: :turbo_stream
@@ -713,7 +715,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe '#messagerie' do
     before { expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie) }
-    subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
     it { expect(subject).to have_http_status(:ok) }
   end
 
@@ -731,7 +733,8 @@ describe Instructeurs::DossiersController, type: :controller do
         commentaire: {
           body: body,
           file: file
-        }
+        },
+        statut: 'a-suivre'
       }
     }
 
@@ -794,7 +797,8 @@ describe Instructeurs::DossiersController, type: :controller do
       post :create_avis, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        avis: { emails: emails, introduction: 'intro', confidentiel: true, invite_linked_dossiers: invite_linked_dossiers, claimant: instructeur, experts_procedure: experts_procedure }
+        avis: { emails: emails, introduction: 'intro', confidentiel: true, invite_linked_dossiers: invite_linked_dossiers, claimant: instructeur, experts_procedure: experts_procedure },
+        statut: 'a-suivre'
       }
     end
 
@@ -949,6 +953,7 @@ describe Instructeurs::DossiersController, type: :controller do
         get :show, params: {
           procedure_id: procedure.id,
           dossier_id: dossier.id,
+          statut: 'a-suivre',
           format: :pdf
         }
       end
@@ -973,7 +978,7 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'with dossier in batch_operation' do
       let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
       it 'assigns variable with true value' do
-        get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+        get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
         expect(assigns(:is_dossier_in_batch_operation)).to eq(true)
       end
     end
@@ -1181,7 +1186,8 @@ describe Instructeurs::DossiersController, type: :controller do
       batch_operation
       delete :destroy, params: {
         procedure_id: procedure.id,
-        dossier_id: dossier.id
+        dossier_id: dossier.id,
+        statut: 'a-suivre'
       }
     end
 
@@ -1267,7 +1273,7 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#extend_conservation' do
-    subject { post :extend_conservation, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    subject { post :extend_conservation, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
     context 'when user logged in' do
       it 'works' do
         expect(subject).to redirect_to(instructeur_dossier_path(procedure, dossier))
@@ -1308,7 +1314,8 @@ describe Instructeurs::DossiersController, type: :controller do
       patch :restore,
       params: {
         procedure_id: procedure.id,
-        dossier_id: dossier.id
+        dossier_id: dossier.id,
+        statut: 'a-suivre'
       }
     end
 
@@ -1325,7 +1332,7 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#extend_conservation and restore' do
-    subject { post :extend_conservation_and_restore, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    subject { post :extend_conservation_and_restore, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
 
     before do
       dossier.update(hidden_by_expired_at: 1.hour.ago, hidden_by_reason: 'expired')
@@ -1398,7 +1405,8 @@ describe Instructeurs::DossiersController, type: :controller do
       post :reaffectation,
          params: {
            procedure_id: procedure.id,
-           dossier_id: dossier.id
+           dossier_id: dossier.id,
+           statut: 'a-suivre'
          }
     end
 
@@ -1423,7 +1431,8 @@ describe Instructeurs::DossiersController, type: :controller do
         params: {
           procedure_id: procedure.id,
           dossier_id: dossier.id,
-          groupe_instructeur_id: gi_2.id
+          groupe_instructeur_id: gi_2.id,
+          statut: 'a-suivre'
         }
     end
 
@@ -1458,7 +1467,8 @@ describe Instructeurs::DossiersController, type: :controller do
       get :personnes_impliquees,
         params: {
           procedure_id: routed_procedure.id,
-          dossier_id: dossier.id
+          dossier_id: dossier.id,
+          statut: 'a-suivre'
         }
     end
 
@@ -1514,7 +1524,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
       get :pieces_jointes, params: {
         procedure_id: procedure.id,
-        dossier_id: dossier.id
+        dossier_id: dossier.id,
+        statut: 'a-suivre'
       }
     end
 
@@ -1535,7 +1546,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:procedure) { create(:procedure, :with_labels, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, :en_construction, procedure:) }
     context 'it create dossier labels' do
-      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [Label.first.id] }, format: :turbo_stream }
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [Label.first.id], statut: 'a-suivre' }, format: :turbo_stream }
       it 'works' do
         subject
         dossier.reload
@@ -1551,7 +1562,7 @@ describe Instructeurs::DossiersController, type: :controller do
         DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.first.id)
       end
 
-      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [] }, format: :turbo_stream }
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [], statut: 'a-suivre' }, format: :turbo_stream }
 
       it 'works' do
         expect(dossier.dossier_labels.count).to eq(1)

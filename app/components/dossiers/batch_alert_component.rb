@@ -13,4 +13,8 @@ class Dossiers::BatchAlertComponent < ApplicationComponent
     @batch.seen_at = Time.zone.now
     @batch.save
   end
+
+  def procedure_path
+    instructeur_procedure_path(@procedure, statut: params[:statut])
+  end
 end

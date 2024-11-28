@@ -10,7 +10,8 @@ describe Instructeurs::BatchOperationsController, type: :controller do
       batch_operation: {
         operation: BatchOperation.operations.fetch(:archiver),
         dossier_ids: [dossier.id]
-      }
+      },
+      statut: 'a-suivre'
     }
   end
 
@@ -20,7 +21,10 @@ describe Instructeurs::BatchOperationsController, type: :controller do
 
     context 'ACL' do
       let(:params) do
-        { procedure_id: create(:procedure).id }
+        {
+          procedure_id: create(:procedure).id,
+          statut: 'a-suivre'
+        }
       end
 
       it 'fails when procedure does not belongs to instructeur' do

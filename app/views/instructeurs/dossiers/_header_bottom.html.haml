@@ -4,30 +4,30 @@
       - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.request'),
-        instructeur_dossier_path(dossier.procedure, dossier),
+        instructeur_dossier_path(dossier.procedure, params[:statut], dossier),
         notification: notifications_summary[:demande])
 
       - if gallery_attachments.present?
         = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.attachments'),
-          pieces_jointes_instructeur_dossier_path(dossier.procedure, dossier),
+          pieces_jointes_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]),
           notification: notifications_summary[:pieces_jointes])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.private_annotations'),
-        annotations_privees_instructeur_dossier_path(dossier.procedure, dossier),
+        annotations_privees_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]),
         notification: notifications_summary[:annotations_privees])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.external_opinion'),
-        [avis_instructeur_dossier_path(dossier.procedure, dossier),
-        avis_new_instructeur_dossier_path(dossier.procedure, dossier)],
+        [avis_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]),
+        avis_new_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut])],
         notification: notifications_summary[:avis])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.messaging'),
-        messagerie_instructeur_dossier_path(dossier.procedure, dossier),
+        messagerie_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]),
         notification: notifications_summary[:messagerie])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.involved_persons'),
-        personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier))
+        personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]))
 
       - if dossier.procedure.routing_enabled?
         = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.reaffectation'),
-          reaffectation_instructeur_dossier_path(dossier.procedure, dossier))
+          reaffectation_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]))

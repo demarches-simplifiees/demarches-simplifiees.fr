@@ -38,7 +38,16 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_current_path(instructeur_procedure_path(procedure))
 
     click_on dossier.user.email
-    expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier))
+    expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier, statut: 'a-suivre'))
+    page.find('.back-btn').click
+
+    click_on 'Suivre le dossier'
+    click_on 'suivi'
+    expect(page).to have_current_path(instructeur_procedure_path(procedure, statut: 'suivis'))
+
+    click_on dossier.user.email
+    expect(page).to have_current_path(instructeur_dossier_path(procedure, 'suivis', dossier))
+    expect(page).to have_selector(".back-btn[href=\"#{instructeur_procedure_path(procedure, statut: 'suivis')}\"]")
 
     click_on 'Passer en instruction'
 
@@ -70,16 +79,17 @@ describe 'Instructing a dossier:', js: true do
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
     expect(dossier.motivation).to eq('a good reason')
+    # keep back up to date after most action on dossier
+    expect(page).to have_selector(".back-btn[href=\"#{instructeur_procedure_path(procedure, statut: 'suivis')}\"]")
 
     click_on procedure.libelle
     click_on 'traité'
     expect(page).to have_button('Repasser en instruction')
     click_on 'Supprimer le dossier'
-    click_on 'traité'
     expect(page).not_to have_button('Repasser en instruction')
   end
 
-  scenario 'An instructeur can add anotations' do
+  scenario 'An instructeur can add annotations' do
     log_in(instructeur.email, password)
 
     visit instructeur_dossier_path(procedure, dossier)
@@ -90,15 +100,6 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_field 'Nom'
     fill_in 'Nom', with: 'John Doe'
     expect(page).to have_text 'Annotations enregistrées'
-  end
-
-  scenario 'An instructeur can destroy a dossier from view' do
-    log_in(instructeur.email, password)
-
-    dossier.passer_en_instruction(instructeur: instructeur)
-    dossier.accepter!(instructeur: instructeur)
-    visit instructeur_dossier_path(procedure, dossier)
-    click_on 'Supprimer le dossier'
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do
@@ -152,18 +153,20 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text('Télécharger l’export')
   end
 
-  scenario 'A instructeur can see the personnes impliquées' do
+  scenario 'A instructeur can see the personnes impliquées and statut is maintened over avis/personnes impliquee paths', chrome: true do
     instructeur2 = create(:instructeur, password: password)
 
     log_in(instructeur.email, password)
 
     click_on procedure.libelle
+    click_on 'Suivre le dossier'
+    click_on 'suivi'
     click_on dossier.user.email
 
     click_on 'Avis externes'
-    expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
+    expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier, statut: 'suivis'))
     within('.fr-sidemenu') { click_on 'Demander un avis' }
-    expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
+    expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier, statut: 'suivis'))
 
     expert_email = 'expert@tps.com'
     ask_confidential_avis(expert_email, 'a good introduction')
@@ -171,6 +174,7 @@ describe 'Instructing a dossier:', js: true do
     ask_confidential_avis(instructeur2.email, 'a good introduction')
 
     click_on 'Personnes impliquées'
+    expect(page).to have_current_path(personnes_impliquees_instructeur_dossier_path(procedure, dossier, statut: 'suivis'))
     expect(page).to have_text(expert_email)
     expect(page).to have_text(instructeur2.email)
   end
@@ -199,20 +203,19 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text("Dossier envoyé")
   end
 
-  context 'A instructeur can ask for an Archive' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
-    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
-    before do
-      log_in(instructeur.email, password)
-      visit instructeur_archives_path(procedure)
-    end
-    scenario 'download' do
-      expect {
-        page.first(".fr-table .fr-btn").click
-      }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), instructeur)
-      expect(Archive.first.month).not_to be_nil
-    end
+  scenario 'A instructeur can ask for an Archive', chrome: true do
+    archivable_procedure = create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur])
+    create(:dossier, :accepte, procedure: archivable_procedure)
+
+    log_in(instructeur.email, password)
+    visit list_instructeur_archives_path(archivable_procedure)
+
+    expect {
+      page.first(".fr-table .fr-btn").click
+    }.to have_enqueued_job(ArchiveCreationJob).with(archivable_procedure, an_instance_of(Archive), instructeur)
+    expect(Archive.first.month).not_to be_nil
   end
+
   context 'with dossiers having attached files' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }

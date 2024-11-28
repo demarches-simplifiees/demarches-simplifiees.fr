@@ -468,9 +468,76 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :procedures, only: [:index, :show], param: :procedure_id do
+    resources :procedures, only: [:index], param: :procedure_id do
       member do
-        resources :archives, only: [:index, :create]
+        #
+        # nested navigation, all those route are hit during an instructeur instruction navigation context
+        #   must keep track of last view statut page
+        #
+        constraints statut: /a-suivre|suivis|traites|tous|supprimes|expirant|archives/ do
+          get :show, path: "(:statut)", defaults: { statut: 'a-suivre' } # optional because some url may still live on with /procedure/:id
+
+          resources :dossiers, only: [:show, :destroy], param: :dossier_id, path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
+            member do
+              resources :commentaires, only: [:destroy]
+              post 'repousser-expiration' => 'dossiers#extend_conservation'
+              post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
+              post 'dossier_labels' => 'dossiers#dossier_labels'
+              get 'messagerie'
+              get 'annotations-privees' => 'dossiers#annotations_privees'
+              get 'avis'
+              get 'avis_new'
+              get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
+              patch 'follow'
+              patch 'unfollow'
+              patch 'archive'
+              patch 'unarchive'
+              patch 'restore'
+              post 'commentaire' => 'dossiers#create_commentaire'
+              post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
+              post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
+              post 'repasser-en-instruction' => 'dossiers#repasser_en_instruction'
+              post 'terminer'
+              post 'pending_correction'
+              post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
+              post 'avis' => 'dossiers#create_avis'
+              get 'reaffectation'
+              get 'pieces_jointes'
+              post 'reaffecter'
+            end
+          end
+
+          resources :avis, only: [], path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
+            member do
+              patch 'revoquer'
+              get 'remind'
+            end
+          end
+
+          resources :batch_operations, only: [:create], path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' }
+        end
+
+        #
+        # not nested navigation
+        #
+        resources :dossiers, only: [], param: :dossier_id do
+          member do
+            get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
+            get 'print' => 'dossiers#print'
+            patch 'annotations' => 'dossiers#update_annotations'
+            get 'annotations/:stable_id', to: 'dossiers#annotation', as: :annotation
+            get 'geo_data'
+            get 'apercu_attestation'
+            get 'bilans_bdf'
+          end
+        end
+
+        resources :archives, only: [] do
+          collection do
+            get 'list' => "archives#index"
+            post 'create' => "archives#create"
+          end
+        end
 
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           resource :contact_information
@@ -479,13 +546,6 @@ Rails.application.routes.draw do
             delete 'remove_instructeur'
             post 'add_signature'
             get 'preview_attestation'
-          end
-        end
-
-        resources :avis, only: [] do
-          member do
-            patch 'revoquer'
-            get 'remind'
           end
         end
 
@@ -502,45 +562,6 @@ Rails.application.routes.draw do
         get 'deleted_dossiers'
         get 'email_usagers'
         post 'create_multiple_commentaire'
-
-        resources :dossiers, only: [:show, :destroy], param: :dossier_id do
-          member do
-            resources :commentaires, only: [:destroy]
-            post 'repousser-expiration' => 'dossiers#extend_conservation'
-            post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
-            post 'dossier_labels' => 'dossiers#dossier_labels'
-            get 'geo_data'
-            get 'apercu_attestation'
-            get 'bilans_bdf'
-            get 'messagerie'
-            get 'annotations-privees' => 'dossiers#annotations_privees'
-            get 'avis'
-            get 'avis_new'
-            get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
-            get 'annotations/:stable_id', to: 'dossiers#annotation', as: :annotation
-            patch 'follow'
-            patch 'unfollow'
-            patch 'archive'
-            patch 'unarchive'
-            patch 'restore'
-            patch 'annotations' => 'dossiers#update_annotations'
-            post 'commentaire' => 'dossiers#create_commentaire'
-            post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
-            post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
-            post 'repasser-en-instruction' => 'dossiers#repasser_en_instruction'
-            post 'terminer'
-            post 'pending_correction'
-            post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
-            post 'avis' => 'dossiers#create_avis'
-            get 'print' => 'dossiers#print'
-            get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
-            get 'reaffectation'
-            get 'pieces_jointes'
-            post 'reaffecter'
-          end
-        end
-
-        resources :batch_operations, only: [:create]
       end
     end
   end

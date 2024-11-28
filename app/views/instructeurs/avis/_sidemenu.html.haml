@@ -1,2 +1,2 @@
 = render(Dsfr::SidemenuComponent.new) do |component|
-  - component.with_links([{ name: t('helpers.sidemenu.see_avis'), url: avis_instructeur_dossier_path(@dossier.procedure, @dossier) }, { name: t('helpers.sidemenu.ask_avis'), url: avis_new_instructeur_dossier_path(@dossier.procedure, @dossier) }])
+  - component.with_links([{ name: t('helpers.sidemenu.see_avis'), url: avis_instructeur_dossier_path(procedure_id: @dossier.procedure.id, statut: params[:statut], dossier_id: @dossier.id) }, { name: t('helpers.sidemenu.ask_avis'), url: avis_new_instructeur_dossier_path(@dossier.procedure, params[:statut], @dossier) }])

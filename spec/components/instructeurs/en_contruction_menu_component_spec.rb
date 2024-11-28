@@ -4,7 +4,9 @@ RSpec.describe Instructeurs::EnConstructionMenuComponent, type: :component do
   include DossierHelper
 
   subject do
-    render_inline(described_class.new(dossier:))
+    component = described_class.new(dossier:)
+    allow(component).to receive(:statut).and_return('a-suivre')
+    render_inline(component)
   end
 
   matcher :have_dropdown_title do |expected_title|

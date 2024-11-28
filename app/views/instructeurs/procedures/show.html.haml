@@ -30,7 +30,7 @@
         = t('views.instructeurs.dossiers.tab_explainations.suivis')
     - if @statut == 'traites'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
+        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: list_instructeur_archives_path(@procedure))
     - if @statut == 'tous'
       %p
         - if @procedure.routing_enabled?
@@ -111,7 +111,7 @@
 
                     - @projected_dossiers.each do |p|
                       - dossier = p.dossier
-                      - path = instructeur_dossier_path(@procedure, dossier.id)
+                      - path = instructeur_dossier_path(@procedure, dossier.id, statut: params[:statut])
                       %tr{ class: class_names("file-hidden-by-user" => dossier.hidden_by_user_at.present?), id: "table-dossiers-row-#{dossier.id}", "aria-selected" => "false", "data-row-key" => dossier.id }
                         - if batch_operation_component.render?
                           %th.fr-cell--fixed{ scope: 'row' }

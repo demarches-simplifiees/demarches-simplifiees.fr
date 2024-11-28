@@ -12,7 +12,7 @@
         %p= t(".#{batch.operation}.in_progress.text_success", count: @batch.total_count, success_count: @batch.success_count)
 
         %p
-          = link_to t('.link_text'), instructeur_procedure_path(@procedure, statut: params["statut"]), data: { action: 'turbo-poll#refresh' }
+          = link_to t('.link_text'), procedure_path, data: { action: 'turbo-poll#refresh' }
           = t('.after_link_text')
 
         %p.fr-mt-2w

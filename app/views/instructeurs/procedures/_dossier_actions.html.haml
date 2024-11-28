@@ -25,23 +25,23 @@
         = ""
 
     - else
-      = button_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line', form: { data: { turbo: turbo ? 'true' : 'false' } } do
+      = button_to repasser_en_instruction_instructeur_dossier_path(procedure_id, dossier_id, statut: params[:statut]), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-edit-line', form: { data: { turbo: turbo ? 'true' : 'false' } } do
         Repasser en instruction
 
-      = button_to archive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-icon-folder-2-line' do
+      = button_to archive_instructeur_dossier_path(procedure_id, dossier_id, statut: params[:statut]), method: :patch, class: 'fr-btn fr-icon-folder-2-line' do
         Archiver le dossier
 
-      = button_to instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier') do
+      = button_to instructeur_dossier_path(procedure_id, dossier_id, statut: params[:statut]), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier') do
         = ""
 
 - elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   - if dossier_is_followed
     %li
-      = button_to unfollow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
+      = button_to unfollow_instructeur_dossier_path(procedure_id, statut: params[:statut], dossier_id:), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-fill' do
         = t('views.instructeurs.dossiers.stop_follow')
   - else
     %li
-      = button_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-line' do
+      = button_to follow_instructeur_dossier_path(procedure_id, statut: params[:statut], dossier_id:), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-line' do
         = t('views.instructeurs.dossiers.follow_file')
 
   - if with_menu
@@ -50,7 +50,7 @@
 
   - if Dossier.states[:en_construction] == state
     %li{ 'data-turbo': turbo ? 'true' : 'false' }
-      = button_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-icon-edit-line',
+      = button_to passer_en_instruction_instructeur_dossier_path(procedure_id, statut: params[:statut], dossier_id:), method: :post, class: 'fr-btn fr-icon-edit-line',
         disabled: has_blocking_pending_correction, "aria-describedby" => has_blocking_pending_correction ? "tooltip-passer-en-instruction" : nil do
         = t('views.instructeurs.dossiers.passer_en_instruction')
 
@@ -60,5 +60,5 @@
 
   - elsif Dossier.states[:en_instruction] == state && !with_menu && !sva_svr
     %li{ 'data-turbo': turbo ? 'true' : 'false' }
-      = button_to repasser_en_construction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-draft-line' do
+      = button_to repasser_en_construction_instructeur_dossier_path(procedure_id, statut: params[:statut], dossier_id:), method: :post, class: 'fr-btn fr-btn--secondary fr-icon-draft-line' do
         = t('views.instructeurs.dossiers.repasser_en_construction')

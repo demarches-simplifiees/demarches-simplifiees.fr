@@ -278,7 +278,7 @@ module Instructeurs
         @commentaire.dossier.touch(:last_commentaire_updated_at)
         current_instructeur.follow(dossier)
         flash.notice = "Message envoyé"
-        redirect_to messagerie_instructeur_dossier_path(procedure, dossier)
+        redirect_to messagerie_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
         @commentaire.piece_jointe.purge.reload
         flash.alert = @commentaire.errors.full_messages
@@ -290,7 +290,7 @@ module Instructeurs
       @avis = create_avis_from_params(dossier, current_instructeur)
 
       if @avis.nil?
-        redirect_to avis_instructeur_dossier_path(procedure, dossier)
+        redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
         @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
         render :avis
