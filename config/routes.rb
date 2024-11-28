@@ -211,6 +211,10 @@ Rails.application.routes.draw do
     get 'logout_from_mcp' => 'agent#logout_from_mcp'
   end
 
+  namespace :rdv_service_public do
+    get 'oauth/callback' => 'oauth#callback'
+  end
+
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
@@ -250,6 +254,10 @@ Rails.application.routes.draw do
   post "webhooks/helpscout", to: "webhook#helpscout"
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
+  post "webhooks/rdv_service_public", to: "webhook#rdv_service_public"
+  namespace :webhooks do
+    resources :rdv_service_public, only: [:create]
+  end
 
   get '/preremplir/:path', to: 'prefill_descriptions#edit', as: :preremplir
   get '/preremplir/:path/schema', to: 'api/public/v1/json_description_procedures#show', as: :prefill_json_description, defaults: { format: :json }
@@ -506,6 +514,11 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show, :destroy], param: :dossier_id do
           member do
             resources :commentaires, only: [:destroy]
+            resources :rdvs, only: [:create] do
+              collection do
+                get 'propose_rdv_menu_content_lazy'
+              end
+            end
             post 'repousser-expiration' => 'dossiers#extend_conservation'
             post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
             post 'dossier_labels' => 'dossiers#dossier_labels'
@@ -610,6 +623,8 @@ Rails.application.routes.draw do
         patch 'update_accuse_lecture'
         get 'jeton'
         patch 'update_jeton'
+        get 'rdv'
+        patch 'rdv', to: 'procedures#update_rdv'
         put :allow_expert_review
         put :allow_expert_messaging
         put :experts_require_administrateur_invitation

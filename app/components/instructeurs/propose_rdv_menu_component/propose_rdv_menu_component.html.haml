@@ -1,0 +1,10 @@
+= render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: "fr-btn--secondary" }, role: :region) do |menu|
+  - menu.with_button_inner_html do
+    = t('.propose_rdv')
+
+  - menu.with_form do
+    .fr-p-3w{ style: "width: 340px;" }
+      .dropdown-description{ id: dom_id(@dossier, :propose_rdv) }
+        %h6= t('.propose_rdv')
+        = turbo_frame_tag(dom_id(@dossier, :propose_rdv_menu_content_component), loading: :lazy, src: propose_rdv_menu_content_lazy_instructeur_rdvs_path(@dossier.procedure, @dossier)) do
+          .text-sm Chargement en cours...

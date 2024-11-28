@@ -1,0 +1,15 @@
+- if current_instructeur.rdv_connection.nil?
+  = t('.propose_rdv_description')
+  = link_to t('.connect_with_rdv_service_public'), rdv_service_public_oauth_callback_url(next: instructeur_dossier_path(@dossier.procedure,@dossier)), class: "fr-btn", target: "_top"
+- elsif !@has_plage_ouvertures
+  = t('.propose_rdv_no_plage_ouvertures')
+  = link_to t('.configure_plage_ouvertures'), "", class: "fr-btn", target: "_blank"
+- else
+  = t('.propose_rdv_explaination')
+
+  .fr-mt-2w
+    = form_tag(instructeur_rdvs_path(@dossier.procedure, @dossier), data: { turbo: true, turbo_confirm: t('.confirm') }, method: :post, multipart: true) do
+      = text_area :rdv, :reason, class: 'fr-input', placeholder: "Indiquez ici la raison pour laquelle vous proposez un rendez-vous...", required: false, rows: 3
+      -# = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--secondary', onclick: 'DS.motivationCancel();'
+      .fr-mt-2w
+        = button_tag t('.confirm'), class: 'fr-btn fr-ml-0'

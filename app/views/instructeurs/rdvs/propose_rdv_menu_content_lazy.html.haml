@@ -1,0 +1,2 @@
+= turbo_frame_tag dom_id(@dossier, :propose_rdv_menu_content_component) do
+  = render Instructeurs::ProposeRdvMenuContentComponent.new(dossier: @dossier, has_plage_ouvertures: @has_plage_ouvertures)

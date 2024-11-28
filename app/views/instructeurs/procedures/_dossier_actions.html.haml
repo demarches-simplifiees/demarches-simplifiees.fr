@@ -45,6 +45,10 @@
         = t('views.instructeurs.dossiers.follow_file')
 
   - if with_menu
+    - if dossier.procedure.rdv_enabled?
+      %li.propose-rdv-menu{ 'data-turbo': turbo ? 'true' : 'false' }
+        = render Instructeurs::ProposeRdvMenuComponent.new(dossier:)
+
     %li.en-construction-menu{ 'data-turbo': turbo ? 'true' : 'false' }
       = render Instructeurs::EnConstructionMenuComponent.new(dossier:)
 
