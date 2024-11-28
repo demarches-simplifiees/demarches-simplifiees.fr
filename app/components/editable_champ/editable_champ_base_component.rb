@@ -28,7 +28,8 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
       labelledby << describedby_id if @champ.description.present?
 
       {
-        aria: { labelledby: labelledby.join(' ') }
+        aria: { labelledby: labelledby.join(' ') },
+        role: 'group'
       }
     else
       {}

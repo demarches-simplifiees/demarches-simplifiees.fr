@@ -28,6 +28,8 @@ describe EditableChamp::DropDownListComponent, type: :component do
         render
 
         expect(aria_labelledby(fieldset)).to eq([champ.labelledby_id, champ.describedby_id])
+        expect(fieldset['role']).to eq('group')
+
         expect(no_aria_on_radio?).to be true
       end
 
