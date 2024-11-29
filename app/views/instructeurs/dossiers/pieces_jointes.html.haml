@@ -1,6 +1,6 @@
 - content_for(:title, "Pièces jointes")
 
-= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments }
+= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation }
 
 .fr-container
   .gallery.gallery-pieces-jointes{ "data-controller": "lightbox" }

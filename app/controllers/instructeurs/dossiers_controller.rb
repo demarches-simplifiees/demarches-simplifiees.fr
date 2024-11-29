@@ -14,8 +14,9 @@ module Instructeurs
     before_action :redirect_on_dossier_not_found, only: :show
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation]
-    after_action :mark_demande_as_read, only: :show
+    before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
 
+    after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
