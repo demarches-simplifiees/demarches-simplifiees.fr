@@ -8,4 +8,4 @@
     .fr-select-group
       = @form.label :value, for: @champ.epci_input_id, class: 'fr-label' do
         - "EPCI"
-      = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: @champ.epci_input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, class: "width-33-desktop width-100-mobile fr-select"
+      = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: @champ.epci_input_id, class: "width-33-desktop width-100-mobile fr-select"
