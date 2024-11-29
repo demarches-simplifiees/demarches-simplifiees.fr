@@ -9,7 +9,7 @@ fr:
             state: État du dossier
             created_at: Date de création
             updated_at: Date du dernier évènement
-            depose_at: Date de dépot
+            depose_at: Date de dépôt
             en_construction_at: Date de passage en construction
             en_instruction_at: Date de passage en instruction
             processed_at: Date de traitement
