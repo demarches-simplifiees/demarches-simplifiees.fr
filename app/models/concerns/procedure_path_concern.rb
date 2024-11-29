@@ -15,7 +15,7 @@ module ProcedurePathConcern
 
     scope :find_with_path, -> (path) do
       normalized_path = path.downcase.strip
-      joins(:procedure_paths).where(procedure_paths: { path: normalized_path }).or(where(path: normalized_path)).limit(1)
+      left_joins(:procedure_paths).where(procedure_paths: { path: normalized_path }).or(where(path: normalized_path)).limit(1)
       # TODO: remove the or(where(path: normalized_path)) when the migration is done
     end
 
