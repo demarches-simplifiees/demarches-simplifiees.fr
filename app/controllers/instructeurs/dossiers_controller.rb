@@ -390,7 +390,35 @@ module Instructeurs
       @pieces_jointes_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.pieces_jointes_seen_at
     end
 
+    def next
+      navigate_throw_dossier_list do |cache|
+        cache.next_dossier_id(from_id: params[:dossier_id])
+      end
+    end
+
+    def previous
+      navigate_throw_dossier_list do |cache|
+        cache.previous_dossier_id(from_id: params[:dossier_id])
+      end
+    end
+
     private
+
+    def navigate_throw_dossier_list
+      dossier = dossier_scope.find(params[:dossier_id])
+      procedure_presentation = current_instructeur.procedure_presentation_for_procedure_id(dossier.procedure.id)
+      cache = Cache::ProcedureDossierPagination.new(procedure_presentation:, statut: params[:statut])
+
+      next_or_previous_dossier_id = yield(cache)
+
+      if next_or_previous_dossier_id
+        redirect_to instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_or_previous_dossier_id, statut: params[:statut])
+      else
+        redirect_back fallback_location: instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier.id, statut: params[:statut]), alert: "Une erreur est survenue"
+      end
+    rescue ActiveRecord::RecordNotFound
+      redirect_to instructeur_procedure_path(procedure_id: procedure.id), alert: "Une erreur est survenue"
+    end
 
     def dossier_scope
       if action_name == 'update_annotations'
