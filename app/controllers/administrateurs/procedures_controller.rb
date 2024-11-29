@@ -292,7 +292,7 @@ module Administrateurs
     end
 
     def check_path
-      path = params.permit(:path)[:path]
+      path = params[:path]
       @path_available = @procedure.path_available?(path)
       @other_procedure = @procedure.other_procedure_with_path(path)
 
@@ -307,12 +307,12 @@ module Administrateurs
     end
 
     def update_path
-      new_path = params.permit(:path)[:path]
+      new_path = params[:path]
       other_procedure = @procedure.other_procedure_with_path(new_path)
 
       if other_procedure.present? && !current_administrateur.owns?(other_procedure)
         flash.alert = "Cette URL de démarche n'est pas disponible"
-        return redirect_to admin_procedure_path_path(@procedure)
+        return redirect_to [:admin, @procedure, :path]
       end
 
       @procedure.claim_path(current_administrateur, new_path)
