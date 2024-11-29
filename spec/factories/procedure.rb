@@ -72,7 +72,7 @@ FactoryBot.define do
     end
 
     after(:create) do |procedure, evaluator|
-      procedure.claim_path(evaluator.administrateur, evaluator.path)
+      procedure.claim_path!(evaluator.administrateur, evaluator.path)
       evaluator.instructeurs.each { |i| i.assign_to_procedure(procedure) }
 
       if evaluator.updated_at

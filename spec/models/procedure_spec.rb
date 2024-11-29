@@ -1079,7 +1079,7 @@ describe Procedure do
 
       before do
         parent_procedure.update!(canonical_procedure: canonical_procedure)
-        parent_procedure.claim_path(administrateur, canonical_path)
+        parent_procedure.claim_path!(administrateur, canonical_path)
         Timecop.freeze(now) do
           procedure.publish_or_reopen!(administrateur, canonical_path)
         end
@@ -1337,22 +1337,6 @@ describe Procedure do
       expect(procedure.draft_revision).not_to be_nil
       expect(procedure.revisions.count).to eq(2)
       expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
-    end
-  end
-
-  describe 'path_customized?' do
-    let(:procedure) { create :procedure }
-
-    subject { procedure.path_customized? }
-
-    context 'when the path is still the default' do
-      it { is_expected.to be_falsey }
-    end
-
-    context 'when the path has been changed' do
-      before { procedure.claim_path(procedure.administrateurs.first, 'custom_path') }
-
-      it { is_expected.to be_truthy }
     end
   end
 

@@ -114,20 +114,36 @@ describe ProcedurePathConcern do
     end
   end
 
-  describe "#claim_path" do
+  describe "#claim_path!" do
     let!(:procedure) { create(:procedure) }
-    let!(:procedure_2) { create(:procedure) }
     let!(:procedure_path) { create(:procedure_path, procedure: procedure, path: "test-path") }
+    let!(:procedure_2) { create(:procedure) }
     let!(:procedure_path_2) { create(:procedure_path, procedure: procedure_2, path: "test-path-2") }
     let(:administrateur) { procedure.administrateurs.first }
 
+    let(:path_to_claim) { procedure_path_2.path }
+
     subject do
-      procedure.claim_path(administrateur, procedure_path_2.path)
+      procedure.claim_path!(administrateur, path_to_claim)
       procedure.save!
     end
 
     it "assigns the procedure to the procedure_path" do
       expect { subject }.to change { procedure_path_2.reload.procedure }.from(procedure_2).to(procedure)
     end
+
+    context "when the procedure path is already owned by another administrateur" do
+      let!(:procedure_3) { create(:procedure, administrateurs: [create(:administrateur)]) }
+      let!(:procedure_path_3) { create(:procedure_path, procedure: procedure_3, path: "path-not-available") }
+
+      let(:path_to_claim) { procedure_path_3.path }
+
+      it "does not assign the procedure to the procedure_path" do
+        expect { subject }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(procedure.errors.full_messages).to include("Le champ « Lien public » est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.")
+      end
+    end
+
+    # test if the procedure path is owned by another administrateur
   end
 end

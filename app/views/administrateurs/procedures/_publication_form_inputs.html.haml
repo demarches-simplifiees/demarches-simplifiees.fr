@@ -9,7 +9,7 @@
     .flex
       %span.placeholder
         = commencer_url(path: '')
-      = text_field_tag(:path, procedure.path,
+      = text_field_tag(:path, procedure.suggested_path,
                       id: 'procedure_path',
                       placeholder: t('activerecord.attributes.procedure.procedure_path_placeholder'),
                       required: true,

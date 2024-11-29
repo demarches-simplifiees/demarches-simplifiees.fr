@@ -42,17 +42,13 @@ module ProcedurePathConcern
     end
 
     def claim_path!(administrateur, new_path)
-      claim_path(administrateur, new_path)
-      raise ActiveRecord::RecordInvalid if errors.any?
-    end
-
-    def claim_path(administrateur, new_path)
       return if new_path.blank?
 
       procedure_path = procedure_paths.find { _1.path == new_path } || ProcedurePath.find_or_initialize_by(path: new_path)
 
       if procedure_path.procedure.present? && !administrateur.owns?(procedure_path.procedure)
         errors.add(:path, :taken)
+        raise ActiveRecord::RecordInvalid
       end
 
       procedure_path.updated_at = Time.zone.now
