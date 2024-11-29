@@ -2,7 +2,7 @@
   %h4.fr-h5= t('views.invites.form.modal_title')
   %p.fr-highlight.fr-mb-3w= t('views.invites.form.modal_highlight')
 
-  %h5.fr-h6= t('views.invites.form.edit_dossier', count: invites.size)
+  = t('views.invites.form.edit_dossier_html', count: invites.size)
   - if invites.present?
     #invite-list
       %ul
