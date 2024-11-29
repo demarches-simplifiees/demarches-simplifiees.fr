@@ -88,6 +88,8 @@ class Attachment::EditComponent < ApplicationComponent
     describedby = []
     describedby << champ.describedby_id if champ&.description.present?
     describedby << describedby_hint_id if show_hint?
+    describedby << champ.error_id if champ&.errors&.has_key?(:value)
+
     options[:aria] = { describedby: describedby.join(' ') }
 
     options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
