@@ -45,7 +45,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # select service
       find("#service .fr-btn").click
-      click_on "Assigner"
+      click_on "Affecter"
 
       # select zone
       find("#zones .fr-btn").click
@@ -83,7 +83,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # select service
       find("#service .fr-btn").click
-      click_on "Assigner"
+      click_on "Affecter"
 
       # select zone
       find("#zones .fr-btn").click
