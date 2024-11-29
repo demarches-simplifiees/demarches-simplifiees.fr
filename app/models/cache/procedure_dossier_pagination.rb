@@ -54,11 +54,6 @@ class Cache::ProcedureDossierPagination
     read_cache[:incoming_page]
   end
 
-  # test only
-  def raw
-    read_cache
-  end
-
   private
 
   def cache_key
