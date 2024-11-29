@@ -426,8 +426,4 @@ class ApplicationController < ActionController::Base
   def cast_bool(value)
     ActiveRecord::Type::Boolean.new.deserialize(value)
   end
-
-  def retrieve_procedure_presentation
-    @procedure_presentation ||= current_instructeur.procedure_presentation_for_procedure_id(params[:procedure_id])
-  end
 end
