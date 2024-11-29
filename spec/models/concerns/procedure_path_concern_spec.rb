@@ -54,9 +54,11 @@ describe ProcedurePathConcern do
 
         before do
           procedure.update_column("path", "path-not-in-procedure-paths")
+          procedure.procedure_paths.delete_all
         end
 
         it "returns the procedure" do
+          expect(procedure.procedure_paths.count).to eq(0)
           expect(Procedure.find_with_path("path-not-in-procedure-paths").first).to eq(procedure)
         end
       end
