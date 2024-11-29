@@ -35,6 +35,16 @@ RSpec.describe Attachment::EditComponent, type: :component do
     it 'renders allowed formats' do
       expect(subject).to have_content(/Formats supportés : jpeg, png/)
     end
+
+    it 'sets up its aria describedby' do
+      subject
+
+      hint_element = page.find('.fr-hint-text')
+      expect(hint_element['id']).to eq("#{champ.input_id}-pj-hint")
+
+      input_describedby = page.find('input')['aria-describedby'].split
+      expect(input_describedby).to eq([champ.describedby_id, "#{champ.input_id}-pj-hint"])
+    end
   end
 
   context 'when there is an attachment' do
