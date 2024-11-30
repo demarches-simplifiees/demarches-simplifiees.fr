@@ -443,7 +443,7 @@ describe DossierFilterService do
     end
 
     context 'for type_de_champ table' do
-      let(:filter) { [type_de_champ.libelle, ' Keep '] }
+      let(:filter) { [type_de_champ.libelle, ' Kéep '] } # add space / case / accent
 
       let(:kept_dossier) { create(:dossier, procedure:) }
       let(:discarded_dossier) { create(:dossier, procedure:) }
