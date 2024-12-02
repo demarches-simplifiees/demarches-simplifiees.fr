@@ -68,6 +68,10 @@ class Attachment::EditComponent < ApplicationComponent
     "attachment-input-#{attachment_id}"
   end
 
+  def show_hint?
+    first? && !persisted?
+  end
+
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
 
@@ -75,12 +79,18 @@ class Attachment::EditComponent < ApplicationComponent
       class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true),
       direct_upload: @direct_upload,
       id: input_id,
-      aria: { describedby: champ&.describedby_id },
       data: {
         auto_attach_url:,
         turbo_force: :server
       }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
     }
+
+    describedby = []
+    describedby << champ.describedby_id if champ&.description.present?
+    describedby << describedby_hint_id if show_hint?
+    describedby << champ.error_id if champ&.errors&.has_key?(:value)
+
+    options[:aria] = { describedby: describedby.join(' ') }
 
     options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
     options[:multiple] = true if as_multiple?
@@ -168,6 +178,10 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   private
+
+  def describedby_hint_id
+    "#{input_id}-pj-hint"
+  end
 
   def input_id
     if champ.present?

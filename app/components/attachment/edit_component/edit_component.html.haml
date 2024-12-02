@@ -37,8 +37,8 @@
         - if error?(attachment)
           %p.fr-error-text= error_message(attachment)
 
-  - if first? && !persisted?
-    %p.fr-hint-text.fr-mb-1w
+  - if show_hint?
+    %p.fr-hint-text.fr-mb-1w{ id: describedby_hint_id }
       - if max_file_size.present?
         = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
       - if allowed_formats.present?

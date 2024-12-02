@@ -36,7 +36,9 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
         }.merge(champ_component.input_group_error_class_names)
       ),
       data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }
-    }.deep_merge(champ_component.fieldset_error_opts)
+    }
+      .deep_merge(champ_component.fieldset_aria_opts)
+      .deep_merge(champ_component.fieldset_error_opts)
   end
 
   def fieldset_element_attributes
