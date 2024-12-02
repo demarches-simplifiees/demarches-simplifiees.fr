@@ -14,7 +14,8 @@ class Champs::DropDownListChamp < Champ
   end
 
   def render_as_combobox?
-    drop_down_options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
+    options = referentiel? ? referentiel_drop_down_options : drop_down_options
+    options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
   end
 
   def html_label?
