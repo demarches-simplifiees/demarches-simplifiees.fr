@@ -56,7 +56,7 @@ describe 'shared/_procedure_description', type: :view do
 
     it 'shows a usual traitement text' do
       subject
-      expect(rendered).to have_text("Quels sont les délais d'instruction pour cette démarche ?")
+      expect(rendered).to have_text("Quels sont les délais d’instruction pour cette démarche ?")
       expect(rendered).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour.")
     end
   end

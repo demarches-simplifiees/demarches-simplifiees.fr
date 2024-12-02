@@ -7,7 +7,7 @@ describe 'France Connect Particulier Connexion' do
   let(:birthdate) { '20150821' }
   let(:gender) { 'M' }
   let(:birthplace) { '1234' }
-  let(:email) { 'plop@plop.com' }
+  let(:fc_email) { 'plop@plop.com' }
   let(:france_connect_particulier_id) { 'blabla' }
 
   let(:user_info) do
@@ -18,7 +18,7 @@ describe 'France Connect Particulier Connexion' do
       birthdate: birthdate,
       birthplace: birthplace,
       gender: gender,
-      email_france_connect: email
+      email_france_connect: fc_email
     }
   end
 
@@ -40,32 +40,49 @@ describe 'France Connect Particulier Connexion' do
           let(:france_connect_information) { build(:france_connect_information, user_info) }
 
           context 'and no user has the same email' do
-            before { page.find('.fr-connect').click }
-
-            scenario 'he is redirected to user dossiers page' do
-              expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
-              find("#use_france_connect_email_no").click
-              fill_in("email", with: "exemple@email.com")
-              page.find("input[type='submit'][name='commit'][value='Confirmer']").click
-              expect(page).to have_content("Confirmez votre email")
-              click_on 'Continuer'
-              expect(User.find_by(email: email)).not_to be nil
+            before do
+              page.find('.fr-connect').click
             end
 
-            scenario 'he can choose not to use FranceConnect email and input an alternative email' do
+            scenario 'he is redirected to user dossiers page', js: true do
               expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+
+              find('label', text: "Oui, utiliser #{fc_email} comme email de contact").click
+
+              click_on 'Valider'
+              expect(User.find_by(email: fc_email).email_verified_at).to be_present
+            end
+
+            scenario 'he can choose not to use FranceConnect email and input an alternative email', js: true do
+              alternative_email = 'alternative@example.com'
+
+              expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+              find('label', text: 'utiliser une autre adresse').click
 
               expect(page).to have_selector("input[name='email']", visible: true, wait: 10)
 
-              fill_in 'email', with: 'alternative@example.com'
-              click_on 'Confirmer'
+              fill_in 'email', with: alternative_email
+              click_on 'Valider'
 
-              expect(page).to have_content("Confirmez votre email")
+              expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')
+              expect(User.find_by(email: alternative_email)).to be_nil
+
+              perform_enqueued_jobs
+
+              confirmation_email = open_email(alternative_email)
+              link = confirmation_email.body.match(/href="[^"]*(\/france_connect\/particulier\/merge_using_email_link.*?)"/)[1]
+
+              visit link
+
+              expect(page).to have_content('Les comptes FranceConnect et demarches-simplifiees.fr sont à présent fusionnés')
+              expect(page).to have_content(alternative_email)
+
+              expect(User.find_by(email: alternative_email).email_verified_at).to be_present
             end
           end
 
           context 'and an user exists with the same email' do
-            let!(:user) { create(:user, email: email, password: SECURE_PASSWORD) }
+            let!(:user) { create(:user, email: fc_email, password: SECURE_PASSWORD) }
 
             before do
               page.find('.fr-connect').click
