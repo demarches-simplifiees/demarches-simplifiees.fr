@@ -21,6 +21,8 @@ class Etablissement < ApplicationRecord
 
   after_commit -> { dossier&.index_search_terms_later }
 
+  alias_attribute :code_naf, :naf
+
   # See https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/10591#discussion_r1819399688
   # SIRET is already exposed as base column.
   DISPLAYABLE_COLUMNS = {

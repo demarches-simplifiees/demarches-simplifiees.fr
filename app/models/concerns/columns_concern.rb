@@ -159,7 +159,7 @@ module ColumnsConcern
 
       etablissement_dates = ['entreprise_date_creation'].map { |column| dossier_col(table: 'etablissement', column:, type: :date) }
 
-      for_export = ["siege_social", "naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_siren", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_administratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declaration", "association_date_publication"]
+      for_export = ["siege_social", "code_naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_siren", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_administratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declaration", "association_date_publication"]
         .map { |column| dossier_col(table: 'etablissement', column:, displayable: false, filterable: false) }
 
       other = ['siret', 'libelle_naf', 'code_postal'].map { |column| dossier_col(table: 'etablissement', column:) }

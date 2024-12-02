@@ -50,6 +50,7 @@ en:
             entreprise_date_creation: Entreprise date de création
             siret: Établissement SIRET
             libelle_naf: Libellé NAF
+            code_naf: Code NAF
             siege_social: "Établissement siège social"
             naf: "Établissement NAF"
             adresse: "Établissement Adresse"
