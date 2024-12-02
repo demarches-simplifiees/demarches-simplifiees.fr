@@ -8,11 +8,8 @@ describe DossierSearchService do
       described_class.matching_dossiers(instructeur_1.dossiers, terms)
     end
 
-    let(:administrateur_1) { administrateurs(:default_admin) }
-    let(:administrateur_2) { administrateurs(:default_admin) }
-
-    let(:instructeur_1) { create(:instructeur, administrateurs: [administrateur_1]) }
-    let(:instructeur_2) { create(:instructeur, administrateurs: [administrateur_2]) }
+    let(:instructeur_1) { create(:instructeur) }
+    let(:instructeur_2) { create(:instructeur) }
 
     before do
       instructeur_1.assign_to_procedure(procedure_1)
@@ -29,8 +26,8 @@ describe DossierSearchService do
       perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
     end
 
-    let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }
-    let(:procedure_2) { create(:procedure, :published, administrateur: administrateur_2) }
+    let(:procedure_1) { create(:procedure, :published) }
+    let(:procedure_2) { create(:procedure, :published) }
 
     let(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
 
