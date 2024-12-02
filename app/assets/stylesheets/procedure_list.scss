@@ -22,10 +22,9 @@
 
     li {
       min-height: 36px;
-      width: 90px;
+      min-width: 6em;
+      color: var(--text-default-grey);
       position: relative;
-
-      border-left: 1px solid $border-grey;
 
       &:first-child {
         border-left: none;
@@ -35,24 +34,10 @@
         background-color: rgba(0, 0, 0, 0.05);
       }
 
-      .stats-number,
-      .stats-legend {
-        text-align: center;
+      .notifications {
+        top: 3px;
+        right: 18px;
       }
-
-      .stats-number {
-        font-size: 14px;
-        font-weight: bold;
-      }
-
-      .stats-legend {
-        font-size: 12px;
-      }
-    }
-
-    .notifications {
-      top: 3px;
-      right: 18px;
     }
   }
 }
