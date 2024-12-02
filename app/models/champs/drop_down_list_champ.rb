@@ -9,7 +9,8 @@ class Champs::DropDownListChamp < Champ
   validate :value_is_in_options, if: -> { validate_champ_value? && !(value.blank? || drop_down_other?) }
 
   def render_as_radios?
-    drop_down_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
+    options = referentiel? ? referentiel_drop_down_options : drop_down_options
+    options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
   end
 
   def render_as_combobox?
