@@ -16,25 +16,27 @@ class Instructeurs::DossiersNavigationComponent < ApplicationComponent
   end
 
   def link_next
-    options = { class: "fr-link fr-icon-arrow-right-line fr-link--icon-right fr-ml-3w" }
-
     if has_next?
-      tag.a(t('.next'), **options.merge(href: next_instructeur_dossier_path(dossier:, statut:)))
+      html_tag = :a
+      options = { class: "fr-link no-wrap fr-ml-3w", href: next_instructeur_dossier_path(dossier:, statut:) }
     else
-      options[:class] = "#{options[:class]} fr-text-mention--grey"
-      tag.span(t('.next'), **options)
+      html_tag = :span
+      options = { class: "fr-link no-wrap fr-ml-3w fr-text-mention--grey" }
     end
+
+    tag.send(html_tag, t('.next').html_safe + tag.span(class: 'fr-icon-arrow-right-line fr-ml-1w'), **options)
   end
 
   def link_previous
-    options = { class: "fr-link fr-icon-arrow-left-line fr-link--icon-left" }
-
     if has_previous?
-      tag.a(t('.previous'), **options.merge(href: previous_instructeur_dossier_path(dossier:, statut:)))
+      html_tag = :a
+      options = { class: "fr-link no-wrap", href: previous_instructeur_dossier_path(dossier:, statut:) }
     else
-      options[:class] = "#{options[:class]} fr-text-mention--grey"
-      tag.span(t('.previous'), **options)
+      html_tag = :span
+      options = { class: "fr-link no-wrap fr-text-mention--grey" }
     end
+
+    tag.send(html_tag, tag.span(class: 'fr-icon-arrow-left-line fr-mr-1w') + t('.previous'), **options)
   end
 
   def has_next? = @has_next ||= @cache.next_dossier_id(from_id: dossier.id).present?
