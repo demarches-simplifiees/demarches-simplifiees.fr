@@ -397,6 +397,15 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def referentiel_drop_down_options_with_other
+    select_options = referentiel_drop_down_options.map { |h| [h['value'], h['id']] }
+    if drop_down_other?
+      select_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
+    else
+      select_options
+    end
+  end
+
   def header_section_level_value
     if header_section_level.presence
       header_section_level.to_i
