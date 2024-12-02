@@ -781,11 +781,9 @@ fr:
       one: nouveau
       other: nouveaux
     followed:
-      one: suivi
-      other: suivis
-    archived:
-      one: archivé
-      other: archivés
+      one: suivi par moi
+      other: suivis par moi
+    archived: à archiver
     en_cours:
       one: en cours
       other: en cours
@@ -799,7 +797,7 @@ fr:
       one: dossier invité
       other: dossiers invités
     dossiers_supprimes:
-      one:  supprimé
+      one: supprimé
       other: supprimés
     dossiers_historique:
       one:  supprimé définitivement
@@ -879,6 +877,8 @@ fr:
          other: "%{count} groupes existent"
        labels:
         to_follow: à suivre
+        to_archive: à archiver
+        dossiers_supprimes: corbeille
         total: dossiers
   administrateurs:
     activate:

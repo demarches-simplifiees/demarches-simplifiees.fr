@@ -337,7 +337,7 @@ describe 'Instructing a dossier:', js: true do
       "#{suivi} suivi",
       "#{traite} traité",
       "#{tous_les_dossiers} au total",
-      "#{archive} archivé"
+      "à archiver"
     ]
 
     texts.each { |text| expect(page).to have_text(text) }
