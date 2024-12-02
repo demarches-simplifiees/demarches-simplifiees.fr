@@ -1,80 +1,73 @@
-%li.flex.align-start.fr-mb-5w
+
+%li.flex.align-start.fr-mb-3w{ style: "border-top: 1px solid var(--border-default-grey);" }
   .flex
-    .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
 
     .procedure-details
       .flex.clipboard-container
-        .fr-mb-2w
+        .fr-mb-2w.fr-mt-2w
           = procedure_badge(p)
           %h3.font-weight-normal.fr-link.fr-ml-1w
-            = link_to("#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p))
+            = link_to "#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p)
+
           = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(p.path))
 
-      %ul.procedure-stats.flex
-        %li
-          %object
-            = link_to(instructeur_procedure_path(p, statut: 'a-suivre')) do
-              - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
-              .stats-number
-                = number_with_html_delimiter(a_suivre_count)
-              .stats-legend
-                = t('instructeurs.dossiers.labels.to_follow')
-        %li
-          %object
-            = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
-              - if procedure_ids_en_cours_with_notifications.include?(p.id)
-                %span.notifications{ 'aria-label': "notifications" }
-              - followed_count = followed_dossiers_count_per_procedure[p.id] || 0
-              .stats-number
-                = number_with_html_delimiter(followed_count)
-              .stats-legend
-                = t('pluralize.followed', count: followed_count)
-        %li
-          %object
-            = link_to(instructeur_procedure_path(p, statut: 'traites')) do
-              - if procedure_ids_termines_with_notifications.include?(p.id)
-                %span.notifications{ 'aria-label': "notifications" }
-              - termines_count = dossiers_termines_count_per_procedure[p.id] || 0
-              .stats-number
-                = number_with_html_delimiter(termines_count)
-              .stats-legend
-                = t('pluralize.processed', count: termines_count)
-        %li
-          %object
-            = link_to(instructeur_procedure_path(p, statut: 'tous')) do
-              - dossier_count = dossiers_count_per_procedure[p.id] || 0
-              .stats-number
-                = number_with_html_delimiter(dossier_count)
-              .stats-legend
-                = t('pluralize.case', count: dossier_count)
-
-        %li
-          %object
-            = link_to(instructeur_procedure_path(p, statut: 'supprimes')) do
-              - dossier_count = dossiers_supprimes_count_per_procedure[p.id] || 0
-              .stats-number
-                = number_with_html_delimiter(dossier_count)
-              .stats-legend
-                = t('pluralize.dossiers_supprimes', count: dossier_count)
+      %ul.procedure-stats.flex.wrap.flex-gap-1
+        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+          = link_to instructeur_procedure_path(p, statut: 'a-suivre') do
+            - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
+            .center.fr-text--bold.fr-text--sm
+              = number_with_html_delimiter(a_suivre_count)
+            .center.fr-text--xs
+              = t('instructeurs.dossiers.labels.to_follow')
+        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+          = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
+            - if procedure_ids_en_cours_with_notifications.include?(p.id)
+              %span.notifications{ 'aria-label': "notifications" }
+            - followed_count = followed_dossiers_count_per_procedure[p.id] || 0
+            .center.fr-text--bold.fr-text--sm
+              = number_with_html_delimiter(followed_count)
+            .center.fr-text--xs
+              = t('pluralize.followed', count: followed_count)
+        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+          = link_to(instructeur_procedure_path(p, statut: 'traites')) do
+            - if procedure_ids_termines_with_notifications.include?(p.id)
+              %span.notifications{ 'aria-label': "notifications" }
+            - termines_count = dossiers_termines_count_per_procedure[p.id] || 0
+            .center.fr-text--bold.fr-text--sm
+              = number_with_html_delimiter(termines_count)
+            .center.fr-text--xs
+              = t('pluralize.processed', count: termines_count)
+        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+          = link_to(instructeur_procedure_path(p, statut: 'tous')) do
+            - dossier_count = dossiers_count_per_procedure[p.id] || 0
+            .center.fr-text--bold.fr-text--sm
+              = number_with_html_delimiter(dossier_count)
+            .center.fr-text--xs
+              = t('pluralize.case', count: dossier_count)
 
         - if p.procedure_expires_when_termine_enabled
-          %li
-            %object
-              = link_to(instructeur_procedure_path(p, statut: 'expirant')) do
-                - expirant_count = dossiers_expirant_count_per_procedure[p.id] || 0
-                .stats-number
-                  = number_with_html_delimiter(expirant_count)
-                .stats-legend
-                  = t('pluralize.dossiers_close_to_expiration', count: expirant_count)
+          %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+            = link_to(instructeur_procedure_path(p, statut: 'expirant')) do
+              - expirant_count = dossiers_expirant_count_per_procedure[p.id] || 0
+              .center.fr-text--bold.fr-text--sm
+                = number_with_html_delimiter(expirant_count)
+              .center.fr-text--xs
+                = t('pluralize.dossiers_close_to_expiration', count: expirant_count)
 
-        %li
-          %object
-            = link_to(instructeur_procedure_path(p, statut: 'archives')) do
-              - archived_count = dossiers_archived_count_per_procedure[p.id] || 0
-              .stats-number
-                = number_with_html_delimiter(archived_count)
-              .stats-legend
-                = t('pluralize.archived', count: archived_count)
+        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+          = link_to(instructeur_procedure_path(p, statut: 'archives')) do
+            .center.fr-text--bold.fr-text--sm
+              %span.fr-icon-folder-2-line
+            .center.fr-text--xs
+              = t('instructeurs.dossiers.labels.to_archive')
+
+        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+          = link_to(instructeur_procedure_path(p, statut: 'supprimes')) do
+            .center.fr-text--bold.fr-text--sm
+              %span.fr-icon-delete-line
+            .center.fr-text--xs
+              = t('instructeurs.dossiers.labels.dossiers_supprimes')
+
 
     - if p.close?
       .ml-auto
