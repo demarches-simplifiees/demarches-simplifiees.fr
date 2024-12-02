@@ -1,10 +1,10 @@
-.flex.fr-mb-1w.align-center
+.flex.fr-mb-1w.align-start
   = render Instructeurs::BackButtonComponent.new(to: instructeur_procedure_path(dossier.procedure, **back_url_options))
 
   %h1.fr-h3.fr-mb-0
     = t('show_dossier', scope: [:layouts, :breadcrumb], dossier_id: dossier.id, owner_name: dossier.owner_name)
 
-  .fr.ml-auto.align-center.flex
+  .fr.ml-auto.align-center.flex.fr-mt-1v
     = link_previous
     = link_next
 
