@@ -8,6 +8,8 @@
     %h1.fr-h2= t('views.registrations.new.title', name: Current.application_name)
 
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+    = render partial: 'shared/pro_connect_login', locals: { url: agent_connect_login_path }
+    %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
     %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
       %legend.fr-fieldset__legend#create-account-legend

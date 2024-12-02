@@ -23,7 +23,7 @@ describe 'Signing up:', js: true do
 
     before do
       visit commencer_path(path: procedure.path)
-      click_on "Créer un compte #{APPLICATION_NAME}"
+      click_on "Créer un compte sur #{APPLICATION_NAME}"
       expect(page).to have_selector('.suspect-email', visible: false)
       fill_in 'Adresse électronique', with: 'bidou@yahoo.rf'
       fill_in 'Mot de passe', with: '1 2 3 4 5 6 '

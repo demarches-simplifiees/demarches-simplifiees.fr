@@ -364,6 +364,7 @@ Rails.application.routes.draw do
       get '/:path/sign_in', action: 'sign_in', as: :sign_in
       get '/:path/sign_up', action: 'sign_up', as: :sign_up
       get '/:path/france_connect', action: 'france_connect', as: :france_connect
+      get '/:path/pro_connect', action: 'pro_connect', as: :pro_connect
     end
 
     resources :dossiers, only: [:index, :show, :destroy, :new] do

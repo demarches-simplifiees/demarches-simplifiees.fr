@@ -1,0 +1,15 @@
+- if AgentConnectService.enabled?
+  .france-connect-login{ data: { connect: 'pro' } }
+    = tag.public_send(local_assigns.fetch(:heading_level, :h2), class: "fr-h6 mt-3") do
+      = t('views.shared.pro_connect_login.title')
+
+    .fr-connect-group.fr-my-2w
+      = link_to(url, class: "fr-btn fr-connect") do
+        %span.fr-connect__login
+          = t('views.shared.pro_connect_login.login_button')
+        %span.fr-connect__brand ProConnect
+      %p
+        = link_to t('views.shared.pro_connect_login.help_link'), "https://www.proconnect.gouv.fr/", title: new_tab_suffix(t('views.shared.pro_connect_login.help_link')), **external_link_attributes
+
+- else
+  <!-- ProConnect is not configured -->

@@ -12,14 +12,13 @@ en:
         en_attente: "Waiting for response"
       france_connect_login:
         title: "With FranceConnect"
-        description: "FranceConnect is a solution proposed by the government to secure and simplify the connection to web services."
         login_button: "Sign in with"
         help_link: What is FranceConnect?
         separator: or
       account:
         already_user_question: 'Do you already have an account?'
         already_user: "I already have an account"
-        create: 'Create an account'
+        create: 'Create an account on %{application_name}'
         signin: 'Sign in'
       messages:
         remove_file: 'Remove file'
