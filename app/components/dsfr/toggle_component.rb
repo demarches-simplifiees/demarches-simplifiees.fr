@@ -22,7 +22,19 @@ class Dsfr::ToggleComponent < ApplicationComponent
 
   private
 
+  def label_for
+    return input_id if @form.object.present?
+
+    return "#{@form.options[:namespace]}_#{target}" if @form.options[:namespace].present?
+
+    target.to_s
+  end
+
   def input_id
-    dom_id(@form.object, target)
+    if @form.object.present?
+      dom_id(@form.object, target)
+    else
+      target.to_s
+    end
   end
 end
