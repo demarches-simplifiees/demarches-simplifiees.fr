@@ -7,7 +7,7 @@
         = render ViewableChamp::SectionComponent.new(dossier: champ.dossier, types_de_champ:, row_id:, demande_seen_at: seen_at, profile:)
 
   - else
-    = render Dossiers::RowShowComponent.new(label: champ.libelle, seen_at:, profile:, content_class: champ.type_champ, updated_at: updated_at_after_deposer(champ)) do |c|
+    = render Dossiers::RowShowComponent.new(label: champ.libelle, seen_at:, profile:, content_class: champ.type_champ, updated_at: updated_at_after_deposer(champ), errors: champ.errors) do |c|
       - if champ.blank?
         - c.with_blank do
           = t(blank_key(champ))

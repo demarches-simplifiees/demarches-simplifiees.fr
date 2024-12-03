@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DossierChampsConcern do
-  let(:procedure) do
-    create(:procedure, types_de_champ_public:, types_de_champ_private:)
-  end
+  let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
   let(:types_de_champ_public) do
     [
       { type: :text, libelle: "Un champ text", stable_id: 99 },
@@ -47,7 +45,7 @@ RSpec.describe DossierChampsConcern do
         let(:row_id) { dossier.project_champ(type_de_champ_repetition, nil).row_ids.first }
 
         it {
-          expect(subject.persisted?).to be_truthy
+          expect(subject.new_record?).to be_truthy
           expect(subject.row_id).to eq(row_id)
         }
 
@@ -104,6 +102,43 @@ RSpec.describe DossierChampsConcern do
         }
       end
     end
+
+    context 'draft user stream' do
+      let(:row_id) { nil }
+      subject { dossier.with_stream(Champ::USER_DRAFT_STREAM).project_champ(type_de_champ_public, row_id) }
+
+      it { expect(subject.persisted?).to be_truthy }
+
+      context "in repetition" do
+        let(:type_de_champ_public) { dossier.find_type_de_champ_by_stable_id(994) }
+        let(:row_id) { dossier.project_champ(type_de_champ_repetition, nil).row_ids.first }
+
+        it {
+          expect(subject.persisted?).to be_truthy
+          expect(subject.row_id).to eq(row_id)
+        }
+      end
+
+      context "missing champ" do
+        before { dossier.champs.where(type: 'Champs::TextChamp').destroy_all; dossier.reload }
+
+        it {
+          expect(subject.new_record?).to be_truthy
+          expect(subject.is_a?(Champs::TextChamp)).to be_truthy
+        }
+
+        context "in repetition" do
+          let(:type_de_champ_public) { dossier.find_type_de_champ_by_stable_id(994) }
+          let(:row_id) { ULID.generate }
+
+          it {
+            expect(subject.new_record?).to be_truthy
+            expect(subject.is_a?(Champs::TextChamp)).to be_truthy
+            expect(subject.row_id).to eq(row_id)
+          }
+        end
+      end
+    end
   end
 
   describe '#project_champs_public' do
@@ -130,10 +165,11 @@ RSpec.describe DossierChampsConcern do
         { type: :explication }
       ]
     end
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     subject { dossier.filled_champs_public }
 
-    it { expect(subject.size).to eq(4) }
-    it { expect(subject.find { _1.libelle == 'Nom' }).to be_truthy }
+    it { expect(subject.size).to eq(5) }
+    it { expect(subject.filter { _1.libelle == 'Nom' }.size).to eq(2) }
   end
 
   describe '#filled_champs_private' do
@@ -156,14 +192,8 @@ RSpec.describe DossierChampsConcern do
     it { expect(subject.size).to eq(1) }
 
     context 'given a type de champ repetition in another revision' do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
-      let(:draft) { procedure.draft_revision }
-      let(:errored_stable_id) { 666 }
-      let(:type_de_champ_repetition) { procedure.active_revision.types_de_champ.find { _1.stable_id == errored_stable_id } }
       before do
-        dossier
-        tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition", stable_id: errored_stable_id)
-        draft.add_type_de_champ(type_champ: :text, libelle: "t1", parent_stable_id: tdc_repetition.stable_id)
+        procedure.draft_revision.remove_type_de_champ(type_de_champ_repetition.stable_id)
         procedure.publish_revision!
       end
 
@@ -352,6 +382,144 @@ RSpec.describe DossierChampsConcern do
         expect(annotation_995.changed?).to be_truthy
         expect(annotation_995.value).to eq("Hello")
       }
+    end
+  end
+
+  context 'en_construction(user)' do
+    let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+    describe "#update_champs_attributes(public)" do
+      before { Flipper.enable(:user_draft_stream, procedure) }
+
+      let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
+      let(:row_ids) { dossier.project_champ(type_de_champ_repetition, nil).row_ids }
+      let(:row_id) { row_ids.first }
+
+      let(:attributes) do
+        {
+          "99" => { value: "Hello" },
+          "991" => { value: "World" },
+          "994-#{row_id}" => { value: "Greer" }
+        }
+      end
+
+      let(:new_attributes) do
+        {
+          "99" => { value: "Hello!!!" },
+          "994-#{row_id}" => { value: "Greer is the best" }
+        }
+      end
+
+      let(:bad_attributes) do
+        {
+          "99" => { value: "bad" },
+          "994-#{row_id}" => { value: "bad" }
+        }
+      end
+
+      def main_champ(stable_id, row_id = nil)
+        dossier.with_stream(Champ::MAIN_STREAM) do
+          dossier.project_champ(dossier.find_type_de_champ_by_stable_id(stable_id), row_id)
+        end
+      end
+
+      def draft_champ(stable_id, row_id = nil)
+        dossier.with_stream(Champ::USER_DRAFT_STREAM) do
+          dossier.project_champ(dossier.find_type_de_champ_by_stable_id(stable_id), row_id)
+        end
+      end
+
+      def main_champ_99 = main_champ(99)
+      def main_champ_991 = main_champ(991)
+      def main_champ_994 = main_champ(994, row_id)
+      def draft_champ_99 = draft_champ(99)
+      def draft_champ_991 = draft_champ(991)
+      def draft_champ_994 = draft_champ(994, row_id)
+
+      subject do
+        dossier.with_stream(Champ::USER_DRAFT_STREAM) do
+          dossier.update_champs_attributes(attributes, :public, updated_by: dossier.user.email)
+        end
+      end
+
+      it {
+        subject
+        dossier.save!
+
+        expect(dossier.user_draft_changes?).to be_truthy
+
+        expect(main_champ_99.stream).to eq(Champ::MAIN_STREAM)
+        expect(main_champ_991.stream).to eq(Champ::MAIN_STREAM)
+        expect(main_champ_994.stream).to eq(Champ::MAIN_STREAM)
+
+        expect(main_champ_99.value).to be_nil
+        expect(main_champ_991.value).to be_nil
+        expect(main_champ_994.value).to be_nil
+
+        expect(draft_champ_99.stream).to eq(Champ::USER_DRAFT_STREAM)
+        expect(draft_champ_991.stream).to eq(Champ::USER_DRAFT_STREAM)
+        expect(draft_champ_994.stream).to eq(Champ::USER_DRAFT_STREAM)
+
+        expect(draft_champ_99.value).to eq("Hello")
+        expect(draft_champ_991.value).to eq("World")
+        expect(draft_champ_994.value).to eq("Greer")
+        expect(dossier.history.size).to eq(0)
+
+        dossier.merge_stream(Champ::USER_DRAFT_STREAM)
+
+        expect(main_champ_99.value).to eq("Hello")
+        expect(main_champ_991.value).to eq("World")
+        expect(main_champ_994.value).to eq("Greer")
+        expect(dossier.history.size).to eq(3)
+
+        Timecop.freeze(1.hour.from_now) do
+          dossier.with_stream(Champ::USER_DRAFT_STREAM) do
+            dossier.update_champs_attributes(new_attributes, :public, updated_by: dossier.user.email)
+          end
+          dossier.save!
+          dossier.merge_stream(Champ::USER_DRAFT_STREAM)
+        end
+
+        expect(main_champ_99.value).to eq("Hello!!!")
+        expect(main_champ_994.value).to eq("Greer is the best")
+        expect(dossier.history.size).to eq(5)
+
+        Timecop.freeze(2.hours.from_now) do
+          dossier.with_stream(Champ::USER_DRAFT_STREAM) do
+            dossier.update_champs_attributes(bad_attributes, :public, updated_by: dossier.user.email)
+          end
+          dossier.save!
+        end
+
+        expect(draft_champ_99.value).to eq("bad")
+        expect(draft_champ_991.value).to eq("World")
+        expect(draft_champ_994.value).to eq("bad")
+        dossier.reset_stream(Champ::USER_DRAFT_STREAM)
+        expect(draft_champ_99.value).to eq("Hello!!!")
+        expect(draft_champ_991.value).to eq("World")
+        expect(draft_champ_994.value).to eq("Greer is the best")
+      }
+
+      context "missing champs" do
+        before { dossier; Champs::TextChamp.destroy_all; }
+
+        it {
+          subject
+          dossier.save!
+
+          expect(draft_champ_99.stream).to eq(Champ::USER_DRAFT_STREAM)
+          expect(draft_champ_991.stream).to eq(Champ::USER_DRAFT_STREAM)
+          expect(draft_champ_994.stream).to eq(Champ::USER_DRAFT_STREAM)
+
+          expect(draft_champ_99.value).to eq("Hello")
+          expect(draft_champ_991.value).to eq("World")
+          expect(draft_champ_994.value).to eq("Greer")
+
+          expect(dossier.history.size).to eq(0)
+          dossier.merge_stream(Champ::USER_DRAFT_STREAM)
+          expect(dossier.history.size).to eq(0)
+        }
+      end
     end
   end
 end

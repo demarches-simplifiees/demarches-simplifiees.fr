@@ -29,10 +29,6 @@ class Champs::MultipleDropDownListChamp < Champ
     render_as_checkboxes?
   end
 
-  def in?(options)
-    (selected_options - options).size != selected_options.size
-  end
-
   def focusable_input_id
     render_as_checkboxes? ? checkbox_id(drop_down_options.first) : input_id
   end

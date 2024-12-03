@@ -2,7 +2,8 @@
 
 class Champ < ApplicationRecord
   include ChampConditionalConcern
-  include ChampsValidateConcern
+  include ChampValidateConcern
+  include ChampRevisionConcern
 
   self.ignored_columns += [:type_de_champ_id, :parent_id]
 
@@ -60,6 +61,7 @@ class Champ < ApplicationRecord
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :prefilled, -> { where(prefilled: true) }
 
+  before_validation :set_default_stream
   before_save :cleanup_if_empty
   before_save :normalize
   after_update_commit :fetch_external_data_later
@@ -69,7 +71,17 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    row_id.present?
+    row_id.present? && !is_type?(TypeDeChamp.type_champs.fetch(:repetition))
+  end
+
+  def row?
+    row_id.present? && is_type?(TypeDeChamp.type_champs.fetch(:repetition))
+  end
+
+  def clonable?
+    return if non_fillable?
+    return !discarded? if row?
+    !repetition?
   end
 
   # used for the `required` html attribute
@@ -219,8 +231,8 @@ class Champ < ApplicationRecord
     input_id
   end
 
-  def forked_with_changes?
-    public? && dossier.champ_forked_with_changes?(self)
+  def user_draft_changes?
+    public? && dossier.user_draft_changes_on_champ?(self)
   end
 
   def public_id
@@ -255,9 +267,49 @@ class Champ < ApplicationRecord
     write_attribute(:value, value.delete("\u0000"))
   end
 
+  MAIN_STREAM = 'main'
+  USER_DRAFT_STREAM = 'draft:user'
+  HISTORY_STREAM = 'history:'
+
+  def main_stream?
+    stream == MAIN_STREAM
+  end
+
+  def user_draft_stream?
+    stream == USER_DRAFT_STREAM
+  end
+
+  def history_stream?
+    stream.start_with?(HISTORY_STREAM)
+  end
+
+  def clone_value_from(champ)
+    self.value = champ.value
+    self.external_id = champ.external_id
+    self.value_json = champ.value_json
+    self.data = champ.data
+
+    self.geo_areas = champ.geo_areas.dup
+
+    ClonePiecesJustificativesService.clone_attachments(champ, self)
+
+    if champ.etablissement.present?
+      self.etablissement = champ.etablissement.dup
+      ClonePiecesJustificativesService.clone_attachments(champ.etablissement, self.etablissement)
+    end
+
+    save!
+  end
+
   class NotImplemented < ::StandardError
     def initialize(method)
       super(":#{method} not implemented")
     end
+  end
+
+  private
+
+  def set_default_stream
+    self.stream ||= MAIN_STREAM
   end
 end

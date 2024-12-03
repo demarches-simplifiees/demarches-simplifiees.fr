@@ -11,9 +11,7 @@ module DossierStateConcern
 
     resolve_pending_correction!
     process_sva_svr!
-    remove_piece_justificative_file_not_visible!
-
-    editing_forks.each(&:destroy_editing_fork!)
+    clean_champs_after_submit!
   end
 
   def after_passer_en_construction
@@ -41,7 +39,8 @@ module DossierStateConcern
     groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
       DossierMailer.notify_new_dossier_depose_to_instructeur(self, instructeur.email).deliver_later
     end
-    remove_piece_justificative_file_not_visible!
+
+    clean_champs_after_submit!
   end
 
   def after_passer_en_instruction(h)
@@ -55,6 +54,7 @@ module DossierStateConcern
       .processed_at
     save!
 
+    reset_stream(Champ::USER_DRAFT_STREAM)
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     resolve_pending_correction!
 
@@ -68,8 +68,6 @@ module DossierStateConcern
       NotificationMailer.send_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
-
-    editing_forks.each(&:destroy_editing_fork!)
   end
 
   def after_passer_automatiquement_en_instruction
@@ -154,7 +152,7 @@ module DossierStateConcern
     end
 
     send_dossier_decision_to_experts(self)
-    remove_titres_identite!
+    clean_champs_after_instruction!
   end
 
   def after_accepter_automatiquement
@@ -189,7 +187,7 @@ module DossierStateConcern
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
 
     send_dossier_decision_to_experts(self)
-    remove_titres_identite!
+    clean_champs_after_instruction!
   end
 
   def after_refuser(h)
@@ -226,7 +224,7 @@ module DossierStateConcern
     end
 
     send_dossier_decision_to_experts(self)
-    remove_titres_identite!
+    clean_champs_after_instruction!
   end
 
   def after_refuser_automatiquement
@@ -254,7 +252,7 @@ module DossierStateConcern
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
 
     send_dossier_decision_to_experts(self)
-    remove_titres_identite!
+    clean_champs_after_instruction!
   end
 
   def after_classer_sans_suite(h)
@@ -291,7 +289,7 @@ module DossierStateConcern
     end
 
     send_dossier_decision_to_experts(self)
-    remove_titres_identite!
+    clean_champs_after_instruction!
   end
 
   def after_repasser_en_instruction(h)
@@ -328,5 +326,60 @@ module DossierStateConcern
     end
 
     rebase_later
+  end
+
+  def clean_champs_after_submit!
+    remove_discarded_rows!
+    remove_not_visible_rows!
+    remove_not_visible_or_empty_champs!
+    # TODO remove when all forks are gone
+    editing_forks.each(&:destroy_editing_fork!)
+  end
+
+  def clean_champs_after_instruction!
+    remove_discarded_rows!
+    remove_titres_identite!
+    # TODO remove when all forks are gone
+    editing_forks.each(&:destroy_editing_fork!)
+  end
+
+  private
+
+  def remove_discarded_rows!
+    row_to_remove_ids = champs.filter { _1.row? && _1.discarded? }.map(&:row_id)
+
+    return if row_to_remove_ids.empty?
+    champs.where(row_id: row_to_remove_ids, stream: 'main').destroy_all
+  end
+
+  def remove_not_visible_or_empty_champs!
+    champ_to_keep_public_ids = project_champs_public_all
+      .reject { _1.repetition? || !_1.fillable? || _1.blank? }
+      .filter(&:visible?)
+      .to_set(&:public_id)
+    repetition_to_keep_stable_ids = project_champs_public.filter(&:repetition?).to_set(&:stable_id)
+
+    champ_to_remove_ids = champs.reject(&:private?)
+      .reject { _1.row? ? repetition_to_keep_stable_ids.member?(_1.stable_id) : champ_to_keep_public_ids.member?(_1.public_id) }
+      .map(&:id)
+
+    return if champ_to_remove_ids.empty?
+    champs.where(id: champ_to_remove_ids, stream: 'main').destroy_all
+  end
+
+  def remove_not_visible_rows!
+    row_to_remove_ids = project_champs_public
+      .filter { _1.repetition? && !_1.visible? }
+      .flat_map(&:row_ids)
+
+    return if row_to_remove_ids.empty?
+    champs.where(row_id: row_to_remove_ids, stream: 'main').destroy_all
+  end
+
+  def remove_titres_identite!
+    champ_to_remove_ids = filled_champs.filter(&:titre_identite?).map(&:id)
+
+    return if champ_to_remove_ids.empty?
+    champs.where(id: champ_to_remove_ids, stream: 'main').destroy_all
   end
 end

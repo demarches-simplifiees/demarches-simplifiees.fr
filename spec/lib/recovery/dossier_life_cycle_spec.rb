@@ -15,7 +15,7 @@ describe 'Dossier::Recovery::LifeCycle' do
     let(:geo_area) { build(:geo_area, :selection_utilisateur, :polygon) }
     let(:fp) { Rails.root.join('spec', 'fixtures', 'export.dump') }
     let(:dossier) do
-      d = create(:dossier, procedure:)
+      d = create(:dossier, :with_populated_champs, procedure:)
 
       repetition(d).add_row(updated_by: 'test')
       pj_champ(d).piece_justificative_file.attach(some_file)
@@ -49,7 +49,7 @@ describe 'Dossier::Recovery::LifeCycle' do
       d
     end
 
-    def repetition(d) = d.champs.find_by(type: "Champs::RepetitionChamp")
+    def repetition(d) = d.project_champs_public.find(&:repetition?)
     def pj_champ(d) = d.champs.find_by(type: "Champs::PieceJustificativeChamp")
     def carte(d) = d.champs.find_by(type: "Champs::CarteChamp")
     def siret(d) = d.champs.find_by(type: "Champs::SiretChamp")
@@ -83,7 +83,7 @@ describe 'Dossier::Recovery::LifeCycle' do
 
       expect(reloaded_dossier.champs.count).not_to be(0)
 
-      expect(repetition(reloaded_dossier).rows.flatten.map(&:type)).to match_array(["Champs::PieceJustificativeChamp"])
+      expect(repetition(reloaded_dossier).rows.flatten.map(&:type)).to match_array(["Champs::PieceJustificativeChamp", "Champs::PieceJustificativeChamp", "Champs::PieceJustificativeChamp"])
       expect(pj_champ(reloaded_dossier).piece_justificative_file).to be_attached
       expect(carte(reloaded_dossier).geo_areas).to be_present
 

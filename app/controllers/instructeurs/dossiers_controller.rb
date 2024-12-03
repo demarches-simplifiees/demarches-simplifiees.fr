@@ -59,7 +59,10 @@ module Instructeurs
           @acls = PiecesJustificativesService.new(user_profile: current_instructeur, export_template: nil).acl_for_dossier_export(dossier.procedure)
           render(template: 'dossiers/show', formats: [:pdf])
         end
-        format.all
+        format.all do
+          dossier.validate(:champs_public_value)
+          dossier.check_mandatory_and_visible_champs
+        end
       end
     end
 
@@ -308,7 +311,7 @@ module Instructeurs
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.champs.filter(&:private?))
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.project_champs_private_all)
         end
       end
     end
