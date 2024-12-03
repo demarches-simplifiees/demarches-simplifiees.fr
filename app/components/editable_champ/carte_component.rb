@@ -28,6 +28,6 @@ class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def update_path
-    champs_carte_features_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
+    champs_carte_features_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, stream: @champ.dossier.stream)
   end
 end
