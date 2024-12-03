@@ -29,10 +29,10 @@ module DossierFilteringConcern
     }
 
     scope :filter_ilike, lambda { |table, column, search_terms|
-      safe_quoted_terms = search_terms.map { "%#{sanitize_sql_like(_1)}%" }
+      safe_quoted_terms = search_terms.map(&:strip).map { "%#{sanitize_sql_like(_1)}%" }
       table_column = DossierFilterService.sanitized_column(table, column)
 
-      where("#{table_column} LIKE ANY (ARRAY[?])", safe_quoted_terms)
+      where("unaccent(#{table_column}) ILIKE ANY (ARRAY((SELECT unaccent(unnest(ARRAY[?])))))", safe_quoted_terms)
     }
 
     def sanitize_sql_like(q) = ActiveRecord::Base.sanitize_sql_like(q)

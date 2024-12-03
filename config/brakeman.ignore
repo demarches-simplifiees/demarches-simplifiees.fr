@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 323,
+          "line": 297,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -171,29 +171,6 @@
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "afd2a1a41bd87fa62e065671670bd9bd8cc503ca4cbd3cfdb74a38a794146926",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 35,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{DossierFilterService.sanitized_column(table, column)} LIKE ANY (ARRAY[?])\", search_terms.map do\n \"%#{sanitize_sql_like(_1)}%\"\n end)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "DossierFilteringConcern",
-        "method": null
-      },
-      "user_input": "DossierFilterService.sanitized_column(table, column)",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "The table and column are escaped, which should make this safe"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "c97049798ff05438dcca6f3ee1a714f2336041837411ab001a7e3caf1bfb75c8",
@@ -247,8 +224,31 @@
         79
       ],
       "note": "Current is not a model"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "fc12551e83eab01e5955c73470bb1fc30b6642bd39750ba4aa9f0fe6ef4d6522",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/concerns/dossier_filtering_concern.rb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"unaccent(#{DossierFilterService.sanitized_column(table, column)}) ILIKE ANY (ARRAY((SELECT unaccent(unnest(ARRAY[?])))))\", search_terms.map(&:strip).map do\n \"%#{sanitize_sql_like(_1)}%\"\n end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DossierFilteringConcern",
+        "method": null
+      },
+      "user_input": "DossierFilterService.sanitized_column(table, column)",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "The table and column are escaped, which should make this safe"
     }
   ],
-  "updated": "2024-11-12 17:33:07 +0100",
+  "updated": "2024-12-02 21:04:14 +0100",
   "brakeman_version": "6.1.2"
 }
