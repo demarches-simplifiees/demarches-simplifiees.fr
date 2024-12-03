@@ -143,9 +143,7 @@ module Administrateurs
           Referentiel.find_by(type_de_champ_stable_id: params["stable_id"], procedure_id: @procedure.id)&.destroy
 
           # Create referentiel
-          referentiel = Referentiel.create!(type_de_champ_stable_id: params["stable_id"],
-                                            procedure_id: @procedure.id,
-                                            name: referentiel_file.original_filename)
+          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename)
 
           csv_to_code = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
             .map { |row| row.to_h }
