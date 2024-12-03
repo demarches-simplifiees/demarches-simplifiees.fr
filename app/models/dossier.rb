@@ -244,7 +244,7 @@ class Dossier < ApplicationRecord
 
   scope :with_type_de_champ, -> (stable_id) { joins(:champs).where(champs: { stream: 'main', stable_id: }) }
 
-  scope :all_state,                   -> { not_archived.state_not_brouillon }
+  scope :all_state,                   -> (include_archived: false) { include_archived ? state_not_brouillon : not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
@@ -385,7 +385,7 @@ class Dossier < ApplicationRecord
       .distinct
   end
 
-  scope :by_statut, -> (statut, instructeur = nil) do
+  scope :by_statut, -> (statut, instructeur: nil, include_archived: false) do
     case statut
     when 'a-suivre'
       visible_by_administration
@@ -399,7 +399,7 @@ class Dossier < ApplicationRecord
     when 'traites'
       visible_by_administration.termine
     when 'tous'
-      visible_by_administration.all_state
+      visible_by_administration.all_state(include_archived:)
     when 'supprimes'
       hidden_by_administration.state_termine.or(hidden_by_expired)
     when 'archives'
