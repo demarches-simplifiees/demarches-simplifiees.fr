@@ -261,11 +261,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     context 'working case with multi column file' do
       it 'creates a valid referentiel' do
         expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
-        expect(Referentiel.last.type_de_champ_stable_id).to eq type_de_champ.stable_id
-        expect(Referentiel.last.type_de_champ).to eq type_de_champ
-        expect(Referentiel.last.procedure_id).to eq procedure.id
-        expect(procedure.referentiels).to eq [Referentiel.last]
-        expect(type_de_champ.referentiel).to eq Referentiel.last
+        expect(type_de_champ.reload.referentiel).to eq Referentiel.last
+        expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
         expect(Referentiel.last.name).to eq referentiel_file.original_filename
         expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
         expect(ReferentielItem.first.data).to eq({ "calorie (kcal)" => "145", "poids (g)" => "60" })

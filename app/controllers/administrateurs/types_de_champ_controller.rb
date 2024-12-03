@@ -140,7 +140,8 @@ module Administrateurs
 
         ActiveRecord::Base.transaction do
           # if referentiel already exist delete it
-          Referentiel.find_by(type_de_champ_stable_id: params["stable_id"], procedure_id: @procedure.id)&.destroy
+          type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+          type_de_champ.referentiel&.destroy
 
           # Create referentiel
           referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename)
@@ -152,6 +153,7 @@ module Administrateurs
 
           # Create referentiel items
           csv_to_code.each do |row|
+            # referentiel.create_items!(option: row.slice(keys.first), data: row.except(keys.first))
             ReferentielItem.create(referentiel_id: referentiel.id,
                                    option: row.slice(keys.first),
                                    data: row.except(keys.first))

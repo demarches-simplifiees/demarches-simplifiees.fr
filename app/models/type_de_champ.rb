@@ -128,7 +128,6 @@ class TypeDeChamp < ApplicationRecord
                  :old_pj,
                  :drop_down_options,
                  :drop_down_mode,
-                 :referentiel_id,
                  :skip_pj_validation,
                  :skip_content_type_pj_validation,
                  :drop_down_secondary_libelle,
