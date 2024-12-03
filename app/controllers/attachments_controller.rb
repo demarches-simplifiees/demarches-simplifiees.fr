@@ -20,14 +20,15 @@ class AttachmentsController < ApplicationController
 
   def destroy
     @attachment = @blob.attachments.find(params[:id])
-    @attachment.purge_later
-    flash.notice = 'La pièce jointe a bien été supprimée.'
 
-    if params[:dossier_id]
-      @champ = find_champ
+    if champ?
+      @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
     else
       @attachment_options = attachment_options
     end
+
+    @attachment.purge_later
+    flash.notice = 'La pièce jointe a bien été supprimée.'
 
     respond_to do |format|
       format.turbo_stream
@@ -37,14 +38,23 @@ class AttachmentsController < ApplicationController
 
   private
 
-  def find_champ
-    dossier = policy_scope(Dossier).includes(:champs).find(params[:dossier_id])
-    dossier.champs.find_by(stable_id: params[:stable_id], row_id: params[:row_id] || Champ::NULL_ROW_ID)
+  def record
+    @attachment.record
+  end
+
+  def champ?
+    record.is_a?(Champ)
+  end
+
+  def champ
+    @champ ||= if champ?
+      record.dossier.champ_for_update(record.type_de_champ, row_id: record.row_id, updated_by: current_user.email)
+    end
   end
 
   def attachment_options
     {
-      attached_file: @attachment.record.public_send(@attachment.name),
+      attached_file: record.public_send(@attachment.name),
       view_as: params[:view_as]&.to_sym,
       direct_upload: params[:direct_upload] == "true",
       auto_attach_url: params[:direct_upload] == "true" ? params[:auto_attach_url] : nil
