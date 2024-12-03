@@ -2,106 +2,69 @@
 
 describe DossierSearchService do
   describe '#matching_dossiers' do
-    subject { liste_dossiers }
+    let!(:dossiers) { Dossier.where(id: dossier.id) }
 
-    let(:liste_dossiers) do
-      described_class.matching_dossiers(instructeur_1.dossiers, terms)
+    before { perform_enqueued_jobs(only: DossierIndexSearchTermsJob) }
+
+    def searching(terms) = described_class.matching_dossiers(dossiers, terms)
+
+    describe 'ignores brouillon' do
+      let(:dossier) { create(:dossier, state: :brouillon) }
+
+      it { expect(searching(dossier.id.to_s)).to eq([]) }
     end
 
-    let(:instructeur_1) { create(:instructeur) }
-    let(:instructeur_2) { create(:instructeur) }
-
-    before do
-      instructeur_1.assign_to_procedure(procedure_1)
-      instructeur_2.assign_to_procedure(procedure_2)
-
-      # create dossier before performing jobs
-      # because let!() syntax is executed after "before" callback
-      dossier_0
-      dossier_1
-      dossier_2
-      dossier_3
-      dossier_archived
-
-      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
-    end
-
-    let(:procedure_1) { create(:procedure, :published) }
-    let(:procedure_2) { create(:procedure, :published) }
-
-    let(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
-
-    let(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
-    let(:dossier_1) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'contact@test.com'), etablissement: etablissement_1) }
-
-    let(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
-    let(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'plop@gmail.com'), etablissement: etablissement_2) }
-
-    let(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
-    let(:dossier_3) { create(:dossier, :en_construction, procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
-
-    let(:dossier_archived) { create(:dossier, :en_construction, procedure: procedure_1, archived: true, user: create(:user, email: 'archived@clap.fr')) }
-
-    describe 'search is empty' do
-      let(:terms) { '' }
-
-      it { expect(subject.size).to eq(0) }
-    end
-
-    describe 'search brouillon file' do
-      let(:terms) { 'brouillon' }
-
-      it { expect(subject.size).to eq(0) }
-    end
-
-    describe 'search archived file' do
-      let(:terms) { 'archived' }
-
-      it { expect(subject.size).to eq(1) }
-    end
-
-    describe 'search on contact email' do
-      let(:terms) { 'clap' }
-
-      it { expect(subject.size).to eq(0) }
-    end
-
-    describe 'search on SIRET' do
-      context 'when is part of SIRET' do
-        let(:terms) { '4181' }
-
-        it { expect(subject.size).to eq(1) }
+    context 'with a dossier not in brouillon' do
+      let(:user) { create(:user, email: 'nicolas@email.com') }
+      let(:etablissement) { create(:etablissement, entreprise_raison_sociale: 'Direction Interministerielle Du Numérique', siret: '13002526500013') }
+      let(:dossier) do
+        create(:dossier, state: :en_construction, user:, etablissement:).tap do |dossier|
+          dossier.champs.first.update!(value: 'Hélène mange des pommes')
+        end
       end
 
-      context 'when is a complet SIRET' do
-        let(:terms) { '41816602300012' }
+      it do
+        expect(searching('')).to eq([])
 
-        it { expect(subject.size).to eq(1) }
+        # by dossier id
+        expect(searching(dossier.id.to_s)).to eq([dossier.id])
+
+        # by email
+        expect(searching('nicolas@email.com')).to eq([dossier.id])
+        expect(searching('nicolas')).to eq([dossier.id])
+
+        # by SIRET
+        expect(searching('13002526500013')).to eq([dossier.id])
+        expect(searching('1300')).to eq([dossier.id])
+
+        # by raison sociale
+        expect(searching('Direction Interministerielle Du Numérique')).to eq([dossier.id])
+        expect(searching('Direction')).to eq([dossier.id])
+
+        # with multiple terms
+        expect(searching('Direction nicolas')).to eq([dossier.id])
+
+        # with forbidden characters
+        expect(searching("'?\\:&!(Direction) <Interministerielle>")).to eq([dossier.id])
+
+        # with supirious spaces
+        expect(searching("  nicolas  ")).to eq([dossier.id])
+
+        # with wrong case
+        expect(searching('direction')).to eq([dossier.id])
+
+        # by champ text
+        expect(searching('Hélène')).to eq([dossier.id])
+
+        # by singular
+        expect(searching('la pomme')).to eq([dossier.id])
       end
     end
 
-    describe 'search on raison social' do
-      let(:terms) { 'OCTO' }
+    describe 'does not ignore archived dossiers' do
+      let(:dossier) { create(:dossier, state: :en_construction, archived: true) }
 
-      it { expect(subject.size).to eq(2) }
-    end
-
-    describe 'search terms surrounded with spurious spaces' do
-      let(:terms) { ' OCTO ' }
-
-      it { expect(subject.size).to eq(2) }
-    end
-
-    describe 'search on multiple fields' do
-      let(:terms) { 'octo plop' }
-
-      it { expect(subject.size).to eq(1) }
-    end
-
-    describe 'search with characters disallowed by the tsquery parser' do
-      let(:terms) { "'?\\:&!(OCTO) <plop>" }
-
-      it { expect(subject.size).to eq(1) }
+      it { expect(searching(dossier.id.to_s)).to eq([dossier.id]) }
     end
   end
 
