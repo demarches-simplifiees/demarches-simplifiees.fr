@@ -1,0 +1,11 @@
+en:
+  dossier_mailer:
+    notify_old_brouillon_soon_deleted:
+      subject: 'Your draft file n°%{dossier_id} will soon be deleted'
+      body: |
+        Your file n° %{dossier_id} for "%{libelle_demarche}" has not been modified for more than 3 months.
+
+        It will be automatically deleted in 2 weeks.
+
+        If you wish to keep this application, please update it by logging into your personal space.
+      access_dossier: 'Access my dossier'

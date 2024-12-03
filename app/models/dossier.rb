@@ -567,7 +567,10 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_automatic?(reason)
-    reason == :expired && !en_instruction?
+    return true if reason == :expired && !en_instruction?
+    return true if reason == :not_modified_for_a_long_time && brouillon?
+
+    false
   end
 
   def can_terminer_automatiquement_by_sva_svr?

@@ -1,0 +1,8 @@
+en:
+  dossier_mailer:
+    notify_old_brouillon_after_deletion:
+      subject: 'Your draft application n°%{dossier_id} has been deleted due to inactivity'
+      body: |
+        Your application n° %{dossier_id} for "%{libelle_demarche}" has been automatically deleted as it had not been modified for more than 3 months.
+      new_dossier_html: |
+        If you wish to submit a new application for this procedure, you can <a href="%{link}">click here</a>.

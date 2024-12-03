@@ -1,0 +1,11 @@
+fr:
+  dossier_mailer:
+    notify_old_brouillon_soon_deleted:
+      subject: 'Votre dossier n°%{dossier_id} en brouillon va bientôt être supprimé'
+      body: |
+        Votre dossier n° %{dossier_id} pour la démarche "%{libelle_demarche}" n'a pas été modifié depuis plus de 3 mois.
+
+        Il sera automatiquement supprimé dans 2 semaines.
+
+        Si vous souhaitez conserver ce dossier, nous vous invitons à le mettre à jour en vous connectant à votre espace personnel.
+      access_dossier: 'Accéder à mon dossier'
