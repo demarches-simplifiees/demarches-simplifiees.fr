@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_03_154714) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -642,6 +642,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
     t.bigint "export_template_id"
     t.jsonb "filtered_columns", default: [], null: false, array: true
     t.string "format", null: false
+    t.boolean "include_archived", default: false, null: false
     t.bigint "instructeur_id"
     t.string "job_status", default: "pending", null: false
     t.text "key", null: false
@@ -890,6 +891,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
     t.index ["from"], name: "index_path_rewrites_on_from", unique: true
   end
 
+  create_table "procedure_paths", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "path"
+    t.bigint "procedure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["path"], name: "index_procedure_paths_on_path", unique: true
+    t.index ["procedure_id"], name: "index_procedure_paths_on_procedure_id"
+  end
+
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.jsonb "a_suivre_filters", default: [], null: false, array: true
     t.jsonb "archives_filters", default: [], null: false, array: true
@@ -937,7 +947,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
 
   create_table "procedure_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_procedure_tags_on_name", unique: true
@@ -1008,6 +1017,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at", precision: nil
     t.bigint "published_revision_id"
+    t.boolean "rdv_enabled", default: false, null: false
     t.bigint "replaced_by_procedure_id"
     t.boolean "routing_enabled"
     t.bigint "service_id"
@@ -1042,6 +1052,26 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
     t.bigint "zone_id"
     t.index ["procedure_id"], name: "index_procedures_zones_on_procedure_id"
     t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
+  end
+
+  create_table "rdv_connections", force: :cascade do |t|
+    t.string "access_token"
+    t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.bigint "instructeur_id", null: false
+    t.string "refresh_token"
+    t.datetime "updated_at", null: false
+    t.index ["instructeur_id"], name: "index_rdv_connections_on_instructeur_id", unique: true
+  end
+
+  create_table "rdvs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "dossier_id", null: false
+    t.string "rdv_service_public_id"
+    t.datetime "starts_at"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_rdvs_on_dossier_id"
   end
 
   create_table "re_instructed_mails", force: :cascade do |t|
@@ -1326,6 +1356,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
   add_foreign_key "instructeurs", "users"
   add_foreign_key "labels", "procedures"
   add_foreign_key "merge_logs", "users"
+  add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
@@ -1337,6 +1368,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"
   add_foreign_key "procedures", "services"
   add_foreign_key "procedures", "zones"
+  add_foreign_key "rdv_connections", "instructeurs"
+  add_foreign_key "rdvs", "dossiers"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
