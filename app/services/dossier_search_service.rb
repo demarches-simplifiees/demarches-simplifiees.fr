@@ -6,7 +6,7 @@ class DossierSearchService
       []
     else
       dossier_by_exact_id(dossiers, search_terms)
-        .presence || dossier_by_full_text(dossiers, search_terms, with_annotations)
+        .presence || dossier_ids_by_full_text(dossiers, search_terms, with_annotations)
     end
   end
 
@@ -26,24 +26,25 @@ class DossierSearchService
     end
   end
 
-  def self.dossier_by_full_text(dossiers, search_terms, with_annotations)
-    ts_vector = "to_tsvector('french', unaccent(#{with_annotations ? 'dossiers.search_terms || dossiers.private_search_terms' : 'dossiers.search_terms'}))"
-    ts_query = "to_tsquery('french', unaccent(#{Dossier.connection.quote(to_tsquery(search_terms))}))"
+  def self.dossier_ids_by_full_text(dossiers, search_terms, with_annotations)
+    columns = with_annotations ? 'search_terms || private_search_terms' : 'search_terms'
 
-    dossiers
-      .visible_by_administration
-      .where("#{ts_vector} @@ #{ts_query}")
-      .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
+    dossier_by_full_text(dossiers.visible_by_administration, columns, search_terms)
       .pluck('id')
       .uniq
   end
 
   def self.dossier_by_full_text_for_user(search_terms, dossiers)
-    ts_vector = "to_tsvector('french', search_terms)"
-    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
+    columns = 'search_terms'
+
+    dossier_by_full_text(dossiers.visible_by_user, columns, search_terms)
+  end
+
+  def self.dossier_by_full_text(dossiers, columns, search_terms)
+    ts_vector = "to_tsvector('french', unaccent(#{columns}))"
+    ts_query = "to_tsquery('french', unaccent(#{Dossier.connection.quote(to_tsquery(search_terms))}))"
 
     dossiers
-      .visible_by_user
       .where("#{ts_vector} @@ #{ts_query}")
       .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
   end
