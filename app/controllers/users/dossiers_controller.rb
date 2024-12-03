@@ -18,7 +18,8 @@ module Users
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
-    before_action :set_dossier_as_editing_fork, only: [:submit_en_construction]
+    before_action :set_dossier_as_editing_fork, only: [:submit_en_construction], if: :update_with_fork?
+    before_action :set_dossier_stream, only: [:modifier, :update, :submit_en_construction, :champ], if: :update_with_streams?
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
 
@@ -253,38 +254,52 @@ module Users
 
     def modifier
       @dossier = dossier_with_champs
-      @dossier_for_editing = dossier.owner_editing_fork
+
+      if update_with_streams?
+        @dossier_for_editing = dossier
+      else
+        # TODO remove when all forks are gone
+        @dossier_for_editing = dossier.owner_editing_fork
+        @dossier_for_editing.validate(:champs_public_value)
+        @dossier_for_editing.check_mandatory_and_visible_champs
+      end
 
       dossier.validate(:champs_public_value)
       dossier.check_mandatory_and_visible_champs
-
-      @dossier_for_editing.validate(:champs_public_value)
-      @dossier_for_editing.check_mandatory_and_visible_champs
     end
 
     def submit_en_construction
       @dossier = dossier_with_champs(pj_template: false)
-      editing_fork_origin = @dossier.editing_fork_origin
+      editing_fork_origin = dossier.editing_fork_origin
+      dossier_en_construction = editing_fork_origin || dossier
 
       if cast_bool(params.dig(:dossier, :pending_correction))
-        editing_fork_origin.resolve_pending_correction
+        dossier_en_construction.resolve_pending_correction
       end
 
       submit_dossier_and_compute_errors
 
       if dossier.errors.blank? && dossier.can_passer_en_construction?
-        editing_fork_origin.merge_fork(dossier)
-        editing_fork_origin.submit_en_construction!
-        redirect_to dossier_path(editing_fork_origin)
+        if editing_fork_origin.present?
+          # TODO remove when all forks are gone
+          editing_fork_origin.merge_fork(dossier)
+        else
+          dossier.merge_stream(Champ::USER_DRAFT_STREAM)
+        end
+
+        dossier_en_construction.submit_en_construction!
+        redirect_to dossier_path(dossier_en_construction)
       else
         @dossier_for_editing = dossier
-        @dossier = editing_fork_origin
+        if editing_fork_origin.present?
+          @dossier = editing_fork_origin
+        end
+
         render :modifier
       end
     end
 
     def update
-      @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
       @can_passer_en_construction_was, @can_passer_en_construction_is = dossier.track_can_passer_en_construction do
         update_dossier_and_compute_errors
@@ -538,6 +553,18 @@ module Users
       redirect_to dossier_path(dossier)
     end
 
+    def set_dossier_stream
+      dossier.with_stream(Champ::USER_DRAFT_STREAM)
+    end
+
+    def update_with_streams?
+      dossier.en_construction? && !dossier.legacy_fork? && dossier.procedure.feature_enabled?(:user_draft_stream)
+    end
+
+    def update_with_fork?
+      dossier.with_editing_fork?
+    end
+
     def update_dossier_and_compute_errors
       dossier.update_champs_attributes(champs_public_attributes_params, :public, updated_by: current_user.email)
       updated_champs = dossier.champs.filter(&:changed_for_autosave?)
@@ -563,6 +590,7 @@ module Users
       dossier.validate(:champs_public_value)
       dossier.check_mandatory_and_visible_champs
 
+      # TODO remove when all forks are gone
       if dossier.editing_fork_origin&.pending_correction?
         dossier.editing_fork_origin.validate(:champs_public_value)
         dossier.editing_fork_origin.errors.where(:pending_correction).each do |error|
