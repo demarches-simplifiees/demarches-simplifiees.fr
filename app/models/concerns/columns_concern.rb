@@ -154,17 +154,41 @@ module ColumnsConcern
     end
 
     def moral_columns
-      etablissements = ['entreprise_forme_juridique', 'entreprise_siren', 'entreprise_nom_commercial', 'entreprise_raison_sociale', 'entreprise_siret_siege_social']
-        .map { |column| dossier_col(table: 'etablissement', column:) }
+      siret_column = dossier_col(table: 'etablissement', column: :siret)
 
-      etablissement_dates = ['entreprise_date_creation'].map { |column| dossier_col(table: 'etablissement', column:, type: :date) }
+      etablissements = Etablissement::DISPLAYABLE_COLUMNS.map do |(column, attributes)|
+        dossier_col(table: 'etablissement', column:, type: attributes[:type], filterable: attributes.fetch(:filterable, true))
+      end
 
-      for_export = ["siege_social", "code_naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_siren", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_administratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declaration", "association_date_publication"]
-        .map { |column| dossier_col(table: 'etablissement', column:, displayable: false, filterable: false) }
+      others = %w[code_postal].map { |column| dossier_col(table: 'etablissement', column:) }
 
-      other = ['siret', 'libelle_naf', 'code_postal'].map { |column| dossier_col(table: 'etablissement', column:) }
+      for_export = %w[
+        siege_social
+        code_naf
+        adresse
+        numero_voie
+        type_voie
+        nom_voie
+        complement_adresse
+        localite
+        code_insee_localite
+        entreprise_capital_social
+        entreprise_numero_tva_intracommunautaire
+        entreprise_forme_juridique_code
+        entreprise_code_effectif_entreprise
+        entreprise_etat_administratif
+        entreprise_siret_siege_social
+        entreprise_nom
+        entreprise_prenom
+        association_rna
+        association_titre
+        association_objet
+        association_date_creation
+        association_date_declaration
+        association_date_publication
+      ].map { |column| dossier_col(table: 'etablissement', column:, displayable: false, filterable: false) }
 
-      [etablissements, etablissement_dates, other, for_export].flatten
+      [siret_column, etablissements, others, for_export].flatten
     end
 
     def types_de_champ_columns
