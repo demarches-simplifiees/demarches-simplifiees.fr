@@ -15,6 +15,13 @@
 
         .fr-tabs__panel.fr-pb-8w.fr-tabs__panel--selected{ id: "tabpanel-standard#{@count}-panel", role: "tabpanel", "aria-labelledby": "tabpanel-standard#{@count}", tabindex: "0" }
           = form_with url: download_export_path, namespace: "export#{@count}", data: { turbo_method: :post, turbo: true } do |f|
+            
+            .fr-pb-2w
+              = render Dsfr::ToggleComponent.new(form: f,
+                  target: :include_archived_dossiers,
+                  title: "Include les dossiers archivés",
+                  label_side: :right)
+
             = f.hidden_field :statut, value: @statut
             %fieldset.fr-fieldset#radio-hint{ "aria-labelledby": "radio-hint-legend" }
               %legend.fr-fieldset__legend--regular.fr-fieldset__legend#radio-hint-legend Sélectionner le format de l'export
