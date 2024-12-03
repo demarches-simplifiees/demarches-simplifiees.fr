@@ -27,20 +27,18 @@ class DossierSearchService
   end
 
   def self.dossier_ids_by_full_text(dossiers, search_terms, with_annotations)
-    columns = with_annotations ? 'search_terms || private_search_terms' : 'search_terms'
-
-    dossier_by_full_text(dossiers.visible_by_administration, columns, search_terms)
+    dossier_by_full_text(dossiers.visible_by_administration, search_terms, with_annotations:)
       .pluck('id')
       .uniq
   end
 
   def self.dossier_by_full_text_for_user(search_terms, dossiers)
-    columns = 'search_terms'
-
-    dossier_by_full_text(dossiers.visible_by_user, columns, search_terms)
+    dossier_by_full_text(dossiers.visible_by_user, search_terms)
   end
 
-  def self.dossier_by_full_text(dossiers, columns, search_terms)
+  def self.dossier_by_full_text(dossiers, search_terms, with_annotations: false)
+    columns = with_annotations ? 'search_terms || private_search_terms' : 'search_terms'
+
     ts_vector = "to_tsvector('french', unaccent(#{columns}))"
     ts_query = "to_tsquery('french', unaccent(#{Dossier.connection.quote(to_tsquery(search_terms))}))"
 

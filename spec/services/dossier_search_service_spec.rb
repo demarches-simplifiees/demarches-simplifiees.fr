@@ -64,6 +64,10 @@ describe DossierSearchService do
 
         # without accent
         expect(searching('helene')).to eq([dossier.id])
+
+        # NOT WORKING YET
+        # with a single faulty character
+        expect(searching('des pammes')).to eq([])
       end
     end
 
