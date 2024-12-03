@@ -58,6 +58,9 @@ describe DossierSearchService do
 
         # by singular
         expect(searching('la pomme')).to eq([dossier.id])
+
+        # without accent
+        expect(searching('helene')).to eq([dossier.id])
       end
     end
 

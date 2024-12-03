@@ -27,8 +27,8 @@ class DossierSearchService
   end
 
   def self.dossier_by_full_text(dossiers, search_terms, with_annotations)
-    ts_vector = "to_tsvector('french', #{with_annotations ? 'dossiers.search_terms || dossiers.private_search_terms' : 'dossiers.search_terms'})"
-    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
+    ts_vector = "to_tsvector('french', unaccent(#{with_annotations ? 'dossiers.search_terms || dossiers.private_search_terms' : 'dossiers.search_terms'}))"
+    ts_query = "to_tsquery('french', unaccent(#{Dossier.connection.quote(to_tsquery(search_terms))}))"
 
     dossiers
       .visible_by_administration
