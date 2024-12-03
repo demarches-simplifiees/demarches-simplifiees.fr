@@ -37,16 +37,17 @@ module DossierCloneConcern
     editing_fork_origin_id.present?
   end
 
-  def forked_with_changes?
-    if forked_diff.present?
-      forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
-    end
+  def with_editing_fork?
+    editing_forks.present?
   end
 
-  def champ_forked_with_changes?(champ)
-    if forked_diff.present?
-      forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
-    end
+  def legacy_fork?
+    editing_fork? || with_editing_fork?
+  end
+
+  # TODO remove when all forks are gone
+  def en_construction_for_editor?
+    en_construction? || editing_fork?
   end
 
   def make_diff(editing_fork)
@@ -131,6 +132,24 @@ module DossierCloneConcern
 
     cloned_dossier.index_search_terms_later if !fork
     cloned_dossier.reload
+  end
+
+  protected
+
+  def forked_with_changes?
+    if with_editing_fork?
+      find_editing_fork(user, rebase: false)&.forked_with_changes?
+    elsif forked_diff.present?
+      forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
+    end
+  end
+
+  def champ_forked_with_changes?(champ)
+    if with_editing_fork?
+      find_editing_fork(user, rebase: false)&.champ_forked_with_changes?(champ)
+    elsif forked_diff.present?
+      forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
+    end
   end
 
   private

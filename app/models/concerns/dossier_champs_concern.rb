@@ -204,10 +204,16 @@ module DossierChampsConcern
   end
 
   def user_draft_changes?
+    # TODO remove when all forks are gone
+    return true if forked_with_changes?
+
     champs_on_user_draft_stream.present?
   end
 
   def user_draft_changes_on_champ?(champ)
+    # TODO remove when all forks are gone
+    return true if champ_forked_with_changes?(champ)
+
     champs_on_user_draft_stream.any? { _1.public_id == champ.public_id }
   end
 
