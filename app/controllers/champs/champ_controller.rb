@@ -8,6 +8,9 @@ class Champs::ChampController < ApplicationController
 
   def find_champ
     dossier = policy_scope(Dossier).includes(:champs, revision: [:types_de_champ]).find(params[:dossier_id])
+    if params[:stream].in?([Champ::USER_DRAFT_STREAM])
+      dossier.with_stream(params[:stream])
+    end
     type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id])
     if type_de_champ.repetition?
       dossier.project_champ(type_de_champ)

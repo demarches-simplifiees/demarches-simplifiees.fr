@@ -14,6 +14,6 @@ class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def update_path
-    champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
+    champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, stream: @champ.dossier.stream)
   end
 end
