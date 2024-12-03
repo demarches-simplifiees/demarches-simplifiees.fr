@@ -103,23 +103,39 @@
 
             %div{class: class_names("flex column", "justify-start", "flex-grow", "drop-down-mode-referentiel", hidden: (type_de_champ.drop_down_mode != 'referentiel')), data: { 'drop-down-mode-target': 'referentiel'  } }
               .cell
-                = form_tag import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :post, multipart: true, class: "column" do
+                - if type_de_champ.referentiel.present?
                   %label.fr-label.font-weight-bold
                     Fichier de référentiel à importer (CSV)
-                  .fr-hint-text.fr-mb-2w
-                    =t('.drop_down_list.referentiel.hint_html')
+                  %p.fr-mt-2w
+                    %span.fr-badge.fr-badge--success
+                      = type_de_champ.referentiel.items.count
+                      options importées
 
-                  .fr-download
-                    = link_to template_file, {class: "fr-download__link", download: ''} do
-                      Modèle à télécharger
-                      %span.fr-download__detail
-                        = template_detail
-                  .fr-hint-text.fr-mb-1w
-                    Taille max : #{number_to_human_size(referentiel_max_size)}
+                    à partir de
+                    = type_de_champ.referentiel.name
 
-                  .flex.column
-                    = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w'
-                    = submit_tag 'Importer le fichier', class: 'fr-btn fr-btn--tertiary fr-mb-2w', id: 'submit-button', data: { disable_with: "Envoi...", confirm: 'Êtes vous sûr ?' }
+                  = button_to delete_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w', method: :post, formaction: delete_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), formnovalidate: true, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce référentiel ?' } } do
+                    %span Supprimer ce référentiel
+
+                - else
+                  = form_tag import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :post, multipart: true, class: "column" do
+                    %label.fr-label.font-weight-bold
+                      Fichier de référentiel à importer (CSV)
+                    .fr-hint-text.fr-mb-2w
+                      =t('.drop_down_list.referentiel.hint_html')
+
+                    .fr-download
+                      = link_to template_file, {class: "fr-download__link", download: ''} do
+                        Modèle à télécharger
+                        %span.fr-download__detail
+                          = template_detail
+                    .fr-hint-text.fr-mb-1w
+                      Taille max : #{number_to_human_size(referentiel_max_size)}
+
+                    .flex.column
+                      = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w'
+                      = submit_tag 'Importer le fichier', class: 'fr-btn fr-btn--tertiary fr-mb-2w', id: 'submit-button', data: { disable_with: "Envoi...", confirm: 'Êtes vous sûr ?' }
+
               .cell
                 = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
                   Proposer une option « autre » avec un texte libre

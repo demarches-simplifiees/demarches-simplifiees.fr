@@ -698,6 +698,7 @@ Rails.application.routes.draw do
           put :piece_justificative_template
           put :notice_explicative
           post :import_referentiel
+          patch :delete_referentiel
         end
       end
 
