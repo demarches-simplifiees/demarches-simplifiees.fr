@@ -40,7 +40,7 @@ class DossierSearchService
 
   def self.dossier_by_full_text_for_user(search_terms, dossiers)
     ts_vector = "to_tsvector('french', search_terms)"
-    ts_query = "to_tsquery('french', #{Dossier.includes(:procedure).connection.quote(to_tsquery(search_terms))})"
+    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
 
     dossiers
       .visible_by_user
