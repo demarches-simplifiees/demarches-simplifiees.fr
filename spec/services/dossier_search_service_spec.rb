@@ -47,6 +47,9 @@ describe DossierSearchService do
         # with forbidden characters
         expect(searching("'?\\:&!(Direction) <Interministerielle>")).to eq([dossier.id])
 
+        # with a single forbidden character should not crash postgres
+        expect(searching('? Direction')).to eq([dossier.id])
+
         # with supirious spaces
         expect(searching("  nicolas  ")).to eq([dossier.id])
 
@@ -72,122 +75,31 @@ describe DossierSearchService do
   end
 
   describe '#matching_dossiers_for_user' do
-    subject { liste_dossiers }
+    let(:user) { create(:user) }
+    let(:another_user) { create(:user) }
 
-    before do
-      dossier_0
-      dossier_0b
-      dossier_1
-      dossier_2
-      dossier_3
-      dossier_archived
-      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
-    end
+    before { perform_enqueued_jobs(only: DossierIndexSearchTermsJob) }
 
-    let(:liste_dossiers) do
-      described_class.matching_dossiers_for_user(terms, user_1)
-    end
+    def searching(terms, user) = described_class.matching_dossiers_for_user(terms, user)
 
-    let(:user_1) { create(:user, email: 'bidou@clap.fr') }
-    let(:user_2) { create(:user) }
+    context 'when the dossier is brouillon' do
+      let(:dossier) { create(:dossier, state: :brouillon, user:) }
 
-    let(:procedure_1) { create(:procedure, :published) }
-    let(:procedure_2) { create(:procedure, :published) }
+      it do
+        # searching its own dossier by id
+        expect(searching(dossier.id.to_s, user)).to eq([dossier])
 
-    let(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: user_1) }
-    let(:dossier_0b) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: user_2) }
-
-    let(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
-    let(:dossier_1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: user_1, etablissement: etablissement_1) }
-
-    let(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
-    let(:dossier_2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: user_1, etablissement: etablissement_2) }
-
-    let(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
-    let(:dossier_3) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_2, user: user_1, etablissement: etablissement_3) }
-
-    let(:dossier_archived) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, archived: true, user: user_1) }
-
-    describe 'search is empty' do
-      let(:terms) { '' }
-
-      it { expect(subject.size).to eq(0) }
-    end
-
-    describe 'search by dossier id' do
-      context 'when the user owns the dossier' do
-        let(:terms) { dossier_0.id.to_s }
-
-        it { expect(subject.map(&:id)).to include(dossier_0.id) }
-      end
-
-      context 'when the user does not own the dossier' do
-        let(:terms) { dossier_0b.id.to_s }
-
-        it { expect(subject.map(&:id)).not_to include(dossier_0b.id) }
+        # searching another dossier by id
+        expect(searching(dossier.id.to_s, another_user)).to eq([])
       end
     end
 
-    describe 'search brouillon file' do
-      let(:terms) { 'brouillon' }
+    context 'when the user is invited on the dossier' do
+      let(:dossier) { create(:dossier) }
 
-      it { expect(subject.size).to eq(0) }
-    end
+      before { create(:invite, dossier:, user:) }
 
-    describe 'search on contact email' do
-      let(:terms) { 'bidou@clap.fr' }
-
-      it { expect(subject.size).to eq(5) }
-    end
-
-    describe 'search on contact name' do
-      let(:terms) { 'bidou@clap.fr' }
-
-      it { expect(subject.size).to eq(5) }
-    end
-
-    describe 'search on SIRET' do
-      context 'when is part of SIRET' do
-        let(:terms) { '4181' }
-
-        it { expect(subject.size).to eq(2) }
-      end
-
-      context 'when is a complet SIRET' do
-        let(:terms) { '41816602300012' }
-
-        it { expect(subject.size).to eq(1) }
-      end
-    end
-
-    describe 'search on raison social' do
-      let(:terms) { 'OCTO' }
-
-      it { expect(subject.size).to eq(3) }
-    end
-
-    describe 'search terms surrounded with spurious spaces' do
-      let(:terms) { ' OCTO ' }
-
-      it { expect(subject.size).to eq(3) }
-    end
-
-    describe 'search on multiple fields' do
-      let(:terms) { 'octo plop' }
-
-      it { expect(subject.size).to eq(1) }
-    end
-
-    describe 'search with characters disallowed by the tsquery parser' do
-      let(:terms) { "'?\\:&!(OCTO) <plop>" }
-
-      it { expect(subject.size).to eq(1) }
-    end
-
-    describe 'search with a single forbidden character should not crash postgres' do
-      let(:terms) { '? OCTO' }
-
-      it { expect(subject.size).to eq(3) }
+      it { expect(searching(dossier.id.to_s, user)).to eq([dossier]) }
     end
   end
 end
