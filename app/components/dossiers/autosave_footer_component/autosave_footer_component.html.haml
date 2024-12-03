@@ -3,7 +3,7 @@
     %span.autosave-explanation-text
       - if annotation?
         = t('.annotations.explanation')
-      - elsif dossier.editing_fork?
+      - elsif dossier.en_construction_for_editor?
         = t('.en_construction.explanation')
       - else
         = t('.brouillon.explanation')
@@ -15,7 +15,7 @@
     %span.autosave-label
       - if annotation?
         = t('.annotations.confirmation')
-      - elsif dossier.editing_fork?
+      - elsif dossier.en_construction_for_editor?
         = t('.en_construction.confirmation')
       - else
         = t('.brouillon.confirmation')
@@ -27,7 +27,7 @@
     %span.autosave-label
       - if annotation?
         = t('.annotations.error')
-      - elsif dossier.editing_fork?
+      - elsif dossier.en_construction_for_editor?
         = t('.en_construction.error')
       - else
         = t('.brouillon.error')
