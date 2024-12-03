@@ -237,6 +237,18 @@ module DossierChampsConcern
     champs_in_revision.filter(&:history_stream?)
   end
 
+  def update_with_stream?
+    en_construction? && procedure.feature_enabled?(:user_draft_stream) && !with_editing_fork?
+  end
+
+  def stream_for_update
+    if update_with_stream?
+      Champ::USER_DRAFT_STREAM
+    else
+      Champ::MAIN_STREAM
+    end
+  end
+
   private
 
   def merge_user_draft_stream
