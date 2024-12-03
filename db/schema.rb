@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_22_125956) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_03_152519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1073,8 +1073,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_125956) do
   create_table "referentiels", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
-    t.bigint "procedure_id", null: false
-    t.bigint "type_de_champ_stable_id", null: false
     t.datetime "updated_at", null: false
   end
 
@@ -1211,10 +1209,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_125956) do
     t.boolean "mandatory", default: true
     t.jsonb "options"
     t.boolean "private", default: false, null: false
+    t.bigint "referentiel_id"
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at", precision: nil
     t.index ["private"], name: "index_types_de_champ_on_private"
+    t.index ["referentiel_id"], name: "index_types_de_champ_on_referentiel_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -1360,6 +1360,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_125956) do
   add_foreign_key "targeted_user_links", "users"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
+  add_foreign_key "types_de_champ", "referentiels"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
   add_foreign_key "zone_labels", "zones"
