@@ -39,5 +39,9 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
 
   def months_to_query(csv)
     return [Date.current.prev_month.all_month] if csv.empty?
+    last_date = Date.parse("#{csv.first['mois']}-01")
+    previous_month = 1.month.ago.beginning_of_month.to_date
+    nb_month = (previous_month.year * 12 + previous_month.month) - (last_date.year * 12 + last_date.month)
+    Array.new(nb_month) { |i| (last_date + (1 + i).month).all_month }
   end
 end
