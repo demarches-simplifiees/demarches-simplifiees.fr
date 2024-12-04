@@ -10,6 +10,7 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
 
   def perform(*args)
     csv = existing_csv(DATASET, RESOURCE)
+    months_to_query(csv).map { |period| csv << data_of_range(period) }
 
     GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, HEADERS, data) do |file|
       APIDatagouv::API.upload(file, DATASET)
@@ -18,12 +19,8 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
 
   private
 
-  def data
-    [[date_last_month, User.where(created_at: 1.month.ago.all_month).count]]
-  end
-
-  def date_last_month
-    Date.today.prev_month.strftime("%Y %B")
+  def data_of_range(range)
+    [range.min.strftime("%Y-%m"), User.where(created_at: range).count]
   end
 
   def default_csv
@@ -38,5 +35,9 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
     return default_csv unless response.success?
 
     CSV.parse(response.body, headers: true)
+  end
+
+  def months_to_query(csv)
+    return [Date.current.prev_month.all_month] if csv.empty?
   end
 end
