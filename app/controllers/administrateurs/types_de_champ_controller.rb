@@ -153,10 +153,7 @@ module Administrateurs
 
           # Create referentiel items
           csv_to_code.each do |row|
-            # referentiel.create_items!(option: row.slice(keys.first), data: row.except(keys.first))
-            ReferentielItem.create(referentiel_id: referentiel.id,
-                                   option: row.slice(keys.first),
-                                   data: row.except(keys.first))
+            referentiel.items.create!(option: row.slice(keys.first), data: row.except(keys.first))
           end
         end
       end
