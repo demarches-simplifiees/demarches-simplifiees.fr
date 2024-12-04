@@ -10,6 +10,10 @@ module Maintenance
       let(:element) { dossier.champs.first }
       subject(:process) { described_class.process(element) }
 
+      before do
+        element.update!(value_json: nil)
+      end
+
       it 'updates value_json' do
         expect { subject }.to change { element.reload.value_json }
           .from(anything)

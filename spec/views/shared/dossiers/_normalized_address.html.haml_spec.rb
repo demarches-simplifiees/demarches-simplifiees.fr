@@ -9,9 +9,12 @@ describe 'shared/dossiers/normalized_address', type: :view do
     let(:address) { AddressProxy.new(dossier.champs.first) }
 
     it 'render address' do
-      AddressProxy::ADDRESS_PARTS.each do |address_part|
-        expect(subject).to have_text(address_part)
-      end
+      expect(subject).to have_text("6 RUE RAOUL NORDLING")
+      expect(subject).to have_text("Bois-Colombes")
+      expect(subject).to have_text("92270")
+      expect(subject).to have_text("92009")
+      expect(subject).to have_text("Hauts-de-Seine – 92")
+      expect(subject).to have_text("Île-de-France – 11")
     end
   end
 
