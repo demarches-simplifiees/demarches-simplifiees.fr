@@ -6,7 +6,9 @@ describe DossierSearchService do
 
     before { perform_enqueued_jobs(only: DossierIndexSearchTermsJob) }
 
-    def searching(terms) = described_class.matching_dossiers(dossiers, terms)
+    def searching(terms, with_annotations: false)
+      described_class.matching_dossiers(dossiers, terms, with_annotations)
+    end
 
     describe 'ignores brouillon' do
       let(:dossier) { create(:dossier, state: :brouillon) }
@@ -17,9 +19,11 @@ describe DossierSearchService do
     context 'with a dossier not in brouillon' do
       let(:user) { create(:user, email: 'nicolas@email.com') }
       let(:etablissement) { create(:etablissement, entreprise_raison_sociale: 'Direction Interministerielle Du Numérique', siret: '13002526500013') }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }], types_de_champ_private: [{ type: :text }]) }
       let(:dossier) do
-        create(:dossier, state: :en_construction, user:, etablissement:).tap do |dossier|
-          dossier.champs.first.update!(value: 'Hélène mange des pommes')
+        create(:dossier, procedure:, state: :en_construction, user:, etablissement:).tap do |dossier|
+          dossier.project_champs_public.first.update!(value: 'Hélène mange des pommes')
+          dossier.project_champs_private.first.update!(value: 'annotations')
         end
       end
 
@@ -28,6 +32,11 @@ describe DossierSearchService do
 
         # by dossier id
         expect(searching(dossier.id.to_s)).to eq([dossier.id])
+
+        # annotations is unsearchable by default
+        expect(searching('annotations')).to eq([])
+        # but can be searched with the with_annotations option
+        expect(searching('annotations', with_annotations: true)).to eq([dossier.id])
 
         # by email
         expect(searching('nicolas@email.com')).to eq([dossier.id])
@@ -87,7 +96,12 @@ describe DossierSearchService do
     def searching(terms, user) = described_class.matching_dossiers_for_user(terms, user)
 
     context 'when the dossier is brouillon' do
-      let(:dossier) { create(:dossier, state: :brouillon, user:) }
+      let(:procedure) { create(:procedure, types_de_champ_private: [{ type: :text }]) }
+      let(:dossier) do
+        create(:dossier, procedure:, state: :brouillon, user:).tap do |dossier|
+          dossier.project_champs_private.first.update!(value: 'annotations')
+        end
+      end
 
       it do
         # searching its own dossier by id
@@ -95,6 +109,9 @@ describe DossierSearchService do
 
         # searching another dossier by id
         expect(searching(dossier.id.to_s, another_user)).to eq([])
+
+        # annotations is unsearchable
+        expect(searching('annotations', user)).to eq([])
       end
     end
 
