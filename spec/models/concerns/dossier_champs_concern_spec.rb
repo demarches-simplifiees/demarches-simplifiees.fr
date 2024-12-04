@@ -268,6 +268,25 @@ RSpec.describe DossierChampsConcern do
           }
         end
       end
+
+      context "champ with type change" do
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: "Un champ text", stable_id: 99 }]) }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+
+        before do
+          tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
+          tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:checkbox))
+          dossier.procedure.publish_revision!
+          perform_enqueued_jobs
+          dossier.reload
+        end
+
+        it {
+          expect(subject.persisted?).to be_truthy
+          expect(subject.is_a?(Champs::CheckboxChamp)).to be_truthy
+          expect(subject.value).to be_nil
+        }
+      end
     end
 
     context "private champ" do
@@ -321,6 +340,27 @@ RSpec.describe DossierChampsConcern do
         expect(champ_99.value).to eq("Hello")
         expect(champ_991.value).to eq("World")
         expect(champ_994.value).to eq("Greer")
+      }
+    end
+
+    context "champ with type change" do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: "Un champ text", stable_id: 99 }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:attributes) { { "99" => { primary_value: "primary" } } }
+
+      before do
+        tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
+        tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:linked_drop_down_list), drop_down_options: ["--primary--", "secondary"])
+        dossier.procedure.publish_revision!
+        perform_enqueued_jobs
+        dossier.reload
+      end
+
+      it {
+        subject
+        expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
+        expect(champ_99.changed?).to be_truthy
+        expect(champ_99.value).to eq('["primary",""]')
       }
     end
   end

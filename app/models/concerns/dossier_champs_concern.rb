@@ -177,9 +177,11 @@ module DossierChampsConcern
       attributes[:value_json] = nil
       attributes[:external_id] = nil
       attributes[:data] = nil
+      champ = champ.becomes!(attributes[:type].constantize)
+      champ.save!
     end
 
-    reset_champs_cache
+    reset_champ_cache(champ)
 
     [champ, attributes]
   end
@@ -200,6 +202,11 @@ module DossierChampsConcern
     @filled_champs_private = nil
     @project_champs_public = nil
     @project_champs_private = nil
+  end
+
+  def reset_champ_cache(champ)
+    champs_by_public_id[champ.public_id]&.reload
+    reset_champs_cache
   end
 
   def reload_champs_cache
