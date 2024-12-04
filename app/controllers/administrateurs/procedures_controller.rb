@@ -424,26 +424,22 @@ module Administrateurs
 
     def api_champ_columns
       _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
-      @columns = [
-        "Raison sociale",
-        "Adresse du siège social",
-        "Code NAF",
-        "Libellé NAF",
-        "Date de création",
-        "Numéro TVA intracommunautaire",
-        "Attestation sociale",
-        "Attestation fiscale",
-        "Raison sociale",
-        "Adresse du siège social",
-        "Code NAF",
-        "Libellé NAF",
-        "Date de création",
-        "Numéro TVA intracommunautaire",
-        "Attestation sociale",
-        "Attestation fiscale"
-      ].map do |label|
-        Column.new(procedure_id: @procedure.id, table: :etablissement, column: nil, label:)
-      end.sort_by(&:label)
+      regex_prefix = /^#{Regexp.escape(@type_de_champ.libelle)}([^\p{L}]+SIRET)?[^\p{L}]+/
+
+      @column_labels = @type_de_champ
+        .columns(procedure: @procedure)
+        .filter_map do |column|
+          # Remove tdc libelle prefix added in columns:
+          # Numéro SIRET - Entreprise SIREN => Entreprise SIREN
+          column.label.sub(regex_prefix, '')
+        end
+
+      if @type_de_champ.type_champ == "siret"
+        @column_labels.concat Etablissement::EXPORTABLE_COLUMNS.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
+
+        # Hardcode non columns data
+        @column_labels << "Bilans BDF"
+      end
     end
 
     private

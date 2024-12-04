@@ -162,31 +162,7 @@ module ColumnsConcern
 
       others = %w[code_postal].map { |column| dossier_col(table: 'etablissement', column:) }
 
-      for_export = %w[
-        siege_social
-        code_naf
-        adresse
-        numero_voie
-        type_voie
-        nom_voie
-        complement_adresse
-        localite
-        code_insee_localite
-        entreprise_capital_social
-        entreprise_numero_tva_intracommunautaire
-        entreprise_forme_juridique_code
-        entreprise_code_effectif_entreprise
-        entreprise_etat_administratif
-        entreprise_siret_siege_social
-        entreprise_nom
-        entreprise_prenom
-        association_rna
-        association_titre
-        association_objet
-        association_date_creation
-        association_date_declaration
-        association_date_publication
-      ].map { |column| dossier_col(table: 'etablissement', column:, displayable: false, filterable: false) }
+      for_export = Etablissement::EXPORTABLE_COLUMNS.map { |column| dossier_col(table: 'etablissement', column:) }
 
       [siret_column, etablissements, others, for_export].flatten
     end

@@ -6,8 +6,8 @@
     = t('.hint_html')
 
   %ul.two-column-list.fr-mb-3w
-    - @columns.each do |column|
-      %li= column.label
+    - @column_labels.each do |label|
+      %li= label.upcase_first
 
   - if @type_de_champ.type_champ == "siret"
     %p.fr-hint-text
