@@ -305,4 +305,37 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
     end
   end
+
+  describe '#delete_referentiel' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+
+    let(:params) do
+      { procedure_id: procedure.id, stable_id: type_de_champ.stable_id }
+    end
+
+    before do
+      referentiel = type_de_champ.create_referentiel!(name: 'referentiel.csv')
+
+      csv_to_code = [ { 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }, { 'option' => 'dessert', 'calorie (kcal)' => '170', 'poids (g)' => '70' }, { 'option' => 'fruit', 'calorie (kcal)' => '100', 'poids (g)' => '50' } ]
+
+      keys = csv_to_code.first.keys
+
+      csv_to_code.each do |row|
+        referentiel.items.create!(option: row.slice(keys.first), data: row.except(keys.first))
+      end
+
+    end
+
+    subject { post :delete_referentiel, params: params, format: :turbo_stream }
+
+    context 'working case with multi column file' do
+      it 'creates a valid referentiel' do
+        expect { subject }.to change(Referentiel, :count).by(-1).and change(ReferentielItem, :count).by(-3)
+        expect(type_de_champ.reload.referentiel).to be_nil
+        expect(Referentiel.count).to eq 0
+        expect(ReferentielItem.count).to eq 0
+      end
+    end
+  end
 end

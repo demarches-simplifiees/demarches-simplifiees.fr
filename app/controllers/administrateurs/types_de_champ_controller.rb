@@ -162,8 +162,10 @@ module Administrateurs
     def delete_referentiel
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
       @coordinate = draft.coordinate_for(type_de_champ)
+      referentiel = type_de_champ.referentiel
 
-      Referentiel.find_by(type_de_champ_stable_id: params["stable_id"], procedure_id: @procedure.id).destroy
+      type_de_champ.update!(referentiel_id: nil)
+      referentiel.destroy if referentiel.types_de_champ.blank?
 
       @morphed = [champ_component_from(@coordinate, focused: true)]
     end
