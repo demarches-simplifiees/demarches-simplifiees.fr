@@ -80,4 +80,31 @@ describe 'users/dossiers/demande', type: :view do
       expect(rendered).not_to have_text('L’usager n’a pas encore pris connaissance de la décision concernant son dossier')
     end
   end
+
+  context 'when there is a dropdown list from a referentiel' do
+    let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
+    let(:type_de_champ) { procedure.draft_types_de_champ_public.first }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
+
+    before do
+      referentiel = type_de_champ.create_referentiel!(name: 'referentiel.csv')
+
+      csv_to_code = [{ 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }, { 'option' => 'dessert', 'calorie (kcal)' => '170', 'poids (g)' => '70' }, { 'option' => 'fruit', 'calorie (kcal)' => '100', 'poids (g)' => '50' }]
+      keys = csv_to_code.first.keys
+      csv_to_code.each do |row|
+        referentiel.items.create!(option: row.slice(keys.first), data: row.except(keys.first))
+      end
+
+      type_de_champ.update!(drop_down_mode: 'referentiel')
+      dossier.champs.first.update!(value: referentiel.items.first.id)
+
+      render
+    end
+
+    it 'display only the first option to the user' do
+      expect(rendered).to have_text('fromage')
+      expect(rendered).not_to have_text('dessert')
+    end
+  end
 end
