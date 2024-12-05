@@ -118,7 +118,7 @@
                     %span Supprimer ce référentiel
 
                 - else
-                  = form_tag import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :post, multipart: true, class: "column" do
+                  = form_tag import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), data: { turbo: false }, method: :post, multipart: true, class: "column", id: 'referentiel-file', formaction: import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id) do
                     %label.fr-label.font-weight-bold
                       Fichier de référentiel à importer (CSV)
                     .fr-hint-text.fr-mb-2w
@@ -134,7 +134,7 @@
 
                     .flex.column
                       = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w'
-                      = submit_tag 'Importer le fichier', class: 'fr-btn fr-btn--tertiary fr-mb-2w', id: 'submit-button', data: { disable_with: "Envoi...", confirm: 'Êtes vous sûr ?' }
+                      = submit_tag 'Importer le fichier', class: 'fr-btn fr-btn--tertiary fr-mb-2w', id: 'referentiel-file', data: { turbo: false }, formaction: import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :post
 
               .cell
                 = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
