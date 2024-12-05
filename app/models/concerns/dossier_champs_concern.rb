@@ -114,8 +114,8 @@ module DossierChampsConcern
   end
 
   def champ_for_update(type_de_champ, row_id, updated_by:)
-    champ, attributes = champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
-    champ.assign_attributes(attributes)
+    champ = champ_upsert_by!(type_de_champ, row_id)
+    champ.updated_by = updated_by
     champ
   end
 
@@ -203,33 +203,33 @@ module DossierChampsConcern
   def champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
     stable_id, row_id = public_id.split('-')
     type_de_champ = find_type_de_champ_by_stable_id(stable_id, scope)
-    champ_with_attributes_for_update(type_de_champ, row_id, updated_by:).last.merge(attributes)
+    champ = champ_upsert_by!(type_de_champ, row_id)
+    attributes.merge(id: champ.id, updated_by:)
   end
 
-  def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
+  def champ_upsert_by!(type_de_champ, row_id)
     check_valid_row_id_on_write?(type_de_champ, row_id)
-    attributes = type_de_champ.params_for_champ
+    champ_attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
-      .create_with(**attributes)
+      .create_with(**champ_attributes)
       .find_or_create_by!(stable_id: type_de_champ.stable_id, row_id:)
 
-    attributes[:id] = champ.id
-    attributes[:updated_by] = updated_by
-
     # Needed when a revision change the champ type in this case, we reset the champ data
-    if champ.type != attributes[:type]
-      attributes[:value] = nil
-      attributes[:value_json] = nil
-      attributes[:external_id] = nil
-      attributes[:data] = nil
-      champ = champ.becomes!(attributes[:type].constantize)
-      champ.save!
+    if champ.type != champ_attributes[:type]
+      champ_attributes[:value] = nil
+      champ_attributes[:value_json] = nil
+      champ_attributes[:external_id] = nil
+      champ_attributes[:data] = nil
+      champ = champ.becomes!(champ_attributes[:type].constantize)
     end
+
+    champ.assign_attributes(champ_attributes)
+    champ.save!
 
     reset_champ_cache(champ)
 
-    [champ, attributes]
+    champ
   end
 
   def check_valid_row_id_on_write?(type_de_champ, row_id)
