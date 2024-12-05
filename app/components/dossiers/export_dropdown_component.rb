@@ -6,11 +6,12 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
   attr_reader :wrapper
   attr_reader :export_templates
 
-  def initialize(procedure:, export_templates: nil, statut: nil, count: nil, class_btn: nil, export_url: nil, show_export_template_tab: true, wrapper: :div)
+  def initialize(procedure:, export_templates: nil, statut: nil, count: nil, archived_count: 0, class_btn: nil, export_url: nil, show_export_template_tab: true, wrapper: :div)
     @procedure = procedure
     @export_templates = export_templates
     @statut = statut
     @count = count
+    @archived_count = archived_count
     @class_btn = class_btn
     @export_url = export_url
     @show_export_template_tab = show_export_template_tab
@@ -27,6 +28,18 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
 
   def allowed_format?(item)
     item.fetch(:format) != :json || @procedure.active_revision.carte?
+  end
+
+  def can_include_archived?
+    @statut == 'tous'
+  end
+
+  def include_archived_title
+    if @archived_count > 1
+      "<span>Inclure les <strong>#{@archived_count} dossiers « archivés »</strong></span>"
+    else
+      "<span>Inclure le <strong>dossier « archivé »</strong></span>"
+    end
   end
 
   def download_export_path(export_format: nil, export_template_id: nil, no_progress_notification: nil)
