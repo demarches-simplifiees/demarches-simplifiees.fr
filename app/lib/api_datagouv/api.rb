@@ -43,6 +43,27 @@ class APIDatagouv::API
       end
     end
 
+    def upload_csv(file_name, csv, dataset, resource)
+      Tempfile.create([file_name, '.csv']) do |file|
+        file << csv.to_csv
+        file.rewind
+
+        response = Typhoeus.post(
+          datagouv_upload_url(dataset, resource),
+          body: {
+            file: file
+          },
+          headers: { "X-Api-Key" => datagouv_secret[:api_key] }
+        )
+
+        if response.success?
+          response.body
+        else
+          raise RequestFailed.new(datagouv_upload_url(dataset, resource), response)
+        end
+      end
+    end
+
     private
 
     def datagouv_resource_url(dataset, resource)
@@ -56,15 +77,15 @@ class APIDatagouv::API
     def datagouv_upload_url(dataset, resource = nil)
       if resource.present?
         [
-          datagouv_secret[:api_url],
-          "/datasets/", datagouv_secret[dataset],
-          "/resources/", datagouv_secret[resource],
+          API_URL,
+          "/datasets/", dataset,
+          "/resources/", resource,
           "/upload/"
         ].join
       else
         [
-          datagouv_secret[:api_url],
-          "/datasets/", datagouv_secret[dataset],
+          API_URL,
+          "/datasets/", dataset,
           "/upload/"
         ].join
       end
