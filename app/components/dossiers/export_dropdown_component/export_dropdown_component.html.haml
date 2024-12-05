@@ -27,7 +27,7 @@
               %legend.fr-fieldset__legend--regular.fr-fieldset__legend#radio-hint-legend Sélectionner le format de l'export
               .fr-fieldset__element
                 .fr-radio-group
-                  = f.radio_button :export_format, 'xlsx'
+                  = f.radio_button :export_format, 'xlsx', checked: true
                   = f.label :export_format_xlsx, 'Fichier xlsx'
               .fr-fieldset__element
                 .fr-radio-group
