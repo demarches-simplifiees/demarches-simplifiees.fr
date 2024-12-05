@@ -138,10 +138,13 @@ module Administrateurs
         file = referentiel_file.read
         base_encoding = CharlockHolmes::EncodingDetector.detect(file)
 
+        type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+
         ActiveRecord::Base.transaction do
           # if referentiel already exist delete it
-          type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
-          type_de_champ.referentiel&.destroy
+          referentiel = type_de_champ.referentiel
+          type_de_champ.update!(referentiel_id: nil)
+          referentiel&.destroy if referentiel&.types_de_champ.blank?
 
           # Create referentiel
           referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename)
@@ -156,18 +159,31 @@ module Administrateurs
             referentiel.items.create!(option: row.slice(keys.first), data: row.except(keys.first))
           end
         end
+        @coordinate = draft.coordinate_for(type_de_champ)
+
+        respond_to do |format|
+          format.turbo_stream do
+            @morphed = [champ_component_from(@coordinate, focused: true)]
+          end
+          format.html { redirect_back(fallback_location: root_url) }
+        end
       end
     end
 
     def delete_referentiel
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
       @coordinate = draft.coordinate_for(type_de_champ)
+
       referentiel = type_de_champ.referentiel
-
       type_de_champ.update!(referentiel_id: nil)
-      referentiel.destroy if referentiel.types_de_champ.blank?
+      referentiel&.destroy if referentiel&.types_de_champ.blank?
 
-      @morphed = [champ_component_from(@coordinate, focused: true)]
+      respond_to do |format|
+        format.turbo_stream do
+          @morphed = [champ_component_from(@coordinate, focused: true)]
+        end
+        format.html { redirect_back(fallback_location: root_url) }
+      end
     end
 
     private
