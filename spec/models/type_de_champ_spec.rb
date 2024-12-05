@@ -149,8 +149,67 @@ describe TypeDeChamp do
     end
   end
 
+  describe "invalid_character_rules?" do
+    let(:tdc) { create(:type_de_champ_formatted, formatted_mode:, letters_accepted:, numbers_accepted:, special_characters_accepted:) }
+    let(:formatted_mode) { "simple" }
+    let(:letters_accepted) { "1" }
+    let(:numbers_accepted) { "0" }
+    let(:special_characters_accepted) { "0" }
+    subject { tdc.invalid_characters_rules? }
+
+    context "valid characters rules" do
+      it "should have no error message" do
+        expect(subject).to be_falsey
+        expect(tdc.errors.messages[:characters_accepted].size).to eq(0)
+
+        tdc.invalid_characters_rules?
+      end
+    end
+
+    context "no characters accepted" do
+      let(:letters_accepted) { "0" }
+      let(:numbers_accepted) { "0" }
+      let(:special_characters_accepted) { "0" }
+
+      it "should have one error message" do
+        expect(subject).to be_truthy
+        expect(tdc.errors.messages[:characters_accepted].size).to eq(1)
+
+        tdc.invalid_characters_rules?
+      end
+    end
+  end
+
+  describe 'invalid_character_length?' do
+    let(:formatted_mode) { "simple" }
+    let(:min_character_length) { "3" }
+    let(:max_character_length) { "3" }
+    let(:tdc) { create(:type_de_champ_formatted, formatted_mode:, min_character_length:, max_character_length:) }
+    subject { tdc.invalid_character_length? }
+
+    context 'valid character length' do
+      it "should have no error message" do
+        expect(subject).to be_falsey
+        expect(tdc.errors.messages[:character_length].size).to eq(0)
+
+        tdc.invalid_character_length?
+      end
+    end
+
+    context 'invalid character length' do
+      let(:min_character_length) { "10" }
+      let(:max_character_length) { "3" }
+      it "should have one error message" do
+        expect(subject).to be_truthy
+        expect(tdc.errors.messages[:character_length].size).to eq(1)
+
+        tdc.invalid_character_length?
+      end
+    end
+  end
+
   describe "validate_regexp" do
-    let(:tdc) { create(:type_de_champ_expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text:) }
+    let(:tdc) { create(:type_de_champ_formatted, expression_reguliere:, expression_reguliere_exemple_text:) }
     subject { tdc.invalid_regexp? }
 
     context "expression_reguliere and bad example" do
@@ -383,16 +442,29 @@ describe TypeDeChamp do
       end
     end
 
-    context "Expression reguliere" do
-      let(:type_de_champ) { create(:type_de_champ_expression_reguliere, procedure:) }
+    context "Champ formaté simple" do
+      let(:type_de_champ) { create(:type_de_champ_formatted, procedure:) }
 
       before do
-        type_de_champ.update!(options: { 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789', 'key' => 'value' })
+        type_de_champ.update!(options: { 'formatted_mode' => 'simple', 'letters_accepted' => "1", 'numbers_accepted' => '1', "special_characters_accepted" => "0", 'min_character_length' => "4", 'max_character_length' => "5", "key" => "value" })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the formatted mode, letters_accepted, numbers_accepted, special_characters_accepted' do
+        is_expected.to eq({ 'formatted_mode' => 'simple', 'letters_accepted' => "1", 'numbers_accepted' => '1', "special_characters_accepted" => "0", 'min_character_length' => "4", 'max_character_length' => "5" })
+      end
+    end
+
+    context "Champ formaté avancé" do
+      let(:type_de_champ) { create(:type_de_champ_formatted, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'formatted_mode' => 'advanced', 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789', 'key' => 'value' })
         procedure.publish_revision!
       end
 
       it 'keeping only the expression_reguliere, expression_reguliere_error_message and expression_reguliere_exemple_text' do
-        is_expected.to eq({ 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789' })
+        is_expected.to eq({ 'formatted_mode' => 'advanced', 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789' })
       end
     end
   end
