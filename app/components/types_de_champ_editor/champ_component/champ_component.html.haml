@@ -114,11 +114,11 @@
                     à partir de
                     = type_de_champ.referentiel.name
 
-                  = button_to delete_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w', method: :post, formaction: delete_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), id: dom_id(type_de_champ, :delete_referentiel), formnovalidate: true, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce référentiel ?' } } do
+                  = link_to delete_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w', id: dom_id(type_de_champ, :delete_referentiel), data: { turbo: true, turbo_method: :patch } do
                     %span Supprimer ce référentiel
 
                 - else
-                  = form_tag import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), data: { turbo: true }, method: :post, multipart: true, class: "column", id: dom_id(type_de_champ, :import_referentiel), formaction: import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id) do
+                  = form_tag import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :patch, data: { turbo: true }, multipart: true, class: "column", id: dom_id(type_de_champ, :import_referentiel) do
                     %label.fr-label.font-weight-bold
                       Fichier de référentiel à importer (CSV)
                     .fr-hint-text.fr-mb-2w
@@ -134,7 +134,7 @@
 
                     .flex.column
                       = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w', id: dom_id(type_de_champ, :import_referentiel)
-                      = submit_tag 'Importer le fichier', class: 'fr-btn fr-btn--tertiary fr-mb-2w', data: { turbo: true }, formaction: import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :post
+                      = submit_tag 'Importer le fichier', class: 'fr-btn fr-btn--tertiary fr-mb-2w', data: { turbo: true }, formaction: import_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), method: :patch
 
               .cell
                 = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
