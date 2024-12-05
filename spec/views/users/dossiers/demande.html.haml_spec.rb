@@ -98,7 +98,7 @@ describe 'users/dossiers/demande', type: :view do
 
       type_de_champ.update!(drop_down_mode: 'referentiel')
       dossier.champs.first.update!(value: referentiel.items.first.id)
-
+      dossier.reload
       render
     end
 
