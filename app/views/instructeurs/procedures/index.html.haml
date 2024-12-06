@@ -12,17 +12,17 @@
         = tab_item(t('pluralize.closed', count: @procedures_closes_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closes_count))
 
 .fr-container
-  - if @statut.in? ["publiees", "en-cours"] # FIX ME: @statut === "en-cours" à partir du 1/11/2023
+  - if @statut == "en-cours"
     = render Dsfr::CalloutComponent.new(title: nil) do |c|
       - c.with_body do
         = t(".procedure_en_cours_description")
     - collection = @procedures_en_cours
-  - if @statut === "brouillons"
+  - if @statut == "brouillons"
     = render Dsfr::CalloutComponent.new(title: nil) do |c|
       - c.with_body do
         = t(".procedure_en_test_description")
     - collection = @procedures_draft
-  - if @statut === "archivees"
+  - if @statut == "archivees"
     = render Dsfr::CalloutComponent.new(title: nil) do |c|
       - c.with_body do
         = t(".procedure_close_description")
@@ -30,8 +30,11 @@
 
 
   - if collection.present?
-    %h2.fr-h6
-      = page_entries_info collection
+    .fr-container.flex.justify-between.fr-mb-6w
+      %h2.fr-h6.fr-m-0
+        = page_entries_info collection
+      - if (@statut == "en-cours" && collection.size > 1)
+        = link_to "Personnaliser l'ordre", order_positions_instructeur_procedures_path(collection_ids: collection.map(&:id)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-btn--icon-left fr-icon-settings-5-line'
     %ul.procedure-list.fr-pl-0
       = render partial: 'instructeurs/procedures/list',
         collection: collection,

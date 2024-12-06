@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProceduresController < InstructeurController
-    before_action :ensure_ownership!, except: [:index]
+    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
 
     ITEMS_PER_PAGE = 100
@@ -25,7 +25,8 @@ module Instructeurs
 
       @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
       publiees_or_closes_with_dossiers_en_cours = all_procedures_for_listing.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
-      @procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      current_instructeur.ensure_instructeur_procedures_for(publiees_or_closes_with_dossiers_en_cours)
+      @procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur).page(params[:page]).per(ITEMS_PER_PAGE)
       closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
       @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
       @procedures_draft = all_procedures_for_listing.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
@@ -65,6 +66,16 @@ module Instructeurs
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
+    end
+
+    def order_positions
+      @procedures = Procedure.where(id: params[:collection_ids]).order_by_position_for(current_instructeur)
+      render layout: "empty_layout"
+    end
+
+    def update_order_positions
+      current_instructeur.update_instructeur_procedures_positions(ordered_procedure_ids_params)
+      redirect_to instructeur_procedures_path, notice: "L'ordre des démarches a été mis à jour."
     end
 
     def show
@@ -376,6 +387,10 @@ module Instructeurs
 
     def cookies_export_key
       "exports_#{@procedure.id}_seen_at"
+    end
+
+    def ordered_procedure_ids_params
+      params.require(:ordered_procedure_ids)
     end
   end
 end

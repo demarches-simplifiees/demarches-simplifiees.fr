@@ -1,0 +1,31 @@
+!!! 5
+%html{ lang: html_lang, data: { fr_scheme: 'system' }, class: yield(:root_class) }
+  %head
+    %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
+    %meta{ "http-equiv": "X-UA-Compatible", content: "IE=edge" }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1" }
+    %meta{ name: "application-name", content: Current.application_name }
+    %meta{ name: "apple-mobile-web-app-title", content: Current.application_name }
+    = csrf_meta_tags
+
+    %title
+      = content_for?(:title) ? "#{yield(:title)} · #{Current.application_name}" : Current.application_name
+
+    = render partial: "layouts/favicons"
+
+    = vite_client_tag
+    = vite_react_refresh_tag
+    = vite_javascript_tag 'application'
+
+    = preload_link_tag(asset_url("Marianne-Regular.woff2"))
+    = preload_link_tag(asset_url("Spectral-Regular.ttf"))
+
+    = vite_stylesheet_tag 'main', media: 'all'
+    = stylesheet_link_tag 'application', media: 'all'
+
+    = render partial: 'layouts/setup_theme'
+
+  %body{ class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo' } }
+    .page-wrapper
+      %main
+        = content_for?(:content) ? yield(:content) : yield
