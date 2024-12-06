@@ -72,6 +72,27 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
               expect(dossier.individual.gender).to eq(genre_value)
             end
           end
+
+          context 'when prefill given values contains more than one rows for repetitions' do
+            let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+            let(:types_de_champ_public) do
+              [
+                type: :repetition,
+                children: [
+                  { type: :text, libelle: 'child of repet text' }
+                ]
+              ]
+            end
+            let(:prefilled_champs) { TypesDeChamp::PrefillTypeDeChamp.wrap(procedure.published_revision.types_de_champ, procedure.active_revision) }
+            let(:prefilled_champs_as_params) { prefilled_champs.map { |type_de_champ| ["champ_#{type_de_champ.to_typed_id_for_query}", type_de_champ.example_value] }.to_h }
+            let(:params) do
+              prefilled_champs_as_params.merge(id: procedure.id)
+            end
+
+            it "updates the champs with the new values and mark them as prefilled" do
+              expect { create_request }.not_to raise_error(ActiveRecord::RecordNotFound)
+            end
+          end
         end
 
         context 'when the dossier can not be saved' do
