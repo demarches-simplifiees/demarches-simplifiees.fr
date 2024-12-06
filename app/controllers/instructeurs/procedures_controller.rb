@@ -74,6 +74,8 @@ module Instructeurs
     end
 
     def update_order_positions
+      current_instructeur.update_instructeur_procedures_positions(ordered_procedure_ids_params)
+      redirect_to instructeur_procedures_path, notice: "L'ordre des démarches a été mis à jour."
     end
 
     def show
@@ -380,6 +382,10 @@ module Instructeurs
 
     def cookies_export_key
       "exports_#{@procedure.id}_seen_at"
+    end
+
+    def ordered_procedure_ids_params
+      params.require(:ordered_procedure_ids)
     end
   end
 end

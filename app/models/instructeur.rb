@@ -118,6 +118,15 @@ class Instructeur < ApplicationRecord
     InstructeursProcedure.insert_all(missing_instructeur_procedures) if missing_instructeur_procedures.size.positive?
   end
 
+  def update_instructeur_procedures_positions(ordered_procedure_ids)
+    procedure_id_position = ordered_procedure_ids.reverse.each.with_index.to_h
+    InstructeursProcedure.transaction do
+      procedure_id_position.each do |procedure_id, position|
+        InstructeursProcedure.where(procedure_id:, instructeur_id: id).update(position:)
+      end
+    end
+  end
+
   def procedure_presentation_and_errors_for_procedure_id(procedure_id)
     assign_to
       .joins(:groupe_instructeur)
