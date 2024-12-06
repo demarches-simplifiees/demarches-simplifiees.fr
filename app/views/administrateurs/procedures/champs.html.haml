@@ -16,8 +16,19 @@
   = render NestedForms::FormOwnerComponent.new
   .fr-grid-row
     = render TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: false)
-    .fr-col
+    .fr-col{ data: { controller: "lazy-modal" } }
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: false)
+
+      %dialog#api-champ-columns-modal.fr-modal{ "aria-labelledby" => 'fr-modal-api-champ-columns-h1', role: "dialog" }
+        .fr-container.fr-container--fluid.fr-container-md
+          .fr-grid-row.fr-grid-row--center
+            .fr-col-12.fr-col-md-8
+              .fr-modal__body
+                .fr-modal__header
+                  %button.fr-btn--close.fr-btn{ aria: { controls: "api-champ-columns-modal" }, title: t('utils.modal_close_alt') }= t('utils.modal_close')
+                .fr-modal__content
+                  = turbo_frame_tag "api-champ-columns", data: { "lazy-modal-target": "frame" }
+
 
 .padded-fixed-footer
   .fixed-footer
