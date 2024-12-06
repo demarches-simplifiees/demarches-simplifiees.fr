@@ -256,7 +256,7 @@ class ApplicationController < ActionController::Base
       user_id: current_user&.id,
       user_roles: current_user_roles,
       client_ip: request.headers['X-Forwarded-For'],
-      request_id: request.headers['X-Request-ID']
+      request_id: Current.request_id
     })
 
     if browser.known?
