@@ -254,6 +254,12 @@ module Users
     def modifier
       @dossier = dossier_with_champs
       @dossier_for_editing = dossier.owner_editing_fork
+
+      dossier.validate(:champs_public_value)
+      dossier.check_mandatory_and_visible_champs
+
+      @dossier_for_editing.validate(:champs_public_value)
+      @dossier_for_editing.check_mandatory_and_visible_champs
     end
 
     def submit_en_construction
@@ -286,7 +292,7 @@ module Users
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_attributes_params, dossier.champs.filter(&:public?))
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_attributes_params, dossier.project_champs_public_all)
           render :update, layout: false
         end
       end

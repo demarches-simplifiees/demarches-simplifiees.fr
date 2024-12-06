@@ -52,10 +52,6 @@ class Champs::DropDownListChamp < Champ
     other? ? value : ""
   end
 
-  def in?(options)
-    options.include?(value)
-  end
-
   private
 
   def value_is_in_options
