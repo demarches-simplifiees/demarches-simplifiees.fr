@@ -1002,8 +1002,8 @@ describe Procedure do
       it 'changes the procedure state to published' do
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
-        expect(Procedure.find_by(path: "example-path")).to eq(procedure)
-        expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
+        expect(Procedure.find_with_path("example-path").first).to eq(procedure)
+        expect(Procedure.find_with_path("example-path").first.administrateurs).to eq(procedure.administrateurs)
       end
 
       it 'creates a new draft revision' do
@@ -1043,9 +1043,8 @@ describe Procedure do
 
     context 'when publishing over a previous canonical procedure' do
       before do
-        procedure.path = canonical_procedure.path
         Timecop.freeze(now) do
-          procedure.publish_or_reopen!(administrateur)
+          procedure.publish_or_reopen!(administrateur, canonical_procedure.path)
         end
         procedure.reload
         canonical_procedure.reload
@@ -1074,14 +1073,15 @@ describe Procedure do
     end
 
     context 'when publishing over a previous procedure with canonical procedure' do
-      let(:canonical_procedure) { create(:procedure, :closed) }
+      let(:canonical_path) { 'canonical-path' }
+      let(:canonical_procedure) { create(:procedure, :closed, path: canonical_path) }
       let(:parent_procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
 
       before do
-        parent_procedure.update!(path: canonical_procedure.path, canonical_procedure: canonical_procedure)
-        procedure.path = canonical_procedure.path
+        parent_procedure.update!(canonical_procedure: canonical_procedure)
+        parent_procedure.claim_path!(administrateur, canonical_path)
         Timecop.freeze(now) do
-          procedure.publish_or_reopen!(administrateur)
+          procedure.publish_or_reopen!(administrateur, canonical_path)
         end
         parent_procedure.reload
       end
@@ -1108,7 +1108,7 @@ describe Procedure do
       before do
         procedure.close!
         Timecop.freeze(now) do
-          procedure.publish_or_reopen!(administrateur)
+          procedure.publish_or_reopen!(administrateur, procedure.path)
         end
       end
 
@@ -1123,6 +1123,15 @@ describe Procedure do
         expect(procedure.draft_revision).not_to be_nil
         expect(procedure.revisions.count).to eq(2)
         expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      end
+    end
+
+    context 'when publishing a procedure with the same path as another procedure from another admin' do
+      let(:procedure) { create(:procedure, path: 'example-path', administrateurs: [administrateur]) }
+      let(:other_procedure) { create(:procedure, path: 'example-path', administrateurs: [create(:administrateur)]) }
+
+      it 'raises an error' do
+        expect { procedure.publish_or_reopen!(administrateur, other_procedure.path) }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
@@ -1341,7 +1350,7 @@ describe Procedure do
     end
 
     context 'when the path has been changed' do
-      before { procedure.path = 'custom_path' }
+      before { procedure.claim_path!(procedure.administrateurs.first, 'custom_path') }
 
       it { is_expected.to be_truthy }
     end
@@ -1362,12 +1371,13 @@ describe Procedure do
   end
 
   describe 'suggested_path' do
-    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
+    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)], path: path) }
+    let(:path) { nil }
 
     subject { procedure.suggested_path }
 
     context 'when the path has been customized' do
-      before { procedure.path = 'custom_path' }
+      let(:path) { 'custom_path' }
 
       it { is_expected.to eq 'custom_path' }
     end

@@ -14,7 +14,6 @@ FactoryBot.define do
     estimated_duration_visible { true }
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
-    path { SecureRandom.uuid }
     declarative_with_state { nil }
     sva_svr { {} }
 
@@ -32,9 +31,12 @@ FactoryBot.define do
       types_de_champ_private { [] }
       updated_at { nil }
       dossier_submitted_message { nil }
+      path { nil }
     end
 
     after(:build) do |procedure, evaluator|
+      procedure[:path] = SecureRandom.uuid # temporary to avoid errors (to be removed)
+
       procedure.defaut_groupe_instructeur = procedure.groupe_instructeurs.first
       initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
@@ -70,6 +72,7 @@ FactoryBot.define do
     end
 
     after(:create) do |procedure, evaluator|
+      procedure.claim_path!(evaluator.administrateur, evaluator.path)
       evaluator.instructeurs.each { |i| i.assign_to_procedure(procedure) }
 
       if evaluator.updated_at

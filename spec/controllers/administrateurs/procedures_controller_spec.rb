@@ -1068,6 +1068,110 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #check_path' do
+    render_views
+
+    let(:procedure) { create(:procedure, :published, administrateur: admin) }
+
+    subject(:perform_request) { get :check_path, params: { procedure_id: procedure.id, path: path }, format: :turbo_stream }
+
+    context 'when path is not used' do
+      let(:path) { SecureRandom.uuid }
+
+      it do
+        perform_request
+        is_expected.to have_http_status(:success)
+        expect(response.body).to include('<turbo-stream action="update" target="check_path"><template></template></turbo-stream>')
+      end
+    end
+
+    context 'when path is used' do
+      context "by same admin" do
+        let(:procedure_path) { build(:procedure_path, path: "plop") }
+        let!(:procedure2) { create(:procedure, :published, administrateur: admin, procedure_paths: [procedure_path]) }
+
+        let(:path) { "plop" }
+
+        it do
+          perform_request
+          is_expected.to have_http_status(:success)
+          expect(response.body).to include('<turbo-stream action="update" target="check_path">')
+          expect(response.body).to include('Cette url est identique à celle d’une autre de vos démarches publiées.')
+        end
+      end
+
+      context "by another admin" do
+        let(:procedure_path) { build(:procedure_path, path: "plip") }
+        let!(:procedure3) { create(:procedure, :published, administrateur: create(:administrateur), procedure_paths: [procedure_path]) }
+
+        let(:path) { "plip" }
+
+        it do
+          perform_request
+          is_expected.to have_http_status(:success)
+          expect(response.body).to include('<turbo-stream action="update" target="check_path">')
+          expect(response.body).to include('Cette url est identique à celle d’une autre démarche, vous devez la modifier afin de pouvoir publier votre démarche.')
+        end
+      end
+    end
+  end
+
+  describe 'PATCH #update_path' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+    subject(:perform_request) { patch :update_path, params: { procedure_id: procedure.id, path: path } }
+
+    context 'when path is not used' do
+      let(:path) { "ma-demarche" }
+
+      it 'updates the procedure path' do
+        perform_request
+        expect(response).to redirect_to(admin_procedure_path(procedure))
+        expect(flash[:notice]).to eq("L'URL de la démarche a bien été mise à jour")
+        expect(procedure.reload.path).to eq(path)
+      end
+    end
+
+    context 'when path is used' do
+      context "by same admin" do
+        let(:procedure_path) { build(:procedure_path, path: "plop") }
+        let!(:procedure2) { create(:procedure, :published, administrateur: admin, procedure_paths: [procedure_path]) }
+        let(:path) { "plop" }
+
+        it 'updates the procedure path' do
+          perform_request
+          expect(response).to redirect_to(admin_procedure_path(procedure))
+          expect(flash[:notice]).to eq("L'URL de la démarche a bien été mise à jour")
+          expect(procedure.reload.path).to eq(path)
+        end
+      end
+
+      context "by another admin" do
+        let(:procedure_path) { build(:procedure_path, path: "plip") }
+        let!(:procedure3) { create(:procedure, :published, administrateur: create(:administrateur), procedure_paths: [procedure_path]) }
+        let(:path) { "plip" }
+
+        it 'fails to update the path' do
+          perform_request
+          expect(response).to redirect_to(admin_procedure_path_path(procedure))
+          expect(flash[:alert]).to eq("Cette URL de démarche n'est pas disponible")
+          expect(procedure.reload.path).not_to eq(path)
+        end
+      end
+    end
+
+    context 'when path is invalid' do
+      let(:path) { 'Invalid Path!' }
+
+      it 'fails to update the path' do
+        perform_request
+        expect(response).to render_template(:path)
+        expect(flash[:alert]).to be_present
+        expect(procedure.reload.path).not_to eq(path)
+      end
+    end
+  end
+
   describe 'GET #publication' do
     subject(:perform_request) { get :publication, params: { procedure_id: procedure.id } }
 
@@ -1188,7 +1292,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it {
           expect { perform_request }.not_to change { procedure.reload.updated_at }
-          expect(flash[:alert]).to have_content "« Lien public » n’est pas valide"
+          expect(flash[:alert]).to have_content "Le champ « Lien public » n'est pas valide"
         }
       end
 
