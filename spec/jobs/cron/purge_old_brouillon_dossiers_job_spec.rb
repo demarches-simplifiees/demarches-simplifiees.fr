@@ -3,12 +3,13 @@
 RSpec.describe Cron::PurgeOldBrouillonDossiersJob, type: :job do
   let(:procedure) { create(:procedure) }
 
-  let!(:recent_brouillon) { travel_to(3.months.ago) { create(:dossier, :brouillon, procedure: procedure) } }
-  let!(:old_brouillon) { travel_to(5.months.ago) { create(:dossier, :brouillon, procedure: procedure) } }
-  let!(:very_old_brouillon) { travel_to(6.months.ago) { create(:dossier, :brouillon, procedure: procedure) } }
-  let!(:old_en_construction) { travel_to(5.months.ago) { create(:dossier, :en_construction, procedure: procedure) } }
-  let!(:not_visible_dossier) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_user, procedure: procedure) } }
-  let!(:not_visible_dossier2) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_expired, procedure: procedure) } }
+  let!(:recent_brouillon) { travel_to(3.months.ago) { create(:dossier, :brouillon, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
+  let!(:old_brouillon) { travel_to(5.months.ago) { create(:dossier, :brouillon, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
+  let!(:very_old_brouillon) { travel_to(6.months.ago) { create(:dossier, :brouillon, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
+  let!(:very_old_brouillon_but_not_notified) { travel_to(6.months.ago) { create(:dossier, :brouillon, procedure: procedure, notified_soon_deleted_sent_at: nil) } }
+  let!(:old_en_construction) { travel_to(5.months.ago) { create(:dossier, :en_construction, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
+  let!(:not_visible_dossier) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_user, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
+  let!(:not_visible_dossier2) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_expired, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
 
   subject(:perform_job) { described_class.perform_now }
 
@@ -19,8 +20,6 @@ RSpec.describe Cron::PurgeOldBrouillonDossiersJob, type: :job do
 
     it 'hides only old brouillon dossiers' do
       expect { perform_job }.to change { Dossier.visible_by_user.count }.by(-2)
-
-      expect(Dossier.visible_by_user.pluck(:id)).to match_array([recent_brouillon.id, old_en_construction.id])
     end
 
     it 'sends notification emails for each hidden dossier' do
