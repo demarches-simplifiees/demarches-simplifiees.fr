@@ -374,7 +374,11 @@ ul.dropdown-items {
   padding: 2 * $default-spacer;
 
   &.large {
-    width: 340px;
+    width: 90vw;
+
+    @media (min-width: 62em) {
+      width: 40vw;
+    }
   }
 
   ul {

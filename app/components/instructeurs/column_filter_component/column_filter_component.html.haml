@@ -5,7 +5,7 @@
   = current_filter_tags
 
   .fr-select-group
-    = label_tag :column,  t('.column'), class: 'fr-label fr-m-0', id: 'instructeur-filter-combo-label', for: 'search-filter'
+    = label_tag :column,  t('.column'), class: 'fr-label fr-mb-1w', id: 'instructeur-filter-combo-label', for: 'search-filter'
     %react-fragment
       = render ReactComponent.new "ComboBox/SingleComboBox", **filter_react_props
 

@@ -99,9 +99,9 @@ describe ColumnsConcern do
       end
 
       context 'with rna' do
-        let(:types_de_champ_public) { [{ type: :rna, libelle: 'rna' }] }
+        let(:types_de_champ_public) { [{ type: :rna, libelle: 'RNA' }] }
         let(:types_de_champ_private) { [] }
-        it { expect(subject.map(&:label)).to include('rna – commune') }
+        it { expect(subject.map(&:label)).to include('RNA – Commune') }
       end
 
       context 'with linked drop down list' do
@@ -187,8 +187,8 @@ describe ColumnsConcern do
             procedure.find_column(label: "France connecté ?"),
             procedure.find_column(label: "Établissement SIRET"),
             procedure.find_column(label: "Établissement siège social"),
-            procedure.find_column(label: "Établissement NAF"),
             procedure.find_column(label: "Libellé NAF"),
+            procedure.find_column(label: "Code NAF"),
             procedure.find_column(label: "Établissement Adresse"),
             procedure.find_column(label: "Établissement numero voie"),
             procedure.find_column(label: "Établissement type voie"),

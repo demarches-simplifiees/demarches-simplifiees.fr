@@ -29,6 +29,7 @@ storage/
 yarn-debug.log*
 .yarn-integrity
 /.vscode
+/.zed
 /.idea
 /public/assets
 /spec/support/spec_config.local.rb

@@ -21,6 +21,19 @@ class Etablissement < ApplicationRecord
 
   after_commit -> { dossier&.index_search_terms_later }
 
+  alias_attribute :code_naf, :naf
+
+  # See https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/10591#discussion_r1819399688
+  # SIRET is already exposed as base column.
+  DISPLAYABLE_COLUMNS = {
+    "entreprise_raison_sociale" => { type: :text },
+    "entreprise_siren" => { type: :text },
+    "entreprise_nom_commercial" => { type: :text },
+    "entreprise_forme_juridique" => { type: :text },
+    "entreprise_date_creation" => { type: :date, filterable: false },
+    "libelle_naf" => { type: :text }
+  }.freeze
+
   def entreprise_raison_sociale
     read_attribute(:entreprise_raison_sociale).presence || raison_sociale_for_ei
   end
@@ -191,6 +204,21 @@ class Etablissement < ApplicationRecord
 
   def as_degraded_mode?
     adresse.nil? # TOOD: maybe dedicated column or more robust way
+  end
+
+  def update_champ_value_json!
+    return if champ.nil?
+
+    champ.update!(value_json: champ_value_json)
+  end
+
+  def champ_value_json
+    address_data = APIGeoService.parse_etablissement_address(self)
+
+    DISPLAYABLE_COLUMNS.keys.each_with_object(address_data) do |attr, hash|
+      value = public_send(attr)
+      hash[attr.to_sym] = value if value.present?
+    end
   end
 
   private

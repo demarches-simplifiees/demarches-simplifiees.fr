@@ -130,6 +130,43 @@ describe Etablissement do
     end
   end
 
+  describe '#update_champ_value_json!' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret }]) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:etablissement) { create(:etablissement) }
+    let(:champ) { dossier.champs[0] }
+    let(:address_data) do
+      {
+        "street_number" => "6",
+        "street_name" => "RAOUL NORDLING",
+        "postal_code" => "92270",
+        "city_name" => "BOIS COLOMBES"
+      }
+    end
+
+    before do
+      allow(APIGeoService).to receive(:parse_etablissement_address)
+        .with(etablissement)
+        .and_return(address_data.dup)
+
+      etablissement.champ = champ
+    end
+
+    subject(:value_json) {
+      etablissement.update_champ_value_json!
+      champ.reload.value_json
+    }
+
+    it 'updates the associated champ value_json with geocoded address' do
+      expect(value_json).to include(address_data.stringify_keys)
+    end
+
+    it 'includes jsonpathables columns entreprise attributes' do
+      expect(value_json["entreprise_siren"]).to eq(etablissement.siren)
+      expect(value_json["entreprise_raison_sociale"]).to eq(etablissement.entreprise_raison_sociale)
+    end
+  end
+
   private
 
   def csv_to_array_of_hash(lines)

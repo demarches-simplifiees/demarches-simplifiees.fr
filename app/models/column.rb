@@ -50,6 +50,7 @@ class Column
 
   def dossier_column? = false
   def champ_column? = false
+  def filterable? = filterable
 
   def label_for_value(value)
     if options_for_select.present?

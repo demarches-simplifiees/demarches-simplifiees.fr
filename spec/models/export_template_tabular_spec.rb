@@ -123,11 +123,20 @@ describe ExportTemplate do
     context 'when procedure has a TypeDeChamp::Siret' do
       let(:types_de_champ_public) do
         [
-          { type: :siret, libelle: 'siret', stable_id: 20 }
+          { type: :siret, libelle: 'SIRET', stable_id: 20 }
         ]
       end
       it 'is able to resolve stable_id' do
-        expect(export_template.columns_for_stable_id(20).size).to eq(5)
+        columns = export_template.columns_for_stable_id(20)
+
+        expect(columns.find { _1.libelle == "SIRET" }).to be_present
+
+        %w[
+          $.entreprise_nom_commercial
+          $.entreprise_raison_sociale
+        ].each do |jsonpath|
+          expect(columns.find { _1.column.respond_to?(:jsonpath) && _1.column.jsonpath == jsonpath }).to be_present
+        end
       end
     end
     context 'when procedure has a TypeDeChamp::Text' do

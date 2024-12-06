@@ -51,13 +51,10 @@ fr:
             question_answer: Avis oui/non
           etablissement:
             entreprise_etat_administratif: 'Entreprise état administratif'
-            entreprise_forme_juridique: Forme juridique
-            entreprise_nom_commercial: Nom commercial
-            entreprise_raison_sociale: Raison sociale
-            entreprise_siret_siege_social: SIRET siège social
             entreprise_date_creation: Entreprise date de création
             siret: Établissement SIRET
             libelle_naf: Libellé NAF
+            code_naf: Code NAF
             siege_social: "Établissement siège social"
             naf: "Établissement NAF"
             adresse: "Établissement Adresse"

@@ -572,7 +572,7 @@ describe DossierFilterService do
 
       context "when searching by postal_code (text)" do
         let(:value) { "60580" }
-        let(:filter) { ["rna – code postal (5 chiffres)", value] }
+        let(:filter) { ["rna – Code postal (5 chiffres)", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => value })
@@ -589,7 +589,7 @@ describe DossierFilterService do
 
       context "when searching by departement_code (enum)" do
         let(:value) { "99" }
-        let(:filter) { ["rna – département", value] }
+        let(:filter) { ["rna – Département", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => value })
@@ -606,7 +606,7 @@ describe DossierFilterService do
 
       context "when searching by region_name" do
         let(:value) { "60" }
-        let(:filter) { ["rna – region", value] }
+        let(:filter) { ["rna – Région", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "region_name" => value })

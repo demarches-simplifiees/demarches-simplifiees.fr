@@ -6,10 +6,10 @@ module AddressableColumnConcern
   included do
     def addressable_columns(procedure:, displayable: true, prefix: nil)
       [
-        ["code postal (5 chiffres)", '$.postal_code', :text, []],
-        ["commune", '$.city_name', :text, []],
-        ["département", '$.departement_code', :enum, APIGeoService.departement_options],
-        ["region", '$.region_name', :enum, APIGeoService.region_options]
+        ["Code postal (5 chiffres)", '$.postal_code', :text, []],
+        ["Commune", '$.city_name', :text, []],
+        ["Département", '$.departement_code', :enum, APIGeoService.departement_options],
+        ["Région", '$.region_name', :enum, APIGeoService.region_options]
       ].map do |(label, jsonpath, type, options_for_select)|
         Columns::JSONPathColumn.new(
           procedure_id: procedure.id,
