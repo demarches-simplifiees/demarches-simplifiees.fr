@@ -2,7 +2,8 @@
 
 class Champ < ApplicationRecord
   include ChampConditionalConcern
-  include ChampsValidateConcern
+  include ChampValidateConcern
+  include ChampRevisionConcern
 
   self.ignored_columns += [:type_de_champ_id, :parent_id]
 
@@ -69,7 +70,11 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    row_id.present?
+    row_id.present? && !is_type?(TypeDeChamp.type_champs.fetch(:repetition))
+  end
+
+  def row?
+    row_id.present? && is_type?(TypeDeChamp.type_champs.fetch(:repetition))
   end
 
   # used for the `required` html attribute

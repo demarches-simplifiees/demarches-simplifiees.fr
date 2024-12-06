@@ -501,15 +501,13 @@ describe Dossier, type: :model do
           let(:procedure) { create(:procedure, types_de_champ_public:) }
           let(:dossier) { create(:dossier, :brouillon, :with_populated_champs, procedure:) }
 
-          before { expect(champ).to receive(:visible?).and_return(visible) }
-
           context 'when piece_justificative' do
-            let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+            let(:types_de_champ_public) { [{ type: :piece_justificative, condition: ds_eq(constant(true), constant(visible)) }] }
             let(:champ) { dossier.project_champs_public.find(&:piece_justificative?) }
 
             context 'when not visible' do
               let(:visible) { false }
-              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+              it { expect { subject }.to change { Champ.exists?(champ.id) } }
             end
 
             context 'when visible' do
@@ -519,12 +517,12 @@ describe Dossier, type: :model do
           end
 
           context 'when titre identite' do
-            let(:types_de_champ_public) { [{ type: :titre_identite }] }
+            let(:types_de_champ_public) { [{ type: :titre_identite, condition: ds_eq(constant(true), constant(visible)) }] }
             let(:champ) { dossier.project_champs_public.find(&:titre_identite?) }
 
             context 'when not visible' do
               let(:visible) { false }
-              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+              it { expect { subject }.to change { Champ.exists?(champ.id) } }
             end
 
             context 'when visible' do
@@ -1986,13 +1984,12 @@ describe Dossier, type: :model do
     context 'with integer_number' do
       let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :integer_number, libelle: 'c1' }]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:integer_number_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:integer_number) } }
+      let(:integer_number_type_de_champ) { procedure.active_revision.types_de_champ_public.find(&:integer_number?) }
 
       it 'give me back my decimal number' do
         dossier
         expect {
           integer_number_type_de_champ.update(type_champ: :decimal_number)
-          procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
         }.to change { dossier.reload.champ_values_for_export(procedure.all_revisions_types_de_champ.not_repetition.to_a, format: :xlsx) }
           .from([["c1", 42]]).to([["c1", 42.0]])
       end
@@ -2032,7 +2029,7 @@ describe Dossier, type: :model do
           procedure.draft_revision.find_and_ensure_exclusive_use(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
           procedure.draft_revision.find_and_ensure_exclusive_use(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
           procedure.draft_revision.find_and_ensure_exclusive_use(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')
-          procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+          procedure.publish_revision!
           dossier.reload
           procedure.reload
         end

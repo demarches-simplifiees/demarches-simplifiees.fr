@@ -7,8 +7,8 @@ describe ProcedureExportService do
   let(:export_template) { create(:export_template, :enabled_pjs, groupe_instructeur: procedure.defaut_groupe_instructeur) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
 
-  def pj_champ(d) = d.project_champs_public.find { _1.type == 'Champs::PieceJustificativeChamp' }
-  def repetition(d) = d.champs.find_by(type: "Champs::RepetitionChamp")
+  def pj_champ(d) = d.project_champs_public.find(&:piece_justificative?)
+  def repetition(d) = d.project_champs_public.find(&:repetition?)
   def attachments(champ) = champ.piece_justificative_file.attachments
 
   before do
@@ -69,7 +69,9 @@ describe ProcedureExportService do
   end
 
   def attach_file_to_champ(champ, safe = true)
+    champ = champ_for_update(champ)
     attach_file(champ.piece_justificative_file, safe)
+    champ.save!
   end
 
   def attach_file(attachable, safe = true)
