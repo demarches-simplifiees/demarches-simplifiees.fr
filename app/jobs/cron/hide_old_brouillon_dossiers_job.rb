@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Cron::HideOldBrouillonDossiersJob < Cron::CronJob
-  self.schedule_expression = "every day at 5:30"
+  self.schedule_expression = "every day at 21:00"
 
   def perform
     Dossier
