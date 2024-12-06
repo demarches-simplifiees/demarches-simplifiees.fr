@@ -219,6 +219,7 @@ class Dossier < ApplicationRecord
   scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
   scope :hidden_by_expired,         -> { where.not(hidden_by_expired_at: nil) }
+  scope :hidden_by_not_modified_for_a_long_time, -> { hidden_by_expired.where(hidden_by_reason: :not_modified_for_a_long_time) }
   scope :visible_by_user,           -> { where(for_procedure_preview: false, hidden_by_user_at: nil, editing_fork_origin_id: nil, hidden_by_expired_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
@@ -852,7 +853,9 @@ class Dossier < ApplicationRecord
         update(hidden_by_user_at: nil)
       end
 
-      if !hidden_by_user? && !hidden_by_administration?
+      if is_user?(author) && hidden_by_reason&.to_sym == :not_modified_for_a_long_time
+        update(hidden_by_expired_at: nil)
+      elsif !hidden_by_user? && !hidden_by_administration?
         update(hidden_by_reason: nil)
       elsif hidden_by_user?
         update(hidden_by_reason: :user_request)
