@@ -5,13 +5,14 @@ class API::Client
 
   TIMEOUT = 10
 
-  def call(url:, params: nil, body: nil, json: nil, headers: nil, method: :get, authorization_token: nil, schema: nil, timeout: TIMEOUT)
+  def call(url:, params: nil, body: nil, json: nil, headers: nil, method: :get, authorization_token: nil, schema: nil, timeout: TIMEOUT, typhoeus_options: {})
     response = case method
     when :get
       Typhoeus.get(url,
         headers: headers_with_authorization(headers, false, authorization_token),
         params:,
-        timeout: TIMEOUT)
+        timeout: TIMEOUT,
+        **typhoeus_options)
     when :post
       Typhoeus.post(url,
         headers: headers_with_authorization(headers, json, authorization_token),
