@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Cron::PurgeOldBrouillonDossiersJob, type: :job do
+RSpec.describe Cron::HideOldBrouillonDossiersJob, type: :job do
   let(:procedure) { create(:procedure) }
 
   let!(:recent_brouillon) { travel_to(3.months.ago) { create(:dossier, :brouillon, procedure: procedure, notified_soon_deleted_sent_at: 3.weeks.ago) } }
