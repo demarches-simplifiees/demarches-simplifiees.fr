@@ -5,6 +5,7 @@ class Cron::PurgeOldBrouillonDossiersJob < Cron::CronJob
 
   def perform
     Dossier
+      .visible_by_user
       .state_brouillon
       .where(updated_at: ..(3.months + 2.weeks).ago)
       .find_each do |dossier|

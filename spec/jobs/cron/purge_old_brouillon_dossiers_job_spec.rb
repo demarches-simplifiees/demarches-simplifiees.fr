@@ -7,6 +7,8 @@ RSpec.describe Cron::PurgeOldBrouillonDossiersJob, type: :job do
   let!(:old_brouillon) { travel_to(5.months.ago) { create(:dossier, :brouillon, procedure: procedure) } }
   let!(:very_old_brouillon) { travel_to(6.months.ago) { create(:dossier, :brouillon, procedure: procedure) } }
   let!(:old_en_construction) { travel_to(5.months.ago) { create(:dossier, :en_construction, procedure: procedure) } }
+  let!(:not_visible_dossier) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_user, procedure: procedure) } }
+  let!(:not_visible_dossier2) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_expired, procedure: procedure) } }
 
   subject(:perform_job) { described_class.perform_now }
 
@@ -28,6 +30,8 @@ RSpec.describe Cron::PurgeOldBrouillonDossiersJob, type: :job do
       expect(DossierMailer).to have_received(:notify_old_brouillon_after_deletion).with(very_old_brouillon).once
       expect(DossierMailer).not_to have_received(:notify_old_brouillon_after_deletion).with(recent_brouillon)
       expect(DossierMailer).not_to have_received(:notify_old_brouillon_after_deletion).with(old_en_construction)
+      expect(DossierMailer).not_to have_received(:notify_old_brouillon_after_deletion).with(not_visible_dossier)
+      expect(DossierMailer).not_to have_received(:notify_old_brouillon_after_deletion).with(not_visible_dossier2)
     end
 
     it 'sets the correct hidden_by attributes' do
