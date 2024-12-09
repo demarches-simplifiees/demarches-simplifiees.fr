@@ -6,7 +6,7 @@ describe PasswordComplexityController, type: :controller do
       { user: { password: 'motDePasseTropFacile' } }
     end
 
-    subject { get :show, format: :turbo_stream, params: params }
+    subject { post :show, format: :turbo_stream, params: params }
 
     it 'computes a password score' do
       subject

@@ -20,7 +20,13 @@
 
       .fr-fieldset__element
         = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-          opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path, email_input_target: 'next'}, aria: {describedby: 'password_hint'}})
+          opts: { autofocus: 'true',
+            autocomplete: 'new-password',
+            data: { controller: 'turbo-input',
+              turbo_input_url_value: show_password_complexity_path,
+              turbo_input_method_value: 'post',
+              email_input_target: 'next' },
+            aria: {describedby: 'password_hint'}})
 
         #password_complexity
           = render PasswordComplexityComponent.new
