@@ -821,6 +821,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
     t.index ["user_id"], name: "index_instructeurs_on_user_id"
   end
 
+  create_table "instructeurs_procedures", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "instructeur_id", null: false
+    t.integer "position"
+    t.bigint "procedure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["instructeur_id", "procedure_id"], name: "index_instructeurs_procedures_on_instructeur_and_procedure", unique: true
+    t.index ["instructeur_id"], name: "index_instructeurs_procedures_on_instructeur_id"
+    t.index ["procedure_id"], name: "index_instructeurs_procedures_on_procedure_id"
+  end
+
   create_table "invites", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.integer "dossier_id"
@@ -1325,6 +1336,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
   add_foreign_key "groupe_instructeurs", "procedures"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "instructeurs", "users"
+  add_foreign_key "instructeurs_procedures", "instructeurs"
+  add_foreign_key "instructeurs_procedures", "procedures"
   add_foreign_key "labels", "procedures"
   add_foreign_key "merge_logs", "users"
   add_foreign_key "procedure_presentations", "assign_tos"
