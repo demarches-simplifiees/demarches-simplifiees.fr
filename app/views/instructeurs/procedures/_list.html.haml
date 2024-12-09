@@ -1,12 +1,12 @@
 
-%li.flex.align-start.fr-mb-3w{ style: "border-top: 1px solid var(--border-default-grey);" }
+%li.flex.align-start.fr-mb-3w
   .flex
 
     .procedure-details
-      .flex.clipboard-container
+      .clipboard-container
         .fr-mb-2w.fr-mt-2w
-          = procedure_badge(p)
-          %h3.font-weight-normal.fr-link.fr-ml-1w
+          = badge = procedure_badge(p)
+          %h3{ class: class_names('font-weight-normal fr-link' => true, 'fr-ml-1v' => badge.present?) }
             = link_to "#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p)
 
           = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(p.path))
@@ -67,11 +67,4 @@
               %span.fr-icon-delete-line
             .center.fr-text--xs
               = t('instructeurs.dossiers.labels.dossiers_supprimes')
-
-
-    - if p.close?
-      .ml-auto
-        %span.fr-badge Close
-    - elsif p.depubliee?
-      .ml-auto
-        %span.fr-badge Dépubliée
+r
