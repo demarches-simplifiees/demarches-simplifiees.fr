@@ -5,6 +5,7 @@ class Cron::NotifyOldBrouillonDossiersSoonDeletedJob < Cron::CronJob
 
   def perform
     Dossier
+      .visible_by_user
       .state_brouillon
       .where(updated_at: ..3.months.ago)
       .where("notified_soon_deleted_sent_at IS NULL OR notified_soon_deleted_sent_at < updated_at")

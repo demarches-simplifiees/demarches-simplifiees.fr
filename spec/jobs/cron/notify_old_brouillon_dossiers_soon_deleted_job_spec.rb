@@ -18,6 +18,8 @@ RSpec.describe Cron::NotifyOldBrouillonDossiersSoonDeletedJob, type: :job do
       end
       let!(:recent_draft) { travel_to(2.months.ago) { create(:dossier, :brouillon) } }
       let!(:old_non_draft) { travel_to(4.months.ago) { create(:dossier, :en_construction) } }
+      let!(:not_visible_dossier) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_user) } }
+      let!(:not_visible_dossier2) { travel_to(6.months.ago) { create(:dossier, :brouillon, :hidden_by_expired) } }
 
       it "sends notifications only for eligible draft dossiers" do
         expect(DossierMailer).to receive(:notify_old_brouillon_soon_deleted)
@@ -30,8 +32,10 @@ RSpec.describe Cron::NotifyOldBrouillonDossiersSoonDeletedJob, type: :job do
           .and_return(double(deliver_later: true))
           .once
 
-        expect(DossierMailer).not_to receive(:notify_old_brouillon_soon_deleted)
-          .with(old_draft_recently_notified)
+        [old_draft_recently_notified, not_visible_dossier, not_visible_dossier2].each do |dossier|
+          expect(DossierMailer).not_to receive(:notify_old_brouillon_soon_deleted)
+            .with(dossier)
+        end
 
         job.perform
 
