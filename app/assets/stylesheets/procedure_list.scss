@@ -7,6 +7,10 @@
     background-image: none;
   }
 
+  > li {
+    border-top: 1px solid var(--border-default-grey);
+  }
+
   .procedure-logo {
     @include ie-compatible-background-image();
 
