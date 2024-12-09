@@ -19,6 +19,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   end
   let(:procedure) { create(:procedure, :for_individual, :published, types_de_champ_public:) }
   let(:dossier) { procedure.dossiers.last }
+  let(:linked_dossier) { create(:dossier, :en_construction, procedure:) }
   let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
 
   let(:type_de_champ_text) { types_de_champ[0] }
@@ -51,7 +52,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
   let(:text_repetition_value) { "First repetition text" }
   let(:integer_repetition_value) { "42" }
-  let(:dossier_link_value) { '42' }
+  let(:dossier_link_value) { linked_dossier.id }
   let(:prenom_value) { 'Jean' }
   let(:nom_value) { 'Dupont' }
   let(:genre_value) { 'M.' }

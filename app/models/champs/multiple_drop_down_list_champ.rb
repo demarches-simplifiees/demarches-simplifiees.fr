@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Champs::MultipleDropDownListChamp < Champ
-  validate :values_are_in_options, if: -> { value.present? && validate_champ_value_or_prefill? }
+  validate :values_are_in_options, if: -> { value.present? && validate_champ_value? }
 
   THRESHOLD_NB_OPTIONS_AS_CHECKBOX = 5
 

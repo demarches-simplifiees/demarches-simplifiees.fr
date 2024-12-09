@@ -19,17 +19,20 @@ module ChampValidateConcern
         public? && can_validate? && visible?
       when :champs_private_value
         private? && can_validate? && visible?
+      when :prefill
+        can_validate? && visible?
       else
-        false
+        # FIXME: this is a temporary fix to avoid breaking specs
+        if is_a?(Champs::PieceJustificativeChamp) || is_a?(Champs::TitreIdentiteChamp)
+          validation_context != :create && can_validate?
+        else
+          false
+        end
       end
     end
 
     def can_validate?
       in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
-    end
-
-    def validate_champ_value_or_prefill?
-      validate_champ_value? || validation_context == :prefill
     end
   end
 end

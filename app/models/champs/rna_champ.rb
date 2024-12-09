@@ -5,7 +5,7 @@ class Champs::RNAChamp < Champ
 
   validates :value, allow_blank: true, format: {
     with: /\AW[0-9A-Z]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
-  }, if: :validate_champ_value_or_prefill?
+  }, if: :validate_champ_value?
 
   delegate :id, to: :procedure, prefix: true
 
