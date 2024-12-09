@@ -1,10 +1,17 @@
 - if @champ.render_as_radios?
   .fr-fieldset__content
-    - @champ.drop_down_options.each_with_index do |option, index|
-      .fr-radio-group
-        = @form.radio_button :value, option, id: dom_id(@champ, "radio_option_#{index}")
-        %label.fr-label{ for: dom_id(@champ, "radio_option_#{index}") }
-          = option
+    - if @champ.referentiel?
+      - @champ.referentiel_drop_down_options.each do |option|
+        .fr-radio-group
+          = @form.radio_button :value, option['id'], id: dom_id(@champ, "radio_option_#{option['id']}")
+          %label.fr-label{ for: dom_id(@champ, "radio_option_#{option['id']}") }
+            = option['value']
+    - else
+      - @champ.drop_down_options.each_with_index do |option, index|
+        .fr-radio-group
+          = @form.radio_button :value, option, id: dom_id(@champ, "radio_option_#{index}")
+          %label.fr-label{ for: dom_id(@champ, "radio_option_#{index}") }
+            = option
 
     - if !@champ.mandatory?
       .fr-radio-group
@@ -17,12 +24,14 @@
         = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: dom_id(@champ, "radio_option_other")
         %label.fr-label{ for: dom_id(@champ, "radio_option_other") }
           = t('shared.champs.drop_down_list.other')
+
 - elsif @champ.render_as_combobox?
   %react-fragment
     = render ReactComponent.new "ComboBox/SingleComboBox", **react_props
 - else
+  - options = @champ.referentiel? ? @champ.referentiel_drop_down_options_with_other : @champ.drop_down_options_with_other
   = @form.select :value,
-    @champ.drop_down_options_with_other,
+    options,
     { selected: @champ.selected, include_blank: true },
     required: @champ.required?,
     id: @champ.input_id,
