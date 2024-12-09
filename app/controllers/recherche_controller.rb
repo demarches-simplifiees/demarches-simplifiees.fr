@@ -71,6 +71,23 @@ class RechercheController < ApplicationController
     else
       return
     end
+
+  rescue ActiveRecord::QueryCanceled => e
+    Sentry.capture_exception(e)
+
+    logger = Lograge.logger || Rails.logger
+
+    payload = {
+      message: 'search timeout',
+      user_id: current_user.id,
+      request_id: Current.request_id,
+      controller: self.class.name,
+      terms: @search_terms
+    }
+
+    logger.info(payload.to_json)
+
+    redirect_to recherche_index_path, alert: "La recherche n'a pas pu aboutir."
   end
 
   private
