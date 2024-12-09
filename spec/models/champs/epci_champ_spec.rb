@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 describe Champs::EpciChamp, type: :model do
+  let(:champ) { Champs::EpciChamp.new(code_departement: code_departement, dossier: build(:dossier)) }
+  let(:code_departement) { nil }
+
+  before do
+    allow(champ).to receive(:visible?).and_return(true)
+    allow(champ).to receive(:can_validate?).and_return(true)
+  end
+
   describe 'validations' do
     subject { champ.validate(:champs_public_value) }
 
     describe 'code_departement' do
-      let(:champ) { Champs::EpciChamp.new(code_departement: code_departement, dossier: build(:dossier)) }
-      before do
-        allow(champ).to receive(:visible?).and_return(true)
-        allow(champ).to receive(:can_validate?).and_return(true)
-      end
       context 'when nil' do
         let(:code_departement) { nil }
 
@@ -156,7 +159,6 @@ describe Champs::EpciChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) { described_class.new }
     let(:epci) { APIGeoService.epcis('01').first }
 
     it 'with departement and code' do

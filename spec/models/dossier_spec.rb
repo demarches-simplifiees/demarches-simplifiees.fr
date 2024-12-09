@@ -2133,21 +2133,21 @@ describe Dossier, type: :model do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
       dossier.accepter!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
     end
 
     it "clean up titres identite on refuser" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
       dossier.refuser!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
     end
 
     it "clean up titres identite on classer_sans_suite" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
       dossier.classer_sans_suite!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
     end
 
     context 'en_construction' do
@@ -2158,7 +2158,7 @@ describe Dossier, type: :model do
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
         expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
         dossier.accepter_automatiquement!
-        expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+        expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
       end
     end
   end

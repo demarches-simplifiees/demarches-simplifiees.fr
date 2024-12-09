@@ -5,10 +5,12 @@ require 'active_storage_validations/matchers'
 describe Champs::PieceJustificativeChamp do
   include ActiveStorageValidations::Matchers
 
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
+
   describe "validations" do
-    let(:champ) { Champs::PieceJustificativeChamp.new }
     subject { champ }
-    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_piece_justificative)) }
 
     context "by default" do
       it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE) }
@@ -19,20 +21,17 @@ describe Champs::PieceJustificativeChamp do
     context "when validation is disabled" do
       before { champ.type_de_champ.update(skip_pj_validation: true) }
 
-      it { is_expected.not_to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE) }
+      it { is_expected.not_to validate_size_of(:piece_justificative_file).on(:champs_public_value).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE) }
     end
 
     context "when content-type validation is disabled" do
       before { champ.type_de_champ.update(skip_content_type_pj_validation: true) }
 
-      it { is_expected.not_to validate_content_type_of(:piece_justificative_file).rejecting('application/x-ms-dos-executable') }
+      it { is_expected.not_to validate_content_type_of(:piece_justificative_file).on(:champs_public_value).rejecting('application/x-ms-dos-executable') }
     end
   end
 
   describe "#for_export" do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
-    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-    let(:champ) { dossier.champs.first }
     subject { champ.type_de_champ.champ_value_for_export(champ) }
 
     it { is_expected.to eq('toto.txt') }
@@ -44,10 +43,6 @@ describe Champs::PieceJustificativeChamp do
   end
 
   describe '#for_api' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
-    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-    let(:champ) { dossier.champs.first }
-
     before { champ.piece_justificative_file.first.blob.update(virus_scan_result:) }
 
     subject { champ.type_de_champ.champ_value_for_api(champ, version: 1) }
