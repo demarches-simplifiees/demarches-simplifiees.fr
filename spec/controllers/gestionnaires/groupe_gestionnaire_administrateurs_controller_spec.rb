@@ -45,7 +45,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       before { destroy(new_administrateur) }
 
       it { expect(groupe_gestionnaire.reload.administrateurs.count).to eq(0) }
-      it { expect(flash.notice).to eq("L'administrateur « #{new_administrateur.email} » a été supprimé.") }
+      it { expect(flash.notice).to eq("L’administrateur « #{new_administrateur.email} » a été supprimé.") }
     end
 
     context 'when administrateur has some procedure' do
@@ -57,7 +57,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       end
 
       it { expect(groupe_gestionnaire.reload.administrateurs.count).to eq(2) }
-      it { expect(flash.alert).to eq("L'administrateur « #{administrateur_with_procedure.email} » ne peut pas être supprimé du groupe gestionnaire.") }
+      it { expect(flash.alert).to eq("L’administrateur « #{administrateur_with_procedure.email} » ne peut pas être supprimé du groupe gestionnaire.") }
     end
 
     context 'when administrateur is not in the groupe_gestionnaire' do
@@ -65,7 +65,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       before { destroy(other_administrateur) }
 
       it { expect(groupe_gestionnaire.reload.administrateurs.count).to eq(1) }
-      it { expect(flash.alert).to eq("L'administrateur « #{other_administrateur.email} » n’est pas dans le groupe gestionnaire.") }
+      it { expect(flash.alert).to eq("L’administrateur « #{other_administrateur.email} » n’est pas dans le groupe gestionnaire.") }
     end
   end
 
@@ -90,7 +90,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       before { remove(new_administrateur) }
 
       it { expect(groupe_gestionnaire.reload.administrateurs.count).to eq(0) }
-      it { expect(flash.notice).to eq("L'administrateur « #{new_administrateur.email} » a été retiré du groupe gestionnaire.") }
+      it { expect(flash.notice).to eq("L’administrateur « #{new_administrateur.email} » a été retiré du groupe gestionnaire.") }
     end
 
     context 'when administrateur is not in the groupe_gestionnaire' do
@@ -98,7 +98,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       before { remove(other_administrateur) }
 
       it { expect(groupe_gestionnaire.reload.administrateurs.count).to eq(1) }
-      it { expect(flash.alert).to eq("L'administrateur « #{other_administrateur.email} » n’est pas dans le groupe gestionnaire.") }
+      it { expect(flash.alert).to eq("L’administrateur « #{other_administrateur.email} » n’est pas dans le groupe gestionnaire.") }
     end
   end
 end

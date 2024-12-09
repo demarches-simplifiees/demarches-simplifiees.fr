@@ -155,10 +155,9 @@ describe FranceConnect::ParticulierController, type: :controller do
         user = User.last
 
         expect(user.email).to eq(email.downcase)
-        expect(UserMailer).to have_received(:custom_confirmation_instructions).with(user, user.confirmation_token)
-        expect(user.email_verified_at).to be_nil
+        expect(user.email_verified_at).not_to be_nil
         expect(fci.reload.merge_token).to be_nil
-        expect(response).to render_template(:confirmation_sent)
+        expect(response).to redirect_to(root_path(user))
       end
     end
 
