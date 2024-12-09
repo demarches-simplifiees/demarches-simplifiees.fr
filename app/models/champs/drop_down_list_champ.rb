@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Champs::DropDownListChamp < Champ
-  store_accessor :value_json, :other
+  store_accessor :value_json, :other, :referentiel
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5
   THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE = 20
   OTHER = '__other__'
@@ -37,11 +37,18 @@ class Champs::DropDownListChamp < Champ
   def value=(value)
     if value == OTHER
       self.other = true
+      self.referentiel = nil if self.referentiel?
       write_attribute(:value, nil)
     else
       self.other = false
+      self.referentiel = set_referentiel_from(value) if self.referentiel? && value
       write_attribute(:value, value)
     end
+  end
+
+  def set_referentiel_from(value)
+    referentiel_item = ReferentielItem.find(value)
+    { data: referentiel_item.data }
   end
 
   def value_other=(value)
@@ -56,6 +63,25 @@ class Champs::DropDownListChamp < Champ
 
   def in?(options)
     options.include?(value)
+  end
+
+  def referentiel_item_first_column
+    return nil if self.value_json&.dig("referentiel").nil?
+    # a checker
+    self.value_json["referentiel"].fetch("data").first
+  end
+
+  def referentiel_item_data
+    return nil if self.value_json&.dig("referentiel").nil?
+    self.value_json["referentiel"].fetch("data")
+  end
+
+  def referentiel_item_first_column_value
+    referentiel_item_first_column&.last
+  end
+
+  def referentiel_headers
+    ReferentielItem.find(value).referentiel.headers
   end
 
   private
