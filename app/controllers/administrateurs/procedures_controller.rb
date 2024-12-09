@@ -94,6 +94,9 @@ module Administrateurs
     end
 
     def zones
+      @zones = Zone.available_at(@procedure.published_or_created_at, current_administrateur.default_zones)
+        .partition { |zone| zone.label == Zone::OTHER_ZONE }
+        .then { |other_zone, zones| zones + other_zone }
     end
 
     def create
