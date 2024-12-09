@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ChampsValidateConcern
+module ChampValidateConcern
   extend ActiveSupport::Concern
 
   included do
@@ -16,20 +16,20 @@ module ChampsValidateConcern
     def validate_champ_value?
       case validation_context
       when :champs_public_value
-        public? && in_dossier_revision? && visible?
+        public? && can_validate? && visible?
       when :champs_private_value
-        private? && in_dossier_revision? && visible?
+        private? && can_validate? && visible?
       else
         false
       end
     end
 
-    def validate_champ_value_or_prefill?
-      validate_champ_value? || validation_context == :prefill
+    def can_validate?
+      in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
     end
 
-    def in_dossier_revision?
-      dossier.revision.in_revision?(stable_id) && is_type?(type_de_champ.type_champ)
+    def validate_champ_value_or_prefill?
+      validate_champ_value? || validation_context == :prefill
     end
   end
 end

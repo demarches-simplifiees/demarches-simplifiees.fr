@@ -3,14 +3,14 @@
 RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{}, { type: :integer_number }, { type: :regions }] }]) }
   let(:dossier) { create(:dossier, procedure: procedure) }
+  let(:champ) { dossier.project_champs_public.first }
   let(:type_de_champ) { champ.type_de_champ }
-  let(:champ) { dossier.champs.first }
   let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ, procedure.active_revision).send(:prefillable_subchamps) }
   let(:text_repetition) { prefillable_subchamps.first }
   let(:integer_repetition) { prefillable_subchamps.second }
   let(:region_repetition) { prefillable_subchamps.third }
-  let(:text_repetition_champs) { dossier.champs.where(stable_id: text_repetition.stable_id) }
-  let(:integer_repetition_champs) { dossier.champs.where(stable_id: integer_repetition.stable_id) }
+  let(:text_repetition_champs) { champ.rows.flat_map(&:first) }
+  let(:integer_repetition_champs) { champ.rows.flat_map(&:second) }
 
   describe 'ancestors' do
     subject { described_class.build(type_de_champ, procedure.active_revision) }

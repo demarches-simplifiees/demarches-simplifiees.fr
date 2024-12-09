@@ -308,7 +308,7 @@ module Instructeurs
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.champs.filter(&:private?))
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.project_champs_private_all)
         end
       end
     end
@@ -321,7 +321,7 @@ module Instructeurs
     def annotation
       @dossier = dossier_with_champs(pj_template: false)
       type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
-      annotation = @dossier.project_champ(type_de_champ, params[:row_id])
+      annotation = @dossier.project_champ(type_de_champ, row_id: params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do

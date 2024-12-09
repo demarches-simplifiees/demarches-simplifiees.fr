@@ -72,7 +72,7 @@ describe DossierSectionsConcern do
     context "when there are invisible sections" do
       it "index accordingly header sections" do
          expect(dossier.index_for_section_header(headers[0])).to eq(1)
-         expect(dossier.project_champ(headers[1], nil)).not_to be_visible
+         expect(dossier.project_champ(headers[1])).not_to be_visible
          expect(dossier.index_for_section_header(headers[2])).to eq(2)
        end
     end
@@ -81,7 +81,7 @@ describe DossierSectionsConcern do
       let(:number_value) { 5 }
       it "index accordingly header sections" do
         expect(dossier.index_for_section_header(headers[0])).to eq(1)
-        expect(dossier.project_champ(headers[1], nil)).to be_visible
+        expect(dossier.project_champ(headers[1])).to be_visible
         expect(dossier.index_for_section_header(headers[1])).to eq(2)
         expect(dossier.index_for_section_header(headers[2])).to eq(3)
       end

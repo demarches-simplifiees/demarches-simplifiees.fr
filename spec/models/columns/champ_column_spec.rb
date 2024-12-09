@@ -155,13 +155,13 @@ describe Columns::ChampColumn do
 
   def expect_type_de_champ_values(type, assertion)
     type_de_champ = types_de_champ.find { _1.type_champ == type }
-    champ = dossier.send(:filled_champ, type_de_champ, nil)
+    champ = dossier.send(:filled_champ, type_de_champ)
     columns = type_de_champ.columns(procedure:)
     expect(columns.map { _1.value(champ) }).to assertion
   end
 
   def retrieve_champ(type)
     type_de_champ = types_de_champ.find { _1.type_champ == type }
-    dossier.send(:filled_champ, type_de_champ, nil)
+    dossier.send(:filled_champ, type_de_champ)
   end
 end

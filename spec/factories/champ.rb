@@ -94,14 +94,6 @@ FactoryBot.define do
       external_id { '200071991' }
     end
 
-    factory :champ_do_not_use_header_section, class: 'Champs::HeaderSectionChamp' do
-      value { 'une section' }
-    end
-
-    factory :champ_do_not_use_explication, class: 'Champs::ExplicationChamp' do
-      value { '' }
-    end
-
     factory :champ_do_not_use_dossier_link, class: 'Champs::DossierLinkChamp' do
       value { create(:dossier, :en_construction).id }
     end
@@ -187,26 +179,6 @@ FactoryBot.define do
     end
 
     factory :champ_do_not_use_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do
-    end
-
-    factory :champ_do_not_use_repetition, class: 'Champs::RepetitionChamp' do
-      transient do
-        rows { 2 }
-      end
-
-      after(:build) do |champ_repetition, evaluator|
-        revision = champ_repetition.procedure.active_revision
-        parent = revision.revision_types_de_champ.find { _1.type_de_champ == champ_repetition.type_de_champ }
-        types_de_champ = revision.revision_types_de_champ.filter { _1.parent == parent }.map(&:type_de_champ)
-
-        evaluator.rows.times do
-          row_id = ULID.generate
-          champ_repetition.dossier.champs << types_de_champ.map do |type_de_champ|
-            attrs = { dossier: champ_repetition.dossier, private: champ_repetition.private?, stable_id: type_de_champ.stable_id, row_id: }
-            build(:"champ_do_not_use_#{type_de_champ.type_champ}", **attrs)
-          end
-        end
-      end
     end
   end
 end

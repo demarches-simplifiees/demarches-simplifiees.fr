@@ -58,7 +58,7 @@ describe Champ do
     context 'when repetition not blank' do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }] }]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:champ) { dossier.champs.find(&:repetition?) }
+      let(:champ) { dossier.project_champs_public.find(&:repetition?) }
 
       it { expect(champ.blank?).to be(false) }
     end
@@ -108,11 +108,10 @@ describe Champ do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:public_champ) { dossier.project_champs_public.first }
     let(:private_champ) { dossier.project_champs_private.first }
-    let(:champ_in_repetition) { dossier.project_champs_public.find(&:repetition?).champs.first }
     let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: build(:dossier)) }
     let(:public_sections) { dossier.project_champs_public.filter(&:header_section?) }
     let(:private_sections) { dossier.project_champs_private.filter(&:header_section?) }
-    let(:sections_in_repetition) { dossier.champs.filter(&:child?).filter(&:header_section?) }
+    let(:sections_in_repetition) { dossier.project_champs_public.find(&:repetition?).rows.flatten.filter(&:header_section?) }
 
     it 'returns the sibling sections of a champ' do
       expect(public_sections).not_to be_empty

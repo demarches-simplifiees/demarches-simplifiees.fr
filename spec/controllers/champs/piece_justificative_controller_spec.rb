@@ -40,20 +40,7 @@ describe Champs::PieceJustificativeController, type: :controller do
     end
 
     context 'when the file is invalid' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/invalid_file_format.json', 'application/json') }
-
-      # TODO: for now there are no validators on the champ piece_justificative_file,
-      # so we have to mock a failing validation.
-      # Once the validators will be enabled, remove those mocks, and let the usual
-      # validation fail naturally.
-      #
-      # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-      before do
-        champ
-        expect_any_instance_of(Champs::PieceJustificativeChamp).to receive(:save).and_return(false)
-        expect_any_instance_of(Champs::PieceJustificativeChamp).to receive(:errors)
-          .and_return(double(full_messages: ['La pièce justificative n’est pas d’un type accepté']))
-      end
+      let(:file) { fixture_file_upload('spec/fixtures/files/invalid_file_format.json', 'bad/bad') }
 
       it 'doesn’t attach the file' do
         subject
@@ -64,7 +51,7 @@ describe Champs::PieceJustificativeController, type: :controller do
         subject
         expect(response.status).to eq(422)
         expect(response.header['Content-Type']).to include('application/json')
-        expect(response.parsed_body).to eq({ 'errors' => ['La pièce justificative n’est pas d’un type accepté'] })
+        expect(response.parsed_body).to eq({ 'errors' => ['Le champ « Piece justificative file » n’est pas d’un type accepté'] })
       end
     end
   end

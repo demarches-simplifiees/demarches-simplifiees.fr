@@ -237,11 +237,11 @@ describe TagsSubstitutionConcern, type: :model do
         repetition.add_row(updated_by: 'test')
         paul_champs, pierre_champs = repetition.rows
 
-        paul_champs.first.update(value: 'Paul')
-        paul_champs.last.update(value: 'Chavard')
+        champ_for_update(paul_champs.first).update(value: 'Paul')
+        champ_for_update(paul_champs.last).update(value: 'Chavard')
 
-        pierre_champs.first.update(value: 'Pierre')
-        pierre_champs.last.update(value: 'de La Morinerie')
+        champ_for_update(pierre_champs.first).update(value: 'Pierre')
+        champ_for_update(pierre_champs.last).update(value: 'de La Morinerie')
       end
 
       it { is_expected.to eq("Répétition\n\nNom : Paul\nPrénom : Chavard\n\nNom : Pierre\nPrénom : de La Morinerie") }
@@ -258,7 +258,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       context 'and the champ has a primary value' do
         before do
-          dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(primary_value: 'primo')
+          dossier.champ_for_update(type_de_champ, updated_by: 'test').update(primary_value: 'primo')
           dossier.reload
         end
 
@@ -266,7 +266,7 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and the champ has a secondary value' do
           before do
-            dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(secondary_value: 'secundo')
+            dossier.champ_for_update(type_de_champ, updated_by: 'test').update(secondary_value: 'secundo')
             dossier.reload
           end
 
@@ -481,7 +481,7 @@ describe TagsSubstitutionConcern, type: :model do
       before do
         draft_type_de_champ.update(libelle: 'mon nouveau libellé')
         dossier.project_champs_public.first.update(value: 'valeur')
-        procedure.update!(draft_revision: procedure.create_new_revision, published_revision: procedure.draft_revision)
+        procedure.publish_revision!
       end
 
       context "when using the champ's original label" do

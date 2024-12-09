@@ -905,19 +905,6 @@ class Dossier < ApplicationRecord
     traitements.any?(&:termine?)
   end
 
-  def remove_titres_identite!
-    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
-  end
-
-  def remove_piece_justificative_file_not_visible!
-    champs.each do |champ|
-      next unless champ.piece_justificative_file.attached?
-      next if champ.visible?
-
-      champ.piece_justificative_file.purge_later
-    end
-  end
-
   def check_mandatory_and_visible_champs
     project_champs_public.filter(&:visible?).each do |champ|
       if champ.mandatory_blank?
@@ -1058,13 +1045,13 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs_for(types_de_champ)
-    self.champs << types_de_champ.flat_map do |type_de_champ|
-      champ = type_de_champ.build_champ(dossier: self)
-      if type_de_champ.repetition? && (type_de_champ.private? || type_de_champ.mandatory?)
-        row_id = ULID.generate
-        [champ] + revision.children_of(type_de_champ).map { _1.build_champ(dossier: self, row_id:) }
+    self.champs << types_de_champ.filter(&:fillable?).filter_map do |type_de_champ|
+      if type_de_champ.repetition?
+        if type_de_champ.private? || type_de_champ.mandatory?
+          type_de_champ.build_champ(dossier: self, row_id: ULID.generate)
+        end
       else
-        champ
+        type_de_champ.build_champ(dossier: self)
       end
     end
   end

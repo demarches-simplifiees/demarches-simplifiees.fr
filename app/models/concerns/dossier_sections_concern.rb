@@ -33,7 +33,7 @@ module DossierSectionsConcern
           return "#{index}.#{index_in_repetition + 1}" if index_in_repetition
         else
           return index if tdc.stable_id == type_de_champ.stable_id
-          next unless project_champ(tdc, nil).visible?
+          next unless project_champ(tdc).visible?
 
           index += 1 if tdc.header_section?
         end

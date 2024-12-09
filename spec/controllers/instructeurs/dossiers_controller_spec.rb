@@ -1002,10 +1002,11 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
+    let(:champ_repetition) { dossier.project_champs_private.fourth }
+    let(:champ_text) { champ_repetition.rows.first.first }
     let(:champ_multiple_drop_down_list) { dossier.project_champs_private.first }
     let(:champ_linked_drop_down_list) { dossier.project_champs_private.second }
     let(:champ_datetime) { dossier.project_champs_private.third }
-    let(:champ_repetition) { dossier.project_champs_private.fourth }
     let(:champ_drop_down_list) { dossier.project_champs_private.fifth }
 
     context 'when no invalid champs_public' do
@@ -1015,12 +1016,12 @@ describe Instructeurs::DossiersController, type: :controller do
           another_instructeur.follow(dossier)
           Timecop.freeze(now)
           patch :update_annotations, params: params, format: :turbo_stream
-
+          dossier.reload
           champ_multiple_drop_down_list.reload
           champ_linked_drop_down_list.reload
           champ_datetime.reload
-          champ_repetition.reload
           champ_drop_down_list.reload
+          champ_text.reload
         end
 
         after do
@@ -1059,9 +1060,9 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(champ_linked_drop_down_list.primary_value).to eq('primary')
           expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
           expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
-          expect(champ_repetition.rows.first.first.value).to eq('text')
+          expect(champ_text.value).to eq('text')
           expect(champ_drop_down_list.value).to eq('other value')
-          expect(dossier.reload.last_champ_private_updated_at).to eq(now)
+          expect(dossier.last_champ_private_updated_at).to eq(now)
           expect(response).to have_http_status(200)
           assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
         }

@@ -17,7 +17,7 @@ module DossierExportConcern
 
   def champ_values_for_export(types_de_champ, row_id: nil, export_template: nil, format:)
     types_de_champ.flat_map do |type_de_champ|
-      champ = filled_champ(type_de_champ, row_id)
+      champ = filled_champ(type_de_champ, row_id:)
       if export_template.present?
         export_template
           .columns_for_stable_id(type_de_champ.stable_id)

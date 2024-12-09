@@ -356,7 +356,7 @@ describe DossierRebaseConcern do
       it "updates the brouillon champs with the latest revision changes" do
         expect(dossier.revision).to eq(procedure.published_revision)
         expect(dossier.project_champs_public.size).to eq(5)
-        expect(dossier.champs.count(&:public?)).to eq(7)
+        expect(dossier.champs.count(&:public?)).to eq(6)
         expect(repetition_champ.rows.size).to eq(2)
         expect(repetition_champ.rows[0].size).to eq(1)
         expect(repetition_champ.rows[1].size).to eq(1)
@@ -369,7 +369,7 @@ describe DossierRebaseConcern do
         expect(procedure.revisions.size).to eq(3)
         expect(dossier.revision).to eq(procedure.published_revision)
         expect(dossier.project_champs_public.size).to eq(7)
-        expect(dossier.champs.count(&:public?)).to eq(13)
+        expect(dossier.champs.count(&:public?)).to eq(7)
         expect(rebased_text_champ.value).to eq(text_champ.value)
         expect(rebased_text_champ.type_de_champ).not_to eq(text_champ.type_de_champ)
         expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
@@ -381,7 +381,6 @@ describe DossierRebaseConcern do
         expect(rebased_datetime_champ.rebased_at).not_to be_nil
         expect(rebased_number_champ.rebased_at).to be_nil
         expect(rebased_new_repetition_champ).not_to be_nil
-        expect(rebased_new_repetition_champ.rebased_at).not_to be_nil
         expect(rebased_new_repetition_champ.rows.size).to eq(1)
         expect(rebased_new_repetition_champ.rows[0].size).to eq(2)
 
@@ -728,9 +727,8 @@ describe DossierRebaseConcern do
           parent.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs.filter(&:child?).count }.from(2).to(0) }
-        it { expect { subject }.to change { Champ.count }.from(3).to(1) }
         it { expect { subject }.to change { dossier.project_champs_public.find(&:repetition?)&.libelle }.from('p1').to(nil) }
+        it { expect { subject }.not_to change { Champ.count } }
       end
     end
   end

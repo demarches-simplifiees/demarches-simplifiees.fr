@@ -2,7 +2,8 @@
 
 describe Users::CommencerController, type: :controller do
   let(:user) { create(:user) }
-  let(:published_procedure) { create(:procedure, :for_individual, :published) }
+  let(:published_procedure) { create(:procedure, :for_individual, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [] }
   let(:draft_procedure) { create(:procedure, :with_path) }
 
   describe '#commencer' do
@@ -160,7 +161,8 @@ describe Users::CommencerController, type: :controller do
     end
 
     context 'when a dossier is being prefilled by GET' do
-      let(:type_de_champ_text) { create(:type_de_champ_text, procedure: published_procedure) }
+      let(:types_de_champ_public) { [{}] }
+      let(:type_de_champ_text) { published_procedure.published_revision.types_de_champ.first }
       let(:path) { published_procedure.path }
       let(:user) { create(:user) }
 

@@ -17,7 +17,7 @@ class EditableChamp::SectionComponent < ApplicationComponent
 
   def header_section
     node = @nodes.first
-    @dossier.project_champ(node, @row_id) if node.is_a?(TypeDeChamp) && node.header_section?
+    @dossier.project_champ(node, row_id: @row_id) if node.is_a?(TypeDeChamp) && node.header_section?
   end
 
   def splitted_tail
@@ -40,7 +40,7 @@ class EditableChamp::SectionComponent < ApplicationComponent
     when EditableChamp::SectionComponent
       [node, nil]
     else
-      [nil, @dossier.project_champ(node, @row_id)]
+      [nil, @dossier.project_champ(node, row_id: @row_id)]
     end
   end
 

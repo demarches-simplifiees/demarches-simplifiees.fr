@@ -171,7 +171,7 @@ describe 'The user', js: true do
       wait_until { page.all(".row").size == 1 }
       # removing a repetition means one child only, thus its button destroy is not visible
       expect(page).to have_selector(".repetition .row:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
-    end.to change { Champ.count }
+    end.to change { Champ.where.not(discarded_at: nil).count }
   end
 
   let(:simple_procedure) {
@@ -569,6 +569,16 @@ describe 'The user', js: true do
         expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
+        fill_in('age du candidat', with: '18')
+        wait_for_autosave
+
+        # the champ keeps their previous value so they are all displayed
+        expect(page).to have_css('legend', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('label', text: 'tonnage', visible: true)
+
+        fill_in('age du candidat', with: '2')
+        wait_for_autosave
+
         click_on 'Déposer le dossier'
         click_on 'Accéder à votre dossier'
         click_on 'Modifier mon dossier'
@@ -576,13 +586,6 @@ describe 'The user', js: true do
         expect(page).to have_css('label', text: 'age du candidat', visible: true)
         expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
-
-        fill_in('age du candidat', with: '18')
-        wait_for_autosave
-
-        # the champ keeps their previous value so they are all displayed
-        expect(page).to have_css('legend', text: 'permis de conduire', visible: true)
-        expect(page).to have_css('label', text: 'tonnage', visible: true)
       end
     end
   end

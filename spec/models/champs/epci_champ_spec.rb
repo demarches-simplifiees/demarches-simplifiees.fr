@@ -8,7 +8,7 @@ describe Champs::EpciChamp, type: :model do
       let(:champ) { Champs::EpciChamp.new(code_departement: code_departement, dossier: build(:dossier)) }
       before do
         allow(champ).to receive(:visible?).and_return(true)
-        allow(champ).to receive(:in_dossier_revision?).and_return(true)
+        allow(champ).to receive(:can_validate?).and_return(true)
       end
       context 'when nil' do
         let(:code_departement) { nil }

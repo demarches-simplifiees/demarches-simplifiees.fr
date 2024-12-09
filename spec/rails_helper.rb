@@ -125,6 +125,13 @@ RSpec.configure do |config|
     end
   end
 
+  module SpecHelpers
+    def champ_for_update(champ)
+      champ.dossier.champ_for_update(champ.type_de_champ, row_id: champ.row_id, updated_by: 'test')
+    end
+  end
+
+  config.include SpecHelpers
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :model
