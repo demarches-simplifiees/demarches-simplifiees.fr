@@ -2,13 +2,13 @@
 
 describe APIDatagouv::API do
   describe '#upload' do
-    let(:dataset) { :descriptif_demarches_dataset }
-    let(:resource) { :descriptif_demarches_resource }
+    let(:dataset) { '62a0afdacffa4c3ea5cbd1b4' }
+    let(:resource) { '666211e9-6226-4fad-8d2f-5a4135f40e47' }
     let(:datagouv_secret) { Rails.application.secrets.datagouv }
     let(:subject) { APIDatagouv::API.upload(Tempfile.new, dataset, resource) }
 
     before do
-      stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/1\/datasets\/#{datagouv_secret[dataset]}\/resources\/#{datagouv_secret[resource]}\/upload\//)
+      stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/1\/datasets\/#{dataset}\/resources\/#{resource}\/upload\//)
         .to_return(body: body, status: status)
     end
 
