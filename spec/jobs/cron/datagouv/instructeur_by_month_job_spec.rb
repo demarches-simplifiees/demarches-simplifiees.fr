@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe Cron::Datagouv::InstructeurByMonthJob, type: :job do
-  let!(:instructeur) { create(:instructeur, created_at: 1.month.ago) }
-  let(:status) { 200 }
-  let(:body) { "ok" }
-  let(:stub) { stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/.*\/upload\//) }
+  describe 'data_for' do
+    let(:month) { Date.parse('01/01/2024') }
 
-  describe 'perform' do
-    before do
-      stub
+    subject { Cron::Datagouv::InstructeurByMonthJob.new.send(:data_for, month:) }
+
+    context 'when instructeurs have been created during the target month' do
+      let!(:instructeur) { create(:instructeur, created_at: Date.parse('15/01/2024')) }
+
+      it { is_expected.to eq(['2024-01', 1]) }
     end
 
-    subject { Cron::Datagouv::InstructeurByMonthJob.perform_now }
+    context 'when instructeurs have not been created during the target month' do
+      let!(:instructeur) { create(:instructeur, created_at: Date.parse('15/12/2023')) }
 
-    it 'send POST request to datagouv' do
-      subject
-      expect(stub).to have_been_requested
+      it { is_expected.to eq(['2024-01', 0]) }
     end
   end
 end
