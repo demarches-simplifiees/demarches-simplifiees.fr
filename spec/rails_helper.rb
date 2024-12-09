@@ -127,7 +127,7 @@ RSpec.configure do |config|
 
   module SpecHelpers
     def champ_for_update(champ)
-      champ.dossier.champ_for_update(champ.type_de_champ, champ.row_id, updated_by: 'test')
+      champ.dossier.champ_for_update(champ.type_de_champ, row_id: champ.row_id, updated_by: 'test')
     end
   end
 

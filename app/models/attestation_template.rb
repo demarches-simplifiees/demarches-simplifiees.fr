@@ -92,7 +92,7 @@ class AttestationTemplate < ApplicationRecord
     used_tags.filter_map do |used_tag|
       corresponding_type_de_champ = types_de_champ_by_tag_id[used_tag]
 
-      if corresponding_type_de_champ && dossier.project_champ(corresponding_type_de_champ, nil).blank?
+      if corresponding_type_de_champ && dossier.project_champ(corresponding_type_de_champ).blank?
         corresponding_type_de_champ
       end
     end

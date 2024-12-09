@@ -3,7 +3,7 @@
 module DossierChampsConcern
   extend ActiveSupport::Concern
 
-  def project_champ(type_de_champ, row_id)
+  def project_champ(type_de_champ, row_id: nil)
     check_valid_row_id_on_read?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil? || !champ.is_type?(type_de_champ.type_champ)
@@ -17,11 +17,11 @@ module DossierChampsConcern
   end
 
   def project_champs_public
-    @project_champs_public ||= revision.types_de_champ_public.map { project_champ(_1, nil) }
+    @project_champs_public ||= revision.types_de_champ_public.map { project_champ(_1) }
   end
 
   def project_champs_private
-    @project_champs_private ||= revision.types_de_champ_private.map { project_champ(_1, nil) }
+    @project_champs_private ||= revision.types_de_champ_private.map { project_champ(_1) }
   end
 
   def filled_champs_public
@@ -54,7 +54,7 @@ module DossierChampsConcern
 
   def project_champs_public_all
     revision.types_de_champ_public.flat_map do |type_de_champ|
-      champ = project_champ(type_de_champ, nil)
+      champ = project_champ(type_de_champ)
       if type_de_champ.repetition?
         [champ] + project_rows_for(type_de_champ).flatten
       else
@@ -65,7 +65,7 @@ module DossierChampsConcern
 
   def project_champs_private_all
     revision.types_de_champ_private.flat_map do |type_de_champ|
-      champ = project_champ(type_de_champ, nil)
+      champ = project_champ(type_de_champ)
       if type_de_champ.repetition?
         [champ] + project_rows_for(type_de_champ).flatten
       else
@@ -81,7 +81,7 @@ module DossierChampsConcern
     row_ids = repetition_row_ids(type_de_champ)
 
     row_ids.map do |row_id|
-      children.map { project_champ(_1, row_id) }
+      children.map { project_champ(_1, row_id:) }
     end
   end
 
@@ -101,19 +101,19 @@ module DossierChampsConcern
       .types_de_champ
       .filter { _1.stable_id.in?(stable_ids) }
       .filter { !_1.child?(revision) }
-      .map { _1.repetition? ? project_champ(_1, nil) : champ_for_update(_1, nil, updated_by: nil) }
+      .map { _1.repetition? ? project_champ(_1) : champ_for_update(_1, updated_by: nil) }
   end
 
   def champ_value_for_tag(type_de_champ, path = :value)
     champ = if type_de_champ.repetition?
-      project_champ(type_de_champ, nil)
+      project_champ(type_de_champ)
     else
-      filled_champ(type_de_champ, nil)
+      filled_champ(type_de_champ)
     end
     type_de_champ.champ_value_for_tag(champ, path)
   end
 
-  def champ_for_update(type_de_champ, row_id, updated_by:)
+  def champ_for_update(type_de_champ, row_id: nil, updated_by:)
     champ = champ_upsert_by!(type_de_champ, row_id)
     champ.updated_by = updated_by
     champ
@@ -155,7 +155,7 @@ module DossierChampsConcern
     raise "Can't add row to non-repetition type de champ" if !type_de_champ.repetition?
 
     row_id = ULID.generate
-    champ = champ_for_update(type_de_champ, row_id, updated_by:)
+    champ = champ_for_update(type_de_champ, row_id:, updated_by:)
     champ.save!
     reset_champ_cache(champ)
     row_id
@@ -164,7 +164,7 @@ module DossierChampsConcern
   def repetition_remove_row(type_de_champ, row_id, updated_by:)
     raise "Can't remove row from non-repetition type de champ" if !type_de_champ.repetition?
 
-    champ = champ_for_update(type_de_champ, row_id, updated_by:)
+    champ = champ_for_update(type_de_champ, row_id:, updated_by:)
     champ.discard!
     reset_champ_cache(champ)
   end
@@ -191,7 +191,7 @@ module DossierChampsConcern
     champs.filter { stable_id_in_revision?(_1.stable_id) }
   end
 
-  def filled_champ(type_de_champ, row_id)
+  def filled_champ(type_de_champ, row_id: nil)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if type_de_champ.champ_blank?(champ) || !champ.visible?
       nil

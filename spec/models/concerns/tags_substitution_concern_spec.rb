@@ -258,7 +258,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       context 'and the champ has a primary value' do
         before do
-          dossier.champ_for_update(type_de_champ, nil, updated_by: 'test').update(primary_value: 'primo')
+          dossier.champ_for_update(type_de_champ, updated_by: 'test').update(primary_value: 'primo')
           dossier.reload
         end
 
@@ -266,7 +266,7 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and the champ has a secondary value' do
           before do
-            dossier.champ_for_update(type_de_champ, nil, updated_by: 'test').update(secondary_value: 'secundo')
+            dossier.champ_for_update(type_de_champ, updated_by: 'test').update(secondary_value: 'secundo')
             dossier.reload
           end
 

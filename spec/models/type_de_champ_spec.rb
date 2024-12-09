@@ -17,7 +17,7 @@ describe TypeDeChamp do
 
       it do
         dossier.revision.types_de_champ_public.each do |type_de_champ|
-          champ = dossier.project_champ(type_de_champ, nil)
+          champ = dossier.project_champ(type_de_champ)
           expect(type_de_champ.dynamic_type.class.name).to match(/^TypesDeChamp::/)
           expect(champ.class.name).to match(/^Champs::/)
         end

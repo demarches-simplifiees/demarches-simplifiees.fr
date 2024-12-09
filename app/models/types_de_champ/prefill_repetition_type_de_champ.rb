@@ -65,7 +65,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
         type_de_champ = revision.types_de_champ.find { _1.stable_id == stable_id }
         next unless type_de_champ
 
-        subchamp = champ.dossier.champ_for_update(type_de_champ, row_id, updated_by: nil)
+        subchamp = champ.dossier.champ_for_update(type_de_champ, row_id:, updated_by: nil)
         TypesDeChamp::PrefillTypeDeChamp.build(subchamp.type_de_champ, revision).to_assignable_attributes(subchamp, value)
       end.compact
     end

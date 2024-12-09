@@ -34,7 +34,7 @@ module Mutations
         .find_by(type_champ: TypeDeChamp.type_champs.fetch(:repetition), stable_id:)
 
       return nil if type_de_champ.nil?
-      dossier.project_champ(type_de_champ, nil)
+      dossier.project_champ(type_de_champ)
     end
   end
 end

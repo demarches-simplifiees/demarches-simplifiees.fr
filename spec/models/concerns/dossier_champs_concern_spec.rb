@@ -36,13 +36,13 @@ RSpec.describe DossierChampsConcern do
 
     context "public champ" do
       let(:row_id) { nil }
-      subject { dossier.project_champ(type_de_champ_public, row_id) }
+      subject { dossier.project_champ(type_de_champ_public, row_id:) }
 
       it { expect(subject.persisted?).to be_truthy }
 
       context "in repetition" do
         let(:type_de_champ_public) { dossier.find_type_de_champ_by_stable_id(994) }
-        let(:row_id) { dossier.project_champ(type_de_champ_repetition, nil).row_ids.first }
+        let(:row_id) { dossier.project_champ(type_de_champ_repetition).row_ids.first }
 
         it {
           expect(subject.new_record?).to be_truthy
@@ -88,7 +88,7 @@ RSpec.describe DossierChampsConcern do
     end
 
     context "private champ" do
-      subject { dossier.project_champ(type_de_champ_private, nil) }
+      subject { dossier.project_champ(type_de_champ_private) }
 
       it { expect(subject.persisted?).to be_truthy }
 
@@ -225,7 +225,7 @@ RSpec.describe DossierChampsConcern do
     let(:row_id) { nil }
 
     context "public champ" do
-      subject { dossier.champ_for_update(type_de_champ_public, row_id, updated_by: dossier.user.email) }
+      subject { dossier.champ_for_update(type_de_champ_public, row_id:, updated_by: dossier.user.email) }
 
       it {
         expect(subject.persisted?).to be_truthy
@@ -283,7 +283,7 @@ RSpec.describe DossierChampsConcern do
     end
 
     context "private champ" do
-      subject { dossier.champ_for_update(type_de_champ_private, row_id, updated_by: dossier.user.email) }
+      subject { dossier.champ_for_update(type_de_champ_private, row_id:, updated_by: dossier.user.email) }
 
       it {
         expect(subject.persisted?).to be_truthy
@@ -304,9 +304,9 @@ RSpec.describe DossierChampsConcern do
       }
     end
 
-    let(:champ_99) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(99), nil) }
-    let(:champ_991) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(991), nil) }
-    let(:champ_994) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(994), row_id) }
+    let(:champ_99) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(99)) }
+    let(:champ_991) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(991)) }
+    let(:champ_994) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(994), row_id:) }
 
     subject { dossier.update_champs_attributes(attributes, :public, updated_by: dossier.user.email) }
 
@@ -365,7 +365,7 @@ RSpec.describe DossierChampsConcern do
       }
     end
 
-    let(:annotation_995) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(995), nil) }
+    let(:annotation_995) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(995)) }
 
     subject { dossier.update_champs_attributes(attributes, :private, updated_by: dossier.user.email) }
 

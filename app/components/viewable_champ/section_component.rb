@@ -18,11 +18,11 @@ class ViewableChamp::SectionComponent < ApplicationComponent
 
   def header_section
     node = @nodes.first
-    @dossier.project_champ(node, @row_id) if node.is_a?(TypeDeChamp) && node.header_section?
+    @dossier.project_champ(node, row_id: @row_id) if node.is_a?(TypeDeChamp) && node.header_section?
   end
 
   def champs
-    tail.filter_map { _1.is_a?(TypeDeChamp) ? @dossier.project_champ(_1, @row_id) : nil }
+    tail.filter_map { _1.is_a?(TypeDeChamp) ? @dossier.project_champ(_1, row_id: @row_id) : nil }
   end
 
   def sections

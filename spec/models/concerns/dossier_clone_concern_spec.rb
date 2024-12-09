@@ -368,13 +368,13 @@ RSpec.describe DossierCloneConcern do
     context 'with new revision' do
       let(:added_champ) {
         tdc = forked_dossier.revision.types_de_champ.find { _1.libelle == "Un nouveau champ text" }
-        forked_dossier.champ_for_update(tdc, nil, updated_by: 'test')
+        forked_dossier.champ_for_update(tdc, updated_by: 'test')
       }
       let(:added_repetition_champ) {
         tdc_repetition = forked_dossier.revision.types_de_champ.find { _1.stable_id == 993 }
         tdc = forked_dossier.revision.types_de_champ.find { _1.libelle == "Texte en répétition" }
         row_id = forked_dossier.repetition_row_ids(tdc_repetition).first
-        forked_dossier.champ_for_update(tdc, row_id, updated_by: 'test')
+        forked_dossier.champ_for_update(tdc, row_id:, updated_by: 'test')
       }
       let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
       let(:updated_champ) { dossier.champs.find { _1.stable_id == 991 } }

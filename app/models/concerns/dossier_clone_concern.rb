@@ -175,10 +175,10 @@ module DossierCloneConcern
     end
 
     added_row_ids.each do |row_id, repetition_type_de_champ|
-      champ_for_update(repetition_type_de_champ, row_id, updated_by: user.email).save!
+      champ_for_update(repetition_type_de_champ, row_id:, updated_by: user.email).save!
     end
     removed_row_ids.each do |row_id, repetition_type_de_champ|
-      champ_for_update(repetition_type_de_champ, row_id, updated_by: user.email).discard!
+      champ_for_update(repetition_type_de_champ, row_id:, updated_by: user.email).discard!
     end
   end
 end
