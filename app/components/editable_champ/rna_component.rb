@@ -6,6 +6,6 @@ class EditableChamp::RNAComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def update_path
-    champs_rna_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
+    champs_rna_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, stream: @champ.dossier.stream)
   end
 end

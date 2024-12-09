@@ -25,11 +25,15 @@ module ChampValidateConcern
     end
 
     def can_validate?
-      in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
+      in_dossier_stream? && in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
     end
 
     def validate_champ_value_or_prefill?
       validate_champ_value? || validation_context == :prefill
+    end
+
+    def in_dossier_stream?
+      dossier.stream == stream
     end
   end
 end
