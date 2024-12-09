@@ -27,7 +27,8 @@ class Champs::PieceJustificativeController < Champs::ChampController
 
     ActiveStorage::Attachment.transaction do
       @champ.piece_justificative_file.attach(params[:blob_signed_id])
-      save_succeed = @champ.save
+      context = @champ.public? ? :champs_public_value : :champs_private_value
+      save_succeed = @champ.save(context:)
     end
 
     if save_succeed && dossier.brouillon?

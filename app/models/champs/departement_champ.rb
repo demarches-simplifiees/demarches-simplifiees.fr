@@ -3,8 +3,8 @@
 class Champs::DepartementChamp < Champs::TextChamp
   store_accessor :value_json,  :code_region
 
-  validate :value_in_departement_names, if: -> { validate_champ_value_or_prefill? && !value.nil? }
-  validate :external_id_in_departement_codes, if: -> { validate_champ_value_or_prefill? && !external_id.nil? }
+  validate :value_in_departement_names, if: -> { !value.nil? && validate_champ_value? }
+  validate :external_id_in_departement_codes, if: -> { !external_id.nil? && validate_champ_value? }
   before_save :store_code_region
 
   def selected

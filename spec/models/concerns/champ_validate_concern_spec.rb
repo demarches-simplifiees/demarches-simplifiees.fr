@@ -51,6 +51,34 @@ RSpec.describe ChampValidateConcern do
         expect(dossier.errors).to be_empty
       }
     end
+
+    context 'attachments' do
+      let(:types_de_champ_public) { [{ type: :piece_justificative }, { type: :titre_identite }] }
+
+      before {
+        dossier.revision.revision_types_de_champ.delete_all
+        dossier.validate(:champs_public_value)
+      }
+      it {
+        expect(dossier.revision.revision_types_de_champ).to be_empty
+        expect(dossier.champs).not_to be_empty
+        expect(dossier.errors).to be_empty
+      }
+    end
+
+    context 'drop_down_list' do
+      let(:types_de_champ_public) { [{ type: :drop_down_list }] }
+
+      before {
+        dossier.revision.revision_types_de_champ.delete_all
+        dossier.validate(:champs_public_value)
+      }
+      it {
+        expect(dossier.revision.revision_types_de_champ).to be_empty
+        expect(dossier.champs).not_to be_empty
+        expect(dossier.errors).to be_empty
+      }
+    end
   end
 
   context 'when type changed' do

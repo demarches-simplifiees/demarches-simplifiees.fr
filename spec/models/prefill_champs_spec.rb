@@ -3,7 +3,8 @@
 RSpec.describe PrefillChamps do
   describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
-    let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+    let(:dossier) { create(:dossier, :brouillon, procedure:) }
+    let(:linked_dossier) { create(:dossier, :en_construction, procedure:) }
     let(:types_de_champ_public) { [] }
     let(:types_de_champ_private) { [] }
 
@@ -68,11 +69,12 @@ RSpec.describe PrefillChamps do
         let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
         let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
+        let(:champ_value) { value == 'linked_dossier_id' ? linked_dossier.id : value }
 
-        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => champ_value } }
 
         it "builds an array of hash matching the given params" do
-          expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
+          expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, champ_value))])
         end
       end
     end
@@ -82,11 +84,12 @@ RSpec.describe PrefillChamps do
         let(:types_de_champ_private) { [{ type: type_de_champ_type }] }
         let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
+        let(:champ_value) { value == 'linked_dossier_id' ? linked_dossier.id : value }
 
-        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => champ_value } }
 
         it "builds an array of hash matching the given params" do
-          expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
+          expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, champ_value))])
         end
       end
     end
@@ -125,7 +128,7 @@ RSpec.describe PrefillChamps do
     it_behaves_like "a champ public value that is authorized", :communes, ['01540', '01457']
     it_behaves_like "a champ public value that is authorized", :address, "20 avenue de Ségur 75007 Paris"
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
-    it_behaves_like "a champ public value that is authorized", :dossier_link, "1"
+    it_behaves_like "a champ public value that is authorized", :dossier_link, 'linked_dossier_id'
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
     it_behaves_like "a champ public value that is authorized", :siret, "13002526500013"
 
@@ -167,7 +170,7 @@ RSpec.describe PrefillChamps do
     it_behaves_like "a champ private value that is authorized", :communes, ['01540', '01457']
     it_behaves_like "a champ private value that is authorized", :address, "20 avenue de Ségur 75007 Paris"
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
-    it_behaves_like "a champ private value that is authorized", :dossier_link, "1"
+    it_behaves_like "a champ private value that is authorized", :dossier_link, 'linked_dossier_id'
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
 
     context "when the private type de champ is authorized (repetition)" do
