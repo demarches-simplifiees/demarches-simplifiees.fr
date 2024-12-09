@@ -49,7 +49,7 @@ class ConditionForm
   def parse_value(left_type, value)
     return empty if value.blank?
 
-    if left_type == :number
+    if left_type == :number || left_type == :integer || left_type == :decimal
       # in this special case, we try to cast as Float, then Integer
       # but it can still be a previous string value or a mistap
       number = parse_to_number(value)

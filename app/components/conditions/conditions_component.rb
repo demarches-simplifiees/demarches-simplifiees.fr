@@ -62,9 +62,15 @@ class Conditions::ConditionsComponent < ApplicationComponent
   end
 
   def available_targets_for_select
-    @source_tdcs
+    original = @source_tdcs
       .filter(&:conditionable?)
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
+    #
+    # TO REMOVE
+    procedure = Procedure.find(@procedure_id)
+    columns = @source_tdcs.flat_map { |tdc| tdc.columns(procedure:) }.filter { _1.type != :text }
+
+    original + columns.map { |column| [column.label + " (col)", column_value(column).to_json] }
   end
 
   def operator_tag(operator_name, targeted_champ, row_index)
@@ -118,7 +124,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
         [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name],
         [t(ExcludeOperator.name, scope: 'logic.operators'), ExcludeOperator.name]
       ]
-    when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:number), :integer, :decimal
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]
         .map(&:name)
         .map { |name| [t(name, scope: 'logic.operators'), name] }
@@ -164,7 +170,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
         id: input_id_for('value', row_index),
         class: { 'fr-select': true, alert: right_invalid }
       )
-    when :number
+    when :number, :integer, :decimal
       text_field_tag(
         input_name_for('value'),
         right.value,
