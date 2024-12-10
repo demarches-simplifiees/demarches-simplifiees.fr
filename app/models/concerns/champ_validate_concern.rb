@@ -19,6 +19,8 @@ module ChampValidateConcern
         public? && can_validate? && visible?
       when :champs_private_value
         private? && can_validate? && visible?
+      when :prefill
+        true
       else
         false
       end
@@ -26,10 +28,6 @@ module ChampValidateConcern
 
     def can_validate?
       in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
-    end
-
-    def validate_champ_value_or_prefill?
-      validate_champ_value? || validation_context == :prefill
     end
   end
 end

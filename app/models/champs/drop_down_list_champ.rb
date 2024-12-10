@@ -6,7 +6,7 @@ class Champs::DropDownListChamp < Champ
   THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE = 20
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
-  validate :value_is_in_options, if: -> { !(value.blank? || drop_down_other?) && validate_champ_value_or_prefill? }
+  validate :value_is_in_options, if: -> { validate_champ_value? && !(value.blank? || drop_down_other?) }
 
   def render_as_radios?
     drop_down_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO

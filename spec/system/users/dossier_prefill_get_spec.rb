@@ -19,6 +19,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   end
   let(:procedure) { create(:procedure, :for_individual, :published, opendata: true, types_de_champ_public:) }
   let(:dossier) { procedure.dossiers.last }
+  let(:linked_dossier) { create(:dossier, :en_construction, procedure:) }
   let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
 
   let(:type_de_champ_text) { types_de_champ[0] }
@@ -43,7 +44,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
-  let(:dossier_link_value) { '42' }
+  let(:dossier_link_value) { linked_dossier.id }
   let(:commune_value) { ['01540', '01457'] }
   let(:commune_libelle) { 'Vonnas (01540)' }
   let(:address_value) { "20 Avenue de Ségur 75007 Paris" }
