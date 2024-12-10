@@ -1,7 +1,7 @@
 - referentiel_item = champ.referentiel_item
 
 - if champ.referentiel? && referentiel_item&.option.present?
-  - if current_user.instructeur?
+  - if  current_user.instructeur? && !current_user.owns_or_invite?(champ.dossier)
     .fr-background-alt--grey.fr-p-3v
       - referentiel_item.option.merge(referentiel_item.data).each do |key, value|
         - if key.present?
