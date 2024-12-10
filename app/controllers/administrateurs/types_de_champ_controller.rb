@@ -129,6 +129,16 @@ module Administrateurs
       end
     end
 
+    def delete_referentiel
+      type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+      @coordinate = draft.coordinate_for(type_de_champ)
+
+      type_de_champ.referentiel&.destroy!
+      @morphed = [champ_component_from(@coordinate, focused: true)]
+    end
+
+    private
+
     def import_referentiel
       if !CSV_ACCEPTED_CONTENT_TYPES.include?(referentiel_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
         flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
@@ -159,8 +169,6 @@ module Administrateurs
         @coordinate = draft.coordinate_for(type_de_champ)
       end
     end
-
-    private
 
     def changing_of_type?(type_de_champ)
       type_de_champ_update_params['type_champ'].present? && (type_de_champ_update_params['type_champ'] != type_de_champ.type_champ)
