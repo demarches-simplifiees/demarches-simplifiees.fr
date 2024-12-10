@@ -243,7 +243,8 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
         draft_revision = procedure.reload.draft_revision
         expect(draft_revision.ineligibilite_message).to eq('panpan')
         expect(draft_revision.ineligibilite_enabled).to eq(true)
-        expect(response).to redirect_to(edit_admin_procedure_ineligibilite_rules_path(procedure))
+        expect(response).to redirect_to(admin_procedure_path(procedure))
+        expect(flash.notice).not_to be_empty
       end
     end
   end
