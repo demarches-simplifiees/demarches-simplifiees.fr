@@ -2,8 +2,11 @@
 
 FactoryBot.define do
   factory :referentiel do
-  end
+    factory :csv_referentiel, class: 'Referentiels::CSVReferentiel' do
+      name { 'referentiel.csv' }
+    end
 
-  factory :api_referentiel, class: 'Referentiels::APIReferentiel' do
+    factory :api_referentiel, class: 'Referentiels::APIReferentiel' do
+    end
   end
 end

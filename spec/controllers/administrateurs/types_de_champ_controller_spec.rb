@@ -117,6 +117,70 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         expect(flash.alert).to include("utilisé pour le routage")
       end
     end
+
+    context 'with referentiel' do
+      let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ.last }
+
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          stable_id: third_coordinate.stable_id,
+          referentiel_file:,
+          name: referentiel_file.original_filename,
+          type_de_champ: {
+            libelle: 'updated'
+          }
+        }
+      end
+
+      context 'working case with multi column file' do
+        it 'creates a valid referentiel' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
+          expect(type_de_champ.reload.referentiel).to eq Referentiel.last
+          expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
+          expect(Referentiel.last.name).to eq referentiel_file.original_filename
+          expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
+          expect(ReferentielItem.first.data).to eq({ "calorie (kcal)" => "145", "poids (g)" => "60" })
+          expect(ReferentielItem.first.referentiel_id).to eq(Referentiel.last.id)
+        end
+      end
+
+      context 'working case with uniq column file' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-one-column-referentiel.csv', 'text/csv') }
+
+        it 'creates a valid referentiel' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
+          expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
+          expect(ReferentielItem.first.data).to eq({ 'dessert' => 'Éclair au café', "headers" => ["Dessert"] })
+        end
+      end
+
+      context 'when the csv file length is more than 10 mo' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+
+        before do
+          allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(11.megabytes)
+          subject
+        end
+
+        it 'verifies the file size limitation' do
+          expect(flash.alert).to be_present
+          expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo")
+        end
+      end
+
+      context 'when the file content type is not accepted' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+
+        before { subject }
+
+        it 'checks file format acceptance' do
+          expect(flash.alert).to be_present
+          expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV")
+        end
+      end
+    end
   end
 
   # l1, l2, l3 => l1, l3, l2

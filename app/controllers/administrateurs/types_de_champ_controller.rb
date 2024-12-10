@@ -2,9 +2,17 @@
 
 module Administrateurs
   class TypesDeChampController < AdministrateurController
+    include ActiveSupport::NumberHelper
+
     before_action :retrieve_procedure
     after_action :reset_procedure, only: [:create, :update, :destroy, :piece_justificative_template]
     before_action :reload_procedure_with_includes, only: [:destroy]
+
+    CSV_MAX_SIZE = 1.megabyte
+    CSV_ACCEPTED_CONTENT_TYPES = [
+      "text/csv",
+      "application/vnd.ms-excel"
+    ]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
@@ -19,6 +27,8 @@ module Administrateurs
     end
 
     def update
+      import_referentiel and return if referentiel_file.present?
+
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
       @coordinate = draft.coordinate_for(type_de_champ)
 
@@ -119,6 +129,48 @@ module Administrateurs
       end
     end
 
+    def import_referentiel
+      if !CSV_ACCEPTED_CONTENT_TYPES.include?(referentiel_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
+        flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
+
+      elsif referentiel_file.size > CSV_MAX_SIZE
+        flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+
+      else
+        file = referentiel_file.read
+        return flash[:alert] = "Importation impossible : votre fichier CSV est vide" if file.blank?
+
+        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
+
+        type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+
+        csv_to_code = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true).map(&:to_h)
+
+        headers = csv_to_code.first.keys
+
+        ActiveRecord::Base.transaction do
+          # Create referentiel
+          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename, headers:)
+
+          # Create referentiel items
+          # We add headers to items in order to display them in instructeur view
+          # even if the referentiel has been deleted
+          items_to_insert = csv_to_code.map do |row|
+            {
+              data: {
+                row: row.transform_keys { |k| k.parameterize.underscore }
+              },
+              referentiel_id: referentiel.id
+            }
+          end
+
+          ReferentielItem.insert_all(items_to_insert)
+        end
+        @coordinate = draft.coordinate_for(type_de_champ)
+        @morphed = [champ_component_from(@coordinate)]
+      end
+    end
+
     private
 
     def changing_of_type?(type_de_champ)
@@ -156,6 +208,7 @@ module Administrateurs
         :drop_down_other,
         :drop_down_secondary_libelle,
         :drop_down_secondary_description,
+        :drop_down_mode,
         :collapsible_explanation_enabled,
         :collapsible_explanation_text,
         :header_section_level,
@@ -183,6 +236,14 @@ module Administrateurs
 
     def reload_procedure_with_includes
       ProcedureRevisionPreloader.load_one(draft)
+    end
+
+    def referentiel_file
+      params["referentiel_file"]
+    end
+
+    def marcel_content_type
+      Marcel::MimeType.for(referentiel_file.read, name: referentiel_file.original_filename, declared_type: referentiel_file.content_type)
     end
   end
 end
