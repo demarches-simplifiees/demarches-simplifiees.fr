@@ -12,6 +12,7 @@ module Logic
   def self.class_from_name(name)
     [
       ChampValue,
+      ColumnValue,
       Constant,
       Empty,
       LessThan,
@@ -50,9 +51,9 @@ module Logic
       operator_class = Eq
     in [:enums, _]
       operator_class = IncludeOperator
-    in [:number, EmptyOperator]
+    in [:number, EmptyOperator] | [:integer, EmptyOperator] | [:decimal, EmptyOperator]
       operator_class = Eq
-    in [:number, _]
+    in [:number, _] | [:integer, _] | [:decimal, _]
     end
 
     if !compatible_type?(left, right, type_de_champs)
@@ -63,7 +64,7 @@ module Logic
         Empty.new
       when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :address
         Constant.new(left.options(type_de_champs).first.second)
-      when :number
+      when :number, :integer, :decimal
         Constant.new(0)
       end
     end
@@ -75,7 +76,7 @@ module Logic
     case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
-    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string] | [:address, :string]
+    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string] | [:address, :string] | [:integer, :number] | [:decimal, :number]
       true
     else
       false
@@ -125,6 +126,8 @@ module Logic
   def constant(value) = Logic::Constant.new(value)
 
   def champ_value(stable_id) = Logic::ChampValue.new(stable_id)
+
+  def column_value(column) = Logic::ColumnValue.new(column)
 
   def empty = Logic::Empty.new
 
