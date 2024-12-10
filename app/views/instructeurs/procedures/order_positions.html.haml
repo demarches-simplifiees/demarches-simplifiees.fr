@@ -5,7 +5,7 @@
   %p Déplacez les démarches dans la liste pour les classer en fonction de vos préférences :
 
   %fr-container{ data: { controller: 'move-procedures-position' } }
-    = form_tag update_order_positions_instructeur_procedures_path, method: :patch do
+    = form_tag update_order_positions_instructeur_procedures_path, method: :patch, id: 'order-instructeur-procedures-form' do
       - @procedures.each do |procedure|
         .fr-card.fr-mb-1w.fr-py-1w.fr-px-2w
           .flex.align-center
