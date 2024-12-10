@@ -1,4 +1,5 @@
-%div{ id: dom_id(@dossier, :ineligibilite_rules_broken), data: { controller: 'ineligibilite-rules-match', turbo_force: :server } }
+%div{ id: dom_id(@dossier, :ineligibilite_rules_broken), data: { controller: 'ineligibilite-rules-match',
+                                                                  ineligibilite_rules_match_open_value: (!can_passer_en_construction?).to_s } }
   %button.fr-sr-only{ aria: {controls: 'modal-eligibilite-rules-dialog' }, data: {'fr-opened': "false" } }
     show modal
 

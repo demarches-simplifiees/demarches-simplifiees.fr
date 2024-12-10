@@ -10,10 +10,28 @@ declare const window: Window &
 
 export class InvalidIneligibiliteRulesController extends ApplicationController {
   static targets = ['dialog'];
+  static values = {
+    open: String
+  };
 
   declare dialogTarget: HTMLElement;
+  declare openValue: 'true' | 'false';
 
   connect() {
-    setTimeout(() => window.dsfr(this.dialogTarget).modal.disclose(), 100);
+    if (this.openValue == 'true') {
+      this.openModal();
+    }
+  }
+
+  openValueChanged() {
+    if (this.openValue == 'true') {
+      this.openModal();
+    }
+  }
+
+  private openModal() {
+    setTimeout(() => {
+      window.dsfr(this.dialogTarget).modal.disclose();
+    }, 100);
   }
 }
