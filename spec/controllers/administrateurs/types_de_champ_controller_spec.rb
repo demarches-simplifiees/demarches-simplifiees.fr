@@ -157,7 +157,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
 
       context 'when the csv file length is more than 10 mo' do
-      let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
 
         before do
           allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(11.megabytes)
@@ -307,6 +307,38 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           .to change { coordinate.reload.notice_explicative.attached? }
           .from(false).to(true)
         expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
+  describe '#nullify_referentiel' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+
+    let(:params) do
+      { procedure_id: procedure.id, stable_id: type_de_champ.stable_id }
+    end
+
+    before do
+      referentiel = type_de_champ.create_referentiel!(name: 'referentiel.csv')
+
+      csv_to_code = [{ 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }, { 'option' => 'dessert', 'calorie (kcal)' => '170', 'poids (g)' => '70' }, { 'option' => 'fruit', 'calorie (kcal)' => '100', 'poids (g)' => '50' }]
+
+      keys = csv_to_code.first.keys
+
+      csv_to_code.each do |row|
+        referentiel.items.create!(option: row.slice(keys.first), data: row.except(keys.first))
+      end
+    end
+
+    subject { delete :nullify_referentiel, params: params, format: :turbo_stream }
+
+    context 'working case with multi column file' do
+      it 'nullifies referentiel' do
+        expect { subject }.not_to change(Referentiel, :count).and change(ReferentielItem, :count)
+        expect(type_de_champ.reload.referentiel).to be_nil
+        expect(Referentiel.count).to eq 1
+        expect(ReferentielItem.count).to eq 3
       end
     end
   end
