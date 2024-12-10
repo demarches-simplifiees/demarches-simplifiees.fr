@@ -26,7 +26,7 @@ class APIDatagouv::API
       JSON.parse(response.body)["url"]
     end
 
-    def upload(io, dataset, resource = nil)
+    def upload(io, dataset, resource)
       response = Typhoeus.post(
         datagouv_upload_url(dataset, resource),
         body: {
@@ -66,29 +66,23 @@ class APIDatagouv::API
 
     private
 
-    def datagouv_resource_url(dataset, resource)
-      [
-        API_URL,
-        "/datasets/", dataset,
-        "/resources/", resource
-      ].join
-    end
-
-    def datagouv_upload_url(dataset, resource = nil)
+    def datagouv_resource_url(dataset, resource = nil)
       if resource.present?
         [
           API_URL,
           "/datasets/", dataset,
-          "/resources/", resource,
-          "/upload/"
+          "/resources/", resource
         ].join
       else
         [
           API_URL,
-          "/datasets/", dataset,
-          "/upload/"
+          "/datasets/", dataset
         ].join
       end
+    end
+
+    def datagouv_upload_url(dataset, resource)
+      [datagouv_resource_url(dataset, resource), "/upload/"].join
     end
 
     def datagouv_secret
