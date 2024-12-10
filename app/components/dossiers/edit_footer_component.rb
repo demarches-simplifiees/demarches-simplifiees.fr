@@ -64,7 +64,7 @@ class Dossiers::EditFooterComponent < ApplicationComponent
 
   def submit_draft_button_options
     {
-      class: 'fr-btn fr-btn--sm',
+      class: 'fr-btn',
       disabled: !owner? || !can_passer_en_construction?,
       method: :post,
       data: { 'disable-with': t('.submitting'), controller: 'autosave-submit', turbo_force: :server }
@@ -73,7 +73,7 @@ class Dossiers::EditFooterComponent < ApplicationComponent
 
   def submit_en_construction_button_options
     {
-      class: 'fr-btn fr-btn--sm',
+      class: 'fr-btn',
       disabled: !can_passer_en_construction?,
       method: :post,
       data: { 'disable-with': t('.submitting'), controller: 'autosave-submit', turbo_force: :server },
