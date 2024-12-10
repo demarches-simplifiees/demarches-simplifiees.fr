@@ -1,10 +1,7 @@
 = render partial: 'shared/dossiers/update_champs', locals: { to_show: @to_show, to_hide: @to_hide, to_update: @to_update, dossier: @dossier }
 
-- if !params.key?(:validate)
-  - if @can_passer_en_construction_was && !@can_passer_en_construction_is
-    = turbo_stream.append('contenu', render(Dossiers::InvalidIneligibiliteRulesComponent.new(dossier: @dossier)))
-  - else @ineligibilite_rules_is_computable
-    = turbo_stream.remove(dom_id(@dossier, :ineligibilite_rules_broken))
+- if params[:validate].present? && @dossier.revision.ineligibilite_enabled?
+  = turbo_stream.update dom_id(@dossier, :ineligibilite_rules_broken), render(Dossiers::InvalidIneligibiliteRulesComponent.new(dossier: @dossier, wrapped: false))
 
 - if @update_contact_information
   = turbo_stream.update "contact_information", partial: 'shared/dossiers/update_contact_information', locals: { dossier: @dossier, procedure: @dossier.procedure }

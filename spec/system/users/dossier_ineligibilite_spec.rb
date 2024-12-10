@@ -28,21 +28,21 @@ describe 'Dossier Inéligibilité', js: true do
       visit brouillon_dossier_path(dossier)
       # no error while dossier is empty
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
-      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
-      # does raise error when dossier is filled with condition that does not match
+      # does nothing when dossier is filled with condition that does not match
       within "#champ-1" do
         find("label", text: "Non").click
       end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
-      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
-      # raise error when dossier is filled with condition that matches
+      # open modal when dossier is filled with condition that matches
       within "#champ-1" do
         find("label", text: "Oui").click
       end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: true)
-      expect(page).to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
 
       # reload page and see error
       visit brouillon_dossier_path(dossier)
@@ -51,6 +51,7 @@ describe 'Dossier Inéligibilité', js: true do
 
       # modal is closable, and we can change our dossier response to be eligible
       expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
+      expect(page).to have_text("Vous ne pouvez pas déposer votre dossier")
       within("#modal-eligibilite-rules-dialog") { click_on "Fermer" }
       expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
@@ -78,7 +79,7 @@ describe 'Dossier Inéligibilité', js: true do
       visit brouillon_dossier_path(dossier)
       # no error while dossier is empty
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
-      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
       # first condition matches (so ineligible), cannot submit dossier and error message is clear
       within "#champ-#{first_tdc.stable_id}" do
@@ -148,14 +149,14 @@ describe 'Dossier Inéligibilité', js: true do
       visit brouillon_dossier_path(dossier)
       # no error while dossier is empty
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
-      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
       # only one condition is matches, can submit dossier
       within "#champ-#{first_tdc.stable_id}" do
         find("label", text: "Oui").click
       end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
-      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
       # Now test dossier modification
       click_on "Déposer le dossier"
@@ -196,7 +197,7 @@ describe 'Dossier Inéligibilité', js: true do
     scenario 'ineligibilite rules without validation on champ ensure to re-process cached champs.visible' do
       visit brouillon_dossier_path(dossier)
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
-      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
       within "#champ-1" do
         find("label", text: "Non").click

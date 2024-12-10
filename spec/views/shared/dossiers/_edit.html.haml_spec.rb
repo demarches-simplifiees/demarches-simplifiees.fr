@@ -160,6 +160,7 @@ describe 'shared/dossiers/edit', type: :view do
 
     before do
       allow(dossier).to receive(:can_passer_en_construction?).and_return(false)
+      allow(dossier.revision).to receive(:ineligibilite_enabled?).and_return(true)
     end
 
     it 'renders broken transitions rules dialog' do
