@@ -38,15 +38,15 @@ module DossierCloneConcern
   end
 
   def forked_with_changes?
-    if forked_diff.present?
-      forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
-    end
+    return false if forked_diff.blank?
+
+    forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
   end
 
   def champ_forked_with_changes?(champ)
-    if forked_diff.present?
-      forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
-    end
+    return false if forked_diff.blank?
+
+    forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
   end
 
   def make_diff(editing_fork)
