@@ -5,6 +5,8 @@
         = t('.annotations.explanation')
       - elsif dossier.editing_fork?
         = t('.en_construction.explanation')
+        - if dossier.can_passer_en_construction?
+          = t('.en_construction.submit_them')
       - else
         = t('.brouillon.explanation')
     - if !annotation?

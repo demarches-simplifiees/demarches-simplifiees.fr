@@ -5,7 +5,8 @@ fr:
     confirmation: Brouillon enregistré
     error: Impossible d’enregistrer le brouillon
   en_construction:
-    explanation: Vos modifications sont automatiquement enregistrées. Déposez-les quand vous aurez terminé.
+    explanation: Vos modifications sont automatiquement enregistrées.
+    submit_them: Déposez-les quand vous aurez terminé.
     confirmation: Modifications enregistrées.
     error: Impossible d’enregistrer les modifications
   annotations:
