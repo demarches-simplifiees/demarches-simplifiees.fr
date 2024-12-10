@@ -118,7 +118,7 @@
                         options importées
                       à partir de
                       = type_de_champ.referentiel.name
-                    = render NestedForms::OwnedButtonComponent.new(formaction: delete_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), http_method: :delete, opt: { class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w"}) do
+                    = render NestedForms::OwnedButtonComponent.new(formaction: nullify_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), http_method: :delete, opt: { class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w"}) do
                       Supprimer ce référentiel
 
                 - else

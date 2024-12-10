@@ -140,8 +140,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(type_de_champ.reload.referentiel).to eq Referentiel.last
           expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
           expect(Referentiel.last.name).to eq referentiel_file.original_filename
-          expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
-          expect(ReferentielItem.first.data).to eq({ "calorie (kcal)" => "145", "poids (g)" => "60" })
+          expect(ReferentielItem.first.data).to eq({ "dessert" => "Éclair au café", "poids_g" => "60", "calorie_kcal" => "145" })
           expect(ReferentielItem.first.referentiel_id).to eq(Referentiel.last.id)
         end
       end
@@ -151,7 +150,6 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
         it 'creates a valid referentiel' do
           expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
-          expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
           expect(ReferentielItem.first.data).to eq({ 'dessert' => 'Éclair au café', "headers" => ["Dessert"] })
         end
       end
@@ -307,6 +305,27 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           .to change { coordinate.reload.notice_explicative.attached? }
           .from(false).to(true)
         expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
+  describe '#nullify_referentiel' do
+    let(:procedure) { create(:procedure) }
+    let!(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure:, referentiel:) }
+    let(:referentiel) { create(:csv_referentiel, :with_items) }
+
+    let(:params) do
+      { procedure_id: procedure.id, stable_id: type_de_champ.stable_id }
+    end
+
+    subject { delete :nullify_referentiel, params: params, format: :turbo_stream }
+
+    context 'working case with multi column file' do
+      it 'nullifies referentiel' do
+        expect { subject }.to not_change(Referentiel, :count).and not_change(ReferentielItem, :count)
+        expect(type_de_champ.reload.referentiel).to be_nil
+        expect(Referentiel.count).to eq 1
+        expect(ReferentielItem.count).to eq 3
       end
     end
   end
