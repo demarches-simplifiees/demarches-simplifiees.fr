@@ -89,7 +89,8 @@ class Champ < ApplicationRecord
   end
 
   def blank?
-    type_de_champ.champ_blank?(self)
+    # FIXME: temporary fix to avoid breaking validation
+    in_dossier_revision? ? type_de_champ.champ_blank?(self) : value.blank?
   end
 
   def used_by_routing_rules?
