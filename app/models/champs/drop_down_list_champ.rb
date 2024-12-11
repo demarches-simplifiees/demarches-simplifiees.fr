@@ -39,10 +39,17 @@ class Champs::DropDownListChamp < Champ
     if value == OTHER
       self.other = true
       write_attribute(:value, nil)
+      write_attribute(:data, nil) if self.referentiel?
     else
       self.other = false
       write_attribute(:value, value)
+      write_attribute(:data, set_data_from(value)) if self.referentiel?
     end
+  end
+
+  def set_data_from(value)
+    referentiel_item = ReferentielItem.find(value)
+    { option: referentiel_item.option, data: referentiel_item.data }
   end
 
   def value_other=(value)
