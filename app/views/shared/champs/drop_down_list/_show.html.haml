@@ -1,16 +1,14 @@
-- referentiel_item = champ.referentiel_item
-
-- if champ.referentiel? && referentiel_item&.option.present?
+- if champ.referentiel? && champ.referentiel_item_option.present?
   - if  current_user.instructeur? && !current_user.owns_or_invite?(champ.dossier)
     .fr-background-alt--grey.fr-p-3v
-      - referentiel_item.option.merge(referentiel_item.data).each do |key, value|
+      - champ.referentiel_item_option.merge(champ.referentiel_item_data).each do |key, value|
         - if key.present?
           = render Dossiers::RowShowComponent.new(label: key) do |c|
             - c.with_value do
               %p= value
 
   - else
-    %p= referentiel_item.option[referentiel_item.option.keys.first]
+    %p= champ.referentiel_item_option_value
 
 - elsif champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
   %p

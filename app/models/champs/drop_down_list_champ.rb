@@ -66,6 +66,20 @@ class Champs::DropDownListChamp < Champ
     options.include?(value)
   end
 
+  def referentiel_item_option
+    return nil if self.data.nil?
+    self.data.fetch("option")
+  end
+
+  def referentiel_item_data
+    return nil if self.data.nil?
+    self.data.fetch("data")
+  end
+
+  def referentiel_item_option_value
+    referentiel_item_option.values.first
+  end
+
   private
 
   def value_is_in_options
