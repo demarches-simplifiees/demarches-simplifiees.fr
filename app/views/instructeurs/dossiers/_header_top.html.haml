@@ -1,14 +1,9 @@
 #header-top.fr-container
-  .flex
+  = render Instructeurs::DossiersNavigationComponent.new(dossier:, procedure_presentation:, statut: params[:statut])
+
+  .flex.fr-mb-3w
     %div
-      .flex.fr-mb-1w
-        = render Instructeurs::BackButtonComponent.new(to: instructeur_procedure_path(dossier.procedure, statut: params[:statut]))
-        %h1.fr-h3.fr-mb-1w
-          = t('show_dossier', scope: [:layouts, :breadcrumb], dossier_id: dossier.id, owner_name: dossier.owner_name)
-
-
-      = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
-      .fr-mt-2w.fr-badge-group
+      .fr-mt-2w.badge-group
         = procedure_badge(dossier.procedure)
 
         = status_badge(dossier.state)

@@ -984,6 +984,68 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe 'navigation accross next/prev dossiers' do
+    let(:dossier_id) { dossier.id }
+    let(:statut) { 'a-suivre' }
+    let(:previous_dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:next_dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:cached_ids) { [previous_dossier, dossier, next_dossier].map(&:id) }
+    before do
+      cache = Cache::ProcedureDossierPagination.new(procedure_presentation: double(procedure:, instructeur:), statut:)
+      cache.save_context(incoming_page: 1, ids: cached_ids)
+    end
+
+    context 'when nexting' do
+      subject { get :next, params: { procedure_id: procedure.id, dossier_id: from_id, statut: } }
+
+      context 'when their is a next id' do
+        let(:from_id) { dossier.id }
+        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier.id)) }
+      end
+
+      context 'when their is not next id (en of list)' do
+        let(:from_id) { cached_ids.last }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: from_id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
+
+      context 'when id does not exists' do
+        let(:from_id) { 'kthxbye' }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_procedure_path(procedure_id: procedure.id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
+    end
+
+    context 'when previousing' do
+      subject { get :previous, params: { procedure_id: procedure.id, dossier_id: from_id, statut: } }
+
+      context 'when their is a previous id' do
+        let(:from_id) { dossier.id }
+        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: previous_dossier.id)) }
+      end
+
+      context 'when their is not previous id (before list)' do
+        let(:from_id) { cached_ids.first }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: from_id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
+
+      context 'when id does not exists' do
+        let(:from_id) { 'kthxbye' }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_procedure_path(procedure_id: procedure.id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
+    end
+  end
+
   describe "#update_annotations" do
     let(:procedure) do
       create(:procedure, :published, types_de_champ_public:, types_de_champ_private:, instructeurs: instructeurs)

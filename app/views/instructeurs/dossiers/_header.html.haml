@@ -10,7 +10,7 @@
     locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb], libelle: dossier.procedure.libelle.truncate(22)), instructeur_procedure_path(dossier.procedure)],
                       [t('show_dossier', scope: [:layouts, :breadcrumb], dossier_id: dossier.id, owner_name: dossier.owner_name)]] }
 
-  = render partial: 'instructeurs/dossiers/header_top', locals: { dossier: }
+  = render partial: 'instructeurs/dossiers/header_top', locals: { dossier:, procedure_presentation: }
   = render partial: 'instructeurs/dossiers/header_bottom', locals: { dossier:, gallery_attachments: }
 
 .fr-container

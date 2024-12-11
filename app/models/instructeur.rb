@@ -127,12 +127,14 @@ class Instructeur < ApplicationRecord
     end
   end
 
+  def procedure_presentation_for_procedure_id(procedure_id)
+    assign_to = assign_to_for_procedure_id(procedure_id)
+    assign_to.procedure_presentation || assign_to.create_procedure_presentation!
+  end
+
   def procedure_presentation_and_errors_for_procedure_id(procedure_id)
-    assign_to
-      .joins(:groupe_instructeur)
-      .includes(:instructeur, :procedure)
-      .find_by(groupe_instructeurs: { procedure_id: procedure_id })
-      .procedure_presentation_or_default_and_errors
+    assign_to = assign_to_for_procedure_id(procedure_id)
+    assign_to.procedure_presentation_or_default_and_errors
   end
 
   def notifications_for_dossier(dossier)
@@ -354,5 +356,12 @@ class Instructeur < ApplicationRecord
       .where(condition)
       .merge(followed_dossiers)
       .with_notifications
+  end
+
+  def assign_to_for_procedure_id(procedure_id)
+    assign_to
+      .joins(:groupe_instructeur)
+      .includes(:instructeur, :procedure)
+      .find_by(groupe_instructeurs: { procedure_id: procedure_id })
   end
 end

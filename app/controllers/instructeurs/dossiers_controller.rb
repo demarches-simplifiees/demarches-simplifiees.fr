@@ -7,15 +7,16 @@ module Instructeurs
     include CreateAvisConcern
     include DossierHelper
     include TurboChampsConcern
-
+    include InstructeurConcern
     include ActionController::Streaming
     include Zipline
 
     before_action :redirect_on_dossier_not_found, only: :show
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation]
-    after_action :mark_demande_as_read, only: :show
+    before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
 
+    after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
@@ -390,7 +391,39 @@ module Instructeurs
       @pieces_jointes_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.pieces_jointes_seen_at
     end
 
+    def next
+      navigate_through_dossiers_list do |cache|
+        cache.next_dossier_id(from_id: params[:dossier_id])
+      end
+    end
+
+    def previous
+      navigate_through_dossiers_list do |cache|
+        cache.previous_dossier_id(from_id: params[:dossier_id])
+      end
+    end
+
     private
+
+    def navigate_through_dossiers_list
+      dossier = dossier_scope.find(params[:dossier_id])
+      procedure_presentation = current_instructeur.procedure_presentation_for_procedure_id(dossier.procedure.id)
+      cache = Cache::ProcedureDossierPagination.new(procedure_presentation:, statut: params[:statut])
+
+      next_or_previous_dossier_id = yield(cache)
+
+      if next_or_previous_dossier_id
+        redirect_to instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_or_previous_dossier_id, statut: params[:statut])
+      else
+        redirect_back fallback_location: instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier.id, statut: params[:statut]), alert: "Une erreur est survenue"
+      end
+    rescue ActiveRecord::RecordNotFound
+      Sentry.capture_message(
+        "Navigation through dossier failed => ActiveRecord::RecordNotFound",
+        extra: { dossier_id: params[:dossier_id] }
+      )
+      redirect_to instructeur_procedure_path(procedure_id: procedure.id), alert: "Une erreur est survenue"
+    end
 
     def dossier_scope
       if action_name == 'update_annotations'

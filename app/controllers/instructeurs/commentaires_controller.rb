@@ -2,10 +2,12 @@
 
 module Instructeurs
   class CommentairesController < ApplicationController
+    include InstructeurConcern
     before_action :authenticate_instructeur_or_expert!
     after_action :mark_messagerie_as_read
 
     def destroy
+      retrieve_procedure_presentation if current_instructeur
       if commentaire.sent_by?(current_instructeur) || commentaire.sent_by?(current_expert)
         commentaire.soft_delete!
 
