@@ -122,6 +122,8 @@ module Instructeurs
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
         .where(seen_at: nil)
         .distinct
+
+      cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
 
     def deleted_dossiers
@@ -391,6 +393,12 @@ module Instructeurs
 
     def ordered_procedure_ids_params
       params.require(:ordered_procedure_ids)
+    end
+
+    def cache_show_procedure_state
+      cache = Cache::ProcedureDossierPagination.new(procedure_presentation:, statut:)
+
+      cache.save_context(ids: @filtered_sorted_paginated_ids, incoming_page: params[:page])
     end
   end
 end

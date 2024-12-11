@@ -670,6 +670,18 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
       end
     end
+
+    describe 'caches statut and page query param' do
+      let(:statut) { 'tous' }
+      let(:page) { '1' }
+      let!(:dossier) { create(:dossier, :accepte, procedure:) }
+      before { sign_in(instructeur.user) }
+      subject { get :show, params: { procedure_id: procedure.id, statut:, page: } }
+      it 'changes cached value' do
+        expect { subject }.to change { Cache::ProcedureDossierPagination.new(statut:, procedure_presentation: double(procedure:, instructeur:)).send(:read_cache) }
+          .from({}).to(ids: [dossier.id], incoming_page: page)
+      end
+    end
   end
 
   describe '#deleted_dossiers' do

@@ -1,6 +1,6 @@
 - content_for(:title, "Réaffectation · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
 
-= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments }
+= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation }
 
 .container.groupe-instructeur
 
