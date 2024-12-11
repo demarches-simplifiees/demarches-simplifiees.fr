@@ -8,11 +8,9 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   private
 
   def champ_value_in_options?(champ)
-    if champ.referentiel?
-      champ_with_other_value?(champ) || referentiel_drop_down_options.map { _1['id'] }.include?(champ.value.to_i)
-    else
-      champ_with_other_value?(champ) || drop_down_options.include?(champ.value)
-    end
+    # we want to display referentiel item even if it is not in db anymore
+    return true if champ.referentiel?
+    champ_with_other_value?(champ) || drop_down_options.include?(champ.value)
   end
 
   def champ_with_other_value?(champ)

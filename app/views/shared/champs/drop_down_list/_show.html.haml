@@ -1,6 +1,8 @@
-- if champ.referentiel? && champ.referentiel_item_option.present?
-  - if  current_user.instructeur? && !current_user.owns_or_invite?(champ.dossier)
+- if champ.referentiel?
+  - if  false
     .fr-background-alt--grey.fr-p-3v
+      - if !champ.value_is_in_referentiel_ids?
+        %span.fr-badge.fr-badge--warning.fr-badge--sm Valeur retirée du référentiel
       - champ.referentiel_item_option.merge(champ.referentiel_item_data).each do |key, value|
         - if key.present?
           = render Dossiers::RowShowComponent.new(label: key) do |c|
