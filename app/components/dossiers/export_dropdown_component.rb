@@ -31,7 +31,7 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
   end
 
   def can_include_archived?
-    @statut == 'tous'
+    @statut == 'tous' && @archived_count > 0
   end
 
   def include_archived_title

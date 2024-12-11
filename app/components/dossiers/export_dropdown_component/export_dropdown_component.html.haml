@@ -16,7 +16,7 @@
         .fr-tabs__panel.fr-pb-8w.fr-tabs__panel--selected{ id: "tabpanel-standard#{@count}-panel", role: "tabpanel", "aria-labelledby": "tabpanel-standard#{@count}", tabindex: "0" }
           = form_with url: download_export_path, namespace: "export#{@count}", data: { turbo_method: :post, turbo: true } do |f|
 
-            - if can_include_archived? && @archived_count > 0
+            - if can_include_archived?
               .fr-pb-2w
                 = render Dsfr::ToggleComponent.new(form: f,
                     target: :include_archived,
@@ -64,7 +64,7 @@
           .fr-tabs__panel.fr-pr-3w.fr-pb-8w{ id: "tabpanel-template#{@count}-panel", role: "tabpanel", "aria-labelledby": "tabpanel-template", tabindex: "0" }
             = form_with url: download_export_path, namespace: "export_template_#{@count}", data: { turbo_method: :post, turbo: true }  do |f|
               = f.hidden_field :statut, value: @statut
-              - if can_include_archived? && @archived_count > 0
+              - if can_include_archived?
                 .fr-pb-2w
                   = render Dsfr::ToggleComponent.new(form: f,
                       target: :include_archived,
