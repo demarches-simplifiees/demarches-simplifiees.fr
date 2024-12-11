@@ -51,7 +51,6 @@ class ProcedureDashboard < Administrate::BaseDashboard
     piece_justificative_multiple: Field::Boolean,
     for_tiers_enabled: Field::Boolean,
     replaced_by_procedure_id: Field::String,
-    tags: Field::Text,
     template: Field::Boolean,
     opendata: Field::Boolean,
     hide_instructeurs_email: Field::Boolean
@@ -85,7 +84,6 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :routing_champs,
     :libelle,
     :description,
-    :tags,
     :template,
     :lien_site_web,
     :organisation,
