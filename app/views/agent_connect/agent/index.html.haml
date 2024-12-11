@@ -26,36 +26,36 @@
                   %p
                     = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
 
+            - if !params[:force_agent_connect]
+              %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
-            %p.fr-hr-or= t('views.shared.france_connect_login.separator')
+              %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
+                %legend.fr-fieldset__legend#new-account-legend
+                  %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
 
-            %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
-              %legend.fr-fieldset__legend#new-account-legend
-                %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
+                = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+                  - c.with_body do
+                    = t('views.users.sessions.new.for_tiers_alert')
 
-              = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-                - c.with_body do
-                  = t('views.users.sessions.new.for_tiers_alert')
+                .fr-fieldset__element
+                  %p.fr-text--sm= t('utils.asterisk_html')
 
-              .fr-fieldset__element
-                %p.fr-text--sm= t('utils.asterisk_html')
+                .fr-fieldset__element
+                  = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email' }) do |c|
+                    - c.with_label { t('.pro_email') }
 
-              .fr-fieldset__element
-                = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email' }) do |c|
-                  - c.with_label { t('.pro_email') }
+                .fr-fieldset__element
+                  = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
 
-              .fr-fieldset__element
-                = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
+                  %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "fr-link"
 
-                %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "fr-link"
+                .fr-fieldset__element
+                  .auth-options
+                    .flex-no-shrink
+                      = f.check_box :remember_me
+                      = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
 
-              .fr-fieldset__element
-                .auth-options
-                  .flex-no-shrink
-                    = f.check_box :remember_me
-                    = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
-
-                .fr-btns-group= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
+                  .fr-btns-group= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
 
           %hr
 

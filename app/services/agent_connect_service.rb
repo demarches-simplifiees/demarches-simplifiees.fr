@@ -3,6 +3,8 @@
 class AgentConnectService
   include OpenIDConnect
 
+  MANDATORY_EMAIL_DOMAINS = ['beta.gouv.fr', 'modernisation.gouv.fr']
+
   def self.enabled?
     ENV['AGENT_CONNECT_BASE_URL'].present?
   end
@@ -43,6 +45,10 @@ class AgentConnectService
     app_logout = Rails.application.routes.url_helpers.logout_url(host: host_with_port)
     h = { id_token_hint: id_token, post_logout_redirect_uri: app_logout }
     "#{AGENT_CONNECT[:end_session_endpoint]}?#{h.to_query}"
+  end
+
+  def self.email_domain_is_in_mandatory_list?(email)
+    email.strip.split('@').last.in?(MANDATORY_EMAIL_DOMAINS)
   end
 
   private
