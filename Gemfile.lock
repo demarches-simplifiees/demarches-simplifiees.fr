@@ -214,7 +214,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-i18n (1.12.0)
+    devise-i18n (1.12.1)
       devise (>= 4.9.0)
     devise-two-factor (6.0.0)
       activesupport (~> 7.0)
