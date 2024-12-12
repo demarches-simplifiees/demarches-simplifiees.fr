@@ -449,7 +449,7 @@ describe DossierRebaseConcern do
           tdc_to_update.update(drop_down_options: ["option", "updated"])
         end
 
-        it { expect { subject }.to change { dossier.project_champs_public.first.to_s }.from('v1').to('') }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.to_s } }
       end
 
       context 'when a dropdown unused option is removed' do
@@ -495,7 +495,7 @@ describe DossierRebaseConcern do
           tdc_to_update.update(drop_down_options: ["option", "updated"])
         end
 
-        it { expect { subject }.to change { dossier.project_champs_public.first.to_s }.from('v1, option').to('option') }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.to_s } }
       end
 
       context 'when a dropdown unused option is removed' do

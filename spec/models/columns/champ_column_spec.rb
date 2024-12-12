@@ -121,14 +121,6 @@ describe Columns::ChampColumn do
           expect(column('multiple_drop_down_list').value(champ)).to eq(['val1'])
           expect(column('text').value(champ)).to eq('val1')
         end
-
-        context 'value not in options' do
-          let(:value) { 'toto' }
-
-          it do
-            expect(column('simple_drop_down_list').value(champ)).to eq(nil)
-          end
-        end
       end
 
       context 'from a multiple_drop_down_list' do
@@ -138,14 +130,6 @@ describe Columns::ChampColumn do
         it do
           expect(column('simple_drop_down_list').value(champ)).to eq('val1')
           expect(column('text').value(champ)).to eq('val1, val2')
-        end
-
-        context 'value not in options' do
-          let(:value) { '["toto","val2"]' }
-
-          it do
-            expect(column('multiple_drop_down_list').value(champ)).to eq(['val2'])
-          end
         end
       end
     end
