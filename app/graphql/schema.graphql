@@ -3197,6 +3197,73 @@ type IntegerNumberChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+type LexpolChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
+  Lien vers le dossier Lexpol
+  """
+  dossierURL: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Numéro NOR du dossier Lexpol
+  """
+  nor: String
+  prefilled: Boolean!
+
+  """
+  Statut du dossier Lexpol
+  """
+  status: String
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+}
+
+type LexpolChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
 type LinkedDropDownListChamp implements Champ {
   """
   L'identifiant du champDescriptor de ce champ
@@ -4742,6 +4809,11 @@ enum TypeDeChamp {
   Nombre entier
   """
   integer_number
+
+  """
+  Lexpol
+  """
+  lexpol
 
   """
   Deux menus déroulants liés
