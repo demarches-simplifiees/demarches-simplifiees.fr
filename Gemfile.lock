@@ -353,9 +353,9 @@ GEM
       ruby-vips (>= 2.0.17, < 3)
     invisible_captcha (2.3.0)
       rails (>= 5.2)
-    io-console (0.7.2)
-    irb (1.12.0)
-      rdoc
+    io-console (0.8.0)
+    irb (1.14.1)
+      rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     job-iteration (1.7.0)
       activejob (>= 5.2)
@@ -509,7 +509,8 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     prometheus-client (4.2.2)
     promise.rb (0.7.4)
-    psych (5.2.0)
+    psych (5.2.1)
+      date
       stringio
     public_suffix (6.0.1)
     puma (6.5.0)
@@ -591,7 +592,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rdoc (6.6.3.1)
+    rdoc (6.8.1)
       psych (>= 4.0.0)
     redcarpet (3.6.0)
     redis (5.2.0)
@@ -599,7 +600,7 @@ GEM
     redis-client (0.22.1)
       connection_pool
     regexp_parser (2.9.2)
-    reline (0.5.3)
+    reline (0.5.12)
       io-console (~> 0.5)
     request_store (1.5.1)
       rack (>= 1.4)
