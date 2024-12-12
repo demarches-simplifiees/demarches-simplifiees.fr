@@ -95,9 +95,9 @@ class Columns::ChampColumn < Column
     when ['drop_down_list', 'text'] # single list can become text
       value
     when ['multiple_drop_down_list', 'drop_down_list'] # multi list can become single
-      parse_enums(value)&.first
+      parse_enums(value).first
     when ['multiple_drop_down_list', 'text'] # multi list can become text
-      parse_enums(value)&.join(', ')
+      parse_enums(value).join(', ')
     when ['date', 'datetime'] # date <=> datetime
       parse_datetime(value)&.to_datetime
     when ['datetime', 'date'] # may lose some data, but who cares ?
@@ -116,14 +116,7 @@ class Columns::ChampColumn < Column
     end
   end
 
-  def parse_enums(value)
-    values = JSON.parse(value)
-    return values if options_for_select.blank?
-    options = options_for_select.to_set(&:second)
-    values.filter { options.member?(_1) }
-  rescue JSON::ParserError
-    nil
-  end
+  def parse_enums(value) = JSON.parse(value) rescue nil
 
   def parse_datetime(value) = Time.zone.parse(value) rescue nil
 end
