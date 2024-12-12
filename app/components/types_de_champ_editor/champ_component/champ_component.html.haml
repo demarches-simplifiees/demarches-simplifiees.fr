@@ -64,8 +64,25 @@
               .cell.fr-mt-1w
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
-
-
+            - if type_de_champ.lexpol?
+              .cell.fr-mt-1w
+                = form.label :lexpol_modele, "Sélectionner un modèle Lexpol", class: 'flex-grow', for: dom_id(type_de_champ, :lexpol_modele)
+                - if lexpol_models.any?
+                  = form.select :lexpol_modele,
+                                lexpol_models.map { |model| [model.first, model.last] },
+                                { prompt: 'Sélectionnez un modèle' },
+                                { class: 'fr-select small-margin small width-100', id: dom_id(type_de_champ, :lexpol_modele) }
+                - else
+                  .fr-message.fr-message--error
+                    %p Aucune modèle disponible ou erreur lors de la récupération des modèles.
+              .cell.fr-mt-1w
+                = form.label :lexpol_mapping, "Variables Lexpol", class: 'flex-grow', for: dom_id(type_de_champ, :lexpol_mapping)
+                = form.text_area :lexpol_mapping,
+                                value: type_de_champ.lexpol_mapping,
+                                class: 'fr-input small-margin small width-100 resize-y',
+                                rows: 3,
+                                placeholder: "variables_mes_demarches=variable_lexpol\n...",
+                                id: dom_id(type_de_champ, :lexpol_mapping)
 
         .flex.justify-start.fr-mt-1w
           -# ----- Polynesia options

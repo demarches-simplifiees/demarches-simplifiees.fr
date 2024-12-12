@@ -90,6 +90,8 @@ module Types
           Types::Champs::TitreIdentiteChampType
         when ::Champs::VisaChamp
           Types::Champs::VisaChampType
+        when ::Champs::LexpolChamp
+          Types::Champs::LexpolChampType
         when ::Champs::EpciChamp
           Types::Champs::EpciChampType
         when ::Champs::RNAChamp

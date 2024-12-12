@@ -8,6 +8,7 @@ class TypeDeChamp < ApplicationRecord
     engagement_juridique: :engagement_juridique_type_de_champ,
 
     cojo: :cojo_type_de_champ,
+    lexpol: :lexpol,
     expression_reguliere: :expression_reguliere_type_de_champ
   }
 
@@ -19,6 +20,7 @@ class TypeDeChamp < ApplicationRecord
     code_postal_de_polynesie: 'code_postal_de_polynesie',
     numero_dn: 'numero_dn',
     te_fenua: 'te_fenua',
+    lexpol: 'lexpol',
     visa: 'visa'
   }
 
@@ -39,6 +41,7 @@ class TypeDeChamp < ApplicationRecord
     code_postal_de_polynesie: LOCALISATION,
     numero_dn: REFERENTIEL_EXTERNE,
     te_fenua: REFERENTIEL_EXTERNE,
+    lexpol: REFERENTIEL_EXTERNE,
     visa: STRUCTURE
   }
 
@@ -163,6 +166,8 @@ class TypeDeChamp < ApplicationRecord
                  :expression_reguliere_error_message,
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
+                 :lexpol_modele,
+                 :lexpol_mapping,
                  :header_section_level
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
@@ -465,6 +470,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:te_fenua)
   end
 
+  def lexpol?
+    type_champ == TypeDeChamp.type_champs.fetch(:lexpol)
+  end
+
   def cnaf?
     type_champ == TypeDeChamp.type_champs.fetch(:cnaf)
   end
@@ -722,6 +731,7 @@ class TypeDeChamp < ApplicationRecord
       type_champs.fetch(:siret),
       type_champs.fetch(:numero_dn),
       type_champs.fetch(:te_fenua)
+      # type_champs.fetch(:lexpol) # useless ?
       false
     else
       true

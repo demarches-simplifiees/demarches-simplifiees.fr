@@ -62,6 +62,7 @@ fr:
           mesri: "Données du Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation"
           epci: "EPCI"
           cojo: "Accréditation Paris 2024"
+          lexpol: "Lexpol"
           expression_reguliere: 'Expression régulière'
     errors:
       type_de_champ:

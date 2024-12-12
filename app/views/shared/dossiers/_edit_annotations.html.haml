@@ -6,5 +6,26 @@
         %fieldset.fr-fieldset= render EditableChamp::SectionComponent.new(dossier:, types_de_champ: dossier.revision.types_de_champ_private)
 
       = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: true)
-  - else
-    %h2.empty-text Aucune annotation privée
+    - champ_lexpol = dossier.champs.find { |c| c.lexpol? }
+
+    - if champ_lexpol.present?
+      %section.fr-section
+        %h2 LexPol
+        - if champ_lexpol.value.blank?
+          = form_with url: create_lexpol_dossier_instructeur_dossier_path(dossier_id: dossier.id, champ_id: champ_lexpol.id), method: :post do |form|
+            = form.submit 'Créer le dossier dans LexPol', class: 'fr-btn'
+        - else
+          %p
+            %strong Numéro NOR :
+            = champ_lexpol.value
+          %p
+            %strong Statut du dossier :
+            = champ_lexpol.data&.[]('lexpol_status') || 'Inconnu'
+
+          - if champ_lexpol.data&.[]('lexpol_dossier_url').present?
+            = link_to 'Aller sur LexPol', champ_lexpol.data['lexpol_dossier_url'], target: '_blank', class: 'fr-btn fr-btn--secondary'
+
+          = form_with url: update_lexpol_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post do |form|
+            = form.submit 'Rafraîchir les données LexPol', class: 'fr-btn fr-btn--secondary'
+    - else
+      %h2.empty-text Aucune annotation privée

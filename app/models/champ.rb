@@ -1,6 +1,7 @@
 class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern
+  include LexpolConcern
 
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
@@ -53,6 +54,7 @@ class Champ < ApplicationRecord
     :siret?,
     :carte?,
     :te_fenua?,
+    :lexpol?,
     :datetime?,
     :mandatory?,
     :prefillable?,

@@ -82,6 +82,7 @@ gem 'prawn-qrcode' # to generate qrcode in pdfs
 gem 'prawn-rails' # PDF Generation
 gem 'prawn-table'
 gem 'premailer-rails'
+gem 'pry-byebug'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'

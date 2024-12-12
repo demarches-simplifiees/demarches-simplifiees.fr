@@ -346,10 +346,15 @@ module Instructeurs
     end
 
     def procedure
-      Procedure
-        .with_attached_logo
-        .find(procedure_id)
-        .tap { Sentry.set_tags(procedure: _1.id) }
+      if params[:dossier_id].present?
+        dossier = Dossier.find(params[:dossier_id])
+        dossier.procedure
+      else
+        Procedure
+          .with_attached_logo
+          .find(procedure_id)
+          .tap { Sentry.set_tags(procedure: _1.id) }
+      end
     end
 
     def ensure_ownership!
