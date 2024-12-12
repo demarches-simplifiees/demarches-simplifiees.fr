@@ -111,7 +111,7 @@ GEM
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
     anchored (1.1.0)
-    anyway_config (2.6.3)
+    anyway_config (2.6.4)
       ruby-next-core (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
@@ -400,8 +400,8 @@ GEM
     language_server-protocol (3.17.0.3)
     launchy (2.5.2)
       addressable (~> 2.8)
-    letter_opener (1.9.0)
-      launchy (>= 2.2, < 3)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     letter_opener_web (2.0.0)
       actionmailer (>= 5.2)
       letter_opener (~> 1.7)
@@ -675,7 +675,7 @@ GEM
       rubocop (~> 1.40)
     ruby-graphviz (1.2.5)
       rexml
-    ruby-next-core (1.0.2)
+    ruby-next-core (1.0.3)
     ruby-pg-extras (5.4.5)
       pg
       terminal-table
@@ -856,7 +856,7 @@ GEM
       nokogiri (~> 1.11)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yabeda (0.12.0)
+    yabeda (0.13.1)
       anyway_config (>= 1.0, < 3)
       concurrent-ruby
       dry-initializer
