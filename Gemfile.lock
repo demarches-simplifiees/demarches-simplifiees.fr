@@ -184,7 +184,7 @@ GEM
       addressable
     csv (3.3.0)
     daemons (1.4.1)
-    date (3.3.4)
+    date (3.4.1)
     deep_cloneable (3.2.1)
       activerecord (>= 3.1.0, < 9)
     delayed_cron_job (0.9.0)
@@ -351,7 +351,7 @@ GEM
     image_processing (1.13.0)
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.17, < 3)
-    invisible_captcha (2.2.0)
+    invisible_captcha (2.3.0)
       rails (>= 5.2)
     io-console (0.7.2)
     irb (1.12.0)
@@ -451,7 +451,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     net-http (0.4.1)
       uri
-    net-imap (0.4.17)
+    net-imap (0.5.1)
       date
       net-protocol
     net-pop (0.1.2)
@@ -788,7 +788,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.3.0)
     timecop (0.9.8)
-    timeout (0.4.1)
+    timeout (0.4.2)
     ttfunk (1.7.0)
     turbo-rails (2.0.5)
       actionpack (>= 6.0.0)
