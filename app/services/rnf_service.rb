@@ -4,7 +4,7 @@ class RNFService
   include Dry::Monads[:result]
 
   def call(rnf_id:)
-    result = API::Client.new.(url: "#{url}/#{rnf_id}", schema:)
+    result = API::Client.new.(url: "#{url}/#{rnf_id}", schema:, headers:, typhoeus_options:)
     case result
     in Success(body:)
       Success(body)
@@ -20,6 +20,14 @@ class RNFService
   end
 
   private
+
+  def headers
+    { Token: ENV['RNF_TOKEN'] }
+  end
+
+  def typhoeus_options
+    { ssl_verifyhost: 0 }
+  end
 
   def schema
     JSONSchemer.schema(Rails.root.join('app/schemas/rnf.json'))
