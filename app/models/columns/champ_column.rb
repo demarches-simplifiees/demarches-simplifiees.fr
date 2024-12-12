@@ -70,7 +70,7 @@ class Columns::ChampColumn < Column
     when :date
       parse_datetime(value)&.to_date
     when :enum
-      parse_enum(value)
+      value
     when :enums
       parse_enums(value)
     else
@@ -91,9 +91,9 @@ class Columns::ChampColumn < Column
     when ['integer_number', 'text'], ['decimal_number', 'text'] # number to text
       value
     when ['drop_down_list', 'multiple_drop_down_list'] # single list can become multi
-      [parse_enum(value)].compact_blank
+      [value]
     when ['drop_down_list', 'text'] # single list can become text
-      parse_enum(value)
+      value
     when ['multiple_drop_down_list', 'drop_down_list'] # multi list can become single
       parse_enums(value)&.first
     when ['multiple_drop_down_list', 'text'] # multi list can become text
@@ -114,11 +114,6 @@ class Columns::ChampColumn < Column
     when 'false'
       false
     end
-  end
-
-  def parse_enum(value)
-    return value if options_for_select.blank?
-    value if options_for_select.to_set(&:second).member?(value)
   end
 
   def parse_enums(value)
