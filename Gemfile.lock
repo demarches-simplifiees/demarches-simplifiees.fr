@@ -433,7 +433,7 @@ GEM
       zeitwerk (>= 2.6.2)
     marcel (1.0.4)
     matrix (0.4.2)
-    memory_profiler (1.0.1)
+    memory_profiler (1.1.0)
     method_source (1.1.0)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
