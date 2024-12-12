@@ -579,9 +579,9 @@ GEM
     rails-i18n (7.0.10)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
-    rails-pg-extras (5.3.1)
+    rails-pg-extras (5.4.5)
       rails
-      ruby-pg-extras (= 5.3.1)
+      ruby-pg-extras (= 5.4.5)
     railties (7.0.8.7)
       actionpack (= 7.0.8.7)
       activesupport (= 7.0.8.7)
@@ -675,7 +675,7 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-next-core (1.0.2)
-    ruby-pg-extras (5.3.1)
+    ruby-pg-extras (5.4.5)
       pg
       terminal-table
     ruby-progressbar (1.13.0)
