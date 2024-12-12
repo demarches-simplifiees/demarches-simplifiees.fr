@@ -130,7 +130,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.2.0)
     bcrypt (3.1.20)
-    benchmark-ips (2.13.0)
+    benchmark-ips (2.14.0)
     better_html (2.0.2)
       actionview (>= 6.0)
       activesupport (>= 6.0)
