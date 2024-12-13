@@ -9,26 +9,52 @@
       %p= t('.use_email_for_notifications')
 
       %fieldset.fr-fieldset
-        = form_with url: france_connect_particulier_merge_using_fc_email_path(merge_token: @fci.merge_token), method: :post, data: { controller: 'email-france-connect' } do |f|
+        = form_with url: france_connect_particulier_merge_using_fc_email_path,
+          method: :post,
+          data: { controller: 'email-france-connect',
+            email_france_connect_fc_email_path_value: france_connect_particulier_merge_using_fc_email_path,
+            email_france_connect_custom_email_path_value: france_connect_particulier_send_email_merge_request_path,
+            email_france_connect_target: "form" } do |f|
+
           = hidden_field_tag :merge_token, @fci.merge_token
 
           %fieldset.fr-fieldset
             %legend.fr-fieldset__legend
             .fr-fieldset__element
               .fr-radio-group
-                = f.radio_button :use_france_connect_email, true, id: 'use_france_connect_email_yes', class: 'fr-radio', required: true, data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
+                = f.radio_button :use_france_connect_email, true,
+                  id: 'use_france_connect_email_yes',
+                  class: 'fr-radio',
+                  required: true,
+                  data: { action: "email-france-connect#triggerEmailField email-france-connect#triggerSubmitDisabled",
+                  email_france_connect_target: "useFranceConnectEmail" }
                 %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_yes' }
-                  = t('.keep_fc_email_html', email: h(@fci.email_france_connect)).html_safe
+                  = t('.keep_fc_email_html', email: h(@fci.email_france_connect))
+
             .fr-fieldset__element
               .fr-radio-group
-                = f.radio_button :use_france_connect_email, false, id: 'use_france_connect_email_no', class: 'fr-radio', required: true, data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
+                = f.radio_button :use_france_connect_email, false,
+                  id: 'use_france_connect_email_no',
+                  class: 'fr-radio',
+                  required: true,
+                  data: { action: "email-france-connect#triggerEmailField email-france-connect#triggerSubmitDisabled", email_france_connect_target: "useFranceConnectEmail" }
                 %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_no' }
                   = t('.use_another_email')
 
-            .fr-fieldset__element.fr-fieldset__element--inline.hidden{ aria: { hidden: true }, data: { email_france_connect_target: "emailField", controller: 'email-input', email_input_url_value: show_email_suggestions_path } }
+            .fr-fieldset__element.fr-fieldset__element--inline.hidden{
+              aria: { hidden: true },
+              data: {
+                email_france_connect_target: "emailField",
+                controller: 'email-input',
+                email_input_url_value: show_email_suggestions_path
+                }
+              }
+
               = f.label :email, t('.alternative_email'), class: "fr-label"
               %span.fr-hint-text.mb-1= t('activerecord.attributes.user.hints.email')
-              = f.email_field :email, class: "fr-input"
+              = f.email_field :email,
+                data: { action: "email-france-connect#triggerSubmitDisabled", email_france_connect_target: "emailInput" },
+                class: "fr-input"
 
               .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion'}, aria: { live: 'off' } }
                 = render Dsfr::AlertComponent.new(title: t('utils.email_suggest.wanna_say'), state: :info, heading_level: :div) do |c|
@@ -40,4 +66,7 @@
                       = button_tag type: 'button', class: 'fr-btn fr-btn--sm', data: { action: 'click->email-input#discard'} do
                         = t('utils.no')
           %div
-            = f.submit t('.confirm'), class: 'fr-btn'
+            = f.submit t('.confirm'),
+              class: 'fr-btn',
+              data: { email_france_connect_target: "submit" },
+              disabled: true
