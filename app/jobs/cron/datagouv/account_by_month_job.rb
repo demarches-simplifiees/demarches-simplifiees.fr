@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
-  include DatagouvCronSchedulableConcern
+class Cron::Datagouv::AccountByMonthJob < Cron::Datagouv::BaseJob
   self.schedule_expression = "every month at 4:30"
   HEADERS = ["mois", "nb_comptes_crees_par_mois"]
   FILE_NAME = HEADERS[1]
-  DATASET = '6745cdbb3aee5fa1f498d5ef'
   RESOURCE = '2832f158-1920-4f96-af83-ae41c5313558'
-  DATE_FORMAT = "%Y-%m"
 
   def perform
-    csv = data_gouv_csv
+    csv = data_gouv_csv(RESOURCE, HEADERS)
 
     missing_months(csv)
       .map { |month| data_for(month:) }
@@ -20,21 +17,6 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
   end
 
   private
-
-  def data_gouv_csv
-    APIDatagouv::API.existing_csv(DATASET, RESOURCE) || CSV::Table.new([], headers: HEADERS)
-  end
-
-  def missing_months(csv)
-    last_date = Date.strptime(csv[-1]['mois'], DATE_FORMAT) if csv.present?
-
-    start_month = last_date.present? ? last_date + 1.month : previous_month
-
-    Enumerator.produce(start_month) { _1 + 1.month }
-      .take_while { _1 <= previous_month }
-  end
-
-  def previous_month = 1.month.ago.beginning_of_month.to_date
 
   def data_for(month:)
     [month.strftime(DATE_FORMAT), User.where(created_at: month.all_month).count]
