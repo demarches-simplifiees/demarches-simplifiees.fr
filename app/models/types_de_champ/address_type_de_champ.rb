@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
+  include AddressableColumnConcern
+
   def libelles_for_export
     path = paths.first
     [[path[:libelle], path[:path]]]
@@ -34,6 +36,11 @@ class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
     when :commune
       champ.commune_name
     end
+  end
+
+  def columns(procedure:, displayable: true, prefix: nil)
+    super
+      .concat(addressable_columns(procedure:, displayable:, prefix:))
   end
 
   private
