@@ -15,6 +15,7 @@ module ColumnsConcern
       # TODO: to remove after linked_drop_down column column_id migration
       if column.nil? && h_id.is_a?(Hash) && h_id[:column_id].present?
         h_id[:column_id].gsub!('->', '.')
+        h_id[:column_id].gsub!('departement_code', 'department_code')
 
         column = columns.find { _1.h_id == h_id }
       end

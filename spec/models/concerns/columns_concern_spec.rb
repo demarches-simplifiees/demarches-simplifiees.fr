@@ -4,7 +4,12 @@ describe ColumnsConcern do
   let(:procedure_id) { procedure.id }
 
   describe '#find_column' do
-    let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'linked' }] }
+    let(:types_de_champ_public) do
+      [
+        { type: :linked_drop_down_list, libelle: 'linked' },
+        { type: :address, libelle: 'address' }
+      ]
+    end
     let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:notifications_column) { procedure.notifications_column }
 
@@ -28,6 +33,14 @@ describe ColumnsConcern do
 
       h_id = { procedure_id:, column_id: }
       expect(procedure.find_column(h_id:)).to eq(value_column)
+
+      address_tdc = procedure.active_revision.types_de_champ
+        .find { _1.type_champ == 'address' }
+
+      adresse_department_column = procedure.find_column(label: "address – Département")
+      column_id = "type_de_champ/#{address_tdc.stable_id}-$.departement_code"
+      h_id = { procedure_id:, column_id: }
+      expect(procedure.find_column(h_id:)).to eq(adresse_department_column)
     end
   end
 
