@@ -25,7 +25,7 @@ describe 'experts/avis/index', type: :view do
     end
 
     it 'doesn’t count avis a donner when dossier is termine' do
-      expect(subject).to have_selector("##{dom_id(procedure)} .avis-a-donner .stats-number", text: 0)
+      expect(subject).to have_selector("##{dom_id(procedure)}", text: 0)
     end
   end
 

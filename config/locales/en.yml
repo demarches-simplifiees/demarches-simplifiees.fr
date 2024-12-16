@@ -59,8 +59,6 @@ en:
   helpers:
     procedure:
       testing_procedure: testing procedure
-      close: Closed
-      unpublished: Unpublished
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
@@ -772,12 +770,8 @@ en:
     new:
       one: new
       other: new
-    followed:
-      one: followed
-      other: followed
-    archived:
-      one: archived
-      other: archived
+    followed: followed by me
+    archived: to archive
     en_cours:
       one: in progress
       other: in progress
@@ -791,8 +785,8 @@ en:
       one: guest file
       other: guest files
     dossiers_supprimes:
-      one: recently deleted file
-      other: recently deleted files
+      one: deleted
+      other: deleted
     dossiers_transferes:
       one: transfer request
       other: transfer requests
@@ -878,6 +872,8 @@ en:
        restore: "The folder has been restored"
        labels:
           to_follow: to follow
+          to_archive: to archive
+          dossiers_supprimes: trash
   france_connect:
     particulier:
       choose_email:
