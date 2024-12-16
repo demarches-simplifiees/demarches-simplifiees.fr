@@ -59,8 +59,6 @@ en:
   helpers:
     procedure:
       testing_procedure: testing procedure
-      close: Closed
-      unpublished: Unpublished
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
