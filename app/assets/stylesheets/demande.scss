@@ -8,8 +8,14 @@
 
   .champ-label {
     margin-bottom: 0;
+    padding-bottom: 0;
     font-size: 0.8rem;
     font-weight: 300;
+  }
+
+  dt.champ-label::after {
+    content: ' :';
+    speak: none;
   }
 
   .champ-content {
@@ -18,11 +24,6 @@
 
     a {
       font-weight: normal;
-    }
-
-    p {
-      padding: 0;
-      margin: 0;
     }
 
     ul {
