@@ -6,18 +6,22 @@ class Champs::AddressChamp < Champs::TextChamp
   end
 
   def feature=(value)
-    if value.blank?
-      self.data = nil
+    h = if value.blank?
+      nil
     else
       feature = JSON.parse(value)
       if feature.key?('properties')
-        self.data = APIGeoService.parse_ban_address(feature)
+        APIGeoService.parse_ban_address(feature)
       else
-        self.data = feature
+        feature
       end
     end
+
+    self.data = h
+    self.value_json = h
   rescue JSON::ParserError
     self.data = nil
+    self.value_json = nil
   end
 
   def selected_items
