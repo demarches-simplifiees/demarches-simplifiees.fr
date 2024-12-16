@@ -164,7 +164,7 @@ describe 'shared/dossiers/edit', type: :view do
     end
 
     it 'renders broken transitions rules dialog' do
-      expect(subject).to have_selector("##{ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken)}")
+      expect(subject).to have_selector("#ineligibilite_rules_modal [data-fr-opened='true']")
     end
   end
 end

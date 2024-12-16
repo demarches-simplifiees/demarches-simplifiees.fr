@@ -16,7 +16,7 @@
               %p= error_message
 
 - if wrapped?
-  %div{ id: dom_id(@dossier, :ineligibilite_rules_broken) }
+  #ineligibilite_rules_modal
     = modal_content
 - else
   = modal_content
