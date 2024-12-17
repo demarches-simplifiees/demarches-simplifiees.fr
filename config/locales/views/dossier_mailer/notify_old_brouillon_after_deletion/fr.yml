@@ -1,8 +1,0 @@
-fr:
-  dossier_mailer:
-    notify_old_brouillon_after_deletion:
-      subject: "Votre dossier n°%{dossier_id} en brouillon a été supprimé pour cause d'inactivité"
-      body: |
-        Votre dossier n° %{dossier_id} pour la démarche "%{libelle_demarche}" n'ayant pas été modifié depuis plus de 3 mois a été supprimé automatiquement.
-      new_dossier_html: |
-        Si vous souhaitez déposer un nouveau dossier pour cette démarche, vous pouvez <a href="%{link}">cliquer ici</a>.

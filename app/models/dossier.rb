@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:search_terms, :private_search_terms]
+  self.ignored_columns += [:search_terms, :private_search_terms, :notified_soon_deleted_sent_at]
 
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -568,10 +568,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_automatic?(reason)
-    return true if reason == :expired && !en_instruction?
-    return true if reason == :not_modified_for_a_long_time && brouillon?
-
-    false
+    reason == :expired && !en_instruction?
   end
 
   def can_terminer_automatiquement_by_sva_svr?
