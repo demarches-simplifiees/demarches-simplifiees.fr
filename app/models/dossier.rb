@@ -619,6 +619,12 @@ class Dossier < ApplicationRecord
     expiration_notification_date < Time.zone.now && Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago < expiration_notification_date
   end
 
+  def duree_totale_conservation_in_months
+    duree_conservation_dossier = brouillon? ? [procedure.duree_conservation_dossiers_dans_ds, Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION].min : procedure.duree_conservation_dossiers_dans_ds
+
+    duree_conservation_dossier + (conservation_extension / 1.month.to_i)
+  end
+
   def has_expired?
     return false if en_instruction?
     expiration_notification_date < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
@@ -712,10 +718,6 @@ class Dossier < ApplicationRecord
     end
 
     parts.join
-  end
-
-  def duree_totale_conservation_in_months
-    procedure.duree_conservation_dossiers_dans_ds + (conservation_extension / 1.month.to_i)
   end
 
   def avis_for_expert(expert)

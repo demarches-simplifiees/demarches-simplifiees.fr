@@ -181,7 +181,7 @@ describe 'The user', js: true do
       { mandatory: false, libelle: "nombre décimal", type: :decimal_number },
       { mandatory: false, libelle: 'address', type: :address },
       { mandatory: false, libelle: 'IBAN', type: :iban }
-    ])
+    ], duree_conservation_dossiers_dans_ds: 6)
   }
 
   scenario 'save an incomplete dossier as draft but cannot not submit it' do
