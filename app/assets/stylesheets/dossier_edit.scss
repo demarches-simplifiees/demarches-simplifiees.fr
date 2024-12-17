@@ -1,8 +1,6 @@
 @import 'colors';
 @import 'constants';
 
-$dossier-actions-bar-border-width: 1px;
-
 [data-fr-theme='dark'] .dossier-edit .dossier-edit-sticky-footer {
   background-color: var(--background-action-low-blue-france);
   border: none;
@@ -25,86 +23,41 @@ $dossier-actions-bar-border-width: 1px;
 }
 
 .dossier-edit {
-  .prologue {
-    margin: (1.5 * $default-padding) 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-
-    .mandatory-explanation {
-      flex-grow: 1; // Push the "notice" button to the right
-      flex-shrink: 1; // Allow the text to shrink
-      margin-bottom: $default-spacer; // Leave space when the "notice" button wraps under the text
-    }
-
-    .button.notice {
-      flex-shrink: 0; // Display the button label on a single line
-      margin-top: 1rem;
-    }
-  }
-
-  .warning {
-    margin-bottom: 20px;
-    background-color: #f9b91666;
-    padding: 20px;
-    border-radius: 4px;
-  }
-
   .dossier-edit-sticky-footer {
-    position: fixed; // Fallback for IE 11, and other browser that don't support sticky
     position: -webkit-sticky; // This is needed on Safari (tested on 12.1)
     position: sticky;
 
-    // IE 11 uses `position:fixed` – and thus needs an explicit width, content-box for better layout, etc.
-    width: 100%;
-    max-width: $page-width + 2 * $default-padding;
-    box-sizing: content-box;
-
     bottom: 0;
 
-    margin-top: $default-padding;
-    margin-left: -$default-padding;
-    margin-right: -$default-padding;
-    margin-bottom: 0;
+    padding: 0.5rem 1rem;
 
-    padding-right: $default-padding - $dossier-actions-bar-border-width;
-    padding-left: $default-padding - $dossier-actions-bar-border-width;
+    background: var(--background-default-grey);
 
-    background: #ffffff;
-
-    border: $dossier-actions-bar-border-width solid #cccccc;
+    border: 1px solid var(--border-contrast-grey);
+    border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    border-bottom: none;
 
     z-index: 10; // above DSFR btn which are at 1
+
+    @media (min-width: 48em) {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
   }
 
   .send-dossier-actions-bar {
     display: flex;
-    flex-direction: row;
     align-items: center;
+    flex-direction: column;
+    gap: 1rem;
 
-    .button:not(:small) {
-      min-height: 38px;
-      line-height: 16px;
+    a {
+      white-space: nowrap;
     }
 
-    // If there are more than one button, align the "Send" button to the right
-    .button:not(:first-child).send {
-      margin-left: auto;
-    }
-
-    // Normal layout
-    @media (min-width: 620px) {
-      padding-top: $default-spacer * 2;
-      padding-bottom: $default-spacer * 2;
-    }
-
-    // Compact layout
-    @media (max-width: 620px) {
-      padding-top: $default-spacer;
-      padding-bottom: $default-spacer;
+    @media (min-width: 48em) {
+      flex-direction: row;
     }
   }
 
