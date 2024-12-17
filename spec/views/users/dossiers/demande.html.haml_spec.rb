@@ -80,4 +80,51 @@ describe 'users/dossiers/demande', type: :view do
       expect(rendered).not_to have_text('L’usager n’a pas encore pris connaissance de la décision concernant son dossier')
     end
   end
+
+  context 'when there is a dropdown list from a referentiel' do
+    let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
+    let(:type_de_champ) { procedure.draft_types_de_champ_public.first }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
+    let(:referentiel) { type_de_champ.create_referentiel!(name: 'modele-import-referentiel.csv') }
+
+    before do
+      referentiel = type_de_champ.create_referentiel!(name: 'referentiel.csv')
+
+      csv_to_code = [{ 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }, { 'option' => 'dessert', 'calorie (kcal)' => '170', 'poids (g)' => '70' }, { 'option' => 'fruit', 'calorie (kcal)' => '100', 'poids (g)' => '50' }]
+      keys = csv_to_code.first.keys
+      csv_to_code.each do |row|
+        referentiel.items.create!(data: row)
+      end
+
+      type_de_champ.update!(drop_down_mode: 'advanced')
+      dossier.champs.first.update!(value: referentiel.items.first.id)
+      dossier.reload
+      render
+    end
+
+    context 'user choose an option in the list' do
+      before do
+        dossier.champs.first.update!(value: referentiel.items.first.id, value_json: { data: [{ 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }] })
+        dossier.reload
+        render
+      end
+
+      it 'display only the first option to the user' do
+        expect(rendered).to have_text('fromage')
+        expect(rendered).not_to have_text('dessert')
+      end
+    end
+
+    context 'user choose other option' do
+      before do
+        dossier.champs.first.update!(value: '__other__', value_other: 'Texte libre')
+        dossier.reload
+        render
+      end
+      it 'display only the first option to the user' do
+        expect(rendered).to have_text('Texte libre')
+      end
+    end
+  end
 end
