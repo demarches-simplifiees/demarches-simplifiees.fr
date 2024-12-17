@@ -1,6 +1,3 @@
-@import 'colors';
-@import 'constants';
-
 .autosave {
   position: relative;
   font-size: 0.9em;
@@ -20,12 +17,12 @@
   position: absolute;
   top: 0;
 
-  &.succeeded .autosave-label {
-    color: $green;
+  &.succeeded {
+    color: var(--success-425-625);
   }
 
-  &.failed .autosave-label {
-    color: $orange;
+  &.failed {
+    color: var(--warning-425-625);
   }
 }
 
