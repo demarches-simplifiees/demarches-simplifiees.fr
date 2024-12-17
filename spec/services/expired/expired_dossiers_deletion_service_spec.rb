@@ -19,10 +19,10 @@ describe Expired::DossiersDeletionService do
     let(:date_not_expired) { today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
 
     context 'send messages for dossiers expiring soon and delete expired' do
-      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (warning_period + 3.days)) }
-      let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration) }
-      let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
-      let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }
+      let!(:expired_brouillon) { create(:dossier, procedure: procedure, updated_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (warning_period + 3.days)) }
+      let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, updated_at: date_close_to_expiration) }
+      let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, updated_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
+      let!(:valid_brouillon) { create(:dossier, procedure: procedure, updated_at: date_not_expired) }
 
       before do
         allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_call_original
@@ -58,19 +58,19 @@ describe Expired::DossiersDeletionService do
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, procedure: procedure, created_at: created_at) }
+      let!(:dossier) { create(:dossier, procedure: procedure, updated_at: updated_at) }
 
       before { service.send_brouillon_expiration_notices }
 
       context 'when the dossier is not close to expiration' do
-        let(:created_at) { (conservation_par_defaut - 2.weeks - 1.day).ago }
+        let(:updated_at) { (conservation_par_defaut - 2.weeks - 1.day).ago }
 
         it { expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).to be_nil }
         it { expect(DossierMailer).not_to have_received(:notify_brouillon_near_deletion) }
       end
 
       context 'when the dossier is close to expiration' do
-        let(:created_at) { (conservation_par_defaut - 2.weeks + 1.day).ago }
+        let(:updated_at) { (conservation_par_defaut - 2.weeks + 1.day).ago }
 
         it { expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil }
         it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once }
@@ -79,8 +79,8 @@ describe Expired::DossiersDeletionService do
     end
 
     context 'with 2 dossiers to notice' do
-      let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, created_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, created_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
+      let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, updated_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, updated_at: (conservation_par_defaut - 2.weeks + 1.day).ago) }
 
       before { service.send_brouillon_expiration_notices }
 

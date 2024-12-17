@@ -88,10 +88,10 @@ describe Dossier, type: :model do
   describe 'brouillon_close_to_expiration' do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let!(:expiring_dossier) { create(:dossier, created_at: 175.days.ago, procedure: procedure) }
-    let!(:expiring_dossier_with_notification) { create(:dossier, created_at: 175.days.ago, brouillon_close_to_expiration_notice_sent_at: Time.zone.now, procedure: procedure) }
-    let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
-    let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, updated_at: 175.days.ago, procedure: procedure) }
+    let!(:expiring_dossier_with_notification) { create(:dossier, updated_at: 175.days.ago, brouillon_close_to_expiration_notice_sent_at: Time.zone.now, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, updated_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, updated_at: 1.year.ago, procedure: procedure) }
 
     subject { Dossier.brouillon_close_to_expiration }
 

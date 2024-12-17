@@ -288,7 +288,7 @@ class Dossier < ApplicationRecord
   scope :interval_brouillon_close_to_expiration, -> do
     state_brouillon
       .visible_by_user
-      .where("dossiers.created_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.updated_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_en_construction_close_to_expiration, -> do
     state_en_construction
@@ -599,7 +599,7 @@ class Dossier < ApplicationRecord
 
   def expiration_date_reference
     if brouillon?
-      created_at
+      updated_at
     elsif en_construction?
       en_construction_at
     elsif termine?
