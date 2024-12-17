@@ -21,7 +21,7 @@ fr:
               other: contient  %{count} balises (%{tags}) qui n’existent pas. Supprimer les balises
             champ_missing_in_draft_revision:
               one: contient la balise "%{tags}" qui a été supprimée dans les modifications en cours du formulaire. Supprimer cette balise ou réinitialiser les modifications du formulaire puis recommencer
-              other: contient  %{count} balises (%{tags}) qui ont été supprimées dans les modifications en coure du formumlaire. Supprimer cette balise ou réinitialiser les modifications du formulaire puis recommencer
+              other: contient  %{count} balises (%{tags}) qui ont été supprimées dans les modifications en cours du formulaire. Supprimer cette balise ou réinitialiser les modifications du formulaire puis recommencer
             champ_missing_in_published_revision:
               one: contient la balise "%{tags}" qui n’est pas encore publiée. Publier la nouvelle version de la démarche et recommencer
               other: contient  %{count} balises (%{tags}) qui ne sont pas encore publiées. Publier la nouvelle version de la démarche et recommencer
