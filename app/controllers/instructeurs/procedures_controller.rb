@@ -106,6 +106,12 @@ module Instructeurs
       page = params[:page].presence || 1
 
       @dossiers_count = @filtered_sorted_ids.size
+      @archived_dossiers_count = if statut == 'tous'
+        @counts[:archives]
+      else
+        0
+      end
+
       @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(@filtered_sorted_ids)
         .page(page)
@@ -317,6 +323,7 @@ module Instructeurs
         time_span_type: params[:time_span_type],
         statut: params[:statut],
         export_template:,
+        include_archived: params[:include_archived],
         procedure_presentation: params[:statut].present? ? procedure_presentation : nil
       }.compact
     end
