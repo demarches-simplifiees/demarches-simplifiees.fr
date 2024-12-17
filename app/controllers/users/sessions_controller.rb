@@ -7,6 +7,7 @@ class Users::SessionsController < Devise::SessionsController
 
   layout 'login', only: [:new, :create]
 
+  before_action :redirect_to_agent_connect_if_mandatory, only: [:create]
   before_action :restore_procedure_context, only: [:new, :create]
   skip_before_action :redirect_if_untrusted, only: [:reset_link_sent]
   # POST /resource/sign_in
@@ -116,5 +117,14 @@ class Users::SessionsController < Devise::SessionsController
     end
 
     redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
+  end
+
+  def redirect_to_agent_connect_if_mandatory
+    return if !AgentConnectService.enabled?
+
+    return if !AgentConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
+
+    flash[:alert] = "La connexion des agents passe à présent systématiquement par AgentConnect"
+    redirect_to agent_connect_path(force_agent_connect: true)
   end
 end
