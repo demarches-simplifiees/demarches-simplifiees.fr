@@ -94,7 +94,7 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sib-api-v3-sdk'
-gem 'sidekiq'
+gem 'sidekiq', '< 7.3' # 7.3 needs to migrate to sidekiq-cron 2.0
 gem 'sidekiq-cron'
 gem 'skylight'
 gem 'spreadsheet_architect'
