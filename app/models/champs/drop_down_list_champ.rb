@@ -88,7 +88,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def referentiel_headers
-    type_de_champ.referentiel.headers
+    referentiel&.dig('data', 'headers')
   end
 
   private
