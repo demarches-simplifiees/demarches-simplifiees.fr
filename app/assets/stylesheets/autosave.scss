@@ -1,15 +1,5 @@
 .autosave {
   position: relative;
-  font-size: 0.9em;
-}
-
-.autosave-explanation {
-  margin-left: 4px;
-}
-
-.autosave-explanation-text,
-.autosave-label {
-  margin-right: 6px;
 }
 
 .autosave-status {
@@ -24,12 +14,6 @@
   &.failed {
     color: var(--warning-425-625);
   }
-}
-
-.autosave-icon {
-  display: inline-block;
-  vertical-align: -1px;
-  margin-right: 4px;
 }
 
 .autosave-retry {
