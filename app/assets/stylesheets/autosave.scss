@@ -91,17 +91,6 @@ $autosave-status-fade-out-duration: 0.7s;
     transition-property: opacity;
     transition-duration: $autosave-status-fade-in-duration;
   }
-
-  // Make the icon pulse (if any)
-  .autosave-icon {
-    opacity: 1;
-    // Make the icon pulse after being made visible
-    animation-name: pulse;
-    animation-duration: 0.25s;
-    animation-delay: 0.15s;
-    animation-timing-function: linear;
-    animation-fill-mode: backwards;
-  }
 }
 
 // Show only the relevant status message (succeeded of failed)
