@@ -9,6 +9,7 @@ describe Expired::DossiersDeletionService do
   let(:procedure_2) { create(:procedure, :published, :new_administrateur, procedure_opts) }
   let(:reference_date) { Date.parse("March 8") }
   let(:service) { Expired::DossiersDeletionService.new }
+
   describe '#process_expired_dossiers_brouillon' do
     before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
