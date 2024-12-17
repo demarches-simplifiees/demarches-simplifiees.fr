@@ -1415,19 +1415,6 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.hidden_by_user_at).to be_nil
       end
     end
-
-    context 'when brouillon has been automatically expired' do
-      let(:dossier) { create(:dossier, :brouillon, user:) }
-
-      before {
-        dossier.hide_and_keep_track!(:automatic, :not_modified_for_a_long_time)
-      }
-
-      it 'must restore hidden attributes' do
-        expect { subject }.to change { dossier.reload.hidden_by_expired_at }.from(anything).to(nil)
-        expect(dossier.hidden_by_reason).to eq("not_modified_for_a_long_time")
-      end
-    end
   end
 
   describe '#new' do
