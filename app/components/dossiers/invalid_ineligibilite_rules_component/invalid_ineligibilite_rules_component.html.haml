@@ -1,8 +1,8 @@
-%div{ id: dom_id(@dossier, :ineligibilite_rules_broken), data: { controller: 'ineligibilite-rules-match', turbo_force: :server } }
-  %button.fr-sr-only{ aria: {controls: 'modal-eligibilite-rules-dialog' }, data: {'fr-opened': "false" } }
+- modal_content = capture do
+  %button.fr-sr-only{ aria: { controls: 'modal-eligibilite-rules-dialog' }, data: { 'fr-opened': opened?.to_s } }
     show modal
 
-  %dialog.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog", id: 'modal-eligibilite-rules-dialog', data: { 'ineligibilite-rules-match-target' => 'dialog' } }
+  %dialog.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog", id: 'modal-eligibilite-rules-dialog', data: { 'turbo-permanent' => true } }
     .fr-container.fr-container--fluid.fr-container-md
       .fr-grid-row.fr-grid-row--center
         .fr-col-12.fr-col-md-8.fr-col-lg-6
@@ -14,3 +14,9 @@
                 %span.fr-icon-arrow-right-line.fr-icon--lg>
                 = t('.modal.title')
               %p= error_message
+
+- if wrapped?
+  #ineligibilite_rules_modal
+    = modal_content
+- else
+  = modal_content

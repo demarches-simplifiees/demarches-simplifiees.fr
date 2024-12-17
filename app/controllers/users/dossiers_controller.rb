@@ -280,9 +280,7 @@ module Users
     def update
       @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
-      @can_passer_en_construction_was, @can_passer_en_construction_is = dossier.track_can_passer_en_construction do
-        update_dossier_and_compute_errors
-      end
+      update_dossier_and_compute_errors
 
       respond_to do |format|
         format.turbo_stream do

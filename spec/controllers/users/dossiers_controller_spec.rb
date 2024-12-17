@@ -775,9 +775,11 @@ describe Users::DossiersController, type: :controller do
       let(:types_de_champ_public) { [{ type: :text }, { type: :integer_number }] }
       let(:text_champ) { dossier.project_champs_public.first }
       let(:number_champ) { dossier.project_champs_public.last }
+      let(:validate) { "true" }
       let(:submit_payload) do
         {
           id: dossier.id,
+          validate:,
           dossier: {
             groupe_instructeur_id: dossier.groupe_instructeur_id,
             champs_public_attributes: {
@@ -805,28 +807,36 @@ describe Users::DossiersController, type: :controller do
       end
       render_views
 
-      context 'when it switches from true to false' do
+      context 'when it becomes invalid' do
         let(:value) { must_be_greater_than + 1 }
 
         it 'raises popup' do
           subject
           dossier.reload
           expect(dossier.can_passer_en_construction?).to be_falsey
-          expect(assigns(:can_passer_en_construction_was)).to eq(true)
-          expect(assigns(:can_passer_en_construction_is)).to eq(false)
-          expect(response.body).to match(ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken))
+          expect(response.body).to match(/aria-controls='modal-eligibilite-rules-dialog'[^>]*data-fr-opened='true'/)
         end
       end
 
-      context 'when it stays true' do
+      context 'when it says valid' do
         let(:value) { must_be_greater_than - 1 }
         it 'does nothing' do
           subject
           dossier.reload
           expect(dossier.can_passer_en_construction?).to be_truthy
-          expect(assigns(:can_passer_en_construction_was)).to eq(true)
-          expect(assigns(:can_passer_en_construction_is)).to eq(true)
-          expect(response.body).not_to have_selector("##{ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken)}")
+          expect(response.body).to match(/aria-controls='modal-eligibilite-rules-dialog'[^>]*data-fr-opened='false'/)
+        end
+      end
+
+      context 'when not validating' do
+        let(:validate) { nil }
+        let(:value) { must_be_greater_than + 1 }
+
+        it 'does not render invalid ineligible modal' do
+          subject
+          dossier.reload
+          expect(dossier.can_passer_en_construction?).to be_falsey
+          expect(response.body).not_to include("aria-controls='modal-eligibilite-rules-dialog'")
         end
       end
     end

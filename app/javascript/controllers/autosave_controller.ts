@@ -80,11 +80,13 @@ export class AutosaveController extends ApplicationController {
         // Wait next tick so champs having JS can interact
         // with form elements before extracting form data.
         setTimeout(() => {
-          this.enqueueAutosaveRequest();
+          this.enqueueAutosaveWithValidationRequest();
           this.showConditionnalSpinner(target);
         }, 0);
       },
-      inputable: (target) => this.enqueueOnInput(target, true),
+      inputable: (target) => {
+        this.enqueueOnInput(target, true);
+      },
       hidden: (target) => {
         // In comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
         // We want to debounce them.
@@ -152,7 +154,7 @@ export class AutosaveController extends ApplicationController {
 
   private didRequestRetry() {
     if (this.#needsRetry) {
-      this.enqueueAutosaveRequest();
+      this.enqueueAutosaveWithValidationRequest();
     }
   }
 

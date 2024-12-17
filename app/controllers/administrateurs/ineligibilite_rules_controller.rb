@@ -11,7 +11,8 @@ module Administrateurs
       draft_revision.assign_attributes(procedure_revision_params)
 
       if draft_revision.validate(:ineligibilite_rules_editor) && draft_revision.save
-        redirect_to edit_admin_procedure_ineligibilite_rules_path(@procedure)
+        flash[:notice] = "Les conditions d‘inéligibilité ont été modifiées."
+        redirect_to [:admin, @procedure]
       else
         flash[:alert] = draft_revision.errors.full_messages
         render :edit
