@@ -291,7 +291,7 @@ describe 'The user', js: true do
     simple_procedure.update(procedure_expires_when_termine_enabled: true)
     user_old_dossier = create(:dossier,
                               procedure: simple_procedure,
-                              created_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
+                              updated_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
                               user: user)
     login_as(user, scope: :user)
     visit brouillon_dossier_path(user_old_dossier)
