@@ -26,7 +26,7 @@ class RNFService
   end
 
   def typhoeus_options
-    { ssl_verifyhost: 0 }
+    { ssl_verifypeer: false }
   end
 
   def schema
