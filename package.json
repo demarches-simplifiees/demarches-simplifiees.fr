@@ -101,7 +101,7 @@
     "typescript": "^5.5.4",
     "vite": "^5.3.5",
     "vite-plugin-full-reload": "^1.2.0",
-    "vite-plugin-ruby": "^5.0.0",
+    "vite-plugin-ruby": "^5.1.0",
     "vitest": "^2.0.4"
   },
   "scripts": {
