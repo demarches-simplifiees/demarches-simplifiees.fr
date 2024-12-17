@@ -5,7 +5,7 @@ module Instructeurs
 
     def create_dossier
       if @champ.lexpol_create_dossier
-        redirect_to annotations_instructeur_dossier_path(@dossier.procedure, @dossier), notice: 'Dossier LexPol créé avec succès.'
+        redirect_to annotations_instructeur_dossier_path(@dossier.procedure, @dossier), notice: 'Dossier Lexpol créé avec succès.'
       else
         redirect_to annotations_instructeur_dossier_path(@dossier.procedure, @dossier), alert: @champ.errors.full_messages.join(', ')
       end
@@ -13,7 +13,7 @@ module Instructeurs
 
     def update_dossier
       if @champ.lexpol_update_dossier
-        redirect_to annotations_instructeur_dossier_path(@dossier.procedure, @dossier), notice: 'Dossier LexPol mis à jour avec succès.'
+        redirect_to annotations_instructeur_dossier_path(@dossier.procedure, @dossier), notice: 'Dossier Lexpol mis à jour avec succès.'
       else
         redirect_to annotations_instructeur_dossier_path(@dossier.procedure, @dossier), alert: @champ.errors.full_messages.join(', ')
       end

@@ -375,19 +375,33 @@ module Instructeurs
       begin
         api_lexpol = APILexpol.new
 
-        nor = api_lexpol.create_dossier(598706)
+        champ = dossier.champs.find_by(id: params[:champ_id])
+
+        mapping = (champ.type_de_champ.lexpol_mapping || "")
+          .split(',')
+          .map { |pair| pair.split('=').map(&:strip) }
+          .to_h
+
+        variables = dossier.champs.each_with_object({}) do |champ, hash|
+          next unless champ.value.present? && champ.type_de_champ&.libelle.present?
+
+          mapped_key = mapping[champ.type_de_champ.libelle] || champ.type_de_champ.libelle
+          hash[mapped_key] = champ.value
+        end
+
+        nor = api_lexpol.create_dossier(598706, variables)
 
         if nor.nil?
           raise "Le numéro NOR n'a pas été trouvé dans la réponse de l'API."
         end
 
-        champ = Champ.find(params[:champ_id])
         champ.update!(value: nor)
-        flash[:notice] = "Dossier créé avec succès dans LexPol. Numéro NOR : #{nor}"
+        flash[:notice] = "Dossier créé avec succès dans Lexpol. Numéro NOR : #{nor}"
       rescue => e
-        Rails.logger.error("Erreur lors de la création du dossier dans LexPol : #{e.message}")
-        flash[:alert] = "Erreur lors de la création du dossier dans LexPol : #{e.message}"
-        redirect_to request.referer || root_path
+        Rails.logger.error("Erreur lors de la création du dossier dans Lexpol : #{e.message}")
+        flash[:alert] = "Erreur lors de la création du dossier dans Lexpol : #{e.message}"
+      ensure
+        redirect_to annotations_privees_instructeur_dossier_path(dossier.procedure, dossier.id)
       end
     end
 
@@ -412,7 +426,7 @@ module Instructeurs
       end
 
       if champ&.lexpol_update_dossier(variables)
-        flash[:notice] = "Dossier LexPol mis à jour avec succès."
+        flash[:notice] = "Dossier Lexpol mis à jour avec succès."
       else
         flash[:alert] = champ&.errors&.full_messages&.join(', ') || "Erreur lors de la mise à jour."
       end

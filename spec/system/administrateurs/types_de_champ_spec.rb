@@ -206,6 +206,25 @@ describe 'As an administrateur I can edit types de champ', js: true do
     end
   end
 
+  context 'lexpol enabled' do
+    before { Flipper.enable(:lexpol, procedure) }
+
+    it "Add lexpol champ" do
+      add_champ
+
+      select('Lexpol', from: 'Type de champ')
+      fill_in 'Libellé du champ', with: 'Libellé de champ lexpol', fill_options: { clear: :backspace }
+
+      wait_until { procedure.draft_types_de_champ_public.first.type_champ == TypeDeChamp.type_champs.fetch(:lexpol) }
+      expect(page).to have_content('Formulaire enregistré')
+
+      page.refresh
+
+      expect(page).to have_content('Sélectionner un modèle Lexpol')
+      expect(page).to have_content('Variables Lexpol')
+    end
+  end
+
   context "estimated duration visible" do
     scenario "displaying the estimated fill duration" do
       # It doesn't display anything when there are no champs

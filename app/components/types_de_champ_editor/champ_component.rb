@@ -15,7 +15,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       models = models_response['modeles']
       models.map { |model| [model['libelle'], model['modele']] }
                        rescue => e
-                         Rails.logger.error("Erreur lors de la récupération des modèles LexPol : #{e.message}")
+                         Rails.logger.error("Erreur lors de la récupération des modèles Lexpol : #{e.message}")
                          []
     end
   end

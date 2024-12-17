@@ -84,7 +84,7 @@ class APILexpol
       body = JSON.parse(response.body)
       [body['jeton'], Time.zone.now + 300] # 300 secondes = 5 minutes
     else
-      raise "Erreur d'authentification LexPol : #{response.body}"
+      raise "Erreur d'authentification Lexpol : #{response.body}"
     end
   end
 

@@ -1,6 +1,6 @@
 - if champ.value.blank?
   = form_with url: create_lexpol_dossier_instructeur_dossier_path(dossier_id: champ.dossier.id, champ_id: champ.id), method: :post do |form|
-    = form.submit 'Créer le dossier dans LexPol', class: 'fr-btn'
+    = form.submit 'Créer le dossier dans Lexpol', class: 'fr-btn'
 - else
   %p
     %strong Numéro NOR :
@@ -9,6 +9,6 @@
     %strong Statut du dossier :
     = champ.lexpol_status
   - if champ.lexpol_dossier_url.present?
-    = link_to 'Aller sur LexPol', champ.lexpol_dossier_url, target: '_blank', class: 'fr-btn fr-btn--secondary'
+    = link_to 'Aller sur Lexpol', champ.lexpol_dossier_url, target: '_blank', class: 'fr-btn fr-btn--secondary'
   = form_with url: update_lexpol_dossier_instructeur_dossier_path(champ.dossier, champ_id: champ.id), method: :post do |form|
     = form.submit 'Mettre à jour le dossier', class: 'fr-btn fr-btn--secondary'
