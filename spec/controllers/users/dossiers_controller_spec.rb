@@ -12,7 +12,7 @@ describe Users::DossiersController, type: :controller do
         .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
-      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!, :forbid_invite_submission!)
+      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!)
     end
   end
 
@@ -119,30 +119,6 @@ describe Users::DossiersController, type: :controller do
         expect(@controller).to receive(:current_user).twice.and_return(user)
         create(:invite, dossier: create(:dossier), user: user)
       end
-
-      it_behaves_like 'redirects and flashes'
-    end
-  end
-
-  describe "#forbid_invite_submission!" do
-    let(:user) { create(:user) }
-    let(:asked_dossier) { create(:dossier) }
-    let(:ensure_authorized) { :forbid_invite_submission! }
-
-    before do
-      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
-      allow(@controller).to receive(:current_user).and_return(user)
-      allow(@controller).to receive(:redirect_to)
-    end
-
-    context 'when a user submit their own dossier' do
-      let(:asked_dossier) { create(:dossier, user: user) }
-
-      it_behaves_like 'does not redirect nor flash'
-    end
-
-    context 'when an invite submit a dossier where they where invited' do
-      before { create(:invite, dossier: asked_dossier, user: user) }
 
       it_behaves_like 'redirects and flashes'
     end
