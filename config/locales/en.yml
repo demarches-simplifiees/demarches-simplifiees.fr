@@ -56,6 +56,8 @@ en:
     no_mandatory: (optional)
     send_mail: Send message
     new_tab: New tab
+    modal_close: "Close"
+    modal_close_alt: "Close this modal"
   helpers:
     procedure:
       testing_procedure: testing procedure
@@ -78,7 +80,6 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      close_modal: 'Close'
       back: "Back"
       back_title: "Back to my administration's website"
       main_menu: "Main menu"

@@ -47,6 +47,8 @@ fr:
     no_mandatory: (facultatif)
     send_mail: Envoyer le message
     new_tab: "Nouvel onglet"
+    modal_close: "Fermer"
+    modal_close_alt: "Fermer la fenêtre modale"
   helpers:
     procedure:
       testing_procedure: démarche en test
@@ -69,7 +71,6 @@ fr:
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
     header:
-      close_modal: 'Fermer'
       back: "Revenir en arrière"
       back_title: "Revenir en arrière, sur le site de mon administration"
       main_menu: "Menu principal"

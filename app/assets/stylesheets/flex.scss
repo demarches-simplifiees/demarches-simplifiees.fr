@@ -75,3 +75,19 @@
 .flex-1 {
   flex: 1;
 }
+
+.two-column-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  li {
+    flex: 0 0 50%;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 62em) {
+    li {
+      flex: 0 0 100%;
+    }
+  }
+}

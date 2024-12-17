@@ -413,4 +413,29 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).not_to have_selector('.sticky-header.sticky-header-warning')
     end
   end
+
+  context "SIRET field modal" do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret, libelle: "SIRET de test" }]) }
+
+    scenario "loads modal content only when clicked" do
+      visit champs_admin_procedure_path(procedure)
+
+      expect(page).not_to have_content("Informations complémentaires au champ Numéro Siret")
+
+      click_button "Liste des informations remontées"
+
+      within "#api-champ-columns-modal" do
+        expect(page).to have_content("Informations complémentaires au champ Numéro Siret")
+        expect(page).to have_content("Entreprise raison sociale")
+        expect(page).not_to have_content("SIRET de test – Commune") # no champ libelle
+
+        click_button "Fermer"
+      end
+
+      expect(page).not_to have_selector("#api-champ-columns-modal[open]")
+
+      click_button "Liste des informations remontées"
+      expect(page).to have_content("Informations complémentaires au champ Numéro Siret")
+    end
+  end
 end

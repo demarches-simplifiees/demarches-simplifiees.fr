@@ -642,6 +642,7 @@ Rails.application.routes.draw do
         put :allow_expert_messaging
         put :experts_require_administrateur_invitation
         put :restore
+        get 'api_champ_columns'
       end
 
       get :api_particulier, controller: 'jeton_particulier'

@@ -1,6 +1,11 @@
 fr:
   administrateurs:
     procedures:
+      api_champ_columns:
+        title: 'Informations complémentaires au champ %{type_de_champ}'
+        hint_html: |
+          Les données suivantes sont automatiquement récupérées par API et affichées dans les dossiers ou exports.
+          <strong> Inutile de les redemander à l’usager dans d’autres champs !</strong>
       close:
         page_title: Clore la démarche
         replacement_procedure_callout_title: Vous êtes sur le point de clore une démarche
@@ -19,7 +24,7 @@ fr:
           other: Souhaitez-vous envoyer un email aux %{count} utilisateurs avec un dossier en brouillon ?
         email_content_brouillon: Contenu de l'email
         email_toggle_en_cours:
-          one : Souhaitez-vous envoyer un email à l'utilisateur avec un dossier déposé ?
+          one: Souhaitez-vous envoyer un email à l'utilisateur avec un dossier déposé ?
           other: Souhaitez-vous envoyer un email aux %{count} utilisateurs avec un dossier déposé ?
         email_content_en_cours: Contenu de l'email
       preview_unavailable: Aperçu non disponible car la démarche est mal configurée

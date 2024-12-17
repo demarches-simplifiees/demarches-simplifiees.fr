@@ -5,7 +5,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -419,6 +419,26 @@ module Administrateurs
       @admins = Administrateur.includes(:user, :procedures).where(id: pids, procedures: { hidden_at_as_template: nil })
       @admins = @admins.where('unaccent(users.email) ILIKE unaccent(?)', "%#{@filter.email}%") if @filter.email.present?
       @admins = paginate(@admins, 'users.email')
+    end
+
+    def api_champ_columns
+      _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
+      regex_prefix = /^#{Regexp.escape(@type_de_champ.libelle)}([^\p{L}]+SIRET)?[^\p{L}]+/
+
+      @column_labels = @type_de_champ
+        .columns(procedure: @procedure)
+        .filter_map do |column|
+          # Remove tdc libelle prefix added in columns:
+          # Numéro SIRET - Entreprise SIREN => Entreprise SIREN
+          column.label.sub(regex_prefix, '')
+        end
+
+      if @type_de_champ.type_champ == "siret"
+        @column_labels.concat Etablissement::EXPORTABLE_COLUMNS.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
+
+        # Hardcode non columns data
+        @column_labels << "Bilans BDF"
+      end
     end
 
     private
