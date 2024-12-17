@@ -167,7 +167,7 @@ module DossierCloneConcern
     added_champs.each { _1.update_column(:dossier_id, id) }
 
     if updated_champs.present?
-      champs_index = filled_champs_public.index_by(&:public_id)
+      champs_index = champs.index_by(&:public_id)
       updated_champs.each do |champ|
         champs_index[champ.public_id]&.destroy!
         champ.update_column(:dossier_id, id)

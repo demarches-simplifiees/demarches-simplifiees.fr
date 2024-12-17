@@ -378,11 +378,15 @@ RSpec.describe DossierCloneConcern do
       }
       let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
       let(:updated_champ) { dossier.champs.find { _1.stable_id == 991 } }
+      let(:repetition_updated_champ) { champ_for_update(dossier.champs.find { _1.stable_id == 994 }) }
+      let(:forked_updated_champ) { champ_for_update(forked_dossier.champs.find { _1.stable_id == 991 }) }
+      let(:forked_repetition_updated_champ) { champ_for_update(forked_dossier.champs.find { _1.stable_id == 994 }) }
 
       before do
         dossier.champs.each do |champ|
           champ.update(value: 'old value')
         end
+        dossier.reload
         procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "Un nouveau champ text"
@@ -395,18 +399,19 @@ RSpec.describe DossierCloneConcern do
         procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
         procedure.draft_revision.find_and_ensure_exclusive_use(updated_champ.stable_id).update(libelle: "Un nouveau libelle")
         procedure.publish_revision!
+        added_champ.update(value: 'new value for added champ')
+        added_repetition_champ.update(value: "new value in repetition champ")
+
+        forked_updated_champ.update(value: 'new value for updated champ')
+        forked_repetition_updated_champ.update(value: 'new value for updated champ in repetition')
+        updated_champ.update(type: 'Champs::TextareaChamp')
+        repetition_updated_champ.update(type: 'Champs::TextareaChamp')
+        dossier.reload
+        forked_dossier.reload
       end
 
-      subject {
-        added_champ.update(value: 'new value for added champ')
-        updated_champ.update(value: 'new value for updated champ')
-        added_repetition_champ.update(value: "new value in repetition champ")
-        dossier.reload
-        super()
-      }
-
-      it { expect { subject }.to change { dossier.filled_champs.size }.by(1) }
-      it { expect { subject }.to change { dossier.filled_champs.sort_by(&:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ', 'new value in repetition champ']) }
+      it { expect { subject }.to change { dossier.filled_champs.size }.by(3) }
+      it { expect { subject }.to change { dossier.filled_champs.sort_by(&:created_at).map(&:to_s) }.from(['old value', 'Non', 'old value']).to(['new value for updated champ', 'Non', 'new value for updated champ in repetition', 'old value', 'new value for added champ', 'new value in repetition champ']) }
 
       it "dossier after merge should be on last published revision" do
         expect(dossier.revision_id).to eq(procedure.revisions.first.id)
