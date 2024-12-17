@@ -1,9 +1,0 @@
-- content_for(:title, "#{@subject}")
-
-%p= t(:hello, scope: [:views, :shared, :greetings])
-
-%p= t('.body', dossier_id: @dossier.id, libelle_demarche: @dossier.procedure.libelle)
-
-%p= t('.new_dossier_html', link: commencer_url(@dossier.procedure))
-
-= render partial: "layouts/mailers/signature"

@@ -217,26 +217,6 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_old_brouillon_after_deletion(dossier)
-    @dossier = dossier
-    configure_defaults_for_user(dossier.user)
-
-    I18n.with_locale(dossier.user_locale) do
-      @subject = default_i18n_subject(dossier_id: dossier.id)
-      mail(to: dossier.user_email_for(:notification), subject: @subject)
-    end
-  end
-
-  def notify_old_brouillon_soon_deleted(dossier)
-    @dossier = dossier
-    configure_defaults_for_user(dossier.user)
-
-    I18n.with_locale(dossier.user_locale) do
-      @subject = default_i18n_subject(dossier_id: dossier.id)
-      mail(to: dossier.user_email_for(:notification), subject: @subject)
-    end
-  end
-
   def self.critical_email?(action_name)
     false
   end
