@@ -2,15 +2,15 @@
 fr:
   brouillon:
     explanation: Votre brouillon est automatiquement enregistré.
-    confirmation: Brouillon enregistré
-    error: Impossible d’enregistrer le brouillon
+    confirmation_html: 'Brouillon enregistré <span class="sr-only">avec succès</span>'
+    error_html: '<span class="sr-only">Attention :</span> Impossible d’enregistrer le brouillon.'
   en_construction:
     explanation: Vos modifications sont automatiquement enregistrées.
     submit_them: Déposez-les quand vous aurez terminé.
-    confirmation: Modifications enregistrées.
-    error: Impossible d’enregistrer les modifications
+    confirmation_html: 'Modifications enregistrées <span class="sr-only">avec succès</span>'
+    error_html: '<span class="sr-only">Attention :</span> Impossible d’enregistrer les modifications.'
   annotations:
     explanation: Vos annotations sont automatiquement enregistrées.
-    confirmation: Annotations enregistrées
-    error: Impossible d’enregistrer les annotations
+    confirmation_html: 'Annotations enregistrées <span class="sr-only">avec succès</span>'
+    error_html: '<span class="sr-only">Attention :</span> Impossible d’enregistrer les annotations.'
   more_information: En savoir plus
