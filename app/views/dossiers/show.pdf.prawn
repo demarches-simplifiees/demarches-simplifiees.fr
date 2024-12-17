@@ -165,6 +165,13 @@ def add_single_champ(pdf, champ)
       pdf.indent(default_margin) do
         champ.geo_areas.each do |area|
           pdf.text "- #{clean_string(area.label)}"
+          if area.description.present?
+            pdf.indent(8) do
+              pdf.pad_bottom(4) do
+                pdf.text clean_string(area.description)
+              end
+            end
+          end
         end
       end
     end
