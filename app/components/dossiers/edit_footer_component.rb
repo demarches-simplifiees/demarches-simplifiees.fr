@@ -27,7 +27,7 @@ class Dossiers::EditFooterComponent < ApplicationComponent
   end
 
   def can_submit_en_construction?
-    forked_with_changes?
+    forked_with_changes? && owner?
   end
 
   def submit_button_label
