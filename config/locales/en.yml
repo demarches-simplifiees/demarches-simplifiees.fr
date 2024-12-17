@@ -336,9 +336,10 @@ en:
         send_invitation: Send an invitation
         withdraw_permission: "Withdraw the permission"
         want_to_withdraw_permission: "Would you like to withdraw the permission of %{email}?"
-        edit_dossier:
-          one: "1 user can edit this file."
-          other: "%{count} users can edit this file."
+        edit_dossier_html:
+          zero: '<p class="fr-h6">No user can edit this file.</p>'
+          one: '<h5 class="fr-h6">1 user can edit this file</h5>'
+          other: '<h5 class="fr-h6">%{count} users can edit this file</h5>'
         submit_dossier_yourself: "You must submit the file yourself when it is complete."
     pagination:
       next: Next

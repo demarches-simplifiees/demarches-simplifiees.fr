@@ -2,7 +2,7 @@
   %h4.fr-h5= t('views.invites.form.modal_title')
   %p.fr-highlight.fr-mb-3w= t('views.invites.form.modal_highlight')
 
-  %h5.fr-h6= t('views.invites.form.edit_dossier', count: invites.size)
+  = t('views.invites.form.edit_dossier_html', count: invites.size)
   - if invites.present?
     #invite-list
       %ul
@@ -15,9 +15,9 @@
     - if dossier.brouillon?
       %p= t('views.invites.form.submit_dossier_yourself')
 
-  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post, aria: { labelledby: 'invite-form-legend' } do
+  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post do
     %fieldset.fr-fieldset
-      %legend.fr-fieldset__legend#invite-form-legend
+      %legend.fr-fieldset__legend
         %h5.fr-h6= t('views.invites.form.title')
 
       .fr-fieldset__element

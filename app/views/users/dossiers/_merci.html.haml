@@ -3,8 +3,8 @@
     .fr-grid-row.fr-col-offset-md-2.fr-col-md-8
       .fr-col-12
         = image_tag('user/envoi-dossier.svg', alt: '', class: 'mt-8')
-        %h1.fr-mt-4w.fr-mb-3w.mx-0= t('views.users.dossiers.merci.thanks')
-        %h2.send.fr-m-2w.text-lg
+        %p.fr-h1.fr-mt-4w= t('views.users.dossiers.merci.thanks')
+        %h1.send.fr-m-2w.text-lg
           = t('views.users.dossiers.merci.dossier_send_l1')
           %strong= procedure.libelle
           = t('views.users.dossiers.merci.dossier_send_l2')

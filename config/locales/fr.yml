@@ -329,10 +329,10 @@ fr:
         send_invitation: Envoyer une invitation
         withdraw_permission: "Révoquer l’autorisation"
         want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation de %{email} ?"
-        edit_dossier:
-          zero: "Aucun invité peut modifier ce dossier"
-          one: "1 invité peut modifier ce dossier"
-          other: "%{count} invités peuvent modifier ce dossier"
+        edit_dossier_html:
+          zero: '<p class="fr-h6">Aucun invité peut modifier ce dossier.</p>'
+          one: '<h5 class="fr-h6">1 invité peut modifier ce dossier</h5>'
+          other: '<h5 class="fr-h6">%{count} invités peuvent modifier ce dossier</h5>'
         submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
     pagination:
       next: Suivant
