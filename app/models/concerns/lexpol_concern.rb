@@ -34,9 +34,8 @@ module LexpolConcern
     status_info = lexpol_service.get_dossier_status(value)
     dossier_info = lexpol_service.get_dossier_infos(value)
 
-    self.data ||= {}
-    self.data['lexpol_status'] = status_info['libelle']
-    self.data['lexpol_dossier_url'] = dossier_info['lienDossier']
+    self.lexpol_status = status_info['libelle']
+    self.lexpol_dossier_url = dossier_info['lienDossier']
     save!
   rescue => e
     errors.add(:base, "Impossible de rafraîchir les données Lexpol : #{e.message}")
