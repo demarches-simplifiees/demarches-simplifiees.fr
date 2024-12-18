@@ -3,10 +3,12 @@
 describe Champs::DropDownListChamp do
   describe 'validations' do
     describe 'inclusion' do
-      let(:champ) { described_class.new(other:, value:, dossier: build(:dossier)) }
+      let(:champ) { described_class.new(other:, dossier: create(:dossier)) }
       before do
-        allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_drop_down_list, drop_down_other: other))
+        type_de_champ = build(:type_de_champ_drop_down_list, drop_down_other: other)
+        allow(champ).to receive(:type_de_champ).and_return(type_de_champ)
         allow(champ).to receive(:in_dossier_revision?).and_return(true)
+        champ.value = value
       end
       subject { champ.validate(:champs_public_value) }
 

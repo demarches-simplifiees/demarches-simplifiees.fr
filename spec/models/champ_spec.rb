@@ -306,8 +306,11 @@ describe Champ do
     end
 
     context 'for drop down list champ' do
-      let(:champ) { Champs::DropDownListChamp.new(value:) }
-      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_drop_down_list)) }
+      let(:champ) { Champs::DropDownListChamp.new() }
+      before do
+        allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_drop_down_list))
+        champ.value = value
+      end
       let(:value) { "val1" }
 
       it { is_expected.to eq([value]) }
