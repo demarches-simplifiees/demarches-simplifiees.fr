@@ -42,7 +42,7 @@
           .center.fr-text--bold.fr-text--sm
             = number_with_html_delimiter(dossier_count)
           .center.fr-text--xs
-            = t('pluralize.case', count: dossier_count)
+            = t('instructeurs.dossiers.labels.total')
 
       - if p.procedure_expires_when_termine_enabled
         %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
@@ -56,13 +56,13 @@
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
         = link_to(instructeur_procedure_path(p, statut: 'archives')) do
           .center.fr-text--bold.fr-text--sm
-            %span.fr-icon-folder-2-line
+            %span.fr-icon-folder-2-line.fr-icon--sm
           .center.fr-text--xs
             = t('instructeurs.dossiers.labels.to_archive')
 
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
         = link_to(instructeur_procedure_path(p, statut: 'supprimes')) do
           .center.fr-text--bold.fr-text--sm
-            %span.fr-icon-delete-line
+            %span.fr-icon-delete-line.fr-icon--sm
           .center.fr-text--xs
             = t('instructeurs.dossiers.labels.dossiers_supprimes')

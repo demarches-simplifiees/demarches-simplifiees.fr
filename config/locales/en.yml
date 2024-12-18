@@ -876,6 +876,7 @@ en:
           to_follow: to follow
           to_archive: to archive
           dossiers_supprimes: trash
+          total: total
   france_connect:
     particulier:
       choose_email:

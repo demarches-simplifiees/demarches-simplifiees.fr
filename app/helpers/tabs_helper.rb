@@ -12,7 +12,7 @@ module TabsHelper
     when 'tous'
       'views.instructeurs.dossiers.tab_steps.total' # i18n-tasks-use t('views.instructeurs.dossiers.tab_steps.total')
     when 'supprimes'
-      'pluralize.dossiers_supprimes'
+      'instructeurs.dossiers.labels.dossiers_supprimes'
     when 'expirant'
       'pluralize.dossiers_close_to_expiration'
     when 'archives'
@@ -22,21 +22,22 @@ module TabsHelper
     end
   end
 
-  def tab_item(label, url, active: false, badge: nil, notification: false)
+  def tab_item(label, url, active: false, badge: nil, notification: false, icon: nil)
     render partial: 'shared/tab_item', locals: {
       label: label,
       url: url,
       active: active,
       badge: badge,
-      notification: notification
+      notification: notification,
+      icon: icon
     }
   end
 
-  def dynamic_tab_item(label, url_or_urls, badge: nil, notification: false)
+  def dynamic_tab_item(label, url_or_urls, badge: nil, notification: false, icon: nil)
     urls = [url_or_urls].flatten
     url = urls.first
     active = urls.any? { |u| current_page?(u) }
 
-    tab_item(label, url, active: active, badge: badge, notification: notification)
+    tab_item(label, url, active: active, badge: badge, notification: notification, icon: icon)
   end
 end
