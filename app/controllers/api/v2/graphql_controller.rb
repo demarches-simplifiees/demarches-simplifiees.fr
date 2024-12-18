@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class API::V2::GraphqlController < API::V2::BaseController
+  include GcTrackingConcern
+
   def execute
     result = API::V2::Schema.execute(query:, variables:, context:, operation_name:)
     @query_info = result.context.query_info
