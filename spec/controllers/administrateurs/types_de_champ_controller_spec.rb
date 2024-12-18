@@ -140,8 +140,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(type_de_champ.reload.referentiel).to eq Referentiel.last
           expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
           expect(Referentiel.last.name).to eq referentiel_file.original_filename
-          expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
-          expect(ReferentielItem.first.data).to eq({ "calorie (kcal)" => "145", "poids (g)" => "60" })
+          expect(ReferentielItem.first.data).to eq({ "dessert" => "Éclair au café", "poids_g" => "60", "calorie_kcal" => "145" })
           expect(ReferentielItem.first.referentiel_id).to eq(Referentiel.last.id)
         end
       end
@@ -151,8 +150,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
         it 'creates a valid referentiel' do
           expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
-          expect(ReferentielItem.first.option).to eq({ 'dessert' => 'Éclair au café' })
-          expect(ReferentielItem.first.data).to eq({})
+          expect(ReferentielItem.first.data).to eq({ 'dessert' => 'Éclair au café' })
         end
       end
 
@@ -327,7 +325,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       keys = csv_to_code.first.keys
 
       csv_to_code.each do |row|
-        referentiel.items.create!(option: row.slice(keys.first), data: row.except(keys.first))
+        referentiel.items.create!(data: row)
       end
     end
 
@@ -335,7 +333,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
     context 'working case with multi column file' do
       it 'nullifies referentiel' do
-        expect { subject }.not_to change(Referentiel, :count).and change(ReferentielItem, :count)
+        expect { subject }.to not_change(Referentiel, :count).and not_change(ReferentielItem, :count)
         expect(type_de_champ.reload.referentiel).to be_nil
         expect(Referentiel.count).to eq 1
         expect(ReferentielItem.count).to eq 3
