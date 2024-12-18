@@ -3,15 +3,12 @@
 module DossierRebaseConcern
   extend ActiveSupport::Concern
 
-  def rebase!(force: false)
+  def rebase!
     ProcedureRevisionPreloader.new([procedure.published_revision, revision].compact).all
     return if procedure.published_revision.blank?
+    return if !can_rebase?
 
-    if force || can_rebase?
-      transaction do
-        rebase
-      end
-    end
+    transaction { rebase }
   end
 
   def rebase_later
@@ -19,31 +16,14 @@ module DossierRebaseConcern
   end
 
   def can_rebase?
-    procedure.published_revision.present? && revision != procedure.published_revision &&
-      (brouillon? || accepted_en_construction_changes? || accepted_en_instruction_changes?)
+    procedure.published_revision.present? && revision != procedure.published_revision && !termine?
   end
 
   def pending_changes
     procedure.published_revision.present? ? revision.compare_types_de_champ(procedure.published_revision) : []
   end
 
-  def can_rebase_mandatory_change?(stable_id)
-    !champs.filter { _1.stable_id == stable_id }.any?(&:blank?)
-  end
-
-  def can_rebase_drop_down_options_change?(stable_id, options)
-    !champs.filter { _1.stable_id == stable_id }.any? { _1.in?(options) }
-  end
-
   private
-
-  def accepted_en_construction_changes?
-    en_construction? && pending_changes.all? { _1.can_rebase?(self) }
-  end
-
-  def accepted_en_instruction_changes?
-    en_instruction? && pending_changes.all? { _1.can_rebase?(self) }
-  end
 
   def rebase
     # revision we are rebasing to

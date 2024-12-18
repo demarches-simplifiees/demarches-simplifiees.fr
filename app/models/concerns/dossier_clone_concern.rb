@@ -73,7 +73,7 @@ module DossierCloneConcern
     return false if revision_id > editing_fork.revision_id
 
     transaction do
-      rebase!(force: true)
+      rebase!
       diff = make_diff(editing_fork)
       apply_diff(diff)
       touch(:last_champ_updated_at)

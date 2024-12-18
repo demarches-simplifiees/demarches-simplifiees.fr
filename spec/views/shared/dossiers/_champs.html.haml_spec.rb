@@ -87,7 +87,7 @@ describe 'shared/dossiers/champs', type: :view do
   end
 
   context "with a dossier_link champ but without value" do
-    let(:types_de_champ_public) { [{ type: :dossier_link }] }
+    let(:types_de_champ_public) { [{ type: :dossier_link, mandatory: false }] }
 
     before do
       dossier.champs.first.update(value: nil)
@@ -102,7 +102,7 @@ describe 'shared/dossiers/champs', type: :view do
   end
 
   context "with a piece justificative without value" do
-    let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+    let(:types_de_champ_public) { [{ type: :piece_justificative, mandatory: false }] }
 
     before do
       dossier.champs.first.piece_justificative_file.purge
