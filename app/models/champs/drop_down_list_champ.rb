@@ -7,6 +7,7 @@ class Champs::DropDownListChamp < Champ
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
   validate :value_is_in_options, if: -> { validate_champ_value? && !(value.blank? || drop_down_other?) }
+  before_save :store_referentiel
 
   def render_as_radios?
     options = referentiel? ? referentiel_drop_down_options : drop_down_options
@@ -37,12 +38,19 @@ class Champs::DropDownListChamp < Champ
   def value=(value)
     if value == OTHER
       self.other = true
-      self.referentiel = nil if self.referentiel?
       write_attribute(:value, nil)
     else
       self.other = false
-      self.referentiel = set_referentiel_from(value) if self.referentiel? && value
       write_attribute(:value, value)
+    end
+  end
+
+  def store_referentiel
+    return if !self.referentiel?
+    if self.other?
+      self.referentiel = nil
+    else
+      self.referentiel = set_referentiel_from(value) if value
     end
   end
 
