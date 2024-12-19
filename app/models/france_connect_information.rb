@@ -15,6 +15,8 @@ class FranceConnectInformation < ApplicationRecord
         password: Devise.friendly_token[0, 20],
         confirmed_at: Time.zone.now
       )
+
+      update_attribute('user_id', user.id)
     rescue ActiveRecord::RecordNotUnique
       # ignore this exception because we check before if user is nil.
       # exception can be raised in race conditions, when FranceConnect calls callback 2 times.
@@ -23,7 +25,6 @@ class FranceConnectInformation < ApplicationRecord
     end
 
     clean_tokens_and_requested_email
-    update_attribute('user_id', user.id)
     save!
   end
 

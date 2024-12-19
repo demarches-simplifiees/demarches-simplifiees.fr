@@ -50,25 +50,19 @@ describe FranceConnectInformation, type: :model do
         allow(fci).to receive(:send_custom_confirmation_instructions)
       end
 
-      it 'raises an error' do
-        expect { fci.safely_associate_user!(email) }.to raise_error(NoMethodError)
+      it 'is noop' do
+        expect(fci.safely_associate_user!(email)).to eq(true)
       end
 
       it 'does not create a new user' do
         expect {
-          begin
-            fci.safely_associate_user!(email)
-          rescue NoMethodError
-          end
+          fci.safely_associate_user!(email)
         }.to_not change(User, :count)
       end
 
       it 'does not associate with any user' do
         expect(fci.user).to be_nil
-        begin
-          fci.safely_associate_user!(email)
-        rescue NoMethodError
-        end
+        fci.safely_associate_user!(email)
         expect(fci.reload.user).to be_nil
       end
     end
