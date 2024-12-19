@@ -39,8 +39,42 @@
       }
 
       .notifications {
-        top: 3px;
-        right: 18px;
+        top: 10px;
+        left: 50%;
+        margin-left: 15px;
+      }
+    }
+  }
+}
+
+.procedure-list-item {
+  .fr-btn--tertiary {
+    a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .notifications {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: red;
+      border-radius: 50%;
+      top: 15px;
+      right: 35%;
+    }
+
+    .center.fr-text--bold {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &::after {
+        content: '';
+        display: inline-block;
+        width: 30px;
       }
     }
   }

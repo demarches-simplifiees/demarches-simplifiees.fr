@@ -4,4 +4,6 @@
   = link_to(url, 'aria-selected': active ? true : nil, class: 'fr-tabs__tab', role: 'tab' ) do
     - if badge.present?
       %span.fr-badge.fr-badge--blue-ecume.fr-mr-1w= badge
+    - if icon.present?
+      %span.fr-icon--sm.fr-mr-1w{ class: icon, "aria-hidden": true }
     = label

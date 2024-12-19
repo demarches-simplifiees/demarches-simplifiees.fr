@@ -22,11 +22,6 @@
       active: statut == 'tous',
       badge: number_with_html_delimiter(tous_count))
 
-    = tab_item(t(tab_i18n_key_from_status('supprimes'), count: supprimes_count),
-      instructeur_procedure_path(procedure, statut: 'supprimes'),
-      active: statut == 'supprimes',
-      badge: number_with_html_delimiter(supprimes_count))
-
     - if procedure.procedure_expires_when_termine_enabled
       = tab_item(t(tab_i18n_key_from_status('expirant'), count: expirant_count),
         instructeur_procedure_path(procedure, statut: 'expirant'),
@@ -36,4 +31,9 @@
     = tab_item(t(tab_i18n_key_from_status('archives'), count: archives_count),
       instructeur_procedure_path(procedure, statut: 'archives'),
       active: statut == 'archives',
-      badge: number_with_html_delimiter(archives_count))
+      icon: 'fr-icon-folder-2-line')
+
+    = tab_item(t(tab_i18n_key_from_status('supprimes'), count: supprimes_count),
+      instructeur_procedure_path(procedure, statut: 'supprimes'),
+      active: statut == 'supprimes',
+      icon: 'fr-icon-delete-line')

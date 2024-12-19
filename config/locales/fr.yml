@@ -878,7 +878,7 @@ fr:
         to_follow: à suivre
         to_archive: à archiver
         dossiers_supprimes: corbeille
-        total: dossiers
+        total: au total
   administrateurs:
     activate:
       new:
