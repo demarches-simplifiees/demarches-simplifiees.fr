@@ -50,7 +50,7 @@
                 %span.fr-badge= procedure.instructeurs_count
 
               = dsfr_icon('fr-icon-file-text-fill fr-ml-1w')
-              %span.fr-badge= procedure.dossiers.state_not_brouillon.visible_by_administration.count
+              %span.fr-badge= procedure.estimated_dossiers_count
 
       .text-right
         %p.fr-mb-0.width-max-content N° #{number_with_html_delimiter(procedure.id)}
