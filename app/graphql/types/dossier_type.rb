@@ -162,9 +162,7 @@ module Types
 
     def champs(id: nil)
       if id.present?
-        Loaders::Champ
-          .for(object, private: false)
-          .load(ApplicationRecord.id_from_typed_id(id))
+        object.project_champs_public.filter { _1.stable_id.to_s == ApplicationRecord.id_from_typed_id(id).to_s }
       else
         object.project_champs_public.filter(&:visible?)
       end
@@ -172,9 +170,7 @@ module Types
 
     def annotations(id: nil)
       if id.present?
-        Loaders::Champ
-          .for(object, private: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
+        object.project_champs_private.filter { _1.stable_id.to_s == ApplicationRecord.id_from_typed_id(id).to_s }
       else
         object.project_champs_private.filter(&:visible?)
       end
