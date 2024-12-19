@@ -12,7 +12,7 @@ describe Users::DossiersController, type: :controller do
         .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
-      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!, :forbid_invite_submission!)
+      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!)
     end
   end
 
@@ -119,30 +119,6 @@ describe Users::DossiersController, type: :controller do
         expect(@controller).to receive(:current_user).twice.and_return(user)
         create(:invite, dossier: create(:dossier), user: user)
       end
-
-      it_behaves_like 'redirects and flashes'
-    end
-  end
-
-  describe "#forbid_invite_submission!" do
-    let(:user) { create(:user) }
-    let(:asked_dossier) { create(:dossier) }
-    let(:ensure_authorized) { :forbid_invite_submission! }
-
-    before do
-      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
-      allow(@controller).to receive(:current_user).and_return(user)
-      allow(@controller).to receive(:redirect_to)
-    end
-
-    context 'when a user submit their own dossier' do
-      let(:asked_dossier) { create(:dossier, user: user) }
-
-      it_behaves_like 'does not redirect nor flash'
-    end
-
-    context 'when an invite submit a dossier where they where invited' do
-      before { create(:invite, dossier: asked_dossier, user: user) }
 
       it_behaves_like 'redirects and flashes'
     end
@@ -525,10 +501,10 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe '#submit_en_construction' do
-    before { sign_in(user) }
+    let(:owner) { create(:user) }
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
-    let(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+    let(:dossier) { create(:dossier, :en_construction, procedure:, user: owner) }
     let(:first_champ) { dossier.owner_editing_fork.project_champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
@@ -543,130 +519,147 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when the dossier cannot be updated by the user' do
-      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+    context 'when the owner signs in' do
+      before { sign_in(owner) }
 
-      it 'redirects to the dossiers list' do
-        subject
+      context 'when the dossier cannot be updated by the owner' do
+        let!(:dossier) { create(:dossier, :en_instruction, user: owner) }
 
-        expect(response).to redirect_to(dossier_path(dossier))
-        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
-      end
-    end
+        it 'redirects to the dossiers list' do
+          subject
 
-    context 'when the update fails' do
-      render_views
-
-      before do
-        allow_any_instance_of(Dossier).to receive(:validate).and_return(false)
-        allow_any_instance_of(Dossier).to receive(:errors).and_return(
-          [double(inner_error: double(base: first_champ), message: 'nop')]
-        )
-
-        subject
+          expect(response).to redirect_to(dossier_path(dossier))
+          expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+        end
       end
 
-      it { expect(response).to render_template(:modifier) }
-    end
+      context 'when the update fails' do
+        render_views
 
-    context 'when a mandatory champ is missing' do
-      let(:value) { nil }
-      render_views
-      let(:types_de_champ_public) { [{ type: :text, mandatory: true, libelle: 'l' }] }
-      before { subject }
+        before do
+          allow_any_instance_of(Dossier).to receive(:validate).and_return(false)
+          allow_any_instance_of(Dossier).to receive(:errors).and_return(
+            [double(inner_error: double(base: first_champ), message: 'nop')]
+          )
 
-      it { expect(response).to render_template(:modifier) }
-      it { expect(response.body).to have_content("doit être rempli") }
-      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
-    end
+          subject
+        end
 
-    context 'when dossier has no champ' do
-      let(:submit_payload) { { id: dossier.id } }
-
-      it 'does not raise any errors' do
-        subject
-
-        expect(response).to redirect_to(dossier_path(dossier))
-      end
-    end
-
-    context 'when dossier repetition had been removed in newer version' do
-      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, user:) }
-      let(:types_de_champ_public) { [{ type: :repetition, libelle: 'repetition', children: [{ type: :text, libelle: 'child' }] }] }
-      let(:editing_fork) { dossier.owner_editing_fork }
-      let(:champ_repetition) { editing_fork.project_champs_public.find(&:repetition?) }
-      before do
-        editing_fork
-
-        procedure.draft_revision.remove_type_de_champ(champ_repetition.stable_id)
-        procedure.publish_revision!
-
-        editing_fork.reload
-        editing_fork.rebase!
-      end
-      let(:submit_payload) { { id: dossier.id } }
-
-      it { expect { subject }.not_to raise_error }
-    end
-
-    context 'when dossier was already submitted' do
-      before do
-        expect_any_instance_of(Dossier).to receive(:remove_not_visible_or_empty_champs!)
-        post :submit_en_construction, params: payload
+        it { expect(response).to render_template(:modifier) }
       end
 
-      it 'redirects to the dossier' do
-        subject
+      context 'when a mandatory champ is missing' do
+        let(:value) { nil }
+        render_views
+        let(:types_de_champ_public) { [{ type: :text, mandatory: true, libelle: 'l' }] }
+        before { subject }
 
-        expect(response).to redirect_to(dossier_path(dossier))
-        expect(flash.alert).to eq("Les modifications ont déjà été déposées")
-      end
-    end
-
-    context "when there are pending correction" do
-      let!(:correction) { create(:dossier_correction, dossier: dossier) }
-
-      subject { post :submit_en_construction, params: { id: dossier.id } }
-
-      it "resolves correction automatically" do
-        expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
+        it { expect(response).to render_template(:modifier) }
+        it { expect(response.body).to have_content("doit être rempli") }
+        it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
       end
 
-      context 'when procedure has sva enabled' do
-        let(:procedure) { create(:procedure, :sva) }
-        let(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+      context 'when dossier has no champ' do
+        let(:submit_payload) { { id: dossier.id } }
+
+        it 'does not raise any errors' do
+          subject
+
+          expect(response).to redirect_to(dossier_path(dossier))
+        end
+      end
+
+      context 'when dossier repetition had been removed in newer version' do
+        let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, user:) }
+        let(:types_de_champ_public) { [{ type: :repetition, libelle: 'repetition', children: [{ type: :text, libelle: 'child' }] }] }
+        let(:editing_fork) { dossier.owner_editing_fork }
+        let(:champ_repetition) { editing_fork.project_champs_public.find(&:repetition?) }
+        before do
+          editing_fork
+
+          procedure.draft_revision.remove_type_de_champ(champ_repetition.stable_id)
+          procedure.publish_revision!
+
+          editing_fork.reload
+          editing_fork.rebase!
+        end
+        let(:submit_payload) { { id: dossier.id } }
+
+        it { expect { subject }.not_to raise_error }
+      end
+
+      context 'when dossier was already submitted' do
+        before do
+          expect_any_instance_of(Dossier).to receive(:remove_not_visible_or_empty_champs!)
+          post :submit_en_construction, params: payload
+        end
+
+        it 'redirects to the dossier' do
+          subject
+
+          expect(response).to redirect_to(dossier_path(dossier))
+          expect(flash.alert).to eq("Les modifications ont déjà été déposées")
+        end
+      end
+
+      context "when there are pending correction" do
         let!(:correction) { create(:dossier_correction, dossier: dossier) }
 
-        subject { post :submit_en_construction, params: { id: dossier.id, dossier: { pending_correction: pending_correction_value } } }
+        subject { post :submit_en_construction, params: { id: dossier.id } }
 
-        context 'when resolving correction' do
-          let(:pending_correction_value) { "1" }
-          it 'passe automatiquement en instruction' do
-            expect(dossier.pending_correction?).to be_truthy
-
-            subject
-            dossier.reload
-
-            expect(dossier).to be_en_instruction
-            expect(dossier.pending_correction?).to be_falsey
-            expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
-          end
+        it "resolves correction automatically" do
+          expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
         end
 
-        context 'when not resolving correction' do
-          render_views
+        context 'when procedure has sva enabled' do
+          let(:procedure) { create(:procedure, :sva) }
+          let(:dossier) { create(:dossier, :en_construction, procedure:, user: owner) }
+          let!(:correction) { create(:dossier_correction, dossier: dossier) }
 
-          let(:pending_correction_value) { "" }
-          it 'does not passe automatiquement en instruction' do
-            subject
-            dossier.reload
+          subject { post :submit_en_construction, params: { id: dossier.id, dossier: { pending_correction: pending_correction_value } } }
 
-            expect(dossier).to be_en_construction
-            expect(dossier.pending_correction?).to be_truthy
+          context 'when resolving correction' do
+            let(:pending_correction_value) { "1" }
+            it 'passe automatiquement en instruction' do
+              expect(dossier.pending_correction?).to be_truthy
 
-            expect(response.body).to include("Cochez la case")
+              subject
+              dossier.reload
+
+              expect(dossier).to be_en_instruction
+              expect(dossier.pending_correction?).to be_falsey
+              expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
+            end
+          end
+
+          context 'when not resolving correction' do
+            render_views
+
+            let(:pending_correction_value) { "" }
+            it 'does not passe automatiquement en instruction' do
+              subject
+              dossier.reload
+
+              expect(dossier).to be_en_construction
+              expect(dossier.pending_correction?).to be_truthy
+
+              expect(response.body).to include("Cochez la case")
+            end
           end
         end
+      end
+    end
+
+    context 'when a invite signs in' do
+      let(:invite_user) { create(:user) }
+      let!(:invite) { create(:invite, dossier:, user: invite_user) }
+
+      before { sign_in(invite_user) }
+      context 'and the invite tries to submit the dossier' do
+        before { subject }
+
+        it { expect(response).to redirect_to(root_path) }
+        it { expect(flash.alert).to include("Vous n’avez pas accès à ce dossier") }
       end
     end
   end

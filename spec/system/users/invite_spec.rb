@@ -136,7 +136,6 @@ describe 'Invitations' do
         expect(page).to have_current_path(dossier_path(invite.dossier))
       end
 
-      it_behaves_like 'the user can edit the submitted demande'
       it_behaves_like 'the user can send messages to the instructeur'
     end
   end
