@@ -1,18 +1,5 @@
-@import 'colors';
-@import 'constants';
-
 .autosave {
   position: relative;
-  font-size: 0.9em;
-}
-
-.autosave-explanation {
-  margin-left: 4px;
-}
-
-.autosave-explanation-text,
-.autosave-label {
-  margin-right: 6px;
 }
 
 .autosave-status {
@@ -20,19 +7,13 @@
   position: absolute;
   top: 0;
 
-  &.succeeded .autosave-label {
-    color: $green;
+  &.succeeded {
+    color: var(--success-425-625);
   }
 
-  &.failed .autosave-label {
-    color: $orange;
+  &.failed {
+    color: var(--warning-425-625);
   }
-}
-
-.autosave-icon {
-  display: inline-block;
-  vertical-align: -1px;
-  margin-right: 4px;
 }
 
 .autosave-retry {
@@ -90,17 +71,6 @@ $autosave-status-fade-out-duration: 0.7s;
     // Make the status message fade-in quickly
     transition-property: opacity;
     transition-duration: $autosave-status-fade-in-duration;
-  }
-
-  // Make the icon pulse (if any)
-  .autosave-icon {
-    opacity: 1;
-    // Make the icon pulse after being made visible
-    animation-name: pulse;
-    animation-duration: 0.25s;
-    animation-delay: 0.15s;
-    animation-timing-function: linear;
-    animation-fill-mode: backwards;
   }
 }
 

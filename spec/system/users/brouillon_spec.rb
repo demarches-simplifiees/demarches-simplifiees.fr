@@ -614,8 +614,7 @@ describe 'The user', js: true do
       allow_any_instance_of(Users::DossiersController).to receive(:update).and_raise("Server is busy")
       fill_in('texte obligatoire', with: 'a valid user input')
       blur
-      expect(page).to have_css('span', text: 'Impossible d’enregistrer le brouillon', visible: true)
-
+      expect(page).to have_text('Attention : Impossible d’enregistrer le brouillon.')
       # Test that retrying after a failure works
       allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
       click_on 'Réessayer'

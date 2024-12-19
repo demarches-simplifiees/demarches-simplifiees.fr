@@ -59,6 +59,8 @@ export function ComboBox({
       <div className="fr-ds-combobox__input" style={{ position: 'relative' }}>
         <Input className="fr-select fr-autocomplete" ref={inputRef} />
         <Button
+          aria-haspopup="false"
+          aria-label=""
           style={{
             width: '40px',
             height: '100%',
