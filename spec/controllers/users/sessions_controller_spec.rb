@@ -99,11 +99,12 @@ describe Users::SessionsController, type: :controller do
 
     context 'when email domain is in mandatory list' do
       let(:email) { 'user@beta.gouv.fr' }
-      it 'redirects to agent connect with force parameter' do
+      it 'redirects to agent connect with force parameter and is not logged in' do
         expect(AgentConnectService).to receive(:enabled?).and_return(true)
         subject
         expect(response).to redirect_to(agent_connect_path(force_agent_connect: true))
         expect(flash[:alert]).to eq("La connexion des agents passe à présent systématiquement par AgentConnect")
+        expect(controller.current_user).to be_nil
       end
     end
   end
