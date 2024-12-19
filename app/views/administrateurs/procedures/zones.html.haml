@@ -19,7 +19,7 @@
             .fr-checkbox-group
               = b.check_box
               = b.label class: "fr-label font-weight-bold"
-        = f.collection_check_boxes :zone_ids, Zone.available_at(@procedure.published_or_created_at, current_administrateur.default_zones), :id, :label do |b|
+        = f.collection_check_boxes :zone_ids, @zones, :id, :label do |b|
           .fr-fieldset__element
             .fr-checkbox-group
               = b.check_box
