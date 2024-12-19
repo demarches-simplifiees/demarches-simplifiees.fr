@@ -58,7 +58,7 @@ class Attachment::EditComponent < ApplicationComponent
 
   def destroy_attachment_path
     if champ.present?
-      attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id)
+      attachment_path
     else
       attachment_path(auto_attach_url: @auto_attach_url, view_as: @view_as, direct_upload: @direct_upload)
     end

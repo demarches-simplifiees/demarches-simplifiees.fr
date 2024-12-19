@@ -138,14 +138,14 @@ module DossierChampsConcern
     return [] unless stable_id_in_revision?(type_de_champ.stable_id)
     @repetition_row_ids ||= {}
     @repetition_row_ids[type_de_champ.stable_id] ||= begin
-      rows = champs_in_revision.filter { _1.row? && _1.stable_id == type_de_champ.stable_id }
+      rows = champs_on_stream.filter { _1.row? && _1.stable_id == type_de_champ.stable_id }
       row_ids = rows.reject(&:discarded?).map(&:row_id)
 
       # Legacy rows are rows that have been created before the introduction of the discarded_at column
       # TODO migrate and clean
       children_stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
       discarded_row_ids = rows.filter(&:discarded?).map(&:row_id)
-      legacy_row_ids = champs_in_revision.filter { _1.stable_id.in?(children_stable_ids) && _1.row_id.present? }.map(&:row_id).uniq
+      legacy_row_ids = champs_on_stream.filter { _1.stable_id.in?(children_stable_ids) && _1.row_id.present? }.map(&:row_id).uniq
       row_ids += (legacy_row_ids - discarded_row_ids)
       row_ids.uniq.sort
     end
@@ -177,10 +177,121 @@ module DossierChampsConcern
     super.tap { reset_champs_cache }
   end
 
+  def merge_stream(stream)
+    case stream
+    when Champ::USER_DRAFT_STREAM
+      merge_user_draft_stream
+    else
+      raise ArgumentError, "Invalid stream: #{stream}"
+    end
+
+    reload_champs_cache
+  end
+
+  def reset_stream(stream)
+    case stream
+    when Champ::USER_DRAFT_STREAM
+      champs.where(stream:).delete_all
+    else
+      raise ArgumentError, "Invalid stream: #{stream}"
+    end
+
+    reload_champs_cache
+  end
+
+  def user_draft_changes?
+    # TODO remove when all forks are gone
+    return true if forked_with_changes?
+
+    champs_on_user_draft_stream.present?
+  end
+
+  def user_draft_changes_on_champ?(champ)
+    # TODO remove when all forks are gone
+    return true if champ_forked_with_changes?(champ)
+
+    champs_on_user_draft_stream.any? { _1.public_id == champ.public_id }
+  end
+
+  def with_stream(stream)
+    if block_given?
+      previous_stream = @stream
+      @stream = stream
+      reset_champs_cache
+      result = yield
+      @stream = previous_stream
+      reset_champs_cache
+      result
+    else
+      @stream = stream
+      reset_champs_cache
+      self
+    end
+  end
+
+  def stream
+    @stream || Champ::MAIN_STREAM
+  end
+
+  def history
+    champs_in_revision.filter(&:history_stream?)
+  end
+
+  def update_with_stream?
+    en_construction? && procedure.feature_enabled?(:user_draft_stream) && !with_editing_fork?
+  end
+
+  def stream_for_update
+    if update_with_stream?
+      Champ::USER_DRAFT_STREAM
+    else
+      Champ::MAIN_STREAM
+    end
+  end
+
   private
 
+  def merge_user_draft_stream
+    draft_champs = champs.where(stream: Champ::USER_DRAFT_STREAM, stable_id: revision_stable_ids)
+      .pluck(:id, :stable_id, :row_id)
+      .index_by { |(_, stable_id, row_id)| [stable_id, row_id].compact }
+      .transform_values(&:first)
+
+    return if draft_champs.empty?
+
+    main_champs = champs.where(stream: Champ::MAIN_STREAM, stable_id: revision_stable_ids)
+      .pluck(:id, :stable_id, :row_id)
+      .index_by { |(_, stable_id, row_id)| [stable_id, row_id].compact }
+      .transform_values(&:first)
+
+    draft_champ_ids = draft_champs.values
+    main_champ_ids = main_champs.filter_map { |key, id| id if draft_champs.key?(key) }
+
+    now = Time.zone.now
+    transaction do
+      champs.where(id: main_champ_ids, stream: Champ::MAIN_STREAM).update_all(stream: "#{Champ::HISTORY_STREAM}#{now}")
+      champs.where(id: draft_champ_ids, stream: Champ::USER_DRAFT_STREAM).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
+    end
+
+    update(last_champ_updated_at: now)
+    if Champ.exists?(id: draft_champ_ids, type: ['Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'])
+      update(last_champ_piece_jointe_updated_at: now)
+    end
+
+    reload_champs_cache
+  end
+
   def champs_by_public_id
-    @champs_by_public_id ||= champs_in_revision.index_by(&:public_id)
+    @champs_by_public_id ||= champs_on_stream.index_by(&:public_id)
+  end
+
+  def champs_on_stream
+    @champs_on_stream ||= case stream
+    when Champ::USER_DRAFT_STREAM
+      (champs_on_user_draft_stream + champs_on_main_stream).uniq(&:public_id)
+    else
+      champs_on_main_stream
+    end
   end
 
   def revision_stable_ids
@@ -189,6 +300,14 @@ module DossierChampsConcern
 
   def champs_in_revision
     champs.filter { stable_id_in_revision?(_1.stable_id) }
+  end
+
+  def champs_on_main_stream
+    champs_in_revision.filter(&:main_stream?)
+  end
+
+  def champs_on_user_draft_stream
+    champs_in_revision.filter(&:user_draft_stream?)
   end
 
   def filled_champ(type_de_champ, row_id: nil)
@@ -213,7 +332,14 @@ module DossierChampsConcern
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
       .create_with(**champ_attributes)
-      .find_or_create_by!(stable_id: type_de_champ.stable_id, row_id:)
+      .find_or_create_by!(stable_id: type_de_champ.stable_id, row_id:, stream:)
+
+    draft_champ_exists = if stream != Champ::MAIN_STREAM
+      champs.exists?(stable_id: type_de_champ.stable_id, row_id:, stream:)
+    end
+    main_stream_champ = if stream != Champ::MAIN_STREAM && !draft_champ_exists
+      champs.find_by(stable_id: type_de_champ.stable_id, row_id:, stream: Champ::MAIN_STREAM)
+    end
 
     # Needed when a revision change the champ type in this case, we reset the champ data
     if champ.type != champ_attributes[:type]
@@ -222,6 +348,8 @@ module DossierChampsConcern
       champ_attributes[:external_id] = nil
       champ_attributes[:data] = nil
       champ = champ.becomes!(champ_attributes[:type].constantize)
+    elsif main_stream_champ.present?
+      champ.clone_value_from(main_stream_champ)
     end
 
     champ.assign_attributes(champ_attributes)
@@ -260,10 +388,16 @@ module DossierChampsConcern
     @project_champs_private = nil
     @repetition_row_ids = nil
     @revision_stable_ids = nil
+    @champs_on_stream = nil
   end
 
   def reset_champ_cache(champ)
     champs_by_public_id[champ.public_id]&.reload
+    reset_champs_cache
+  end
+
+  def reload_champs_cache
+    champs.reset
     reset_champs_cache
   end
 end

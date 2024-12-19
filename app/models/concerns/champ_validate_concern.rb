@@ -27,7 +27,11 @@ module ChampValidateConcern
     end
 
     def can_validate?
-      in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
+      in_dossier_stream? && in_dossier_revision? && is_same_type_as_revision? && !row? && !in_discarded_row?
+    end
+
+    def in_dossier_stream?
+      dossier.stream == stream
     end
   end
 end
