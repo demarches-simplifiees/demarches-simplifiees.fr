@@ -38,7 +38,13 @@ module Dsfr
 
       def fieldset_error_opts
         if dsfr_champ_container == :fieldset && errors_on_attribute?
-          { aria: { labelledby: "#{describedby_id} #{object.labelledby_id}" } }
+          labelledby = [@champ.labelledby_id]
+          labelledby << describedby_id if @champ.description.present?
+          labelledby << @champ.error_id
+
+          {
+            aria: { labelledby: labelledby.join(' ') }
+          }
         else
           {}
         end
@@ -67,14 +73,6 @@ module Dsfr
         }
       end
 
-      def input_error_opts
-        {
-          aria: {
-            describedby: describedby_id
-          }
-        }
-      end
-
       def react_input_opts(other_opts = {})
         input_opts(other_opts, true)
       end
@@ -87,11 +85,18 @@ module Dsfr
                                              'fr-input': !react,
                                              'fr-mb-0': true
                                       }.merge(input_error_class_names)))
-        if errors_on_attribute?
-          @opts.deep_merge!('aria-describedby': describedby_id)
+
+        aria_describedby = []
+
+        if object.respond_to?(:description) && object.description.present?
+          aria_describedby << describedby_id
         elsif hintable?
-          @opts.deep_merge!('aria-describedby': hint_id)
+          aria_describedby << hint_id
         end
+
+        aria_describedby << object.error_id if errors_on_attribute? && object.respond_to?(:error_id)
+
+        @opts.deep_merge!('aria-describedby': aria_describedby.join(' ')) if aria_describedby.present?
 
         if @required
           @opts[react ? :is_required : :required] = true

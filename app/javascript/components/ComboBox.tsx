@@ -18,7 +18,6 @@ import { findOrCreateContainerElement } from '@coldwired/react';
 import * as s from 'superstruct';
 
 import {
-  useLabelledBy,
   useDispatchChangeEvent,
   useMultiList,
   useSingleList,
@@ -50,11 +49,15 @@ export function ComboBox({
       className={`fr-ds-combobox ${className ?? ''}`}
       shouldFocusWrap={true}
     >
-      {label ? <Label className="fr-label">{label}</Label> : null}
-      {description ? (
-        <Text slot="description" className="fr-hint-text">
-          {description}
-        </Text>
+      {label ? (
+        <Label className="fr-label">
+          {label}
+          {description ? (
+            <Text slot="description" className="fr-hint-text fr-mb-1w">
+              {description}
+            </Text>
+          ) : null}
+        </Label>
       ) : null}
       <div className="fr-ds-combobox__input" style={{ position: 'relative' }}>
         <Input className="fr-select fr-autocomplete" ref={inputRef} />
@@ -92,7 +95,6 @@ export function SingleComboBox({
   ...maybeProps
 }: SingleComboBoxProps) {
   const {
-    'aria-labelledby': ariaLabelledby,
     items: defaultItems,
     selectedKey: defaultSelectedKey,
     emptyFilterKey,
@@ -103,7 +105,6 @@ export function SingleComboBox({
     ...props
   } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
-  const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
 
   const { selectedItem, onReset, ...comboBoxProps } = useSingleList({
@@ -115,12 +116,7 @@ export function SingleComboBox({
 
   return (
     <>
-      <ComboBox
-        aria-labelledby={labelledby}
-        menuTrigger="focus"
-        {...comboBoxProps}
-        {...props}
-      >
+      <ComboBox menuTrigger="focus" {...comboBoxProps} {...props}>
         {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
       </ComboBox>
       {children || name ? (
@@ -145,7 +141,6 @@ export function SingleComboBox({
 
 export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   const {
-    'aria-labelledby': ariaLabelledby,
     items: defaultItems,
     selectedKeys: defaultSelectedKeys,
     name,
@@ -157,7 +152,6 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     ...props
   } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
 
-  const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -200,7 +194,6 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
         </TagGroup>
       ) : null}
       <ComboBox
-        aria-labelledby={labelledby}
         allowsCustomValue={allowsCustomValue}
         inputRef={inputRef}
         menuTrigger="focus"
@@ -244,7 +237,6 @@ export function RemoteComboBox({
   ...maybeProps
 }: RemoteComboBoxProps) {
   const {
-    'aria-labelledby': ariaLabelledby,
     items: defaultItems,
     selectedKey: defaultSelectedKey,
     allowsCustomValue,
@@ -259,7 +251,6 @@ export function RemoteComboBox({
     ...props
   } = useMemo(() => s.create(maybeProps, RemoteComboBoxProps), [maybeProps]);
 
-  const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
 
   const load = useMemo(
@@ -286,7 +277,6 @@ export function RemoteComboBox({
       <ComboBox
         allowsEmptyCollection={comboBoxProps.inputValue.length > 0}
         allowsCustomValue={allowsCustomValue}
-        aria-labelledby={labelledby}
         {...comboBoxProps}
         {...props}
       >

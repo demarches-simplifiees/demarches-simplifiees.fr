@@ -510,24 +510,6 @@ export const createLoader: (
     }
   };
 
-export function useLabelledBy(id?: string, ariaLabelledby?: string) {
-  return useMemo(
-    () => (ariaLabelledby ? ariaLabelledby : findLabelledbyId(id)),
-    [id, ariaLabelledby]
-  );
-}
-
-function findLabelledbyId(id?: string) {
-  if (!id) {
-    return;
-  }
-  const label = document.querySelector(`[for="${id}"]`);
-  if (!label?.id) {
-    return;
-  }
-  return label.id;
-}
-
 export function useOnFormReset(onReset?: () => void) {
   const ref = useRef<HTMLInputElement>(null);
   const onResetListener = useEvent<EventListener>((event) => {
