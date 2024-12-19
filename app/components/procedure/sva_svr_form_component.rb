@@ -8,9 +8,12 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
     @configuration = configuration
   end
 
+  private
+
   def form_disabled?
-    return false if procedure.brouillon?
     return true if !procedure.feature_enabled?(:sva)
+    return true if procedure.declarative?
+    return false if procedure.brouillon?
 
     procedure.sva_svr_enabled?
   end
@@ -20,8 +23,8 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
 
     [
       { label: t("disabled", scope:), value: "disabled", disabled: form_disabled? },
-      { label: t("sva", scope:), value: "sva", hint: t("sva_hint", scope:) },
-      { label: t("svr", scope:), value: "svr", hint: t("svr_hint", scope:) }
+      { label: t("sva", scope:), value: "sva", hint: t("sva_hint", scope:), disabled: form_disabled? },
+      { label: t("svr", scope:), value: "svr", hint: t("svr_hint", scope:), disabled: form_disabled? }
     ]
   end
 
@@ -32,12 +35,14 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
       {
         value: "continue",
         label: t("continue_label", scope: scope),
-        hint: t("continue_hint", scope: scope)
+        hint: t("continue_hint", scope: scope),
+        disabled: form_disabled?
       },
       {
         value: "reset",
         label: t("reset_label", scope: scope),
-        hint: t("reset_hint", scope: scope)
+        hint: t("reset_hint", scope: scope),
+        disabled: form_disabled?
       }
     ]
   end
