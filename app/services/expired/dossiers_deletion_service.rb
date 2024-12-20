@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
+  def process_empty_dossiers_brouillon(created_at)
+    delete_empty_brouillons_and_notify(created_at)
+  end
+
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
     delete_expired_brouillons_and_notify
@@ -46,6 +50,23 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
       Dossier.termine_close_to_expiration.without_termine_expiration_notice_sent,
       :termine_close_to_expiration_notice_sent_at
     )
+  end
+
+  def delete_empty_brouillons_and_notify(created_at)
+    empty_brouillons = Dossier.empty_brouillon(created_at)
+
+    user_notifications = group_by_user_email(empty_brouillons)
+      .map { |(email, dossiers)| [email, dossiers.map(&:hash_for_deletion_mail)] }
+
+    empty_brouillons.destroy_all
+
+    user_notifications.each do |(email, dossiers_hash)|
+      mail = DossierMailer.notify_brouillon_deletion(
+        dossiers_hash,
+        email
+      )
+      send_with_delay(mail)
+    end
   end
 
   def delete_expired_brouillons_and_notify
