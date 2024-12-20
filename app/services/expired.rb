@@ -25,6 +25,8 @@ module Expired
   #   it send a lot o email, so we spread our jobs through the day
   def self.schedule_at(caller)
     case caller.name
+    when 'Cron::EmptyDossiersBrouillonDeletionJob'
+      "every day at 5 am"
     when 'Cron::ExpiredPrefilledDossiersDeletionJob'
       "every day at 3 am"
     when 'Cron::ExpiredDossiersTermineDeletionJob'
