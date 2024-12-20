@@ -64,9 +64,13 @@ describe Logic::ChampValue do
 
     context 'dropdown tdc' do
       let(:tdc_type) { :drop_down_list }
-      let(:champ) { Champs::DropDownListChamp.new(value:, other:, stable_id: tdc.stable_id, dossier:) }
+      let(:champ) { Champs::DropDownListChamp.new(other:, stable_id: tdc.stable_id, dossier:) }
       let(:value) { 'val1' }
       let(:other) { nil }
+
+      before do
+        champ.value = value
+      end
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
       it { is_expected.to eq('val1') }
@@ -81,6 +85,7 @@ describe Logic::ChampValue do
 
         context 'with other filled' do
           let(:other) { true }
+          let(:value) { Champs::DropDownListChamp::OTHER }
 
           it { is_expected.to eq(Champs::DropDownListChamp::OTHER) }
         end

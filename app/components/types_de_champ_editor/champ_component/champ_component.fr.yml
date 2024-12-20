@@ -19,3 +19,9 @@ fr:
       hint: "Pensez aux ancres de début (^) et fin ($) : `12 km serait accepté par /[[:digit:]]+/ mais rejeté par /^[[:digit:]]+$/"
       valid_exemple: Exemple valide qui passe l'expression régulière
       error_message: Message d'erreur à afficher à l'usager en cas de saisie invalide
+  drop_down_list:
+    labels:
+      simple: Manuelle
+      advanced: Import référentiel
+    referentiel:
+      hint_html: Utilisez le modèle de fichier CSV fourni ci-dessous pour construire votre référentiel (le nombre de colonnes n'est pas limité).<br>L’usager ne verra que les valeurs présentes <strong> dans la première colonne [A] </strong> du fichier.<br> En examinant le dossier, l’instructeur visualisera également les valeurs associées <strong> aux autre colonnes, [B] à […].</strong>

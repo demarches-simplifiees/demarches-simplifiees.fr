@@ -127,6 +127,7 @@ class TypeDeChamp < ApplicationRecord
                  :cadastres,
                  :old_pj,
                  :drop_down_options,
+                 :drop_down_mode,
                  :skip_pj_validation,
                  :skip_content_type_pj_validation,
                  :drop_down_secondary_libelle,
@@ -141,7 +142,10 @@ class TypeDeChamp < ApplicationRecord
                  :header_section_level
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
+
+  belongs_to :referentiel, optional: true, inverse_of: :types_de_champ
 
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
 
@@ -350,8 +354,16 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def referentiel?
+    drop_down_mode == 'advanced'
+  end
+
   def drop_down_options
     Array.wrap(super)
+  end
+
+  def referentiel_drop_down_options
+    Array.wrap(referentiel&.items&.map { { 'value' => _1.data.values.first, 'id' => _1.id } })
   end
 
   def drop_down_options_from_text=(text)
@@ -363,6 +375,15 @@ class TypeDeChamp < ApplicationRecord
       drop_down_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
     else
       drop_down_options
+    end
+  end
+
+  def referentiel_drop_down_options_with_other
+    select_options = referentiel_drop_down_options.map { |h| [h['value'], h['id']] }
+    if drop_down_other?
+      select_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
+    else
+      select_options
     end
   end
 
@@ -575,7 +596,7 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:explication) => [:collapsible_explanation_enabled, :collapsible_explanation_text],
     type_champs.fetch(:textarea) => [:character_limit],
     type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
-    type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options],
+    type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],
     type_champs.fetch(:linked_drop_down_list) => [:drop_down_options, :drop_down_secondary_libelle, :drop_down_secondary_description],
     type_champs.fetch(:piece_justificative) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],

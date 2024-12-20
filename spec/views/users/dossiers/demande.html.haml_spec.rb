@@ -80,4 +80,49 @@ describe 'users/dossiers/demande', type: :view do
       expect(rendered).not_to have_text('L’usager n’a pas encore pris connaissance de la décision concernant son dossier')
     end
   end
+
+  context 'when there is a dropdown list from a referentiel' do
+    let!(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :drop_down_list, drop_down_mode: 'advanced', drop_down_other: '1' }
+      ]
+    end
+    let(:type_de_champ) { procedure.draft_types_de_champ_public.first }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
+    let(:referentiel) { type_de_champ.create_referentiel!(name: 'modele-import-referentiel.csv') }
+
+    before do
+      csv_to_code = [{ 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }, { 'option' => 'dessert', 'calorie (kcal)' => '170', 'poids (g)' => '70' }, { 'option' => 'fruit', 'calorie (kcal)' => '100', 'poids (g)' => '50' }]
+      keys = csv_to_code.first.keys
+      csv_to_code.each do |row|
+        referentiel.items.create!(data: row)
+      end
+    end
+
+    context 'user choose an option in the list' do
+      before do
+        dossier.champs.first.update!(value: referentiel.items.first.id, value_json: { data: [{ 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' }] })
+        dossier.reload
+        render
+      end
+
+      it 'display only the first option to the user' do
+        expect(rendered).to have_text('fromage')
+        expect(rendered).not_to have_text('dessert')
+      end
+    end
+
+    context 'user choose other option' do
+      before do
+        dossier.champs.first.update!(value: '__other__', value_other: 'Texte libre')
+        dossier.reload
+        render
+      end
+      it 'display only the first option to the user' do
+        expect(rendered).to have_text('Texte libre')
+      end
+    end
+  end
 end
