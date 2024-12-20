@@ -9,8 +9,6 @@
       %li n° #{d.id} (#{d.procedure.libelle})
 
 %p
-  = t('.footer', count: @hidden_dossiers.size)
-  = link_to("mes dossiers", dossiers_url)
-  \.
+  = t('.footer_html', count: @hidden_dossiers.size)
 
 = render partial: "layouts/mailers/signature"

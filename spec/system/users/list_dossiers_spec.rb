@@ -179,9 +179,9 @@ describe 'user access to the list of their dossiers', js: true do
 
   describe 'deletion' do
     it 'should have links to delete dossiers' do
-      expect(page).to have_link('Placer le dossier à la corbeille', href: dossier_path(dossier_brouillon))
-      expect(page).to have_link('Placer le dossier à la corbeille', href: dossier_path(dossier_en_construction))
-      expect(page).not_to have_link('Placer le dossier à la corbeille', href: dossier_path(dossier_en_instruction))
+      expect(page).to have_link('Mettre à la corbeille', href: dossier_path(dossier_brouillon))
+      expect(page).to have_link('Mettre à la corbeille', href: dossier_path(dossier_en_construction))
+      expect(page).not_to have_link('Mettre à la corbeille', href: dossier_path(dossier_en_instruction))
     end
 
     context 'when user clicks on delete button' do
@@ -190,7 +190,7 @@ describe 'user access to the list of their dossiers', js: true do
         within(:css, ".card", match: :first) do
           click_on 'Autres actions'
           accept_alert('Confirmer la suppression ?') do
-            click_on 'Placer le dossier à la corbeille'
+            click_on 'Mettre à la corbeille'
           end
         end
 

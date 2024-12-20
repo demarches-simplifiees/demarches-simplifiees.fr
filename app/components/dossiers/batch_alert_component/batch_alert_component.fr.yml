@@ -56,7 +56,7 @@ fr:
   supprimer:
     finish:
       text_success:
-        one: "%{success_count}/1 dossier a été placé à la corbeille"
+        one: "%{success_count}/1 dossier a été mis à la corbeille"
         other: "%{success_count}/%{count} dossiers ont été placés à la corbeille"
     in_progress:
       text_success:

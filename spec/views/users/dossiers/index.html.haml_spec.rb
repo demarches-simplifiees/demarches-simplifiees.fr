@@ -107,7 +107,7 @@ describe 'users/dossiers/index', type: :view do
     let(:dossiers_traites) { create_list(:dossier, 1) }
 
     it "displays the hide by user at button" do
-      expect(rendered).to have_text("Placer le dossier à la corbeille")
+      expect(rendered).to have_text("Mettre à la corbeille")
     end
   end
 

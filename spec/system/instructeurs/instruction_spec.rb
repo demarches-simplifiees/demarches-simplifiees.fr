@@ -74,7 +74,7 @@ describe 'Instructing a dossier:', js: true do
     end
 
     expect(page).to have_text('Dossier traité avec succès.')
-    expect(page).to have_button('Archiver le dossier')
+    expect(page).to have_button('Déplacer dans “à archiver“')
 
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
@@ -85,7 +85,7 @@ describe 'Instructing a dossier:', js: true do
     click_on procedure.libelle
     click_on 'traité'
     expect(page).to have_button('Repasser en instruction')
-    click_on 'Placer le dossier à la corbeille'
+    click_on 'Mettre à la corbeille'
     expect(page).not_to have_button('Repasser en instruction')
   end
 

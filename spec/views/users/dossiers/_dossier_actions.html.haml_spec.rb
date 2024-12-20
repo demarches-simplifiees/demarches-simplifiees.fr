@@ -8,12 +8,12 @@ describe 'users/dossiers/dossier_actions', type: :view do
   subject { render 'users/dossiers/dossier_actions', dossier: dossier, current_user: user }
 
   it { is_expected.to have_link('Commencer un nouveau dossier', href: commencer_url(path: procedure.path)) }
-  it { is_expected.to have_link('Placer le dossier à la corbeille', href: dossier_path(dossier)) }
+  it { is_expected.to have_link('Mettre à la corbeille', href: dossier_path(dossier)) }
   it { is_expected.to have_link('Transférer le dossier', href: transferer_dossier_path(dossier)) }
 
   context 'when the dossier is termine' do
     let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
-    it { is_expected.to have_link('Placer le dossier à la corbeille') }
+    it { is_expected.to have_link('Mettre à la corbeille') }
   end
 
   context 'when the procedure is closed' do

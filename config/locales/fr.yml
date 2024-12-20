@@ -387,7 +387,7 @@ fr:
           reaffectation: Réaffectation
           attachments: Pièces jointes
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
-        delete_dossier: "Placer le dossier à la corbeille"
+        delete_dossier: "Mettre à la corbeille"
         deleted_reason:
           user_request: supprimé par l’usager
           expired: a expiré
@@ -527,7 +527,7 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"
           clone: "Dupliquer ce dossier"
-          delete_dossier: "Placer le dossier à la corbeille"
+          delete_dossier: "Mettre à la corbeille"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
