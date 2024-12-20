@@ -191,6 +191,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.subject).to eq("Un dossier traité va bientôt être supprimé")
         expect(subject.body).to include("N° #{dossier.id} ")
         expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("il vous reste <strong>14 jours pour télécharger</strong> ce dossier")
       end
     end
   end

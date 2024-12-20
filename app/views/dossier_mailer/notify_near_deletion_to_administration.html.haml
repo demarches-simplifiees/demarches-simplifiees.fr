@@ -6,7 +6,7 @@
   - if @state == Dossier.states.fetch(:en_construction)
     = t('.header_en_construction', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   - else
-    = t('.header_termine', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
+    = t('.header_termine_html', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
 
   %ul
     - @dossiers.each do |d|
