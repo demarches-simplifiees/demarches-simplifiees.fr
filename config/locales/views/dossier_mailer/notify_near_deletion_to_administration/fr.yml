@@ -10,7 +10,7 @@ fr:
       header_en_construction:
         one: "il vous reste %{remaining_weeks_before_expiration} pour démarrer l'instruction de ce dossier avant qu'il ne soit supprimé :"
         other: "il vous reste %{remaining_weeks_before_expiration} pour démarrer l'instruction de ces dossiers avant qu'ils ne soient supprimés :"
-      header_termine:
-        one: "il vous reste %{remaining_weeks_before_expiration} pour archiver ce dossier traité avant qu'il ne soit supprimé :"
-        other: "il vous reste %{remaining_weeks_before_expiration} pour archiver ces dossier traités avant qu'ils ne soient supprimés :"
+      header_termine_html:
+        one: "il vous reste <strong>%{remaining_weeks_before_expiration} pour télécharger</strong> ce dossier traité avant qu'il ne soit supprimé :"
+        other: "il vous reste <strong>%{remaining_weeks_before_expiration} pour télécharger</strong> ces dossiers traités avant qu'ils ne soient supprimés :"
       footer_en_construction: Vous pouvez tenir informé l'usager, en utilisant la messagerie depuis la page du dossier.
