@@ -9,20 +9,30 @@ describe DossierFilterService do
     let(:dossiers) { procedure.dossiers }
     let(:statut) { 'suivis' }
     let(:filters) { [] }
+    let(:include_archived) { false }
     let(:sorted_columns) { procedure.default_sorted_column }
 
-    subject { described_class.filtered_sorted_ids(dossiers, statut, filters, sorted_columns, instructeur) }
+    subject { described_class.filtered_sorted_ids(dossiers, statut, filters, sorted_columns, instructeur, include_archived:) }
 
     context 'with no filters' do
       let(:en_construction_dossier) { create(:dossier, :en_construction, procedure:) }
       let(:accepte_dossier) { create(:dossier, :accepte, procedure:) }
+      let(:archived_dossier) { create(:dossier, :accepte, :archived, procedure:) }
 
       before do
         create(:follow, dossier: en_construction_dossier, instructeur:)
         create(:follow, dossier: accepte_dossier, instructeur:)
+        create(:follow, dossier: archived_dossier, instructeur:)
       end
 
       it { is_expected.to contain_exactly(en_construction_dossier.id) }
+
+      context 'when include_archived is true' do
+        let(:include_archived) { true }
+        let(:statut) { 'tous' }
+
+        it { is_expected.to contain_exactly(en_construction_dossier.id, accepte_dossier.id, archived_dossier.id) }
+      end
     end
 
     context 'with mocked sorted_ids' do

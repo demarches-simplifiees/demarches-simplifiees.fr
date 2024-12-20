@@ -3,8 +3,8 @@
 class DossierFilterService
   TYPE_DE_CHAMP = 'type_de_champ'
 
-  def self.filtered_sorted_ids(dossiers, statut, filters, sorted_column, instructeur, count: nil)
-    dossiers_by_statut = dossiers.by_statut(statut, instructeur)
+  def self.filtered_sorted_ids(dossiers, statut, filters, sorted_column, instructeur, count: nil, include_archived: false)
+    dossiers_by_statut = dossiers.by_statut(statut, instructeur:, include_archived:)
     dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, sorted_column, instructeur, count || dossiers_by_statut.size)
 
     if filters.present?

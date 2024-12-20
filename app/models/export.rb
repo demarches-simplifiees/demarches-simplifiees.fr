@@ -69,7 +69,7 @@ class Export < ApplicationRecord
     time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
   end
 
-  def self.find_or_create_fresh_export(format, groupe_instructeurs, user_profile, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, export_template: nil)
+  def self.find_or_create_fresh_export(format, groupe_instructeurs, user_profile, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, export_template: nil, include_archived: false)
     filtered_columns = Array.wrap(procedure_presentation&.filters_for(statut))
     sorted_column = procedure_presentation&.sorted_column
 
@@ -78,6 +78,7 @@ class Export < ApplicationRecord
       export_template:,
       time_span_type:,
       statut:,
+      include_archived:,
       key: generate_cache_key(groupe_instructeurs.map(&:id), filtered_columns, sorted_column)
     }
 
@@ -136,7 +137,7 @@ class Export < ApplicationRecord
         dossiers.visible_by_administration.where('dossiers.depose_at > ?', since)
       elsif filtered_columns.present? || sorted_column.present?
         instructeur = instructeur_from(user_profile)
-        filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, filtered_columns, sorted_column, instructeur)
+        filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, filtered_columns, sorted_column, instructeur, include_archived: include_archived)
 
         dossiers.where(id: filtered_sorted_ids)
       else

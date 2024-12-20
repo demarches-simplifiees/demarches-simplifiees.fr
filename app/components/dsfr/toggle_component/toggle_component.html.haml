@@ -1,8 +1,8 @@
 %div{ class: "fr-toggle fr-toggle--label-left #{extra_class_names}" }
   = @form.check_box target, class: 'fr-toggle__input', disabled:, data:, id: input_id
   = @form.label target,
-    title,
-    for: input_id,
+    title || html_title&.html_safe,
+    for: label_for,
     data: { 'fr-checked-label': toggle_labels[:checked], 'fr-unchecked-label': toggle_labels[:unchecked] },
     class: 'fr-toggle__label'
 
