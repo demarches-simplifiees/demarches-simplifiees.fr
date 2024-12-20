@@ -32,7 +32,11 @@ class Champs::DropDownListChamp < Champ
   end
 
   def other?
-    drop_down_other? && (other || (value.present? && drop_down_options.exclude?(value)))
+    if referentiel?
+      (drop_down_other? && (other || (value.present? &&  referentiel_drop_down_options.map { _1.fetch('id') }.exclude?(value.to_i))))
+    else
+      drop_down_other? && (other || (value.present? && drop_down_options.exclude?(value)))
+    end
   end
 
   def value=(value)
