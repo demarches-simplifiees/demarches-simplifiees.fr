@@ -2,9 +2,6 @@ en:
   instructeurs:
     procedures:
       index:
-        procedure_en_cours_description: The “in progress” tab groups published procedures as well as closed procedures that still have files to process.
-        procedure_en_test_description: The “in testing” tab groups unpublished procedures. Files submitted during the test phase will be automatically deleted when the procedure is modified or published.
-        procedure_close_description: The “finished” tab groups closed procedures with no more files to process.
         to_follow: to follow
         followed: followed
         processed: processed

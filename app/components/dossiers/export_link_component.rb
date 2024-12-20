@@ -40,9 +40,7 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
   end
 
   def human_export_status(export)
-    key = tab_i18n_key_from_status(export.statut)
-
-    t(key, count: export.count) || export.statut
+    i18n_tab_from_status(export.statut, count: export.count) || export.statut
   end
 
   def badge(export)

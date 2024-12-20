@@ -136,7 +136,7 @@ RSpec.describe DossierMailer, type: :mailer do
 
       it 'checks email subject, to, and body for correct inclusions and exclusions for en_construction status' do
         expect(subject.to).to eq([hidden_dossier.user.email])
-        expect(subject.subject).to eq("Un dossier a été supprimé de votre compte")
+        expect(subject.subject).to eq("Un dossier de votre compte a été mis à la corbeille")
         expect(subject.body).to include("N° #{hidden_dossier.id} ")
         expect(subject.body).to include(hidden_dossier.procedure.libelle)
       end
@@ -149,7 +149,7 @@ RSpec.describe DossierMailer, type: :mailer do
 
       it 'checks email subject, to, and body for correct inclusions and exclusions for termine status' do
         expect(subject.to).to eq([hidden_dossier.user.email])
-        expect(subject.subject).to eq("Un dossier a été supprimé de votre compte")
+        expect(subject.subject).to eq("Un dossier de votre compte a été mis à la corbeille")
         expect(subject.body).to include("N° #{hidden_dossier.id} ")
         expect(subject.body).to include(hidden_dossier.procedure.libelle)
       end
@@ -162,7 +162,7 @@ RSpec.describe DossierMailer, type: :mailer do
     subject { described_class.notify_automatic_deletion_to_administration([hidden_dossier], hidden_dossier.user.email) }
 
     it 'verifies subject and body content for automatic deletion notification' do
-      expect(subject.subject).to eq("Un dossier a été supprimé")
+      expect(subject.subject).to eq("Un dossier a été mis à la corbeille")
       expect(subject.body).to include("n° #{hidden_dossier.id} (#{hidden_dossier.procedure.libelle})")
     end
   end

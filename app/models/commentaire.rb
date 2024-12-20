@@ -130,7 +130,7 @@ class Commentaire < ApplicationRecord
   def messagerie_available?
     return if sent_by_system?
     if dossier.present? && !dossier.messagerie_available?
-      errors.add(:dossier, "Il n’est pas possible d’envoyer un message sur un dossier supprimé, archivé ou en brouillon")
+      errors.add(:dossier, "Il n’est pas possible d’envoyer un message sur un dossier supprimé, à archiver ou en brouillon")
     end
   end
 end

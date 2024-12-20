@@ -1,39 +1,39 @@
 %nav.fr-tabs.mt-3
   %ul.fr-tabs__list.fr-pl-0{ role: 'tablist' }
-    = tab_item(t(tab_i18n_key_from_status('a-suivre')),
+    = tab_item(i18n_tab_from_status('a-suivre'),
       instructeur_procedure_path(procedure, statut: 'a-suivre'),
       active: statut == 'a-suivre',
       badge: number_with_html_delimiter(a_suivre_count))
 
-    = tab_item(t(tab_i18n_key_from_status('suivis'), count: suivis_count),
+    = tab_item(i18n_tab_from_status('suivis', count: suivis_count),
       instructeur_procedure_path(procedure, statut: 'suivis'),
       active: statut == 'suivis',
       badge: number_with_html_delimiter(suivis_count),
       notification: has_en_cours_notifications)
 
-    = tab_item(t(tab_i18n_key_from_status('traites'), count: traites_count),
+    = tab_item(i18n_tab_from_status('traites', count: traites_count),
       instructeur_procedure_path(procedure, statut: 'traites'),
       active: statut == 'traites',
       badge: number_with_html_delimiter(traites_count),
       notification: has_termine_notifications)
 
-    = tab_item(t(tab_i18n_key_from_status('tous')),
+    = tab_item(i18n_tab_from_status('tous'),
       instructeur_procedure_path(procedure, statut: 'tous'),
       active: statut == 'tous',
       badge: number_with_html_delimiter(tous_count))
 
     - if procedure.procedure_expires_when_termine_enabled
-      = tab_item(t(tab_i18n_key_from_status('expirant'), count: expirant_count),
+      = tab_item(i18n_tab_from_status('expirant', count: expirant_count),
         instructeur_procedure_path(procedure, statut: 'expirant'),
         active: statut == 'expirant',
         badge: number_with_html_delimiter(expirant_count))
 
-    = tab_item(t(tab_i18n_key_from_status('archives'), count: archives_count),
+    = tab_item(i18n_tab_from_status('archives'),
       instructeur_procedure_path(procedure, statut: 'archives'),
       active: statut == 'archives',
-      icon: 'fr-icon-folder-2-line')
+      html_class: 'fr-icon-folder-2-line fr-tabs__tab--icon-left')
 
-    = tab_item(t(tab_i18n_key_from_status('supprimes'), count: supprimes_count),
+    = tab_item(i18n_tab_from_status('supprimes'),
       instructeur_procedure_path(procedure, statut: 'supprimes'),
       active: statut == 'supprimes',
-      icon: 'fr-icon-delete-line')
+      html_class: 'fr-icon-delete-line fr-tabs__tab--icon-left')

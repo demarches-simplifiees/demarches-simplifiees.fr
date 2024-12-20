@@ -2,13 +2,11 @@ fr:
   instructeurs:
     procedures:
       index:
-        procedure_en_cours_description: L'onglet « en cours » regroupe les démarches publiées ainsi que les démarches closes ayant encore des dossiers à traiter.
-        procedure_en_test_description: L'onglet « en test » regroupe les démarches qui ne sont pas encore publiées. Les dossiers déposés pendant la phase de test seront automatiquement supprimés lors de la modification ou de la publication de la démarche.
-        procedure_close_description: L'onglet « terminée » regroupe les démarches closes n'ayant plus de dossiers à traiter.
         to_follow: à suivre
-        followed: suivis
+        followed: suivis par moi
         processed: traités
         all: dossiers
+        archived: à archiver
         dossiers_close_to_expiration: expirant
         copy_link_button: Copier le lien de la démarche dans le presse-papiers
       show:

@@ -6,7 +6,7 @@ fr:
     instruction: Instruire les dossiers
     repousser_expiration: Conserver un mois de plus
     accepter: 'Accepter les dossiers'
-    supprimer: 'Supprimer les dossiers'
+    supprimer: 'Mettre les dossiers à la corbeille'
     restaurer: 'Restaurer les dossiers'
     accepter_description: Les usagers seront informés que leur dossier a été accepté
     refuser: 'Refuser les dossiers'

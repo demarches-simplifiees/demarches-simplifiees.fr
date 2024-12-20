@@ -993,7 +993,7 @@ type Demarche {
     after: String
 
     """
-    Seulement les dossiers archivés.
+    Seulement les dossiers à archiver.
     """
     archived: Boolean
 
@@ -2864,7 +2864,7 @@ type GroupeInstructeurWithDossiers {
     after: String
 
     """
-    Seulement les dossiers archivés.
+    Seulement les dossiers à archiver.
     """
     archived: Boolean
 

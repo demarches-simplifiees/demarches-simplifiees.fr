@@ -46,6 +46,22 @@ describe Instructeurs::ProceduresController, type: :controller do
     let(:instructeur) { create(:instructeur) }
     subject { get :index }
 
+    describe 'tabs explanation' do
+      render_views
+
+      before do
+        sign_in(instructeur.user)
+        subject
+      end
+
+      it 'contains tabs explanation' do
+        expect(response.body).to have_text('L’onglet « en cours » regroupe')
+        expect(response.body).to have_text('L’onglet « en test » regroupe')
+        expect(response.body).to have_text('L’onglet « terminée » regroupe')
+        expect(response.body).not_to have_text('L’onglet « expirant » contient')
+      end
+    end
+
     context "when not logged" do
       before { subject }
       it { expect(response).to redirect_to(new_user_session_path) }
@@ -97,7 +113,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(nil) }
 
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(0) }
@@ -158,7 +174,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2) }
 
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
-          it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(0 + 1) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1 + 1 + 1) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3 + 2 + 1) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
@@ -220,7 +236,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4 + 6 + 10) }
 
             it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(4) }
-            it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(6) }
+            it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(6) }
             it { expect(assigns(:all_dossiers_counts)['traités']).to eq(10) }
             it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(4 + 6 + 10) }
           end
@@ -239,7 +255,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2 + 3 + 5) }
 
             it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(2) }
-            it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(3) }
+            it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(3) }
             it { expect(assigns(:all_dossiers_counts)['traités']).to eq(5) }
             it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(2 + 3 + 5) }
           end
@@ -258,6 +274,26 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     subject do
       get :show, params: { procedure_id: procedure.id, statut: statut }
+    end
+
+    describe 'tabs explanation' do
+      render_views
+
+      before do
+        sign_in(instructeur.user)
+        subject
+      end
+
+      it 'contains tabs explanation' do
+        expect(response.body).to have_text('L’onglet « à suivre » contient')
+        expect(response.body).to have_text('L’onglet « suivis par moi» contient')
+        expect(response.body).to have_text('L’onglet « traité » contient')
+        expect(response.body).to have_text('L’onglet « au total » contient')
+        expect(response.body).to have_text('L’onglet « corbeille » contient')
+        expect(response.body).to have_text('L’onglet « à archiver » contient')
+        expect(response.body).to have_text('L’onglet « expirant » contient')
+        expect(response.body).not_to have_text('L’onglet « terminée » regroupe')
+      end
     end
 
     describe 'access to groupes_instructeur' do
