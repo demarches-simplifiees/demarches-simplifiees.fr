@@ -88,6 +88,70 @@ describe Expired::DossiersDeletionService do
     end
   end
 
+  describe '#process_empty_dossiers_brouillon' do
+    let(:types) { [{ type: :text }] }
+    let(:procedure_opts) { { types_de_champ_public: types } }
+
+    before do
+      allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
+    end
+
+    subject { service.process_empty_dossiers_brouillon(3.weeks.ago..2.weeks.ago) }
+
+    context 'with empty brouillon dossiers' do
+      let!(:empty_brouillon) { travel_to(15.days.ago) { create(:dossier, procedure: procedure) } }
+      let!(:empty_brouillon_2) { travel_to(15.days.ago) { create(:dossier, procedure: procedure, user: empty_brouillon.user) } }
+      let!(:empty_brouillon_3) { travel_to(7.days.ago) { create(:dossier, procedure: procedure, user: empty_brouillon.user) } }
+
+      it 'deletes empty brouillons and sends notifications' do
+        subject
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(
+          match_array([empty_brouillon.hash_for_deletion_mail, empty_brouillon_2.hash_for_deletion_mail]),
+          empty_brouillon.user.email
+        )
+        expect { empty_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { empty_brouillon_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { empty_brouillon_3.reload }.not_to raise_error
+      end
+    end
+
+    context 'with non-empty brouillon dossiers' do
+      let!(:not_empty_brouillon) { travel_to(15.days.ago) { create(:dossier, procedure: procedure) } }
+
+      before do
+        not_empty_brouillon.champs.first.update!(value: 'filled')
+      end
+
+      it 'does not delete non-empty brouillons' do
+        subject
+        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
+        expect { not_empty_brouillon.reload }.not_to raise_error
+      end
+    end
+
+    context 'with dossiers too recent' do
+      let!(:recent_empty_brouillon) { travel_to(7.days.ago) { create(:dossier, procedure: procedure) } }
+
+      it 'does not delete recent brouillons' do
+        subject
+        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
+        expect { recent_empty_brouillon.reload }.not_to raise_error
+      end
+    end
+
+    context 'with non-brouillon dossiers' do
+      let!(:en_construction_dossier) { travel_to(15.days.ago) { create(:dossier, :en_construction, procedure: procedure) } }
+
+      it 'does not delete non-brouillon dossiers' do
+        subject
+
+        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
+        expect { en_construction_dossier.reload }.not_to raise_error
+      end
+    end
+  end
+
   describe '#delete_expired_brouillons_and_notify' do
     before { travel_to(reference_date) }
 
