@@ -11,6 +11,10 @@
       .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-4w
         %p= t('.notice_new_files_only')
 
+    - if procedure.declarative?
+      .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-4w
+        %p= t('.notice_incompatible_with_declarative_html', edit_admin_procedure_path: edit_admin_procedure_path(procedure, anchor: ":~:text=Options avancées"))
+
     - if procedure.publiee? && procedure.sva_svr_enabled?
       .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-4w
         %p= t('.notice_edit_denied')
@@ -37,4 +41,4 @@
 
       = render Dsfr::RadioButtonListComponent.new(form: f, target: :resume, buttons: resume_buttons)
 
-  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f, is_form_disabled: form_disabled?)
+  = render Procedure::FixedFooterComponent.new(procedure: procedure, form: f, is_form_disabled: form_disabled?)

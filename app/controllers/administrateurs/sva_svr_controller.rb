@@ -16,13 +16,19 @@ module Administrateurs
       @configuration = @procedure.sva_svr_configuration
       @configuration.assign_attributes(configuration_params)
 
-      if @configuration.valid?
-        @procedure.update!(sva_svr: @configuration.attributes)
+      if @configuration.invalid?
+        flash.now.alert = "Des erreurs empêchent la validation du SVA/SVR. Corrigez les erreurs"
+        render :edit and return
+      end
 
+      @procedure.assign_attributes(sva_svr: @configuration.attributes)
+
+      if @procedure.valid?
+        @procedure.save!
         flash.notice = "La configuration SVA/SVR a été mise à jour et prend immédiatement effet pour les nouveaux dossiers."
         redirect_to admin_procedure_path(@procedure)
       else
-        flash.now.alert = "Des erreurs empêchent la validation du SVA/SVR. Corrigez les erreurs"
+        flash.now.alert = @procedure.errors.full_messages
         render :edit
       end
     end
