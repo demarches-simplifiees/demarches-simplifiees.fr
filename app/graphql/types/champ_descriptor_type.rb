@@ -24,6 +24,9 @@ module Types
     definition_methods do
       def resolve_type(object, context)
         case object.type_champ
+        when TypeDeChamp.type_champs.fetch(:referentiel)
+          Types::Champs::Descriptor::ReferentielChampDescriptorType
+
         when TypeDeChamp.type_champs.fetch(:engagement_juridique)
           Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType
 

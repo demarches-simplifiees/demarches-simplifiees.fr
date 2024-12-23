@@ -3,8 +3,8 @@
 class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
+    referentiel: :referentiel_type_de_champ,
     engagement_juridique: :engagement_juridique_type_de_champ,
-
     cojo: :cojo_type_de_champ,
     expression_reguliere: :expression_reguliere_type_de_champ
   }
@@ -23,6 +23,7 @@ class TypeDeChamp < ApplicationRecord
   CATEGORIES = [STRUCTURE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, PIECES_JOINTES, CHOICE, REFERENTIEL_EXTERNE]
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
+    referentiel: REFERENTIEL_EXTERNE,
     engagement_juridique: REFERENTIEL_EXTERNE,
     header_section: STRUCTURE,
     repetition: STRUCTURE,
@@ -67,7 +68,6 @@ class TypeDeChamp < ApplicationRecord
 
   enum type_champ: {
     engagement_juridique: 'engagement_juridique',
-
     header_section: 'header_section',
     repetition: 'repetition',
     dossier_link: 'dossier_link',
@@ -106,7 +106,8 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri',
     epci: 'epci',
     cojo: 'cojo',
-    expression_reguliere: 'expression_reguliere'
+    expression_reguliere: 'expression_reguliere',
+    referentiel: 'referentiel'
   }
 
   SIMPLE_ROUTABLE_TYPES = [
