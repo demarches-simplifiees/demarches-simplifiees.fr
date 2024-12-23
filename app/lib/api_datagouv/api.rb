@@ -15,18 +15,25 @@ class APIDatagouv::API
   API_URL = 'https://www.data.gouv.fr/api/1'
 
   class << self
-    def existing_file_url(dataset, resource)
+    def existing_csv(dataset, resource)
       response = Typhoeus.get(
         datagouv_resource_url(dataset, resource),
         followlocation: true
       )
 
-      return nil unless response.success?
+      return nil if !response.success?
 
-      JSON.parse(response.body)["url"]
+      url = JSON.parse(response.body)["url"]
+      validate_url(url)
+
+      response = Typhoeus.get(url)
+
+      return nil if !response.success?
+
+      CSV.parse(response.body, headers: true)
     end
 
-    def upload(io, dataset, resource = nil)
+    def upload(io, dataset, resource)
       response = Typhoeus.post(
         datagouv_upload_url(dataset, resource),
         body: {
@@ -50,9 +57,7 @@ class APIDatagouv::API
 
         response = Typhoeus.post(
           datagouv_upload_url(dataset, resource),
-          body: {
-            file: file
-          },
+          body: { file: },
           headers: { "X-Api-Key" => datagouv_secret[:api_key] }
         )
 
@@ -69,30 +74,32 @@ class APIDatagouv::API
     def datagouv_resource_url(dataset, resource)
       [
         API_URL,
-        "/datasets/", dataset,
-        "/resources/", resource
-      ].join
+        "datasets", dataset,
+        "resources", resource,
+        ""
+      ].join('/')
     end
 
-    def datagouv_upload_url(dataset, resource = nil)
-      if resource.present?
-        [
-          API_URL,
-          "/datasets/", dataset,
-          "/resources/", resource,
-          "/upload/"
-        ].join
-      else
-        [
-          API_URL,
-          "/datasets/", dataset,
-          "/upload/"
-        ].join
-      end
+    def datagouv_upload_url(dataset, resource)
+      [
+        API_URL,
+        "datasets", dataset,
+        "resources", resource,
+        "upload", ""
+      ].join('/')
     end
 
     def datagouv_secret
       Rails.application.secrets.datagouv
+    end
+
+    def validate_url(url)
+      uri = URI.parse(url)
+      raise "Invalid host URL" if uri.host != "static.data.gouv.fr"
+      raise "Invalid path URL" if !uri.path.start_with?("/resources/utilisation-du-service-demarches-simplifiees/")
+      raise "Invalid extension URL" if !uri.path.end_with?(".csv")
+    rescue URI::InvalidURIError
+      raise "Invalid URL"
     end
   end
 end
