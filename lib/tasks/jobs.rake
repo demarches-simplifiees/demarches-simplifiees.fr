@@ -14,6 +14,6 @@ namespace :jobs do
   def schedulable_jobs
     glob = Rails.root.join('app', 'jobs', '**', '*_job.rb')
     Dir.glob(glob).each { |f| require f }
-    Cron::CronJob.subclasses.filter(&:schedulable?)
+    Cron::CronJob.descendants.filter(&:schedulable?)
   end
 end
