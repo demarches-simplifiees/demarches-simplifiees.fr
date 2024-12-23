@@ -57,6 +57,7 @@ en:
           epci: "EPCI"
           cojo: "Accreditation Paris 2024"
           expression_reguliere: 'Regular expression'
+          referentiel: 'External data to configure (advanced)'
     errors:
       type_de_champ:
         attributes:
