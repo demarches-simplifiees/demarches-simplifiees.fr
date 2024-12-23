@@ -1104,6 +1104,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_03_191101) do
     t.string "digest"
     t.string "headers", default: [], array: true
     t.string "hint"
+    t.jsonb "last_response"
     t.string "mode"
     t.string "name", null: false
     t.string "test_data"
