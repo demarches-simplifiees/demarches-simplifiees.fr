@@ -1,21 +1,68 @@
 # frozen_string_literal: true
 
 RSpec.describe Cron::Datagouv::ProcedureClosedByMonthJob, type: :job do
-  let!(:procedure) { create(:procedure, closed_at: 1.month.ago) }
-  let(:status) { 200 }
-  let(:body) { "ok" }
-  let(:stub) { stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/.*\/upload\//) }
+  ProcedureClosedByMonthJob = Cron::Datagouv::ProcedureClosedByMonthJob
+
+  def format(date) = date.strftime(ProcedureClosedByMonthJob::DATE_FORMAT)
 
   describe 'perform' do
-    before do
-      stub
+    before { allow(APIDatagouv::API).to receive(:existing_csv).and_return(existing_csv) }
+
+    subject(:sent_csv) do
+      table = nil
+      allow(APIDatagouv::API).to receive(:upload_csv) { |_, sent, _, _| table = sent }
+
+      ProcedureClosedByMonthJob.perform_now
+
+      table
     end
 
-    subject { Cron::Datagouv::ProcedureClosedByMonthJob.perform_now }
+    context 'when there is no existing csv' do
+      let(:existing_csv) { nil }
 
-    it 'send POST request to datagouv' do
-      subject
-      expect(stub).to have_been_requested
+      it 'sends a csv with one row from the previous month' do
+        expect(sent_csv.first['mois']).to eq(format(1.month.ago.beginning_of_month.to_date))
+        expect(sent_csv.first['nb_procedures_closes_par_mois']).to eq(0)
+      end
+    end
+
+    context 'when 2 months are missing' do
+      before { Timecop.freeze(Time.zone.parse('15/02/2024')) }
+
+      let(:existing_csv) do
+        csv = CSV::Table.new([], headers: ProcedureClosedByMonthJob::HEADERS)
+        csv << [format(Date.parse('01/10/2023')), 10]
+        csv << [format(Date.parse('01/11/2023')), 11]
+      end
+
+      it 'sends a csv with one row from the previous month' do
+        expected_csv = [
+          ["mois", "nb_procedures_closes_par_mois"],
+          ["2023-10", 10],
+          ["2023-11", 11],
+          ["2023-12", 0],
+          ["2024-01", 0]
+        ]
+        expect(sent_csv.to_a).to eq(expected_csv)
+      end
+    end
+  end
+
+  describe 'data_for' do
+    let(:month) { Date.parse('01/01/2024') }
+
+    subject { ProcedureClosedByMonthJob.new.send(:data_for, month:) }
+
+    context 'when procedures have been closed during the target month' do
+      let!(:procedure) { create(:procedure, closed_at: Date.parse('15/01/2024')) }
+
+      it { is_expected.to eq(['2024-01', 1]) }
+    end
+
+    context 'when procedures have not been closed during the target month' do
+      let!(:procedure) { create(:procedure, closed_at: Date.parse('15/12/2023')) }
+
+      it { is_expected.to eq(['2024-01', 0]) }
     end
   end
 end
