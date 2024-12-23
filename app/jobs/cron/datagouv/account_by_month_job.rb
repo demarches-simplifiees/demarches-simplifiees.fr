@@ -7,41 +7,36 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
   FILE_NAME = HEADERS[1]
   DATASET = '6745cdbb3aee5fa1f498d5ef'
   RESOURCE = '38195ec9-f10d-44e0-b0aa-fc954ac27c2f'
+  DATE_FORMAT = "%Y-%m"
 
-  def perform(*args)
-    csv = existing_csv(DATASET, RESOURCE)
-    resource = csv.empty? ? nil : RESOURCE
+  def perform
+    csv = data_gouv_csv
 
-    months_to_query(csv).map { |period| csv << data_of_range(period) }
+    missing_months(csv)
+      .map { |month| data_for(month:) }
+      .each { |data| csv << data }
 
-    APIDatagouv::API.upload_csv(FILE_NAME, csv, DATASET, resource)
+    APIDatagouv::API.upload_csv(FILE_NAME, csv, DATASET, RESOURCE)
   end
 
   private
 
-  def data_of_range(range)
-    [range.min.strftime("%Y-%m"), User.where(created_at: range).count]
+  def data_gouv_csv
+    APIDatagouv::API.existing_csv(DATASET, RESOURCE) || CSV::Table.new([], headers: HEADERS)
   end
 
-  def default_csv
-    CSV::Table.new([], headers: HEADERS)
+  def missing_months(csv)
+    last_date = Date.strptime(csv[-1]['mois'], DATE_FORMAT) if csv.present?
+
+    start_month = last_date.present? ? last_date + 1.month : previous_month
+
+    Enumerator.produce(start_month) { _1 + 1.month }
+      .take_while { _1 <= previous_month }
   end
 
-  def existing_csv(dataset, resource)
-    url = APIDatagouv::API.existing_file_url(dataset, resource)
-    return default_csv unless url
+  def previous_month = 1.month.ago.beginning_of_month.to_date
 
-    response = Typhoeus.get(url)
-    return default_csv unless response.success?
-
-    CSV.parse(response.body, headers: true)
-  end
-
-  def months_to_query(csv)
-    return [Date.current.prev_month.all_month] if csv.empty?
-    last_date = Date.parse("#{csv.first['mois']}-01")
-    previous_month = 1.month.ago.beginning_of_month.to_date
-    nb_month = (previous_month.year * 12 + previous_month.month) - (last_date.year * 12 + last_date.month)
-    Array.new(nb_month) { |i| (last_date + (1 + i).month).all_month }
+  def data_for(month:)
+    [month.strftime(DATE_FORMAT), User.where(created_at: month.all_month).count]
   end
 end
