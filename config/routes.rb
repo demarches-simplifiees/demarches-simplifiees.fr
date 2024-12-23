@@ -729,6 +729,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :referentiels, only: [:new, :create], path: ':stable_id'
+
       resources :mail_templates, only: [:index] do
         get 'preview', on: :member
       end

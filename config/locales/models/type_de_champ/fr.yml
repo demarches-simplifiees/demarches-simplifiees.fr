@@ -58,6 +58,12 @@ fr:
           cojo: "Accréditation Paris 2024"
           expression_reguliere: 'Expression régulière'
           referentiel: 'Référentiel à configurer (avancé)'
+        referentiel_url: "URL de l'API"
+        referentiel_hint: "Indications à fournir à l’usager concernant le format de saisie attendu"
+        referentiel_test_data: "Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)"
+        hints:
+          referentiel_url: "Exemple : https://api_1.ext/{id}"
+          referentiel_hint: "Exemple : Identifiant de 12 caractères comportant des chiffres et des lettres (exemple : PG46YY6YWCX8)"
     errors:
       type_de_champ:
         attributes:
