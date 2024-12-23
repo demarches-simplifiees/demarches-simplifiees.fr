@@ -762,6 +762,8 @@ Rails.application.routes.draw do
         post :reset
       end
 
+      resources :referentiels, only: [:new, :create], path: ':stable_id'
+
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
       get 'attestation_template/preview' => 'attestation_templates#preview'

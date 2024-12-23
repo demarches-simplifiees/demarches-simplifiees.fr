@@ -243,7 +243,7 @@
 
 
     - if type_de_champ.referentiel?
-      = render(TypesDeChampEditor::InfoReferentielComponent.new(type_de_champ:))
+      = render(TypesDeChampEditor::InfoReferentielComponent.new(procedure:, type_de_champ:))
 
     - if type_de_champ.repetition?
       .flex.justify-start.section.fr-ml-1w
