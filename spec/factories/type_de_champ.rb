@@ -186,6 +186,9 @@ FactoryBot.define do
     factory :type_de_champ_engagement_juridique do
       type_champ { TypeDeChamp.type_champs.fetch(:engagement_juridique) }
     end
+    factory :type_de_champ_referentiel do
+      type_champ { TypeDeChamp.type_champs.fetch(:referentiel) }
+    end
     factory :type_de_champ_cojo do
       type_champ { TypeDeChamp.type_champs.fetch(:cojo) }
     end

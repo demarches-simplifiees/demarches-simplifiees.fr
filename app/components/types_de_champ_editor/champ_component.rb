@@ -58,7 +58,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def types_of_type_de_champ
     cat_scope = "activerecord.attributes.type_de_champ.categorie"
     tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
-
     TypeDeChamp.type_champs
       .keys
       .filter(&method(:filter_type_champ))
