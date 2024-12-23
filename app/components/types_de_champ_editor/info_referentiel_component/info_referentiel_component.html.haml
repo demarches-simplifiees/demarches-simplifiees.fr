@@ -1,0 +1,21 @@
+.fr-px-2w
+
+  %hr.fr-hr
+
+  .flex.fr-mb-2w.cell
+    %p.fake-label.fr-text--bold.flex-grow.fr-mb-0 Configuration du champ référentiel
+    - if !configured?
+      %p.fr-badge.fr-badge--sm.fr-badge--error À configurer
+
+  .fr-notice.fr-notice--info.fr-mb-2w
+    .fr-container
+      .fr-notice__body
+        %p.fr-notice__title Ce champ sera présenté à l’usager sous forme d’un champ de type « Texte court ».
+        %p.notice__desc.fr-mt-2w Lors de la configuration, vous pourrez choisir de :
+        %ul.fr-mt-0
+          %li proposer des autosuggestions au fur et à mesure de la saisie de l’usager (issue de la BDD du référentiel)
+          %li ou uniquement vérifier la correspondance exacte de saisie dans la BDD du référentiel
+
+  %p.flex.column.align-end
+    = link_to "Configurer le champ", "", class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-equalizer-fill'
+  %hr.fr-hr

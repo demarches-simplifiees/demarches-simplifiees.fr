@@ -242,6 +242,9 @@
                 = form.text_field :expression_reguliere_error_message, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_error_message)
 
 
+    - if type_de_champ.referentiel?
+      = render(TypesDeChampEditor::InfoReferentielComponent.new(type_de_champ:))
+
     - if type_de_champ.repetition?
       .flex.justify-start.section.fr-ml-1w
         .editor-block.flex-grow.cell
