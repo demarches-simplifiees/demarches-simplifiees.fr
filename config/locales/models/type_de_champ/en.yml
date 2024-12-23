@@ -58,6 +58,12 @@ en:
           cojo: "Accreditation Paris 2024"
           expression_reguliere: 'Regular expression'
           referentiel: 'External data to configure (advanced)'
+        referentiel_url: "API url"
+        referentiel_hint: "Hints to share with the user regarding the expected fill in format"
+        referentiel_test_data: "Valid example (displayed to the user and will be used to test the API"
+        hints:
+          referentiel_url: "Example : https://api_1.ext/{id}"
+          referentiel_hint: "Example : ID containing 12 characters including digis and letters (example : PG46YY6YWCX8)"
     errors:
       type_de_champ:
         attributes:
