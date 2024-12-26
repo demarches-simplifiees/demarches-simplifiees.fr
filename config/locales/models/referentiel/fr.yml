@@ -1,0 +1,12 @@
+fr:
+  activerecord:
+    models:
+      referentiel: 'Type de champ'
+    attributes:
+      referentiel:
+        url: "URL de l'API"
+        hint: "Indications à fournir à l’usager concernant le format de saisie attendu"
+        test_data: "Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)"
+        hints:
+          url: "Exemple : https://api_1.ext/{id}"
+          hint: "Exemple : Identifiant de 12 caractères comportant des chiffres et des lettres (exemple : PG46YY6YWCX8)"
