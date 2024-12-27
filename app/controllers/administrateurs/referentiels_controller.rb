@@ -19,7 +19,7 @@ module Administrateurs
       referentiel = @type_de_champ.build_referentiel(referentiel_params)
 
       if referentiel.configured? && referentiel.update(referentiel_params)
-        redirect_to root_path # mapping_datasource_admin_procedure_type_de_champ_path(draft.procedure, type_de_champ.stable_id)
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
       else
         component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
         render turbo_stream: turbo_stream.replace(component.id, component)
@@ -27,14 +27,16 @@ module Administrateurs
     end
 
     def update
-      if @referentiel.update!(referentiel_params)
-        redirect_to root_path
+      if @referentiel.update(referentiel_params)
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel)
       else
         render :edit
       end
     end
 
-      render layout: "empty_layout"
+    def mapping_type_de_champ
+      @service = ReferentielService.new(referentiel: @referentiel)
+      @service.test
     end
 
     private

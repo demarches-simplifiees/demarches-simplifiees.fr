@@ -18,6 +18,15 @@ FactoryBot.define do
     end
   end
 
+  trait :with_last_response do
+    last_response do
+      {
+        status: 200,
+        body: JSON.parse(File.read("spec/fixtures/files/api_referentiel_rnb.json"))
+      }
+    end
+  end
+
   trait :configured do
     url { 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/' }
     mode { 'exact_match' }

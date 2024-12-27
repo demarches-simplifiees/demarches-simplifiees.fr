@@ -3,7 +3,8 @@
 class ReferentielService
   include Dry::Monads[:result]
 
-  attr_reader :referentiel
+  attr_reader :referentiel, :service
+
   def initialize(referentiel:)
     @referentiel = referentiel
   end
@@ -15,8 +16,10 @@ class ReferentielService
 
       case result
       in Success(data)
-        referentiel.update(last_response: data)
-      else
+        referentiel.update(last_response: { status: 200, body: data.body })
+        true
+      in Failure(data)
+        referentiel.update(last_response: { status: data.code, body: data.try(:body) })
         false
       end
     else
