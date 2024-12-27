@@ -765,6 +765,7 @@ Rails.application.routes.draw do
       resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id' do
         member do
           get :mapping_type_de_champ
+          patch :update_mapping_type_de_champ
         end
       end
 
