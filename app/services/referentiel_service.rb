@@ -4,7 +4,7 @@ class ReferentielService
   def test
     case referentiel
     when Referentiels::APIReferentiel
-      ReferentielApiClient.new(referentiel:).valid?(referentiel.test_data)
+      @service.valid?(referentiel.test_data)
     else
       fail "not yet implemented: #{referentiel.referentiel_adapter}"
     end
@@ -12,15 +12,20 @@ class ReferentielService
 
   private
 
-  attr_reader :referentiel
+  attr_reader :referentiel, :service
+
   def initialize(referentiel:)
     @referentiel = referentiel
+    @service = make_service(referentiel:)
   end
+
+  def make_service(referentiel:) = ReferentielApiClient.new(referentiel:)
 
   class ReferentielApiClient
     include Dry::Monads[:result]
 
     attr_reader :referentiel
+
     def initialize(referentiel:)
       @referentiel = referentiel
     end
@@ -29,7 +34,7 @@ class ReferentielService
       result = call(value)
       case result
       in Success(data)
-        referentiel.update(last_response: data)
+        referentiel.update(last_response: data.body)
       else
         false
       end

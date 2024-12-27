@@ -729,7 +729,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id'
+      resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id' do
+        member do
+          get :mapping_type_de_champ
+        end
+      end
 
       resources :mail_templates, only: [:index] do
         get 'preview', on: :member
