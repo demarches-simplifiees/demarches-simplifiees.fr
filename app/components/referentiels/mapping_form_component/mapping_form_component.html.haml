@@ -1,0 +1,64 @@
+- if !@referentiel.ready?
+  %h4 Impossible de contacter le référentiel
+
+  = render Dsfr::AlertComponent.new(title: error_title, state: :error, extra_class_names: 'fr-mb-3w') do |c|
+    - c.with_body do
+      %p L'API n'a pas retournée une réponse valide, veuillez vérifier les paramètres du referentiel :
+      %pre Endpoint: #{@referentiel.url}
+      %pre Body: #{JSON.pretty_generate(@referentiel.last_response_body)}
+
+  %ul.fr-btns-group.fr-btns-group--inline-sm
+    %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary'
+    %li= link_to "Étape précédente", back_url, class: 'fr-btn'
+    %li
+      %button.fr-btn{ disabled: true } Étape suivante
+
+- else
+  %section.fr-accordion.fr-mb-3w
+    %h3.fr-accordion__title
+      %button.fr-accordion__btn{ "aria-controls" => "last_response", "aria-expanded" => "false" } Afficher la réponse récupérée à partir de la requête configurée
+
+  .fr-collapse#last_response
+    %pre= @referentiel.url
+    %pre= JSON.pretty_generate(@referentiel.last_response_body)
+
+  %section
+  = form_with(model: @type_de_champ, url: update_mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel)) do |f|
+    .fr-table
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            %table
+              %caption Complétez le tableau de mapping ci-dessous en fonction des données que vous souhaitez exploiter
+              %thead
+                %tr
+                  %th{ scope: "col" } Propriété
+                  %th.fr-cell--fixed{ scope: "col" } Exemple de donnée
+                  %th{ scope: "col" } Type de donnée
+                  %th{ scope: "col" }
+                    Utiliser la donnée
+                    %br
+                    pour préremplir
+                    %br
+                    un champ du
+                    %br
+                    formulaire
+                  %th{ scope: "col" }
+                    Libellé de la donnée récupérée
+                    %br
+                    (pour afficher à l'usager et/ou l'instructeur)
+              %tbody
+                - last_request_keys.each do |jsonpath,example_value|
+                  %tr{ data: { controller: "referentiel-mapping" } }
+                    %td
+                      = jsonpath
+                      = hidden_field_tag "type_de_champ[referentiel_mapping][][jsonpath]", jsonpath
+                    %td.fr-cell--multiline= example_value
+                    %td= cast_tag(jsonpath, example_value)
+                    %td.text-center= prefill_tag(jsonpath)
+                    %td= libelle_tag(jsonpath)
+
+    %ul.fr-btns-group.fr-btns-group--inline-sm
+      %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary'
+      %li= link_to "Étape précédente", back_url, class: 'fr-btn fr-btn--secondary'
+      %li= f.submit "Étape suivante", class: "fr-btn"
