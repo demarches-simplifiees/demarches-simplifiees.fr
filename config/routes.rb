@@ -762,7 +762,7 @@ Rails.application.routes.draw do
         post :reset
       end
 
-      resources :referentiels, only: [:new, :create], path: ':stable_id'
+      resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id'
 
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
