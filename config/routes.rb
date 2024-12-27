@@ -746,7 +746,11 @@ Rails.application.routes.draw do
         post :reset
       end
 
-      resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id'
+      resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id' do
+        member do
+          get :mapping_type_de_champ
+        end
+      end
 
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
