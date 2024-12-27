@@ -13,12 +13,16 @@ class Referentiels::NewFormComponent < ApplicationComponent
   end
 
   def form_url
-    admin_procedure_referentiels_path(@procedure, @type_de_champ.stable_id)
+    if @referentiel.persisted?
+      admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel)
+    else
+      admin_procedure_referentiels_path(@procedure, @type_de_champ.stable_id)
+    end
   end
 
   def form_options
     {
-      method: :post,
+      method: @referentiel.persisted? ? :patch : :post,
       data: { turbo: 'true' },
       html: { novalidate: 'novalidate', id: }
     }

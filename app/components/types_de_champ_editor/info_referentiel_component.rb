@@ -9,7 +9,11 @@ class TypesDeChampEditor::InfoReferentielComponent < ApplicationComponent
   end
 
   def new_referentiel_url
-    new_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id)
+    if type_de_champ.referentiel
+      edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, type_de_champ.referentiel)
+    else
+      new_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id)
+    end
   end
 
   def configured?
