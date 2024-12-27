@@ -42,6 +42,15 @@ module Administrateurs
       end
     end
 
+    def update_mapping_type_de_champ
+      flash = if @type_de_champ.update(type_de_champ_mapping_params)
+        { notice: "ok" }
+      else
+        { alert: "ko" }
+      end
+      redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash:
+    end
+
     private
 
     def type_de_champ_mapping_params
