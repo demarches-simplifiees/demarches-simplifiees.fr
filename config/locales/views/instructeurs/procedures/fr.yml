@@ -3,6 +3,8 @@ fr:
     procedures:
       index:
         copy_link_button: Copier le lien de la démarche dans le presse-papiers
+        close_button: Fermer
+        procedure_menu: Menu de la démarche
       show:
         file_tracking: Suivi des dossiers
       email_usagers:
