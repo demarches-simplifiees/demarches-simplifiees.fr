@@ -1,14 +1,3 @@
-- content_for :title, @title
-- content_for :authors do
-  - @authors&.map do |author|
-    %meta{ name: 'author', content: author }
-- content_for :description do
-  - if @description.present?
-    %meta{ name: 'description', content: @description }
-- content_for :keywords do
-  - @keywords&.map do |keyword|
-    %meta{ name: 'keywords', content: keyword }
-
 .a4-container{ class: class_names("official-layout": @attestation_template.official_layout?) }
   .content
     %header.first-header
@@ -37,6 +26,6 @@
     .main
       = sanitize(@body, attributes: %w[class style], tags: Rails.configuration.action_view.sanitized_allowed_tags + %w[header])
 
-      - if @attestation_template.signature.present?
+      - if @signature&.attached?
         .signature
-          = image_tag(@attestation_template.signature_url)
+          = image_tag(@signature)

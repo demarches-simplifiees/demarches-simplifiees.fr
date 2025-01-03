@@ -9,8 +9,10 @@ module Administrateurs
 
     def show
       preview_dossier = @procedure.dossier_for_preview(current_user)
+      attributes = @attestation_template.render_attributes_for(dossier: preview_dossier)
 
-      @body = @attestation_template.render_attributes_for(dossier: preview_dossier).fetch(:body)
+      @body = attributes.fetch(:body)
+      @signature = attributes.fetch(:signature)
 
       respond_to do |format|
         format.html do

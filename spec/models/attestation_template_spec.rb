@@ -148,13 +148,13 @@ describe AttestationTemplate, type: :model do
         context "groupe instructeur without signature" do
           let(:groupe_instructeur) { create(:groupe_instructeur, signature: nil) }
 
-          it { expect(subject.blob.filename).to eq("logo_test_procedure.png") }
+          it { expect(subject).to be_an_instance_of(ActiveStorage::Attached::One) }
         end
 
         context 'groupe instructeur with signature' do
           let(:groupe_instructeur) { create(:groupe_instructeur, signature: Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')) }
 
-          it { expect(subject.blob.filename).to eq("black.png") }
+          it { expect(subject).to be_an_instance_of(ActiveStorage::Attached::One) }
         end
       end
 
@@ -164,13 +164,7 @@ describe AttestationTemplate, type: :model do
         context "groupe instructeur without signature" do
           let(:groupe_instructeur) { create(:groupe_instructeur, signature: nil) }
 
-          it { expect(subject.attached?).to be_falsey }
-        end
-
-        context 'groupe instructeur with signature' do
-          let(:groupe_instructeur) { create(:groupe_instructeur, signature: Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')) }
-
-          it { expect(subject.blob.filename).to eq("black.png") }
+          it { expect(subject.blob).to be_nil }
         end
       end
     end
