@@ -180,5 +180,8 @@ FactoryBot.define do
 
     factory :champ_do_not_use_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do
     end
+
+    factory :champ_do_not_use_referentiel, class: 'Champs::ReferentielChamp' do
+    end
   end
 end
