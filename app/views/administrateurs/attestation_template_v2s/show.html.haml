@@ -25,7 +25,6 @@
 
     .main
       = sanitize(@body, attributes: %w[class style], tags: Rails.configuration.action_view.sanitized_allowed_tags + %w[header])
-
       - if @signature&.attached?
         .signature
-          = image_tag(@signature)
+          = image_tag(Rails.application.routes.url_helpers.url_for(@signature))
