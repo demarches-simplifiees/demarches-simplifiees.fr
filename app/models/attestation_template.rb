@@ -213,13 +213,15 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def build_v2_pdf(dossier)
-    body = render_attributes_for(dossier:).fetch(:body)
+    attributes = render_attributes_for(dossier:)
+    body = attributes.fetch(:body)
+    signature = attributes.fetch(:signature)
 
     html = ApplicationController.render(
       template: '/administrateurs/attestation_template_v2s/show',
       formats: [:html],
       layout: 'attestation',
-      assigns: { attestation_template: self, body: body }
+      assigns: { attestation_template: self, body:, signature: }
     )
 
     WeasyprintService.generate_pdf(html, { procedure_id: procedure.id, dossier_id: dossier.id })
