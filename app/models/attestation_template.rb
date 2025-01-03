@@ -134,22 +134,6 @@ class AttestationTemplate < ApplicationRecord
     end
   end
 
-  def logo_checksum
-    logo.attached? ? logo.checksum : nil
-  end
-
-  def signature_checksum
-    signature.attached? ? signature.checksum : nil
-  end
-
-  def logo_filename
-    logo.attached? ? logo.filename : nil
-  end
-
-  def signature_filename
-    signature.attached? ? signature.filename : nil
-  end
-
   def tiptap_body
     json_body&.to_json
   end
