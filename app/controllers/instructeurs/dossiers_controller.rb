@@ -537,8 +537,8 @@ module Instructeurs
     def set_gallery_attachments
       gallery_attachments_ids = Rails.cache.fetch([dossier, "gallery_attachments"], expires_in: 10.minutes) do
         champs_attachments_ids = dossier
-          .champs
-          .where(type: [Champs::PieceJustificativeChamp.name, Champs::TitreIdentiteChamp.name])
+          .filled_champs
+          .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
           .flat_map(&:piece_justificative_file)
           .map(&:id)
 
