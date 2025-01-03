@@ -48,7 +48,10 @@ module Administrateurs
       else
         { alert: "ko" }
       end
-      redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash:
+      redirect_to prefill_and_visibility_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash:
+    end
+
+    def prefill_and_visibility
     end
 
     private

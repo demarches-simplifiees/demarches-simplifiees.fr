@@ -32,8 +32,12 @@ class Referentiels::MappingFormComponent < ApplicationComponent
   def prefill_tag(jsonpath)
     attribute = "prefill"
     current_value = lookup_existing_value(jsonpath, attribute) || false
-
-    check_box_tag "#{PREFIX}[#{attribute}]", "1", current_value, class: "fr-checkbox", data: { "action": "change->referentiel-mapping#onCheckboxChange" }
+    tag.div(class: "fr-checkbox-group") do
+      safe_join([
+        check_box_tag("#{PREFIX}[#{attribute}]", "1", current_value, class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }),
+        tag.label(for: jsonpath.parameterize, class: "fr-label") { "&nbsp;".html_safe }
+      ])
+    end
   end
 
   def libelle_tag(jsonpath)

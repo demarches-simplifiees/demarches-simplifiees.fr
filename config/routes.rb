@@ -750,6 +750,7 @@ Rails.application.routes.draw do
         member do
           get :mapping_type_de_champ
           patch :update_mapping_type_de_champ
+          get :prefill_and_visibility
         end
       end
 
