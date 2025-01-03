@@ -111,12 +111,6 @@ class AttestationTemplate < ApplicationRecord
     end
   end
 
-  def signature_url
-    if signature.attached?
-      Rails.application.routes.url_helpers.url_for(signature)
-    end
-  end
-
   def render_attributes_for(params = {})
     groupe_instructeur = params[:groupe_instructeur]
     groupe_instructeur ||= params[:dossier]&.groupe_instructeur
@@ -176,13 +170,11 @@ class AttestationTemplate < ApplicationRecord
       substitutions = tags_substitutions(used_tags, dossier, escape: false)
       body = tiptap.to_html(json, substitutions)
 
-      attributes.merge(
-        body:
-      )
+      attributes.merge(body:).merge(base_attributes)
     else
       attributes.merge(
         body: params.fetch(:body) { tiptap.to_html(json) }
-      )
+      ).merge(base_attributes)
     end
   end
 

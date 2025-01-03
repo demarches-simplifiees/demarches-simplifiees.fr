@@ -26,6 +26,6 @@
     .main
       = sanitize(@body, attributes: %w[class style], tags: Rails.configuration.action_view.sanitized_allowed_tags + %w[header])
 
-      - if @attestation_template.signature.present?
+      - if @signature&.attached?
         .signature
-          = image_tag(@attestation_template.signature_url)
+          = image_tag(@signature)
