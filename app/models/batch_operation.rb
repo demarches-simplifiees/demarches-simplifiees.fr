@@ -32,12 +32,12 @@ class BatchOperation < ApplicationRecord
 
   scope :stale, lambda {
     where.not(finished_at: nil)
-      .where('updated_at < ?', (Time.zone.now - RETENTION_DURATION))
+      .where(updated_at: ...(Time.zone.now - RETENTION_DURATION))
   }
 
   scope :stuck, lambda {
     where(finished_at: nil)
-      .where('updated_at < ?', (Time.zone.now - MAX_DUREE_GENERATION))
+      .where(updated_at: ...(Time.zone.now - MAX_DUREE_GENERATION))
   }
 
   def dossiers_safe_scope(dossier_ids = self.dossier_ids)

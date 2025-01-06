@@ -34,12 +34,12 @@ module TransientModelsWithPurgeableJobConcern
 
     scope :stale, lambda { |duration|
       where(job_status: [job_statuses.fetch(:generated), job_statuses.fetch(:failed)])
-        .where('updated_at < ?', (Time.zone.now - duration))
+        .where(updated_at: ...(Time.zone.now - duration))
     }
 
     scope :stuck, lambda { |duration|
       where(job_status: [job_statuses.fetch(:pending)])
-        .where('updated_at < ?', (Time.zone.now - duration))
+        .where(updated_at: ...(Time.zone.now - duration))
     }
 
     def available?

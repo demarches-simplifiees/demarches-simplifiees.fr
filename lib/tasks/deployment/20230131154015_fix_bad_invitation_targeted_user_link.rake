@@ -10,7 +10,7 @@ namespace :after_party do
     invalid_invites_to_refresh = Invite.where('invites.created_at > ?', 1.month.ago)
       .joins(:targeted_user_link)
       .where(targeted_user_link: { target_model_type: 'Avis' })
-    invalid_invites_to_silence = Invite.where('invites.created_at <= ?', 1.month.ago)
+    invalid_invites_to_silence = Invite.where(invites: { created_at: ..1.month.ago })
       .joins(:targeted_user_link)
       .where(targeted_user_link: { target_model_type: 'Avis' })
 

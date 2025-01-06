@@ -17,12 +17,12 @@ class ProcedureOverview
     @dossiers_en_instruction_count = dossiers.state_en_instruction.count
     @old_dossiers_en_instruction = dossiers
       .state_en_instruction
-      .where('en_instruction_at < ?', 1.week.ago)
+      .where(en_instruction_at: ...1.week.ago)
 
     @dossiers_en_construction_count = dossiers.state_en_construction.count
     @old_dossiers_en_construction = dossiers
       .state_en_construction
-      .where('depose_at < ?', 1.week.ago)
+      .where(depose_at: ...1.week.ago)
 
     @created_dossiers_count = dossiers
       .where(created_at: start_date..Time.zone.now)

@@ -26,8 +26,8 @@ class DossiersFilter
     dossiers_result = dossiers_result.where(state: state) if state.present? && state != Dossier::A_CORRIGER
     dossiers_result = dossiers_result.with_pending_corrections if state.present? && state == Dossier::A_CORRIGER
     dossiers_result = exclude_accuse_lecture(dossiers_result) if state.present? && Dossier::TERMINE.include?(state)
-    dossiers_result = dossiers_result.where('dossiers.created_at >= ?', from_created_at_date) if from_created_at_date.present?
-    dossiers_result = dossiers_result.where('dossiers.depose_at >= ?', from_depose_at_date) if from_depose_at_date.present?
+    dossiers_result = dossiers_result.where(dossiers: { created_at: from_created_at_date.. }) if from_created_at_date.present?
+    dossiers_result = dossiers_result.where(dossiers: { depose_at: from_depose_at_date.. }) if from_depose_at_date.present?
     dossiers_result
   end
 

@@ -20,6 +20,6 @@ class Cron::AutoArchiveProcedureJob < Cron::CronJob
   def procedures_to_close
     Procedure
       .publiees
-      .where("auto_archive_on <= ?", Time.zone.today)
+      .where(auto_archive_on: ..Time.zone.today)
   end
 end

@@ -163,7 +163,7 @@ class Procedure < ApplicationRecord
   scope :publiques,              -> do
     publiees_ou_closes
       .opendata
-      .where('estimated_dossiers_count >= ?', 4)
+      .where(estimated_dossiers_count: 4..)
       .where.not('lien_site_web LIKE ?', '%mail%')
       .where.not('lien_site_web LIKE ?', '%intra%')
   end
@@ -176,7 +176,7 @@ class Procedure < ApplicationRecord
   scope :discarded_expired, -> do
     with_discarded
       .discarded
-      .where('hidden_at < ?', 1.month.ago)
+      .where(hidden_at: ...1.month.ago)
   end
 
   scope :for_api, -> {

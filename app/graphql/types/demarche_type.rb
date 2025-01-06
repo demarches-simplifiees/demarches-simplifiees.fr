@@ -105,11 +105,11 @@ module Types
         dossiers = dossiers.where(revision: find_revision(revision))
       else
         if !min_revision.nil?
-          dossiers = dossiers.joins(:revision).where('procedure_revisions.created_at >= ?', find_revision(min_revision).created_at)
+          dossiers = dossiers.joins(:revision).where(procedure_revisions: { created_at: find_revision(min_revision).created_at.. })
         end
 
         if !max_revision.nil?
-          dossiers = dossiers.joins(:revision).where('procedure_revisions.created_at <= ?', find_revision(max_revision).created_at)
+          dossiers = dossiers.joins(:revision).where(procedure_revisions: { created_at: ..find_revision(max_revision).created_at })
         end
       end
 

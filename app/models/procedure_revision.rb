@@ -53,7 +53,7 @@ class ProcedureRevision < ApplicationRecord
 
       transaction do
         # moving all the impacted tdc down
-        siblings.where("position >= ?", position).update_all("position = position + 1")
+        siblings.where(position: position..).update_all("position = position + 1")
 
         # insertion of the new tdc
         revision_types_de_champ.create!(type_de_champ:, parent_id:, position:)
@@ -128,7 +128,7 @@ class ProcedureRevision < ApplicationRecord
       children.each(&:destroy_if_orphan)
       tdc.destroy_if_orphan
 
-      coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+      coordinate.siblings.where(position: coordinate.position..).update_all("position = position - 1")
     end
 
     revision_types_de_champ.reset
