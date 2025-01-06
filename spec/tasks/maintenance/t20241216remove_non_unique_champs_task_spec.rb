@@ -9,14 +9,16 @@ module Maintenance
       let(:procedure) { create(:procedure, types_de_champ_public: [{}]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
       let(:type_de_champ) { dossier.revision.types_de_champ_public.first }
-      let(:champ_id) { dossier.champs.first.id }
 
       before {
         dossier.champs.create(**type_de_champ.params_for_champ)
       }
 
-      it { expect { subject }.to change { dossier.reload.project_champ(type_de_champ).id }.from(dossier.champs.last.id).to(champ_id) }
-      it { expect { subject }.to change { Champ.count }.by(-1) }
+      it { expect { subject }.not_to change { dossier.reload.updated_at } }
+      it { expect { subject }.not_to change { dossier.champs.order(id: :desc).first.id } }
+      it { expect { subject }.to change { dossier.champs.order(:id).first.id } }
+      it { expect { subject }.to change { dossier.champs.count }.by(-1) }
+      it { expect { subject }.to change { dossier.champs.where(row_id: nil).count }.from(1).to(0) }
     end
   end
 end

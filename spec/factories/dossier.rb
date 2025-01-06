@@ -305,7 +305,7 @@ def dossier_factory_create_champ_or_repetition(type_de_champ, dossier)
   end
 end
 
-def dossier_factory_create_champ(type_de_champ, dossier, row_id: nil)
+def dossier_factory_create_champ(type_de_champ, dossier, row_id: Champ::NULL_ROW_ID)
   return unless type_de_champ.fillable?
 
   value = if type_de_champ.drop_down_list?

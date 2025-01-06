@@ -77,6 +77,17 @@ class Champ < ApplicationRecord
     row_id.present? && is_type?(TypeDeChamp.type_champs.fetch(:repetition))
   end
 
+  NULL_ROW_ID = 'N'
+
+  def row_id
+    row_id_or_null = super
+    row_id_or_null == Champ::NULL_ROW_ID ? nil : row_id_or_null
+  end
+
+  def row_id=(row_id_or_nil)
+    super(row_id_or_nil || Champ::NULL_ROW_ID)
+  end
+
   # used for the `required` html attribute
   # check visibility to avoid hidden required input
   # which prevent the form from being sent.
