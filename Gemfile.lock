@@ -871,11 +871,11 @@ GEM
       sidekiq
       yabeda (~> 0.6)
     zeitwerk (2.7.1)
-    zip_tricks (5.6.0)
-    zipline (1.5.0)
+    zip_kit (6.3.1)
+    zipline (2.0.0)
       actionpack (>= 6.0, < 8.0)
       content_disposition (~> 1.0)
-      zip_tricks (>= 4.2.1, < 6.0)
+      zip_kit (~> 6, >= 6.2.0, < 7)
     zxcvbn (0.1.13)
 
 PLATFORMS

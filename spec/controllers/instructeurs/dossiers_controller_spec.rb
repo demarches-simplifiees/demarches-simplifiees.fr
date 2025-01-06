@@ -1236,10 +1236,19 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     it 'the attachment.zip is extractable' do
-      content = ZipTricks::FileReader.read_zip_structure(io: StringIO.new(subject.body))
-      file_names = content.map(&:filename)
-      expect(file_names.size).to eq(1)
-      expect(file_names.first).to start_with("dossier-#{dossier.id}/export-")
+      Tempfile.create(['test', '.zip']) do |f|
+        f.binmode
+        f.write(subject.body)
+        f.close
+
+        file_names = []
+        Zip::File.open(f.path) do |zip|
+          file_names = zip.entries.map(&:name)
+        end
+
+        expect(file_names.size).to eq(1)
+        expect(file_names.first).to start_with("dossier-#{dossier.id}/export-")
+      end
     end
   end
 
