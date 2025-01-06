@@ -9,6 +9,8 @@
       %li n° #{d.id} (#{d.procedure.libelle})
 
 %p
-  = t('.footer_html', count: @hidden_dossiers.size)
+  = t('.footer_html', count: @hidden_dossiers.size,
+                      trash_url: instructeur_procedure_url(procedure_id: @hidden_dossiers.first.procedure.id, statut: "supprimes"),
+                      procedures_url: instructeur_procedures_url)
 
 = render partial: "layouts/mailers/signature"
