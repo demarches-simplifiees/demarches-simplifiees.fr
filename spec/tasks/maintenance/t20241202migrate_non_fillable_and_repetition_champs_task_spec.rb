@@ -16,6 +16,7 @@ module Maintenance
         dossier.champs.create(**repetition.params_for_champ)
       }
 
+      it { expect { subject }.not_to change { dossier.reload.updated_at } }
       it { expect { subject }.to change { Champ.count }.by(-3) }
     end
 
@@ -26,6 +27,7 @@ module Maintenance
 
       before { dossier.champs.filter(&:row?).each(&:destroy!) }
 
+      it { expect { subject }.not_to change { dossier.reload.updated_at } }
       it { expect { subject }.to change { Champs::RepetitionChamp.count }.by(2) }
     end
   end
