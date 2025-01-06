@@ -26,7 +26,7 @@ if defined?(RuboCop)
       module DS
         # Cop that checks if `add_concurrent_index` is used with `up`/`down` methods
         # and not `change`.
-        class AddConcurrentIndex < Cop
+        class AddConcurrentIndex < Base
           MSG = '`add_concurrent_index` is not reversible so you must manually define ' \
             'the `up` and `down` methods in your migration class, using `remove_index` in `down`'
 

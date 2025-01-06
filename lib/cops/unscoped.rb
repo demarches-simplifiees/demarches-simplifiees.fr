@@ -4,7 +4,7 @@ if defined?(RuboCop)
   module RuboCop
     module Cop
       module DS
-        class Unscoped < Cop
+        class Unscoped < Base
           MSG = "Avoid using `unscoped`. Instead unscope specific clauses by using `unscope(where: :attribute)`."
 
           def_node_matcher :unscoped?, <<-END
