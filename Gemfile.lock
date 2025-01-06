@@ -716,8 +716,8 @@ GEM
     sentry-ruby (5.22.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.22.0)
-      sentry-ruby (~> 5.22.0)
+    sentry-sidekiq (5.22.1)
+      sentry-ruby (~> 5.22.1)
       sidekiq (>= 3.0)
     shoulda-matchers (6.4.0)
       activesupport (>= 5.2.0)
