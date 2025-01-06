@@ -39,7 +39,7 @@ class AttachmentsController < ApplicationController
 
   def find_champ
     dossier = policy_scope(Dossier).includes(:champs).find(params[:dossier_id])
-    dossier.champs.find_by(stable_id: params[:stable_id], row_id: params[:row_id])
+    dossier.champs.find_by(stable_id: params[:stable_id], row_id: params[:row_id] || Champ::NULL_ROW_ID)
   end
 
   def attachment_options

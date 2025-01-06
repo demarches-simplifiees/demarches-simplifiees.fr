@@ -8,15 +8,11 @@ module Maintenance
     include StatementsHelpersConcern
 
     def collection
-      Dossier.state_not_brouillon.includes(champs: true)
+      Dossier.includes(champs: true)
     end
 
     def process(dossier)
-      dossier.champs.filter { _1.row_id.nil? }.group_by(&:public_id).each do |_, champs|
-        if champs.size > 1
-          champs.sort_by(&:id)[1..].each(&:destroy)
-        end
-      end
+      dossier.tmp_fix_uniq_row_ids
     end
   end
 end

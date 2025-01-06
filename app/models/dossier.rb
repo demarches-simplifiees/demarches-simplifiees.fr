@@ -1039,7 +1039,7 @@ class Dossier < ApplicationRecord
           type_de_champ.build_champ(dossier: self, row_id: ULID.generate)
         end
       else
-        type_de_champ.build_champ(dossier: self)
+        type_de_champ.build_champ(dossier: self, row_id: Champ::NULL_ROW_ID)
       end
     end
   end
