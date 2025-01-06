@@ -16,6 +16,7 @@ module Users
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
+    before_action :ensure_editing_brouillon, only: [:brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :set_dossier_as_editing_fork, only: [:submit_en_construction]
     before_action :show_demarche_en_test_banner
@@ -458,6 +459,12 @@ module Users
     def ensure_dossier_can_be_viewed
       if dossier.brouillon?
         redirect_to brouillon_dossier_path(dossier)
+      end
+    end
+
+    def ensure_editing_brouillon
+      if !dossier.brouillon?
+        redirect_to modifier_dossier_path(@dossier)
       end
     end
 

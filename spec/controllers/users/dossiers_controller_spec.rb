@@ -371,6 +371,11 @@ describe Users::DossiersController, type: :controller do
         it { is_expected.to redirect_to(identite_dossier_path(dossier)) }
       end
     end
+
+    context 'when the dossier is en_construction' do
+      let!(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
+      it { is_expected.to redirect_to(modifier_dossier_path(dossier)) }
+    end
   end
 
   describe '#edit' do
