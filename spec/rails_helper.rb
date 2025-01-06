@@ -83,7 +83,7 @@ RSpec.configure do |config|
 
   config.infer_base_class_for_anonymous_controllers = false
 
-  config.before(:all) do
+  config.before(:each) do
     Rake.verbose false
 
     Typhoeus::Expectation.clear
