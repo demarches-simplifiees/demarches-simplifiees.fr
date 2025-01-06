@@ -19,7 +19,7 @@ class AttestationTemplate < ApplicationRecord
   validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
   validates :footer, length: { maximum: 190 }
 
-  FILE_MAX_SIZE = 1.megabytes
+  FILE_MAX_SIZE = 1.megabyte
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: FILE_MAX_SIZE }
   validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: FILE_MAX_SIZE }
 

@@ -10,7 +10,7 @@ module Administrateurs
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
     ITEMS_PER_PAGE = 25
-    CSV_MAX_SIZE = 1.megabytes
+    CSV_MAX_SIZE = 1.megabyte
     CSV_ACCEPTED_CONTENT_TYPES = [
       "text/csv",
       "application/vnd.ms-excel"
