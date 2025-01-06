@@ -182,7 +182,7 @@ GEM
     crass (1.0.6)
     css_parser (1.21.0)
       addressable
-    csv (3.3.0)
+    csv (3.3.2)
     daemons (1.4.1)
     date (3.4.1)
     deep_cloneable (3.2.1)
