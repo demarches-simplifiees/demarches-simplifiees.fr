@@ -180,7 +180,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    css_parser (1.16.0)
+    css_parser (1.21.0)
       addressable
     csv (3.3.0)
     daemons (1.4.1)
@@ -686,7 +686,7 @@ GEM
       ffi (~> 1.12)
       logger
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     saml_idp (0.16.0)
       activesupport (>= 5.2)
       builder (>= 3.0)
