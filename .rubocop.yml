@@ -2,6 +2,8 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-capybara
+  - rubocop-factory_bot
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
