@@ -11,7 +11,12 @@ describe ProcedureExportService do
     subject do
       service
         .to_xlsx
-        .open { |f| SimpleXlsxReader.open(f.path) }
+        .open { |f|
+          xlsx = SimpleXlsxReader.open(f.path)
+          # Slurp all data at once for each sheet
+          xlsx.sheets.each { |sheet| sheet.rows.slurp }
+          xlsx
+        }
     end
 
     let(:dossiers_sheet) { subject.sheets.first }
