@@ -412,6 +412,12 @@ fr:
         passer_en_instruction_blocked_by_pending_correction: |
           Le passage en instruction est impossible tant que le dossier est en attente de correction.
           Si nécessaire, l’instructeur ayant demandé la correction peut supprimer le message correspondant.
+        archives_notice_title: Archivage des dossiers
+        archives_notice_html: |
+          Ces dossiers seront supprimés lorsque leur délai de conservation dans %{app_name} (%{duration_months} mois) sera expiré.
+          <a href="%{doc_url}" rel="external noopener" target="_blank" title="Documentation sur l‘archivage des dossiers">En savoir plus</a>
+          <br/>
+          Pour sauvegarder et archiver vos dossiers sur votre serveur, vous devez les télécharger.
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
       search:

@@ -410,6 +410,12 @@ en:
         passer_en_instruction_blocked_by_pending_correction: |
           It is not possible to switch to instruction while the file is awaiting correction.
           If necessary, the instructor who requested the correction can delete the corresponding message.
+        archives_notice_title: Files archiving
+        archives_notice_html: |
+          These files will be deleted when their retention period in %{app_name} (%{duration_months} months) expires.
+          <a href="%{doc_url}" rel="external noopener" target="_blank" title="Documentation about files archiving" lang="fr">Learn more</a>
+          <br/>
+          To save and archive your files on your server, you must download them.
       avis:
         introduction_file_explaination: "File attached to the request for advice"
       search:
