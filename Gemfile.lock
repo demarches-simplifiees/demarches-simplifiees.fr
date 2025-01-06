@@ -232,7 +232,7 @@ GEM
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
-    dumb_delegator (1.0.0)
+    dumb_delegator (1.1.0)
     email_validator (2.2.4)
       activemodel
     erubi (1.13.0)
