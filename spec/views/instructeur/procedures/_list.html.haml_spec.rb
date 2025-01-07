@@ -2,6 +2,11 @@
 
 describe 'instructeurs/procedures/_list', type: :view do
   let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
+  let(:current_administrateur) { create(:administrateur) }
+
+  before do
+    allow(view).to receive(:current_administrateur).and_return(current_administrateur)
+  end
 
   subject do
     render('instructeurs/procedures/list',

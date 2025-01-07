@@ -30,7 +30,6 @@
       - if (@statut == "en-cours" && collection.size > 1)
         = link_to "Personnaliser l'ordre", order_positions_instructeur_procedures_path(collection_ids: collection.map(&:id)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-btn--icon-left fr-icon-settings-5-line'
     %ul.procedure-list.fr-pl-0
-      - current_administrateur_id = current_administrateur&.id
       = render partial: 'instructeurs/procedures/list',
         collection: collection,
         as: :p,

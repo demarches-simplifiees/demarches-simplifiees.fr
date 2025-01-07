@@ -62,7 +62,6 @@ module Instructeurs
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
-      @current_administrateur_id = current_administrateur&.id
     end
 
     def order_positions
