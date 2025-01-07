@@ -29,7 +29,11 @@ class Champs::DropDownListChamp < Champ
   end
 
   def other?
-    drop_down_other? && (other || (value.present? && drop_down_options.exclude?(value)))
+    if referentiel?
+      (drop_down_other? && (other || (value.present? && referentiel_drop_down_options.map { _1.fetch('id') }.exclude?(value.to_i))))
+    else
+      drop_down_other? && (other || (value.present? && drop_down_options.exclude?(value)))
+    end
   end
 
   def value=(value)
@@ -55,8 +59,13 @@ class Champs::DropDownListChamp < Champ
   private
 
   def value_is_in_options
+    return if referentiel_mode? && value_is_in_referentiel_ids?
     return if drop_down_options.include?(value)
 
     errors.add(:value, :not_in_options)
+  end
+
+  def value_is_in_referentiel_ids?
+    referentiel_drop_down_options.any? { _1['id'] == value.to_i }
   end
 end

@@ -373,8 +373,16 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def referentiel_mode?
+    drop_down_mode == 'advanced'
+  end
+
   def drop_down_options
     Array.wrap(super)
+  end
+
+  def referentiel_drop_down_options
+    Array.wrap(referentiel&.items&.map { { 'value' => _1.data.values.first, 'id' => _1.id } })
   end
 
   def drop_down_options_from_text=(text)
