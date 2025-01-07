@@ -22,4 +22,4 @@
             - else
               - %w(a_suivre suivis traites tous supprimes expirant archives).each do |tab|
                 %p
-                  = t(".modal.tabs_#{tab}_html")
+                  = t(".modal.tabs_#{tab}_html", app_name: APPLICATION_NAME)
