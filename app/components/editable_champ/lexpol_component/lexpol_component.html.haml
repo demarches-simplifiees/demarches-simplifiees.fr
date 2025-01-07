@@ -1,14 +1,19 @@
 - if @champ.value.blank?
   %p
-    %strong Numéro NOR :
+    %strong Numéro NOR :
     Non créé
   %p
-    %strong Statut du dossier :
+    %strong Statut du dossier :
     Inconnu
+
 - else
   %p
-    %strong Numéro NOR :
-    = @champ.value
+    %strong Numéro NOR :
+    - if @champ.lexpol_dossier_url.present?
+      = link_to @champ.value, @champ.lexpol_dossier_url, target: '_blank', class: 'fr-link'
+    - else
+      = @champ.value
+
   %p
-    %strong Statut du dossier :
+    %strong Statut du dossier :
     = @champ.data&.[]('lexpol_status') || 'Inconnu'

@@ -378,7 +378,7 @@ module Instructeurs
         champ = dossier.champs.find_by(id: params[:champ_id])
 
         mapping = (champ.type_de_champ.lexpol_mapping || "")
-          .split(',')
+          .split("\n")
           .map { |pair| pair.split('=').map(&:strip) }
           .to_h
 
@@ -414,7 +414,7 @@ module Instructeurs
       puts "Procedure attendue : #{params[:procedure_id]}"
 
       mapping = (champ.type_de_champ.lexpol_mapping || "")
-        .split(',')
+        .split("\n")
         .map { |pair| pair.split('=').map(&:strip) }
         .to_h
 
