@@ -1,0 +1,17 @@
+= form_with url: url_for([:select_procedure, :instructeur, :procedures]),
+  class: 'ml-auto',
+  id: 'select-procedure-drop-down-list-component',
+  data: { turbo: true, controller: 'autosubmit' } do
+
+  .flex.align-center
+    = label_tag :procedure_id, t('.label'), class: 'fr-label font-weight-bold fr-mr-2w', id: 'select-procedure-drop-down-list-label', for: 'select-procedure-drop-down-list'
+    %react-fragment
+      = render ReactComponent.new "ComboBox/SingleComboBox", **react_props
+
+    %input.hidden{
+      type: 'submit',
+      formmethod: 'get',
+      formaction: url_for([:select_procedure, :instructeur, :procedures]),
+      formnovalidate: 'true',
+      data: { autosubmit_target: 'submitter' }
+    }
