@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DossierOperationLog < ApplicationRecord
-  enum operation: {
+  enum :operation, {
     changer_groupe_instructeur: 'changer_groupe_instructeur',
     passer_en_instruction: 'passer_en_instruction',
     repasser_en_construction: 'repasser_en_construction',

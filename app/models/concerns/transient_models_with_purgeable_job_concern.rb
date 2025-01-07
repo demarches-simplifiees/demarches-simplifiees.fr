@@ -10,7 +10,7 @@ module TransientModelsWithPurgeableJobConcern
   included do
     include AASM
 
-    enum job_status: {
+    enum :job_status, {
       pending: 'pending',
       generated: 'generated',
       failed: 'failed'

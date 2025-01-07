@@ -9,7 +9,7 @@ class AttestationTemplate < ApplicationRecord
   has_one_attached :logo
   has_one_attached :signature
 
-  enum state: {
+  enum :state, {
     draft: 'draft',
     published: 'published'
   }

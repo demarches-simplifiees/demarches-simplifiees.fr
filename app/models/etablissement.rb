@@ -14,10 +14,10 @@ class Etablissement < ApplicationRecord
   validates :siret, presence: true
   validates :dossier_id, uniqueness: { allow_nil: true }
 
-  enum entreprise_etat_administratif: {
+  enum :entreprise_etat_administratif, {
     actif: "actif",
     fermé: "fermé"
-  }, _prefix: true
+  }, prefix: true
 
   after_commit -> { dossier&.index_search_terms_later }
 

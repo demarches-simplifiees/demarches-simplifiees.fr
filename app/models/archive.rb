@@ -20,7 +20,7 @@ class Archive < ApplicationRecord
       )
   }
 
-  enum time_span_type: {
+  enum :time_span_type, {
     everything: 'everything',
     monthly:    'monthly'
   }

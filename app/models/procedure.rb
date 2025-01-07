@@ -205,15 +205,15 @@ class Procedure < ApplicationRecord
       .order('position DESC')
   }
 
-  enum declarative_with_state: {
+  enum :declarative_with_state, {
     en_instruction:  'en_instruction',
     accepte:         'accepte'
   }
 
-  enum closing_reason: {
+  enum :closing_reason, {
     internal_procedure: 'internal_procedure',
     other: 'other'
-  }, _prefix: true
+  }, prefix: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false

@@ -8,20 +8,20 @@ class Export < ApplicationRecord
   MAX_DUREE_CONSERVATION_EXPORT = 32.hours
   MAX_DUREE_GENERATION = 16.hours
 
-  enum format: {
+  enum :format, {
     csv: 'csv',
     ods: 'ods',
     xlsx: 'xlsx',
     zip: 'zip',
     json: 'json'
-  }, _prefix: true
+  }, prefix: true
 
-  enum time_span_type: {
+  enum :time_span_type, {
     everything: 'everything',
     monthly:    'monthly'
   }
 
-  enum statut: {
+  enum :statut, {
     'a-suivre': 'a-suivre',
     suivis: 'suivis',
     traites: 'traites',

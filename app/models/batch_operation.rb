@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BatchOperation < ApplicationRecord
-  enum operation: {
+  enum :operation, {
     accepter: 'accepter',
     refuser: 'refuser',
     classer_sans_suite: 'classer_sans_suite',

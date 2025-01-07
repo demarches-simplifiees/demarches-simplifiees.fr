@@ -15,7 +15,7 @@ class Dossier < ApplicationRecord
   include DossierEmptyConcern
   include DossierExportConcern
 
-  enum state: {
+  enum :state, {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
     en_instruction:  'en_instruction',
