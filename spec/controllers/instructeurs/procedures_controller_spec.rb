@@ -55,10 +55,10 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it 'contains tabs explanation' do
-        expect(response.body).to have_text('L’onglet « en cours » regroupe')
-        expect(response.body).to have_text('L’onglet « en test » regroupe')
-        expect(response.body).to have_text('L’onglet « terminée » regroupe')
-        expect(response.body).not_to have_text('L’onglet « expirant » contient')
+        expect(response.body).to have_text('L’onglet « en cours » regroupe')
+        expect(response.body).to have_text('L’onglet « en test » regroupe')
+        expect(response.body).to have_text('L’onglet « terminée » regroupe')
+        expect(response.body).not_to have_text('L’onglet « expirant » contient')
       end
     end
 
@@ -285,14 +285,14 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it 'contains tabs explanation' do
-        expect(response.body).to have_text('L’onglet « à suivre » contient')
-        expect(response.body).to have_text('L’onglet « suivis par moi» contient')
-        expect(response.body).to have_text('L’onglet « traité » contient')
-        expect(response.body).to have_text('L’onglet « au total » contient')
-        expect(response.body).to have_text('L’onglet « corbeille » contient')
-        expect(response.body).to have_text('L’onglet « à archiver » contient')
-        expect(response.body).to have_text('L’onglet « expirant » contient')
-        expect(response.body).not_to have_text('L’onglet « terminée » regroupe')
+        expect(response.body).to have_text('L’onglet « à suivre » contient')
+        expect(response.body).to have_text('L’onglet « suivis par moi » contient')
+        expect(response.body).to have_text('L’onglet « traités » contient')
+        expect(response.body).to have_text('L’onglet « total » contient')
+        expect(response.body).to have_text('L’onglet « corbeille » contient')
+        expect(response.body).to have_text('L’onglet « à archiver » contient')
+        expect(response.body).to have_text('L’onglet « expirant » contient')
+        expect(response.body).not_to have_text('L’onglet « terminée » regroupe')
       end
     end
 
