@@ -8,7 +8,7 @@ module Maintenance
     include StatementsHelpersConcern
 
     def collection
-      Dossier.includes(champs: true)
+      Dossier.includes(champs: [])
     end
 
     def process(dossier)
