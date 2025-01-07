@@ -74,6 +74,12 @@ module Instructeurs
       redirect_to instructeur_procedures_path, notice: "L'ordre des démarches a été mis à jour."
     end
 
+    def select_procedure
+      return redirect_to instructeur_procedure_path(procedure_id: params[:procedure_id]) if params[:procedure_id].present?
+
+      redirect_to instructeur_procedures_path
+    end
+
     def show
       @procedure = procedure
       # Technically, procedure_presentation already sets the attribute.
