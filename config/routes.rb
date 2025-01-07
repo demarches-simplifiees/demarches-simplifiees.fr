@@ -530,8 +530,6 @@ Rails.application.routes.draw do
             post 'reaffecter'
             post 'lexpol/create_dossier/:champ_id', to: 'lexpol#create_dossier', as: :lexpol_create_dossier
             post 'lexpol/update_dossier/:champ_id', to: 'lexpol#update_dossier', as: :lexpol_update_dossier
-            post :create_lexpol_dossier
-            post :update_lexpol_dossier
           end
         end
 

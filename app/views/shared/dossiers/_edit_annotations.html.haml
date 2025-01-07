@@ -11,10 +11,10 @@
       %section.fr-section
         .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
           - if champ_lexpol.value.blank?
-            = form_with url: create_lexpol_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
+            = form_with url: lexpol_create_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
               = form.submit 'Créer le dossier dans Lexpol', class: 'fr-btn'
           - else
-            = form_with url: update_lexpol_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
+            = form_with url: lexpol_update_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
               = form.submit 'Rafraîchir les données Lexpol', class: 'fr-btn fr-btn--secondary'
 
     = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: true)
