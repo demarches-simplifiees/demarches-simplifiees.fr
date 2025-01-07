@@ -28,6 +28,8 @@ class AttachmentsController < ApplicationController
     end
 
     @attachment.purge_later
+    @champ.piece_justificative_file.reload if champ?
+
     flash.notice = 'La pièce jointe a bien été supprimée.'
 
     respond_to do |format|
