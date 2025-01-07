@@ -379,8 +379,6 @@ fr:
     instructeurs:
       dossiers:
         tab_steps:
-          to_follow: à suivre
-          total: au total
           request: Demande
           private_annotations: Annotations privées
           external_opinion: Avis externes
@@ -388,17 +386,8 @@ fr:
           involved_persons: Personnes impliquées
           reaffectation: Réaffectation
           attachments: Pièces jointes
-        tab_explainations:
-          a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
-          suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
-          traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
-          tous: Tous les dossiers déposés sur cette démarche, qu’ils soient à suivre, suivis par vous ou suivis par d’autres instructeurs.
-          tous_with_routing: Tous les dossiers déposés sur cette démarche et attribués aux groupes d’instructeurs dont vous faites partie.
-          supprimes: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
-          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
-          expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
-        delete_dossier: "Supprimer le dossier"
+        delete_dossier: "Mettre à la corbeille"
         deleted_reason:
           user_request: supprimé par l’usager
           expired: a expiré
@@ -423,6 +412,12 @@ fr:
         passer_en_instruction_blocked_by_pending_correction: |
           Le passage en instruction est impossible tant que le dossier est en attente de correction.
           Si nécessaire, l’instructeur ayant demandé la correction peut supprimer le message correspondant.
+        archives_notice_title: Archivage des dossiers
+        archives_notice_html: |
+          Ces dossiers seront supprimés lorsque leur délai de conservation dans %{app_name} (%{duration_months} mois) sera expiré.
+          <a href="%{doc_url}" rel="external noopener" target="_blank" title="Documentation sur l‘archivage des dossiers">En savoir plus</a>
+          <br/>
+          Pour sauvegarder et archiver vos dossiers sur votre serveur, vous devez les télécharger.
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
       search:
@@ -538,7 +533,7 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"
           clone: "Dupliquer ce dossier"
-          delete_dossier: "Supprimer le dossier"
+          delete_dossier: "Mettre à la corbeille"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
@@ -782,7 +777,9 @@ fr:
     followed:
       one: suivi par moi
       other: suivis par moi
-    archived: à archiver
+    archived:
+      one: à archiver
+      other: à archiver
     en_cours:
       one: en cours
       other: en cours
@@ -796,8 +793,8 @@ fr:
       one: dossier invité
       other: dossiers invités
     dossiers_supprimes:
-      one: supprimé
-      other: supprimés
+      one: corbeille
+      other: corbeille
     dossiers_historique:
       one:  supprimé définitivement
       other: supprimés définitivement
@@ -806,7 +803,7 @@ fr:
       other: demandes de transfert
     dossiers_close_to_expiration:
       one: expirant
-      other: expirants
+      other: expirant
     dossier_trouve:
       one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
@@ -867,18 +864,18 @@ fr:
           filename: "attestation-de-depot.pdf"
   instructeurs:
     dossiers:
-       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
-       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
-       restore: "Le dossier a bien été restauré"
-       reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
-       existing_groupe:
-         one: "%{count} groupe existe"
-         other: "%{count} groupes existent"
-       labels:
+      deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
+      impossible_deletion: "Supression impossible : le dossier n’est pas traité"
+      restore: "Le dossier a bien été restauré"
+      reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+      existing_groupe:
+        one: "%{count} groupe existe"
+        other: "%{count} groupes existent"
+      labels:
         to_follow: à suivre
         to_archive: à archiver
-        dossiers_supprimes: corbeille
         total: au total
+        trash: corbeille
   administrateurs:
     activate:
       new:

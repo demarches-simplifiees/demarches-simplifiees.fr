@@ -1,43 +1,43 @@
 # frozen_string_literal: true
 
 module TabsHelper
-  def tab_i18n_key_from_status(status)
+  def i18n_tab_from_status(status, count: nil)
     case status
     when 'a-suivre'
-      'views.instructeurs.dossiers.tab_steps.to_follow' # i18n-tasks-use t('views.instructeurs.dossiers.tab_steps.to_follow')
+      t('instructeurs.dossiers.labels.to_follow', count:)
     when 'suivis'
-      'pluralize.followed'
+      t('pluralize.followed', count:)
     when 'traites'
-      'pluralize.processed'
+      t('pluralize.processed', count:)
     when 'tous'
-      'views.instructeurs.dossiers.tab_steps.total' # i18n-tasks-use t('views.instructeurs.dossiers.tab_steps.total')
+      t('instructeurs.dossiers.labels.total')
     when 'supprimes'
-      'instructeurs.dossiers.labels.dossiers_supprimes'
+      t('instructeurs.dossiers.labels.trash')
     when 'expirant'
-      'pluralize.dossiers_close_to_expiration'
+      t('pluralize.dossiers_close_to_expiration', count:)
     when 'archives'
-      'pluralize.archived'
+      t('instructeurs.dossiers.labels.to_archive')
     else
       fail ArgumentError, "Unknown tab status: #{status}"
     end
   end
 
-  def tab_item(label, url, active: false, badge: nil, notification: false, icon: nil)
+  def tab_item(label, url, active: false, badge: nil, notification: false, html_class: nil)
     render partial: 'shared/tab_item', locals: {
       label: label,
       url: url,
       active: active,
       badge: badge,
       notification: notification,
-      icon: icon
+      html_class: html_class
     }
   end
 
-  def dynamic_tab_item(label, url_or_urls, badge: nil, notification: false, icon: nil)
+  def dynamic_tab_item(label, url_or_urls, badge: nil, notification: false)
     urls = [url_or_urls].flatten
     url = urls.first
     active = urls.any? { |u| current_page?(u) }
 
-    tab_item(label, url, active: active, badge: badge, notification: notification, icon: icon)
+    tab_item(label, url, active: active, badge: badge, notification: notification)
   end
 end

@@ -28,6 +28,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_brouillon_near_deletion([dossier, dossier], usager_email)
   end
 
+  def notify_brouillons_near_deletion_one
+    DossierMailer.notify_brouillon_near_deletion([dossier], usager_email)
+  end
+
   def notify_en_construction_near_deletion_to_user
     DossierMailer.notify_near_deletion_to_user([dossier_en_construction], usager_email)
   end
@@ -65,7 +69,11 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_automatic_deletion_to_user([dossier, dossier], usager_email)
   end
 
-  def notify_automatic_deletion_to_administration
+  def notify_automatic_deletion_to_administration_one
+    DossierMailer.notify_automatic_deletion_to_administration([dossier], administration_email)
+  end
+
+  def notify_automatic_deletion_to_administration_multiple
     DossierMailer.notify_automatic_deletion_to_administration([dossier, dossier], administration_email)
   end
 

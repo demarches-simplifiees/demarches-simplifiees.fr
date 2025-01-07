@@ -2,11 +2,22 @@ fr:
   dossier_mailer:
     notify_automatic_deletion_to_administration:
       subject:
-        one: "Un dossier a été supprimé"
-        other: "Des dossiers ont été supprimés"
+        one: 'Un dossier a été mis à la corbeille'
+        other: 'Des dossiers ont été mis à la corbeille'
       header:
-        one: "Le délai maximal de conservation du dossier a été atteint, celui-ci a donc été supprimé :"
-        other: "Le délai maximal de conservation des dossiers a été atteint, ceux-ci ont donc été supprimés :"
-      footer:
-        one: Vous pouvez retrouver ce dossier pendant encore une semaine depuis l’onglet « Supprimé » sur la page
-        other: Vous pouvez retrouver ces dossiers pendant encore une semaine depuis l’onglet « Supprimés » sur la page
+        one: 'Le délai maximal de conservation du dossier a été atteint, celui-ci a donc été mis à la corbeille :'
+        other: 'Le délai maximal de conservation des dossiers a été atteint, ceux-ci ont donc été mis à la corbeille :'
+      footer_html:
+        one: |
+          Vous pouvez retrouver ce dossier pendant <strong>encore 7 jours</strong> depuis l’onglet
+          <a href="%{trash_url}">corbeille</a>
+          du suivi des dossiers, pour les télécharger ou étendre sa durée de conservation.
+          <br>
+          Passé ce délai, ce dossier sera <strong>supprimé définitivement</strong>.
+        other: |
+          Vous pouvez retrouver ces dossiers pendant <strong>encore 7 jours</strong> depuis l’onglet « Corbeille »
+          sur la page du suivi des dossiers, pour les télécharger ou étendre leur durée de conservation.
+          <br>
+          Passé ce délai, ces dossiers seront <strong>supprimés définitivement</strong>.
+          <br>
+          <a href="%{procedures_url}">Consulter la liste des démarches</a>

@@ -12,19 +12,19 @@ describe 'instructeurs/procedures/_synthese', type: :view do
       render 'instructeurs/procedures/synthese',
       all_dossiers_counts: {
         'à suivre': 0,
-        'suivis': 0,
+        'suivis par moi': 0,
         'traités': 1,
         'dossiers': 1,
-        'archivés': 0
+        'à archiver': 0
       },
       procedures: [procedure, procedure2]
     }
 
     it { is_expected.to have_text('Synthèse des dossiers') }
-    it { is_expected.not_to have_text('suivis') }
+    it { is_expected.not_to have_text('suivis par moi') }
     it { is_expected.to have_text('traités') }
     it { is_expected.to have_text('dossiers') }
-    it { is_expected.not_to have_text('archivés') }
+    it { is_expected.not_to have_text('à archiver') }
   end
 
   context 'when instructeur has 1 procedure and 1 file, table is not shown' do
@@ -32,18 +32,18 @@ describe 'instructeurs/procedures/_synthese', type: :view do
       render 'instructeurs/procedures/synthese',
       all_dossiers_counts: {
         'à suivre': 0,
-        'suivis': 0,
+        'suivis par moi': 0,
         'traités': 1,
         'dossiers': 1,
-        'archivés': 0
+        'à archiver': 0
       },
       procedures: [procedure]
     }
 
     it { is_expected.not_to have_text('Synthèse des dossiers') }
-    it { is_expected.not_to have_text('suivis') }
+    it { is_expected.not_to have_text('suivis par moi') }
     it { is_expected.not_to have_text('traités') }
     it { is_expected.not_to have_text('dossiers') }
-    it { is_expected.not_to have_text('archivés') }
+    it { is_expected.not_to have_text('à archiver') }
   end
 end

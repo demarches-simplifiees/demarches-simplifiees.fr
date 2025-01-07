@@ -19,7 +19,7 @@
 
     - elsif archived
       = button_to unarchive_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-upload-2-line" do
-        Désarchiver le dossier
+        Replacer dans “traités”
 
       = button_to instructeur_dossier_path(procedure_id, dossier_id), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier') do
         = ""
@@ -29,7 +29,7 @@
         Repasser en instruction
 
       = button_to archive_instructeur_dossier_path(procedure_id, dossier_id, statut: params[:statut]), method: :patch, class: 'fr-btn fr-icon-folder-2-line' do
-        Archiver le dossier
+        Déplacer dans “à archiver“
 
       = button_to instructeur_dossier_path(procedure_id, dossier_id, statut: params[:statut]), method: :delete, class: 'fr-btn fr-btn--secondary fr-icon-delete-line icon-only danger', title: t('views.instructeurs.dossiers.delete_dossier') do
         = ""

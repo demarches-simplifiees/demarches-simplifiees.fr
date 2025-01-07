@@ -2,21 +2,21 @@ fr:
   archiver:
     finish:
       text_success:
-        one: "%{success_count}/1 dossier a été archivé"
-        other: "%{success_count}/%{count} dossiers ont été archivés"
+        one: "%{success_count}/1 dossier a été placé dans « à archiver »"
+        other: "%{success_count}/%{count} dossiers ont été placés dans « à archiver »"
     in_progress:
       text_success:
-        one: "1 dossier est en cours d'archivage"
-        other: "%{success_count}/%{count} dossiers ont été archivés"
+        one: "1 dossier est en cours de déplacement dans « à archiver »"
+        other: "%{success_count}/%{count} dossiers sont en cours de déplacement dans « à archiver »"
   desarchiver:
     finish:
       text_success:
-        one: "%{success_count}/1 dossier a été désarchivé"
-        other: "%{success_count}/%{count} dossiers ont été désarchivés"
+        one: "%{success_count}/1 dossier a été retiré de « à archiver »"
+        other: "%{success_count}/%{count} dossiers ont été retirés de « à archiver »"
     in_progress:
       text_success:
-        one: "1 dossier est en cours d'désarchivage"
-        other: "%{success_count}/%{count} dossiers ont été désarchivés"
+        one: "1 dossier est en cours de retrait de « à archiver »"
+        other: "%{success_count}/%{count} dossiers sont en cours de retrait de « à archiver »"
   passer_en_instruction:
     finish:
       text_success:
@@ -56,12 +56,12 @@ fr:
   supprimer:
     finish:
       text_success:
-        one: "%{success_count}/1 dossier a été supprimé"
-        other: "%{success_count}/%{count} dossiers ont été supprimés"
+        one: "%{success_count}/1 dossier a été mis à la corbeille"
+        other: "%{success_count}/%{count} dossiers ont été placés à la corbeille"
     in_progress:
       text_success:
         one: "1 dossier est en cours de suppression"
-        other: "%{success_count}/%{count} dossiers ont été supprimés"
+        other: "%{success_count}/%{count} dossiers ont été placés à la corbeille"
   restaurer:
     finish:
       text_success:

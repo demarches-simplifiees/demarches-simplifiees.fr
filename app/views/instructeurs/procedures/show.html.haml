@@ -7,9 +7,12 @@
       locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb], libelle: @procedure.libelle.truncate(22)), instructeur_procedure_path(@procedure)]] }
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
       %hr
-      %h1.fr-h5.fr-mb-0= t('.file_tracking')
+      .flex
+        %h1.fr-h5.fr-mb-0= t('.file_tracking')
+        = render Instructeurs::TabsExplanationsComponent.new
 
-    .fr-container.flex= render partial: "tabs", locals: { procedure: @procedure,
+    .fr-container
+      .flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
         a_suivre_count: @counts[:a_suivre],
         suivis_count: @counts[:suivis],
@@ -21,40 +24,7 @@
         has_en_cours_notifications: @has_en_cours_notifications,
         has_termine_notifications: @has_termine_notifications }
 
-  .fr-container.fr-highlight
-    - if @statut == 'a-suivre'
-      %p
-        = t('views.instructeurs.dossiers.tab_explainations.a_suivre')
-    - if @statut == 'suivis'
-      %p
-        = t('views.instructeurs.dossiers.tab_explainations.suivis')
-    - if @statut == 'traites'
-      %p
-        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: list_instructeur_archives_path(@procedure))
-    - if @statut == 'tous'
-      %p
-        - if @procedure.routing_enabled?
-          = t('views.instructeurs.dossiers.tab_explainations.tous_with_routing')
-        - else
-          = t('views.instructeurs.dossiers.tab_explainations.tous')
-    - if @statut == 'supprimes'
-      %p
-        = t('views.instructeurs.dossiers.tab_explainations.supprimes').html_safe
-    - if @statut == 'archives'
-      %p
-        = t('views.instructeurs.dossiers.tab_explainations.archives')
-        %br
-        Ces dossiers seront supprimés lorsque leur délai de conservation dans #{APPLICATION_NAME}
-        - if @procedure.duree_conservation_dossiers_dans_ds
-          = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
-        sera expiré.
-        = link_to 'En savoir plus', ARCHIVAGE_DOC_URL
-    - if @statut == 'expirant'
-      %p
-        = t('views.instructeurs.dossiers.tab_explainations.expirant')
-
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
-    %hr
     .flex.align-center
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
         = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation }
@@ -186,6 +156,14 @@
             .fr-table__footer--middle
               = paginate @filtered_sorted_paginated_ids, views_prefix: 'shared'
             .fr-table__footer--end.flex-no-grow
+
+      - if @statut == "archives"
+        .fr-notice.fr-notice--warning
+          .fr-container--fluid.fr-px-2w
+            .fr-notice__body
+              %span.fr-notice__title= t('views.instructeurs.dossiers.archives_notice_title')
+              %span.fr-notice__desc
+                = t('views.instructeurs.dossiers.archives_notice_html', app_name: APPLICATION_NAME, duration_months: @procedure.duree_conservation_dossiers_dans_ds, doc_url: ARCHIVAGE_DOC_URL)
 
     - else
       %h2.empty-text

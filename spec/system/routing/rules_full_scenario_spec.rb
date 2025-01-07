@@ -214,7 +214,7 @@ describe 'The routing with rules', js: true do
     expect(find('nav.fr-tabs')).to have_css('span.notifications')
 
     ## on the dossier itself
-    click_on 'suivi'
+    click_on 'suivi par moi'
     click_on litteraire_user.email
     expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first, statut: :suivis))
     expect(page).to have_text('Annotations privées')

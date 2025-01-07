@@ -14,7 +14,7 @@ en:
           procedure_management: File management
           notification_management: notification management
           administrators_list: administrators list
-          exports_list: exports and export templates
+          exports_list: Exports and export templates
           export_templates: Export templates
           exports_notification_label: A new export is ready to download
           statistics: statistics
