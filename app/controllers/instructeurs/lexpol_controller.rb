@@ -16,7 +16,8 @@ module Instructeurs
         hash[mapped_key] = ch.value
       end
 
-      nor = APILexpol.new.create_dossier(598706, variables)
+      model_id = @champ.type_de_champ.lexpol_modele.presence
+      nor = APILexpol.new.create_dossier(model_id, variables)
 
       if nor.present?
         @champ.update!(value: nor)

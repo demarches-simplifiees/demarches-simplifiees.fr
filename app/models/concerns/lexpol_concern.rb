@@ -6,7 +6,8 @@ module LexpolConcern
   end
 
   def lexpol_create_dossier
-    nor = lexpol_service.create_dossier(598706)
+    model_id = type_de_champ.lexpol_modele.presence
+    nor = lexpol_service.create_dossier(model_id)
     update(value: nor)
     refresh_lexpol_data!
     true
