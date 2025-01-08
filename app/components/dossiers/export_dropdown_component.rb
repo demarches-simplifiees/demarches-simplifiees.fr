@@ -36,9 +36,9 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
 
   def include_archived_title
     if @archived_count > 1
-      "<span>Inclure les <strong>#{@archived_count} dossiers « archivés »</strong></span>"
+      "<span>Inclure les <strong>#{@archived_count} dossiers « à archiver »</strong></span>"
     else
-      "<span>Inclure le <strong>dossier « archivé »</strong></span>"
+      "<span>Inclure le <strong>dossier « à archiver »</strong></span>"
     end
   end
 
