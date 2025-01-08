@@ -12,11 +12,13 @@ module Maintenance
     end
 
     def process(dossier)
-      Champs::HeaderSectionChamp.where(dossier:).destroy_all
-      Champs::ExplicationChamp.where(dossier:).destroy_all
-      Champs::RepetitionChamp.where(dossier:, row_id: nil).destroy_all
+      Dossier.no_touching do
+        Champs::HeaderSectionChamp.where(dossier:).destroy_all
+        Champs::ExplicationChamp.where(dossier:).destroy_all
+        Champs::RepetitionChamp.where(dossier:, row_id: nil).destroy_all
 
-      create_rows(dossier)
+        Dossier.transaction { create_rows(dossier) }
+      end
     end
 
     def create_rows(dossier)
@@ -26,7 +28,7 @@ module Maintenance
         row_ids = dossier.repetition_row_ids(type_de_champ)
         row_ids.each do |row_id|
           Champ.create_with(**type_de_champ.params_for_champ)
-            .find_or_create_by!(dossier:, stable_id:, row_id:, stream: 'main')
+            .create_or_find_by!(dossier:, stable_id:, row_id:, stream: 'main')
         end
       end
     end
