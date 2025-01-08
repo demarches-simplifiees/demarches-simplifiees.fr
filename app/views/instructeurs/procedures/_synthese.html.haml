@@ -1,6 +1,6 @@
 - if procedures.length > 1
   .flex.align-center.fr-mb-2w
     %p.font-weight-bold.fr-text--sm.fr-mb-1w= t('views.instructeurs.dossiers.dossier_synthesis')
-    - all_dossiers_counts.each_with_index  do |(label, dossier_count)|
+    - all_dossiers_counts.each_with_index  do |(tab_key, dossier_count)|
       - if dossier_count != 0
-        %span.fr-badge.fr-ml-1w.fr-mb-1w= number_with_html_delimiter(dossier_count) + ' ' + label
+        %span.fr-badge.fr-ml-1w.fr-mb-1w= number_with_html_delimiter(dossier_count) + ' ' + i18n_tab_from_status(tab_key)

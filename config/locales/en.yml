@@ -767,8 +767,6 @@ en:
     new:
       one: new
       other: new
-    followed: followed by me
-    archived: to archive
     en_cours:
       one: in progress
       other: in progress
@@ -869,8 +867,11 @@ en:
       restore: "The folder has been restored"
       labels:
         to_follow: to follow
-        to_archive: to archive
+        followed: followed by me
+        processed: processed
         total: total
+        close_to_expiration: expiring
+        to_archive: to archive
         trash: trash
   france_connect:
     particulier:

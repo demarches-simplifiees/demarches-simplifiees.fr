@@ -5,13 +5,13 @@
       active: statut == 'a-suivre',
       badge: number_with_html_delimiter(a_suivre_count))
 
-    = tab_item(i18n_tab_from_status('suivis', count: suivis_count),
+    = tab_item(i18n_tab_from_status('suivis'),
       instructeur_procedure_path(procedure, statut: 'suivis'),
       active: statut == 'suivis',
       badge: number_with_html_delimiter(suivis_count),
       notification: has_en_cours_notifications)
 
-    = tab_item(i18n_tab_from_status('traites', count: traites_count),
+    = tab_item(i18n_tab_from_status('traites'),
       instructeur_procedure_path(procedure, statut: 'traites'),
       active: statut == 'traites',
       badge: number_with_html_delimiter(traites_count),
@@ -23,7 +23,7 @@
       badge: number_with_html_delimiter(tous_count))
 
     - if procedure.procedure_expires_when_termine_enabled
-      = tab_item(i18n_tab_from_status('expirant', count: expirant_count),
+      = tab_item(i18n_tab_from_status('expirant'),
         instructeur_procedure_path(procedure, statut: 'expirant'),
         active: statut == 'expirant',
         badge: number_with_html_delimiter(expirant_count))

@@ -51,11 +51,11 @@ module Instructeurs
         .count
 
       @all_dossiers_counts = {
-        t('.to_follow') => @dossiers_a_suivre_count_per_procedure.sum { |_, v| v },
-        t('.followed') => @followed_dossiers_count_per_procedure.sum { |_, v| v },
-        t('.processed') => @dossiers_termines_count_per_procedure.sum { |_, v| v },
-        t('.all') => @dossiers_count_per_procedure.sum { |_, v| v },
-        t('.dossiers_close_to_expiration') => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
+        'a-suivre' => @dossiers_a_suivre_count_per_procedure.sum { |_, v| v },
+        'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
+        'traites' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
+        'tous' => @dossiers_count_per_procedure.sum { |_, v| v },
+        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
       }
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)

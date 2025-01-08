@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
 module TabsHelper
-  def i18n_tab_from_status(status, count: nil)
+  def i18n_tab_from_status(status)
     case status
     when 'a-suivre'
-      t('instructeurs.dossiers.labels.to_follow', count:)
+      t('instructeurs.dossiers.labels.to_follow')
     when 'suivis'
-      t('pluralize.followed', count:)
+      t('instructeurs.dossiers.labels.followed')
     when 'traites'
-      t('pluralize.processed', count:)
+      t('instructeurs.dossiers.labels.processed')
     when 'tous'
       t('instructeurs.dossiers.labels.total')
     when 'supprimes'
       t('instructeurs.dossiers.labels.trash')
     when 'expirant'
-      t('pluralize.dossiers_close_to_expiration', count:)
+      t('instructeurs.dossiers.labels.close_to_expiration')
     when 'archives'
       t('instructeurs.dossiers.labels.to_archive')
     else
-      fail ArgumentError, "Unknown tab status: #{status}"
+      fail ArgumentError, "Unknown tab status: `#{status}`"
     end
   end
 

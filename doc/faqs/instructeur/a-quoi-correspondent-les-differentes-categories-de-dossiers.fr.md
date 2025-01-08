@@ -17,7 +17,7 @@ Pour chaque démarche, les dossiers sont répartis dans plusieurs onglets :
 
 - L’onglet **« traités »** contient les dossiers sur lesquels un ou plusieurs instructeurs ont statué et apporté une décision (accepté, refusé ou classé sans suite).
 
-- L’onglet **« total »** contient l'ensemble des dossiers déposés sur cette démarche, quel que soit leur statut (« à suivre », « suivis par moi », « traités »). Si les dossiers sont routés dans des groupes instructeurs, vous ne trouverez dans cet onglet que les dossiers du (des) groupe(s) dont vous faites partie.
+- L’onglet **« au total »** contient l'ensemble des dossiers déposés sur cette démarche, quel que soit leur statut (« à suivre », « suivis par moi », « traités »). Si les dossiers sont routés dans des groupes instructeurs, vous ne trouverez dans cet onglet que les dossiers du (des) groupe(s) dont vous faites partie.
 
 - L’onglet **« expirant »** contient les dossiers dont le délai de conservation va bientôt expirer (la durée de conservation des dossiers est fixée par l'administrateur de la démarche).
 
