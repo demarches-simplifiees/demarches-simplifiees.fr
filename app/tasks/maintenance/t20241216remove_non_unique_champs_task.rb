@@ -12,7 +12,18 @@ module Maintenance
     end
 
     def process(dossier)
-      dossier.tmp_fix_uniq_row_ids
+      duplicated_champ_ids = dossier.champs.where(row_id: [Champ::NULL_ROW_ID, nil])
+        .order(id: :desc)
+        .select(:id, :stream, :stable_id, :row_id)
+        .group_by { "#{_1.stream}-#{_1.public_id}" }
+        .values
+        .flat_map { _1[1..].map(&:id) }
+      Dossier.transaction do
+        if duplicated_champ_ids.present?
+          Dossier.no_touching { dossier.champs.where(id: duplicated_champ_ids).destroy_all }
+        end
+        dossier.champs.where(row_id: nil).update_all(row_id: Champ::NULL_ROW_ID)
+      end
     end
   end
 end
