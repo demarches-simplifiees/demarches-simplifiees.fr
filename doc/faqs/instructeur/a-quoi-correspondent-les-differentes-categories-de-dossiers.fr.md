@@ -11,13 +11,21 @@ title: "À quoi correspondent les différentes catégories de dossiers ?"
 
 Pour chaque démarche, les dossiers sont répartis dans plusieurs onglets :
 
-- **À suivre** : regroupe l’ensemble des dossiers qui ne sont suivis par aucun instructeur.
-- **Suivis** : n’affiche que les dossiers que *vous* suivez. Elle ne prend donc pas en compte les dossiers suivis par les autres instructeurs de la démarche.
-- **Traités** : regroupe les dossiers dont le statut est *accepté*, *refusé* ou *classé sans suite* et qui n’ont pas été déplacés dans « à archiver ».
-- **Supprimés** : regroupe l’ensemble des dossiers non archivés, terminés et supprimés par les instructeurs de la démarche.
-- **Expirant** : les dossiers *en construction* ou *traités*, (archivés ou non), dont le délai d’expiration approche (moins d’un mois). À l’issue de ce délai, le dossier sera supprimé de la plateforme.
-- **À archiver** : regroupe l’ensemble des dossiers à archiver. Les instructeurs ne peuvent plus y répondre, et les demandeurs ne peuvent plus les modifier. La messagerie est désactivée. Ces dossiers seront supprimés lorsque leur délai de conservation sur %{application_name} sera expiré.
+- L’onglet **« à suivre »** contient l’ensemble des dossiers qui ne sont suivis par aucun instructeur. Pour s’affecter le dossier, il suffit de cliquer sur « Suivre » le dossier.
 
-Notez qu’**un dossier peut être suivi par plusieurs instructeurs**. Vous pourrez donc retrouver les dossiers que vous ne suivez pas dans l’onglet **au total**. La somme des onglets *à suivre*, *suivis* et *traités* n’est donc pas nécessairement égale au nombre affiché *au total*.
+- L’onglet **« suivis par moi »** contient les dossiers que vous suivez. Lorsque vous (ou un autre instructeur) suivez un dossier, ce dossier n'apparaît plus dans les dossiers « à suivre ». Vous pouvez échanger avec le demandeur jusqu’à pouvoir accepter, refuser classer sans suite son dossier.
+
+- L’onglet **« traités »** contient les dossiers sur lesquels un ou plusieurs instructeurs ont statué et apporté une décision (accepté, refusé ou classé sans suite).
+
+- L’onglet **« total »** contient l'ensemble des dossiers déposés sur cette démarche, quel que soit leur statut (« à suivre », « suivis par moi », « traités »). Si les dossiers sont routés dans des groupes instructeurs, vous ne trouverez dans cet onglet que les dossiers du (des) groupe(s) dont vous faites partie.
+
+- L’onglet **« expirant »** contient les dossiers dont le délai de conservation va bientôt expirer (la durée de conservation des dossiers est fixée par l'administrateur de la démarche).
+
+- L’onglet **« à archiver »** contient les dossiers qui étaient anciennement dans l’onglet « traités » (ils ont été déplacés par un instructeur dans cet onglet « à archiver »). La messagerie usager est automatiquement désactivée sur le dossier dès qu’il est « à archiver ». Ces dossiers seront supprimés lorsque leur délai de conservation dans demarches-simplifiees.fr sera expiré. Pour sauvegarder et archiver vos dossiers sur votre serveur, vous devez les télécharger.
+
+- L’onglet **« corbeille »** contient :
+  - les dossiers dont le délai de conservation a expiré (la durée de conservation des dossiers est fixée par l'administrateur de la démarche).
+  - les dossiers « traités » qui ont été mis à la corbeille par les instructeurs.
+  À partir de la date à laquelle les dossiers ont été mis dans la corbeille, vous disposez d’un délai de 7 jours pour les télécharger / restaurer / étendre leur durée de conservation d’un mois. Passé ce délai, ces dossiers seront supprimés définitivement.
 
 ![Différents onglets répartissant les dossiers d’une démarche {aria-hidden="true"}](faq/instructeur-procedure-show.png)
