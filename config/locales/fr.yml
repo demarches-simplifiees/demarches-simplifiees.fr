@@ -774,12 +774,6 @@ fr:
     new:
       one: nouveau
       other: nouveaux
-    followed:
-      one: suivi par moi
-      other: suivis par moi
-    archived:
-      one: à archiver
-      other: à archiver
     en_cours:
       one: en cours
       other: en cours
@@ -873,8 +867,11 @@ fr:
         other: "%{count} groupes existent"
       labels:
         to_follow: à suivre
-        to_archive: à archiver
+        followed: suivis par moi
+        processed: traités
         total: au total
+        close_to_expiration: expirant
+        to_archive: à archiver
         trash: corbeille
   administrateurs:
     activate:

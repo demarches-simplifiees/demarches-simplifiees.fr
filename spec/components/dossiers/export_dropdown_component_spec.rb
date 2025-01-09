@@ -14,7 +14,7 @@ RSpec.describe Dossiers::ExportDropdownComponent, type: :component do
           procedure: procedure,
           archived_count: 3
         )
-        expect(component.include_archived_title).to eq("<span>Inclure les <strong>3 dossiers « archivés »</strong></span>")
+        expect(component.include_archived_title).to eq("<span>Inclure les <strong>3 dossiers « à archiver »</strong></span>")
       end
     end
 
@@ -24,7 +24,7 @@ RSpec.describe Dossiers::ExportDropdownComponent, type: :component do
           procedure: procedure,
           archived_count: 1
         )
-        expect(component.include_archived_title).to eq("<span>Inclure le <strong>dossier « archivé »</strong></span>")
+        expect(component.include_archived_title).to eq("<span>Inclure le <strong>dossier « à archiver »</strong></span>")
       end
     end
   end

@@ -106,17 +106,19 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:state) { Dossier.states.fetch(:brouillon) }
           before { subject }
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(nil) }
+          it "assign values" do
+            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil)
+            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil)
+            expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil)
+            expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil)
+            expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(nil)
 
-          it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(0) }
+            expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(0)
+            expect(assigns(:all_dossiers_counts)['suivis']).to eq(0)
+            expect(assigns(:all_dossiers_counts)['traites']).to eq(0)
+            expect(assigns(:all_dossiers_counts)['tous']).to eq(0)
+            expect(assigns(:all_dossiers_counts)['expirant']).to eq(0)
+          end
         end
 
         context "with not draft state on multiple procedures" do
@@ -160,30 +162,32 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(5) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3) }
-          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(2) }
-          it { expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(2) }
+          it "assign values" do
+            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(5)
+            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3)
+            expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil)
+            expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(2)
+            expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(2)
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil) }
-          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
+            expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3)
+            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil)
+            expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1)
+            expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1)
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2) }
+            expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2)
 
-          it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
-          it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(0 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1 + 1 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3 + 2 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
+            expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(3 + 0)
+            expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1)
+            expect(assigns(:all_dossiers_counts)['traites']).to eq(2 + 1 + 1 + 1)
+            expect(assigns(:all_dossiers_counts)['tous']).to eq(5 + 3 + 2 + 1)
+            expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0)
 
-          it { expect(assigns(:procedures_en_cours)).to match_array([procedure2, procedure, procedure3]) }
-          it { expect(assigns(:procedures_en_cours_count)).to eq(3) }
+            expect(assigns(:procedures_en_cours)).to match_array([procedure2, procedure, procedure3])
+            expect(assigns(:procedures_en_cours_count)).to eq(3)
 
-          it { expect(assigns(:procedures_closes)).to eq([procedure4]) }
-          it { expect(assigns(:procedures_closes_count)).to eq(1) }
+            expect(assigns(:procedures_closes)).to eq([procedure4])
+            expect(assigns(:procedures_closes_count)).to eq(1)
+          end
         end
 
         context 'with not draft state on discarded procedure' do
@@ -195,12 +199,14 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(1) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(1) }
+          it "assign values" do
+            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(1)
+            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(1)
 
-          it { expect(assigns(:dossiers_count_per_procedure)[discarded_procedure.id]).to be_nil }
+            expect(assigns(:dossiers_count_per_procedure)[discarded_procedure.id]).to be_nil
 
-          it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(1) }
+            expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(1)
+          end
         end
       end
 
@@ -230,15 +236,17 @@ describe Instructeurs::ProceduresController, type: :controller do
               subject
             end
 
-            it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(4) }
-            it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(6) }
-            it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(10) }
-            it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4 + 6 + 10) }
+            it "assign values" do
+              expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(4)
+              expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(6)
+              expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(10)
+              expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4 + 6 + 10)
 
-            it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(4) }
-            it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(6) }
-            it { expect(assigns(:all_dossiers_counts)['traités']).to eq(10) }
-            it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(4 + 6 + 10) }
+              expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(4)
+              expect(assigns(:all_dossiers_counts)['suivis']).to eq(6)
+              expect(assigns(:all_dossiers_counts)['traites']).to eq(10)
+              expect(assigns(:all_dossiers_counts)['tous']).to eq(4 + 6 + 10)
+            end
           end
 
           context 'when an instructeur only belongs to one of them gi' do
@@ -248,16 +256,18 @@ describe Instructeurs::ProceduresController, type: :controller do
               subject
             end
 
-            it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(2) }
-            # An instructeur cannot follow a dossier which belongs to another groupe
-            it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(3) }
-            it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(5) }
-            it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2 + 3 + 5) }
+            it "assign values" do
+              expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(2)
+              # An instructeur cannot follow a dossier which belongs to another groupe
+              expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(3)
+              expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(5)
+              expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2 + 3 + 5)
 
-            it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(2) }
-            it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(3) }
-            it { expect(assigns(:all_dossiers_counts)['traités']).to eq(5) }
-            it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(2 + 3 + 5) }
+              expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(2)
+              expect(assigns(:all_dossiers_counts)['suivis']).to eq(3)
+              expect(assigns(:all_dossiers_counts)['traites']).to eq(5)
+              expect(assigns(:all_dossiers_counts)['tous']).to eq(2 + 3 + 5)
+            end
           end
         end
       end
@@ -288,7 +298,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         expect(response.body).to have_text('L’onglet « à suivre » contient')
         expect(response.body).to have_text('L’onglet « suivis par moi » contient')
         expect(response.body).to have_text('L’onglet « traités » contient')
-        expect(response.body).to have_text('L’onglet « total » contient')
+        expect(response.body).to have_text('L’onglet « au total » contient')
         expect(response.body).to have_text('L’onglet « corbeille » contient')
         expect(response.body).to have_text('L’onglet « à archiver » contient')
         expect(response.body).to have_text('L’onglet « expirant » contient')

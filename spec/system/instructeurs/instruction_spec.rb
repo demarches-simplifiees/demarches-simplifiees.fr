@@ -114,7 +114,7 @@ describe 'Instructing a dossier:', js: true do
     test_statut_bar(suivi: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
 
-    click_on 'suivi par moi'
+    click_on 'suivis par moi'
     expect(page).to have_current_path(instructeur_procedure_path(procedure, statut: 'suivis'))
     dossier_present?(dossier.id, 'en construction')
 
@@ -334,8 +334,8 @@ describe 'Instructing a dossier:', js: true do
   def test_statut_bar(a_suivre: 0, suivi: 0, traite: 0, tous_les_dossiers: 0, archive: 0)
     texts = [
       "#{a_suivre} à suivre",
-      "#{suivi} suivi par moi",
-      "#{traite} traité",
+      "#{suivi} suivis par moi",
+      "#{traite} traités",
       "#{tous_les_dossiers} au total",
       "à archiver"
     ]

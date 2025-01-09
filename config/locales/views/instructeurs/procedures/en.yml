@@ -2,11 +2,6 @@ en:
   instructeurs:
     procedures:
       index:
-        to_follow: to follow
-        followed: followed
-        processed: processed
-        all: files
-        dossiers_close_to_expiration: expiring
         copy_link_button: Copy the procedure link to clipboard
       show:
         file_tracking: File tracking

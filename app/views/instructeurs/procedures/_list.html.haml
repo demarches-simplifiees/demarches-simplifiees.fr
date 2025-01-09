@@ -26,7 +26,7 @@
           .center.fr-text--bold.fr-text--sm
             = number_with_html_delimiter(followed_count)
           .center.fr-text--xs
-            = t('pluralize.followed', count: followed_count)
+            = t('instructeurs.dossiers.labels.followed', count: followed_count)
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
         = link_to(instructeur_procedure_path(p, statut: 'traites')) do
           - if procedure_ids_termines_with_notifications.include?(p.id)
@@ -35,7 +35,7 @@
           .center.fr-text--bold.fr-text--sm
             = number_with_html_delimiter(termines_count)
           .center.fr-text--xs
-            = t('pluralize.processed', count: termines_count)
+            = t('instructeurs.dossiers.labels.processed', count: termines_count)
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
         = link_to(instructeur_procedure_path(p, statut: 'tous')) do
           - dossier_count = dossiers_count_per_procedure[p.id] || 0
@@ -51,7 +51,7 @@
             .center.fr-text--bold.fr-text--sm
               = number_with_html_delimiter(expirant_count)
             .center.fr-text--xs
-              = t('pluralize.dossiers_close_to_expiration', count: expirant_count)
+              = t('instructeurs.dossiers.labels.close_to_expiration', count: expirant_count)
 
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
         = link_to(instructeur_procedure_path(p, statut: 'archives')) do
