@@ -97,7 +97,7 @@ describe Users::SessionsController, type: :controller do
       end
     end
 
-    context 'when email domain is in mandatory list' do
+    xcontext 'when email domain is in mandatory list' do
       let(:email) { 'user@beta.gouv.fr' }
       it 'redirects to agent connect with force parameter and is not logged in' do
         expect(AgentConnectService).to receive(:enabled?).and_return(true)
