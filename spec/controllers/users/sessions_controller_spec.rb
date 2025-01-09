@@ -329,14 +329,5 @@ describe Users::SessionsController, type: :controller do
     it 'redirects to root_path' do
       expect(subject).to redirect_to(root_path)
     end
-
-    context 'when the cookie redirect_to_ac_login is present' do
-      before { cookies.encrypted[AgentConnect::AgentController::REDIRECT_TO_AC_LOGIN_COOKIE_NAME] = true }
-
-      it 'redirects to relogin_after_2fa_config' do
-        expect(subject).to redirect_to(agent_connect_relogin_after_2fa_config_path)
-        expect(cookies.encrypted[AgentConnect::AgentController::REDIRECT_TO_AC_LOGIN_COOKIE_NAME]).to be_nil
-      end
-    end
   end
 end

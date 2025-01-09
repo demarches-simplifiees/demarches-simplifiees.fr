@@ -110,12 +110,6 @@ class Users::SessionsController < Devise::SessionsController
 
   # agent connect callback
   def logout
-    if cookies.encrypted[AgentConnect::AgentController::REDIRECT_TO_AC_LOGIN_COOKIE_NAME].present?
-      cookies.delete(AgentConnect::AgentController::REDIRECT_TO_AC_LOGIN_COOKIE_NAME)
-
-      return redirect_to agent_connect_relogin_after_2fa_config_path
-    end
-
     redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
   end
 
