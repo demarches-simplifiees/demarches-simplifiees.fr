@@ -6,6 +6,5 @@
   = t('.header', count: @dossier_hashes.size)
   %ul
     - @dossier_hashes.each do |d|
-      %li n° #{d[:id]} (#{d[:procedure_libelle]})
-
+      %li n° #{d[:id]} (#{link_to d[:procedure_libelle], commencer_url(d[:procedure_path])})
 = render partial: "layouts/mailers/signature"

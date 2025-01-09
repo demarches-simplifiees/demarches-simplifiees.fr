@@ -941,7 +941,7 @@ class Dossier < ApplicationRecord
   end
 
   def hash_for_deletion_mail
-    { id: self.id, procedure_libelle: self.procedure.libelle }
+    { id: self.id, procedure_libelle: self.procedure.libelle, procedure_path: self.procedure.path }
   end
 
   def geo_data?
