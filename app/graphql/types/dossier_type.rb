@@ -79,6 +79,7 @@ module Types
       argument :id, ID, required: false
     end
     field :traitements, [Types::TraitementType], null: false
+    field :labels, [Types::LabelType], "Labels associés au dossier", null: false
 
     def state
       object.state
@@ -208,6 +209,12 @@ module Types
           .load(object)
           .then { |attestation| attestation&.pdf }
       end
+    end
+
+    def labels
+      Loaders::Association.for(object.class, dossier_labels: [:label])
+        .load(object)
+        .then { _1.map(&:label) }
     end
 
     def self.authorized?(object, context)

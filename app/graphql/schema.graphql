@@ -1478,6 +1478,11 @@ type Dossier {
   groupeInstructeur: GroupeInstructeur!
   id: ID!
   instructeurs: [Profile!]!
+
+  """
+  Labels associés au dossier
+  """
+  labels: [Label!]!
   messages(id: ID): [Message!]!
   motivation: String
   motivationAttachment: File
@@ -3084,6 +3089,22 @@ type IntegerNumberChampDescriptor implements ChampDescriptor {
   Type de la valeur du champ.
   """
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+"""
+Couleurs disponibles pour les labels
+"""
+enum LabelColorEnum {
+  beige_gris_galet
+  blue_ecume
+  brown_cafe_creme
+  green_bourgeon
+  green_emeraude
+  green_menthe
+  green_tilleul_verveine
+  pink_macaron
+  purple_glycine
+  yellow_tournesol
 }
 
 type LinkedDropDownListChamp implements Champ {
