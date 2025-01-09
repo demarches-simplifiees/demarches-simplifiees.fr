@@ -158,7 +158,7 @@ module Administrateurs
 
         ActiveRecord::Base.transaction do
           # Create referentiel
-          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename, headers:)
+          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename, headers:, type: 'Referentiels::CsvReferentiel')
 
           # Create referentiel items
           # We add headers to items in order to display them in instructeur view

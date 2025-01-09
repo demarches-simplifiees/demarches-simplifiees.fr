@@ -140,7 +140,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(type_de_champ.reload.referentiel).to eq Referentiel.last
           expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
           expect(Referentiel.last.name).to eq referentiel_file.original_filename
-          expect(ReferentielItem.first.data).to eq({ "dessert" => "Éclair au café", "poids_g" => "60", "calorie_kcal" => "145" })
+          expect(Referentiel.last.type).to eq 'Referentiels::CsvReferentiel'
+          expect(ReferentielItem.first.data).to eq({ "row" => { "calorie_kcal" => "145", "dessert" => "Éclair au café", "poids_g" => "60" }, "headers" => ["Dessert", "Poids (g)", "Calorie (kcal)"] })
           expect(ReferentielItem.first.referentiel_id).to eq(Referentiel.last.id)
         end
       end
@@ -150,7 +151,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
         it 'creates a valid referentiel' do
           expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
-          expect(ReferentielItem.first.data).to eq({ 'dessert' => 'Éclair au café', "headers" => ["Dessert"] })
+          expect(ReferentielItem.first.data).to eq({ "row" => { "dessert" => "Éclair au café" }, "headers" => ["Dessert"] })
         end
       end
 
