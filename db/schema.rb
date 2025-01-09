@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_24_084106) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_24_085004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1087,9 +1087,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_24_084106) do
   create_table "referentiels", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "headers", default: [], array: true
+    t.string "hint"
+    t.string "mode"
     t.string "name", null: false
+    t.string "test_data"
     t.string "type"
     t.datetime "updated_at", null: false
+    t.string "url"
   end
 
   create_table "refused_mails", id: :serial, force: :cascade do |t|
