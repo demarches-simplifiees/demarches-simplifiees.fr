@@ -1,3 +1,10 @@
+- if @labels.present?
+  .fr-background-alt--grey.fr-p-2w.fr-mb-2w
+    %p.fr-mb-1w Rappel des labels existants
+    %ul.horizontal-list
+      - @labels.each do |label|
+        %li= tag_label(label.name, label.color)
+
 = form_with model: label, url: [:admin, @procedure, @label], local: true do |f|
   = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field, opts: { maxlength: Label::NAME_MAX_LENGTH})
 
