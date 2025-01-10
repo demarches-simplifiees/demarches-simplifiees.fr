@@ -602,8 +602,8 @@ describe DossierFilterService do
         let(:filter) { ["rna – Département", value] }
 
         before do
-          kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => value })
-          create(:dossier, procedure:).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => "unknown" })
+          kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "department_code" => value })
+          create(:dossier, procedure:).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "department_code" => "unknown" })
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
