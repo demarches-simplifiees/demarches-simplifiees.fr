@@ -5,7 +5,7 @@ require "rails_helper"
 module Maintenance
   RSpec.describe MigrateExistingProcedurePathsTask do
     describe "#process" do
-      subject(:process) { described_class.process(element) }
+      subject(:process) { described_class.process(element.reload) }
 
       context "when procedure is published" do
         let(:element) { create(:procedure, :published) }
@@ -16,7 +16,7 @@ module Maintenance
         end
 
         it "should use the same generated path as procedure_path" do
-          expect { process }.to change { element.procedure_paths.count }.from(0).to(1)
+          expect { process }.to change { element.procedure_paths.count }.from(0).to(2)
           expect(element.procedure_paths.last.path).to eq("path-not-in-procedure-paths")
         end
 
@@ -65,8 +65,9 @@ module Maintenance
 
         context "when path is not used by another published procedure" do
           it "should use the same path" do
-            expect { process }.to change { element.procedure_paths.count }.from(0).to(1)
+            expect { process }.to change { element.procedure_paths.count }.from(0).to(2)
             expect(element.procedure_paths.last.path).to eq("some-path")
+            expect(element.path).to eq("some-path")
           end
         end
       end

@@ -4,7 +4,7 @@ module ProcedurePathConcern
   extend ActiveSupport::Concern
 
   included do
-    has_many :procedure_paths, dependent: :destroy, autosave: true
+    has_many :procedure_paths, inverse_of: :procedure, dependent: :destroy, autosave: true
 
     after_initialize :ensure_path_exists
     before_validation :ensure_path_exists
