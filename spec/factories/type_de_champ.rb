@@ -111,10 +111,15 @@ FactoryBot.define do
       trait :numbers_accepted do
         options do
           {
-            formatted: 'simple',
+            formatted_mode: 'simple',
             numbers_accepted: '1',
             letters_accepted: '0'
           }
+        end
+      end
+      trait :advanced do
+        options do
+          { formatted_mode: "advanced" }
         end
       end
     end
