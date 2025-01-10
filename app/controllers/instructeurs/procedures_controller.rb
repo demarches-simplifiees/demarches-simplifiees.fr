@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProceduresController < InstructeurController
-    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions]
+    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
 
     ITEMS_PER_PAGE = 100
