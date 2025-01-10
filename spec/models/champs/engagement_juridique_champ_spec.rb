@@ -43,6 +43,10 @@ describe Champs::EngagementJuridiqueChamp do
     context 'with *' do
       let(:value) { "*" }
       it { is_expected.to be_falsey }
+      it '' do
+        subject
+        expect(champ.errors.full_messages_for(:value).first.starts_with?("Le numéro d'EJ")).to be_truthy
+      end
     end
   end
 end
