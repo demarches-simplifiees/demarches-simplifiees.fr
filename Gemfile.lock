@@ -461,7 +461,7 @@ GEM
     mutex_m (0.3.0)
     net-http (0.6.0)
       uri
-    net-imap (0.5.1)
+    net-imap (0.5.5)
       date
       net-protocol
     net-pop (0.1.2)
@@ -795,7 +795,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.5.0)
     timecop (0.9.10)
-    timeout (0.4.2)
+    timeout (0.4.3)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
     turbo-rails (2.0.11)
