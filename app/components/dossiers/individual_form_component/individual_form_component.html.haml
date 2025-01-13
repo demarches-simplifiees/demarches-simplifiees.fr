@@ -78,6 +78,6 @@
 
 
       .fr-fieldset__element.fr-fieldset__element--short-text{ "data-for-tiers-target" => "emailContainer", class: class_names(hidden: !email_notifications?(individual)) }
-        = render Dsfr::InputComponent.new(form: individual, attribute: :email, input_type: :email_field, opts: { "data-for-tiers-target" => "emailInput" })
+        = render Dsfr::InputComponent.new(form: individual, attribute: :email, input_type: :email_field, required: email_notifications?(individual), opts: { "data-for-tiers-target" => "emailInput" })
 
   = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn", "data-email-input-target": "next"
