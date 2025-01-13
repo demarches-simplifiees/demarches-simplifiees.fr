@@ -1201,7 +1201,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to eq(nil)
 
           expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
-            errors: [{ message: "Le dossier est déjà avec le grope instructeur: 'défaut'" }]
+            errors: [{ message: "Le dossier est déjà avec le groupe instructeur: 'défaut'" }]
           })
         end
 

@@ -3378,7 +3378,7 @@ type Mutation {
   ): DossierArchiverPayload
 
   """
-  Changer le grope instructeur du dossier.
+  Changer le groupe instructeur du dossier.
   """
   dossierChangerGroupeInstructeur(
     """
