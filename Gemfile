@@ -33,7 +33,7 @@ gem 'devise'
 gem 'devise-i18n'
 gem 'devise-two-factor'
 gem 'discard'
-gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
+gem 'dotenv-rails', require: 'dotenv/load' # dotenv should always be loaded before rails
 gem 'dry-monads'
 gem 'faraday-jwt'
 gem 'flipper'
