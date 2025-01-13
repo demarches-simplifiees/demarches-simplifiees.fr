@@ -32,6 +32,7 @@ class API::V2::DossiersController < API::V2::BaseController
   end
 
   def dossier
+    # GraphQL::Schema::UniqueWithinType.decode(id) is used in the other part of the graphql code.
     @dossier ||= GlobalID::Locator.locate_signed(params[:id].to_s, for: 'api_v2')
   end
 end
