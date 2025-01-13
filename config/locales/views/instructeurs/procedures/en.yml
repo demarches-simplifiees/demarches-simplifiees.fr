@@ -3,6 +3,8 @@ en:
     procedures:
       index:
         copy_link_button: Copy the procedure link to clipboard
+        close_button: Close
+        procedure_menu: Procedure menu
       show:
         file_tracking: File tracking
       email_usagers:

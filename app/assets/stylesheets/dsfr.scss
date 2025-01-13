@@ -252,3 +252,13 @@ input[type='radio'] {
 .fr-tag.no-wrap {
   white-space: nowrap;
 }
+
+.fr-nav__btn.hide-chevron {
+  min-height: 2.5rem !important;
+  height: auto !important;
+  padding: 0.25rem 0.75rem !important;
+
+  &::after {
+    display: none !important;
+  }
+}
