@@ -13,7 +13,7 @@ module Instructeurs
                                     "Dossier Lexpol mis à jour avec succès. NOR : #{nor}"
         flash[:notice] = msg
       else
-        flash[:alert] = "Impossible de #{ @champ.value.blank? ? "créer" : "mettre à jour" } le dossier Lexpol."
+        flash[:alert] = "Impossible de #{@champ.value.blank? ? "créer" : "mettre à jour"} le dossier Lexpol."
       end
 
       redirect_to annotations_privees_instructeur_dossier_path(@dossier.procedure, @dossier)

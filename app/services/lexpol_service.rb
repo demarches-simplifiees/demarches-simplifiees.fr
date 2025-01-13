@@ -41,17 +41,23 @@ class LexpolService
   end
 
   def build_variables
-    mapping = (champ.type_de_champ.lexpol_mapping || "")
-               .split("\n")
-               .map { |pair| pair.split('=').map(&:strip) }
-               .to_h
+    mapping_raw = champ.type_de_champ.lexpol_mapping || ""
 
-    dossier.champs.each_with_object({}) do |ch, hash|
-      next unless ch.value.present? && ch.type_de_champ&.libelle.present?
+    mapping = mapping_raw
+      .split("\n")
+      .map { |pair| pair.split('=').map(&:strip) }
+      .to_h
 
-      mapped_key = mapping[ch.type_de_champ.libelle] || ch.type_de_champ.libelle
-      hash[mapped_key] = ch.value
+    variables = {}
+
+    mapping.each do |source_field, target_field|
+      values = LexpolFieldsService.object_field_values(dossier, source_field)
+
+      next if values.blank?
+      variables[target_field] = values.join(', ')
     end
+
+    variables
   end
 
   def refresh_lexpol_data!
@@ -66,6 +72,6 @@ class LexpolService
   end
 
   def model_id
-    champ.type_de_champ.options.[]('lexpol_modele') || 598706
+    champ.type_de_champ.options&.[]('lexpol_modele')
   end
 end
