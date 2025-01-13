@@ -1525,6 +1525,72 @@ describe API::V2::GraphqlController do
           end
         end
       end
+
+      describe 'dossierAjouterLabel' do
+        let(:label) { create(:label, procedure:) }
+        let(:query) do
+          "mutation {
+            dossierAjouterLabel(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              labelId: \"#{label.to_typed_id}\"
+            }) {
+              dossier {
+                id
+                labels {
+                  id
+                  name
+                  color
+                }
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        it "should add label to dossier" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossierAjouterLabel: {
+            dossier: {
+              id: dossier.to_typed_id,
+              labels: [
+                {
+                  id: label.to_typed_id,
+                  name: label.name,
+                  color: label.color
+                }
+              ]
+            },
+            errors: nil
+          })
+
+          expect(dossier.labels).to match_array([label])
+        end
+
+        context 'validations' do
+          context "invalid label" do
+            let(:label) { create(:label) }
+
+            it "should return error" do
+              expect(gql_data).to eq(dossierAjouterLabel: {
+                dossier: nil,
+                errors: [{ message: "Ce label n’appartient pas à la même démarche que le dossier" }]
+              })
+            end
+          end
+
+          context 'label already associated' do
+            before { dossier.labels << label }
+            it "should return an error" do
+              expect(gql_data).to eq(dossierAjouterLabel: {
+                dossier: nil,
+                errors: [{ message: "Ce label est déjà associé au dossier" }]
+              })
+            end
+          end
+        end
+      end
     end
   end
 end
