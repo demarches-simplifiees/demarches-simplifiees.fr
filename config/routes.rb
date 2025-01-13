@@ -528,7 +528,7 @@ Rails.application.routes.draw do
             get 'reaffectation'
             get 'pieces_jointes'
             post 'reaffecter'
-            post 'lexpol/upsert_dossier/:champ_id', to: 'lexpol#upsert_dossier', as: :lexpol_upsert_dossier
+            post 'lexpol/upsert/:champ_id', to: 'lexpol#upsert', as: :lexpol_upsert_dossier
           end
         end
 
