@@ -108,7 +108,8 @@ describe ProcedureExportService do
             "rnf (Code INSEE Ville)",
             "rnf (Département)",
             "engagement_juridique",
-            "yes_no"
+            "yes_no",
+            "referentiel"
           ]
         end
 
