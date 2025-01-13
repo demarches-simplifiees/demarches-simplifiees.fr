@@ -161,7 +161,7 @@ GEM
       launchy
     case_transform (0.2)
       activesupport
-    caxlsx (3.4.1)
+    caxlsx (4.0.0)
       htmlentities (~> 4.3, >= 4.3.4)
       marcel (~> 1.0)
       nokogiri (~> 1.10, >= 1.10.4)
@@ -762,9 +762,10 @@ GEM
       tilt (~> 2.0)
     skylight (6.0.4)
       activesupport (>= 5.2.0)
-    spreadsheet_architect (5.0.1)
-      caxlsx (>= 3.3.0, < 4)
-      rodf (>= 1.0.0, < 2)
+    spreadsheet_architect (5.1.0)
+      caxlsx (<= 4.0)
+      csv
+      rodf
     spring (4.2.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
