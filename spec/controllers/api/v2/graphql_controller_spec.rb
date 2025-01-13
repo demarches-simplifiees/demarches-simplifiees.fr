@@ -1592,5 +1592,55 @@ describe API::V2::GraphqlController do
         end
       end
     end
+
+    describe 'dossierSupprimerLabel' do
+      let(:label) { create(:label, procedure:) }
+      let(:query) do
+        "mutation {
+            dossierSupprimerLabel(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              labelId: \"#{label.to_typed_id}\"
+            }) {
+              dossier {
+                id
+                labels {
+                  id
+                  name
+                  color
+                }
+              }
+              errors {
+                message
+              }
+            }
+          }"
+      end
+
+      context 'success' do
+        before {
+          dossier.labels << label
+        }
+
+        it "should remove label to dossier" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossierSupprimerLabel: {
+            dossier: {
+              id: dossier.to_typed_id,
+              labels: []
+            },
+            errors: nil
+          })
+        end
+      end
+
+      context 'label not associated' do
+        it "should return an error" do
+          expect(gql_data).to eq(dossierSupprimerLabel: {
+            dossier: nil,
+            errors: [{ message: "Ce label n‘est pas associé au dossier" }]
+          })
+        end
+      end
+    end
   end
 end

@@ -25,6 +25,7 @@ module Types
     field :dossier_modifier_annotation_drop_down_list, mutation: Mutations::DossierModifierAnnotationDropDownList
 
     field :dossier_ajouter_label, mutation: Mutations::DossierAjouterLabel
+    field :dossier_supprimer_label, mutation: Mutations::DossierSupprimerLabel
 
     field :groupe_instructeur_modifier, mutation: Mutations::GroupeInstructeurModifier
     field :groupe_instructeur_creer, mutation: Mutations::GroupeInstructeurCreer
