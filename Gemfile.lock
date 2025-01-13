@@ -240,7 +240,7 @@ GEM
     dumb_delegator (1.1.0)
     email_validator (2.2.4)
       activemodel
-    erubi (1.13.0)
+    erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
     ethon (0.16.0)
