@@ -11,7 +11,7 @@ namespace :after_party do
       procedure_id = presentation.procedure.id
 
       presentation.displayed_columns = presentation.displayed_fields
-        .filter(&:present?)
+        .compact_blank
         .map { Column.new(**_1.deep_symbolize_keys.merge(procedure_id:)) }
         .map(&:h_id)
 
