@@ -34,8 +34,8 @@ module TPS
     # The default locale is :fr and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :fr
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-    config.i18n.load_path += Dir[Rails.root.join('config', 'custom_locales', '**', '*.{rb,yml}')]
+    config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
+    config.i18n.load_path += Rails.root.glob('config/custom_locales/**/*.{rb,yml}')
     config.i18n.available_locales = [:fr, :en]
     config.i18n.fallbacks = [:fr]
 
