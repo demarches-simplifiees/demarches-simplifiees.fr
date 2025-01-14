@@ -22,7 +22,7 @@ Rails.application.config.content_security_policy do |policy|
   # It's too complicated to be fixed right now (and it wouldn't add value: this is hardcoded in views, so not subject to injections)
   policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', "unpkg.com")
 
-  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "app.franceconnect.gouv.fr", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "data.geopf.fr"]
+  connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "app.franceconnect.gouv.fr", "openmaptiles.data.gouv.fr", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "data.geopf.fr"]
   connect_whitelist << ENV.fetch('APP_HOST')
   connect_whitelist << ENV.fetch('APP_HOST_LEGACY') if ENV.key?('APP_HOST_LEGACY') && ENV['APP_HOST_LEGACY'] != ENV['APP_HOST']
   connect_whitelist << "*.amazonaws.com" if Rails.configuration.active_storage.service == :amazon
