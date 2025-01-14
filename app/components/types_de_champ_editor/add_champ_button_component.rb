@@ -46,7 +46,7 @@ class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
     if annotations?
       "Nouvelle annotation"
     else
-      "Nouveau champ"
+      nil
     end
   end
 end

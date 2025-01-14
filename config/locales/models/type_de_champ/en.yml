@@ -53,13 +53,23 @@ en:
           cnaf: 'Data from Caisse nationale des allocations familiales'
           dgfip: 'Data from Direction générale des Finances publiques'
           pole_emploi: 'Pôle emploi status'
-          mesri: "Data from Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation"
-          epci: "EPCI"
-          cojo: "Accreditation Paris 2024"
+          mesri: 'Data from Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation'
+          epci: 'EPCI'
+          cojo: 'Accreditation Paris 2024'
           expression_reguliere: 'Regular expression'
           referentiel: 'External data to configure (advanced)'
+        default_libelle:
+          annuaire_education: Educational institution
+          dossier_link: File number submitted on Démarches Simplifiées
+          epci: Public establishments for intercommunal cooperation (EPCI)
+          iban: IBAN
+          siret: SIRET number
+          titre_identite: Identity document
+          phone: Phone number
+          rna: RNA number
+          rnf: RNF number
     errors:
       type_de_champ:
         attributes:
           header_section_level:
-            gap_error: "An header section with %{level} is missing."
+            gap_error: 'An header section with %{level} is missing.'
