@@ -4,6 +4,8 @@ fr:
       label:
         color: Couleur
         name: Nom
+        hints:
+          name: Le nom de doit pas dépasser 30 caractères.
       label/color: &color
         green_tilleul_verveine: 'tilleul'
         green_bourgeon: 'bourgeon'

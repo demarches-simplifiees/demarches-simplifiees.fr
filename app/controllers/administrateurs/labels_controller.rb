@@ -11,9 +11,11 @@ module Administrateurs
     end
 
     def edit
+      @labels = @procedure.labels
     end
 
     def new
+      @labels = @procedure.labels
       @label = Label.new
     end
 
