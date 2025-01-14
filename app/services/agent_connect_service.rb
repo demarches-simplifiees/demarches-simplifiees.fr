@@ -3,7 +3,7 @@
 class AgentConnectService
   include OpenIDConnect
 
-  MANDATORY_EMAIL_DOMAINS = ['beta.gouv.fr', 'modernisation.gouv.fr']
+  MANDATORY_EMAIL_DOMAINS = []
 
   def self.enabled?
     ENV['AGENT_CONNECT_BASE_URL'].present?
