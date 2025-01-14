@@ -8,7 +8,8 @@ fr:
         in_app_mail:
           link: "Directement par la messagerie"
         email:
-          link: "Directement par courriel :"
+          mail_link: "Directement par courriel :"
+          url_link: "Depuis le lien suivant :"
         phone:
           label: 'Par téléphone au : '
           link: '%{service_telephone}'

@@ -5,7 +5,7 @@ require 'active_support/i18n'
 require 'public_suffix'
 require 'addressable/uri'
 
-# Most of this code is borowed from https://github.com/perfectline/validates_url
+# Most of this code is borrowed from https://github.com/perfectline/validates_url
 
 class URLValidator < ActiveModel::EachValidator
   RESERVED_OPTIONS = [:schemes, :no_local]
@@ -55,19 +55,22 @@ class URLValidator < ActiveModel::EachValidator
   end
 
   def validate_url(record, attribute, value, message, schemes)
+    # First check if it's an email when accept_email is true
+    if options.fetch(:accept_email) && value.to_s.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i)
+      return true
+    end
+
+    # If not an email, validate as URL
     uri = Addressable::URI.parse(value)
+    host = uri && uri.host
+    scheme = uri && uri.scheme
 
-    unless options.fetch(:accept_email) && uri.path.match?(/^(.+)@(.+)$/)
-      host = uri && uri.host
-      scheme = uri && uri.scheme
+    valid_scheme = host && scheme && schemes.include?(scheme)
+    valid_no_local = !options.fetch(:no_local) || (host && host.include?('.'))
+    valid_suffix = !options.fetch(:public_suffix) || (host && PublicSuffix.valid?(host, default_rule: nil))
 
-      valid_scheme = host && scheme && schemes.include?(scheme)
-      valid_no_local = !options.fetch(:no_local) || (host && host.include?('.'))
-      valid_suffix = !options.fetch(:public_suffix) || (host && PublicSuffix.valid?(host, default_rule: nil))
-
-      unless valid_scheme && valid_no_local && valid_suffix
-        record.errors.add(attribute, message, **filtered_options(value))
-      end
+    unless valid_scheme && valid_no_local && valid_suffix
+      record.errors.add(attribute, message, **filtered_options(value))
     end
   rescue Addressable::URI::InvalidURIError
     record.errors.add(attribute, message, **filtered_options(value))
