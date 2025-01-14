@@ -4,6 +4,7 @@ require 'active_model'
 require 'active_support/i18n'
 require 'public_suffix'
 require 'addressable/uri'
+require 'strict_email_validator' # Add this line
 
 # Most of this code is borrowed from https://github.com/perfectline/validates_url
 
@@ -56,8 +57,11 @@ class URLValidator < ActiveModel::EachValidator
 
   def validate_url(record, attribute, value, message, schemes)
     # First check if it's an email when accept_email is true
-    if options.fetch(:accept_email) && value.to_s.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i)
-      return true
+    if options.fetch(:accept_email) && value.to_s.include?('@')
+      validator = StrictEmailValidator.new(attributes: attribute)
+      return true if validator.validate_each(record, attribute, value)
+      # If email validation failed, return false to prevent URL validation attempt
+      return false
     end
 
     # If not an email, validate as URL
