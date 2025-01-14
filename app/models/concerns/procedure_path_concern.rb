@@ -60,6 +60,10 @@ module ProcedurePathConcern
       other_procedure_with_path(path).blank?
     end
 
+    def previous_paths
+      procedure_paths.reject { |path| path.path == self.path || path.uuid_path? }
+    end
+
     def path_customized?
       !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
     end

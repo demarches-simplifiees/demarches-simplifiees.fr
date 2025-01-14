@@ -33,4 +33,13 @@
                           data: { controller: 'turbo-input', turbo_input_url_value: admin_procedure_check_path_path })
     #check_path
 
+    - if @procedure.previous_paths.any?
+      .fr-mt-2w
+        %p.fr-text--sm.fr-mb-1w
+          Pour information les liens précédents resteront accessibles tant qu'ils ne sont pas utilisés par une autre de vos démarches :
+        %ul
+          - @procedure.previous_paths.each do |path|
+            %li.fr-mb-1w
+              = link_to commencer_url(path: path.path), commencer_url(path: path.path), class: 'fr-link fr-link--sm'
+
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

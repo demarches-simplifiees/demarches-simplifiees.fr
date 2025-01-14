@@ -146,4 +146,19 @@ describe ProcedurePathConcern do
 
     # test if the procedure path is owned by another administrateur
   end
+
+  describe '#previous_paths' do
+    let(:procedure) { create(:procedure) }
+
+    context 'when the path has been changed twice' do
+      before do
+        procedure.claim_path!(procedure.administrateurs.first, 'custom_path')
+        procedure.claim_path!(procedure.administrateurs.first, 'custom_path_2')
+      end
+
+      it "should only contain the paths that are not the current one nor the uuid" do
+        expect(procedure.previous_paths.map(&:path)).to eq(['custom_path'])
+      end
+    end
+  end
 end
