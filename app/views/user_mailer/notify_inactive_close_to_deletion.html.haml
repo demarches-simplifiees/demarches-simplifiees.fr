@@ -4,7 +4,8 @@
   Bonjour,
 
 %p
-  Cela fait plus de deux ans que vous ne vous êtes pas connecté à #{Current.application_name}.
+  Cela fait plus de deux ans que vous ne vous êtes pas connecté à #{Current.application_name}
+  avec le compte <strong>#{@user.email}</strong> .
   - if @user.dossiers.not_brouillon.count == 0
     Aussi vous n'avez plus de dossier sur la plateforme.
 
@@ -15,7 +16,7 @@
 - if @user.dossiers.not_brouillon.count > 0
   %p
     %strong Ne vous en faites pas,
-    vos dossiers traités sont conservés par l'administration. Aussi, à tout moment vous pourrez re-créer une compte sur notre plateforme.
+    vos dossiers traités sont conservés par l'administration. Aussi, à tout moment vous pourrez re-créer un compte sur notre plateforme.
     Au besoin, vous pouvez télécharger vos dossiers en suivant ce lien :
     = link_to dossiers_url, dossiers_url
 
