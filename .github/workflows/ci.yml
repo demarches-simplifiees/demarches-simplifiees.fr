@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup the app code and dependancies
+      - name: Setup the app code and dependencies
         uses: ./.github/actions/ci-setup-rails
 
       - name: Run linters
@@ -79,10 +79,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install build dependancies
+        # - imagemagick no longer be installed by default (since 2024-01-14)
         # - fonts pickable by ImageMagick
         # - rust for YJIT support
         # - poppler-utils for pdf previews
-        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server poppler-utils
+        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server poppler-utils imagemagick
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
@@ -139,6 +140,11 @@ jobs:
         instances: [0, 1]
 
     steps:
+      - name: Install tools dependencies
+        # - imagemagick no longer be installed by default (since 2024-01-14)
+        # - fonts pickable by ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y gsfonts imagemagick
+
       - uses: actions/checkout@v4
 
       - name: Setup the app runtime and dependencies
