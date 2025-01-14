@@ -6,6 +6,8 @@ class API::V2::DossiersController < API::V2::BaseController
   skip_before_action :allow_only_persisted_queries
 
   def pdf
+    @dossier = DossierPreloader.load_one(dossier)
+
     @acls = PiecesJustificativesService.new(user_profile: Administrateur.new, export_template: nil).acl_for_dossier_export(dossier.procedure)
     render(template: 'dossiers/show', formats: [:pdf])
   end
@@ -33,6 +35,8 @@ class API::V2::DossiersController < API::V2::BaseController
 
   def dossier
     # GraphQL::Schema::UniqueWithinType.decode(id) is used in the other part of the graphql code.
-    @dossier ||= GlobalID::Locator.locate_signed(params[:id].to_s, for: 'api_v2')
+    @dossier ||= GlobalID::Locator.locate_signed(params[:id].to_s, for: 'api_v2') do
+      set_sentry_dossier(_1)
+    end
   end
 end
