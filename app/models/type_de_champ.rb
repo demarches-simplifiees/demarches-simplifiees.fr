@@ -163,9 +163,6 @@ class TypeDeChamp < ApplicationRecord
 
   serialize :condition, LogicSerializer
 
-  after_initialize :set_dynamic_type
-  after_create :populate_stable_id
-
   attr_reader :dynamic_type
 
   scope :public_only, -> { where(private: false) }
@@ -209,11 +206,14 @@ class TypeDeChamp < ApplicationRecord
     allow_blank: true
   }
 
+  after_initialize :set_dynamic_type
+  after_create :populate_stable_id
+
   before_validation :check_mandatory
   before_validation :normalize_libelle
+  before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
-  before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
 
   def valid?(context = nil)
     super
