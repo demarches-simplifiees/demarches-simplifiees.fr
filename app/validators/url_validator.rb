@@ -61,18 +61,24 @@ class URLValidator < ActiveModel::EachValidator
     end
 
     # If not an email, validate as URL
-    uri = Addressable::URI.parse(value)
-    host = uri && uri.host
-    scheme = uri && uri.scheme
+    begin
+      uri = if value.present?
+        encoded_value = Addressable::URI.encode(value.to_s)
+        Addressable::URI.parse(encoded_value)
+      end
 
-    valid_scheme = host && scheme && schemes.include?(scheme)
-    valid_no_local = !options.fetch(:no_local) || (host && host.include?('.'))
-    valid_suffix = !options.fetch(:public_suffix) || (host && PublicSuffix.valid?(host, default_rule: nil))
+      host = uri && uri.host
+      scheme = uri && uri.scheme
 
-    unless valid_scheme && valid_no_local && valid_suffix
+      valid_scheme = host && scheme && schemes.include?(scheme)
+      valid_no_local = !options.fetch(:no_local) || (host && host.include?('.'))
+      valid_suffix = !options.fetch(:public_suffix) || (host && PublicSuffix.valid?(host, default_rule: nil))
+
+      unless valid_scheme && valid_no_local && valid_suffix
+        record.errors.add(attribute, message, **filtered_options(value))
+      end
+    rescue Addressable::URI::InvalidURIError
       record.errors.add(attribute, message, **filtered_options(value))
     end
-  rescue Addressable::URI::InvalidURIError
-    record.errors.add(attribute, message, **filtered_options(value))
   end
 end
