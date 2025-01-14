@@ -262,3 +262,8 @@ input[type='radio'] {
     display: none !important;
   }
 }
+
+// We want labels to be centered inside dossiers table
+.fr-table .fr-tags-group .fr-tag {
+  margin-top: 0.5rem;
+}
