@@ -5,8 +5,7 @@ require 'active_support/i18n'
 require 'public_suffix'
 require 'addressable/uri'
 
-# Most of this code is borrowed from https://github.com/perfectline/validates_url
-# Most of this code is borrowed from https://github.com/perfectline/validates_url
+# Most of this code is borowed from https://github.com/perfectline/validates_url
 
 class URLValidator < ActiveModel::EachValidator
   RESERVED_OPTIONS = [:schemes, :no_local]
@@ -56,24 +55,9 @@ class URLValidator < ActiveModel::EachValidator
   end
 
   def validate_url(record, attribute, value, message, schemes)
-    # First check if it's an email when accept_email is true
-    if options.fetch(:accept_email) && value.to_s.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i)
-      return true
-    end
+    uri = Addressable::URI.parse(value)
 
-    # If not an email, validate as URL
-    # First check if it's an email when accept_email is true
-    if options.fetch(:accept_email) && value.to_s.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i)
-      return true
-    end
-
-    # If not an email, validate as URL
-    begin
-      uri = if value.present?
-        encoded_value = Addressable::URI.encode(value.to_s)
-        Addressable::URI.parse(encoded_value)
-      end
-
+    unless options.fetch(:accept_email) && uri.path.match?(/^(.+)@(.+)$/)
       host = uri && uri.host
       scheme = uri && uri.scheme
 
@@ -87,8 +71,8 @@ class URLValidator < ActiveModel::EachValidator
       unless valid_scheme && valid_no_local && valid_suffix
         record.errors.add(attribute, message, **filtered_options(value))
       end
-    rescue Addressable::URI::InvalidURIError
-      record.errors.add(attribute, message, **filtered_options(value))
     end
+  rescue Addressable::URI::InvalidURIError
+    record.errors.add(attribute, message, **filtered_options(value))
   end
 end
