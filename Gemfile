@@ -75,6 +75,7 @@ gem 'openid_connect'
 gem 'parsby'
 gem 'pg'
 gem 'phonelib'
+gem 'prawn', '2.4.0' # remove after: https://github.com/prawnpdf/prawn/issues/1346
 gem 'prawn-rails' # PDF Generation
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
