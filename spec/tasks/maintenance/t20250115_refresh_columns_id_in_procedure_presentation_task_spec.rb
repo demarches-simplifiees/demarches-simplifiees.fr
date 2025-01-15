@@ -96,6 +96,36 @@ module Maintenance
           expect(displayed_column_ids.any? { _1.include?('departement') }).to be(false)
         end
       end
+
+      describe "an invalid procedure presentation" do
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'text' }]) }
+
+        let(:invalid_column) do
+          text_column = procedure.columns.filter { _1.label =~ /text/ }.first
+
+          def text_column.h_id
+            original_h_id = super()
+            original_h_id[:column_id] = 'INVALID'
+            original_h_id
+          end
+
+          text_column
+        end
+
+        before do
+          procedure_presentation.update(displayed_columns: [invalid_column])
+
+          # destroy the columns cache
+          Current.procedure_columns = nil
+        end
+
+        it do
+          # ensure invalid id is present in db
+          expect(displayed_column_ids.any? { _1.include?('INVALID') }).to be(true)
+
+          expect { process }.not_to raise_error
+        end
+      end
     end
   end
 end

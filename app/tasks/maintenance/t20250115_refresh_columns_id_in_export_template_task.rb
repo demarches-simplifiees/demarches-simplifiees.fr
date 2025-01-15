@@ -19,6 +19,10 @@ module Maintenance
       export_template.exported_columns_will_change!
 
       export_template.save(validate: false)
+
+    # a column can be not found for various reasons (deleted tdc, changed type, etc)
+    # in this case we just ignore the error and continue
+    rescue ActiveRecord::RecordNotFound
     end
   end
 end

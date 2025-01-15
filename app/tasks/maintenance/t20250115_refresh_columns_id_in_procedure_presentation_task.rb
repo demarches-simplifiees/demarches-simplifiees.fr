@@ -28,6 +28,10 @@ module Maintenance
       procedure_presentation.archives_filters_will_change!
 
       procedure_presentation.save(validate: false)
+
+    # a column can be not found for various reasons (deleted tdc, changed type, etc)
+    # in this case we just ignore the error and continue
+    rescue ActiveRecord::RecordNotFound
     end
   end
 end
