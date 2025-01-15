@@ -1,6 +1,6 @@
 = form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
   method: :get) do
-  #header-search.fr-search-bar.fr-mb-2w.fr-p-2w.background-alt-grey{ role: "search" }
+  #header-search.fr-search-bar.fr-mb-3w.fr-p-2w.fr-background-alt--grey{ role: "search" }
     = label_tag :q, 'Rechercher un groupe (par nom)', class: 'sr-only'
     = text_field_tag :q, @query, class: 'fr-input', type: 'search', autocomplete: 'off', placeholder: 'Rechercher un groupe (par nom)'
     %button.fr-btn{ title: "Rechercher" } Rechercher

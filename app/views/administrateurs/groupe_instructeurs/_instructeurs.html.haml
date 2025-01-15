@@ -21,7 +21,7 @@
   .flex.justify-between.align-baseline
     .card-title= t('.assigned_instructeur', count: instructeurs.total_count)
     = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
-      Exporter la liste (.CSV)
+      Exporter la liste (.csv)
 
   .fr-table
     .fr-table__wrapper
