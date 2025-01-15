@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module Maintenance
-  RSpec.describe MigrateProcedurePresentationAddressAndLinkedColumnsTask do
+  RSpec.describe T20250115RefreshColumnsIdInProcedurePresentationTask do
     def displayed_column_ids
       raw = ProcedurePresentation
         .connection
