@@ -18,25 +18,25 @@ class Instructeurs::DossiersNavigationComponent < ApplicationComponent
   def link_next
     if has_next?
       html_tag = :a
-      options = { class: "fr-link no-wrap fr-text--sm fr-ml-3w", href: next_instructeur_dossier_path(dossier:, statut:) }
+      options = { class: "fr-link no-wrap fr-text--sm fr-ml-3w fr-icon-arrow-right-line fr-link--icon-right", href: next_instructeur_dossier_path(dossier:, statut:) }
     else
       html_tag = :span
       options = { class: "fr-link no-wrap fr-text--sm fr-ml-3w fr-text-mention--grey" }
     end
 
-    tag.send(html_tag, t('.next').html_safe + tag.span(class: 'fr-icon-arrow-right-line fr-ml-1w'), **options)
+    tag.send(html_tag, t('.next').html_safe, **options)
   end
 
   def link_previous
     if has_previous?
       html_tag = :a
-      options = { class: "fr-link no-wrap fr-text--sm", href: previous_instructeur_dossier_path(dossier:, statut:) }
+      options = { class: "fr-link no-wrap fr-text--sm fr-icon-arrow-left-line fr-link--icon-left", href: previous_instructeur_dossier_path(dossier:, statut:) }
     else
       html_tag = :span
       options = { class: "fr-link no-wrap fr-text--sm fr-text-mention--grey" }
     end
 
-    tag.send(html_tag, tag.span(class: 'fr-icon-arrow-left-line fr-mr-1w') + t('.previous'), **options)
+    tag.send(html_tag, t('.previous'), **options)
   end
 
   def has_next? = @has_next ||= @cache.next_dossier_id(from_id: dossier.id).present?
