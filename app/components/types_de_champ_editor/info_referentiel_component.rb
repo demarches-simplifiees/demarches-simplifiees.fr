@@ -3,6 +3,7 @@
 class TypesDeChampEditor::InfoReferentielComponent < ApplicationComponent
   attr_reader :procedure, :type_de_champ
   delegate :referentiel, to: :type_de_champ
+  delegate :ready?, to: :referentiel, allow_nil: true
 
   def initialize(procedure:, type_de_champ:)
     @procedure = procedure
@@ -16,10 +17,6 @@ class TypesDeChampEditor::InfoReferentielComponent < ApplicationComponent
     else
       edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, type_de_champ.referentiel)
     end
-  end
-
-  def configured?
-    false
   end
 
   private
