@@ -244,7 +244,7 @@ describe DossierProjectionService do
         let(:label) { "SIRET – Département" }
 
         before do
-          dossier.project_champs_public.first.update(value_json: { 'departement_code': '38' })
+          dossier.project_champs_public.first.update(value_json: { 'department_code': '38' })
         end
 
         it { is_expected.to eq('38') }
