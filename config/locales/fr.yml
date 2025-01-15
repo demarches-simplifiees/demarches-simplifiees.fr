@@ -405,7 +405,7 @@ fr:
         customize: Personnaliser le tableau
         passer_en_instruction: Passer en instruction
         repasser_en_construction: Repasser en construction
-        follow_file: Suivre le dossier
+        follow_file: Suivre
         stop_follow: Ne plus suivre
         no_file: Aucun dossier
         dossier_synthesis: Synthèse des dossiers
