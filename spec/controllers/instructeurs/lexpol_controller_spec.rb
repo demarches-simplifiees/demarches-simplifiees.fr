@@ -14,72 +14,90 @@ RSpec.describe Instructeurs::LexpolController, type: :controller do
     allow(dossier.champs).to receive(:find).and_return(champ)
   end
 
-  describe 'POST #create_dossier' do
+  describe 'POST #upsert' do
     context 'when dossier creation is successful' do
       before do
-        allow(champ).to receive(:lexpol_create_dossier).and_return(true)
-        post :create_dossier, params: {
+        allow(champ).to receive(:value).and_return(nil)
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return('NOR-12345')
+
+        post :upsert, params: {
           procedure_id: procedure.id,
           dossier_id: dossier.id,
           champ_id: champ.id
         }
       end
 
-      it 'redirects to annotations page with success message' do
-        expect(response).to redirect_to(annotations_instructeur_dossier_path(procedure, dossier))
-        expect(flash[:notice]).to eq('Dossier Lexpol créé avec succès.')
+      it 'redirects to annotations page with success message for creation' do
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(procedure, dossier))
+        expect(flash[:notice]).to eq('Dossier Lexpol créé avec succès. NOR : NOR-12345')
+      end
+    end
+
+    context 'when dossier update is successful' do
+      before do
+        allow(champ).to receive(:value).and_return('NOR-12345')
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return('NOR-12345')
+
+        post :upsert, params: {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          champ_id: champ.id
+        }
+      end
+
+      it 'redirects to annotations page with success message for update' do
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(procedure, dossier))
+        expect(flash[:notice]).to eq('Dossier Lexpol mis à jour avec succès. NOR : NOR-12345')
       end
     end
 
     context 'when dossier creation fails' do
       before do
-        allow(champ).to receive(:lexpol_create_dossier).and_return(false)
-        allow(champ).to receive_message_chain(:errors, :full_messages).and_return(['Erreur de création'])
-        post :create_dossier, params: {
+        allow(champ).to receive(:value).and_return(nil) # Simule un NOR vide
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return(nil)
+
+        post :upsert, params: {
           procedure_id: procedure.id,
           dossier_id: dossier.id,
           champ_id: champ.id
         }
       end
 
-      it 'redirects to annotations page with error message' do
-        expect(response).to redirect_to(annotations_instructeur_dossier_path(procedure, dossier))
-        expect(flash[:alert]).to eq('Erreur de création')
-      end
-    end
-  end
-
-  describe 'POST #update_dossier' do
-    context 'when dossier update is successful' do
-      before do
-        allow(champ).to receive(:lexpol_update_dossier).and_return(true)
-        post :update_dossier, params: {
-          procedure_id: procedure.id,
-          dossier_id: dossier.id,
-          champ_id: champ.id
-        }
-      end
-
-      it 'redirects to annotations page with success message' do
-        expect(response).to redirect_to(annotations_instructeur_dossier_path(procedure, dossier))
-        expect(flash[:notice]).to eq('Dossier Lexpol mis à jour avec succès.')
+      it 'redirects to annotations page with error message for creation' do
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(procedure, dossier))
+        expect(flash[:alert]).to eq('Impossible de créer le dossier Lexpol.')
       end
     end
 
     context 'when dossier update fails' do
       before do
-        allow(champ).to receive(:lexpol_update_dossier).and_return(false)
-        allow(champ).to receive_message_chain(:errors, :full_messages).and_return(['Erreur de mise à jour'])
-        post :update_dossier, params: {
+        allow(champ).to receive(:value).and_return('NOR-12345') # Simule un NOR existant
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return(nil)
+
+        post :upsert, params: {
           procedure_id: procedure.id,
           dossier_id: dossier.id,
           champ_id: champ.id
         }
       end
 
-      it 'redirects to annotations page with error message' do
-        expect(response).to redirect_to(annotations_instructeur_dossier_path(procedure, dossier))
-        expect(flash[:alert]).to eq('Erreur de mise à jour')
+      it 'redirects to annotations page with error message for update' do
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(procedure, dossier))
+        expect(flash[:alert]).to eq('Impossible de mettre à jour le dossier Lexpol.')
+      end
+    end
+
+    context 'when required parameters are missing' do
+      it 'raises an error for missing dossier_id' do
+        expect {
+          post :upsert, params: { champ_id: champ.id }
+        }.to raise_error(ActionController::UrlGenerationError)
+      end
+
+      it 'raises an error for missing champ_id' do
+        expect {
+          post :upsert, params: { dossier_id: dossier.id }
+        }.to raise_error(ActionController::UrlGenerationError)
       end
     end
   end

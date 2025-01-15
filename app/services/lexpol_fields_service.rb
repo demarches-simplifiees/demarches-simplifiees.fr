@@ -2,22 +2,15 @@ module LexpolFieldsService
   def self.object_field_values(source, field, log_empty: true)
     return [] if source.blank? || field.blank?
 
-    objects = [source]
+    objects = [*source]
 
     field.split('.').each do |segment|
       objects = objects.flat_map do |object|
+        object = object.dossier if object.respond_to?(:dossier)
         results = []
-        if object.respond_to?(:champs)
-          results += select_champ(object.champs, segment)
-        end
-
-        if object.respond_to?(:annotations)
-          results += select_champ(object.annotations, segment)
-        end
-
-        if object.respond_to?(segment)
-          results += attributes(object, segment)
-        end
+        results += select_champ(object.champs, segment) if object.respond_to?(:champs)
+        results += select_champ(object.annotations, segment) if object.respond_to?(:annotations)
+        results += attributes(object, segment) if object.respond_to?(segment)
 
         results
       end
