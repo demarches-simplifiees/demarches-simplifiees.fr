@@ -26,7 +26,7 @@ class Service < ApplicationRecord
   validates :siret, siret_format: true
   validates :siret, comparison: { other_than: SIRET_TEST, message: "n'est pas valide" }, on: :update
   validates :type_organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
-  validates :email, presence: { message: 'doit être renseigné' }, allow_nil: false, url: { no_local: true, allow_blank: false, accept_email: true }
+  validates :email, presence: { message: 'doit être renseigné' }, allow_nil: false, url: { no_local: true, allow_blank: true, accept_email: true }
   validates :telephone, phone: { possible: true, allow_blank: true }
   validates :horaires, presence: { message: 'doivent être renseignés' }, allow_nil: false
   validates :adresse, presence: { message: 'doit être renseignée' }, allow_nil: false
