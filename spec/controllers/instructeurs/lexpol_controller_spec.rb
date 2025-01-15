@@ -9,6 +9,10 @@ RSpec.describe Instructeurs::LexpolController, type: :controller do
   let(:champ) { create(:champ, dossier: dossier) }
 
   before do
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with('API_LEXPOL_EMAIL').and_return('fake_email@example.com')
+    allow(ENV).to receive(:fetch).with('API_LEXPOL_PASSWORD').and_return('fake_password')
+    allow(ENV).to receive(:fetch).with('API_LEXPOL_AGENT_EMAIL').and_return('fake_agent_email@example.com')
     sign_in instructeur.user
     allow(Dossier).to receive(:find).and_return(dossier)
     allow(dossier.champs).to receive(:find).and_return(champ)
@@ -71,7 +75,7 @@ RSpec.describe Instructeurs::LexpolController, type: :controller do
 
     context 'when dossier update fails' do
       before do
-        allow(champ).to receive(:value).and_return('NOR-12345') # Simule un NOR existant
+        allow(champ).to receive(:value).and_return('NOR-12345')
         allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return(nil)
 
         post :upsert, params: {
