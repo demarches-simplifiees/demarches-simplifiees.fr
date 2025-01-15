@@ -5,10 +5,11 @@ en:
         header: 'This procedure is managed by'
       contact:
         header: 'Ask a question about the procedure'
+        fallback_service: "As a last resort :"
         in_app_mail:
           link: "Direclty via the chat"
         email:
-          link: "Directly by email: "
+          link: "By email: "
         phone:
           label: 'By phone: '
         schedule:

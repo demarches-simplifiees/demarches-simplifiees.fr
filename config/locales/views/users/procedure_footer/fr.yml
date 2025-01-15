@@ -5,10 +5,11 @@ fr:
         header: 'Cette démarche est gérée par'
       contact:
         header: 'Poser une question sur la démarche'
+        fallback_service: "En dernier recours :"
         in_app_mail:
           link: "Directement par la messagerie"
         email:
-          link: "Directement par courriel :"
+          link: "Par email :"
         phone:
           label: 'Par téléphone au : '
           link: '%{service_telephone}'

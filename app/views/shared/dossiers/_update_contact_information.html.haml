@@ -8,10 +8,15 @@
         = render SimpleFormatComponent.new(service.adresse, class_names_map: {paragraph: 'fr-footer__content-desc'})
   %h3.fr-footer__top-cat= I18n.t('users.procedure_footer.contact.header')
   %ul.fr-footer__top-list
-    - if dossier.present? && dossier.messagerie_available?
+    - if dossier&.messagerie_available?
       %li
         = link_to I18n.t('users.procedure_footer.contact.in_app_mail.link'), messagerie_dossier_path(dossier), class: 'fr-footer__link'
-    - elsif service.present?
+
+    - if service.present?
+      - if dossier&.messagerie_available?
+        %li.fr-mb-1v
+          %em= I18n.t('users.procedure_footer.contact.fallback_service')
+
       %li
         %span.fr-footer__top-link
           = I18n.t('users.procedure_footer.contact.email.link')
