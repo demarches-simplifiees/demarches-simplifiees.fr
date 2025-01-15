@@ -5,8 +5,17 @@
   .fr-collapse#accordion-106
     .notice.fr-mb-1w
       = t(".csv_import.#{scope}.notice_1_html", csv_max_size: number_to_human_size(csv_max_size))
-    .notice
+    .notice.fr-mb-1w
       = t(".csv_import.#{scope}.notice_2_html")
+    .notice.fr-mb-1w
+      = t(".csv_import.#{scope}.notice_3_html")
+
+    - if @procedure.routing_enabled?
+      .fr-icon-mail-line.fr-alert.fr-mt-1w
+        - if @procedure.publiee?
+          = t(".csv_import.#{scope}.notification_alert_publiee_html")
+        - else
+          = t(".csv_import.#{scope}.notification_alert_html")
 
     = form_tag import_admin_procedure_groupe_instructeurs_path(@procedure), method: :post, multipart: true, class: "mt-4 column", "data-controller" => "enable-submit-if-uploaded" do
       %label.fr-label.font-weight-bold
