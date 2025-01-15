@@ -1052,6 +1052,11 @@ type Demarche {
   id: ID!
 
   """
+  Liste des labels associables aux dossiers
+  """
+  labels: [Label!]!
+
+  """
   Numero de la démarche.
   """
   number: Int!

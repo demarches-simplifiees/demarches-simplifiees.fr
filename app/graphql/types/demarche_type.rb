@@ -64,6 +64,7 @@ module Types
     field :published_revision, Types::RevisionType, null: true
     field :revisions, [Types::RevisionType], null: false
     field :chorus_configuration, Types::ChorusConfigurationType, null: true, description: "Cadre budgétaire Chorus"
+    field :labels, [Types::LabelType], null: false, description: 'Liste des labels associables aux dossiers'
 
     def state
       object.aasm.current_state

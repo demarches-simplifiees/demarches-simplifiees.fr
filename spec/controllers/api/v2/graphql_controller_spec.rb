@@ -103,6 +103,11 @@ describe API::V2::GraphqlController do
             id
           }
         }
+        labels {
+          id
+          color
+          name
+        }
       }
     }"
   end
@@ -177,7 +182,10 @@ describe API::V2::GraphqlController do
 
     describe "demarche" do
       describe "query a demarche" do
-        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
+        let(:label) { build(:label) }
+        let(:procedure) {
+          create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin], labels: [label])
+        }
 
         def format_type_champ(type_champ)
           "#{type_champ.gsub('regions', 'region').gsub('departements', 'departement').gsub('communes', 'commune').camelcase}ChampDescriptor"
@@ -224,7 +232,8 @@ describe API::V2::GraphqlController do
             end,
             dossiers: {
               nodes: dossiers.map { { id: _1.to_typed_id } }
-            }
+            },
+            labels: [{ id: label.to_typed_id, color: label.color, name: label.name }]
           })
         end
       end
