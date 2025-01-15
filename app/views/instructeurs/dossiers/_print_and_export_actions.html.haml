@@ -1,4 +1,4 @@
-= render Dropdown::MenuComponent.new(wrapper: :li, menu_options: { id: 'print-pj-menu'}, button_options: { class: ['fr-btn--sm ', 'fr-btn--secondary', 'fr-icon-download-line']}) do |menu|
+= render Dropdown::MenuComponent.new(wrapper: :li, menu_options: { id: 'print-pj-menu'}, button_options: { class: ['fr-btn--sm ', 'fr-btn--secondary', 'fr-icon-download-line'], title: 'Télécharger'}) do |menu|
   - menu.with_button_inner_html do
     Télécharger
   - menu.with_item do
@@ -6,7 +6,7 @@
       Télécharger le dossier et toutes ses pièces jointes
 
 
-= render Dropdown::MenuComponent.new(wrapper: :li, menu_options: { id: 'print-menu'}, button_options: { class: ['fr-btn--sm ', 'fr-btn--secondary', 'fr-icon-printer-line', 'fr-ml-2w']}) do |menu|
+= render Dropdown::MenuComponent.new(wrapper: :li, menu_options: { id: 'print-menu'}, button_options: { class: ['fr-btn--sm ', 'fr-btn--secondary', 'fr-icon-printer-line', 'fr-ml-2w'], title: 'Imprimer'}) do |menu|
   - menu.with_button_inner_html do
     Imprimer
 
