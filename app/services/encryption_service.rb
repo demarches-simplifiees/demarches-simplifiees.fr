@@ -7,10 +7,6 @@ class EncryptionService
     password   = Rails.application.secrets.secret_key_base
     key        = ActiveSupport::KeyGenerator.new(password).generate_key(salt, len)
     @encryptor = ActiveSupport::MessageEncryptor.new(key)
-
-    # Remove after all encrypted attributes have been rotated.
-    legacy_key = ActiveSupport::KeyGenerator.new(password, hash_digest_class: OpenSSL::Digest::SHA1).generate_key(salt, len)
-    @encryptor.rotate legacy_key
   end
 
   def encrypt(value)
