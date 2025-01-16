@@ -5,7 +5,7 @@ class DossierBatchOperation < ApplicationRecord
   belongs_to :batch_operation
   has_many :groupe_instructeurs, through: :dossier
 
-  enum state: {
+  enum :state, {
     pending: 'pending',
     success: 'success',
     error:   'error'

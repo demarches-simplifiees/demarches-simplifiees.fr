@@ -5,7 +5,7 @@ class User < ApplicationRecord
   include EmailSanitizableConcern
   include PasswordComplexityConcern
 
-  enum loged_in_with_france_connect: {
+  enum :loged_in_with_france_connect, {
     particulier: 'particulier',
     entreprise: 'entreprise'
   }

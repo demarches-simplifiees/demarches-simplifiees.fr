@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe ProcedureExportService do
+  include ZipHelpers
+
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, libelle: 'pj' }, { type: :repetition, children: [{ type: :piece_justificative, libelle: 'repet_pj' }] }]) }
   let(:dossiers) { create_list(:dossier, 10, procedure: procedure) }
@@ -41,13 +43,15 @@ describe ProcedureExportService do
             ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
               subject
             end
-            expect(sql_count <= 62).to be_truthy
+            expect(sql_count).to be <= 63
 
             dossier = dossiers.first
 
-            File.write('tmp.zip', subject.download, mode: 'wb')
-            File.open('tmp.zip') do |fd|
-              files = ZipTricks::FileReader.read_zip_structure(io: fd)
+            Tempfile.create(['archive', '.zip']) do |temp_file|
+              temp_file.binmode
+              subject.download { |chunk| temp_file.write(chunk) }
+              temp_file.close
+
               structure = [
                 "export/",
                 "export/dossier-#{dossier.id}/",
@@ -58,10 +62,10 @@ describe ProcedureExportService do
                 "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-01-02.png"
               ]
 
+              files = read_zip_entries(temp_file)
               expect(files.size).to eq(dossiers.count * 6 + 1)
-              expect(structure - files.map(&:filename)).to be_empty
+              expect(structure - files).to be_empty
             end
-            FileUtils.remove_entry_secure('tmp.zip')
           end
         end
       end

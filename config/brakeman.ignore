@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "1d30d61a81ffea8e64121341837db4c47cc97e401d4a9d0e151e01faf0e356a3",
+      "check_name": "Deserialize",
+      "message": "Use of `Marshal.load` may be dangerous",
+      "file": "app/lib/recovery/revision_importer.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Marshal.load(File.read(file_path))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Recovery::RevisionImporter",
+        "method": "initialize"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        502
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "26f504696b074d18ef3f5568dc8f6a46d1283a67fe37822498fa25d0409664ab",
@@ -15,7 +38,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 297,
+          "line": 295,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -97,7 +120,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/columns/json_path_column.rb",
-      "line": 26,
+      "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath} ? (@ like_regex \\\"#{quote_string(search_terms.join(\"|\"))}\\\" flag \\\"i\\\")'\")",
       "render_path": null,
@@ -112,6 +135,29 @@
         89
       ],
       "note": "escaped by hand"
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "9698bb4bcd19d1f09835eff22382bd14c6a28eb73e229d31616d4d33388a2f7b",
+      "check_name": "Deserialize",
+      "message": "Use of `Marshal.load` may be dangerous",
+      "file": "app/lib/recovery/importer.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Marshal.load(File.read(file_path))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Recovery::Importer",
+        "method": "initialize"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        502
+      ],
+      "note": ""
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -249,6 +295,5 @@
       "note": "The table and column are escaped, which should make this safe"
     }
   ],
-  "updated": "2024-12-02 21:04:14 +0100",
-  "brakeman_version": "6.1.2"
+  "brakeman_version": "7.0.0"
 }

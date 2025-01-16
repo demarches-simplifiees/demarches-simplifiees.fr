@@ -6,7 +6,7 @@ class DossierAssignment < ApplicationRecord
   belongs_to :groupe_instructeur, optional: true, inverse_of: :assignments
   belongs_to :previous_groupe_instructeur, class_name: 'GroupeInstructeur', optional: true, inverse_of: :previous_assignments
 
-  enum mode: {
+  enum :mode, {
     auto: 'auto',
     manual: 'manual',
     tech: 'tech'

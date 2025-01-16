@@ -13,7 +13,7 @@ class Label < ApplicationRecord
     { name: 'Urgent', color: 'pink_macaron' }
   ]
 
-  enum color: {
+  enum :color, {
     green_tilleul_verveine: "green-tilleul-verveine",
     green_bourgeon: "green-bourgeon",
     green_emeraude: "green-emeraude",

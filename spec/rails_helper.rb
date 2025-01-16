@@ -31,8 +31,8 @@ require "rack_session_access/capybara"
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
-Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| require f }
+Rails.root.glob('spec/support/**/*.rb').each { |f| require f }
+Rails.root.glob('spec/factories/**/*.rb').each { |f| require f }
 
 ActiveSupport::Deprecation.silenced = true
 
@@ -83,7 +83,7 @@ RSpec.configure do |config|
 
   config.infer_base_class_for_anonymous_controllers = false
 
-  config.before(:all) do
+  config.before(:each) do
     Rake.verbose false
 
     Typhoeus::Expectation.clear

@@ -9,7 +9,7 @@ class ExportTemplate < ApplicationRecord
   has_one :procedure, through: :groupe_instructeur
   has_many :exports, dependent: :nullify
 
-  enum kind: { zip: 'zip', csv: 'csv', xlsx: 'xlsx', ods: 'ods' }, _prefix: :template
+  enum :kind, { zip: 'zip', csv: 'csv', xlsx: 'xlsx', ods: 'ods' }, prefix: :template
 
   attribute :dossier_folder, :export_item
   attribute :export_pdf, :export_item

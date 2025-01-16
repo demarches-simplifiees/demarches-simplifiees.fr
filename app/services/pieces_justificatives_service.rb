@@ -26,7 +26,7 @@ class PiecesJustificativesService
       docs += signatures(some_bill_ids.uniq)
     end
 
-    docs.filter { |_attachment, path| path.present? }
+    docs.filter { |_attachment, path| path.present? } # rubocop:disable Rails/CompactBlank
   end
 
   def generate_dossiers_export(dossiers) # TODO: renommer generate_dossier_export sans s

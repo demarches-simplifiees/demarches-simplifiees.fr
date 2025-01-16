@@ -10,7 +10,7 @@ module TransientModelsWithPurgeableJobConcern
   included do
     include AASM
 
-    enum job_status: {
+    enum :job_status, {
       pending: 'pending',
       generated: 'generated',
       failed: 'failed'
@@ -34,12 +34,12 @@ module TransientModelsWithPurgeableJobConcern
 
     scope :stale, lambda { |duration|
       where(job_status: [job_statuses.fetch(:generated), job_statuses.fetch(:failed)])
-        .where('updated_at < ?', (Time.zone.now - duration))
+        .where(updated_at: ...(Time.zone.now - duration))
     }
 
     scope :stuck, lambda { |duration|
       where(job_status: [job_statuses.fetch(:pending)])
-        .where('updated_at < ?', (Time.zone.now - duration))
+        .where(updated_at: ...(Time.zone.now - duration))
     }
 
     def available?

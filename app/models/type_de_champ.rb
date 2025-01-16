@@ -66,7 +66,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: STANDARD
   }
 
-  enum type_champ: {
+  enum :type_champ, {
     engagement_juridique: 'engagement_juridique',
     header_section: 'header_section',
     repetition: 'repetition',

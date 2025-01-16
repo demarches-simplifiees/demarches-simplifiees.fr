@@ -3,6 +3,8 @@
 require 'csv'
 
 describe ProcedureExportService do
+  include ZipHelpers
+
   let(:instructeur) { create(:instructeur) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
   let(:export_template) { nil }
@@ -11,7 +13,12 @@ describe ProcedureExportService do
     subject do
       service
         .to_xlsx
-        .open { |f| SimpleXlsxReader.open(f.path) }
+        .open { |f|
+          xlsx = SimpleXlsxReader.open(f.path)
+          # Slurp all data at once for each sheet
+          xlsx.sheets.each { |sheet| sheet.rows.slurp }
+          xlsx
+        }
     end
 
     let(:dossiers_sheet) { subject.sheets.first }
@@ -461,9 +468,11 @@ describe ProcedureExportService do
         it 'returns a blob with custom filenames' do
           VCR.use_cassette('archive/new_file_to_get_200') do
             subject
-            File.write('tmp.zip', subject.download, mode: 'wb')
-            File.open('tmp.zip') do |fd|
-              files = ZipTricks::FileReader.read_zip_structure(io: fd)
+            Tempfile.create(['archive', '.zip']) do |temp_file|
+              temp_file.binmode
+              subject.download { |chunk| temp_file.write(chunk) }
+              temp_file.close
+
               base_fn = "export"
               structure = [
                 "#{base_fn}/",
@@ -471,9 +480,8 @@ describe ProcedureExportService do
                 "#{base_fn}/dossier-#{dossier.id}/piece_justificative-#{dossier.id}-01.txt",
                 "#{base_fn}/dossier-#{dossier.id}/export-#{dossier.id}.pdf"
               ]
-              expect(files.map(&:filename)).to match_array(structure)
+              expect(read_zip_entries(temp_file.path)).to match_array(structure)
             end
-            FileUtils.remove_entry_secure('tmp.zip')
           end
         end
       end
@@ -489,9 +497,11 @@ describe ProcedureExportService do
           VCR.use_cassette('archive/new_file_to_get_200') do
             subject
 
-            File.write('tmp.zip', subject.download, mode: 'wb')
-            File.open('tmp.zip') do |fd|
-              files = ZipTricks::FileReader.read_zip_structure(io: fd)
+            Tempfile.create(['archive', '.zip']) do |temp_file|
+              temp_file.binmode
+              subject.download { |chunk| temp_file.write(chunk) }
+              temp_file.close
+
               base_fn = 'export'
               structure = [
                 "#{base_fn}/",
@@ -500,10 +510,8 @@ describe ProcedureExportService do
                 "#{base_fn}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
                 "#{base_fn}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(dossier_exports.first.first)}"
               ]
-              expect(files.size).to eq(structure.size)
-              expect(files.map(&:filename)).to match_array(structure)
+              expect(read_zip_entries(temp_file.path)).to match_array(structure)
             end
-            FileUtils.remove_entry_secure('tmp.zip')
           end
         end
       end

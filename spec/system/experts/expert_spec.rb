@@ -3,6 +3,7 @@
 describe 'Inviting an expert:', js: true do
   include ActiveJob::TestHelper
   include ActionView::Helpers
+  include ZipHelpers
 
   context 'as an invited Expert' do
     let(:expert) { create(:expert) }
@@ -152,12 +153,16 @@ describe 'Inviting an expert:', js: true do
         click_on 'Télécharger le dossier et toutes ses pièces jointes'
 
         DownloadHelpers.wait_for_download
-        files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
-        expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+        zip_path = DownloadHelpers.download
+        expect(zip_path).to include "dossier-#{dossier.id}.zip"
+
+        files = read_zip_entries(zip_path)
         expect(files.size).to be 2
-        expect(files[0].filename.include?('export')).to be_truthy
-        expect(files[1].filename.include?('toto')).to be_truthy
-        expect(files[1].uncompressed_size).to be 4
+        expect(files[0].include?('export')).to be_truthy
+        expect(files[1].include?('toto')).to be_truthy
+
+        content = read_zip_file_content(zip_path, files[1])
+        expect(content.size).to eq(4)
       end
 
       before { DownloadHelpers.clear_downloads }

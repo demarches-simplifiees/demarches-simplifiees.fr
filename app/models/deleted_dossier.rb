@@ -5,10 +5,10 @@ class DeletedDossier < ApplicationRecord
   belongs_to :groupe_instructeur, inverse_of: :deleted_dossiers, optional: true
 
   scope :order_by_updated_at, -> (order = :desc) { order(created_at: order) }
-  scope :deleted_since,       -> (since) { where('deleted_dossiers.deleted_at >= ?', since) }
+  scope :deleted_since,       -> (since) { where(deleted_dossiers: { deleted_at: since.. }) }
   scope :state_termine,       -> { where(state: [states.fetch(:accepte), states.fetch(:refuse), states.fetch(:sans_suite)]) }
 
-  enum reason: {
+  enum :reason, {
     user_request:      'user_request',
     manager_request:   'manager_request',
     user_removed:      'user_removed',
@@ -18,7 +18,7 @@ class DeletedDossier < ApplicationRecord
     user_expired:      'user_expired'
   }
 
-  enum state: {
+  enum :state, {
     en_construction: 'en_construction',
     en_instruction:  'en_instruction',
     accepte:         'accepte',

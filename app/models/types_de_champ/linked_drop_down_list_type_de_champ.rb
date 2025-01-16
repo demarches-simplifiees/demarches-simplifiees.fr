@@ -27,7 +27,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
   end
 
   def champ_value(champ)
-    [primary_value(champ), secondary_value(champ)].filter(&:present?).join(' / ')
+    [primary_value(champ), secondary_value(champ)].compact_blank.join(' / ')
   end
 
   def champ_value_for_tag(champ, path = :value)

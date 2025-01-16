@@ -3,6 +3,7 @@
 describe 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
   include Logic
+  include ZipHelpers
 
   let(:password) { SECURE_PASSWORD }
   let!(:instructeur) { create(:instructeur, password: password) }
@@ -240,13 +241,16 @@ describe 'Instructing a dossier:', js: true do
       click_on 'Télécharger le dossier et toutes ses pièces jointes'
 
       DownloadHelpers.wait_for_download
-      files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
+      zip_path = DownloadHelpers.download
+      expect(zip_path).to include "dossier-#{dossier.id}.zip"
 
-      expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+      files = read_zip_entries(zip_path)
       expect(files.size).to be 2
-      expect(files[0].filename.include?('export')).to be_truthy
-      expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[1].uncompressed_size).to be File.size(path)
+      expect(files[0]).to include('export')
+      expect(files[1]).to include('piece_justificative_0')
+
+      content = read_zip_file_content(zip_path, files[1])
+      expect(content.size).to eq(File.size(path))
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
@@ -261,16 +265,17 @@ describe 'Instructing a dossier:', js: true do
       click_on 'Télécharger le dossier et toutes ses pièces jointes'
 
       DownloadHelpers.wait_for_download
-      files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
+      zip_path = DownloadHelpers.download
+      expect(zip_path).to include "dossier-#{dossier.id}.zip"
 
-      expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+      files = read_zip_entries(zip_path)
       expect(files.size).to be 3
-      expect(files[0].filename.include?('export')).to be_truthy
-      expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[2].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[1].filename).not_to eq files[2].filename
-      expect(files[1].uncompressed_size).to be File.size(path)
-      expect(files[2].uncompressed_size).to be File.size(path)
+      expect(files[0]).to include('export')
+      expect(files[1]).to include('piece_justificative_0')
+      expect(files[2]).to include('piece_justificative_0')
+      expect(files[1]).not_to eq files[2]
+      expect(read_zip_file_content(zip_path, files[1]).size).to be File.size(path)
+      expect(read_zip_file_content(zip_path, files[2]).size).to be File.size(path)
     end
 
     before { DownloadHelpers.clear_downloads }

@@ -10,7 +10,7 @@ class Service < ApplicationRecord
 
   SIRET_TEST = '35600082800018'
 
-  enum type_organisme: {
+  enum :type_organisme, {
     administration_centrale: 'administration_centrale',
     association: 'association',
     collectivite_territoriale: 'collectivite_territoriale',

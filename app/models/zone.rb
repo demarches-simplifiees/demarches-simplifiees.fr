@@ -10,7 +10,7 @@ class Zone < ApplicationRecord
   end
 
   def label_at(date)
-    label = labels.where('designated_on < ?', date)&.first || labels.last
+    label = labels.where(designated_on: ...date)&.first || labels.last
     label.name
   end
 

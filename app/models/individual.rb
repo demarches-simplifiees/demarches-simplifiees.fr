@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Individual < ApplicationRecord
-  enum notification_method: {
+  enum :notification_method, {
     email: 'email',
     no_notification: 'no_notification'
   }

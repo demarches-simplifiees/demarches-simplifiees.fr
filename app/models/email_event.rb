@@ -3,7 +3,7 @@
 class EmailEvent < ApplicationRecord
   RETENTION_DURATION = 1.month
 
-  enum status: {
+  enum :status, {
     pending: 'pending',
     dispatched: 'dispatched',
     dispatch_error: 'dispatch_error'
@@ -13,7 +13,7 @@ class EmailEvent < ApplicationRecord
   scope :dolist_smtp, -> { where(method: 'dolist_smtp') } # legacy method: removable after 2023-06
   scope :dolist_api, -> { where(method: 'dolist_api') }
   scope :sendinblue, -> { where(method: 'sendinblue') }
-  scope :outdated, -> { where("created_at < ?", RETENTION_DURATION.ago) }
+  scope :outdated, -> { where(created_at: ...RETENTION_DURATION.ago) }
 
   class << self
     def create_from_message!(message, status:)

@@ -4,7 +4,7 @@ class TargetedUserLink < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :target_model, polymorphic: true, optional: false
 
-  enum target_context: { avis: 'avis', invite: 'invite' }
+  enum :target_context, { avis: 'avis', invite: 'invite' }
 
   def invalid_signed_in_user?(signed_in_user)
     signed_in_user && signed_in_user.email != target_email

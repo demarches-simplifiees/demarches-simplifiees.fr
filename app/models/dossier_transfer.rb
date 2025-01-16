@@ -10,7 +10,7 @@ class DossierTransfer < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
 
   scope :pending, -> { where('created_at > ?', (Time.zone.now - EXPIRATION_LIMIT)) }
-  scope :stale, -> { where('created_at < ?', (Time.zone.now - EXPIRATION_LIMIT)) }
+  scope :stale, -> { where(created_at: ...(Time.zone.now - EXPIRATION_LIMIT)) }
   scope :with_dossiers, -> { joins(:dossiers).merge(Dossier.visible_by_user) }
   scope :for_email, -> (email) { includes(dossiers: :user).with_dossiers.where(email: email) }
 
