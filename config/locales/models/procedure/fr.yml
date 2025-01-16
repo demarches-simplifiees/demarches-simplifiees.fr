@@ -45,7 +45,7 @@ fr:
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'
         aasm_state:
-          brouillon: Brouillon
+          brouillon: En test
           publiee: Publiée
           close: Close
           hidden: Supprimée

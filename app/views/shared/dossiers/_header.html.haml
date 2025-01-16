@@ -1,5 +1,5 @@
 %h1
-  = procedure_libelle(dossier.procedure)
+  = dossier.procedure.libelle
   = status_badge_user(dossier, 'super')
 %h2
   = t('views.users.dossiers.show.header.dossier_number_html', dossier_id: dossier.id)

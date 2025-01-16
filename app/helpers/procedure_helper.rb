@@ -1,19 +1,13 @@
 # frozen_string_literal: true
 
 module ProcedureHelper
-  def procedure_libelle(procedure)
-    parts = procedure.brouillon? ? [procedure_badge(procedure)] : []
-    parts << procedure.libelle
-    safe_join(parts, ' ')
+  def procedure_libelle_with_number(procedure)
+    "#{procedure.libelle} - n°#{procedure.id} "
   end
 
-  def procedure_badge(procedure)
-    if procedure.close?
-      tag.span('Close', class: 'fr-badge')
-    elsif procedure.depubliee?
-      tag.span('Dépubliée', class: 'fr-badge')
-    elsif procedure.brouillon?
-      tag.span(t('helpers.procedure.testing_procedure'), class: 'fr-badge fr-badge--sm')
+  def procedure_badge(procedure, alignment_class = '')
+    if procedure.close? || procedure.depubliee? || procedure.brouillon?
+      tag.span(t("activerecord.attributes.procedure.aasm_state.#{procedure.aasm_state}"), class: "fr-badge fr-badge--sm #{alignment_class}")
     end
   end
 

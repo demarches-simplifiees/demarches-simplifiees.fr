@@ -1,10 +1,11 @@
 #header-top.fr-container
   = render Instructeurs::DossiersNavigationComponent.new(dossier:, procedure_presentation:, statut: params[:statut])
 
+  %p.fr-text--bold.fr-mb-0
+    = dossier.procedure.libelle.truncate_words(15)
+    = procedure_badge(dossier.procedure)
   %div
     .fr-my-1w.badge-group
-      = procedure_badge(dossier.procedure)
-
       = status_badge(dossier.state)
       - if dossier.pending_correction?
         = pending_correction_badge(:for_instructeur)

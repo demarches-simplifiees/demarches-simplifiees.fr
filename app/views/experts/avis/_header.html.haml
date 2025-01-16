@@ -1,17 +1,24 @@
 .sub-header
   .fr-container
-    .flex.justify-between
-      %nav.fr-breadcrumb{ "aria-label" => "vous êtes ici :", role: "navigation" }
-        %button.fr-breadcrumb__button{ "aria-controls" => "breadcrumb-1", "aria-expanded" => "false" } Voir le fil d’Ariane
-        #breadcrumb-1.fr-collapse
-          %ol.fr-breadcrumb__list
-            %li= link_to('Avis', expert_all_avis_path, class: 'fr-breadcrumb__link')
-            %li
-              = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(avis.procedure), class: "fr-breadcrumb__link")
-              = procedure_badge(dossier.procedure)
-            %li= content_tag("a","Dossier nº #{dossier.id}", class: 'fr-breadcrumb__link', 'aria-current': 'page')
+    %nav.fr-breadcrumb.fr-mt-0.fr-mb-1w{ "aria-label" => "vous êtes ici :", role: "navigation" }
+      %button.fr-breadcrumb__button{ "aria-controls" => "breadcrumb-1", "aria-expanded" => "false" } Voir le fil d’Ariane
+      #breadcrumb-1.fr-collapse
+        %ol.fr-breadcrumb__list
+          %li= link_to('Avis', expert_all_avis_path, class: 'fr-breadcrumb__link')
+          %li
+            = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(avis.procedure), class: "fr-breadcrumb__link")
+          %li= content_tag("a","Dossier nº #{dossier.id}", class: 'fr-breadcrumb__link', 'aria-current': 'page')
 
-      .header-actions
+
+    .flex
+      .fr-mb-3w
+        %h1.fr-h3.fr-mb-0
+          = t('show_dossier', scope: [:layouts, :breadcrumb], dossier_id: dossier.id, owner_name: dossier.owner_name)
+        %p.fr-text--bold.fr-mb-0
+          = dossier.procedure.libelle.truncate_words(15)
+          = procedure_badge(dossier.procedure)
+
+      .header-actions.fr-ml-auto
         .fr-download
           = link_to telecharger_pjs_expert_avis_path(avis.procedure, avis), download: :download, class: "menu-item menu-link fr-download__link" do
             Télécharger le dossier et toutes ses pièces jointes

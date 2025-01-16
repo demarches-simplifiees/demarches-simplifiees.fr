@@ -59,8 +59,6 @@ en:
     modal_close: "Close"
     modal_close_alt: "Close this modal"
   helpers:
-    procedure:
-      testing_procedure: testing procedure
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
