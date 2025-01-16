@@ -1,4 +1,5 @@
 class ProcedureRevision < ApplicationRecord
+  include Logic
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
@@ -17,7 +18,22 @@ class ProcedureRevision < ApplicationRecord
 
   scope :ordered, -> { order(:created_at) }
 
+  validates :ineligibilite_message, presence: true, if: -> { ineligibilite_enabled? }
+
   delegate :path, to: :procedure, prefix: true
+
+  validate :ineligibilite_rules_are_valid?,
+    on: [:ineligibilite_rules_editor, :publication]
+  validates :ineligibilite_message,
+    presence: true,
+    if: -> { ineligibilite_enabled? },
+    on: [:ineligibilite_rules_editor, :publication]
+  validates :ineligibilite_rules,
+    presence: true,
+    if: -> { ineligibilite_enabled? },
+    on: [:ineligibilite_rules_editor, :publication]
+
+  serialize :ineligibilite_rules, LogicSerializer
 
   def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
@@ -136,13 +152,15 @@ class ProcedureRevision < ApplicationRecord
     !draft?
   end
 
-  def different_from?(revision)
-    revision_types_de_champ != revision.revision_types_de_champ
-  end
-
-  def compare(revision)
+  def compare_types_de_champ(revision)
     changes = []
     changes += compare_revision_types_de_champ(revision_types_de_champ, revision.revision_types_de_champ)
+    changes
+  end
+
+  def compare_ineligibilite_rules(revision)
+    changes = []
+    changes += compare_revision_ineligibilite_rules(revision)
     changes
   end
 
@@ -251,6 +269,10 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.filter(&:routable?)
   end
 
+  def conditionable_types_de_champ
+    types_de_champ_for(scope: :public).filter(&:conditionable?)
+  end
+
   private
 
   def compute_estimated_fill_duration
@@ -316,6 +338,29 @@ class ProcedureRevision < ApplicationRecord
 
       (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids.index(_1.stable_id) : to_sids.index(_1.stable_id) }
     end
+  end
+
+  def compare_revision_ineligibilite_rules(new_revision)
+    from_ineligibilite_rules = ineligibilite_rules
+    to_ineligibilite_rules = new_revision.ineligibilite_rules
+    changes = []
+
+    if from_ineligibilite_rules.present? && to_ineligibilite_rules.blank?
+      changes << ProcedureRevisionChange::RemoveEligibiliteRuleChange
+    end
+    if from_ineligibilite_rules.blank? && to_ineligibilite_rules.present?
+      changes << ProcedureRevisionChange::AddEligibiliteRuleChange
+    end
+    if from_ineligibilite_rules != to_ineligibilite_rules
+      changes << ProcedureRevisionChange::UpdateEligibiliteRuleChange
+    end
+    if ineligibilite_message != new_revision.ineligibilite_message
+      changes << ProcedureRevisionChange::UpdateEligibiliteMessageChange
+    end
+    if ineligibilite_enabled != new_revision.ineligibilite_enabled
+      changes << (new_revision.ineligibilite_enabled ? ProcedureRevisionChange::EligibiliteEnabledChange : ProcedureRevisionChange::EligibiliteDisabledChange)
+    end
+    changes.map { _1.new(self, new_revision) }
   end
 
   def compare_type_de_champ(from_type_de_champ, to_type_de_champ, from_coordinates, to_coordinates)
@@ -472,6 +517,13 @@ class ProcedureRevision < ApplicationRecord
 
   def value_of(type_de_champ, value)
     type_de_champ.date? && value.present? ? Date.parse(value) : value
+  end
+  
+  def ineligibilite_rules_are_valid?
+    if ineligibilite_rules
+      ineligibilite_rules.errors(types_de_champ_for(scope: :public).to_a)
+        .each { errors.add(:ineligibilite_rules, :invalid) }
+    end
   end
 
   def replace_type_de_champ_by_clone(coordinate)

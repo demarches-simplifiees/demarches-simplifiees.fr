@@ -9,6 +9,16 @@ title: "Comment trouver ma démarche ?"
 
 # Comment trouver ma démarche ?
 
+> [!INFO]
+> *%{application_name}* est un service de la direction interministérielle du numérique, service du Premier ministre.
+
+> Ce site ne dispose pas d’un annuaire comprenant l’ensemble des démarches administratives en ligne. Vous pouvez retrouver des informations soit :
+
+> - sur le site [service-public.fr](https://www.service-public.fr) : site officiel d'information sur les démarches administratives
+> - sur le site internet de l’administration concernée (ministère, organisme, préfecture, mairie…)
+
+> Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
+
 ## 1. Trouver le lien de votre démarche
 
 Pour déposer un dossier sur %{application_name}, il est nécessaire de disposer du lien de la démarche qui vous intéresse. Il ressemble à un lien de cette forme :
@@ -43,5 +53,3 @@ Pour commencer un nouveau dossier sur une démarche déjà réalisée, [connecte
 Pour connaitre le nouveau lien vers la démarche en ligne, nous vous invitons à contacter le service en charge de la démarche. Vous trouverez les informations de contact en bas du formulaire dans la partie **« Poser une questions sur la démarche »** (en cliquant sur le numéro de dossier).
 
 ![Image montrant comment trouver les informations de contact d’une démarche](faq/usager-procedure-close-focus-contact.png)
-
-

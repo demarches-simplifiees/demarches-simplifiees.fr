@@ -10,7 +10,7 @@
           .flex.justify-start.width-33
             .cell.flex.justify-start.column.flex-grow
               = form.label :type_champ, "Type de champ", for: dom_id(type_de_champ, :type_champ)
-              = form.select :type_champ, grouped_options_for_select(types_of_type_de_champ, type_de_champ.type_champ), {}, class: 'fr-select small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ), disabled: coordinate.used_by_routing_rules?
+              = form.select :type_champ, grouped_options_for_select(types_of_type_de_champ, type_de_champ.type_champ), {}, class: 'fr-select small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ), disabled: coordinate.used_by_routing_rules? || coordinate.used_by_ineligibilite_rules?
 
           .flex.column.justify-start.flex-grow
             .cell
@@ -174,6 +174,10 @@
           %span
             utilisé pour
             = link_to('le routage', admin_procedure_groupe_instructeurs_path(revision.procedure_id, anchor: 'routing-rules'))
+        - elsif coordinate.used_by_ineligibilite_rules?
+          %span
+            utilisé pour
+            = link_to('l’eligibilité des dossiers', edit_admin_procedure_ineligibilite_rules_path(revision.procedure_id))
         - else
           = button_to type_de_champ_path, class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
             %span.sr-only Supprimer

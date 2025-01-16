@@ -2,6 +2,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
   describe 'render' do
     let(:component) { described_class.new(coordinate:, upper_coordinates: []) }
     let(:routing_rules_stable_ids) { [] }
+    let(:ineligibilite_rules_used?) { false }
 
     before do
       Flipper.enable_actor(:engagement_juridique_type_de_champ, procedure)
@@ -29,6 +30,15 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         it do
           expect(page).to have_css("select[disabled=\"disabled\"]")
           expect(page).to have_text(/utilisé pour\nle routage/)
+        end
+      end
+
+      context 'drop down tdc used for ineligibilite_rules' do
+        let(:ineligibilite_rules_used?) { true }
+
+        it do
+          expect(page).to have_css("select[disabled=\"disabled\"]")
+          expect(page).to have_text(/l’eligibilité des dossiers/)
         end
       end
     end

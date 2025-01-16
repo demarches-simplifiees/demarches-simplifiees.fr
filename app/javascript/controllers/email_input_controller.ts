@@ -1,9 +1,20 @@
-import { suggest } from 'email-butler';
+import { httpRequest } from '@utils';
 import { show, hide } from '@utils';
 import { ApplicationController } from './application_controller';
 
+type checkEmailResponse = {
+  success: boolean;
+  email_suggestions: string[];
+};
+
 export class EmailInputController extends ApplicationController {
   static targets = ['ariaRegion', 'suggestion', 'input'];
+
+  static values = {
+    url: String
+  };
+
+  declare readonly urlValue: string;
 
   declare readonly ariaRegionTarget: HTMLElement;
   declare readonly suggestionTarget: HTMLElement;

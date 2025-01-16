@@ -86,3 +86,10 @@ fr:
     update_expression_reguliere_exemple_text: L’exemple d’expression régulière de l’annotation privée « %{label} » a été modifiée. Le nouvel exemple est « %{to} ».
     remove_expression_reguliere_error_message: Le message d’erreur de l’expression régulière de l’annotation privée « %{label} » a été supprimé.
     update_expression_reguliere_error_message: Le message d’erreur de l’expression régulière de l’annotation privée « %{label} » a été modifiée. Le nouveau message est « %{to} ».
+  ineligibilite_rules:
+    add: La condition d’inéligibilité « %{new_condition} » a été ajoutée.
+    remove: La condition d’inéligibilité « %{previous_condition} » a été supprimée
+    update: La conditon d’inéligibilité  « %{previous_condition} » a été changée pour « %{new_condition} »
+    enabled: "L’inéligibilité des dossiers a été activée"
+    disabled: "L’inéligibilité des dossiers a été désactivée"
+    message_updated: "Le message d’inéligibilité a été changé pour « %{ineligibilite_message} »"

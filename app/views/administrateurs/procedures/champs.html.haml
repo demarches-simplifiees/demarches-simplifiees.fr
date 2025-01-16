@@ -11,7 +11,7 @@
 
   = render NestedForms::FormOwnerComponent.new
   .fr-grid-row
-    = render partial: 'champs_summary'
+    = render TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: false)
     .fr-col
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: false)
 

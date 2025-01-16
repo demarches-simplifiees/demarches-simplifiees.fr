@@ -8,6 +8,7 @@
 class NotificationMailer < ApplicationMailer
   before_action :set_dossier, except: [:send_notification_for_tiers, :send_accuse_lecture_notification]
   before_action :set_services_publics_plus, only: :send_notification
+  before_action :set_jdma, only: :send_notification
 
   helper ServiceHelper
   helper MailerHelper
@@ -86,6 +87,12 @@ class NotificationMailer < ApplicationMailer
     return unless Dossier::TERMINE.include?(params[:state])
 
     @services_publics_plus_url = ENV['SERVICES_PUBLICS_PLUS_URL'].presence
+  end
+
+  def set_jdma
+    if params[:state] == Dossier.states.fetch(:en_construction) && @dossier.procedure.monavis_embed
+      @jdma_html = @dossier.procedure.monavis_embed_html_source("email")
+    end
   end
 
   def set_dossier

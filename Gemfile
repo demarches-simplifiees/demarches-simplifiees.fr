@@ -103,6 +103,7 @@ gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'skylight'
 gem 'spreadsheet_architect'
+gem 'string-similarity'
 gem 'strong_migrations' # lint database migrations
 gem 'sys-proctable'
 gem 'turbo-rails'

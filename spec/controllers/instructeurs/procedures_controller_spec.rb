@@ -330,6 +330,32 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_unfollow_dossier].map(&:id)) }
         end
 
+        context 'with pagination' do
+          let(:dossiers) { Array.new(26) { create(:dossier, :en_instruction, procedure: procedure) } }
+          before do # warmup cache
+            get :show, params: { procedure_id: procedure.id, statut: statut }
+            dossiers
+          end
+
+          it 'keeps request count stable' do
+            count_with_25, count_with_100 = 0, 0
+
+            stub_const('Instructeurs::ProceduresController::ITEMS_PER_PAGE', 25)
+            ActiveSupport::Notifications.subscribed(lambda { |*_args| count_with_25 += 1 }, "sql.active_record") do
+              get :show, params: { procedure_id: procedure.id, statut: statut }
+              expect(assigns(:projected_dossiers).size).to eq(25)
+            end
+
+            stub_const('Instructeurs::ProceduresController::ITEMS_PER_PAGE', 100)
+            ActiveSupport::Notifications.subscribed(lambda { |*_args| count_with_100 += 1 }, "sql.active_record") do
+              get :show, params: { procedure_id: procedure.id, statut: statut }
+              expect(assigns(:projected_dossiers).size).to eq(dossiers.size + 1) # +1 due to let!(:new_unfollow_dossier)
+            end
+
+            expect(count_with_100).to eq(count_with_25)
+          end
+        end
+
         context 'with a dossier en contruction hidden by user' do
           let!(:hidden_dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2, hidden_by_user_at: 1.hour.ago) }
           before { subject }

@@ -22,11 +22,19 @@ RSpec.describe GalleryHelper, type: :helper do
   describe ".variant_url_for" do
     subject { variant_url_for(attachment) }
 
-    context "when attachment can be represented with a variant" do
+    context "when image attachment has a variant" do
       let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
 
-      it { expect { subject }.to change { ActiveStorage::VariantRecord.count }.by(1) }
+      before { attachment.variant(resize_to_limit: [400, 400]).processed }
+
       it { is_expected.not_to eq("apercu-indisponible.png") }
+    end
+
+    context "when image attachment has no variant" do
+      let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
+
+      it { expect { subject }.not_to change { ActiveStorage::VariantRecord.count } }
+      it { is_expected.to eq("apercu-indisponible.png") }
     end
 
     context "when attachment cannot be represented with a variant" do
@@ -40,11 +48,19 @@ RSpec.describe GalleryHelper, type: :helper do
   describe ".preview_url_for" do
     subject { preview_url_for(attachment) }
 
-    context "when attachment can be represented with a preview" do
+    context "when pdf attachment has a preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-      it { expect { subject }.to change { ActiveStorage::VariantRecord.count }.by(1) }
+      before { attachment.preview(resize_to_limit: [400, 400]).processed }
+
       it { is_expected.not_to eq("pdf-placeholder.png") }
+    end
+
+    context "when pdf attachment has no preview" do
+      let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
+
+      it { expect { subject }.not_to change { ActiveStorage::VariantRecord.count } }
+      it { is_expected.to eq("pdf-placeholder.png") }
     end
 
     context "when attachment cannot be represented with a preview" do

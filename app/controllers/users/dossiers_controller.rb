@@ -294,9 +294,9 @@ module Users
 
     def submit_brouillon
       @dossier = dossier_with_champs(pj_template: false)
-      @errors = submit_dossier_and_compute_errors
+      submit_dossier_and_compute_errors
 
-      if @errors.blank?
+      if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         @dossier.passer_en_construction!
         @dossier.process_declarative!
         @dossier.process_sva_svr!
@@ -341,9 +341,9 @@ module Users
         editing_fork_origin.resolve_pending_correction
       end
 
-      @errors = submit_dossier_and_compute_errors
+      submit_dossier_and_compute_errors
 
-      if @errors.blank?
+      if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         editing_fork_origin.merge_fork(@dossier)
         editing_fork_origin.submit_en_construction!
 
@@ -351,7 +351,6 @@ module Users
       else
         respond_to do |format|
           format.html do
-            @dossier = editing_fork_origin
             render :modifier
           end
 
@@ -366,9 +365,9 @@ module Users
     def update
       @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
-      @errors = update_dossier_and_compute_errors
-
-      @dossier.index_search_terms_later if @errors.empty?
+      @can_passer_en_construction_was, @can_passer_en_construction_is = @dossier.track_can_passer_en_construction do
+        update_dossier_and_compute_errors
+      end
 
       respond_to do |format|
         format.turbo_stream do
@@ -630,21 +629,14 @@ module Users
 
     def submit_dossier_and_compute_errors
       @dossier.validate(:champs_public_value)
-
-      errors = @dossier.errors
-      @dossier.check_mandatory_and_visible_champs.each do |error_on_champ|
-        errors.import(error_on_champ)
-      end
+      @dossier.check_mandatory_and_visible_champs
 
       if @dossier.editing_fork_origin&.pending_correction?
         @dossier.editing_fork_origin.validate(:champs_public_value)
         @dossier.editing_fork_origin.errors.where(:pending_correction).each do |error|
-          errors.import(error)
+          @dossier.errors.import(error)
         end
-
       end
-
-      errors
     end
 
     def ensure_ownership!

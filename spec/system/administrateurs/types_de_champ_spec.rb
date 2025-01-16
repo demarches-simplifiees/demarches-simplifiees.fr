@@ -243,7 +243,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
   end
 
   context 'header section' do
-    scenario 'invalid order, it pops up errors summary' do
+    scenario 'with public tdc, having invalid order, it pops up errors summary' do
       add_champ
       select('Titre de section', from: 'Type de champ')
       wait_until { procedure.reload.active_revision.types_de_champ_public.first&.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
@@ -266,6 +266,11 @@ describe 'As an administrateur I can edit types de champ', js: true do
         end
       end
       expect(page).to have_content("devrait être précédé d'un titre de niveau 1")
+
+      # check summary refresh
+      procedure.reload.active_revision.types_de_champ_private.each do |header_section|
+        expect(page).to have_link(header_section.libelle)
+      end
     end
   end
 

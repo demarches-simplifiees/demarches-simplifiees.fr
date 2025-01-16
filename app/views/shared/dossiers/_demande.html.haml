@@ -2,64 +2,63 @@
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user: dossier.user }
 
-.fr-container.counter-start-header-section.dossier-show{ class: class_names('gallery': feature_enabled?(:gallery_demande), 'gallery-demande': feature_enabled?(:gallery_demande), "dossier-show-instructeur" => profile =="instructeur"), "data-controller": "lightbox" }
-  .fr-grid-row.fr-grid-row--center
-    .fr-col-12.fr-col-xl-8
-      - if profile == 'instructeur' && dossier.termine_and_accuse_lecture?
-        = render Dsfr::CalloutComponent.new(title: nil) do |c|
-          - c.with_html_body do
-            = t('views.shared.dossiers.demande.accuse_lecture')
-            - if dossier.accuse_lecture_agreement_at.present?
-              = t('views.shared.dossiers.demande.accuse_lecture_with_agreement', agreement: l(dossier.accuse_lecture_agreement_at, format: :long))
-            - else
-              = t('views.shared.dossiers.demande.accuse_lecture_without_agreement')
+.counter-start-header-section.dossier-show{ class: class_names('gallery': feature_enabled?(:gallery_demande), 'gallery-demande': feature_enabled?(:gallery_demande), "dossier-show-instructeur" => profile =="instructeur"), "data-controller": "lightbox" }
 
-      %h2.fr-h6.fr-background-alt--grey.fr-mb-0
-        .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.en_construction')
+  - if profile == 'instructeur' && dossier.termine_and_accuse_lecture?
+    = render Dsfr::CalloutComponent.new(title: nil) do |c|
+      - c.with_html_body do
+        = t('views.shared.dossiers.demande.accuse_lecture')
+        - if dossier.accuse_lecture_agreement_at.present?
+          = t('views.shared.dossiers.demande.accuse_lecture_with_agreement', agreement: l(dossier.accuse_lecture_agreement_at, format: :long))
+        - else
+          = t('views.shared.dossiers.demande.accuse_lecture_without_agreement')
 
-      - if dossier.depose_at.present?
-        = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier, profile: profile }
+  %h2.fr-h6.fr-background-alt--grey.fr-mb-0
+    .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.en_construction')
 
-
-      - if dossier.for_tiers?
-        %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-          .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.mandataire_identity')
-
-          - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
-            = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
+  - if dossier.depose_at.present?
+    = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier, profile: profile }
 
 
-        = render partial: "shared/dossiers/mandataire_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), dossier: dossier }
+  - if dossier.for_tiers?
+    %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
+      .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.mandataire_identity')
 
-      .tab-title
-        %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-          .flex-grow.fr-py-3v.fr-px-2w
-            = t('views.shared.dossiers.demande.requester_identity')
-
-            - if dossier.identity_updated_at.present? && demande_seen_at&.<(dossier.identity_updated_at)
-              %span.fr-badge.fr-badge--new.fr-badge--sm
-                = t('views.shared.dossiers.demande.requester_identity_updated_at', date: try_format_datetime(dossier.identity_updated_at))
-
-          - if dossier.etablissement.present? && profile == 'usager' && !dossier.read_only?
-            = link_to t('views.shared.dossiers.demande.edit_siret'), siret_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
-
-          - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
-            = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
+      - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
+        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
 
 
-      = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), for_tiers: dossier.for_tiers?, beneficiaire_mail: dossier.for_tiers? ? dossier.individual.email : ""}
+    = render partial: "shared/dossiers/mandataire_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), dossier: dossier }
+
+  .tab-title
+    %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
+      .flex-grow.fr-py-3v.fr-px-2w
+        = t('views.shared.dossiers.demande.requester_identity')
+
+        - if dossier.identity_updated_at.present? && demande_seen_at&.<(dossier.identity_updated_at)
+          %span.fr-badge.fr-badge--new.fr-badge--sm
+            = t('views.shared.dossiers.demande.requester_identity_updated_at', date: try_format_datetime(dossier.identity_updated_at))
+
+      - if dossier.etablissement.present? && profile == 'usager' && !dossier.read_only?
+        = link_to t('views.shared.dossiers.demande.edit_siret'), siret_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
+
+      - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
+        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
 
 
-      - if dossier.individual.present?
-        = render partial: "shared/dossiers/identite_individual", locals: { dossier: dossier }
+  = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), for_tiers: dossier.for_tiers?, beneficiaire_mail: dossier.for_tiers? ? dossier.individual.email : ""}
 
-      - if dossier.etablissement.present?
-        .fr-mt-1w.fr-mb-4w.fr-px-2w
-          = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, profile: profile }
 
-      %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-        .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
+  - if dossier.individual.present?
+    = render partial: "shared/dossiers/identite_individual", locals: { dossier: dossier }
 
-      - types_de_champ = dossier.revision.types_de_champ_public
-      - if types_de_champ.any? || dossier.procedure.routing_enabled?
-        = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
+  - if dossier.etablissement.present?
+    .fr-mt-1w.fr-mb-4w.fr-px-2w
+      = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, profile: profile }
+
+  %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
+    .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
+
+  - types_de_champ = dossier.revision.types_de_champ_public
+  - if types_de_champ.any? || dossier.procedure.routing_enabled?
+    = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)

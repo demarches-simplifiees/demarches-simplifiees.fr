@@ -29,10 +29,9 @@ en:
       license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
-        title: "Accessibility declaration"
       api_doc:
         label: "API Documentation"
-        title: "API Documentation"
+        title: "Graphql API Documentation"
         url: "https://doc.demarches-simplifiees.fr/api-graphql"
       dinum:
         title: "Le site de la DINUM — Direction interministérielle du numérique"
@@ -40,8 +39,7 @@ en:
         alt: "Direction interministérielle du numérique"
       code:
         label: "Source code"
-        title: "Our Source code is open source"
-        url: "https://github.com/govpf/mes-demarches"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
       cgu:
         label: "ToS"
         title: "Terms of Service"
@@ -52,36 +50,32 @@ en:
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       doc:
         label: "Documentation"
-        title: "Our Documentation"
+        title: "User Documentation"
         url: "https://doc.demarches-simplifiees.fr"
       vote_feature:
         label: "Improve the site"
         title: "Vote for your priority improvements or share your own ideas"
       mentions_legales:
         label: "Legal notices"
-        title: "Legal notices regarding our platform"
       releases:
         label: "Releases notes"
-        title: "Our last updates"
-        url: "https://github.com/govpf/mes-demarches/releases"
+        title: "Releases notes: Our last updates"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
         label: "Security"
-        title: "Security policy"
+        title: "Security policy and procedures"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       carte:
         label: "Deployment map"
         title: "Deployment map by department"
       status_page:
         label: "Disponibility"
-        title: "Disponibility and availability"
+        title: "Disponibility and availability statistics"
         url: "https://status.demarches-simplifiees.fr"
       suivi:
         label: "Audience tracking and privacy"
-        title: "Tracking and privacy of demarches-simplifiees"
       cookies:
         label: Cookies
-        title: Cookies
       contact:
         label: Contact
-        title: Contact
       display_params: Display params

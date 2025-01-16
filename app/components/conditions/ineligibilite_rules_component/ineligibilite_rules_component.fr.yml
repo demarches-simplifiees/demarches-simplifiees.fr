@@ -1,0 +1,6 @@
+---
+fr:
+  display_if: Bloquer si
+  select: Sélectionner
+  add_condition: Ajouter une règle d’inéligibilité
+  remove_a_row: Supprimer une règle

@@ -43,6 +43,8 @@ end
 
 describe Logic::GreaterThanEq do
   include Logic
+  let(:champ) { create(:champ_integer_number, value: nil) }
+
   it 'computes' do
     expect(greater_than_eq(constant(0), constant(1)).compute).to be(false)
     expect(greater_than_eq(constant(1), constant(1)).compute).to be(true)

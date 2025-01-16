@@ -75,6 +75,3 @@ fr:
         path_not_available:
           owner: Cette url est identique à celle d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.
           not_owner: Cette url est identique à celle d’une autre démarche, vous devez la modifier afin de pouvoir publier votre démarche.
-    autosave_notice:
-      form_saved: "Formulaire enregistré"
-      form_error: "Formulaire en erreur"

@@ -66,7 +66,7 @@ class Helpscout::FormAdapter
       params[:email],
       params[:subject],
       params[:text],
-      params[:file]
+      params[:blob]
     )
 
     if response.success?
@@ -74,6 +74,8 @@ class Helpscout::FormAdapter
         @api.add_phone_number(params[:email], params[:phone])
       end
       response.headers['Resource-ID']
+    else
+      raise StandardError, "Error while creating conversation: #{response.response_code} '#{response.body}'"
     end
   end
 end

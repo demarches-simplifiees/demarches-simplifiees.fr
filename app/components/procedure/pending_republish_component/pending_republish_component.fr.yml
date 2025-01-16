@@ -1,0 +1,4 @@
+---
+fr:
+  pending_republish_html: |
+    Ces modifications ne seront appliquées qu'à la prochaine publication. Vous pouvez vérifier puis publier les modifications sur l'écran de <a href="%{href}">gestion de la démarche</a>

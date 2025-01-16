@@ -37,5 +37,20 @@ module Redcarpet
     def image(link, title, alt)
       view_context.image_tag(link, title:, alt:, loading: :lazy)
     end
+
+    # rubocop:disable Rails/OutputSafety
+    def block_quote(raw_html)
+      if raw_html =~ /^<p>\[!(INFO|WARNING)\]\n/
+        state = Regexp.last_match(1).downcase.to_sym
+        content = raw_html.sub(/^<p>\[!(?:INFO|WARNING)\]\n/, '<p>')
+        component = Dsfr::AlertComponent.new(state:, heading_level: "h2", extra_class_names: "fr-my-3w")
+        component.render_in(view_context) do |c|
+          c.with_body { content.html_safe }
+        end
+      else
+        view_context.content_tag(:blockquote, raw_html.html_safe)
+      end
+    end
+    # rubocop:enable Rails/OutputSafety
   end
 end

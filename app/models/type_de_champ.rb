@@ -732,6 +732,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ.in?(ROUTABLE_TYPES)
   end
 
+  def conditionable?
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ)
+  end
+
   def invalid_regexp?
     self.errors.delete(:expression_reguliere)
     self.errors.delete(:expression_reguliere_exemple_text)

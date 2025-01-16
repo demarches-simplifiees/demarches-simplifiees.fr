@@ -685,8 +685,24 @@ describe Dossier, type: :model do
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-    let(:types_de_champ) { [] }
-    let(:types_de_champ_private) { [] }
+
+    let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
+    let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
+
+    let(:tdc_1) { { libelle: "specified champ-in-title" } }
+    let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
+    let(:tdc_3) { { libelle: "specified champ-in-body" } }
+    let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
+    let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
+    let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
+    let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
+    let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
+
+    before do
+      (dossier.champs_public + dossier.champs_private)
+        .filter { |c| c.libelle.match?(/^specified/) }
+        .each { |c| c.update_attribute(:value, "specified") }
+    end
 
     subject { dossier.unspecified_attestation_champs.map(&:libelle) }
 
@@ -696,11 +712,11 @@ describe Dossier, type: :model do
       it { is_expected.to eq([]) }
     end
 
-    context "with attestation template" do
+    context "with attestation template v1" do
       # Test all combinations:
       # - with tag specified and unspecified
       # - with tag in body and tag in title
-      # - with tag correponsing to a champ and an annotation privée
+      # - with tag correponding to a champ and an annotation privée
       # - with a dash in the champ libelle / tag
       let(:title) { "voici --specified champ-in-title-- un --unspecified champ-in-title-- beau --specified annotation privée-in-title-- titre --unspecified annotation privée-in-title-- non --numéro du dossier--" }
       let(:body) { "voici --specified champ-in-body-- un --unspecified champ-in-body-- beau --specified annotation privée-in-body-- body --unspecified annotation privée-in-body-- non ?" }
@@ -712,26 +728,8 @@ describe Dossier, type: :model do
         it { is_expected.to eq([]) }
       end
 
-      context "wich is enabled" do
+      context "which is enabled" do
         let(:activated) { true }
-
-        let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
-        let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
-
-        let(:tdc_1) { { libelle: "specified champ-in-title" } }
-        let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
-        let(:tdc_3) { { libelle: "specified champ-in-body" } }
-        let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
-        let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
-        let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
-        let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
-        let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
-
-        before do
-          (dossier.champs_public + dossier.champs_private)
-            .filter { |c| c.libelle.match?(/^specified/) }
-            .each { |c| c.update_attribute(:value, "specified") }
-        end
 
         it do
           is_expected.to eq([
@@ -741,6 +739,40 @@ describe Dossier, type: :model do
             "unspecified annotation privée-in-body"
           ])
         end
+      end
+    end
+
+    context "with attestation template v2" do
+      # Test all combinations:
+      # - with tag specified and unspecified
+      # - with tag correponding to a champ and an annotation privée
+      let(:body) {
+        [
+          { "type" => "mention", "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find {  _1.libelle == "unspecified champ-in-body" }.stable_id}", "label" => "unspecified champ-in-body" } }
+        ]
+      }
+      let(:attestation_template) { build(:attestation_template, :v2) }
+
+      before do
+        tdc_content = (types_de_champ + types_de_champ_private).filter_map do |tdc_config|
+          next if tdc_config[:libelle].include?("in-title")
+
+          {
+            "type" => "mention",
+            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] }
+          }
+        end
+
+        json_body = attestation_template.json_body["content"]
+        attestation_template.json_body["content"][-1]["content"].concat(tdc_content)
+        attestation_template.save!
+      end
+
+      it do
+        is_expected.to eq([
+          "unspecified champ-in-body",
+          "unspecified annotation privée-in-body"
+        ])
       end
     end
   end

@@ -1,15 +1,4 @@
 .fr-alert.fr-alert--error.fr-mb-3w{ role: "alertdialog" }
-  - dedup_and_partitioned_errors do |head, tail|
-    %p#sumup-errors= t('.sumup_html', count: head.size + tail.size, url: head.first.anchor)
-    %ul.fr-mb-0#head-errors
-      - head.each do |error_descriptor|
-        %li
-          = link_to error_descriptor.label, error_descriptor.anchor, class: 'error-anchor'
-          = error_descriptor.error_message
-    - if tail.size > 0
-      %button{ type: "button", "aria-controls": 'tail-errors', "aria-expanded": "false", class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline" }= t('.see_more')
-      %ul#tail-errors.fr-collapse.fr-mt-0
-        - tail.each do |error_descriptor|
-          %li
-            = link_to error_descriptor.label, error_descriptor.anchor, class: 'error-anchor'
-            = "(#{error_descriptor.error_message})"
+  - if dedup_and_partitioned_errors.size > 0
+    %p#sumup-errors= t('.sumup_html', count: dedup_and_partitioned_errors.size, url: dedup_and_partitioned_errors.first.anchor)
+    = render ExpandableErrorList.new(errors: dedup_and_partitioned_errors)

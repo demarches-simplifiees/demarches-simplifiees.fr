@@ -29,66 +29,66 @@
           -# .fr-header__service
             - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
-            = link_to root_profile_link, title: "#{root_profile_libelle} — #{Current.application_name}" do
-              %span.fr-header__service-title{ lang: "fr" }= Current.application_name
+              = link_to root_profile_link, title: "#{root_profile_libelle} — #{Current.application_name}" do
+                %span.fr-header__service-title{ lang: "fr" }= Current.application_name
 
-        .fr-header__tools
-          .fr-header__tools-links.relative
+          .fr-header__tools
+            .fr-header__tools-links.relative
 
-            %ul.fr-btns-group.flex.align-center
-              - if instructeur_signed_in? || user_signed_in?
+              %ul.fr-btns-group.flex.align-center
+                - if instructeur_signed_in? || user_signed_in?
+                  %li
+                    = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile, dossier: dossier }
+                - elsif (request.path != new_user_session_path && request.path !=agent_connect_path)
+                  - if request.path == new_user_registration_path
+                    %li.fr-hidden-sm.fr-unhidden-lg.fr-link--sm.fr-mb-2w.fr-mr-1v= t('views.shared.account.already_user_question')
+                  %li= link_to 'Agent', agent_connect_path, class: "fr-btn fr-btn--tertiary fr-icon-government-fill fr-btn--icon-left"
+                  %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn fr-btn--tertiary fr-icon-account-circle-fill fr-btn--icon-left"
+
                 %li
-                  = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile, dossier: dossier }
-              - elsif (request.path != new_user_session_path && request.path !=agent_connect_path)
-                - if request.path == new_user_registration_path
-                  %li.fr-hidden-sm.fr-unhidden-lg.fr-link--sm.fr-mb-2w.fr-mr-1v= t('views.shared.account.already_user_question')
-                %li= link_to 'Agent', agent_connect_path, class: "fr-btn fr-btn--tertiary fr-icon-government-fill fr-btn--icon-left"
-                %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn fr-btn--tertiary fr-icon-account-circle-fill fr-btn--icon-left"
+                  - if dossier.present? && nav_bar_profile == :user
+                    = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
 
-              %li
-                - if dossier.present? && nav_bar_profile == :user
-                  = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+                  - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+                    = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
-                - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
-                  = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
-
-                - elsif nav_bar_profile == :instructeur
-                  = render partial: 'shared/help/help_dropdown_instructeur'
-                - else
-                  // NB: on mobile in order to have links correctly aligned, we need a left icon
-                  = link_to t('help'), t("links.common.faq.url"), class: 'fr-btn dropdown-button', title: t('help')
+                  - elsif nav_bar_profile == :instructeur
+                    = render partial: 'shared/help/help_dropdown_instructeur'
+                  - else
+                    // NB: on mobile in order to have links correctly aligned, we need a left icon
+                    = link_to t('help'), t("links.common.faq.url"), class: 'fr-btn dropdown-button'
 
 
 
-              - if localization_enabled?
-                %li= render partial: 'layouts/locale_dropdown'
+                - if localization_enabled?
+                  %li= render partial: 'layouts/locale_dropdown'
 
 
-          - if params[:controller] == 'recherche'
-            = render partial: 'layouts/search_dossiers_form'
+            - if params[:controller] == 'recherche'
+              = render partial: 'layouts/search_dossiers_form'
 
-          - if is_instructeur_context
-            = render partial: 'layouts/search_dossiers_form'
+            - if is_instructeur_context
+              = render partial: 'layouts/search_dossiers_form'
 
-          - if is_expert_context
-            = render partial: 'layouts/search_dossiers_form'
+            - if is_expert_context
+              = render partial: 'layouts/search_dossiers_form'
 
-  = render SwitchDomainBannerComponent.new(user: current_user)
+    = render SwitchDomainBannerComponent.new(user: current_user)
 
-  #modal-header__menu.fr-header__menu.fr-modal{ "aria-labelledby": "navbar-burger-button" }
-    .fr-container
-      %button.fr-btn--close.fr-btn{ "aria-controls" => "modal-header__menu", title: t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
-      .fr-header__menu-links
-        -# populated by dsfr js
+    #modal-header__menu.fr-header__menu.fr-modal{ "aria-labelledby": "navbar-burger-button" }
+      .fr-container
+        %button.fr-btn--close.fr-btn{ "aria-controls" => "modal-header__menu", title: t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
+        .fr-header__menu-links
+          -# populated by dsfr js
 
-      - if content_for?(:main_navigation)
-        = yield(:main_navigation)
-      - elsif is_administrateur_context
-        = render 'administrateurs/main_navigation'
-      - elsif is_instructeur_context || is_expert_context
-        = render MainNavigation::InstructeurExpertNavigationComponent.new
-      - elsif is_user_context
-        = render 'users/main_navigation'
+        - if content_for?(:main_navigation)
+          = yield(:main_navigation)
+        - elsif is_administrateur_context
+          = render 'administrateurs/main_navigation'
+        - elsif is_instructeur_context || is_expert_context
+          = render MainNavigation::InstructeurExpertNavigationComponent.new
+        - elsif is_user_context
+          = render 'users/main_navigation'
 
 
-  = yield(:notice_info)
+    = yield(:notice_info)

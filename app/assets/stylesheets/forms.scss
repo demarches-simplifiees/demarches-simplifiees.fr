@@ -698,41 +698,11 @@ textarea::placeholder {
   color: $dark-grey;
 }
 
-@media (max-width: 62em) {
-
-  .padded-fixed-footer {
-    padding-top: 120px;
-  }
-}
-
-@media (min-width: 62em) {
-
-  .padded-fixed-footer {
-    padding-top: 60px;
-  }
-}
-
-[data-fr-theme="dark"] .fixed-footer {
-  border-top: 2px solid var(--background-action-low-blue-france-hover);
-  background-color: var(--background-action-low-blue-france);
-}
-
 .mandatory {
   fill: currentColor;
 }
 
-.fixed-footer {
-  border-top: 2px solid $blue-france-500;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding-top: $default-padding;
-  background-color: $white;
-  z-index: 2;
-}
-
-.fr-menu__list {
+:not(.fr-translate) .fr-menu__list {
   padding: $default-spacer;
   overflow-y: auto;
 

@@ -1,17 +1,19 @@
 class ProcedureRevisionChange
-  attr_reader :type_de_champ
-  def initialize(type_de_champ)
-    @type_de_champ = type_de_champ
+  class TypeDeChange
+    attr_reader :type_de_champ
+    def initialize(type_de_champ)
+      @type_de_champ = type_de_champ
+    end
+
+    def label = @type_de_champ.libelle
+    def stable_id = @type_de_champ.stable_id
+    def private? = @type_de_champ.private?
+    def child? = @type_de_champ.child?
+
+    def to_h = { op:, stable_id:, label:, private: private? }
   end
 
-  def label = @type_de_champ.libelle
-  def stable_id = @type_de_champ.stable_id
-  def private? = @type_de_champ.private?
-  def child? = @type_de_champ.child?
-
-  def to_h = { op:, stable_id:, label:, private: private? }
-
-  class AddChamp < ProcedureRevisionChange
+  class AddChamp < TypeDeChange
     def initialize(type_de_champ)
       super(type_de_champ)
     end
@@ -23,7 +25,7 @@ class ProcedureRevisionChange
     def to_h = super.merge(mandatory: mandatory?)
   end
 
-  class RemoveChamp < ProcedureRevisionChange
+  class RemoveChamp < TypeDeChange
     def initialize(type_de_champ)
       super(type_de_champ)
     end
@@ -32,7 +34,7 @@ class ProcedureRevisionChange
     def can_rebase?(dossier = nil) = true
   end
 
-  class MoveChamp < ProcedureRevisionChange
+  class MoveChamp < TypeDeChange
     attr_reader :from, :to
 
     def initialize(type_de_champ, from, to)
@@ -46,7 +48,7 @@ class ProcedureRevisionChange
     def to_h = super.merge(from:, to:)
   end
 
-  class UpdateChamp < ProcedureRevisionChange
+  class UpdateChamp < TypeDeChange
     attr_reader :attribute, :from, :to
 
     def initialize(type_de_champ, attribute, from, to)
@@ -74,5 +76,49 @@ class ProcedureRevisionChange
         true
       end
     end
+  end
+
+  class EligibiliteRulesChange
+    attr_reader :previous_revision, :new_revision
+    def initialize(previous_revision, new_revision)
+      @previous_revision = previous_revision
+      @new_revision = new_revision
+      @previous_ineligibilite_rules = @previous_revision.ineligibilite_rules
+      @new_ineligibilite_rules = @new_revision.ineligibilite_rules
+    end
+
+    def i18n_params
+      {
+        previous_condition: @previous_ineligibilite_rules&.to_s(previous_revision.types_de_champ.filter { @previous_ineligibilite_rules.sources.include? _1.stable_id }),
+        new_condition: @new_ineligibilite_rules&.to_s(new_revision.types_de_champ.filter { @new_ineligibilite_rules.sources.include? _1.stable_id })
+      }
+    end
+  end
+
+  class AddEligibiliteRuleChange < EligibiliteRulesChange
+    def op = :add
+  end
+
+  class RemoveEligibiliteRuleChange < EligibiliteRulesChange
+    def op = :remove
+  end
+
+  class UpdateEligibiliteRuleChange < EligibiliteRulesChange
+    def op = :update
+  end
+
+  class EligibiliteEnabledChange < EligibiliteRulesChange
+    def op = :enabled
+    def i18n_params = {}
+  end
+
+  class EligibiliteDisabledChange < EligibiliteRulesChange
+    def op = :disabled
+    def i18n_params = {}
+  end
+
+  class UpdateEligibiliteMessageChange < EligibiliteRulesChange
+    def op = :message_updated
+    def i18n_params = { ineligibilite_message: @new_revision.ineligibilite_message }
   end
 end
