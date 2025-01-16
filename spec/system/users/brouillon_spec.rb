@@ -292,7 +292,6 @@ describe 'The user', js: true do
     user_old_dossier = travel_to(simple_procedure.duree_conservation_dossiers_dans_ds.month.ago) do
       create(:dossier,
        procedure: simple_procedure,
-       updated_at: simple_procedure.duree_conservation_dossiers_dans_ds.month.ago,
        user: user)
     end
     login_as(user, scope: :user)
@@ -302,7 +301,9 @@ describe 'The user', js: true do
     find('#test-user-repousser-expiration').click
     expect(page).to have_no_selector('#test-user-repousser-expiration')
 
-    travel_to((9.months + 1.day).from_now) do
+    months_before_expiration = Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION + simple_procedure.duree_conservation_dossiers_dans_ds
+
+    travel_to((months_before_expiration.months + 1.day).from_now) do
       visit brouillon_dossier_path(user_old_dossier)
       expect(page).to have_css('.fr-callout__title', text: 'Votre dossier a expiré', visible: true)
       find('#test-user-repousser-expiration').click

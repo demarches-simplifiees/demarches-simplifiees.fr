@@ -286,10 +286,9 @@ class Dossier < ApplicationRecord
   end
 
   scope :interval_brouillon_close_to_expiration, -> do
-    max_months = 3
     state_brouillon
       .visible_by_user
-      .where("dossiers.updated_at + dossiers.conservation_extension + (LEAST(procedures.duree_conservation_dossiers_dans_ds, #{max_months}) * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.updated_at + dossiers.conservation_extension + (LEAST(procedures.duree_conservation_dossiers_dans_ds, #{Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION}) * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_en_construction_close_to_expiration, -> do
     state_en_construction
