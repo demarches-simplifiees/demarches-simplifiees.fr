@@ -96,7 +96,7 @@ gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sib-api-v3-sdk'
 gem 'sidekiq', '< 7.3' # 7.3 needs to migrate to sidekiq-cron 2.0
-gem 'sidekiq-cron'
+gem 'sidekiq-cron', '< 2.0' # wait for a release without "keys command"
 gem 'skylight'
 gem 'spreadsheet_architect'
 gem 'string-similarity'
