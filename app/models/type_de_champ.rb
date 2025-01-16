@@ -238,7 +238,7 @@ class TypeDeChamp < ApplicationRecord
 
   def set_default_libelle
     libelle_was_default = libelle == default_libelle(type_champ_was)
-    self.libelle = default_libelle(type_champ) if libelle_was_default
+    self.libelle = default_libelle(type_champ) if libelle.blank? || libelle_was_default
   end
 
   def default_libelle(type_champ)

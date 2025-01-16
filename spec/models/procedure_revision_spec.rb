@@ -72,13 +72,6 @@ describe ProcedureRevision do
       end
     end
 
-    context 'when a libelle is missing' do
-      let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
-      let(:tdc_params) { text_params.except(:libelle) }
-
-      it { expect(subject.errors.full_messages).to eq(["Le champ « Libelle » doit être rempli"]) }
-    end
-
     context 'when a parent is incorrect' do
       let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
       let(:tdc_params) { text_params.merge(parent_id: 123456789) }
