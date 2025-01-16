@@ -3,10 +3,8 @@
 require "rails_helper"
 
 module Maintenance
-  RSpec.describe BackfillAddressValueJSONTask do
+  RSpec.describe T20250116BackfillAddressValueJSONTask do
     describe "#process" do
-      subject(:process) { described_class.process }
-
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :address, libelle: 'address' }]) }
       let(:dossier) { create(:dossier, procedure:) }
       let(:address_champ) { dossier.project_champs_public.first }
@@ -17,7 +15,7 @@ module Maintenance
       it do
         expect(address_champ.value_json).to be_nil
 
-        process
+        described_class.process(address_champ)
         address_champ.reload
 
         expect(address_champ.value_json).to eq(address_data)
