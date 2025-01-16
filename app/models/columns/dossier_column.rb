@@ -11,6 +11,8 @@ class Columns::DossierColumn < Column
       dossier.individual.public_send(column)
     when 'groupe_instructeur'
       dossier.groupe_instructeur.label
+    when 'dossier_labels'
+      dossier.labels.map(&:name).join(' ')
     when 'followers_instructeurs'
       dossier.followers_instructeurs.map(&:email).join(' ')
     end

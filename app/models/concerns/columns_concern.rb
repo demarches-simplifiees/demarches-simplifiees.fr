@@ -55,6 +55,7 @@ module ColumnsConcern
       columns.concat([dossier_motivation_column])
       columns.concat(sva_svr_columns(for_export: true)) if sva_svr_enabled?
       columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
+      columns.concat([dossier_labels_column])
 
       # ensure the columns exist in main list
       # otherwise, they will be found by the find_column method

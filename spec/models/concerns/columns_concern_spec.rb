@@ -260,7 +260,8 @@ describe ColumnsConcern do
           procedure.find_column(label: "Date de traitement"),
           procedure.find_column(label: "Motivation de la décision"),
           procedure.find_column(label: "Instructeurs"),
-          procedure.find_column(label: "Groupe instructeur")
+          procedure.find_column(label: "Groupe instructeur"),
+          procedure.find_column(label: "Labels")
         ]
         actuals = procedure.dossier_columns_for_export.map(&:h_id)
         expected.each do |expected_col|
