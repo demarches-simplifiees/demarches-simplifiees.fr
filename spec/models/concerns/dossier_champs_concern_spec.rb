@@ -265,6 +265,7 @@ RSpec.describe DossierChampsConcern do
       context "champ with type change" do
         let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: "Un champ text", stable_id: 99 }]) }
         let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        let(:project_champ) { dossier.project_champ(type_de_champ_public) }
 
         before do
           tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
@@ -278,6 +279,7 @@ RSpec.describe DossierChampsConcern do
           expect(subject.persisted?).to be_truthy
           expect(subject.is_a?(Champs::CheckboxChamp)).to be_truthy
           expect(subject.value).to be_nil
+          expect(project_champ.is_a?(Champs::CheckboxChamp)).to be_truthy
         }
       end
     end

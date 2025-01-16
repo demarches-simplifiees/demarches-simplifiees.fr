@@ -252,14 +252,18 @@ class TypeDeChamp < ApplicationRecord
   def params_for_champ
     {
       private: private?,
-      type: self.class.type_champ_to_champ_class_name(type_champ),
+      type: champ_class.name,
       stable_id:,
       stream: 'main'
     }
   end
 
+  def champ_class
+    self.class.type_champ_to_champ_class_name(type_champ).constantize
+  end
+
   def build_champ(params = {})
-    self.class.type_champ_to_champ_class_name(type_champ).constantize.new(params_for_champ.merge(params))
+    champ_class.new(params_for_champ.merge(params))
   end
 
   def check_mandatory
