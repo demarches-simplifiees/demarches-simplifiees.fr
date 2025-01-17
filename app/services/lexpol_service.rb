@@ -67,7 +67,7 @@ class LexpolService
     status_info  = apilexpol.get_dossier_status(champ.value)
     dossier_info = apilexpol.get_dossier_infos(champ.value)
 
-    champ.lexpol_status      = status_info['libelle']
+    champ.lexpol_status      = status_info[:libelle]
     champ.lexpol_dossier_url = dossier_info['lienDossier']
     champ.save!
   end
