@@ -1024,6 +1024,12 @@ class Dossier < ApplicationRecord
     procedure.accuse_lecture? && termine?
   end
 
+  def touch_champs_changed(attributes)
+    update_columns(attributes.each_with_object({ brouillon_close_to_expiration_notice_sent_at: nil }) do |attribute, hash|
+      hash[attribute] = Time.zone.now
+    end)
+  end
+
   private
 
   def build_default_champs

@@ -544,7 +544,7 @@ module Users
       # requests it, we ask for field validation errors.
       if dossier.save
         if dossier.brouillon? && updated_champs.present?
-          dossier.touch(:last_champ_updated_at)
+          dossier.touch_champs_changed([:last_champ_updated_at])
           if updated_champs.any?(&:used_by_routing_rules?)
             @update_contact_information = true
             RoutingEngine.compute(dossier)

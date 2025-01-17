@@ -2426,6 +2426,25 @@ describe Dossier, type: :model do
     it { expect(dossier.sva_svr_decision_in_days).to eq 10 }
   end
 
+  describe '#touch_champs_changed' do
+    let(:dossier) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: 10.days.ago) }
+
+    subject { dossier.touch_champs_changed(attributes) }
+
+    let(:attributes) { [:last_champ_updated_at] }
+
+    it { is_expected.to change(dossier, :last_champ_updated_at) }
+
+    it { is_expected.to change(dossier, :brouillon_close_to_expiration_notice_sent_at).to(nil) }
+
+    context 'when there is two attributes' do
+      let(:attributes) { [:last_champ_updated_at, :last_champ_piece_jointe_updated_at] }
+
+      it { is_expected.to change(dossier, :last_champ_updated_at) }
+      it { is_expected.to change(dossier, :last_champ_piece_jointe_updated_at) }
+    end
+  end
+
   private
 
   def count_for_month(processed_by_month, month)

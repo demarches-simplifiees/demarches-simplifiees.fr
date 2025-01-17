@@ -32,7 +32,7 @@ class Champs::PieceJustificativeController < Champs::ChampController
     end
 
     if save_succeed && dossier.brouillon?
-      dossier.touch(:last_champ_updated_at, :last_champ_piece_jointe_updated_at)
+      dossier.touch_champs_changed([:last_champ_updated_at, :last_champ_piece_jointe_updated_at])
     end
 
     save_succeed

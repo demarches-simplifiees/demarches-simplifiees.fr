@@ -76,8 +76,11 @@ module DossierCloneConcern
       rebase!
       diff = make_diff(editing_fork)
       apply_diff(diff)
-      touch(:last_champ_updated_at)
-      touch(:last_champ_piece_jointe_updated_at) if diff[:updated].any? { |c| c.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
+
+      attributes_to_touch = [:last_champ_updated_at]
+      attributes_to_touch << :last_champ_piece_jointe_updated_at if diff[:updated].any? { |c| c.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
+
+      touch_champs_changed(attributes_to_touch)
     end
     reload
     index_search_terms_later
