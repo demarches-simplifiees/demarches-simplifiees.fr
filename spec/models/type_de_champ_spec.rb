@@ -266,6 +266,25 @@ describe TypeDeChamp do
     it { expect(create(:type_de_champ, libelle: " fix me ").libelle).to eq("fix me") }
   end
 
+  describe '#set_default_libelle' do
+    let(:type_de_champ) { create(:type_de_champ, type_champ: :header_section, libelle: libelle) }
+    let(:libelle) { nil }
+
+    it { expect(type_de_champ.libelle).to eq("Titre de section") }
+
+    context "when the type champ is changed" do
+      before { type_de_champ.update(type_champ: :dossier_link) }
+
+      it { expect(type_de_champ.libelle).to eq("Numéro de dossier déposé sur %{app_name}") }
+
+      context "when the libelle is customized" do
+        let(:libelle) { "Customized libelle" }
+
+        it { expect(type_de_champ.libelle).to eq("Customized libelle") }
+      end
+    end
+  end
+
   describe '#safe_filename' do
     subject { build(:type_de_champ, libelle:).libelle_as_filename }
 

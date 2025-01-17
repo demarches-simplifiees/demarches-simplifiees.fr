@@ -163,9 +163,6 @@ class TypeDeChamp < ApplicationRecord
 
   serialize :condition, LogicSerializer
 
-  after_initialize :set_dynamic_type
-  after_create :populate_stable_id
-
   attr_reader :dynamic_type
 
   scope :public_only, -> { where(private: false) }
@@ -209,11 +206,15 @@ class TypeDeChamp < ApplicationRecord
     allow_blank: true
   }
 
+  after_initialize :set_dynamic_type
+  after_create :populate_stable_id
+
   before_validation :check_mandatory
+  before_validation :set_default_libelle, if: -> { type_champ_changed? }
   before_validation :normalize_libelle
+  before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
-  before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
 
   def valid?(context = nil)
     super
@@ -233,6 +234,19 @@ class TypeDeChamp < ApplicationRecord
   def type_champ=(value)
     super(value)
     set_dynamic_type
+  end
+
+  def set_default_libelle
+    libelle_was_default = libelle == default_libelle(type_champ_was)
+    self.libelle = default_libelle(type_champ) if libelle.blank? || libelle_was_default
+  end
+
+  def default_libelle(type_champ)
+    return if type_champ.blank?
+
+    I18n.t(type_champ,
+      scope: [:activerecord, :attributes, :type_de_champ, :default_libelle],
+      default: I18n.t(type_champ, scope: [:activerecord, :attributes, :type_de_champ, :type_champs]))
   end
 
   def params_for_champ

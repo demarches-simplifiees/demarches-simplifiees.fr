@@ -58,12 +58,12 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
     context "validate" do
       let(:type_champ) { TypeDeChamp.type_champs.fetch(:text) }
-      let(:params) { default_params.deep_merge(type_de_champ: { libelle: '' }) }
+      let(:params) { default_params.deep_merge(type_de_champ: { type_champ: nil }) }
 
       it do
         is_expected.to have_http_status(:ok)
         expect(assigns(:coordinate)).to be_nil
-        expect(flash.alert).to eq(["Le champ « Libelle » doit être rempli"])
+        expect(flash.alert).to eq(["Le champ « Type champ » doit être rempli"])
       end
     end
   end
