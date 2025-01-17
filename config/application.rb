@@ -15,14 +15,17 @@ module TPS
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w(assets tasks cops data generators linters prawn templates))
+    # config.add_autoload_paths_to_load_path = false
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
 
-    Rails.autoloaders.main.ignore(Rails.root.join('lib/cops'))
-    Rails.autoloaders.main.ignore(Rails.root.join('lib/linters'))
-    Rails.autoloaders.main.ignore(Rails.root.join('lib/tasks/task_helper.rb'))
     Rails.autoloaders.main.collapse('app/tasks/maintenance/concerns')
     config.paths.add Rails.root.join('spec/mailers/previews').to_s, eager_load: true
     config.autoload_paths << "#{Rails.root}/app/jobs/concerns"
