@@ -154,6 +154,8 @@ group :development do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
+  gem 'spring' # Spring speeds up development by keeping your application running in the background
+  gem 'spring-commands-rspec'
   gem 'stackprof'
   gem 'web-console'
 end
@@ -165,6 +167,4 @@ group :development, :test do
   gem 'mina', require: false # Deploy
   gem 'rspec-rails'
   gem 'simple_xlsx_reader'
-  gem 'spring' # Spring speeds up development by keeping your application running in the background
-  gem 'spring-commands-rspec'
 end
