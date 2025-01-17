@@ -29,7 +29,7 @@ class Champs::CarteController < Champs::ChampController
     if save_feature(geo_area, update_params_feature)
       head :no_content
     else
-      render json: { errors: geo_area.errors.full_message }, status: :unprocessable_entity
+      render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
