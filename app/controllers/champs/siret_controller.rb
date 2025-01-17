@@ -10,5 +10,6 @@ class Champs::SiretController < Champs::ChampController
     else
       @siret = @champ.etablissement_fetch_error_key
     end
+    @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
 end
