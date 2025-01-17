@@ -22,8 +22,9 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
     dossiers_close_to_expiration = Dossier
       .brouillon_close_to_expiration
       .without_brouillon_expiration_notice_sent
+      .limit(MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY)
 
-    user_notifications = group_by_user_email(dossiers_close_to_expiration).take(MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY)
+    user_notifications = group_by_user_email(dossiers_close_to_expiration)
 
     user_notifications.each do |(email, dossiers)|
       mail = DossierMailer.notify_brouillon_near_deletion(
