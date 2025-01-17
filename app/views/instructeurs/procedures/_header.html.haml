@@ -1,8 +1,9 @@
 .procedure-header
-  .align-start.flex
+  .clipboard-container.flex
     = render Instructeurs::BackButtonComponent.new(to: instructeur_procedures_path)
     %h1.fr-h3.fr-mb-0
       = "#{procedure_libelle procedure} (n°#{procedure.id})"
+      = procedure_badge(procedure) if procedure.brouillon? || procedure.close?
   %nav.fr-nav#navigation{ role: "navigation", "aria-label": t('instructeurs.dossiers.header.banner.procedure_navigation') }
     %ul.fr-nav__list
       %li.fr-nav__item

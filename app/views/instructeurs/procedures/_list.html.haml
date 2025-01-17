@@ -5,7 +5,7 @@
         %nav.fr-nav{ role: "navigation", "aria-label": "Menu de la procédure" }
           %ul.fr-nav__list
             %li.fr-nav__item.relative
-              %button.fr-nav__btn.fr-btn--tertiary.fr-h-5v.hide-chevron{ "aria-expanded": "false", "aria-controls": "mega-menu-#{p.id}" }
+              %button.fr-nav__btn.fr-h-5v.hide-chevron{ "aria-expanded": "false", "aria-controls": "mega-menu-#{p.id}" }
                 %span.fr-icon-menu-2-fill.fr-icon--sm.fr-mr-1w
                 Menu
               .fr-collapse.fr-mega-menu{ id: "mega-menu-#{p.id}", tabindex: "-1" , style: "min-width: 350px" }
@@ -76,11 +76,10 @@
                                 = link_to t('instructeurs.dossiers.header.banner.archives'), list_instructeur_archives_path(p), class: 'fr-nav__link'
                               %li
                                 = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(p), class: 'fr-nav__link'
-            = badge = procedure_badge(p)
-        %h3{ class: class_names('font-weight-normal fr-link fr-ml-3v' => true, 'fr-ml-1v' => badge.present?) }
-          = link_to "#{p.libelle} - n° #{p.id}", instructeur_procedure_path(p)
 
-          = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(p.path))
+        %h3{ class: class_names('font-weight-normal fr-link fr-ml-3v' => true) }
+          = link_to "#{p.libelle} - n° #{p.id}", instructeur_procedure_path(p)
+          %span.fr-ml-1w= badge = procedure_badge(p)
 
     %ul.procedure-stats.flex.wrap.flex-gap-1
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w

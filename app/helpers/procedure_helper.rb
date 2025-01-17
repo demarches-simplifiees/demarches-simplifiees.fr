@@ -2,9 +2,7 @@
 
 module ProcedureHelper
   def procedure_libelle(procedure)
-    parts = procedure.brouillon? ? [procedure_badge(procedure)] : []
-    parts << procedure.libelle
-    safe_join(parts, ' ')
+    procedure.libelle
   end
 
   def procedure_badge(procedure)
