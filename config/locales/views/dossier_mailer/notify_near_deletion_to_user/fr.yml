@@ -11,14 +11,14 @@ fr:
         one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier en attente d'instruction suivant sera supprimé automatiquement dans deux semaines :"
         other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers en attente d'instruction suivants seront supprimés automatiquement dans deux semaines :"
       header_termine:
-        one: "Afin de respecter la durée de conservation de vos données personnelles, ce dossier traité sera supprimé dans deux semaines :"
-        other: "Afin de respecter la durée de conservation de vos données personnelles, ces dossiers traités seront supprimés dans deux semaines :"
+        one: 'Afin de respecter la durée de conservation de vos données personnelles, ce dossier traité sera supprimé dans deux semaines :'
+        other: 'Afin de respecter la durée de conservation de vos données personnelles, ces dossiers traités seront supprimés dans deux semaines :'
       account_active:
         one: Votre compte reste activé sur Démarches Simplifiées, seul le dossier sera supprimé.
         other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers seront supprimés.
       footer_termine:
-        one: Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page
-        other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page "
+        one: Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirants » sur la page
+        other: 'Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirants » sur la page '
       footer_en_construction:
         one: Depuis la page de votre dossier vous avez la possibilité de :<br>- prolonger la durée de conservation<br>- contacter l'administration qui gère votre dossier via la messagerie
         other: Depuis la page de vos dossiers vous avez la possibilité de :<br>- prolonger la durée de conservation<br>- contacter l'administration qui gère votre dossier via la messagerie
