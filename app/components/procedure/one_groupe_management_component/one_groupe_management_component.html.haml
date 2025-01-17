@@ -2,7 +2,6 @@
   %h1.fr-h2 Configuration du groupe « #{@groupe_instructeur.label} »
   %h2.fr-h3 Paramètres du groupe
 
-  = render Procedure::ImportComponent.new(procedure: @procedure)
   .card
     = form_for @groupe_instructeur,
       url: admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
