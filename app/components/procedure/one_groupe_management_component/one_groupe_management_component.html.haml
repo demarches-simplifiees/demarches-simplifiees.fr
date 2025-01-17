@@ -31,20 +31,10 @@
 
   %h2.fr-h3 Dossiers affectés
   .card
-    .fr-hint-text.mt-2.mb-2
-    %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le
-    %span
-      = link_to 'champ concerné', champs_admin_procedure_path(@procedure)
-
-    .flex.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right.mb-2
-      - if @groupe_instructeur.can_delete?
-        %p= t('.delete')
-        = button_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
-        class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line',
-        method: :delete,
-        data: { confirm: t('.delete_confirmation', group_name: @groupe_instructeur.label) } do
-          Supprimer
-      - else
+    .flex.justify-between.align-center.fr-btns-group--sm.fr-btns-group--icon-right
+      %span.fr-icon.fr-icon-folder-2-line.fr-mr-2w
+        = t('.number_of_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)
+      - if !@groupe_instructeur.can_delete?
         = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
         class: 'fr-btn fr-btn--tertiary fr-icon-folder-2-line',
         title: t('.move_files_confirmation'),
@@ -54,3 +44,7 @@
   %h2.fr-h3 Règle(s) de routage
   .card
     = render Conditions::RoutingRulesComponent.new(groupe_instructeur: @groupe_instructeur)
+    .fr-hint-text.mt-2.mb-2
+      %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le
+      %span
+        = link_to 'champ concerné', champs_admin_procedure_path(@procedure)
