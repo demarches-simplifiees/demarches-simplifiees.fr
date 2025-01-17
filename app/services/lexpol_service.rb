@@ -51,10 +51,11 @@ class LexpolService
     variables = {}
 
     mapping.each do |source_field, target_field|
-      values = LexpolFieldsService.object_field_values(dossier, source_field)
+      raw_values = LexpolFieldsService.object_field_values(dossier, source_field)
+      final_values = raw_values.map { |v| v.respond_to?(:value) ? v.value : v }
 
-      next if values.blank?
-      variables[target_field] = values.join(', ')
+      next if final_values.blank?
+      variables[target_field] = final_values.join(', ')
     end
 
     variables
