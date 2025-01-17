@@ -88,7 +88,7 @@ describe Expired::DossiersDeletionService do
     end
   end
 
-  describe '#process_empty_dossiers_brouillon' do
+  describe '#process_never_touched_dossiers_brouillon' do
     let(:types) { [{ type: :text }] }
     let(:procedure_opts) { { types_de_champ_public: types } }
 
@@ -96,7 +96,7 @@ describe Expired::DossiersDeletionService do
       allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
     end
 
-    subject { service.process_empty_dossiers_brouillon(3.weeks.ago..2.weeks.ago) }
+    subject { service.process_never_touched_dossiers_brouillon(3.weeks.ago..2.weeks.ago) }
 
     context 'with empty brouillon dossiers' do
       let!(:empty_brouillon) { travel_to(15.days.ago) { create(:dossier, procedure: procedure) } }

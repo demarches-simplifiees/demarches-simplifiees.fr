@@ -3,8 +3,8 @@
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
   BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY = ENV.fetch("BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY", 10_000).to_i
 
-  def process_empty_dossiers_brouillon(deletion_window)
-    delete_empty_brouillons_and_notify(deletion_window)
+  def process_never_touched_dossiers_brouillon
+    delete_never_touched_brouillons
   end
 
   def process_expired_dossiers_brouillon
@@ -56,21 +56,10 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
     )
   end
 
-  def delete_empty_brouillons_and_notify(deletion_window)
-    empty_brouillons = Dossier.empty_brouillon(deletion_window)
+  def delete_never_touched_brouillons
+    never_touched_brouillons = Dossier.never_touched_brouillon_expired
 
-    user_notifications = group_by_user_email(empty_brouillons)
-      .map { |(email, dossiers)| [email, dossiers.map(&:hash_for_deletion_mail)] }
-
-    empty_brouillons.destroy_all
-
-    user_notifications.each do |(email, dossiers_hash)|
-      mail = DossierMailer.notify_brouillon_deletion(
-        dossiers_hash,
-        email
-      )
-      send_with_delay(mail)
-    end
+    never_touched_brouillons.in_batches.destroy_all
   end
 
   def delete_expired_brouillons_and_notify

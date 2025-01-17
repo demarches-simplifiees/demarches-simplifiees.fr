@@ -12,7 +12,6 @@ class Dossier < ApplicationRecord
   include DossierSectionsConcern
   include DossierStateConcern
   include DossierChampsConcern
-  include DossierEmptyConcern
   include DossierExportConcern
 
   enum :state, {
@@ -338,6 +337,7 @@ class Dossier < ApplicationRecord
     end
   end
 
+  scope :never_touched_brouillon_expired, -> { brouillon.where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil).where(created_at: ..2.weeks.ago) }
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
