@@ -62,7 +62,7 @@ fr:
           annuaire_education: Établissement
           communes: Commune
           departements: Département
-          dossier_link: Numéro de dossier déposé sur Démarches Simplifiées
+          dossier_link: Numéro de dossier déposé sur %{app_name}
           epci: Établissements publics de coopération intercommunale (EPCI)
           iban: IBAN
           regions: Région

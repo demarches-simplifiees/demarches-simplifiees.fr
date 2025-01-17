@@ -60,7 +60,7 @@ en:
           referentiel: 'External data to configure (advanced)'
         default_libelle:
           annuaire_education: Educational institution
-          dossier_link: File number submitted on Démarches Simplifiées
+          dossier_link: File number submitted on %{app_name}
           epci: Public establishments for intercommunal cooperation (EPCI)
           iban: IBAN
           siret: SIRET number
