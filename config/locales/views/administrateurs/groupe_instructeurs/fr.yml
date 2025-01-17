@@ -27,16 +27,19 @@ fr:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
       instructeurs:
-        title: Instructeurs
+        title: Affecter un nouvel instructeur
+        table_title: Instructeurs
         assigned_instructeur:
           one: "%{count} instructeur affecté"
           other: "%{count} instructeurs affectés"
         instructeur_assignation: Affectation des instructeurs
         assign: Affecter
         remove: Retirer
-        instructeur_emails: Adresse électronique des instructeurs que vous souhaitez affecter à cette démarche
+        instructeur_emails: Adresse(s) électronique(s)
         copy_paste_hint: "Vous pouvez saisir les adresses individuellement, ou bien copier-coller dans le champ ci-dessous une liste d’adresses séparées par des points-virgules (exemple : adresse1@mail.com; adresse2@mail.com; adresse3@mail.com)."
-        actions: Retirer
+        actions: Action
+        notification_alert_html: Même si votre démarche est encore en test / non publiée, tous les instructeurs que vous ajouterez à la démarche <strong>seront notifiés par email</strong>.
+        notification_alert_publiee_html: Tous les instructeurs que vous ajouterez à la démarche <strong>seront notifiés par email</strong>.
       import:
         groupe:
           one: "%{count} groupe"

@@ -20,7 +20,7 @@ en:
           one: "%{count} group exist"
           other: "%{count} groups exist"
       instructeurs:
-        title: Instructors
+        title: Assign a new instructor
         assigned_instructeur:
           one: "%{count} instructor assigned"
           other: "%{count} instructors assigned"

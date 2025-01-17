@@ -1,12 +1,20 @@
 
 %h2.fr-h3= t('.instructeur_assignation')
+
 .card
+  .card-title= t('.title')
+  - if procedure.routing_enabled?
+    .fr-icon-mail-line.fr-alert.fr-mb-3w
+      - if @procedure.publiee?
+        = t(".notification_alert_publiee_html")
+      - else
+        = t(".notification_alert_html")
+
   = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_admin_procedure_groupe_instructeur_path(@procedure, groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
-      - if !procedure.routing_enabled?
-        %p= t('.instructeur_emails')
-        %p.fr-hint-text= t('.copy_paste_hint')
+      %p= t('.instructeur_emails')
+      %p.fr-hint-text= t('.copy_paste_hint')
 
       - if disabled_as_super_admin
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
@@ -23,29 +31,29 @@
     = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
       Exporter la liste (.csv)
 
-  .fr-table
+  .fr-table.fr-table--bordered.fr-table--no-caption
     .fr-table__wrapper
       .fr-table__container
         .fr-table__content
           %table
             %thead
               %tr
-                %th{ scope: 'col' }= t('.title')
-                %th{ scope: 'col' }= t('.actions')
+                %th.fr-col-11{ scope: 'col' }= t('.table_title')
+                %th.fr-col-1.fr-cell--center{ scope: 'col' }= t('.actions')
             %tbody
               - instructeurs.each do |instructeur|
                 %tr
-                  %td
+                  %td.fr-col-11{ scope: 'col' }
                     = dsfr_icon('fr-icon-user-line')
                     #{instructeur.email}
 
                   - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-                  %td.actions= button_to t('.remove'),
+                  %td.fr-col-1.fr-cell--center.actions{ scope: 'col' }= button_to t('.remove'),
                     { action: :remove_instructeur, id: groupe_instructeur.id },
                     { method: :delete,
                       data: { confirm: confirmation_message },
                       params: { instructeur: { id: instructeur.id }},
-                      class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-subtract-line' }
+                      class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-subtract-line fr-cell---right' }
 
     .fr-table__footer
       .fr-table__footer--start
