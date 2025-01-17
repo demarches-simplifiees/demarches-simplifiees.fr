@@ -82,9 +82,4 @@ class Champs::CarteController < Champs::ChampController
       true
     end
   end
-
-  def propagate_touch_champs_changed
-    @champ.touch
-    @champ.dossier.touch_champs_changed([:last_champ_updated_at])
-  end
 end
