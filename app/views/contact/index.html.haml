@@ -1,11 +1,11 @@
-- content_for(:title, t('.contact'))
+- content_for(:title, t('.contact', app_name: APPLICATION_NAME))
 - content_for :footer do
   = render partial: "root/footer"
 
 #contact-form
   .fr-container
     %h1
-      = t('.contact')
+      = t('.contact', app_name: APPLICATION_NAME)
 
     .fr-highlight= t('.intro_html')
 
