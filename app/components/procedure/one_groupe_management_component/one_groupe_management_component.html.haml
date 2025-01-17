@@ -9,7 +9,7 @@
       = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
       .flex
         = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w'
-        = f.button 'Renommer', class: 'fr-btn fr-btn--secondary'
+        = f.button 'Renommer', class: 'fr-btn fr-btn--tertiary'
 
     = form_for @groupe_instructeur,
       url: admin_procedure_groupe_instructeur_update_state_path(@procedure, @groupe_instructeur),
@@ -19,7 +19,15 @@
         = f.check_box :closed, { id: 'closed', "aria-describedby" => "closed-messages", :name => "closed" }
         %label.fr-label{ :for => "closed" }
           Groupe inactif
-          %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d’instructeurs
+          %span.fr-hint-text Si cette option est activée, les dossiers ne seront pas routés dans ce groupe si les usagers sélectionnent ce choix.
+    - if @groupe_instructeur.can_delete?
+      = button_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
+      class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line',
+      method: :delete,
+      data: { confirm: t('.delete_confirmation', group_name: @groupe_instructeur.label) } do
+        Supprimer ce groupe
+    - else
+      %em Vous ne pouvez pas supprimer ce groupe car des dossiers lui sont affectés.
 
   %h2.fr-h3 Dossiers affectés
   .card
