@@ -3,7 +3,7 @@
     method: :patch,
     data: { turbo: true, controller: 'autosave' },
     class: 'form width-100' do
-    .conditionnel.mt-2.width-100
+    .conditionnel.width-100
       .flex
         - if @groupe_instructeur.invalid_rule?
           %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm règle invalide
@@ -12,7 +12,7 @@
 
       = render Conditions::ConditionsErrorsComponent.new(conditions: condition_per_row, source_tdcs: @source_tdcs)
 
-      %table.condition-table.mt-2
+      %table.condition-table
         %thead
           %tr
             %th.far-left

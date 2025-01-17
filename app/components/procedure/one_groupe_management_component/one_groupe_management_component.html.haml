@@ -44,7 +44,8 @@
   %h2.fr-h3 Règle(s) de routage
   .card
     = render Conditions::RoutingRulesComponent.new(groupe_instructeur: @groupe_instructeur)
-    .fr-hint-text.mt-2.mb-2
-      %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le
-      %span
-        = link_to 'champ concerné', champs_admin_procedure_path(@procedure)
+    %p.fr-alert.fr-alert--info.fr-mt-3w{ aria: { hidden: true } }
+      Si vous ne trouvez pas l’option correspondant à votre groupe, veuillez l’ajouter dans le champ concerné dans la page d’édition des
+      = link_to('champs du formulaire',
+        champs_admin_procedure_path(@procedure),
+        **helpers.external_link_attributes)
