@@ -89,65 +89,18 @@ describe Expired::DossiersDeletionService do
   end
 
   describe '#process_never_touched_dossiers_brouillon' do
-    let(:types) { [{ type: :text }] }
-    let(:procedure_opts) { { types_de_champ_public: types } }
+    subject { service.process_never_touched_dossiers_brouillon }
 
-    before do
-      allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
-    end
+    context 'with never touched brouillon dossiers' do
+      let!(:never_touched_brouillon) { travel_to(20.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:never_touched_brouillon_2) { travel_to(7.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:never_touched_en_construction) { travel_to(20.days.ago) { create(:dossier, :en_construction, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:touched_brouillon) { travel_to(20.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: 1.day.ago, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:touched_brouillon_2) { travel_to(20.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: 1.day.ago) } }
 
-    subject { service.process_never_touched_dossiers_brouillon(3.weeks.ago..2.weeks.ago) }
-
-    context 'with empty brouillon dossiers' do
-      let!(:empty_brouillon) { travel_to(15.days.ago) { create(:dossier, procedure: procedure) } }
-      let!(:empty_brouillon_2) { travel_to(15.days.ago) { create(:dossier, procedure: procedure, user: empty_brouillon.user) } }
-      let!(:empty_brouillon_3) { travel_to(7.days.ago) { create(:dossier, procedure: procedure, user: empty_brouillon.user) } }
-
-      it 'deletes empty brouillons and sends notifications' do
-        subject
-        expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
-        expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(
-          match_array([empty_brouillon.hash_for_deletion_mail, empty_brouillon_2.hash_for_deletion_mail]),
-          empty_brouillon.user.email
-        )
-        expect { empty_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { empty_brouillon_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { empty_brouillon_3.reload }.not_to raise_error
-      end
-    end
-
-    context 'with non-empty brouillon dossiers' do
-      let!(:not_empty_brouillon) { travel_to(15.days.ago) { create(:dossier, procedure: procedure) } }
-
-      before do
-        not_empty_brouillon.champs.first.update!(value: 'filled')
-      end
-
-      it 'does not delete non-empty brouillons' do
-        subject
-        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
-        expect { not_empty_brouillon.reload }.not_to raise_error
-      end
-    end
-
-    context 'with dossiers too recent' do
-      let!(:recent_empty_brouillon) { travel_to(7.days.ago) { create(:dossier, procedure: procedure) } }
-
-      it 'does not delete recent brouillons' do
-        subject
-        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
-        expect { recent_empty_brouillon.reload }.not_to raise_error
-      end
-    end
-
-    context 'with non-brouillon dossiers' do
-      let!(:en_construction_dossier) { travel_to(15.days.ago) { create(:dossier, :en_construction, procedure: procedure) } }
-
-      it 'does not delete non-brouillon dossiers' do
-        subject
-
-        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
-        expect { en_construction_dossier.reload }.not_to raise_error
+      it 'deletes never touched brouillons ' do
+        expect { subject }.to change { Dossier.never_touched_brouillon_expired.count }.from(1).to(0)
+        expect(Dossier.all).to contain_exactly(never_touched_brouillon_2, never_touched_en_construction, touched_brouillon, touched_brouillon_2)
       end
     end
   end
