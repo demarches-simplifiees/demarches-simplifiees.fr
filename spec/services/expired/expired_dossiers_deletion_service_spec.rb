@@ -450,4 +450,22 @@ describe Expired::DossiersDeletionService do
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier_2], dossier_2.procedure.administrateurs.first.email) }
     end
   end
+
+  describe 'all_user_dossiers_brouillon_close_to_expiration' do
+    before { Timecop.freeze(reference_date) }
+    after  { Timecop.return }
+
+    let(:today) { Time.zone.now.at_beginning_of_day }
+    let(:date_expired) { today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let(:user) { create(:user) }
+    let!(:expired_brouillon_1) { create(:dossier, procedure:, user:, updated_at: date_expired) }
+    let!(:expired_brouillon_2) { create(:dossier, procedure:, user:, updated_at: date_expired) }
+
+    it 'find additional dossiers' do
+      expired_brouillon_1
+      expired_brouillon_2
+      expect(Expired::DossiersDeletionService.new.send(:all_user_dossiers_brouillon_close_to_expiration, user))
+        .to contain_exactly(expired_brouillon_1, expired_brouillon_2)
+    end
+  end
 end
