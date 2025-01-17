@@ -29,13 +29,13 @@ class Champs::CarteController < Champs::ChampController
     if save_feature(geo_area, update_params_feature)
       head :no_content
     else
-      render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: geo_area.errors.full_message }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @champ.geo_areas.find(params[:id]).destroy!
-    @champ.touch
+    propagate_touch_champs_changed
 
     head :no_content
   end
@@ -78,8 +78,13 @@ class Champs::CarteController < Champs::ChampController
       geo_area.properties.merge!(feature[:properties])
     end
     if geo_area.save
-      @champ.touch
+      propagate_touch_champs_changed
       true
     end
+  end
+
+  def propagate_touch_champs_changed
+    @champ.touch
+    @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
 end
