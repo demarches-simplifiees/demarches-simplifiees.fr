@@ -8,5 +8,6 @@ class Champs::RNAController < Champs::ChampController
     unless @champ.fetch_association!(rna)
       @error = @champ.association_fetch_error_key
     end
+    @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
 end

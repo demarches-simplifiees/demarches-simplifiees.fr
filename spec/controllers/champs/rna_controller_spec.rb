@@ -38,14 +38,20 @@ describe Champs::RNAController, type: :controller do
         let(:status) { 422 }
         let(:body) { '' }
 
-        subject! { get :show, params: params, format: :turbo_stream }
+        subject { get :show, params: params, format: :turbo_stream }
 
         it 'clears the data on the model' do
+          subject
           expect(champ.reload.data).to be_nil
         end
 
         it 'clears any information or error message' do
+          subject
           expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :rna_info))
+        end
+
+        it 'updates dossier.last_champs_updated_at' do
+          expect { subject }.to change { dossier.reload.last_champ_updated_at }
         end
       end
 
@@ -54,14 +60,20 @@ describe Champs::RNAController, type: :controller do
         let(:status) { 422 }
         let(:body) { '' }
 
-        subject! { get :show, params: params, format: :turbo_stream }
+        subject { get :show, params: params, format: :turbo_stream }
 
         it 'clears the data on the model' do
+          subject
           expect(champ.reload.data).to be_nil
         end
 
         it 'displays a “RNA is invalid” error message' do
+          subject
           expect(response.body).to include("Le numéro RNA doit commencer par un W majuscule suivi de 9 chiffres ou lettres")
+        end
+
+        it 'updates dossier.last_champs_updated_at' do
+          expect { subject }.to change { dossier.reload.last_champ_updated_at }
         end
       end
 
