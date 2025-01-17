@@ -1,7 +1,7 @@
 
+%h2.fr-h3= t('.instructeur_assignation')
 .card
   = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_admin_procedure_groupe_instructeur_path(@procedure, groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
-  .card-title= t('.instructeur_assignation')
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
       - if !procedure.routing_enabled?

@@ -1,5 +1,5 @@
+%h2.fr-h3 Tampon de l’attestation
 .card.mt-2
-  %h2.fr-h3 Tampon de l'attestation
   = render NestedForms::FormOwnerComponent.new
   = form_with url: { action: :add_signature }, method: :post, html: { multipart: true } do |f|
     %p.fr-text--sm.fr-text-mention--grey
