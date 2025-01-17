@@ -1,9 +1,9 @@
 default_user:
   email: default_user@user.com
   encrypted_password: <%= Devise::Encryptor.digest(User, '{My-$3cure-p4ssWord}') %>
-  confirmed_at: <%= Time.current.to_s(:db) %>
+  confirmed_at: <%= Time.current.to_s %>
 
 default_user_admin:
   email: default_admin@admin.com
   encrypted_password: <%= Devise::Encryptor.digest(User, '{My-$3cure-p4ssWord}') %>
-  confirmed_at: <%= Time.current.to_s(:db) %>
+  confirmed_at: <%= Time.current.to_s %>
