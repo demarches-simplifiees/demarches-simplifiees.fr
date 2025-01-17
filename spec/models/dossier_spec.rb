@@ -2429,7 +2429,7 @@ describe Dossier, type: :model do
   describe '#touch_champs_changed' do
     let(:dossier) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: 10.days.ago) }
 
-    subject { dossier.touch_champs_changed(attributes) }
+    subject { -> { dossier.touch_champs_changed(attributes) } }
 
     let(:attributes) { [:last_champ_updated_at] }
 
