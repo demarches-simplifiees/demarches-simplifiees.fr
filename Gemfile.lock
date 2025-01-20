@@ -941,6 +941,7 @@ DEPENDENCIES
   chartkick
   chunky_png
   clamav-client
+  concurrent-ruby (< 1.3.5)
   daemons
   deep_cloneable
   delayed_cron_job
