@@ -20,7 +20,7 @@ class APIEntreprise::Job < ApplicationJob
   # We guess the backend is slow but not broken
   # and the information we are looking for is available
   # so we retry few seconds later (exponentially to avoid overload)
-  retry_on APIEntreprise::API::Error::TimedOut, wait: :exponentially_longer
+  retry_on APIEntreprise::API::Error::TimedOut, wait: :polynomially_longer
 
   # If by the time the job runs the Etablissement has been deleted
   # (it can happen through EtablissementUpdateJob for instance), ignore the job
