@@ -35,7 +35,7 @@ class ProcedureRevision < ApplicationRecord
     if: -> { ineligibilite_enabled? },
     on: [:ineligibilite_rules_editor, :publication]
 
-  serialize :ineligibilite_rules, LogicSerializer
+  serialize :ineligibilite_rules, coder: LogicSerializer
 
   def add_type_de_champ(params)
     parent_stable_id = params.delete(:parent_stable_id)
