@@ -62,7 +62,7 @@ class Procedure < ApplicationRecord
   has_and_belongs_to_many :procedure_tags
 
   has_many :bulk_messages, dependent: :destroy
-  has_many :labels, dependent: :destroy
+  has_many :labels, -> { order(:position, :id) }, dependent: :destroy, inverse_of: :procedure
 
   has_many :instructeurs_procedures, dependent: :destroy
 
