@@ -48,7 +48,7 @@ describe RechercheController, type: :controller do
 
         it 'returns the expected dossier' do
           expect(assigns(:projected_dossiers).count).to eq(1)
-          expect(assigns(:projected_dossiers).first.dossier).to eq(dossier)
+          expect(assigns(:projected_dossiers).first).to eq(dossier)
         end
       end
 
@@ -62,7 +62,7 @@ describe RechercheController, type: :controller do
 
         it 'returns the expected dossier' do
           expect(assigns(:projected_dossiers).count).to eq(1)
-          expect(assigns(:projected_dossiers).first.dossier).to eq(dossier_with_expert)
+          expect(assigns(:projected_dossiers).first).to eq(dossier_with_expert)
         end
       end
 
@@ -146,7 +146,7 @@ describe RechercheController, type: :controller do
       it 'returns the expected dossier' do
         subject
         expect(assigns(:projected_dossiers).count).to eq(1)
-        expect(assigns(:projected_dossiers).first.dossier).to eq(dossier)
+        expect(assigns(:projected_dossiers).first).to eq(dossier)
       end
 
       context 'when dossier has notification' do
@@ -170,7 +170,7 @@ describe RechercheController, type: :controller do
         it 'returns only the dossier available to the expert' do
           subject
           expect(assigns(:projected_dossiers).count).to eq(1)
-          expect(assigns(:projected_dossiers).first.dossier).to eq(dossier_with_expert)
+          expect(assigns(:projected_dossiers).first).to eq(dossier_with_expert)
         end
       end
     end
@@ -184,7 +184,7 @@ describe RechercheController, type: :controller do
 
       it 'returns the expected dossier' do
         expect(assigns(:projected_dossiers).count).to eq(1)
-        expect(assigns(:projected_dossiers).first.dossier).to eq(dossier_with_expert)
+        expect(assigns(:projected_dossiers).first).to eq(dossier_with_expert)
       end
 
       context 'as an expert' do

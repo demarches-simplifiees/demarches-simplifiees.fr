@@ -36,6 +36,8 @@ class Column
   def dossier_state? = [table, column] == ['self', 'state']
   def groupe_instructeur? = [table, column] == ['groupe_instructeur', 'id']
   def dossier_labels? = [table, column] == ['dossier_labels', 'label_id']
+  def email? = [table, column] == ['user', 'email']
+  def avis? = [table, column] == ['avis', 'question_answer']
   def type_de_champ? = table == TYPE_DE_CHAMP_TABLE
 
   def self.find(h_id)
