@@ -124,6 +124,15 @@ describe 'shared/dossiers/edit', type: :view do
       end
     end
 
+    context 'when dossier is en construction (stream)' do
+      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+      let(:dossier_for_editing) { dossier.with_update_stream(dossier.user) }
+
+      it 'can delete a piece justificative' do
+        expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
+      end
+    end
+
     context 'when dossier is brouillon' do
       it 'can delete a piece justificative' do
         expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
