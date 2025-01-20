@@ -159,9 +159,9 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  serialize :options, WithIndifferentAccess
+  serialize :options, coder: WithIndifferentAccess
 
-  serialize :condition, LogicSerializer
+  serialize :condition, coder: LogicSerializer
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
