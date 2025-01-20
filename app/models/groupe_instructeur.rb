@@ -125,5 +125,5 @@ class GroupeInstructeur < ApplicationRecord
     rule.errors(tdcs).blank?
   end
 
-  serialize :routing_rule, LogicSerializer
+  serialize :routing_rule, coder: LogicSerializer
 end

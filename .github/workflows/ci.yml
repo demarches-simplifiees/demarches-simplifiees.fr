@@ -7,6 +7,9 @@ on:
   merge_group:
     branches: [main]
 
+env:
+  DISABLE_SPRING: '1'
+
 jobs:
   linters:
     name: Linters
