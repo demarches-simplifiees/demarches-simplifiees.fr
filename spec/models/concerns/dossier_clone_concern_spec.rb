@@ -290,7 +290,7 @@ RSpec.describe DossierCloneConcern do
 
       it do
         expect(subject).to eq(added: [], updated: [], removed: [])
-        expect(forked_dossier.forked_with_changes?).to be_truthy
+        expect(forked_dossier.user_buffer_changes?).to be_truthy
       end
     end
 
@@ -299,11 +299,11 @@ RSpec.describe DossierCloneConcern do
 
       before { updated_champ.update(value: 'new value') }
 
-      it 'forked_with_changes? should reflect dossier state' do
+      it 'user_buffer_changes? should reflect dossier state' do
         expect(subject).to eq(added: [], updated: [updated_champ], removed: [])
-        expect(dossier.forked_with_changes?).to be_falsey
-        expect(forked_dossier.forked_with_changes?).to be_truthy
-        expect(updated_champ.forked_with_changes?).to be_truthy
+        expect(dossier.user_buffer_changes?).to be_truthy
+        expect(forked_dossier.user_buffer_changes?).to be_truthy
+        expect(updated_champ.user_buffer_changes?).to be_truthy
       end
     end
 

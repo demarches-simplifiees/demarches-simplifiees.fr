@@ -30,7 +30,7 @@ RSpec.describe Dossiers::EditFooterComponent, type: :component do
   context 'when en construction' do
     let(:fork_origin) { create(:dossier, :en_construction) }
     let(:dossier) { fork_origin.clone(fork: true) }
-    before { allow(dossier).to receive(:forked_with_changes?).and_return(true) }
+    before { allow(dossier).to receive(:user_buffer_changes?).and_return(true) }
 
     context 'when dossier can be submitted' do
       before { allow(component).to receive(:can_passer_en_construction?).and_return(true) }

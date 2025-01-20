@@ -4,6 +4,6 @@
 - if @focus
   = turbo_stream.dispatch 'map:feature:focus', bbox: @champ.bounding_box
 
-- if @champ.dossier.editing_fork?
+- if @champ.dossier.en_construction_for_editor?
   = turbo_stream.replace_all '.dossier-edit-sticky-footer' do
     = render Dossiers::EditFooterComponent.new(dossier: @champ.dossier, annotation: @champ.private?)
