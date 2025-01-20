@@ -3,7 +3,7 @@
   - if @champ.mandatory?
     = render EditableChamp::AsteriskMandatoryComponent.new
 
-- if @champ.forked_with_changes?
+- if @champ.user_buffer_changes?
   %span.updated-at.highlighted
     = t('.changes_to_save')
 - elsif @champ.updated_at.present? && @seen_at.present?

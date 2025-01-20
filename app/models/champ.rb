@@ -242,8 +242,8 @@ class Champ < ApplicationRecord
     input_id
   end
 
-  def forked_with_changes?
-    public? && dossier.champ_forked_with_changes?(self)
+  def user_buffer_changes?
+    public? && dossier.user_buffer_changes_on_champ?(self)
   end
 
   def public_id
