@@ -116,7 +116,7 @@ module Database::MigrationHelpers
     say_with_time "Deleting records from #{from_table} where the associated #{to_table.to_s.singularize} no longer exists" do
       from_table = Arel::Table.new(from_table)
       to_table = Arel::Table.new(to_table)
-      foreign_key_column = foreign_key_column_for(to_table.name)
+      foreign_key_column = foreign_key_column_for(to_table.name, "id")
 
       # Select the ids of orphan records
       arel_select = from_table
