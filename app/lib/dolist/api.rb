@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "support/jsv"
-
 module Dolist
   class API
     CONTACT_URL = "https://apiv9.dolist.net/v1/contacts/read?AccountID=%{account_id}"
@@ -89,6 +87,7 @@ module Dolist
     end
 
     # def send_email_with_attachment(mail)
+    #   Need to re-enable JSV support, blame this commit for code.
     #   uri = URI(format_url(EMAIL_SENDING_TRANSACTIONAL_ATTACHMENT))
 
     #   request = Net::HTTP::Post.new(uri)
