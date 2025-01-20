@@ -243,7 +243,7 @@ module DossierChampsConcern
       champ = champ.becomes!(champ_attributes[:type].constantize)
     end
 
-    champ.assign_attributes(champ_attributes)
+    champ.assign_attributes(champ_attributes.except(:stable_id))
     champ.save!
 
     reset_champ_cache(champ)
