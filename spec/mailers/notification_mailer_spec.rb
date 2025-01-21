@@ -62,7 +62,7 @@ RSpec.describe NotificationMailer, type: :mailer do
         expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
         expect(body).to include("Votre dossier nº #{dossier.id}")
         expect(body).to include(procedure.service.nom)
-        # expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe NotificationMailer, type: :mailer do
       it 'renders the template' do
         expect(mail.subject).to eq('Email subject')
         expect(body).to include('Your dossier was received')
-        # expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
       end
     end
   end

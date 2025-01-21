@@ -27,12 +27,12 @@ module Mails
     DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.initiated_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:en_construction)
 
-    # def attachment_for_dossier(dossier)
-    #   {
-    #     filename: I18n.t('users.dossiers.show.papertrail.filename'),
-    #     content: deposit_receipt_for_dossier(dossier)
-    #   }
-    # end
+    def attachment_for_dossier(dossier)
+      {
+        filename: I18n.t('users.dossiers.show.papertrail.filename'),
+        content: deposit_receipt_for_dossier(dossier)
+      }
+    end
 
     private
 
