@@ -80,6 +80,7 @@ class Service < ApplicationRecord
       attributes: { allow_blank: true },
       no_local: true,
     )
+    
     url_validator.validate_each(self, :email, email)
   end
 end
