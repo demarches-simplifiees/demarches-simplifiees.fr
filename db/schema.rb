@@ -1101,6 +1101,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
 
   create_table "referentiels", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "digest"
     t.string "headers", default: [], array: true
     t.string "hint"
     t.string "mode"
