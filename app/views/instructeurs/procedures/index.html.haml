@@ -24,6 +24,7 @@
     - collection = @procedures_closes
 
   - if collection.present?
+    = render Instructeurs::WarningBannerComponent.new(draft: @statut == "brouillons", single_procedure: false)
     .fr-container.flex.justify-between.fr-mb-6w
       %h2.fr-h6.fr-m-0
         = page_entries_info collection

@@ -10,7 +10,7 @@
       .flex
         %h1.fr-h5.fr-mb-0= t('.file_tracking')
         = render Instructeurs::TabsExplanationsComponent.new
-
+      = render Instructeurs::WarningBannerComponent.new(draft: @procedure.brouillon?, single_procedure: true)
     .fr-container
       .flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
