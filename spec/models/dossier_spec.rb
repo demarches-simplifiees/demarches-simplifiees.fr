@@ -2578,10 +2578,10 @@ describe Dossier, type: :model do
   end
 
   describe '#never_touched_brouillon_expired' do
-    let!(:dossier) { travel_to(2.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+    let!(:dossier) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
     let!(:dossier_2) { travel_to(1.week.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
-    let!(:dossier_with_champ_updated) { travel_to(2.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: 1.day.ago, last_champ_piece_jointe_updated_at: nil) } }
-    let!(:dossier_with_piece_jointe_updated) { travel_to(2.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: 1.day.ago) } }
+    let!(:dossier_with_champ_updated) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: 1.day.ago, last_champ_piece_jointe_updated_at: nil) } }
+    let!(:dossier_with_piece_jointe_updated) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: 1.day.ago) } }
 
     let!(:dossier_en_construction) { create(:dossier, :en_construction, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) }
 
@@ -2590,7 +2590,7 @@ describe Dossier, type: :model do
     it { is_expected.to contain_exactly(dossier) }
 
     context 'when the dossier has been cloned' do
-      let!(:cloned_dossier) { dossier_with_champ_updated.clone }
+      let!(:cloned_dossier) { travel_to(3.weeks.ago) { dossier_with_champ_updated.clone } }
 
       it { is_expected.to contain_exactly(dossier, cloned_dossier) }
     end
