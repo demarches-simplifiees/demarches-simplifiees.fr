@@ -4,13 +4,13 @@
     Personnaliser l'ordre des #{@procedures.size} démarches « en cours »
   %p Déplacez les démarches dans la liste pour les classer en fonction de vos préférences :
 
-  %fr-container{ data: { controller: 'move-procedures-position' } }
+  %fr-container{ data: { controller: 'move-cards-position' } }
     = form_tag update_order_positions_instructeur_procedures_path, method: :patch, id: 'order-instructeur-procedures-form' do
       - @procedures.each do |procedure|
         .fr-card.fr-mb-1w.fr-py-1w.fr-px-2w
           .flex.align-center
-            %button.fr-btn.fr-icon-arrow-up-line.fr-btn--secondary.fr-col-1{ data: { action: "move-procedures-position#moveUp" } }
-            %button.fr-btn.fr-icon-arrow-down-line.fr-btn--secondary.fr-col-1.fr-mx-2w{ data: { action: "move-procedures-position#moveDown" } }
+            %button.fr-btn.fr-icon-arrow-up-line.fr-btn--secondary.fr-col-1{ data: { action: "move-cards-position#moveUp" } }
+            %button.fr-btn.fr-icon-arrow-down-line.fr-btn--secondary.fr-col-1.fr-mx-2w{ data: { action: "move-cards-position#moveDown" } }
             - if procedure.close?
               %span.fr-badge.fr-mr-2w Close
             - elsif procedure.depubliee?

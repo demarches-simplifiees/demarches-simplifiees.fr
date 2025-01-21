@@ -1,6 +1,6 @@
 import { ApplicationController } from './application_controller';
 
-export class MoveProceduresPositionController extends ApplicationController {
+export class MoveCardsPositionController extends ApplicationController {
   connect() {
     this.updateButtonsStates();
   }
