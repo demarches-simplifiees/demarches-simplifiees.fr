@@ -72,10 +72,8 @@ class Service < ApplicationRecord
   def validate_email_or_url
     return if email.blank?
 
-    # Vérifie d'abord si c'est un email valide avec StrictEmailValidator
     return if StrictEmailValidator::REGEXP.match?(email)
 
-    # Si ce n'est pas un email valide, vérifie si c'est une URL valide
     url_validator = URLValidator.new(
       attributes: { allow_blank: true },
       no_local: true,
