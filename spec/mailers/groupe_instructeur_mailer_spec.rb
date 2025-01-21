@@ -50,7 +50,6 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
 
     context 'when there is only one group on procedure' do
       it { expect(subject.body).to include('Vous avez été affecté(e) à la démarche') }
-      it { expect(subject.bcc).to match_array(['int3@g.fr', 'int4@g.fr']) }
     end
 
     context 'when there are many groups on procedure' do
@@ -58,7 +57,6 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
         GroupeInstructeur.create(label: 'gi2', procedure: procedure)
       end
       it { expect(subject.body).to include('Vous avez été ajouté(e) au groupe') }
-      it { expect(subject.bcc).to match_array(['int3@g.fr', 'int4@g.fr']) }
     end
   end
 end

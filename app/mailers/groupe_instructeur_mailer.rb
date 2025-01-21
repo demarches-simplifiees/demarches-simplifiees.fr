@@ -17,7 +17,6 @@ class GroupeInstructeurMailer < ApplicationMailer
   end
 
   def notify_added_instructeurs(group, added_instructeurs, current_instructeur_email)
-    added_instructeur_emails = added_instructeurs.map(&:email)
     @group = group
     @current_instructeur_email = current_instructeur_email
 
@@ -27,7 +26,7 @@ class GroupeInstructeurMailer < ApplicationMailer
       "Vous avez été affecté(e) à la démarche « #{group.procedure.libelle} »"
     end
 
-    mail(bcc: added_instructeur_emails, subject: subject)
+    mail(subject: subject)
   end
 
   def self.critical_email?(action_name)
