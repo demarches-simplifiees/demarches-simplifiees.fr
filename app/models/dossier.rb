@@ -1025,8 +1025,9 @@ class Dossier < ApplicationRecord
   end
 
   def touch_champs_changed(attributes)
-    update_columns(attributes.each_with_object({ brouillon_close_to_expiration_notice_sent_at: nil }) do |attribute, hash|
-      hash[attribute] = Time.zone.now
+    now = Time.zone.now
+    update_columns(attributes.each_with_object({ brouillon_close_to_expiration_notice_sent_at: nil, updated_at: now }) do |attribute, hash|
+      hash[attribute] = now
     end)
   end
 
