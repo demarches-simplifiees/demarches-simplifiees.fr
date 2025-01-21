@@ -1,6 +1,7 @@
 -# small expires mention
 - if dossier.expirable?
-  %p.expires_at
+  %p.expires_at.fr-mb-1w
+
     %small
       = t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
       - if dossier.conservation_extension.positive?

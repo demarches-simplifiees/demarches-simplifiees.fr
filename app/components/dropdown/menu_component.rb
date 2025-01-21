@@ -58,6 +58,10 @@ class Dropdown::MenuComponent < ApplicationComponent
     @button_options[:disabled] == true
   end
 
+  def title
+    @button_options[:title]
+  end
+
   def data
     { menu_button_target: 'button' }.deep_merge(@button_options[:data].to_h)
   end

@@ -42,7 +42,7 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier, statut: 'a-suivre'))
     page.find('.back-btn').click
 
-    click_on 'Suivre le dossier'
+    click_on 'Suivre'
     click_on 'suivi'
     expect(page).to have_current_path(instructeur_procedure_path(procedure, statut: 'suivis'))
 
@@ -110,7 +110,7 @@ describe 'Instructing a dossier:', js: true do
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     dossier_present?(dossier.id, 'en construction')
 
-    click_on 'Suivre le dossier'
+    click_on 'Suivre'
     expect(page).to have_current_path(instructeur_procedure_path(procedure))
     test_statut_bar(suivi: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
@@ -160,7 +160,7 @@ describe 'Instructing a dossier:', js: true do
     log_in(instructeur.email, password)
 
     click_on procedure.libelle
-    click_on 'Suivre le dossier'
+    click_on 'Suivre'
     click_on 'suivi'
     click_on dossier.user.email
 

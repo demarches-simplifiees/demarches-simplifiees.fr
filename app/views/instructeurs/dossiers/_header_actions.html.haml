@@ -1,18 +1,21 @@
-%ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline-md.fr-btns-group--icon-right.flex.justify-end.fr-mb-1w
-  = render partial: "instructeurs/procedures/dossier_actions",
-    locals: { procedure_id: dossier.procedure.id,
-              dossier_id: dossier.id,
-              dossier: dossier,
-              state: dossier.state,
-              archived: dossier.archived,
-              dossier_is_followed: current_instructeur&.follow?(dossier),
-              close_to_expiration: dossier.close_to_expiration?,
-              hidden_by_administration: dossier.hidden_by_administration?,
-              hidden_by_expired: dossier.hidden_by_expired?,
-              has_pending_correction: dossier.pending_correction?,
-              has_blocking_pending_correction: dossier.procedure.feature_enabled?(:blocking_pending_correction) && dossier.pending_correction?,
-              turbo: true,
-              with_menu: true }
+.flex.justify-end.fr-mb-1w
+  %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline-md.fr-btns-group--icon-right
+    = render partial: "instructeurs/procedures/dossier_actions",
+      locals: { procedure_id: dossier.procedure.id,
+                dossier_id: dossier.id,
+                dossier: dossier,
+                state: dossier.state,
+                archived: dossier.archived,
+                dossier_is_followed: current_instructeur&.follow?(dossier),
+                close_to_expiration: dossier.close_to_expiration?,
+                hidden_by_administration: dossier.hidden_by_administration?,
+                hidden_by_expired: dossier.hidden_by_expired?,
+                has_pending_correction: dossier.pending_correction?,
+                has_blocking_pending_correction: dossier.procedure.feature_enabled?(:blocking_pending_correction) && dossier.pending_correction?,
+                turbo: true,
+                with_menu: true }
 
-  %li.instruction-button
-    = render Instructeurs::InstructionMenuComponent.new(dossier:)
+    %li.instruction-button
+      = render Instructeurs::InstructionMenuComponent.new(dossier:)
+  .border-left-1px.fr-ml-2w.fr-mb-1v
+  = render partial: 'instructeurs/dossiers/print_and_export_actions', locals: { dossier: }

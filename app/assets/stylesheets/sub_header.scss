@@ -5,7 +5,7 @@
   background-color: var(--background-alt-blue-france);
   padding-top: $default-padding;
   margin-bottom: $sub-header-bottom-margin;
-  border-bottom: 1px solid $border-grey;
+  border-bottom: 1px solid var(--border-default-grey);
 
   .fr-container {
     margin-bottom: -1px;

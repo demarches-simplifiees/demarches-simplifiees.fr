@@ -8,4 +8,4 @@
     = link_previous
     = link_next
 
-= link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
+%p.fr-text--bold.fr-mb-0= dossier.procedure.libelle.truncate_words(15)

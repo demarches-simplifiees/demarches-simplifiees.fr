@@ -42,7 +42,7 @@ describe 'instructeurs/dossiers/show', type: :view do
         expect(subject).to have_button('Passer en instruction', disabled: false)
       end
       within("form[action=\"#{follow_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
-        expect(subject).to have_button('Suivre le dossier')
+        expect(subject).to have_button('Suivre')
       end
       expect(subject).to have_button('Demander une correction')
       expect(subject).to have_selector('.header-actions ul:first-child > li.instruction-button', count: 1)

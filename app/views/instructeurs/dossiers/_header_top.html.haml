@@ -1,22 +1,16 @@
 #header-top.fr-container
   = render Instructeurs::DossiersNavigationComponent.new(dossier:, procedure_presentation:, statut: params[:statut])
 
-  .flex.fr-mb-3w
-    %div
-      .fr-mt-2w.badge-group
-        = procedure_badge(dossier.procedure)
+  %div
+    .fr-my-1w.badge-group
+      = procedure_badge(dossier.procedure)
 
-        = status_badge(dossier.state)
-        - if dossier.pending_correction?
-          = pending_correction_badge(:for_instructeur)
-        - elsif dossier.en_construction? && dossier.last_correction_resolved?
-          = correction_resolved_badge
-        = render Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: dossier.procedure, with_label: true)
-
-
-    .header-actions.fr-ml-auto
-      = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: }
-      = render partial: 'instructeurs/dossiers/print_and_export_actions', locals: { dossier: }
+      = status_badge(dossier.state)
+      - if dossier.pending_correction?
+        = pending_correction_badge(:for_instructeur)
+      - elsif dossier.en_construction? && dossier.last_correction_resolved?
+        = correction_resolved_badge
+      = render Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: dossier.procedure, with_label: true)
 
   = render partial: 'instructeurs/dossiers/expiration_banner', locals: { dossier: }
 
@@ -24,29 +18,34 @@
     %p.fr-mb-1w
       %small L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
 
-  - if dossier.procedure.labels.present?
-    .fr-mb-3w
-      - if dossier.labels.present?
-        - dossier.labels.each do |label|
-          = tag_label(label.name, label.color)
 
-      = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm fr-btn--tertiary-no-outline fr-pl-1v']}, menu_options: { class: ['dropdown-label left-aligned'] }) do |menu|
-        - if dossier.labels.empty?
-          - menu.with_button_inner_html do
-            Ajouter un label
+  .flex
+    - if dossier.procedure.labels.present?
+      .fr-mb-3w
+        - if dossier.labels.present?
+          - dossier.labels.each do |label|
+            = tag_label(label.name, label.color)
 
-        - menu.with_form do
-          = form_with(url: dossier_labels_instructeur_dossier_path(dossier_id: dossier.id, procedure_id: dossier.procedure.id), method: :post, class: 'fr-p-3w', data: { controller: 'autosubmit', turbo: 'true' }) do |f|
-            %fieldset.fr-fieldset.fr-mt-2w.fr-mb-0
-              = f.collection_check_boxes :label_id, dossier.procedure.labels, :id, :name, include_hidden: false do |b|
-                .fr-fieldset__element
-                  .fr-checkbox-group.fr-checkbox-group--sm.fr-mb-1w
-                    = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, label_id: b.value).present?  )
-                    = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.colors.fetch(b.object.color)}") { b.text }
+        = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm fr-btn--tertiary-no-outline fr-pl-1v']}, menu_options: { class: ['dropdown-label left-aligned'] }) do |menu|
+          - if dossier.labels.empty?
+            - menu.with_button_inner_html do
+              Ajouter un label
 
-            %hr
-              %p.fr-text--sm.fr-text-mention--grey.fr-mb-0
-                %b Besoin d'autres labels ?
-                %br
-                Contactez les
-                = link_to 'administrateurs de la démarche', administrateurs_instructeur_procedure_path(dossier.procedure), class: 'fr-link fr-link--sm', **external_link_attributes
+          - menu.with_form do
+            = form_with(url: dossier_labels_instructeur_dossier_path(dossier_id: dossier.id, procedure_id: dossier.procedure.id), method: :post, class: 'fr-p-3w', data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+              %fieldset.fr-fieldset.fr-mt-2w.fr-mb-0
+                = f.collection_check_boxes :label_id, dossier.procedure.labels, :id, :name, include_hidden: false do |b|
+                  .fr-fieldset__element
+                    .fr-checkbox-group.fr-checkbox-group--sm.fr-mb-1w
+                      = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, label_id: b.value).present?  )
+                      = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.colors.fetch(b.object.color)}") { b.text }
+
+              %hr
+                %p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+                  %b Besoin d'autres labels ?
+                  %br
+                  Contactez les
+                  = link_to 'administrateurs de la démarche', administrateurs_instructeur_procedure_path(dossier.procedure), class: 'fr-link fr-link--sm', **external_link_attributes
+
+    .header-actions.fr-ml-auto
+      = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: }
