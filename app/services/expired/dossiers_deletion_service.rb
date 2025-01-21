@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
+  MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY = 10000
+
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
     delete_expired_brouillons_and_notify
@@ -20,17 +22,19 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
     dossiers_close_to_expiration = Dossier
       .brouillon_close_to_expiration
       .without_brouillon_expiration_notice_sent
+      .limit(MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY)
 
     user_notifications = group_by_user_email(dossiers_close_to_expiration)
 
-    dossiers_close_to_expiration.in_batches.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
-
     user_notifications.each do |(email, dossiers)|
+      all_user_dossiers = all_user_dossiers_brouillon_close_to_expiration(dossiers.first.user).to_a
       mail = DossierMailer.notify_brouillon_near_deletion(
-        dossiers,
+        all_user_dossiers,
         email
       )
+
       send_with_delay(mail)
+      Dossier.where(id: all_user_dossiers.map(&:id)).update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
     end
   end
 
@@ -140,5 +144,14 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
         (dossier.followers_instructeurs + dossier.procedure.administrateurs).each { |destinataire| h[destinataire.email] << dossier }
       end
       .map { |(email, dossiers)| [email, dossiers.to_a] }
+  end
+
+  def all_user_dossiers_brouillon_close_to_expiration(user)
+    user.dossiers
+      .brouillon_close_to_expiration
+      .without_brouillon_expiration_notice_sent
+      .visible_by_user
+      .with_notifiable_procedure(notify_on_closed: true)
+      .includes(:user, :procedure)
   end
 end

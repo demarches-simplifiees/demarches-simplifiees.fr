@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:search_terms, :private_search_terms]
+  self.ignored_columns += [:search_terms, :private_search_terms, :notified_soon_deleted_sent_at]
 
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -288,7 +288,7 @@ class Dossier < ApplicationRecord
   scope :interval_brouillon_close_to_expiration, -> do
     state_brouillon
       .visible_by_user
-      .where("dossiers.created_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.updated_at + dossiers.conservation_extension + (LEAST(procedures.duree_conservation_dossiers_dans_ds, #{Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION}) * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :interval_en_construction_close_to_expiration, -> do
     state_en_construction
@@ -568,10 +568,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_automatic?(reason)
-    return true if reason == :expired && !en_instruction?
-    return true if reason == :not_modified_for_a_long_time && brouillon?
-
-    false
+    reason == :expired && !en_instruction?
   end
 
   def can_terminer_automatiquement_by_sva_svr?
@@ -599,7 +596,7 @@ class Dossier < ApplicationRecord
 
   def expiration_date_reference
     if brouillon?
-      created_at
+      updated_at
     elsif en_construction?
       en_construction_at
     elsif termine?
@@ -610,7 +607,7 @@ class Dossier < ApplicationRecord
   end
 
   def expiration_date_with_extension
-    expiration_date_reference + conservation_extension + procedure.duree_conservation_dossiers_dans_ds.months
+    expiration_date_reference + duree_totale_conservation_in_months.months
   end
 
   def expiration_notification_date
@@ -620,6 +617,12 @@ class Dossier < ApplicationRecord
   def close_to_expiration?
     return false if en_instruction?
     expiration_notification_date < Time.zone.now && Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago < expiration_notification_date
+  end
+
+  def duree_totale_conservation_in_months
+    duree_conservation_dossier = brouillon? ? [procedure.duree_conservation_dossiers_dans_ds, Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION].min : procedure.duree_conservation_dossiers_dans_ds
+
+    duree_conservation_dossier + (conservation_extension / 1.month.to_i)
   end
 
   def has_expired?
@@ -715,10 +718,6 @@ class Dossier < ApplicationRecord
     end
 
     parts.join
-  end
-
-  def duree_totale_conservation_in_months
-    procedure.duree_conservation_dossiers_dans_ds + (conservation_extension / 1.month.to_i)
   end
 
   def avis_for_expert(expert)
@@ -1023,6 +1022,13 @@ class Dossier < ApplicationRecord
 
   def termine_and_accuse_lecture?
     procedure.accuse_lecture? && termine?
+  end
+
+  def touch_champs_changed(attributes)
+    now = Time.zone.now
+    update_columns(attributes.each_with_object({ brouillon_close_to_expiration_notice_sent_at: nil, updated_at: now }) do |attribute, hash|
+      hash[attribute] = now
+    end)
   end
 
   private

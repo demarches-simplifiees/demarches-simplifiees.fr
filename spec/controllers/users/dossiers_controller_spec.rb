@@ -674,7 +674,7 @@ describe Users::DossiersController, type: :controller do
 
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let(:types_de_champ_public) { [{}, { type: :piece_justificative, mandatory: false }] }
-    let(:dossier) { create(:dossier, user:, procedure:) }
+    let(:dossier) { create(:dossier, user:, procedure:, brouillon_close_to_expiration_notice_sent_at: 10.days.ago) }
     let(:first_champ) { dossier.project_champs_public.first }
     let(:piece_justificative_champ) { dossier.project_champs_public.last }
     let(:value) { 'beautiful value' }
@@ -723,6 +723,7 @@ describe Users::DossiersController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(dossier.reload.updated_at.year).to eq(2100)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
+        expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).to be_nil
       end
     end
 
@@ -1413,19 +1414,6 @@ describe Users::DossiersController, type: :controller do
 
       it 'must have hidden_by_user_at nil' do
         expect(dossier.reload.hidden_by_user_at).to be_nil
-      end
-    end
-
-    context 'when brouillon has been automatically expired' do
-      let(:dossier) { create(:dossier, :brouillon, user:) }
-
-      before {
-        dossier.hide_and_keep_track!(:automatic, :not_modified_for_a_long_time)
-      }
-
-      it 'must restore hidden attributes' do
-        expect { subject }.to change { dossier.reload.hidden_by_expired_at }.from(anything).to(nil)
-        expect(dossier.hidden_by_reason).to eq("not_modified_for_a_long_time")
       end
     end
   end

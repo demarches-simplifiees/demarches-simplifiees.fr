@@ -37,12 +37,13 @@ describe Champs::CarteController, type: :controller do
     end
 
     describe 'POST #create' do
-      before do
-        post :create, params: params
-      end
+      subject { post :create, params: params }
 
       context 'success' do
-        it { expect(response.status).to eq 201 }
+        it do
+          expect { subject } .to change { dossier.reload.last_champ_updated_at }
+          expect(response).to have_http_status(:created)
+        end
       end
 
       context 'error' do
@@ -56,7 +57,10 @@ describe Champs::CarteController, type: :controller do
           }
         end
 
-        it { expect(response.status).to eq 422 }
+        it do
+          expect { subject } .not_to change { dossier.reload.last_champ_updated_at }
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
       end
     end
 
@@ -70,12 +74,13 @@ describe Champs::CarteController, type: :controller do
         }
       end
 
-      before do
-        patch :update, params: params
-      end
+      subject { patch :update, params: params }
 
       context 'update geometry' do
-        it { expect(response.status).to eq 204 }
+        it do
+          expect { subject } .to change { dossier.reload.last_champ_updated_at }
+          expect(response).to have_http_status(:no_content)
+        end
       end
 
       context 'update description' do
@@ -87,16 +92,20 @@ describe Champs::CarteController, type: :controller do
           }
         end
 
-        it {
+        it do
+          subject
           expect(response.status).to eq 204
           expect(geo_area.reload.description).to eq('un point')
-        }
+        end
       end
 
       context 'error' do
         let(:feature) { attributes_for(:geo_area, :invalid_point) }
 
-        it { expect(response.status).to eq 422 }
+        it do
+          expect { subject } .not_to change { dossier.reload.last_champ_updated_at }
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
       end
     end
 
@@ -109,11 +118,12 @@ describe Champs::CarteController, type: :controller do
         }
       end
 
-      before do
-        delete :destroy, params: params
-      end
+      subject { delete :destroy, params: params }
 
-      it { expect(response.status).to eq 204 }
+      it do
+        expect { subject } .to change { dossier.reload.last_champ_updated_at }
+        expect(response).to have_http_status(:no_content)
+      end
     end
 
     describe 'GET #index' do

@@ -62,6 +62,61 @@ describe Dossier, type: :model do
         end
       end
     end
+
+    describe '.brouillon_expired' do
+      let(:interval_between_first_and_second_expiration) { Dossier::MONTHS_AFTER_EXPIRATION.months + Dossier::DAYS_AFTER_EXPIRATION.days }
+
+      let!(:dossier_brouillon_expired_and_noticed_long_time_ago) do
+        travel_to(5.months.ago) do
+          create(:dossier,
+            state: :brouillon,
+            brouillon_close_to_expiration_notice_sent_at: 1.day.ago)
+        end
+      end
+
+      let!(:dossier_brouillon_not_expired) do
+        travel_to(1.month.ago) do
+          create(:dossier,
+            state: :brouillon)
+        end
+      end
+
+      let!(:dossier_brouillon_expired_but_noticed_recently) do
+        travel_to(5.months.ago) do
+          create(:dossier,
+            state: :brouillon,
+            brouillon_close_to_expiration_notice_sent_at: (4.months + 20.days).from_now)
+        end
+      end
+
+      let!(:dossier_brouillon_expired_but_not_noticed_yet) do
+        travel_to(5.months.ago) do
+          create(:dossier,
+            state: :brouillon)
+        end
+      end
+
+      let!(:dossier_instruction_expired) do
+        travel_to(5.months.ago) do
+          create(:dossier,
+            state: :en_instruction,
+            brouillon_close_to_expiration_notice_sent_at: 1.day.ago)
+        end
+      end
+
+      let!(:dossier_hidden) do
+        travel_to(5.months.ago) do
+          create(:dossier,
+            state: :brouillon,
+            brouillon_close_to_expiration_notice_sent_at: 1.day.ago,
+            hidden_by_user_at: Time.zone.now)
+        end
+      end
+
+      it 'returns only visible brouillon dossiers whose expiration notice period has passed' do
+        expect(Dossier.brouillon_expired).to contain_exactly(dossier_brouillon_expired_and_noticed_long_time_ago)
+      end
+    end
   end
 
   describe 'validations' do
@@ -88,10 +143,10 @@ describe Dossier, type: :model do
   describe 'brouillon_close_to_expiration' do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let!(:expiring_dossier) { create(:dossier, created_at: 175.days.ago, procedure: procedure) }
-    let!(:expiring_dossier_with_notification) { create(:dossier, created_at: 175.days.ago, brouillon_close_to_expiration_notice_sent_at: Time.zone.now, procedure: procedure) }
-    let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
-    let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, updated_at: 85.days.ago, procedure: procedure) }
+    let!(:expiring_dossier_with_notification) { create(:dossier, updated_at: 85.days.ago, brouillon_close_to_expiration_notice_sent_at: Time.zone.now, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, updated_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, updated_at: 1.year.ago, procedure: procedure) }
 
     subject { Dossier.brouillon_close_to_expiration }
 
@@ -2369,6 +2424,25 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier, :en_instruction, sva_svr_decision_on: 10.days.from_now) }
 
     it { expect(dossier.sva_svr_decision_in_days).to eq 10 }
+  end
+
+  describe '#touch_champs_changed' do
+    let(:dossier) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: 10.days.ago) }
+
+    subject { -> { dossier.touch_champs_changed(attributes) } }
+
+    let(:attributes) { [:last_champ_updated_at] }
+
+    it { is_expected.to change(dossier, :last_champ_updated_at) }
+
+    it { is_expected.to change(dossier, :brouillon_close_to_expiration_notice_sent_at).to(nil) }
+
+    context 'when there is two attributes' do
+      let(:attributes) { [:last_champ_updated_at, :last_champ_piece_jointe_updated_at] }
+
+      it { is_expected.to change(dossier, :last_champ_updated_at) }
+      it { is_expected.to change(dossier, :last_champ_piece_jointe_updated_at) }
+    end
   end
 
   private

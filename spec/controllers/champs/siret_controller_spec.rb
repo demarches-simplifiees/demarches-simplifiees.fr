@@ -42,14 +42,20 @@ describe Champs::SiretController, type: :controller do
       end
 
       context 'when the SIRET is empty' do
-        subject! { get :show, params: params, format: :turbo_stream }
+        subject { get :show, params: params, format: :turbo_stream }
 
         it 'clears the etablissement on the model' do
+          subject
           expect(champ.reload.etablissement).to be_nil
         end
 
         it 'clears any information or error message' do
+          subject
           expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :siret_info))
+        end
+
+        it 'updates dossier.last_champ_updated_at' do
+          expect { subject }.to change { dossier.reload.last_champ_updated_at }
         end
       end
 

@@ -35,7 +35,7 @@ class Champs::CarteController < Champs::ChampController
 
   def destroy
     @champ.geo_areas.find(params[:id]).destroy!
-    @champ.touch
+    propagate_touch_champs_changed
 
     head :no_content
   end
@@ -78,7 +78,7 @@ class Champs::CarteController < Champs::ChampController
       geo_area.properties.merge!(feature[:properties])
     end
     if geo_area.save
-      @champ.touch
+      propagate_touch_champs_changed
       true
     end
   end
