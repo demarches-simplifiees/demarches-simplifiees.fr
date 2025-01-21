@@ -19,6 +19,8 @@ class DossierMailer < ApplicationMailer
 
   def notify_new_draft
     @dossier = params[:dossier]
+    raise AbortDeliveryError if !@dossier.brouillon? || @dossier.hidden_by_user_at.present?
+
     configure_defaults_for_user(@dossier.user)
 
     I18n.with_locale(@dossier.user_locale) do
