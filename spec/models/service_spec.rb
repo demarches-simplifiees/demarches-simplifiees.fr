@@ -87,6 +87,35 @@ describe Service, type: :model do
         expect { Service.new(params.merge(type_organisme: 'choucroute')) }.to raise_error(ArgumentError)
       end
     end
+
+    describe "email ou lien de contact" do
+      it 'devrait accepter une URL valide' do
+        subject.email = 'https://www.service-public.fr/contact'
+        expect(subject).to be_valid
+      end
+
+      it 'devrait accepter un email correctement formaté' do
+        subject.email = 'contact@service-public.fr'
+        expect(subject).to be_valid
+      end
+
+      it 'ne devrait pas accepter un email mal formaté' do
+        subject.email = 'contact@domain'
+        expect(subject).not_to be_valid
+      end
+
+      it 'ne devrait pas accepter une URL invalide' do
+        subject.email = 'not-an-url'
+        expect(subject).not_to be_valid
+      end
+
+      it 'ne devrait pas accepter un champ vide' do
+        subject.email = ''
+        expect(subject).not_to be_valid
+        subject.email = nil
+        expect(subject).not_to be_valid
+      end
+    end
   end
 
   describe 'validation on update' do
