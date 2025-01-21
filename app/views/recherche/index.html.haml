@@ -26,9 +26,8 @@
                   %th Statut
                   %th.follow-col
               %tbody
-              - @projected_dossiers.each do |p|
-                - dossier = p.dossier
-                - procedure_libelle, user_email, procedure_id = p.columns
+              - @projected_dossiers.each do |dossier|
+                - procedure_id = dossier.procedure.id
                 - instructeur_dossier =  @instructeur_dossiers_ids.include?(dossier.id)
                 - expert_dossier = @dossier_avis_ids_h[dossier.id].present?
                 - hidden_by_administration = dossier.hidden_by_administration_at.present?
@@ -42,12 +41,12 @@
                         = dossier.id
                         - if @notifications_dossier_ids.include?(dossier.id)
                           %span.notifications{ 'aria-label': 'notifications' }
-                    %td.fr-cell--multiline= procedure_libelle
-                    %td= user_email
+                    %td.fr-cell--multiline= dossier.procedure.libelle
+                    %td= dossier.user.email
                     %td.flex.column= status_badge(dossier.state)
 
                   - elsif hidden_by_administration
-                    = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
+                    = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: dossier.procedure.libelle, user_email: dossier.user.email}
 
                   - else
                     %td.fr-cell--numeric
@@ -57,10 +56,10 @@
                           %span.notifications{ 'aria-label': 'notifications' }
 
                     %td
-                      %a{ href: path }= procedure_libelle
+                      %a{ href: path }= dossier.procedure.libelle
 
                     %td
-                      %a{ href: path }= user_email
+                      %a{ href: path }= dossier.user.email
 
                     %td
                       %a.flex.column{ href: path }= status_badge(dossier.state)
