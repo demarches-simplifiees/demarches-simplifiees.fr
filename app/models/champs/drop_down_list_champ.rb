@@ -10,13 +10,11 @@ class Champs::DropDownListChamp < Champ
   before_save :store_referentiel
 
   def render_as_radios?
-    options = referentiel? ? referentiel_drop_down_options : drop_down_options
-    options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
+    drop_down_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
   end
 
   def render_as_combobox?
-    options = referentiel? ? referentiel_drop_down_options : drop_down_options
-    options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
+    drop_down_options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
   end
 
   def html_label?
@@ -32,10 +30,15 @@ class Champs::DropDownListChamp < Champ
   end
 
   def other?
-    if referentiel?
-      (drop_down_other? && (other || (value.present? && referentiel_drop_down_options.map { _1.fetch('id') }.exclude?(value.to_i))))
+    drop_down_other? && (other || value_from_user?)
+  end
+
+  def value_from_user?
+    return false if value.blank?
+    if referentiel_mode?
+      drop_down_options.map(&:second).exclude?(value.to_i)
     else
-      drop_down_other? && (other || (value.present? && drop_down_options.exclude?(value)))
+      drop_down_options.exclude?(value)
     end
   end
 
@@ -101,6 +104,6 @@ class Champs::DropDownListChamp < Champ
   end
 
   def value_is_in_referentiel_ids?
-    referentiel_drop_down_options.any? { _1['id'] == value.to_i }
+    drop_down_options.any? { _1.last == value.to_i }
   end
 end

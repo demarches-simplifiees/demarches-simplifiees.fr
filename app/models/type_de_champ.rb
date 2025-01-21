@@ -377,12 +377,15 @@ class TypeDeChamp < ApplicationRecord
     drop_down_mode == 'advanced'
   end
 
-  def drop_down_options
-    Array.wrap(super)
-  end
-
-  def referentiel_drop_down_options
-    Array.wrap(referentiel&.items&.map { { 'value' => _1.data.values.first, 'id' => _1.id } })
+  def drop_down_options(simple: false)
+    return Array.wrap(super()) if simple
+    if referentiel_mode?
+      return if referentiel.nil?
+      header = referentiel.headers.first.parameterize.underscore
+      Array.wrap(referentiel.items.map { [_1.data.values.first[header], _1.id] })
+    else
+      Array.wrap(super())
+    end
   end
 
   def drop_down_options_from_text=(text)
@@ -394,15 +397,6 @@ class TypeDeChamp < ApplicationRecord
       drop_down_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
     else
       drop_down_options
-    end
-  end
-
-  def referentiel_drop_down_options_with_other
-    select_options = referentiel_drop_down_options.map { |h| [h['value'], h['id']] }
-    if drop_down_other?
-      select_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
-    else
-      select_options
     end
   end
 
