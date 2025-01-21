@@ -123,7 +123,7 @@
             .center.fr-text--bold.fr-text--sm
               = number_with_html_delimiter(expirant_count)
             .center.fr-text--xs
-              = t('instructeurs.dossiers.labels.close_to_expiration', count: expirant_count)
+              = t('instructeurs.dossiers.labels.close_to_expiration')
 
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
         = link_to(instructeur_procedure_path(p, statut: 'archives')) do

@@ -797,7 +797,7 @@ fr:
       other: demandes de transfert
     dossiers_close_to_expiration:
       one: expirant
-      other: expirant
+      other: expirants
     dossier_trouve:
       one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
@@ -870,7 +870,7 @@ fr:
         followed: suivis par moi
         processed: traités
         total: au total
-        close_to_expiration: expirant
+        close_to_expiration: expirants
         to_archive: à archiver
         trash: corbeille
   administrateurs:

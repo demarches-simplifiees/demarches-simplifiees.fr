@@ -22,7 +22,7 @@ en:
       notice_pj_other: A screenshot can help us identify the issue.
       notice_upload_group: 'Maximum size: 200 MB. Supported formats: jpg, png, pdf.'
     index:
-      contact: Contact
+      contact: Contact %{app_name}
       intro_html:
         '<p>Contact us via this form and we will answer you as quickly as possible.</p>
         <p>Make sure you provide all the required information so we can help you in the best way.</p>'
