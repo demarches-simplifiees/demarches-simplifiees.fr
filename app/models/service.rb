@@ -20,13 +20,16 @@ class Service < ApplicationRecord
     autre: 'autre'
   }
 
+  before_validation :strip_email
+  validate :validate_email_or_url
+
   validates :nom, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :nom, uniqueness: { scope: :administrateur, message: 'existe déjà' }
   validates :organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :siret, siret_format: true
   validates :siret, comparison: { other_than: SIRET_TEST, message: "n'est pas valide" }, on: :update
   validates :type_organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
-  validates :email, presence: { message: 'doit être renseigné' }, allow_nil: false, url: { no_local: true, allow_blank: true, accept_email: true }
+  validates :email, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :telephone, phone: { possible: true, allow_blank: true }
   validates :horaires, presence: { message: 'doivent être renseignés' }, allow_nil: false
   validates :adresse, presence: { message: 'doit être renseignée' }, allow_nil: false
@@ -58,5 +61,25 @@ class Service < ApplicationRecord
 
   def enqueue_api_entreprise
     APIEntreprise::ServiceJob.perform_later(self.id)
+  end
+
+  private
+
+  def strip_email
+    self.email = email.strip if email.present?
+  end
+
+  def validate_email_or_url
+    return if email.blank?
+
+    # Vérifie d'abord si c'est un email valide avec StrictEmailValidator
+    return if StrictEmailValidator::REGEXP.match?(email)
+
+    # Si ce n'est pas un email valide, vérifie si c'est une URL valide
+    url_validator = URLValidator.new(
+      attributes: { allow_blank: true },
+      no_local: true,
+    )
+    url_validator.validate_each(self, :email, email)
   end
 end
