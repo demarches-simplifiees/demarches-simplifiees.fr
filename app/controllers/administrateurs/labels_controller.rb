@@ -47,6 +47,14 @@ module Administrateurs
       redirect_to [:admin, @procedure, :labels]
     end
 
+    def order_positions
+      @labels = @procedure.labels
+      render layout: "empty_layout"
+    end
+
+    def update_order_positions
+    end
+
     private
 
     def label_params
