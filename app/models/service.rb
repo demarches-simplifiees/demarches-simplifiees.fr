@@ -76,9 +76,8 @@ class Service < ApplicationRecord
 
     url_validator = URLValidator.new(
       attributes: { allow_blank: true },
-      no_local: true,
+      no_local: true
     )
-    
     url_validator.validate_each(self, :email, email)
   end
 end
