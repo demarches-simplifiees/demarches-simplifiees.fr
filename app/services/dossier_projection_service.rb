@@ -2,12 +2,12 @@
 
 class DossierProjectionService
   def self.project(dossiers_ids, columns)
-    to_include = columns.map(&:table).uniq.map(&:to_sym).map do |sym|
+    champ_columns, other_columns = columns.partition(&:champ_column?)
+
+    to_include = other_columns.map(&:table).uniq.map(&:to_sym).map do |sym|
       case sym
       when :self
         nil
-      when :type_de_champ
-        :champs
       when :user
         [:user, :individual]
       when :individual
@@ -25,6 +25,15 @@ class DossierProjectionService
       end
     end.flatten.uniq
 
-    Dossier.includes(:corrections, :pending_corrections, :traitements, *to_include).find(dossiers_ids)
+    dossiers = Dossier.includes(:corrections, :pending_corrections, :traitements, *to_include).find(dossiers_ids)
+
+    if champ_columns.any?
+      stable_ids = champ_columns.map(&:stable_id)
+      champs = Champ.where(dossier_id: dossiers_ids, stable_id: stable_ids, stream: 'main').includes(:piece_justificative_file_attachments).group_by(&:dossier_id)
+
+      dossiers.each { |dossier| dossier.association(:champs).target = champs[dossier.id] || [] }
+    end
+
+    dossiers
   end
 end
