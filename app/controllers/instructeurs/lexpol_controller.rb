@@ -1,4 +1,3 @@
-# app/controllers/instructeurs/lexpol_controller.rb
 module Instructeurs
   class LexpolController < ApplicationController
     before_action :authenticate_instructeur!

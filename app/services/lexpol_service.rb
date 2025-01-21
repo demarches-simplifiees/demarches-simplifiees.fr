@@ -52,10 +52,15 @@ class LexpolService
 
     mapping.each do |source_field, target_field|
       raw_values = LexpolFieldsService.object_field_values(dossier, source_field)
-      final_values = raw_values.map { |v| v.respond_to?(:value) ? v.value : v }
+      final_values = raw_values.map { |val| LexpolFieldsService.format_lexpol_value(val) }.compact_blank
 
       next if final_values.blank?
-      variables[target_field] = final_values.join(', ')
+
+      if final_values.size == 1
+        variables[target_field] = final_values.first
+      else
+        variables[target_field] = final_values.join('<br>')
+      end
     end
 
     variables
