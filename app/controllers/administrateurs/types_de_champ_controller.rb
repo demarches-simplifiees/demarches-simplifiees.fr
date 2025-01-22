@@ -156,9 +156,11 @@ module Administrateurs
 
         headers = csv_to_code.first.keys
 
+        digest = Digest::SHA256.hexdigest(csv_to_code.to_json)
+
         ActiveRecord::Base.transaction do
           # Create referentiel
-          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename, headers:, type: 'Referentiels::CsvReferentiel')
+          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename, headers:, type: 'Referentiels::CsvReferentiel', digest:)
 
           # Create referentiel items
           # We add headers to items in order to display them in instructeur view
