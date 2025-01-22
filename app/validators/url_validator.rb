@@ -6,6 +6,7 @@ require 'public_suffix'
 require 'addressable/uri'
 
 # Most of this code is borowed from https://github.com/perfectline/validates_url
+# Most of this code is borowed from https://github.com/perfectline/validates_url
 
 class URLValidator < ActiveModel::EachValidator
   RESERVED_OPTIONS = [:schemes, :no_local]
@@ -67,7 +68,13 @@ class URLValidator < ActiveModel::EachValidator
     valid_scheme = host && scheme && schemes.include?(scheme)
     valid_no_local = !options.fetch(:no_local) || (host && host.include?('.'))
     valid_suffix = !options.fetch(:public_suffix) || (host && PublicSuffix.valid?(host, default_rule: nil))
+      valid_scheme = host && scheme && schemes.include?(scheme)
+      valid_no_local = !options.fetch(:no_local) || (host && host.include?('.'))
+      valid_suffix = !options.fetch(:public_suffix) || (host && PublicSuffix.valid?(host, default_rule: nil))
 
+      unless valid_scheme && valid_no_local && valid_suffix
+        record.errors.add(attribute, message, **filtered_options(value))
+      end
       unless valid_scheme && valid_no_local && valid_suffix
         record.errors.add(attribute, message, **filtered_options(value))
       end
