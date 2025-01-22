@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::AddressChamp do
-  let(:champ) do
-    described_class.new.tap do |champ|
-      champ.value = value
-      champ.data = data
-      champ.validate
-    end
-  end
-  let(:value) { '' }
+  let(:types_de_champ_public) { [{ type: :address }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:, data:) } }
+  let(:value) { nil }
   let(:data) { nil }
 
   context "with value but no data" do

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 describe Champs::DateChamp do
-  let(:type_de_champ) { create(:type_de_champ_date) }
-  let(:date_champ) { described_class.new }
-  before { allow(date_champ).to receive(:type_de_champ).and_return(type_de_champ) }
+  let(:types_de_champ_public) { [{ type: :date }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:date_champ) { dossier.champs.first }
 
   describe '#convert_to_iso8601' do
     it 'preserves nil' do

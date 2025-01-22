@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 describe Champs::MesriChamp, type: :model do
-  let(:champ) { described_class.new }
+  let(:types_de_champ_public) { [{ type: :mesri }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first }
 
   describe 'INE' do
     before do
@@ -34,9 +37,6 @@ describe Champs::MesriChamp, type: :model do
   end
 
   describe '#validate' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :mesri, stable_id: 99 }]) }
-    let(:dossier) { create(:dossier, procedure:) }
-    let(:champ) { described_class.new(dossier:, stable_id: 99) }
     let(:validation_context) { :create }
 
     subject { champ.valid?(validation_context) }

@@ -1,20 +1,15 @@
 # frozen_string_literal: true
 
 describe Champs::CarteChamp do
-  let(:champ) { Champs::CarteChamp.new(geo_areas:) }
-  before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_carte)) }
-  let(:value) { '' }
+  let(:types_de_champ_public) { [{ type: :carte }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(geo_areas:) } }
   let(:coordinates) { [[[2.3859214782714844, 48.87442541960633], [2.3850631713867183, 48.87273183590832], [2.3809432983398438, 48.87081237174292], [2.3859214782714844, 48.87442541960633]]] }
   let(:geo_json) do
     {
       "type" => 'Polygon',
       "coordinates" => coordinates
-    }
-  end
-  let(:legacy_geo_json) do
-    {
-      type: 'MultiPolygon',
-      coordinates: [coordinates]
     }
   end
 

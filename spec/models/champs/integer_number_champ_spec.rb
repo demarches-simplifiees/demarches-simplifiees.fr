@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::IntegerNumberChamp do
-  let(:champ) { Champs::IntegerNumberChamp.new(value:, dossier: build(:dossier)) }
-  before do
-    allow(champ).to receive(:visible?).and_return(true)
-    allow(champ).to receive(:can_validate?).and_return(true)
-  end
+  let(:types_de_champ_public) { [{ type: :integer_number }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
+  let(:value) { nil }
   subject { champ.validate(:champs_public_value) }
 
   describe '#valid?' do

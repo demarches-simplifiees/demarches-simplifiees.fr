@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 describe Champs::DossierLinkChamp, type: :model do
-  let(:champ) { Champs::DossierLinkChamp.new(value:, dossier: build(:dossier)) }
+  let(:types_de_champ_public) { [{ type: :dossier_link, mandatory: }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
+  let(:value) { nil }
   let(:mandatory) { false }
-
-  before do
-    allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_dossier_link, mandatory:))
-    allow(champ).to receive(:in_dossier_revision?).and_return(true)
-  end
 
   describe 'prefilling validations' do
     let(:linked_dossier) { create(:dossier) }
@@ -47,7 +46,6 @@ describe Champs::DossierLinkChamp, type: :model do
   end
 
   describe 'validation' do
-    before { champ.run_callbacks(:validation) }
     subject { champ.validate(:champs_public_value) }
 
     context 'when not mandatory' do

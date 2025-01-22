@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::MultipleDropDownListChamp do
-  let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, drop_down_options: ["val1", "val2", "val3", "[brackets] val4"]) }
+  let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, options: ["val1", "val2", "val3", "[brackets] val4"] }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
   let(:value) { nil }
-  let(:champ) { Champs::MultipleDropDownListChamp.new(value:, dossier: build(:dossier)) }
-  before do
-    allow(champ).to receive(:type_de_champ).and_return(type_de_champ)
-    allow(champ).to receive(:in_dossier_revision?).and_return(true)
-  end
 
   describe 'validations' do
     subject { champ.validate(:champs_public_value) }
