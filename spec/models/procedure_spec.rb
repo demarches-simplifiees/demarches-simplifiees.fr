@@ -1927,6 +1927,23 @@ describe Procedure do
     end
   end
 
+  describe '#update_labels_position' do
+    let(:procedure) { create(:procedure) }
+    let!(:labels) { create_list(:label, 5, procedure_id: procedure.id) }
+
+    it 'updates the positions of the specified instructeurs_procedures' do
+      procedure.update_labels_position(labels.map(&:id))
+
+      expect(procedure.labels.reload.pluck(:id, :position)).to match_array([
+        [labels[0].id, 0],
+        [labels[1].id, 1],
+        [labels[2].id, 2],
+        [labels[3].id, 3],
+        [labels[4].id, 4]
+      ])
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
