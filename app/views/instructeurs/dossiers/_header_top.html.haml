@@ -46,6 +46,12 @@
                   %br
                   Contactez les
                   = link_to 'administrateurs de la démarche', administrateurs_instructeur_procedure_path(dossier.procedure), class: 'fr-link fr-link--sm', **external_link_attributes
+                .fr-notice.fr-notice--info.fr-mt-2w
+                  .fr-container
+                    .fr-notice__body.fr-p-0
+                      %p
+                        %span.fr-notice__title Pensez à personnaliser votre tableau
+                        %span.fr-notice__desc de suivi des dossiers en ajoutant la colonne « Labels ».
 
     .header-actions.fr-ml-auto
       = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: }
