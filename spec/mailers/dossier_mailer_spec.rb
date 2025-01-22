@@ -38,6 +38,19 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(header_value("From", subject)).to include("ne-pas-repondre@demarches.gouv.fr")
       end
     end
+
+    it 'when dossier is hidden, it does not send the email' do
+      dossier.hide_and_keep_track!(user, :user_request)
+      expect(subject.subject).to be_nil
+    end
+
+    context 'when dossier is not brouillon anymore' do
+      let(:dossier) { create(:dossier, :en_construction, user:) }
+
+      it 'does not send the email' do
+        expect(subject.subject).to be_nil
+      end
+    end
   end
 
   describe '.notify_new_answer with dossier brouillon' do

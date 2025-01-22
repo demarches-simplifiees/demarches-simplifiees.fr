@@ -362,7 +362,7 @@ module Users
       )
       dossier.build_default_values
       dossier.save!
-      DossierMailer.with(dossier:).notify_new_draft.deliver_later
+      DossierMailer.with(dossier:).notify_new_draft.deliver_later(wait: 1.hour)
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)
