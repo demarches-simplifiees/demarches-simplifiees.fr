@@ -282,7 +282,8 @@ module DossierChampsConcern
   end
 
   def reset_champ_cache(champ)
-    champs_by_public_id[champ.public_id]&.reload
+    champs_by_public_id[champ.public_id]&.reload&.tap { _1.dossier = self }
+
     reset_champs_cache
   end
 end
