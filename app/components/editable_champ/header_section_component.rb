@@ -7,7 +7,11 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
   end
 
   def level
-    @champ.level + 1 # skip one heading level
+    @champ.level + 2 # The first title level should be a <h3>
+  end
+
+  def css_level
+    @champ.level + 1 # The first title should look like a <h2>
   end
 
   def collapsible?
@@ -21,9 +25,10 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
   def header_section_classnames
     class_names(
       {
-        "section-#{level}": true,
-        'header-section': @champ.dossier.auto_numbering_section_headers_for?(@champ.type_de_champ),
-        'hidden': !@champ.visible?
+        "fr-h#{css_level}": true,
+        "section-#{css_level}": true,
+        "header-section": @champ.dossier.auto_numbering_section_headers_for?(@champ.type_de_champ),
+        "hidden": !@champ.visible?
       }.merge(@html_class)
     )
   end
