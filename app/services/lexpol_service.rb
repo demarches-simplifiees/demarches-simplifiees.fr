@@ -56,11 +56,7 @@ class LexpolService
 
       next if final_values.blank?
 
-      if final_values.size == 1
-        variables[target_field] = final_values.first
-      else
-        variables[target_field] = final_values.join('<br>')
-      end
+      variables[target_field] = LexpolFieldsService.render_lexpol_values(final_values)
     end
 
     variables

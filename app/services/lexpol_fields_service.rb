@@ -5,16 +5,13 @@ module LexpolFieldsService
     objects = [source]
     field.split('.').each do |segment|
       objects = objects.flat_map do |object|
-        if object.is_a?(Champs::RepetitionChamp)
-          select_champ(object.rows, segment)
-        else
-          results = []
-          results += dossier_linked_champs(object)             if object.is_a?(Champs::DossierLinkChamp) && object.respond_to?(:dossier)
-          results += select_champ(object.champs, segment)      if object.respond_to?(:champs)
-          results += select_champ(object.annotations, segment) if object.respond_to?(:annotations)
-          results += attributes(object, segment)               if object.respond_to?(segment)
-          results
-        end
+        results = []
+        results += dossier_linked_champs(object)             if object.respond_to?(:dossier)
+        results += select_champ(object.champs, segment)      if object.respond_to?(:champs)
+        results += select_champ(object.annotations, segment) if object.respond_to?(:annotations)
+        results += select_champ(object.rows, segment)        if object.respond_to?(:rows)
+        results += attributes(object, segment)               if object.respond_to?(segment)
+        results
       end
 
       if log_empty && objects.blank?
@@ -22,26 +19,26 @@ module LexpolFieldsService
       end
     end
 
-    objects
+    objects = objects.uniq
   end
 
-  def self.select_champ(collection, name)
-    return [] if collection.blank?
+  def self.select_champ(object, name)
+    return [] if object.blank?
 
-    collection.flat_map do |item|
-      if item.is_a?(Array)
-        item.filter { |champ| champ.type_de_champ&.libelle == name }
-      else
-        item.type_de_champ&.libelle == name ? item : nil
-      end
-    end.compact
+    if object.respond_to?(:to_a)
+      object.to_a.flat_map { |item| select_champ(item, name) }
+    else
+      object.type_de_champ&.libelle == name ? [object] : []
+    end
   end
 
   def self.attributes(object, name)
     value = object.send(name)
 
-    if value.is_a?(Date) || value.is_a?(Time) || value.is_a?(DateTime)
+    if value.is_a?(Date)
       return [format_date(value)]
+    elsif value.is_a?(Time) || value.is_a?(DateTime)
+      return [format_datetime(value)]
     end
 
     value.is_a?(Array) ? value : [value].compact
@@ -83,20 +80,27 @@ module LexpolFieldsService
     return '' if date.blank?
     begin
       parsed = date.is_a?(String) ? DateTime.parse(date) : date
-      parsed.strftime('%d/%m/%Y %H:%M')
+      parsed.strftime('%d/%m/%Y à %H:%M')
     rescue
       date.to_s
     end
   end
 
   def self.format_repetition_champ(repeat_champ)
-    return '' if repeat_champ.rows.blank?
+    rows = repeat_champ.rows
+    return '' if rows.blank?
+
+    filtered_rows = rows.map do |row|
+      row.reject { |champ| ignore_champ?(champ) }
+    end
+
+    return '' if filtered_rows.all?(&:empty?)
 
     <<~HTML
-      <table border="1" style="border-collapse:collapse;">
-        #{table_header_row(repeat_champ.rows.first)}
+      <table style="margin: 0 auto; border-collapse: collapse;" border="1">
+        #{table_header_row(filtered_rows.first)}
         <tbody>
-          #{repeat_champ.rows.map { |row| table_body_row(row) }.join}
+          #{filtered_rows.each_with_index.map { |row, i| table_body_row(row, i) }.join}
         </tbody>
       </table>
     HTML
@@ -110,11 +114,17 @@ module LexpolFieldsService
     "</tr></thead>"
   end
 
-  def self.table_body_row(row)
-    return '' unless row.is_a?(Array)
+  def self.table_body_row(row, index)
+    return '' if row.blank?
 
-    "<tr>" +
-      row.map { |c| "<td>#{(c.value || '')}</td>" }.join +
+    background = (index.even? ? "#F0F0F0" : "#FFFFFF")
+
+    "<tr style='background-color: #{background};'>" +
+      row.map do |champ|
+        # format
+        value = format_lexpol_value(champ)
+        "<td style='vertical-align: middle; text-align: left;'>#{value}</td>"
+      end.join +
     "</tr>"
   end
 
@@ -125,5 +135,14 @@ module LexpolFieldsService
     markdown = Redcarpet::Markdown.new(renderer, autolink: true, tables: true)
 
     markdown.render(markdown_str)
+  end
+
+  def self.render_lexpol_values(final_values)
+    return '' if final_values.blank?
+    final_values.size == 1 ? final_values.first : final_values.join('<br>')
+  end
+
+  def self.ignore_champ?(champ)
+    champ.is_a?(Champs::HeaderSectionChamp) || champ.is_a?(Champs::ExplicationChamp)
   end
 end
