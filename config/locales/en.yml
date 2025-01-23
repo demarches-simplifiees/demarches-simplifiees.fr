@@ -732,13 +732,12 @@ en:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
       targeted_user_link_expired: "This invitation link or the file is no longer available."
-      invalid_siret_length: "The SIRET number must contain exactly 14 numbers."
-      invalid_siret_checksum: "The SIRET number is invalid."
       procedure_not_found: "The procedure does not exist"
-      siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
-      siret_network_error: 'Sorry, SIRET information retrieval is temporarily unavailable. Please try again shortly.'
-      siret_not_found: "We haven't found an establishment corresponding to this SIRET number."
-      # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
+      siret:
+        length: "The SIRET number must contain exactly 14 numbers."
+        checksum: "The SIRET number is invalid."
+        network_error: 'Sorry, SIRET information retrieval is temporarily unavailable. Please try again shortly.'
+        not_found: "We haven't found an establishment corresponding to this SIRET number."
       france_connect:
         connexion: "Error trying to connect to France Connect."
         forbidden_html: "Only citizen can use FranceConnect. As an instructor or administrator, you should <a href='%{reset_link}'>reset your password</a>."

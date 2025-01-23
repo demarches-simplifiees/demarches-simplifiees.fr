@@ -7,9 +7,9 @@ module SiretChampEtablissementFetchableConcern
 
   def fetch_etablissement!(siret, user)
     return clear_etablissement!(:empty) if siret.empty?
-    return clear_etablissement!(:invalid_length) if invalid_because?(siret, :length) # i18n-tasks-use t('errors.messages.invalid_siret_length')
-    return clear_etablissement!(:invalid_checksum) if invalid_because?(siret, :checksum) # i18n-tasks-use t('errors.messages.invalid_siret_checksum')
-    return clear_etablissement!(:not_found) unless (etablissement = APIEntrepriseService.create_etablissement(self, siret, user&.id)) # i18n-tasks-use t('errors.messages.siret_not_found')
+    return clear_etablissement!(:invalid_length) if invalid_because?(siret, :length) # i18n-tasks-use t('errors.messages.siret.length')
+    return clear_etablissement!(:invalid_checksum) if invalid_because?(siret, :checksum) # i18n-tasks-use t('errors.messages.siret.checksum')
+    return clear_etablissement!(:not_found) unless (etablissement = APIEntrepriseService.create_etablissement(self, siret, user&.id)) # i18n-tasks-use t('errors.messages.siret.not_found')
 
     update!(etablissement:)
   rescue APIEntreprise::API::Error, APIEntrepriseToken::TokenError => error
@@ -21,7 +21,7 @@ module SiretChampEtablissementFetchableConcern
       false
     else
       Sentry.capture_exception(error, extra: { dossier_id:, siret: })
-      clear_etablissement!(:network_error) # i18n-tasks-use t('errors.messages.siret_network_error')
+      clear_etablissement!(:network_error) # i18n-tasks-use t('errors.messages.siret.network_error')
     end
   end
 

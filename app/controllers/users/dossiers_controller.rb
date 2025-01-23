@@ -196,12 +196,12 @@ module Users
                           Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
 
                           # probably random error, invite user to retry
-                          return render_siret_error(t('errors.messages.siret_network_error'))
+                          return render_siret_error(t('errors.messages.siret.network_error'))
                         end
                       end
 
       if etablissement.nil?
-        return render_siret_error(t('errors.messages.siret_unknown'))
+        return render_siret_error(t('errors.messages.siret.not_found'))
       end
 
       current_user.update!(siret: sanitized_siret)

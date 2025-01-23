@@ -734,12 +734,12 @@ fr:
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
-      invalid_siret_length: "Le numéro de SIRET doit comporter exactement 14 chiffres."
-      invalid_siret_checksum: "Le format du numéro de SIRET est invalide."
+      siret:
+        length: "Le numéro de SIRET doit comporter exactement 14 chiffres."
+        checksum: "Le format du numéro de SIRET est invalide."
+        network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
+        not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
       procedure_not_found: "La démarche n’existe pas"
-      siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
-      siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
-      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
       api_entreprise_down: 'Notre fournisseur de données semble en panne, nous récupérerons les données plus tard.'
       # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
