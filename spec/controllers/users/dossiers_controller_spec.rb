@@ -839,6 +839,61 @@ describe Users::DossiersController, type: :controller do
         end
       end
     end
+
+    context 'perf on demarche with 100 conditional champs' do
+      include Logic
+
+      let(:types_de_champ_public) { (0..99).map { |i| { type: :yes_no, libelle: "c_#{i}" } } }
+
+      100.times do |i|
+        let("tdc_#{i}") { procedure.active_revision.types_de_champ[i] }
+      end
+
+      let(:last_champ) { dossier.project_champs_public.last }
+
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          validate: true,
+          dossier: {
+            groupe_instructeur_id: dossier.groupe_instructeur_id,
+            champs_public_attributes: {
+              last_champ.public_id => {
+                with_public_id: true,
+                value: true
+              }
+            }
+          }
+        }
+      end
+
+      before do
+        # one champ is visible if the previous champ is true
+        (1..99).each do |i|
+          condition = ds_eq(champ_value(send("tdc_#{i - 1}").stable_id), constant(true))
+          send("tdc_#{i}").update!(condition:)
+        end
+
+        # all champs are visible
+        dossier.project_champs_public.take(99).each { |champ| champ.update_columns(value: 'true') }
+      end
+
+      it do
+        query_count = 0
+
+        preloaded_dossier = DossierPreloader.load_one(dossier)
+        expect(preloaded_dossier.project_champs_public.last.visible?).to eq(true)
+
+        ActiveSupport::Notifications.subscribed(lambda { |*_args| query_count += 1 }, "sql.active_record") do
+          # save the last champ
+          subject
+        end
+
+        expect(response).to have_http_status(:ok)
+        expect(last_champ.reload.true?).to eq(true)
+        expect(query_count).to be < 260
+      end
+    end
   end
 
   describe '#update en_construction' do
