@@ -1,8 +1,8 @@
 - if @champ.etablissement_fetch_error_key.present?
-  = turbo_stream.update @champ.describedby_id, partial: 'shared/champs/siret/etablissement', locals: { siret: @siret, etablissement: @champ.etablissement }
-  = turbo_stream.show @champ.describedby_id
+  = turbo_stream.update @champ.error_id, partial: 'shared/champs/siret/etablissement', locals: { siret: @siret, etablissement: @champ.etablissement }
+  = turbo_stream.show @champ.error_id
   = turbo_stream.hide(dom_id(@champ, :siret_info))
 - else
   = turbo_stream.update dom_id(@champ, :siret_info), partial: 'shared/champs/siret/etablissement', locals: { siret: @siret, etablissement: @champ.etablissement }
   = turbo_stream.show dom_id(@champ, :siret_info)
-  = turbo_stream.hide(@champ.describedby_id)
+  = turbo_stream.hide(@champ.error_id)
