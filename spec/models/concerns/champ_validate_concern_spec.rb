@@ -43,6 +43,7 @@ RSpec.describe ChampValidateConcern do
       before {
         update_champ('test')
         dossier.revision.revision_types_de_champ.delete_all
+        dossier.reload
         dossier.validate(:champs_public_value)
       }
       it {
@@ -57,6 +58,7 @@ RSpec.describe ChampValidateConcern do
 
       before {
         dossier.revision.revision_types_de_champ.delete_all
+        dossier.reload
         dossier.validate(:champs_public_value)
       }
       it {
@@ -71,6 +73,7 @@ RSpec.describe ChampValidateConcern do
 
       before {
         dossier.revision.revision_types_de_champ.delete_all
+        dossier.reload
         dossier.validate(:champs_public_value)
       }
       it {
@@ -86,6 +89,7 @@ RSpec.describe ChampValidateConcern do
       before {
         update_champ('test')
         type_de_champ.update(type_champ: :text)
+        dossier.reload
         dossier.validate(:champs_public_value)
       }
       it {
@@ -129,6 +133,7 @@ RSpec.describe ChampValidateConcern do
       before {
         update_champ('test')
         dossier.repetition_remove_row(type_de_champ, row_id, updated_by: 'test')
+        dossier.reload
         dossier.validate(:champs_public_value)
       }
       it {
