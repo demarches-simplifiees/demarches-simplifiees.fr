@@ -2,8 +2,8 @@ class LexpolService
   attr_reader :champ, :dossier, :apilexpol
 
   def initialize(champ:, dossier:, apilexpol: APILexpol.new)
-    @champ     = champ
-    @dossier   = dossier
+    @champ = champ
+    @dossier = dossier
     @apilexpol = apilexpol
   end
 
@@ -41,34 +41,28 @@ class LexpolService
   end
 
   def build_variables
-    mapping_raw = champ.type_de_champ.lexpol_mapping || ""
+    champs = (dossier.champs_public + dossier.champs_private)
+    mapping_raw = champs.map(&:libelle).join("\n") + "\n" + (champ.type_de_champ.lexpol_mapping || "")
 
-    mapping = mapping_raw
-      .split("\n")
-      .map { |pair| pair.split('=').map(&:strip) }
+    mapping = mapping_raw.lines.map(&:strip).compact_blank
+      .map { |ligne| ligne.include?('=') ? ligne.split('=').map(&:strip) : [ligne, ligne] }
       .to_h
 
-    variables = {}
-
-    mapping.each do |source_field, target_field|
+    mapping.reduce({}) do |variables, (source_field, target_field)|
       raw_values = LexpolFieldsService.object_field_values(dossier, source_field)
-      final_values = raw_values.map { |val| LexpolFieldsService.format_lexpol_value(val) }.compact_blank
-
-      next if final_values.blank?
-
-      variables[target_field] = LexpolFieldsService.render_lexpol_values(final_values)
+      final_values = raw_values.map { |val| LexpolFieldsService.format_lexpol_value(val) }
+      variables[target_field] = final_values.compact_blank.join(', ')
+      variables
     end
-
-    variables
   end
 
   def refresh_lexpol_data!
     return if champ.value.blank?
 
-    status_info  = apilexpol.get_dossier_status(champ.value)
+    status_info = apilexpol.get_dossier_status(champ.value)
     dossier_info = apilexpol.get_dossier_infos(champ.value)
 
-    champ.lexpol_status      = status_info[:libelle]
+    champ.lexpol_status = status_info[:libelle]
     champ.lexpol_dossier_url = dossier_info['lienDossier']
     champ.save!
   end
