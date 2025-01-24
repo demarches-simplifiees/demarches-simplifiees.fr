@@ -2,6 +2,10 @@
 
 module Maintenance
   class MigrateExistingProcedurePathsTask < MaintenanceTasks::Task
+    include RunnableOnDeployConcern
+
+    run_on_first_deploy
+
     def collection
       Procedure.all
     end
