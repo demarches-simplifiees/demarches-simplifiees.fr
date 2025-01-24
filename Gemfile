@@ -101,6 +101,7 @@ gem 'spreadsheet_architect'
 gem 'string-similarity'
 gem 'strong_migrations' # lint database migrations
 gem 'sys-proctable'
+gem 'ttfunk', '~> 1.7.0'
 gem 'turbo-rails'
 gem 'typhoeus'
 gem 'ulid-ruby', require: 'ulid'
