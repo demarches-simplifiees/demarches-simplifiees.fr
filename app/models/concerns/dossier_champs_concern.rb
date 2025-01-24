@@ -155,9 +155,7 @@ module DossierChampsConcern
     raise "Can't add row to non-repetition type de champ" if !type_de_champ.repetition?
 
     row_id = ULID.generate
-    champ = champ_for_update(type_de_champ, row_id:, updated_by:)
-    champ.save!
-    reset_champ_cache(champ)
+    champ_for_update(type_de_champ, row_id:, updated_by:)
     row_id
   end
 
@@ -166,7 +164,6 @@ module DossierChampsConcern
 
     champ = champ_for_update(type_de_champ, row_id:, updated_by:)
     champ.discard!
-    reset_champ_cache(champ)
   end
 
   def stable_id_in_revision?(stable_id)
@@ -225,29 +222,36 @@ module DossierChampsConcern
 
   def champ_upsert_by!(type_de_champ, row_id)
     check_valid_row_id_on_write?(type_de_champ, row_id)
-    champ_attributes = type_de_champ.params_for_champ
 
     # FIXME: this is a temporary fix to remove duplicated champs with the same nil row_id
     tmp_fix_uniq_row_ids
 
-    champ = champs
-      .create_with(**champ_attributes)
-      .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id: row_id || Champ::NULL_ROW_ID, stream: 'main')
-
-    # Needed when a revision change the champ type in this case, we reset the champ data
-    if champ.type != champ_attributes[:type]
-      champ_attributes[:value] = nil
-      champ_attributes[:value_json] = nil
-      champ_attributes[:external_id] = nil
-      champ_attributes[:data] = nil
-      champ = champ.becomes!(champ_attributes[:type].constantize)
+    champ = Dossier.no_touching do
+      champs
+        .create_with(**type_de_champ.params_for_champ)
+        .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id: row_id || Champ::NULL_ROW_ID, stream: 'main')
     end
 
-    champ.assign_attributes(champ_attributes)
+    # Needed when a revision change the champ type in this case, we reset the champ data
+    if !champ.is_a?(type_de_champ.champ_class)
+      champ = champ.becomes!(type_de_champ.champ_class)
+      champ.assign_attributes(value: nil, value_json: nil, external_id: nil, data: nil)
+    end
+
+    # If the champ returned from `create_or_find_by` is not the same as the one already loaded in `dossier.champs`, we need to update the association cache
+    loaded_champ = champs.find { [_1.stream, _1.public_id] == [champ.stream, champ.public_id] }
+    if loaded_champ.present? && loaded_champ.object_id != champ.object_id
+      association(:champs).target = champs - [loaded_champ] + [champ]
+    end
+
+    # If the dossier instance on champ has changed we need to update the association cache
+    if champ.dossier.object_id != object_id
+      champ.association(:dossier).target = self
+    end
+
+    reset_champs_cache
+
     champ.save!
-
-    reset_champ_cache(champ)
-
     champ
   end
 
@@ -279,11 +283,5 @@ module DossierChampsConcern
     @project_champs_private = nil
     @repetition_row_ids = nil
     @revision_stable_ids = nil
-  end
-
-  def reset_champ_cache(champ)
-    champs_by_public_id[champ.public_id]&.reload&.tap { _1.dossier = self }
-
-    reset_champs_cache
   end
 end
