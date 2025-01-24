@@ -2590,9 +2590,10 @@ describe Dossier, type: :model do
     it { is_expected.to contain_exactly(dossier) }
 
     context 'when the dossier has been cloned' do
-      let!(:cloned_dossier) { travel_to(3.weeks.ago) { dossier_with_champ_updated.clone } }
+      let!(:cloned_dossier) { travel_to(3.weeks.ago) { dossier.clone } }
+      let!(:cloned_dossier_2) { travel_to(3.weeks.ago) { dossier_with_champ_updated.clone } }
 
-      it { is_expected.to contain_exactly(dossier, cloned_dossier) }
+      it { is_expected.to contain_exactly(dossier) }
     end
   end
 
