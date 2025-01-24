@@ -7,15 +7,16 @@
 
     - champ_lexpol = dossier.champs.find { |c| c.lexpol? }
 
-    - if champ_lexpol.present?
-      %section.fr-section
-        .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
-          - if champ_lexpol.value.blank?
-            = form_with url: lexpol_upsert_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
-              = form.submit 'Créer le dossier dans Lexpol', class: 'fr-btn'
-          - else
-            = form_with url: lexpol_upsert_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
-              = form.submit 'Rafraîchir les données Lexpol', class: 'fr-btn fr-btn--secondary'
+    - if !dossier.for_procedure_preview?
+      - if champ_lexpol.present?
+        %section.fr-section
+          .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
+            - if champ_lexpol.value.blank?
+              = form_with url: lexpol_upsert_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
+                = form.submit 'Créer le dossier dans Lexpol', class: 'fr-btn'
+            - else
+              = form_with url: lexpol_upsert_dossier_instructeur_dossier_path(dossier, champ_id: champ_lexpol.id), method: :post, local: true do |form|
+                = form.submit 'Rafraîchir les données Lexpol', class: 'fr-btn fr-btn--secondary'
 
     = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: true)
   - else
