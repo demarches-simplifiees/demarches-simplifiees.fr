@@ -25,6 +25,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
   })
   pdf.font 'marianne'
+  pdf.fallback_fonts = ['Helvetica']
 
   grey = '3a3a3a'
   black = '222222'

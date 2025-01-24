@@ -816,8 +816,7 @@ GEM
     tilt (2.5.0)
     timecop (0.9.10)
     timeout (0.4.3)
-    ttfunk (1.8.0)
-      bigdecimal (~> 3.1)
+    ttfunk (1.7.0)
     turbo-rails (2.0.11)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
@@ -1052,6 +1051,7 @@ DEPENDENCIES
   sys-proctable
   test-prof
   timecop
+  ttfunk (~> 1.7.0)
   turbo-rails
   typhoeus
   ulid-ruby
