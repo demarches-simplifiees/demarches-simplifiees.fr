@@ -11,7 +11,7 @@ module Maintenance
     end
 
     def process(element)
-      element.save!
+      element.save!(validate: false)
 
       if element.publiee?
         element.procedure_paths << ProcedurePath.find_or_create_by(path: element[:path])
@@ -20,7 +20,7 @@ module Maintenance
           element.procedure_paths << ProcedurePath.find_or_create_by(path: element[:path])
         end
       end
-      element.save!
+      element.save!(validate: false)
     end
   end
 end
