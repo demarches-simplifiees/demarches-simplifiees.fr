@@ -1,68 +1,50 @@
 module LexpolFieldsService
-  def self.object_field_values(source, field, log_empty: true)
+  def self.object_field_values(source, field)
     return [] if source.blank? || field.blank?
 
-    objects = [source]
-    field.split('.').each do |segment|
-      objects = objects.flat_map do |object|
-        results = []
-        results += dossier_linked_champs(object)             if object.respond_to?(:dossier)
-        results += select_champ(object.champs, segment)      if object.respond_to?(:champs)
-        results += select_champ(object.annotations, segment) if object.respond_to?(:annotations)
-        results += select_champ(object.rows, segment)        if object.respond_to?(:rows)
-        results += attributes(object, segment)               if object.respond_to?(segment)
-        results
-      end
-
-      if log_empty && objects.blank?
-        Rails.logger.warn("Dans LexpolFieldsService, le champ '#{field}' est vide après '#{segment}'.")
+    field.split('.').reduce([source]) do |objects, segment|
+      objects.flat_map do |object|
+        if object.respond_to?(segment)
+          attributes(object, segment)
+        elsif object.respond_to?(:rows)
+          object.rows.flat_map { |row| select_champ(row, segment) }
+        else
+          object = dereference(object)
+          results = []
+          results += select_champ(object.champs, segment) if object.respond_to?(:champs)
+          results += select_champ(object.annotations, segment) if object.respond_to?(:annotations)
+          results += attributes(object, segment) if object.respond_to?(:segment)
+          results
+        end
       end
     end
-
-    objects = objects.uniq
   end
 
-  def self.select_champ(object, name)
-    return [] if object.blank?
-
-    if object.respond_to?(:to_a)
-      object.to_a.flat_map { |item| select_champ(item, name) }
-    else
-      object.type_de_champ&.libelle == name ? [object] : []
-    end
+  def self.select_champ(champs, name)
+    champs.filter { |champ| champ.libelle == name }
   end
 
   def self.attributes(object, name)
-    value = object.send(name)
-
-    if value.is_a?(Date)
-      return [format_date(value)]
-    elsif value.is_a?(Time) || value.is_a?(DateTime)
-      return [format_datetime(value)]
-    end
-
-    value.is_a?(Array) ? value : [value].compact
+    r = object.send(name)
+    r.is_a?(Array) ? r : [r]
   end
 
-  def self.dossier_linked_champs(object)
-    Rails.logger.debug { "Navigating to linked dossier for #{object.inspect}" }
-    dossier_linked = Dossier.find_by(id: object.value)
-    object.dossier
-    dossier_linked ? dossier_linked.champs : []
-  end
-
-  def self.format_lexpol_value(champ)
-    case champ
+  def self.format_lexpol_value(object)
+    case object
     when Champs::DatetimeChamp
-      format_datetime(champ.value)
+      format_datetime(object.value)
     when Champs::DateChamp
-      format_date(champ.value)
+      format_date(object.value)
     when Champs::RepetitionChamp
-      format_repetition_champ(champ)
+      format_repetition_champ(object)
     when Champs::TextareaChamp
-      format_markdown(champ.value)
+      format_markdown(object.value)
+    when Date
+      format_date(object)
+    when DateTime, Time
+      format_datetime(object)
     else
-      champ.respond_to?(:value) ? champ.value.to_s : champ.to_s
+      object.respond_to?(:value) ? object.value.to_s : object.to_s
     end
   end
 
@@ -70,7 +52,7 @@ module LexpolFieldsService
     return '' if date.blank?
     begin
       parsed = date.is_a?(String) ? Date.parse(date) : date
-      parsed.strftime('%d/%m/%Y')
+      I18n.l(parsed, format: '%-d %B %Y')
     rescue
       date.to_s
     end
@@ -80,7 +62,7 @@ module LexpolFieldsService
     return '' if date.blank?
     begin
       parsed = date.is_a?(String) ? DateTime.parse(date) : date
-      parsed.strftime('%d/%m/%Y à %H:%M')
+      I18n.l(parsed, format: '%-d %B %Y à %H:%M')
     rescue
       date.to_s
     end
@@ -96,10 +78,10 @@ module LexpolFieldsService
 
     return '' if filtered_rows.all?(&:empty?)
 
-    <<~HTML
-      <table style="margin: 0 auto; border-collapse: collapse;" border="1">
-        #{table_header_row(filtered_rows.first)}
+    <<~HTML.delete("\n")
+      <table class="table table-bordered" style="margin: 0px auto !important;">
         <tbody>
+          #{table_header_row(filtered_rows.first)}
           #{filtered_rows.each_with_index.map { |row, i| table_body_row(row, i) }.join}
         </tbody>
       </table>
@@ -109,9 +91,9 @@ module LexpolFieldsService
   def self.table_header_row(row)
     return '' unless row.is_a?(Array)
 
-    "<thead><tr>" +
-      row.map { |c| "<th>#{c.type_de_champ.libelle}</th>" }.join +
-    "</tr></thead>"
+    "<tr>" +
+      row.map { |c| "<td style='background-color: #505050;color:#FFFFFF;padding:7px'>#{c.type_de_champ.libelle}</td>" }.join +
+      "</tr></thead>"
   end
 
   def self.table_body_row(row, index)
@@ -123,9 +105,9 @@ module LexpolFieldsService
       row.map do |champ|
         # format
         value = format_lexpol_value(champ)
-        "<td style='vertical-align: middle; text-align: left;'>#{value}</td>"
+        "<td style='vertical-align: middle; text-align: left;padding: 5px'>#{value}</td>"
       end.join +
-    "</tr>"
+      "</tr>"
   end
 
   def self.format_markdown(markdown_str)
@@ -134,15 +116,16 @@ module LexpolFieldsService
     renderer = Redcarpet::Render::HTML.new(filter_html: false, hard_wrap: true)
     markdown = Redcarpet::Markdown.new(renderer, autolink: true, tables: true)
 
-    markdown.render(markdown_str)
-  end
-
-  def self.render_lexpol_values(final_values)
-    return '' if final_values.blank?
-    final_values.size == 1 ? final_values.first : final_values.join('<br>')
+    markdown.render(markdown_str).delete("\n")
   end
 
   def self.ignore_champ?(champ)
     champ.is_a?(Champs::HeaderSectionChamp) || champ.is_a?(Champs::ExplicationChamp)
+  end
+
+  private
+
+  def self.dereference(object)
+    object.is_a?(Champs::DossierLinkChamp) ? object.dossier : object
   end
 end
