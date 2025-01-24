@@ -324,6 +324,7 @@ prawn_document(page_size: "A4") do |pdf|
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
   })
   pdf.font 'marianne'
+  pdf.fallback_fonts = ['Helvetica']
 
   pdf.pad_bottom(40) do
     pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
