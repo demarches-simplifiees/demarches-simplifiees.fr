@@ -14,10 +14,11 @@ module Maintenance
         dossier.champs.create(**header_section.params_for_champ)
         dossier.champs.create(**explication.params_for_champ)
         dossier.champs.create(**repetition.params_for_champ)
+        dossier.reload
       }
 
       it { expect { subject }.not_to change { dossier.reload.updated_at } }
-      it { expect { subject }.to change { Champ.count }.by(-3) }
+      it { expect { subject }.to change { dossier.champs.count }.by(-3) }
     end
 
     describe "create rows" do
@@ -25,10 +26,13 @@ module Maintenance
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{}] }]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
 
-      before { dossier.champs.filter(&:row?).each(&:destroy!) }
+      before {
+        dossier.champs.filter(&:row?).each(&:destroy!)
+        dossier.reload
+      }
 
       it { expect { subject }.not_to change { dossier.reload.updated_at } }
-      it { expect { subject }.to change { Champs::RepetitionChamp.count }.by(2) }
+      it { expect { subject }.to change { dossier.champs.where(type: 'Champs::RepetitionChamp').count }.by(2) }
     end
   end
 end
