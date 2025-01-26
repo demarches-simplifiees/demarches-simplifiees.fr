@@ -268,6 +268,8 @@ module Users
 
       if dossier.errors.blank? && dossier.can_passer_en_construction?
         editing_fork_origin.merge_fork(dossier)
+        # merge_fork do a `reload`, the preloader is used to reload the whole tree
+        editing_fork_origin = DossierPreloader.load_one(editing_fork_origin)
         editing_fork_origin.submit_en_construction!
         redirect_to dossier_path(editing_fork_origin)
       else

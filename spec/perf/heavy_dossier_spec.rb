@@ -68,9 +68,6 @@ describe Users::DossiersController, type: :controller do
     end
 
     describe 'POST #submit_en_construction' do
-      # TODO: go back to 100 when the issue is fixed
-      let(:nb_champ) { 10 }
-
       before do
         dossier.passer_en_construction!
         dossier.owner_editing_fork
@@ -83,8 +80,7 @@ describe Users::DossiersController, type: :controller do
           post :submit_en_construction, params: { id: dossier.id }
         end
 
-        # TODO: FIX ME !
-        expect(query_count).to be_between(2070, 2090)
+        expect(query_count).to be_between(60, 70)
       end
     end
   end
