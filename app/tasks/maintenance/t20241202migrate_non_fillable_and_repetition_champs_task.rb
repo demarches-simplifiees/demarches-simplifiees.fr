@@ -13,24 +13,26 @@ module Maintenance
 
     def process(dossier)
       Dossier.no_touching do
-        Champs::HeaderSectionChamp.where(dossier:).destroy_all
-        Champs::ExplicationChamp.where(dossier:).destroy_all
-        Champs::RepetitionChamp.where(dossier:, row_id: nil).destroy_all
+        champ_to_remove_ids = dossier
+          .champs
+          .filter { !_1.row? && (_1.repetition? || _1.header_section? || _1.explication?) }
+          .map(&:id)
+        dossier.champs.where(id: champ_to_remove_ids).destroy_all
 
-        Dossier.transaction { create_rows(dossier) }
+        create_rows(dossier)
       end
     end
 
     def create_rows(dossier)
       repetitions = dossier.revision.types_de_champ.filter(&:repetition?)
-      repetitions.each do |type_de_champ|
-        stable_id = type_de_champ.stable_id
-        row_ids = dossier.repetition_row_ids(type_de_champ)
-        row_ids.each do |row_id|
-          Champ.create_with(**type_de_champ.params_for_champ)
-            .create_or_find_by!(dossier:, stable_id:, row_id:, stream: 'main')
-        end
+      existing_row_ids = dossier.champs.filter(&:row?).to_set(&:row_id)
+      now = Time.zone.now
+      row_attributes = { created_at: now, updated_at: now, dossier_id: dossier.id }
+      new_rows = repetitions.flat_map do |type_de_champ|
+        row_ids = dossier.repetition_row_ids(type_de_champ).to_set - existing_row_ids
+        row_ids.map { type_de_champ.params_for_champ.merge(row_id: _1, **row_attributes) }
       end
+      Champ.insert_all!(new_rows) if new_rows.present?
     end
   end
 end
