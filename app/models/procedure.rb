@@ -803,6 +803,15 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def update_labels_position(ordered_label_ids)
+    label_ids_positions = ordered_label_ids.each.with_index.to_h
+    Label.transaction do
+      label_ids_positions.each do |label_id, position|
+        Label.where(id: label_id).update(position:)
+      end
+    end
+  end
+
   def used_by_routing_rules?(type_de_champ)
     type_de_champ.stable_id.in?(stable_ids_used_by_routing_rules)
   end
