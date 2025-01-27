@@ -174,22 +174,6 @@ module DossierChampsConcern
     super.tap { reset_champs_cache }
   end
 
-  # FIXME: this is a temporary fix to remove duplicated champs with the same nil row_id
-  def tmp_fix_uniq_row_ids
-    duplicated_champ_ids = champs.where(row_id: [Champ::NULL_ROW_ID, nil])
-      .order(id: :desc)
-      .select(:id, :stream, :stable_id, :row_id)
-      .group_by { "#{_1.stream}-#{_1.public_id}" }
-      .values
-      .flat_map { _1[1..].map(&:id) }
-    Dossier.transaction do
-      if duplicated_champ_ids.present?
-        Dossier.no_touching { champs.where(id: duplicated_champ_ids).destroy_all }
-      end
-      champs.where(row_id: nil).update_all(row_id: Champ::NULL_ROW_ID)
-    end
-  end
-
   private
 
   def champs_by_public_id
@@ -222,9 +206,6 @@ module DossierChampsConcern
 
   def champ_upsert_by!(type_de_champ, row_id)
     check_valid_row_id_on_write?(type_de_champ, row_id)
-
-    # FIXME: this is a temporary fix to remove duplicated champs with the same nil row_id
-    tmp_fix_uniq_row_ids
 
     champ = Dossier.no_touching do
       champs
