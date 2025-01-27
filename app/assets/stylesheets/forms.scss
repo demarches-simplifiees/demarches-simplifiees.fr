@@ -319,9 +319,9 @@
       width: 100%;
     }
 
-    // don't set 100% width when width-* classes or size attribute are applied
+    // don't set 100% width when width-* classes are applied
     @media (min-width: $two-columns-breakpoint) {
-      &:not([class^='width-']):not([size]) {
+      &:not([class^='width-']) {
         width: 100%;
       }
     }
@@ -348,19 +348,17 @@
       max-width: none;
 
       @media (min-width: $two-columns-breakpoint) {
-        &:not([size]) {
-          &[type='date'],
-          &[type='tel'],
-          &[type='number'],
-          &[inputmode='numeric'],
-          &[inputmode='decimal'],
-          &[type='datetime-local'] {
-            width: 33.33%;
-          }
+        &[type='date'],
+        &[type='tel'],
+        &[type='number'],
+        &[inputmode='numeric'],
+        &[inputmode='decimal'],
+        &[type='datetime-local'] {
+          width: 33.33%;
+        }
 
-          &[type='email'] {
-            width: 66.67%;
-          }
+        &[type='email'] {
+          width: 66.67%;
         }
       }
     }
