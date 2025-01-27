@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://data.geopf.fr/geocodage/search?index=parcel&q=54084000AC0001&returntruegeometry=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 28 Jan 2025 10:41:48 GMT
+      Set-Cookie:
+      - session=WZ-Zi71DrtuXg8ssXoz67A|1738064508|rzvqqdtYuxRnt2txwIkTeQ|RHfSu-QB5VzCMZ7T47f6eIcz6l4;
+        Path=/; SameSite=Lax; Secure; HttpOnly
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '704'
+      Vary:
+      - Origin
+      Etag:
+      - W/"2c0-r4W7I3jkMy3aJpxMMokOI/nMFtA"
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, PUT, POST, DELETE, PATCH, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Content-Disposition,Content-Length,X-Community
+      Access-Control-Max-Age:
+      - '1728000'
+      X-Iplb-Request-Id:
+      - 5D108AFD:F39A_91EFC1E7:01BB_6798B46C_9B38423E:50FE
+      X-Iplb-Instance:
+      - '61218'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[5.8218044630002606,49.32765568104129]},"properties":{"id":"54084000AC0001","departmentcode":"54","municipalitycode":"084","oldmunicipalitycode":"000","districtcode":"000","section":"AC","sheet":"01","number":"0001","city":"Mont-Bonvillers","truegeometry":{"type":"Polygon","coordinates":[[[5.823564,49.327646],[5.822122,49.327555],[5.8218,49.327533],[5.820329,49.327418],[5.820328,49.327542],[5.820462,49.327623],[5.820958,49.327659],[5.821478,49.327699],[5.821861,49.327729],[5.822157,49.327753],[5.822235,49.327756],[5.822622,49.327778],[5.823543,49.327833],[5.823564,49.327646]]]},"_type":"parcel"}}]}'
+  recorded_at: Tue, 28 Jan 2025 10:41:48 GMT
+recorded_with: VCR 6.3.1
