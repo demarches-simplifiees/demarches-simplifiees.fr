@@ -6,7 +6,7 @@ class Champs::CarteController < Champs::ChampController
   end
 
   def create
-    geo_area = if params_source == GeoArea.sources.fetch(:cadastre)
+    geo_area = if cadastre_in_params?
       @champ.geo_areas.find_by("properties->>'id' = :id", id: create_params_feature[:properties][:id])
     end
 
@@ -14,6 +14,7 @@ class Champs::CarteController < Champs::ChampController
       geo_area = @champ.geo_areas.build(source: params_source, properties: {})
 
       if save_feature(geo_area, create_params_feature)
+        FetchCadastreRealGeometryJob.perform_later(geo_area) if geo_area.cadastre?
         render json: { feature: geo_area.to_feature }, status: :created
       else
         render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
@@ -27,6 +28,7 @@ class Champs::CarteController < Champs::ChampController
     geo_area = @champ.geo_areas.find(params[:id])
 
     if save_feature(geo_area, update_params_feature)
+      FetchCadastreRealGeometryJob.perform_later(geo_area) if geo_area.cadastre?
       head :no_content
     else
       render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
@@ -45,6 +47,8 @@ class Champs::CarteController < Champs::ChampController
   def params_source
     params[:source]
   end
+
+  def cadastre_in_params? = params_source == GeoArea.sources.fetch(:cadastre)
 
   def create_params_feature
     params.require(:feature).permit(properties: [
