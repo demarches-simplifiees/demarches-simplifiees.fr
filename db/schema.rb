@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_07_155455) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -740,6 +740,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_07_155455) do
   end
 
   create_table "geo_areas", force: :cascade do |t|
+    t.string "cadastre_error"
+    t.string "cadastre_state"
     t.bigint "champ_id"
     t.datetime "created_at", precision: nil
     t.string "geo_reference_id"
@@ -747,6 +749,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_07_155455) do
     t.jsonb "properties"
     t.string "source"
     t.datetime "updated_at", precision: nil
+    t.index ["cadastre_state"], name: "index_geo_areas_on_cadastre_state"
     t.index ["champ_id"], name: "index_geo_areas_on_champ_id"
     t.index ["source"], name: "index_geo_areas_on_source"
   end
