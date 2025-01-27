@@ -19,7 +19,7 @@ describe APIEntreprise::API do
       let(:status) { 502 }
       let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/entreprises_unavailable.json').read }
 
-      it 'raises APIEntreprise::API::Error::RequestFailed' do
+      it 'raises APIEntreprise::API::Error::BadGateway' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::BadGateway)
       end
     end
@@ -29,7 +29,7 @@ describe APIEntreprise::API do
       let(:status) { 502 }
       let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_01000.json').read }
 
-      it 'raises APIEntreprise::API::Error::RequestFailed' do
+      it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
       end
     end
@@ -39,7 +39,7 @@ describe APIEntreprise::API do
       let(:status) { 502 }
       let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_01001.json').read }
 
-      it 'raises APIEntreprise::API::Error::RequestFailed' do
+      it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
       end
     end
@@ -49,7 +49,7 @@ describe APIEntreprise::API do
       let(:status) { 504 }
       let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_01002.json').read }
 
-      it 'raises APIEntreprise::API::Error::RequestFailed' do
+      it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
       end
     end
@@ -59,7 +59,7 @@ describe APIEntreprise::API do
       let(:status) { 504 }
       let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_02002.json').read }
 
-      it 'raises APIEntreprise::API::Error::RequestFailed' do
+      it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
       end
     end
@@ -69,7 +69,17 @@ describe APIEntreprise::API do
       let(:status) { 504 }
       let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_03002.json').read }
 
-      it 'raises APIEntreprise::API::Error::RequestFailed' do
+      it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
+        expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
+      end
+    end
+
+    context 'when the service reponds with 03020 code' do
+      let(:siren) { '111111111' }
+      let(:status) { 503 }
+      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_03020.json').read }
+
+      it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
       end
     end

@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "code": "03020",
+      "title": "Maintenance du fournisseur de données",
+      "detail": "Le fournisseur de données est en maintenance de 08:00 à 18:00",
+      "meta": { "provider": "DGFIP - Adélie", "retry_in": 15397 }
+    }
+  ]
+}
