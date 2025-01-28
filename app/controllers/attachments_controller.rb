@@ -23,7 +23,10 @@ class AttachmentsController < ApplicationController
 
     if champ?
       @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
-      @attachment&.purge_later
+      if @attachment.present?
+        @attachment.purge_later
+        champ.update_timestamps
+      end
       champ.piece_justificative_file.reload
     else
       @attachment.purge_later

@@ -11,6 +11,6 @@ class Champs::SiretController < Champs::ChampController
     # Anyway it would be clear when updating the value without validation
     @champ.validate(params[:validate].to_sym) if params[:validate]
 
-    @champ.dossier.touch_champs_changed([:last_champ_updated_at])
+    @champ.update_timestamps
   end
 end

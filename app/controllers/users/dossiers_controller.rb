@@ -577,7 +577,7 @@ module Users
       if dossier.brouillon?
         if dossier.save
           if updated_champs.present?
-            dossier.touch_champs_changed([:last_champ_updated_at])
+            updated_champs.each(&:update_timestamps)
             if updated_champs.any?(&:used_by_routing_rules?)
               @update_contact_information = true
               RoutingEngine.compute(dossier)

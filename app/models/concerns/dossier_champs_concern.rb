@@ -183,15 +183,12 @@ module DossierChampsConcern
 
     now = Time.zone.now
     history_stream = "#{Champ::HISTORY_STREAM}#{now}"
+    changed_champs = champs.filter { _1.id.in?(buffer_champ_ids) }
+
     transaction do
       champs.where(id: changed_main_champ_ids, stream: Champ::MAIN_STREAM).update_all(stream: history_stream)
       champs.where(id: buffer_champ_ids, stream: Champ::USER_BUFFER_STREAM).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
-
-      if Champ.exists?(id: buffer_champ_ids, type: ['Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'])
-        touch_champs_changed([:last_champ_updated_at, :last_champ_piece_jointe_updated_at])
-      else
-        touch_champs_changed([:last_champ_updated_at])
-      end
+      update_champs_timestamps(changed_champs)
     end
 
     # update loaded champ instances
