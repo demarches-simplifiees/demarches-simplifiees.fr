@@ -4,9 +4,12 @@ class GeoArea < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   belongs_to :champ, optional: false
 
+  enum :cadastre_state, %w[cadastre_fetched cadastre_error].index_by(&:itself)
+
+  scope :pending_cadastre, -> { where(source: :cadastre, cadastre_state: nil) }
+
   # FIXME: once geo_areas are migrated to not use YAML serialization we can enable store_accessor
   # store_accessor :properties, :description, :numero, :section
-
   def properties
     value = read_attribute(:properties)
     if value.is_a? String
@@ -180,6 +183,19 @@ class GeoArea < ApplicationRecord
 
   def code_arr
     prefixe
+  end
+
+  # see: https://gist.github.com/ThomasG77/a9b39677d302e2405c18cfe9bc8e462b
+  def parcelle_id
+    if legacy_cadastre?
+      code_insee = "#{properties['code_dep']}#{properties['code_com']}"
+      ancien_code = properties['code_arr']
+      section = properties['section'].rjust(2, '0')
+      numero = properties['numero'].rjust(4, '0')
+      [code_insee, ancien_code, section, numero].join('')
+    else
+      properties["id"]
+    end
   end
 
   def surface_parcelle

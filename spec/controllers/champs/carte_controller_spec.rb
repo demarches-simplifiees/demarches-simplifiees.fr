@@ -21,14 +21,6 @@ describe Champs::CarteController, type: :controller do
   describe 'features' do
     let(:feature) { attributes_for(:geo_area, :polygon) }
     let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon, champ: champ) }
-    let(:params) do
-      {
-        dossier_id: champ.dossier_id,
-        stable_id: champ.stable_id,
-        feature: feature,
-        source: GeoArea.sources.fetch(:selection_utilisateur)
-      }
-    end
 
     before do
       sign_in user
@@ -39,10 +31,39 @@ describe Champs::CarteController, type: :controller do
     describe 'POST #create' do
       subject { post :create, params: params }
 
-      context 'success' do
+      context 'when success (selection utilisateur)' do
+        let(:params) do
+          {
+            dossier_id: champ.dossier_id,
+            stable_id: champ.stable_id,
+            feature: feature,
+            source: GeoArea.sources.fetch(:selection_utilisateur)
+          }
+        end
+
         it do
           expect { subject } .to change { dossier.reload.last_champ_updated_at }
           expect(response).to have_http_status(:created)
+        end
+      end
+
+      context 'when success (cadastre)' do
+        let(:params) do
+          {
+            dossier_id: champ.dossier_id,
+            stable_id: champ.stable_id,
+            feature: feature,
+            source: GeoArea.sources.fetch(:cadastre)
+          }
+        end
+
+        it do
+          expect { subject } .to change { dossier.reload.last_champ_updated_at }
+          expect(response).to have_http_status(:created)
+        end
+
+        it 'enqueues a FetchCadastreRealGeometryJob' do
+          expect { subject }.to have_enqueued_job(FetchCadastreRealGeometryJob)
         end
       end
 

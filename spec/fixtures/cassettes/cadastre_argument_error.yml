@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://data.geopf.fr/geocodage/search?index=parcel&q=&returntruegeometry=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Tue, 28 Jan 2025 10:41:48 GMT
+      Set-Cookie:
+      - session=bQZmWmZ4eBJ0O229h0XQKw|1738064508|Reqc9tXfg6fbmNq5jRnGEA|PCOCRRWf0CrNYU9HxfMy6KavvSM;
+        Path=/; SameSite=Lax; Secure; HttpOnly
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '73'
+      Vary:
+      - Origin
+      Etag:
+      - W/"49-KXTe/7S5qADz9W1HcnpzetPFTEQ"
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, PUT, POST, DELETE, PATCH, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,Content-Disposition,Content-Length,X-Community
+      Access-Control-Max-Age:
+      - '1728000'
+      X-Iplb-Request-Id:
+      - 5D108AFD:F39A_91EFC1E7:01BB_6798B46C_9B383EBD:50FE
+      X-Iplb-Instance:
+      - '61218'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"code":400,"message":"departmentcode is required for structured search"}'
+  recorded_at: Tue, 28 Jan 2025 10:41:48 GMT
+recorded_with: VCR 6.3.1
