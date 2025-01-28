@@ -518,7 +518,7 @@ class ProcedureRevision < ApplicationRecord
   def value_of(type_de_champ, value)
     type_de_champ.date? && value.present? ? Date.parse(value) : value
   end
-  
+
   def ineligibilite_rules_are_valid?
     if ineligibilite_rules
       ineligibilite_rules.errors(types_de_champ_for(scope: :public).to_a)

@@ -8,26 +8,27 @@
 - is_user_context = nav_bar_profile == :user
 - is_search_enabled = [params[:controller] == 'recherche', is_instructeur_context, is_expert_context, is_user_context && current_user.dossiers.count].any?
 %header{ class: ["fr-header", content_for?(:notice_info) && "fr-header__with-notice-info"], role: "banner", "data-controller": "dsfr-header" }
-  .fr-header__body
-    .fr-container
-      .fr-header__body-row
-        .fr-header__brand.fr-enlarge-link
-          .fr-header__brand-top
-            -# .fr-header__logo
-              %p.fr-logo{ lang: "fr" }
-                République
-                = succeed "Française" do
-                  %br/
-            .fr-header__operator
+  %nav{ :role => "navigation", "aria-label" => t('layouts.header.main_menu') }
+    .fr-header__body
+      .fr-container
+        .fr-header__body-row
+          .fr-header__brand.fr-enlarge-link
+            .fr-header__brand-top
+              -# .fr-header__logo
+                %p.fr-logo{ lang: "fr" }
+                  République
+                  = succeed "Française" do
+                    %br/
+              .fr-header__operator
+                - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
+                = link_to root_profile_link, title: root_profile_libelle  do
+                  = image_tag 'header/logo-md-wide.svg', alt: '', class: 'fr-responsive-img', style: 'width: 360px'
+              .fr-header__navbar
+                - if is_search_enabled
+                  %button.fr-btn--search.fr-btn{ "aria-controls" => "search-modal", "data-fr-opened" => "false", :title => t('views.users.dossiers.search.search_file') }= t('views.users.dossiers.search.search_file')
+                %button#navbar-burger-button.fr-btn--menu.fr-btn{ "aria-controls" => "modal-header__menu", "data-fr-opened" => "false", title: "Menu" } Menu
+            -# .fr-header__service
               - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
-              = link_to root_profile_link, title: root_profile_libelle  do
-                = image_tag 'header/logo-md-wide.svg', alt: '', class: 'fr-responsive-img', style: 'width: 360px'
-            .fr-header__navbar
-              - if is_search_enabled
-                %button.fr-btn--search.fr-btn{ "aria-controls" => "search-modal", "data-fr-opened" => "false", :title => t('views.users.dossiers.search.search_file') }= t('views.users.dossiers.search.search_file')
-              %button#navbar-burger-button.fr-btn--menu.fr-btn{ "aria-controls" => "modal-header__menu", "data-fr-opened" => "false", title: "Menu" } Menu
-          -# .fr-header__service
-            - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
               = link_to root_profile_link, title: "#{root_profile_libelle} — #{Current.application_name}" do
                 %span.fr-header__service-title{ lang: "fr" }= Current.application_name

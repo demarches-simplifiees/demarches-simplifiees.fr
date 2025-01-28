@@ -20,8 +20,13 @@ export class EmailInputController extends ApplicationController {
   declare readonly suggestionTarget: HTMLElement;
   declare readonly inputTarget: HTMLInputElement;
 
-  checkEmail() {
+  async checkEmail() {
     const email = this.inputTarget.value;
+
+    if (!email || email.length < 5 || !email.includes('@')) {
+      return;
+    }
+
     if (email.toLowerCase().endsWith('@gmail.pf')) {
       const address = email.substring(0, email.indexOf('@')) + '@gmail.com';
       this.suggestionTarget.innerHTML = address;
@@ -30,9 +35,15 @@ export class EmailInputController extends ApplicationController {
     } else if (email.toLowerCase().endsWith('.pf')) {
       this.discard();
     } else {
-      const suggestion = suggest(email);
-      if (suggestion && suggestion.full) {
-        this.suggestionTarget.innerHTML = suggestion.full;
+      const url = new URL(this.urlValue, document.baseURI);
+      url.searchParams.append('email', email);
+
+      const data: checkEmailResponse | null = await httpRequest(
+        url.toString()
+      ).json();
+
+      if (data && data.email_suggestions && data.email_suggestions.length > 0) {
+        this.suggestionTarget.innerHTML = data.email_suggestions[0];
         show(this.ariaRegionTarget);
         this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
       }

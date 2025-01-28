@@ -44,10 +44,6 @@ en:
         label: "ToS"
         title: "Terms of Service"
         url: "https://doc.demarches-simplifiees.fr/cgu"
-      rgpd:
-        label: "Data protection"
-        title: "Data protection"
-        url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       doc:
         label: "Documentation"
         title: "User Documentation"

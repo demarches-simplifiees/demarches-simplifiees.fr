@@ -25,6 +25,8 @@
               %a.fr-footer__top-link{ :href => t("links.footer.cgu.url"), :rel => "noopener noreferrer", :hreflang => "fr" }
                 %abbr{ title: t("links.footer.cgu.title") }
                   = t("links.footer.cgu.label")
+            %li.fr-footer__top-link
+              = link_to t("links.footer.rgpd.label"), t("links.footer.rgpd.url"), title: t("links.footer.rgpd.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
         .fr-col-12.fr-col-sm-3.fr-col-md-3
           %h3.fr-footer__top-cat= t("links.footer.top_labels.resources")
           %ul.fr-footer__top-list

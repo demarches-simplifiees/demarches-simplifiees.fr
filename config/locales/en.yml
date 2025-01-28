@@ -86,7 +86,7 @@ en:
       close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
-      main_menu: "Main menu"
+      # main_menu: "Main menu"
     locale_dropdown:
       select_locale: "Choose a language"
       locale_name: "English"
@@ -707,7 +707,6 @@ en:
           attributes:
             value:
               format: '%{message}'
-              missing: must be filled
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:
