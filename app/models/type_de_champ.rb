@@ -527,8 +527,7 @@ class TypeDeChamp < ApplicationRecord
     when type_champs.fetch(:carte),
       type_champs.fetch(:piece_justificative),
       type_champs.fetch(:titre_identite),
-      type_champs.fetch(:rna),
-      type_champs.fetch(:siret)
+      type_champs.fetch(:rna)
       false
     else
       true

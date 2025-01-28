@@ -734,8 +734,6 @@ en:
       targeted_user_link_expired: "This invitation link or the file is no longer available."
       procedure_not_found: "The procedure does not exist"
       siret:
-        length: "The SIRET number must contain exactly 14 numbers."
-        checksum: "The SIRET number is invalid."
         network_error: 'Sorry, SIRET information retrieval is temporarily unavailable. Please try again shortly.'
         not_found: "We haven't found an establishment corresponding to this SIRET number."
       france_connect:

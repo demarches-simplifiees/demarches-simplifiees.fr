@@ -3,4 +3,12 @@ en:
     attributes:
       champs/siret_champ:
         hints:
-          value: "Enter 14 digits. Example: 500 0012 345 6789"
+          value: 'Enter 14 digits. Example: 500 0012 345 6789'
+    errors:
+      models:
+        champs/siret_champ:
+          attributes:
+            value:
+              length: 'must contain exactly 14 numbers'
+              checksum: 'is invalid'
+              not_found: 'no establishment is linked to this number'
