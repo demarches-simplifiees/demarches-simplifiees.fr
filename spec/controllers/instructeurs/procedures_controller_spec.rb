@@ -880,7 +880,6 @@ describe Instructeurs::ProceduresController, type: :controller do
         let(:defaut_groupe_instructeur) { procedure.defaut_groupe_instructeur }
         let!(:dossier_in_group) { create(:dossier, :brouillon, procedure:, groupe_instructeur: defaut_groupe_instructeur) }
         let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure:, groupe_instructeur: nil) }
-        let!(:dossier_fork) { dossier_in_group.find_or_create_editing_fork(dossier_in_group.user) }
         before { defaut_groupe_instructeur.instructeurs << instructeur }
 
         it 'count brouillon per group and not in group' do
@@ -953,14 +952,6 @@ describe Instructeurs::ProceduresController, type: :controller do
           expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
           expect(response).to redirect_to instructeur_procedure_path(procedure)
         end
-
-        context 'when editing_fork exists' do
-          it 'skips fork notification' do
-            dossier.find_or_create_editing_fork(dossier_4.user)
-
-            expect { subject }.to change { Commentaire.count }.from(0).to(2)
-          end
-        end
       end
 
       context 'when without_group is specified' do
@@ -984,14 +975,6 @@ describe Instructeurs::ProceduresController, type: :controller do
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
           expect(response).to redirect_to instructeur_procedure_path(procedure)
-        end
-
-        context 'when editing_fork exists' do
-          it 'skips fork notification' do
-            dossier_4.find_or_create_editing_fork(dossier_4.user)
-
-            expect { subject }.to change { Commentaire.count }.from(0).to(1)
-          end
         end
       end
     end

@@ -63,19 +63,4 @@ describe DossierPolicy do
       it_behaves_like 'they can’t access dossier'
     end
   end
-
-  context 'when the champ is on a forked dossier' do
-    let(:signed_in_user) { dossier_owner }
-    let(:origin) { create(:dossier, procedure: procedure, user: dossier_owner) }
-    let(:dossier) { origin.find_or_create_editing_fork(dossier_owner) }
-
-    it_behaves_like 'they can access dossier'
-
-    context 'when the user is invited on the origin dossier' do
-      let(:invite) { create(:invite, :with_user, dossier: origin) }
-      let(:signed_in_user) { invite.user }
-
-      it_behaves_like 'they can access dossier'
-    end
-  end
 end

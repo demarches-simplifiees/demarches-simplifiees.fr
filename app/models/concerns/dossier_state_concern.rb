@@ -77,9 +77,6 @@ module DossierStateConcern
       NotificationMailer.send_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
-
-    # TODO remove when all forks are gone
-    editing_forks.each(&:destroy_editing_fork!)
   end
 
   def after_passer_automatiquement_en_instruction
@@ -367,8 +364,6 @@ module DossierStateConcern
     remove_discarded_rows!
     remove_not_visible_rows!
     remove_not_visible_or_empty_champs!
-    # TODO remove when all forks are gone
-    editing_forks.each(&:destroy_editing_fork!)
   end
 
   def clean_champs_after_instruction!
