@@ -14,6 +14,7 @@ class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def update_path
-    champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
+    validate = @champ.prefilled? ? :prefill : nil
+    champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, validate:)
   end
 end

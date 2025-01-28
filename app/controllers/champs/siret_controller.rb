@@ -7,8 +7,9 @@ class Champs::SiretController < Champs::ChampController
 
     @champ.fetch_etablissement!(siret, current_user)
 
-    # Validation is made on update with validate_champ_value
+    # Except of prefill first load, validation is made on update with validate_champ_value
     # Anyway it would be clear when updating the value without validation
+    @champ.validate(params[:validate].to_sym) if params[:validate]
 
     @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
