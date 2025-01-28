@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 describe Champs::DgfipChamp, type: :model do
-  let(:champ) { described_class.new }
+  let(:types_de_champ_public) { [{ type: :dgfip }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first }
 
   describe 'numero_fiscal and reference_avis' do
     before do
@@ -39,11 +42,6 @@ describe Champs::DgfipChamp, type: :model do
   describe '#validate' do
     let(:numero_fiscal) { '1122299999092' }
     let(:reference_avis) { 'FC22299999092' }
-    let(:champ) { described_class.new(dossier: build(:dossier)) }
-    before do
-      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_dgfip))
-      allow(champ).to receive(:in_dossier_revision?).and_return(true)
-    end
     let(:validation_context) { :champs_public_value }
 
     subject { champ.valid?(validation_context) }

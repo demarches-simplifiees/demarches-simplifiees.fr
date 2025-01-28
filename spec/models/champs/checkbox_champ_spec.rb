@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::CheckboxChamp do
-  let(:boolean_champ) { described_class.new(value: value) }
-  before { allow(boolean_champ).to receive(:type_de_champ).and_return(build(:type_de_champ_checkbox)) }
+  let(:types_de_champ_public) { [{ type: :checkbox }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:boolean_champ) { dossier.champs.first.tap { _1.update_column(:value, value) } }
+  let(:value) { '' }
   it_behaves_like "a boolean champ", false
 
   # TODO remove when normalize_checkbox_values is over

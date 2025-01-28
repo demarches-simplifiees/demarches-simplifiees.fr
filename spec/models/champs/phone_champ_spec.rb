@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::PhoneChamp do
-  let(:champ) { Champs::PhoneChamp.new(dossier: build(:dossier)) }
-  before do
-    allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_phone))
-    allow(champ).to receive(:in_dossier_revision?).and_return(true)
-  end
+  let(:types_de_champ_public) { [{ type: :phone }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first }
+
   describe '#validate' do
     it do
       expect(champ_with_value(nil).validate(:champs_public_value)).to be_truthy

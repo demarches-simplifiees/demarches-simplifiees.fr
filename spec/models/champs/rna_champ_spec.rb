@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 describe Champs::RNAChamp do
-  let(:champ) { Champs::RNAChamp.new(value: "W182736273", dossier: build(:dossier)) }
-  before do
-    allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rna))
-    allow(champ).to receive(:in_dossier_revision?).and_return(true)
-  end
+  let(:types_de_champ_public) { [{ type: :rna }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
+  let(:value) { "W182736273" }
+
   def with_value(value)
     champ.tap { _1.value = value }
   end

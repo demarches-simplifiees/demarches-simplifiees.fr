@@ -1,20 +1,16 @@
 # frozen_string_literal: true
 
 describe Champs::RegionChamp, type: :model do
-  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :regions, stable_id: 99 }]) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :regions }]) }
   let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:, external_id:) } }
+  let(:value) { nil }
+  let(:external_id) { nil }
 
   describe 'validations' do
+    subject { champ.validate(:champs_public_value) }
+
     describe 'external link' do
-      let(:champ) do
-        described_class
-          .new(stable_id: 99, dossier:)
-          .tap do |champ|
-            champ.value = nil
-            champ.external_id = external_id
-          end
-      end
-      subject { champ.validate(:champs_public_value) }
       context 'when nil' do
         let(:external_id) { nil }
 
@@ -41,15 +37,6 @@ describe Champs::RegionChamp, type: :model do
     end
 
     describe 'value' do
-      let(:champ) do
-        described_class
-          .new(stable_id: 99, dossier:)
-          .tap do |champ|
-            champ.value = value
-          end
-      end
-      subject { champ.validate(:champs_public_value) }
-
       context 'when nil' do
         let(:value) { nil }
 
@@ -78,10 +65,6 @@ describe Champs::RegionChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) do
-      described_class.new(stable_id: 99, dossier:)
-    end
-
     it 'with code' do
       champ.value = '01'
       expect(champ.external_id).to eq('01')

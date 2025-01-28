@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 describe Champs::DropDownListChamp do
+  let(:types_de_champ_public) { [{ type: :drop_down_list, drop_down_other: other }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:, other:) } }
+  let(:value) { nil }
+  let(:other) { nil }
+
   describe 'validations' do
     describe 'inclusion' do
-      let(:champ) { described_class.new(other:, value:, dossier: build(:dossier)) }
-      before do
-        allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_drop_down_list, drop_down_other: other))
-        allow(champ).to receive(:in_dossier_revision?).and_return(true)
-      end
       subject { champ.validate(:champs_public_value) }
 
       context 'when the other value is accepted' do
@@ -57,25 +59,22 @@ describe Champs::DropDownListChamp do
   end
 
   describe '#drop_down_other?' do
-    let(:drop_down) { described_class.new(dossier: build(:dossier)) }
-    before { allow(drop_down).to receive(:type_de_champ).and_return(build(:type_de_champ_drop_down_list)) }
-
     context 'when drop_down_other is nil' do
       it do
-        drop_down.type_de_champ.drop_down_other = nil
-        expect(drop_down.drop_down_other?).to be false
+        champ.type_de_champ.drop_down_other = nil
+        expect(champ.drop_down_other?).to be false
 
-        drop_down.type_de_champ.drop_down_other = "0"
-        expect(drop_down.drop_down_other?).to be false
+        champ.type_de_champ.drop_down_other = "0"
+        expect(champ.drop_down_other?).to be false
 
-        drop_down.type_de_champ.drop_down_other = false
-        expect(drop_down.drop_down_other?).to be false
+        champ.type_de_champ.drop_down_other = false
+        expect(champ.drop_down_other?).to be false
 
-        drop_down.type_de_champ.drop_down_other = "1"
-        expect(drop_down.drop_down_other?).to be true
+        champ.type_de_champ.drop_down_other = "1"
+        expect(champ.drop_down_other?).to be true
 
-        drop_down.type_de_champ.drop_down_other = true
-        expect(drop_down.drop_down_other?).to be true
+        champ.type_de_champ.drop_down_other = true
+        expect(champ.drop_down_other?).to be true
       end
     end
   end

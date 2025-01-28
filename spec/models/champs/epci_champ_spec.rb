@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::EpciChamp, type: :model do
-  let(:champ) { Champs::EpciChamp.new(code_departement: code_departement, dossier: build(:dossier)) }
+  let(:types_de_champ_public) { [{ type: :epci }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.code_departement = code_departement } }
   let(:code_departement) { nil }
-
-  before do
-    allow(champ).to receive(:visible?).and_return(true)
-    allow(champ).to receive(:can_validate?).and_return(true)
-  end
 
   describe 'validations' do
     subject { champ.validate(:champs_public_value) }
@@ -39,10 +37,6 @@ describe Champs::EpciChamp, type: :model do
     end
 
     describe 'external_id' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :epci }]) }
-      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:champ) { dossier.champs.first }
-
       before do
         champ.code_departement = code_departement
         champ.external_id = nil
@@ -87,10 +81,6 @@ describe Champs::EpciChamp, type: :model do
     end
 
     describe 'value' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :epci }]) }
-      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:champ) { dossier.champs.first }
-
       before do
         champ.value = nil
         champ.code_departement = code_departement

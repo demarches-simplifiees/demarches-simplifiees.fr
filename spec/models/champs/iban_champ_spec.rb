@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 describe Champs::IbanChamp do
+  let(:types_de_champ_public) { [{ type: :iban }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first }
+
   describe '#valid?' do
-    let(:champ) { Champs::IbanChamp.new(dossier: build(:dossier)) }
-    before do
-      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_iban))
-      allow(champ).to receive(:in_dossier_revision?).and_return(true)
-    end
     def with_value(value)
       champ.tap { _1.value = value }
     end

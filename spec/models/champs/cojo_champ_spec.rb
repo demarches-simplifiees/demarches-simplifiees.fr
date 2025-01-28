@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 describe Champs::COJOChamp, type: :model do
+  let(:types_de_champ_public) { [{ type: :cojo }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first }
+
   let(:external_id) { nil }
   let(:url) { COJOService.new.send(:url) }
   let(:body) { Rails.root.join('spec', 'fixtures', 'files', 'api_cojo', "accreditation_#{response_type}.json").read }
@@ -12,12 +17,10 @@ describe Champs::COJOChamp, type: :model do
   before { stub_request(:post, url).with(body: { accreditationNumber: accreditation_number.to_i, birthdate: accreditation_birthdate }).to_return(body:, status:) }
 
   describe 'fetch_external_data' do
-    let(:champ) do
-      described_class.new do |champ|
-        champ.accreditation_number = accreditation_number
-        champ.accreditation_birthdate = accreditation_birthdate
-      end
-    end
+    before {
+      champ.accreditation_number = accreditation_number
+      champ.accreditation_birthdate = accreditation_birthdate
+    }
 
     subject { champ.fetch_external_data }
 
@@ -58,9 +61,6 @@ describe Champs::COJOChamp, type: :model do
   end
 
   describe 'fill champ' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :cojo }]) }
-    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-    let(:champ) { dossier.champs.first }
     before do
       champ.update(accreditation_number:, accreditation_birthdate:, data: nil)
       perform_enqueued_jobs;

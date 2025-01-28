@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 describe Champs::DepartementChamp, type: :model do
-  describe 'validations' do
-    describe 'external link' do
-      let(:champ) { described_class.new(external_id: external_id, dossier: build(:dossier)) }
-      before do
-        allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_departements))
-        allow(champ).to receive(:in_dossier_revision?).and_return(true)
-      end
-      subject { champ.validate(:champs_public_value) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :departements }]) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { dossier.champs.first.tap { _1.update_columns(value:, external_id:) } }
+  let(:value) { nil }
+  let(:external_id) { nil }
 
+  describe 'validations' do
+    subject { champ.validate(:champs_public_value) }
+
+    describe 'external link' do
       context 'when nil' do
         let(:external_id) { nil }
 
@@ -36,12 +37,6 @@ describe Champs::DepartementChamp, type: :model do
     end
 
     describe 'value' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :departements }]) }
-      let(:dossier) { create(:dossier, procedure:) }
-      let(:champ) { dossier.champs.first }
-      subject { champ.validate(:champs_public_value) }
-      before { champ.update_columns(value: value) }
-
       context 'when nil' do
         let(:value) { nil }
 
@@ -69,9 +64,6 @@ describe Champs::DepartementChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) { described_class.new(value: nil, dossier: build(:dossier)) }
-    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_departements)) }
-
     it 'with code having 2 chars' do
       champ.value = '01'
       expect(champ.external_id).to eq('01')
