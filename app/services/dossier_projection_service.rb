@@ -115,8 +115,9 @@ class DossierProjectionService
 
         id_value_h =
           DossierLabel
-            .includes(:label)
+            .joins(:label)
             .where(dossier_id: dossiers_ids)
+            .order('labels.position ASC, labels.id ASC')
             .pluck('dossier_id, labels.name, labels.color')
             .group_by { |dossier_id, _| dossier_id }
 

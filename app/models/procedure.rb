@@ -62,7 +62,7 @@ class Procedure < ApplicationRecord
   has_and_belongs_to_many :procedure_tags
 
   has_many :bulk_messages, dependent: :destroy
-  has_many :labels, dependent: :destroy
+  has_many :labels, -> { order(:position, :id) }, dependent: :destroy, inverse_of: :procedure
 
   has_many :instructeurs_procedures, dependent: :destroy
 
@@ -800,6 +800,15 @@ class Procedure < ApplicationRecord
   def create_generic_labels
     Label::GENERIC_LABELS.each do |label|
       Label.create(name: label[:name], color: label[:color], procedure_id: self.id)
+    end
+  end
+
+  def update_labels_position(ordered_label_ids)
+    label_ids_positions = ordered_label_ids.each.with_index.to_h
+    Label.transaction do
+      label_ids_positions.each do |label_id, position|
+        Label.where(id: label_id).update(position:)
+      end
     end
   end
 

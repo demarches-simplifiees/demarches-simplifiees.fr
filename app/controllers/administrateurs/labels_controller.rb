@@ -47,10 +47,24 @@ module Administrateurs
       redirect_to [:admin, @procedure, :labels]
     end
 
+    def order_positions
+      @labels = @procedure.labels
+      render layout: "empty_layout"
+    end
+
+    def update_order_positions
+      @procedure.update_labels_position(ordered_label_ids_params)
+      redirect_to admin_procedure_labels_path, notice: "L'ordre des labels a été mis à jour."
+    end
+
     private
 
     def label_params
       params.require(:label).permit(:name, :color)
+    end
+
+    def ordered_label_ids_params
+      params.require(:ordered_label_ids)
     end
 
     def retrieve_label

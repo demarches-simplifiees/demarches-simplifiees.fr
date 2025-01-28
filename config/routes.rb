@@ -730,11 +730,17 @@ Rails.application.routes.draw do
         get 'preview', on: :member
       end
 
-      resources :labels, controller: 'labels'
+      resources :labels, controller: 'labels' do
+        collection do
+          get 'order_positions'
+          patch 'update_order_positions'
+        end
+      end
 
       resource :attestation_template, only: [:show, :edit, :update, :create] do
         get 'preview', on: :member
       end
+
       resource :chorus, only: [:edit, :update] do
         get 'add_champ_engagement_juridique'
       end

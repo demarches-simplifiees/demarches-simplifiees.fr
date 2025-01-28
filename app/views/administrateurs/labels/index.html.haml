@@ -10,15 +10,19 @@
 
   = link_to "Nouveau label",
     [:new, :admin, @procedure, :label],
-    class: "fr-btn fr-btn--primary fr-btn--icon-left fr-icon-add-circle-line mb-3"
+    class: "fr-btn fr-btn--primary fr-btn--icon-left fr-icon-add-circle-line fr-mb-4w"
 
-  - if @procedure.labels.present?
+  - if @labels.present?
+    .fr-container.flex.justify-between.fr-mb-2w.fr-p-0
+      %h2.fr-h6.fr-m-0
+        Liste des labels
+      - if @labels.size > 1
+        = link_to "Personnaliser l'ordre", order_positions_admin_procedure_labels_path, class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-btn--icon-left fr-icon-settings-5-line'
     .fr-table.fr-table--lg
       .fr-table__wrapper
         .fr-table__container
           .fr-table__content
             %table
-              %caption Liste des labels
               %thead
                 %tr
                   %th{ scope: "col" }
