@@ -308,6 +308,27 @@ class Champ < ApplicationRecord
     save!
   end
 
+  def touch_changed
+    return unless private? || dossier.brouillon?
+
+    updated_at = Time.zone.now
+    attributes = { updated_at: }
+    update_columns(attributes) if persisted?
+
+    if piece_justificative_or_titre_identite?
+      attributes[:last_champ_piece_jointe_updated_at] = updated_at
+    end
+
+    if private?
+      attributes[:last_champ_private_updated_at] = updated_at
+    else
+      attributes[:last_champ_updated_at] = updated_at
+      attributes[:brouillon_close_to_expiration_notice_sent_at] = nil
+    end
+
+    dossier.update_columns(attributes) if attributes.present?
+  end
+
   class NotImplemented < ::StandardError
     def initialize(method)
       super(":#{method} not implemented")
