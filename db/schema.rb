@@ -853,6 +853,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.string "color"
     t.datetime "created_at", null: false
     t.string "name"
+    t.integer "position"
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_labels_on_procedure_id"
