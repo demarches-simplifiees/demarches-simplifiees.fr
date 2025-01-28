@@ -3,7 +3,7 @@
     %span.autosave-explanation-text
       - if annotation?
         = t('.annotations.explanation')
-      - elsif dossier.en_construction_for_editor?
+      - elsif dossier.en_construction?
         = t('.en_construction.explanation')
         - if dossier.can_passer_en_construction?
           = t('.en_construction.submit_them')
@@ -16,7 +16,7 @@
     %span.fr-icon-success-fill.fr-mr-1v{ 'aria-hidden': 'true' }
     - if annotation?
       = t('.annotations.confirmation_html')
-    - elsif dossier.en_construction_for_editor?
+    - elsif dossier.en_construction?
       = t('.en_construction.confirmation_html')
     - else
       = t('.brouillon.confirmation_html')
@@ -27,7 +27,7 @@
     %span.fr-icon-warning-fill.fr-mr-1v{ 'aria-hidden': 'true' }
     - if annotation?
       = t('.annotations.error_html')
-    - elsif dossier.en_construction_for_editor?
+    - elsif dossier.en_construction?
       = t('.en_construction.error_html')
     - else
       = t('.brouillon.error_html')

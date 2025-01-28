@@ -28,8 +28,7 @@ RSpec.describe Dossiers::EditFooterComponent, type: :component do
   end
 
   context 'when en construction' do
-    let(:fork_origin) { create(:dossier, :en_construction) }
-    let(:dossier) { fork_origin.clone(fork: true) }
+    let(:dossier) { create(:dossier, :en_construction) }
     before { allow(dossier).to receive(:user_buffer_changes?).and_return(true) }
 
     context 'when dossier can be submitted' do

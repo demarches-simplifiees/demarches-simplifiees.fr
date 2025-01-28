@@ -6,11 +6,10 @@ describe 'shared/dossiers/edit', type: :view do
     allow(view).to receive(:administrateur_signed_in?).and_return(false)
   end
 
-  subject { render 'shared/dossiers/edit', dossier:, dossier_for_editing:, apercu: false }
+  subject { render 'shared/dossiers/edit', dossier:, apercu: false }
 
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-  let(:dossier_for_editing) { dossier }
 
   context 'when there are some champs' do
     let(:type_de_champ_header_section) { procedure.draft_types_de_champ_public.find(&:header_section?) }
@@ -131,18 +130,8 @@ describe 'shared/dossiers/edit', type: :view do
     let(:types_de_champ_public) { [{ type: :piece_justificative, mandatory: true }] }
     let(:champ) { dossier.champs.first }
 
-    context 'when dossier is en construction' do
-      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
-      let(:dossier_for_editing) { dossier.owner_editing_fork }
-
-      it 'can delete a piece justificative' do
-        expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
-      end
-    end
-
     context 'when dossier is en construction (stream)' do
-      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
-      let(:dossier_for_editing) { dossier.with_update_stream(dossier.user) }
+      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:).then { |dossier| dossier.with_update_stream(dossier.user) } }
 
       it 'can delete a piece justificative' do
         expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")

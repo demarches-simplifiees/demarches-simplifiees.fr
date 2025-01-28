@@ -135,13 +135,6 @@ RSpec.describe DossierHelper, type: :helper do
 
       it_behaves_like "returns false"
     end
-
-    context "when dossier is an editing fork" do
-      let(:user) { create(:user) }
-      let(:dossier) { create(:dossier, :en_construction, user:).find_or_create_editing_fork(user) }
-
-      it_behaves_like "returns false"
-    end
   end
 
   describe '.dossier_display_state' do
