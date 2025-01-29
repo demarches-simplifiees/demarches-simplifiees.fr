@@ -103,6 +103,11 @@ describe API::V2::GraphqlController do
             id
           }
         }
+        labels {
+          id
+          color
+          name
+        }
       }
     }"
   end
@@ -177,7 +182,10 @@ describe API::V2::GraphqlController do
 
     describe "demarche" do
       describe "query a demarche" do
-        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
+        let(:label) { build(:label) }
+        let(:procedure) {
+          create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin], labels: [label])
+        }
 
         def format_type_champ(type_champ)
           "#{type_champ.gsub('regions', 'region').gsub('departements', 'departement').gsub('communes', 'commune').camelcase}ChampDescriptor"
@@ -224,7 +232,8 @@ describe API::V2::GraphqlController do
             end,
             dossiers: {
               nodes: dossiers.map { { id: _1.to_typed_id } }
-            }
+            },
+            labels: [{ id: label.to_typed_id, color: label.color, name: label.name }]
           })
         end
       end
@@ -1201,7 +1210,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to eq(nil)
 
           expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
-            errors: [{ message: "Le dossier est déjà avec le grope instructeur: 'défaut'" }]
+            errors: [{ message: "Le dossier est déjà avec le groupe instructeur: 'défaut'" }]
           })
         end
 
@@ -1523,6 +1532,122 @@ describe API::V2::GraphqlController do
               })
             end
           end
+        end
+      end
+
+      describe 'dossierAjouterLabel' do
+        let(:label) { create(:label, procedure:) }
+        let(:query) do
+          "mutation {
+            dossierAjouterLabel(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              labelId: \"#{label.to_typed_id}\"
+            }) {
+              dossier {
+                id
+                labels {
+                  id
+                  name
+                  color
+                }
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        it "should add label to dossier" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossierAjouterLabel: {
+            dossier: {
+              id: dossier.to_typed_id,
+              labels: [
+                {
+                  id: label.to_typed_id,
+                  name: label.name,
+                  color: label.color
+                }
+              ]
+            },
+            errors: nil
+          })
+
+          expect(dossier.labels).to match_array([label])
+        end
+
+        context 'validations' do
+          context "invalid label" do
+            let(:label) { create(:label) }
+
+            it "should return error" do
+              expect(gql_data).to eq(dossierAjouterLabel: {
+                dossier: nil,
+                errors: [{ message: "Ce label n’appartient pas à la même démarche que le dossier" }]
+              })
+            end
+          end
+
+          context 'label already associated' do
+            before { dossier.labels << label }
+            it "should return an error" do
+              expect(gql_data).to eq(dossierAjouterLabel: {
+                dossier: nil,
+                errors: [{ message: "Ce label est déjà associé au dossier" }]
+              })
+            end
+          end
+        end
+      end
+    end
+
+    describe 'dossierSupprimerLabel' do
+      let(:label) { create(:label, procedure:) }
+      let(:query) do
+        "mutation {
+            dossierSupprimerLabel(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              labelId: \"#{label.to_typed_id}\"
+            }) {
+              dossier {
+                id
+                labels {
+                  id
+                  name
+                  color
+                }
+              }
+              errors {
+                message
+              }
+            }
+          }"
+      end
+
+      context 'success' do
+        before {
+          dossier.labels << label
+        }
+
+        it "should remove label to dossier" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossierSupprimerLabel: {
+            dossier: {
+              id: dossier.to_typed_id,
+              labels: []
+            },
+            errors: nil
+          })
+        end
+      end
+
+      context 'label not associated' do
+        it "should return an error" do
+          expect(gql_data).to eq(dossierSupprimerLabel: {
+            dossier: nil,
+            errors: [{ message: "Ce label n‘est pas associé au dossier" }]
+          })
         end
       end
     end

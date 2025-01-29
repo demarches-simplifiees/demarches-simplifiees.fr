@@ -327,6 +327,32 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
+  describe 'dossier with labels' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:label) { create(:label, procedure:, name: "Urgent", color: "pink_macaron") }
+    let(:query) { DOSSIER_WITH_LABELS_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    let(:past) { DateTime.new(2025, 1, 5, 12, 30, 0, "+01:00") }
+    before do
+      travel_to past do
+        dossier.labels << label
+      end
+    end
+
+    it {
+      expect(data[:dossier][:labels]).not_to be_empty
+      expect(data[:dossier][:labels][0]).to eq(
+        {
+          id: label.to_typed_id,
+          name: "Urgent",
+          color: "pink_macaron"
+        }
+      )
+    }
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
@@ -571,5 +597,17 @@ RSpec.describe Types::DossierType, type: :graphql do
       }
     }
   }
+  GRAPHQL
+
+  DOSSIER_WITH_LABELS_QUERY = <<-GRAPHQL
+    query($number: Int!) {
+      dossier(number: $number) {
+        labels {
+          id
+          name
+          color
+        }
+      }
+    }
   GRAPHQL
 end
