@@ -212,9 +212,8 @@ module Types
     end
 
     def labels
-      Loaders::Association.for(object.class, dossier_labels: [:label])
+      Loaders::Association.for(object.class, :labels)
         .load(object)
-        .then { _1.map(&:label) }
     end
 
     def self.authorized?(object, context)
