@@ -23,12 +23,12 @@ class AttachmentsController < ApplicationController
 
     if champ?
       @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
+      @attachment&.purge_later
+      champ.piece_justificative_file.reload
     else
+      @attachment.purge_later
       @attachment_options = attachment_options
     end
-
-    @attachment.purge_later
-    @champ.piece_justificative_file.reload if champ?
 
     flash.notice = 'La pièce jointe a bien été supprimée.'
 
