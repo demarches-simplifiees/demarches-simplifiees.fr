@@ -177,7 +177,7 @@ describe "procedure filters" do
       DossierLabel.create!(dossier_id: new_unfollow_dossier.id, label_id: procedure.labels.first.id)
       add_filter('Labels', procedure.labels.first.name, type: :enum)
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
-      expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s)
+      expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
     end
   end
 
