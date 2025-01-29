@@ -86,7 +86,10 @@ def add_identite_individual(pdf)
   format_in_2_columns(pdf, "Civilité")
   format_in_2_columns(pdf, "Nom")
   format_in_2_columns(pdf, "Prénom")
-  format_in_2_columns(pdf, "Date de naissance")
+
+  if @procedure.ask_birthday?
+    format_in_2_columns(pdf, "Date de naissance")
+  end
 end
 
 def add_identite_etablissement(pdf, libelle)
