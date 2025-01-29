@@ -79,6 +79,7 @@ en:
               invalid_condition: "have an invalid logic"
               empty_repetition: 'requires at least one field'
               empty_drop_down: 'requires at least one option'
+              empty_csv: 'requires at least one csv file'
               inconsistent_header_section: "%{custom_message}"
               expression_reguliere_invalid: "is invalid"
             draft_types_de_champ_private:
@@ -86,6 +87,7 @@ en:
               invalid_condition: "have an invalid logic"
               empty_repetition: 'requires at least one field'
               empty_drop_down: 'requires at least one option'
+              empty_csv: 'requires at least one csv file'
               inconsistent_header_section: "%{custom_message}"
               expression_reguliere_invalid: "is invalid"
             attestation_template:

@@ -85,6 +85,7 @@ fr:
               invalid_condition: "a une logique conditionnelle invalide"
               empty_repetition: 'doit comporter au moins un champ répétable'
               empty_drop_down: 'doit comporter au moins un choix sélectionnable'
+              empty_csv: 'doit comporter au moins un fichier csv'
               inconsistent_header_section: "%{custom_message}"
               expression_reguliere_invalid: "est invalide, veuillez la corriger"
             draft_types_de_champ_private:
@@ -92,6 +93,7 @@ fr:
               invalid_condition: "a une logique conditionnelle invalide"
               empty_repetition: 'doit comporter au moins un champ répétable'
               empty_drop_down: 'doit comporter au moins un choix sélectionnable'
+              empty_csv: 'doit comporter au moins un fichier csv'
               inconsistent_header_section: "%{custom_message}"
               expression_reguliere_invalid: "est invalide, veuillez la corriger"
             attestation_template:
