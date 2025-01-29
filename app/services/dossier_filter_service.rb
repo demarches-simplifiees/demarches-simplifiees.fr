@@ -138,7 +138,10 @@ class DossierFilterService
     table = if association == 'self'
       Dossier.table_name
     elsif (association_reflection = Dossier.reflect_on_association(association))
-      association_reflection.klass.table_name
+      klass = association_reflection.klass
+      # Get real db name if column has been aliased (cf etablissements.code_naf => naf)
+      column = klass.attribute_aliases[column.to_s] || column
+      klass.table_name
     else
       # Allow filtering on a joined table alias (which doesn’t exist
       # in the ActiveRecord domain).

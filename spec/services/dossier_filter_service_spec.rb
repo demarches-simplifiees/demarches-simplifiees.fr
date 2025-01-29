@@ -315,6 +315,16 @@ describe DossierFilterService do
 
       it { is_expected.to eq([huitieme_dossier, vingtieme_dossier].map(&:id)) }
     end
+
+    context 'for etablissement code_naf column (aliased to naf)' do
+      let(:column) { procedure.find_column(label: 'Code NAF') }
+      let(:order) { 'asc' }
+
+      let!(:first_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, naf: '1234Z')) }
+      let!(:second_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, naf: '9999Z')) }
+
+      it { is_expected.to eq([first_dossier.id, second_dossier.id]) }
+    end
   end
 
   describe '#filtered_ids' do
