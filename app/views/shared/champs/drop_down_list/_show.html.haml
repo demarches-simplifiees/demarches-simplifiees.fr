@@ -1,14 +1,14 @@
-- if champ.referentiel?
-  - referentiel_item = champ.referentiel_item
-  - if !current_user.instructeur?
-    %p= referentiel_item.option[referentiel_item.option.keys.first]
-  - else
+- if champ.referentiel_item_data.present?
+  - if current_user.instructeur? && controller.try(:nav_bar_profile) == :instructeur
     .fr-background-alt--grey.fr-p-3v
-      - referentiel_item.option.merge(referentiel_item.data).each do |key, value|
-        - if key.present?
-          = render Dossiers::RowShowComponent.new(label: key) do |c|
-            - c.with_value do
-              %p= value
+      - champ.referentiel_headers.each do |header|
+        = render Dossiers::RowShowComponent.new(label: header) do |c|
+          - c.with_value do
+            %p= champ.referentiel_item_data.fetch(header.parameterize.underscore)
+
+
+  - else
+    %p= champ.referentiel_item_first_column_value
 
 - elsif champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
   %p
