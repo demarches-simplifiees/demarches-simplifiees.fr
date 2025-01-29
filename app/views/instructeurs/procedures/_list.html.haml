@@ -76,7 +76,13 @@
                             %li
                               = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(p), class: 'fr-nav__link'
 
-      %h3.font-weight-normal.fr-link.fr-mx-2w
+      .fr-hidden.fr-unhidden-lg
+        %h3.font-weight-normal.fr-link.fr-mx-2w
+          = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+        = procedure_badge(p)
+
+    .flex.align-center.fr-hidden-lg.fr-mb-2w
+      %h3.font-weight-normal.fr-link.fr-mr-2w
         = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
       = procedure_badge(p)
 

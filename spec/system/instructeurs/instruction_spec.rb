@@ -35,7 +35,7 @@ describe 'Instructing a dossier:', js: true do
 
     expect(page).to have_current_path(instructeur_procedures_path)
 
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     expect(page).to have_current_path(instructeur_procedure_path(procedure))
 
     click_on dossier.user.email
@@ -83,7 +83,7 @@ describe 'Instructing a dossier:', js: true do
     # keep back up to date after most action on dossier
     expect(page).to have_selector(".back-btn[href=\"#{instructeur_procedure_path(procedure, statut: 'suivis')}\"]")
 
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     click_on 'traité'
     expect(page).to have_button('Repasser en instruction')
     click_on 'Mettre à la corbeille'
@@ -106,7 +106,7 @@ describe 'Instructing a dossier:', js: true do
   scenario 'A instructeur can follow/unfollow a dossier' do
     log_in(instructeur.email, password)
 
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     dossier_present?(dossier.id, 'en construction')
 
@@ -130,7 +130,7 @@ describe 'Instructing a dossier:', js: true do
       log_in(instructeur.email, password)
     end
 
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
 
     click_on "Télécharger un dossier"
@@ -159,7 +159,7 @@ describe 'Instructing a dossier:', js: true do
 
     log_in(instructeur.email, password)
 
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     click_on 'Suivre'
     click_on 'suivi'
     click_on dossier.user.email
@@ -191,7 +191,7 @@ describe 'Instructing a dossier:', js: true do
 
     log_in(instructeur.email, password)
 
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     click_on dossier.user.email
 
     click_on 'Personnes impliquées'

@@ -8,7 +8,11 @@
   }
 
   > li {
-    border-top: 1px solid var(--border-default-grey);
+    border-top: none;
+
+    @media (min-width: 62em) {
+      border-top: 1px solid var(--border-default-grey);
+    }
   }
 
   .procedure-logo {
