@@ -1,13 +1,15 @@
-%h2.fr-h3 Tampon de l’attestation
+%h2.fr-h3 Tampon de l’attestation d’acceptation
 .card.mt-2
   = render NestedForms::FormOwnerComponent.new
   = form_with url: { action: :add_signature }, method: :post, html: { multipart: true } do |f|
-    %p.fr-text--sm.fr-text-mention--grey
-      Vous pouvez apposer sur l’attestation un tampon (ou signature) dédié à ce groupe d’instructeurs.
+    %p
+      Vous pouvez apposer sur l’attestation  d’acceptation du dossier un tampon (ou signature) dédié à ce groupe d’instructeurs.
       Si vous n’en fournissez pas, celui de la démarche sera utilisé, le cas échéant.
 
-    .fr-upload-group.fr-mb-4w
-      %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
+    .fr-upload-group.fr-mb-2w
+      .card-title
+        Tampon
+      .fr-hint-text
         Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
       = render Attachment::EditComponent.new(attached_file: groupe_instructeur.signature, direct_upload: false)
 
