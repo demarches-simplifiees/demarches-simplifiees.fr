@@ -17,6 +17,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "postgis"
+  disable_extension "postgis_tiger_geocoder"
   enable_extension "sslinfo"
   enable_extension "unaccent"
 

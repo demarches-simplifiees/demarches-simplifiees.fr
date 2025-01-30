@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     services:
       postgres:
-        image: postgis/postgis:14-3.3
+        image: postgis/postgis:17-3.5
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -64,7 +64,7 @@ jobs:
       RUBY_YJIT_ENABLE: "1"
     services:
       postgres:
-        image: postgis/postgis:14-3.3
+        image: postgis/postgis:17-3.5
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -120,7 +120,7 @@ jobs:
       RUBY_YJIT_ENABLE: "1"
     services:
       postgres:
-        image: postgis/postgis:14-3.3
+        image: postgis/postgis:17-3.5
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
