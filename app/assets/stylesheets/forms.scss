@@ -218,6 +218,14 @@
     }
   }
 
+  .fr-label .fr-hint-text,
+  .fr-label + .fr-hint-text {
+    clear: right;
+    // Évite (en version mobile) que les premiers mots de l'aide
+    // ne remontent en vis à vis de l'encart
+    // "champ actualisé par l'administration", lorsqu'il est présent
+  }
+
   .fr-label + .fr-hint-text > *,
   .fr-fieldset__legend + .fr-hint-text > * {
     // la description d'un champ peut contenir du markup (markdown->html),
