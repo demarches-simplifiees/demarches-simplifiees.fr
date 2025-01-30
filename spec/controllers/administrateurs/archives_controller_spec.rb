@@ -26,7 +26,19 @@ describe Administrateurs::ArchivesController, type: :controller do
         expect(Archive).to receive(:for_groupe_instructeur).and_return([])
         subject
       end
+
+      it 'counts only dossiers visible by administration' do
+        travel_to Date.new(2025, 1, 29)
+        create(:dossier, :accepte, procedure:, hidden_by_expired_at: nil)
+        create(:dossier, :accepte, :hidden_by_expired, procedure:)
+        create(:dossier, :accepte, :hidden_by_user, procedure:)
+        create(:dossier, :accepte, :hidden_by_administration, procedure:)
+
+        subject
+        expect(assigns(:count_dossiers_termines_by_month)).to eq({ Date.new(2025, 1, 1) => 2 })
+      end
     end
+
     context 'when logged in as administrateur_procedure.manager=true' do
       let(:manager) { true }
 
