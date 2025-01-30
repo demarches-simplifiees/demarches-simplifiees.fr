@@ -75,7 +75,7 @@ en:
       technical_issues: "Issues are affecting the proper functioning of the process"
       check_path:
         path_not_available:
-          owner: This URL is identical to another of your published procedures. If you publish this procedure, the old one will be unpublished and will no longer be accessible to the public.
+          owner: This URL is identical to another of your published procedures. If you publish this procedure, the URL will no longer point to the old procedure.
           not_owner: This URL is identical to another procedure, you must modify it.
       unpublished_changes_sticky_header:
         intro_html: Changes made will only be visible <strong>after the next publication</strong>

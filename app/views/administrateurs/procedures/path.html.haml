@@ -1,0 +1,45 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Lien de la démarche']] }
+
+.fr-container
+  %h1.fr-h2 Lien de la démarche
+
+= form_with url: admin_procedure_update_path_url(@procedure), method: :patch do |f|
+  .fr-container
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      - c.with_body do
+        %p
+          Si vous avez communiqué le lien de votre démarche à des usagers et que vous souhaitez le modifier, les anciens liens resteront accessibles.
+
+    .fr-input-group
+      = label_tag :procedure_path, class: 'fr-label' do
+        = t('activerecord.attributes.procedure.procedure_path')
+
+        %span.fr-hint-text
+          = t('activerecord.attributes.procedure.hints.procedure_path')
+      .fr-input
+        .flex
+          %span.placeholder
+            = commencer_url(path: '')
+          = text_field_tag(:path, @procedure.path,
+                          id: 'procedure_path',
+                          placeholder: t('activerecord.attributes.procedure.procedure_path_placeholder'),
+                          required: true,
+                          class: 'unstyled flex-1',
+                          pattern: '[a-z0-9.\-_]{3,200}',
+                          autocomplete: 'off',
+                          data: { controller: 'turbo-input', turbo_input_url_value: admin_procedure_check_path_path })
+    #check_path
+
+    - if @procedure.previous_paths.any?
+      .fr-mt-2w
+        %p.fr-text--sm.fr-mb-1w
+          Pour information les liens précédents resteront accessibles tant qu'ils ne sont pas utilisés par une autre de vos démarches :
+        %ul
+          - @procedure.previous_paths.each do |path|
+            %li.fr-mb-1w
+              = link_to commencer_url(path: path.path), commencer_url(path: path.path), class: 'fr-link fr-link--sm'
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

@@ -66,6 +66,8 @@ en:
         aasm_state: Status
         admin_count: Administrators count
         template: Is a template
+      procedure/procedure_paths:
+        path: Public link
     errors:
       models:
         procedure:

@@ -11,7 +11,7 @@ class API::Public::V1::JSONDescriptionProceduresController < API::Public::V1::Ba
   private
 
   def retrieve_procedure
-    @procedure = Procedure.publiees_ou_brouillons.opendata.find_by(path: params[:path])
+    @procedure = Procedure.publiees_ou_brouillons.opendata.find_with_path(params[:path]).first
     render_not_found("procedure", params[:path]) if @procedure.blank?
   end
 

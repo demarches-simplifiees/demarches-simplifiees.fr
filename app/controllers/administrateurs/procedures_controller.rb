@@ -5,7 +5,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns, :path, :update_path]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -285,15 +285,16 @@ module Administrateurs
         flash.alert = "La date limite de dépôt des dossiers doit être postérieure à la date du jour pour réactiver la procédure. #{view_context.link_to('Veuillez la modifier', edit_admin_procedure_path(@procedure))}"
         redirect_to admin_procedure_path(@procedure)
       else
-        @procedure.path = @procedure.suggested_path
         @current_administrateur = current_administrateur
         @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
       end
     end
 
     def check_path
-      @path_available = @procedure.path_available?(params[:path])
-      @other_procedure = @procedure.other_procedure_with_path(params[:path])
+      path = params[:path]
+      @path_available = @procedure.path_available?(path)
+      @other_procedure = @procedure.other_procedure_with_path(path)
+
       respond_to do |format|
         format.turbo_stream do
           render :check_path
@@ -301,10 +302,33 @@ module Administrateurs
       end
     end
 
-    def publish
-      @procedure.assign_attributes(publish_params)
+    def path
+    end
 
-      @procedure.publish_or_reopen!(current_administrateur)
+    def update_path
+      new_path = params[:path]
+      other_procedure = @procedure.other_procedure_with_path(new_path)
+
+      if other_procedure.present? && !current_administrateur.owns?(other_procedure)
+        flash.alert = "Cette URL de démarche n'est pas disponible"
+        return redirect_to [:admin, @procedure, :path]
+      end
+
+      @procedure.claim_path!(current_administrateur, new_path)
+
+      if @procedure.save
+        flash.notice = "L'URL de la démarche a bien été mise à jour"
+        redirect_to admin_procedure_path(@procedure)
+      else
+        flash.alert = @procedure.errors.full_messages
+        render :path
+      end
+    end
+
+    def publish
+      @procedure.assign_attributes(publish_params.except(:path))
+
+      @procedure.publish_or_reopen!(current_administrateur, publish_params[:path])
 
       if params[:old_procedure].present? && @procedure.errors.empty?
         current_administrateur
@@ -569,7 +593,7 @@ module Administrateurs
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else
-        params.require(:procedure).permit(*editable_params, :for_individual, :path)
+        params.require(:procedure).permit(*editable_params, :for_individual)
       end
       if permited_params[:auto_archive_on].present?
         permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day

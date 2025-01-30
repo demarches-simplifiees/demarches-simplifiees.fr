@@ -32,6 +32,23 @@ describe Users::CommencerController, type: :controller do
       end
     end
 
+    context 'when there is an old path' do
+      let!(:old_path) do
+        travel_to(1.day.ago) do
+          create(:procedure_path, procedure: published_procedure, path: 'old_path')
+        end
+      end
+
+      let!(:new_path) { create(:procedure_path, procedure: published_procedure, path: 'new_path') }
+
+      let(:path) { old_path.path }
+
+      it 'redirects to the new path' do
+        expect(subject.status).to eq(301)
+        expect(subject).to redirect_to(commencer_path(path: new_path.path))
+      end
+    end
+
     context 'when the path is for a draft procedure' do
       let(:path) { draft_procedure.path }
 

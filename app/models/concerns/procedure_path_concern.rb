@@ -4,25 +4,66 @@ module ProcedurePathConcern
   extend ActiveSupport::Concern
 
   included do
-    validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
+    has_many :procedure_paths, inverse_of: :procedure, dependent: :destroy, autosave: true
 
     after_initialize :ensure_path_exists
-    before_save :ensure_path_exists
+    before_validation :ensure_path_exists
+
+    validates :procedure_paths, length: { minimum: 1 }
+
+    scope :find_with_path, -> (path) do
+      normalized_path = path.downcase.strip
+      left_joins(:procedure_paths).where(procedure_paths: { path: normalized_path }).or(where(path: normalized_path)).limit(1)
+      # TODO: remove the or(where(path: normalized_path)) when the migration is done
+    end
 
     def ensure_path_exists
+      uuid = SecureRandom.uuid
       if self.path.blank?
-        self.path = SecureRandom.uuid
+        self.path = uuid
+      end
+      if self.procedure_paths.empty?
+        self.procedure_paths.build(path: uuid)
       end
     end
 
     def other_procedure_with_path(path)
-      Procedure.publiees
+      Procedure
         .where.not(id: self.id)
-        .find_by(path: path)
+        .find_with_path(path).first
+    end
+
+    def path
+      canonical_path || super
+    end
+
+    def canonical_path
+      procedure_paths.by_updated_at.first&.path
+    end
+
+    def claim_path!(administrateur, new_path)
+      return if new_path.blank?
+
+      other_procedure = other_procedure_with_path(new_path)
+
+      if other_procedure.present? && !administrateur.owns?(other_procedure)
+        errors.add(:path, :taken)
+        raise ActiveRecord::RecordInvalid
+      end
+
+      procedure_path = procedure_paths.find { _1.path == new_path } || ProcedurePath.find_or_initialize_by(path: new_path)
+
+      procedure_path.updated_at = Time.zone.now
+
+      procedure_paths << procedure_path
     end
 
     def path_available?(path)
       other_procedure_with_path(path).blank?
+    end
+
+    def previous_paths
+      procedure_paths.reject { |path| path.path == self.path || path.uuid_path? }
     end
 
     def path_customized?
