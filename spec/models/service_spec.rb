@@ -89,6 +89,35 @@ describe Service, type: :model do
     end
   end
 
+  describe "email or contact link" do
+    it 'should accept a valid URL' do
+      subject.email = 'https://www.service-public.fr/contact'
+      expect(subject).to be_valid
+    end
+
+    it 'should accept a valid email' do
+      subject.email = 'contact@service-public.fr'
+      expect(subject).to be_valid
+    end
+
+    it 'should not accept an invalid email' do
+      subject.email = 'contact@domain'
+      expect(subject).not_to be_valid
+    end
+
+    it 'should not accept an invalid URL' do
+      subject.email = 'not-an-url'
+      expect(subject).not_to be_valid
+    end
+
+    it 'should not accept an empty field' do
+      subject.email = ''
+      expect(subject).not_to be_valid
+      subject.email = nil
+      expect(subject).not_to be_valid
+    end
+  end
+
   describe 'validation on update' do
     subject { create(:service) }
 

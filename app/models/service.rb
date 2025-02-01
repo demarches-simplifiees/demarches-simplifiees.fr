@@ -20,6 +20,8 @@ class Service < ApplicationRecord
     autre: 'autre'
   }
 
+  before_validation :strip_email
+  validate :validate_email_or_url
   validates :nom, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :nom, uniqueness: { scope: :administrateur, message: 'existe déjà' }
   validates :organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
@@ -58,5 +60,22 @@ class Service < ApplicationRecord
 
   def enqueue_api_entreprise
     APIEntreprise::ServiceJob.perform_later(self.id)
+  end
+  private
+
+  def strip_email
+    self.email = email.strip if email.present?
+  end
+
+  def validate_email_or_url
+    return if email.blank?
+
+    return if StrictEmailValidator::REGEXP.match?(email)
+
+    url_validator = URLValidator.new(
+      attributes: { allow_blank: true },
+      no_local: true
+    )
+    url_validator.validate_each(self, :email, email)
   end
 end

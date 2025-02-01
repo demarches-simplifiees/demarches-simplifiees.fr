@@ -17,7 +17,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "postgis"
-  disable_extension "postgis_tiger_geocoder"
   enable_extension "sslinfo"
   enable_extension "unaccent"
 
@@ -741,8 +740,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   end
 
   create_table "geo_areas", force: :cascade do |t|
-    t.string "cadastre_error"
-    t.string "cadastre_state"
     t.bigint "champ_id"
     t.datetime "created_at", precision: nil
     t.string "geo_reference_id"
@@ -750,6 +747,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.jsonb "properties"
     t.string "source"
     t.datetime "updated_at", precision: nil
+    t.string "cadastre_state"
+    t.string "cadastre_error"
     t.index ["cadastre_state"], name: "index_geo_areas_on_cadastre_state"
     t.index ["champ_id"], name: "index_geo_areas_on_champ_id"
     t.index ["source"], name: "index_geo_areas_on_source"
@@ -854,9 +853,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.string "color"
     t.datetime "created_at", null: false
     t.string "name"
-    t.integer "position"
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "position"
     t.index ["procedure_id"], name: "index_labels_on_procedure_id"
   end
 
@@ -910,9 +909,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   end
 
   create_table "procedure_paths", force: :cascade do |t|
-    t.datetime "created_at", null: false
     t.string "path"
     t.bigint "procedure_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["path"], name: "index_procedure_paths_on_path", unique: true
     t.index ["procedure_id"], name: "index_procedure_paths_on_procedure_id"
@@ -1091,24 +1090,24 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   end
 
   create_table "referentiel_items", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.jsonb "data", default: {}
-    t.jsonb "option", default: {}, null: false
     t.bigint "referentiel_id", null: false
+    t.jsonb "option", default: {}, null: false
+    t.jsonb "data", default: {}
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["referentiel_id"], name: "index_referentiel_items_on_referentiel_id"
   end
 
   create_table "referentiels", force: :cascade do |t|
+    t.string "name", null: false
     t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "headers", default: [], array: true
+    t.string "type"
+    t.string "url"
+    t.string "test_data"
     t.string "hint"
     t.string "mode"
-    t.string "name", null: false
-    t.string "test_data"
-    t.string "type"
-    t.datetime "updated_at", null: false
-    t.string "url"
   end
 
   create_table "refused_mails", id: :serial, force: :cascade do |t|
@@ -1153,9 +1152,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.string "telephone"
     t.string "type_organisme", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "email_or_contact_page"
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
     t.index ["departement"], name: "index_services_on_departement"
+    t.check_constraint "email_or_contact_page IS NOT NULL", name: "services_email_or_contact_page_null"
   end
 
   create_table "stats", force: :cascade do |t|
@@ -1244,10 +1245,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.boolean "mandatory", default: true
     t.jsonb "options"
     t.boolean "private", default: false, null: false
-    t.bigint "referentiel_id"
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at", precision: nil
+    t.bigint "referentiel_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["referentiel_id"], name: "index_types_de_champ_on_referentiel_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
