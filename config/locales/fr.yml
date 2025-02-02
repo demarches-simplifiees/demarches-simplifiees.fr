@@ -89,6 +89,15 @@ fr:
       instructeur: 'Aller à la liste des démarches'
       admin: "Aller au panneau d’administration"
       gestionnaire: "Aller au panneau de gestionnaire"
+    mailers:
+      service_footer:
+        by_email: Par email
+        by_phone: Par téléphone
+        by_link: Par lien de contact
+        schedule: Horaires
+        hours: "Horaires : %{hours}"
+        question_about_procedure: Une question sur cette démarche ?
+        consult_contact_page: Consultez la page de contact de l'administration
   views:
     legal_notice:
       title: "Mentions légales"

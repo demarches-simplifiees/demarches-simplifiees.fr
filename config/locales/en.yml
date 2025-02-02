@@ -98,6 +98,15 @@ en:
       instructeur: 'Go to procedures list'
       admin: 'Go to administration panel'
       gestionnaire: "Go to admins group panel"
+    mailers:
+      service_footer:
+        by_email: By email
+        by_phone: By phone
+        by_link: By contact link
+        schedule: Schedule
+        hours: "Hours: %{hours}"
+        question_about_procedure: Have a question about this procedure?
+        consult_contact_page: Visit the administration contact page
   views:
     legal_notice:
       title: "Legal Notices"
