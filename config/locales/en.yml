@@ -353,6 +353,10 @@ en:
         hello: Dear Sir or Madam,
         best_regards: Best Regards,
       dossiers:
+        messages:
+          messagerie_disabled:
+            contact_page: "Service contact page"
+            remember_dossier: "Please remember to mention that your request concerns dossier No. %{dossier_id}"
         form:
           submitted_at: "Submitted on %{datetime}"
           updated_at: "Updated on %{datetime}"

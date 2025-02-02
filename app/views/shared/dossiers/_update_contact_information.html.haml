@@ -12,19 +12,21 @@
       %li
         = link_to I18n.t('users.procedure_footer.contact.in_app_mail.link'), messagerie_dossier_path(dossier), class: 'fr-footer__link'
     - elsif service.present?
-      %li
-        %span.fr-footer__top-link
-          - if service.email.include?('@')
-            = I18n.t('users.procedure_footer.contact.email.mail_link')
-          - else
+      - if service.link.present?
+        %li
+          %span.fr-footer__top-link
             = I18n.t('users.procedure_footer.contact.email.url_link')
-          = link_to service.email, service.email.include?('@') ? "mailto:#{service.email}" : service.email, class: "fr-footer__link"
+            = link_to service.link, service.link, class: "fr-footer__link"
+      - if service.email.present?
+        %li
+          %span.fr-footer__top-link
+            = I18n.t('users.procedure_footer.contact.email.mail_link')
+            = link_to service.email, "mailto:#{service.email}", class: "fr-footer__link"
       - if service.telephone.present?
         %li
           %span.fr-footer__top-link
             = I18n.t('users.procedure_footer.contact.phone.label')
-          = link_to I18n.t('users.procedure_footer.contact.phone.link', service_telephone: service.telephone), service.telephone_url, class: 'fr-footer__link'
-
+            = link_to service.telephone, "tel:#{service.telephone}", class: "fr-footer__link"
       - if service.horaires.present?
         %li
           = "#{I18n.t('users.procedure_footer.contact.schedule.prefix')}#{formatted_horaires(service.horaires)}"

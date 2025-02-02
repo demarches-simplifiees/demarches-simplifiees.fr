@@ -69,7 +69,7 @@ module Administrateurs
         partial: "administrateurs/services/form",
         locals: { service: @service, prefilled:, procedure: @procedure }
       )
-        end
+    end
 
     def add_to_procedure
       procedure = current_administrateur.procedures.find(procedure_params[:id])
@@ -103,7 +103,7 @@ module Administrateurs
     private
 
     def service_params
-      params.require(:service).permit(:nom, :organisme, :type_organisme, :email, :telephone, :horaires, :adresse, :siret)
+      params.require(:service).permit(:nom, :organisme, :type_organisme, :email, :telephone, :horaires, :adresse, :siret, :link)
     end
 
     def service

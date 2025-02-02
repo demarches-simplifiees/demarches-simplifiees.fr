@@ -20,15 +20,16 @@ class Service < ApplicationRecord
     autre: 'autre'
   }
 
-  before_validation :strip_email
-  validate :validate_email_or_url
+  before_validation :strip_email, :strip_link
+  validates :email, format: { with: StrictEmailValidator::REGEXP, message: "n'est pas valide" }, if: -> { email.present? }
+  validates :link, url: { no_local: true }, if: -> { link.present? }
+  validate :validate_contact_presence
   validates :nom, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :nom, uniqueness: { scope: :administrateur, message: 'existe déjà' }
   validates :organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :siret, siret_format: true
-  validates :siret, comparison: { other_than: SIRET_TEST, message: "n'est pas valide" }, on: :update
+  validates :siret, comparison: { other_than: SIRET_TEST, message: "n'est pas valide" }, on: :update, if: :siret_changed?
   validates :type_organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
-  validates :email, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :telephone, phone: { possible: true, allow_blank: true }
   validates :horaires, presence: { message: 'doivent être renseignés' }, allow_nil: false
   validates :adresse, presence: { message: 'doit être renseignée' }, allow_nil: false
@@ -51,7 +52,7 @@ class Service < ApplicationRecord
   end
 
   def etablissement_adresse
-    etablissement_infos.fetch("adresse", nil)
+    etablissement_infos&.fetch("adresse", nil)
   end
 
   def etablissement_latlng
@@ -67,15 +68,13 @@ class Service < ApplicationRecord
     self.email = email.strip if email.present?
   end
 
-  def validate_email_or_url
-    return if email.blank?
+  def strip_link
+    self.link = link.strip if link.present?
+  end
 
-    return if StrictEmailValidator::REGEXP.match?(email)
-
-    url_validator = URLValidator.new(
-      attributes: { allow_blank: true },
-      no_local: true
-    )
-    url_validator.validate_each(self, :email, email)
+  def validate_contact_presence
+    if email.blank? && link.blank?
+      errors.add(:base, "Veuillez renseigner au moins un des deux champs de contact")
+    end
   end
 end

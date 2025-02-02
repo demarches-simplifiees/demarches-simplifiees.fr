@@ -7,7 +7,8 @@ fr:
     attributes:
       service: &service
         adresse: 'Adresse postale'
-        email: 'Email ou lien de contact'
+        email: 'Email de contact'
+        link: 'Lien vers une page ou formulaire de contact'
         telephone: 'Téléphone'
         nom: Nom du service
         organisme: Organisme(s)
@@ -15,17 +16,20 @@ fr:
         hints:
           nom: |
             Indiquez le nom et la direction rattachée, séparés par une virgule.
-            Exemple : service jeunesse et prévention, direction des affaires maritimes
+            Exemple : service jeunesse et prévention, direction des affaires maritimes
           organisme: |
             Indiquez les organismes depuis l’échelon territorial jusqu’au ministère séparés par une virgule.
-            Exemple : mairie de Mours, préfecture de l'Oise, ministère de la Culture
+            Exemple : mairie de Mours, préfecture de l'Oise, ministère de la Culture
           email: |
-            Indiquez une adresse email valide ou une URL qui permettra de recevoir et de répondre aux questions des usagers.
-            Exemples : contact@mairie-de-mours.fr, https://www.mairie-de-mours.fr/contact
-          telephone: "Indiquez le numéro de téléphone du service valide le plus à même de fournir des réponses pertinentes à vos usagers. Exemple : 01 23 45 67 89"
+            Indiquez une adresse email valide qui permettra de recevoir et de répondre aux questions des usagers.
+            Exemple : contact@mairie-de-mours.fr
+          link: |
+            Indiquez l'URL d'une page présentant vos coordonnées et/ou un formulaire de contact en ligne.
+            Exemple : https://www.mairie-de-mours.fr/contact
+          telephone: "Indiquez le numéro de téléphone du service valide le plus à même de fournir des réponses pertinentes à vos usagers. Exemple : 01 23 45 67 89"
           horaires: |
             Indiquez les jours ouvrables et les horaires où les usagers peuvent vous joindre.
-            Exemple : Du lundi au vendredi de 9h30 à 17h30, le samedi de 9h30 à 12h.
+            Exemple : Du lundi au vendredi de 9h30 à 17h30, le samedi de 9h30 à 12h.
           adresse: |
             Indiquez l’adresse à laquelle un usager peut vous contacter, par exemple s’il n’est pas en capacité de compléter son formulaire en ligne.
       contact_information: *service

@@ -11,12 +11,21 @@
 
     - if service.horaires.present?
       = render SimpleFormatComponent.new("Horaires : #{formatted_horaires(service.horaires)}")
-    %p
-      = mail_to service.email,
-        service.email,
-        subject: "[#{Current.application_name}] Question sur le dossier Nº #{dossier.id} de la démarche Nº #{dossier.procedure.id}",
-        rel: "noopener noreferrer",
-        target: '_blank'
+    
+    - if service.email.present?
+      %p
+        = mail_to service.email,
+          service.email,
+          subject: "[#{Current.application_name}] Question sur le dossier Nº #{dossier.id} de la démarche Nº #{dossier.procedure.id}",
+          rel: "noopener noreferrer",
+          target: '_blank'
+
+    - if service.link.present?
+      %p
+        = link_to t('.contact_page'),
+          service.link,
+          rel: "noopener noreferrer",
+          target: '_blank'
 
     %p
-      Pensez bien à préciser que votre demande concerne le <b>dossier Nº #{dossier.id}</b>.
+      = t('.remember_dossier', dossier_id: dossier.id).html_safe

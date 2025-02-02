@@ -39,12 +39,31 @@
       %br
       %br
       %strong Il est donc indispensable que les usagers puissent vous contacter
-      par le moyen de leur choix s’ils ont des questions sur votre démarche.
-      %br
-      %br
-      Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier. En cas d’informations invalides, #{Current.application_name} se réserve le droit de suspendre la publication de la démarche.
+      par le moyen de votre choix.
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :text_field)
+  - if f.object.errors[:base].present?
+    .fr-alert.fr-alert--error.fr-mb-3w
+      %p
+        = f.object.errors[:base].first
+
+  .fr-form-group
+    %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+      Veuillez renseigner au moins un des deux champs de contact ci-dessous
+      = render EditableChamp::AsteriskMandatoryComponent.new
+    .fr-fieldset.fr-fieldset--inline.fr-ml-0-5w{ class: f.object.errors[:base].present? ? 'fr-fieldset--error' : 'fr-fieldset--info' }
+      .fr-fieldset__content
+        .fr-fieldset__element
+          = render Dsfr::InputComponent.new(form: f, attribute: :link, input_type: :text_field,
+            opts: {}, required: false) do |c|
+            - c.with_hint do
+              = "Exemple : https://www.mairie-de-mours.fr/contact"
+
+        .fr-fieldset__element
+          = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field,
+            opts: {}, required: false) do |c|
+            - c.with_hint do
+              = "Exemple : contact@mairie-de-mours.fr"
+
   = render Dsfr::InputComponent.new(form: f, attribute: :telephone, input_type: :telephone_field)
   = render Dsfr::InputComponent.new(form: f, attribute: :horaires, input_type: :text_area)
   = render Dsfr::InputComponent.new(form: f, attribute: :adresse, input_type: :text_area)

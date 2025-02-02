@@ -2,7 +2,7 @@
 
 describe Service, type: :model do
   describe 'validation' do
-    let(:administrateur) { administrateurs(:default_admin) }
+    let(:administrateur) { create(:administrateur) }
     let(:params) do
       {
         nom: 'service des jardins',
@@ -12,7 +12,7 @@ describe Service, type: :model do
         telephone: '012345678',
         horaires: 'du lundi au vendredi',
         adresse: '12 rue des schtroumpfs',
-        administrateur_id: administrateur.id,
+        administrateur: administrateur,
         siret: "35600011719156"
       }
     end
@@ -20,6 +20,75 @@ describe Service, type: :model do
     subject { Service.new(params) }
 
     it { expect(Service.new(params)).to be_valid }
+
+    describe 'contact information validation' do
+      it 'requires at least one contact method' do
+        subject.email = nil
+        subject.link = nil
+        expect(subject).not_to be_valid
+        expect(subject.errors[:base]).to include("Veuillez renseigner au moins un des deux champs de contact")
+      end
+
+      it 'accepts email only' do
+        subject.email = 'contact@example.com'
+        subject.link = nil
+        expect(subject).to be_valid
+      end
+
+      it 'accepts link only' do
+        subject.email = nil
+        subject.link = 'https://example.com/contact'
+        expect(subject).to be_valid
+      end
+
+      it 'accepts both email and link' do
+        subject.email = 'contact@example.com'
+        subject.link = 'https://example.com/contact'
+        expect(subject).to be_valid
+      end
+
+      it 'validates link format' do
+        subject.email = nil
+        subject.link = 'not-a-url'
+        expect(subject).not_to be_valid
+        expect(subject.errors[:link]).to be_present
+      end
+    end
+
+    describe "email or contact link" do
+      it 'should accept a valid URL' do
+        subject.email = nil
+        subject.link = 'https://www.service-public.fr/contact'
+        expect(subject).to be_valid
+      end
+
+      it 'should accept a valid email' do
+        subject.link = nil
+        subject.email = 'contact@service-public.fr'
+        expect(subject).to be_valid
+      end
+
+      it 'should not accept an invalid email' do
+        subject.link = nil
+        subject.email = 'contact@domain'
+        expect(subject).not_to be_valid
+      end
+
+      it 'should not accept an invalid URL in link field' do
+        subject.email = nil
+        subject.link = 'not-an-url'
+        expect(subject).not_to be_valid
+      end
+
+      it 'should not accept empty contact fields' do
+        subject.email = ''
+        subject.link = ''
+        expect(subject).not_to be_valid
+        subject.email = nil
+        subject.link = nil
+        expect(subject).not_to be_valid
+      end
+    end
 
     it 'should forbid invalid phone numbers' do
       invalid_phone_numbers = ["1", "Néant", "01 60 50 40 30 20"]
@@ -56,11 +125,20 @@ describe Service, type: :model do
       end
     end
 
-    context 'when a first service exists' do
-      before { Service.create(params) }
+    describe 'when a first service exists' do
+      before do
+        create(:service, :with_both_contacts, nom: 'My Service', administrateur: administrateur)
+      end
 
-      context 'checks uniqueness of administrateur, name couple' do
-        it { expect(Service.create(params)).not_to be_valid }
+      it 'checks uniqueness of administrateur, name couple' do
+        new_service = build(:service, :with_both_contacts, nom: 'My Service', administrateur: administrateur)
+        expect(new_service).not_to be_valid
+        expect(new_service.errors[:nom]).to include('existe déjà')
+
+        # Should be valid with same name but different administrateur
+        other_admin = create(:administrateur)
+        new_service.administrateur = other_admin
+        expect(new_service).to be_valid
       end
     end
 
@@ -78,7 +156,7 @@ describe Service, type: :model do
 
     context 'of administrateur' do
       it 'should be set' do
-        expect(Service.new(params.except(:administrateur_id))).not_to be_valid
+        expect(Service.new(params.except(:administrateur))).not_to be_valid
       end
     end
 
@@ -89,54 +167,27 @@ describe Service, type: :model do
     end
   end
 
-  describe "email or contact link" do
-    it 'should accept a valid URL' do
-      subject.email = 'https://www.service-public.fr/contact'
-      expect(subject).to be_valid
-    end
-
-    it 'should accept a valid email' do
-      subject.email = 'contact@service-public.fr'
-      expect(subject).to be_valid
-    end
-
-    it 'should not accept an invalid email' do
-      subject.email = 'contact@domain'
-      expect(subject).not_to be_valid
-    end
-
-    it 'should not accept an invalid URL' do
-      subject.email = 'not-an-url'
-      expect(subject).not_to be_valid
-    end
-
-    it 'should not accept an empty field' do
-      subject.email = ''
-      expect(subject).not_to be_valid
-      subject.email = nil
-      expect(subject).not_to be_valid
-    end
-  end
-
   describe 'validation on update' do
-    subject { create(:service) }
+    let(:service) { create(:service, :with_both_contacts) }
 
     it 'should not allow to have a test siret' do
-      subject.siret = Service::SIRET_TEST
-      expect(subject).not_to be_valid
+      service.siret = Service::SIRET_TEST
+      service.validate
+      expect(service).not_to be_valid
+      expect(service.errors[:siret]).to include("n'est pas valide")
     end
   end
 
   describe "etablissement adresse & geo coordinates" do
-    subject { create(:service, etablissement_lat: latitude, etablissement_lng: longitude, etablissement_infos: etablissement_infos) }
+    subject { build(:service, etablissement_lat: latitude, etablissement_lng: longitude, etablissement_infos: etablissement_infos) }
 
     context "when the service has no geo coordinates" do
       let(:latitude) { nil }
       let(:longitude) { nil }
       let(:etablissement_infos) { {} }
-      it "should return nil" do
-        expect(subject.etablissement_lat).to be_nil
-        expect(subject.etablissement_lng).to be_nil
+
+      it "should return nil values" do
+        expect(subject.etablissement_latlng).to eq([nil, nil])
         expect(subject.etablissement_adresse).to be_nil
       end
     end
@@ -145,11 +196,10 @@ describe Service, type: :model do
       let(:latitude) { 43.5 }
       let(:longitude) { 4.7 }
       let(:adresse) { "174 Chemin du Beurre\n13200\nARLES\nFRANCE" }
-      let(:etablissement_infos) { { adresse: adresse } }
+      let(:etablissement_infos) { { "adresse" => adresse } }
 
-      it "should return nil" do
-        expect(subject.etablissement_lat).to eq(43.5)
-        expect(subject.etablissement_lng).to eq(4.7)
+      it "should return coordinates" do
+        expect(subject.etablissement_latlng).to eq([43.5, 4.7])
       end
 
       it "should return etablissement adresse" do

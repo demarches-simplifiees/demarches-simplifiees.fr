@@ -373,6 +373,9 @@ fr:
           accuse_lecture: Cette démarche est soumise à un accusé de lecture.
           accuse_lecture_with_agreement: L’usager a pris connaissance de la décision concernant son dossier le %{agreement}.
           accuse_lecture_without_agreement: L’usager n’a pas encore pris connaissance de la décision concernant son dossier.
+        messagerie_disabled:
+          contact_page: "Page de contact du service"
+          remember_dossier: "Pensez bien à préciser que votre demande concerne le dossier Nº %{dossier_id}"
     gestionnaires:
       groupe_gestionnaires:
         delete: Supprimer
