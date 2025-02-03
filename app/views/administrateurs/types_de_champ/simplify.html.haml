@@ -1,0 +1,13 @@
+.fr-container
+  %h1.fr-h2.mt-2 Simplification proposée par Albert
+
+  %p= @text
+
+  %ul.fr-btns-group.fr-btns-group--inline-md
+    %li
+      = button_to("Accepter les modifications",
+        [:accept_simplification, :admin, @procedure, :types_de_champ],
+        params: { changes: @changes.to_json },
+        class: "fr-btn")
+    %li
+      = link_to("Revenir à l'éditeur", [:champs, :admin, @procedure], class: "fr-btn fr-btn--secondary")
