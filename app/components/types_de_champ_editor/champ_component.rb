@@ -14,6 +14,10 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     Administrateurs::TypesDeChampController::CSV_MAX_SIZE
   end
 
+  def referentiel_max_lines
+    Administrateurs::TypesDeChampController::CSV_MAX_LINES
+  end
+
   def template_detail
     "#{file_extension} – #{file_size}"
   end
