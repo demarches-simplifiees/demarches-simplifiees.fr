@@ -1,0 +1,104 @@
+{
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "Summary of important modifications suggested, shown to agent."
+    },
+    "champs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "header_section",
+              "repetition",
+              "explication",
+              "civilite",
+              "email",
+              "phone",
+              "address",
+              "communes",
+              "departments",
+              "regions",
+              "pays",
+              "iban",
+              "siret",
+              "text",
+              "textarea",
+              "decimal_number",
+              "integer_number",
+              "date",
+              "datetime",
+              "piece_justificative",
+              "titre_identite",
+              "checkbox",
+              "drop_down_list",
+              "multiple_drop_down_list",
+              "yes_no"
+            ]
+          },
+          "libelle": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mandatory": {
+            "type": "boolean",
+            "default": true
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "description": "Only for header_section type"
+          },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          },
+          "other": {
+            "type": "boolean",
+            "description": "Only for drop_down_list type"
+          }
+        },
+        "required": ["type", "libelle"],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": { "enum": ["header_section", "explication"] }
+              }
+            },
+            "then": {
+              "not": { "required": ["mandatory"] }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": ["drop_down_list", "multiple_drop_down_list"]
+                }
+              }
+            },
+            "then": {
+              "required": ["options"]
+            }
+          }
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "description": "List of champs improved."
+    }
+  },
+  "required": ["summary", "revision"],
+  "additionalProperties": false
+}
