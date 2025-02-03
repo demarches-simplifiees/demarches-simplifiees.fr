@@ -125,6 +125,10 @@ GEM
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
     anchored (1.1.0)
+    anthropic (0.3.2)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     anyway_config (2.7.2)
       ruby-next-core (~> 1.0)
     ast (2.4.3)
@@ -142,6 +146,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    baran (0.1.12)
     base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.5.0)
@@ -260,6 +265,7 @@ GEM
       tzinfo
     ethon (0.17.0)
       ffi (>= 1.15.0)
+    event_stream_parser (1.0.0)
     excon (1.3.0)
       logger
     factory_bot (6.5.5)
@@ -273,6 +279,8 @@ GEM
     faraday-jwt (0.1.0)
       faraday (~> 2.0)
       json-jwt (~> 1.16)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.4.1)
       net-http (>= 0.5.0)
     ffi (1.17.2)
@@ -281,9 +289,6 @@ GEM
     ffi (1.17.2-arm-linux-gnu)
     ffi (1.17.2-arm-linux-musl)
     ffi (1.17.2-arm64-darwin)
-    ffi (1.17.2-x86_64-darwin)
-    ffi (1.17.2-x86_64-linux-gnu)
-    ffi (1.17.2-x86_64-linux-musl)
     fiber-storage (1.0.1)
     flipper (1.3.6)
       concurrent-ruby (< 2)
@@ -414,6 +419,8 @@ GEM
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
+    json-schema (4.3.1)
+      addressable (>= 2.8)
     json_schemer (2.4.0)
       bigdecimal
       hana (~> 1.3)
@@ -440,6 +447,13 @@ GEM
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
       redis (>= 4.2, < 6)
+    langchainrb (0.19.3)
+      baran (~> 0.1.9)
+      csv
+      json-schema (~> 4)
+      matrix
+      pragmatic_segmenter (~> 0.3.0)
+      zeitwerk (~> 2.5)
     language_server-protocol (3.17.0.5)
     launchy (3.1.1)
       addressable (~> 2.8)
@@ -496,6 +510,7 @@ GEM
     multi_json (1.17.0)
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
+    multipart-post (2.4.1)
     mustermann (3.0.4)
       ruby2_keywords (~> 0.0.1)
     mutex_m (0.3.0)
@@ -567,18 +582,14 @@ GEM
       racc
     pdf-core (0.9.0)
     pg (1.6.2)
-    pg (1.6.2-aarch64-linux)
-    pg (1.6.2-aarch64-linux-musl)
     pg (1.6.2-arm64-darwin)
-    pg (1.6.2-x86_64-darwin)
-    pg (1.6.2-x86_64-linux)
-    pg (1.6.2-x86_64-linux-musl)
     phonelib (0.10.12)
     playwright-ruby-client (1.55.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
     pp (0.6.2)
       prettyprint
+    pragmatic_segmenter (0.3.24)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -777,6 +788,10 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-next-core (1.1.2)
+    ruby-openai (7.3.1)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     ruby-pg-extras (5.6.13)
       pg
       terminal-table
@@ -992,10 +1007,6 @@ GEM
     zxcvbn (1.0.0)
 
 PLATFORMS
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux-gnu
-  arm-linux-musl
   arm64-darwin
   x86_64-darwin
   x86_64-linux
@@ -1013,6 +1024,7 @@ DEPENDENCIES
   after_commit_everywhere
   ancestry
   anchored
+  anthropic
   axe-core-rspec
   bcrypt
   benchmark-ips
@@ -1071,6 +1083,7 @@ DEPENDENCIES
   jwt
   kaminari
   kredis
+  langchainrb
   launchy
   letter_opener_web
   listen
@@ -1120,6 +1133,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  ruby-openai
   saml_idp
   sassc-rails
   selenium-devtools
