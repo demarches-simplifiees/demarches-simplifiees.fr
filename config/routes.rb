@@ -726,6 +726,11 @@ Rails.application.routes.draw do
           put :piece_justificative_template
           put :notice_explicative
         end
+
+        collection do
+          get :simplify
+          post :accept_simplification
+        end
       end
 
       resources :mail_templates, only: [:index] do
