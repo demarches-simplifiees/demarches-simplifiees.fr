@@ -2,14 +2,15 @@
 
 module RevisionDescribableToLLMConcern
   def schema_to_llm
-    revision_types_de_champ_public.map do |tdc|
+    revision_types_de_champ_public.map do |rtdc|
       {
-        stable_id: tdc.stable_id,
-        type: tdc.type_champ,
-        libelle: tdc.libelle,
-        mandatory: tdc.mandatory?,
-        description: tdc.description
-      }
+        stable_id: rtdc.stable_id,
+        type: rtdc.type_champ,
+        libelle: rtdc.libelle,
+        mandatory: rtdc.mandatory?,
+        description: rtdc.description,
+        choices: (rtdc.type_de_champ.drop_down_options if rtdc.type_de_champ.choice_type?)
+      }.compact
     end
   end
 end
