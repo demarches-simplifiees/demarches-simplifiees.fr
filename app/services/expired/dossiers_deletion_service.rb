@@ -2,6 +2,11 @@
 
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
   MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY = 10000
+  MAX_NEVER_TOUCHED_BROUILLON_DELETION_TO_PROCESS_PER_DAY = 10000
+
+  def process_never_touched_dossiers_brouillon
+    delete_never_touched_brouillons
+  end
 
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
@@ -50,6 +55,10 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
       Dossier.termine_close_to_expiration.without_termine_expiration_notice_sent,
       :termine_close_to_expiration_notice_sent_at
     )
+  end
+
+  def delete_never_touched_brouillons
+    Dossier.never_touched_brouillon_expired.limit(MAX_NEVER_TOUCHED_BROUILLON_DELETION_TO_PROCESS_PER_DAY).in_batches.destroy_all
   end
 
   def delete_expired_brouillons_and_notify
