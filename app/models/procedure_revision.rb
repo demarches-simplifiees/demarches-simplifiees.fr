@@ -249,6 +249,38 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_for(scope: :public).filter(&:conditionable?)
   end
 
+  def apply_changes(changes)
+    transaction do
+      changes.fetch(:destroy, []).each { |stable_id| remove_type_de_champ(stable_id) }
+
+      changes.fetch(:update, []).each do |change|
+        stable_id, libelle = change.values_at(:stable_id, :libelle)
+        tdc = find_and_ensure_exclusive_use(stable_id)
+        tdc.update(libelle:)
+      end
+
+      changes.fetch(:add, []).each do |change|
+        after_stable_id, type_champ, libelle = change.values_at(:after_stable_id, :type_champ, :libelle)
+
+        tdc = add_type_de_champ(after_stable_id:, type_champ:, libelle:)
+
+        if type_champ == 'repetition'
+          parent_stable_id = tdc.stable_id
+          children = change[:children]
+
+          previous_child_stable_id = nil
+          children.each do |child|
+            type_champ, libelle = child.values_at(:type_champ, :libelle)
+            child = add_type_de_champ(parent_stable_id:, type_champ:, libelle:, after_stable_id: previous_child_stable_id)
+            previous_child_stable_id = child.stable_id
+          end
+        else
+
+        end
+      end
+    end
+  end
+
   private
 
   def compute_estimated_fill_duration
