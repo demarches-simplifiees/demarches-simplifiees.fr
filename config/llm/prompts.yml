@@ -1,0 +1,109 @@
+revision_improver:
+  champs_descriptor: |
+    ## Caractéristiques d'un champ
+    - un type, qui détermine l'ergonomie de saisie présentée à l'usager, et dans certains cas remontera par API des informations complémentaires, comme le code commune ou le numéro de département pour le champ adresse.
+    - un libellé, obligatoire, idéalement de moins de 80 caractères
+    - une description, optionnelle, qui est un complément d'informations au libellé
+    - un attribut qui matérialise une saisie obligatoire ou non
+    - une condition d'affichage, optionnelle, dépendant de valeurs saisies préalablement par l'usager. Si cette condition est vraie le champ sera affiché, sinon il sera masqué, même s'il est obligatoire.
+    - certains types de champs proposent d'autres options listées plus loin.
+
+    En amont du dossier, l'usager aura saisi son prénom et son nom, ou son numéro SIRET, si la démarche est à destination d'une personne physique ou morale.
+
+    ## Types de champ
+
+    Par défaut tous les champs de saisie sont considérés comme obligatoires (mandatory = true)
+
+    ### Titre de section (type = header_section)
+    Un titre ou sous-titre pour organiser des sections de formulaire, sans valeur à saisir.
+    En option, l'attribut `level` de 1 à 3 permet de créer sous-titres. La numérotation des titres est automatique si aucun titre de la démarche ne commence par un numéro.
+    Les attributs description et mandatory ne sont pas disponible.
+
+    ### Bloc répétable (type = repetition)
+    Structure contenant un ou plusieurs champs permettant à l'usager de répéter autant de fois qu'il le veut l'ensemble des champs de cette structure.
+    Exemple: si l'usager doit remplir les prénoms et âge de ses enfants,
+    le formulaire peut être organisé avec un bloc répétable intitulé "Enfants à charge" non obligatoire.
+    A l'intérieur de ce bloc répétable, les champs `text` et `integer` permettent de saisir le prénom et âge de chacun enfant. L'usager pourra en ajouter autant que nécessaire.
+
+    ### Explication (type = explication)
+    Un texte libre fourni par l'administration qui vise à contextualiser certaines informations demandées à l'usager. L'usager ne saisira pas d'information.
+    Seul le libellé et la description sont possibles.
+
+    ### Civilité (type = civilite)
+    Représenté par un bouton radio avec lex choix "Madame" et "Monsieur".
+
+    ### Adresse électronique (type = email)
+    Représenté en html comme un input de type text, avec validation de format d'un email
+
+    ### Téléphone (type = phone)
+    Accepte un numéro de téléphone valide.
+
+    ### Adresse (type = address)
+    Champ de saisie d'adresse postale, représenté par un combobox avec autocompletion par la Base d'Adresses Nationales.
+    Les informations complémentaires sont remontées à l'administration :
+    - numéro de voie, nom de voie, code postal, nom de la commune, code INSEE de la commune, nom de département, numéro de département, nom de la région, numéro de la région
+
+    ### Commune (type = communes)
+    Champ de saisie de de commune, représenté par un combobox avec autocompletion parmi les communes françaises.
+    Les informations complémentaires sont remontées à l'administration :
+    - code INSEE de la commune, nom de département, numéro de département, nom de la région, numéro de la région
+
+    ### Département (type = departments)
+    Liste déroulante des départements français.
+    Les informations complémentaires sont remontées à l'administration :
+    - nom de département, numéro de département, nom de la région, numéro de la région
+
+    ### Région (type = regions)
+    Liste déroulante des régions françaises.
+    Les informations complémentaires sont remontées à l'administration :
+    - nom de la région, numéro de la région
+
+    ### Pays (type = pays)
+    Liste déroulante des pays reconnus par l'ONU.
+
+    ### Numéro IBAN (type = iban)
+    Champ de saisie qui formatte et valide un IBAN.
+
+    ### Numéro SIRET (type = siret)
+    Champ de saisie qui formatte et valide un numéro SIRET.
+    Les informations complémentaires sont remontées à l'administration :
+    - raison sociale, date de début d'activité, adresse de l'établissement (ainsi que tous les champs complémentaires mentionnés pour le champ Adresse), code naf, libellé naf, code effectif
+
+    ### Texte court (type = text)
+    Représenté en html comme un input de type text.
+
+    ### Texte long (type = textarea)
+    Représenté en html comme un textarea.
+
+    ### Nombre décimal (type = decimal_number)
+    Champ de saisie adapté aux nombres qui valide un nombre décimal
+
+    ### Nombre entier (type = integer_number)
+    Champ de saisie adapté aux nombres qui valide un nombre entier
+
+    ### Date (type = date)
+    Représenté sous forme de datepicker.
+
+    ### Date et heure (type = datetime)
+    Représenté sous forme de datepicker avec choix d'heure possible.
+
+    ### Pièce justificative (type = piece_justificative)
+    Permet à l'usager d'envoyer d'1 à 10 documents, dans la limite de 200 Mo par document. Tous les formats sont acceptés.
+
+    ### Titre d'identité (type = titre_identite)
+    Permet à l'usager d'envoyer un fichier PDF ou une image représentant un titre d'identité. Ce document sera hébergé de manière sécurisée.
+
+    ### Case à cocher seule (type = checkbox)
+    Représenté sous forme de checkbox.
+
+    ### Choix simple (type = drop_down_list)
+    Représenté sous forme de liste déroulante ou de combobox avec autocomplétion suivant le nombre de propositions.
+    L'agent doit définir au moins 2 choix dans cette liste dans sous l'attribut `options`
+    L'agent peut permettre à l'usager de renseigner un choix libre, si le champ est configuré avec `other` = true.
+
+    ### Choix multiple (type = multiple_drop_down_list)
+    Représenté sous forme de chechbox ou ou de combobox avec choix multiples suivant le nombre de propositions.
+    L'agent doit définir au moins 2 choix dans cette liste dans sous l'attribut `options`
+
+    ### Oui/Non (type = yes_no)
+    Représenté sous forme de bouton radio avec les choix "Oui" et "Non"
