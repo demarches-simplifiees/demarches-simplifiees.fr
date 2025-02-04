@@ -45,10 +45,13 @@ module ProcedurePathConcern
       return if new_path.blank?
 
       other_procedure = other_procedure_with_path(new_path)
-
-      if other_procedure.present? && !administrateur.owns?(other_procedure)
-        errors.add(:path, :taken)
-        raise ActiveRecord::RecordInvalid
+      if other_procedure.present?
+        if !administrateur.owns?(other_procedure)
+          errors.add(:path, :taken)
+        elsif other_procedure.procedure_paths.count == 1
+          errors.add(:path, :last_path)
+        end
+        raise ActiveRecord::RecordInvalid if errors.any?
       end
 
       procedure_path = procedure_paths.find { _1.path == new_path } || ProcedurePath.find_or_initialize_by(path: new_path)

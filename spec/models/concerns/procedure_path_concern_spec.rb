@@ -144,7 +144,24 @@ describe ProcedurePathConcern do
       end
     end
 
-    # test if the procedure path is owned by another administrateur
+    context "when trying to claim the last procedure_path of another procedure" do
+      let!(:procedure_2) { create(:procedure) }
+
+      before do
+        first_procedure_path = procedure_2.procedure_paths.order(:created_at).first
+        procedure_2.procedure_paths.where.not(id: first_procedure_path.id).delete_all
+      end
+
+      let(:path_to_claim) { procedure_2.canonical_path }
+
+      it "does not assign the procedure to the procedure_path" do
+        puts "procedure_2.canonical_path: #{procedure_2.canonical_path}"
+        expect(procedure_2.procedure_paths.count).to eq(1)
+        expect(procedure_2.canonical_path).to eq(procedure_2.procedure_paths.first.path)
+        expect { subject }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(procedure.errors.full_messages).to include("Le champ « Lien public » ne peut pas être utilisé car c'est le dernier lien de la démarche.")
+      end
+    end
   end
 
   describe '#previous_paths' do

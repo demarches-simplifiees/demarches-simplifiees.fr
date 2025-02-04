@@ -673,6 +673,7 @@ en:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               invalid: is not valid. It must countain between 3 and 200 characters among a-z, 0-9, '_' and '-'.
+              last_path: cannot be used because it is the last path of the procedure.
         procedure_revision:
           attributes:
             ineligibilite_rules:
