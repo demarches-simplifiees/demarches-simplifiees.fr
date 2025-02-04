@@ -28,6 +28,7 @@ en:
         Remember start (^) and end ($) anchors :<br>
         `12 miles` would be accepted by /[[:digit:]]+/ but rejected by /^[[:digit:]]+$/ <br>
         <a href="https://rubular.com" target="_blank" rel="noreferrer">Find out more about regular expression syntax</a>
+      indications: Indications of the expected input format
       valid_exemple: Valid example passing the regular expression
       error_message: Error message to be displayed to user in case of invalid entry
   kind:
