@@ -25,9 +25,10 @@ module LLM
 
       parser.parse(response.chat_completion).symbolize_keys
     rescue Langchain::OutputParsers::OutputParserException, JSON::Schema::ValidationError => e
-      raise e if attempt >= 3
-      Rails.logger.info { "Failure #{e.message}, retry ##{attempt}" }
-      suggest(attempt + 1)
+      raise e # if attempt >= 2
+      # puts "Failure #{e.message}, retry ##{attempt}"
+      # Rails.logger.info { "Failure #{e.message}, retry ##{attempt}" }
+      # suggest(attempt + 1)
     end
 
     private
@@ -74,15 +75,18 @@ module LLM
     def ds_description_prompt
       <<~PROMPT
         Before making any recommendations, please analyze the current form structure and fields.
-        Wrap your private analysis inside <analysis></analysis> tags, focusing on the following aspects:
+        Wrap your private analysis inside <think></think> tags, focusing on the following aspects:
 
           1. List all fields having potential issues
           2. For each field evaluate:
              - Delete if:
-               - Redundant with other or data already known by administration
-               - Part of a repeating field (add these in a new `repetition` field)
-             - Modify if:
+               - Redundant with other field
+               - Data already known by administration, (ie. email, first name of user, code postal when there is an address field)
+               - Should be in a `repetition` field instead (add these in a new `repetition` field)
+             - Update if:
                - Unclear or inappropriate label/description
+               - Incorrect case in labels. Always update labels written in uppercase with a correct case.
+               - Visibility should be conditionned by the value of a previous field
                - Inappropriate type
                - Non-compliant with guidelines
           3. Justify each proposed change
@@ -92,31 +96,31 @@ module LLM
 
         %<json_schema>s
 
-        Important guidelines:
+        Read carefully these guidelines:
         1. Field Types: Use the appropriate field type from the following list:
            - header_section: For organizing form sections (no user input)
-           - repetition: For repeatable blocks of children fields
+           - repetition: For repeatable blocks of children fields. User can repeat children fields as many times as he wants.
            - explication: For providing context or instructions (no user input)
-           - civilite: For selecting "Madame" or "Monsieur"
-           - email: For email addresses
+           - civilite: For selecting "Madame" or "Monsieur". Administration already knows civilite of user
+           - email: For email addresses. Administration already knows email of user
            - phone: For phone numbers
-           - address: For postal addresses (auto-completes with additional info: commune name and codes, code postal, departement name and code)
-           - communes: For selecting French communes (auto-completes with additional info: code, code postal, departement name and code)
+           - address: For postal addresses (auto-completed with additional info: commune name and codes, code postal, departement name and code)
+           - communes: For selecting French communes (auto-completed with additional info: code, code postal, departement name and code)
            - departments: For selecting French departments
            - text: For short text inputs
            - textarea: For longer text inputs
            - integer_number: For whole numbers
            - decimal_number: For numbers with decimals
            - date: For date selection
-           - piece_justificative: For document uploads. Can natively upload multiple documents.
+           - piece_justificative: For document uploads. Do not wrap in a repetition because it supports multiple documents
            - titre_identite: For secure identity document uploads
            - checkbox: For single checkboxes
            - yes_no: For yes/no questions
-           - drop_down_list: For single-choice selections. Choices are already configured by agents.
-           - multiple_drop_down_list: For multiple-choice selections. Choices are already configured by agents.
+           - drop_down_list: For single-choice selections. Choices are configured by administration separately
+           - multiple_drop_down_list: For multiple-choice selections. Choices are configured by administration separately
 
         2. Labeling and Descriptions:
-           - Use proper capitalization in labels and descriptions. This is crucial.
+           - Use proper capitalization in labels and descriptions (ie. not in uppercase). This is crucial.
            - Use consistent, plain language throughout the form
            - Make labels clear and understandable for all users
            - Avoid abbreviations, acronyms, and technical jargon
@@ -142,30 +146,37 @@ module LLM
            - By default, all input fields are considered mandatory (mandatory = true)
            - Explicitly set mandatory = false for optional fields
 
-        Remember to provide a summary explaining your recommended changes in the "summary" field of your JSON response.
+        Also provide a summary explaining your changes in the "summary" field of your JSON response.
         Answer summary and procedure text in french.
+
+        <example_invalid_labels>
+          - NATURE DES PRESTATIONS (uppercase)
+          - ACTIVITE DE LA STRUCTURE (uppercase)
+          - ADRESSE DE L'ASSOCIATION (uppercase)
+        </example_invalid_labels>
 
         <example_valid_labels>
           - Justificatif de domicile
           - Date des travaux
+          - Adresse du bénéficiaire
         </example_valid_labels>
 
-        <example_invalid_labels>
-          - NATURE DES PRESTATIONS
-          - ACTIVITE DE LA STRUCTURE
-        </example_invalid_labels>
-
-        <example_valid_descriptions>
-          - Daté de moins de 3 mois
-          - Lisible, non raturé, à l'adresse du demandeur
-        </example_valid_descriptions>
-
         <example_invalid_descriptions>
-          - Pour vous contacter
-          - Choisissez parmi "Ain", "Loire"
-          - Écrivez la date
+          - Pour vous contacter (useless)
+          - Choisissez parmi "Ain", "Loire" (don't list choices)
+          - Écrivez sa date de naissance (useless)
         </example_invalid_descriptions>
 
+        <example_valid_descriptions>
+          - Datant de moins de 3 mois
+          - Le RIB doit correspondre à l'adresse du demandeur
+        </example_valid_descriptions>
+
+        <example_redundant_fields>
+          - postal code, commune, … when there is already an address field.
+          - email, civilite, first name or last name of the user filling the file
+          - fields duplicated, or very similar without clear justification
+        </example_redundant_fields>
 
       PROMPT
     end
