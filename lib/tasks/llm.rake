@@ -14,7 +14,7 @@ namespace :llm do
     # Écrit le fichier JSON
     File.write(
       "tmp/procedure_#{procedure_id}_improvements.json",
-      JSON.pretty_generate(completion[:operations])
+      JSON.pretty_generate(completion[:operations].merge("summary" => completion[:summary]))
     )
 
     puts "Operations saved to tmp/procedure_#{procedure_id}_improvements.json"
