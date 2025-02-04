@@ -1,81 +1,9 @@
 {
   "type": "object",
-  "definitions": {
-    "champ_type": {
-      "type": "string",
-      "enum": [
-        "header_section",
-        "repetition",
-        "explication",
-        "civilite",
-        "email",
-        "phone",
-        "address",
-        "communes",
-        "departments",
-        "text",
-        "textarea",
-        "integer_number",
-        "decimal_number",
-        "date",
-        "piece_justificative",
-        "titre_identite",
-        "checkbox",
-        "yes_no",
-        "drop_down_list",
-        "multiple_drop_down_list"
-      ]
-    },
-    "champ_properties": {
-      "type": "object",
-      "properties": {
-        "type_champ": { "$ref": "#/definitions/champ_type" },
-        "libelle": { "type": "string" },
-        "description": { "type": "string" },
-        "mandatory": { "type": "boolean", "default": true },
-        "children": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/champ_properties" }
-        },
-        "choices": {
-          "type": "array",
-          "minItems": 2,
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": { "type_champ": { "const": "repetition" } }
-          },
-          "then": {
-            "required": ["children"]
-          },
-          "else": {
-            "not": { "required": ["children"] }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "enum": ["drop_down_list", "multiple_drop_down_list"]
-              }
-            }
-          },
-          "then": {
-            "required": ["choices"]
-          }
-        }
-      ]
-    }
-  },
   "properties": {
     "summary": {
       "type": "string",
-      "description": "Summary of important modifications suggested below"
+      "description": "List of important modifications suggested and why,use bullets points"
     },
     "operations": {
       "type": "object",
@@ -84,41 +12,51 @@
           "type": "array",
           "items": {
             "type": "integer",
-            "description": "stable ids of champs to destroy"
+            "description": "stable ids of fields to remove"
           }
         },
         "update": {
           "type": "array",
           "items": {
-            "allOf": [
-              { "$ref": "#/definitions/champ_properties" },
-              {
-                "properties": {
-                  "stable_id": { "type": "integer" }
-                },
-                "required": ["stable_id"]
-              }
-            ]
+            "type": "object",
+            "properties": {
+              "stable_id": { "type": "integer" },
+              "type_champ": { "type": "string" },
+              "libelle": { "type": "string" },
+              "description": { "type": "string" },
+              "mandatory": { "type": "boolean" }
+            },
+            "required": ["stable_id"]
           }
         },
         "add": {
           "type": "array",
           "items": {
-            "allOf": [
-              { "$ref": "#/definitions/champ_properties" },
-              {
-                "properties": {
-                  "after_stable_id": { "type": "integer" }
-                },
-                "required": ["after_stable_id", "type_champ", "libelle"]
+            "type": "object",
+            "properties": {
+              "after_stable_id": { "type": "integer" },
+              "type_champ": { "type": "string" },
+              "libelle": { "type": "string" },
+              "description": { "type": "string" },
+              "mandatory": { "type": "boolean" },
+              "children": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type_champ": { "type": "string" },
+                    "libelle": { "type": "string" },
+                    "mandatory": { "type": "boolean" }
+                  },
+                  "required": ["type_champ", "libelle"]
+                }
               }
-            ]
+            },
+            "required": ["after_stable_id", "type_champ", "libelle"]
           }
         }
-      },
-      "additionalProperties": false
+      }
     }
   },
-  "required": ["summary", "operations"],
-  "additionalProperties": false
+  "required": ["summary", "operations"]
 }
