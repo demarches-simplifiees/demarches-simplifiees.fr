@@ -63,12 +63,14 @@ class Dossier < ApplicationRecord
       build(state: Dossier.states.fetch(:en_construction),
         instructeur_email: instructeur&.email,
         processed_at:,
+        revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
     end
 
     def submit_en_construction(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_construction),
         processed_at:,
+        revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
     end
 
@@ -76,12 +78,14 @@ class Dossier < ApplicationRecord
       build(state: Dossier.states.fetch(:en_instruction),
         instructeur_email: instructeur&.email,
         processed_at:,
+        revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
     end
 
     def accepter_automatiquement(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:accepte),
-        processed_at:)
+        processed_at:,
+        revision_id: proxy_association.owner.revision_id)
     end
 
     def accepter(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
@@ -89,6 +93,7 @@ class Dossier < ApplicationRecord
         instructeur_email: instructeur&.email,
         motivation:,
         processed_at:,
+        revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
     end
 
@@ -97,13 +102,15 @@ class Dossier < ApplicationRecord
         instructeur_email: instructeur&.email,
         motivation:,
         processed_at:,
+        revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
     end
 
     def refuser_automatiquement(processed_at: Time.zone.now, motivation:)
       build(state: Dossier.states.fetch(:refuse),
         motivation:,
-        processed_at:)
+        processed_at:,
+        revision_id: proxy_association.owner.revision_id)
     end
 
     def classer_sans_suite(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
@@ -111,6 +118,7 @@ class Dossier < ApplicationRecord
         instructeur_email: instructeur&.email,
         motivation:,
         processed_at:,
+        revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
     end
   end

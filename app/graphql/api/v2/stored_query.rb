@@ -325,6 +325,10 @@ class API::V2::StoredQuery
       emailAgentTraitant
       dateTraitement
       motivation
+      revision {
+        id
+        datePublication
+      }
     }
     champs @include(if: $includeChamps) {
       ...ChampFragment
