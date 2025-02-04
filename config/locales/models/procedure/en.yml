@@ -39,11 +39,18 @@ en:
         duree_conservation_dossiers_dans_ds: Duration files will be kept
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
         for_tiers_enabled: Enable a third party to submit a file
+        api_state:
+          brouillon: Draft
+          publiee: Published
+          close: Closed
+          hidden: Destroyed
+          depubliee: Unpublished
         aasm_state:
           brouillon: Draft
           publiee: Published
           close: Closed
           hidden: Destroyed
+          depubliee: Unpublished
         kind_usager:
           individual: Individual
           personne_morale: 'Legal entity'

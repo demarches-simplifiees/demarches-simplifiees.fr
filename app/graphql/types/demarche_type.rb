@@ -4,7 +4,9 @@ module Types
   class DemarcheType < Types::BaseObject
     class DemarcheState < Types::BaseEnum
       Procedure.aasm.states.reject { |state| state.name == :hidden }.each do |state|
-        value(state.name.to_s, state.display_name, value: state.name)
+        value(state.name.to_s,
+            I18n.t(state, scope: [:activerecord, :attributes, :procedure, :api_state]),
+           value: state.name)
       end
     end
 
