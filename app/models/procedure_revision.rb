@@ -451,6 +451,12 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.expression_reguliere,
           to_type_de_champ.expression_reguliere)
       end
+      if from_type_de_champ.expression_reguliere_indications != to_type_de_champ.expression_reguliere_indications
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere_indications,
+          from_type_de_champ.expression_reguliere_indications,
+          to_type_de_champ.expression_reguliere_indications)
+      end
       if from_type_de_champ.expression_reguliere_exemple_text != to_type_de_champ.expression_reguliere_exemple_text
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :expression_reguliere_exemple_text,
