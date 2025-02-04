@@ -16,6 +16,7 @@ gem 'after_commit_everywhere'
 gem 'after_party'
 gem 'ancestry'
 gem 'anchored'
+gem 'anthropic'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
@@ -61,6 +62,7 @@ gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari'
 gem 'kredis'
+gem 'langchainrb'
 gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
@@ -87,6 +89,7 @@ gem 'redcarpet'
 gem 'redis'
 gem 'rexml' # add missing gem due to ruby3 (https://github.com/Shopify/bootsnap/issues/325)
 gem 'rqrcode'
+gem 'ruby-openai'
 gem 'saml_idp'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-delayed_job'
