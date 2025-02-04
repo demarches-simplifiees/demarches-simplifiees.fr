@@ -33,9 +33,7 @@ class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
     fields.each { |k| etablissement[k] = merge_values(translated_etablissements, k) }
 
     if translated_etablissements.size == 1
-
-      etablissement[:siege_social] = true if etablissements[0][:communeGeo][:id] == etablissements[0][:entreprise][:commune][:id] && list_etablissements.count { |e| e[:communeGeo][:id] == e[:entreprise][:commune][:id] } == 1
-
+      etablissement[:siege_social] = true if etablissement[:num_entreprise] == "1"
       etablissement[:siret] += format("%03d", etablissement[:num_entreprise])
     end
     etablissement.delete(:num_entreprise)
