@@ -221,6 +221,11 @@
                   .type-de-champ-expression-reguliere
                     = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
                   %p.fr-hint-text= t('.expression_reguliere.labels.hint_html')
+              .cell.fr-mt-2w
+                .fr-input-group
+                  = form.label :expression_reguliere_indications, for: dom_id(type_de_champ, :expression_reguliere_indications) do
+                    = t('.expression_reguliere.labels.indications')
+                  = form.text_field :expression_reguliere_indications, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_indications)
 
               .cell.fr-mt-2w
                 .fr-input-group
