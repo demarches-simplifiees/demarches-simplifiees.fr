@@ -124,6 +124,13 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_expression_reguliere", label: change.label, to: change.to)
+      - when :expression_reguliere_indications
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_expression_reguliere_indications", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_expression_reguliere_indications", label: change.label, to: change.to)
       - when :expression_reguliere_exemple_text
         - if change.to.blank?
           - list.with_item do
