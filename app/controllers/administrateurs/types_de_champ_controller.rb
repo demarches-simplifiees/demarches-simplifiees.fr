@@ -165,98 +165,11 @@ module Administrateurs
         ReferentielItem.insert_all(items_to_insert)
       end
     def simplify
-      @text = "je propose une super simplification"
+      service = LLM::RevisionImproverService.new(@procedure)
+      suggestion = service.suggest
 
-      @changes = {
-        "destroy": [
-          335892,
-          335890,
-          335887,
-          335888,
-          335894,
-          335895,
-          585372,
-          3573135
-        ],
-        "update": [
-          {
-            "stable_id": 585367,
-            "type_champ": "drop_down_list",
-            "libelle": "Type de séjour",
-            "mandatory": true
-          },
-          {
-            "stable_id": 335897,
-            "type_champ": "civilite",
-            "libelle": "Civilité"
-          },
-          {
-            "stable_id": 354937,
-            "type_champ": "header_section",
-            "libelle": "Informations sur le conjoint"
-          },
-          {
-            "stable_id": 335883,
-            "type_champ": "text",
-            "libelle": "Nom du conjoint",
-            "description": "À remplir uniquement en cas de mariage, PACS ou vie maritale"
-          },
-          {
-            "stable_id": 585748,
-            "type_champ": "drop_down_list",
-            "libelle": "Organisme ayant organisé le séjour",
-            "description": "Sélectionnez le type d'organisme"
-          },
-          {
-            "stable_id": 585404,
-            "type_champ": "checkbox",
-            "libelle": "Je certifie sur l'honneur n'avoir pas perçu de prestation de même nature et que les renseignements sont exacts"
-          }
-        ],
-        "add": [
-          {
-            "type_champ": "header_section",
-            "libelle": "Informations personnelles",
-            "after_stable_id": 585367
-          },
-          {
-            "type_champ": "header_section",
-            "libelle": "Informations sur le(s) enfant(s)",
-            "after_stable_id": 335886
-          },
-          {
-            "type_champ": "repetition",
-            "libelle": "Enfant concerné par le séjour",
-            "mandatory": true,
-            "after_stable_id": 335886,
-            "children": [
-              {
-                "type_champ": "text",
-                "libelle": "Nom de l'enfant"
-              },
-              {
-                "type_champ": "text",
-                "libelle": "Prénom de l'enfant"
-              },
-              {
-                "type_champ": "date",
-                "libelle": "Date de naissance"
-              }
-            ]
-          },
-          {
-            "type_champ": "header_section",
-            "libelle": "Informations sur le séjour",
-            "after_stable_id": 335895
-          },
-          {
-            "type_champ": "checkbox",
-            "libelle": "J'accepte que mes données personnelles soient utilisées pour le traitement de ma demande",
-            "after_stable_id": 3573130,
-            "mandatory": true
-          }
-        ]
-      }
+      @text = suggestion[:summary]
+      @changes = suggestion[:operations]
     end
 
     def accept_simplification
