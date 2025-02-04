@@ -6,7 +6,8 @@ module Instructeurs
     def upsert
       service = LexpolService.new(champ: @champ, dossier: @dossier)
 
-      nor = service.upsert_dossier
+      force_create = params[:force_create].present?
+      nor = service.upsert_dossier(force_create: force_create)
       if nor.present?
         msg = @champ.value.blank? ? "Dossier Lexpol créé avec succès. NOR : #{nor}" :
                                     "Dossier Lexpol mis à jour avec succès. NOR : #{nor}"

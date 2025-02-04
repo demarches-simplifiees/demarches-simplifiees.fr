@@ -5,6 +5,20 @@
   %p
     %strong Statut du dossier :
     Inconnu
+  .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
+    = link_to 'Créer le dossier dans Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id),
+      method: :post, class: 'fr-btn'
+
+- elsif @champ.data&.[]('lexpol_status') == 'Annulé'
+  %p
+    %strong Numéro NOR :
+    Le dossier a été annulé
+  %p
+    %strong Statut du dossier :
+    Annulé
+  .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
+    = link_to 'Re-créer le dossier dans Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id, force_create: true),
+      method: :post, class: 'fr-btn'
 
 - else
   %p
@@ -17,3 +31,8 @@
   %p
     %strong Statut du dossier :
     = @champ.data&.[]('lexpol_status') || 'Inconnu'
+  .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
+    = link_to 'Mettre à jour les variables Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id),
+      method: :post, class: 'fr-btn fr-btn--secondary'
+    = link_to 'Re-créer le dossier dans Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id, force_create: true),
+      method: :post, class: 'fr-btn'

@@ -1237,7 +1237,7 @@ class Dossier < ApplicationRecord
     etablissement&.adresse
   end
 
-  def etablissement_numero_tahi
+  def etablissement_numero_tahiti
     etablissement&.siret
   end
 

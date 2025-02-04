@@ -84,6 +84,14 @@
                                 placeholder: "variables_mes_demarches=variable_lexpol\n...",
                                 id: dom_id(type_de_champ, :lexpol_mapping)
 
+              .lexpol-variables-toggle.fr-mt-1w
+                %button.fr-btn.fr-btn--tertiary.fr-btn--sm{ type: "button", onclick: "var container = document.getElementById('lexpol-vars-#{dom_id(type_de_champ)}'); if (container.classList.contains('hidden')) { container.classList.remove('hidden'); this.innerText = 'Masquer les variables disponibles'; } else { container.classList.add('hidden'); this.innerText = 'Afficher les variables disponibles'; } return false;" }
+                  Afficher les variables disponibles
+
+              .lexpol-variables-list.fr-mt-1w.hidden{ id: "lexpol-vars-#{dom_id(type_de_champ)}" }
+                %strong Variables disponibles :
+                = raw LexpolService.available_variables_html(@upper_coordinates.map(&:type_de_champ))
+
         .flex.justify-start.fr-mt-1w
           -# ----- Polynesia options
           - if type_de_champ.integer_number? || type_de_champ.decimal_number?
