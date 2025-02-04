@@ -33,7 +33,50 @@
               "type_champ": { "type": "string" },
               "libelle": { "type": "string" },
               "description": { "type": "string" },
-              "mandatory": { "type": "boolean" }
+              "mandatory": { "type": "boolean" },
+              "justification": {
+                "type": "string",
+                "description": "1 sentence explaining why this field should be updated"
+              },
+              "display_condition": {
+                "type": "object",
+                "description": "Conditional logic to show/hide this field",
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "enum": ["Logic::Eq"],
+                    "description": "Equality comparison operator"
+                  },
+                  "left": {
+                    "type": "object",
+                    "description": "Left operand - always refers to a field value",
+                    "properties": {
+                      "term": {
+                        "type": "string",
+                        "enum": ["Logic::ChampValue"]
+                      },
+                      "stable_id": {
+                        "type": "integer",
+                        "description": "ID of the field to compare"
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "object",
+                    "description": "Right operand - contains the comparison value",
+                    "properties": {
+                      "term": {
+                        "type": "string",
+                        "enum": ["Logic::Constant"]
+                      },
+                      "value": {
+                        "type": ["string", "number"],
+                        "description": "Value to compare against"
+                      }
+                    }
+                  }
+                }
+              }
             },
             "required": ["stable_id"]
           }
