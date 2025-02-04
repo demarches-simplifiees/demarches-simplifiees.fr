@@ -3,7 +3,42 @@
 
   %p= @text
 
-  %ul.fr-btns-group.fr-btns-group--inline-md
+  - tdcs = @procedure.published_revision.types_de_champ_public
+  - destroyeds = @changes.fetch(:destroy, [])
+  - updated_by_stable_id = @changes.fetch(:update, []).index_by { _1[:stable_id] }
+  - add = @changes.fetch(:add, [])
+
+  %h2.fr-h4.mt-2 #{pluralize(destroyeds.count, 'suppression')}
+  %ul
+    - tdcs.each do |tdc|
+      - if destroyeds.include?(tdc.stable_id)
+        %li= tdc.libelle
+
+  %h2.fr-h4.mt-2 #{pluralize(updated_by_stable_id.keys.count, 'modification')}
+  %ul
+    - tdcs.each do |tdc|
+      - if updated_by_stable_id[tdc.stable_id]
+        %li
+          #{tdc.libelle} → #{updated_by_stable_id[tdc.stable_id][:libelle]}
+          %br
+          %small= updated_by_stable_id[tdc.stable_id][:justification]
+
+
+  %h2.fr-h4.mt-2 #{pluralize(add.count, 'ajout')}
+  %ul
+    - add.each do |tdc|
+      %li
+        = tdc[:libelle]
+        - if tdc[:children].present?
+          (bloc répétable)
+        %br
+        %small= tdc[:justification]
+        - if tdc[:children].present?
+          %ul
+            - tdc[:children].each do |child|
+              %li= child[:libelle]
+
+  %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
     %li
       = button_to("Accepter les modifications",
         [:accept_simplification, :admin, @procedure, :types_de_champ],
