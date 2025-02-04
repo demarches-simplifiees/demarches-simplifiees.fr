@@ -139,6 +139,7 @@ module LLM
            - Place essential fields first, following user-centric logic
            - Remove any fields asking for information already known to the administration. This is absolutely crucial.
            - Minimize the number of required documents
+           - Apply visibility conditions to dynamically show/hide a field based on another field's exact choice or value. When a field is hidden by its visibility condition, its mandatory rule will be ignored
            - Use checkboxes for consent fields
            - Consider information automatically retrieved by certain field types (e.g., address, communes) to avoid redundant questions. This is your main goal.
 
