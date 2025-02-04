@@ -2,7 +2,11 @@
 
 %p
   - number_of_groups = @group.procedure.groupe_instructeurs.many? ? 'many_groups' : 'one_group'
-  = t(".email_body.#{number_of_groups}", groupe: @group.label, email: @current_instructeur_email, procedure: @group.procedure.libelle)
+  = t(".email_body.#{number_of_groups}",
+      groupe: @group.label,
+      email: @current_instructeur_email,
+      procedure: @group.procedure.libelle,
+      procedure_url: instructeur_procedure_url(@group.procedure))
 
 %p
   Votre compte a été créé pour l'adresse email
