@@ -15,29 +15,32 @@ module LLM
     def suggest(attempt = 0)
       log_prompt
 
-      response = if llm.is_a?(Langchain::LLM::Anthropic)
-        llm.chat(messages:, system: system_prompt, max_tokens: 4096)
-      else
-        llm.chat(messages:, structured_outputs: true, max_tokens: 8192)
+      assistant = Langchain::Assistant.new(llm:) do |response_chunk|
+        print response_chunk.dig("delta", "content")
       end
 
-      backup_response(response)
+      assistant.add_messages(messages:)
+      assistant.run!
 
-      parser.parse(response.chat_completion).symbolize_keys
+      backup_response(assistant)
+
+      parser.parse(assistant.messages.last.content).symbolize_keys
     rescue Langchain::OutputParsers::OutputParserException, JSON::Schema::ValidationError => e
       raise e # if attempt >= 2
-      # puts "Failure #{e.message}, retry ##{attempt}"
-      # Rails.logger.info { "Failure #{e.message}, retry ##{attempt}" }
-      # suggest(attempt + 1)
+    # puts "Failure #{e.message}, retry ##{attempt}"
+    # Rails.logger.info { "Failure #{e.message}, retry ##{attempt}" }
+    # suggest(attempt + 1)
+    rescue => e
+      binding.irb
     end
 
     private
 
     def messages
       [
-        llm.is_a?(Langchain::LLM::Anthropic) ? nil : { role: :system, content: system_prompt },
-        { role: :user, content: current_schema_prompt },
-        { role: :user, content: format(ds_description_prompt, json_schema: parser.get_format_instructions) }
+        llm.is_a?(Langchain::LLM::Anthropic) ? nil : { role: "system", content: system_prompt },
+        { role: "user", content: current_schema_prompt },
+        { role: "user", content: format(ds_description_prompt, json_schema: parser.get_format_instructions) }
       ].compact
     end
 
@@ -191,10 +194,10 @@ module LLM
       Rails.logger.info { "Prompt written in tmp/procedure_#{procedure.id}_prompt.json" }
     end
 
-    def backup_response(response)
+    def backup_response(assistant)
       File.write(
         "tmp/procedure_#{procedure.id}_improvements.txt",
-        response.chat_completion
+          assistant.messages.last.content
       )
     end
   end
