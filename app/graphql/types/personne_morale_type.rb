@@ -30,20 +30,16 @@ module Types
       field :etat_administratif, EntrepriseEtatAdministratifType, null: true
       field :nom, String, null: true
       field :prenom, String, null: true
-      field :attestation_sociale_attachment, Types::File, null: true
-      field :attestation_fiscale_attachment, Types::File, null: true
+      field :attestation_sociale_attachment, Types::File, null: true, extensions: [
+        { Extensions::Attachment => { attachment: :entreprise_attestation_sociale, root: :etablissement } }
+      ]
+      field :attestation_fiscale_attachment, Types::File, null: true, extensions: [
+        { Extensions::Attachment => { attachment: :entreprise_attestation_fiscale, root: :etablissement } }
+      ]
       field :enseigne, String, null: true
 
       def enseigne
         object.enseigne || nil
-      end
-
-      def attestation_sociale_attachment
-        load_attachment_for(:entreprise_attestation_sociale_attachment)
-      end
-
-      def attestation_fiscale_attachment
-        load_attachment_for(:entreprise_attestation_fiscale_attachment)
       end
 
       def effectif_mensuel
@@ -83,13 +79,8 @@ module Types
         object.code_effectif_entreprise
       end
 
-      private
-
-      def load_attachment_for(key)
-        Loaders::Association.for(
-          Etablissement,
-          key => :blob
-        ).load(object.etablissement)
+      def etablissement
+        object.etablissement
       end
     end
 

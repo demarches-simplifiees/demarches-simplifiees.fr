@@ -122,7 +122,7 @@ module Types
     end
 
     def groupe_instructeur
-      Loaders::Record.for(GroupeInstructeur, includes: [:procedure]).load(object.groupe_instructeur_id)
+      Loaders::Association.for(object.class, groupe_instructeur: [:procedure]).load(object)
     end
 
     def demandeur
@@ -142,28 +142,32 @@ module Types
     end
 
     def messages(id: nil)
-      if id.present?
-        Loaders::Record
-          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :expert], array: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
-      else
-        Loaders::Association.for(object.class, commentaires: [:instructeur, :expert]).load(object)
-      end
+      Loaders::Association.for(object.class, commentaires: [:instructeur, :expert])
+        .load(object)
+        .then do |records|
+          if id.present?
+            find_record_by_typed_id(records, id)
+          else
+            records
+          end
+        end
     end
 
     def avis(id: nil)
-      if id.present?
-        Loaders::Record
-          .for(Avis, where: { dossier: object }, includes: [:expert, :claimant], array: true)
-          .load(ApplicationRecord.id_from_typed_id(id))
-      else
-        Loaders::Association.for(object.class, avis: [:expert, :claimant]).load(object)
-      end
+      Loaders::Association.for(object.class, avis: [:expert, :claimant])
+        .load(object)
+        .then do |records|
+          if id.present?
+            find_record_by_typed_id(records, id)
+          else
+            records
+          end
+        end
     end
 
     def champs(id: nil)
       if id.present?
-        object.project_champs_public.filter { _1.stable_id.to_s == ApplicationRecord.id_from_typed_id(id).to_s }
+        find_record_by_typed_id(object.project_champs_public, id, attribute: :stable_id)
       else
         object.project_champs_public.filter(&:visible?)
       end
@@ -171,7 +175,7 @@ module Types
 
     def annotations(id: nil)
       if id.present?
-        object.project_champs_private.filter { _1.stable_id.to_s == ApplicationRecord.id_from_typed_id(id).to_s }
+        find_record_by_typed_id(object.project_champs_private, id, attribute: :stable_id)
       else
         object.project_champs_private.filter(&:visible?)
       end
@@ -218,6 +222,14 @@ module Types
 
     def self.authorized?(object, context)
       context.authorized_demarche?(object.revision.procedure)
+    end
+
+    private
+
+    def find_record_by_typed_id(records, id, attribute: :id)
+      record_id = ApplicationRecord.id_from_typed_id(id).to_s
+      record = records.find { _1.public_send(attribute).to_s == record_id }
+      record ? [record] : []
     end
   end
 end

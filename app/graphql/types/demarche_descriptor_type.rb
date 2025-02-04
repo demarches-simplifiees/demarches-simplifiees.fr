@@ -53,7 +53,7 @@ Cela évite l’accès récursif aux dossiers."
     field :dossiers_count, Int, "nb de dossiers déposés", null: false, internal: true
 
     def service
-      Loaders::Record.for(Service).load(procedure.service_id)
+      Loaders::Association.for(procedure.class, :service).load(procedure)
     end
 
     def revision
