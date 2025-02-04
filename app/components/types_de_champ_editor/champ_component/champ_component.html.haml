@@ -72,9 +72,8 @@
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
-
-        .flex.justify-start.fr-mt-1w.flex-gap
-          - if type_de_champ.any_drop_down_list?
+        .flex.justify-start.fr-mt-1w.flex-gap{ data: { controller: 'segmented-control' } }
+          - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
             .flex.column.justify-start.width-33
               .cell
                 = form.label :drop_down_options_from_text, "Options de la liste", for: dom_id(type_de_champ, :drop_down_options_from_text)
@@ -83,11 +82,65 @@
                   class: 'fr-input small-margin small width-100',
                   rows: 7,
                   id: dom_id(type_de_champ, :drop_down_options_from_text)
-            - if type_de_champ.drop_down_list?
+          - elsif type_de_champ.drop_down_list?
+            .flex.justify-start.column.width-33.fr-mt-1w
               .cell
+                %fieldset.fr-segmented.fr-segmented
+                  %legend.fr-segmented__legend
+                    Liste de choix
+                  .fr-segmented__elements
+                    .fr-segmented__element
+                      = form.radio_button :drop_down_mode, 'simple', checked: 'checked', id: dom_id(type_de_champ, :simple), data: { action: 'drop-down-mode#toggle', 'mode-to-show': 'simple' }
+                      = form.label :drop_down_mode_simple, t('.drop_down_list.labels.simple'), for: dom_id(type_de_champ, :simple), class: 'fr-label'
+                    .fr-segmented__element
+                      = form.radio_button :drop_down_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'drop-down-mode#toggle', "mode-to-show": "advanced" }
+                      = form.label :drop_down_mode_advanced, t('.drop_down_list.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
+
+            .flex.column.justify-start.flex-grow.vertical-border.fr-pl-2w.fr-my-1w
+              %div{ class: class_names("drop-down-mode-simple", hidden: (type_de_champ.drop_down_mode == 'advanced')), data: { 'drop-down-mode-target': 'simple'  } }
+                .cell
+                  = form.label :drop_down_options_from_text, "Options de la liste", for: dom_id(type_de_champ, :drop_down_options_from_text)
+                  = form.text_area :drop_down_options_from_text,
+                    value: type_de_champ.drop_down_options(simple: true).join("\r\n"),
+                    class: 'fr-input small-margin small width-100 fr-mb-2w',
+                    rows: 7,
+                    id: dom_id(type_de_champ, :drop_down_options_from_text)
+
+              %div{ class: class_names("drop-down-mode-advanced", hidden: (type_de_champ.drop_down_mode != 'advanced')), data: { 'drop-down-mode-target': 'advanced'  } }
+
+                - if type_de_champ.referentiel.present?
+                  .cell
+                    %label.fr-label.font-weight-bold
+                      Fichier de référentiel à importer (CSV)
+                    %p.fr-mt-2w
+                      %span.fr-badge.fr-badge--success
+                        = type_de_champ.referentiel.items.count
+                        options importées
+                      à partir de
+                      = type_de_champ.referentiel.name
+                    = render NestedForms::OwnedButtonComponent.new(formaction: nullify_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), http_method: :delete, opt: { class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w"}) do
+                      Supprimer ce référentiel
+
+                - else
+                  .cell
+                    %label.fr-label.font-weight-bold
+                      Fichier de référentiel à importer (CSV)
+                    .fr-hint-text.fr-mb-2w
+                      = t('.drop_down_list.referentiel.hint_html')
+                    .fr-download
+                      = link_to "/#{template_file}", {class: "fr-download__link", download: ''} do
+                        Modèle à télécharger
+                        %span.fr-download__detail
+                          = template_detail
+                    .fr-hint-text.fr-mb-1w
+                      Votre fichier doit peser maximum #{number_to_human_size(referentiel_max_size)} et ne doit pas contenir plus de #{referentiel_max_lines} lignes.
+                    .flex.column
+                      = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w', id: dom_id(type_de_champ, :import_referentiel)
+
+              .cell.flex.align-center
+                = form.check_box :drop_down_other, class: "small-margin small", id: dom_id(type_de_champ, :drop_down_other)
                 = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
                   Proposer une option « autre » avec un texte libre
-                = form.check_box :drop_down_other, class: "small-margin small", id: dom_id(type_de_champ, :drop_down_other)
 
           - if type_de_champ.linked_drop_down_list?
             .flex.column.justify-start.flex-grow

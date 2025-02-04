@@ -55,13 +55,19 @@
           = render Dsfr::ListComponent.new do |list|
             - if added.present?
               - list.with_item do
-                = t('.add_option', items: added.map{ |term| "« #{term.strip} »" }.join(", "))
+                = t('.add_option', items: added.map{ |term| term.is_a?(Array) ? "« #{term.first.strip} »" : "« #{term.strip} »" }.join(", "))
             - if removed.present?
               - list.with_item do
                 = t('.remove_option', items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
           - if (removed.present? || added.present? ) && used_by_routing_rules?(change.type_de_champ)
             .fr-alert.fr-alert--warning.fr-mt-1v
               = t(".#{prefix}.update_drop_down_options_alert", label: change.label)
+      - when :referentiel
+        - list.with_item do
+          = t(".#{prefix}.update_referentiel", label: change.label)
+      - when :drop_down_mode
+        - list.with_item do
+          = t(".#{prefix}.update_drop_down_mode", label: change.label)
       - when :drop_down_other
         - if change.from == false
           - list.with_item do

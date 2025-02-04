@@ -142,6 +142,16 @@ describe ColumnsConcern do
           expect(subject.map(&:label)).to include('linked (Secondaire)')
         }
       end
+
+      context 'with drop down list with csv referentiel' do
+        let(:types_de_champ_public) { [{ type: :drop_down_list, libelle: 'liste csv', drop_down_mode: 'advanced', referentiel: }] }
+        let(:referentiel) { create(:csv_referentiel, :with_items) }
+        let(:types_de_champ_private) { [] }
+        it {
+          expect(subject.map(&:label)).to include('liste csv – Référentiel calorie (kcal)')
+          expect(subject.map(&:label)).to include('liste csv – Référentiel poids (g)')
+        }
+      end
     end
 
     context 'when the procedure is for individuals' do

@@ -1,6 +1,19 @@
-- if champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
+- if champ.referentiel_item_data.present?
+  - if current_user.instructeur? && controller.try(:nav_bar_profile) == :instructeur
+    .fr-background-alt--grey.fr-p-3v
+      - champ.referentiel_headers.each do |header|
+        = render Dossiers::RowShowComponent.new(label: header) do |c|
+          - c.with_value do
+            %p= champ.referentiel_item_data.fetch(header.parameterize.underscore)
+
+
+  - else
+    %p= champ.referentiel_item_first_column_value
+
+- elsif champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
   %p
     %span= champ.value
     %span.fr-badge.fr-badge--warning.fr-badge--sm dossier réaffecté au groupe « #{champ.dossier.groupe_instructeur.label} »
+
 - else
   %p= champ.value

@@ -128,6 +128,7 @@ class TypeDeChamp < ApplicationRecord
                  :cadastres,
                  :old_pj,
                  :drop_down_options,
+                 :drop_down_mode,
                  :skip_pj_validation,
                  :skip_content_type_pj_validation,
                  :drop_down_secondary_libelle,
@@ -372,8 +373,19 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def drop_down_options
-    Array.wrap(super)
+  def referentiel_mode?
+    drop_down_mode == 'advanced'
+  end
+
+  def drop_down_options(simple: false)
+    return Array.wrap(super()) if simple
+    if referentiel_mode?
+      return if referentiel.nil?
+      header = referentiel.headers.first.parameterize.underscore
+      Array.wrap(referentiel.items.map { [_1.data.values.first[header], _1.id] })
+    else
+      Array.wrap(super())
+    end
   end
 
   def drop_down_options_from_text=(text)
@@ -597,7 +609,7 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:explication) => [:collapsible_explanation_enabled, :collapsible_explanation_text],
     type_champs.fetch(:textarea) => [:character_limit],
     type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
-    type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options],
+    type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],
     type_champs.fetch(:linked_drop_down_list) => [:drop_down_options, :drop_down_secondary_libelle, :drop_down_secondary_description],
     type_champs.fetch(:piece_justificative) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],

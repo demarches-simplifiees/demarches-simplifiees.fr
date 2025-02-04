@@ -117,6 +117,69 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         expect(flash.alert).to include("utilisé pour le routage")
       end
     end
+
+    context 'with referentiel' do
+      let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ.last }
+
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          stable_id: third_coordinate.stable_id,
+          referentiel_file:,
+          name: referentiel_file.original_filename,
+          type_de_champ: {
+            libelle: 'updated'
+          }
+        }
+      end
+
+      context 'working case with multi column file' do
+        it 'creates a valid referentiel' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
+          expect(type_de_champ.reload.referentiel).to eq Referentiel.last
+          expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
+          expect(Referentiel.last.name).to eq referentiel_file.original_filename
+          expect(Referentiel.last.type).to eq 'Referentiels::CsvReferentiel'
+          expect(ReferentielItem.first.data).to eq({ "row" => { "calorie_kcal" => "145", "dessert" => "Éclair au café", "poids_g" => "60" } })
+          expect(ReferentielItem.first.referentiel_id).to eq(Referentiel.last.id)
+        end
+      end
+
+      context 'working case with uniq column file' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-one-column-referentiel.csv', 'text/csv') }
+
+        it 'creates a valid referentiel' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
+          expect(ReferentielItem.first.data).to eq({ "row" => { "dessert" => "Éclair au café" } })
+        end
+      end
+
+      context 'when the csv file length is more than 10 mo' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+
+        before do
+          allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(11.megabytes)
+          subject
+        end
+
+        it 'verifies the file size limitation' do
+          expect(flash.alert).to be_present
+          expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo")
+        end
+      end
+
+      context 'when the file content type is not accepted' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+
+        before { subject }
+
+        it 'checks file format acceptance' do
+          expect(flash.alert).to be_present
+          expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV")
+        end
+      end
+    end
   end
 
   # l1, l2, l3 => l1, l3, l2
@@ -243,6 +306,27 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           .to change { coordinate.reload.notice_explicative.attached? }
           .from(false).to(true)
         expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
+  describe '#nullify_referentiel' do
+    let(:procedure) { create(:procedure) }
+    let!(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure:, referentiel:) }
+    let(:referentiel) { create(:csv_referentiel, :with_items) }
+
+    let(:params) do
+      { procedure_id: procedure.id, stable_id: type_de_champ.stable_id }
+    end
+
+    subject { delete :nullify_referentiel, params: params, format: :turbo_stream }
+
+    context 'working case with multi column file' do
+      it 'nullifies referentiel' do
+        expect { subject }.to not_change(Referentiel, :count).and not_change(ReferentielItem, :count)
+        expect(type_de_champ.reload.referentiel).to be_nil
+        expect(Referentiel.count).to eq 1
+        expect(ReferentielItem.count).to eq 3
       end
     end
   end

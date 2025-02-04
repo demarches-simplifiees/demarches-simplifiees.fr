@@ -33,6 +33,8 @@ class Champ < ApplicationRecord
     :drop_down_options_with_other,
     :drop_down_secondary_libelle,
     :drop_down_secondary_description,
+    :drop_down_mode,
+    :referentiel_mode?,
     :collapsible_explanation_enabled?,
     :collapsible_explanation_text,
     :header_section_level_value,

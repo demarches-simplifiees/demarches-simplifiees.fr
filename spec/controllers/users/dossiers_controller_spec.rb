@@ -705,6 +705,37 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
+    context 'when the champ is a drop_down_list with referentiel' do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :drop_down_list }]) }
+
+      let(:referentiel) { create(:csv_referentiel, :with_items) }
+
+      let(:value) { referentiel.items.first.id }
+
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            champs_public_attributes: {
+              first_champ.public_id => {
+                value: value
+              }
+            }
+          }
+        }
+      end
+
+      context 'with a valid value sent as string' do
+        before { procedure.active_revision.types_de_champ_public.first.update!(drop_down_mode: 'advanced', referentiel:) }
+
+        it 'updates the value' do
+          subject
+          expect(first_champ.reload.value).to eq(referentiel.items.first.id.to_s)
+          expect(first_champ.reload.referentiel.fetch('data')).to eq(referentiel.items.first.data.merge('headers' => referentiel.headers))
+        end
+      end
+    end
+
     context 'when the dossier cannot be updated by the user' do
       let(:dossier) { create(:dossier, :en_instruction, user:, procedure:) }
 
