@@ -11,8 +11,17 @@
         "destroy": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "description": "stable ids of fields to remove"
+            "type": "object",
+            "properties": {
+              "stable_id": {
+                "type": "integer",
+                "description": "stable id of field to remove"
+              },
+              "justification": {
+                "type": "string",
+                "description": "1 sentence explaining why this field should be deleted"
+              }
+            }
           }
         },
         "update": {
@@ -39,6 +48,10 @@
               "libelle": { "type": "string" },
               "description": { "type": "string" },
               "mandatory": { "type": "boolean" },
+              "justification": {
+                "type": "string",
+                "description": "1 sentence explaining why this field should be added"
+              },
               "children": {
                 "type": "array",
                 "items": {
