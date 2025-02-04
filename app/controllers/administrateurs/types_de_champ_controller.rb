@@ -233,6 +233,7 @@ module Administrateurs
         :min_character_length,
         :max_character_length,
         :expression_reguliere,
+        :expression_reguliere_indications,
         :expression_reguliere_exemple_text,
         :expression_reguliere_error_message,
         editable_options: [

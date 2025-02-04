@@ -144,6 +144,7 @@ class TypeDeChamp < ApplicationRecord
                  :min_character_length,
                  :max_character_length,
                  :expression_reguliere,
+                 :expression_reguliere_indications,
                  :expression_reguliere_exemple_text,
                  :expression_reguliere_error_message,
                  :collapsible_explanation_enabled,
@@ -643,7 +644,7 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:formatted) => [
       :formatted_mode, :numbers_accepted, :letters_accepted, :special_characters_accepted,
       :min_character_length, :max_character_length,
-      :expression_reguliere, :expression_reguliere_exemple_text, :expression_reguliere_error_message
+      :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
     ]
   }
 
