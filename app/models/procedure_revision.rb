@@ -251,7 +251,7 @@ class ProcedureRevision < ApplicationRecord
 
   def apply_changes(changes)
     transaction do
-      changes.fetch(:destroy, []).each { |stable_id| remove_type_de_champ(stable_id) }
+      changes.fetch(:destroy, []).each { |change| remove_type_de_champ(change[:stable_id]) }
 
       changes.fetch(:update, []).each do |change|
         stable_id, libelle = change.values_at(:stable_id, :libelle)
