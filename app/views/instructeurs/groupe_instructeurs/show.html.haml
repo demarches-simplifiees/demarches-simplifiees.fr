@@ -51,23 +51,24 @@
 
     = paginate @instructeurs, views_prefix: 'shared'
 
-  .card.fr-mt-2w
-    %h2.fr-h3 Informations de contact
-    - service = @groupe_instructeur.contact_information
-    - if service.nil?
-      = "Le groupe #{@groupe_instructeur.label} n'a pas d'informations de contact. Les informations de contact affichées à l'usager seront celles du service de la procédure"
-      %p.mt-3
-        = link_to "+ Ajouter des informations de contact", new_instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id), class: "fr-btn"
-    - else
-      %p.mt-3
-        = link_to "Modifier les informations de contact", edit_instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id), class: "fr-btn"
-      %p.mt-3= service.nom
-      = render SimpleFormatComponent.new(service.adresse, class_names_map: {paragraph: 'fr-footer__content-desc'})
-      = service.email
-      - if service.telephone.present?
-        %p= service.telephone
-      - if service.horaires.present?
-        %p= service.horaires
+  - if @procedure.routing_enabled?
+    .card.fr-mt-2w
+      %h2.fr-h3 Informations de contact
+      - service = @groupe_instructeur.contact_information
+      - if service.nil?
+        = "Le groupe #{@groupe_instructeur.label} n'a pas d'informations de contact. Les informations de contact affichées à l'usager seront celles du service de la procédure"
+        %p.mt-3
+          = link_to "+ Ajouter des informations de contact", new_instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id), class: "fr-btn"
+      - else
+        %p.mt-3
+          = link_to "Modifier les informations de contact", edit_instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id), class: "fr-btn"
+        %p.mt-3= service.nom
+        = render SimpleFormatComponent.new(service.adresse, class_names_map: {paragraph: 'fr-footer__content-desc'})
+        = service.email
+        - if service.telephone.present?
+          %p= service.telephone
+        - if service.horaires.present?
+          %p= service.horaires
 
-  = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
-    preview_path: preview_attestation_instructeur_groupe_path(@groupe_instructeur.procedure, @groupe_instructeur) }
+    = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
+      preview_path: preview_attestation_instructeur_groupe_path(@groupe_instructeur.procedure, @groupe_instructeur) }
