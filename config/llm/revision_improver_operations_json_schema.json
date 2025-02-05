@@ -70,7 +70,7 @@
                         "enum": ["Logic::Constant"]
                       },
                       "value": {
-                        "type": ["string", "number"],
+                        "type": ["string", "number", "array"],
                         "description": "Value to compare against"
                       }
                     }

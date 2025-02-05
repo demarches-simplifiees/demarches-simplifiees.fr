@@ -6,10 +6,12 @@ module LLM
 
     attr_reader :llm
     attr_reader :procedure
+    attr_reader :now
 
     def initialize(procedure)
       @llm = OpenAIClient.instance
       @procedure = procedure
+      @now = Time.zone.now.to_i
     end
 
     def suggest(attempt = 0)
@@ -77,78 +79,84 @@ module LLM
 
     def ds_description_prompt
       <<~PROMPT
+        Read carefully these guidelines:
+          1. Field Types: Use the appropriate field type from the following list:
+            - header_section: For organizing form sections (no user input)
+            - repetition: For repeatable blocks of children fields. User can repeat children fields as many times as he wants.
+            - explication: For providing context or instructions (no user input)
+            - civilite: For selecting "Madame" or "Monsieur". Administration already knows civilite of user
+            - email: For email addresses. Administration already knows email of user
+            - phone: For phone numbers
+            - address: For postal addresses (auto-completed with additional info: commune name and codes, code postal, departement name and code)
+            - communes: For selecting French communes (auto-completed with additional info: code, code postal, departement name and code)
+            - departments: For selecting French departments
+            - text: For short text inputs
+            - textarea: For longer text inputs
+            - integer_number: For whole numbers
+            - decimal_number: For numbers with decimals
+            - date: For date selection
+            - piece_justificative: For document uploads. Do not wrap in a repetition because it supports multiple documents
+            - titre_identite: For secure identity document uploads
+            - checkbox: For single checkboxes
+            - yes_no: For yes/no questions
+            - drop_down_list: For single-choice selections. Choices are configured by administration separately
+            - multiple_drop_down_list: For multiple-choice selections. Choices are configured by administration separately
+
+          2. Labeling and Descriptions:
+            - Use proper capitalization in labels and descriptions (ie. not in uppercase). This is crucial.
+            - Use consistent, plain language throughout the form
+            - Make labels clear and understandable for all users
+            - Avoid abbreviations, acronyms, and technical jargon
+            - Maintain consistent pronouns ("Vous" or "Nous") when addressing users
+            - Replace negative constructions with positive, action-oriented statements
+            - Keep sentences short with one idea per sentence
+            - Structure all headings and labels uniformly
+            - Provide descriptions only when necessary to clarify the field's purpose or requirements. Descriptions must not be redundant to labels and must not contain formatting exemples or choices.
+            - Avoid trivial or redundant descriptions with labels. They must be really useful.
+            - Write in active voice using present tense
+            - Start conditional statements with the condition
+            - Use standardized field labels (e.g., "Adresse email" not "Adresse de courrier électronique")
+            - Specify document requirements clearly (format, validity, original vs copy)
+
+          3. Form Structure:
+            - Place essential fields first, following user-centric logic
+            - Remove any fields asking for information already known to the administration. This is absolutely crucial.
+            - Minimize the number of required documents
+            - Add header sections to structure the fields with appropriate level if necessary (level starts at 1)
+            - Apply visibility conditions to dynamically show/hide a field based on another field's exact choice or value. When a field is hidden by its visibility condition, its mandatory rule will be ignored
+            - Use checkboxes for consent fields
+            - Consider information automatically retrieved by certain field types (e.g., address, communes) to avoid redundant questions. This is your main goal.
+
+          4. Mandatory Fields:
+            - By default, all input fields are considered mandatory (mandatory = true)
+            - Explicitly set mandatory = false for optional fields
+
         Before making any recommendations, please analyze the current form structure and fields.
         Wrap your private analysis inside <think></think> tags, focusing on the following aspects:
 
           1. List all fields having potential issues
-          2. For each field evaluate:
+          2. For each field:
              - Delete if:
                - Redundant with other field
                - Data already known by administration, (ie. email, first name of user, code postal when there is an address field)
-               - Should be in a `repetition` field instead (add these in a new `repetition` field)
+               - Field should be in a `repetition` structure instead. In this case : delete this field, and add the equivalent in a new `repetition` structure
              - Update if:
                - Unclear or inappropriate label/description
                - Incorrect case in labels. Always update labels written in uppercase with a correct case.
                - Visibility should be conditionned by the value of a previous field
                - Inappropriate type
                - Non-compliant with guidelines
-          3. Justify each proposed change
+          3. Add header sections if necessary to improve form structure
+          4. Justify each proposed change.
 
-        After your analysis, answer with all theses recommendations in a JSON format that adheres to the following schema.
-        Only update attributes or fields having changes.
+        Other instructions :
+        - Each existing field must be listed under the category 'delete' or 'update'.
+        - Always try to improve and update the label.
+        - Ensure to delete a field when the equivalent is added to a repetition field.
+
+        After your analysis, replicate ALL theses recommendations in a JSON format that adheres to the following schema.
 
         %<json_schema>s
-
-        Read carefully these guidelines:
-        1. Field Types: Use the appropriate field type from the following list:
-           - header_section: For organizing form sections (no user input)
-           - repetition: For repeatable blocks of children fields. User can repeat children fields as many times as he wants.
-           - explication: For providing context or instructions (no user input)
-           - civilite: For selecting "Madame" or "Monsieur". Administration already knows civilite of user
-           - email: For email addresses. Administration already knows email of user
-           - phone: For phone numbers
-           - address: For postal addresses (auto-completed with additional info: commune name and codes, code postal, departement name and code)
-           - communes: For selecting French communes (auto-completed with additional info: code, code postal, departement name and code)
-           - departments: For selecting French departments
-           - text: For short text inputs
-           - textarea: For longer text inputs
-           - integer_number: For whole numbers
-           - decimal_number: For numbers with decimals
-           - date: For date selection
-           - piece_justificative: For document uploads. Do not wrap in a repetition because it supports multiple documents
-           - titre_identite: For secure identity document uploads
-           - checkbox: For single checkboxes
-           - yes_no: For yes/no questions
-           - drop_down_list: For single-choice selections. Choices are configured by administration separately
-           - multiple_drop_down_list: For multiple-choice selections. Choices are configured by administration separately
-
-        2. Labeling and Descriptions:
-           - Use proper capitalization in labels and descriptions (ie. not in uppercase). This is crucial.
-           - Use consistent, plain language throughout the form
-           - Make labels clear and understandable for all users
-           - Avoid abbreviations, acronyms, and technical jargon
-           - Maintain consistent pronouns ("Vous" or "Nous") when addressing users
-           - Replace negative constructions with positive, action-oriented statements
-           - Keep sentences short with one idea per sentence
-           - Structure all headings and labels uniformly
-           - Provide descriptions only when necessary to clarify the field's purpose or requirements. Descriptions must not be redundant to labels and must not contain formatting exemples or choices.
-           - Avoid trivial or redundant descriptions with labels. They must be really useful.
-           - Write in active voice using present tense
-           - Start conditional statements with the condition
-           - Use standardized field labels (e.g., "Adresse email" not "Adresse de courrier électronique")
-           - Specify document requirements clearly (format, validity, original vs copy)
-
-        3. Form Structure:
-           - Place essential fields first, following user-centric logic
-           - Remove any fields asking for information already known to the administration. This is absolutely crucial.
-           - Minimize the number of required documents
-           - Apply visibility conditions to dynamically show/hide a field based on another field's exact choice or value. When a field is hidden by its visibility condition, its mandatory rule will be ignored
-           - Use checkboxes for consent fields
-           - Consider information automatically retrieved by certain field types (e.g., address, communes) to avoid redundant questions. This is your main goal.
-
-        4. Mandatory Fields:
-           - By default, all input fields are considered mandatory (mandatory = true)
-           - Explicitly set mandatory = false for optional fields
 
         Also provide a summary explaining your changes in the "summary" field of your JSON response.
         Answer summary and procedure text in french.
@@ -196,7 +204,7 @@ module LLM
 
     def backup_response(assistant)
       File.write(
-        "tmp/procedure_#{procedure.id}_improvements.txt",
+        "tmp/procedure_#{procedure.id}_improvements_#{@now}.txt",
           assistant.messages.last.content
       )
     end
