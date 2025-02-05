@@ -1,13 +1,39 @@
 {
   "type": "object",
   "properties": {
-    "summary": {
-      "type": "string",
-      "description": "List of important modifications suggested and why,use bullets points"
-    },
     "operations": {
       "type": "object",
       "properties": {
+        "add": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "after_stable_id": { "type": "integer" },
+              "type_champ": { "type": "string" },
+              "libelle": { "type": "string" },
+              "description": { "type": "string" },
+              "mandatory": { "type": "boolean" },
+              "justification": {
+                "type": "string",
+                "description": "1 sentence explaining why this field should be added"
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type_champ": { "type": "string" },
+                    "libelle": { "type": "string" },
+                    "mandatory": { "type": "boolean" }
+                  },
+                  "required": ["type_champ", "libelle"]
+                }
+              }
+            },
+            "required": ["after_stable_id", "type_champ", "libelle"]
+          }
+        },
         "destroy": {
           "type": "array",
           "items": {
@@ -19,7 +45,7 @@
               },
               "justification": {
                 "type": "string",
-                "description": "1 sentence explaining why this field should be deleted"
+                "description": "Short sentence explaining why this field should be deleted"
               }
             }
           }
@@ -36,7 +62,7 @@
               "mandatory": { "type": "boolean" },
               "justification": {
                 "type": "string",
-                "description": "1 sentence explaining why this field should be updated"
+                "description": "Short sentence explaining why this field should be updated"
               },
               "display_condition": {
                 "type": "object",
@@ -80,38 +106,12 @@
             },
             "required": ["stable_id"]
           }
-        },
-        "add": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "after_stable_id": { "type": "integer" },
-              "type_champ": { "type": "string" },
-              "libelle": { "type": "string" },
-              "description": { "type": "string" },
-              "mandatory": { "type": "boolean" },
-              "justification": {
-                "type": "string",
-                "description": "1 sentence explaining why this field should be added"
-              },
-              "children": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "type_champ": { "type": "string" },
-                    "libelle": { "type": "string" },
-                    "mandatory": { "type": "boolean" }
-                  },
-                  "required": ["type_champ", "libelle"]
-                }
-              }
-            },
-            "required": ["after_stable_id", "type_champ", "libelle"]
-          }
         }
       }
+    },
+    "summary": {
+      "type": "string",
+      "description": "List of important modifications suggested and why, use bullets points"
     }
   },
   "required": ["summary", "operations"]
