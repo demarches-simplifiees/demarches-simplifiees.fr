@@ -1241,6 +1241,14 @@ class Dossier < ApplicationRecord
     etablissement&.siret
   end
 
+  def for_individual?
+    procedure.for_individual?
+  end
+
+  def for_enterprise?
+    !for_individual?
+  end
+
   private
 
   def create_missing_traitemets

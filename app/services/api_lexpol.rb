@@ -76,9 +76,17 @@ class APILexpol
   private
 
   def perform_authentication
-    response = Typhoeus.post("#{BASE_URL}/authentification",
-                             body: @credentials.to_json,
-                             headers: { 'Content-Type' => 'application/json' })
+    options = {
+      body: @credentials.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    }
+
+    if ENV['USE_CERTIFICATE_FOR_LEXPOL'] == 'true'
+      options[:sslcert] = ENV.fetch('API_LEXPOL_CERT_PATH')
+      options[:ssl_key] = ENV.fetch('API_LEXPOL_KEY_PATH')
+    end
+
+    response = Typhoeus.post("#{BASE_URL}/authentification", options)
 
     if response.success?
       body = JSON.parse(response.body)

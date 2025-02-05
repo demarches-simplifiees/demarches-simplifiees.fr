@@ -1,8 +1,12 @@
 class LexpolService
-  FIXED_METADATA = [
+  FIXED_METADATA_INDIVIDUEL = [
     "demandeur_nom",
     "demandeur_prenom",
     "demandeur_civilite",
+    "demandeur_email"
+  ].freeze
+
+  FIXED_METADATA_ENTREPRISE = [
     "entreprise_forme_juridique",
     "entreprise_nom_commercial",
     "entreprise_raison_sociale",
@@ -22,7 +26,7 @@ class LexpolService
   end
 
   def upsert_dossier(force_create: false)
-    if force_create || champ.value.blank? || (champ.data&.[]('lexpol_status') == 'Annulé')
+    if force_create || champ.value.blank?
       create_dossier
     else
       update_dossier
@@ -30,13 +34,12 @@ class LexpolService
   end
 
   def create_dossier
-    nor = apilexpol.create_dossier(model_id, build_variables)
+    variables = build_variables
+    nor = apilexpol.create_dossier(model_id, variables)
     return nil if nor.blank?
 
     champ.update!(value: nor)
-
     refresh_lexpol_data!
-
     nor
   rescue => e
     Rails.logger.error("Erreur Lexpol create_dossier : #{e.message}")
@@ -45,8 +48,8 @@ class LexpolService
 
   def update_dossier
     return nil if champ.value.blank?
-
-    apilexpol.update_dossier(champ.value, build_variables)
+    variables = build_variables
+    apilexpol.update_dossier(champ.value, variables)
     refresh_lexpol_data!
     champ.value
   rescue => e
@@ -58,7 +61,8 @@ class LexpolService
     champs = (dossier.champs_public + dossier.champs_private)
     dynamic_mapping = champs.map(&:libelle).uniq.map { |libelle| "#{libelle}=#{libelle}" }.join("\n")
 
-    fixed_mapping = FIXED_METADATA.map { |m| "#{m}=#{m}" }.join("\n")
+    fixed_metadata = dossier.for_individual? ? FIXED_METADATA_INDIVIDUEL : FIXED_METADATA_ENTREPRISE
+    fixed_mapping = fixed_metadata.map { |m| "#{m}=#{m}" }.join("\n")
 
     admin_mapping = champ.type_de_champ.lexpol_mapping || ""
 
@@ -78,10 +82,8 @@ class LexpolService
 
   def refresh_lexpol_data!
     return if champ.value.blank?
-
     status_info = apilexpol.get_dossier_status(champ.value)
     dossier_info = apilexpol.get_dossier_infos(champ.value)
-
     champ.lexpol_status = status_info[:libelle]
     champ.lexpol_dossier_url = dossier_info['lienDossier']
     champ.save!
@@ -91,14 +93,20 @@ class LexpolService
     champ.type_de_champ.options&.[]('lexpol_modele')
   end
 
-  def self.available_variables_html(dynamic_fields)
+  def self.available_variables_html(dynamic_fields, dossier)
     dynamic_variables = dynamic_fields.map(&:libelle).uniq.sort
 
-    html =  "<div class='lexpol-available-vars'>"
+    fixed_metadata = if dossier && dossier.for_individual?
+      FIXED_METADATA_INDIVIDUEL
+    else
+      FIXED_METADATA_ENTREPRISE
+    end
+
+    html = "<div class='lexpol-available-vars'>"
     html << "<strong>Données du formulaire :</strong>"
     html << "<ul>" + dynamic_variables.map { |v| "<li>#{v}</li>" }.join + "</ul>"
     html << "<strong>Méta données :</strong>"
-    html << "<ul>" + FIXED_METADATA.map { |v| "<li>#{v}</li>" }.join + "</ul>"
+    html << "<ul>" + fixed_metadata.map { |v| "<li>#{v}</li>" }.join + "</ul>"
     html << "</div>"
   end
 end
