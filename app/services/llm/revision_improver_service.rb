@@ -5,26 +5,46 @@ module LLM
     JSON_SCHEMA = Rails.root.join("config/llm/revision_improver_operations_json_schema.json").read
 
     attr_reader :llm
+    attr_reader :assistant
     attr_reader :procedure
-    attr_reader :now
+    attr_accessor :now
 
     def initialize(procedure)
       @llm = OpenAIClient.instance
       @procedure = procedure
       @now = Time.zone.now.to_i
-    end
 
-    def suggest(attempt = 0)
-      log_prompt
-
-      assistant = Langchain::Assistant.new(llm:) do |response_chunk|
+      @assistant = Langchain::Assistant.new(llm:) do |response_chunk|
         print response_chunk.dig("delta", "content")
       end
 
-      assistant.add_messages(messages:)
+      @assistant.add_message(role: "system", content: system_prompt)
+    end
+
+    def analyze(attempt = 0)
+      # log_prompt
+
+      llm.chat_parameters.update(temperature: { default: 1.0 }, max_tokens: { default: 8192 * 2 })
+      assistant.add_messages(messages: messages_analyze)
       assistant.run!
 
-      backup_response(assistant)
+      backup_response(:analysis)
+    end
+
+    def insert_analysis(analysis)
+      assistant.add_messages(messages: messages_analyze)
+      assistant.add_message(role: "assistant", content: analysis)
+    end
+
+    def suggest(attempt = 0)
+      # log_prompt
+      #
+
+      llm.chat_parameters.update(temperature: { default: 0.1 }, repetition_penalty: { default: 0 }, max_tokens: { default: 8192 * 2 })
+      assistant.add_messages(messages: messages_suggest)
+      assistant.run!
+
+      backup_response(:suggest)
 
       parser.parse(assistant.messages.last.content).symbolize_keys
     rescue Langchain::OutputParsers::OutputParserException, JSON::Schema::ValidationError => e
@@ -38,12 +58,17 @@ module LLM
 
     private
 
-    def messages
+    def messages_analyze
       [
-        llm.is_a?(Langchain::LLM::Anthropic) ? nil : { role: "system", content: system_prompt },
         { role: "user", content: current_schema_prompt },
-        { role: "user", content: format(ds_description_prompt, json_schema: parser.get_format_instructions) }
-      ].compact
+        { role: "user", content: analyze_prompt }
+      ]
+    end
+
+    def messages_suggest
+      [
+        { role: "user", content: format(restructure_prompt, json_schema: parser.get_format_instructions) }
+      ]
     end
 
     def parser
@@ -52,11 +77,11 @@ module LLM
 
     def current_schema_prompt
       template = <<~PROMPT
-        Here's the current schema of the form:
+        Here is the form schema you need to analyze:
 
-        <current_schema>
+        <form_schema>
           %<schema>s
-        </current_schema>
+        </form_schema>
 
         Here's the administrative procedure you'll be working on:
         <demarche_libelle>
@@ -77,7 +102,7 @@ module LLM
       PROMPT
     end
 
-    def ds_description_prompt
+    def analyze_prompt
       <<~PROMPT
         Read carefully these guidelines:
           1. Field Types: Use the appropriate field type from the following list:
@@ -131,80 +156,87 @@ module LLM
             - By default, all input fields are considered mandatory (mandatory = true)
             - Explicitly set mandatory = false for optional fields
 
-        Before making any recommendations, please analyze the current form structure and fields.
-        Wrap your private analysis inside <think></think> tags, focusing on the following aspects:
+        Please analyze the form schema and provide recommendations for improvements. Follow these steps:
 
-          1. List all fields having potential issues
-          2. For each field:
-             - Delete if:
-               - Redundant with other field
-               - Data already known by administration, (ie. email, first name of user, code postal when there is an address field)
-               - Field should be in a `repetition` structure instead. In this case : delete this field, and add the equivalent in a new `repetition` structure
-             - Update if:
-               - Unclear or inappropriate label/description
-               - Incorrect case in labels. Always update labels written in uppercase with a correct case.
-               - Visibility should be conditionned by the value of a previous field
-               - Inappropriate type
-               - Non-compliant with guidelines
-          3. Add header sections if necessary to improve form structure
-          4. Justify each proposed change.
+        1. Analyze the overall form structure.
+        2. For each field in the form:
+            a. Determine carefully if the field should be deleted, updated, or kept as is
+            b. Delete if:
+              - Identifed as redundant with another field
+              - Data is already known by the administration (e.g., email, first name of user, postal code when there's an address field)
+              - the field should be part of a `repetition` structure instead
+            c. Update if:
+              - the label or description is unclear or inappropriate
+              - the label is in uppercase : update field with a proper case
+              - field's visibility should be conditioned by the value of a previous field
+              - field type is not appropriate
+              - Ensure compliance with guidelines
+        3. Identify where header sections could be added to improve the form structure.
+        4. Review official recommendations for French administrative forms and note any potential compliance issues
 
-        Other instructions :
-        - Each existing field must be listed under the category 'delete' or 'update'.
-        - Always try to improve and update the label.
-        - Ensure to delete a field when the equivalent is added to a repetition field.
-
-        After your analysis, replicate ALL theses recommendations in a JSON format that adheres to the following schema.
-
-        %<json_schema>s
-
-        Also provide a summary explaining your changes in the "summary" field of your JSON response.
-        Answer summary and procedure text in french.
-
-        <example_invalid_labels>
-          - NATURE DES PRESTATIONS (uppercase)
-          - ACTIVITE DE LA STRUCTURE (uppercase)
-          - ADRESSE DE L'ASSOCIATION (uppercase)
-        </example_invalid_labels>
-
-        <example_valid_labels>
-          - Justificatif de domicile
-          - Date des travaux
-          - Adresse du bénéficiaire
-        </example_valid_labels>
-
-        <example_invalid_descriptions>
-          - Pour vous contacter (useless)
-          - Choisissez parmi "Ain", "Loire" (don't list choices)
-          - Écrivez sa date de naissance (useless)
-        </example_invalid_descriptions>
-
-        <example_valid_descriptions>
-          - Datant de moins de 3 mois
-          - Le RIB doit correspondre à l'adresse du demandeur
-        </example_valid_descriptions>
-
-        <example_redundant_fields>
-          - postal code, commune, … when there is already an address field.
-          - email, civilite, first name or last name of the user filling the file
-          - fields duplicated, or very similar without clear justification
-        </example_redundant_fields>
-
+        Structure your analysis in a <analysis> tags.
+        It's OK for this section to be quite long.
       PROMPT
     end
 
-    def log_prompt
-      File.write(
-        "tmp/procedure_#{procedure.id}_prompt.json",
-        JSON.pretty_generate(messages)
-      )
+    def restructure_prompt
+      <<~PROMPT
+        Based on your previous analysis, structure ALL fields in a JSON format following this schema:
+        %<json_schema>s
 
-      Rails.logger.info { "Prompt written in tmp/procedure_#{procedure.id}_prompt.json" }
+        CRITICAL RULES for field processing:
+        1. You MUST include ALL original fields in your response, distributed between:
+           - "delete" category
+           - "update" category
+
+        2. When a field is added to a repetition structure:
+           - You MUST delete ALL original standalone versions
+           - This deletion MUST be documented in the "delete" category
+           - Use justification: "Remplacé par un bloc répétable dynamique"
+
+        3. For each field in "update" category:
+           - If modifications needed: specify only the changing attributes
+           - Update label with a proper case
+           - If no modifications needed: skip justification
+           - But ALWAYS list the field
+
+        Remember previous analysis guidelines:
+        - Keep relevant repetition structures identified
+        - Preserve planned improvements to descriptions
+        - Follow French administrative standards
+        - Keep identified redundancy removals
+        - Answer labels, descriptions, summary, justification in french.
+
+        Response structure:
+        {
+          "delete": [
+            - ALL deleted fields, including all those moved to repetition
+            - Clear justification for each deletion
+          ],
+          "update": [
+            - ALL remaining fields, including unchanged ones
+            - For modified fields: only changed attributes and a justification
+          ],
+          "summary": {
+            - Brief French summary of implemented changes
+            - Focus on structural improvements
+          }
+        }
+      PROMPT
     end
 
-    def backup_response(assistant)
+    # def log_prompt
+    #   File.write(
+    #     "tmp/procedure_#{procedure.id}_#{now}_prompt.json",
+    #     JSON.pretty_generate(messages)
+    #   )
+
+    #   Rails.logger.info { "Prompt written in tmp/llm/procedure_#{procedure.id}_prompt.json" }
+    # end
+
+    def backup_response(part)
       File.write(
-        "tmp/procedure_#{procedure.id}_improvements_#{@now}.txt",
+        "tmp/llm/procedure_#{procedure.id}_#{now}_#{part}.txt",
           assistant.messages.last.content
       )
     end
