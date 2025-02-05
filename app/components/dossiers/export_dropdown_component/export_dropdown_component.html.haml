@@ -74,7 +74,10 @@
                 - if export_templates.present?
                   %label.fr-label{ for: 'select' }
                     Sélectionner le modèle d'export
-                    = f.collection_select :export_template_id, export_templates, :id, :name, {}, { class: "fr-select fr-mb-2w" }
+                    - if export_templates.first.is_a?(ExportTemplate)
+                      = f.collection_select :export_template_id, export_templates, :id, :name, {}, { class: "fr-select fr-mb-2w" }
+                    - else
+                      = f.grouped_collection_select :export_template_id, export_templates, :templates, :name, :id, :name, {}, { class: "fr-select fr-mb-2w" }
                 - else
                   %p
                     %i Aucun modèle configuré

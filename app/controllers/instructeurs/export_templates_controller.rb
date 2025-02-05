@@ -27,7 +27,7 @@ module Instructeurs
 
     def update
       if @export_template.update(export_template_params)
-        redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
+        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
       else
         flash[:alert] = @export_template.errors.full_messages
         render :edit
@@ -36,9 +36,9 @@ module Instructeurs
 
     def destroy
       if @export_template.destroy
-        redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été supprimé"
+        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été supprimé"
       else
-        redirect_to [:exports, :instructeur, @procedure], alert: "Le modèle d'export #{@export_template.name} n'a pu être supprimé"
+        redirect_to [:export_templates, :instructeur, @procedure], alert: "Le modèle d'export #{@export_template.name} n'a pu être supprimé"
       end
     end
 
@@ -67,6 +67,7 @@ module Instructeurs
         .permit(
           :name,
           :kind,
+          :shared,
           :groupe_instructeur_id,
           dossier_folder: [:enabled, :template],
           export_pdf: [:enabled, :template],

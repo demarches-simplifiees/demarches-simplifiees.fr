@@ -27,7 +27,8 @@ fr:
         no_existing_template: Aucun modèle d'export n'a encore été créé. Utilisez les boutons ci-dessus pour commencer.
         template_format: Format
         template_creation_date: Date de création
-        template_shared_with: Partagé avec (groupe instructeurs)
+        template_owned_by: Créé par (groupe instructeur éditeur)
+        template_shared_with: Partagé avec tous les groupes instructeurs
         modify_template: Modifier
         delete_template: Supprimer
         delete_template_alert: Voulez-vous vraiment supprimer ce modèle ? Il sera supprimé pour tous les instructeurs du groupe
