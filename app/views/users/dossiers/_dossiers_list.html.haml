@@ -3,7 +3,7 @@
     = page_entries_info dossiers
 
   - dossiers.each do |dossier|
-    .card
+    .card{ id: "dossier_#{dossier.id}" }
       .flex.justify-between
         %div
           %h3.card-title
