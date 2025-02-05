@@ -2,6 +2,8 @@
 
 module Administrateurs
   class TypesDeChampController < AdministrateurController
+    include ActionView::Helpers::TagHelper
+
     before_action :retrieve_procedure
     after_action :reset_procedure, only: [:create, :update, :destroy, :piece_justificative_template]
     before_action :reload_procedure_with_includes, only: [:destroy]
@@ -123,8 +125,8 @@ module Administrateurs
       service = LLM::RevisionImproverService.new(@procedure)
       suggestion = service.suggest
 
-      @text = suggestion[:summary]
       @changes = suggestion[:operations]
+      @text = Array.wrap(suggestion[:summary]).map { _1.gsub('- ', '') }.join(tag.br)
     end
 
     def accept_simplification

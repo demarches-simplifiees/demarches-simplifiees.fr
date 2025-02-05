@@ -1,42 +1,71 @@
 .fr-container
   %h1.fr-h2.mt-2 Simplification proposée par Albert
 
-  %p= @text
+  %p= sanitize(@text)
 
   - tdcs = @procedure.published_revision.types_de_champ_public
+  - tdc_by_stable_id = tdcs.index_by(&:stable_id)
+
   - destroyeds = @changes.fetch(:destroy, [])
+  - destroyed_by_justification = destroyeds.group_by { _1[:justification] }
+
   - updated_by_stable_id = @changes.fetch(:update, []).index_by { _1[:stable_id] }
+  - updated_by_justification = @changes[:update].group_by { _1[:justification] }
+
   - add = @changes.fetch(:add, [])
+  - add_by_justification = add.group_by { _1[:justification] }
 
   %h2.fr-h4.mt-2 #{pluralize(destroyeds.count, 'suppression')}
+
+  %ul
+    - destroyed_by_justification.each do |justification, changes|
+      %li
+        %strong= justification
+        %ul
+          - changes.map { _1[:stable_id] }.each do |stable_id|
+            %li= tdc_by_stable_id[stable_id].libelle
+
   %ul
     - tdcs.each do |tdc|
       - if destroyeds.include?(tdc.stable_id)
         %li= tdc.libelle
 
   %h2.fr-h4.mt-2 #{pluralize(updated_by_stable_id.keys.count, 'modification')}
+
   %ul
-    - tdcs.each do |tdc|
-      - if updated_by_stable_id[tdc.stable_id]
-        %li
-          #{tdc.libelle} → #{updated_by_stable_id[tdc.stable_id][:libelle]}
-          %br
-          %small= updated_by_stable_id[tdc.stable_id][:justification]
+    - updated_by_justification.each do |justification, changes|
+      %li
+        %strong= justification
+        %ul
+          - changes.each do |change|
+            - libelle_has_changed = change[:libelle] != tdc_by_stable_id[change[:stable_id]].libelle
+            - type_has_changed = change[:type_champ].present? && change[:type_champ] != tdc_by_stable_id[change[:stable_id]].type_champ
+            %li
+              - if type_has_changed
+                #{tdc_by_stable_id[change[:stable_id]].libelle} (#{tdc_by_stable_id[change[:stable_id]].type_champ}) → #{change[:libelle]} (#{change[:type_champ]})
+              - else
+                #{tdc_by_stable_id[change[:stable_id]].libelle}
+
+              - if change[:display_condition].present?
+                %br
+                affiche si #{tdc_by_stable_id[change[:display_condition][:left][:stable_id]].libelle} est égal à #{Array.wrap(change[:display_condition][:right][:value]).join(', ')}
 
 
   %h2.fr-h4.mt-2 #{pluralize(add.count, 'ajout')}
+
   %ul
-    - add.each do |tdc|
+    - add_by_justification.each do |justification, changes|
       %li
-        = tdc[:libelle]
-        - if tdc[:children].present?
-          (bloc répétable)
-        %br
-        %small= tdc[:justification]
-        - if tdc[:children].present?
-          %ul
-            - tdc[:children].each do |child|
-              %li= child[:libelle]
+        %strong= justification
+        %ul
+          - changes.each do |change|
+            %li
+              = change[:libelle]
+              - if change[:children].present?
+                (bloc répétable)
+              %ul
+                - change[:children].each do |child|
+                  %li= child[:libelle]
 
   %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
     %li
