@@ -13,8 +13,12 @@ module LLM
       @llm = OpenAIClient.instance
       @procedure = procedure
       @now = Time.zone.now.to_i
+    end
+    StubResponse = Data.define(:chat_completion)
+    def suggest(attempt = 0)
+      log_prompt
 
-      @assistant = Langchain::Assistant.new(llm:) do |response_chunk|
+      assistant = Langchain::Assistant.new(llm:) do |response_chunk|
         print response_chunk.dig("delta", "content")
       end
 
