@@ -13,11 +13,11 @@ namespace :llm do
 
     # Écrit le fichier JSON
     File.write(
-      "tmp/procedure_#{procedure_id}_improvements.json",
+      "tmp/procedure_#{procedure_id}_improvements_#{llm.now}.json",
       JSON.pretty_generate(completion[:operations].merge("summary" => completion[:summary]))
     )
 
-    puts "Operations saved to tmp/procedure_#{procedure_id}_improvements.json"
+    puts "Operations saved to tmp/procedure_#{procedure_id}_improvements_#{llm.now}.json"
   end
 
   task :lint_procedure, [:procedure_id] => :environment do |_t, args|
