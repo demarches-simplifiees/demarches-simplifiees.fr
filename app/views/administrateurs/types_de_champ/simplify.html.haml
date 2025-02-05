@@ -1,16 +1,33 @@
 .fr-container
-  %h1.fr-h2.mt-2 Simplification proposée par Albert
+  %h1.fr-h2.mt-2 Amélioration de la qualité de la démarche “#{@procedure.libelle}“
 
+  = render Dsfr::CalloutComponent.new(title: "Qualité de la démarche") do |c|
+    - c.with_body do
+      %p Cette étape vise à optimiser la collecte d’informations, alléger la charge administrative des usagers et garantir le respect des obligations légales. Les règles sont les suivantes :
+      %ul
+        %li Respect du principe du “dîtes le nous une fois” ;
+        %li Présence d’une notice et des mentions légales et règlementaires ;
+        %li Structure logique et simplifiée du formulaire ;
+        %li Limiter et préciser les demandes de documents justificatifs ;
+        %li Rédaction en langage clair.
+      %p
+        = "Consulter le "
+        = link_to "Guide des bonnes pratiques de la DITP.", "https://www.modernisation.gouv.fr/files/2024-03/guide_kit-formulaires.pdf"
+
+  %h2.fr-h3 QualiScore de votre démarche :
+  = render Procedure::SimplifyGaugeComponent.new(@procedure, @revision)
+
+  %h2.fr-h3.mt-2 Suggestions de votre assistant IA :
   %p= sanitize(@text)
 
-  - tdcs = @procedure.published_revision.types_de_champ_public
+  - tdcs = @revision.types_de_champ_public
   - tdc_by_stable_id = tdcs.index_by(&:stable_id)
 
   - destroyeds = @changes.fetch(:destroy, [])
   - destroyed_by_justification = destroyeds.group_by { _1[:justification] }
 
   - updated_by_stable_id = @changes.fetch(:update, []).index_by { _1[:stable_id] }
-  - updated_by_justification = @changes[:update].group_by { _1[:justification] }
+  - updated_by_justification = @changes.fetch(:update, []).group_by { _1[:justification] }
 
   - add = @changes.fetch(:add, [])
   - add_by_justification = add.group_by { _1[:justification] }

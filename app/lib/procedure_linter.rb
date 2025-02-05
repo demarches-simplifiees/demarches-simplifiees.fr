@@ -31,6 +31,10 @@ class ProcedureLinter
     @tdcs = revision.types_de_champ_public
   end
 
+  def quali_score
+    "#{details.values.count(&:pass)}/#{details.values.size}"
+  end
+
   def perfect_rate?
     details.values.count(&:pass) == details.values.size
   end
@@ -87,7 +91,7 @@ bénéficiaire", "demandeur", "Souscrire une demande", "Proroger", "Stipuler", "
   end
 
   def nom_prenom_for_individual?
-    errored = tdcs.filter { |tdc| tdc.libelle.split(/\s/).any? { |w| /^(pr*)?nom$/i.match?(w) } }
+    errored = tdcs.filter { |tdc| tdc.libelle.match?(/^(pr*)?nom$/i) }
     ComputedRule.new(errored.empty?, errored.map { [_1.stable_id, _1.libelle] })
   end
 
