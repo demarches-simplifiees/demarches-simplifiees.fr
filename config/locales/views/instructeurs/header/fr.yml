@@ -21,7 +21,7 @@ fr:
             new: Nouveau
             no_history: "Aucune modification n'a été publiée"
           exports_list: Liste des exports
-          export_templates: Modèles d'export
+          export_templates: Modèles d’export
           exports_notification_label: Un nouvel export est prêt à être téléchargé
           statistics: Statistiques de la démarche
           user_support: Accompagnement des usagers

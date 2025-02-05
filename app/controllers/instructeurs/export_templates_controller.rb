@@ -15,7 +15,7 @@ module Instructeurs
       @export_template = ExportTemplate.new(export_template_params)
 
       if @export_template.save
-        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été créé"
+        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d’export #{@export_template.name} a bien été créé"
       else
         flash[:alert] = @export_template.errors.full_messages
         render :new
@@ -27,7 +27,7 @@ module Instructeurs
 
     def update
       if @export_template.update(export_template_params)
-        redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
+        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d’export #{@export_template.name} a bien été modifié"
       else
         flash[:alert] = @export_template.errors.full_messages
         render :edit
@@ -36,16 +36,16 @@ module Instructeurs
 
     def destroy
       if @export_template.destroy
-        redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été supprimé"
+        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d’export #{@export_template.name} a bien été supprimé"
       else
-        redirect_to [:exports, :instructeur, @procedure], alert: "Le modèle d'export #{@export_template.name} n'a pu être supprimé"
+        redirect_to [:export_templates, :instructeur, @procedure], alert: "Le modèle d’export #{@export_template.name} n’a pu être supprimé"
       end
     end
 
     def preview
       export_template = ExportTemplate.new(export_template_params)
 
-      render turbo_stream: turbo_stream.replace('preview', partial: 'preview', locals: { export_template: })
+      render turbo_stream: turbo_stream.replace('preview', partial: 'preview', locals: { procedure: @procedure, export_template: })
     end
 
     private
@@ -67,6 +67,7 @@ module Instructeurs
         .permit(
           :name,
           :kind,
+          :shared,
           :groupe_instructeur_id,
           dossier_folder: [:enabled, :template],
           export_pdf: [:enabled, :template],
@@ -90,7 +91,7 @@ module Instructeurs
     def ensure_legitimate_groupe_instructeur
       return if export_template_params[:groupe_instructeur_id].in?(@groupe_instructeurs.map { _1.id.to_s })
 
-      redirect_to [:exports, :instructeur, @procedure], alert: 'Vous n’avez pas le droit de créer un modèle d’export pour ce groupe'
+      redirect_to [:export_templates, :instructeur, @procedure], alert: 'Vous n’avez pas le droit de créer un modèle d’export pour ce groupe'
     end
   end
 end

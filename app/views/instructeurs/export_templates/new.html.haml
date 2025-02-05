@@ -1,9 +1,8 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    [t('.title')]] }
+  locals: { steps: [[@procedure.libelle.truncate_words(10), [:instructeur, @procedure]],
+                      [t('instructeurs.dossiers.header.banner.export_templates'), [:export_templates, :instructeur, @procedure]],
+                      [t('.title')]] }
 .fr-container
-  %h1 Nouveau modèle d'export
-  - if @export_template.tabular?
-    = render partial: 'form_tabular', locals: { export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }
-  - else
-    = render partial: 'form', locals: { export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }
+  %h1 Nouveau modèle d’export
+
+  = render partial: 'form', locals: { procedure: @procedure, export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }

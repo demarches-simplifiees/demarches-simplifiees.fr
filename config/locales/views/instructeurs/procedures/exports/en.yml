@@ -16,7 +16,6 @@ en:
           Are you facing an issue when you try to extract the export.zip ? Try it with <a href="https://www.7-zip.org/" target="_blank" rel="noopener noreferrer">7zip</a>.<br />
           Are you facing an issue when you try to extract the export.zip on your company network ? Try to rename it with a shorter name first, then extract it.
 
-
         no_export_html: You have no export at the moment. <br> Can't find an export? It may have expired, exports are deleted after %{expiration_time} hours.
       export_templates:
         export_template_list_description_html: |
@@ -28,9 +27,10 @@ en:
         no_existing_template: No export templates have been created yet. Use the buttons above to get started.
         template_format: Format
         template_creation_date: Creation date
+        template_owned_by: Owned by instructor group
         template_shared_with: Shared with (instructor groups)
         modify_template: Edit
         delete_template: Delete
         delete_template_alert: Are you sure you want to delete this template? It will be removed for all instructors in the group
-        page_title: "Export templates · %{procedure}"
+        page_title: 'Export templates · %{procedure}'
         actions: Actions

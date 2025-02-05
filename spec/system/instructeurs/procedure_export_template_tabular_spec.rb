@@ -15,9 +15,9 @@ describe "procedure exports" do
 
     find("button", text: "Téléchargements").click
 
-    click_on "Modèles d'export"
+    click_on "Modèles d’export"
 
-    click_on "Créer un modèle d'export tabulaire"
+    click_on "Créer un modèle d’export tabulaire"
 
     fill_in "Nom du modèle", with: "Mon modèle"
 
