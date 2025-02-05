@@ -1,6 +1,19 @@
 class ProcedureLinter
   attr_reader :procedure, :tdcs, :rules
 
+  RULES = [
+    :uppercase_in_libelles?,
+    :too_long_libelle?,
+    :optional_and_no_condition?,
+    :missnamed_libelle?,
+    :no_header_section?,
+    :nom_prenom_for_individual?,
+    :first_champ_is_siret_for_moral_procedure?,
+    :notice_missing?,
+    :extra_address_champs?,
+    :entreprise_champ_after_siret?
+  ]
+
   ComputedRule = Data.define(:pass, :details) do
     def score
       details.size
@@ -16,22 +29,18 @@ class ProcedureLinter
   def initialize(procedure, revision)
     @procedure = procedure
     @tdcs = revision.types_de_champ_public
-    @rules = [
-      :uppercase_in_libelles?,
-      :too_long_libelle?,
-      :optional_and_no_condition?,
-      :missnamed_libelle?,
-      :no_header_section?,
-      :nom_prenom_for_individual?,
-      :first_champ_is_siret_for_moral_procedure?,
-      :notice_missing?,
-      :extra_address_champs?,
-      :entreprise_champ_after_siret?
-    ]
+  end
+
+  def perfect_rate?
+    details.values.count(&:pass) == details.values.size
+  end
+
+  def top_rate
+    details.values.size
   end
 
   def rate
-    [details.values.count(&:pass), details.size]
+    details.values.count(&:pass)
   end
 
   def score
@@ -39,7 +48,7 @@ class ProcedureLinter
   end
 
   def details
-    @computed ||= rules.index_with { |method_name| send(method_name) }
+    @computed ||= RULES.index_with { |method_name| send(method_name) }
   end
 
   def too_long_libelle?
@@ -72,7 +81,7 @@ bénéficiaire", "demandeur", "Souscrire une demande", "Proroger", "Stipuler", "
   end
 
   def no_header_section?
-    return true if tdcs.size < 20
+    return Rule.new(true, "") if tdcs.size < 20
 
     Rule.new(tdcs.any?(&:header_section?), "")
   end
