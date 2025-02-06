@@ -120,7 +120,8 @@ module Administrateurs
       procedure.defaut_groupe_instructeur.update!(
         routing_rule: nil,
         label: GroupeInstructeur::DEFAUT_LABEL,
-        closed: false
+        closed: false,
+        contact_information: nil
       )
       flash.notice = 'Tous les groupes instructeurs ont été supprimés'
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
@@ -199,7 +200,8 @@ module Administrateurs
           procedure.defaut_groupe_instructeur.update!(
             routing_rule: nil,
             label: GroupeInstructeur::DEFAUT_LABEL,
-            closed: false
+            closed: false,
+            contact_information: nil
           )
           routing_notice = " et le routage a été désactivé"
         end
