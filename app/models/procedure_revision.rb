@@ -254,9 +254,13 @@ class ProcedureRevision < ApplicationRecord
       changes.fetch(:destroy, []).each { |change| remove_type_de_champ(change[:stable_id]) }
 
       changes.fetch(:update, []).each do |change|
-        stable_id, libelle = change.values_at(:stable_id, :libelle)
+        stable_id, libelle, type_champ = change.values_at(:stable_id, :libelle, :type_champ)
         tdc = find_and_ensure_exclusive_use(stable_id)
-        tdc.update(libelle:)
+        if type_champ.present?
+          tdc.update(libelle:, type_champ:)
+        else
+          tdc.update(libelle:)
+        end
       end
 
       changes.fetch(:add, []).each do |change|
