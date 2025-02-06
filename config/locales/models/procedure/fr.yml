@@ -44,8 +44,14 @@ fr:
         published_at: 'Date de publication'
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'
-        aasm_state:
+        api_state:
           brouillon: Brouillon
+          publiee: Publiée
+          close: Close
+          hidden: Supprimée
+          depubliee: Dépubliée
+        aasm_state:
+          brouillon: En test
           publiee: Publiée
           close: Close
           hidden: Supprimée

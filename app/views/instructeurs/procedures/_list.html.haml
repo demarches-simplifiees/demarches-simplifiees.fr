@@ -1,86 +1,90 @@
 %li.list-style-type-none.fr-mb-3w
   .procedure-details
-    .clipboard-container
-      .fr-mb-2w.fr-mt-2w.flex.align-center
-        %nav.fr-nav{ role: "navigation", "aria-label": "Menu de la procédure" }
-          %ul.fr-nav__list
-            %li.fr-nav__item.relative
-              %button.fr-nav__btn.fr-btn--tertiary.fr-h-5v.hide-chevron{ "aria-expanded": "false", "aria-controls": "mega-menu-#{p.id}" }
-                %span.fr-icon-menu-2-fill.fr-icon--sm.fr-mr-1w
-                Menu
-              .fr-collapse.fr-mega-menu{ id: "mega-menu-#{p.id}", tabindex: "-1" , style: "min-width: 350px" }
-                .fr-container.fr-container--fluid.fr-container-lg
-                  %button.fr-btn--close.fr-btn.fr.fr-mb-3w{ "aria-controls": "mega-menu-#{p.id}" }
-                    = t('instructeurs.procedures.index.close_button')
-                  .fr-grid-row
-                    .fr-col-12
-                      .fr-mega-menu__leader
-                        %h4.fr-h6= t('instructeurs.procedures.index.procedure_menu')
-                    .fr-col-12
-                      %h5.fr-mega-menu__category
-                        = link_to t('instructeurs.dossiers.header.banner.follow_up'), instructeur_procedure_path(p), class: "fr-nav__link"
-                    .fr-col-12
-                      %ul.fr-mega-menu__list.fr-pb-0
-                        %li.fr-nav__item
-                          %button.fr-nav__btn.fr-mega-menu__category.flex.justify-between{ "aria-expanded": "false", "aria-controls": "procedure-management-#{p.id}", style: "height: 47px" }
-                            = t('instructeurs.dossiers.header.banner.procedure_management')
-                          .fr-collapse.width-100{ id: "procedure-management-#{p.id}" }
-                            %ul.fr-menu__list.fr-mb-0
-                              %li
-                                = link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(p), class: 'fr-nav__link'
+    .fr-mb-2w.fr-mt-2w.flex.align-center
+      %nav.fr-nav{ role: "navigation", "aria-label": "Menu de la procédure" }
+        %ul.fr-nav__list
+          %li.fr-nav__item.relative
+            %button.fr-nav__btn.fr-btn--tertiary-no-outline.fr-h-5v.hide-chevron{ "aria-expanded": "false", "aria-controls": "mega-menu-#{p.id}" }
+              %span.fr-icon-menu-2-fill.fr-icon--sm.fr-mr-1w
+              Menu
+            .fr-collapse.fr-mega-menu{ id: "mega-menu-#{p.id}", tabindex: "-1" , style: "min-width: 350px" }
+              .fr-container.fr-container--fluid.fr-container-lg
+                %button.fr-btn--close.fr-btn.fr.fr-mb-3w{ "aria-controls": "mega-menu-#{p.id}" }
+                  = t('instructeurs.procedures.index.close_button')
+                .fr-grid-row
+                  .fr-col-12
+                    .fr-mega-menu__leader
+                      %h4.fr-h6= t('instructeurs.procedures.index.procedure_menu')
+                  .fr-col-12
+                    %h5.fr-mega-menu__category
+                      = link_to t('instructeurs.dossiers.header.banner.follow_up'), instructeur_procedure_path(p), class: "fr-nav__link"
+                  .fr-col-12
+                    %ul.fr-mega-menu__list.fr-pb-0
+                      %li.fr-nav__item
+                        %button.fr-nav__btn.fr-mega-menu__category.flex.justify-between{ "aria-expanded": "false", "aria-controls": "procedure-management-#{p.id}", style: "height: 47px" }
+                          = t('instructeurs.dossiers.header.banner.procedure_management')
+                        .fr-collapse.width-100{ id: "procedure-management-#{p.id}" }
+                          %ul.fr-menu__list.fr-mb-0
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(p), class: 'fr-nav__link'
 
-                              - if p.instructeurs_self_management_enabled?
-                                %li
-                                  = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(p), class: 'fr-nav__link'
+                            - if p.instructeurs_self_management_enabled?
+                              %li
+                                = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(p), class: 'fr-nav__link'
 
-                              - elsif current_administrateur && p.administrateurs_procedures.any? { _1.administrateur_id == current_administrateur.id }
+                            - elsif current_administrateur && p.administrateurs_procedures.any? { _1.administrateur_id == current_administrateur.id }
 
-                                %li
-                                  = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(p), class: 'fr-nav__link'
                               %li
-                                = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(p), class: 'fr-nav__link'
-                              %li
-                                = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(p), class: 'fr-nav__link'
-                              %li
-                                = link_to t('views.instructeurs.dossiers.show_deleted_dossiers'), deleted_dossiers_instructeur_procedure_path(p), class: 'fr-nav__link'
-                    .fr-col-12
-                      %ul.fr-mega-menu__list.fr-pb-0
-                        %li.fr-nav__item
-                          %button.fr-nav__btn.fr-mega-menu__category.flex.justify-between{ "aria-expanded": "false", "aria-controls": "user-support-#{p.id}", style: "height: 47px" }
-                            = t('instructeurs.dossiers.header.banner.user_support')
-                          .fr-collapse.width-100{ id: "user-support-#{p.id}" }
-                            %ul.fr-menu__list.fr-mb-0
-                              %li
-                                = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(p), class: 'fr-nav__link'
-                              %li
-                                = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_instructeur_procedure_path(p), target: "_blank", rel: "noopener", class: 'fr-nav__link'
-                              %li
-                                = link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: {controller: "clipboard", clipboard_text_value: commencer_url(p.path), action: "click->clipboard#copy" } do
-                                  = t('instructeurs.dossiers.header.banner.copy_link_button')
-                    .fr-col-12
-                      %ul.fr-mega-menu__list.fr-pb-0
-                        %li.fr-nav__item
-                          %button.fr-nav__btn.fr-mega-menu__category.flex.justify-between{ "aria-expanded": "false", "aria-controls": "downloads-#{p.id}", style: "height: 47px" }
-                            = t('instructeurs.dossiers.header.banner.downloads')
-                            %span.relative{ class: class_names("fr-pr-1w" => @has_export_notification) }
-                            - if @has_export_notification
-                              %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
-                          .fr-collapse.width-100{ id: "downloads-#{p.id}" }
-                            %ul.fr-menu__list.fr-mb-0
-                              %li
-                                = link_to exports_instructeur_procedure_path(p), class: 'fr-nav__link' do
-                                  = t('instructeurs.dossiers.header.banner.exports_list')
-                                  - if @has_export_notification
-                                    %span.fr-ml-1v.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
-                              %li
-                                = link_to t('instructeurs.dossiers.header.banner.archives'), list_instructeur_archives_path(p), class: 'fr-nav__link'
-                              %li
-                                = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(p), class: 'fr-nav__link'
-            = badge = procedure_badge(p)
-        %h3{ class: class_names('font-weight-normal fr-link fr-ml-3v' => true, 'fr-ml-1v' => badge.present?) }
-          = link_to "#{p.libelle} - n° #{p.id}", instructeur_procedure_path(p)
+                                = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(p), class: 'fr-nav__link'
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(p), class: 'fr-nav__link'
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(p), class: 'fr-nav__link'
+                            %li
+                              = link_to t('views.instructeurs.dossiers.show_deleted_dossiers'), deleted_dossiers_instructeur_procedure_path(p), class: 'fr-nav__link'
+                  .fr-col-12
+                    %ul.fr-mega-menu__list.fr-pb-0
+                      %li.fr-nav__item
+                        %button.fr-nav__btn.fr-mega-menu__category.flex.justify-between{ "aria-expanded": "false", "aria-controls": "user-support-#{p.id}", style: "height: 47px" }
+                          = t('instructeurs.dossiers.header.banner.user_support')
+                        .fr-collapse.width-100{ id: "user-support-#{p.id}" }
+                          %ul.fr-menu__list.fr-mb-0
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(p), class: 'fr-nav__link'
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_instructeur_procedure_path(p), target: "_blank", rel: "noopener", class: 'fr-nav__link'
+                            %li
+                              = link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: {controller: "clipboard", clipboard_text_value: commencer_url(p.path), action: "click->clipboard#copy" } do
+                                = t('instructeurs.dossiers.header.banner.copy_link_button')
+                  .fr-col-12
+                    %ul.fr-mega-menu__list.fr-pb-0
+                      %li.fr-nav__item
+                        %button.fr-nav__btn.fr-mega-menu__category.flex.justify-between{ "aria-expanded": "false", "aria-controls": "downloads-#{p.id}", style: "height: 47px" }
+                          = t('instructeurs.dossiers.header.banner.downloads')
+                          %span.relative{ class: class_names("fr-pr-1w" => @has_export_notification) }
+                          - if @has_export_notification
+                            %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
+                        .fr-collapse.width-100{ id: "downloads-#{p.id}" }
+                          %ul.fr-menu__list.fr-mb-0
+                            %li
+                              = link_to exports_instructeur_procedure_path(p), class: 'fr-nav__link' do
+                                = t('instructeurs.dossiers.header.banner.exports_list')
+                                - if @has_export_notification
+                                  %span.fr-ml-1v.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.archives'), list_instructeur_archives_path(p), class: 'fr-nav__link'
+                            %li
+                              = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(p), class: 'fr-nav__link'
 
-          = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(p.path))
+      .fr-hidden.fr-unhidden-lg
+        %h3.font-weight-normal.fr-link.fr-mx-2w
+          = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+        = procedure_badge(p)
+
+    .flex.align-center.fr-hidden-lg.fr-mb-2w
+      %h3.font-weight-normal.fr-link.fr-mr-2w
+        = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+      = procedure_badge(p)
 
     %ul.procedure-stats.flex.wrap.flex-gap-1
       %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w

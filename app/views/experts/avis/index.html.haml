@@ -11,10 +11,9 @@
         .procedure-details
           .clipboard-container
             .fr-mb-2w.fr-mt-2w
-              = badge = procedure_badge(p)
-              %h3{ class: class_names('font-weight-normal fr-link' => true, 'fr-ml-1v' => badge.present?) }
-                = link_to "#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p)
-
+              %h3.font-weight-normal.fr-link.fr-mr-2w
+                = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+              = procedure_badge(p)
 
           %ul.procedure-stats.flex.wrap.flex-gap-1
             %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w

@@ -1,13 +1,6 @@
 @import 'colors';
 @import 'constants';
 
-.procedure-header {
-  a.header-link {
-    display: inline-block;
-    margin-bottom: 1 * $default-padding;
-  }
-}
-
 #procedure-show {
   .procedure-actions {
     margin-left: auto;

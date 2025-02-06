@@ -150,7 +150,7 @@ describe 'The routing with rules', js: true do
 
     # the litteraires instructeurs only manage the litteraires dossiers
     register_instructeur_and_log_in(victor.email)
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     expect(page).to have_text(litteraire_user.email)
     expect(page).not_to have_text(scientifique_user.email)
 
@@ -176,7 +176,7 @@ describe 'The routing with rules', js: true do
 
     # the scientifiques instructeurs only manage the scientifiques dossiers
     register_instructeur_and_log_in(marie.email)
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     expect(page).not_to have_text(litteraire_user.email)
     expect(page).to have_text(scientifique_user.email)
 
@@ -209,7 +209,7 @@ describe 'The routing with rules', js: true do
     expect(find('.procedure-stats')).to have_css('span.notifications')
 
     ## on the dossiers list
-    click_on procedure.libelle
+    click_on(procedure.libelle, visible: true)
     expect(page).to have_current_path(instructeur_procedure_path(procedure))
     expect(find('nav.fr-tabs')).to have_css('span.notifications')
 

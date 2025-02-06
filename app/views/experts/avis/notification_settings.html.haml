@@ -1,12 +1,8 @@
 
 .sub-header
   .fr-container.flex
-
-    .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
-      role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
-
     .procedure-header
-      %h1.fr-h3= procedure_libelle @procedure
+      %h1.fr-h3= procedure_libelle_with_number(@procedure)
 
 .fr-container
   %h1.fr-h3

@@ -4,13 +4,12 @@
 #procedure-show
   .sub-header
     .fr-container.flex
-
-      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
-        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
-
       .procedure-header
-        %h1.fr-h3= procedure_libelle @procedure
-        = link_to t('.management', procedure_id: @procedure.id), notification_settings_expert_procedure_path(@procedure), class: 'header-link'
+        %h1.fr-h3.fr-mb-0
+          = procedure_libelle_with_number(@procedure)
+          = procedure_badge(@procedure, 'super')
+        %p
+          = link_to t('.management', procedure_id: @procedure.id), notification_settings_expert_procedure_path(@procedure)
 
 
 
