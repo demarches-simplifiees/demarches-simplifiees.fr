@@ -17,5 +17,6 @@
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur }
 
-  = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
-    preview_path: preview_attestation_admin_procedure_groupe_instructeur_path(@groupe_instructeur.procedure, @groupe_instructeur) }
+  - if @procedure.attestation_template&.activated?
+    = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
+      preview_path: preview_attestation_admin_procedure_groupe_instructeur_path(@groupe_instructeur.procedure, @groupe_instructeur) }
