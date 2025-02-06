@@ -25,10 +25,9 @@
       = f.submit t('.assign'), class: 'fr-btn fr-btn--tertiary', disabled: disabled_as_super_admin
 
   %hr.fr-mt-4w
-
   .flex.justify-between.align-baseline
     .card-title= t('.assigned_instructeur', count: instructeurs.total_count)
-    - if !@procedure.routing_enabled?
+    - if !@procedure.routing_enabled? & current_user.administrateur? && controller.try(:nav_bar_profile) == :administrateur
       = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
         Exporter la liste (.csv)
 
