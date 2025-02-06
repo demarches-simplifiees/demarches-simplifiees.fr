@@ -122,11 +122,16 @@ module Administrateurs
     end
 
     def simplify
-      service = LLM::RevisionImproverService.new(@procedure)
-      suggestion = service.suggest
-
+      if params[:unstub]
+        service = LLM::RevisionImproverService.new(@procedure)
+        suggestion = service.suggest
+      else
+        suggestion = JSON.parse(File.read("spec/fixtures/llm_procedure_improvements_stub.txt")).deep_symbolize_keys
+      end
       @changes = suggestion[:operations]
       @text = Array.wrap(suggestion[:summary]).map { _1.gsub('- ', '') }.join(tag.br)
+      @revision = @procedure.draft_revision
+      @procedure_linter = ProcedureLinter.new(@procedure, @revision)
     end
 
     def accept_simplification
