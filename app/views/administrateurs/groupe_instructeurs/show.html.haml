@@ -7,13 +7,13 @@
 = render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
   = render Procedure::OneGroupeManagementComponent.new(revision: @procedure.active_revision, groupe_instructeur: @groupe_instructeur)
 
-  = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
+  = render partial: 'shared/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur,
       instructeurs: @instructeurs,
       available_instructeur_emails: @available_instructeur_emails,
       disabled_as_super_admin: administrateur_as_manager? }
-  = render partial: 'administrateurs/groupe_instructeurs/contact_information',
+  = render partial: 'shared/groupe_instructeurs/contact_information',
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur }
 

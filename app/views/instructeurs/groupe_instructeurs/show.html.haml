@@ -25,7 +25,7 @@
     - else
       Démarche « #{@procedure.libelle} »
 
-  = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
+  = render partial: 'shared/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur,
       instructeurs: @instructeurs,
@@ -33,7 +33,7 @@
       available_instructeur_emails: [] }
 
   - if @procedure.routing_enabled?
-    = render partial: 'administrateurs/groupe_instructeurs/contact_information',
+    = render partial: 'shared/groupe_instructeurs/contact_information',
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur }
 

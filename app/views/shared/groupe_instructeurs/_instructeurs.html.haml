@@ -1,20 +1,20 @@
 
-%h2.fr-h3= t('.instructeur_assignation')
+%h2.fr-h3= t('views.shared.groupe_instructeurs.instructeur_assignation')
 
 .card
-  .card-title= t('.title')
+  .card-title= t('views.shared.groupe_instructeurs.title')
   - if procedure.routing_enabled?
     .fr-icon-mail-line.fr-alert.fr-mb-3w
       - if @procedure.publiee?
-        = t(".notification_alert_publiee_html")
+        = t("views.shared.groupe_instructeurs.notification_alert_publiee_html")
       - else
-        = t(".notification_alert_html")
+        = t("views.shared.groupe_instructeurs.notification_alert_html")
 
   = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_admin_procedure_groupe_instructeur_path(@procedure, groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
-      %p= t('.instructeur_emails')
-      %p.fr-hint-text= t('.copy_paste_hint')
+      %p= t('views.shared.groupe_instructeurs.instructeur_emails')
+      %p.fr-hint-text= t('views.shared.groupe_instructeurs.copy_paste_hint')
 
       - if disabled_as_super_admin
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
@@ -22,12 +22,12 @@
         %react-fragment
           = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
 
-      = f.submit t('.assign'), class: 'fr-btn fr-btn--tertiary', disabled: disabled_as_super_admin
+      = f.submit t('views.shared.groupe_instructeurs.assign'), class: 'fr-btn fr-btn--tertiary', disabled: disabled_as_super_admin
 
   %hr.fr-mt-4w
   .flex.justify-between.align-baseline
-    .card-title= t('.assigned_instructeur', count: instructeurs.total_count)
-    - if !@procedure.routing_enabled? & current_user.administrateur? && controller.try(:nav_bar_profile) == :administrateur
+    .card-title= t('views.shared.groupe_instructeurs.assigned_instructeur', count: instructeurs.total_count)
+    - if !@procedure.routing_enabled? & current_user.administrateur.in?(@procedure.administrateurs) && controller.try(:nav_bar_profile) == :administrateur
       = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
         Exporter la liste (.csv)
 
@@ -38,8 +38,8 @@
           %table
             %thead
               %tr
-                %th.fr-col-11{ scope: 'col' }= t('.table_title')
-                %th.fr-col-1.fr-cell--center{ scope: 'col' }= t('.actions')
+                %th.fr-col-11{ scope: 'col' }= t('views.shared.groupe_instructeurs.table_title')
+                %th.fr-col-1.fr-cell--center{ scope: 'col' }= t('views.shared.groupe_instructeurs.actions')
             %tbody
               - instructeurs.each do |instructeur|
                 %tr
@@ -48,7 +48,7 @@
                     #{instructeur.email}
 
                   - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-                  %td.fr-col-1.fr-cell--center.actions{ scope: 'col' }= button_to t('.remove'),
+                  %td.fr-col-1.fr-cell--center.actions{ scope: 'col' }= button_to t('views.shared.groupe_instructeurs.remove'),
                     { action: :remove_instructeur, id: groupe_instructeur.id },
                     { method: :delete,
                       data: { confirm: confirmation_message },
