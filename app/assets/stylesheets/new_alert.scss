@@ -3,22 +3,21 @@
 
 .alert {
   padding: 15px;
-  border: 1px solid transparent;
-}
-
-.alert-danger {
-  background-color: $medium-red;
   color: #ffffff;
-
   a {
     color: #ffffff;
   }
+  &:before {
+    margin-right: 3px;
+  }
+}
+
+.alert-danger {
+  background-color: var(--error-425-625);
 }
 
 .alert-success {
-  background-color: $lighter-green;
-  border-color: $light-green;
-  color: $dark-green;
+  background-color: var(--success-425-625);
 }
 
 .alert-fixed {
