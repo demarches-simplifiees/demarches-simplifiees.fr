@@ -759,7 +759,6 @@ describe Instructeurs::ProceduresController, type: :controller do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure) }
     let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
-    let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
 
     subject do
       get :email_usagers, params: { procedure_id: procedure.id }
@@ -769,9 +768,15 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     context 'when authenticated' do
       before { sign_in(instructeur.user) }
-      it 'lists dossier brouillon in groupe_instructeur as well as dossiers_brouillon outside groupe_instructeur' do
-        is_expected.to have_http_status(200)
-        expect(assigns(:dossiers_without_groupe_count)).to eq(1)
+
+      context 'when instructor has groups' do
+        let!(:dossier_in_group) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: gi_1) }
+        let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
+
+        it 'lists only dossiers in instructor groups' do
+          is_expected.to have_http_status(200)
+          expect(assigns(:dossiers_count)).to eq(1) # only dossier_in_group
+        end
       end
     end
   end
@@ -801,12 +806,12 @@ describe Instructeurs::ProceduresController, type: :controller do
             }
     end
 
-    it "creates a commentaire for 1 dossiers" do
-      expect(Commentaire.count).to eq(1)
-      expect(dossier.commentaires).to eq([])
-      expect(dossier_2.commentaires).to eq([])
+    it "creates commentaires for dossiers in instructor's groups" do
+      expect(Commentaire.count).to eq(2)
+      expect(dossier.commentaires.first.body).to eq("avant\napres")
+      expect(dossier_2.commentaires.first.body).to eq("avant\napres")
       expect(dossier_3.commentaires).to eq([])
-      expect(dossier_4.commentaires.first.body).to eq("avant\napres")
+      expect(dossier_4.commentaires).to eq([])
     end
 
     it "creates a Bulk Message for 2 groupes instructeurs" do

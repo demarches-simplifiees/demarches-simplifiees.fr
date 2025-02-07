@@ -241,14 +241,19 @@ module Instructeurs
       @procedure = procedure
       @bulk_messages = BulkMessage.where(procedure: procedure)
       @bulk_message = current_instructeur.bulk_messages.build
-      @dossiers_without_groupe_count = procedure.dossiers.state_brouillon.for_groupe_instructeur(nil).count
+
+      instructeur_groupe_ids = current_instructeur.groupe_instructeurs.where(procedure: procedure).ids
+      @dossiers_count = procedure.dossiers.state_brouillon.where(groupe_instructeur_id: instructeur_groupe_ids).count
     end
 
     def create_multiple_commentaire
       @procedure = procedure
       errors = []
       bulk_message = current_instructeur.bulk_messages.build(bulk_message_params)
-      dossiers = procedure.dossiers.state_brouillon.for_groupe_instructeur(nil)
+      instructeur_groupe_ids = current_instructeur.groupe_instructeurs.where(procedure: procedure).ids
+
+      dossiers = procedure.dossiers.state_brouillon.where(groupe_instructeur_id: instructeur_groupe_ids)
+
       dossiers.each do |dossier|
         commentaire = CommentaireService.create(current_instructeur, dossier, bulk_message_params.except(:targets))
         if commentaire.errors.empty?
