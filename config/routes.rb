@@ -222,6 +222,8 @@ Rails.application.routes.draw do
 
     # TODO remove this route after august 2025
     get ':champ_id/piece_justificative/download/:h/(:i)', to: 'piece_justificative#download', as: :legacy_piece_justificative_download
+
+    post ':dossier_id/:stable_id/lexpol/upsert', to: 'lexpol#upsert', as: :lexpol_upsert_dossier
   end
 
   resources :attachments, only: [:show, :destroy]
@@ -528,7 +530,6 @@ Rails.application.routes.draw do
             get 'reaffectation'
             get 'pieces_jointes'
             post 'reaffecter'
-            post 'lexpol/upsert/:champ_id', to: 'lexpol#upsert', as: :lexpol_upsert_dossier
           end
         end
 
