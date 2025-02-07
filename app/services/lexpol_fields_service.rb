@@ -52,7 +52,8 @@ module LexpolFieldsService
     return '' if date.blank?
     begin
       parsed = date.is_a?(String) ? Date.parse(date) : date
-      I18n.l(parsed, format: '%-d %B %Y')
+      day = (parsed.day == 1 ? "1er" : parsed.day.to_s)
+      day + I18n.l(parsed, format: ' %B %Y')
     rescue
       date.to_s
     end
@@ -62,7 +63,8 @@ module LexpolFieldsService
     return '' if date.blank?
     begin
       parsed = date.is_a?(String) ? DateTime.parse(date) : date
-      I18n.l(parsed, format: '%-d %B %Y à %H:%M')
+      day = (parsed.day == 1 ? "1er" : parsed.day.to_s)
+      day + I18n.l(parsed, format: '%-d %B %Y à %H:%M')
     rescue
       date.to_s
     end
