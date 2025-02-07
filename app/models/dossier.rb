@@ -1181,66 +1181,6 @@ class Dossier < ApplicationRecord
     for_tiers?
   end
 
-  # mandataire
-  def mandataire_nom
-    mandataire_last_name
-  end
-
-  def mandataire_prenom
-    mandataire_first_name
-  end
-
-  # demandeur
-  def demandeur_nom
-    individual&.nom
-  end
-
-  def demandeur_prenom
-    individual&.prenom
-  end
-
-  def demandeur_civilite
-    individual&.gender
-  end
-
-  def demandeur_email
-    user&.email
-  end
-
-  # entreprise
-  def entreprise_forme_juridique
-    etablissement&.entreprise_forme_juridique
-  end
-
-  def entreprise_nom_commercial
-    etablissement&.entreprise_nom_commercial
-  end
-
-  def entreprise_raison_sociale
-    etablissement&.entreprise_raison_sociale
-  end
-
-  def entreprise_numero_tahiti
-    etablissement&.entreprise_siret_siege_social
-  end
-
-  def entreprise_adresse
-    etablissement&.adresse
-  end
-
-  # etablissement
-  def etablissement_code_postal
-    etablissement&.code_postal
-  end
-
-  def etablissement_adresse
-    etablissement&.adresse
-  end
-
-  def etablissement_numero_tahiti
-    etablissement&.siret
-  end
-
   def for_individual?
     procedure.for_individual?
   end

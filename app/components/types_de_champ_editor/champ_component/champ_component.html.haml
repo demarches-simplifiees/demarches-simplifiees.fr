@@ -89,8 +89,10 @@
                   Afficher les variables disponibles
 
               .lexpol-variables-list.fr-mt-1w.hidden{ id: "lexpol-vars-#{dom_id(type_de_champ)}" }
-                %strong Variables disponibles :
-                = raw LexpolService.available_variables_html(@upper_coordinates.map(&:type_de_champ), @dossier)
+                %strong Variables que vous pouvez utiliser dans votre modèle Lexpol :
+                %ul
+                  - LexpolService.lexpol_variables(type_de_champ).map do |variable|
+                    %li= variable
 
         .flex.justify-start.fr-mt-1w
           -# ----- Polynesia options

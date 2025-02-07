@@ -1,38 +1,23 @@
 - if @champ.value.blank?
-  %p
-    %strong Numéro NOR :
-    Non créé
-  %p
-    %strong Statut du dossier :
-    Inconnu
-  .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
-    = link_to 'Créer le dossier dans Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id),
-      method: :post, class: 'fr-btn'
-
-- elsif @champ.data&.[]('lexpol_status') == 'Annulé'
-  %p
-    %strong Numéro NOR :
-    Le dossier a été annulé
-  %p
-    %strong Statut du dossier :
-    Annulé
-  .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
-    = link_to 'Mettre à jour les variables Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id),
-      method: :post, class: 'fr-btn fr-btn--secondary'
-    = link_to 'Re-créer le dossier dans Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id, force_create: true),
-      method: :post, class: 'fr-btn'
-
+  - button_label = 'Créer le dossier Lexpol'
 - else
-  %p
-    %strong Numéro NOR :
+  - button_label = 'Mettre à jour le dossier lexpol'
+.div.dossier-show
+  %p.champ-label
+    Numéro NOR :
     - if @champ.lexpol_dossier_url.present?
       = link_to @champ.value, @champ.lexpol_dossier_url, target: '_blank', class: 'fr-link'
     - else
       = @champ.value
 
-  %p
-    %strong Statut du dossier :
-    = @champ.data&.[]('lexpol_status') || 'Inconnu'
-  .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
-    = link_to 'Mettre à jour les variables Lexpol', lexpol_upsert_dossier_instructeur_dossier_path(@champ.dossier, champ_id: @champ.id),
-      method: :post, class: 'fr-btn fr-btn--secondary'
+  - if @champ.lexpol_status.present? || true
+    %p.champ-label
+      Statut du dossier :
+      %strong
+        = @champ.data&.[]('lexpol_status')
+    .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
+      = link_to button_label, champs_lexpol_upsert_dossier_path(dossier_id: @champ.dossier.id, stable_id: @champ.stable_id),
+        method: :post, class: 'fr-btn fr-btn--secondary'
+      - if @champ.lexpol_status == "Annulé"
+        = link_to 'Créer un nouveau dossier Lexpol', champs_lexpol_upsert_dossier_path(dossier_id: @champ.dossier.id, stable_id: @champ.stable_id, force_create: true),
+          method: :post, class: 'fr-btn fr-btn--secondary'
