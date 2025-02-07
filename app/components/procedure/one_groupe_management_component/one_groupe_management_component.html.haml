@@ -1,6 +1,6 @@
 %div{ id: dom_id(@groupe_instructeur, :routing) }
   %h1.fr-h2 Configuration du groupe « #{@groupe_instructeur.label} »
-  %h2.fr-h3 Paramètres du groupe
+  %h2.fr-h3#parametres-groupe Paramètres du groupe
 
   .card
     = form_for @groupe_instructeur,
@@ -29,7 +29,7 @@
     - else
       %em Vous ne pouvez pas supprimer ce groupe car des dossiers lui sont affectés.
 
-  %h2.fr-h3 Dossiers affectés
+  %h2.fr-h3#dossiers-affectes Dossiers affectés
   .card
     .flex.justify-between.align-center.fr-btns-group--sm.fr-btns-group--icon-right
       %span.fr-icon.fr-icon-folder-2-line.fr-mr-2w
@@ -41,7 +41,7 @@
         method: :get do
           = t('.move_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)
 
-  %h2.fr-h3 Règle(s) de routage
+  %h2.fr-h3#regles-routage Règle(s) de routage
   .card
     = render Conditions::RoutingRulesComponent.new(groupe_instructeur: @groupe_instructeur)
     %p.fr-alert.fr-alert--info.fr-mt-3w{ aria: { hidden: true } }
