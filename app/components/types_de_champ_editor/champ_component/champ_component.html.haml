@@ -67,14 +67,15 @@
             - if type_de_champ.lexpol?
               .cell.fr-mt-1w
                 = form.label :lexpol_modele, "Sélectionner un modèle Lexpol", class: 'flex-grow', for: dom_id(type_de_champ, :lexpol_modele)
+                - lexpol_models = APILexpol.new(current_user.email, '003962', true).get_models
                 - if lexpol_models.any?
                   = form.select :lexpol_modele,
-                                lexpol_models.map { |model| [model.first.truncate(40), model.last] },
+                                lexpol_models.map { |k,v| [k.truncate(80), v] },
                                 { prompt: 'Sélectionnez un modèle' },
-                                { class: 'fr-select small-margin small width-100', id: dom_id(type_de_champ, :lexpol_modele) }
+                                { class: 'fr-select small-margin small', id: dom_id(type_de_champ, :lexpol_modele) }
                 - else
                   .fr-message.fr-message--error
-                    %p Aucune modèle disponible ou erreur lors de la récupération des modèles.
+                    %p Aucun modèle disponible ou erreur lors de la récupération des modèles.
               .cell.fr-mt-1w
                 = form.label :lexpol_mapping, "Variables Lexpol", class: 'flex-grow', for: dom_id(type_de_champ, :lexpol_mapping)
                 = form.text_area :lexpol_mapping,

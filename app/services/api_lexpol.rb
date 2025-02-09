@@ -2,106 +2,106 @@ require 'typhoeus'
 require 'json'
 
 class APILexpol
-  BASE_URL = ENV.fetch('API_LEXPOL_BASE_URL', 'https://devapilexpol.cloud.pf/api/v1/geda')
+  # Syntaxe de LEXPOL_SERVICE_EMAILS :
+  # Cette variable d'environnement doit contenir une liste de numéros Tahiti avec leurs emails associés.
+  # Format attendu : "T123456(email1),D654321(email2),003970(email3)"
+  # Exemple : "003970(admin@example.com),D123456(manager@example.com)"
 
-  def initialize
-    @credentials = {
-      email: ENV.fetch('API_LEXPOL_EMAIL'),
-      motdepasse: ENV.fetch('API_LEXPOL_PASSWORD'),
-      email_agent: ENV.fetch('API_LEXPOL_AGENT_EMAIL')
-    }
-    @token = nil
-    @token_expiration = nil
+  BASE_URL = ENV.fetch('LEXPOL_BASE_URL', 'https://devapilexpol.cloud.pf/api/v1/geda')
+  TOKEN_EXPIRATION_TIME = 290 # less than 5 minutes
+
+  def initialize(email = nil, numero_tahiti = nil, is_manager = false)
+    @email_agent = determine_email_agent(email, numero_tahiti, is_manager)
+    @use_certificate = ENV.fetch('LEXPOL_CERTIFICATE_ENABLED', '').casecmp('enabled').zero?
   end
 
   def authenticate
-    return @token if @token && @token_expiration && @token_expiration > Time.zone.now
-
-    if defined?(Rails) && Rails.cache
-      @token, @token_expiration = Rails.cache.fetch("lexpol_token", expires_in: 300) do
-        perform_authentication
-      end
-    else
-      @token, @token_expiration = perform_authentication
+    Rails.cache.fetch("lexpol_token_#{@email_agent}", expires_in: TOKEN_EXPIRATION_TIME) do
+      request_authentication
     end
-
-    @token
   end
 
   def get_models
-    authenticate
-    response = Typhoeus.get("#{BASE_URL}/modeles", params: { jeton: @token })
-    handle_response(response, 'Erreur lors de la récupération des modèles') do |body|
-      body
+    Rails.cache.fetch("lexpol_medels_#{@email_agent}", expires_in: TOKEN_EXPIRATION_TIME) do
+      body = request(:get, "/modeles", 'Erreur lors de la récupération des modèles')
+      body['modeles'].map { |model| [model['libelle'], model['modele']] }
     end
   end
 
   def create_dossier(modele_id, variables = {})
-    authenticate
-    params = { jeton: @token, modele: modele_id }
-    params[:variables] = variables if variables.present?
-
-    response = Typhoeus.post("#{BASE_URL}/dossier", body: params.to_json, headers: { 'Content-Type' => 'application/json' })
-    handle_response(response, 'Erreur lors de la création du dossier') do |body|
-      body['nor']
-    end
+    request(:post, "/dossier", "l'envoi des variables à Lexpol", { modele: modele_id, variables: variables.presence })&.fetch('nor', nil)
   end
 
   def update_dossier(nor, variables)
-    authenticate
-    response = Typhoeus.put("#{BASE_URL}/dossier/#{nor}/modifier",
-                            body: { jeton: @token, variables: variables }.to_json,
-                            headers: { 'Content-Type' => 'application/json' })
-    handle_response(response, 'Erreur lors de la mise à jour du dossier') do |body|
-      body['nor']
-    end
+    request(:put, "/dossier/#{nor}/modifier", "L'envoi des variables à Lexpol", { variables: variables })&.fetch('nor', nil)
   end
 
   def get_dossier_status(nor)
-    authenticate
-    response = Typhoeus.get("#{BASE_URL}/dossier/#{nor}/statut", params: { jeton: @token })
-    handle_response(response, 'Erreur lors de la récupération du statut du dossier') do |body|
-      { statut: body['statut'], libelle: body['libelle'] }
-    end
+    request(:get, "/dossier/#{nor}/statut", 'La récupération du statut du dossier Lexpol')&.slice('statut', 'libelle')
   end
 
   def get_dossier_infos(nor)
-    authenticate
-    response = Typhoeus.get("#{BASE_URL}/dossier/#{nor}/infos", params: { jeton: @token })
-    handle_response(response, 'Erreur lors de la récupération des informations du dossier') do |body|
-      body
-    end
+    request(:get, "/dossier/#{nor}/infos", 'La récupération des informations du dossier Lexpol')
   end
 
   private
 
-  def perform_authentication
-    options = {
-      body: @credentials.to_json,
-      headers: { 'Content-Type' => 'application/json' }
-    }
+  def determine_email_agent(email, numero_tahiti, is_manager)
+    return email unless is_manager && numero_tahiti
 
-    if ENV['USE_CERTIFICATE_FOR_LEXPOL'] == 'true'
-      options[:sslcert] = ENV.fetch('API_LEXPOL_CERT_PATH')
-      options[:ssl_key] = ENV.fetch('API_LEXPOL_KEY_PATH')
-    end
-
-    response = Typhoeus.post("#{BASE_URL}/authentification", options)
-
-    if response.success?
-      body = JSON.parse(response.body)
-      [body['jeton'], Time.zone.now + 300] # 300 secondes = 5 minutes
-    else
-      raise "Erreur d'authentification Lexpol : #{response.body}"
-    end
+    service_emails = ENV.fetch('LEXPOL_SERVICE_EMAILS', '').scan(/([A-Z0-9][0-9]{5})\(([^)]+)\)/).to_h
+    service_emails[numero_tahiti] || email
   end
 
-  def handle_response(response, error_message)
-    if response.success?
-      body = JSON.parse(response.body.force_encoding('UTF-8'))
-      yield(body)
+  def request_authentication
+    options = { headers: { 'Content-Type' => 'application/json' } }
+    body = { email_agent: @email_agent }
+
+    if @use_certificate
+      options[:sslcert] = ENV.fetch('LEXPOL_CERT_PATH')
+      options[:sslkey] = ENV.fetch('LEXPOL_KEY_PATH')
     else
-      raise "#{error_message} : #{response.body}"
+      body[:email] = ENV.fetch('LEXPOL_EMAIL')
+      body[:motdepasse] = ENV.fetch('LEXPOL_PASSWORD')
     end
+
+    options[:body] = body.to_json
+    response = Typhoeus.post("#{BASE_URL}/authentification", options)
+    return parse_token(response) if response.success?
+
+    raise "Erreur d'authentification Lexpol : #{response.body}"
+  end
+
+  def request(method, endpoint, error_message, body = {})
+    body[:jeton] = authenticate
+
+    request = Typhoeus::Request.new("#{BASE_URL}#{endpoint}", request_options(body, method))
+    response = request.run
+    return parse_response(response, error_message) if response.success?
+
+    raise "#{error_message} renvoi l'erreur HTML #{response.code}."
+  end
+
+  def request_options(body, method = :post)
+    options = { method: }
+
+    if method == :get
+      options[:params] = body
+    else
+      options[:headers] = { 'Content-Type' => 'application/json' }
+      options[:body] = body.to_json
+    end
+
+    options
+  end
+
+  def parse_token(response)
+    JSON.parse(response.body)['jeton']
+  end
+
+  def parse_response(response, error_message)
+    JSON.parse(response.body.force_encoding('UTF-8'))
+  rescue JSON::ParserError
+    raise "#{error_message} : Réponse invalide"
   end
 end

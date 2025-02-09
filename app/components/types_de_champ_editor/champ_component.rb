@@ -8,18 +8,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     @errors = errors
   end
 
-  def lexpol_models
-    @lexpol_models ||= begin
-      api = APILexpol.new
-      models_response = api.get_models
-      models = models_response['modeles']
-      models.map { |model| [model['libelle'], model['modele']] }
-                       rescue => e
-                         Rails.logger.error("Erreur lors de la récupération des modèles Lexpol : #{e.message}")
-                         []
-    end
-  end
-
   private
 
   delegate :type_de_champ, :revision, :procedure, to: :coordinate

@@ -26,7 +26,7 @@ class LexpolService
 
   attr_reader :champ, :dossier, :apilexpol
 
-  def initialize(champ:, dossier:, apilexpol: APILexpol.new)
+  def initialize(champ:, dossier:, apilexpol:)
     @champ = champ
     @dossier = dossier
     @apilexpol = apilexpol

@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe APILexpol do
-  let(:api_lexpol) { described_class.new }
+  let(:is_manager) { nil }
+  let(:numero_tahiti) { nil }
+  let(:api_lexpol) { described_class.new("instructeur@mes-demarches.gov.pf", numero_tahiti, is_manager) }
 
   before do
-    allow(ENV).to receive(:fetch).with('API_LEXPOL_EMAIL').and_return('fake_email@example.com')
-    allow(ENV).to receive(:fetch).with('API_LEXPOL_PASSWORD').and_return('fake_password')
-    allow(ENV).to receive(:fetch).with('API_LEXPOL_AGENT_EMAIL').and_return('fake_agent_email@example.com')
+    allow(ENV).to receive(:fetch).with('LEXPOL_CERTIFICATE_ENABLED', "").and_return('')
+    allow(ENV).to receive(:fetch).with('LEXPOL_EMAIL').and_return('fake_email@example.com')
+    allow(ENV).to receive(:fetch).with('LEXPOL_PASSWORD').and_return('fake_password')
   end
 
   describe '#authenticate' do
@@ -22,7 +24,7 @@ RSpec.describe APILexpol do
     it 'retrieves the list of models' do
       VCR.use_cassette('get_models') do
         models = api_lexpol.get_models
-        expect(models['modeles']).to be_an(Array)
+        expect(models).to be_an(Array)
       end
     end
   end

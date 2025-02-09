@@ -11,9 +11,9 @@ RSpec.describe Champs::LexpolController, type: :controller do
 
   before do
     allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('API_LEXPOL_EMAIL').and_return('fake_email@example.com')
-    allow(ENV).to receive(:fetch).with('API_LEXPOL_PASSWORD').and_return('fake_password')
-    allow(ENV).to receive(:fetch).with('API_LEXPOL_AGENT_EMAIL').and_return('fake_agent_email@example.com')
+    allow(ENV).to receive(:fetch).with('LEXPOL_EMAIL').and_return('fake_email@example.com')
+    allow(ENV).to receive(:fetch).with('LEXPOL_PASSWORD').and_return('fake_password')
+    allow(ENV).to receive(:fetch).with('LEXPOL_AGENT_EMAIL').and_return('fake_agent_email@example.com')
     sign_in instructeur.user
     allow(Dossier).to receive(:find).and_return(dossier)
     allow(dossier.champs).to receive(:find).and_return(champ)
@@ -55,7 +55,7 @@ RSpec.describe Champs::LexpolController, type: :controller do
 
     context 'when dossier creation fails' do
       before do
-        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return(nil)
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_raise(StandardError.new("test"))
 
         post :upsert, params: {
           dossier_id: dossier.id,
@@ -65,7 +65,7 @@ RSpec.describe Champs::LexpolController, type: :controller do
 
       it 'redirects to annotations page with error message for creation' do
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq('Impossible de créer le dossier Lexpol.')
+        expect(flash[:alert]).to eq('Impossible de créer le dossier Lexpol. test')
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe Champs::LexpolController, type: :controller do
       let(:value) { 'NOR-12345' }
       before do
         champ
-        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return(nil)
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_raise(StandardError.new("test"))
 
         post :upsert, params: {
           dossier_id: dossier.id,
@@ -83,7 +83,7 @@ RSpec.describe Champs::LexpolController, type: :controller do
 
       it 'redirects to annotations page with error message for update' do
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq('Impossible de mettre à jour le dossier Lexpol.')
+        expect(flash[:alert]).to eq('Impossible de mettre à jour le dossier Lexpol. test')
       end
     end
 

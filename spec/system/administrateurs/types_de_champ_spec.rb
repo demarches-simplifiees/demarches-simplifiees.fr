@@ -208,6 +208,9 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   context 'lexpol enabled' do
     before { Flipper.enable(:lexpol, procedure) }
+    before do
+      allow_any_instance_of(APILexpol).to receive(:get_models).and_return([["Modele1", "Id1"], ["Modele2", "Id2"]])
+    end
 
     it "Add lexpol champ" do
       add_champ
@@ -217,8 +220,6 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       wait_until { procedure.draft_types_de_champ_public.first.type_champ == TypeDeChamp.type_champs.fetch(:lexpol) }
       expect(page).to have_content('Formulaire enregistré')
-
-      page.refresh
 
       expect(page).to have_content('Sélectionner un modèle Lexpol')
       expect(page).to have_content('Variables Lexpol')
