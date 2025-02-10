@@ -7,7 +7,7 @@ module Types::Champs
     field :geo_areas, [Types::GeoAreaType], null: false
 
     def geo_areas
-      Loaders::Association.for(Champs::CarteChamp, :geo_areas).load(object)
+      Loaders::Association.for(object.class, :geo_areas).load(object)
     end
   end
 end

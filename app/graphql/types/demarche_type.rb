@@ -83,7 +83,7 @@ module Types
     end
 
     def service
-      Loaders::Record.for(Service).load(object.service_id)
+      Loaders::Association.for(object.class, :service).load(object)
     end
 
     def revisions
