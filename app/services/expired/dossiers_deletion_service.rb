@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
-  MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY = 10000
+  BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY = ENV.fetch("BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY", 10_000).to_i
 
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
@@ -22,7 +22,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
     dossiers_close_to_expiration = Dossier
       .brouillon_close_to_expiration
       .without_brouillon_expiration_notice_sent
-      .limit(MAX_BROUILLON_DELETION_EMAILS_TO_PROCESS_PER_DAY)
+      .limit(BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY)
 
     user_notifications = group_by_user_email(dossiers_close_to_expiration)
 
