@@ -187,7 +187,7 @@ describe 'user access to the list of their dossiers', js: true do
     context 'when user clicks on delete button' do
       scenario 'the dossier is deleted' do
         expect(page).to have_content(dossier_en_construction.procedure.libelle)
-        within(:css, ".card", match: :first) do
+        within(:css, "#dossier_#{dossier_en_construction.id}", match: :first) do
           click_on 'Autres actions'
           accept_alert('Confirmer la suppression ?') do
             click_on 'Mettre à la corbeille'

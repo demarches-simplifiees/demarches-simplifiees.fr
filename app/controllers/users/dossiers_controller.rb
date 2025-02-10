@@ -27,7 +27,7 @@ module Users
     end
 
     def index
-      ordered_dossiers = Dossier.includes(:procedure).order_by_updated_at
+      ordered_dossiers = Dossier.includes(:procedure).order_by_depose_at
 
       user_revisions = ProcedureRevision.where(dossiers: current_user.dossiers.visible_by_user)
       invite_revisions = ProcedureRevision.where(dossiers: current_user.dossiers_invites.visible_by_user)
