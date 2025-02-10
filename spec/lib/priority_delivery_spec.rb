@@ -9,6 +9,8 @@ RSpec.describe PriorityDeliveryConcern do
 
       bypass_unverified_mail_protection! if bypass_unverified_mail_protection
     end
+
+    def self.critical_email?(_action_name) = false
   end
 
   class ImportantEmail < ApplicationMailer
@@ -21,6 +23,8 @@ RSpec.describe PriorityDeliveryConcern do
 
       bypass_unverified_mail_protection!
     end
+
+    def self.critical_email?(_action_name) = false
 
     private
 
@@ -210,6 +214,17 @@ RSpec.describe PriorityDeliveryConcern do
       let(:mail) { ExampleMailer.greet(nil, bypass_unverified_mail_protection: false, bcc: ["'u@a.com'"]) }
 
       it { expect(mail).to have_been_delivered_using(MockSmtp) }
+    end
+  end
+
+  context 'when email is critical' do
+    before do
+      allow(ImportantEmail).to receive(:critical_email?).and_return(true)
+    end
+
+    it 'sets x-critical header' do
+      mail = ImportantEmail.greet('test@example.com').deliver_now
+      expect(mail[PriorityDeliveryConcern::CRITICAL_HEADER].value).to eq("true")
     end
   end
 
