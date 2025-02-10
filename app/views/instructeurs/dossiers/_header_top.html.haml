@@ -41,12 +41,20 @@
                       = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, label_id: b.value).present?  )
                       = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.colors.fetch(b.object.color)}") { b.text }
 
-              %hr
+              %hr.fr-pb-2w
                 %p.fr-text--sm.fr-text-mention--grey.fr-mb-0
                   %b Besoin d'autres labels ?
                   %br
                   Contactez les
                   = link_to 'administrateurs de la démarche', administrateurs_instructeur_procedure_path(dossier.procedure), class: 'fr-link fr-link--sm', **external_link_attributes
+              - if !@procedure_presentation.displayed_columns.any? { |c| c.column == "label_id" }
+                %hr.fr-mt-2w
+                .fr-notice.fr-notice--info
+                  .fr-container
+                    .fr-notice__body.fr-p-0
+                      %p
+                        %span.fr-notice__title Pensez à personnaliser votre tableau
+                        %span.fr-notice__desc de suivi des dossiers en ajoutant la colonne « Labels ».
 
     .header-actions.fr-ml-auto
       = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: }

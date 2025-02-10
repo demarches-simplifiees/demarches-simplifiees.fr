@@ -4,7 +4,7 @@ describe 'instructeurs/dossiers/show', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:dossier) { create(:dossier, :en_construction) }
   let(:statut) { { statut: 'tous' } }
-  let(:procedure_presentation) { double(instructeur: current_instructeur, procedure: dossier.procedure) }
+  let(:procedure_presentation) { double(instructeur: current_instructeur, procedure: dossier.procedure, displayed_columns: []) }
 
   before do
     sign_in(current_instructeur.user)
