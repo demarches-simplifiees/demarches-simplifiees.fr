@@ -4,7 +4,6 @@ class ApplicationMailer < ActionMailer::Base
   include MailerDefaultsConfigurableConcern
   include MailerDolistConcern
   include MailerMonitoringConcern
-  include BalancedDeliveryConcern
   include PriorityDeliveryConcern
 
   helper :application # gives access to all helpers defined within `application_helper`.

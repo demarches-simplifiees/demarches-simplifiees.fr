@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe BalancerDeliveryMethod do
+RSpec.describe PriorityDeliveryConcern do
   class ExampleMailer < ApplicationMailer
-    include BalancedDeliveryConcern
+    include PriorityDeliveryConcern
 
     def greet(name, bypass_unverified_mail_protection: true, **mail_args)
       mail(to: name, from: "smtp_from", body: "Hello #{name}", **mail_args)
@@ -12,7 +12,7 @@ RSpec.describe BalancerDeliveryMethod do
   end
 
   class ImportantEmail < ApplicationMailer
-    include BalancedDeliveryConcern
+    include PriorityDeliveryConcern
 
     before_action :set_x_deliver_with
 
