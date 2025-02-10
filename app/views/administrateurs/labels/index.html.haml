@@ -44,7 +44,7 @@
                       = link_to 'Supprimer',
                         [:admin, @procedure, label],
                         method: :delete,
-                        data: { confirm: "Confirmez vous la suppression de #{label.name}" },
+                        data: { confirm: t("administrateurs.labels.delete_labels", count: label.dossier_labels.count, label_name: label.name) },
                         class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-delete-line fr-ml-1w'
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)
