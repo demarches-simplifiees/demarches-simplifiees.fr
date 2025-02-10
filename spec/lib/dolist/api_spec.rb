@@ -49,6 +49,36 @@ describe Dolist::API do
     end
   end
 
+  describe ".rate_limited?" do
+    context "when limits are not set" do
+      it "returns false" do
+        expect(Dolist::API.rate_limited?).to be false
+      end
+    end
+
+    context "when rate limit is reached" do
+      it "returns true if reset time is in future" do
+        Dolist::API.limit_remaining.value = 0
+        Dolist::API.limit_reset_at.value = 1.hour.from_now
+        expect(Dolist::API.rate_limited?).to eq true
+      end
+
+      it "returns false if reset time is in past" do
+        Dolist::API.limit_remaining.value = 0
+        Dolist::API.limit_reset_at.value = 1.hour.ago
+        expect(Dolist::API.rate_limited?).to eq false
+      end
+    end
+
+    context "when rate limit is not reached" do
+      it "returns false" do
+        Dolist::API.limit_remaining.value = 1
+        Dolist::API.limit_reset_at.value = 1.hour.from_now
+        expect(Dolist::API.rate_limited?).to eq false
+      end
+    end
+  end
+
   describe ".sendable?" do
     context "when mail has no recipient" do
       it "returns false" do

@@ -58,9 +58,19 @@ module Dolist
         sleep (current_reset_at - Time.zone.now).ceil
       end
 
+      def rate_limited?
+        remaining = limit_remaining.value
+        reset_at = limit_reset_at.value
+        return false if remaining.nil? || reset_at.nil?
+
+        remaining.zero? && reset_at.future?
+      end
+
       def sendable?(mail)
         return false if mail.to.blank? # recipient are mandatory
         return false if mail.bcc.present? # no bcc support
+        # TIP: don't use rate limited here otherwise balancer would automatically switch to other provider,
+        # which is not always desirable.
 
         # Mail having attachments are not yet supported in our account
         mail.attachments.none? { !_1.inline? }

@@ -5,6 +5,11 @@ module Dolist
     def initialize(mail); end
 
     def deliver!(mail)
+      if Dolist::API.rate_limited?
+        Sentry.capture_message("Dolist: rate limit reached") if rand < 0.1
+        raise Dolist::RateLimitError, "Rate limit reached" # ignored by sentry
+      end
+
       client = Dolist::API.new
       response = client.send_email(mail)
       if response&.dig("Result")
