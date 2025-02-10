@@ -15,8 +15,6 @@ module Dolist
     EMAIL_SENDING_TRANSACTIONAL_ATTACHMENT = "https://apiv9.dolist.net/v1/email/sendings/transactional/attachment?AccountID=%{account_id}"
     EMAIL_SENDING_TRANSACTIONAL_SEARCH = "https://apiv9.dolist.net/v1/email/sendings/transactional/search?AccountID=%{account_id}"
 
-    class_attribute :limit_remaining, :limit_reset_at
-
     # those code are just undocumented
     IGNORABLE_API_ERROR_CODE = [
       "458",
@@ -30,21 +28,34 @@ module Dolist
     ]
 
     class << self
+      def limit_remaining
+        @limit_remaining ||= Kredis.integer "dolist:limit_remaining"
+      end
+
+      def limit_reset_at
+        @limit_reset_at ||= Kredis.datetime "dolist:limit_reset_at"
+      end
+
       def save_rate_limit_headers(headers)
-        self.limit_remaining = headers["X-Rate-Limit-Remaining"].to_i
-        self.limit_reset_at = Time.zone.at(headers["X-Rate-Limit-Reset"].to_i / 1_000)
+        limit_remaining.value = headers["X-Rate-Limit-Remaining"].to_i
+        limit_reset_at.value = Time.zone.at(headers["X-Rate-Limit-Reset"].to_i / 1_000)
       end
 
       def near_rate_limit?
-        return if limit_remaining.nil?
+        current_limit = limit_remaining.value
+        return false if current_limit.nil?
 
-        limit_remaining < 20 # keep 20 requests for non background API calls
+        current_reset_at = limit_reset_at.value
+        return false if current_reset_at.nil? || current_reset_at.past?
+
+        current_limit < 100 # keep 100 requests for priority mails and non background API calls
       end
 
       def sleep_until_limit_reset
-        return if limit_reset_at.nil? || limit_reset_at.past?
+        current_reset_at = limit_reset_at.value
+        return if current_reset_at.nil? || current_reset_at.past?
 
-        sleep (limit_reset_at - Time.zone.now).ceil
+        sleep (current_reset_at - Time.zone.now).ceil
       end
 
       def sendable?(mail)
