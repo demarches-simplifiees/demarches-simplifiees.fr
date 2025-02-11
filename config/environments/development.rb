@@ -45,7 +45,7 @@ Rails.application.configure do
   config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=3600' }
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE").to_sym
@@ -86,9 +86,9 @@ Rails.application.configure do
   ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
   config.action_mailer.balancer_settings = {
     helo: ENV['HELO_ENABLED'] == 'enabled' ? 100 : 0,
-    letter_opener: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100
+    letter_opener_web: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100
   }
-  config.action_mailer.delivery_method = :letter_opener_web
+  config.action_mailer.delivery_method = :balancer
 
   config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST") }
   config.action_mailer.asset_host = "http://" + ENV.fetch("APP_HOST")

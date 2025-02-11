@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 describe Dolist::API do
+  after(:each) do
+    Dolist::API.limit_reset_at.del
+  end
+
   let(:headers) { { "X-Rate-Limit-Remaining" => "15", "X-Rate-Limit-Reset" => (Time.current + 3600).to_i.to_s } }
 
   let(:mail) do
@@ -16,30 +20,61 @@ describe Dolist::API do
   describe ".save_rate_limit_headers" do
     it "saves the rate limit headers" do
       Dolist::API.save_rate_limit_headers(headers)
-      expect(Dolist::API.limit_remaining).to eq(15)
-      expect(Dolist::API.limit_reset_at).to be_within(1.second).of(Time.zone.at(headers["X-Rate-Limit-Reset"].to_i / 1_000))
+      expect(Dolist::API.limit_remaining.value).to eq(15)
+      expect(Dolist::API.limit_reset_at.value).to be_within(1.second).of(Time.zone.at(headers["X-Rate-Limit-Reset"].to_i / 1_000))
     end
   end
 
   describe ".near_rate_limit?" do
     context "when limit_remaining is nil" do
       it "returns nil" do
-        Dolist::API.limit_remaining = nil
-        expect(Dolist::API.near_rate_limit?).to be_nil
+        expect(Dolist::API.near_rate_limit?).to eq(false)
       end
     end
 
-    context "when limit_remaining is less than 20" do
+    context "when limit_remaining is less than 100" do
       it "returns true" do
-        Dolist::API.limit_remaining = 15
-        expect(Dolist::API.near_rate_limit?).to be true
+        Dolist::API.limit_reset_at.value = 1.minute.from_now
+        Dolist::API.limit_remaining.value = 15
+        expect(Dolist::API.near_rate_limit?).to eq(true)
       end
     end
 
-    context "when limit_remaining is 20 or more" do
+    context "when limit_remaining is 100 or more" do
       it "returns false" do
-        Dolist::API.limit_remaining = 25
-        expect(Dolist::API.near_rate_limit?).to be false
+        Dolist::API.limit_reset_at.value = 1.minute.from_now
+        Dolist::API.limit_remaining.value = 105
+        expect(Dolist::API.near_rate_limit?).to eq(false)
+      end
+    end
+  end
+
+  describe ".rate_limited?" do
+    context "when limits are not set" do
+      it "returns false" do
+        expect(Dolist::API.rate_limited?).to be false
+      end
+    end
+
+    context "when rate limit is reached" do
+      it "returns true if reset time is in future" do
+        Dolist::API.limit_remaining.value = 0
+        Dolist::API.limit_reset_at.value = 1.hour.from_now
+        expect(Dolist::API.rate_limited?).to eq true
+      end
+
+      it "returns false if reset time is in past" do
+        Dolist::API.limit_remaining.value = 0
+        Dolist::API.limit_reset_at.value = 1.hour.ago
+        expect(Dolist::API.rate_limited?).to eq false
+      end
+    end
+
+    context "when rate limit is not reached" do
+      it "returns false" do
+        Dolist::API.limit_remaining.value = 1
+        Dolist::API.limit_reset_at.value = 1.hour.from_now
+        expect(Dolist::API.rate_limited?).to eq false
       end
     end
   end

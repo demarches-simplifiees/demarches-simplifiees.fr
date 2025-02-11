@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
-RSpec.describe BalancerDeliveryMethod do
+RSpec.describe PriorityDeliveryConcern do
   class ExampleMailer < ApplicationMailer
-    include BalancedDeliveryConcern
+    include PriorityDeliveryConcern
 
     def greet(name, bypass_unverified_mail_protection: true, **mail_args)
       mail(to: name, from: "smtp_from", body: "Hello #{name}", **mail_args)
 
       bypass_unverified_mail_protection! if bypass_unverified_mail_protection
     end
+
+    def self.critical_email?(_action_name) = false
   end
 
   class ImportantEmail < ApplicationMailer
-    include BalancedDeliveryConcern
+    include PriorityDeliveryConcern
 
     before_action :set_x_deliver_with
 
@@ -21,6 +23,8 @@ RSpec.describe BalancerDeliveryMethod do
 
       bypass_unverified_mail_protection!
     end
+
+    def self.critical_email?(_action_name) = false
 
     private
 
@@ -210,6 +214,17 @@ RSpec.describe BalancerDeliveryMethod do
       let(:mail) { ExampleMailer.greet(nil, bypass_unverified_mail_protection: false, bcc: ["'u@a.com'"]) }
 
       it { expect(mail).to have_been_delivered_using(MockSmtp) }
+    end
+  end
+
+  context 'when email is critical' do
+    before do
+      allow(ImportantEmail).to receive(:critical_email?).and_return(true)
+    end
+
+    it 'sets x-critical header' do
+      mail = ImportantEmail.greet('test@example.com').deliver_now
+      expect(mail[PriorityDeliveryConcern::CRITICAL_HEADER].value).to eq("true")
     end
   end
 

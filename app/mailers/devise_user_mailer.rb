@@ -8,7 +8,6 @@ class DeviseUserMailer < Devise::Mailer
   include MailerDefaultsConfigurableConcern
   include MailerDolistConcern
   include MailerMonitoringConcern
-  include BalancedDeliveryConcern
   include PriorityDeliveryConcern
 
   layout 'mailers/layout'
