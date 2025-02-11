@@ -16,7 +16,7 @@ module GroupeInstructeursSignatureConcern
           @available_instructeur_emails = available_instructeur_emails
         end
 
-        flash[:alert] = "Aucun fichier joint pour le tampon de l'attestation"
+        flash[:alert] = "Aucun fichier joint pour le tampon de l’attestation"
         render :show
       else
         if @groupe_instructeur.signature.attach(signature_file)

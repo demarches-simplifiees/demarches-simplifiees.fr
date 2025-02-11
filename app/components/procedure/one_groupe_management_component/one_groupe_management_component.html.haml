@@ -1,44 +1,51 @@
 %div{ id: dom_id(@groupe_instructeur, :routing) }
-  %h1 Paramètres du groupe
+  %h1.fr-h2 Configuration du groupe « #{@groupe_instructeur.label} »
+  %h2.fr-h3 Paramètres du groupe
 
-  = render Procedure::ImportComponent.new(procedure: @procedure)
+  .card
+    = form_for @groupe_instructeur,
+      url: admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
+      method: :patch do |f|
+      = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
+      .flex
+        = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w'
+        = f.button 'Renommer', class: 'fr-btn fr-btn--tertiary'
 
-  = form_for @groupe_instructeur,
-    url: admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
-    method: :patch do |f|
-    = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
-    .flex
-      = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w'
-      = f.button 'Renommer', class: 'fr-btn fr-btn--secondary'
-
-  = form_for @groupe_instructeur,
-    url: admin_procedure_groupe_instructeur_update_state_path(@procedure, @groupe_instructeur),
-    method: :patch,
-    data: { turbo: true, controller: 'autosubmit' } do |f|
-    .fr-checkbox-group.fr-my-3w
-      = f.check_box :closed, { id: 'closed', "aria-describedby" => "closed-messages", :name => "closed" }
-      %label.fr-label{ :for => "closed" }
-        Groupe inactif
-        %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d’instructeurs
-
-  = render Conditions::RoutingRulesComponent.new(groupe_instructeur: @groupe_instructeur)
-
-  .fr-hint-text.mt-2.mb-2
-    %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le
-    %span
-      = link_to 'champ concerné', champs_admin_procedure_path(@procedure)
-
-  .flex.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right.mb-2
+    = form_for @groupe_instructeur,
+      url: admin_procedure_groupe_instructeur_update_state_path(@procedure, @groupe_instructeur),
+      method: :patch,
+      data: { turbo: true, controller: 'autosubmit' } do |f|
+      .fr-checkbox-group.fr-my-3w
+        = f.check_box :closed, { id: 'closed', "aria-describedby" => "closed-messages", :name => "closed" }
+        %label.fr-label{ :for => "closed" }
+          Groupe inactif
+          %span.fr-hint-text Si cette option est activée, les dossiers ne seront pas routés dans ce groupe si les usagers sélectionnent ce choix.
     - if @groupe_instructeur.can_delete?
-      %p= t('.delete')
       = button_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
-      class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line',
+      class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line',
       method: :delete,
       data: { confirm: t('.delete_confirmation', group_name: @groupe_instructeur.label) } do
-        Supprimer
+        Supprimer ce groupe
     - else
-      = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
-      class: 'fr-btn fr-btn--tertiary fr-icon-folder-2-line',
-      title: t('.move_files_confirmation'),
-      method: :get do
-        = t('.move_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)
+      %em Vous ne pouvez pas supprimer ce groupe car des dossiers lui sont affectés.
+
+  %h2.fr-h3 Dossiers affectés
+  .card
+    .flex.justify-between.align-center.fr-btns-group--sm.fr-btns-group--icon-right
+      %span.fr-icon.fr-icon-folder-2-line.fr-mr-2w
+        = t('.number_of_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)
+      - if !@groupe_instructeur.can_delete?
+        = button_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
+        class: 'fr-btn fr-btn--tertiary fr-icon-folder-2-line',
+        title: t('.move_files_confirmation'),
+        method: :get do
+          = t('.move_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)
+
+  %h2.fr-h3 Règle(s) de routage
+  .card
+    = render Conditions::RoutingRulesComponent.new(groupe_instructeur: @groupe_instructeur)
+    %p.fr-alert.fr-alert--info.fr-mt-3w{ aria: { hidden: true } }
+      Si vous ne trouvez pas l’option correspondant à votre groupe, veuillez l’ajouter dans le champ concerné dans la page d’édition des
+      = link_to('champs du formulaire',
+        champs_admin_procedure_path(@procedure),
+        **helpers.external_link_attributes)
