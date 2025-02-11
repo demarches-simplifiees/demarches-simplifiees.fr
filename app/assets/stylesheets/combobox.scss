@@ -1,0 +1,89 @@
+.fr-label + .fr-ds-combobox {
+  // same as .fr-label + .fr-input
+  margin-top: 0.5rem;
+}
+
+.fr-ds-combobox {
+  .fr-autocomplete {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z'%3E%3C/path%3E%3C/svg%3E");
+  }
+}
+
+.fr-ds-combobox__multiple {
+  .fr-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.fr-ds-combobox__menu {
+  &[data-placement='top'] {
+    --origin: translateY(8px);
+  }
+
+  &[data-placement='bottom'] {
+    --origin: translateY(-8px);
+  }
+
+  &[data-placement='right'] {
+    --origin: translateX(-8px);
+  }
+
+  &[data-placement='left'] {
+    --origin: translateX(8px);
+  }
+
+  &[data-entering] {
+    animation: popover-slide 200ms;
+  }
+
+  &.fr-menu {
+    width: var(--trigger-width);
+    top: unset;
+
+    .fr-menu__list {
+      display: block;
+      width: unset;
+      max-height: 300px;
+      overflow: auto;
+    }
+
+    .fr-menu__item {
+      &[data-selected] {
+        font-weight: bold;
+      }
+
+      &[data-focused] {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+@keyframes popover-slide {
+  from {
+    transform: var(--origin);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 62em) {
+  .fr-ds-combobox__menu {
+    &.fr-menu .fr-menu__list {
+      z-index: calc(var(--ground) + 1000);
+      background-color: var(--background-default-grey);
+      --idle: transparent;
+      --hover: var(--background-overlap-grey-hover);
+      --active: var(--background-overlap-grey-active);
+      filter: drop-shadow(var(--overlap-shadow));
+      box-shadow: inset 0 1px 0 0 var(--border-open-blue-france);
+    }
+  }
+}
