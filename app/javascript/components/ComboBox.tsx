@@ -275,7 +275,9 @@ export function RemoteComboBox({
   return (
     <>
       <ComboBox
-        allowsEmptyCollection={comboBoxProps.inputValue.length > 0}
+        allowsEmptyCollection={
+          comboBoxProps.inputValue.length >= (minimumInputLength ?? 0)
+        }
         allowsCustomValue={allowsCustomValue}
         {...comboBoxProps}
         {...props}
