@@ -529,6 +529,50 @@ describe DossierFilterService do
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
+      context 'with multiple filters' do
+        let(:filters) { [filter_resto, filter_a_emporter] }
+        let(:filter_resto) { [type_de_champ_resto.libelle, 'pizzeria'] }
+        let(:filter_a_emporter) { [type_de_champ_a_emporter.libelle, 'true'] }
+
+        let(:types_de_champ_public) do
+          [
+            { type: :drop_down_list, options: ['pizzeria', 'gastronomique'] },
+            { type: :yes_no }
+          ]
+        end
+        let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
+        let(:type_de_champ_resto) { types_de_champ[0] }
+        let(:type_de_champ_a_emporter) { types_de_champ[1] }
+
+        let(:another_discarded_dossier) { create(:dossier, procedure:) }
+
+        before do
+          kept_champ_resto = kept_dossier.champs.find_by(stable_id: type_de_champ_resto.stable_id)
+          kept_champ_resto.value = 'pizzeria'
+          kept_champ_resto.save!
+
+          kept_champ_a_emporter = kept_dossier.champs.find_by(stable_id: type_de_champ_a_emporter.stable_id)
+          kept_champ_a_emporter.value = 'true'
+          kept_champ_a_emporter.save!
+
+          discarded_champ_resto = discarded_dossier.champs.find_by(stable_id: type_de_champ_resto.stable_id)
+          discarded_champ_resto.value = 'pizzeria'
+          discarded_champ_a_emporter = discarded_dossier.champs.find_by(stable_id: type_de_champ_a_emporter.stable_id)
+          discarded_champ_a_emporter.value = 'false'
+          discarded_champ_resto.save!
+          discarded_champ_a_emporter.save!
+
+          another_discarded_champ_resto = another_discarded_dossier.champs.find_by(stable_id: type_de_champ_resto.stable_id)
+          another_discarded_champ_resto.value = 'fast-food'
+          another_discarded_champ_a_emporter = another_discarded_dossier.champs.find_by(stable_id: type_de_champ_a_emporter.stable_id)
+          another_discarded_champ_a_emporter.value = 'true'
+          another_discarded_champ_resto.save!
+          another_discarded_champ_a_emporter.save!
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
       context 'with enums type_de_champ' do
         let(:filter) { [type_de_champ.libelle, search_term] }
         let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, options: ['champ', 'champignon'] }] }

@@ -74,63 +74,63 @@ class DossierFilterService
       .group_by { |filter| filter.column.then { [_1.table, _1.column] } }
       .map do |(table, column), filters_for_column|
       values = filters_for_column.map(&:filter)
-      filtered_column = filters_for_column.first.column
+      filters_for_column.map(&:column).map do |filtered_column|
+        if filtered_column.respond_to?(:filtered_ids)
+          filtered_column.filtered_ids(dossiers, values)
+        else
+          case table
+          when 'self'
+            if filtered_column.type == :date || filtered_column.type == :datetime
+              dates = values
+                .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
-      if filtered_column.respond_to?(:filtered_ids)
-        filtered_column.filtered_ids(dossiers, values)
-      else
-        case table
-        when 'self'
-          if filtered_column.type == :date || filtered_column.type == :datetime
-            dates = values
-              .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+              dossiers.filter_by_datetimes(column, dates)
+            elsif filtered_column.column == "state" && values.include?("pending_correction")
+              dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
+            elsif filtered_column.column == "state" && values.include?("en_construction")
+              dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+            elsif filtered_column.type == :integer
+              dossiers.where("dossiers.#{column} IN (?)", values.filter_map { Integer(_1) rescue nil })
+            else
+              dossiers.where("dossiers.#{column} IN (?)", values)
+            end
+          when 'etablissement'
+            if column == 'entreprise_date_creation'
+              dates = values
+                .filter_map { |v| v.to_date rescue nil }
 
-            dossiers.filter_by_datetimes(column, dates)
-          elsif filtered_column.column == "state" && values.include?("pending_correction")
-            dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-          elsif filtered_column.column == "state" && values.include?("en_construction")
-            dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
-          elsif filtered_column.type == :integer
-            dossiers.where("dossiers.#{column} IN (?)", values.filter_map { Integer(_1) rescue nil })
-          else
-            dossiers.where("dossiers.#{column} IN (?)", values)
-          end
-        when 'etablissement'
-          if column == 'entreprise_date_creation'
-            dates = values
-              .filter_map { |v| v.to_date rescue nil }
-
+              dossiers
+                .includes(table)
+                .where(table.pluralize => { column => dates })
+            else
+              dossiers
+                .includes(table)
+                .filter_ilike(table, column, values)
+            end
+          when 'followers_instructeurs'
+            assert_supported_column(table, column)
+            dossiers
+              .includes(:followers_instructeurs)
+              .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
+              .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
+          when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
             dossiers
               .includes(table)
-              .where(table.pluralize => { column => dates })
-          else
+              .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
+          when 'dossier_labels'
+            assert_supported_column(table, column)
             dossiers
-              .includes(table)
-              .filter_ilike(table, column, values)
-          end
-        when 'followers_instructeurs'
-          assert_supported_column(table, column)
-          dossiers
-            .includes(:followers_instructeurs)
-            .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-            .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
-        when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
-          dossiers
-            .includes(table)
-            .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
-        when 'dossier_labels'
-          assert_supported_column(table, column)
-          dossiers
-            .joins(:dossier_labels)
-            .where(dossier_labels: { label_id: values })
-        when 'groupe_instructeur'
-          assert_supported_column(table, column)
+              .joins(:dossier_labels)
+              .where(dossier_labels: { label_id: values })
+          when 'groupe_instructeur'
+            assert_supported_column(table, column)
 
-          dossiers
-            .joins(:groupe_instructeur)
-            .where(groupe_instructeur_id: values)
-        end.pluck(:id)
-      end
+            dossiers
+              .joins(:groupe_instructeur)
+              .where(groupe_instructeur_id: values)
+          end.pluck(:id)
+        end
+      end.reduce(:&)
     end.reduce(:&)
   end
 
