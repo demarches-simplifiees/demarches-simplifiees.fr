@@ -41,6 +41,7 @@ export function ComboBox({
   description,
   className,
   inputRef,
+  isLoading,
   ...props
 }: ComboBoxProps & { inputRef?: RefObject<HTMLInputElement> }) {
   return (
@@ -60,7 +61,11 @@ export function ComboBox({
         </Label>
       ) : null}
       <div className="fr-ds-combobox__input" style={{ position: 'relative' }}>
-        <Input className="fr-select fr-autocomplete" ref={inputRef} />
+        <Input
+          className="fr-select fr-autocomplete"
+          ref={inputRef}
+          aria-busy={isLoading}
+        />
         <Button
           aria-haspopup="false"
           aria-label=""

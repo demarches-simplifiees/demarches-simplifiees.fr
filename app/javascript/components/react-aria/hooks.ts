@@ -20,6 +20,7 @@ export interface ComboBoxProps
   children: React.ReactNode | ((item: Item) => React.ReactNode);
   label?: string;
   description?: string;
+  isLoading?: boolean;
 }
 
 const inputMap = new WeakMap<HTMLInputElement, string>();
@@ -431,7 +432,8 @@ export function useRemoteList({
     inputValue,
     onInputChange,
     items,
-    onReset
+    onReset,
+    isLoading: list.isLoading
   };
 }
 
