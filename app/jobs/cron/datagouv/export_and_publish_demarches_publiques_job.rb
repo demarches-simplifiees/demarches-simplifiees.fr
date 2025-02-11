@@ -3,6 +3,8 @@
 class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
   self.schedule_expression = "every month at 4:10"
+  DATASET = '62a0afdacffa4c3ea5cbd1b4'
+  RESOURCE = '666211e9-6226-4fad-8d2f-5a4135f40e47'
 
   def perform(*args)
     gzip_filepath = [
@@ -14,7 +16,7 @@ class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
     begin
       DemarchesPubliquesExportService.new(gzip_filepath).call
       io = File.new(gzip_filepath, 'r')
-      APIDatagouv::API.upload(io, :descriptif_demarches_dataset, :descriptif_demarches_resource)
+      APIDatagouv::API.upload(io, DATASET, RESOURCE)
     ensure
       FileUtils.rm(gzip_filepath)
     end
