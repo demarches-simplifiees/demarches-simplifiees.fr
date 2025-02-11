@@ -48,15 +48,26 @@
       width: unset;
       max-height: 300px;
       overflow: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      padding: 2px 2px 0 2px !important;
+      color: var(--text-default-blue-france);
     }
 
     .fr-menu__item {
-      &[data-selected] {
-        font-weight: bold;
+      padding: 4px 8px;
+      margin-bottom: 2px !important;
+      background-color: var(--background-alt-blue-france);
+      cursor: pointer;
+      border: 1px solid transparent;
+
+      &[data-selected],
+      &[data-focused] {
+        background-color: var(--background-alt-blue-france-hover);
+        color: var(--text-action-high-blue-france);
       }
 
-      &[data-focused] {
-        font-weight: bold;
+      &[data-selected] {
+        border: 1px solid var(--border-plain-info);
       }
     }
   }
