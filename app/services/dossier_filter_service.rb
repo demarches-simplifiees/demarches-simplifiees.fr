@@ -74,13 +74,13 @@ class DossierFilterService
       .group_by { |filtered_column| filtered_column.column.then { [_1.table, _1.column] } }
       .map do |(table, db_column), grouped_filtered_columns|
       values = grouped_filtered_columns.map(&:filter)
-      grouped_filtered_columns.map(&:column).map do |filtered_column|
-        if filtered_column.respond_to?(:filtered_ids)
-          filtered_column.filtered_ids(dossiers, values)
+      grouped_filtered_columns.map(&:column).map do |column|
+        if column.respond_to?(:filtered_ids)
+          column.filtered_ids(dossiers, values)
         else
           case table
           when 'self'
-            if filtered_column.type == :date || filtered_column.type == :datetime
+            if column.type == :date || column.type == :datetime
               dates = values
                 .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
@@ -89,7 +89,7 @@ class DossierFilterService
               dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
             elsif db_column == "state" && values.include?("en_construction")
               dossiers.where("dossiers.#{db_column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
-            elsif filtered_column.type == :integer
+            elsif column.type == :integer
               dossiers.where("dossiers.#{db_column} IN (?)", values.filter_map { Integer(_1) rescue nil })
             else
               dossiers.where("dossiers.#{db_column} IN (?)", values)
