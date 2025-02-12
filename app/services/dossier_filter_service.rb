@@ -44,7 +44,6 @@ class DossierFilterService
         ids
       end
     when 'followers_instructeurs'
-      assert_supported_column(table, column)
       # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
       dossiers
         .includes(:followers_instructeurs)
@@ -108,7 +107,6 @@ class DossierFilterService
                 .filter_ilike(table, db_column, values)
             end
           when 'followers_instructeurs'
-            assert_supported_column(table, db_column)
             dossiers
               .includes(:followers_instructeurs)
               .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
@@ -118,13 +116,10 @@ class DossierFilterService
               .includes(table)
               .filter_ilike(table, db_column, values) # ilike or where db_column == 'value' are both valid, we opted for ilike
           when 'dossier_labels'
-            assert_supported_column(table, db_column)
             dossiers
               .joins(:dossier_labels)
               .where(dossier_labels: { label_id: values })
           when 'groupe_instructeur'
-            assert_supported_column(table, db_column)
-
             dossiers
               .joins(:groupe_instructeur)
               .where(groupe_instructeur_id: values)
@@ -151,14 +146,5 @@ class DossierFilterService
     [table, column]
       .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
       .join('.')
-  end
-
-  def self.assert_supported_column(table, column)
-    if table == 'followers_instructeurs' && column != 'email'
-      raise ArgumentError, 'Table `followers_instructeurs` only supports the `email` column.'
-    end
-    if table == 'groupe_instructeur' && (column != 'label' && column != 'id')
-      raise ArgumentError, 'Table `groupe_instructeur` only supports the `label` or `id` column.'
-    end
   end
 end
