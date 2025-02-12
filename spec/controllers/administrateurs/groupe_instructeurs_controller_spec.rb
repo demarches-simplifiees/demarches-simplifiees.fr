@@ -1085,4 +1085,32 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       expect(gi_1_1.signature).to be_attached
     end
   end
+
+  describe '#bulk_route' do
+    let!(:procedure) do
+      create(:procedure,
+             types_de_champ_public: [
+               { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
+               { type: :text, libelle: 'Un champ texte' }
+             ],
+             administrateurs: [admin])
+    end
+
+    let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
+    let!(:dossier1) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
+    let!(:dossier2) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
+
+    before do
+      dossier1.champs.first.update(value: 'Paris')
+      dossier2.champs.first.update(value: 'Lyon')
+      post :create_simple_routing, params: { procedure_id: procedure.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } }
+      post :bulk_route, params: { procedure_id: procedure.id }
+    end
+
+    it do
+      expect(dossier1.reload.groupe_instructeur.label).to eq 'Paris'
+      expect(dossier2.reload.groupe_instructeur.label).to eq 'Lyon'
+      expect(procedure.reload.routing_alert).to be_falsey
+    end
+  end
 end

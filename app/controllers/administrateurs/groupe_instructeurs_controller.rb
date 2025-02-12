@@ -392,6 +392,22 @@ module Administrateurs
       end
     end
 
+    def bulk_route
+      dossiers = procedure.dossiers
+
+      dossiers.update_all(forced_groupe_instructeur: false)
+
+      dossiers.each do |dossier|
+        RoutingEngine.compute(dossier, assignment_mode: DossierAssignment.modes.fetch(:bulk_routing))
+      end
+
+      procedure.update!(routing_alert: false)
+
+      flash[:notice] = "Les dossiers ont étés routés vers les groupes d’instructeurs"
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+    end
+
     private
 
     def closed_params?

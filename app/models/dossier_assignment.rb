@@ -9,7 +9,8 @@ class DossierAssignment < ApplicationRecord
   enum :mode, {
     auto: 'auto',
     manual: 'manual',
-    tech: 'tech'
+    tech: 'tech',
+    bulk_routing: 'bulk_routing'
   }
 
   scope :manual, -> { where(mode: :manual) }

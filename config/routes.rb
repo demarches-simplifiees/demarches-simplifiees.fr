@@ -729,6 +729,7 @@ Rails.application.routes.draw do
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
           get 'export_groupe_instructeurs'
+          post 'bulk_route'
         end
       end
 
