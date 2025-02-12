@@ -42,8 +42,12 @@ export function ComboBox({
   className,
   inputRef,
   isLoading,
+  isOpen,
   ...props
-}: ComboBoxProps & { inputRef?: RefObject<HTMLInputElement> }) {
+}: ComboBoxProps & {
+  inputRef?: RefObject<HTMLInputElement>;
+  isOpen?: boolean;
+}) {
   return (
     <AriaComboBox
       {...props}
@@ -84,6 +88,7 @@ export function ComboBox({
       <Popover
         className="fr-ds-combobox__menu fr-menu"
         UNSTABLE_portalContainer={getPortal()!}
+        isOpen={isOpen}
       >
         <ListBox className="fr-menu__list">{children}</ListBox>
       </Popover>
@@ -265,17 +270,18 @@ export function RemoteComboBox({
         : loader,
     [loader, minimumInputLength, limit, coerce]
   );
-  const { selectedItem, onReset, ...comboBoxProps } = useRemoteList({
-    allowsCustomValue,
-    defaultItems,
-    defaultSelectedKey,
-    debounce,
-    load,
-    onChange: (item) => {
-      onChange?.(item);
-      dispatch();
-    }
-  });
+  const { selectedItem, onReset, shouldShowPopover, ...comboBoxProps } =
+    useRemoteList({
+      allowsCustomValue,
+      defaultItems,
+      defaultSelectedKey,
+      debounce,
+      load,
+      onChange: (item) => {
+        onChange?.(item);
+        dispatch();
+      }
+    });
 
   return (
     <>
@@ -283,6 +289,7 @@ export function RemoteComboBox({
         allowsEmptyCollection={
           comboBoxProps.inputValue.length >= (minimumInputLength ?? 0)
         }
+        isOpen={shouldShowPopover}
         allowsCustomValue={allowsCustomValue}
         {...comboBoxProps}
         {...props}

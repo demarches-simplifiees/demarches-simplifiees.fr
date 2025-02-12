@@ -366,6 +366,7 @@ export function useRemoteList({
   const [inputValue, setInputValue] = useState(
     defaultSelectedItem?.label ?? ''
   );
+  const [isExplicitlySelected, setIsExplicitlySelected] = useState(false);
   const selectedItem = useMemo<Item | null>(() => {
     if (defaultSelectedItem) {
       return defaultSelectedItem;
@@ -387,6 +388,7 @@ export function useRemoteList({
   const onSelectionChange = useEvent<
     NonNullable<ComboBoxProps['onSelectionChange']>
   >((key) => {
+    setIsExplicitlySelected(true);
     const item =
       typeof key != 'string'
         ? null
@@ -405,6 +407,7 @@ export function useRemoteList({
   const onInputChange = useEvent<NonNullable<ComboBoxProps['onInputChange']>>(
     (value) => {
       debouncedSetFilterText(value);
+      setIsExplicitlySelected(false);
       setInputValue(value);
       if (value == '') {
         onSelectionChange(null);
@@ -425,6 +428,20 @@ export function useRemoteList({
       ? [selectedItem, ...list.items]
       : list.items;
 
+  const shouldShowPopover = useMemo(() => {
+    if (isExplicitlySelected || list.items.length == 0) {
+      return false;
+    }
+
+    // Visible while loading new items or when loaded but explicit selection not yet done
+    return list.loadingState == 'filtering' || !list.isLoading;
+  }, [
+    list.isLoading,
+    list.loadingState,
+    list.items.length,
+    isExplicitlySelected
+  ]);
+
   return {
     selectedItem,
     selectedKey: selectedItem?.value ?? null,
@@ -433,7 +450,8 @@ export function useRemoteList({
     onInputChange,
     items,
     onReset,
-    isLoading: list.isLoading
+    isLoading: list.isLoading,
+    shouldShowPopover
   };
 }
 
