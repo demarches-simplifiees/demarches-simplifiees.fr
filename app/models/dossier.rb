@@ -222,6 +222,7 @@ class Dossier < ApplicationRecord
   scope :state_accepte,                        -> { where(state: states.fetch(:accepte)) }
   scope :state_refuse,                         -> { where(state: states.fetch(:refuse)) }
   scope :state_sans_suite,                     -> { where(state: states.fetch(:sans_suite)) }
+  scope :soumis,                               -> { where(state: SOUMIS) }
 
   scope :archived,                  -> { where(archived: true) }
   scope :not_archived,              -> { where(archived: false) }
