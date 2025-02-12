@@ -5,7 +5,7 @@ require 'active_support/i18n'
 require 'public_suffix'
 require 'addressable/uri'
 
-# Most of this code is borowed from https://github.com/perfectline/validates_url
+# Most of this code is borrowed from https://github.com/perfectline/validates_url
 
 class URLValidator < ActiveModel::EachValidator
   RESERVED_OPTIONS = [:schemes, :no_local]
