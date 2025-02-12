@@ -88,6 +88,8 @@ module Administrateurs
         defaut.destroy!
       end
 
+      procedure.update!(routing_alert: true) if procedure.dossiers.soumis.any?
+
       flash[:routing_mode] = 'simple'
 
       redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
@@ -107,6 +109,8 @@ module Administrateurs
         .create({ label: 'Groupe 2 (à renommer et configurer)', instructeurs: [current_administrateur.instructeur] })
 
       procedure.toggle_routing
+
+      procedure.update!(routing_alert: true) if procedure.dossiers.soumis.any?
 
       flash[:routing_mode] = 'custom'
 
