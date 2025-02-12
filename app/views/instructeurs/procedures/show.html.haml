@@ -79,8 +79,7 @@
                   %tbody
                     = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
 
-                    - @projected_dossiers.each do |p|
-                      - dossier = p.dossier
+                    - @projected_dossiers.each do |dossier|
                       - path = instructeur_dossier_path(@procedure, dossier.id, statut: params[:statut])
                       %tr{ class: class_names("file-hidden-by-user" => dossier.hidden_by_user_at.present?), id: "table-dossiers-row-#{dossier.id}", "aria-selected" => "false", "data-row-key" => dossier.id }
                         - if batch_operation_component.render?
@@ -108,16 +107,16 @@
                                 %span.notifications{ 'aria-label': 'notifications' }
 
 
-                        - p.columns.each do |column|
+                        - @procedure_presentation.displayed_columns.each do |column|
                           %td.fr-cell--multiline
                             - if dossier.hidden_by_administration_at.present?
                               %span
-                                = column.is_a?(Hash) ? tags_label(column[:value]) : column
+                                = render Instructeurs::CellComponent.new(dossier:, column:)
                                 - if dossier.hidden_by_user_at.present?
                                   = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}"
                             - else
                               %a{ href: path }
-                                = column.is_a?(Hash) ? tags_label(column[:value]) : column
+                                = render Instructeurs::CellComponent.new(dossier:, column:)
                                 = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}" if dossier.hidden_by_user_at.present?
 
                         %td
