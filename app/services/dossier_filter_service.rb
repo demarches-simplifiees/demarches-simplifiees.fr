@@ -72,9 +72,9 @@ class DossierFilterService
   def self.filtered_ids(dossiers, filtered_columns)
     filtered_columns
       .group_by { |filtered_column| filtered_column.column.then { [_1.table, _1.column] } }
-      .map do |(table, db_column), filters_for_column|
-      values = filters_for_column.map(&:filter)
-      filters_for_column.map(&:column).map do |filtered_column|
+      .map do |(table, db_column), grouped_filtered_columns|
+      values = grouped_filtered_columns.map(&:filter)
+      grouped_filtered_columns.map(&:column).map do |filtered_column|
         if filtered_column.respond_to?(:filtered_ids)
           filtered_column.filtered_ids(dossiers, values)
         else
