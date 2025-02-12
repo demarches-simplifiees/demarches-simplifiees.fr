@@ -909,6 +909,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
 
       let!(:drop_down_tdc) { procedure3.draft_revision.types_de_champ.first }
+      let!(:dossier) { create(:dossier, procedure: procedure3, state: :en_construction) }
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } } }
 
@@ -918,6 +919,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         expect(procedure3.groupe_instructeurs.pluck(:label)).to match_array(['Paris', 'Lyon', 'Marseille'])
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
         expect(procedure3.routing_enabled).to be_truthy
+        expect(procedure3.routing_alert).to be_truthy
       end
     end
 
@@ -938,6 +940,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(departements_tdc.stable_id), constant('01')))
         expect(procedure3.routing_enabled).to be_truthy
+        expect(procedure3.routing_alert).to be_falsey
       end
     end
 
