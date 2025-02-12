@@ -3,12 +3,12 @@
 class DossierFilterService
   TYPE_DE_CHAMP = 'type_de_champ'
 
-  def self.filtered_sorted_ids(dossiers, statut, filters, sorted_column, instructeur, count: nil, include_archived: false)
+  def self.filtered_sorted_ids(dossiers, statut, filtered_columns, sorted_column, instructeur, count: nil, include_archived: false)
     dossiers_by_statut = dossiers.by_statut(statut, instructeur:, include_archived:)
     dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, sorted_column, instructeur, count || dossiers_by_statut.size)
 
-    if filters.present?
-      dossiers_sorted_ids.intersection(filtered_ids(dossiers_by_statut, filters))
+    if filtered_columns.present?
+      dossiers_sorted_ids.intersection(filtered_ids(dossiers_by_statut, filtered_columns))
     else
       dossiers_sorted_ids
     end
@@ -69,9 +69,9 @@ class DossierFilterService
     end
   end
 
-  def self.filtered_ids(dossiers, filters)
-    filters
-      .group_by { |filter| filter.column.then { [_1.table, _1.column] } }
+  def self.filtered_ids(dossiers, filtered_columns)
+    filtered_columns
+      .group_by { |filtered_column| filtered_column.column.then { [_1.table, _1.column] } }
       .map do |(table, column), filters_for_column|
       values = filters_for_column.map(&:filter)
       filters_for_column.map(&:column).map do |filtered_column|
