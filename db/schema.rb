@@ -1039,6 +1039,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_20_153834) do
     t.bigint "published_revision_id"
     t.boolean "rdv_enabled", default: false, null: false
     t.bigint "replaced_by_procedure_id"
+    t.boolean "routing_alert", default: false, null: false
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
