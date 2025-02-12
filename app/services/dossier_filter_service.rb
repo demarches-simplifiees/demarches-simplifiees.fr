@@ -72,7 +72,7 @@ class DossierFilterService
   def self.filtered_ids(dossiers, filtered_columns)
     filtered_columns
       .group_by { |filtered_column| filtered_column.column.then { [_1.table, _1.column] } }
-      .map do |(table, column), filters_for_column|
+      .map do |(table, db_column), filters_for_column|
       values = filters_for_column.map(&:filter)
       filters_for_column.map(&:column).map do |filtered_column|
         if filtered_column.respond_to?(:filtered_ids)
@@ -84,31 +84,31 @@ class DossierFilterService
               dates = values
                 .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
-              dossiers.filter_by_datetimes(column, dates)
+              dossiers.filter_by_datetimes(db_column, dates)
             elsif filtered_column.column == "state" && values.include?("pending_correction")
               dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
             elsif filtered_column.column == "state" && values.include?("en_construction")
-              dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+              dossiers.where("dossiers.#{db_column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
             elsif filtered_column.type == :integer
-              dossiers.where("dossiers.#{column} IN (?)", values.filter_map { Integer(_1) rescue nil })
+              dossiers.where("dossiers.#{db_column} IN (?)", values.filter_map { Integer(_1) rescue nil })
             else
-              dossiers.where("dossiers.#{column} IN (?)", values)
+              dossiers.where("dossiers.#{db_column} IN (?)", values)
             end
           when 'etablissement'
-            if column == 'entreprise_date_creation'
+            if db_column == 'entreprise_date_creation'
               dates = values
                 .filter_map { |v| v.to_date rescue nil }
 
               dossiers
                 .includes(table)
-                .where(table.pluralize => { column => dates })
+                .where(table.pluralize => { db_column => dates })
             else
               dossiers
                 .includes(table)
-                .filter_ilike(table, column, values)
+                .filter_ilike(table, db_column, values)
             end
           when 'followers_instructeurs'
-            assert_supported_column(table, column)
+            assert_supported_column(table, db_column)
             dossiers
               .includes(:followers_instructeurs)
               .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
@@ -116,14 +116,14 @@ class DossierFilterService
           when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
             dossiers
               .includes(table)
-              .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
+              .filter_ilike(table, db_column, values) # ilike or where db_column == 'value' are both valid, we opted for ilike
           when 'dossier_labels'
-            assert_supported_column(table, column)
+            assert_supported_column(table, db_column)
             dossiers
               .joins(:dossier_labels)
               .where(dossier_labels: { label_id: values })
           when 'groupe_instructeur'
-            assert_supported_column(table, column)
+            assert_supported_column(table, db_column)
 
             dossiers
               .joins(:groupe_instructeur)
