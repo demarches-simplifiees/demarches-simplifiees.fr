@@ -392,7 +392,7 @@ export function useRemoteList({
         ? null
         : selectedItem?.value == key
           ? selectedItem
-          : list.getItem(key);
+          : list.getItem(key) ?? null;
     setSelectedItem(item);
     if (item) {
       setInputValue(item.label);
