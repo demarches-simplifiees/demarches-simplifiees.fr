@@ -4475,6 +4475,7 @@ type Traitement {
   emailAgentTraitant: String
   id: ID!
   motivation: String
+  revision: Revision
   state: DossierState!
 }
 
