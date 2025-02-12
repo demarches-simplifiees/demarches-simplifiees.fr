@@ -69,63 +69,62 @@ class DossierFilterService
   end
 
   def self.filtered_ids(dossiers, filtered_columns)
-    filtered_columns
-      .group_by { |filtered_column| filtered_column.column.then { [_1.table, _1.column] } }
-      .map do |(table, db_column), grouped_filtered_columns|
-      values = grouped_filtered_columns.map(&:filter)
-      grouped_filtered_columns.map(&:column).map do |column|
-        if column.respond_to?(:filtered_ids)
-          column.filtered_ids(dossiers, values)
-        else
-          case table
-          when 'self'
-            if column.type == :date || column.type == :datetime
-              dates = values
-                .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+    values_by_column = filtered_columns.group_by(&:column).transform_values { _1.map(&:filter) }
 
-              dossiers.filter_by_datetimes(db_column, dates)
-            elsif db_column == "state" && values.include?("pending_correction")
-              dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-            elsif db_column == "state" && values.include?("en_construction")
-              dossiers.where("dossiers.#{db_column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
-            elsif column.type == :integer
-              dossiers.where("dossiers.#{db_column} IN (?)", values.filter_map { Integer(_1) rescue nil })
-            else
-              dossiers.where("dossiers.#{db_column} IN (?)", values)
-            end
-          when 'etablissement'
-            if db_column == 'entreprise_date_creation'
-              dates = values
-                .filter_map { |v| v.to_date rescue nil }
+    values_by_column.map do |column, values|
+      if column.respond_to?(:filtered_ids)
+        column.filtered_ids(dossiers, values)
+      else
+        table, db_column = [column.table, column.column]
 
-              dossiers
-                .includes(table)
-                .where(table.pluralize => { db_column => dates })
-            else
-              dossiers
-                .includes(table)
-                .filter_ilike(table, db_column, values)
-            end
-          when 'followers_instructeurs'
-            dossiers
-              .includes(:followers_instructeurs)
-              .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-              .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
-          when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
+        case table
+        when 'self'
+          if column.type == :date || column.type == :datetime
+            dates = values
+              .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+
+            dossiers.filter_by_datetimes(db_column, dates)
+          elsif db_column == "state" && values.include?("pending_correction")
+            dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
+          elsif db_column == "state" && values.include?("en_construction")
+            dossiers.where("dossiers.#{db_column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+          elsif column.type == :integer
+            dossiers.where("dossiers.#{db_column} IN (?)", values.filter_map { Integer(_1) rescue nil })
+          else
+            dossiers.where("dossiers.#{db_column} IN (?)", values)
+          end
+        when 'etablissement'
+          if db_column == 'entreprise_date_creation'
+            dates = values
+              .filter_map { |v| v.to_date rescue nil }
+
             dossiers
               .includes(table)
-              .filter_ilike(table, db_column, values) # ilike or where db_column == 'value' are both valid, we opted for ilike
-          when 'dossier_labels'
+              .where(table.pluralize => { db_column => dates })
+          else
             dossiers
-              .joins(:dossier_labels)
-              .where(dossier_labels: { label_id: values })
-          when 'groupe_instructeur'
-            dossiers
-              .joins(:groupe_instructeur)
-              .where(groupe_instructeur_id: values)
-          end.pluck(:id)
-        end
-      end.reduce(:&)
+              .includes(table)
+              .filter_ilike(table, db_column, values)
+          end
+        when 'followers_instructeurs'
+          dossiers
+            .includes(:followers_instructeurs)
+            .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
+            .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
+        when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
+          dossiers
+            .includes(table)
+            .filter_ilike(table, db_column, values) # ilike or where db_column == 'value' are both valid, we opted for ilike
+        when 'dossier_labels'
+          dossiers
+            .joins(:dossier_labels)
+            .where(dossier_labels: { label_id: values })
+        when 'groupe_instructeur'
+          dossiers
+            .joins(:groupe_instructeur)
+            .where(groupe_instructeur_id: values)
+        end.pluck(:id)
+      end
     end.reduce(:&)
   end
 
