@@ -85,9 +85,9 @@ class DossierFilterService
                 .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
               dossiers.filter_by_datetimes(db_column, dates)
-            elsif filtered_column.column == "state" && values.include?("pending_correction")
+            elsif db_column == "state" && values.include?("pending_correction")
               dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-            elsif filtered_column.column == "state" && values.include?("en_construction")
+            elsif db_column == "state" && values.include?("en_construction")
               dossiers.where("dossiers.#{db_column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
             elsif filtered_column.type == :integer
               dossiers.where("dossiers.#{db_column} IN (?)", values.filter_map { Integer(_1) rescue nil })
