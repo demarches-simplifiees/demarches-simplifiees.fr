@@ -67,10 +67,6 @@ describe Champs::SiretController, type: :controller do
         it 'clears the etablissement on the model' do
           expect(champ.reload.etablissement).to be_nil
         end
-
-        it 'displays a “SIRET is invalid” error message' do
-          expect(response.body).to include('Le numéro de SIRET doit comporter exactement 14 chiffres.')
-        end
       end
 
       context "when the SIRET is invalid because of it's checksum" do
@@ -80,10 +76,6 @@ describe Champs::SiretController, type: :controller do
 
         it 'clears the etablissement on the model' do
           expect(champ.reload.etablissement).to be_nil
-        end
-
-        it 'displays a “SIRET is invalid” error message' do
-          expect(response.body).to include('Le format du numéro de SIRET est invalide.')
         end
       end
 
@@ -100,10 +92,6 @@ describe Champs::SiretController, type: :controller do
         it 'clears the etablissement on the model' do
           expect(champ.reload.etablissement).to be_nil
         end
-
-        it 'displays a “API is unavailable” error message' do
-          expect(response.body).to include('Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.')
-        end
       end
 
       context 'when the API is unavailable due to an api maintenance or pb' do
@@ -116,14 +104,10 @@ describe Champs::SiretController, type: :controller do
 
         subject! { get :show, params: params, format: :turbo_stream }
 
-        it 'saves the etablissement in degraded mode and SIRET on the model' do
+        it 'saves the etablissement in degraded mode' do
           champ.reload
           expect(champ.etablissement.siret).to eq(siret)
           expect(champ.etablissement.as_degraded_mode?).to be true
-        end
-
-        it 'displays a “API entreprise down” error message' do
-          expect(response.body).to include('Notre fournisseur de données semble en panne, nous récupérerons les données plus tard.')
         end
       end
 
@@ -135,10 +119,6 @@ describe Champs::SiretController, type: :controller do
 
         it 'clears the etablissement on the model' do
           expect(champ.reload.etablissement).to be_nil
-        end
-
-        it 'displays a “SIRET not found” error message' do
-          expect(response.body).to include('Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.')
         end
       end
 

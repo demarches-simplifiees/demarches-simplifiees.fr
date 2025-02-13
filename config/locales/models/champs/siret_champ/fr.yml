@@ -3,4 +3,12 @@ fr:
     attributes:
       champs/siret_champ:
         hints:
-          value: "Saisissez 14 chiffres. Exemple : 500 001 234 56789"
+          value: 'Saisissez 14 chiffres. Exemple : 500 001 234 56789'
+    errors:
+      models:
+        champs/siret_champ:
+          attributes:
+            value:
+              length: 'doit comporter exactement 14 chiffres'
+              checksum: 'n‘est pas valide'
+              not_found: 'aucun établissement n’est rattaché à ce numéro'

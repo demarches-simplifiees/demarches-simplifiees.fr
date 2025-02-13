@@ -35,7 +35,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
 
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
-  let(:siret_value) { '41816609600051' }
+  let(:siret_value) { '30613890001294' }
   let(:datetime_value) { "2023-02-01T10:32" }
   let(:multiple_drop_down_list_values) {
     [

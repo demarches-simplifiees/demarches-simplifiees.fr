@@ -5,11 +5,12 @@ class Champs::SiretController < Champs::ChampController
     champs_attributes = params.dig(:dossier, :champs_public_attributes) || params.dig(:dossier, :champs_private_attributes)
     siret = champs_attributes.values.first[:value]
 
-    if @champ.fetch_etablissement!(siret, current_user)
-      @siret = @champ.etablissement.siret
-    else
-      @siret = @champ.etablissement_fetch_error_key
-    end
+    @champ.fetch_etablissement!(siret, current_user)
+
+    # Except of prefill first load, validation is made on update with validate_champ_value
+    # Anyway it would be clear when updating the value without validation
+    @champ.validate(params[:validate].to_sym) if params[:validate]
+
     @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
 end

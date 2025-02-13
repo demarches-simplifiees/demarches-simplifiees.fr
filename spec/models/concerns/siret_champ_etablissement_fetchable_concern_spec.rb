@@ -24,35 +24,30 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
 
     subject(:fetch_etablissement!) { champ.fetch_etablissement!(siret, build_stubbed(:user)) }
 
-    shared_examples 'an error occured' do |error|
+    shared_examples 'an error occured' do
       it { expect { fetch_etablissement! }.to change { champ.reload.etablissement }.to(nil) }
 
       it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(-1) }
 
       it { expect(fetch_etablissement!).to eq(false) }
-
-      it 'populates the etablissement_fetch_error_key' do
-        fetch_etablissement!
-        expect(champ.etablissement_fetch_error_key).to eq(error)
-      end
     end
 
     context 'when the SIRET is empty' do
       let(:siret) { '' }
 
-      it_behaves_like 'an error occured', :empty
+      it_behaves_like 'an error occured'
     end
 
     context "when the SIRET is invalid because of it's length" do
       let(:siret) { '1234' }
 
-      it_behaves_like 'an error occured', :invalid_length
+      it_behaves_like 'an error occured'
     end
 
     context "when the SIRET is invalid because of it's checksum" do
       let(:siret) { '82812345600023' }
 
-      it_behaves_like 'an error occured', :invalid_checksum
+      it_behaves_like 'an error occured'
     end
 
     context 'when the API is unavailable due to network error' do
@@ -61,7 +56,7 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
 
       before { expect(APIEntrepriseService).to receive(:api_insee_up?).and_return(true) }
 
-      it_behaves_like 'an error occured', :network_error
+      it_behaves_like 'an error occured'
 
       it 'sends the error to Sentry' do
         expect(Sentry).to receive(:capture_exception)
@@ -82,18 +77,13 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
       it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(1) }
 
       it { expect(fetch_etablissement!).to eq(false) }
-
-      it 'populates the etablissement_fetch_error_key' do
-        fetch_etablissement!
-        expect(champ.etablissement_fetch_error_key).to eq(:api_entreprise_down)
-      end
     end
 
     context 'when the SIRET is valid but unknown' do
       let(:siret) { '00000000000000' }
       let(:api_etablissement_status) { 404 }
 
-      it_behaves_like 'an error occured', :not_found
+      it_behaves_like 'an error occured'
     end
 
     context 'when the SIRET informations are retrieved successfully' do
