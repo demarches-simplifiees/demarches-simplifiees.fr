@@ -19,7 +19,10 @@ if (enabled && key) {
       'Non-Error promise rejection captured with value',
 
       // Error with password input with a password manager, pending a DSFR fix
-      'e.getModifierState is not a function'
+      'e.getModifierState is not a function',
+
+      // Piwik/Matomo invasive error
+      "'get' on proxy: property 'javaEnabled' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value"
     ]
   });
 
