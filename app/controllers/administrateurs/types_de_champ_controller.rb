@@ -173,7 +173,8 @@ module Administrateurs
         suggestion = JSON.parse(File.read("spec/fixtures/llm_procedure_improvements_stub.txt")).deep_symbolize_keys
       end
       @changes = suggestion[:operations]
-      @text = Array.wrap(suggestion[:summary]).map { _1.gsub('- ', '') }.join(tag.br)
+      @text = Array.wrap(suggestion[:summary].split('.').map(&:strip))
+
       @revision = @procedure.draft_revision
       @procedure_linter = ProcedureLinter.new(@procedure, @revision)
     end

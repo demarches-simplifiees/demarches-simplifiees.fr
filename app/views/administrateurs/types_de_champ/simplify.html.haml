@@ -1,12 +1,13 @@
 .fr-container
   %h1.fr-h2.mt-2 Amélioration de la qualité de la démarche “#{@procedure.libelle}“
 
-  = render Dsfr::CalloutComponent.new(title: "Qualité de la démarche") do |c|
+  = render Dsfr::CalloutComponent.new(title: "Qualiscore de la démarche") do |c|
     - c.with_body do
+      = render Procedure::SimplifyGaugeComponent.new(@procedure, @revision)
+
       %p Cette étape vise à optimiser la collecte d’informations, alléger la charge administrative des usagers et garantir le respect des obligations légales. Les règles sont les suivantes :
       %ul
         %li Respect du principe du “dîtes le nous une fois” ;
-        %li Présence d’une notice et des mentions légales et règlementaires ;
         %li Structure logique et simplifiée du formulaire ;
         %li Limiter et préciser les demandes de documents justificatifs ;
         %li Rédaction en langage clair.
@@ -14,11 +15,11 @@
         = "Consulter le "
         = link_to "Guide des bonnes pratiques de la DITP.", "https://www.modernisation.gouv.fr/files/2024-03/guide_kit-formulaires.pdf"
 
-  %h2.fr-h3 QualiScore de votre démarche :
-  = render Procedure::SimplifyGaugeComponent.new(@procedure, @revision)
-
   %h2.fr-h3.mt-2 Suggestions de votre assistant IA :
-  %p= sanitize(@text)
+  - if @text.any?
+    %ul.fr-mb-8w
+      - @text.each do |reason| 
+        %li= sanitize(reason)
 
   - tdcs = @revision.types_de_champ_public
   - tdc_by_stable_id = tdcs.index_by(&:stable_id)
@@ -28,67 +29,77 @@
 
   - updated_by_stable_id = @changes.fetch(:update, []).index_by { _1[:stable_id] }
   - updated_by_justification = @changes.fetch(:update, []).group_by { _1[:justification] }
-
   - add = @changes.fetch(:add, [])
   - add_by_justification = add.group_by { _1[:justification] }
 
+  .fr-callout
+    %h3.fr-h5.fr-callout__title Sélectionner les propositions que vous souhaitez appliquer
+  
   %h2.fr-h4.mt-2 #{pluralize(destroyeds.count, 'suppression')}
-
-  %ul
-    - destroyed_by_justification.each do |justification, changes|
-      %li
-        %strong= justification
-        %ul
+  
+  =form_with url: [:accept_simplification, :admin, @procedure, :types_de_champ] do |form|
+    %ul
+      - destroyed_by_justification.each do |justification, changes|
+        %li.fr-my-2w
+          %strong= justification
           - changes.map { _1[:stable_id] }.each do |stable_id|
-            %li= tdc_by_stable_id[stable_id].libelle
+            .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
+              = form.check_box stable_id, checked: true
+              = form.label stable_id, class: 'fr-label' do
+                = tdc_by_stable_id[stable_id].libelle
 
-  %ul
-    - tdcs.each do |tdc|
-      - if destroyeds.include?(tdc.stable_id)
-        %li= tdc.libelle
+    %ul
+      - tdcs.each do |tdc|
+        - if destroyeds.include?(tdc.stable_id)
+          %li.fr-my-2w
+            .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
+              = form.check_box tdc.stable_id, checked: true
+              = form.label tdc.stable_id, class: 'fr-label' do
+                = tdc.libelle
 
-  %h2.fr-h4.mt-2 #{pluralize(updated_by_stable_id.keys.count, 'modification')}
+    %h2.fr-h4.mt-2 #{pluralize(updated_by_stable_id.keys.count, 'modification')}
 
-  %ul
-    - updated_by_justification.each do |justification, changes|
-      %li
-        %strong= justification
-        %ul
+    %ul
+      - updated_by_justification.each do |justification, changes|
+        %li.fr-my-2w
+          %strong= justification
           - changes.each do |change|
             - libelle_has_changed = change[:libelle] != tdc_by_stable_id[change[:stable_id]].libelle
             - type_has_changed = change[:type_champ].present? && change[:type_champ] != tdc_by_stable_id[change[:stable_id]].type_champ
-            %li
-              - if type_has_changed
-                #{tdc_by_stable_id[change[:stable_id]].libelle} (#{tdc_by_stable_id[change[:stable_id]].type_champ}) → #{change[:libelle]} (#{change[:type_champ]})
-              - else
-                #{tdc_by_stable_id[change[:stable_id]].libelle}
 
-              - if change[:display_condition].present?
-                %br
-                affiche si #{tdc_by_stable_id[change[:display_condition][:left][:stable_id]].libelle} est égal à #{Array.wrap(change[:display_condition][:right][:value]).join(', ')}
+            .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
+              = form.check_box change[:stable_id], checked: true
+              = form.label change[:stable_id], class: 'fr-label' do
+                - if type_has_changed
+                  #{tdc_by_stable_id[change[:stable_id]].libelle} (#{tdc_by_stable_id[change[:stable_id]].type_champ}) → #{change[:libelle]} (#{change[:type_champ]})
+                - else
+                  #{tdc_by_stable_id[change[:stable_id]].libelle}
+
+                - if change[:display_condition].present?
+                  %br
+                  affiche si #{tdc_by_stable_id[change[:display_condition][:left][:stable_id]].libelle} est égal à #{Array.wrap(change[:display_condition][:right][:value]).join(', ')}
 
 
-  %h2.fr-h4.mt-2 #{pluralize(add.count, 'ajout')}
+    %h2.fr-h4.mt-2 #{pluralize(add.count, 'ajout')}
 
-  %ul
-    - add_by_justification.each do |justification, changes|
-      %li
-        %strong= justification
-        %ul
+    %ul
+      - add_by_justification.each do |justification, changes|
+        %li.fr-my-2w
+          %strong= justification
+
           - changes.each do |change|
-            %li
-              = change[:libelle]
-              - if change[:children].present?
-                (bloc répétable)
-              %ul
+            .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
+              = form.check_box change[:stable_id], checked: true
+              = form.label change[:stable_id], class: 'fr-label' do
+                = change[:libelle]
+                - if change[:children].present?
+                  (bloc répétable)
+              %ul.fr-ml-3w
                 - change[:children].each do |child|
                   %li= child[:libelle]
 
-  %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
-    %li
-      = button_to("Accepter les modifications",
-        [:accept_simplification, :admin, @procedure, :types_de_champ],
-        params: { changes: @changes.to_json },
-        class: "fr-btn")
-    %li
-      = link_to("Revenir à l'éditeur", [:champs, :admin, @procedure], class: "fr-btn fr-btn--secondary")
+    %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
+      %li
+        = form.submit("Accepter les modifications", class: "fr-btn")
+      %li
+        = link_to("Revenir à l'éditeur", [:champs, :admin, @procedure], class: "fr-btn fr-btn--secondary")
