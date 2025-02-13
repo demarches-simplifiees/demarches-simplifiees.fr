@@ -8,6 +8,7 @@ class Champs::ChampController < ApplicationController
 
   def find_champ
     dossier = policy_scope(Dossier).includes(:champs, revision: [:types_de_champ]).find(params[:dossier_id])
+    dossier.with_update_stream(current_user)
     type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id])
     if type_de_champ.repetition?
       dossier.project_champ(type_de_champ)
@@ -22,10 +23,5 @@ class Champs::ChampController < ApplicationController
 
   def set_champ
     @champ = find_champ
-  end
-
-  def propagate_touch_champs_changed
-    @champ.touch
-    @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
 end
