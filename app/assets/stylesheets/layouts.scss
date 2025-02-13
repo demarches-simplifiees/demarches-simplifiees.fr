@@ -73,5 +73,15 @@
 }
 
 html.scroll-margins-for-sticky-footer {
-  scroll-padding: 0 0 100px 0;
+  @media (max-width: $two-columns-breakpoint) {
+    scroll-padding-bottom: 9.5rem;
+    // 9.5rem = padding-top + text height + button height + line-height + padding-bottom + empty space
+    // 9.5rem = 0.5 + 1.5✕2 + 2.5 + 1 + 0.5 + 2
+  }
+
+  @media (min-width: $two-columns-breakpoint) {
+    scroll-padding-bottom: 6.5rem;
+    // 6.5rem = padding-top + height + padding-bottom + empty space
+    // 6.5rem = 1 + 2.5 + 1 + 2
+  }
 }
