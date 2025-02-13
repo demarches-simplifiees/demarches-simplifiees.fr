@@ -92,6 +92,19 @@ describe Instructeurs::CellComponent do
       it { is_expected.to eq('12 février 2025 09:19') }
     end
 
+    context 'for a date column with value as string' do
+      let(:types_de_champ_public) { [{ type: :siret, libelle: 'siret' }] }
+      let(:column) { dossier.procedure.find_column(label: 'siret – Entreprise date de création') }
+      let(:etablissement) { build(:etablissement, entreprise_date_creation: Date.new(2015, 8, 10)) }
+
+      before {
+        dossier.champs.first.update(value: etablissement.siret, etablissement:)
+        etablissement.update_champ_value_json!
+      }
+
+      it { is_expected.to eq('10/08/2015') }
+    end
+
     context 'for a enum column' do
       let(:types_de_champ_public) { [{ type: :drop_down_list, libelle: 'drop_down_list', options: ['a', 'b', 'c'] }] }
       let(:column) { dossier.procedure.find_column(label: 'drop_down_list') }
