@@ -27,7 +27,7 @@ describe EditableChamp::SectionComponent, type: :component do
 
     it 'renders fieldset' do
       expect(page).to have_selector("fieldset")
-      expect(page).to have_selector("legend h2")
+      expect(page).to have_selector("legend h3")
     end
 
     it 'renders champs within fieldset' do
@@ -41,7 +41,7 @@ describe EditableChamp::SectionComponent, type: :component do
 
     it 'renders nested champs (after an header section) within a fieldset' do
       expect(page).to have_selector("fieldset", count: 1)
-      expect(page).to have_selector("fieldset legend h2")
+      expect(page).to have_selector("fieldset legend h3")
       expect(page).to have_selector("input[type=text]", count: 2)
       expect(page).to have_selector("fieldset input[type=text]", count: 1)
     end
@@ -57,9 +57,9 @@ describe EditableChamp::SectionComponent, type: :component do
 
     it 'render header within fieldset' do
       expect(page).to have_selector("fieldset > legend", count: 3)
-      expect(page).to have_selector("h2")
       expect(page).to have_selector("h3")
       expect(page).to have_selector("h4")
+      expect(page).to have_selector("h5")
     end
   end
 
@@ -67,9 +67,9 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:types_de_champ_public) { [{ type: :header_section, level: 1 }, { type: :explication }, { type: :header_section, level: 1 }, { type: :text }] }
 
     it 'render fieldset, header_section, also render explication' do
-      expect(page).to have_selector("h2", count: 2)
-      expect(page).to have_selector("h3") # explication
-      expect(page).to have_selector("fieldset > legend > h2", count: 2)
+      expect(page).to have_selector("h3", count: 2)
+      expect(page).to have_selector("h4") # explication
+      expect(page).to have_selector("fieldset > legend > h3", count: 2)
       expect(page).to have_selector("fieldset input[type=text]", count: 1)
     end
   end
@@ -79,9 +79,9 @@ describe EditableChamp::SectionComponent, type: :component do
 
     it 'render nested fieldsets' do
       expect(page).to have_selector("fieldset")
-      expect(page).to have_selector("legend h2")
+      expect(page).to have_selector("legend h3")
       expect(page).to have_selector("fieldset fieldset")
-      expect(page).to have_selector("fieldset fieldset legend h3")
+      expect(page).to have_selector("fieldset fieldset legend h4")
     end
 
     it 'contains all champs' do
@@ -107,9 +107,9 @@ describe EditableChamp::SectionComponent, type: :component do
 
     it 'render nested fieldsets, increase heading level for repetition header_section' do
       expect(page).to have_selector("fieldset")
-      expect(page).to have_selector("legend h2")
+      expect(page).to have_selector("legend h3")
       expect(page).to have_selector("fieldset fieldset")
-      expect(page).to have_selector("fieldset fieldset legend h3")
+      expect(page).to have_selector("fieldset fieldset legend h4")
     end
 
     it 'contains as many text champ as repetition.rows' do

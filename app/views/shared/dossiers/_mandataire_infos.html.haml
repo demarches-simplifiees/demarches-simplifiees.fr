@@ -1,11 +1,12 @@
-= render Dossiers::RowShowComponent.new(label: 'Email', profile: @profile) do |c|
-  - c.with_value do
-    = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+%dl.fr-pl-0
+  .champ-row
+    %dt.champ-label= 'Email'
+    %dd.champ-content= user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
 
-= render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.first_name')) do |c|
-  - c.with_value do
-    = dossier.mandataire_first_name
+  .champ-row
+    %dt.champ-label= t('views.users.dossiers.identite.first_name')
+    %dd.champ-content= dossier.mandataire_first_name
 
-= render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.last_name')) do |c|
-  - c.with_value do
-    = dossier.mandataire_last_name
+  .champ-row
+    %dt.champ-label= t('views.users.dossiers.identite.last_name')
+    %dd.champ-content= dossier.mandataire_last_name

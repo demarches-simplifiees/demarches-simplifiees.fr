@@ -11,12 +11,12 @@
 
     &:focus {
       box-shadow: none !important;
-      background-color: $white !important;
+      background-color: var(--grey-1000-100) !important;
     }
   }
 
   .placeholder {
-    color: $dark-grey;
+    color: var(--grey-425-625);
     font-style: italic;
   }
 
@@ -37,9 +37,7 @@
     margin-bottom: 1.5rem;
   }
 
-  .section-4,
-  .section-5,
-  .section-6 {
+  .section-4 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
   }
