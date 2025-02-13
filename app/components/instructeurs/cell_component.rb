@@ -55,7 +55,11 @@ class Instructeurs::CellComponent < ApplicationComponent
       format_enum(column: @column, raw_value:)
     when :enums
       format_enums(column: @column, raw_values: raw_value)
-    when :datetime, :date
+    when :date
+      raw_value = Date.parse(raw_value) if raw_value.is_a?(String)
+      I18n.l(raw_value)
+    when :datetime
+      raw_value = DateTime.parse(raw_value) if raw_value.is_a?(String)
       I18n.l(raw_value)
     else
       raw_value
