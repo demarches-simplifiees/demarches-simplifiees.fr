@@ -145,6 +145,8 @@ class Dossier < ApplicationRecord
   has_many :dossier_labels, dependent: :destroy
   has_many :labels, -> { order(:position, :id) }, through: :dossier_labels
 
+  has_many :rdvs, dependent: :destroy
+
   after_destroy_commit :log_destroy
 
   accepts_nested_attributes_for :champs
