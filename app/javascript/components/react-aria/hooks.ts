@@ -526,8 +526,15 @@ export const createLoader: (
         const [err, items] = s.validate(json, struct, { coerce: true });
         if (!err) {
           const filteredItems = matchSorter(items, filterText, {
-            keys: ['label'],
-            baseSort: naturalSort
+            keys: [
+              (item) => item.label.replace(/[_ -]/g, ' '), // accept filter to match saint martin => "Saint-Martin"
+              'label' // keep original label for exact match and filter (saint-martin => Saint-Martin)
+            ],
+            baseSort: naturalSort,
+            threshold:
+              items.length > limit
+                ? matchSorter.rankings.MATCHES // default filter when there are many items
+                : matchSorter.rankings.NO_MATCH // don't reject items when filter contains have typos or non exact matches with dashes/space etc…
           });
           return { items: filteredItems.slice(0, limit) };
         }
