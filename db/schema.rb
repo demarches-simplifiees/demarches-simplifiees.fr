@@ -1072,6 +1072,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_154931) do
     t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
   end
 
+  create_table "rdv_connections", force: :cascade do |t|
+    t.string "access_token"
+    t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.bigint "instructeur_id", null: false
+    t.string "refresh_token"
+    t.datetime "updated_at", null: false
+    t.index ["instructeur_id"], name: "index_rdv_connections_on_instructeur_id", unique: true
+  end
+
   create_table "re_instructed_mails", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -1393,6 +1403,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_154931) do
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"
   add_foreign_key "procedures", "services"
   add_foreign_key "procedures", "zones"
+  add_foreign_key "rdv_connections", "instructeurs"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "referentiel_items", "referentiels"
   add_foreign_key "refused_mails", "procedures"
