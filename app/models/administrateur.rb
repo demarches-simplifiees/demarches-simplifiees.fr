@@ -32,6 +32,8 @@ class Administrateur < ApplicationRecord
       .merge(APIToken.where(last_v2_authenticated_at: nil).or(APIToken.where(last_v2_authenticated_at: ..UNUSED_ADMIN_THRESHOLD.ago)))
   end
 
+  delegate :rdv_connection, to: :instructeur
+
   def email
     user&.email
   end
