@@ -5,7 +5,7 @@ import type {
 import { useAsyncList, type AsyncListOptions } from 'react-stately';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import type { Key } from 'react';
-import { matchSorter } from 'match-sorter';
+import { matchSorter, MatchSorterOptions } from 'match-sorter';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useEvent } from 'react-use-event-hook';
 import isEqual from 'react-fast-compare';
@@ -66,6 +66,13 @@ function inputChanged(container: HTMLSpanElement, inputs: HTMLInputElement[]) {
   return false;
 }
 
+const naturalSort: MatchSorterOptions['baseSort'] = (a, b) => {
+  return a.rankedValue.localeCompare(b.rankedValue, undefined, {
+    numeric: true,
+    sensitivity: 'base'
+  });
+};
+
 export function useSingleList({
   defaultItems,
   defaultSelectedKey,
@@ -96,7 +103,10 @@ export function useSingleList({
     if (inputValue == '') {
       return items;
     }
-    const filteredItems = matchSorter(items, inputValue, { keys: ['label'] });
+    const filteredItems = matchSorter(items, inputValue, {
+      keys: ['label'],
+      baseSort: naturalSort
+    });
     if (filteredItems.length == 0 && fallbackItem) {
       return [fallbackItem];
     } else {
@@ -515,13 +525,11 @@ export const createLoader: (
         const struct = Coerce[options?.coerce ?? 'Default'];
         const [err, items] = s.validate(json, struct, { coerce: true });
         if (!err) {
-          if (items.length > limit) {
-            const filteredItems = matchSorter(items, filterText, {
-              keys: ['label']
-            });
-            return { items: filteredItems.slice(0, limit) };
-          }
-          return { items };
+          const filteredItems = matchSorter(items, filterText, {
+            keys: ['label'],
+            baseSort: naturalSort
+          });
+          return { items: filteredItems.slice(0, limit) };
         }
       }
       return { items: [] };
