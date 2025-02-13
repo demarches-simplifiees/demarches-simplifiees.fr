@@ -1082,6 +1082,18 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_154931) do
     t.index ["instructeur_id"], name: "index_rdv_connections_on_instructeur_id", unique: true
   end
 
+  create_table "rdvs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "dossier_id", null: false
+    t.string "rdv_external_id"
+    t.string "rdv_plan_external_id", null: false
+    t.datetime "starts_at"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_rdvs_on_dossier_id"
+    t.index ["instructeur_id"], name: "index_rdvs_on_instructeur_id"
+  end
+
   create_table "re_instructed_mails", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -1404,6 +1416,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_154931) do
   add_foreign_key "procedures", "services"
   add_foreign_key "procedures", "zones"
   add_foreign_key "rdv_connections", "instructeurs"
+  add_foreign_key "rdvs", "dossiers"
+  add_foreign_key "rdvs", "instructeurs"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "referentiel_items", "referentiels"
   add_foreign_key "refused_mails", "procedures"
