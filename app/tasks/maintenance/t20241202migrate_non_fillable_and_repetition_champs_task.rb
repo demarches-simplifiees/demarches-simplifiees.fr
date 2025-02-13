@@ -8,30 +8,47 @@ module Maintenance
     include StatementsHelpersConcern
 
     def collection
-      Dossier.includes(champs: [], revision: { revision_types_de_champ: { parent_type_de_champ: [], types_de_champ: [] }, types_de_champ_public: [], types_de_champ_private: [], types_de_champ: [] })
+      Dossier.select(:id, :revision_id)
     end
 
     def process(dossier)
-      Dossier.no_touching do
-        champ_to_remove_ids = dossier
-          .champs
-          .filter { !_1.row? && (_1.repetition? || _1.header_section? || _1.explication?) }
-          .map(&:id)
-        dossier.champs.where(id: champ_to_remove_ids).destroy_all
+      # ici on peut faire un delete_all car les champs concernés n'ont pas de cascade
+      Champ.where(dossier_id: dossier.id, type: ['Champs::HeaderSectionChamp', 'Champs::ExplicationChamp'])
+        .or(Champ.where(dossier_id: dossier.id, type: 'Champs::RepetitionChamp', row_id: Champ::NULL_ROW_ID))
+        .delete_all
 
-        create_rows(dossier)
-      end
+      create_rows(dossier.id, dossier.revision_id)
     end
 
-    def create_rows(dossier)
-      repetitions = dossier.revision.types_de_champ.filter(&:repetition?)
-      existing_row_ids = dossier.champs.filter(&:row?).to_set(&:row_id)
+    def create_rows(dossier_id, revision_id)
+      # les row_ids qui sont déjà persistés en base
+      persisted_row_ids = Champs::RepetitionChamp.where(dossier_id:).where.not(row_id: Champ::NULL_ROW_ID).pluck(:row_id)
+
+      first_child_stable_id_by_row_id = Champ.where(dossier_id:)
+        .where.not(type: 'Champs::RepetitionChamp')
+        .where.not(row_id: Champ::NULL_ROW_ID)
+        .where.not(row_id: persisted_row_ids)
+        .pluck(:row_id, :stable_id)
+        .to_h
+
+      return if first_child_stable_id_by_row_id.empty?
+
+      coordinates_for_revision_id = ProcedureRevisionTypeDeChamp.joins(:type_de_champ).where(revision_id:)
+      coordinates = coordinates_for_revision_id
+        .where(types_de_champ: { type_champ: 'repetition' })
+        .or(coordinates_for_revision_id.where.not(parent_id: nil))
+        .pluck(:id, :stable_id, :parent_id, :private)
+      coordinate_parent_id_by_stable_id = coordinates.index_by(&:second).transform_values(&:third)
+      type_de_champ_attributes_by_id = coordinates.index_by(&:first).transform_values { { stable_id: _1.second, private: _1.last } }
+
       now = Time.zone.now
-      row_attributes = { created_at: now, updated_at: now, dossier_id: dossier.id }
-      new_rows = repetitions.flat_map do |type_de_champ|
-        row_ids = dossier.repetition_row_ids(type_de_champ).to_set - existing_row_ids
-        row_ids.map { type_de_champ.params_for_champ.merge(row_id: _1, **row_attributes) }
+      row_attributes = { type: 'Champs::RepetitionChamp', created_at: now, updated_at: now, dossier_id: }
+      new_rows = first_child_stable_id_by_row_id.filter_map do |row_id, child_stable_id|
+        parent_id = coordinate_parent_id_by_stable_id[child_stable_id]
+        type_de_champ_attributes = type_de_champ_attributes_by_id[parent_id]
+        type_de_champ_attributes&.merge(row_id:, **row_attributes)
       end
+
       Champ.insert_all!(new_rows) if new_rows.present?
     end
   end
