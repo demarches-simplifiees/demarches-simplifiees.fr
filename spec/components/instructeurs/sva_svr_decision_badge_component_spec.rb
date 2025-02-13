@@ -18,7 +18,7 @@ RSpec.describe Instructeurs::SVASVRDecisionBadgeComponent, type: :component do
     context 'dossier en instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: Date.new(2023, 9, 5)) }
       it { expect(subject).to have_text("dans 4 jours") }
-      it { expect(title).to have_text("sera automatiquement traité le 05/09/2023") }
+      it { expect(title).to have_text("sera automatiquement traité le 05 septembre 2023") }
 
       context 'with label' do
         let(:with_label) { true }

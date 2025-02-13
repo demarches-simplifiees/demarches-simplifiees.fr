@@ -43,7 +43,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
       let(:filter) { to_filter(['Date de création', "15/06/2023"]) }
 
       it 'should get formatted value' do
-        expect(page).to have_text("15/06/2023")
+        expect(page).to have_text("15 juin 2023")
       end
     end
 
@@ -57,7 +57,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
       end
 
       it 'should display all filters' do
-        text = "État du dossier : En construction ou État du dossier : En instruction et Date de création : 15/06/2023"
+        text = "État du dossier : En construction ou État du dossier : En instruction et Date de création : 15 juin 2023"
         expect(page).to have_text(text)
       end
     end
