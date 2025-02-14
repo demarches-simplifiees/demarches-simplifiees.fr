@@ -61,11 +61,9 @@ module Instructeurs
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
 
-      if !errors.empty?
-        flash.now[:alert] = errors.join(". ") if !errors.empty?
-      end
+      flash[:alert] = errors.join(". ") if !errors.empty?
 
-      render :show
+      redirect_to instructeur_groupe_path(@procedure, @groupe_instructeur)
     end
 
     def remove_instructeur
