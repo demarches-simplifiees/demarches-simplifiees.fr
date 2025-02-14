@@ -9,7 +9,6 @@ module RNAChampAssociationFetchableConcern
     self.value = rna
 
     return clear_association!(:blank) if rna.empty?
-    return clear_association!(:invalid_rna) unless valid_champ_value?
     return clear_association!(:not_found) if (data = APIEntreprise::RNAAdapter.new(rna, procedure_id).to_params).blank?
 
     update_with_external_data!(data:)
