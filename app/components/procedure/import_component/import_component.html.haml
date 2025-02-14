@@ -7,8 +7,9 @@
       = t(".csv_import.#{scope}.notice_1_html", csv_max_size: number_to_human_size(csv_max_size))
     .notice.fr-mb-1w
       = t(".csv_import.#{scope}.notice_2_html")
-    .notice.fr-mb-1w
-      = t(".csv_import.#{scope}.notice_3_html")
+    - if @procedure.routing_enabled?
+      .notice.fr-mb-1w
+        = t(".csv_import.#{scope}.notice_3_html")
 
     - if @procedure.routing_enabled?
       .fr-icon-mail-line.fr-alert.fr-mt-1w

@@ -19,14 +19,3 @@ en:
         existing_groupe:
           one: "%{count} group exist"
           other: "%{count} groups exist"
-      instructeurs:
-        title: Assign a new instructor
-        assigned_instructeur:
-          one: "%{count} instructor assigned"
-          other: "%{count} instructors assigned"
-        instructeur_assignation: Instructors assignment
-        assign: Assign
-        remove: Remove
-        instructeur_emails: Email addresses of the instructors you want to assign to this procedure
-        copy_paste_hint: "You can enter addresses individually, or copy-paste a list of addresses separated by semicolons into the field below (example: adress1@mail.com; adress2@mail.com; adress3@mail.com)."
-        actions: Remove

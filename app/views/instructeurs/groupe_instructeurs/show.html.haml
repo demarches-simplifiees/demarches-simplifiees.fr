@@ -1,73 +1,42 @@
-- if @procedure.routing_enabled?
-  - content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
+.sub-header
+  .fr-container.flex.column
+    - if @procedure.routing_enabled?
+      - content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
 
-  = render partial: 'administrateurs/breadcrumbs',
-    locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                      ['Groupes d’instructeurs', instructeur_groupes_path(@procedure)],
-                      [@groupe_instructeur.label]] }
+      = render partial: 'instructeurs/breadcrumbs',
+        locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                          ['Groupes d’instructeurs', instructeur_groupes_path(@procedure)],
+                          [@groupe_instructeur.label]] }
 
-- else
-  - content_for(:title, "Instructeurs de la démarche #{@procedure.libelle}")
+    - else
+      - content_for(:title, "Instructeurs de la démarche #{@procedure.libelle}")
 
-  = render partial: 'administrateurs/breadcrumbs',
-    locals: { steps: [[@procedure.libelle, instructeur_procedure_path(@procedure)],
-                      ['Instructeurs']] }
+      = render partial: 'instructeurs/breadcrumbs',
+        locals: { steps: [[@procedure.libelle, instructeur_procedure_path(@procedure)],
+                          ['Instructeurs']] }
+
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
 
 .fr-container.groupe-instructeur
-  %h1
+  %h4
     - if @procedure.routing_enabled?
       Groupe « #{@groupe_instructeur.label} »
     - else
       Démarche « #{@procedure.libelle} »
 
-  .card.fr-mt-2w
-    = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_instructeur_groupe_path(@procedure, @groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
-    %h2.fr-h3= t('.title')
+  = render partial: 'shared/groupe_instructeurs/instructeurs',
+    locals: { procedure: @procedure,
+      groupe_instructeur: @groupe_instructeur,
+      instructeurs: @instructeurs,
+      disabled_as_super_admin: false,
+      available_instructeur_emails: [] }
 
-    = form_for :instructeur, url: { action: :add_instructeur, id: @groupe_instructeur.id }, html: { class: 'form' } do |f|
-      .instructeur-wrapper
-        %p= t('.instructeur_emails')
-        %p.fr-hint-text= t('.copy_paste_hint')
-        %react-fragment
-          = render ReactComponent.new 'ComboBox/MultiComboBox', id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
+  - if @procedure.routing_enabled?
+    = render partial: 'shared/groupe_instructeurs/contact_information',
+    locals: { procedure: @procedure,
+      groupe_instructeur: @groupe_instructeur }
 
-        = f.submit t('.assign'), class: 'fr-btn fr-btn--tertiary'
-
-    %table.fr-table.fr-mt-2w.width-100
-      %thead
-        %tr
-          %th{ colspan: 2 } Instructeurs affectés
-      %tbody
-        - @instructeurs.each do |instructeur|
-          %tr
-            %td= instructeur.email
-            - confirmation_message = @procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{@groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-            %td.actions= button_to 'Retirer',
-              { action: :remove_instructeur },
-              { method: :delete,
-                data: { confirm: confirmation_message },
-                params: { instructeur: { id: instructeur.id }},
-                class: 'fr-btn fr-btn--secondary' }
-
-    = paginate @instructeurs, views_prefix: 'shared'
-
-  .card.fr-mt-2w
-    %h2.fr-h3 Informations de contact
-    - service = @groupe_instructeur.contact_information
-    - if service.nil?
-      = "Le groupe #{@groupe_instructeur.label} n'a pas d'informations de contact. Les informations de contact affichées à l'usager seront celles du service de la procédure"
-      %p.mt-3
-        = link_to "+ Ajouter des informations de contact", new_instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id), class: "fr-btn"
-    - else
-      %p.mt-3
-        = link_to "Modifier les informations de contact", edit_instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id), class: "fr-btn"
-      %p.mt-3= service.nom
-      = render SimpleFormatComponent.new(service.adresse, class_names_map: {paragraph: 'fr-footer__content-desc'})
-      = service.email
-      - if service.telephone.present?
-        %p= service.telephone
-      - if service.horaires.present?
-        %p= service.horaires
-
-  = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
-    preview_path: preview_attestation_instructeur_groupe_path(@groupe_instructeur.procedure, @groupe_instructeur) }
+    - if @procedure.attestation_template&.activated?
+      = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
+        preview_path: preview_attestation_instructeur_groupe_path(@groupe_instructeur.procedure, @groupe_instructeur) }

@@ -11,6 +11,7 @@ module Instructeurs
 
     def index
       @procedure = procedure
+      redirect_to instructeur_groupe_path(@procedure, @procedure.defaut_groupe_instructeur) if !@procedure.routing_enabled?
       @groupes_instructeurs = paginated_groupe_instructeurs
     end
 

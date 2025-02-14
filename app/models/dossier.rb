@@ -1009,7 +1009,11 @@ class Dossier < ApplicationRecord
   end
 
   def service
-    groupe_instructeur&.contact_information || procedure.service
+    if procedure.routing_enabled?
+      groupe_instructeur&.contact_information || procedure.service
+    else
+      procedure.service
+    end
   end
 
   def mandataire_full_name
