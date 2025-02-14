@@ -89,6 +89,8 @@ module Administrateurs
         defaut.destroy!
       end
 
+      procedure.update!(routing_alert: true) if procedure.dossiers.soumis.any?
+
       flash[:routing_mode] = 'simple'
 
       redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
@@ -108,6 +110,8 @@ module Administrateurs
         .create({ label: 'Groupe 2 (à renommer et configurer)', instructeurs: [current_administrateur.instructeur] })
 
       procedure.toggle_routing
+
+      procedure.update!(routing_alert: true) if procedure.dossiers.soumis.any?
 
       flash[:routing_mode] = 'custom'
 
@@ -391,6 +395,22 @@ module Administrateurs
       respond_to do |format|
         format.csv { send_data data, filename: "#{procedure.id}-groupe-instructeurs-#{Date.today}.csv" }
       end
+    end
+
+    def bulk_route
+      dossiers = procedure.dossiers
+
+      dossiers.update_all(forced_groupe_instructeur: false)
+
+      dossiers.each do |dossier|
+        RoutingEngine.compute(dossier, assignment_mode: DossierAssignment.modes.fetch(:bulk_routing))
+      end
+
+      procedure.update!(routing_alert: false)
+
+      flash[:notice] = "Les dossiers ont étés routés vers les groupes d’instructeurs"
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     private

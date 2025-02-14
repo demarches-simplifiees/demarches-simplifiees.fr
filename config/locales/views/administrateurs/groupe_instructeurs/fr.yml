@@ -39,3 +39,8 @@ fr:
         procedures: Démarches
       simple_routing:
         procedures: Démarches
+      routing_alert_sticky_header:
+        routing_alert_html: "<strong>%{count} dossiers</strong> ont déjà été déposés sur cette démarche et n’ont <strong>pas été routés selon le routage configuré</strong>. Vous devez lancer le routage pour répartir ces dossiers dans les différents groupes."
+        routing_alert_with_invalid_rules_html: "<strong>%{count} dossiers</strong> ont déjà été déposés sur cette démarche et n’ont <strong>pas encore été routés</strong>. Une fois que vous aurez configuré vos règles de routage, vous devrez lancer le routage pour répartir ces dossiers dans les différents groupes."
+        bulk_route: Lancer le routage
+        bulk_routing_confirm: "Êtes-vous sûr de vouloir lancer le routage pour les dossiers déposés ?"
