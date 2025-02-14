@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_03_191101) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_14_104345) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -965,7 +965,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_03_191101) do
 
   create_table "procedure_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_procedure_tags_on_name", unique: true
@@ -1086,6 +1085,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_03_191101) do
   create_table "rdvs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
+    t.bigint "instructeur_id", null: false
+    t.string "location_type"
     t.string "rdv_external_id"
     t.string "rdv_plan_external_id", null: false
     t.datetime "starts_at"
