@@ -9,8 +9,16 @@ class RdvService
     @rdv_connection = rdv_connection
   end
 
-  def rdv_api_host
+  def self.rdv_api_host
     ENV["RDV_SERVICE_PUBLIC_URL"]
+  end
+
+  def self.create_rdv_plan_url
+    "#{rdv_api_host}/api/v1/rdv_plans"
+  end
+
+  def self.update_pending_rdv_plan_url(rdv_plan_external_id)
+    "#{rdv_api_host}/api/v1/rdv_plans/#{rdv_plan_external_id}"
   end
 
   def create_rdv_plan(dossier:, first_name:, last_name:, email:, dossier_url:, return_url:)
@@ -27,7 +35,7 @@ class RdvService
     }
 
     response = Typhoeus.post(
-      "#{rdv_api_host}/api/v1/rdv_plans",
+      self.class.create_rdv_plan_url,
       body: rdv.to_json,
       headers:
     )
@@ -58,12 +66,14 @@ class RdvService
   def update_pending_rdv_plan!(dossier:)
     # To be replaced by the webhook
 
+    refresh_token_if_expired!
+
     pending_rdv_plan = dossier.rdvs.order(created_at: :desc).where(rdv_external_id: nil).first
 
     return if pending_rdv_plan.nil?
 
     response = Typhoeus.get(
-      "#{rdv_api_host}/api/v1/rdv_plans/#{pending_rdv_plan.rdv_plan_external_id}",
+      self.class.update_pending_rdv_plan_url(pending_rdv_plan.rdv_plan_external_id),
       headers:
     )
 
@@ -71,10 +81,28 @@ class RdvService
 
     parsed_body = JSON.parse(response.body)
 
+    # {
+    #   "rdv_plan":
+    #   {
+    #     "id":10,
+    #     "created_at":"2025-01-23 15:15:20 +0100",
+    #     "rdv":{
+    #       "id"=>10093,
+    #       "status"=>"unknown",
+    #       "starts_at"=>"2025-02-11 10:30:00 +0100",
+    #       "location_type"=>"phone"
+    #     },
+    #     "updated_at":"2025-01-23 15:15:20 +0100",
+    #     "url":"https://demo.rdv.anct.gouv.fr/agents/rdv_plans/10",
+    #     "user_id":6425
+    #   }
+    # }
+
     if parsed_body["rdv_plan"]["rdv"].present?
       pending_rdv_plan.update!(
         rdv_external_id: parsed_body["rdv_plan"]["rdv"]["id"],
-        starts_at: 2.days.from_now
+        starts_at: Time.zone.parse(parsed_body["rdv_plan"]["rdv"]["starts_at"]),
+        location_type: parsed_body["rdv_plan"]["rdv"]["location_type"]
       )
     end
   end
