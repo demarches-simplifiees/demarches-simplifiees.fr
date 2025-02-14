@@ -3,10 +3,10 @@ fr:
     models:
       referentiel: 'Type de champ'
     attributes:
-      referentiel:
+      referentiels/api_referentiel:
         url: "URL de l'API"
         hint: "Indications à fournir à l’usager concernant le format de saisie attendu"
         test_data: "Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)"
         hints:
-          url: "Exemple : https://api_1.ext/{id}"
+          url: "Exemple : https://api_1.ext/{id}, la section {id} sera remplacée par la valeur du champ. L'appel se fera en HTTP GET"
           hint: "Exemple : Identifiant de 12 caractères comportant des chiffres et des lettres (exemple : PG46YY6YWCX8)"
