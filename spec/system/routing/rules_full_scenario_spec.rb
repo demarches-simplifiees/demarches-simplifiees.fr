@@ -39,7 +39,7 @@ describe 'The routing with rules', js: true do
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][targeted_champ]", selected: "Spécialité")
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][value]", selected: "littéraire")
 
-    click_on '3 groupes'
+    click_on 'Revenir à la liste'
     click_on 'scientifique'
 
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][targeted_champ]", selected: "Spécialité")
@@ -89,7 +89,7 @@ describe 'The routing with rules', js: true do
     check("Groupe inactif", allow_label_click: true)
 
     # # add scientifique groupe
-    click_on '3 groupes'
+    click_on 'Revenir à la liste'
     click_on 'Groupe 2 (à renommer et configurer)'
     fill_in 'Nom du groupe', with: 'scientifique'
     click_on 'Renommer'
@@ -111,7 +111,7 @@ describe 'The routing with rules', js: true do
     within('.target select') { select('Spécialité') }
     within('.value select') { select('scientifique') }
 
-    click_on '3 groupes'
+    click_on 'Revenir à la liste'
 
     click_on 'littéraire'
 
