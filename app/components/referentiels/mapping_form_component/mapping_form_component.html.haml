@@ -56,7 +56,9 @@
                     %td.fr-cell--multiline= example_value
                     %td= cast_tag(jsonpath, example_value)
                     %td.text-center= prefill_tag(jsonpath)
-                    %td= libelle_tag(jsonpath)
+                    %td
+                      %div{ data: { "referentiel-mapping-target": "enabledContent" }, class: disabled?(jsonpath) ? '' : 'hidden' }= enabled_libelle_tag(jsonpath)
+                      %div{ data: { "referentiel-mapping-target": "disabledContent" }, class: disabled?(jsonpath) ? 'hidden' : '' }= disabled_libelle_tag(jsonpath)
 
     %ul.fr-btns-group.fr-btns-group--inline-sm
       %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary'
