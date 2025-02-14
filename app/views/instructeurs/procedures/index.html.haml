@@ -5,6 +5,7 @@
     .flex.fr-mb-2v
       %h1.fr-h3.fr-mb-0 Démarches
       = render Instructeurs::TabsExplanationsComponent.new
+      = render Instructeurs::SelectProcedureDropDownListComponent.new(procedures: @procedures)
     = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }

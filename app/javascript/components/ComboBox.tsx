@@ -41,8 +41,12 @@ export function ComboBox({
   description,
   className,
   inputRef,
+  placeholder,
   ...props
-}: ComboBoxProps & { inputRef?: RefObject<HTMLInputElement> }) {
+}: ComboBoxProps & {
+  inputRef?: RefObject<HTMLInputElement>;
+  placeholder?: string;
+}) {
   return (
     <AriaComboBox
       {...props}
@@ -60,7 +64,11 @@ export function ComboBox({
         </Label>
       ) : null}
       <div className="fr-ds-combobox__input" style={{ position: 'relative' }}>
-        <Input className="fr-select fr-autocomplete" ref={inputRef} />
+        <Input
+          className="fr-select fr-autocomplete"
+          ref={inputRef}
+          placeholder={placeholder || undefined}
+        />
         <Button
           aria-haspopup="false"
           aria-label=""
@@ -97,6 +105,7 @@ export function SingleComboBox({
   const {
     items: defaultItems,
     selectedKey: defaultSelectedKey,
+    placeholder,
     emptyFilterKey,
     name,
     formValue,
@@ -116,7 +125,12 @@ export function SingleComboBox({
 
   return (
     <>
-      <ComboBox menuTrigger="focus" {...comboBoxProps} {...props}>
+      <ComboBox
+        menuTrigger="focus"
+        placeholder={placeholder}
+        {...comboBoxProps}
+        {...props}
+      >
         {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
       </ComboBox>
       {children || name ? (

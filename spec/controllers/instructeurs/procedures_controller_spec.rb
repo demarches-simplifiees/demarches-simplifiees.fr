@@ -1000,4 +1000,47 @@ describe Instructeurs::ProceduresController, type: :controller do
       expect(response.body).not_to include("Déposer")
     end
   end
+
+  describe '#select_procedure' do
+    let(:instructeur) { create(:instructeur) }
+
+    before do
+      sign_in(instructeur.user)
+    end
+
+    context 'when procedure_id is present' do
+      let(:procedure) { create(:procedure) }
+
+      it 'redirects to the procedure path' do
+        puts "procedure.id: #{procedure.id}"
+        get :select_procedure, params: { procedure_id: procedure.id }
+
+        expect(response).to redirect_to(instructeur_procedure_path(procedure_id: procedure.id))
+      end
+    end
+
+    context 'when procedure_id is not present' do
+      it 'redirects to procedures index' do
+        get :select_procedure
+
+        expect(response).to redirect_to(instructeur_procedures_path)
+      end
+    end
+
+    context 'when procedure_id is empty string' do
+      it 'redirects to procedures index' do
+        get :select_procedure, params: { procedure_id: '' }
+
+        expect(response).to redirect_to(instructeur_procedures_path)
+      end
+    end
+
+    context 'when procedure_id is nil' do
+      it 'redirects to procedures index' do
+        get :select_procedure, params: { procedure_id: nil }
+
+        expect(response).to redirect_to(instructeur_procedures_path)
+      end
+    end
+  end
 end
