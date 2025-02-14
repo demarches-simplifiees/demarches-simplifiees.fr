@@ -1085,6 +1085,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_154931) do
   create_table "rdvs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
+    t.bigint "instructeur_id", null: false
+    t.string "location_type"
     t.string "rdv_external_id"
     t.string "rdv_plan_external_id", null: false
     t.datetime "starts_at"
