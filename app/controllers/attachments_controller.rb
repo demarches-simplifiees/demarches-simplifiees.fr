@@ -28,12 +28,12 @@ class AttachmentsController < ApplicationController
         champ.update_timestamps
       end
       champ.piece_justificative_file.reload
+      flash.notice = "La pièce jointe (#{@attachment.blob.filename}) a bien été supprimée. Vous pouvez en <a href=\"##{@champ.input_id}\">ajouter une autre</a>"
     else
       @attachment.purge_later
       @attachment_options = attachment_options
+      flash.notice = "La pièce jointe a bien été supprimée."
     end
-
-    flash.notice = 'La pièce jointe a bien été supprimée.'
 
     respond_to do |format|
       format.turbo_stream
