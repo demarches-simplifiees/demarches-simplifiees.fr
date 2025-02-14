@@ -101,6 +101,28 @@ FactoryBot.define do
     factory :type_de_champ_expression_reguliere do
       type_champ { TypeDeChamp.type_champs.fetch(:expression_reguliere) }
     end
+    factory :type_de_champ_formatted do
+      type_champ { TypeDeChamp.type_champs.fetch(:formatted) }
+      trait :simple do
+        options do
+          { formatted: "simple" }
+        end
+      end
+      trait :numbers_accepted do
+        options do
+          {
+            formatted_mode: 'simple',
+            numbers_accepted: '1',
+            letters_accepted: '0'
+          }
+        end
+      end
+      trait :advanced do
+        options do
+          { formatted_mode: "advanced" }
+        end
+      end
+    end
     factory :type_de_champ_pays do
       type_champ { TypeDeChamp.type_champs.fetch(:pays) }
     end
