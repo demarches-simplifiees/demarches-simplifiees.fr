@@ -49,16 +49,25 @@ class Referentiels::MappingFormComponent < ApplicationComponent
     end
   end
 
-  def libelle_tag(jsonpath)
+  def enabled_libelle_tag(jsonpath)
     attribute = "libelle"
     current_value = lookup_existing_value(jsonpath, attribute) || jsonpath
-    options = { class: 'fr-input', data: { "referentiel-mapping-target": "input" } }
-    options[:disabled] = :disabled if lookup_existing_value(jsonpath, "prefill") == "1"
-
+    options = { class: 'fr-input', data: { "referentiel-mapping-target": "input", 'referentiel-mapping-enabled-value': disabled?(jsonpath) } }
     text_field_tag "#{PREFIX}[#{attribute}]", current_value, options
   end
 
+  def disabled_libelle_tag(jsonpath)
+    safe_join([
+      tag.p("Libellé du champ du formulaire"),
+      tag.p("(à définir à l'étape suivante)", class: 'fr-text--sm fr-text-action-high--blue-france')
+    ])
+  end
+
   private
+
+  def disabled?(jsonpath)
+    lookup_existing_value(jsonpath, "prefill") == "1"
+  end
 
   def lookup_existing_value(jsonpath, attribute)
     type_de_champ.referentiel_mapping
