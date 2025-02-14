@@ -227,6 +227,7 @@
   }
 
   .fr-label + .fr-hint-text > *,
+  .fr-label + .fr-hint-text > * > p,
   .fr-fieldset__legend + .fr-hint-text > * {
     // la description d'un champ peut contenir du markup (markdown->html),
     // on herite donc la taille de police, la couleur et l'interlignage de fr-hint-text
