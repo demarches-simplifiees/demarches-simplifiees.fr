@@ -19,10 +19,13 @@ module Instructeurs
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
+      @maybe_typos = JSON.parse(params[:maybe_typos]) if params[:maybe_typos]
     end
 
     def add_instructeur
+      emails_with_typos = JSON.parse(params[:emails_with_typos]) if params[:emails_with_typos]
       emails = params['emails'].presence || []
+      emails.push(emails_with_typos).flatten! if emails_with_typos
       emails = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
 
@@ -62,11 +65,10 @@ module Instructeurs
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
 
-      if !errors.empty?
-        flash.now[:alert] = errors.join(". ") if !errors.empty?
-      end
+      flash[:alert] = errors.join(". ") if !errors.empty?
 
-      render :show
+      query_param = { maybe_typos: @maybe_typos.to_json } if @maybe_typos.present?
+      redirect_to instructeur_groupe_path(@procedure, @groupe_instructeur, query_param)
     end
 
     def remove_instructeur

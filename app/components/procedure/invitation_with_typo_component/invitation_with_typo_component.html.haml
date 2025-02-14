@@ -3,8 +3,9 @@
     %p= @title
     %ul#maybe_typos_errors
       - @maybe_typos.each do |(actual_email, suggested_email)|
+        - emails_with_typos = (@maybe_typos.map(&:first) - [actual_email]).to_json
         %li
           = "Je confirme "
-          = button_to "#{actual_email}", @url, method: :POST, params: { final_email: actual_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
+          = button_to "#{actual_email}", @url, method: :POST, params: { final_email: actual_email, emails_with_typos: }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
           = " ou "
-          = button_to "#{suggested_email}", @url, method: :POST, params: { final_email: suggested_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
+          = button_to "#{suggested_email}", @url, method: :POST, params: { final_email: suggested_email, emails_with_typos: }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
