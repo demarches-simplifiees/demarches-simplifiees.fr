@@ -316,9 +316,9 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).to have_content('pays FRANCE')
         expect(page).to have_content('complément d’identité géographique au nord de paris')
         expect(page).to have_content('lieu-dit glagla')
-        expect(page).to have_content('ERIC SNOW masculin 07/01/1991')
-        expect(page).to have_content('SANSA SNOW féminin 15/01/1992')
-        expect(page).to have_content('PAUL SNOW masculin 04/01/2018')
+        expect(page).to have_content('ERIC SNOW masculin 07 janvier 1991')
+        expect(page).to have_content('SANSA SNOW féminin 15 janvier 1992')
+        expect(page).to have_content('PAUL SNOW masculin 04 janvier 2018')
         expect(page).to have_content('1856 6 2021')
       end
     end
