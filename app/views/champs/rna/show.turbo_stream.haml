@@ -1,1 +1,3 @@
-= turbo_stream.update dom_id(@champ, :rna_info), partial: 'shared/champs/rna/association', locals: { champ: @champ, error: @error }
+= fields_for @champ.input_name, @champ do |form|
+  = turbo_stream.replace @champ.input_group_id do
+    = render EditableChamp::EditableChampComponent.new champ:@champ, form:

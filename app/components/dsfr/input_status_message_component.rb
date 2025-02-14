@@ -8,5 +8,22 @@ module Dsfr
       @error_id = champ.error_id
       @champ = champ
     end
+
+    def statutable?
+      supports_statut? && @champ.value.present?
+    end
+
+    def supports_statut?
+      @champ.type_de_champ.type_champ.in?([
+        TypeDeChamp.type_champs[:rna]
+      ])
+    end
+
+    def statut_message
+      case @champ.type_de_champ.type_champ
+      when TypeDeChamp.type_champs[:rna]
+        t(".rna.data_fetched", title: @champ.title, address: @champ.full_address)
+      end
+    end
   end
 end

@@ -224,6 +224,10 @@ class Champ < ApplicationRecord
     update!(data: data)
   end
 
+  def status_message?
+    false
+  end
+
   def clone(fork = false)
     champ_attributes = [:private, :row_id, :type, :stable_id, :stream]
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []

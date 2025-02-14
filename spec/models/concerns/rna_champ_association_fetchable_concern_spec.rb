@@ -36,7 +36,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 422 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", false, :empty, '', nil
+      it_behaves_like "an association fetcher", false, :blank, '', nil
     end
 
     context 'when the RNA is invalid' do
@@ -44,7 +44,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 422 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", false, :invalid, '1234', nil
+      it_behaves_like "an association fetcher", false, :invalid_rna, '1234', nil
     end
 
     context 'when the RNA is unknow' do
