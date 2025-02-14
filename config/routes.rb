@@ -176,6 +176,9 @@ Rails.application.routes.draw do
 
   resources :targeted_user_links, only: [:show]
 
+  # Omniauth
+  get 'auth/:provider/callback', to: 'rdv_service_public/oauth#callback'
+
   #
   # Main routes
   #
@@ -381,6 +384,7 @@ Rails.application.routes.draw do
         get 'merci'
         get 'demande'
         get 'messagerie'
+        get 'rendez-vous'
         post 'commentaire' => 'dossiers#create_commentaire'
         patch 'restore', to: 'dossiers#restore'
         get 'attestation'
@@ -482,6 +486,7 @@ Rails.application.routes.draw do
           resources :dossiers, only: [:show, :destroy], param: :dossier_id, path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
             member do
               resources :commentaires, only: [:destroy]
+              resources :rdvs, only: [:create]
               get 'next'
               get 'previous'
               post 'repousser-expiration' => 'dossiers#extend_conservation'
@@ -492,6 +497,7 @@ Rails.application.routes.draw do
               get 'avis'
               get 'avis_new'
               get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
+              get 'rendez-vous' => 'dossiers#rendez_vous'
               patch 'follow'
               patch 'unfollow'
               patch 'archive'
@@ -565,6 +571,7 @@ Rails.application.routes.draw do
         patch 'update_email_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'
+        get 'usagers_rdvs'
         post 'create_multiple_commentaire'
       end
     end
@@ -635,6 +642,8 @@ Rails.application.routes.draw do
         patch 'update_accuse_lecture'
         get 'jeton'
         patch 'update_jeton'
+        get 'rdv'
+        patch 'rdv', to: 'procedures#update_rdv'
         put :allow_expert_review
         put :allow_expert_messaging
         put :experts_require_administrateur_invitation
