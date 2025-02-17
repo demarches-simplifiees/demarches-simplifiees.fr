@@ -136,14 +136,34 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   end
 
   def group_by_fonctionnaire_email(dossiers)
-    dossiers
+    dossiers = dossiers
       .visible_by_administration
       .with_notifiable_procedure(notify_on_closed: true)
-      .includes(:followers_instructeurs, procedure: [:administrateurs])
-      .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
-        (dossier.followers_instructeurs + dossier.procedure.administrateurs).each { |destinataire| h[destinataire.email] << dossier }
+      .includes(
+        :followers_instructeurs,
+        procedure: {
+          groupe_instructeurs: { instructeurs: :user },
+          administrateurs: :user
+        }
+      )
+    temp_result = Hash.new { |h, k| h[k] = [] }
+
+    dossiers.find_each do |dossier|
+      dossier.followers_instructeurs.each do |instructeur|
+        temp_result[instructeur.email] << dossier
       end
-      .map { |(email, dossiers)| [email, dossiers.to_a] }
+
+      admin_emails = dossier.procedure.administrateurs.map(&:email)
+      dossier.procedure.groupe_instructeurs.each do |groupe|
+        groupe.instructeurs.each do |instructeur|
+          if admin_emails.include?(instructeur.email)
+            temp_result[instructeur.email] << dossier
+          end
+        end
+      end
+    end
+
+    temp_result.map { |(email, dossiers)| [email, dossiers.to_a] }
   end
 
   def all_user_dossiers_brouillon_close_to_expiration(user)
