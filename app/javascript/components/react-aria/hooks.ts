@@ -5,7 +5,7 @@ import type {
 import { useAsyncList, type AsyncListOptions } from 'react-stately';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import type { Key } from 'react';
-import { matchSorter } from 'match-sorter';
+import { matchSorter, MatchSorterOptions } from 'match-sorter';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useEvent } from 'react-use-event-hook';
 import isEqual from 'react-fast-compare';
@@ -20,6 +20,7 @@ export interface ComboBoxProps
   children: React.ReactNode | ((item: Item) => React.ReactNode);
   label?: string;
   description?: string;
+  isLoading?: boolean;
 }
 
 const inputMap = new WeakMap<HTMLInputElement, string>();
@@ -65,6 +66,13 @@ function inputChanged(container: HTMLSpanElement, inputs: HTMLInputElement[]) {
   return false;
 }
 
+const naturalSort: MatchSorterOptions['baseSort'] = (a, b) => {
+  return a.rankedValue.localeCompare(b.rankedValue, undefined, {
+    numeric: true,
+    sensitivity: 'base'
+  });
+};
+
 export function useSingleList({
   defaultItems,
   defaultSelectedKey,
@@ -95,7 +103,10 @@ export function useSingleList({
     if (inputValue == '') {
       return items;
     }
-    const filteredItems = matchSorter(items, inputValue, { keys: ['label'] });
+    const filteredItems = matchSorter(items, inputValue, {
+      keys: ['label'],
+      baseSort: naturalSort
+    });
     if (filteredItems.length == 0 && fallbackItem) {
       return [fallbackItem];
     } else {
@@ -365,6 +376,7 @@ export function useRemoteList({
   const [inputValue, setInputValue] = useState(
     defaultSelectedItem?.label ?? ''
   );
+  const [isExplicitlySelected, setIsExplicitlySelected] = useState(false);
   const selectedItem = useMemo<Item | null>(() => {
     if (defaultSelectedItem) {
       return defaultSelectedItem;
@@ -386,12 +398,13 @@ export function useRemoteList({
   const onSelectionChange = useEvent<
     NonNullable<ComboBoxProps['onSelectionChange']>
   >((key) => {
+    setIsExplicitlySelected(true);
     const item =
       typeof key != 'string'
         ? null
         : selectedItem?.value == key
           ? selectedItem
-          : list.getItem(key);
+          : list.getItem(key) ?? null;
     setSelectedItem(item);
     if (item) {
       setInputValue(item.label);
@@ -404,6 +417,7 @@ export function useRemoteList({
   const onInputChange = useEvent<NonNullable<ComboBoxProps['onInputChange']>>(
     (value) => {
       debouncedSetFilterText(value);
+      setIsExplicitlySelected(false);
       setInputValue(value);
       if (value == '') {
         onSelectionChange(null);
@@ -424,6 +438,20 @@ export function useRemoteList({
       ? [selectedItem, ...list.items]
       : list.items;
 
+  const shouldShowPopover = useMemo(() => {
+    if (isExplicitlySelected || list.items.length == 0) {
+      return false;
+    }
+
+    // Visible while loading new items or when loaded but explicit selection not yet done
+    return list.loadingState == 'filtering' || !list.isLoading;
+  }, [
+    list.isLoading,
+    list.loadingState,
+    list.items.length,
+    isExplicitlySelected
+  ]);
+
   return {
     selectedItem,
     selectedKey: selectedItem?.value ?? null,
@@ -431,7 +459,9 @@ export function useRemoteList({
     inputValue,
     onInputChange,
     items,
-    onReset
+    onReset,
+    isLoading: list.isLoading,
+    shouldShowPopover
   };
 }
 
@@ -495,13 +525,18 @@ export const createLoader: (
         const struct = Coerce[options?.coerce ?? 'Default'];
         const [err, items] = s.validate(json, struct, { coerce: true });
         if (!err) {
-          if (items.length > limit) {
-            const filteredItems = matchSorter(items, filterText, {
-              keys: ['label']
-            });
-            return { items: filteredItems.slice(0, limit) };
-          }
-          return { items };
+          const filteredItems = matchSorter(items, filterText, {
+            keys: [
+              (item) => item.label.replace(/[_ -]/g, ' '), // accept filter to match saint martin => "Saint-Martin"
+              'label' // keep original label for exact match and filter (saint-martin => Saint-Martin)
+            ],
+            baseSort: naturalSort,
+            threshold:
+              items.length > limit
+                ? matchSorter.rankings.MATCHES // default filter when there are many items
+                : matchSorter.rankings.NO_MATCH // don't reject items when filter contains have typos or non exact matches with dashes/space etc…
+          });
+          return { items: filteredItems.slice(0, limit) };
         }
       }
       return { items: [] };
