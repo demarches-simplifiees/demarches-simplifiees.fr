@@ -23,4 +23,4 @@ en:
     attributes:
       champs/rna_champ:
           hints:
-            value: "Expected format: W123456789. Example: W503726238"
+            value: "Expected format: A capital W followed by 9 digits or letters. Example: W503726238"

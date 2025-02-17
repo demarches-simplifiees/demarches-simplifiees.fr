@@ -23,4 +23,4 @@ fr:
     attributes:
       champs/rna_champ:
           hints:
-            value: "Format attendu : W123456789. Exemple : W503726238"
+            value: "Format attendu : Un W majuscule suivi de 9 chiffres ou lettres. Exemple : W503726238"
