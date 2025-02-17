@@ -1,9 +1,10 @@
 @import 'colors';
 @import 'constants';
 
-$colors: 'green-tilleul-verveine', 'green-bourgeon', 'green-emeraude',
-  'green-menthe', 'blue-ecume', 'purple-glycine', 'pink-macaron',
-  'yellow-tournesol', 'brown-cafe-creme', 'beige-gris-galet';
+$colors:
+  'green-tilleul-verveine', 'green-bourgeon', 'green-emeraude', 'green-menthe',
+  'blue-ecume', 'purple-glycine', 'pink-macaron', 'yellow-tournesol',
+  'brown-cafe-creme', 'beige-gris-galet';
 
 @each $color in $colors {
   .fr-tag--#{$color},

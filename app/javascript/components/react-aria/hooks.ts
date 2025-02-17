@@ -1,15 +1,15 @@
+import { matchSorter, MatchSorterOptions } from 'match-sorter';
+import type { Key } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type {
   ComboBoxProps as AriaComboBoxProps,
   TagGroupProps
 } from 'react-aria-components';
-import { useAsyncList, type AsyncListOptions } from 'react-stately';
-import { useMemo, useRef, useState, useEffect } from 'react';
-import type { Key } from 'react';
-import { matchSorter, MatchSorterOptions } from 'match-sorter';
-import { useDebounceCallback } from 'usehooks-ts';
-import { useEvent } from 'react-use-event-hook';
 import isEqual from 'react-fast-compare';
+import { useAsyncList, type AsyncListOptions } from 'react-stately';
+import { useEvent } from 'react-use-event-hook';
 import * as s from 'superstruct';
+import { useDebounceCallback } from 'usehooks-ts';
 
 import { Item } from './props';
 
@@ -128,11 +128,11 @@ export function useSingleList({
   >((key) => {
     setSelection(key ? String(key) : null);
     const item =
-      typeof key != 'string'
+      (typeof key != 'string'
         ? null
         : selectedItem?.value == key
           ? selectedItem
-          : items.find((item) => item.value == key) ?? null;
+          : items.find((item) => item.value == key)) ?? null;
     onChange?.(item);
   });
   const onInputChange = useEvent<NonNullable<ComboBoxProps['onInputChange']>>(
@@ -400,11 +400,11 @@ export function useRemoteList({
   >((key) => {
     setIsExplicitlySelected(true);
     const item =
-      typeof key != 'string'
+      (typeof key != 'string'
         ? null
         : selectedItem?.value == key
           ? selectedItem
-          : list.getItem(key) ?? null;
+          : list.getItem(key)) ?? null;
     setSelectedItem(item);
     if (item) {
       setInputValue(item.label);
