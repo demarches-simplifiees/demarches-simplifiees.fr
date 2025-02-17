@@ -104,7 +104,7 @@ export class TypeDeChampEditorController extends ApplicationController {
       httpRequest(form.action, {
         method: form.getAttribute('method') ?? '',
         body: new FormData(form),
-        controller: controller
+        signal: controller.signal
       })
         .turbo()
         .catch(() => null)

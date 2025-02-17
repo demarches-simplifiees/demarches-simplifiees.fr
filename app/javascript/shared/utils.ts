@@ -155,14 +155,12 @@ export function delegate<E extends Event = Event>(
 
 export class ResponseError extends Error {
   readonly response: Response;
-  readonly jsonBody?: unknown;
-  readonly textBody?: string;
+  readonly errors: string[];
 
-  constructor(response: Response, jsonBody?: unknown, textBody?: string) {
-    super(String(response.statusText || response.status));
+  constructor(response: Response, errors?: string[]) {
+    super(String(response.statusText || errors?.at(0) || response.status));
     this.response = response;
-    this.jsonBody = jsonBody;
-    this.textBody = textBody;
+    this.errors = errors || [];
   }
 }
 
@@ -188,13 +186,11 @@ export function httpRequest(
     csrf = true,
     timeout = FETCH_TIMEOUT,
     json,
-    controller,
     ...init
   }: RequestInit & {
     csrf?: boolean;
     json?: unknown;
     timeout?: number | false;
-    controller?: AbortController;
   } = {}
 ) {
   const headers = init.headers ? new Headers(init.headers) : new Headers();
@@ -211,14 +207,12 @@ export function httpRequest(
     init.body = JSON.stringify(json);
   }
 
-  let timer: ReturnType<typeof setTimeout>;
-  if (!init.signal) {
-    controller = createAbortController(controller);
-    if (controller) {
-      init.signal = controller.signal;
-      if (timeout != false) {
-        timer = setTimeout(() => controller?.abort(), timeout);
-      }
+  if (timeout != false && AbortSignal.timeout) {
+    const abortSignal = AbortSignal.timeout(timeout);
+    if (init.signal) {
+      init.signal = AbortSignal.any([init.signal, abortSignal]);
+    } else {
+      init.signal = abortSignal;
     }
   }
 
@@ -229,31 +223,23 @@ export function httpRequest(
     if (accept && init.headers instanceof Headers) {
       init.headers.set('accept', accept);
     }
-    try {
-      const response = await fetch(url, init);
 
-      if (response.ok) {
-        return response;
-      } else if (response.status == 401) {
-        location.reload(); // reload whole page so Devise will redirect to sign-in
-      }
+    const response = await fetch(url, init).catch((error) => {
+      const body = (error as Error).message;
+      return new Response(body, {
+        status: 0,
+        headers: { 'content-type': 'text/plain' }
+      });
+    });
 
-      const contentType = response.headers.get('content-type');
-      let jsonBody: unknown;
-      let textBody: string | undefined;
-      try {
-        if (contentType?.match('json')) {
-          jsonBody = await response.clone().json();
-        } else {
-          textBody = await response.clone().text();
-        }
-      } catch {
-        // ignore
-      }
-      throw new ResponseError(response, jsonBody, textBody);
-    } finally {
-      clearTimeout(timer);
+    if (response.ok) {
+      return response;
+    } else if (response.status == 401 || response.status == 403) {
+      location.reload(); // reload whole page so Devise will redirect to sign-in
     }
+
+    const errors = await getResponseErrors(response);
+    throw new ResponseError(response, errors);
   };
 
   return {
@@ -274,13 +260,20 @@ export function httpRequest(
   };
 }
 
-function createAbortController(controller?: AbortController) {
-  if (controller) {
-    return controller;
-  } else if (window.AbortController) {
-    return new AbortController();
+const JSONErrorBody = s.type({ errors: s.array(s.string()) });
+
+async function getResponseErrors(response: Response): Promise<string[]> {
+  const contentType = response.headers.get('content-type');
+  try {
+    if (contentType?.match('json')) {
+      const json = await response.clone().json();
+      const [, body] = s.validate(json, JSONErrorBody);
+      return body?.errors ?? [];
+    }
+    return [];
+  } catch {
+    return [];
   }
-  return;
 }
 
 export function isNumeric(s: string) {

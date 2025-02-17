@@ -102,7 +102,7 @@ export default class Uploader {
       }).turbo();
     } catch (e) {
       const error = e as ResponseError;
-      const errors = (error.jsonBody as { errors: string[] })?.errors;
+      const errors = error?.errors;
       const message = errors && errors[0];
       throw new FileUploadError(
         message ||
