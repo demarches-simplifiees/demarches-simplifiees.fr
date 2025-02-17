@@ -44,7 +44,7 @@
       %br
       Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier. En cas d’informations invalides, #{Current.application_name} se réserve le droit de suspendre la publication de la démarche.
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field)
+  = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :text_field)
   = render Dsfr::InputComponent.new(form: f, attribute: :telephone, input_type: :telephone_field)
   = render Dsfr::InputComponent.new(form: f, attribute: :horaires, input_type: :text_area)
   = render Dsfr::InputComponent.new(form: f, attribute: :adresse, input_type: :text_area)

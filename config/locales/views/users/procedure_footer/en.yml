@@ -8,7 +8,8 @@ en:
         in_app_mail:
           link: "Direclty via the chat"
         email:
-          link: "Directly by email: "
+          mail_link: "Directly by email: "
+          url_link: "From the following link: "
         phone:
           label: 'By phone: '
         schedule:
