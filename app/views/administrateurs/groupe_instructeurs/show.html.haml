@@ -4,7 +4,7 @@
                     ['Groupes d’instructeurs', admin_procedure_groupe_instructeurs_path(@procedure)],
                     [@groupe_instructeur.label]] }
 
-= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
+= render Procedure::GroupeInstructeurMenuComponent.new(procedure: @procedure, sticky: true) do
   = render Procedure::OneGroupeManagementComponent.new(revision: @procedure.active_revision, groupe_instructeur: @groupe_instructeur)
 
   = render partial: 'shared/groupe_instructeurs/instructeurs',

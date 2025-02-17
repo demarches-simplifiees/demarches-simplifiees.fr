@@ -2,6 +2,10 @@
 
 class Dsfr::SidemenuComponent < ApplicationComponent
   renders_many :links, "LinkComponent"
+  attr_reader :sticky
+  def initialize(sticky: false)
+    @sticky = sticky
+  end
 
   class LinkComponent < ApplicationComponent
     attr_reader :name, :url, :icon
