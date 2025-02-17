@@ -5,6 +5,10 @@ class Instructeurs::SelectProcedureDropDownListComponent < Dsfr::InputComponent
     @procedures = procedures
   end
 
+  def render?
+    @procedures.count > 3
+  end
+
   def react_props
     {
       items:,
