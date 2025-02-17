@@ -4,7 +4,7 @@ import { MapIcon } from '@heroicons/react/outline';
 import { Slider } from '@reach/slider';
 import '@reach/slider/styles.css';
 
-import { LayersMap, NBS } from './styles';
+import { type LayersMap, NBS } from './styles';
 
 const STYLES = {
   ortho: 'Satellite',

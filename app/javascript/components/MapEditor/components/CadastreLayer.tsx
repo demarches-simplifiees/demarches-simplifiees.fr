@@ -7,14 +7,18 @@ import { useMapLibre, ReactControl } from '../../shared/maplibre/MapLibre';
 import {
   useEvent,
   useMapEvent,
-  EventHandler
+  type EventHandler
 } from '../../shared/maplibre/hooks';
 import {
   filterFeatureCollection,
   findFeature
 } from '../../shared/maplibre/utils';
 
-import { SOURCE_CADASTRE, CreateFeatures, DeleteFeatures } from '../hooks';
+import {
+  SOURCE_CADASTRE,
+  type CreateFeatures,
+  type DeleteFeatures
+} from '../hooks';
 
 export function CadastreLayer({
   featureCollection,

@@ -1,21 +1,21 @@
+import type { Feature, Geometry } from 'geojson';
+import type {
+  LngLat,
+  LngLatBoundsLike,
+  LngLatLike,
+  MapLayerEventType,
+  StyleSpecification
+} from 'maplibre-gl';
 import {
   useCallback,
   useEffect,
-  useState,
   useMemo,
+  useState,
   type RefObject
 } from 'react';
-import type {
-  LngLatBoundsLike,
-  LngLat,
-  MapLayerEventType,
-  StyleSpecification,
-  LngLatLike
-} from 'maplibre-gl';
-import type { Feature, Geometry } from 'geojson';
 
-import { getMapStyle, getLayerName, LayersMap } from './styles';
 import { useMapLibre } from './MapLibre';
+import { getLayerName, getMapStyle, type LayersMap } from './styles';
 
 export function useFitBounds() {
   const map = useMapLibre();

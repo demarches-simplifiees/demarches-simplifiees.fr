@@ -1,10 +1,15 @@
-import { useState, useCallback, MouseEvent, ChangeEvent } from 'react';
+import {
+  useState,
+  useCallback,
+  type MouseEvent,
+  type ChangeEvent
+} from 'react';
 import type { FeatureCollection } from 'geojson';
 import invariant from 'tiny-invariant';
 
 import { readGeoFile } from '../readGeoFile';
 import { generateId } from '../../shared/maplibre/utils';
-import { CreateFeatures, DeleteFeatures } from '../hooks';
+import type { CreateFeatures, DeleteFeatures } from '../hooks';
 
 export function ImportFileInput({
   featureCollection,

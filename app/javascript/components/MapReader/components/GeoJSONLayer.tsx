@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { Popup, LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
+import { Popup, type LngLatBoundsLike, type LngLatLike } from 'maplibre-gl';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 
 import { useMapLibre } from '../../shared/maplibre/MapLibre';
 import {
   useFitBounds,
   useEvent,
-  EventHandler,
+  type EventHandler,
   useMapEvent,
   useFlyTo
 } from '../../shared/maplibre/hooks';

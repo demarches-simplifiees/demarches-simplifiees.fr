@@ -9,14 +9,14 @@ export class EmailFranceConnectController extends ApplicationController {
     'form'
   ];
 
-  emailFieldTarget!: HTMLElement;
-  useFranceConnectEmailTargets!: HTMLInputElement[];
-  submitTarget!: HTMLButtonElement;
-  emailInputTarget!: HTMLInputElement;
-  formTarget!: HTMLFormElement;
+  declare readonly emailFieldTarget: HTMLElement;
+  declare readonly useFranceConnectEmailTargets: HTMLInputElement[];
+  declare readonly submitTarget: HTMLButtonElement;
+  declare readonly emailInputTarget: HTMLInputElement;
+  declare readonly formTarget: HTMLFormElement;
 
-  fcEmailPathValue!: string;
-  customEmailPathValue!: string;
+  declare readonly fcEmailPathValue: string;
+  declare readonly customEmailPathValue: string;
 
   static values = {
     fcEmailPath: String,
