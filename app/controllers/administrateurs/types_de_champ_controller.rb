@@ -9,7 +9,7 @@ module Administrateurs
     before_action :reload_procedure_with_includes, only: [:destroy]
 
     CSV_MAX_SIZE = 1.megabyte
-    CSV_MAX_LINES = 1000
+    CSV_MAX_LINES = 5_000
     CSV_ACCEPTED_CONTENT_TYPES = [
       "text/csv",
       "application/vnd.ms-excel"
@@ -155,7 +155,7 @@ module Administrateurs
 
         csv_to_code = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true).map(&:to_h)
 
-        return flash[:alert] = "Importation impossible : votre fichier CSV fait plus de 1000 lignes" if csv_to_code.size > 1000
+        return flash[:alert] = "Importation impossible : votre fichier CSV fait plus de #{helpers.number_with_delimiter(CSV_MAX_LINES)} lignes" if csv_to_code.size > CSV_MAX_LINES
 
         headers = csv_to_code.first.keys
 

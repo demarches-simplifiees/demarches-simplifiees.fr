@@ -133,7 +133,7 @@
                         %span.fr-download__detail
                           = template_detail
                     .fr-hint-text.fr-mb-1w
-                      Votre fichier doit peser maximum #{number_to_human_size(referentiel_max_size)} et ne doit pas contenir plus de #{referentiel_max_lines} lignes.
+                      Votre fichier doit peser maximum #{number_to_human_size(referentiel_max_size)} et ne doit pas contenir plus de #{number_with_delimiter(referentiel_max_lines)} lignes.
                     .flex.column
                       = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w', id: dom_id(type_de_champ, :import_referentiel)
 
