@@ -21,5 +21,7 @@ en:
           title: "File %{number} in draft (%{procedure_label}) - Step 2: Form"
         merci:
           title: "File submitted (%{procedure_label})"
+        rendez_vous:
+          title: "Rendez-vous · File %{number} (%{procedure_label})"
       activate:
         title: Activate my account on %{application_name}
