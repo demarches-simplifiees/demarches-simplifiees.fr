@@ -73,16 +73,20 @@ const naturalSort: MatchSorterOptions['baseSort'] = (a, b) => {
   });
 };
 
+const DEFAULT_MAX_ITEMS_DISPLAY = 200;
+
 export function useSingleList({
   defaultItems,
   defaultSelectedKey,
   emptyFilterKey,
-  onChange
+  onChange,
+  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY
 }: {
   defaultItems?: Item[];
   defaultSelectedKey?: string | null;
   emptyFilterKey?: string | null;
   onChange?: (item: Item | null) => void;
+  maxItemsDisplay?: number;
 }) {
   const [selectedKey, setSelectedKey] = useState(defaultSelectedKey);
   const items = useMemo(
@@ -162,7 +166,7 @@ export function useSingleList({
     onSelectionChange,
     inputValue,
     onInputChange,
-    items: filteredItems,
+    items: filteredItems.slice(0, maxItemsDisplay),
     onReset
   };
 }
@@ -174,7 +178,8 @@ export function useMultiList({
   valueSeparator,
   onChange,
   focusInput,
-  formValue
+  formValue,
+  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY
 }: {
   defaultItems?: Item[];
   defaultSelectedKeys?: string[];
@@ -183,6 +188,7 @@ export function useMultiList({
   onChange?: () => void;
   focusInput?: () => void;
   formValue?: 'text' | 'key';
+  maxItemsDisplay?: number;
 }) {
   const valueSeparatorRegExp = useMemo(
     () =>
@@ -343,7 +349,7 @@ export function useMultiList({
     onSelectionChange,
     onInputChange,
     selectedItems,
-    items: filteredItems,
+    items: filteredItems.slice(0, maxItemsDisplay),
     hiddenInputValues,
     inputValue,
     onReset
