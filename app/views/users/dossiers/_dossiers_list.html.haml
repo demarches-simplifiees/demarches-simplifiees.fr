@@ -109,7 +109,7 @@
           - else
             - if dossier.expiration_can_be_extended?
               = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
-                Restaurer et étendre la conservation
+                Restaurer et étendre la conservation (#{dossier.procedure.duree_conservation_dossiers_dans_ds} mois)
 
 
             - else
