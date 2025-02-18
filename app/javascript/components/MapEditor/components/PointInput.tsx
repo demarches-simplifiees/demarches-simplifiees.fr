@@ -14,14 +14,11 @@ export function PointInput({
   const [value, setValue] = useState('');
   const [feature, setFeature] = useState<Feature | null>(null);
   const getCurrentPosition = () => {
-    navigator.geolocation &&
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
-        setValue(
-          `${coords.latitude.toPrecision(6)}, ${coords.longitude.toPrecision(
-            6
-          )}`
-        );
-      });
+    navigator.geolocation?.getCurrentPosition(({ coords }) => {
+      setValue(
+        `${coords.latitude.toPrecision(6)}, ${coords.longitude.toPrecision(6)}`
+      );
+    });
   };
   const addPoint = () => {
     if (feature) {

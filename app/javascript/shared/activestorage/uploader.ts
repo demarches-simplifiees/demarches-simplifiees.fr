@@ -1,11 +1,11 @@
 import { DirectUpload } from '@rails/activestorage';
 import { httpRequest, ResponseError } from '@utils';
-import ProgressBar from './progress-bar';
 import {
-  FileUploadError,
+  ERROR_CODE_ATTACH,
   errorFromDirectUploadMessage,
-  ERROR_CODE_ATTACH
+  FileUploadError
 } from './file-upload-error';
+import ProgressBar from './progress-bar';
 
 const BYTES_TO_MB_RATIO = 1_048_576;
 /**
@@ -32,7 +32,7 @@ export default class Uploader {
     this.autoAttachUrl = autoAttachUrl;
     try {
       this.maxFileSize = parseInt(maxFileSize || '0', 10);
-    } catch (e) {
+    } catch {
       this.maxFileSize = 0;
     }
   }

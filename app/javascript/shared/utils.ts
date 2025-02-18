@@ -110,13 +110,17 @@ export function toggleExpandIcon(icon: Element | null) {
 export function enable(
   el: HTMLSelectElement | HTMLInputElement | HTMLButtonElement | null
 ) {
-  el && (el.disabled = false);
+  if (el) {
+    el.disabled = false;
+  }
 }
 
 export function disable(
   el: HTMLSelectElement | HTMLInputElement | HTMLButtonElement | null
 ) {
-  el && (el.disabled = true);
+  if (el) {
+    el.disabled = true;
+  }
 }
 
 export function hasClass(el: HTMLElement | null, cssClass: string) {

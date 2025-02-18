@@ -1,11 +1,11 @@
 import {
-  enable,
-  disable,
-  hasClass,
   addClass,
+  disable,
+  enable,
+  getConfig,
+  hasClass,
   removeClass,
-  ResponseError,
-  getConfig
+  ResponseError
 } from '@utils';
 
 import { ApplicationController } from './application_controller';
@@ -87,6 +87,7 @@ export class AutosaveStatusController extends ApplicationController {
       removeClass(autosave, 'autosave-state-idle');
       removeClass(autosave, 'autosave-state-succeeded');
       removeClass(autosave, 'autosave-state-failed');
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       autosave.offsetHeight; // flush animations
       addClass(autosave, `autosave-state-${state}`);
     }

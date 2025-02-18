@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { ActionEvent } from '@hotwired/stimulus';
-import { httpRequest, getConfig } from '@utils';
 import { matchInputElement } from '@coldwired/utils';
+import { ActionEvent } from '@hotwired/stimulus';
+import { getConfig, httpRequest } from '@utils';
 
 import { AutoUpload } from '../shared/activestorage/auto-upload';
 import { ApplicationController } from './application_controller';
