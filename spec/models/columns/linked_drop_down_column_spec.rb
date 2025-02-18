@@ -75,4 +75,15 @@ describe Columns::LinkedDropDownColumn do
       end
     end
   end
+
+  describe 'unpack_values' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :linked_drop_down_list, libelle: 'linked' }]) }
+    let(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
+    let(:column) { procedure.find_column(label: 'linked') }
+    subject { column.send(:unpack_values, nil) }
+
+    context 'when value is nil' do
+      it { is_expected.to eq([]) }
+    end
+  end
 end
