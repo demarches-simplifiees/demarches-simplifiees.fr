@@ -70,8 +70,15 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#show' do
-    context 'of a group I belong to' do
-      before { get :show, params: { procedure_id: procedure.id, id: gi_1_2.id } }
+    context 'as an instructeur of a group, with self management enabled' do
+      render_views
+
+      let(:instructeur) { create(:instructeur) }
+
+      before do
+        procedure.update(instructeurs_self_management_enabled: true)
+        get :show, params: { procedure_id: procedure.id, id: gi_1_2.id }
+      end
 
       it { expect(response).to have_http_status(:ok) }
     end
