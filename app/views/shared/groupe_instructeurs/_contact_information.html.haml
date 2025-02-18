@@ -6,7 +6,7 @@
     %strong= groupe_instructeur.label
     %span n’a pas d’informations de contact spécifiques.
     %p Les informations de contact affichées à l’usager seront celles du service porteur de la démarche.
-    - if groupe_instructeur.instructeurs.include?(current_administrateur.user.instructeur)
+    - if administrateur_signed_in? && groupe_instructeur.instructeurs.include?(current_administrateur.user.instructeur)
       = link_to "Personnaliser les informations de contact", new_instructeur_groupe_contact_information_path(procedure_id: procedure.id, groupe_id: groupe_instructeur.id, from_admin: true), class: "fr-btn"
     - else
       %p Si vous souhaitez créer un service pour ce groupe, vous devez faire partie du groupe instructeur
