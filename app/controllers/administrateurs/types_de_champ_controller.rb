@@ -153,7 +153,11 @@ module Administrateurs
 
         type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
-        csv_to_code = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true).map(&:to_h)
+        begin
+          csv_to_code = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true).map(&:to_h)
+        rescue CSV::MalformedCSVError
+          return flash[:alert] = "Importation impossible : le fichier est mal formaté"
+        end
 
         return flash[:alert] = "Importation impossible : votre fichier CSV fait plus de #{helpers.number_with_delimiter(CSV_MAX_LINES)} lignes" if csv_to_code.size > CSV_MAX_LINES
 
