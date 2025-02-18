@@ -112,6 +112,7 @@ export function SingleComboBox({
     formValue,
     form,
     data,
+    maxItemsDisplay,
     ...props
   } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
@@ -121,7 +122,8 @@ export function SingleComboBox({
     defaultItems,
     defaultSelectedKey,
     emptyFilterKey,
-    onChange: dispatch
+    onChange: dispatch,
+    maxItemsDisplay
   });
 
   return (
@@ -159,6 +161,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     allowsCustomValue,
     valueSeparator,
     className,
+    maxItemsDisplay,
     ...props
   } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
 
@@ -178,6 +181,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     formValue,
     allowsCustomValue,
     valueSeparator,
+    maxItemsDisplay,
     focusInput: () => {
       inputRef.current?.focus();
     }
