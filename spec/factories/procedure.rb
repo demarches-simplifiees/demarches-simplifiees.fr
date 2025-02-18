@@ -35,8 +35,6 @@ FactoryBot.define do
     end
 
     after(:build) do |procedure, evaluator|
-      procedure[:path] = SecureRandom.uuid # temporary to avoid errors (to be removed)
-
       procedure.defaut_groupe_instructeur = procedure.groupe_instructeurs.first
       initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
