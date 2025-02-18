@@ -26,6 +26,8 @@ export class TurboInputController extends ApplicationController {
     url.searchParams.append(target.name, target.value);
     httpRequest(url.toString(), {
       method: this.methodValue
-    }).turbo();
+    })
+      .turbo()
+      .catch(() => null);
   }
 }
