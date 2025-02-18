@@ -59,7 +59,8 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
 
   def unpack_values(value)
     JSON.parse(value)
-  rescue JSON::ParserError
+  rescue JSON::ParserError,
+         TypeError # case of value.nil?.eq(true)
     []
   end
 
