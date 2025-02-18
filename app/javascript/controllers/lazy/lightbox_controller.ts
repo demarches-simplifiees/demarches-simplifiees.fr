@@ -1,11 +1,11 @@
-import { ApplicationController } from '../application_controller';
 import lightGallery from 'lightgallery';
-import { LightGallery } from 'lightgallery/lightgallery';
+import 'lightgallery/css/lightgallery-bundle.css';
+import type { LightGallery } from 'lightgallery/lightgallery';
+import lgHash from 'lightgallery/plugins/hash';
+import lgRotate from 'lightgallery/plugins/rotate';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
-import lgRotate from 'lightgallery/plugins/rotate';
-import lgHash from 'lightgallery/plugins/hash';
-import 'lightgallery/css/lightgallery-bundle.css';
+import { ApplicationController } from '../application_controller';
 
 export default class extends ApplicationController {
   lightGallery?: LightGallery;

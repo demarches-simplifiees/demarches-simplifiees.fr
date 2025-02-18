@@ -5,7 +5,7 @@ export class CheckboxSelectAll extends ApplicationController {
   declare readonly checkboxTargets: HTMLInputElement[];
   declare readonly checkboxAllTarget: HTMLInputElement;
 
-  static targets: string[] = ['checkboxAll', 'checkbox'];
+  static targets = ['checkboxAll', 'checkbox'];
 
   initialize() {
     this.toggle = this.toggle.bind(this);

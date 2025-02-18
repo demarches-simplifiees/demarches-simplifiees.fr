@@ -1,4 +1,4 @@
-import { matchSorter, MatchSorterOptions } from 'match-sorter';
+import { matchSorter, type MatchSorterOptions } from 'match-sorter';
 import type { Key } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type {

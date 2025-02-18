@@ -4,7 +4,7 @@ import {
   useRef,
   useEffect,
   useMemo,
-  ReactNode,
+  type ReactNode,
   createContext,
   useCallback
 } from 'react';

@@ -18,9 +18,9 @@ import {
 } from '../../shared/maplibre/utils';
 import {
   SOURCE_SELECTION_UTILISATEUR,
-  CreateFeatures,
-  UpdateFatures,
-  DeleteFeatures
+  type CreateFeatures,
+  type UpdateFatures,
+  type DeleteFeatures
 } from '../hooks';
 
 export function DrawLayer({

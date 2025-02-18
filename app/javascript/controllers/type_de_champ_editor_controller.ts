@@ -1,5 +1,5 @@
 import { matchInputElement } from '@coldwired/utils';
-import { ActionEvent } from '@hotwired/stimulus';
+import type { ActionEvent } from '@hotwired/stimulus';
 import { getConfig, httpRequest } from '@utils';
 
 import { AutoUpload } from '../shared/activestorage/auto-upload';
