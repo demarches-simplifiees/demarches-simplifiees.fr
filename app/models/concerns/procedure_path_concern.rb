@@ -4,6 +4,8 @@ module ProcedurePathConcern
   extend ActiveSupport::Concern
 
   included do
+    self.ignored_columns += [:path]
+
     has_many :procedure_paths, inverse_of: :procedure, dependent: :destroy, autosave: true
 
     after_initialize :ensure_path_exists
