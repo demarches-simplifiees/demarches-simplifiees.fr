@@ -2,5 +2,6 @@ en:
   groupe_instructeur_mailer:
     notify_added_instructeurs:
       email_body:
-        one_group: "You were assigned to the procedure <a href='%{procedure_url}'>%{procedure}</a> by %{email}."
-        many_groups: "You were assigned to the group %{groupe} by %{email}, in charge of procedure <a href='%{procedure_url}'>%{procedure}</a>."
+        html:
+          one: "You were assigned to the procedure <a href=\"%{procedure_url}\">%{procedure}</a> by %{email}."
+          other: "You were assigned to the group %{groupe} by %{email}, in charge of procedure <a href=\"%{procedure_url}\">%{procedure}</a>."
