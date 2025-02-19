@@ -1089,45 +1089,98 @@ describe Instructeurs::DossiersController, type: :controller do
         after do
           Timecop.return
         end
+        let(:champs_private_attributes) do
+          {
+            champ_multiple_drop_down_list.public_id => {
+              value: ['', 'val1', 'val2']
+            }
+          }
+        end
         let(:params) do
           {
             procedure_id: procedure.id,
             dossier_id: dossier.id,
-            dossier: {
-              champs_private_attributes: {
-                champ_multiple_drop_down_list.public_id => {
-                  value: ['', 'val1', 'val2']
-                },
-                champ_datetime.public_id => {
-                  value: '2019-12-21T13:17'
-                },
-                champ_linked_drop_down_list.public_id => {
-                  primary_value: 'primary',
-                  secondary_value: 'secondary'
-                },
-                champ_repetition.rows.first.first.public_id => {
-                  value: 'text'
-                },
-                champ_drop_down_list.public_id => {
-                  value: '__other__',
-                  value_other: 'other value'
-                }
-              }
-            }
+            dossier: { champs_private_attributes: }
           }
         end
 
         it {
           expect(champ_multiple_drop_down_list.value).to eq('["val1","val2"]')
-          expect(champ_linked_drop_down_list.primary_value).to eq('primary')
-          expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
-          expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
-          expect(champ_text.value).to eq('text')
-          expect(champ_drop_down_list.value).to eq('other value')
           expect(dossier.last_champ_private_updated_at).to eq(now)
           expect(response).to have_http_status(200)
           assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
         }
+
+        context 'datetime' do
+          let(:champs_private_attributes) do
+            {
+              champ_datetime.public_id => {
+                value: '2019-12-21T13:17'
+              }
+            }
+          end
+
+          it {
+            expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
+            expect(dossier.last_champ_private_updated_at).to eq(now)
+            expect(response).to have_http_status(200)
+            assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
+          }
+        end
+
+        context 'linked_drop_down' do
+          let(:champs_private_attributes) do
+            {
+              champ_linked_drop_down_list.public_id => {
+                primary_value: 'primary',
+                secondary_value: 'secondary'
+              }
+            }
+          end
+
+          it {
+            expect(champ_linked_drop_down_list.primary_value).to eq('primary')
+            expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
+            expect(dossier.last_champ_private_updated_at).to eq(now)
+            expect(response).to have_http_status(200)
+            assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
+          }
+        end
+
+        context 'repetition' do
+          let(:champs_private_attributes) do
+            {
+              champ_repetition.rows.first.first.public_id => {
+                value: 'text'
+              }
+            }
+          end
+
+          it {
+            expect(champ_text.value).to eq('text')
+            expect(dossier.last_champ_private_updated_at).to eq(now)
+            expect(response).to have_http_status(200)
+            assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
+          }
+        end
+
+        context 'drop_down_list' do
+          let(:champs_private_attributes) do
+            {
+              champ_drop_down_list.public_id => {
+                value: '__other__',
+                value_other: 'other value'
+              }
+            }
+          end
+
+          it {
+            expect(champ_drop_down_list.value).to eq('other value')
+            expect(dossier.last_champ_private_updated_at).to eq(now)
+            expect(response).to have_http_status(200)
+            assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
+          }
+        end
 
         it 'updates the annotations' do
           Timecop.travel(now + 1.hour)

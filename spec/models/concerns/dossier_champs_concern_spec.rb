@@ -331,7 +331,7 @@ RSpec.describe DossierChampsConcern do
     end
   end
 
-  describe "#update_champs_attributes(public)" do
+  describe "#public_champ_for_update" do
     let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
     let(:row_id) { ULID.generate }
 
@@ -347,7 +347,14 @@ RSpec.describe DossierChampsConcern do
     let(:champ_991) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(991)) }
     let(:champ_994) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(994), row_id:) }
 
-    subject { dossier.update_champs_attributes(attributes, :public, updated_by: dossier.user.email) }
+    def assign_champs_attributes(attributes)
+      attributes.each do |public_id, attributes|
+        champ = dossier.public_champ_for_update(public_id, updated_by: dossier.user.email)
+        champ.assign_attributes(attributes)
+      end
+    end
+
+    subject { assign_champs_attributes(attributes) }
 
     it {
       subject
@@ -397,7 +404,7 @@ RSpec.describe DossierChampsConcern do
     end
   end
 
-  describe "#update_champs_attributes(private)" do
+  describe "#private_champ_for_update" do
     let(:attributes) do
       {
         "995" => { value: "Hello" }
@@ -406,7 +413,14 @@ RSpec.describe DossierChampsConcern do
 
     let(:annotation_995) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(995)) }
 
-    subject { dossier.update_champs_attributes(attributes, :private, updated_by: dossier.user.email) }
+    def assign_champs_attributes(attributes)
+      attributes.each do |public_id, attributes|
+        champ = dossier.private_champ_for_update(public_id, updated_by: dossier.user.email)
+        champ.assign_attributes(attributes)
+      end
+    end
+
+    subject { assign_champs_attributes(attributes) }
 
     it {
       subject
@@ -430,7 +444,7 @@ RSpec.describe DossierChampsConcern do
   context 'en_construction(user)' do
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
 
-    describe "#update_champs_attributes(public)" do
+    describe "#public_champ_for_update" do
       before { Flipper.enable(:user_buffer_stream, procedure) }
 
       let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
@@ -478,10 +492,15 @@ RSpec.describe DossierChampsConcern do
       def draft_champ_991 = draft_champ(991)
       def draft_champ_994 = draft_champ(994, row_id)
 
-      subject do
-        dossier.with_update_stream(dossier.user) do
-          dossier.update_champs_attributes(attributes, :public, updated_by: dossier.user.email)
+      def assign_champs_attributes(attributes)
+        attributes.each do |public_id, attributes|
+          champ = dossier.public_champ_for_update(public_id, updated_by: dossier.user.email)
+          champ.assign_attributes(attributes)
         end
+      end
+
+      subject do
+        dossier.with_update_stream(dossier.user) { assign_champs_attributes(attributes) }
       end
 
       it {
@@ -515,9 +534,7 @@ RSpec.describe DossierChampsConcern do
         expect(dossier.history.size).to eq(2)
 
         Timecop.freeze(1.hour.from_now) do
-          dossier.with_update_stream(dossier.user) do
-            dossier.update_champs_attributes(new_attributes, :public, updated_by: dossier.user.email)
-          end
+          dossier.with_update_stream(dossier.user) { assign_champs_attributes(new_attributes) }
           dossier.save!
           dossier.merge_user_buffer_stream!
         end
@@ -527,9 +544,7 @@ RSpec.describe DossierChampsConcern do
         expect(dossier.history.size).to eq(4)
 
         Timecop.freeze(2.hours.from_now) do
-          dossier.with_update_stream(dossier.user) do
-            dossier.update_champs_attributes(bad_attributes, :public, updated_by: dossier.user.email)
-          end
+          dossier.with_update_stream(dossier.user) { assign_champs_attributes(bad_attributes) }
           dossier.save!
         end
 

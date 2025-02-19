@@ -119,12 +119,16 @@ module DossierChampsConcern
     champ
   end
 
-  def update_champs_attributes(attributes, scope, updated_by:)
-    champs_attributes = attributes.to_h.map do |public_id, attributes|
-      champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
-    end
+  def public_champ_for_update(public_id, updated_by:)
+    stable_id, row_id = public_id.split('-')
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id, :public)
+    champ_for_update(type_de_champ, row_id:, updated_by:)
+  end
 
-    assign_attributes(champs_attributes:)
+  def private_champ_for_update(public_id, updated_by:)
+    stable_id, row_id = public_id.split('-')
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id, :private)
+    champ_for_update(type_de_champ, row_id:, updated_by:)
   end
 
   def repetition_rows_for_export(type_de_champ)
@@ -308,13 +312,6 @@ module DossierChampsConcern
     else
       champ
     end
-  end
-
-  def champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
-    stable_id, row_id = public_id.split('-')
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id, scope)
-    champ = champ_upsert_by!(type_de_champ, row_id)
-    attributes.merge(id: champ.id, updated_by:)
   end
 
   def champ_upsert_by!(type_de_champ, row_id)
