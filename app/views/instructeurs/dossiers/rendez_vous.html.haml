@@ -19,4 +19,4 @@
       - @rdvs.booked.each do |rdv|
         = render Instructeurs::RdvCardComponent.new(rdv:)
 
-    = render Instructeurs::ProposeRdvButtonComponent.new(dossier: @dossier)
+    = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)
