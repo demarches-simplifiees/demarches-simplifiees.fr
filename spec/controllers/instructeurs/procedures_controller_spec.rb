@@ -565,6 +565,20 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
       end
 
+      context 'when an error occurs in the DossierFilterService' do
+        before do
+          allow(DossierFilterService).to receive(:filtered_sorted_ids).and_raise(ActiveRecord::StatementInvalid.new('PG::UndefinedFunction'))
+
+          expect_any_instance_of(ProcedurePresentation).to receive(:destroy_filters_for!)
+          subject
+        end
+
+        it do
+          expect(response).to redirect_to(instructeur_procedure_path)
+          expect(flash.alert).to include('Votre affichage a dû être réinitialisé')
+        end
+      end
+
       context 'exports notification' do
         context 'without generated export' do
           before do

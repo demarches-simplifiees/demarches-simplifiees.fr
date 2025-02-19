@@ -108,7 +108,26 @@ module Instructeurs
 
       @has_export_notification = notify_exports?
       @last_export = last_export_for(statut)
-      @filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, procedure_presentation.filters_for(statut), procedure_presentation.sorted_column, current_instructeur, count: dossiers_count)
+
+      begin
+        @filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, procedure_presentation.filters_for(statut), procedure_presentation.sorted_column, current_instructeur, count: dossiers_count)
+      rescue ActiveRecord::StatementInvalid => e
+        raise e if !(e.message =~ /PG::UndefinedFunction/) # StatementInvalid is too generic, we'll add more cases if needed
+
+        Sentry.capture_message(
+          "Destroying invalid ProcedurePresentation",
+          extra: {
+            procedure_presentation_id: procedure_presentation.id,
+            errors: e.message,
+            filters: procedure_presentation.filters_for(statut).map(&:to_json).join
+          }
+        )
+
+        procedure_presentation.destroy_filters_for!(statut)
+
+        return redirect_to [:instructeur, @procedure, statut:], alert: "Votre affichage a dû être réinitialisé en raison d'un problème technique."
+      end
+
       page = params[:page].presence || 1
 
       @dossiers_count = @filtered_sorted_ids.size
