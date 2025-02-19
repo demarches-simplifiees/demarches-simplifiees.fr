@@ -458,7 +458,7 @@ module Administrateurs
         end
 
       if @type_de_champ.type_champ == "siret"
-        @column_labels.concat Etablissement::EXPORTABLE_COLUMNS.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
+        @column_labels.concat Etablissement::EXPORTABLE_COLUMNS.keys.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
 
         # Hardcode non columns data
         @column_labels << "Bilans BDF"

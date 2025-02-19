@@ -168,7 +168,7 @@ module ColumnsConcern
 
       others = %w[code_postal].map { |column| dossier_col(table: 'etablissement', column:) }
 
-      for_export = Etablissement::EXPORTABLE_COLUMNS.map { |column| dossier_col(table: 'etablissement', column:) }
+      for_export = Etablissement::EXPORTABLE_COLUMNS.map { |(column, attributes)| dossier_col(table: 'etablissement', column:, type: attributes[:type]) }
 
       [siret_column, etablissements, others, for_export].flatten
     end
