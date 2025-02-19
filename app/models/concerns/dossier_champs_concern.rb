@@ -135,20 +135,11 @@ module DossierChampsConcern
 
   def repetition_row_ids(type_de_champ)
     return [] if !type_de_champ.repetition?
-    return [] unless stable_id_in_revision?(type_de_champ.stable_id)
     @repetition_row_ids ||= {}
-    @repetition_row_ids[type_de_champ.stable_id] ||= begin
-      rows = champs_in_revision.filter { _1.row? && _1.stable_id == type_de_champ.stable_id }
-      row_ids = rows.reject(&:discarded?).map(&:row_id)
-
-      # Legacy rows are rows that have been created before the introduction of the discarded_at column
-      # TODO migrate and clean
-      children_stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
-      discarded_row_ids = rows.filter(&:discarded?).map(&:row_id)
-      legacy_row_ids = champs_in_revision.filter { _1.stable_id.in?(children_stable_ids) && _1.row_id.present? }.map(&:row_id).uniq
-      row_ids += (legacy_row_ids - discarded_row_ids)
-      row_ids.uniq.sort
-    end
+    @repetition_row_ids[type_de_champ.stable_id] ||= champs_in_revision
+      .filter { _1.row? && _1.stable_id == type_de_champ.stable_id && !_1.discarded? }
+      .map(&:row_id)
+      .sort
   end
 
   def repetition_add_row(type_de_champ, updated_by:)
