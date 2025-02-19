@@ -26,6 +26,24 @@ describe ProcedurePresentation do
     end
   end
 
+  describe 'destroy_filters_for!' do
+    let(:procedure_presentation) do
+      create(:procedure_presentation, assign_to:).tap do |pp|
+        pp.update(a_suivre_filters: [FilteredColumn.new(column: procedure.find_column(label: 'Demandeur'), filter: 'mail')])
+      end
+    end
+
+    subject { procedure_presentation.destroy_filters_for!('a-suivre') }
+
+    it do
+      expect(procedure_presentation.a_suivre_filters).not_to eq([])
+
+      subject
+
+      expect(procedure_presentation.a_suivre_filters).to eq([])
+    end
+  end
+
   describe '#update_displayed_fields' do
     let(:en_construction_column) { procedure.find_column(label: 'Date de passage en construction') }
     let(:mise_a_jour_column) { procedure.find_column(label: 'Date du dernier évènement') }
