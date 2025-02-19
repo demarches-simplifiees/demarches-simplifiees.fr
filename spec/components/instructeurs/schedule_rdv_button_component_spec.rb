@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Instructeurs::ProposeRdvButtonComponent, type: :component do
+RSpec.describe Instructeurs::ScheduleRdvButtonComponent, type: :component do
   let(:procedure) { create(:procedure) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 

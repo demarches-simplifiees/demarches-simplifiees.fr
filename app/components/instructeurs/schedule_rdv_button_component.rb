@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Instructeurs::ProposeRdvButtonComponent < ApplicationComponent
+class Instructeurs::ScheduleRdvButtonComponent < ApplicationComponent
   def initialize(dossier:)
     @dossier = dossier
   end
