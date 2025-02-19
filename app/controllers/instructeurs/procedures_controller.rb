@@ -242,17 +242,15 @@ module Instructeurs
       @bulk_messages = BulkMessage.where(procedure: procedure)
       @bulk_message = current_instructeur.bulk_messages.build
 
-      instructeur_groupe_ids = current_instructeur.groupe_instructeurs.where(procedure: procedure).ids
-      @dossiers_count = procedure.dossiers.state_brouillon.where(groupe_instructeur_id: instructeur_groupe_ids).count
+      @dossiers_count = reachable_brouillons.count
     end
 
     def create_multiple_commentaire
       @procedure = procedure
       errors = []
       bulk_message = current_instructeur.bulk_messages.build(bulk_message_params)
-      instructeur_groupe_ids = current_instructeur.groupe_instructeurs.where(procedure: procedure).ids
 
-      dossiers = procedure.dossiers.state_brouillon.where(groupe_instructeur_id: instructeur_groupe_ids)
+      dossiers = reachable_brouillons
 
       dossiers.each do |dossier|
         commentaire = CommentaireService.create(current_instructeur, dossier, bulk_message_params.except(:targets))
@@ -293,6 +291,15 @@ module Instructeurs
     end
 
     private
+
+    def reachable_brouillons
+      if procedure.routing_enabled?
+        instructeur_groupe_ids = current_instructeur.groupe_instructeurs.where(procedure: procedure).ids
+        procedure.dossiers.brouillon.where(groupe_instructeur_id: instructeur_groupe_ids)
+      else
+        procedure.dossiers.brouillon
+      end
+    end
 
     def assign_to_params
       params.require(:assign_to)

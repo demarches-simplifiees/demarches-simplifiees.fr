@@ -756,9 +756,7 @@ describe Instructeurs::ProceduresController, type: :controller do
   end
 
   describe '#email_usagers' do
-    let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure) }
-    let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
 
     subject do
       get :email_usagers, params: { procedure_id: procedure.id }
@@ -769,13 +767,32 @@ describe Instructeurs::ProceduresController, type: :controller do
     context 'when authenticated' do
       before { sign_in(instructeur.user) }
 
-      context 'when instructor has groups' do
-        let!(:dossier_in_group) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: gi_1) }
-        let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
+      context 'the procedure is not routed' do
+        let(:instructeur) { create(:instructeur) }
+        let(:defaut_groupe_instructeur) { procedure.defaut_groupe_instructeur }
+        let!(:dossier_in_group) { create(:dossier, :brouillon, procedure:, groupe_instructeur: defaut_groupe_instructeur) }
+        let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure:, groupe_instructeur: nil) }
 
-        it 'lists only dossiers in instructor groups' do
+        before { defaut_groupe_instructeur.instructeurs << instructeur }
+
+        it 'lists all the brouillon' do
           is_expected.to have_http_status(200)
-          expect(assigns(:dossiers_count)).to eq(1) # only dossier_in_group
+          expect(assigns(:dossiers_count)).to eq(2) # only dossier_in_group
+        end
+      end
+
+      context 'the procedure is routed' do
+        let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure:, instructeurs: [instructeur]) }
+        let(:instructeur) { create(:instructeur) }
+
+        context 'when instructor has groups' do
+          let!(:dossier_in_group) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: gi_1) }
+          let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
+
+          it 'lists only dossiers in instructor groups' do
+            is_expected.to have_http_status(200)
+            expect(assigns(:dossiers_count)).to eq(1) # only dossier_in_group
+          end
         end
       end
     end
