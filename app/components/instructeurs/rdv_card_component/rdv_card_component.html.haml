@@ -1,7 +1,7 @@
 .card.rounded-4.mb-4.fr-p-0
   .flex
     - if with_dossier_infos
-      .p-3.fr-background-alt--grey
+      .fr-p-3w.fr-background-alt--grey
         .flex.column.flex-gap-1
           %h3.card-title
             = t('.dossier_number')
@@ -21,7 +21,7 @@
             = link_to dossier_path(dossier), class: "fr-link" do
               = t('.view_file')
               %span.fr-icon-arrow-right-line.fr-icon--sm{ "aria-hidden": "true" }
-    .p-3
+    .fr-p-3w
       .flex.column.flex-gap-1
         %p
           %span.fr-icon-calendar-fill{ "aria-hidden": "true" }
