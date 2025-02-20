@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-class Cron::Datagouv::InstructeurConnectedByMonthJob < Cron::CronJob
-  include DatagouvCronSchedulableConcern
+class Cron::Datagouv::InstructeurConnectedByMonthJob < Cron::Datagouv::BaseJob
   self.schedule_expression = "every month at 4:45"
-  FILE_NAME = "nb_instructeurs_connectes_par_mois"
+  HEADERS = ["mois", "nb_instructeurs_connectes_par_mois"]
+  FILE_NAME = HEADERS[1]
+  RESOURCE = 'f15e8857-06dc-4671-8139-887205c7337a'
 
-  def perform(*args)
-    GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, data) do |file|
-      begin
-        APIDatagouv::API.upload(file, :statistics_dataset)
-      ensure
-        FileUtils.rm(file)
-      end
-    end
+  def perform
+    super(RESOURCE, HEADERS, FILE_NAME)
   end
 
-  def data
-    Instructeur.joins(:user).where(user: { last_sign_in_at: 1.month.ago.all_month }).count
+  private
+
+  def data_for(month:)
+    [
+      month.strftime(DATE_FORMAT),
+      Instructeur.joins(:user).where(user: { last_sign_in_at: month.all_month }).count
+    ]
   end
 end
