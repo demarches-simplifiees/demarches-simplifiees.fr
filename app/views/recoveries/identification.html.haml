@@ -9,7 +9,7 @@
   = form_with do |f|
     .fr-input-group
       %label.fr-label{ for: "email" }
-        Email du propriétaire des dossiers
+        Adresse électronique du propriétaire des dossiers
         %span.fr-hint-text= t('email', scope: [:activerecord, :attributes, :default_attributes, :hints])
 
       = f.email_field :previous_email,
