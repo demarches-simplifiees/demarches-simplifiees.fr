@@ -207,7 +207,7 @@ export function httpRequest(
     init.body = JSON.stringify(json);
   }
 
-  if (timeout != false && AbortSignal.timeout) {
+  if (timeout != false && AbortSignal.timeout && AbortSignal.any) {
     const abortSignal = AbortSignal.timeout(timeout);
     if (init.signal) {
       init.signal = AbortSignal.any([init.signal, abortSignal]);
