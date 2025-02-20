@@ -20,7 +20,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
           type: :enum,
           jsonpath: "$.referentiel.data.row.#{header.parameterize.underscore}",
           displayable:,
-          options_for_select: referentiel.items.map { _1.data['row'][header.parameterize.underscore] }.uniq.sort
+          options_for_select: referentiel.items.map { _1.data['row'][header.parameterize.underscore] }.uniq.compact.sort
         )
       end
     else
