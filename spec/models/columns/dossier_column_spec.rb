@@ -99,4 +99,17 @@ describe Columns::DossierColumn do
       end
     end
   end
+
+  describe 'filtered_ids' do
+    context 'for an integer etablissement column' do
+      let(:procedure) { create(:procedure, for_individual: false) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
+      let(:capital) { dossier.etablissement.entreprise_capital_social }
+      let(:integer_column) { procedure.find_column(label: "Entreprise capital social") }
+
+      subject { integer_column.filtered_ids(procedure.dossiers, [capital.to_s]) }
+
+      it { is_expected.to eq([dossier.id]) }
+    end
+  end
 end

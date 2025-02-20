@@ -43,11 +43,15 @@ class Columns::DossierColumn < Column
           .filter_map { |v| v.to_date rescue nil }
 
         dossiers
-          .includes(table)
-          .where(table.pluralize => { column => dates })
+          .includes(:etablissement)
+          .where(etablissements: { column => dates })
+      elsif type == :integer
+        dossiers
+          .includes(:etablissement)
+          .where(etablissements: { column => values.filter_map { Integer(_1) rescue nil } })
       else
         dossiers
-          .includes(table)
+          .includes(:etablissement)
           .filter_ilike(table, column, values)
       end
     when 'followers_instructeurs'

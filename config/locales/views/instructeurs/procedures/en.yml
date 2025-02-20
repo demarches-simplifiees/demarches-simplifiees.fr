@@ -6,6 +6,7 @@ en:
         procedure_menu: Procedure menu
       show:
         file_tracking: File tracking
+        reinit_display: Your display had to be reset due to a technical issue.
       email_usagers:
         hint:
           zero: "There is no user with a draft."

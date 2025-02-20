@@ -31,6 +31,10 @@ class ProcedurePresentation < ApplicationRecord
     send(filters_name_for(statut))
   end
 
+  def destroy_filters_for!(statut)
+    update!(filters_name_for(statut) => [])
+  end
+
   def filters_name_for(statut) = statut.tr('-', '_').then { "#{_1}_filters" }
 
   def displayed_fields_for_headers

@@ -34,31 +34,31 @@ class Etablissement < ApplicationRecord
     "libelle_naf" => { type: :text }
   }.freeze
 
-  EXPORTABLE_COLUMNS = %w[
-    siege_social
-    code_naf
-    adresse
-    numero_voie
-    type_voie
-    nom_voie
-    complement_adresse
-    localite
-    code_insee_localite
-    entreprise_capital_social
-    entreprise_numero_tva_intracommunautaire
-    entreprise_forme_juridique_code
-    entreprise_code_effectif_entreprise
-    entreprise_etat_administratif
-    entreprise_siret_siege_social
-    entreprise_nom
-    entreprise_prenom
-    association_rna
-    association_titre
-    association_objet
-    association_date_creation
-    association_date_declaration
-    association_date_publication
-  ].freeze
+  EXPORTABLE_COLUMNS = {
+    "siege_social" => { type: :text },
+    "code_naf" => { type: :text },
+    "adresse" => { type: :text },
+    "numero_voie" => { type: :text },
+    "type_voie" => { type: :text },
+    "nom_voie" => { type: :text },
+    "complement_adresse" => { type: :text },
+    "localite" => { type: :text },
+    "code_insee_localite" => { type: :text },
+    "entreprise_capital_social" => { type: :integer },
+    "entreprise_numero_tva_intracommunautaire" => { type: :text },
+    "entreprise_forme_juridique_code" => { type: :text },
+    "entreprise_code_effectif_entreprise" => { type: :text },
+    "entreprise_etat_administratif" => { type: :text },
+    "entreprise_siret_siege_social" => { type: :text },
+    "entreprise_nom" => { type: :text },
+    "entreprise_prenom" => { type: :text },
+    "association_rna" => { type: :text },
+    "association_titre" => { type: :text },
+    "association_objet" => { type: :text },
+    "association_date_creation" => { type: :text },
+    "association_date_declaration" => { type: :text },
+    "association_date_publication" => { type: :text }
+  }.freeze
 
   def entreprise_raison_sociale
     read_attribute(:entreprise_raison_sociale).presence || raison_sociale_for_ei
