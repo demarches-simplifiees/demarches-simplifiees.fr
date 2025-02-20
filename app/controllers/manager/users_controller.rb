@@ -11,7 +11,7 @@ module Manager
         user.update(email: targeted_email)
 
         if (user.valid?)
-          flash[:notice] = "L'email a été modifié en « #{targeted_email} » sans notification ni validation par email."
+          flash[:notice] = "L'adresse électronique a été modifiée en « #{targeted_email} » sans notification ni validation par email."
         else
           flash[:error] = user.errors.full_messages.to_sentence
         end
@@ -20,7 +20,7 @@ module Manager
       else
         targeted_user.merge(user)
 
-        flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."
+        flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."
         redirect_to edit_manager_user_path(targeted_user)
       end
     end
@@ -95,9 +95,9 @@ module Manager
     def unblock_email
       @user = User.find(params[:user_id])
       if Sendinblue::API.new.unblock_user(@user.email)
-        flash.notice = "L'adresse email a été débloquée auprès de Sendinblue"
+        flash.notice = "L'adresse électronique a été débloquée auprès de Sendinblue"
       else
-        flash.alert = "Impossible de débloquer cette adresse email auprès de Sendinblue"
+        flash.alert = "Impossible de débloquer cette adresse électronique auprès de Sendinblue"
       end
       redirect_to emails_manager_user_path(@user)
     end

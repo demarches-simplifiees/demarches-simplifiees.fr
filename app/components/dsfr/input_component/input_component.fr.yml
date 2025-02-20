@@ -4,5 +4,5 @@ fr:
     aria_label: "Afficher le mot de passe"
     label: "Afficher"
   email_suggest:
-    mistake: "L'adresse semble erronée"
+    mistake: "L'adresse électronique semble erronée"
     wanna_say: "Vouliez-vous écrire :"
