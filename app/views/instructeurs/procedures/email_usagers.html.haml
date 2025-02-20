@@ -37,5 +37,5 @@
             .width-100
               %h2.claimant
                 %span.email= message.instructeur.email
-                %span.date a envoyé ce message à #{@dossiers_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
+                %span.date a envoyé ce message à #{message.dossier_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
               %p= message.body
