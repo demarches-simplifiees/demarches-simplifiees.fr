@@ -14,6 +14,7 @@ class Champs::CarteController < Champs::ChampController
       geo_area = @champ.geo_areas.build(source: params_source, properties: {})
 
       if save_feature(geo_area, create_params_feature)
+        @champ.update_timestamps
         FetchCadastreRealGeometryJob.perform_later(geo_area) if geo_area.cadastre?
         render json: { feature: geo_area.to_feature }, status: :created
       else
@@ -28,6 +29,7 @@ class Champs::CarteController < Champs::ChampController
     geo_area = @champ.geo_areas.find(params[:id])
 
     if save_feature(geo_area, update_params_feature)
+      @champ.update_timestamps
       FetchCadastreRealGeometryJob.perform_later(geo_area) if geo_area.cadastre?
       head :no_content
     else
@@ -37,7 +39,7 @@ class Champs::CarteController < Champs::ChampController
 
   def destroy
     @champ.geo_areas.find(params[:id]).destroy!
-    propagate_touch_champs_changed
+    @champ.update_timestamps
 
     head :no_content
   end
@@ -81,9 +83,6 @@ class Champs::CarteController < Champs::ChampController
     if feature[:properties]
       geo_area.properties.merge!(feature[:properties])
     end
-    if geo_area.save
-      propagate_touch_champs_changed
-      true
-    end
+    geo_area.save
   end
 end

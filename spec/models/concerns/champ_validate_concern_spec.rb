@@ -8,10 +8,7 @@ RSpec.describe ChampValidateConcern do
   let(:types_de_champ_public) { [{ type: :email }] }
 
   def update_champ(value)
-    dossier.update_champs_attributes({
-      public_id => { value: }
-    }, :public, updated_by: 'test')
-    dossier.save
+    dossier.public_champ_for_update(public_id, updated_by: 'test').update(value:)
   end
 
   context 'when in revision' do

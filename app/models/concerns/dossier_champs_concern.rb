@@ -10,7 +10,7 @@ module DossierChampsConcern
       value = type_de_champ.champ_blank?(champ) ? nil : champ.value
       updated_at = champ&.updated_at || depose_at || created_at
       rebased_at = champ&.rebased_at
-      type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:)
+      type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:, stream:)
     else
       champ
     end
@@ -119,12 +119,16 @@ module DossierChampsConcern
     champ
   end
 
-  def update_champs_attributes(attributes, scope, updated_by:)
-    champs_attributes = attributes.to_h.map do |public_id, attributes|
-      champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
-    end
+  def public_champ_for_update(public_id, updated_by:)
+    stable_id, row_id = public_id.split('-')
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id, :public)
+    champ_for_update(type_de_champ, row_id:, updated_by:)
+  end
 
-    assign_attributes(champs_attributes:)
+  def private_champ_for_update(public_id, updated_by:)
+    stable_id, row_id = public_id.split('-')
+    type_de_champ = find_type_de_champ_by_stable_id(stable_id, :private)
+    champ_for_update(type_de_champ, row_id:, updated_by:)
   end
 
   def repetition_rows_for_export(type_de_champ)
@@ -136,7 +140,7 @@ module DossierChampsConcern
   def repetition_row_ids(type_de_champ)
     return [] if !type_de_champ.repetition?
     @repetition_row_ids ||= {}
-    @repetition_row_ids[type_de_champ.stable_id] ||= champs_in_revision
+    @repetition_row_ids[type_de_champ.stable_id] ||= champs_on_stream
       .filter { _1.row? && _1.stable_id == type_de_champ.stable_id && !_1.discarded? }
       .map(&:row_id)
       .sort
@@ -165,10 +169,124 @@ module DossierChampsConcern
     super.tap { reset_champs_cache }
   end
 
+  def merge_user_buffer_stream!
+    buffer_champ_ids_h = champs.where(stream: Champ::USER_BUFFER_STREAM, stable_id: revision_stable_ids)
+      .pluck(:id, :stable_id, :row_id)
+      .index_by { |(_, stable_id, row_id)| TypeDeChamp.public_id(stable_id, row_id) }
+      .transform_values(&:first)
+
+    return if buffer_champ_ids_h.empty?
+
+    changed_main_champ_ids_h = champs.where(stream: Champ::MAIN_STREAM, stable_id: revision_stable_ids)
+      .pluck(:id, :stable_id, :row_id)
+      .index_by { |(_, stable_id, row_id)| TypeDeChamp.public_id(stable_id, row_id) }
+      .transform_values(&:first)
+
+    buffer_champ_ids = buffer_champ_ids_h.values
+    changed_main_champ_ids = changed_main_champ_ids_h.filter_map { |public_id, id| id if buffer_champ_ids_h.key?(public_id) }
+
+    now = Time.zone.now
+    history_stream = "#{Champ::HISTORY_STREAM}#{now}"
+    changed_champs = champs.filter { _1.id.in?(buffer_champ_ids) }
+
+    transaction do
+      champs.where(id: changed_main_champ_ids, stream: Champ::MAIN_STREAM).update_all(stream: history_stream)
+      champs.where(id: buffer_champ_ids, stream: Champ::USER_BUFFER_STREAM).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
+      update_champs_timestamps(changed_champs)
+    end
+
+    # update loaded champ instances
+    champs.each do |champ|
+      if champ.id.in?(changed_main_champ_ids)
+        champ.stream = history_stream
+      elsif champ.id.in?(buffer_champ_ids)
+        champ.stream = Champ::MAIN_STREAM
+      end
+    end
+
+    reset_champs_cache
+  end
+
+  def reset_user_buffer_stream!
+    champs.where(stream: Champ::USER_BUFFER_STREAM).delete_all
+
+    # update loaded champ instances
+    association(:champs).target = champs.filter { _1.stream != Champ::USER_BUFFER_STREAM }
+
+    reset_champs_cache
+  end
+
+  def user_buffer_changes?
+    # TODO remove when all forks are gone
+    return true if forked_with_changes?
+
+    champs_on_user_buffer_stream.present?
+  end
+
+  def user_buffer_changes_on_champ?(champ)
+    # TODO remove when all forks are gone
+    return true if champ_forked_with_changes?(champ)
+
+    champs_on_user_buffer_stream.any? { _1.public_id == champ.public_id }
+  end
+
+  def with_update_stream(user, &block)
+    if update_with_stream? && user.owns_or_invite?(self)
+      with_stream(Champ::USER_BUFFER_STREAM, &block)
+    else
+      with_stream(Champ::MAIN_STREAM, &block)
+    end
+  end
+
+  def with_main_stream(&block)
+    with_stream(Champ::MAIN_STREAM, &block)
+  end
+
+  def stream
+    @stream || Champ::MAIN_STREAM
+  end
+
+  def history
+    champs_in_revision.filter(&:history_stream?)
+  end
+
+  def update_with_stream?
+    en_construction? && procedure.feature_enabled?(:user_buffer_stream) && !with_editing_fork?
+  end
+
+  def update_with_fork?
+    en_construction? && !procedure.feature_enabled?(:user_buffer_stream)
+  end
+
   private
 
+  def with_stream(stream)
+    if block_given?
+      previous_stream = @stream
+      @stream = stream
+      reset_champs_cache
+      result = yield
+      @stream = previous_stream
+      reset_champs_cache
+      result
+    else
+      @stream = stream
+      reset_champs_cache
+      self
+    end
+  end
+
   def champs_by_public_id
-    @champs_by_public_id ||= champs_in_revision.index_by(&:public_id)
+    @champs_by_public_id ||= champs_on_stream.index_by(&:public_id)
+  end
+
+  def champs_on_stream
+    @champs_on_stream ||= case stream
+    when Champ::USER_BUFFER_STREAM
+      (champs_on_user_buffer_stream + champs_on_main_stream).uniq(&:public_id)
+    else
+      champs_on_main_stream
+    end
   end
 
   def revision_stable_ids
@@ -177,6 +295,14 @@ module DossierChampsConcern
 
   def champs_in_revision
     champs.filter { stable_id_in_revision?(_1.stable_id) }
+  end
+
+  def champs_on_main_stream
+    champs_in_revision.filter(&:main_stream?)
+  end
+
+  def champs_on_user_buffer_stream
+    champs_in_revision.filter(&:user_buffer_stream?)
   end
 
   def filled_champ(type_de_champ, row_id: nil)
@@ -188,26 +314,24 @@ module DossierChampsConcern
     end
   end
 
-  def champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
-    stable_id, row_id = public_id.split('-')
-    type_de_champ = find_type_de_champ_by_stable_id(stable_id, scope)
-    champ = champ_upsert_by!(type_de_champ, row_id)
-    attributes.merge(id: champ.id, updated_by:)
-  end
-
   def champ_upsert_by!(type_de_champ, row_id)
     check_valid_row_id_on_write?(type_de_champ, row_id)
+
+    row_id_or_null = row_id || Champ::NULL_ROW_ID
 
     champ = Dossier.no_touching do
       champs
         .create_with(**type_de_champ.params_for_champ)
-        .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id: row_id || Champ::NULL_ROW_ID, stream: 'main')
+        .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id: row_id_or_null, stream:)
     end
 
     # Needed when a revision change the champ type in this case, we reset the champ data
     if !champ.is_a?(type_de_champ.champ_class)
       champ = champ.becomes!(type_de_champ.champ_class)
       champ.assign_attributes(value: nil, value_json: nil, external_id: nil, data: nil)
+    elsif stream != Champ::MAIN_STREAM && champ.previously_new_record?
+      main_stream_champ = champs.find_by(stable_id: type_de_champ.stable_id, row_id: row_id_or_null, stream: Champ::MAIN_STREAM)
+      champ.clone_value_from(main_stream_champ) if main_stream_champ.present?
     end
 
     # If the champ returned from `create_or_find_by` is not the same as the one already loaded in `dossier.champs`, we need to update the association cache
@@ -255,5 +379,6 @@ module DossierChampsConcern
     @project_champs_private = nil
     @repetition_row_ids = nil
     @revision_stable_ids = nil
+    @champs_on_stream = nil
   end
 end

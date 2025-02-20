@@ -242,16 +242,12 @@ class Champ < ApplicationRecord
     input_id
   end
 
-  def forked_with_changes?
-    public? && dossier.champ_forked_with_changes?(self)
+  def user_buffer_changes?
+    public? && dossier.user_buffer_changes_on_champ?(self)
   end
 
   def public_id
-    if row_id.blank?
-      stable_id.to_s
-    else
-      "#{stable_id}-#{row_id}"
-    end
+    TypeDeChamp.public_id(stable_id, row_id)
   end
 
   def html_id
@@ -276,6 +272,61 @@ class Champ < ApplicationRecord
     return if value.present? && !value.include?("\u0000")
 
     write_attribute(:value, value.delete("\u0000"))
+  end
+
+  MAIN_STREAM = 'main'
+  USER_BUFFER_STREAM = 'user:buffer'
+  HISTORY_STREAM = 'history:'
+
+  def main_stream?
+    stream == MAIN_STREAM
+  end
+
+  def user_buffer_stream?
+    stream == USER_BUFFER_STREAM
+  end
+
+  def history_stream?
+    stream.start_with?(HISTORY_STREAM)
+  end
+
+  def clone_value_from(champ)
+    self.value = champ.value
+    self.external_id = champ.external_id
+    self.value_json = champ.value_json
+    self.data = champ.data
+
+    self.geo_areas = champ.geo_areas.dup
+
+    ClonePiecesJustificativesService.clone_attachments(champ, self)
+
+    if champ.etablissement.present?
+      self.etablissement = champ.etablissement.dup
+      ClonePiecesJustificativesService.clone_attachments(champ.etablissement, self.etablissement)
+    end
+
+    save!
+  end
+
+  def update_timestamps
+    return if public? && dossier.en_construction?
+
+    updated_at = Time.zone.now
+    attributes = { updated_at: }
+    update_columns(attributes) if persisted?
+
+    if piece_justificative_or_titre_identite?
+      attributes[:last_champ_piece_jointe_updated_at] = updated_at
+    end
+
+    if private?
+      attributes[:last_champ_private_updated_at] = updated_at
+    else
+      attributes[:last_champ_updated_at] = updated_at
+      attributes[:brouillon_close_to_expiration_notice_sent_at] = nil
+    end
+
+    dossier.update_columns(attributes)
   end
 
   class NotImplemented < ::StandardError

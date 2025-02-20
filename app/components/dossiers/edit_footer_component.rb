@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossiers::EditFooterComponent < ApplicationComponent
-  delegate :can_passer_en_construction?, :can_transition_to_en_construction?, :forked_with_changes?, to: :@dossier
+  delegate :can_passer_en_construction?, :can_transition_to_en_construction?, :user_buffer_changes?, to: :@dossier
 
   def initialize(dossier:, annotation:)
     @dossier = dossier
@@ -27,7 +27,7 @@ class Dossiers::EditFooterComponent < ApplicationComponent
   end
 
   def can_submit_en_construction?
-    forked_with_changes? && owner?
+    owner? && user_buffer_changes?
   end
 
   def submit_button_label
@@ -41,8 +41,10 @@ class Dossiers::EditFooterComponent < ApplicationComponent
   def submit_button_path
     if can_submit_draft?
       brouillon_dossier_path(@dossier)
-    else
+    elsif @dossier.editing_fork?
       modifier_dossier_path(@dossier.editing_fork_origin)
+    else
+      modifier_dossier_path(@dossier)
     end
   end
 

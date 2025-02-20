@@ -23,7 +23,10 @@ class AttachmentsController < ApplicationController
 
     if champ?
       @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
-      @attachment&.purge_later
+      if @attachment.present?
+        @attachment.purge_later
+        champ.update_timestamps
+      end
       champ.piece_justificative_file.reload
     else
       @attachment.purge_later
@@ -50,6 +53,7 @@ class AttachmentsController < ApplicationController
 
   def champ
     @champ ||= if champ?
+      record.dossier.with_update_stream(current_user)
       record.dossier.champ_for_update(record.type_de_champ, row_id: record.row_id, updated_by: current_user.email)
     end
   end

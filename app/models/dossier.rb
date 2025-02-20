@@ -1037,11 +1037,14 @@ class Dossier < ApplicationRecord
     procedure.accuse_lecture? && termine?
   end
 
-  def touch_champs_changed(attributes)
-    now = Time.zone.now
-    update_columns(attributes.each_with_object({ brouillon_close_to_expiration_notice_sent_at: nil, updated_at: now }) do |attribute, hash|
-      hash[attribute] = now
-    end)
+  def update_champs_timestamps(changed_champs)
+    return if changed_champs.empty?
+    updated_at = Time.zone.now
+    attributes = { updated_at:, last_champ_updated_at: updated_at }
+    if changed_champs.any?(&:piece_justificative_or_titre_identite?)
+      attributes[:last_champ_piece_jointe_updated_at] = updated_at
+    end
+    update_columns(attributes)
   end
 
   private

@@ -37,16 +37,13 @@ module DossierCloneConcern
     editing_fork_origin_id.present?
   end
 
-  def forked_with_changes?
-    return false if forked_diff.blank?
-
-    forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
+  def with_editing_fork?
+    editing_forks.present?
   end
 
-  def champ_forked_with_changes?(champ)
-    return false if forked_diff.blank?
-
-    forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
+  # TODO remove when all forks are gone
+  def en_construction_for_editor?
+    en_construction? || editing_fork?
   end
 
   def make_diff(editing_fork)
@@ -77,10 +74,8 @@ module DossierCloneConcern
       diff = make_diff(editing_fork)
       apply_diff(diff)
 
-      attributes_to_touch = [:last_champ_updated_at]
-      attributes_to_touch << :last_champ_piece_jointe_updated_at if diff[:updated].any? { |c| c.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
-
-      touch_champs_changed(attributes_to_touch)
+      changed_champs = diff.values.flatten
+      update_champs_timestamps(changed_champs)
     end
     reload
     index_search_terms_later
@@ -92,10 +87,10 @@ module DossierCloneConcern
     dossier_attributes += [:groupe_instructeur_id] if fork
     relationships = [:individual, :etablissement]
 
-    discarded_row_ids = champs_in_revision
+    discarded_row_ids = champs_on_main_stream
       .filter { _1.row? && _1.discarded? }
       .to_set(&:row_id)
-    cloned_champs = champs_in_revision
+    cloned_champs = champs_on_main_stream
       .reject { discarded_row_ids.member?(_1.row_id) }
       .index_by(&:id)
       .transform_values { [_1, _1.clone(fork)] }
@@ -137,6 +132,24 @@ module DossierCloneConcern
 
     cloned_dossier.index_search_terms_later if !fork
     cloned_dossier.reload
+  end
+
+  protected
+
+  def forked_with_changes?
+    if with_editing_fork?
+      find_editing_fork(user, rebase: false)&.forked_with_changes?
+    elsif forked_diff.present?
+      forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
+    end
+  end
+
+  def champ_forked_with_changes?(champ)
+    if with_editing_fork?
+      find_editing_fork(user, rebase: false)&.champ_forked_with_changes?(champ)
+    elsif forked_diff.present?
+      forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
+    end
   end
 
   private

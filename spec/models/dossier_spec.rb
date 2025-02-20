@@ -2426,22 +2426,30 @@ describe Dossier, type: :model do
     it { expect(dossier.sva_svr_decision_in_days).to eq 10 }
   end
 
-  describe '#touch_champs_changed' do
-    let(:dossier) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: 10.days.ago) }
+  describe '#update_champs_timestamps' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{}, { type: :piece_justificative }, { type: :titre_identite }]) }
+    let(:dossier) { create(:dossier, procedure:, brouillon_close_to_expiration_notice_sent_at: 10.days.ago) }
+    let(:changed_champs) { dossier.champs.filter(&:text?) }
 
-    subject { -> { dossier.touch_champs_changed(attributes) } }
-
-    let(:attributes) { [:last_champ_updated_at] }
+    subject { -> { dossier.update_champs_timestamps(changed_champs) } }
 
     it { is_expected.to change(dossier, :last_champ_updated_at) }
+    it { is_expected.to change(dossier, :updated_at) }
 
-    it { is_expected.to change(dossier, :brouillon_close_to_expiration_notice_sent_at).to(nil) }
-
-    context 'when there is two attributes' do
-      let(:attributes) { [:last_champ_updated_at, :last_champ_piece_jointe_updated_at] }
+    context 'when there is piece justificative' do
+      let(:changed_champs) { dossier.champs.filter(&:piece_justificative?) }
 
       it { is_expected.to change(dossier, :last_champ_updated_at) }
       it { is_expected.to change(dossier, :last_champ_piece_jointe_updated_at) }
+      it { is_expected.to change(dossier, :updated_at) }
+    end
+
+    context 'when there is titre identite' do
+      let(:changed_champs) { dossier.champs.filter(&:titre_identite?) }
+
+      it { is_expected.to change(dossier, :last_champ_updated_at) }
+      it { is_expected.to change(dossier, :last_champ_piece_jointe_updated_at) }
+      it { is_expected.to change(dossier, :updated_at) }
     end
   end
 

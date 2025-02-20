@@ -299,13 +299,17 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private, updated_by: current_user.email)
-      if dossier.champs.any?(&:changed_for_autosave?)
-        dossier.touch(:last_champ_private_updated_at)
+      public_id, annotation_attributes = champs_private_attributes_params.to_h.first
+      annotation = dossier.private_champ_for_update(public_id, updated_by: current_user.email)
+      annotation.assign_attributes(annotation_attributes)
+      annotation_changed = annotation.changed_for_autosave?
+
+      if annotation.save(context: :champs_private_value) && annotation_changed
+        annotation.update_timestamps
+        dossier.index_search_terms_later
       end
 
-      dossier.save(context: :champs_private_value)
-      dossier.index_search_terms_later
+      dossier.validate(context: :champs_private_value)
 
       respond_to do |format|
         format.turbo_stream do

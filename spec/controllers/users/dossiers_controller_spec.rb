@@ -594,10 +594,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when dossier was already submitted' do
-        before do
-          expect_any_instance_of(Dossier).to receive(:remove_not_visible_or_empty_champs!)
-          post :submit_en_construction, params: payload
-        end
+        before { post :submit_en_construction, params: payload }
 
         it 'redirects to the dossier' do
           subject
@@ -684,17 +681,12 @@ describe Users::DossiersController, type: :controller do
     let(:submit_payload) do
       {
         id: dossier.id,
-        dossier: {
-          groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_public_attributes: {
-            first_champ.public_id => {
-              value: value
-            },
-            piece_justificative_champ.public_id => {
-              piece_justificative_file: file
-            }
-          }
-        }
+        dossier: { champs_public_attributes: }
+      }
+    end
+    let(:champs_public_attributes) do
+      {
+        first_champ.public_id => { value: value }
       }
     end
     let(:payload) { submit_payload }
@@ -750,11 +742,56 @@ describe Users::DossiersController, type: :controller do
     context 'when dossier can be updated by the owner' do
       it 'updates the champs' do
         subject
-
         expect(response).to have_http_status(:ok)
         expect(dossier.reload.updated_at.year).to eq(2100)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
         expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).to be_nil
+        expect(first_champ.reload.value).to eq('beautiful value')
+      end
+
+      context 'updates the pj' do
+        let(:champs_public_attributes) do
+          {
+            piece_justificative_champ.public_id => { piece_justificative_file: file }
+          }
+        end
+
+        it do
+          subject
+          expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
+        end
+      end
+
+      it 'updates the dossier timestamps' do
+        subject
+        dossier.reload
+        expect(dossier.updated_at).to eq(now)
+        expect(dossier.last_champ_updated_at).to eq(now)
+      end
+
+      it { is_expected.to have_http_status(:ok) }
+
+      context 'when only a single file champ are modified' do
+        # A bug in ActiveRecord causes records changed through grand-parent <->  parent <-> child
+        # relationships do not touch the grand-parent record on change.
+        # This situation is hit when updating just the attachment of a champ (and not the
+        # champ itself).
+        #
+        # This test ensures that, whatever workaround we wrote for this, it still works properly.
+        #
+        # See https://github.com/rails/rails/issues/26726
+        let(:champs_public_attributes) do
+          {
+            piece_justificative_champ.public_id => { piece_justificative_file: file }
+          }
+        end
+
+        it 'updates the dossier timestamps' do
+          subject
+          dossier.reload
+          expect(dossier.updated_at).to eq(now)
+          expect(dossier.last_champ_updated_at).to eq(now)
+        end
       end
     end
 
@@ -774,7 +811,7 @@ describe Users::DossiersController, type: :controller do
         {
           id: dossier.id,
           dossier: {
-            champs_public_attributes: { first_champ.public_id => { value: value } }
+            champs_public_attributes: { first_champ.public_id => { value: } }
           }
         }
       end
@@ -811,16 +848,8 @@ describe Users::DossiersController, type: :controller do
           id: dossier.id,
           validate:,
           dossier: {
-            groupe_instructeur_id: dossier.groupe_instructeur_id,
             champs_public_attributes: {
-              text_champ.public_id => {
-                with_public_id: true,
-                value: "hello world"
-              },
-              number_champ.public_id => {
-                with_public_id: true,
-                value:
-              }
+              number_champ.public_id => { value: }
             }
           }
         }
@@ -888,17 +917,12 @@ describe Users::DossiersController, type: :controller do
     let(:submit_payload) do
       {
         id: dossier.id,
-        dossier: {
-          groupe_instructeur_id: dossier.groupe_instructeur_id,
-          champs_public_attributes: {
-            first_champ.public_id => {
-              value: value
-            },
-            piece_justificative_champ.public_id => {
-              piece_justificative_file: file
-            }
-          }
-        }
+        dossier: { champs_public_attributes: }
+      }
+    end
+    let(:champs_public_attributes) do
+      {
+        first_champ.public_id => { value: value }
       }
     end
     let(:payload) { submit_payload }
@@ -923,7 +947,19 @@ describe Users::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
         expect(first_champ.reload.value).to eq('beautiful value')
-        expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
+      end
+
+      context 'updates the pj' do
+        let(:champs_public_attributes) do
+          {
+            piece_justificative_champ.public_id => { piece_justificative_file: file }
+          }
+        end
+
+        it do
+          subject
+          expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
+        end
       end
 
       it 'updates the dossier timestamps' do
@@ -1013,22 +1049,6 @@ describe Users::DossiersController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
     end
 
-    context 'when the dossier is followed by an instructeur' do
-      let(:dossier) { create(:dossier, procedure:) }
-      let(:instructeur) { create(:instructeur) }
-      let!(:invite) { create(:invite, dossier:, user:) }
-
-      before do
-        instructeur.follow(dossier)
-      end
-
-      it 'the follower has a notification' do
-        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([])
-        subject
-        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
-      end
-    end
-
     context 'when the champ is a phone number' do
       let(:types_de_champ_public) { [{ type: :phone }] }
       let(:now) { Time.zone.parse('01/01/2100') }
@@ -1059,6 +1079,217 @@ describe Users::DossiersController, type: :controller do
         it 'updates the value' do
           subject
           expect(first_champ.reload.value).to eq('45187272')
+        end
+      end
+    end
+  end
+
+  describe '#update en_construction (stream)' do
+    before { sign_in(user) }
+
+    let(:types_de_champ_public) { [{}, { type: :piece_justificative }] }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:).tap { Flipper.enable(:user_buffer_stream, _1) } }
+    let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
+    let(:first_champ) { dossier.project_champs_public.first }
+    let(:first_champ_user_buffer) { dossier.with_update_stream(dossier.user) { dossier.project_champs_public.first } }
+    let(:piece_justificative_champ) { dossier.project_champs_public.last }
+    let(:piece_justificative_champ_user_buffer) { dossier.with_update_stream(dossier.user) { dossier.project_champs_public.last } }
+    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
+    let(:value) { 'beautiful value' }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+    let(:now) { Time.zone.parse('01/01/2100') }
+
+    let(:submit_payload) do
+      {
+        id: dossier.id,
+        dossier: { champs_public_attributes: }
+      }
+    end
+    let(:champs_public_attributes) do
+      {
+        first_champ.public_id => { value: value }
+      }
+    end
+    let(:payload) { submit_payload }
+
+    subject do
+      Timecop.freeze(now) do
+        patch :update, params: payload, format: :turbo_stream
+      end
+    end
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user:, procedure:) }
+
+      it 'redirects to the dossiers list' do
+        subject
+        expect(response).to redirect_to(dossier_path(dossier))
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
+    context 'when dossier can be updated by the owner' do
+      it 'updates the champs' do
+        subject
+        dossier.reload
+        expect(dossier.user_buffer_changes?).to be_truthy
+        expect(first_champ_user_buffer.stream).to eq(Champ::USER_BUFFER_STREAM)
+        expect(first_champ_user_buffer.value).to eq('beautiful value')
+        expect(first_champ_user_buffer.updated_at).to eq(now)
+      end
+
+      context 'updates the pj' do
+        let(:champs_public_attributes) do
+          {
+            piece_justificative_champ.public_id => { piece_justificative_file: file }
+          }
+        end
+
+        it do
+          subject
+          dossier.reload
+          expect(dossier.user_buffer_changes?).to be_truthy
+          expect(piece_justificative_champ_user_buffer.stream).to eq(Champ::USER_BUFFER_STREAM)
+          expect(piece_justificative_champ_user_buffer.piece_justificative_file).to be_attached
+        end
+      end
+
+      it 'does not update the dossier timestamps' do
+        subject
+        dossier.reload
+        expect(dossier.updated_at).not_to eq(now)
+        expect(dossier.last_champ_updated_at).to be_nil
+      end
+
+      it { is_expected.to have_http_status(:ok) }
+
+      context 'when only a single file champ are modified' do
+        # A bug in ActiveRecord causes records changed through grand-parent <->  parent <-> child
+        # relationships do not touch the grand-parent record on change.
+        # This situation is hit when updating just the attachment of a champ (and not the
+        # champ itself).
+        #
+        # This test ensures that, whatever workaround we wrote for this, it still works properly.
+        #
+        # See https://github.com/rails/rails/issues/26726
+        let(:submit_payload) do
+          {
+            id: dossier.id,
+            dossier: {
+              champs_public_attributes: {
+                piece_justificative_champ.public_id => {
+                  piece_justificative_file: file
+                }
+              }
+            }
+          }
+        end
+
+        it 'does not update the dossier timestamps' do
+          subject
+          dossier.reload
+          expect(dossier.updated_at).not_to eq(now)
+          expect(dossier.last_champ_updated_at).to be_nil
+        end
+      end
+    end
+
+    context 'when the update fails' do
+      render_views
+
+      context 'classic error' do
+        before do
+          allow_any_instance_of(Dossier).to receive(:save).and_return(false)
+          allow_any_instance_of(Dossier).to receive(:errors).and_return(
+            [message: 'nop', inner_error: double(base: first_champ_user_buffer)]
+          )
+          subject
+        end
+
+        it { expect(response).to render_template(:update) }
+
+        it 'does not update the dossier timestamps' do
+          dossier.reload
+          expect(dossier.updated_at).not_to eq(now)
+          expect(dossier.last_champ_updated_at).to be_nil
+        end
+      end
+
+      context 'iban error' do
+        let(:types_de_champ_public) { [{ type: :iban }] }
+        let(:value) { 'abc' }
+
+        before { subject }
+
+        it 'does not update the dossier timestamps' do
+          dossier.reload
+          expect(dossier.updated_at).not_to eq(now)
+          expect(dossier.last_champ_updated_at).to be_nil
+          expect(response).to have_http_status(:success)
+        end
+      end
+    end
+
+    context 'when the user has an invitation but is not the owner' do
+      let(:dossier) { create(:dossier, :en_construction, procedure:) }
+      let!(:invite) { create(:invite, dossier:, user:) }
+
+      before { subject }
+
+      it do
+        dossier.reload
+        expect(first_champ_user_buffer.value).to eq('beautiful value')
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the dossier is followed by an instructeur' do
+      let(:instructeur) { create(:instructeur) }
+      let!(:invite) { create(:invite, dossier:, user:) }
+
+      before do
+        instructeur.follow(dossier)
+      end
+
+      it 'the follower has a notification' do
+        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([])
+        subject
+        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([])
+      end
+    end
+
+    context 'when the champ is a phone number' do
+      let(:types_de_champ_public) { [{ type: :phone }] }
+      let(:now) { Time.zone.parse('01/01/2100') }
+
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            champs_public_attributes: {
+              first_champ.public_id => {
+                value: value
+              }
+            }
+          }
+        }
+      end
+
+      context 'with a valid value sent as string' do
+        let(:value) { '0612345678' }
+        it 'updates the value' do
+          subject
+          dossier.reload
+          expect(first_champ_user_buffer.value).to eq('0612345678')
+        end
+      end
+
+      context 'with a valid value sent as number' do
+        let(:value) { '45187272'.to_i }
+        it 'updates the value' do
+          subject
+          dossier.reload
+          expect(first_champ_user_buffer.value).to eq('45187272')
         end
       end
     end
