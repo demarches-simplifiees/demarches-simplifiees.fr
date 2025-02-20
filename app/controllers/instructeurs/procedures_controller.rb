@@ -125,7 +125,7 @@ module Instructeurs
 
         procedure_presentation.destroy_filters_for!(statut)
 
-        return redirect_to [:instructeur, @procedure, statut:], alert: "Votre affichage a dû être réinitialisé en raison d'un problème technique."
+        return redirect_to [:instructeur, @procedure, statut:], alert: t('.reinit_display')
       end
 
       page = params[:page].presence || 1

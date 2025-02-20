@@ -6,6 +6,7 @@ fr:
         procedure_menu: Menu de la démarche
       show:
         file_tracking: Suivi des dossiers
+        reinit_display: Votre affichage a dû être réinitialisé en raison d'un problème technique.
       email_usagers:
         hint:
           zero: "Aucun usager n'a de dossier en brouillon."
