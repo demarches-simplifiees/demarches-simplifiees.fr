@@ -7,9 +7,9 @@ FactoryBot.define do
       headers { ['option', 'calorie (kcal)', 'poids (g)'] }
       trait :with_items do
         after(:create) do |referentiel|
-          create(:referentiel_item, referentiel:, data: { 'option' => 'fromage', 'calorie (kcal)' => '145', 'poids (g)' => '60' })
-          create(:referentiel_item, referentiel:, data: { 'option' => 'dessert', 'calorie (kcal)' => '170', 'poids (g)' => '70' })
-          create(:referentiel_item, referentiel:, data: { 'option' => 'fruit', 'calorie (kcal)' => '100', 'poids (g)' => '50' })
+          create(:referentiel_item, referentiel:, data: { row: { 'option' => 'fromage', 'calorie_kcal' => '145', 'poids_g' => '60' } })
+          create(:referentiel_item, referentiel:, data: { row: { 'option' => 'dessert', 'calorie_kcal' => '170', 'poids_g' => '70' } })
+          create(:referentiel_item, referentiel:, data: { row: { 'option' => 'fruit', 'calorie_kcal' => '100', 'poids_g' => '50' } })
         end
       end
     end
