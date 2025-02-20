@@ -1453,4 +1453,55 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe '#update_rdv' do
+    let(:admin) { create(:administrateur) }
+    let(:procedure) { create(:procedure, administrateurs: [admin]) }
+
+    before { sign_in(admin.user) }
+
+    context 'when enabling rdv' do
+      before do
+        patch :update_rdv, params: {
+          id: procedure.id,
+          procedure: { rdv_enabled: true }
+        }
+      end
+
+      it 'updates the procedure' do
+        expect(procedure.reload.rdv_enabled).to be true
+      end
+
+      it 'sets a success message' do
+        expect(flash.notice).to eq("La prise de rendez-vous est activée")
+      end
+
+      it 'redirects to rdv admin procedure path' do
+        expect(response).to redirect_to(rdv_admin_procedure_path(procedure))
+      end
+    end
+
+    context 'when disabling rdv' do
+      let(:procedure) { create(:procedure, rdv_enabled: true, administrateurs: [admin]) }
+
+      before do
+        patch :update_rdv, params: {
+          id: procedure.id,
+          procedure: { rdv_enabled: false }
+        }
+      end
+
+      it 'updates the procedure' do
+        expect(procedure.reload.rdv_enabled).to be false
+      end
+
+      it 'sets a success message' do
+        expect(flash.notice).to eq("La prise de rendez-vous est désactivée")
+      end
+
+      it 'redirects to rdv admin procedure path' do
+        expect(response).to redirect_to(rdv_admin_procedure_path(procedure))
+      end
+    end
+  end
 end
