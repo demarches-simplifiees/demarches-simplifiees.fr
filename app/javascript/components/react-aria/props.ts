@@ -14,10 +14,7 @@ const ArrayOfTuples = s.coerce(
   s.array(Item),
   s.array(s.tuple([s.string(), s.union([s.string(), s.number()])])),
   (items) =>
-    items.map<Item>(([label, value]) => ({
-      label,
-      value: String(value)
-    }))
+    items.map<Item>(([label, value]) => ({ label, value: String(value) }))
 );
 
 const ArrayOfStrings = s.coerce(s.array(Item), s.array(s.string()), (items) =>
@@ -47,7 +44,8 @@ export const SingleComboBoxProps = s.assign(
     s.object({
       selectedKey: s.nullable(s.string()),
       emptyFilterKey: s.nullable(s.string()),
-      maxItemsDisplay: s.number()
+      maxItemsDisplay: s.number(),
+      placeholder: s.string()
     })
   )
 );

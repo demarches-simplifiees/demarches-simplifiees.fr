@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProceduresController < InstructeurController
-    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions]
+    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
 
     ITEMS_PER_PAGE = 100
@@ -72,6 +72,12 @@ module Instructeurs
     def update_order_positions
       current_instructeur.update_instructeur_procedures_positions(ordered_procedure_ids_params)
       redirect_to instructeur_procedures_path, notice: "L'ordre des démarches a été mis à jour."
+    end
+
+    def select_procedure
+      return redirect_to instructeur_procedure_path(procedure_id: params[:procedure_id]) if params[:procedure_id].present?
+
+      redirect_to instructeur_procedures_path
     end
 
     def show
