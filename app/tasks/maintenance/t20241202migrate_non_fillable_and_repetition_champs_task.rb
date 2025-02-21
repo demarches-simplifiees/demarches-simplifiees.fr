@@ -42,7 +42,7 @@ module Maintenance
       type_de_champ_attributes_by_id = coordinates.index_by(&:first).transform_values { { stable_id: _1.second, private: _1.last } }
 
       now = Time.zone.now
-      row_attributes = { type: 'Champs::RepetitionChamp', created_at: now, updated_at: now, dossier_id: }
+      row_attributes = { type: 'Champs::RepetitionChamp', created_at: now, updated_at: now, dossier_id:, stream: 'main' }
       new_rows = first_child_stable_id_by_row_id.filter_map do |row_id, child_stable_id|
         parent_id = coordinate_parent_id_by_stable_id[child_stable_id]
         type_de_champ_attributes = type_de_champ_attributes_by_id[parent_id]
