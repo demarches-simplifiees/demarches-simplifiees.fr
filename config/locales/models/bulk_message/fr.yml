@@ -6,4 +6,4 @@ fr:
         other: "Messages aux usagers"
     attributes:
       bulk_message:
-        body: "Message envoyé aux destinataires :"
+        body: "Message à envoyer aux usagers"

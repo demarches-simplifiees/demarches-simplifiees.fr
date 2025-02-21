@@ -38,7 +38,7 @@
       = t('.alert.user')
 
   %fieldset.fr-fieldset
-    .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder:  t('views.shared.dossiers.messages.form.write_message_placeholder'), title:  t('views.shared.dossiers.messages.form.write_message_placeholder'), class: 'fr-input message-textarea'})
+    .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, required: true, opts: { rows: 5, placeholder:  t('views.shared.dossiers.messages.form.write_message_placeholder'), title:  t('views.shared.dossiers.messages.form.write_message_placeholder'), class: 'fr-input message-textarea'}, label_opts: { class: 'fr-text--bold' })
 
   .fr-mt-3w
     = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
