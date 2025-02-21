@@ -41,7 +41,7 @@
   .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-3w
     %p
       = t('.alert.send_message_to')
-      %strong= default_dossiers_count
+      %strong{ "data-bulk-message-target" => 'count' }= default_dossiers_count
       = t('.alert.user')
 
   %fieldset.fr-fieldset
