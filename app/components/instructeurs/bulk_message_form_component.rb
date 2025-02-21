@@ -23,11 +23,50 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
     end
   end
 
+  def groupe_instructeurs_with_brouillon = procedure.groupe_instructeurs.filter { dossier_count_for(_1)&.> 0 }
+
+  def splitted_groupe_instructeurs = yield(*groupe_instructeurs_with_brouillon.partition { current_instructeur_in_groupe?(_1.id) })
+
+  def groupe_instructeur_checkbox(form, groupe_instructeur)
+    form.check_box(
+      groupe_instructeur.id,
+      {
+        checked: current_instructeur_in_groupe?(groupe_instructeur.id),
+      },
+      'true',
+      'false'
+    )
+  end
+
+  def groupe_instructeur_label(form, groupe_instructeur)
+    form.label groupe_instructeur.id, class: 'fr-label' do
+      safe_join([
+        groupe_instructeur.label,
+        tag.span(class: 'fr-hint-text') do
+          safe_join([
+            t('.dossier_count_per_group', count: dossier_count_for(groupe_instructeur)),
+            text_belongs_to_group(groupe_instructeur)
+          ])
+        end
+      ])
+    end
+  end
+
   def instructeur_in_all_groupes? = @in_all_groupes ||= procedure.groupe_instructeurs.size == instructeur_groupe_ids.size
 
   private
 
+  def dossier_count_for(groupe_instructeur) = @dossiers_count_per_groupe_instructeur[groupe_instructeur.id] || 0
+
   def current_instructeur_in_groupe?(groupe_instructeur_id) = groupe_instructeur_id.in?(instructeur_groupe_ids)
+
+  def text_belongs_to_group(groupe_instructeur)
+    if current_instructeur_in_groupe?(groupe_instructeur.id)
+      tag.span(t('.present_in_group'))
+    else
+      tag.span(t('.not_present_in_group'))
+    end
+  end
 
   def instructeur_groupe_ids
     @instructeur_groupe_ids ||= current_instructeur

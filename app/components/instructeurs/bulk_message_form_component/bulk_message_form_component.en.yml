@@ -1,5 +1,12 @@
 ---
 en:
+  dossier_count_per_group:
+    one: "1 user"
+    other: "%{count} users"
+  form:
+    target_group:  "Target users by instruction group having file in \"draft\" : "
   alert:
     send_message_to: "You will send a message to "
     user: "users having a file in draft"
+  present_in_group: " (you are in the instruction group)"
+  not_present_in_group: " (you are not in the instruction group)"

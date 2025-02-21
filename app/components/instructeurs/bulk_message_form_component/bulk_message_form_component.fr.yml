@@ -1,5 +1,13 @@
 ---
 fr:
+  dossier_count_per_group:
+    zero: "Aucun usager a contacter"
+    one: "1 usager"
+    other: "%{count} usager"
+  form:
+    target_group:  "Ciblez les groupes d'usagers avec un dossier \"brouillon\" que vous souhaitez contacter : "
   alert:
     send_message_to: "Vous allez envoyer un message à "
     user: "usager ayant un dossier en brouillon (dossier commencé mais pas encore déposé)"
+  present_in_group: " (vous êtes présent dans ce groupe instructeurs)"
+  not_present_in_group: " (vous n'êtes pas présent dans ce groupe instructeurs)"
