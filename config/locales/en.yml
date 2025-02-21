@@ -318,9 +318,9 @@ en:
         resent: 'Resend the confirmation email'
     invites:
       create:
-        success: "One invitation has been sent to %{email}."
+        success: 'An invitation has been sent to %{email}. You can <a href="#invite-content_button">create another one</a>.'
       destroy:
-        success: "The permission given to %{email} had been revoked."
+        success: 'The permission given to %{email} had been revoked. You can <a href="#invite-content_button">create another one</a>.'
         error: "You can't revoke this invitation"
       dropdown:
         invite_to_edit: Invite someone to edit this file
