@@ -11,12 +11,12 @@
 
     &:focus {
       box-shadow: none !important;
-      background-color: $white !important;
+      background-color: var(--grey-1000-100) !important;
     }
   }
 
   .placeholder {
-    color: $dark-grey;
+    color: var(--grey-425-625);
     font-style: italic;
   }
 
