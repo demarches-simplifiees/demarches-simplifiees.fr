@@ -2,10 +2,15 @@
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
   - if procedure.routing_enabled?
-    %fielset.fr-fieldset
+    %fielset.fr-fieldset{ data: render_select_all? ? {controller: "checkbox-select-all"} : {} }
       %legend.fake-label.fr-mb-3w= t('.form.target_group')
 
       .checkbox-group-bordered
+        - if render_select_all?
+          .fr-fieldset__element.fr-background-contrast--grey.fr-py-2w.fr-px-4w.fr-mb-0
+            .fr-checkbox-group
+              = check_box_tag "bulk-message-select-all", "select-all", false, data: { "checkbox-select-all-target": 'checkboxAll' }
+              = label_tag "bulk-message-select-all", t('.form.select_all')
         %div{ style: "max-height: 430px; overflow-y: scroll" }
           - splitted_groupe_instructeurs do |current_instructeur_groupes, other_groupe_instructeurs|
             - current_instructeur_groupes.each do |groupe_instructeur|

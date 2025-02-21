@@ -10,6 +10,7 @@ fr:
     other: "%{count} usager"
   form:
     target_group:  "Ciblez les groupes d'usagers avec un dossier \"brouillon\" que vous souhaitez contacter : "
+    select_all:  "Tout sélectionner"
   alert:
     send_message_to: "Vous allez envoyer un message à "
     user: "usager ayant un dossier en brouillon (dossier commencé mais pas encore déposé)"
