@@ -1,0 +1,7 @@
+---
+fr:
+  alert:
+    send_message_to: "Vous allez envoyer un message à "
+    user: "usager(s) ayant un dossier en brouillon (dossier commencé mais pas encore déposé)"
+  present_in_group: " (vous êtes présent dans ce groupe instructeurs)"
+  not_present_in_group: " (vous n'êtes pas présent dans ce groupe instructeurs)"

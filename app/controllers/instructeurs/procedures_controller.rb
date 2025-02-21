@@ -270,7 +270,6 @@ module Instructeurs
     def email_usagers
       @procedure = procedure
       @bulk_messages = BulkMessage.where(procedure: procedure)
-      @bulk_message = current_instructeur.bulk_messages.build
       @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.group(:groupe_instructeur_id).count
     end
 
