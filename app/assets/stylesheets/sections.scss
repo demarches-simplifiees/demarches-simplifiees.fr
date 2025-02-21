@@ -9,26 +9,6 @@
     counter-reset: h4;
   }
 
-  .reset-h4 {
-    counter-reset: h5;
-  }
-
-  .reset-h5 {
-    counter-reset: h6;
-  }
-
-  .reset-h6 {
-    counter-reset: h6;
-  }
-
-  .reset-h5 {
-    counter-reset: h6;
-  }
-
-  .reset-h6 {
-    counter-reset: h7;
-  }
-
   .header-section.section-2::before {
     counter-increment: h2;
     content: counter(h2) '. ';
@@ -44,29 +24,29 @@
     content: counter(h2) '.' counter(h3) '.' counter(h4) '. ';
   }
 
-  .header-section.section-5::before {
-    counter-increment: h5;
-    content: counter(h2) '.' counter(h3) '.' counter(h4) '.' counter(h5) '. ';
-  }
-
-  .header-section.section-6::before {
-    counter-increment: h6;
-    content: counter(h2) '.' counter(h3) '.' counter(h4) '.' counter(h5) '.'
-      counter(h6) '. ';
-  }
-
-  .header-section.section-7::before {
-    counter-increment: h7;
-    content: counter(h2) '.' counter(h3) '.' counter(h4) '.' counter(h5) '.'
-      counter(h6) '.' counter(h7) '. ';
-  }
-
   .repetition {
     counter-reset: repetition;
 
     .block-id::after {
       counter-increment: repetition;
       content: counter(repetition);
+    }
+  }
+
+  // Repeat block
+  .repetition {
+    .fr-fieldset,
+    .fr-fieldset__legend {
+      margin-right: 0;
+      margin-left: 0;
+    }
+    .fr-fieldset__element,
+    .fr-fieldset__legend {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .fr-fieldset__legend {
+      padding-bottom: 0;
     }
   }
 }
