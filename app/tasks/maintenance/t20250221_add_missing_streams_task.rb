@@ -14,10 +14,8 @@ module Maintenance
       ((rows_count / BATCH_SIZE) + 1).times.to_a
     end
 
-    def process(i)
-      champ_ids = with_statement_timeout("5min") do
-        Champs::RepetitionChamp.where(stream: nil).limit(BATCH_SIZE).offset(BATCH_SIZE * i).ids
-      end
+    def process(_)
+      champ_ids = with_statement_timeout("5min")  { Champs::RepetitionChamp.where(stream: nil).limit(BATCH_SIZE).ids }
       with_statement_timeout("5min") { Champ.where(id: champ_ids).update_all(stream: 'main') }
     end
   end
