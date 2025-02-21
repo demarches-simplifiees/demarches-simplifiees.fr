@@ -1,5 +1,8 @@
 ---
 en:
+  dossier_count_without_group_html:
+    one: "<span>Also contact the user who haven't filled routing fields</span>"
+    other: "<span>Also contact <strong>%{count}</strong> users who haven't filled routing fields</span>"
   dossier_count_per_group:
     one: "1 user"
     other: "%{count} users"

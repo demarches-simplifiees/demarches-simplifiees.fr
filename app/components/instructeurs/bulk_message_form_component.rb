@@ -23,6 +23,9 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
     end
   end
 
+  # grouped by groupe_instructeur_id, those without is indexed by nil
+  def dossier_count_without_group = @dossiers_count_per_groupe_instructeur[nil]
+
   def groupe_instructeurs_with_brouillon = procedure.groupe_instructeurs.filter { dossier_count_for(_1)&.> 0 }
 
   def splitted_groupe_instructeurs = yield(*groupe_instructeurs_with_brouillon.partition { current_instructeur_in_groupe?(_1.id) })
