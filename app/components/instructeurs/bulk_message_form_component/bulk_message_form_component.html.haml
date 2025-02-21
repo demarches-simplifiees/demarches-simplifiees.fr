@@ -26,6 +26,10 @@
                       = groupe_instructeur_label(fgroup, groupe_instructeur)
 
 
+    - if dossier_count_without_group
+      %fieldset.fr-fieldset
+        .fr-fieldset__element
+          = render Dsfr::ToggleComponent.new(form: f, target: :without_group, title: t('.dossier_count_without_group_html', count: dossier_count_without_group), extra_class_names: "")
 
   .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-3w
     %p

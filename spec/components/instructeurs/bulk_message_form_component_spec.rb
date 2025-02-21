@@ -78,5 +78,14 @@ describe Instructeurs::BulkMessageFormComponent, type: :component do
         expect(subject).to have_content("2 usagers (vous n'êtes pas présent dans ce groupe instructeurs)")
       end
     end
+
+    context 'when dossier without group exists' do
+      let(:procedure) { create(:procedure, routing_enabled: true, instructeurs: []) }
+
+      it 'is expected to render the groupe' do
+        create(:dossier, :brouillon, procedure:, groupe_instructeur: nil)
+        expect(subject).to have_content("Contacter également l'usager qui n'a pas encore renseigné le(s) champ(s) de routage")
+      end
+    end
   end
 end
