@@ -87,5 +87,21 @@ describe Instructeurs::BulkMessageFormComponent, type: :component do
         expect(subject).to have_content("Contacter également l'usager qui n'a pas encore renseigné le(s) champ(s) de routage")
       end
     end
+
+    describe 'select all or not' do
+      context 'when groupe_instructeur < treshold' do
+        before { allow(component).to receive(:render_select_all?).and_return(false) }
+        let(:procedure) { create(:procedure, routing_enabled: true, instructeurs: []) }
+
+        it { is_expected.not_to have_selector("#bulk-message-select-all") }
+      end
+
+      context 'when groupe_instructeur > treshold' do
+        before { allow(component).to receive(:render_select_all?).and_return(true) }
+        let(:procedure) { create(:procedure, routing_enabled: true, instructeurs: []) }
+
+        it { is_expected.to have_selector("#bulk-message-select-all") }
+      end
+    end
   end
 end

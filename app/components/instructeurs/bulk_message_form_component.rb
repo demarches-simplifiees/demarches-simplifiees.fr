@@ -35,6 +35,9 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
       groupe_instructeur.id,
       {
         checked: current_instructeur_in_groupe?(groupe_instructeur.id),
+        data: {
+          "checkbox-select-all-target": "checkbox",
+        }
       },
       'true',
       'false'
@@ -55,6 +58,9 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
       ])
     end
   end
+
+
+  def render_select_all? = @select_all ||= groupe_instructeurs_with_brouillon.size >= 6
 
   def instructeur_in_all_groupes? = @in_all_groupes ||= procedure.groupe_instructeurs.size == instructeur_groupe_ids.size
 

@@ -8,6 +8,7 @@ en:
     other: "%{count} users"
   form:
     target_group:  "Target users by instruction group having file in \"draft\" : "
+    select_all:  "Select all"
   alert:
     send_message_to: "You will send a message to "
     user: "users having a file in draft"

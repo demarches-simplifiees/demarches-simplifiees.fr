@@ -2,10 +2,17 @@
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
   - if procedure.routing_enabled?
-    %fielset.fr-fieldset
-      %legend.fake-label.fr-mb-3w= t('.form.target_group')
+    %fielset.fr-fieldset{ data: render_select_all? ? {controller: "checkbox-select-all"} : {} }
+      %legend.fake-label.fr-text--bold.fr-mb-3w
+        = t('.form.target_group')
+        = render EditableChamp::AsteriskMandatoryComponent.new
 
       .checkbox-group-bordered
+        - if render_select_all?
+          .fr-fieldset__element.fr-background-contrast--grey.fr-py-2w.fr-px-4w.fr-mb-0
+            .fr-checkbox-group
+              = check_box_tag "bulk-message-select-all", "select-all", false, data: { "checkbox-select-all-target": 'checkboxAll', "action": "change->bulk-message#change" }
+              = label_tag "bulk-message-select-all", t('.form.select_all')
         %div{ style: "max-height: 430px; overflow-y: scroll" }
           - splitted_groupe_instructeurs do |current_instructeur_groupes, other_groupe_instructeurs|
             - current_instructeur_groupes.each do |groupe_instructeur|
@@ -28,8 +35,8 @@
 
     - if dossier_count_without_group
       %fieldset.fr-fieldset
-        .fr-fieldset__element
-          = render Dsfr::ToggleComponent.new(form: f, target: :without_group, title: t('.dossier_count_without_group_html', count: dossier_count_without_group), extra_class_names: "")
+        .fr-fieldset__element.fr-mt-2w
+          = render Dsfr::ToggleComponent.new(form: f, target: :without_group, title: t('.dossier_count_without_group_html', count: dossier_count_without_group), extra_class_names: "", opt: bulk_message_stimulus_data(dossier_count_without_group))
 
   .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-3w
     %p
