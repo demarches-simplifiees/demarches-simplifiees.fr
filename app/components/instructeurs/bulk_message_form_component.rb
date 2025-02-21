@@ -45,6 +45,7 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
     form.label groupe_instructeur.id, class: 'fr-label' do
       safe_join([
         groupe_instructeur.label,
+        tooltip_tag(groupe_instructeur),
         tag.span(class: 'fr-hint-text') do
           safe_join([
             t('.dossier_count_per_group', count: dossier_count_for(groupe_instructeur)),
@@ -69,6 +70,26 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
     else
       tag.span(t('.not_present_in_group'))
     end
+  end
+
+  def tooltip_tag(groupe_instructeur)
+    return if groupe_instructeur.routing_rule.blank?
+
+    safe_join([
+      tag.span(
+        "",
+        class: "fr-icon-information-line fr-icon--sm ml-1",
+        id: "link-#{groupe_instructeur.id}",
+        aria: { describedby: "tooltip-#{groupe_instructeur.id}" }
+      ),
+      tag.span(
+        groupe_instructeur.routing_rule.to_s(procedure.active_revision.types_de_champ),
+        class: 'fr-tooltip fr-placement',
+        id: "tooltip-#{groupe_instructeur.id}",
+        role: "tooltip",
+        aria: { hidden: "true" }
+      )
+    ])
   end
 
   def instructeur_groupe_ids
