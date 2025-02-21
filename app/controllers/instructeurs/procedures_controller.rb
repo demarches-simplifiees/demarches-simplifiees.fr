@@ -271,8 +271,7 @@ module Instructeurs
       @procedure = procedure
       @bulk_messages = BulkMessage.where(procedure: procedure)
       @bulk_message = current_instructeur.bulk_messages.build
-
-      @dossiers_count = reachable_brouillons.count
+      @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.group(:groupe_instructeur_id).count
     end
 
     def usagers_rdvs
