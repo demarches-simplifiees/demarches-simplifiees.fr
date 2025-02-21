@@ -3,9 +3,13 @@
 class Champs::RNAChamp < Champ
   include RNAChampAssociationFetchableConcern
 
+  RNA_REGEXP = /\AW[0-9A-Z]{9}\z/
+
   validates :value, allow_blank: true, format: {
-    with: /\AW[0-9A-Z]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
+    with: RNA_REGEXP, message: :invalid_rna
   }, if: :validate_champ_value?
+
+  validate :ensure_association_found, if: :validate_champ_value?
 
   delegate :id, to: :procedure, prefix: true
 
@@ -13,12 +17,18 @@ class Champs::RNAChamp < Champ
     data&.dig("association_titre")
   end
 
-  def update_with_external_data!(data:)
-    update!(data:, value_json: extract_value_json(data:))
+  def update_with_external_data!(value:, data:)
+    value_json = data.blank? ? nil : extract_value_json(data:)
+    data = (data.presence)
+    update_columns(data:, value_json:, value:)
   end
 
   def identifier
     title.present? ? "#{value} (#{title})" : value
+  end
+
+  def status_message?
+    true
   end
 
   def search_terms
@@ -47,6 +57,12 @@ class Champs::RNAChamp < Champ
   end
 
   private
+
+  def ensure_association_found
+    if value&.match(RNA_REGEXP) && data.blank?
+      errors.add(:value, :not_found)
+    end
+  end
 
   def extract_value_json(data:)
     h = APIGeoService.parse_rna_address(data['adresse'])

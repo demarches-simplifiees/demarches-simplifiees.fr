@@ -1,0 +1,4 @@
+---
+fr:
+  rna:
+    data_fetched: "Ce RNA correspond à : %{title}, %{address}"

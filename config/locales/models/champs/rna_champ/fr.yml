@@ -12,7 +12,15 @@ fr:
         paste: Copier le RNA dans le presse-papier
         paste_success: Le RNA a été copié dans le presse-papier
   activerecord:
+    errors:
+      models:
+        champs/rna_champ:
+          attributes:
+            value:
+              invalid_rna: "doit commencer par un W majuscule suivi de 9 chiffres ou lettres, saisissez un numéro RNA valide"
+              not_found: "le numéro RNA saisi ne correspond à aucun établissement, saisissez un numéro RNA valide"
+              network_error: "une erreur réseau a empêché l’association liée à ce RNA d’être trouvée, réessayez plus tard"
     attributes:
       champs/rna_champ:
           hints:
-            value: "Format attendu : W123456789. Exemple : W503726238"
+            value: "Format attendu : Un W majuscule suivi de 9 chiffres ou lettres. Exemple : W503726238"

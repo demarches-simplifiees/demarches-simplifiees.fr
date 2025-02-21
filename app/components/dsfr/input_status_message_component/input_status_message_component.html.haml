@@ -5,3 +5,5 @@
 
       - @error_full_messages.each do |error_message|
         = error_message
+  - elsif statutable?
+    %p.fr-info-text= statut_message
