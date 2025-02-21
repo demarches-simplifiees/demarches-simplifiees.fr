@@ -30,6 +30,7 @@ fr:
             dossier_state: 'État du dossier'
             last_champ_updated_at: Date de dernière modification (usager)
             motivation: 'Motivation de la décision'
+            accuse_lecture_agreement_at: 'Accusé de lecture'
           user:
             id: Identifiant du demandeur
             email: Demandeur

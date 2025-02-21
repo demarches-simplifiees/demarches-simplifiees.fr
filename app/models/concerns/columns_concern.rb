@@ -58,6 +58,7 @@ module ColumnsConcern
       columns.concat(dossier_dates_columns)
       columns.concat([dossier_motivation_column])
       columns.concat(sva_svr_columns(for_export: true)) if sva_svr_enabled?
+      columns.concat([dossier_accuse_lecture_agreement_at_column]) if accuse_lecture?
       columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
       columns.concat([dossier_labels_column])
 
@@ -127,6 +128,8 @@ module ColumnsConcern
         .map { |column| dossier_col(table: 'self', column:, type: :datetime) }
     end
 
+    def dossier_accuse_lecture_agreement_at_column = dossier_col(table: 'self', column: 'accuse_lecture_agreement_at', type: :date, filterable: false)
+
     def email_column
       dossier_col(table: 'user', column: 'email')
     end
@@ -137,8 +140,10 @@ module ColumnsConcern
       columns.concat([dossier_archived_column])
       columns.concat(dossier_dates_columns)
       columns.concat([dossier_motivation_column])
+      columns.concat([dossier_accuse_lecture_agreement_at_column]) if accuse_lecture?
       columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
       columns.concat(dossier_non_displayable_dates_columns)
+      columns.concat([Columns::ReadAgreementColumn.new(procedure_id: id)])
     end
 
     def standard_columns

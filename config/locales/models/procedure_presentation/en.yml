@@ -26,6 +26,7 @@ en:
             for_tiers: "For tiers"
             mandataire_last_name: "Tier last name"
             mandataire_first_name: "Tier first name"
+            accuse_lecture_agreement_at: 'Read receipt'
           user:
             id: User Id
             email: Requester
