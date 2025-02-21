@@ -315,9 +315,9 @@ fr:
         resent: 'Renvoyer un email de confirmation'
     invites:
       create:
-        success: "Une invitation a été envoyée à %{email}."
+        success: 'Une invitation a été envoyée à %{email}. Vous pouvez en <a href="#invite-content_button">créer une autre</a>.'
       destroy:
-        success: "L’autorisation de %{email} vient d’être révoquée."
+        success: 'L’autorisation de %{email} vient d’être révoquée. Vous pouvez en <a href="#invite-content_button">créer une autre</a>.'
         error: "Vous ne pouvez pas révoquer cette autorisation"
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
