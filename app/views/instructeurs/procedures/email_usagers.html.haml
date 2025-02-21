@@ -10,17 +10,9 @@
 
 .messagerie.fr-container
   %h1.fr-h4= t('instructeurs.dossiers.header.banner.contact_users')
-  %p.fr-highlight
-    = sanitize(t('.hint', count: @dossiers_count), tags: %w(strong))
-  - if @dossiers_count.positive?
-    = form_for(@bulk_message, url: create_multiple_commentaire_instructeur_procedure_path, html: {  data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@procedure, :bulk_message) } }) do |f|
 
-      %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
-
-      = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder:  t('views.shared.dossiers.messages.form.write_message_placeholder'), title:  t('views.shared.dossiers.messages.form.write_message_placeholder'), class: 'fr-input message-textarea'})
-
-      .fr-mt-3w
-        = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
+  - if @dossiers_count_per_groupe_instructeur.values.sum.positive?
+    = render Instructeurs::BulkMessageFormComponent.new(current_instructeur:, procedure: @procedure, dossiers_count_per_groupe_instructeur: @dossiers_count_per_groupe_instructeur)
   - else
     .page-title.center
       %h2 Il n’y a aucun dossier en brouillon

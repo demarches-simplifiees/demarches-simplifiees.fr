@@ -1,0 +1,5 @@
+---
+en:
+  alert:
+    send_message_to: "You will send a message to "
+    user: "users having a file in draft"

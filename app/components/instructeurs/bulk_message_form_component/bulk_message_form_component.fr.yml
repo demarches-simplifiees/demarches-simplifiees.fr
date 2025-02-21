@@ -1,0 +1,5 @@
+---
+fr:
+  alert:
+    send_message_to: "Vous allez envoyer un message à "
+    user: "usager ayant un dossier en brouillon (dossier commencé mais pas encore déposé)"
