@@ -1,9 +1,10 @@
 %h1
   = dossier.procedure.libelle
   = status_badge_user(dossier, 'super')
-%h2
-  = t('views.users.dossiers.show.header.dossier_number_html', dossier_id: dossier.id)
-  = t('views.users.dossiers.show.header.created_date', date_du_dossier: I18n.l(dossier.created_at))
+  %br
+  %span.fr-h2
+    = t('views.users.dossiers.show.header.dossier_number_html', dossier_id: dossier.id)
+    = t('views.users.dossiers.show.header.created_date', date_du_dossier: I18n.l(dossier.created_at))
 
 = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
