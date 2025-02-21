@@ -1,5 +1,31 @@
-= form_for(current_instructeur.bulk_messages.build, url: create_multiple_commentaire_instructeur_procedure_path, html: {  data: { controller: 'persisted-form bulk-message', persisted_form_key_value: dom_id(procedure, :bulk_message) } }) do |f|
+= form_for(current_instructeur.bulk_messages.build, url: create_multiple_commentaire_instructeur_procedure_path([procedure]), html: {  data: { controller: 'persisted-form bulk-message', persisted_form_key_value: dom_id(procedure, :bulk_message) } }) do |f|
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
+
+  - if procedure.routing_enabled?
+    %fielset.fr-fieldset
+      %legend.fake-label.fr-mb-3w= t('.form.target_group')
+
+      .checkbox-group-bordered
+        %div{ style: "max-height: 430px; overflow-y: scroll" }
+          - splitted_groupe_instructeurs do |current_instructeur_groupes, other_groupe_instructeurs|
+            - current_instructeur_groupes.each do |groupe_instructeur|
+              .fr-fieldset__element.fr-px-4w.fr-mt-2w
+                = f.fields_for :groupe_instructeur_ids do |fgroup|
+                  .fr-checkbox-group
+                    = groupe_instructeur_checkbox(fgroup, groupe_instructeur)
+                    = groupe_instructeur_label(fgroup, groupe_instructeur)
+
+            - if other_groupe_instructeurs.any?
+              %hr.fr-hr.fr-mx-3w
+
+              - other_groupe_instructeurs.each do |groupe_instructeur|
+                .fr-fieldset__element.fr-px-4w.fr-mt-2w
+                  = f.fields_for :groupe_instructeur_ids do |fgroup|
+                    .fr-checkbox-group
+                      = groupe_instructeur_checkbox(fgroup, groupe_instructeur)
+                      = groupe_instructeur_label(fgroup, groupe_instructeur)
+
+
 
   .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-3w
     %p
