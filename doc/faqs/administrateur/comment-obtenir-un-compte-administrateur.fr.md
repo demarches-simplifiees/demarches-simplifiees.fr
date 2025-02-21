@@ -11,7 +11,7 @@ title: "Comment obtenir un compte administrateur ?"
 
 Pour obtenir un compte administrateur, il suffit d’en faire la demande en déposant un dossier via le lien suivant : [Demande d'inscription à %{application_name}](%{application_base_url}/commencer/demande-d-inscription-a-demarches-simplifiees)
 
-Le profil administrateur est le seul profil réservé strictement aux agents publics. Nous vous demandons donc de bien vouloir **faire la demande avec votre adresse mail professionnelle**.
+Le profil administrateur est le seul profil réservé strictement aux agents publics. Nous vous demandons donc de bien vouloir **faire la demande avec votre adresse électronique professionnelle**.
 
 👉 **Attention**, la création de compte administrateur est **réservée uniquement aux organismes publics**. Elle ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d'utilité publique), ni les personnes souhaitant remplir un dossier ou faire une démarche en ligne. Ce compte vous permettra de dématérialiser des démarches papier sur demarches-simplifiees.fr, vous pourrez ensuite les diffuser en ligne auprès de vos usagers (sur votre site web, par exemple).
 

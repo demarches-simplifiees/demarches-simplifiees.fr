@@ -94,7 +94,7 @@ fr:
             ligneNom: nom
           contact:
             libelle: Contact
-            email: email
+            email: adresse électronique
             telephone: téléphone
             telephone2: téléphone 2
           inscription:

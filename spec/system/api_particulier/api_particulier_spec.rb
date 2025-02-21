@@ -26,7 +26,7 @@ describe 'fetch API Particulier Data', js: true do
       'pole_emploi' => {
         'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
         'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
-        'contact' => ['email', 'telephone', 'telephone2'],
+        'contact' => ['adresse électronique', 'telephone', 'telephone2'],
         'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
       },
       'mesri' => {
@@ -154,7 +154,7 @@ describe 'fetch API Particulier Data', js: true do
       end
 
       within('#pole_emploi-contact') do
-        check('email')
+        check('adresse électronique')
         check('téléphone')
         check('téléphone 2')
       end
@@ -383,7 +383,7 @@ describe 'fetch API Particulier Data', js: true do
         expect(page).to have_content('voie 3 rue des Huttes')
         expect(page).to have_content('nom MOUSTAKI')
 
-        expect(page).to have_content('email georges@moustaki.fr')
+        expect(page).to have_content('adresse électronique georges@moustaki.fr')
         expect(page).to have_content('téléphone 0629212921')
 
         expect(page).to have_content("date d’inscription 3 mai 1965")
