@@ -85,6 +85,11 @@ class APILexpol
   def request_options(body, method = :post)
     options = { method: }
 
+    if @use_certificate
+      options[:sslcert] = ENV.fetch('LEXPOL_CERT_PATH')
+      options[:sslkey] = ENV.fetch('LEXPOL_KEY_PATH')
+    end
+
     if method == :get
       options[:params] = body
     else
@@ -102,6 +107,6 @@ class APILexpol
   def parse_response(response, error_message)
     JSON.parse(response.body.force_encoding('UTF-8'))
   rescue JSON::ParserError
-    raise "#{error_message} : Réponse invalide"
+    raise "#{error_message} : impossible de lire la réponse de Lexpol"
   end
 end

@@ -44,6 +44,9 @@ services:
     restart: always
     ports:
       - ${PORT}:3000
+    secrets: 
+      - lexpol_key
+      - lexpol_crt
     environment:
       - ACTIVE_STORAGE_SERVICE
       - ADMINISTRATION_BANNER_MESSAGE
@@ -117,8 +120,8 @@ services:
       - LEXPOL_PASSWORD
       - LEXPOL_SERVICE_EMAILS
       - LEXPOL_CERTIFICATE_ENABLED
-      - LEXPOL_CERT_PATH
-      - LEXPOL_KEY_PATH
+      - LEXPOL_CERT_PATH=/run/secrets/lexpol_crt
+      - LEXPOL_KEY_PATH=/run/secrets/lexpol_key
       - MAILCATCHER_ENABLED
       - MAILCATCHER_HOST
       - MAILCATCHER_PORT
@@ -186,6 +189,9 @@ services:
     command: app/lib/worker.sh
     container_name: worker
     restart: always
+    secrets:
+      - lexpol_key
+      - lexpol_crt
     environment: &worker_env
       - ACTIVE_STORAGE_SERVICE
       - API_ADRESSE_URL
@@ -226,6 +232,8 @@ services:
       - LEXPOL_PASSWORD
       - LEXPOL_SERVICE_EMAILS
       - LEXPOL_CERTIFICATE_ENABLED
+      - LEXPOL_CERT_PATH=/run/secrets/lexpol_crt
+      - LEXPOL_KEY_PATH=/run/secrets/lexpol_key
       - LEXPOL_CERT_PATH
       - LEXPOL_KEY_PATH
       - ENCRYPTION_SERVICE_SALT
@@ -298,12 +306,20 @@ services:
     container_name: sidekiq
     command: bundle exec sidekiq -C config/sidekiq.yml
     entrypoint: [ ]
+    secrets:
+      - lexpol_key
+      - lexpol_crt
     depends_on:
       - redis
     environment: *worker_env
     networks:
       - md-network
 
+secrets: 
+  lexpol_key: 
+    file: ./config/secrets/mes-demarches@administration.gov.pf_key.pem
+  lexpol_crt:
+    file: ./config/secrets/mes-demarches@administration.gov.pf_crt.pem
 volumes:
   md-data-files:
     driver: local
