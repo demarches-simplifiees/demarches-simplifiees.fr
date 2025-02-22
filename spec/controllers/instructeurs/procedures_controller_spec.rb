@@ -781,7 +781,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     context 'when authenticated' do
       before { sign_in(instructeur.user) }
 
-      context 'the procedure is not routed' do
+      context 'the procedure is not routed (or not)' do
         let(:instructeur) { create(:instructeur) }
         let(:defaut_groupe_instructeur) { procedure.defaut_groupe_instructeur }
         let!(:dossier_in_group) { create(:dossier, :brouillon, procedure:, groupe_instructeur: defaut_groupe_instructeur) }
@@ -789,24 +789,9 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before { defaut_groupe_instructeur.instructeurs << instructeur }
 
-        it 'lists all the brouillon' do
+        it 'count brouillon per group and not in group' do
           is_expected.to have_http_status(200)
-          expect(assigns(:dossiers_count)).to eq(2) # only dossier_in_group
-        end
-      end
-
-      context 'the procedure is routed' do
-        let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure:, instructeurs: [instructeur]) }
-        let(:instructeur) { create(:instructeur) }
-
-        context 'when instructor has groups' do
-          let!(:dossier_in_group) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: gi_1) }
-          let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
-
-          it 'lists only dossiers in instructor groups' do
-            is_expected.to have_http_status(200)
-            expect(assigns(:dossiers_count)).to eq(1) # only dossier_in_group
-          end
+          expect(assigns(:dossiers_count_per_groupe_instructeur)).to match({ nil => 1, defaut_groupe_instructeur.id => 1 }) # only dossier_in_group
         end
       end
     end
