@@ -93,7 +93,7 @@ describe ExportTemplate do
     context 'when exported_columns is not empty' do
       before do
         export_template.exported_columns = [
-          ExportedColumn.new(libelle: 'Colonne usager', column: procedure.find_column(label: "Email")),
+          ExportedColumn.new(libelle: 'Colonne usager', column: procedure.find_column(label: "Adresse électronique")),
           ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
         ]
       end
