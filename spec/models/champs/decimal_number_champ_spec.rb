@@ -42,7 +42,7 @@ describe Champs::DecimalNumberChamp do
 
       it 'is not valid and contains expected error' do
         expect(subject).to be_falsey
-        expect(champ.errors[:value]).to eq(["doit comprendre maximum 3 chiffres après la virgule"])
+        expect(champ.errors[:value]).to eq(["doit comprendre entre 1 et 3 chiffres après le point"])
       end
     end
 
