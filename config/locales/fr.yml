@@ -613,7 +613,7 @@ fr:
         password: 'Mot de passe'
         requested_merge_into: 'La nouvelle adresse électronique'
         hints:
-          email: 'Format attendu : adresse@mail.com'
+          email: 'Exemple : adresse@mail.com'
       user:
         siret: 'Numéro SIRET'
         << : *default_attributes

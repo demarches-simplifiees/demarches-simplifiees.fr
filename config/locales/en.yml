@@ -606,7 +606,7 @@ en:
         password: 'Password'
         requested_merge_into: 'new email address'
         hints:
-          email: 'Expected format : address@mail.com'
+          email: 'Example: address@mail.com'
       user:
         siret: 'SIRET number'
         << : *default_attributes
