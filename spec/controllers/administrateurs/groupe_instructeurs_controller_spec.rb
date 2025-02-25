@@ -925,6 +925,32 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
     end
 
+    context 'with a drop_down_list advanced mode type de champ' do
+      let(:procedure3) do
+          create(:procedure,
+                types_de_champ_public: [{ type: :drop_down_list }],
+                administrateurs: [admin])
+        end
+
+      let(:drop_down_tdc) { procedure3.draft_revision.types_de_champ.first }
+      let(:referentiel) { create(:csv_referentiel, :with_items) }
+
+      before do
+        drop_down_tdc.update(referentiel:, drop_down_mode: 'advanced')
+        post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } }
+      end
+
+      it do
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
+        expect(flash[:routing_mode]).to eq 'simple'
+        expect(procedure3.reload.groupe_instructeurs.pluck(:label)).to match_array(%w[fromage dessert fruit])
+        gi_fromage = procedure3.groupe_instructeurs.find { _1.label == "fromage" }
+        expect(gi_fromage.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('fromage')))
+        expect(gi_fromage).to be_valid
+        expect(procedure3.routing_enabled).to be_truthy
+      end
+    end
+
     context 'with a departements type de champ' do
       let!(:procedure3) do
         create(:procedure,
