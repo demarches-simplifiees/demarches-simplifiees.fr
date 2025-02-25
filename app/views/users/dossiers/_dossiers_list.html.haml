@@ -49,7 +49,7 @@
             %br
             = pending_correction_badge(:for_user)
 
-      - dossier.rdvs.upcoming.each do |rdv|
+      - @rdvs_for_dossiers[dossier.id]&.each do |rdv|
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
             %p
