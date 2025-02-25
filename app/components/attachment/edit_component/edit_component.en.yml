@@ -1,7 +1,7 @@
 ---
 en:
-  max_file_size: "File size limit : %{max_file_size}."
-  allowed_formats: "Supported formats : %{formats}"
+  max_file_size: "Maximum size allowed: %{max_file_size}."
+  allowed_formats: "Supported formats: %{formats}"
   retry: Retry
   delete: Delete
   delete_file: Delete file %{filename}

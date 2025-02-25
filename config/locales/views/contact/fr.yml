@@ -20,7 +20,7 @@ fr:
       our_answer: Notre réponse
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
       notice_pj_other: Une capture d’écran peut nous aider à identifier plus facilement le problème.
-      notice_upload_group: 'Taille maximale : 200 Mo. Formats supportés : jpg, png, pdf.'
+      notice_upload_group: 'Taille maximale autorisée : 200 Mo. Formats supportés : jpg, png, pdf.'
     index:
       contact: Contacter %{app_name}
       intro_html:
