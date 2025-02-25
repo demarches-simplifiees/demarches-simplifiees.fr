@@ -99,5 +99,4 @@
     = render Procedure::Card::ChorusComponent.new(procedure: @procedure)
     = render Procedure::Card::AccuseLectureComponent.new(procedure: @procedure)
     = render Procedure::Card::LabelsComponent.new(procedure: @procedure)
-    - if feature_enabled?(:rdv)
-      = render Procedure::Card::RdvComponent.new(procedure: @procedure)
+    = render Procedure::Card::RdvComponent.new(procedure: @procedure)
