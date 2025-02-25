@@ -20,6 +20,6 @@ Il est possible d’avoir plusieurs administrateurs sur une même démarche. Cel
 1. Si les personnes en question n’ont pas encore de compte administrateur, **faites une [demande de compte administrateur](%{application_base_url}/demandes/new)** et attendez que le compte soit approuvé.
 2. Connectez-vous en tant qu’Administrateur et **allez sur le tableau de bord de la démarche**.
 3. Cliquez sur l’onglet **« Administrateurs »** de la démarche.
-4. **Ajoutez l’adresse email** du nouvel administrateur à la liste.
+4. **Ajoutez l’adresse électronique** du nouvel administrateur à la liste.
 
 👏 La nouvelle personne pourra alors administrer la démarche !

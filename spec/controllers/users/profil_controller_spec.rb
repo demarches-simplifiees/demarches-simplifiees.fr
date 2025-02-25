@@ -38,7 +38,7 @@ describe Users::ProfilController, type: :controller do
       it 'fails' do
         patch :update_email, params: { user: { email: user.email } }
         expect(response).to have_http_status(302)
-        expect(flash[:alert]).to eq(["Le champ « La nouvelle adresse email » ne peut être identique à l’ancienne. Saisir une autre adresse email"])
+        expect(flash[:alert]).to eq(["Le champ « La nouvelle adresse électronique » ne peut être identique à l’ancienne. Saisir une autre adresse électronique"])
       end
     end
 
@@ -136,7 +136,7 @@ describe Users::ProfilController, type: :controller do
 
       it "should not transfer to an empty email" do
         expect { subject }.not_to change { DossierTransfer.count }
-        expect(flash.alert).to eq(["L’adresse email doit être rempli"])
+        expect(flash.alert).to eq(["L’adresse électronique doit être rempli"])
       end
     end
   end

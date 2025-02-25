@@ -6,7 +6,7 @@ fr:
         title: Transférer votre dossier
         detail: Vous vous apprêtez à transférer le dossier %{state} nº %{number} déposé par %{demandeur} le %{created_at} vers le compte d’un autre usager.
         irrevocable_html: Une fois la demande de transfert acceptée, le dossier sera associé au compte du destinataire et <strong>vous ne pourrez plus y accéder</strong>.
-        email_label: Email du compte destinataire
+        email_label: Adresse électronique du compte destinataire
         submit: Envoyer la demande de transfert
         notice_sent: L’invitation au transfert a été envoyée avec succès
         destroy: La demande de transfert a été supprimée avec succès
