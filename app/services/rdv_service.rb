@@ -9,16 +9,16 @@ class RdvService
     @rdv_connection = rdv_connection
   end
 
-  def self.rdv_api_host
+  def self.rdv_sp_host_url
     ENV["RDV_SERVICE_PUBLIC_URL"]
   end
 
   def self.create_rdv_plan_url
-    "#{rdv_api_host}/api/v1/rdv_plans"
+    "#{rdv_sp_host_url}/api/v1/rdv_plans"
   end
 
   def self.update_pending_rdv_plan_url(rdv_plan_external_id)
-    "#{rdv_api_host}/api/v1/rdv_plans/#{rdv_plan_external_id}"
+    "#{rdv_sp_host_url}/api/v1/rdv_plans/#{rdv_plan_external_id}"
   end
 
   def create_rdv_plan(dossier:, first_name:, last_name:, email:, dossier_url:, return_url:)
