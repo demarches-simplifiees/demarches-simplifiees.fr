@@ -604,6 +604,9 @@ fr:
       user:
         one: Utilisateur
         other: Utilisateurs
+      attachment:
+        successfully_deleted_with_anchor: 'La pièce jointe (%{attachment}) a bien été supprimée. Vous pouvez en <a href="#%{champ}">ajouter une autre</a>.'
+        successfully_deleted_without_anchor: 'La pièce jointe (%{attachment}) a bien été supprimée.'
 
     attributes:
       default_attributes: &default_attributes
