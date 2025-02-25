@@ -10,6 +10,6 @@ class RdvConnection < ApplicationRecord
   validates :expires_at, presence: true
 
   def expired?
-    expires_at && expires_at < Time.zone.now
+    expires_at && expires_at.past?
   end
 end
