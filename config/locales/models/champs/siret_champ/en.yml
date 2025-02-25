@@ -3,7 +3,7 @@ en:
     attributes:
       champs/siret_champ:
         hints:
-          value: 'Enter 14 digits. Example: 500 0012 345 6789'
+          value: 'Expected format: 14 digits. Example: 500 0012 345 6789'
     errors:
       models:
         champs/siret_champ:
