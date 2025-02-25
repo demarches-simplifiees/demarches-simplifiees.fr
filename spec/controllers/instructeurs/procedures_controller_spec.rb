@@ -1087,8 +1087,8 @@ describe Instructeurs::ProceduresController, type: :controller do
     let(:procedure) { create(:procedure) }
     let(:instructeur) { create(:instructeur) }
     let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-    let!(:rdv) { create(:rdv, dossier: dossier) }
-    let!(:rdv_with_details) { create(:rdv, dossier: dossier, rdv_external_id: "123", starts_at: Time.zone.parse("2025-02-17 10:00:00 +0100")) }
+    let!(:rdv) { create(:rdv, dossier: dossier, instructeur: instructeur) }
+    let!(:rdv_with_details) { create(:rdv, dossier: dossier, instructeur: instructeur, rdv_external_id: "123", starts_at: Time.zone.parse("2025-02-17 10:00:00 +0100")) }
 
     it 'renders the view successfully' do
       subject

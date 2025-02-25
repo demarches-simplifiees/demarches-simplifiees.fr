@@ -86,7 +86,7 @@ describe RdvService do
 
   describe '#update_pending_rdv_plan!' do
     let(:dossier) { create(:dossier, :en_instruction) }
-    let!(:pending_rdv) { create(:rdv, dossier: dossier, rdv_plan_external_id: "10", rdv_external_id: nil) }
+    let!(:pending_rdv) { create(:rdv, dossier: dossier, rdv_plan_external_id: "10", rdv_external_id: nil, instructeur:) }
     let(:rdv_plan_result) {
       {
         "rdv_plan": {

@@ -3,6 +3,10 @@
 require "rails_helper"
 
 RSpec.describe Procedure::Card::RdvComponent, type: :component do
+  before do
+    allow_any_instance_of(described_class).to receive(:feature_enabled?).and_return(true)
+  end
+
   subject { render_inline(described_class.new(procedure:)) }
 
   let(:procedure) { create(:procedure, rdv_enabled:) }
