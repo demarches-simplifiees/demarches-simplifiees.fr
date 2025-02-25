@@ -54,6 +54,7 @@ class RdvService
       # }
 
       Success(Rdv.create!(
+        instructeur: @rdv_connection.instructeur,
         dossier: dossier,
         rdv_plan_external_id: JSON.parse(response.body)["rdv_plan"]["id"]
       ))

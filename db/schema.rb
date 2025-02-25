@@ -1092,6 +1092,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_25_154931) do
     t.datetime "starts_at"
     t.string "status"
     t.datetime "updated_at", null: false
+    t.index ["dossier_id", "rdv_external_id"], name: "index_rdvs_on_dossier_id_and_rdv_external_id"
+    t.index ["dossier_id", "starts_at"], name: "index_rdvs_on_dossier_id_and_starts_at"
     t.index ["dossier_id"], name: "index_rdvs_on_dossier_id"
     t.index ["instructeur_id"], name: "index_rdvs_on_instructeur_id"
   end

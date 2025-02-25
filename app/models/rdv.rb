@@ -13,7 +13,7 @@ class Rdv < ApplicationRecord
   scope :by_starts_at, -> { order(starts_at: :desc) }
 
   def rdv_plan_url
-    ENV["RDV_SERVICE_PUBLIC_URL"] + "/agents/rdv_plans/#{rdv_plan_external_id}"
+    "#{ENV["RDV_SERVICE_PUBLIC_URL"]}/agents/rdv_plans/#{rdv_plan_external_id}"
   end
 
   def upcoming?
