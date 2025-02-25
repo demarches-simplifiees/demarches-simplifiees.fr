@@ -3,7 +3,6 @@
     %p{ class: class_names('fr-message' => true, "fr-message--#{@errors_on_attribute ? 'error' : 'valid'}" => true) }
       = "« #{@champ.libelle} » "
 
-      - @error_full_messages.each do |error_message|
-        = error_message
+      = @error_full_messages.to_sentence
   - elsif statutable?
     %p.fr-info-text= statut_message
