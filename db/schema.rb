@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_03_191101) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_18_155237) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1031,7 +1031,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_03_191101) do
     t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"
-    t.string "path", null: false
+    t.string "path"
     t.boolean "piece_justificative_multiple", default: true, null: false
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at", precision: nil
