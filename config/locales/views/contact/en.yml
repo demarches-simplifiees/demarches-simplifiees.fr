@@ -20,7 +20,7 @@ en:
       our_answer: Our answer
       notice_pj_product: A screenshot can help us identify the element to improve.
       notice_pj_other: A screenshot can help us identify the issue.
-      notice_upload_group: 'Maximum size: 200 MB. Supported formats: jpg, png, pdf.'
+      notice_upload_group: 'Maximum size allowed: 200 MB. Supported formats: jpg, png, pdf.'
     index:
       contact: Contact %{app_name}
       intro_html:
