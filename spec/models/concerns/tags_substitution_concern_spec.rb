@@ -286,6 +286,22 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context 'when the procedure has a dropdown type de champ with referentiel' do
+      let(:referentiel) { create(:csv_referentiel, :with_items) }
+      let(:types_de_champ_public) { [{ type: :drop_down_list }] }
+      let(:template) { "--tdc#{dropdown_list_tdc.stable_id}/option-- --tdc#{dropdown_list_tdc.stable_id}/poids_g--" }
+      let(:dropdown_list_tdc) { procedure.active_revision.types_de_champ.first }
+
+      before do
+        dropdown_list_tdc.update(referentiel:, drop_down_mode: 'advanced')
+        champ = dossier.project_champs_public.first
+        item = referentiel.items.first
+        champ.update(value: item.id)
+      end
+
+      it { is_expected.to eq('fromage 60') }
+    end
+
     context 'when the user requests the service' do
       let(:template) { 'Dossier traité par --nom du service--' }
 

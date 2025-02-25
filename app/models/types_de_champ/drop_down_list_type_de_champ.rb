@@ -9,6 +9,14 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
     end
   end
 
+  def champ_value_for_tag(champ, path = :value)
+    if referentiel_mode?
+      champ.referentiel_item_data&.dig(path)
+    else
+      super
+    end
+  end
+
   def columns(procedure:, displayable: true, prefix: nil)
     if referentiel_mode?
       referentiel.headers.map do |header|
