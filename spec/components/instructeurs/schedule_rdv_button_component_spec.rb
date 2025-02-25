@@ -12,6 +12,6 @@ RSpec.describe Instructeurs::ScheduleRdvButtonComponent, type: :component do
     render_inline(component)
 
     expect(page).to have_css("button.fr-btn")
-    expect(page).to have_button("Proposer un rendez-vous")
+    expect(page).to have_button("Prendre un rendez-vous")
   end
 end

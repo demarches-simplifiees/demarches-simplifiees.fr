@@ -24,7 +24,7 @@ describe Instructeurs::RdvsController, type: :controller do
     end
 
     context 'without pending rdv' do
-      let(:rdv_plan_result) { instance_double(Dry::Monads::Result::Success, success?: true, value!: create(:rdv)) }
+      let(:rdv_plan_result) { instance_double(Dry::Monads::Result::Success, success?: true, value!: create(:rdv, dossier: dossier, instructeur: instructeur)) }
 
       before do
         allow_any_instance_of(RdvService).to receive(:create_rdv_plan).and_return(rdv_plan_result)
