@@ -12,11 +12,7 @@ class RdvServicePublic::OauthController < ApplicationController
       refresh_token: user_info.credentials.refresh_token
     }
 
-    if current_instructeur.rdv_connection.present?
-      current_instructeur.rdv_connection.update!(rdv_connection_attributes)
-    else
-      current_instructeur.create_rdv_connection!(rdv_connection_attributes)
-    end
+    current_instructeur.rdv_connection&.update!(rdv_connection_attributes) || current_instructeur.create_rdv_connection!(rdv_connection_attributes)
 
     redirect_path = request.env['omniauth.origin'] || root_path
 
