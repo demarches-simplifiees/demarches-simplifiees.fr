@@ -31,8 +31,8 @@ RSpec.describe RdvConnection, type: :model do
         rdv_connection.expires_at = nil
       end
 
-      it 'returns false' do
-        expect(rdv_connection.expired?).to be false
+      it 'returns nil' do
+        expect(rdv_connection.expired?).to be nil
       end
     end
   end

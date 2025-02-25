@@ -110,7 +110,9 @@ module Instructeurs
     end
 
     def rendez_vous
-      RdvService.new(rdv_connection: current_instructeur.rdv_connection).update_pending_rdv_plan!(dossier:)
+      if current_instructeur.rdv_connection.present?
+        RdvService.new(rdv_connection: current_instructeur.rdv_connection).update_pending_rdv_plan!(dossier:)
+      end
 
       @rdvs = dossier.rdvs.by_starts_at
     end

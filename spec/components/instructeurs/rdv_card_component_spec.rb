@@ -8,7 +8,7 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
   end
 
   let(:dossier) { create(:dossier, :en_instruction) }
-  let(:rdv) { create(:rdv, dossier:) }
+  let(:rdv) { create(:rdv, dossier:, instructeur: create(:instructeur)) }
   let(:starts_at) { Time.zone.parse("2025-02-14 10:00:00") }
 
   describe "rendering" do
@@ -22,14 +22,14 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
 
       it "does not show dossier information" do
         expect(subject).not_to have_css(".fr-icon-user-line")
-        expect(subject).not_to have_text(dossier.id.to_s)
+        expect(subject).not_to have_text("Dossier Nº\n#{dossier.id}")
       end
 
       context "with dossier information" do
         let(:with_dossier_infos) { true }
 
         it "displays dossier details" do
-          expect(subject).to have_text(dossier.id.to_s)
+          expect(subject).to have_text("Dossier Nº\n#{dossier.id}")
           expect(subject).to have_css(".fr-icon-user-line")
           expect(subject).to have_css(".fr-icon-calendar-line")
           expect(subject).to have_text(I18n.l(dossier.depose_at.to_date))
