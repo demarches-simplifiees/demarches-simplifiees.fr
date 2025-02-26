@@ -175,7 +175,7 @@ module Administrateurs
           items_to_insert = csv_to_code.map do |row|
             {
               data: {
-                row: row.transform_keys { |k| k.parameterize.underscore }
+                row: row.transform_keys { Referentiel.header_to_path(_1) }
               },
               referentiel_id: referentiel.id
             }
