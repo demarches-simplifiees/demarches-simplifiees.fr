@@ -29,8 +29,8 @@
     .fr-container.flex.justify-between.fr-mb-6w
       %h2.fr-h6.fr-m-0
         = page_entries_info collection
-      - if (@statut == "en-cours" && collection.size > 1)
-        = link_to "Personnaliser l'ordre", order_positions_instructeur_procedures_path(collection_ids: collection.map(&:id)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-btn--icon-left fr-icon-settings-5-line'
+      - if (@statut == "en-cours" && @all_procedures_en_cours.size > 1)
+        = link_to "Personnaliser l'ordre", order_positions_instructeur_procedures_path(collection_ids: @all_procedures_en_cours.map(&:id)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-btn--icon-left fr-icon-settings-5-line'
     %ul.procedure-list.fr-pl-0
       = render partial: 'instructeurs/procedures/list',
         collection: collection,
