@@ -280,7 +280,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def drop_down_other?
-    drop_down_other == "1" || drop_down_other == true
+    drop_down_list? && (drop_down_other == "1" || drop_down_other == true)
   end
 
   def character_limit?
@@ -374,30 +374,45 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def referentiel_mode?
-    drop_down_mode == 'advanced'
+    drop_down_list? && drop_down_mode == 'advanced'
   end
 
-  def drop_down_options(simple: false)
-    return Array.wrap(super()) if simple
+  def drop_down_options
     if referentiel_mode?
-      return if referentiel.nil?
-      header = referentiel.headers.first.parameterize.underscore
-      Array.wrap(referentiel.items.map { [_1.data.values.first[header], _1.id] })
+      Array.wrap(referentiel&.drop_down_options)
     else
-      Array.wrap(super())
+      Array.wrap(super)
+    end
+  end
+
+  def options_for_select
+    if departements?
+      APIGeoService.departement_options
+    elsif regions?
+      APIGeoService.region_options
+    elsif any_drop_down_list?
+      if referentiel_mode?
+        Array.wrap(referentiel&.options_for_select)
+      else
+        drop_down_options.map { [_1, _1] }
+      end
+    elsif yes_no?
+      Champs::YesNoChamp.options
+    elsif checkbox?
+      Champs::CheckboxChamp.options
+    end
+  end
+
+  def options_for_select_with_other
+    if drop_down_other?
+      options_for_select + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
+    else
+      options_for_select
     end
   end
 
   def drop_down_options_from_text=(text)
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
-  end
-
-  def drop_down_options_with_other
-    if drop_down_other?
-      drop_down_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
-    else
-      drop_down_options
-    end
   end
 
   def header_section_level_value
@@ -465,20 +480,6 @@ class TypeDeChamp < ApplicationRecord
       :attachements
     else
       :text
-    end
-  end
-
-  def options_for_select
-    if departements?
-      APIGeoService.departement_options
-    elsif regions?
-      APIGeoService.region_options
-    elsif any_drop_down_list?
-      drop_down_options.map { [_1, _1] }
-    elsif yes_no?
-      Champs::YesNoChamp.options
-    elsif checkbox?
-      Champs::CheckboxChamp.options
     end
   end
 
