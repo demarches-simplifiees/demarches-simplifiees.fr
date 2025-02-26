@@ -137,7 +137,7 @@ class Logic::ChampValue < Logic::Term
     elsif tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:pays)
       APIGeoService.countries.map { ["#{_1[:name]} – #{_1[:code]}", _1[:code]] }
     else
-      tdc.drop_down_options_with_other.map { _1.is_a?(Array) ? _1 : [_1, _1] }
+      tdc.drop_down_options_with_other(only_names: true).map { _1.is_a?(Array) ? _1 : [_1, _1] }
     end
   end
 

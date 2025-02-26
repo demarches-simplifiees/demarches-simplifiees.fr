@@ -377,12 +377,17 @@ class TypeDeChamp < ApplicationRecord
     drop_down_mode == 'advanced'
   end
 
-  def drop_down_options(simple: false)
+  def drop_down_options(simple: false, only_names: false)
     return Array.wrap(super()) if simple
+
     if referentiel_mode?
       return if referentiel.nil?
       header = referentiel.headers.first.parameterize.underscore
-      Array.wrap(referentiel.items.map { [_1.data.values.first[header], _1.id] })
+      combined = Array.wrap(referentiel.items.map { [_1.data.values.first[header], _1.id] })
+
+      return combined unless only_names
+
+      combined.map(&:first)
     else
       Array.wrap(super())
     end
@@ -392,11 +397,11 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
-  def drop_down_options_with_other
+  def drop_down_options_with_other(only_names: false)
     if drop_down_other?
-      drop_down_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
+      drop_down_options(only_names:) + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
     else
-      drop_down_options
+      drop_down_options(only_names:)
     end
   end
 

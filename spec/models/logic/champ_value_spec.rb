@@ -87,6 +87,22 @@ describe Logic::ChampValue do
       end
     end
 
+    context 'dropdown tdc advanced' do
+      let(:tdc_type) { :drop_down_list }
+      let(:champ) { Champs::DropDownListChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
+      let(:item) { tdc.referentiel.items.find { _1.data["row"]["option"] == "fromage" } }
+      let(:value) { item.id }
+      let(:referentiel) { create(:csv_referentiel, :with_items) }
+
+      before {
+        tdc.update!(referentiel:, drop_down_mode: "advanced")
+      }
+
+      it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
+      it { is_expected.to eq(item.id.to_s) }
+      it { expect(champ_value(champ.stable_id).options([champ.type_de_champ])).to match_array([["dessert", "dessert"], ["fromage", "fromage"], ["fruit", "fruit"]]) }
+    end
+
     context 'checkbox tdc' do
       let(:tdc_type) { :checkbox }
       let(:champ) { Champs::CheckboxChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
