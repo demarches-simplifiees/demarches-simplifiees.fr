@@ -45,10 +45,6 @@ class Champs::MultipleDropDownListChamp < Champ
     next_value ? checkbox_id(next_value) : nil
   end
 
-  def unselected_options
-    drop_down_options - selected_options
-  end
-
   def value=(value)
     return super(nil) if value.blank?
 

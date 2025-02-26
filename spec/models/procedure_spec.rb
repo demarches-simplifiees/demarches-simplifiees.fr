@@ -949,6 +949,20 @@ describe Procedure do
       end
     end
 
+    context 'with a drop_down_list referentiel' do
+      let(:procedure) { create(:procedure, types_de_champ_public:, service:) }
+      let(:types_de_champ_public) { [{ type: :drop_down_list, referentiel:, drop_down_mode: 'advanced' }] }
+      let(:referentiel) { create(:csv_referentiel, :with_items) }
+      let(:drop_down_list) { procedure.draft_revision.types_de_champ_public.first }
+      let(:cloned_drop_down_list) { subject.draft_revision.types_de_champ_public.first }
+
+      it {
+        expect(cloned_drop_down_list.drop_down_mode).to eq('advanced')
+        expect(cloned_drop_down_list.referentiel_id).to eq(referentiel.id)
+        is_expected.to be_valid
+      }
+    end
+
     describe 'feature flag' do
       context 'with a feature flag enabled' do
         before do
