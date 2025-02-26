@@ -10,7 +10,7 @@ class EditableChamp::DepartementsComponent < EditableChamp::EditableChampBaseCom
   end
 
   def options
-    APIGeoService.departement_options
+    @champ.options_for_select
   end
 
   def select_options

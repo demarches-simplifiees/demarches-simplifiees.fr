@@ -66,7 +66,7 @@ module Administrateurs
         tdc_options = APIGeoService.countries.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
         create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)
       when TypeDeChamp.type_champs.fetch(:drop_down_list)
-        tdc_options = tdc.drop_down_options.reject(&:empty?)
+        tdc_options = tdc.options_for_select
         create_groups_from_drop_down_list_tdc(tdc_options, stable_id)
       end
 
@@ -81,7 +81,7 @@ module Administrateurs
       @procedure.toggle_routing
       defaut = @procedure.defaut_groupe_instructeur
 
-      if !tdc_options.include?(defaut.label)
+      if tdc_options.none? { _1.first == defaut.label }
         new_defaut = @procedure.reload.groupe_instructeurs_but_defaut.first
         @procedure.update!(defaut_groupe_instructeur: new_defaut)
         reaffecter_all_dossiers_to_defaut_groupe
@@ -504,7 +504,7 @@ module Administrateurs
     end
 
     def create_groups_from_drop_down_list_tdc(tdc_options, stable_id)
-      tdc_options.each do |label|
+      tdc_options.each do |label, _|
         routing_rule = ds_eq(champ_value(stable_id), constant(label))
         @procedure
           .groupe_instructeurs

@@ -46,10 +46,6 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
   end
 
   def items
-    if @champ.referentiel_mode?
-      @champ.drop_down_options_with_other
-    else
-      @champ.drop_down_options_with_other.map { _1.is_a?(Array) ? _1 : [_1, _1] }
-    end
+    @champ.options_for_select_with_other
   end
 end

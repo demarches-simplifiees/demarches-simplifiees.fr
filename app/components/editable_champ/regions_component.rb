@@ -10,7 +10,7 @@ class EditableChamp::RegionsComponent < EditableChamp::EditableChampBaseComponen
   private
 
   def options
-    APIGeoService.region_options
+    @champ.options_for_select
   end
 
   def select_options
