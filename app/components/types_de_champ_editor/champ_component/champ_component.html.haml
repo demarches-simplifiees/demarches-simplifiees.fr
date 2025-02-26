@@ -191,7 +191,7 @@
                       = form.label :special_characters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :special_characters_accepted) do
                         = t('.simple_mode.labels.special_characters')
                   .fr-messages-group
-                    - if type_de_champ.invalid_characters_rules?
+                    - if type_de_champ.errors.of_kind?(:character_rules)
                       %p.fr-message.fr-message--error
                         = type_de_champ.errors[:characters_accepted].join
               .cell

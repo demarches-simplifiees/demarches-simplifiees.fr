@@ -216,6 +216,14 @@ class TypeDeChamp < ApplicationRecord
     allow_blank: true
   }
 
+  validate :formatted_character_rules, if: -> { formatted? }
+
+  def formatted_character_rules
+    if formatted_mode == 'simple' && letters_accepted == '0' && numbers_accepted == '0' && special_characters_accepted == '0'
+      self.errors.add(:characters_accepted, I18n.t('errors.messages.invalid_character_rules'))
+    end
+  end
+
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
 
