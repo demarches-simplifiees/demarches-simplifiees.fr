@@ -1,12 +1,12 @@
-en:
+fr:
   activerecord:
     models:
-      referentiel: 'Referentiel'
+      referentiel: 'Field type'
     attributes:
-      referentiel:
-        url: "API url"
-        hint: "Hints to share with the user regarding the expected fill in format"
-        test_data: "Valid example (displayed to the user and will be used to test the API"
+      referentiels/api_referentiel:
+        url: "URL of the API"
+        hint: "Expected format shown to the user"
+        test_data: "Valid example used to test the API"
         hints:
-          url: "Example : https://api_1.ext/{id}"
-          hint: "Example : ID containing 12 characters including digis and letters (example : PG46YY6YWCX8)"
+          url: "Example : https://api_1.ext/{id}, the segment {id} will be replaced by the field value. The http request will use the GET verb"
+          hint: "Example : ID containing 12 chars"
