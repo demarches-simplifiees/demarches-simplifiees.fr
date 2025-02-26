@@ -19,3 +19,8 @@ en:
         existing_groupe:
           one: "%{count} group exist"
           other: "%{count} groups exist"
+      routing_alert_sticky_header:
+        routing_alert_html: "<strong>%{count} dossiers</strong> have already been deposited on this procedure and have <strong>not been routed according to the configured routing</strong>. You must launch the routing to distribute these files to the different groups."
+        routing_alert_with_invalid_rules_html: "<strong>%{count} dossiers</strong> have already been deposited on this procedure and have <strong>not yet been routed</strong>. Once you have configured your routing rules, you will need to launch the routing to distribute these files to the different groups."
+        bulk_route: Launch routing
+        bulk_routing_confirm: "Are you sure you want to launch the routing for the deposited files?"
