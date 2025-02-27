@@ -13,7 +13,7 @@ fr:
     errors:
       models:
         contact_form:
-          invalid_email_format: 'est invalide'
+          invalid_email_format: 'est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com'
   contact:
     form:
       your_question: Votre question
