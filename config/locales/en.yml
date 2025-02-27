@@ -638,7 +638,7 @@ en:
       messages:
         not_a_phone: 'is invalid. Enter a valid phone number. Example: 0612345678'
         url: 'is not a valid link'
-        invalid_email_format: 'is invalid. Please fill in a valid email ex: address@mail.com'
+        invalid_email_format: 'is invalid. Enter a valid email. Example: address@mail.com'
       models:
         attestation_template:
           attributes:
