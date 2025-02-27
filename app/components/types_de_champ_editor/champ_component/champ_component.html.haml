@@ -70,14 +70,14 @@
                     Liste de choix
                   .fr-segmented__elements
                     .fr-segmented__element
-                      = form.radio_button :drop_down_mode, 'simple', checked: 'checked', id: dom_id(type_de_champ, :simple), data: { action: 'drop-down-mode#toggle', 'mode-to-show': 'simple' }
+                      = form.radio_button :drop_down_mode, 'simple', checked: 'checked', id: dom_id(type_de_champ, :simple), data: { action: 'segmented-control#toggle', 'mode-to-show': 'simple' }
                       = form.label :drop_down_mode_simple, t('.drop_down_list.labels.simple'), for: dom_id(type_de_champ, :simple), class: 'fr-label'
                     .fr-segmented__element
-                      = form.radio_button :drop_down_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'drop-down-mode#toggle', "mode-to-show": "advanced" }
+                      = form.radio_button :drop_down_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'segmented-control#toggle', "mode-to-show": "advanced" }
                       = form.label :drop_down_mode_advanced, t('.drop_down_list.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
             .flex.column.justify-start.flex-grow.vertical-border.fr-pl-2w.fr-my-1w
-              %div{ class: class_names("drop-down-mode-simple", hidden: (type_de_champ.drop_down_mode == 'advanced')), data: { 'drop-down-mode-target': 'simple'  } }
+              %div{ class: class_names("drop-down-mode-simple", hidden: (type_de_champ.drop_down_mode == 'advanced')), data: { 'segmented-control-mode-target': 'simple'  } }
                 .cell
                   = form.label :drop_down_options_from_text, "Options de la liste", for: dom_id(type_de_champ, :drop_down_options_from_text)
                   = form.text_area :drop_down_options_from_text,
@@ -86,7 +86,7 @@
                     rows: 7,
                     id: dom_id(type_de_champ, :drop_down_options_from_text)
 
-              %div{ class: class_names("drop-down-mode-advanced", hidden: (type_de_champ.drop_down_mode != 'advanced')), data: { 'drop-down-mode-target': 'advanced'  } }
+              %div{ class: class_names("drop-down-mode-advanced", hidden: (type_de_champ.drop_down_mode != 'advanced')), data: { 'segmented-control-mode-target': 'advanced'  } }
 
                 - if type_de_champ.referentiel.present?
                   .cell
