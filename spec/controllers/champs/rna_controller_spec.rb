@@ -69,7 +69,7 @@ describe Champs::RNAController, type: :controller do
 
         it 'displays a “RNA is invalid” error message' do
           subject
-          expect(response.body).to include("doit commencer par un W majuscule suivi de 9 chiffres ou lettres, saisissez un numéro RNA valide")
+          expect(response.body).to include("doit commencer par un W majuscule suivi de 9 chiffres ou lettres. Exemple : W503726238")
         end
 
         it 'updates dossier.last_champs_updated_at' do

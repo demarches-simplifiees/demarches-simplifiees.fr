@@ -25,7 +25,7 @@ describe Champs::RNAChamp do
     it 'when invalid format, it contains only error message for invalid format' do
       champ = with_value("W1827362", nil)
       champ.validate(:champs_public_value)
-      expect(champ.errors.full_messages).to eq(["doit commencer par un W majuscule suivi de 9 chiffres ou lettres, saisissez un numéro RNA valide"])
+      expect(champ.errors.full_messages).to eq(["doit commencer par un W majuscule suivi de 9 chiffres ou lettres. Exemple : W503726238"])
     end
 
     it 'when valid format, but no data, it contains only error message for not found' do
