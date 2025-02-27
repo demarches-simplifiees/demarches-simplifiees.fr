@@ -6,8 +6,8 @@ class Champs::DropDownListChamp < Champ
   THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE = 20
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
-  validate :value_is_in_options, if: -> { validate_champ_value? && !(value.blank? || drop_down_other?) }
-  before_save :store_referentiel
+  validate :validate_value_is_in_options, if: -> { validate_champ_value? && !(value.blank? || drop_down_other?) }
+  before_save :store_referentiel, if: :referentiel_mode?
 
   def render_as_radios?
     drop_down_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
@@ -34,12 +34,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def value_from_user?
-    return false if value.blank?
-    if referentiel_mode?
-      drop_down_options.map(&:second).exclude?(value.to_i)
-    else
-      drop_down_options.exclude?(value)
-    end
+    value.present? && !value_is_in_options?
   end
 
   def value=(value)
@@ -53,19 +48,10 @@ class Champs::DropDownListChamp < Champ
   end
 
   def store_referentiel
-    return if !self.referentiel_mode?
-    if self.other?
+    if other?
       self.referentiel = nil
     else
-      self.referentiel = referentiel_from(value) if value
-    end
-  end
-
-  def referentiel_from(value)
-    if value.present?
-      referentiel_item = self.type_de_champ.referentiel.items.find(value)
-      headers = referentiel_item.referentiel.headers
-      { data: referentiel_item.data.merge(headers:) }
+      self.referentiel = referentiel_from(value)
     end
   end
 
@@ -79,31 +65,46 @@ class Champs::DropDownListChamp < Champ
     other? ? value : ""
   end
 
-  def referentiel_item_data
-    return nil if self.referentiel.nil?
-    self.referentiel&.dig('data', 'row')
+  def referentiel_item_selected?
+    referentiel&.dig('data', 'row').present?
+  end
+
+  def referentiel_item_value(path)
+    referentiel&.dig('data', 'row', path)
+  end
+
+  def referentiel_item_column_values
+    return [] if referentiel.nil?
+    referentiel_headers.map { |(header, path)| [header, referentiel_item_value(path)] }
   end
 
   def referentiel_item_first_column_value
-    return nil if self.referentiel.nil?
-    header = self.referentiel&.dig('data', 'headers')&.first
-    self.referentiel&.dig('data', 'row', header&.parameterize&.underscore)
-  end
-
-  def referentiel_headers
-    referentiel&.dig('data', 'headers')
+    return nil if referentiel.nil?
+    path = referentiel_headers&.first&.second
+    referentiel_item_value(path)
   end
 
   private
 
-  def value_is_in_options
-    return if referentiel_mode? && value_is_in_referentiel_ids?
-    return if drop_down_options.include?(value)
+  def referentiel_headers
+    headers = referentiel&.dig('data', 'headers') || []
+    headers.map { [_1, Referentiel.header_to_path(_1)] }
+  end
 
+  def referentiel_from(value)
+    if value.present?
+      referentiel_item = type_de_champ.referentiel.items.find(value)
+      headers = referentiel_item.referentiel.headers
+      { data: referentiel_item.data.merge(headers:) }
+    end
+  end
+
+  def validate_value_is_in_options
+    return if value_is_in_options?
     errors.add(:value, :not_in_options)
   end
 
-  def value_is_in_referentiel_ids?
-    drop_down_options.any? { _1.last == value.to_i }
+  def value_is_in_options?
+    options_for_select.any? { _1.last == value }
   end
 end

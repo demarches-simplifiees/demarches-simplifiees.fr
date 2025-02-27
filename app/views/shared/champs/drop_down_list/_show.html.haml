@@ -1,11 +1,10 @@
-- if champ.referentiel_item_data.present?
+- if champ.referentiel_item_selected?
   - if current_user.instructeur? && controller.try(:nav_bar_profile) == :instructeur
     .fr-background-alt--grey.fr-p-3v
-      - champ.referentiel_headers.each do |header|
+      - champ.referentiel_item_column_values.each do |(header, value)|
         = render Dossiers::RowShowComponent.new(label: header) do |c|
           - c.with_value do
-            %p= champ.referentiel_item_data.fetch(header.parameterize.underscore)
-
+            %p= value
 
   - else
     %p= champ.referentiel_item_first_column_value

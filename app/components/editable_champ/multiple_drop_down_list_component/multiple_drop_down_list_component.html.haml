@@ -1,5 +1,5 @@
 - if @champ.render_as_checkboxes?
-  = @form.collection_check_boxes :value, @champ.drop_down_options, :to_s, :to_s do |b|
+  = @form.collection_check_boxes :value, items, :second, :first do |b|
     - capture do
       .fr-fieldset__element
         .fr-checkbox-group

@@ -384,18 +384,24 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.drop_down_mode,
           to_type_de_champ.drop_down_mode)
       end
-      if from_type_de_champ.referentiel != to_type_de_champ.referentiel
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-          :referentiel,
-          from_type_de_champ.referentiel,
-          to_type_de_champ.referentiel)
+
+      if to_type_de_champ.referentiel_mode?
+        if from_type_de_champ.referentiel_id != to_type_de_champ.referentiel_id
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :referentiel,
+            from_type_de_champ.referentiel_id,
+            to_type_de_champ.referentiel_id)
+        end
+      else
+        from_drop_down_options = from_type_de_champ.referentiel_mode? ? [] : from_type_de_champ.drop_down_options
+        if from_drop_down_options != to_type_de_champ.drop_down_options
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :drop_down_options,
+            from_drop_down_options,
+            to_type_de_champ.drop_down_options)
+        end
       end
-      if from_type_de_champ.drop_down_options != to_type_de_champ.drop_down_options
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-          :drop_down_options,
-          from_type_de_champ.drop_down_options,
-          to_type_de_champ.drop_down_options)
-      end
+
       if to_type_de_champ.linked_drop_down_list?
         if from_type_de_champ.drop_down_secondary_libelle != to_type_de_champ.drop_down_secondary_libelle
           changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
@@ -410,6 +416,7 @@ class ProcedureRevision < ApplicationRecord
             to_type_de_champ.drop_down_secondary_description)
         end
       end
+
       if from_type_de_champ.drop_down_other? != to_type_de_champ.drop_down_other?
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :drop_down_other,
