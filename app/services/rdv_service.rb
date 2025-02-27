@@ -59,7 +59,7 @@ class RdvService
         rdv_plan_external_id: JSON.parse(response.body)["rdv_plan"]["id"]
       ))
     else
-      Sentry.capture_exception("RdvService#create_rdv_plan failed")
+      Sentry.capture_message("RdvService#create_rdv_plan failed #{response.code.to_s} #{response.body}")
       Failure("Une erreur est survenue")
     end
   end
