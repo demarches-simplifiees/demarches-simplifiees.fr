@@ -156,7 +156,7 @@ function isElementVisible(
   }
 }
 
-export function useElementVisible(element: RefObject<HTMLElement>) {
+export function useElementVisible(element: RefObject<HTMLElement | null>) {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     if (element.current) {

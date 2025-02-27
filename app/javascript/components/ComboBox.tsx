@@ -46,7 +46,7 @@ export function ComboBox({
   placeholder,
   ...props
 }: ComboBoxProps & {
-  inputRef?: RefObject<HTMLInputElement>;
+  inputRef?: RefObject<HTMLInputElement | null>;
   isOpen?: boolean;
   placeholder?: string;
 }) {
