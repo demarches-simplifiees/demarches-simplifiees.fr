@@ -59,7 +59,9 @@ class RdvService
         rdv_plan_external_id: JSON.parse(response.body)["rdv_plan"]["id"]
       ))
     else
-      Sentry.capture_message("RdvService#create_rdv_plan failed #{response.code.to_s} #{response.body}")
+      error_message = "RdvService#create_rdv_plan failed #{response.code} #{response.body}"
+      Rails.logger.error(error_message)
+      Sentry.capture_message(error_message)
       Failure("Une erreur est survenue")
     end
   end
