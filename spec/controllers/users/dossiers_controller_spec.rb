@@ -284,7 +284,7 @@ describe Users::DossiersController, type: :controller do
     context 'with an invalid SIRET' do
       let(:params_siret) { '000 000' }
 
-      it_behaves_like 'the request fails with an error', ['Le champ « Siret » est invalide. Saisir un numéro SIRET avec 14 chiffres']
+      it_behaves_like 'the request fails with an error', ['Le champ « Siret » doit comporter exactement 14 chiffres. Exemple : 500 001 234 56789']
     end
 
     context 'with a valid SIRET' do

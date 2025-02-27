@@ -19,19 +19,19 @@ describe Champs::SiretChamp do
     context 'with invalid format' do
       let(:value) { "12345" }
 
-      it { subject.errors[:value].should include('doit comporter exactement 14 chiffres') }
+      it { subject.errors[:value].should include('doit comporter exactement 14 chiffres. Exemple : 500 001 234 56789') }
     end
 
     context 'with invalid checksum' do
       let(:value) { "12345678901234" }
 
-      it { subject.errors[:value].should include("n‘est pas valide") }
+      it { subject.errors[:value].should include("comporte une erreur de saisie. Corrigez-la.") }
     end
 
     context 'with valid format but no etablissement' do
       let(:value) { "12345678901245" }
 
-      it { subject.errors[:value].should include("aucun établissement n’est rattaché à ce numéro") }
+      it { subject.errors[:value].should include("ne correspond pas à un établissement existant") }
     end
 
     context 'with valid SIRET and etablissement' do
