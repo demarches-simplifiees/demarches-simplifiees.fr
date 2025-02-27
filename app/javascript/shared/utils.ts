@@ -227,7 +227,7 @@ export function httpRequest(
     const response = await fetch(url, init).catch((error) => {
       const body = (error as Error).message;
       return new Response(body, {
-        status: 0,
+        status: 418,
         headers: { 'content-type': 'text/plain' }
       });
     });
