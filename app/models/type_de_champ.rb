@@ -548,11 +548,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def simple_routable?
-    type_champ.in?(SIMPLE_ROUTABLE_TYPES)
+    type_champ.in?(SIMPLE_ROUTABLE_TYPES) && !referentiel_mode?
   end
 
   def conditionable?
-    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ)
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ) && !referentiel_mode?
   end
 
   def self.humanized_conditionable_types_by_category
