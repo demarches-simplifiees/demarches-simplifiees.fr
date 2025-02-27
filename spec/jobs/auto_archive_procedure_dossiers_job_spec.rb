@@ -18,12 +18,15 @@ RSpec.describe AutoArchiveProcedureDossiersJob, type: :job do
     let!(:dossier6) { create(:dossier, :accepte, procedure: procedure) }
     let!(:dossier7) { create(:dossier, :refuse, procedure: procedure) }
     let!(:dossier8) { create(:dossier, :sans_suite, procedure: procedure) }
+    let!(:dossier9) { create(:dossier, :en_construction, procedure: procedure) }
     let(:last_operation) { dossier2.dossier_operation_logs.last }
 
     before do
+      dossier9.flag_as_pending_correction!(build(:commentaire))
+
       subject
 
-      [dossier1, dossier2, dossier3, dossier4, dossier5, dossier6, dossier7, dossier8].each(&:reload)
+      [dossier1, dossier2, dossier3, dossier4, dossier5, dossier6, dossier7, dossier8, dossier9].each(&:reload)
 
       procedure.reload
     end
@@ -39,6 +42,7 @@ RSpec.describe AutoArchiveProcedureDossiersJob, type: :job do
       expect(dossier6.state).to eq Dossier.states.fetch(:accepte)
       expect(dossier7.state).to eq Dossier.states.fetch(:refuse)
       expect(dossier8.state).to eq Dossier.states.fetch(:sans_suite)
+      expect(dossier9.state).to eq Dossier.states.fetch(:en_construction)
     }
   end
 end
