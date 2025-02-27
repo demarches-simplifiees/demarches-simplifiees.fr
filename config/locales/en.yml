@@ -746,7 +746,7 @@ en:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
       #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "must be an integer (without decimal)"
-      not_a_float: "must have maximum 3 digits after the decimal point"
+      not_a_float: "must have between 1 and 3 decimal places"
       not_a_date: "must be a correct date"
       not_a_datetime: "must be a correct datetime"
       blank: "can't be blank"
