@@ -637,7 +637,6 @@ en:
     errors:
       messages:
         not_a_phone: 'is invalid. Enter a valid phone number. Example: 0612345678'
-        not_a_rna: 'Invalid RNA number'
         url: 'is not a valid link'
         invalid_email_format: 'is invalid. Please fill in a valid email ex: address@mail.com'
       models:

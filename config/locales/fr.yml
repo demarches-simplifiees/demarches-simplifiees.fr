@@ -644,7 +644,6 @@ fr:
     errors:
       messages:
         not_a_phone: 'est invalide. Saisissez un numéro de téléphone valide. Exemple : 0612345678'
-        not_a_rna: 'Numéro RNA invalide'
         url: 'n’est pas un lien valide'
         invalid_email_format: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
       models:
