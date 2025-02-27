@@ -25,7 +25,7 @@ module Administrateurs
       @maybe_typos_signed = JSON.parse(params[:maybe_typos_signed]) if params[:maybe_typos_signed]
       @maybe_typos = @maybe_typos_signed&.map do |tuple|
         tuple.map do |email|
-          email_verified = message_verifier.verified(email).first
+          message_verifier.verified(email).first
         end
       end
     end
@@ -249,7 +249,7 @@ module Administrateurs
       emails.push(emails_with_typos).flatten! if emails_with_typos
       emails = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
-      @maybe_typos_signed = @maybe_typos.map{|tuple| tuple.map{|email| message_verifier.generate([email, expires_in: 2.minutes])}}
+      @maybe_typos_signed = @maybe_typos.map { |tuple| tuple.map { |email| message_verifier.generate([email, expires_in: 2.minutes]) } }
 
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
