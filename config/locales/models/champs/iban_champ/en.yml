@@ -5,8 +5,8 @@ en:
         champs/iban_champ:
           attributes:
             value:
-              invalid_iban: is not a valid IBAN
+              invalid_iban: 'is invalid. Enter a valid IBAN number. Example (France): FR76 1234 1234 1234 1234 1234 123'
     attributes:
       champs/iban_champ:
         hints:
-          value: "Example (France): FR76 1234 1234 1234 1234 1234 123"
+          value: 'Example (France): FR76 1234 1234 1234 1234 1234 123'
