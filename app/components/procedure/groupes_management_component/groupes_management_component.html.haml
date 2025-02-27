@@ -56,9 +56,11 @@
   .fr-mt-1w
     = paginate @groupe_instructeurs
 
-= form_tag admin_procedure_update_defaut_groupe_instructeur_path,
+= form_for @procedure,
+  method: :patch,
+  url: admin_procedure_update_defaut_groupe_instructeur_path,
   class: 'fr-my-3w',
-  data: { controller: 'autosave' } do
+  data: { controller: 'autosubmit', turbo: 'true' } do
   = label_tag :defaut_groupe_instructeur_id, 'Et si aucune règle ne correspond, router vers :', class: 'fr-label'
   = select_tag :defaut_groupe_instructeur_id,
     options_for_select(@procedure.groupe_instructeurs.pluck(:label, :id), selected: @procedure.defaut_groupe_instructeur.id),
