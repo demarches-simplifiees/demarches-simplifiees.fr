@@ -41,6 +41,14 @@ fr:
     update_condition: La condition du champ « %{label} » a été modifiée. La nouvelle condition est « %{to} ».
     update_character_limit: La limite de caractères du champ texte « %{label} » a été modifiée. La nouvelle limite est « %{to} ».
     remove_character_limit: La limite de caractères du champ texte « %{label} » a été supprimée.
+    update_formatted_mode: Le mode du champ formaté « %{label} » a été modifié. Le nouveau mode est « %{to} ».
+    update_letters_acceptance: L'acceptation des lettres pour le champ « %{label} » a été modifiée. Les lettres sont désormais %{to}.
+    update_numbers_acceptance: L'acceptation des chiffres pour le champ « %{label} » a été modifiée. Les chiffres sont désormais %{to}.
+    update_special_characters_acceptance: L'acceptation des caractères spéciaux pour le champ « %{label} » a été modifiée. Les caractères spéciaux sont désormais %{to}.
+    remove_min_character_length: Le nombre de caractères minimum pour le champ « %{label} » a été supprimé.
+    update_min_character_length: Le nombre de caractères minimum pour le champ « %{label} » a été modifié. Le minimum est désormais %{to}.
+    remove_max_character_length: Le nombre de caractères maxium pour le champ « %{label} » a été supprimé.
+    update_max_character_length: Le nombre de caractères maximum pour le champ « %{label} » a été modifié. Le maximum est désormais %{to}.
     remove_expression_reguliere: L’expression régulière du champ « %{label} » a été supprimée.
     update_expression_reguliere: L’expression régulière du champ « %{label} » a été modifiée. La nouvelle expression est « %{to} ».
     remove_expression_reguliere_exemple_text: L’exemple d’expression régulière du champ « %{label} » a été supprimé.

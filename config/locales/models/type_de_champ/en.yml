@@ -57,6 +57,7 @@ en:
           epci: 'EPCI'
           cojo: 'Accreditation Paris 2024'
           expression_reguliere: 'Regular expression'
+          formatted: 'Formatted field'
           referentiel: 'External data to configure (advanced)'
         default_libelle:
           annuaire_education: Educational institution
