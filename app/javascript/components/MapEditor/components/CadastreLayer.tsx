@@ -162,7 +162,7 @@ function useCadastres(
     deleteFeatures: DeleteFeatures;
   }
 ) {
-  const hoveredFeature = useRef<Feature | null>();
+  const hoveredFeature = useRef<Feature>(null);
 
   const onMouseMove = useCallback<EventHandler>(
     (event) => {
