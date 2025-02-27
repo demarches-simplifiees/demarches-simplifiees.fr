@@ -6,6 +6,8 @@ class AutoArchiveProcedureDossiersJob < ApplicationJob
       .dossiers
       .state_en_construction
       .find_each do |d|
+        next unless d.may_passer_automatiquement_en_instruction?
+
         begin
           d.passer_automatiquement_en_instruction!
         rescue StandardError => e

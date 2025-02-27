@@ -1451,8 +1451,8 @@ describe Dossier, type: :model do
       context 'when there are pending correction' do
         before { create(:dossier_correction, dossier:) }
 
-        it "passes en instruction and keep the correction request" do
-          expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy
+        it "can't passe en instruction" do
+          expect(dossier.can_passer_automatiquement_en_instruction?).to be_falsey
           expect(dossier.pending_correction?).to be_truthy
         end
       end
