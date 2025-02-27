@@ -201,6 +201,15 @@ def add_single_champ(pdf, champ)
   when 'Champs::TextareaChamp'
     value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, clean_string(value))
+  when 'Champs::DropDownListChamp'
+    value = if champ.blank?
+      'Non communiqué'
+    elsif champ.referentiel_mode?
+      champ.referentiel_item_first_column_value
+    else
+      champ.to_s
+    end
+    format_in_2_lines(pdf, tdc.libelle, value)
   else
     value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, value)
