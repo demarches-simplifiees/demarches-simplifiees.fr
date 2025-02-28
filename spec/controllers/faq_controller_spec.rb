@@ -9,7 +9,7 @@ RSpec.describe FAQController, type: :controller do
 
       # Usager
       expect(response.body).to include("Gestion de mon compte")
-      expect(response.body).to include("Je veux changer mon adresse email")
+      expect(response.body).to include("Je veux changer mon adresse électronique")
       expect(response.body).to include(faq_path(category: "usager", slug: "je-veux-changer-mon-adresse-email"))
 
       # Instructeur

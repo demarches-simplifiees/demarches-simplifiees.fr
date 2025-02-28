@@ -5,7 +5,7 @@ fr:
         rnf_id: Numéro RNF
         data:
           title: Nom de la fondation
-          email: Email
+          email: Adresse électronique
           phone: Téléphone
           createdAt: Créée le
           updatedAt: Mise à jour le

@@ -4,8 +4,8 @@ fr:
       show:
         profile: Profil
         contact: Coordonnées
-        new_email_address: Nouvelle adresse email
-        your_email: Votre email est actuellement
+        new_email_address: Nouvelle adresse électronique
+        your_email: Votre adresse électronique actuelle
         change_address: Changer mon adresse
         transfer_title: Transférer tous vos dossiers
         transfer_explication_html: "<p>Cette fonctionnalité vous permet de changer le propriétaire de tous vos dossiers. C’est généralement utile lors d’un changement de poste ou si vous souhaitez fusionner plusieurs comptes.</p>"
@@ -40,6 +40,6 @@ fr:
       ensure_update_email_is_authorized:
         email_not_allowed: "L’email %{requested_email} ne peut être utilisé, contactez le support : <a href='mailto:%{contact_email}'>%{contact_email}</a>"
       transfer_all_dossiers:
-        new_transfer: 
+        new_transfer:
           one: "Le transfert d’un dossier à %{email} est en cours"
           other: "Le transfert de %{count} dossiers à %{email} est en cours"

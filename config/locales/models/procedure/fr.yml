@@ -40,7 +40,7 @@ fr:
         procedure_path: Lien de la démarche à diffuser aux usagers
         procedure_path_placeholder: nom-de-la-demarche
         cadre_juridique: Cadre juridique - lien web vers le texte
-        lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)
+        lien_dpo: Lien ou adresse électronique pour contacter le Délégué à la Protection des Données (DPO)
         published_at: 'Date de publication'
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'
@@ -63,11 +63,11 @@ fr:
         declarative_with_state/accepte: Accepté
         api_entreprise_token: Jeton API Entreprise
         api_particulier_token: Jeton API Particulier
-        initiated_mail: L’email de notification de passage de dossier en instruction
-        received_mail: L’email de notification de dépôt de dossier
-        closed_mail: L’email de notification d’acceptation de dossier
-        refused_mail: L’email de notification de refus de dossier
-        without_continuation_mail: L’email de notification de classement sans suite de dossier
+        initiated_mail: L’adresse électronique de notification de passage de dossier en instruction
+        received_mail: L’adresse électronique de notification de dépôt de dossier
+        closed_mail: L’adresse électronique de notification d’acceptation de dossier
+        refused_mail: L’adresse électronique de notification de refus de dossier
+        without_continuation_mail: L’adresse électronique de notification de classement sans suite de dossier
         attestation_template: Le modèle d’attestation
         draft_revision: Le formulaire
         auto_archive_on: Date limite de dépôt des dossiers
@@ -117,7 +117,7 @@ fr:
             re_instructed_mail:
               format: "%{attribute} %{message}"
             lien_dpo:
-              invalid_uri_or_email: "Veuillez saisir un mail ou un lien"
+              invalid_uri_or_email: "Veuillez saisir une adresse électronique ou un lien"
             auto_archive_on:
               future: doit être dans le futur
             sva_svr:
