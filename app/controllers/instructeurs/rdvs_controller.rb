@@ -11,13 +11,16 @@ module Instructeurs
         return redirect_to pending_rdv.rdv_plan_url, allow_other_host: true
       end
 
+      # TODO: remove this once ENV are fixed in dev env
+      host = helpers.app_host_legacy?(request) ? ENV.fetch("APP_HOST_LEGACY") : ENV.fetch("APP_HOST")
+
       @rdv_plan_result = RdvService.new(rdv_connection: current_instructeur.rdv_connection).create_rdv_plan(
         dossier: @dossier,
         first_name: @dossier.individual&.prenom,
         last_name: @dossier.individual&.nom,
         email: @dossier.user_email_for(:notification),
-        dossier_url: instructeur_dossier_url(@dossier.procedure, @dossier, host: ENV.fetch("APP_HOST")),
-        return_url: rendez_vous_instructeur_dossier_url(@dossier.procedure, @dossier, host: ENV.fetch("APP_HOST"))
+        dossier_url: instructeur_dossier_url(@dossier.procedure, @dossier, host:),
+        return_url: rendez_vous_instructeur_dossier_url(@dossier.procedure, @dossier, host:)
       )
 
       if @rdv_plan_result.success?
