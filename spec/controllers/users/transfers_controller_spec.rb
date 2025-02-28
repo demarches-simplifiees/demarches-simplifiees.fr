@@ -93,14 +93,14 @@ describe Users::TransfersController, type: :controller do
     context "when email is empty" do
       let(:email) { "" }
       it_behaves_like 'email error' do
-        let(:expected_error) { 'L’adresse email doit être rempli' }
+        let(:expected_error) { 'L’adresse électronique doit être rempli' }
       end
     end
 
     context "when email is invalid" do
       let(:email) { "not-an-email" }
       it_behaves_like 'email error' do
-        let(:expected_error) { "L’adresse email est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com" }
+        let(:expected_error) { "L’adresse électronique est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com" }
       end
     end
   end

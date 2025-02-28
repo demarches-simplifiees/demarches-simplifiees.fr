@@ -6,8 +6,8 @@ fr:
         other: Instructeurs
     attributes:
       instructeur:
-        bypass_email_login_token: Autoriser la connexion sans confirmer l’email
+        bypass_email_login_token: Autoriser la connexion sans confirmer l’adresse électronique
   helpers:
     label:
       instructeur:
-        bypass_email_login_token: Autoriser la connexion sans confirmer l’email
+        bypass_email_login_token: Autoriser la connexion sans confirmer l’adresse électronique
