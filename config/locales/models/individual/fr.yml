@@ -12,10 +12,10 @@ fr:
         nom: Nom
         prenom: Prénom
         birthdate: Date de naissance
-        email: Email
+        email: Adresse électronique
         notification_method: "Notifier le bénéficiaire :"
         notification_methods:
-          email: Par e-mail
+          email: Par adresse électronique
           no_notification: Pas de notification
       individual/gender:
         female: Madame

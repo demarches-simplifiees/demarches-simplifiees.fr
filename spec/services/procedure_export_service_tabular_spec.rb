@@ -53,7 +53,7 @@ describe ProcedureExportService do
         let(:exported_columns) do
           [
             ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'Date du dernier évènement')),
-            ExportedColumn.new(libelle: 'Email', column: procedure.find_column(label: 'Email')),
+            ExportedColumn.new(libelle: 'Adresse électronique', column: procedure.find_column(label: 'Adresse électronique')),
             ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
             ExportedColumn.new(libelle: 'État du dossier', column: procedure.dossier_state_column),
             ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
@@ -63,7 +63,7 @@ describe ProcedureExportService do
         end
 
         let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-        let(:selected_headers) { ["Email", "first champ", "Commune", "Groupe instructeur", "Date du dernier évènement", "État du dossier", "PJ"] }
+        let(:selected_headers) { ["Adresse électronique", "first champ", "Commune", "Groupe instructeur", "Date du dernier évènement", "État du dossier", "PJ"] }
 
         it 'should have only headers from export template' do
           expect(dossiers_sheet.headers).to match_array(selected_headers)

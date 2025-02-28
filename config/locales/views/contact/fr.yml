@@ -2,8 +2,8 @@ fr:
   activerecord:
     attributes:
       contact_form:
-        email: 'Votre adresse email'
-        email_pro: Votre adresse email professionnelle
+        email: 'Votre adresse électronique'
+        email_pro: Votre adresse électronique professionnelle
         phone: Numéro de téléphone professionnel (ligne directe)
         subject: Sujet
         text: Message
@@ -66,7 +66,7 @@ fr:
       admin_suggestion_produit:
         question: J’ai une proposition d’évolution
       admin_demande_compte:
-        question: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
+        question: Je souhaite ouvrir un compte administrateur avec une adresse électronique Orange, Wanadoo, etc.
       admin_autre:
         question: Autre sujet
     create:

@@ -243,7 +243,7 @@ fr:
           decimal_number_html: Un nombre décimal
           integer_number_html: Un nombre entier
           formatted_html: Un texte qui respecte les règles de formattage
-          email_html: Une adresse email
+          email_html: Une adresse électronique
           civilite_html: '"M." pour Monsieur, "Mme" pour Madame'
           phone_html: Un numéro de téléphone
           iban_html: Un numéro Iban
@@ -303,12 +303,12 @@ fr:
     registrations:
       new:
         title: "Creation de compte sur %{name}"
-        subtitle: "Se créer un compte avec une adresse email"
-        email_label: 'Email'
+        subtitle: "Se créer un compte avec une adresse électronique"
+        email_label: 'Adresse électronique'
         password_label: "Mot de passe (%{min_length} caractères minimum)"
     confirmation:
       new:
-        title: 'Confirmez votre adresse email'
+        title: 'Confirmez votre adresse électronique'
         email_cta_html: "Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse électronique <strong>%{email}</strong>."
         email_guidelines_html: "Ouvrez votre boîte email, et <strong>cliquez sur le lien d’activation</strong> dans le message que vous avez reçu."
         email_missing: "Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer."
@@ -327,7 +327,7 @@ fr:
         modal_title: "Gestion des invités"
         modal_highlight: Les invités ont le droit de voir et modifier votre dossier.
         title: Ajouter un invité
-        email: Adresse mail
+        email: Adresse électronique
         email_hint: 'Exemple : adresse@mail.com'
         invite_message: Ajouter un message à la personne invitée (optionnel)
         send_invitation: Envoyer une invitation
@@ -345,6 +345,8 @@ fr:
       first: Premier
       truncate: '&hellip;'
     shared:
+      label:
+        email: 'Adresse électronique'
       actions:
         save: Enregistrer
         edit: Modifier
@@ -609,7 +611,7 @@ fr:
       default_attributes: &default_attributes
         email: Adresse électronique
         password: 'Mot de passe'
-        requested_merge_into: 'La nouvelle adresse email'
+        requested_merge_into: 'La nouvelle adresse électronique'
         hints:
           email: 'Format attendu : adresse@mail.com'
       user:
@@ -641,7 +643,7 @@ fr:
 
     errors:
       messages:
-        not_a_phone: 'Numéro de téléphone invalide'
+        not_a_phone: 'est invalide. Saisir un numéro de téléphone valide, par exemple : 0612345678'
         not_a_rna: 'Numéro RNA invalide'
         url: 'n’est pas un lien valide'
         invalid_email_format: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
@@ -668,7 +670,7 @@ fr:
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
             requested_merge_into:
-              same: "ne peut être identique à l’ancienne. Saisir une autre adresse email"
+              same: "ne peut être identique à l’ancienne. Saisir une autre adresse électronique"
 
         instructeur:
           attributes:
@@ -828,7 +830,7 @@ fr:
   users:
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
-      no_access_html: "Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse email de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n’est pas le cas, déconnectez-vous"
+      no_access_html: "Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse électronique de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n’est pas le cas, déconnectez-vous"
       no_longer_editable: "Votre dossier ne peut plus être modifié"
       en_construction_submitted: "Les modifications ont déjà été déposées"
       fill_identity:
@@ -938,27 +940,27 @@ fr:
         intro_html: "Votre compte FranceConnect utilise <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> comme email de contact."
         use_email_for_notifications: Souhaitez-vous l’utiliser pour recevoir les notifications concernant l’avancement de vos dossiers ?
         confirm: Valider
-        choose_email_contact: Choisissez votre email de contact pour finaliser votre connexion
+        choose_email_contact: Choisissez votre adresse électronique de contact pour finaliser votre connexion
         alternative_email: Veuillez nous fournir l’adresse électronique à utiliser pour vous contacter
-        keep_fc_email_html: "<span>Oui, utiliser <b>%{email}</b> comme email de contact</span>"
+        keep_fc_email_html: "<span>Oui, utiliser <b>%{email}</b> comme adresse électronique de contact</span>"
         use_another_email: Non, utiliser une autre adresse
         email_suggest:
           wanna_say: 'Voulez-vous dire ?'
       merge:
         title: "Fusion des comptes FranceConnect et %{application_name}"
-        subtitle_html: "Bonjour,<br /><br />Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme email de contact.<br />Or il existe un compte sur %{application_name} avec cet email."
+        subtitle_html: "Bonjour,<br /><br />Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme adresse électronique de contact.<br />Or il existe un compte sur %{application_name} avec cette adresse électronique."
         label_select_merge_flow: Ce compte %{email} vous appartient-il ?
         title_fill_in_password:  Pour les fusionner, entrez votre mot de passe
         button_merge: Fusionner les comptes
-        title_fill_in_email: Donnez-nous alors le mail que %{application_name} utilisera pour vous contacter
-        button_use_this_email: Utiliser ce mail
+        title_fill_in_email: Donnez-nous alors l'adresse électronique que %{application_name} utilisera pour vous contacter
+        button_use_this_email: Utiliser cette adresse électronique
         link_confirm_by_email: Confirmer mon compte par email
       flash:
         confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
         confirmation_mail_resent: "Le lien de confirmation a expiré. Un nouveau lien de confirmation vous a été envoyé par email."
         confirmation_mail_resent_error: "Une erreur inattendue est survenue. Veuillez contacter le support si le problème persiste."
         redirect_new_user_session: "Vous avez été déconnecté de votre précédent compte. Veuillez cliquer à nouveau sur le lien de confirmation."
-        email_confirmed: 'Votre email est bien vérifié'
+        email_confirmed: 'Votre adresse électronique est bien vérifiée'
         user_not_found: 'Utilisateur non trouvé'
         invalid_password: "Mot de passe incorrect"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"

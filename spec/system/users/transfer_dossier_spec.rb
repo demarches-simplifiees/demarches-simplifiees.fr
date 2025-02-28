@@ -20,7 +20,7 @@ describe 'Transfer dossier:' do
 
     expect(page).to have_current_path(transferer_dossier_path(dossier))
     expect(page).to have_content("transférer le dossier en construction nº #{dossier.id}")
-    fill_in 'Email du compte destinataire', with: other_user.email
+    fill_in 'Adresse électronique du compte destinataire', with: other_user.email
     click_on 'Envoyer la demande de transfert'
 
     logout

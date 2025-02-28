@@ -7,7 +7,7 @@ fr:
     attributes:
       service: &service
         adresse: 'Adresse postale'
-        email: 'Email de contact'
+        email: 'Adresse électronique de contact'
         telephone: 'Téléphone'
         nom: Nom du service
         organisme: Organisme(s)
@@ -19,7 +19,7 @@ fr:
             Indiquez les organismes depuis l’échelon territorial jusqu’au ministère séparés par une virgule.
             Exemple : mairie de Mours, préfecture de l'Oise, ministère de la Culture
           email: |
-            Indiquez une adresse email valide qui permettra de recevoir et de répondre aux questions des usagers.
+            Indiquez une adresse électronique valide qui permettra de recevoir et de répondre aux questions des usagers.
             Exemple : contact@mairie-de-mours.fr
           telephone: "Indiquez le numéro de téléphone du service valide le plus à même de fournir des réponses pertinentes à vos usagers. Exemple : 01 23 45 67 89"
           horaires: |

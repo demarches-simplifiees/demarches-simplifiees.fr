@@ -7,7 +7,7 @@ fr:
     file_size_limit: "Taille maximale : %{max_file_size}."
     groupes:
       title: Ajout de groupes / instructeurs avec import de fichier
-      notice_1_html: Pour l’import, votre fichier csv doit comporter <strong>2 colonnes (Groupe, Email)</strong> (voir modèle de fichier ci-dessous). Le poids du fichier doit être inférieur à %{csv_max_size}.
+      notice_1_html: Pour l’import, votre fichier csv doit comporter <strong>2 colonnes (Groupe, Adresse électronique)</strong> (voir modèle de fichier ci-dessous). Le poids du fichier doit être inférieur à %{csv_max_size}.
       notice_2_html: L’import n’écrase pas les groupes et instructeurs existants. Il permet uniquement <strong>d’en ajouter</strong>.
       notice_3_html: Une fois votre import effectué, vous devrez ensuite <strong>configurer les règles de routage</strong> pour chacun des groupes ajoutés.
       notification_alert_html: Même si votre démarche est encore en test / non publiée, tous les instructeurs que vous ajouterez à la démarche <strong>seront notifiés par email</strong>.
@@ -15,5 +15,5 @@ fr:
 
     instructeurs:
       title: Ajout d’instructeurs avec import de fichier
-      notice_1_html: Pour l’import, votre fichier csv doit comporter <strong>1 seule colonne (Email)</strong> listant les adresses emails des instructeurs (voir modèle de fichier ci-dessous). Le poids du fichier doit être inférieur à %{csv_max_size}.
+      notice_1_html: Pour l’import, votre fichier csv doit comporter <strong>1 seule colonne (Adresse électronique)</strong> listant les adresses électroniques des instructeurs (voir modèle de fichier ci-dessous). Le poids du fichier doit être inférieur à %{csv_max_size}.
       notice_2_html: L’import n’écrase pas les instructeurs existants. Il permet uniquement <strong>d’en ajouter</strong>.
