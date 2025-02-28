@@ -293,10 +293,8 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#update_state' do
-    let(:closed_value) { '0' }
     let!(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
-    let!(:gi_1_1) { procedure_non_routee.defaut_groupe_instructeur }
-    let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'deuxième groupe') }
+    let!(:group) { procedure_non_routee.groupe_instructeurs.create(label: 'groupe_instructeur') }
 
     before do
       patch :update_state,
@@ -308,25 +306,23 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       group.reload
     end
 
-    context 'when we try do disable the default groupe instructeur' do
-      let(:closed_value) { '1' }
-      let(:group) { gi_1_1 }
+    context 'when we try to enable a groupe instructeur' do
+      let(:closed_value) { '0' }
 
       it do
-        expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_1)
-        expect(gi_1_1.closed).to eq(false)
-        expect(flash.alert).to eq('Il est impossible de désactiver le groupe d’instructeurs par défaut.')
+        expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure_non_routee, group)
+        expect(group.closed).to eq(false)
+        expect(flash.notice).to eq('Le groupe « groupe_instructeur » est activé.')
       end
     end
 
-    context 'when we try do disable the second groupe instructeur' do
+    context 'when we try to disable a groupe instructeur' do
       let(:closed_value) { '1' }
-      let(:group) { gi_1_2 }
 
       it do
-        expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_2)
-        expect(gi_1_2.closed).to eq(true)
-        expect(flash.notice).to eq('Le groupe deuxième groupe est désactivé.')
+        expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure_non_routee, group)
+        expect(group.closed).to eq(true)
+        expect(flash.notice).to eq('Le groupe « groupe_instructeur » est désactivé.')
       end
     end
   end
