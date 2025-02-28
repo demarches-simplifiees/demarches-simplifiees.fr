@@ -1,0 +1,25 @@
+- content_for(:title, "Rendez-vous · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+
+= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation }
+
+.rendez-vous.container
+  - if @rdvs.booked.empty?
+    %p Vous pouvez proposer un rendez-vous à l’usager, en le configurant sur le site RDV Service Public (date et horaire, par téléphone / en visioconférence / en présentiel).
+  - if current_instructeur.rdv_connection.nil?
+    %p
+      Pour utiliser cette fonctionnalité, vous devez commencer par connecter votre compte
+      %strong RDV Service Public
+      à votre compte Démarches Simplifiées :
+    = form_tag('/auth/rdvservicepublic', method: 'post', data: {turbo: false}) do
+      %button.fr-btn{ type:'submit' }
+        Connecter RDV Service Public
+        %span.fr-ml-1w.fr-icon-external-link-line{ "aria-hidden": "true" }
+  - else
+    - if @rdvs.booked.any?
+      %p Cette fonctionnalité est en version expérimentale. Pensez à vérifier les horaires des rendez-vous sur le site RDV Service Public.
+
+    .fr-mb-2w
+      - @rdvs.booked.each do |rdv|
+        = render Instructeurs::RdvCardComponent.new(rdv:)
+
+    = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)

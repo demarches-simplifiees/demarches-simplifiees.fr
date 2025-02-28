@@ -23,7 +23,7 @@ module NavigationHelper
   end
 
   def user_support_section?
-    params[:action] == 'email_usagers' || params[:action] == 'apercu'
+    %w[email_usagers apercu usagers_rdvs].include?(params[:action])
   end
 
   def downloads_section?
