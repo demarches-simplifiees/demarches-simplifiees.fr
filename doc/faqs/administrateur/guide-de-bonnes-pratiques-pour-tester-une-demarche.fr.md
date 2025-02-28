@@ -54,7 +54,7 @@ N’hésitez pas à [transmettre le lien vers la démarche test à vos collègue
 
 Vous avez déposé à l’étape précédente un premier dossier. Rendez-vous désormais dans la partie instructeur.
 
-Passez à l’interface instructeur via le lien [%{application_base_url}/procedures](/procedures) ou en changeant de profil depuis le menu en haut à droite en cliquant sur votre adresse email.
+Passez à l’interface instructeur via le lien [%{application_base_url}/procedures](/procedures) ou en changeant de profil depuis le menu en haut à droite en cliquant sur votre adresse électronique.
 
 ![Menu pour passer instructeur {aria-hidden="true"}](faq/administrateur-profile-switch.png)
 
@@ -75,8 +75,8 @@ Voici le tutoriel pour instruire un dossier en tant qu’instructeur : [Tutorie
 Vous pourrez ici tester différents éléments secondaires :
 
 - Demande d’**avis externe** (partie instruction) . Pour plus d’information, vous pouvez consulter [notre tutoriel expert invité](https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-expert-invite)
-- **Vérifiez les e-mails** d’accusé de réception, de passage en instruction, d’acceptation, de refus et de classement sans suite (partie usager)
-- Testez la **messagerie du dossier** en envoyant un message à l’usager. Si vous souhaitez anonymiser l’adresse mail des instructeurs dans la messagerie, vous pouvez [nous contacter à l’adresse %{contact_email}](mailto:%{contact_email})
+- **Vérifiez les adresses électroniques** d’accusé de réception, de passage en instruction, d’acceptation, de refus et de classement sans suite (partie usager)
+- Testez la **messagerie du dossier** en envoyant un message à l’usager. Si vous souhaitez anonymiser l’adresse électronique des instructeurs dans la messagerie, vous pouvez [nous contacter à l’adresse %{contact_email}](mailto:%{contact_email})
 - Si l’**attestation automatique d’acceptation** et la partie annotations privées ont été paramétrées, vérifiez qu’il n’y a pas d’erreur
 
 En cas d’erreur et/ou en fonction des retours de vos collègues suite à la phase de test, vous pouvez modifier la démarche depuis votre profil administrateur.
