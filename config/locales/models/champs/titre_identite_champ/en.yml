@@ -3,4 +3,4 @@ en:
     attributes:
       champs/titre_identite_champ:
           hints:
-            value: "National identity card (front side only), passport, residency permit or other proof of identity."
+            value: "Required document: National identity card (front side only), passport, residency permit or other proof of identity."
