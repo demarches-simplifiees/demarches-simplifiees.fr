@@ -75,6 +75,10 @@ class GroupeInstructeur < ApplicationRecord
     dossiers.empty? && (procedure.groupe_instructeurs.active.many? || (procedure.groupe_instructeurs.active.one? && closed))
   end
 
+  def can_close?
+    id != procedure.defaut_groupe_instructeur_id
+  end
+
   def routing_to_configure?
     invalid_rule? || non_unique_rule?
   end

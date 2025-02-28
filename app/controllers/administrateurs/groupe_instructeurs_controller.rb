@@ -176,14 +176,10 @@ module Administrateurs
     def update_state
       @groupe_instructeur = procedure.groupe_instructeurs.find(params[:groupe_instructeur_id])
 
-      if @groupe_instructeur.update(closed: params[:closed])
-        state_for_notice = @groupe_instructeur.closed ? 'désactivé' : 'activé'
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-          notice: "Le groupe #{@groupe_instructeur.label} est #{state_for_notice}."
-      else
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-          alert: @groupe_instructeur.errors.messages_for(:closed).to_sentence
-      end
+      @groupe_instructeur.update!(closed: params[:closed])
+      state_for_notice = @groupe_instructeur.closed ? 'désactivé' : 'activé'
+      redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+        notice: "Le groupe « #{@groupe_instructeur.label} » est #{state_for_notice}."
     end
 
     def destroy
