@@ -7,10 +7,5 @@ fr:
       show:
         file_tracking: Suivi des dossiers
         reinit_display: Votre affichage a dû être réinitialisé en raison d'un problème technique.
-      email_usagers:
-        hint:
-          zero: "Aucun usager n'a de dossier en brouillon."
-          one: "Vous allez envoyer un message à <strong>1</strong> usager ayant un dossier en brouillon."
-          other: "Vous allez envoyer un message à <strong>%{count}</strong> usagers ayant un dossier en brouillon."
       administrators_list:
         title: Administrateurs de la démarche
