@@ -39,7 +39,7 @@ class UserMailer < ApplicationMailer
   def custom_confirmation_instructions(user, token)
     @user = user
     @token = token
-    mail(to: @user.email, subject: 'Confirmez votre email')
+    mail(to: @user.email, subject: 'Confirmez votre adresse électronique')
   end
 
   def invite_instructeur(user, reset_password_token)
@@ -60,7 +60,7 @@ class UserMailer < ApplicationMailer
     @token = token
     @user = user
     @dossier = dossier
-    subject = "Vérification de votre mail"
+    subject = "Vérification de votre adresse électronique"
 
     configure_defaults_for_user(user)
 
@@ -74,7 +74,7 @@ class UserMailer < ApplicationMailer
   def resend_confirmation_email(user, token)
     @token = token
     @user = user
-    subject = "Vérification de votre mail"
+    subject = "Vérification de votre adresse électronique"
 
     configure_defaults_for_user(user)
 
