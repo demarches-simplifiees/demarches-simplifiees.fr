@@ -7,7 +7,7 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
   end
 
   def level
-    @champ.level + 1 # skip one heading level
+    @champ.level + 1 # The first title level should be a <h2>
   end
 
   def collapsible?
