@@ -29,13 +29,13 @@ class SimpleFormattedChampValidator < ActiveModel::Validator
         end
       end
 
-      if min_character_length
+      if min_character_length.present?
         if record.value.length < min_character_length.to_i
           record.errors.add(:value, :min_character_length_rule, min: min_character_length)
         end
       end
 
-      if max_character_length
+      if max_character_length.present?
         if record.value.length > max_character_length.to_i
           record.errors.add(:value, :max_character_length_rule, max: max_character_length)
         end

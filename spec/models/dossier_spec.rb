@@ -1748,8 +1748,8 @@ describe Dossier, type: :model do
     let(:letters_accepted) { '1' }
     let(:numbers_accepted) { '1' }
     let(:special_characters_accepted) { '1' }
-    let(:min_character_length) { nil }
-    let(:max_character_length) { nil }
+    let(:min_character_length) { "" }
+    let(:max_character_length) { "" }
 
     before do
       champ = dossier.project_champs_public.first
