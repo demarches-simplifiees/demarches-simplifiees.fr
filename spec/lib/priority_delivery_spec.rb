@@ -88,6 +88,21 @@ RSpec.describe PriorityDeliveryConcern do
     end
   end
 
+  context 'when the delivery method raise a Dolist::ContactReadOnlyError' do
+    let(:mail) { ExampleMailer.greet(email, bypass_unverified_mail_protection: true) }
+    let(:email) { user.email }
+    let(:user) { create(:user, email: 'u@a.com') }
+
+    before do
+      ActionMailer::Base.balancer_settings = { mock_smtp: 10 }
+    end
+
+    it 'sends emails to the selected delivery method' do
+      allow_any_instance_of(Mail::Message).to receive(:send).with(:do_delivery).and_raise(Dolist::ContactReadOnlyError)
+      expect { mail.deliver_now }.to change { user.reload.email_unsubscribed }.from(false).to(true)
+    end
+  end
+
   context 'when multiple delivery methods are provided' do
     before do
       ActionMailer::Base.balancer_settings = { mock_smtp: 10, mock_sendmail: 5 }

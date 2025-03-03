@@ -41,6 +41,8 @@ class BalancerDeliveryMethod
     #
     # See https://github.com/mikel/mail/blob/199a76bed3fc518508b46135691914a1cfd8bff8/lib/mail/message.rb#L250
     mail.delivery_handler.deliver_mail(mail) { mail.send :do_delivery }
+  rescue Dolist::ContactReadOnlyError
+    User.where(email: mail.to.first).update_all(email_unsubscribed: true) if mail&.to&.first
   end
 
   private
