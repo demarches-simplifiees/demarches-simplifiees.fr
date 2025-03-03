@@ -7,7 +7,7 @@
             %p= value
 
   - else
-    %p= champ.referentiel_item_first_column_value
+    %p= champ.to_s
 
 - elsif champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
   %p

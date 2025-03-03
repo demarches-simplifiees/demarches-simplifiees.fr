@@ -78,18 +78,12 @@ class Champs::DropDownListChamp < Champ
     referentiel_headers.map { |(header, path)| [header, referentiel_item_value(path)] }
   end
 
-  def referentiel_item_first_column_value
-    return nil if referentiel.nil?
-    path = referentiel_headers&.first&.second
-    referentiel_item_value(path)
-  end
-
-  private
-
   def referentiel_headers
     headers = referentiel&.dig('data', 'headers') || []
     headers.map { [_1, Referentiel.header_to_path(_1)] }
   end
+
+  private
 
   def referentiel_from(value)
     if value.present?
