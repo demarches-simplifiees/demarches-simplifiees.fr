@@ -52,6 +52,7 @@ class BalancerDeliveryMethod
     return false if mail.to.blank? # bcc list
 
     user = User.find_by(email: mail.to.first)
+    return true if user.unsubscribed? if user.present?
     return user.unverified_email? if user.present?
 
     individual = Individual.find_by(email: mail.to.first)

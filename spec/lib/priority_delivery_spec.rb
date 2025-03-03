@@ -193,6 +193,14 @@ RSpec.describe PriorityDeliveryConcern do
         it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
       end
 
+      context 'and the user had unsubcribed' do
+        let(:email) { user.email }
+        let(:user) { create(:user, email: 'u@a.com', unsubscribed: true, email_verified_at: 2.days.ago) }
+        let(:bypass_unverified_mail_protection) { false }
+
+        it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
+      end
+
       context 'and the email is not verified but a bypass flag is added' do
         let(:email_verified_at) { nil }
         let(:bypass_unverified_mail_protection) { true }
