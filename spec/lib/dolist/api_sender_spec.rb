@@ -28,6 +28,18 @@ RSpec.describe Dolist::APISender do
       end
     end
 
+    context 'when API call reach a read only Contact' do
+      let(:response) { { "ResponseStatus" => { "ErrorCode" => "439", "Message" => "The contact is read only.", "Errors" => [] } } }
+
+      before do
+        allow(api_client).to receive(:send_email).and_return(response)
+      end
+
+      it 'raises ContactReadOnlyError' do
+        expect { subject.deliver!(mail) }.to raise_error(Dolist::ContactReadOnlyError)
+      end
+    end
+
     context 'when API call succeeds' do
       let(:response) { { "Result" => "message-id-123" } }
 
