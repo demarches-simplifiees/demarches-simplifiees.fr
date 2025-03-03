@@ -1099,17 +1099,21 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
     let!(:dossier1) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
     let!(:dossier2) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
+    let!(:dossier3) { create(:dossier, :with_populated_champs, procedure: procedure, state: :accepte) }
 
     before do
       dossier1.champs.first.update(value: 'Paris')
       dossier2.champs.first.update(value: 'Lyon')
+      dossier3.champs.first.update(value: 'Marseille')
       post :create_simple_routing, params: { procedure_id: procedure.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } }
       post :bulk_route, params: { procedure_id: procedure.id }
     end
 
-    it do
+    it 'routes only dossiers en construction or en instruction' do
       expect(dossier1.reload.groupe_instructeur.label).to eq 'Paris'
       expect(dossier2.reload.groupe_instructeur.label).to eq 'Lyon'
+      expect(dossier3.reload.groupe_instructeur.label).to eq 'Lyon'
+      # Lyon is default group
       expect(procedure.reload.routing_alert).to be_falsey
     end
   end

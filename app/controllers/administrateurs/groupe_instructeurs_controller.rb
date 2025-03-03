@@ -89,7 +89,7 @@ module Administrateurs
         defaut.destroy!
       end
 
-      procedure.update!(routing_alert: true) if procedure.dossiers.soumis.any?
+      procedure.update!(routing_alert: true) if procedure.dossiers.state_en_construction_ou_instruction.any?
 
       flash[:routing_mode] = 'simple'
 
@@ -111,7 +111,7 @@ module Administrateurs
 
       procedure.toggle_routing
 
-      procedure.update!(routing_alert: true) if procedure.dossiers.soumis.any?
+      procedure.update!(routing_alert: true) if procedure.dossiers.state_en_construction_ou_instruction.any?
 
       flash[:routing_mode] = 'custom'
 
@@ -393,7 +393,7 @@ module Administrateurs
     end
 
     def bulk_route
-      dossiers = procedure.dossiers
+      dossiers = procedure.dossiers.state_not_termine
 
       dossiers.update_all(forced_groupe_instructeur: false)
 
