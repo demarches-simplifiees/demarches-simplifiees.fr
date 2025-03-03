@@ -158,6 +158,10 @@ input[type='radio'] {
   font-variant-numeric: tabular-nums;
 }
 
+.fr-text--monospace {
+  font-family: monospace;
+}
+
 // We don't want badge to split in two lines
 .fr-tag.no-wrap {
   white-space: nowrap;
