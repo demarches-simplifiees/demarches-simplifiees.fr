@@ -5,8 +5,8 @@
     - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
   - if @champ.description.present?
     .fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
-  - if @champ.type_de_champ.options[:expression_reguliere_indications].present?
-    .fr-hint-text{ id: @champ.describedby_id }= @champ.type_de_champ.options[:expression_reguliere_indications]
+  - if @champ.type_de_champ.expression_reguliere_indications.present?
+    .fr-hint-text{ id: @champ.describedby_id }= @champ.type_de_champ.expression_reguliere_indications
 - elsif @champ.legend_label?
   %legend.fr-fieldset__legend.fr-text--regular.fr-pb-1w{ id: @champ.labelledby_id }= render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
   - if @champ.description.present?
