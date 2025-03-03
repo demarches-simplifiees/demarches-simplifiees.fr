@@ -43,8 +43,8 @@ class Referentiels::MappingFormComponent < ApplicationComponent
     current_value = lookup_existing_value(jsonpath, attribute) || false
     tag.div(class: "fr-checkbox-group") do
       safe_join([
-        check_box_tag("#{PREFIX}[#{attribute}]", "1", current_value, class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }),
-        tag.label(for: jsonpath.parameterize, class: "fr-label") { sanitize("&nbsp;") }
+        check_box_tag("#{PREFIX}[#{attribute}]", "1", current_value, class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }, aria: { labelledby: label_check_prefill(jsonpath) }),
+        tag.label(for: jsonpath.parameterize, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") }
       ])
     end
   end
@@ -61,6 +61,10 @@ class Referentiels::MappingFormComponent < ApplicationComponent
       tag.p("Libellé du champ du formulaire"),
       tag.p("(à définir à l'étape suivante)", class: 'fr-text--sm fr-text-action-high--blue-france')
     ])
+  end
+
+  def label_check_prefill(jsonpath)
+    "use-for-prefill-#{jsonpath.parameterize}"
   end
 
   private

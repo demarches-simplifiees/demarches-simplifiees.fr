@@ -51,6 +51,7 @@
                 - last_request_keys.each do |jsonpath,example_value|
                   %tr{ data: { controller: "referentiel-mapping" } }
                     %td
+                      %span.hidden{ id: label_check_prefill(jsonpath) }= "Utiliser #{jsonpath} pour préremplir le formulaire"
                       = jsonpath
                       = hidden_field_tag "type_de_champ[referentiel_mapping][][jsonpath]", jsonpath
                     %td.fr-cell--multiline= example_value
