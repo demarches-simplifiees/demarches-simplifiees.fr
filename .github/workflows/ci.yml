@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-22.04
     services:
       postgres:
-        image: postgis/postgis:17-3.5
+        image: postgis/postgis:14-3.3
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
           POSTGRES_PASSWORD: tps_test
-        ports: [ "5432:5432" ]
+        ports: ['5432:5432']
 
     steps:
       - uses: actions/checkout@v4
@@ -61,15 +61,15 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     env:
-      RUBY_YJIT_ENABLE: "1"
+      RUBY_YJIT_ENABLE: '1'
     services:
       postgres:
-        image: postgis/postgis:17-3.5
+        image: postgis/postgis:14-3.3
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
           POSTGRES_PASSWORD: tps_test
-        ports: ["5432:5432"]
+        ports: ['5432:5432']
 
     strategy:
       matrix:
@@ -117,15 +117,15 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     env:
-      RUBY_YJIT_ENABLE: "1"
+      RUBY_YJIT_ENABLE: '1'
     services:
       postgres:
-        image: postgis/postgis:17-3.5
+        image: postgis/postgis:14-3.3
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
           POSTGRES_PASSWORD: tps_test
-        ports: ["5432:5432"]
+        ports: ['5432:5432']
 
     strategy:
       matrix:

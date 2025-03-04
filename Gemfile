@@ -159,7 +159,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'drb' # strange dep required by rspec, should try to be removed after rails 7.2.x
   gem 'graphql-schema_comparator'
   gem 'irb'
   gem 'mina', require: false # Deploy
