@@ -29,4 +29,65 @@ class Traitement < ApplicationRecord
   end
 
   def termine? = state.in?(Dossier::TERMINE)
+
+  EVENT = [
+    :depose,
+    :depose_correction_usager,
+    :depose_correction_instructeur,
+    :passe_en_instruction,
+    :accepte,
+    :refuse,
+    :classe_sans_suite,
+    :repasse_en_construction,
+    :repasse_en_instruction,
+    :passe_en_instruction_automatiquement,
+    :accepte_automatiquement,
+    :refuse_automatiquement
+  ].to_h { [_1, _1.to_s.humanize] }
+
+  def event
+    if state == Dossier.states.fetch(:en_construction)
+      if previous_state.nil?
+        :depose
+      elsif previous_state == Dossier.states.fetch(:en_instruction)
+        :repasse_en_construction
+      elsif previous_state == Dossier.states.fetch(:en_construction)
+        if instructeur?
+          :depose_correction_instructeur
+        else
+          :depose_correction_usager
+        end
+      end
+    elsif state == Dossier.states.fetch(:en_instruction)
+      if previous_state != Dossier.states.fetch(:en_construction)
+        :repasse_en_instruction
+      elsif instructeur?
+        :passe_en_instruction
+      else
+        :passe_en_instruction_automatiquement
+      end
+    elsif instructeur?
+      if state == Dossier.states.fetch(:sans_suite)
+        :classe_sans_suite
+      else
+        state.to_sym
+      end
+    elsif state == Dossier.states.fetch(:accepte)
+      :accepte_automatiquement
+    else
+      :refuse_automatiquement
+    end
+  end
+
+  private
+
+  def previous_state
+    i = dossier.traitements.index(self)
+    return if i.zero?
+    dossier.traitements[i - 1].state
+  end
+
+  def instructeur?
+    instructeur_email.present?
+  end
 end

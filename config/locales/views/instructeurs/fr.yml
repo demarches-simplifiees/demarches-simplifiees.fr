@@ -4,25 +4,12 @@ fr:
       archive_pending_html: Archive en cours de création<br>(demandée il y a %{created_period})
       archive_ready_html: Télécharger l’archive<br>(demandée il y a %{generated_period})
     dossiers:
-      decisions_rendues_block:
-        without_email:
-          en_construction: Le %{processed_at} ce dossier a été passé en construction
-          en_instruction: Le %{processed_at} ce dossier a été passé en instruction
-          accepte: Le %{processed_at} ce dossier a été accepté
-          refuse: Le %{processed_at} ce dossier a été refusé
-          sans_suite: Le %{processed_at} ce dossier a été classé sans suite
-        with_email:
-          en_construction: Le %{processed_at}, %{email} a passé ce dossier en construction
-          en_instruction: Le %{processed_at}, %{email} a passé ce dossier en instruction
-          accepte: Le %{processed_at}, %{email} a accepté ce dossier
-          refuse: Le %{processed_at}, %{email} a refusé ce dossier
-          sans_suite: Le %{processed_at}, %{email} a classé ce dossier sans suite
       filterable_state:
-        en_construction: "En construction"
-        pending_correction: "En attente"
-        en_instruction: "En instruction"
-        accepte: "Accepté"
-        refuse: "Refusé"
-        sans_suite: "Classé sans suite"
+        en_construction: 'En construction'
+        pending_correction: 'En attente'
+        en_instruction: 'En instruction'
+        accepte: 'Accepté'
+        refuse: 'Refusé'
+        sans_suite: 'Classé sans suite'
       archived_block:
-        archived: "Ce dossier a été déplacé dans « à archiver » le %{date} par %{email}"
+        archived: 'Ce dossier a été déplacé dans « à archiver » le %{date} par %{email}'
