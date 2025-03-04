@@ -1106,13 +1106,20 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       dossier2.champs.first.update(value: 'Lyon')
       dossier3.champs.first.update(value: 'Marseille')
       post :create_simple_routing, params: { procedure_id: procedure.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } }
-      post :bulk_route, params: { procedure_id: procedure.id }
     end
 
     it 'routes only dossiers en construction or en instruction' do
+      query_count = 0
+      ActiveSupport::Notifications.subscribed(lambda { |*_args| query_count += 1 }, "sql.active_record") do
+        post :bulk_route, params: { procedure_id: procedure.id }
+      end
+      expect(query_count).to be_between(60, 90)
       expect(dossier1.reload.groupe_instructeur.label).to eq 'Paris'
+      expect(dossier1.reload.dossier_assignment.mode).to eq 'bulk_routing'
       expect(dossier2.reload.groupe_instructeur.label).to eq 'Lyon'
+      expect(dossier2.reload.dossier_assignment.mode).to eq 'bulk_routing'
       expect(dossier3.reload.groupe_instructeur.label).to eq 'Lyon'
+      expect(dossier3.reload.dossier_assignment.mode).to eq 'auto'
       # Lyon is default group
       expect(procedure.reload.routing_alert).to be_falsey
     end
