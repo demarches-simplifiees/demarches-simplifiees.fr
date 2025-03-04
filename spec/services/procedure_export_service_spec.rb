@@ -109,6 +109,7 @@ describe ProcedureExportService do
             "epci (Département)",
             "cojo",
             "expression_reguliere",
+            "formatted",
             "rnf",
             "rnf (Nom)",
             "rnf (Adresse)",

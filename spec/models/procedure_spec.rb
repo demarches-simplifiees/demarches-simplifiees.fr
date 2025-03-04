@@ -416,6 +416,64 @@ describe Procedure do
           procedure.reload.validate(:publication)
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
         end
+
+        context 'validates formatted champ character rules' do
+          let(:types_de_champ_private) { [] }
+          let(:formatted_mode) { "simple" }
+          let(:letters_accepted) { "1" }
+          let(:numbers_accepted) { "0" }
+          let(:special_characters_accepted) { "0" }
+          let(:types_de_champ_public) do
+            [
+              { type: :formatted, formatted_mode:, letters_accepted:, numbers_accepted:, special_characters_accepted: }
+            ]
+          end
+
+          it 'accepts valid character rules' do
+            expect(procedure.valid?(:publication)).to be_truthy
+          end
+
+          context "all rules are disabled" do
+            let(:letters_accepted) { "0" }
+            it 'publication is invalid' do
+              expect(procedure.invalid?(:publication)).to be_truthy
+
+              expect(procedure.errors.messages_for(:draft_types_de_champ_public).first).to include("au moins un type de caractère")
+            end
+          end
+        end
+
+        context 'validates formatted champ character length' do
+          let(:types_de_champ_private) { [] }
+          let(:formatted_mode) { "simple" }
+          let(:min_character_length) { "3" }
+          let(:max_character_length) { "10" }
+          let(:types_de_champ_public) do
+            [
+              { type: :formatted, formatted_mode:, min_character_length:, max_character_length: }
+            ]
+          end
+
+          it 'accepts valid character length rules' do
+            expect(procedure.valid?(:publication)).to be_truthy
+          end
+
+          context "when min > max" do
+            let(:min_character_length) { "20" }
+
+            it 'publication is invalid' do
+              expect(procedure.invalid?(:publication)).to be_truthy
+              expect(procedure.errors.messages_for(:draft_types_de_champ_public).first).to include("inférieur au nombre maximum de caractères")
+            end
+          end
+
+          context "when max is empty" do
+            let(:max_character_length) { "" }
+            it 'is valid' do
+              expect(procedure.valid?(:publication)).to be_truthy
+            end
+          end
+        end
       end
 
       context 'when the champ is private' do

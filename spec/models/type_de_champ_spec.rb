@@ -150,7 +150,7 @@ describe TypeDeChamp do
   end
 
   describe "validate_regexp" do
-    let(:tdc) { create(:type_de_champ_expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text:) }
+    let(:tdc) { create(:type_de_champ_formatted, expression_reguliere:, expression_reguliere_exemple_text:) }
     subject { tdc.invalid_regexp? }
 
     context "expression_reguliere and bad example" do
@@ -402,16 +402,29 @@ describe TypeDeChamp do
       end
     end
 
-    context "Expression reguliere" do
-      let(:type_de_champ) { create(:type_de_champ_expression_reguliere, procedure:) }
+    context "Champ formaté simple" do
+      let(:type_de_champ) { create(:type_de_champ_formatted, procedure:) }
 
       before do
-        type_de_champ.update!(options: { 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789', 'key' => 'value' })
+        type_de_champ.update!(options: { 'formatted_mode' => 'simple', 'letters_accepted' => "1", 'numbers_accepted' => '1', "special_characters_accepted" => "0", 'min_character_length' => "4", 'max_character_length' => "5", "key" => "value" })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the formatted mode, letters_accepted, numbers_accepted, special_characters_accepted' do
+        is_expected.to eq({ 'formatted_mode' => 'simple', 'letters_accepted' => "1", 'numbers_accepted' => '1', "special_characters_accepted" => "0", 'min_character_length' => "4", 'max_character_length' => "5" })
+      end
+    end
+
+    context "Champ formaté avancé" do
+      let(:type_de_champ) { create(:type_de_champ_formatted, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'formatted_mode' => 'advanced', 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789', 'key' => 'value' })
         procedure.publish_revision!
       end
 
       it 'keeping only the expression_reguliere, expression_reguliere_error_message and expression_reguliere_exemple_text' do
-        is_expected.to eq({ 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789' })
+        is_expected.to eq({ 'formatted_mode' => 'advanced', 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789' })
       end
     end
   end

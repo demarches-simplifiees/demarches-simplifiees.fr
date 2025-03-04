@@ -13,11 +13,25 @@ fr:
   character_limit:
     unlimited: Pas de limite de caractères
     limit: Limité à %{limit} caractères
+  simple_mode:
+    labels:
+      accepted_format: Format de saisie accepté
+      numbers: 'Chiffres'
+      letters: 'Lettres'
+      special_characters: "Caractères spéciaux (-_\/:* ...)"
+      min_character_length: Nombre de caractères minimum
+      max_character_length: Nombre de caractères maximum
   expression_reguliere:
     labels:
-      regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com. 
-      hint: "Pensez aux ancres de début (^) et fin ($) : `12 km serait accepté par /[[:digit:]]+/ mais rejeté par /^[[:digit:]]+$/"
-      valid_exemple: Exemple valide qui passe l'expression régulière
+      regex: Saisissez votre expression régulière (regex)
+      hint_html: |
+        Pensez aux ancres de début <code class="fr-background-alt--grey">^</code> et fin <code class="fr-background-alt--grey">$</code> :<br>
+        <code class="fr-background-alt--grey">12 km</code> serait accepté par
+        <code class="fr-background-alt--grey">/[[:digit:]]+/</code> mais rejeté par <code class="fr-background-alt--grey">/^[[:digit:]]+$/</code><br>
+        <a href="https://rubular.com" target="_blank" rel="external noreferrer noopener">Tester l‘expression et consulter la syntaxe sur rubular.com</a>
+      indications: Indications sur le format de saisie attendu (affichées à l‘usager)
+      indications_hint: 'Exemple : Numéro à 7 caractères comportant des chiffres et des lettres (exemple: AB446KP)'
+      valid_exemple: Exemple de saisie valide (ou de format de saisie requis)
       error_message: Message d'erreur à afficher à l'usager en cas de saisie invalide
   drop_down_list:
     labels:
@@ -25,3 +39,7 @@ fr:
       advanced: Import référentiel
     referentiel:
       hint_html: Utilisez le modèle de fichier CSV fourni ci-dessous pour construire votre référentiel (le nombre de colonnes n'est pas limité).<br>L’usager ne verra que les valeurs présentes <strong> dans la première colonne [A] </strong> du fichier.<br> En examinant le dossier, l’instructeur visualisera également les valeurs associées <strong> aux autre colonnes, [B] à […].</strong>
+  kind:
+    labels:
+      simple: "Mode simple"
+      advanced: "Mode avancé"

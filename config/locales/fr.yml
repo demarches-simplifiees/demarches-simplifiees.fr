@@ -49,6 +49,10 @@ fr:
     new_tab: "Nouvel onglet"
     modal_close: "Fermer"
     modal_close_alt: "Fermer la fenêtre modale"
+    accepted: acceptés
+    accepted_f: acceptées
+    forbidden: interdits
+    forbidden_f: interdites
   helpers:
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
@@ -746,9 +750,11 @@ fr:
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
-      evil_regexp: L’expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
-      mismatch_regexp: L’exemple doit correspondre à l’expression régulière fournie
-      syntax_error_regexp: La syntaxe de l’expression régulière n’est pas valide
+      invalid_character_rules: Vous devez sélectionner au moins un type de caractère.
+      invalid_character_length: "Le nombre minimum de caractères doit être inférieur au nombre maximum de caractères"
+      evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
+      mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie
+      syntax_error_regexp: La syntaxe de l'expression régulière n'est pas valide
       # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
