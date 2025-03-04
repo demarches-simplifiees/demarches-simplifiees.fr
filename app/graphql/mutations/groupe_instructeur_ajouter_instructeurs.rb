@@ -13,12 +13,12 @@ module Mutations
 
     def resolve(groupe_instructeur:, instructeurs:)
       ids, emails = partition_instructeurs_by(instructeurs)
-      _, invalid_emails = groupe_instructeur.add_instructeurs(ids:, emails:)
+      added_instructers, invalid_emails = groupe_instructeur.add_instructeurs(ids:, emails:)
 
-      if instructeurs.present?
+      if added_instructers.present?
         groupe_instructeur.reload
         GroupeInstructeurMailer
-          .notify_added_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
+          .notify_added_instructeurs(groupe_instructeur, added_instructers, current_administrateur.email)
           .deliver_later
       end
 
