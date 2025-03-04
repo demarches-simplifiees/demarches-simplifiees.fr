@@ -1,0 +1,13 @@
+fr:
+  depose: Le %{processed_at}, ce dossier a été déposé
+  depose_correction_usager: Le %{processed_at}, des corrections ont été déposées
+  depose_correction_instructeur: Le %{processed_at}, %{email} a corrigé ce dossier
+  passe_en_instruction: Le %{processed_at}, %{email} a passé ce dossier en instruction
+  accepte: Le %{processed_at}, %{email} a accepté ce dossier
+  refuse: Le %{processed_at}, %{email} a refusé ce dossier
+  classe_sans_suite: Le %{processed_at}, %{email} a classé ce dossier sans suite
+  repasse_en_construction: Le %{processed_at}, %{email} a repassé ce dossier en construction
+  repasse_en_instruction: Le %{processed_at}, %{email} a repassé ce dossier en instruction
+  passe_en_instruction_automatiquement: Le %{processed_at}, ce dossier a été automatiquement passé en instruction
+  accepte_automatiquement: Le %{processed_at}, ce dossier a été automatiquement accepté
+  refuse_automatiquement: Le %{processed_at}, ce dossier a été automatiquement refusé
