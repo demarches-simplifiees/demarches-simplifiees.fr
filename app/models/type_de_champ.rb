@@ -216,14 +216,6 @@ class TypeDeChamp < ApplicationRecord
     allow_blank: true
   }
 
-  validate :formatted_character_rules, if: -> { formatted? }
-
-  def formatted_character_rules
-    if formatted_mode == 'simple' && letters_accepted == '0' && numbers_accepted == '0' && special_characters_accepted == '0'
-      self.errors.add(:characters_accepted, I18n.t('errors.messages.invalid_character_rules'))
-    end
-  end
-
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
 
@@ -587,25 +579,6 @@ class TypeDeChamp < ApplicationRecord
     Logic::ChampValue::MANAGED_TYPE_DE_CHAMP_BY_CATEGORY
       .map { |_, v| v.filter_map { "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »" if !_1.to_s.in?(SIMPLE_ROUTABLE_TYPES) } }
       .reject(&:empty?)
-  end
-
-  def invalid_characters_rules?
-    if formatted_mode == 'simple' && letters_accepted == '0' && numbers_accepted == '0' && special_characters_accepted == '0'
-      self.errors.add(:characters_accepted, I18n.t('errors.messages.invalid_character_rules'))
-      return true
-    end
-    return false
-  end
-
-  def invalid_character_length?
-    self.errors.delete(:character_length)
-    if formatted_mode == 'simple' &&
-        max_character_length.present? &&
-        (min_character_length.to_i > max_character_length.to_i)
-      self.errors.add(:character_length, I18n.t('errors.messages.invalid_character_length'))
-      return true
-    end
-    return false
   end
 
   def invalid_regexp?
