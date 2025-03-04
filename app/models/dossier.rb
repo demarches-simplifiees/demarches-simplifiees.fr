@@ -548,9 +548,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_passer_automatiquement_en_instruction?
-    # Auto archive always passe en instruction, even if there is a pending correction
-    return true if procedure.auto_archive_on? && !procedure.auto_archive_on.future?
-
+    return true if procedure.auto_archive_on? && !procedure.auto_archive_on.future? && !pending_correction?
     return false if !can_passer_en_instruction?
     return true if declarative_triggered_at.nil? && procedure.declarative_en_instruction?
     return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil? && !pending_correction?
