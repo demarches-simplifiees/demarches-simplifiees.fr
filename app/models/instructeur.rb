@@ -337,6 +337,10 @@ class Instructeur < ApplicationRecord
     procedure.export_templates.where(groupe_instructeur: groupe_instructeurs).order(:name)
   end
 
+  def groupe_instructeur_options_for(procedure)
+    groupe_instructeurs.filter_map { [_1.label, _1.id] if _1.procedure == procedure }
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie, pieces_jointes)

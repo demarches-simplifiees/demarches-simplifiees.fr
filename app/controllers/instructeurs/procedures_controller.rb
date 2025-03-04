@@ -87,6 +87,11 @@ module Instructeurs
       @procedure_presentation = procedure_presentation
 
       @current_filters = procedure_presentation.filters_for(statut)
+      @current_filters.each do |filter|
+        if filter.column.groupe_instructeur?
+          filter.column.options_for_select = current_instructeur.groupe_instructeur_options_for(procedure)
+        end
+      end
       @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .symbolize_keys
