@@ -11,7 +11,7 @@
                 hidden_by_administration: dossier.hidden_by_administration?,
                 hidden_by_expired: dossier.hidden_by_expired?,
                 has_pending_correction: dossier.pending_correction?,
-                has_blocking_pending_correction: dossier.procedure.feature_enabled?(:blocking_pending_correction) && dossier.pending_correction?,
+                has_blocking_pending_correction: dossier.blocked_with_pending_correction?,
                 turbo: true,
                 with_menu: true }
 
