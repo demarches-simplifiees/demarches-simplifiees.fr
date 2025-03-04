@@ -1,4 +1,4 @@
-= form_for(current_instructeur.bulk_messages.build, url: create_multiple_commentaire_instructeur_procedure_path([procedure]), html: {  data: { controller: 'persisted-form bulk-message', persisted_form_key_value: dom_id(procedure, :bulk_message) } }) do |f|
+= form_for(bulk_message, url: create_multiple_commentaire_instructeur_procedure_path([procedure]), html: {  data: { controller: 'persisted-form bulk-message', persisted_form_key_value: dom_id(procedure, :bulk_message) } }) do |f|
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
   - if procedure.routing_enabled?

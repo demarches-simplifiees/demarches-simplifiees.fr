@@ -4,5 +4,5 @@ class BulkMessage < ApplicationRecord
   belongs_to :instructeur
   belongs_to :procedure
 
-  attr_reader :without_group
+  attr_accessor :without_group
 end

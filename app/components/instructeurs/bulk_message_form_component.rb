@@ -72,6 +72,14 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
 
   def instructeur_in_all_groupes? = @in_all_groupes ||= procedure.groupe_instructeurs.size == instructeur_groupe_ids.size
 
+  def bulk_message
+    current_instructeur
+      .bulk_messages
+      .build.tap do |bulk_message|
+        bulk_message.without_group = instructeur_in_all_groupes?
+      end
+  end
+
   private
 
   def dossier_count_for(groupe_instructeur) = @dossiers_count_per_groupe_instructeur[groupe_instructeur.id] || 0
