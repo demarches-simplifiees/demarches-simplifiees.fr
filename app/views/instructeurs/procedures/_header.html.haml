@@ -39,6 +39,8 @@
             %li
               = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(procedure), class: 'fr-nav__link'
             %li
+              = link_to t('instructeurs.dossiers.header.banner.users_with_rdvs'), RdvService.rdv_sp_host_url, target: "_blank", class: 'fr-nav__link'
+            %li
               = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_instructeur_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-nav__link'
             %li
               = link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: {controller: "clipboard", clipboard_text_value: commencer_url(@procedure.path), action: "click->clipboard#copy" } do

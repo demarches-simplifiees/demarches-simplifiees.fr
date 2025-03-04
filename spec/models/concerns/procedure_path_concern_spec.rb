@@ -155,7 +155,6 @@ describe ProcedurePathConcern do
       let(:path_to_claim) { procedure_2.canonical_path }
 
       it "does not assign the procedure to the procedure_path" do
-        puts "procedure_2.canonical_path: #{procedure_2.canonical_path}"
         expect(procedure_2.procedure_paths.count).to eq(1)
         expect(procedure_2.canonical_path).to eq(procedure_2.procedure_paths.first.path)
         expect { subject }.to raise_error(ActiveRecord::RecordInvalid)

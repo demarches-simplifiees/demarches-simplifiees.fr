@@ -27,3 +27,5 @@
         = dynamic_tab_item(t('views.users.dossiers.show.header.summary'), dossier_path(dossier))
         = dynamic_tab_item(t('views.users.dossiers.show.header.request'), [demande_dossier_path(dossier), modifier_dossier_path(dossier)])
         = dynamic_tab_item(t('views.users.dossiers.show.header.mailbox'), messagerie_dossier_path(dossier))
+        - if dossier.rdvs.any?
+          = dynamic_tab_item(t('views.users.dossiers.show.header.rendez_vous'), rendez_vous_dossier_path(dossier))

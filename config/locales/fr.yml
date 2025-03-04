@@ -384,6 +384,7 @@ fr:
           involved_persons: Personnes impliquées
           reaffectation: Réaffectation
           attachments: Pièces jointes
+          rendez_vous: Rendez-vous
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Mettre à la corbeille"
         deleted_reason:
@@ -457,6 +458,7 @@ fr:
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
+            rendez_vous: "Rendez-vous"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
@@ -484,6 +486,8 @@ fr:
             latest_message: "Dernier message"
         messagerie:
           mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
+        rendez_vous:
+          title: "Votre prochain rendez-vous"
         demande:
           edit_dossier: Modifier le dossier
           edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
@@ -521,6 +525,8 @@ fr:
             procedure: démarche
             this_procedure: cette démarche
           pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie</a>."
+          upcoming_rdv_html: "Vous avez rendez-vous avec un instructeur en visioconférence le <strong>%{date}</strong>."
+          upcoming_rdv_link: "Infos et annulation :"
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
@@ -756,6 +762,7 @@ fr:
     formats:
       default: "%d %B %Y %R"
       long: "%d %B %y %H:%M"
+      human: "%A %-d %B à %Hh%M"
   datetime:
     formats:
       long: "%d %B %y %H:%M"

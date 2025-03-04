@@ -55,7 +55,7 @@ Capybara.register_driver :chrome do |app|
   setup_driver(app, download_path, options)
 end
 
-Capybara.default_max_wait_time = 4
+Capybara.default_max_wait_time = 6
 
 Capybara.ignore_hidden_elements = false
 

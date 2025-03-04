@@ -21,5 +21,7 @@ fr:
           title: "Dossier %{number} en brouillon (%{procedure_label}) - Étape 2 : Formulaire"
         merci:
           title: "Dossier envoyé (%{procedure_label})"
+        rendez_vous:
+          title: "Rendez-vous · Dossier %{number} (%{procedure_label})"
       activate:
         title: Activer mon compte sur %{application_name}
