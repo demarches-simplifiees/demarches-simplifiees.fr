@@ -530,7 +530,7 @@ class Dossier < ApplicationRecord
   end
 
   def blocked_with_pending_correction?
-    procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+    procedure.publiee? && procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
   end
 
   def can_passer_en_construction?
