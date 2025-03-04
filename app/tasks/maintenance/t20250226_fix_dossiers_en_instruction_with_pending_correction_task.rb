@@ -22,6 +22,14 @@ module Maintenance
         correction = dossier.pending_correction
         dossier.resolve_pending_correction
 
+        if dossier.procedure.sva_svr_enabled?
+          class << dossier.procedure
+            def sva_svr_enabled?
+              false # contourne guard can_repasser_en_construction?
+            end
+          end
+        end
+
         dossier.repasser_en_construction!(instructeur: correction.commentaire.instructeur)
 
         correction.update!(resolved_at: nil)

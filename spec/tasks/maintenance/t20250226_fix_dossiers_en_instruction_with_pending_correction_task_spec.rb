@@ -5,7 +5,8 @@ require "rails_helper"
 module Maintenance
   RSpec.describe T20250226FixDossiersEnInstructionWithPendingCorrectionTask do
     let(:instructeur) { create(:instructeur) }
-    let(:dossier) { create(:dossier, :en_instruction) }
+    let(:procedure) { create(:procedure, :closed, :sva) }
+    let(:dossier) { create(:dossier, :en_instruction, procedure:) }
     let(:commentaire) { create(:commentaire, dossier:, instructeur:) }
 
     before do
