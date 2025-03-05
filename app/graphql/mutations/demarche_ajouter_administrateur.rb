@@ -17,22 +17,27 @@ module Mutations
 
       ids, emails = partition_administrators_by(administrateurs)
 
-      administrateurs_added, invalid_emails = demarche.add_administrateurs(ids:, emails:)
+      if context.authorized_demarche?(demarche)
+        administrateurs_added, invalid_emails = demarche.add_administrateurs(ids:, emails:)
 
-      if administrateurs_added.present?
-        demarche.reload
+        if administrateurs_added.present?
+          demarche.reload
+        end
+
+        result = { demarche: }
+
+        if invalid_emails.present?
+          warning = I18n.t('administrateurs.procedures.add_administrateur.wrong_address',
+                           count: invalid_emails.size,
+                           emails: invalid_emails.join(', '))
+          result[:warnings] = [warning]
+        end
+
+        result
+      else
+        { errors: ["Vous n'avez pas le droit d'ajouter un administrateur sur la démarche"] }
       end
 
-      result = { demarche: }
-
-      if invalid_emails.present?
-        warning = I18n.t('administrateurs.procedures.add_administrateur.wrong_address',
-                         count: invalid_emails.size,
-                         emails: invalid_emails.join(', '))
-        result[:warnings] = [warning]
-      end
-
-      result
     end
   end
 end
