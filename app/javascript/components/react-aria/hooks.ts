@@ -383,17 +383,15 @@ export function useRemoteList({
   defaultItems,
   defaultSelectedKey,
   onChange,
-  debounce,
-  allowsCustomValue
+  debounce
 }: {
   load: Loader;
   defaultItems?: Item[];
   defaultSelectedKey?: Key | null;
   onChange?: (item: Item | null) => void;
   debounce?: number;
-  allowsCustomValue?: boolean;
 }) {
-  const [defaultSelectedItem, setSelectedItem] = useState<Item | null>(() => {
+  const [selectedItem, setSelectedItem] = useState<Item | null>(() => {
     if (defaultItems) {
       return (
         defaultItems.find((item) => item.value == defaultSelectedKey) ?? null
@@ -401,19 +399,8 @@ export function useRemoteList({
     }
     return null;
   });
-  const [inputValue, setInputValue] = useState(
-    defaultSelectedItem?.label ?? ''
-  );
+  const [inputValue, setInputValue] = useState(selectedItem?.label ?? '');
   const [isExplicitlySelected, setIsExplicitlySelected] = useState(false);
-  const selectedItem = useMemo<Item | null>(() => {
-    if (defaultSelectedItem) {
-      return defaultSelectedItem;
-    }
-    if (allowsCustomValue && inputValue != '') {
-      return { label: inputValue, value: inputValue };
-    }
-    return null;
-  }, [defaultSelectedItem, inputValue, allowsCustomValue]);
   const list = useAsyncList<Item>({ getKey, load });
   const setFilterText = useEvent((filterText: string) => {
     list.setFilterText(filterText);
@@ -422,6 +409,7 @@ export function useRemoteList({
     setFilterText,
     debounce ?? 300
   );
+  const initialSelectedKeyRef = useRef(defaultSelectedKey);
 
   const onSelectionChange = useEvent<
     NonNullable<ComboBoxProps['onSelectionChange']>
@@ -436,7 +424,7 @@ export function useRemoteList({
     setSelectedItem(item);
     if (item) {
       setInputValue(item.label);
-    } else if (!allowsCustomValue) {
+    } else {
       setInputValue('');
     }
     onChange?.(item);
@@ -449,8 +437,6 @@ export function useRemoteList({
       setInputValue(value);
       if (value == '') {
         onSelectionChange(null);
-      } else if (allowsCustomValue && selectedItem?.label != value) {
-        onChange?.(selectedItem);
       }
     }
   );
@@ -479,6 +465,24 @@ export function useRemoteList({
     list.items.length,
     isExplicitlySelected
   ]);
+
+  // reset default selected key when props change
+  useEffect(() => {
+    if (initialSelectedKeyRef.current != defaultSelectedKey) {
+      initialSelectedKeyRef.current = defaultSelectedKey;
+      const item = defaultSelectedKey
+        ? items.find((item) => item.value == defaultSelectedKey)
+        : null;
+      if (item) {
+        setSelectedItem(item);
+        setInputValue(item.label);
+      } else {
+        setSelectedItem(null);
+        setInputValue('');
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultSelectedKey]);
 
   return {
     selectedItem,

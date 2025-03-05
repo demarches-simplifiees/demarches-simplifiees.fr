@@ -38,6 +38,10 @@ class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
     end
   end
 
+  def champ_blank?(champ)
+    !champ.full_address?
+  end
+
   def columns(procedure:, displayable: true, prefix: nil)
     super
       .concat(addressable_columns(procedure:, displayable:, prefix:))
