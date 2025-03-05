@@ -142,3 +142,7 @@ fr:
           clone: Cloner la démarche
           cancel: Annuler
           disable_with: Clonage en cours
+      add_administrateur:
+        wrong_address:
+          one: "%{value} n’est pas une adresse email valide"
+          other: "%{value} ne sont pas des adresses emails valides"
