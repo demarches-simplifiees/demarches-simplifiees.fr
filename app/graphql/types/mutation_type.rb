@@ -37,5 +37,6 @@ module Types
     field :groupe_instructeur_supprimer_instructeurs, mutation: Mutations::GroupeInstructeurSupprimerInstructeurs
     field :demarche_cloner, mutation: Mutations::DemarcheCloner
     field :demarche_ajouter_administrateur, mutation: Mutations::DemarcheAjouterAdministrateur
+    field :demarche_supprimer_administrateur, mutation: Mutations::DemarcheSupprimerAdministrateur
   end
 end
