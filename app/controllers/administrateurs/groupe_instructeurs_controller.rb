@@ -121,7 +121,7 @@ module Administrateurs
     def destroy_all_groups_but_defaut
       reaffecter_all_dossiers_to_defaut_groupe
       procedure.groupe_instructeurs_but_defaut.each(&:destroy!)
-      procedure.update!(routing_enabled: false)
+      procedure.update!(routing_enabled: false, routing_alert: false)
       procedure.defaut_groupe_instructeur.update!(
         routing_rule: nil,
         label: GroupeInstructeur::DEFAUT_LABEL,
@@ -199,6 +199,7 @@ module Administrateurs
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
           procedure.toggle_routing
+          procedure.update!(routing_alert: false)
           procedure.defaut_groupe_instructeur.update!(
             routing_rule: nil,
             label: GroupeInstructeur::DEFAUT_LABEL,
