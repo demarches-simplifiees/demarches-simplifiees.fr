@@ -324,6 +324,24 @@ module Instructeurs
       DossierPreloader.load_one(@dossier)
     end
 
+    def history
+      @procedure = procedure
+      all_published_revisions = @procedure.revisions.where.not(published_at: nil).order(published_at: :asc)
+
+      @comparison_pairs = []
+
+      if all_published_revisions.size >= 2
+        1.upto(all_published_revisions.size - 1) do |i|
+          previous = all_published_revisions[i - 1]
+          current = all_published_revisions[i]
+
+          @comparison_pairs << [current, previous]
+        end
+
+        @comparison_pairs.reverse!
+      end
+    end
+
     private
 
     def groupe_instructeur_ids_params
