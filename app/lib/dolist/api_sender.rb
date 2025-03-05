@@ -42,7 +42,7 @@ module Dolist
     end
 
     def critical?(mail)
-      mail[PriorityDeliveryConcern::CRITICAL_HEADER]&.value == 'true'
+      mail[BalancerDeliveryMethod::CRITICAL_HEADER]&.value == 'true'
     end
   end
 end

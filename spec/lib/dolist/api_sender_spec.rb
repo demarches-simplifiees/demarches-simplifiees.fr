@@ -8,7 +8,7 @@ RSpec.describe Dolist::APISender do
 
   before do
     allow(Dolist::API).to receive(:new).and_return(api_client)
-    allow(mail).to receive(:[]).with(PriorityDeliveryConcern::CRITICAL_HEADER).and_return(double(value: critical.nil? ? nil : critical.to_s))
+    allow(mail).to receive(:[]).with(BalancerDeliveryMethod::CRITICAL_HEADER).and_return(double(value: critical.nil? ? nil : critical.to_s))
   end
 
   describe '#deliver!' do

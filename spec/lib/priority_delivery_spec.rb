@@ -195,7 +195,7 @@ RSpec.describe PriorityDeliveryConcern do
 
       context 'and the user had unsubcribed' do
         let(:email) { user.email }
-        let(:user) { create(:user, email: 'u@a.com', unsubscribed: true, email_verified_at: 2.days.ago) }
+        let(:user) { create(:user, email: 'u@a.com', email_unsubscribed: true, email_verified_at: 2.days.ago) }
         let(:bypass_unverified_mail_protection) { false }
 
         it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
@@ -247,7 +247,7 @@ RSpec.describe PriorityDeliveryConcern do
 
     it 'sets x-critical header' do
       mail = ImportantEmail.greet('test@example.com').deliver_now
-      expect(mail[PriorityDeliveryConcern::CRITICAL_HEADER].value).to eq("true")
+      expect(mail[BalancerDeliveryMethod::CRITICAL_HEADER].value).to eq("true")
     end
   end
 
