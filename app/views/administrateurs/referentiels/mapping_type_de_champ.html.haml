@@ -1,0 +1,17 @@
+.fr-container.fr-mt-6w.fr-mb-15w
+  = link_to " Champs du formulaire", champs_admin_procedure_path(@procedure), class: 'fr-link fr-icon-arrow-left-line fr-link--icon--left fr-icon--sm'
+  %h3.fr-my-3w
+    Configuration du champ « #{@type_de_champ.libelle} »
+
+  .fr-stepper
+    %h2.fr-stepper__title
+      Réponse et mapping
+      %span.fr-stepper__state Étape 2 sur 3
+
+    .fr-stepper__steps{ data: { "fr-current-step" => "2", "fr-steps" => "3" } }
+    %p.fr-stepper__details
+      %span.fr-text--bold Étape suivante :
+      Pré remplissage des champs et/ou affichage des données récupérées
+
+
+  = render Referentiels::MappingFormComponent.new(procedure: @procedure, type_de_champ: @type_de_champ, referentiel: @referentiel)
