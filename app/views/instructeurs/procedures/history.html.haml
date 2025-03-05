@@ -5,7 +5,7 @@
   .fr-container.flex.column
     = render partial: 'instructeurs/breadcrumbs',
       locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                        [t('instructeurs.dossiers.header.banner.exports_list')]] }
+                        [t('instructeurs.dossiers.header.banner.history.title')]] }
 
     = render partial: 'instructeurs/procedures/header',
       locals: { procedure: @procedure }
@@ -14,13 +14,13 @@
   %h1.fr-h4= t('instructeurs.dossiers.header.banner.history.title')
   - if @comparison_pairs.present?
     - @comparison_pairs.each do |current_revision, previous_revision|
-      .fr-card.fr-mb-3w.fr-p-2w
-        .fr-card__header
+      .fr-card.fr-mb-2w.fr-p-2w
+        %div
           %h2.fr-card__title
             = t('instructeurs.dossiers.header.banner.history.modification_published_at', date: l(current_revision.published_at, format: '%d %B %Y à %H:%M'))
             - if current_revision == @procedure.published_revision
               %span.fr-badge.fr-badge--sm.fr-badge--success= t('instructeurs.dossiers.header.banner.history.actual_version')
-        .fr-card__content
+        %div
           = render Procedure::RevisionChangesComponent.new new_revision: current_revision, previous_revision: previous_revision
   - else
     .fr-alert.fr-alert--info

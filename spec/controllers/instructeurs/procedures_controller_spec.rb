@@ -1140,4 +1140,94 @@ describe Instructeurs::ProceduresController, type: :controller do
       expect(response.body).to include("lundi 17 février à 10h00")
     end
   end
+
+  describe '#history' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+
+    before do
+      sign_in(instructeur.user)
+      procedure.revisions.update_all(published_at: nil)
+    end
+
+    context 'when there are no published revisions' do
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns an empty comparison_pairs array' do
+        expect(assigns(:comparison_pairs)).to eq([])
+      end
+    end
+
+    context 'when there is only one published revision' do
+      before do
+        create(:procedure_revision, procedure: procedure, published_at: 1.day.ago)
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns an empty comparison_pairs array' do
+        expect(assigns(:comparison_pairs)).to eq([])
+      end
+    end
+
+    context 'when there are two published revisions' do
+      let!(:old_revision) { create(:procedure_revision, procedure: procedure, published_at: 2.days.ago) }
+      let!(:new_revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns a comparison_pairs array with one pair' do
+        expect(assigns(:comparison_pairs).length).to eq(1)
+      end
+
+      it 'includes the correct revisions in the pair' do
+        pair = assigns(:comparison_pairs).first
+        expect(pair).to eq([new_revision, old_revision])
+      end
+    end
+
+    context 'when there are multiple published revisions' do
+      let!(:oldest_revision) { create(:procedure_revision, procedure: procedure, published_at: 4.days.ago) }
+      let!(:middle_revision) { create(:procedure_revision, procedure: procedure, published_at: 3.days.ago) }
+      let!(:recent_revision) { create(:procedure_revision, procedure: procedure, published_at: 2.days.ago) }
+      let!(:newest_revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns a comparison_pairs array with the correct number of pairs' do
+        expect(assigns(:comparison_pairs).length).to eq(3)
+      end
+
+      it 'orders the pairs with the most recent first' do
+        pairs = assigns(:comparison_pairs)
+        expect(pairs[0][0]).to eq(newest_revision)
+        expect(pairs[0][1]).to eq(recent_revision)
+        expect(pairs[1][0]).to eq(recent_revision)
+        expect(pairs[1][1]).to eq(middle_revision)
+        expect(pairs[2][0]).to eq(middle_revision)
+        expect(pairs[2][1]).to eq(oldest_revision)
+      end
+    end
+
+    context 'when there are published and unpublished revisions' do
+      let!(:published_old) { create(:procedure_revision, procedure: procedure, published_at: 3.days.ago) }
+      let!(:unpublished) { create(:procedure_revision, procedure: procedure, published_at: nil) }
+      let!(:published_new) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'only includes published revisions in the pairs' do
+        expect(assigns(:comparison_pairs).length).to eq(1)
+        pair = assigns(:comparison_pairs).first
+        expect(pair).to eq([published_new, published_old])
+      end
+    end
+  end
 end
