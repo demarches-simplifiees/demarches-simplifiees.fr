@@ -15,6 +15,11 @@ fr:
           follow_up: Suivi des dossiers
           procedure_management: Gestion de la démarche
           administrators_list: Administrateurs de la démarche
+          history:
+            title: Historique des modifications du formulaire
+            modification_published_at: "Modifications publiées le %{date}"
+            actual_version: "Version actuelle"
+            no_history: "Aucune modification n'a été publiée"
           exports_list: Liste des exports
           export_templates: Modèles d'export
           exports_notification_label: Un nouvel export est prêt à être téléchargé
