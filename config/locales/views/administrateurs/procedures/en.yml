@@ -144,6 +144,6 @@ en:
           disable_with: Cloning in progress
       add_administrateur:
         wrong_address:
-          one: "%{emails} is not a valid email address"
-          other: "%{emails} are not valid email addresses"
+          one: "%{value} is not a valid email address"
+          other: "%{value} are not valid email addresses"
 

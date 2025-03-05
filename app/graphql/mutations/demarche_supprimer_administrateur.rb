@@ -28,6 +28,5 @@ module Mutations
         { errors: ["Vous n'avez pas le droit de retirer un administrateur sur la démarche"] }
       end
     end
-
   end
 end
