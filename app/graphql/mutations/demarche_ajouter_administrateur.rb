@@ -37,7 +37,6 @@ module Mutations
       else
         { errors: ["Vous n'avez pas le droit d'ajouter un administrateur sur la démarche"] }
       end
-
     end
   end
 end
