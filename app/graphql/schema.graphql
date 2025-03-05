@@ -15,6 +15,16 @@ type Address {
   cityName: String!
 
   """
+  code ISO du pays
+  """
+  countryCode: String
+
+  """
+  nom du pays
+  """
+  countryName: String
+
+  """
   n° de département
   """
   departmentCode: String

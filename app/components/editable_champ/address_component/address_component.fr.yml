@@ -1,0 +1,7 @@
+fr:
+  street_label: Nom et numèro de voie ou, lieu-dit
+  city_label: Ville
+  commune_label: Ville ou commune
+  postal_code_label: Code postal
+  country_label: Pays
+  not_in_ban: Je ne trouve pas mon adresse dans les suggestions

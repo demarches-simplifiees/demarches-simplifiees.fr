@@ -8,7 +8,7 @@ module Maintenance
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :address, libelle: 'address' }]) }
       let(:dossier) { create(:dossier, procedure:) }
       let(:address_champ) { dossier.project_champs_public.first }
-      let(:address_data) { { 'address' => 'address' } }
+      let(:address_data) { { 'address' => 'address', 'country_code' => 'FR' } }
 
       before { address_champ.update(data: address_data) }
 

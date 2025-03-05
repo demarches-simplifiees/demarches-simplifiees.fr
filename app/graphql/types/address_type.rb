@@ -26,6 +26,9 @@ module Types
     field :region_name, String, "nom de région", null: true
     field :region_code, String, "n° de région", null: true
 
+    field :country_name, String, "nom du pays", null: true
+    field :country_code, String, "code ISO du pays", null: true
+
     field :geometry, Types::GeoJSON, "coordonnées géographique", null: true
 
     def city_name

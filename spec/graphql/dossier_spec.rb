@@ -71,7 +71,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     before do
-      dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:address) }.update(data: address)
+      dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:address) }.update(value_json: address)
       dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:rna) }.update(data: rna)
     end
 

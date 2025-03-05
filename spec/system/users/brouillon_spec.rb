@@ -222,15 +222,20 @@ describe 'The user', js: true do
   scenario 'fill address not in BAN' do
     stub_request(:get, "https://api-adresse.data.gouv.fr/search?limit=10&q=2%20rue%20de%20la%20paix,%2092094%20Belgique")
       .to_return(body: '{"type":"FeatureCollection","version":"draft","features":[]}')
+    stub_request(:get, "https://geo.api.gouv.fr/communes?boost=population&codePostal=60400&limit=50&type=commune-actuelle,arrondissement-municipal")
+      .to_return(body: '[{"nom":"Brétigny","code":"60105","codeDepartement":"60","codeRegion":"32","codesPostaux":["60400"]}]')
 
     log_in(user, simple_procedure)
     fill_individual
 
-    fill_in('address', with: '2 rue de la paix, 92094 Belgique')
-    wait_until {
-      champ_value_for('address') == '2 rue de la paix, 92094 Belgique'
-    }
-    expect(champ_for('address').full_address?).to be_falsey
+    find('label', text: 'Je ne trouve pas mon adresse dans les suggestions').click
+    fill_in('Nom et numèro de voie ou, lieu-dit', with: '2 rue de la paix')
+    scroll_to(find_field('Ville ou commune'), align: :center)
+    fill_in('Ville ou commune', with: '60400')
+    find('.fr-menu__item', text: 'Brétigny (60400)').click
+    wait_until { champ_for('address').city_name == 'Brétigny' }
+    expect(champ_for('address').street_address).to eq('2 rue de la paix')
+    expect(champ_for('address').full_address?).to be_truthy
   end
 
   scenario 'numbers champs formatting' do

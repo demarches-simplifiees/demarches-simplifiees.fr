@@ -250,10 +250,10 @@ describe Champ do
     subject { champ.search_terms }
 
     context 'for adresse champ' do
-      let(:champ) { Champs::AddressChamp.new(value:) }
+      let(:champ) { Champs::AddressChamp.new(value:, not_in_ban: 'true', street_address: '10 rue du Pinson qui Piaille', city_name: 'Piaille', postal_code: '1234', country_code: 'IT') }
       let(:value) { "10 rue du Pinson qui Piaille" }
 
-      it { is_expected.to eq([value]) }
+      it { is_expected.to eq([value, 'Piaille']) }
     end
 
     context 'for checkbox champ' do

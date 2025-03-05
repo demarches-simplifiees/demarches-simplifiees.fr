@@ -51,7 +51,24 @@ FactoryBot.define do
 
     factory :champ_do_not_use_address, class: 'Champs::AddressChamp' do
       value { '2 rue des Démarches' }
-      value_json { { postal_code: '38000', city_name: 'grenoble', department_code: '38', region_name: 'Auvergne-Rhones-Alpes' } }
+      value_json do
+        {
+          type: "housenumber",
+          label: "2 rue des Démarches grenoble (38100)",
+          city_code: "38100",
+          city_name: "grenoble",
+          postal_code: "38000",
+          region_code: "84",
+          region_name: "Auvergne-Rhones-Alpes",
+          street_name: "rue des Démarches",
+          street_number: "2",
+          street_address: "2 rue des Démarches",
+          department_code: "38",
+          department_name: "Isère",
+          country_code: "FR",
+          country_name: "France"
+        }
+      end
     end
 
     factory :champ_do_not_use_yes_no, class: 'Champs::YesNoChamp' do
