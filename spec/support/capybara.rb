@@ -27,7 +27,8 @@ Capybara.register_driver :playwright do |app|
     browser_type: (ENV['PLAYWRIGHT_BROWSER'] || 'chromium').to_sym, # :chromium (default) or :firefox, :webkit
     headless: ENV['NO_HEADLESS'].blank?,
     locale: Rails.application.config.i18n.default_locale,
-    downloadsPath: Capybara.save_path)
+    downloadsPath: Capybara.save_path,
+    playwright_cli_executable_path: 'bunx playwright')
 end
 
 Capybara.register_driver :chrome do |app|
