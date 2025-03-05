@@ -142,3 +142,8 @@ en:
           clone: Clone the procedure
           cancel: Cancel
           disable_with: Cloning in progress
+      add_administrateur:
+        wrong_address:
+          one: "%{emails} is not a valid email address"
+          other: "%{emails} are not valid email addresses"
+

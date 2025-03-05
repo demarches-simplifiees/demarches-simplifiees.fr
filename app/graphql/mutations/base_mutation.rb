@@ -29,6 +29,17 @@ module Mutations
         end
     end
 
+    def partition_administrators_by(administrators)
+      administrators
+        .partition { _1.id.present? }
+        .then do |by_id, by_email|
+        [
+          by_id.map { Administrateur.id_from_typed_id(_1.id) },
+          by_email.map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1.email) }
+        ]
+      end
+    end
+
     def validate_blob(blob_id)
       begin
         blob = ActiveStorage::Blob.find_signed(blob_id)
