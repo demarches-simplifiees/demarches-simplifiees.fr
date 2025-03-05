@@ -905,6 +905,11 @@ Une démarche
 """
 type Demarche {
   activeRevision: Revision!
+
+  """
+  Liste les administrateurs de la démarche
+  """
+  administrateurs: [Profile!]!
   annotationDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `activeRevision.annotationDescriptors` à la place.")
   champDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `activeRevision.champDescriptors` à la place.")
 
