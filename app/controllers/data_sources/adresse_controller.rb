@@ -40,7 +40,7 @@ class DataSources::AdresseController < ApplicationController
       {
         label: _1[:properties][:label],
         value: _1[:properties][:label],
-        data: _1
+        data: APIGeoService.parse_ban_address(_1.deep_stringify_keys)
       }
     end
   end
