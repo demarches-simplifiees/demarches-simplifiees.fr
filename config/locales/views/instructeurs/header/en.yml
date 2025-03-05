@@ -12,6 +12,11 @@ en:
           button_delay_expiration: "Keep for one more month"
           follow_up: File tracking
           procedure_management: File management
+          history:
+            title: Form modification history
+            modification_published_at: "Modifications published on %{date}"
+            actual_version: "Current version"
+            no_history: "No modification has been published"
           notification_management: notification management
           administrators_list: administrators list
           exports_list: Exports and export templates
