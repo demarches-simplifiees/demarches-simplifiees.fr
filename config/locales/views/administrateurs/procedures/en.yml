@@ -81,3 +81,8 @@ en:
         intro_html: Changes made will only be visible <strong>after the next publication</strong>
         see_changes: View changes
         publish_changes: Publish changes
+      add_administrateur:
+        wrong_address:
+          one: "%{emails} is not a valid email address"
+          other: "%{emails} are not valid email addresses"
+
