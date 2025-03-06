@@ -53,7 +53,7 @@ describe VirusScannerJob, type: :job do
 
   context "when the blob has been deleted" do
     before do
-      ActiveStorage::Blob.find(blob.id).purge
+      ActiveStorage::Blob.find(blob.id).purge # allowed in spec
     end
 
     it "ignores the error" do
