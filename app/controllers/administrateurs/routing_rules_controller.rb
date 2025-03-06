@@ -35,8 +35,16 @@ module Administrateurs
     end
 
     def update_defaut_groupe_instructeur
-      new_defaut = @procedure.groupe_instructeurs.find(defaut_groupe_instructeur_id)
-      @procedure.update!(defaut_groupe_instructeur: new_defaut)
+      new_defaut_groupe = @procedure.groupe_instructeurs.find(defaut_groupe_instructeur_id)
+
+      if new_defaut_groupe.closed
+        flash.alert = "Il n'est pas possible de définir un groupe inactif par défaut."
+        redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
+      else
+        @procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
+        flash.notice = "Le groupe par défaut est : « #{new_defaut_groupe.label} »."
+        redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
+      end
     end
 
     private
