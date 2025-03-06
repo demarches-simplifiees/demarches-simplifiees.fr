@@ -19,7 +19,12 @@ module Instructeurs
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
-      @maybe_typos = JSON.parse(params[:maybe_typos]) if params[:maybe_typos]
+      @maybe_typos_signed = JSON.parse(params[:maybe_typos_signed]) if params[:maybe_typos_signed]
+      @maybe_typos = @maybe_typos_signed&.map do |tuple|
+        tuple.map do |email|
+          message_verifier.verified(email).first
+        end
+      end
     end
 
     def add_instructeur
@@ -28,6 +33,7 @@ module Instructeurs
       emails.push(emails_with_typos).flatten! if emails_with_typos
       emails = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
+      @maybe_typos_signed = @maybe_typos.map { |tuple| tuple.map { |email| message_verifier.generate([email, expires_in: 2.minutes]) } }
 
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
@@ -67,7 +73,7 @@ module Instructeurs
 
       flash[:alert] = errors.join(". ") if !errors.empty?
 
-      query_param = { maybe_typos: @maybe_typos.to_json } if @maybe_typos.present?
+      query_param = { maybe_typos_signed: @maybe_typos_signed.to_json } if @maybe_typos.present?
       redirect_to instructeur_groupe_path(@procedure, @groupe_instructeur, query_param)
     end
 
