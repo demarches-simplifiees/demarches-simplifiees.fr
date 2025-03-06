@@ -11,6 +11,12 @@ ActiveSupport.on_load(:active_storage_blob) do
   include BlobVirusScannerConcern
   include BlobSignedIdConcern
 
+  ActiveStorage::Blob.class_eval do
+    def purge_later
+      DelayedPurgeJob.perform_later(self)
+    end
+  end
+
   def self.generate_unique_secure_token(length: MINIMUM_TOKEN_LENGTH)
     token = super
     "#{Time.current.strftime('%Y/%m/%d')}/#{token[0..1]}/#{token}"
