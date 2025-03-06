@@ -342,6 +342,12 @@ RSpec.describe DossierMailer, type: :mailer do
       end
     end
 
+    context 'when user was not validated' do
+      let(:user) { create(:user, email_verified_at: nil) }
+
+      it { expect(subject['BYPASS_UNVERIFIED_MAIL_PROTECTION']).to be_present }
+    end
+
     context 'when the user has already an account' do
       before do
         dossier_transfer.update!(email: user_2.email)
