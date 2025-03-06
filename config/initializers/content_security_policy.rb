@@ -32,8 +32,8 @@ Rails.application.configure do
     connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
     connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
     connect_whitelist << URI(API_GEO_URL).host if API_GEO_URL.present?
-    connect_whitelist << Rails.application.secrets.matomo[:host] if Rails.application.secrets.matomo[:enabled]
-    policy.connect_src(:self, *connect_whitelist)
+    connect_whitelist << Rails.application.secrets.matomo[:host]
+    policy.connect_src(:self, *connect_whitelist.compact)
 
     # Frames: allow some iframes
     frame_whitelist = []
