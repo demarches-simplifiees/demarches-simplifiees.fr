@@ -36,6 +36,7 @@ Capybara.register_driver :chrome do |app|
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
   options.add_argument('--mute-audio')
   options.add_argument('--window-size=1440,900')
+  options.add_argument("--user-data-dir=/tmp/chrome-#{ENV['TEST_ENV_NUMBER'] || '1'}")
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
@@ -54,6 +55,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('--disable-software-rasterizer')
   options.add_argument('--mute-audio')
+  options.add_argument("--user-data-dir=/tmp/chrome-#{ENV['TEST_ENV_NUMBER'] || '1'}")
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
