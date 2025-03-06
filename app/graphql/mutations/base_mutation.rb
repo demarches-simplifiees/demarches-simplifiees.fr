@@ -29,7 +29,7 @@ module Mutations
         end
     end
 
-    def partition_administrators_by(administrators)
+    def partition_administrators_by_profile_input(administrators)
       administrators
         .partition { _1.id.present? }
         .then do |by_id, by_email|
