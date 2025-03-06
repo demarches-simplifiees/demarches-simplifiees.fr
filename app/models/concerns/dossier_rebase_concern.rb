@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module DossierRebaseConcern
+  RACE_CONDITION_DELAY = 30.seconds
+
   extend ActiveSupport::Concern
 
   def rebase!
@@ -12,7 +14,7 @@ module DossierRebaseConcern
   end
 
   def rebase_later
-    DossierRebaseJob.perform_later(self)
+    DossierRebaseJob.set(wait: RACE_CONDITION_DELAY).perform_later(self)
   end
 
   def can_rebase?
