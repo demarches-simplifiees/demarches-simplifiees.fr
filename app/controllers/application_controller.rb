@@ -203,7 +203,11 @@ class ApplicationController < ActionController::Base
 
   def setup_javascript_settings
     gon.autosave = Rails.application.config.ds_autosave
-    gon.autocomplete = Rails.application.secrets.autocomplete
+    gon.autocomplete = {
+      api_geo_url: API_GEO_URL,
+      api_adresse_url: API_ADRESSE_URL,
+      api_education_url: API_EDUCATION_URL
+    }
   end
 
   def setup_tracking
