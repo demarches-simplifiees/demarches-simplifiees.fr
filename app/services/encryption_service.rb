@@ -4,7 +4,7 @@ class EncryptionService
   def initialize
     len        = ActiveSupport::MessageEncryptor.key_len
     salt       = Rails.application.secrets.encryption_service_salt
-    password   = Rails.application.secret_key_base
+    password   = ENV["SECRET_KEY_BASE"]
     key        = ActiveSupport::KeyGenerator.new(password).generate_key(salt, len)
     @encryptor = ActiveSupport::MessageEncryptor.new(key)
   end
