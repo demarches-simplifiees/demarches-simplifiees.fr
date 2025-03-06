@@ -424,6 +424,10 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
+  def formatted_advanced?
+    formatted? && options['formatted_mode'] == 'advanced'
+  end
+
   def header_section_level_value
     if header_section_level.presence
       header_section_level.to_i

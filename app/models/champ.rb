@@ -47,6 +47,7 @@ class Champ < ApplicationRecord
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
+    :formatted_advanced?,
     :character_limit?,
     :character_limit,
     :letters_accepted,
