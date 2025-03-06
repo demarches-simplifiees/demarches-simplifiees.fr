@@ -14,7 +14,7 @@ module Mutations
     def resolve(demarche:, administrateurs:)
       demarche_number = demarche.number.presence || ApplicationRecord.id_from_typed_id(demarche.id)
       demarche = Procedure.find_by(id: demarche_number)
-      ids, emails = partition_administrators_by(administrateurs)
+      ids, emails = partition_administrators_by_profile_input(administrateurs)
 
       if context.authorized_demarche?(demarche)
         administrateurs = demarche.administrateurs.find_all_by_identifier(ids:, emails:)
