@@ -7,7 +7,7 @@ module Mutations
     argument :value, GraphQL::Types::ISO8601DateTime, required: true
 
     def resolve(dossier:, annotation_id:, instructeur:, value:)
-      resolve_with_type(dossier:, annotation_id:, instructeur:, value:)
+      resolve_with_type(dossier:, annotation_id:, instructeur:, value: value.iso8601(0))
     end
 
     private
