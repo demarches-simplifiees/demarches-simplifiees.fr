@@ -11,12 +11,12 @@
 
     &:focus {
       box-shadow: none !important;
-      background-color: $white !important;
+      background-color: var(--grey-1000-100) !important;
     }
   }
 
   .placeholder {
-    color: $dark-grey;
+    color: var(--grey-425-625);
     font-style: italic;
   }
 
@@ -25,22 +25,29 @@
     margin-bottom: 1rem;
   }
 
-  .section-2 {
+  .section-2,
+  .section-3,
+  .section-4,
+  .section-5,
+  .section-6,
+  .section-7 {
     margin-top: 1.5rem;
+  }
+
+  .section-2 {
+    margin-bottom: 1.5rem;
     padding-top: 2rem;
     border-top: 2px solid var(--border-default-grey);
   }
 
-  .section-2,
   .section-3 {
-    margin-top: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
   .section-4,
   .section-5,
-  .section-6 {
-    margin-top: 1.5rem;
+  .section-6,
+  .section-7 {
     margin-bottom: 1rem;
   }
 
