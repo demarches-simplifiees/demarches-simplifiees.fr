@@ -15,7 +15,7 @@ en:
           history:
             title: Form modification history
             modification_published_at: "Modifications published on %{date}"
-            actual_version: "Current version"
+            new: New
             no_history: "No modification has been published"
           notification_management: notification management
           administrators_list: administrators list

@@ -829,6 +829,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_17_104348) do
   create_table "instructeurs_procedures", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "instructeur_id", null: false
+    t.bigint "last_revision_seen_id"
     t.integer "position"
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
