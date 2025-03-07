@@ -26,7 +26,7 @@ describe Columns::DossierColumn do
 
         it 'retrieve entreprise information' do
           expect(procedure.find_column(label: "Nº dossier").value(dossier)).to eq(dossier.id)
-          expect(procedure.find_column(label: "Email").value(dossier)).to eq(dossier.user_email_for(:display))
+          expect(procedure.find_column(label: "Adresse électronique").value(dossier)).to eq(dossier.user_email_for(:display))
           expect(procedure.find_column(label: "France connecté ?").value(dossier)).to eq(false)
           expect(procedure.find_column(label: "Entreprise forme juridique").value(dossier)).to eq("SA à conseil d'administration (s.a.i.)")
           expect(procedure.find_column(label: "Entreprise SIREN").value(dossier)).to eq('440117620')

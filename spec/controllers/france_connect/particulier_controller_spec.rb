@@ -203,7 +203,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         expect(user.confirmation_token).to be_nil
 
         expect(response).to redirect_to(root_path(user))
-        expect(flash[:notice]).to eq('Votre email est bien vérifié')
+        expect(flash[:notice]).to eq('Votre adresse électronique est bien vérifiée')
       end
     end
 

@@ -5,8 +5,8 @@ fr:
     groupe_gestionnaires:
       add_gestionnaire:
         wrong_address:
-          one: "%{emails} n’est pas une adresse email valide"
-          other: "%{emails} ne sont pas des adresses emails valides"
+          one: "%{emails} n’est pas une adresse électronique valide"
+          other: "%{emails} ne sont pas des adresses électroniques valides"
     administrateurs:
       delete:
         cannot_be_deleted: "L'administrateur ne peut pas être supprimé"

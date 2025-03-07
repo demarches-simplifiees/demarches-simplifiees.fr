@@ -14,7 +14,7 @@ describe ContactController, question_type: :controller do
       get :index
 
       expect(response.status).to eq(200)
-      expect(response.body).not_to have_content("Votre adresse email")
+      expect(response.body).not_to have_content("Votre adresse électronique")
     end
 
     describe "with dossier" do
@@ -153,7 +153,7 @@ describe ContactController, question_type: :controller do
         get :index
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_text("Votre adresse email")
+        expect(response.body).to have_text("Votre adresse électronique")
       end
     end
 
@@ -193,7 +193,7 @@ describe ContactController, question_type: :controller do
 
         it 'creates a conversation on HelpScout' do
           expect { subject }.not_to have_enqueued_job(HelpscoutCreateConversationJob)
-          expect(response.body).to include("Le champ « Votre adresse email » est invalide")
+          expect(response.body).to include("Le champ « Votre adresse électronique » est invalide")
           expect(response.body).to include("bonjour")
           expect(response.body).to include("un message")
         end
@@ -215,7 +215,7 @@ describe ContactController, question_type: :controller do
     context 'index' do
       it 'should have professionnal email field' do
         get :admin
-        expect(response.body).to have_text('Votre adresse email professionnelle')
+        expect(response.body).to have_text('Votre adresse électronique professionnelle')
         expect(response.body).to have_text('téléphone')
         expect(response.body).to include('for_admin')
       end
