@@ -70,4 +70,18 @@ module ProcedureHelper
     end
     admin_procedures_path(statut:)
   end
+
+  def procedure_has_unseen_revisions?(procedure, instructeur)
+    return false if procedure.revisions.where.not(published_at: nil).none?
+
+    latest_revision = procedure.revisions.where.not(published_at: nil).last
+
+    instructeur_procedure = InstructeursProcedure.find_by(
+      instructeur: instructeur,
+      procedure: procedure
+    )
+
+    instructeur_procedure.last_revision_seen_id.nil? ||
+      instructeur_procedure.last_revision_seen_id < latest_revision.id
+  end
 end
