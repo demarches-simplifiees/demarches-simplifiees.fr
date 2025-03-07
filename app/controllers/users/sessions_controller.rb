@@ -108,7 +108,7 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  # agent connect callback
+  # Pro connect callback
   def logout
     redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
   end
@@ -118,7 +118,7 @@ class Users::SessionsController < Devise::SessionsController
 
     return if !AgentConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
 
-    flash[:alert] = "La connexion des agents passe à présent systématiquement par AgentConnect"
+    flash[:alert] = "La connexion des agents passe à présent systématiquement par ProConnect"
     redirect_to agent_connect_path(force_agent_connect: true)
   end
 end

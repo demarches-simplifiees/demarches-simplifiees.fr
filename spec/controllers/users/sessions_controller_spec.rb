@@ -103,7 +103,7 @@ describe Users::SessionsController, type: :controller do
         expect(AgentConnectService).to receive(:enabled?).and_return(true)
         subject
         expect(response).to redirect_to(agent_connect_path(force_agent_connect: true))
-        expect(flash[:alert]).to eq("La connexion des agents passe à présent systématiquement par AgentConnect")
+        expect(flash[:alert]).to eq("La connexion des agents passe à présent systématiquement par ProConnect")
         expect(controller.current_user).to be_nil
       end
     end

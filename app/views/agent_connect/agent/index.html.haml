@@ -1,6 +1,6 @@
 - content_for(:title, t('.cta'))
 
-#agentconnect
+#proconnect
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-mt-0
 
@@ -22,11 +22,11 @@
                   = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
                     %span.fr-connect__login
                       = t('.signin_with')
-                    %span.fr-connect__brand AgentConnect
+                    %span.fr-connect__brand ProConnect
                   %p
-                    = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
+                    = link_to t('.whats_proconnect'), 'https://proconnect.gouv.fr/', target: '_blank', rel: "noopener"
 
-            - if !params[:force_agent_connect]
+            - if !params[:force_proconnect]
               %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
               %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
