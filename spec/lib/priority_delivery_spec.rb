@@ -88,6 +88,21 @@ RSpec.describe PriorityDeliveryConcern do
     end
   end
 
+  context 'when the delivery method raise a Dolist::ContactReadOnlyError' do
+    let(:mail) { ExampleMailer.greet(email, bypass_unverified_mail_protection: true) }
+    let(:email) { user.email }
+    let(:user) { create(:user, email: 'u@a.com') }
+
+    before do
+      ActionMailer::Base.balancer_settings = { mock_smtp: 10 }
+    end
+
+    it 'sends emails to the selected delivery method' do
+      allow_any_instance_of(Mail::Message).to receive(:send).with(:do_delivery).and_raise(Dolist::ContactReadOnlyError)
+      expect { mail.deliver_now }.to change { user.reload.email_unsubscribed }.from(false).to(true)
+    end
+  end
+
   context 'when multiple delivery methods are provided' do
     before do
       ActionMailer::Base.balancer_settings = { mock_smtp: 10, mock_sendmail: 5 }
@@ -178,6 +193,14 @@ RSpec.describe PriorityDeliveryConcern do
         it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
       end
 
+      context 'and the user had unsubcribed' do
+        let(:email) { user.email }
+        let(:user) { create(:user, email: 'u@a.com', email_unsubscribed: true, email_verified_at: 2.days.ago) }
+        let(:bypass_unverified_mail_protection) { false }
+
+        it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
+      end
+
       context 'and the email is not verified but a bypass flag is added' do
         let(:email_verified_at) { nil }
         let(:bypass_unverified_mail_protection) { true }
@@ -224,7 +247,7 @@ RSpec.describe PriorityDeliveryConcern do
 
     it 'sets x-critical header' do
       mail = ImportantEmail.greet('test@example.com').deliver_now
-      expect(mail[PriorityDeliveryConcern::CRITICAL_HEADER].value).to eq("true")
+      expect(mail[BalancerDeliveryMethod::CRITICAL_HEADER].value).to eq("true")
     end
   end
 

@@ -16,8 +16,9 @@
 #
 # Be sure to restart your server when you modify this file.
 class BalancerDeliveryMethod
-  BYPASS_UNVERIFIED_MAIL_PROTECTION = 'BYPASS_UNVERIFIED_MAIL_PROTECTION'.freeze
+  BYPASS_UNVERIFIED_MAIL_PROTECTION = 'BYPASS_UNVERIFIED_MAIL_PROTECTION'
   FORCE_DELIVERY_METHOD_HEADER = 'X-deliver-with'
+  CRITICAL_HEADER = 'x-critical'
   # Allows configuring the random number generator used for selecting a delivery method,
   # mostly for testing purposes.
   mattr_accessor :random, default: Random.new
@@ -41,15 +42,19 @@ class BalancerDeliveryMethod
     #
     # See https://github.com/mikel/mail/blob/199a76bed3fc518508b46135691914a1cfd8bff8/lib/mail/message.rb#L250
     mail.delivery_handler.deliver_mail(mail) { mail.send :do_delivery }
+  rescue Dolist::ContactReadOnlyError
+    User.where(email: mail.to.first).update_all(email_unsubscribed: true) if mail&.to&.first
   end
 
   private
 
   def prevent_delivery?(mail)
     return false if mail[BYPASS_UNVERIFIED_MAIL_PROTECTION].present?
+    return false if mail[CRITICAL_HEADER].present?
     return false if mail.to.blank? # bcc list
 
     user = User.find_by(email: mail.to.first)
+    return true if user.email_unsubscribed? if user.present?
     return user.unverified_email? if user.present?
 
     individual = Individual.find_by(email: mail.to.first)

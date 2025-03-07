@@ -8,7 +8,7 @@ RSpec.describe Dolist::APISender do
 
   before do
     allow(Dolist::API).to receive(:new).and_return(api_client)
-    allow(mail).to receive(:[]).with(PriorityDeliveryConcern::CRITICAL_HEADER).and_return(double(value: critical.nil? ? nil : critical.to_s))
+    allow(mail).to receive(:[]).with(BalancerDeliveryMethod::CRITICAL_HEADER).and_return(double(value: critical.nil? ? nil : critical.to_s))
   end
 
   describe '#deliver!' do
@@ -25,6 +25,18 @@ RSpec.describe Dolist::APISender do
       it 'notifies Sentry 10% of the time' do
         expect(Sentry).to receive(:capture_message).with("Dolist: rate limit reached")
         expect { subject.deliver!(mail) }.to raise_error(Dolist::RateLimitError)
+      end
+    end
+
+    context 'when API call reach a read only Contact' do
+      let(:response) { { "ResponseStatus" => { "ErrorCode" => "439", "Message" => "The contact is read only.", "Errors" => [] } } }
+
+      before do
+        allow(api_client).to receive(:send_email).and_return(response)
+      end
+
+      it 'raises ContactReadOnlyError' do
+        expect { subject.deliver!(mail) }.to raise_error(Dolist::ContactReadOnlyError)
       end
     end
 

@@ -9,16 +9,21 @@ module Dolist
 
       client = API.new
       response = client.send_email(mail)
-      if response&.dig("Result")
-        mail.message_id = response.dig("Result")
-      else
-        _, invalid_contact_status = client.ignorable_error?(response, mail)
+      case response.with_indifferent_access
+      in { Result: String } => response
+        mail.message_id = response.dig(:Result)
+      in { ResponseStatus: { ErrorCode: "439", Message: "The contact is read only." } }
+        fail ContactReadOnlyError, "The contact is read only."
+      in { ResponseStatus: { ErrorCode: ignorable_code } } if ignorable_code.in?(Dolist::API::IGNORABLE_API_ERROR_CODE)
+        invalid_contact_status = client.fetch_contact_status(mail.to.first)
 
         if invalid_contact_status
           fail IgnorableError, "DoList delivery error. contact unreachable: #{invalid_contact_status}"
         else
           fail "DoList delivery error. Body: #{response}"
         end
+      else
+        fail "DoList delivery error. Body: #{response}"
       end
     end
 
@@ -37,7 +42,7 @@ module Dolist
     end
 
     def critical?(mail)
-      mail[PriorityDeliveryConcern::CRITICAL_HEADER]&.value == 'true'
+      mail[BalancerDeliveryMethod::CRITICAL_HEADER]&.value == 'true'
     end
   end
 end
