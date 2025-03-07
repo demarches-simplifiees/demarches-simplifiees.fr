@@ -14,6 +14,9 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
   before do
     gi_1_2.instructeurs << instructeur
     sign_in(instructeur.user)
+    unless InstructeursProcedure.exists?(instructeur: instructeur, procedure: procedure)
+      create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure)
+    end
   end
 
   describe "before_action: ensure_allowed!" do
