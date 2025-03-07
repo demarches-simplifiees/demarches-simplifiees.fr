@@ -289,7 +289,7 @@ module Instructeurs
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
-        @commentaire.piece_jointe.purge.reload
+        @commentaire.piece_jointe.purge.reload # only allowed here, sync action
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
       end
