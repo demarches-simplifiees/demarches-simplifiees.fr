@@ -781,7 +781,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     context 'when authenticated' do
       before { sign_in(instructeur.user) }
 
-      context 'the procedure is not routed' do
+      context 'the procedure is not routed (or not)' do
         let(:instructeur) { create(:instructeur) }
         let(:defaut_groupe_instructeur) { procedure.defaut_groupe_instructeur }
         let!(:dossier_in_group) { create(:dossier, :brouillon, procedure:, groupe_instructeur: defaut_groupe_instructeur) }
@@ -789,24 +789,9 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before { defaut_groupe_instructeur.instructeurs << instructeur }
 
-        it 'lists all the brouillon' do
+        it 'count brouillon per group and not in group' do
           is_expected.to have_http_status(200)
-          expect(assigns(:dossiers_count)).to eq(2) # only dossier_in_group
-        end
-      end
-
-      context 'the procedure is routed' do
-        let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure:, instructeurs: [instructeur]) }
-        let(:instructeur) { create(:instructeur) }
-
-        context 'when instructor has groups' do
-          let!(:dossier_in_group) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: gi_1) }
-          let!(:dossier_without_groupe) { create(:dossier, :brouillon, procedure: procedure, groupe_instructeur: nil) }
-
-          it 'lists only dossiers in instructor groups' do
-            is_expected.to have_http_status(200)
-            expect(assigns(:dossiers_count)).to eq(1) # only dossier_in_group
-          end
+          expect(assigns(:dossiers_count_per_groupe_instructeur)).to match({ nil => 1, defaut_groupe_instructeur.id => 1 }) # only dossier_in_group
         end
       end
     end
@@ -814,50 +799,89 @@ describe Instructeurs::ProceduresController, type: :controller do
 
   describe '#create_multiple_commentaire' do
     let(:instructeur) { create(:instructeur) }
-    let!(:gi_p1_1) { create(:groupe_instructeur, label: '1', procedure: procedure, instructeurs: [instructeur]) }
-    let!(:gi_p1_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
     let(:body) { "avant\napres" }
     let(:bulk_message) { BulkMessage.first }
-    let!(:dossier) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
-    let!(:dossier_2) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
-    let!(:dossier_3) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_2) }
-    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
 
     before do
       sign_in(instructeur.user)
       procedure
     end
 
-    let!(:dossier_4) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: nil) }
-    before do
-      post :create_multiple_commentaire,
+    context 'when routing not enabled' do
+      let(:procedure) { create(:procedure, :published, instructeurs: [instructeur], routing_enabled: false) }
+      let!(:dossier) { create(:dossier, :brouillon, procedure:) }
+      let!(:dossier_2) { create(:dossier, :brouillon, procedure:) }
+      let!(:dossier_3) { create(:dossier, :brouillon, procedure:) }
+      let!(:dossier_4) { create(:dossier, :brouillon, procedure:) }
+
+      it "creates commentaires for all dossiers, dossier.groupe_instructeur does not matter" do
+        expect do
+            post :create_multiple_commentaire,
+              params: {
+                procedure_id: procedure.id,
+                bulk_message: { body: body }
+              }
+          end.to change { Commentaire.count }.from(0).to(4)
+        [dossier, dossier_2, dossier_3, dossier_4].each do |any_dossier|
+          expect(any_dossier.commentaires.first.body).to eq("avant\napres")
+        end
+      end
+    end
+
+    context 'when routing_enabled' do
+      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+
+      let!(:gi_p1_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
+      let!(:gi_p1_1) { create(:groupe_instructeur, label: '1', procedure: procedure, instructeurs: [instructeur]) }
+      let!(:dossier) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
+      let!(:dossier_2) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_1) }
+      let!(:dossier_3) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: gi_p1_2) }
+      let!(:dossier_4) { create(:dossier, state: "brouillon", procedure: procedure, groupe_instructeur: nil) }
+
+      context 'when groupe instructeur id is specified' do
+        it "creates a Bulk Message for given group_instructeur_ids" do
+          expect do
+            post :create_multiple_commentaire,
             params: {
               procedure_id: procedure.id,
-              bulk_message: { body: body }
+              bulk_message: {
+                body: body,
+                groupe_instructeur_ids: { gi_p1_1.id => true, gi_p1_2.id => false }
+              }
             }
-    end
+          end.to change { Commentaire.count }.from(0).to(2)
+          expect(dossier.commentaires.first.body).to eq(body)
+          expect(dossier_2.commentaires.first.body).to eq(body)
+          expect(dossier_3.commentaires.count).to eq(0)
+          expect(dossier_4.commentaires.count).to eq(0)
+          expect(flash.notice).to be_present
+          expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
+          expect(response).to redirect_to instructeur_procedure_path(procedure)
+        end
+      end
 
-    it "creates commentaires for dossiers in instructor's groups" do
-      expect(Commentaire.count).to eq(2)
-      expect(dossier.commentaires.first.body).to eq("avant\napres")
-      expect(dossier_2.commentaires.first.body).to eq("avant\napres")
-      expect(dossier_3.commentaires).to eq([])
-      expect(dossier_4.commentaires).to eq([])
-    end
-
-    it "creates a Bulk Message for 2 groupes instructeurs" do
-      expect(BulkMessage.count).to eq(1)
-      expect(bulk_message.body).to eq("avant\napres")
-      expect(bulk_message.procedure_id).to eq(procedure.id)
-    end
-
-    it "creates a flash notice" do
-      expect(flash.notice).to be_present
-      expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
-    end
-
-    it "redirect to instructeur_procedure_path" do
-      expect(response).to redirect_to instructeur_procedure_path(procedure)
+      context 'when routing_enabled and without_group is specified' do
+        it "creates a Bulk Message for dossier without group_instructeur_ids" do
+          expect do
+            post :create_multiple_commentaire,
+            params: {
+              procedure_id: procedure.id,
+              bulk_message: {
+                body: body,
+                groupe_instructeur_ids: {},
+                without_group: "1"
+              }
+            }
+          end.to change { Commentaire.count }.from(0).to(1)
+          expect(dossier.commentaires.count).to eq(0)
+          expect(dossier_2.commentaires.count).to eq(0)
+          expect(dossier_3.commentaires.count).to eq(0)
+          expect(dossier_4.commentaires.first.body).to eq(body)
+          expect(flash.notice).to be_present
+          expect(flash.notice).to eq("Tous les messages ont été envoyés avec succès")
+          expect(response).to redirect_to instructeur_procedure_path(procedure)
+        end
+      end
     end
   end
 

@@ -1,0 +1,16 @@
+---
+en:
+  dossier_count_without_group_html:
+    one: "<span>Also contact the user who haven't filled routing fields</span>"
+    other: "<span>Also contact <strong>%{count}</strong> users who haven't filled routing fields</span>"
+  dossier_count_per_group:
+    one: "1 user"
+    other: "%{count} users"
+  form:
+    target_group:  "Target users by instruction group having file in \"draft\" : "
+    select_all:  "Select all"
+  alert:
+    send_message_to: "You will send a message to "
+    user: "users having a file in draft"
+  present_in_group: " (you are in the instruction group)"
+  not_present_in_group: " (you are not in the instruction group)"

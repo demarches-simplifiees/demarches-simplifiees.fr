@@ -13,13 +13,14 @@ class Dsfr::InputComponent < ApplicationComponent
   renders_one :describedby
   renders_one :label
 
-  def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true, autoresize: true)
+  def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true, autoresize: true, label_opts: {})
     @form = form
     @attribute = attribute
     @input_type = input_type
     @opts = opts
     @required = required
     @autoresize = autoresize
+    @label_opts = label_opts
   end
 
   def dsfr_champ_container
@@ -41,8 +42,12 @@ class Dsfr::InputComponent < ApplicationComponent
     opts
   end
 
-  def label_opts
-    { class: class_names('fr-label': true, 'fr-password__label': password?) }
+  def label_class_names
+    class_names(
+      'fr-label': true,
+      'fr-password__label': password?,
+      @label_opts[:class] => @label_opts[:class].present?
+    )
   end
 
   # errors helpers

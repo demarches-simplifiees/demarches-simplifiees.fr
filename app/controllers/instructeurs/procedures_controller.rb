@@ -270,9 +270,7 @@ module Instructeurs
     def email_usagers
       @procedure = procedure
       @bulk_messages = BulkMessage.where(procedure: procedure)
-      @bulk_message = current_instructeur.bulk_messages.build
-
-      @dossiers_count = reachable_brouillons.count
+      @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.group(:groupe_instructeur_id).count
     end
 
     def usagers_rdvs
@@ -327,10 +325,17 @@ module Instructeurs
 
     private
 
+    def groupe_instructeur_ids_params
+      bulk_message_params = params.require(:bulk_message).permit(:without_group, groupe_instructeur_ids: {}).to_h
+      bulk_message_params
+        .fetch(:groupe_instructeur_ids) { [] }
+        .filter_map { |id, selected| selected == "true" ? id : nil }
+        .concat(bulk_message_params.dig(:without_group).eql?('1') ? [nil] : [])
+    end
+
     def reachable_brouillons
       if procedure.routing_enabled?
-        instructeur_groupe_ids = current_instructeur.groupe_instructeurs.where(procedure: procedure).ids
-        procedure.dossiers.brouillon.where(groupe_instructeur_id: instructeur_groupe_ids)
+        procedure.dossiers.brouillon.where(groupe_instructeur_id: groupe_instructeur_ids_params)
       else
         procedure.dossiers.brouillon
       end
