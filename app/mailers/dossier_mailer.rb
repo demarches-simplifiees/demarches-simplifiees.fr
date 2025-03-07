@@ -211,7 +211,7 @@ class DossierMailer < ApplicationMailer
     @user = User.find_by(email: @transfer.email)
 
     configure_defaults_for_email(@transfer.email)
-
+    bypass_unverified_mail_protection!
     I18n.with_locale(@transfer.user_locale) do
       @subject = default_i18n_subject()
 
