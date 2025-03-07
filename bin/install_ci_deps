@@ -1,0 +1,5 @@
+#!/bin/bash
+mkdir -p /opt/bin
+curl --no-progress-meter -L https://github.com/leonid-shevtsov/split_tests/releases/download/v0.3.0/split_tests.linux.gz | gunzip -c > /opt/bin/split_tests
+chmod +x /opt/bin/split_tests
+curl --no-progress-meter -fsSL https://bun.sh/install | BUN_INSTALL=/opt bash
