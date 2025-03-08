@@ -119,6 +119,6 @@ class Users::SessionsController < Devise::SessionsController
     return if !AgentConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
 
     flash[:alert] = "La connexion des agents passe à présent systématiquement par ProConnect"
-    redirect_to agent_connect_path(force_agent_connect: true)
+    redirect_to pro_connect_path(force_proconnect: true)
   end
 end
