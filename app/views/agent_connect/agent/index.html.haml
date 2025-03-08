@@ -19,7 +19,7 @@
                 %p= t('.explanation')
 
                 .fr-connect-group.fr-my-2w
-                  = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
+                  = link_to(pro_connect_login_path, class: "fr-btn fr-connect") do
                     %span.fr-connect__login
                       = t('.signin_with')
                     %span.fr-connect__brand ProConnect
@@ -31,7 +31,7 @@
 
               %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
                 %legend.fr-fieldset__legend#new-account-legend
-                  %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
+                  %h2.fr-h6= t('views.users.sessions.new.subtitle')
 
                 = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
                   - c.with_body do
