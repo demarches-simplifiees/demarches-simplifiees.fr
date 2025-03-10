@@ -206,7 +206,7 @@ Rails.application.routes.draw do
   end
 
   scope path: 'pro_connect', module: 'agent_connect', as: 'pro_connect' do
-    get '/' => 'agent#index'
+    get '' => 'agent#index'
     get 'login' => 'agent#login'
     get 'callback' => 'agent#callback'
   end
