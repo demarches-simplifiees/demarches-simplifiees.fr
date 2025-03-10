@@ -387,11 +387,12 @@ class TypeDeChamp < ApplicationRecord
     drop_down_list? && drop_down_mode == 'advanced'
   end
 
-  def drop_down_options
+  def drop_down_options(simple: false)
+    return Array.wrap(super()) if simple
     if referentiel_mode?
       Array.wrap(referentiel&.drop_down_options)
     else
-      Array.wrap(super)
+      Array.wrap(super())
     end
   end
 
