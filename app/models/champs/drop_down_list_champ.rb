@@ -7,7 +7,7 @@ class Champs::DropDownListChamp < Champ
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
   validate :validate_value_is_in_options, if: -> { validate_champ_value? && !(value.blank? || drop_down_other?) }
-  before_save :store_referentiel, if: :referentiel_mode?
+  before_save :store_referentiel, if: :drop_down_advanced?
 
   def render_as_radios?
     drop_down_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO

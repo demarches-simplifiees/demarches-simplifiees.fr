@@ -385,7 +385,7 @@ class ProcedureRevision < ApplicationRecord
           to_type_de_champ.drop_down_mode)
       end
 
-      if to_type_de_champ.referentiel_mode?
+      if to_type_de_champ.drop_down_advanced?
         if from_type_de_champ.referentiel_id != to_type_de_champ.referentiel_id
           changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
             :referentiel,
@@ -393,7 +393,7 @@ class ProcedureRevision < ApplicationRecord
             to_type_de_champ.referentiel_id)
         end
       else
-        from_drop_down_options = from_type_de_champ.referentiel_mode? ? [] : from_type_de_champ.drop_down_options
+        from_drop_down_options = from_type_de_champ.drop_down_advanced? ? [] : from_type_de_champ.drop_down_options
         if from_drop_down_options != to_type_de_champ.drop_down_options
           changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
             :drop_down_options,

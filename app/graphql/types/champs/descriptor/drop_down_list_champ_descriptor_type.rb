@@ -12,7 +12,7 @@ module Types::Champs::Descriptor
     end
 
     def options
-      if object.type_de_champ.referentiel_mode?
+      if object.type_de_champ.drop_down_advanced?
         # referntiel can contain dosens of thousands of values, we don't want to expose them all
         []
       else

@@ -2,7 +2,7 @@
 
 class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_value(champ)
-    if referentiel_mode? && champ.respond_to?(:referentiel) && champ.referentiel.present?
+    if drop_down_advanced? && champ.respond_to?(:referentiel) && champ.referentiel.present?
       path = champ.referentiel_headers&.first&.second
       champ.referentiel_item_value(path)
     else
@@ -11,7 +11,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def champ_value_for_export(champ, path = :value)
-    if referentiel_mode? && path != :value
+    if drop_down_advanced? && path != :value
       champ.referentiel_item_value(path)
     else
       super
@@ -19,7 +19,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def champ_value_for_tag(champ, path = :value)
-    if referentiel_mode? && path != :value
+    if drop_down_advanced? && path != :value
       champ.referentiel_item_value(path)
     else
       super
@@ -27,7 +27,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def columns(procedure:, displayable: true, prefix: nil)
-    if referentiel_mode?
+    if drop_down_advanced?
       referentiel.headers_with_path.map do |(header, path)|
         Columns::JSONPathColumn.new(
           procedure_id: procedure.id,
@@ -46,7 +46,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def paths
-    if referentiel_mode? && referentiel.present?
+    if drop_down_advanced? && referentiel.present?
       referentiel.headers_with_path.map do |(header, path)|
         {
           libelle: "#{libelle} (#{header})",

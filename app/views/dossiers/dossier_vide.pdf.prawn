@@ -163,7 +163,7 @@ def render_single_champ(pdf, revision, type_de_champ)
   when TypeDeChamp.type_champs.fetch(:address), TypeDeChamp.type_champs.fetch(:carte), TypeDeChamp.type_champs.fetch(:textarea)
     format_in_2_lines(pdf, type_de_champ, 5)
   when TypeDeChamp.type_champs.fetch(:drop_down_list)
-    if type_de_champ.referentiel_mode?
+    if type_de_champ.drop_down_advanced?
       format_in_2_lines(pdf, type_de_champ)
     else
       add_libelle(pdf, type_de_champ)

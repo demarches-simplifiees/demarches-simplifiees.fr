@@ -1,0 +1,8 @@
+fr:
+  labels:
+    accepted_format: Format de saisie accepté
+    numbers: 'Chiffres'
+    letters: 'Lettres'
+    special_characters: "Caractères spéciaux (-_\/:* ...)"
+    min_character_length: Nombre de caractères minimum
+    max_character_length: Nombre de caractères maximum
