@@ -680,7 +680,7 @@ class Dossier < ApplicationRecord
 
   def assign_to_groupe_instructeur(groupe_instructeur, mode, author = nil)
     return if groupe_instructeur.present? && groupe_instructeur.procedure != procedure
-    return if self.groupe_instructeur == groupe_instructeur
+    return if self.groupe_instructeur == groupe_instructeur && mode == self.dossier_assignment&.mode
 
     previous_groupe_instructeur = self.groupe_instructeur
 

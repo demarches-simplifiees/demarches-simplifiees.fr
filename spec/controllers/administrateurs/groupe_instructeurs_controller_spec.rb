@@ -909,6 +909,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
 
       let!(:drop_down_tdc) { procedure3.draft_revision.types_de_champ.first }
+      let!(:dossier) { create(:dossier, procedure: procedure3, state: :en_construction) }
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } } }
 
@@ -918,6 +919,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         expect(procedure3.groupe_instructeurs.pluck(:label)).to match_array(['Paris', 'Lyon', 'Marseille'])
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
         expect(procedure3.routing_enabled).to be_truthy
+        expect(procedure3.routing_alert).to be_truthy
       end
     end
 
@@ -938,6 +940,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(departements_tdc.stable_id), constant('01')))
         expect(procedure3.routing_enabled).to be_truthy
+        expect(procedure3.routing_alert).to be_falsey
       end
     end
 
@@ -1080,6 +1083,45 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     it do
       expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1))
       expect(gi_1_1.signature).to be_attached
+    end
+  end
+
+  describe '#bulk_route' do
+    let!(:procedure) do
+      create(:procedure,
+             types_de_champ_public: [
+               { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
+               { type: :text, libelle: 'Un champ texte' }
+             ],
+             administrateurs: [admin])
+    end
+
+    let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
+    let!(:dossier1) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
+    let!(:dossier2) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
+    let!(:dossier3) { create(:dossier, :with_populated_champs, procedure: procedure, state: :accepte) }
+
+    before do
+      dossier1.champs.first.update(value: 'Paris')
+      dossier2.champs.first.update(value: 'Lyon')
+      dossier3.champs.first.update(value: 'Marseille')
+      post :create_simple_routing, params: { procedure_id: procedure.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } }
+    end
+
+    it 'routes only dossiers en construction or en instruction' do
+      query_count = 0
+      ActiveSupport::Notifications.subscribed(lambda { |*_args| query_count += 1 }, "sql.active_record") do
+        post :bulk_route, params: { procedure_id: procedure.id }
+      end
+      expect(query_count).to be_between(60, 90)
+      expect(dossier1.reload.groupe_instructeur.label).to eq 'Paris'
+      expect(dossier1.reload.dossier_assignment.mode).to eq 'bulk_routing'
+      expect(dossier2.reload.groupe_instructeur.label).to eq 'Lyon'
+      expect(dossier2.reload.dossier_assignment.mode).to eq 'bulk_routing'
+      expect(dossier3.reload.groupe_instructeur.label).to eq 'Lyon'
+      expect(dossier3.reload.dossier_assignment.mode).to eq 'auto'
+      # Lyon is default group
+      expect(procedure.reload.routing_alert).to be_falsey
     end
   end
 end

@@ -89,6 +89,8 @@ module Administrateurs
         defaut.destroy!
       end
 
+      procedure.update!(routing_alert: true) if procedure.dossiers.state_en_construction_ou_instruction.any?
+
       flash[:routing_mode] = 'simple'
 
       redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
@@ -109,6 +111,8 @@ module Administrateurs
 
       procedure.toggle_routing
 
+      procedure.update!(routing_alert: true) if procedure.dossiers.state_en_construction_ou_instruction.any?
+
       flash[:routing_mode] = 'custom'
 
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
@@ -117,7 +121,7 @@ module Administrateurs
     def destroy_all_groups_but_defaut
       reaffecter_all_dossiers_to_defaut_groupe
       procedure.groupe_instructeurs_but_defaut.each(&:destroy!)
-      procedure.update!(routing_enabled: false)
+      procedure.update!(routing_enabled: false, routing_alert: false)
       procedure.defaut_groupe_instructeur.update!(
         routing_rule: nil,
         label: GroupeInstructeur::DEFAUT_LABEL,
@@ -195,6 +199,7 @@ module Administrateurs
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
           procedure.toggle_routing
+          procedure.update!(routing_alert: false)
           procedure.defaut_groupe_instructeur.update!(
             routing_rule: nil,
             label: GroupeInstructeur::DEFAUT_LABEL,
@@ -387,6 +392,20 @@ module Administrateurs
       respond_to do |format|
         format.csv { send_data data, filename: "#{procedure.id}-groupe-instructeurs-#{Date.today}.csv" }
       end
+    end
+
+    def bulk_route
+      dossiers = procedure.dossiers.includes(:procedure, :groupe_instructeur, :champs, revision: [:types_de_champ]).state_not_termine
+
+      dossiers.each do |dossier|
+        dossier.update_column(:forced_groupe_instructeur, false)
+        RoutingEngine.compute(dossier, assignment_mode: DossierAssignment.modes.fetch(:bulk_routing))
+      end
+      procedure.update!(routing_alert: false)
+
+      flash[:notice] = "Les dossiers ont étés routés vers les groupes d’instructeurs"
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     private
