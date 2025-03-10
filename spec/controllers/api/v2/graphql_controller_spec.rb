@@ -1440,6 +1440,7 @@ describe API::V2::GraphqlController do
           end
 
           context "success" do
+            let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:) }
             it 'should be a success' do
               expect(gql_errors).to eq(nil)
 
@@ -1449,6 +1450,7 @@ describe API::V2::GraphqlController do
                 },
                 errors: nil
               })
+              expect(dossier.champs.first.value).not_to be_nil
             end
           end
         end
