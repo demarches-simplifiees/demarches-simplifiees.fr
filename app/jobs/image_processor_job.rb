@@ -23,7 +23,7 @@ class ImageProcessorJob < ApplicationJob
   end
   # If the file is not analyzed or scanned for viruses yet, retry later
   # (to avoid modifying the file while it is being scanned).
-  retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
+  retry_on FileNotScannedYetError, wait: :polynomially_longer, attempts: 10
 
   # Usually invalid image or ImageMagick decoder blocked for this format
   retry_on MiniMagick::Invalid, attempts: 3

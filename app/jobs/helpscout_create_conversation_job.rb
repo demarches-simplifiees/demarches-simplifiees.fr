@@ -8,7 +8,7 @@ class HelpscoutCreateConversationJob < ApplicationJob
   class FileNotScannedYetError < StandardError
   end
 
-  retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
+  retry_on FileNotScannedYetError, wait: :polynomially_longer, attempts: 10
 
   attr_reader :contact_form
   attr_reader :api
