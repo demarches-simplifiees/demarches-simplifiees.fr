@@ -102,7 +102,7 @@ describe Users::SessionsController, type: :controller do
       it 'redirects to agent connect with force parameter and is not logged in' do
         expect(AgentConnectService).to receive(:enabled?).and_return(true)
         subject
-        expect(response).to redirect_to(pro_connect_path(force_proconnect: true))
+        expect(response).to redirect_to(pro_connect_path(force_pro_connect: true))
         expect(flash[:alert]).to eq("La connexion des agents passe à présent systématiquement par ProConnect")
         expect(controller.current_user).to be_nil
       end
