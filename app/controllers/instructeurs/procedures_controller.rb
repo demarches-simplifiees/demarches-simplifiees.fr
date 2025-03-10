@@ -4,6 +4,7 @@ module Instructeurs
   class ProceduresController < InstructeurController
     before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
+    after_action :mark_latest_revision_as_seen, only: [:history]
 
     ITEMS_PER_PAGE = 100
     BATCH_SELECTION_LIMIT = 500
@@ -323,7 +324,47 @@ module Instructeurs
       DossierPreloader.load_one(@dossier)
     end
 
+    def history
+      @procedure = procedure
+      all_published_revisions = @procedure.revisions.where.not(published_at: nil).order(published_at: :asc)
+
+      @comparison_pairs = []
+
+      if all_published_revisions.size >= 2
+        1.upto(all_published_revisions.size - 1) do |i|
+          previous = all_published_revisions[i - 1]
+          current = all_published_revisions[i]
+
+          @comparison_pairs << [current, previous]
+        end
+
+        @comparison_pairs.reverse!
+      end
+
+      @instructeur_procedure = InstructeursProcedure.find_by(
+        instructeur: current_instructeur,
+        procedure: @procedure
+      )
+      @last_revision_seen_id = @instructeur_procedure&.last_revision_seen_id
+    end
+
     private
+
+    def mark_latest_revision_as_seen
+      if @procedure.revisions.where.not(published_at: nil).any?
+        latest_revision = @procedure.revisions.where.not(published_at: nil).last
+        if latest_revision.present?
+          instructeur_procedure = InstructeursProcedure.find_by(
+            instructeur: current_instructeur,
+            procedure: @procedure
+          )
+
+          if instructeur_procedure.last_revision_seen_id.nil? || instructeur_procedure.last_revision_seen_id != latest_revision.id
+            instructeur_procedure.update(last_revision_seen_id: latest_revision.id)
+          end
+        end
+      end
+    end
 
     def groupe_instructeur_ids_params
       bulk_message_params = params.require(:bulk_message).permit(:without_group, groupe_instructeur_ids: {}).to_h

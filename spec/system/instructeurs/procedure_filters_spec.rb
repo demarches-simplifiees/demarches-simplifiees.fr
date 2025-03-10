@@ -13,6 +13,9 @@ describe "procedure filters" do
   before do
     champ.update(value: "Mon champ rempli")
     champ_2.update(value: "Mon autre champ rempli différemment")
+    unless InstructeursProcedure.exists?(instructeur: instructeur, procedure: procedure)
+      create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure)
+    end
     login_as(instructeur.user, scope: :user)
     visit instructeur_procedure_path(procedure)
   end
