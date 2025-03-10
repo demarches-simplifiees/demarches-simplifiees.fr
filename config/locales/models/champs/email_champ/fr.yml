@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/email_champ:
         hints:
-          value: 'Format attendu : adresse@mail.com'
+          value: 'Exemple : adresse@mail.com'

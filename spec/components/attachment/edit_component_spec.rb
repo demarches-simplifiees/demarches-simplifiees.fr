@@ -29,7 +29,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     it 'renders max size' do
-      expect(subject).to have_content(/Taille maximale :\s+20 Mo/)
+      expect(subject).to have_content(/Taille maximale autorisée :\s+20 Mo/)
     end
 
     it 'renders allowed formats' do
@@ -99,7 +99,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     it 'renders max size for first index' do
-      expect(subject).to have_content(/Taille maximale :\s+20 Mo/)
+      expect(subject).to have_content(/Taille maximale autorisée :\s+20 Mo/)
     end
 
     context 'when index is not 0' do

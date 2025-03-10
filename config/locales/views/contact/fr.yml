@@ -13,14 +13,14 @@ fr:
     errors:
       models:
         contact_form:
-          invalid_email_format: 'est invalide'
+          invalid_email_format: 'est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com'
   contact:
     form:
       your_question: Votre question
       our_answer: Notre réponse
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
       notice_pj_other: Une capture d’écran peut nous aider à identifier plus facilement le problème.
-      notice_upload_group: 'Taille maximale : 200 Mo. Formats supportés : jpg, png, pdf.'
+      notice_upload_group: 'Taille maximale autorisée : 200 Mo. Formats supportés : jpg, png, pdf.'
     index:
       contact: Contacter %{app_name}
       intro_html:

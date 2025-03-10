@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/decimal_number_champ:
         hints:
-          value_html: "Vous pouvez saisir jusqu’à 3 décimales après le point. Exemple: <span aria-hidden='true'>3.141</span><span class='sr-only'>3 point 141</span>"
+          value_html: "Format attendu : De 1 à 3 décimales après le point. Exemple: <span aria-hidden='true'>3.141</span><span class='sr-only'>3 point 141</span>"
