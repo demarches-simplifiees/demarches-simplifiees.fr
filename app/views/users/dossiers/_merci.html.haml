@@ -6,7 +6,7 @@
         %p.fr-h1.fr-mt-4w= t('views.users.dossiers.merci.thanks')
         %h1.send.fr-m-2w.text-lg
           = t('views.users.dossiers.merci.dossier_send_l1')
-          %strong= procedure.libelle
+          = procedure.libelle
           = t('views.users.dossiers.merci.dossier_send_l2')
         %p.fr-m-2w
           = t('views.users.dossiers.merci.dossier_acces_l1')
@@ -28,7 +28,7 @@
 
       - if procedure.monavis_embed
         .monavis
-          %p.fr-mt-5w.fr-mb-1w
-            %strong= t('views.users.dossiers.merci.jdma_l1')
+          %h2.fr-mt-5w.fr-mb-1w.fr-text--lg
+            = t('views.users.dossiers.merci.jdma_l1')
           %p= t('views.users.dossiers.merci.jdma_l2')
           != procedure.monavis_embed_html_source("site")
