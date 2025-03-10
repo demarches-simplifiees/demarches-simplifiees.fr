@@ -247,7 +247,7 @@ module Administrateurs
       emails_with_typos = JSON.parse(params[:emails_with_typos]) if params[:emails_with_typos]
       emails = params['emails'].presence || []
       emails.push(emails_with_typos).flatten! if emails_with_typos
-      emails = check_if_typo(emails)
+      emails, @maybe_typos = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
       @maybe_typos_signed = @maybe_typos.map { |tuple| tuple.map { |email| message_verifier.generate([email, expires_in: 2.minutes]) } }
 
