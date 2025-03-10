@@ -101,21 +101,25 @@ describe DossierCorrectableConcern do
       it 'creates a log operation' do
         expect { flag }.to change { dossier.dossier_operation_logs.count }.by(2)
 
-        log_correction, log_construction = dossier.dossier_operation_logs.last(2)
-        expect(log_correction.operation).to eq("demander_une_correction")
-        expect(log_construction.operation).to eq("repasser_en_construction")
+        correction_log = dossier.dossier_operation_logs.find { |log| log.operation == "demander_une_correction" }
+        construction_log = dossier.dossier_operation_logs.find { |log| log.operation == "repasser_en_construction" }
 
-        expect(log_correction.data["subject"]["body"]).to eq(commentaire.body)
-        expect(log_correction.data["subject"]["email"]).to eq(commentaire.instructeur.email)
+        expect(correction_log).to be_present
+        expect(construction_log).to be_present
+        expect(correction_log.data["subject"]["body"]).to eq(commentaire.body)
+        expect(correction_log.data["subject"]["email"]).to eq(commentaire.instructeur.email)
       end
 
       it 'creates a log operation of incomplete dossier' do
         expect { dossier.flag_as_pending_correction!(commentaire, "incomplete") }.to change { dossier.dossier_operation_logs.count }.by(2)
 
-        log_correction, _ = dossier.dossier_operation_logs.last(2)
-        expect(log_correction.operation).to eq("demander_a_completer")
-        expect(log_correction.data["subject"]["body"]).to eq(commentaire.body)
-        expect(log_correction.data["subject"]["email"]).to eq(commentaire.instructeur.email)
+        correction_log = dossier.dossier_operation_logs.find { |log| log.operation == "demander_a_completer" }
+        construction_log = dossier.dossier_operation_logs.find { |log| log.operation == "repasser_en_construction" }
+
+        expect(correction_log).to be_present
+        expect(construction_log).to be_present
+        expect(correction_log.data["subject"]["body"]).to eq(commentaire.body)
+        expect(correction_log.data["subject"]["email"]).to eq(commentaire.instructeur.email)
       end
     end
   end
