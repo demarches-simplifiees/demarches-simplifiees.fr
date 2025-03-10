@@ -5,7 +5,6 @@ module Administrateurs
     include ActiveSupport::NumberHelper
 
     before_action :retrieve_procedure
-    after_action :reset_procedure, only: [:create, :update, :destroy, :piece_justificative_template]
     before_action :reload_procedure_with_includes, only: [:destroy]
 
     CSV_MAX_SIZE = 1.megabyte

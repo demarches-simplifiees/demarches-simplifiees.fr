@@ -7,7 +7,7 @@ module Administrateurs
 
     before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns, :path, :update_path, :rdv, :update_rdv]
     before_action :draft_valid?, only: [:apercu]
-    after_action :reset_procedure, only: [:update]
+    after_action :reset_draft_procedure, only: [:update]
 
     ITEMS_PER_PAGE = 25
 
@@ -475,6 +475,10 @@ module Administrateurs
     end
 
     private
+
+    def reset_draft_procedure
+      @procedure.reset!
+    end
 
     def paginated_published_procedures
       paginate_procedures(current_administrateur

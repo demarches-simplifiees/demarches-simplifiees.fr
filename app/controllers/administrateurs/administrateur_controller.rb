@@ -24,10 +24,6 @@ module Administrateurs
       redirect_to admin_procedures_path, status: 404
     end
 
-    def reset_procedure
-      @procedure.reset!
-    end
-
     def preload_revisions
       ProcedureRevisionPreloader.new(@procedure.revisions).all
 

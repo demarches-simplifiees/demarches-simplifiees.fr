@@ -5,7 +5,6 @@ module Administrateurs
     include Logic
 
     before_action :retrieve_procedure, :retrieve_coordinate_and_uppers
-    after_action :reset_procedure
 
     def update
       condition = condition_form.to_condition
