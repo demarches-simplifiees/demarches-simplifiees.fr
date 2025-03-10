@@ -22,12 +22,7 @@ module Administrateurs
 
       @instructeurs = paginated_instructeurs
       @available_instructeur_emails = available_instructeur_emails
-      @maybe_typos_signed = JSON.parse(params[:maybe_typos_signed]) if params[:maybe_typos_signed]
-      @maybe_typos = @maybe_typos_signed&.map do |tuple|
-        tuple.map do |email|
-          message_verifier.verified(email).first
-        end
-      end
+      @maybe_typos = message_verifier.verified(params[:maybe_typos_signed])
     end
 
     def options
@@ -138,12 +133,7 @@ module Administrateurs
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
       @available_instructeur_emails = available_instructeur_emails
-      @maybe_typos_signed = JSON.parse(params[:maybe_typos_signed]) if params[:maybe_typos_signed]
-      @maybe_typos = @maybe_typos_signed&.map do |tuple|
-        tuple.map do |email|
-          message_verifier.verified(email).first
-        end
-      end
+      @maybe_typos = message_verifier.verified(params[:maybe_typos_signed])
     end
 
     def create
@@ -247,9 +237,8 @@ module Administrateurs
       emails_with_typos = JSON.parse(params[:emails_with_typos]) if params[:emails_with_typos]
       emails = params['emails'].presence || []
       emails.push(emails_with_typos).flatten! if emails_with_typos
-      emails, @maybe_typos = check_if_typo(emails)
-      errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
-      @maybe_typos_signed = @maybe_typos.map { |tuple| tuple.map { |email| message_verifier.generate([email, expires_in: 2.minutes]) } }
+      emails, maybe_typos = check_if_typo(emails)
+      errors = Array.wrap(generate_emails_suggestions_message(maybe_typos))
 
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
@@ -290,7 +279,8 @@ module Administrateurs
       @instructeurs = paginated_instructeurs
       @available_instructeur_emails = available_instructeur_emails
 
-      query_param = { maybe_typos_signed: @maybe_typos_signed.to_json } if @maybe_typos_signed.present?
+      query_param = { maybe_typos_signed: message_verifier.generate(maybe_typos, expires_in: 2.minutes) } if maybe_typos.present?
+
       if procedure.routing_enabled?
         @groupe_instructeur = groupe_instructeur
         redirect_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur, query_param)
