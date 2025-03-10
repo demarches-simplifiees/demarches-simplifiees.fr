@@ -206,13 +206,14 @@ Rails.application.routes.draw do
   end
 
   scope path: 'pro_connect', module: 'agent_connect', as: 'pro_connect' do
-    scope :agent do
-      get 'login' => 'agent#login'
-      get 'callback' => 'agent#callback'
-      get '/' => 'agent#index'
-    end
+    get '/' => 'agent#index'
+    get 'login' => 'agent#login'
+    get 'callback' => 'agent#callback'
   end
 
+  # Backward compatibility for AgentConnect callbacks
+  get 'agent_connect/callback' => 'agent_connect/agent#callback'
+  
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
