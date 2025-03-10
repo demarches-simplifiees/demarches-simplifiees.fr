@@ -213,7 +213,7 @@ Rails.application.routes.draw do
 
   # Backward compatibility for AgentConnect callbacks
   get 'agent_connect/callback' => 'agent_connect/agent#callback'
-  
+
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
