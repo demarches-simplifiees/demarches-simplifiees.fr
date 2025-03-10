@@ -17,6 +17,7 @@ en:
         help_link: What is FranceConnect?
         separator: or
       account:
+        already_user_question: 'Do you already have an account?'
         already_user: "I already have an account"
         create: 'Create an account'
         signin: 'Sign in'
