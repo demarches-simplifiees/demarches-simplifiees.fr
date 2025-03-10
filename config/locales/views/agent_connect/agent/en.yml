@@ -2,13 +2,13 @@ en:
   agent_connect:
     agent:
       index:
-        cta: Connect with AgentConnect
-        explanation: Agent connect is the solution powered by the state to secure and simplify the connection to online services
-        full_deploy_title: Agent connect is now fully available
-        full_deploy_body: All ministries and operators are able to use it
-        you_are_a_citizen: Are you a citizen ?
-        citizen_page: Go to our dedicated page
+        cta: Connect with ProConnect
+        explanation: ProConnect is the solution provided by the French government to secure and simplify connection to online services
+        full_deploy_title: ProConnect is now fully deployed
+        full_deploy_body: All ministries and operators can use it today
+        you_are_a_citizen: Are you a citizen?
+        citizen_page: Connect to your space
         signin_with: "Sign in with"
-        whats_agentconnect: 'What is AgentConnect?'
-        whats_ds: '%{application_name}, the national platform to dematerialize administrative procedures'
-        pro_email: Professional email
+        whats_proconnect: 'What is ProConnect?'
+        whats_ds: '%{application_name}, the national platform for digitizing administrative procedures'
+        pro_email: Professional email address
