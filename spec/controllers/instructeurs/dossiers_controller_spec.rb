@@ -64,6 +64,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:batch_operation) {}
 
     subject do
+      travel(1.minute)
       batch_operation
       patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
     end
@@ -74,7 +75,10 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(flash.notice).to eq('Dossier suivi')
       expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
     end
-    it { expect { subject }.to change { dossier.reload.updated_at } }
+
+    it "changes the updated_at" do
+      expect { subject }.to change { dossier.reload.updated_at }
+    end
 
     context 'with dossier in batch_operation' do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
@@ -93,6 +97,7 @@ describe Instructeurs::DossiersController, type: :controller do
     before { instructeur.followed_dossiers << dossier }
 
     subject do
+      travel(1.minute)
       batch_operation
       patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
     end
@@ -104,7 +109,9 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
     end
 
-    it { expect { subject }.to change { dossier.reload.updated_at } }
+    it "changes the updated_at" do
+      expect { subject }.to change { dossier.reload.updated_at }
+    end
 
     context 'with dossier in batch_operation' do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
