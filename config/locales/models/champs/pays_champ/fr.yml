@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/pays_champ:
         hints:
-          value: "Renseignez le pays"
+          value: "Sélectionnez le pays"

@@ -3,4 +3,4 @@ en:
     attributes:
       champs/pays_champ:
         hints:
-          value: "Enter country"
+          value: "Select country"
