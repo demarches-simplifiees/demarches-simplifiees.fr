@@ -54,6 +54,12 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('--disable-software-rasterizer')
   options.add_argument('--mute-audio')
+  # 🔹 Force la langue via les préférences utilisateur Chrome
+  options.add_preference('intl.accept_languages', 'fr-FR,fr')
+  options.add_preference('translate.enabled', false)
+
+  # 🔹 Vérification en ajoutant un log
+  puts "headless_chrome: #{options.inspect}"
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
@@ -95,7 +101,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, chrome: true) do
-    driven_by :chrome
+    driven_by :headless_chrome
   end
 
   # Examples tagged with :capybara_ignore_server_errors will allow Capybara
