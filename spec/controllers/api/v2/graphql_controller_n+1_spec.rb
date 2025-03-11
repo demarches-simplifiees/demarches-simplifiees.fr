@@ -23,8 +23,8 @@ describe API::V2::GraphqlController do
     request.env['HTTP_AUTHORIZATION'] = authorization_header
   end
 
-  MIN_QUERY_COUNT = 57
-  MAX_QUERY_COUNT = 61
+  MIN_QUERY_COUNT = 50
+  MAX_QUERY_COUNT = 59
 
   describe 'demarche.dossiers' do
     let(:operation_name) { 'getDemarche' }

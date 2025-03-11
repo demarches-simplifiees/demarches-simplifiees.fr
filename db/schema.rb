@@ -1030,7 +1030,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_03_153311) do
     t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"
-    t.string "path", null: false
+    t.string "path"
     t.boolean "piece_justificative_multiple", default: true, null: false
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at", precision: nil

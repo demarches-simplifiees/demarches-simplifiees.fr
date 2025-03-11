@@ -1205,20 +1205,6 @@ describe Procedure do
       it 'raises an error' do
         expect { procedure.publish_or_reopen!(administrateur, other_procedure.path) }.to raise_error(ActiveRecord::RecordInvalid)
       end
-
-      context "before maintenance task" do
-        let(:other_procedure) do
-          p = create(:procedure, :published, administrateurs: [create(:administrateur)])
-          p.update_column(:path, 'other-path')
-          p.procedure_paths.delete_all
-          p
-        end
-
-        it 'raises an error' do
-          expect { procedure.publish_or_reopen!(administrateur, other_procedure.path) }.to raise_error(ActiveRecord::RecordInvalid)
-          expect(procedure.canonical_path).not_to eq(other_procedure.path)
-        end
-      end
     end
   end
 

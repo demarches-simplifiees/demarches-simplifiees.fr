@@ -13,7 +13,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     context 'when a procedure is provided' do
-      let(:procedure) { build(:procedure) }
+      let(:procedure) { create(:procedure) }
 
       subject { described_class.new_account_warning(user, procedure) }
 
