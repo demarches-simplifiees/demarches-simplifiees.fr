@@ -3,4 +3,4 @@ en:
     attributes:
       champs/commune_champ:
         hints:
-          value: "Enter the city name or zip code, then select the municipality from the list"
+          value: "Enter the city name or zip code, then select the municipality from the list. Example: Strasbourg"
