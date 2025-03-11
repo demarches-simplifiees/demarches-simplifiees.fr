@@ -242,6 +242,7 @@ fr:
           textarea_html: Un texte long
           decimal_number_html: Un nombre décimal
           integer_number_html: Un nombre entier
+          formatted_html: Un texte qui respecte les règles de formattage
           email_html: Une adresse email
           civilite_html: '"M." pour Monsieur, "Mme" pour Madame'
           phone_html: Un numéro de téléphone
