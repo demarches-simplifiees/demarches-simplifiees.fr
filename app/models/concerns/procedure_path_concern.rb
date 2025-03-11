@@ -8,7 +8,6 @@ module ProcedurePathConcern
 
     has_many :procedure_paths, -> { order(updated_at: :asc) }, inverse_of: :procedure, dependent: :destroy, autosave: true
 
-    after_initialize :ensure_path_exists
     before_validation :ensure_path_exists
 
     validates :procedure_paths, length: { minimum: 1 }
