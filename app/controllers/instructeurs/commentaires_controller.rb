@@ -8,6 +8,7 @@ module Instructeurs
 
     def destroy
       retrieve_procedure_presentation if current_instructeur
+      set_notifications_dossier
       if commentaire.sent_by?(current_instructeur) || commentaire.sent_by?(current_expert)
         commentaire.soft_delete!
 
@@ -28,9 +29,12 @@ module Instructeurs
       end
     end
 
+    def dossier
+      Dossier.find(params[:dossier_id])
+    end
+
     def commentaire
-      @commentaire ||= Dossier
-        .find(params[:dossier_id])
+      @commentaire ||= dossier
         .commentaires
         .find(params[:id])
     end
