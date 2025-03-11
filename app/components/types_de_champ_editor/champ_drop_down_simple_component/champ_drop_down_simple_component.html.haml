@@ -1,0 +1,8 @@
+.drop-down-mode-simple
+  .cell
+    = form.label :drop_down_options_from_text, "Options de la liste", for: dom_id(type_de_champ, :drop_down_options_from_text)
+    = form.text_area :drop_down_options_from_text,
+      value: type_de_champ.drop_down_options.join("\r\n"),
+      class: 'fr-input small-margin small width-100 fr-mb-2w',
+      rows: 7,
+      id: dom_id(type_de_champ, :drop_down_options_from_text)

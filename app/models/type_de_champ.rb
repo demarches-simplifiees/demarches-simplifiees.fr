@@ -384,12 +384,24 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def referentiel_mode?
+  def formatted_simple?
+    formatted? && formatted_mode != 'advanced'
+  end
+
+  def formatted_advanced?
+    formatted? && formatted_mode == 'advanced'
+  end
+
+  def drop_down_simple?
+    drop_down_list? && drop_down_mode != 'advanced'
+  end
+
+  def drop_down_advanced?
     drop_down_list? && drop_down_mode == 'advanced'
   end
 
   def drop_down_options
-    if referentiel_mode?
+    if drop_down_advanced?
       Array.wrap(referentiel&.drop_down_options)
     else
       Array.wrap(super)
@@ -402,7 +414,7 @@ class TypeDeChamp < ApplicationRecord
     elsif regions?
       APIGeoService.region_options
     elsif any_drop_down_list?
-      if referentiel_mode?
+      if drop_down_advanced?
         Array.wrap(referentiel&.options_for_select)
       else
         drop_down_options.map { [_1, _1] }
@@ -424,10 +436,6 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_options_from_text=(text)
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
-  end
-
-  def formatted_advanced?
-    formatted? && options['formatted_mode'] == 'advanced'
   end
 
   def header_section_level_value
@@ -563,11 +571,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def simple_routable?
-    type_champ.in?(SIMPLE_ROUTABLE_TYPES) && !referentiel_mode?
+    type_champ.in?(SIMPLE_ROUTABLE_TYPES) && !drop_down_advanced?
   end
 
   def conditionable?
-    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ) && !referentiel_mode?
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ) && !drop_down_advanced?
   end
 
   def self.humanized_conditionable_types_by_category

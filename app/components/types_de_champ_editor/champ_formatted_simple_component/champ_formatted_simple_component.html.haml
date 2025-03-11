@@ -1,0 +1,40 @@
+.formatted_mode_simple.flex.column.justify-start.flex-grow.width-66.vertical-border.fr-pl-2w.fr-mb-4w
+  .cell
+    %fieldset.fr-fieldset{ aria_labelledby: 'checkboxes-inline-legend' }
+      .fr-fieldset__element.fr-mb-0
+        %legend.fr-fieldset__legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
+      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+        .fr-checkbox-group
+          = form.check_box :numbers_accepted, id: dom_id(type_de_champ, :numbers_accepted)
+          = form.label :numbers_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :numbers_accepted) do
+            = t('.labels.numbers')
+      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+        .fr-checkbox-group
+          = form.check_box :letters_accepted, id: dom_id(type_de_champ, :letters_accepted)
+          = form.label :letters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :letters_accepted) do
+            = t('.labels.letters')
+      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+        .fr-checkbox-group
+          = form.check_box :special_characters_accepted, id: dom_id(type_de_champ, :special_characters_accepted)
+          = form.label :special_characters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :special_characters_accepted) do
+            = t('.labels.special_characters')
+      - if (errors = procedure.errors.where(:draft_types_de_champ_public, :invalid_character_rules, type_de_champ:)).any?
+        .fr-messages-group
+          %p.fr-message.fr-message--error= errors.map(&:full_message).to_sentence
+
+  .cell
+    %fieldset.fr-fieldset
+      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+        .fr-input-group
+          = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
+            = t('.labels.min_character_length')
+          = form.number_field :min_character_length, class: "fr-input", id: dom_id(type_de_champ, :min_character_length)
+
+      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+        .fr-input-group
+          = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
+            = t('.labels.max_character_length')
+          = form.number_field :max_character_length, class: "fr-input", id: dom_id(type_de_champ, :max_character_length)
+      - if (errors = procedure.errors.where(:draft_types_de_champ_public, :invalid_character_length, type_de_champ:)).any?
+        .fr-messages-group
+          %p.fr-message.fr-message--error= errors.map(&:full_message).to_sentence

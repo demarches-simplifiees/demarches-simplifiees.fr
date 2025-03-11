@@ -46,6 +46,8 @@ module TPS
     default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u'] - ['img', 'a']
 
+    config.view_component.capture_compatibility_patch_enabled = true
+
     # ActionDispatch's IP spoofing detection is quite limited, and often rejects
     # legitimate requests from misconfigured proxies (such as mobile telcos).
     #

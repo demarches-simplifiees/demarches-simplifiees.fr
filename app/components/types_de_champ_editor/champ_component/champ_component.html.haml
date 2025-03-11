@@ -52,7 +52,7 @@
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
-        .flex.justify-start.fr-mt-1w.flex-gap{ data: { controller: 'segmented-control' } }
+        .flex.justify-start.fr-mt-1w.flex-gap
           - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
             .flex.column.justify-start.width-33
               .cell
@@ -70,51 +70,15 @@
                     Liste de choix
                   .fr-segmented__elements
                     .fr-segmented__element
-                      = form.radio_button :drop_down_mode, 'simple', checked: 'checked', id: dom_id(type_de_champ, :simple), data: { action: 'segmented-control#toggle', 'mode-to-show': 'simple' }
+                      = form.radio_button :drop_down_mode, 'simple', checked: type_de_champ.drop_down_simple?, id: dom_id(type_de_champ, :simple)
                       = form.label :drop_down_mode_simple, t('.drop_down_list.labels.simple'), for: dom_id(type_de_champ, :simple), class: 'fr-label'
                     .fr-segmented__element
-                      = form.radio_button :drop_down_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'segmented-control#toggle', "mode-to-show": "advanced" }
+                      = form.radio_button :drop_down_mode, 'advanced', id: dom_id(type_de_champ, :advanced)
                       = form.label :drop_down_mode_advanced, t('.drop_down_list.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
             .flex.column.justify-start.flex-grow.vertical-border.fr-pl-2w.fr-my-1w
-              %div{ class: class_names("drop-down-mode-simple", hidden: type_de_champ.referentiel_mode?), data: { 'segmented-control-mode-target': 'simple' } }
-                .cell
-                  = form.label :drop_down_options_from_text, "Options de la liste", for: dom_id(type_de_champ, :drop_down_options_from_text)
-                  = form.text_area :drop_down_options_from_text,
-                    value: type_de_champ.drop_down_options.join("\r\n"),
-                    class: 'fr-input small-margin small width-100 fr-mb-2w',
-                    rows: 7,
-                    id: dom_id(type_de_champ, :drop_down_options_from_text)
-
-              %div{ class: class_names("drop-down-mode-advanced", hidden: !type_de_champ.referentiel_mode?), data: { 'segmented-control-mode-target': 'advanced' } }
-                - if type_de_champ.referentiel.present?
-                  .cell
-                    %label.fr-label.font-weight-bold
-                      Fichier de référentiel à importer (CSV)
-                    %p.fr-mt-2w
-                      %span.fr-badge.fr-badge--success
-                        = type_de_champ.referentiel.items.count
-                        options importées
-                      à partir de
-                      = type_de_champ.referentiel.name
-                    = render NestedForms::OwnedButtonComponent.new(formaction: nullify_referentiel_admin_procedure_type_de_champ_path(procedure_id: procedure.id, stable_id: type_de_champ.stable_id), http_method: :delete, opt: { class: "fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-delete-line fr-mb-2w"}) do
-                      Supprimer ce référentiel
-
-                - else
-                  .cell
-                    %label.fr-label.font-weight-bold
-                      Fichier de référentiel à importer (CSV)
-                    .fr-hint-text.fr-mb-2w
-                      = t('.drop_down_list.referentiel.hint_html')
-                    .fr-download
-                      = link_to "/#{template_file}", {class: "fr-download__link", download: ''} do
-                        Modèle à télécharger
-                        %span.fr-download__detail
-                          = template_detail
-                    .fr-hint-text.fr-mb-1w
-                      Votre fichier doit peser maximum #{number_to_human_size(referentiel_max_size)} et ne doit pas contenir plus de #{number_with_delimiter(referentiel_max_lines)} lignes.
-                    .flex.column
-                      = file_field_tag :referentiel_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w', id: dom_id(type_de_champ, :import_referentiel)
+              = render TypesDeChampEditor::ChampDropDownSimpleComponent.new(type_de_champ:, form:, procedure:)
+              = render TypesDeChampEditor::ChampDropDownAdvancedComponent.new(type_de_champ:, form:, procedure:)
 
               .cell.flex.align-center
                 = form.check_box :drop_down_other, class: "small-margin small", id: dom_id(type_de_champ, :drop_down_other)
@@ -164,83 +128,14 @@
                   Spécifier le format requis
                 .fr-segmented__elements
                   .fr-segmented__element
-                    = form.radio_button :formatted_mode, 'simple', id: dom_id(type_de_champ, :simple), data: { action: 'segmented-control#toggle', 'mode-to-show': 'simple' }
+                    = form.radio_button :formatted_mode, 'simple', checked: type_de_champ.formatted_simple?, id: dom_id(type_de_champ, :simple)
                     = form.label :formatted_mode_simple, t('.kind.labels.simple'), for: dom_id(type_de_champ, :simple), class: 'fr-label'
                   .fr-segmented__element
-                    = form.radio_button :formatted_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'segmented-control#toggle', "mode-to-show": "advanced" }
+                    = form.radio_button :formatted_mode, 'advanced', id: dom_id(type_de_champ, :advanced)
                     = form.label :formatted_mode_advanced, t('.kind.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
-            %div{ class: class_names("flex column", "justify-start", "flex-grow", "width-66", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_simple", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'advanced' : nil), data: { 'segmented-control-target': 'simple' } }
-              .cell
-                %fieldset.fr-fieldset{ aria_labelledby: 'checkboxes-inline-legend' }
-                  .fr-fieldset__element.fr-mb-0
-                    %legend.fr-fieldset__legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
-                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
-                    .fr-checkbox-group
-                      = form.check_box :numbers_accepted, id: dom_id(type_de_champ, :numbers_accepted)
-                      = form.label :numbers_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :numbers_accepted) do
-                        = t('.simple_mode.labels.numbers')
-                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
-                    .fr-checkbox-group
-                      = form.check_box :letters_accepted, id: dom_id(type_de_champ, :letters_accepted)
-                      = form.label :letters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :letters_accepted) do
-                        = t('.simple_mode.labels.letters')
-                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
-                    .fr-checkbox-group
-                      = form.check_box :special_characters_accepted, id: dom_id(type_de_champ, :special_characters_accepted)
-                      = form.label :special_characters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :special_characters_accepted) do
-                        = t('.simple_mode.labels.special_characters')
-                  - if (errors = procedure.errors.where(:draft_types_de_champ_public, :invalid_character_rules, type_de_champ:)).any?
-                    .fr-messages-group
-                      %p.fr-message.fr-message--error= errors.map(&:full_message).to_sentence
-
-              .cell
-                %fieldset.fr-fieldset
-                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
-                    .fr-input-group
-                      = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
-                        = t('.simple_mode.labels.min_character_length')
-                      = form.number_field :min_character_length, class: "fr-input", id: dom_id(type_de_champ, :min_character_length)
-
-                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
-                    .fr-input-group
-                      = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
-                        = t('.simple_mode.labels.max_character_length')
-                      = form.number_field :max_character_length, class: "fr-input", id: dom_id(type_de_champ, :max_character_length)
-                  - if (errors = procedure.errors.where(:draft_types_de_champ_public, :invalid_character_length, type_de_champ:)).any?
-                    .fr-messages-group
-                      %p.fr-message.fr-message--error= errors.map(&:full_message).to_sentence
-
-            %div{ class: class_names("flex column", "justify-start", "flex-grow", "width-66", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'segmented-control-target': 'advanced' } }
-              .cell.formatted_mode_advanced
-                .fr-input-group
-                  = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere), class: "fr-md-1w" do
-                    = t('.expression_reguliere.labels.regex')
-
-                  .type-de-champ-expression-reguliere
-                    = form.text_field :expression_reguliere, class: "fr-input small-margin small fr-text--monospace", id: dom_id(type_de_champ, :expression_reguliere)
-                  %p.fr-hint-text.fr-mt-1w= t('.expression_reguliere.labels.hint_html')
-              .cell.fr-mt-2w
-                .fr-input-group
-                  = form.label :expression_reguliere_indications, for: dom_id(type_de_champ, :expression_reguliere_indications), class: "fr-mb-0" do
-                    = t('.expression_reguliere.labels.indications')
-                  %p.fr-hint-text.fr-mb-0= t('.expression_reguliere.labels.indications_hint')
-                  = form.text_field :expression_reguliere_indications, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_indications)
-
-              .cell.fr-mt-2w
-                .fr-input-group
-                  = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do
-                    = t('.expression_reguliere.labels.valid_exemple')
-                  = form.text_field :expression_reguliere_exemple_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_exemple_text)
-                .fr-messages-group
-                  - if type_de_champ.invalid_regexp?
-                    %p.fr-message.fr-message--error
-                      = type_de_champ.errors[:expression_reguliere_exemple_text].join(", ")
-              .cell.fr-mt-2w
-                = form.label :expression_reguliere_error_message, for: dom_id(type_de_champ, :expression_reguliere_error_message) do
-                  = t('.expression_reguliere.labels.error_message')
-                = form.text_field :expression_reguliere_error_message, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_error_message)
-
+            = render TypesDeChampEditor::ChampFormattedSimpleComponent.new(type_de_champ:, form:, procedure:)
+            = render TypesDeChampEditor::ChampFormattedAdvancedComponent.new(type_de_champ:, form:, procedure:)
 
     - if type_de_champ.referentiel?
       = render(TypesDeChampEditor::InfoReferentielComponent.new(procedure:, type_de_champ:))
