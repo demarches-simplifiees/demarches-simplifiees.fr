@@ -224,6 +224,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :set_default_libelle, if: -> { type_champ_changed? }
   before_validation :normalize_libelle
   before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
+  before_validation :clean_formatted_options, if: -> { type_champ_changed? }
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
 
@@ -423,6 +424,10 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_options_from_text=(text)
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
+  end
+
+  def formatted_advanced?
+    formatted? && options['formatted_mode'] == 'advanced'
   end
 
   def header_section_level_value
@@ -761,6 +766,13 @@ class TypeDeChamp < ApplicationRecord
     elsif linked_drop_down_list? && drop_down_options.none?(/^--.*--$/)
       self.drop_down_options = ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
     end
+  end
+
+  def clean_formatted_options
+    return if options.blank?
+    return if formatted?
+
+    options.except!(*TypesDeChamp::FormattedTypeDeChamp::OPTIONS)
   end
 
   def normalize_libelle
