@@ -21,13 +21,14 @@ module EmailSanitizableConcern
 
   def check_if_typo(emails)
     emails = emails.map { EmailSanitizer.sanitize(_1) }
-    @maybe_typos, no_suggestions = emails
+    maybe_typos, no_suggestions = emails
       .map { |email| [email, EmailChecker.check(email:)[:suggestions]&.first] }
       .partition { _1[1].present? }
 
     emails = no_suggestions.map(&:first)
     emails << EmailSanitizer.sanitize(params['final_email']) if params['final_email'].present?
-    emails
+
+    [emails, maybe_typos]
   end
 
   class EmailSanitizer

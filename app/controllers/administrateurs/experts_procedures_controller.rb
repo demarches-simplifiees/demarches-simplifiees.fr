@@ -13,7 +13,7 @@ module Administrateurs
     def create
       emails = params['emails'].presence || []
 
-      emails = check_if_typo(emails)
+      emails, @maybe_typos = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
 
       valid_users, invalid_users = emails

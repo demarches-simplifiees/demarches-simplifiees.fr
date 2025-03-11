@@ -1,4 +1,5 @@
-- if flash.any?
+- displayable_flash = flash.filter { |key, _| key.in?(['notice', 'alert']) }
+- if displayable_flash.any?
   - unique_classname= "u#{SecureRandom.hex}"
   = turbo_stream.replace 'flash_messages', partial: 'layouts/flash_messages', locals: { unique_classname: }
   = turbo_stream.focus 'flash_messages'

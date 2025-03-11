@@ -44,8 +44,6 @@ module ApplicationHelper
       class_names << 'alert-success fr-icon-success-line fr-icon--sm fr-text--sm fr-mb-0'
     when 'alert', 'error'
       class_names << 'alert-danger fr-icon-error-line fr-icon--sm fr-text--sm fr-mb-0'
-    when 'routing_mode'
-      class_names << 'hidden'
     end
     if sticky
       class_names << 'sticky'
