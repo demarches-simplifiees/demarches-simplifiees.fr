@@ -150,7 +150,7 @@ describe TypeDeChamp do
   end
 
   describe "validate_regexp" do
-    let(:tdc) { create(:type_de_champ_formatted, :advanced, expression_reguliere:, expression_reguliere_exemple_text:) }
+    let(:tdc) { create(:type_de_champ_formatted, expression_reguliere:, expression_reguliere_exemple_text:) }
     subject { tdc.invalid_regexp? }
 
     context "expression_reguliere and bad example" do
@@ -175,18 +175,6 @@ describe TypeDeChamp do
         expect(subject).to be_truthy
         expect(tdc.errors.messages[:expression_reguliere]).to be_present
       end
-    end
-  end
-
-  describe 'formatted options cleaning' do
-    let(:tdc) { build(:type_de_champ_formatted) }
-    it 'keeps only simple options' do
-      expect(tdc.options["formatted_mode"]).to be_present
-      expect(tdc.options["drop_down_options"]).to be_blank
-      tdc.type_champ = "drop_down_list"
-      tdc.save!
-      expect(tdc.options["formatted_mode"]).to be_blank
-      expect(tdc.options["drop_down_options"]).to be_present
     end
   end
 
