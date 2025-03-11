@@ -47,7 +47,7 @@ describe Manager::DossiersController, type: :controller do
 
       it do
         expect { subject }.to have_enqueued_mail(DossierMailer, :notify_transfer)
-        expect(flash[:success]).to eq("Une invitation de transfert a été envoyée à chouette.gars@laposte.net")
+        expect(flash[:notice]).to eq("Une invitation de transfert a été envoyée à chouette.gars@laposte.net")
       end
     end
 

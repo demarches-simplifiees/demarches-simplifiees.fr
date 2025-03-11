@@ -25,7 +25,7 @@ module Manager
     def transfer
       transfer = DossierTransfer.create(email: params[:email], dossiers: [Dossier.find(params[:id])], from_support: true)
       if transfer.persisted?
-        flash[:success] = "Une invitation de transfert a été envoyée à #{params[:email]}"
+        flash[:notice] = "Une invitation de transfert a été envoyée à #{params[:email]}"
       else
         flash[:alert] = transfer.errors.full_messages.join("<br>")
       end
