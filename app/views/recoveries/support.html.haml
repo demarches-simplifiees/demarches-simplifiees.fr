@@ -13,14 +13,14 @@
       class: 'fr-btn')
 
   - when 'must_use_agent_connect'
-    %p Vous devez utiliser le portail ProConnect pour récupérer vos dossiers.
+    %p Vous devez utiliser le portail AgentConnect pour récupérer vos dossiers.
 
     = link_to pro_connect_login_path, class: "fr-btn fr-connect" do
       %span.fr-connect__login
-        = t('agent_connect.agent.index.signin_with')
-      %span.fr-connect__brand ProConnect
+        = t('pro_connect.agent.index.signin_with')
+      %span.fr-connect__brand AgentConnect
 
-    %p Vous n'avez pas encore de compte ProConnect ? Vous pouvez en créer un en utilisant MonComptePro.
+    %p Vous n'avez pas encore de compte AgentConnect ? Vous pouvez en créer un en utilisant MonComptePro.
     = link_to 'MonComptePro', 'https://moncomptepro.beta.gouv.fr', class: 'fr-btn'
 
   - when 'no_dossier'

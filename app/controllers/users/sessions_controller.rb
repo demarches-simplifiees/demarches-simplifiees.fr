@@ -7,7 +7,7 @@ class Users::SessionsController < Devise::SessionsController
 
   layout 'login', only: [:new, :create]
 
-  before_action :redirect_to_agent_connect_if_mandatory, only: [:create]
+  before_action :redirect_to_pro_connect_if_mandatory, only: [:create]
   before_action :restore_procedure_context, only: [:new, :create]
   skip_before_action :redirect_if_untrusted, only: [:reset_link_sent]
   # POST /resource/sign_in
@@ -60,7 +60,7 @@ class Users::SessionsController < Devise::SessionsController
       end
 
       if agent_connect_id_token.present?
-        return redirect_to AgentConnectService.logout_url(agent_connect_id_token, host_with_port: request.host_with_port),
+        return redirect_to ProConnectService.logout_url(agent_connect_id_token, host_with_port: request.host_with_port),
           allow_other_host: true
       end
     end
@@ -113,10 +113,10 @@ class Users::SessionsController < Devise::SessionsController
     redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
   end
 
-  def redirect_to_agent_connect_if_mandatory
-    return if !AgentConnectService.enabled?
+  def redirect_to_pro_connect_if_mandatory
+    return if !ProConnectService.enabled?
 
-    return if !AgentConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
+    return if !ProConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
 
     flash[:alert] = "La connexion des agents passe à présent systématiquement par ProConnect"
     redirect_to pro_connect_path(force_pro_connect: true)
