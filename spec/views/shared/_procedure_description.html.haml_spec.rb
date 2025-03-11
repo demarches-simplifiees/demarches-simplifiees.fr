@@ -120,6 +120,8 @@ describe 'shared/_procedure_description', type: :view do
       render partial: 'shared/procedure_description', locals: { procedure: }
       expect(rendered).not_to have_text('new pj')
 
+      travel(1.minute)
+
       procedure.draft_revision.add_type_de_champ(type_champ: :piece_justificative, libelle: 'new pj')
       procedure.publish_revision!
 
