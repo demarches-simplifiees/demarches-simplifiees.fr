@@ -66,7 +66,7 @@ describe ProcedurePathConcern do
   end
 
   describe 'path_customized?' do
-    let(:procedure) { create :procedure }
+    let!(:procedure) { create :procedure }
 
     subject { procedure.path_customized? }
 
@@ -75,7 +75,10 @@ describe ProcedurePathConcern do
     end
 
     context 'when the path has been changed' do
-      before { procedure.claim_path!(procedure.administrateurs.first, 'custom_path') }
+      before do
+        travel(1.minute)
+        procedure.claim_path!(procedure.administrateurs.first, 'custom_path')
+      end
 
       it { expect(procedure.path).to eq('custom_path') }
       it { is_expected.to be_truthy }
@@ -164,11 +167,13 @@ describe ProcedurePathConcern do
   end
 
   describe '#previous_paths' do
-    let(:procedure) { create(:procedure) }
+    let!(:procedure) { create(:procedure) }
 
     context 'when the path has been changed twice' do
       before do
+        travel(1.minute)
         procedure.claim_path!(procedure.administrateurs.first, 'custom_path')
+        travel(2.minutes)
         procedure.claim_path!(procedure.administrateurs.first, 'custom_path_2')
       end
 

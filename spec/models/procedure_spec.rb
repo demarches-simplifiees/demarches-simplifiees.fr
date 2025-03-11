@@ -1441,8 +1441,13 @@ describe Procedure do
   end
 
   describe 'suggested_path' do
-    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)], path: path) }
+    let!(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
     let(:path) { nil }
+
+    before do
+      travel(3.seconds)
+      procedure.claim_path!(procedure.administrateurs.first, path)
+    end
 
     subject { procedure.suggested_path }
 

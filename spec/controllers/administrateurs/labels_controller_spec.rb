@@ -103,6 +103,7 @@ describe Administrateurs::LabelsController, type: :controller do
 
     context 'when updating a label' do
       it 'updates correctly' do
+        travel(1.second)
         subject
         expect(flash.alert).to be_nil
         expect(flash.notice).to eq('Le label a bien été modifié')
