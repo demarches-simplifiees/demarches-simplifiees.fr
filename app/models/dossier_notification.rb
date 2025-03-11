@@ -69,6 +69,15 @@ class DossierNotification < ApplicationRecord
       .group_by(&:dossier_id)
   end
 
+  def self.notifications_for_instructeur_dossier(instructeur, dossier)
+    DossierNotification
+      .where(dossier_id: dossier.id)
+      .where(groupe_instructeur_id: dossier.groupe_instructeur_id)
+      .or(DossierNotification.where(dossier_id: dossier.id, instructeur_id: instructeur.id))
+      .to_display
+      .to_a
+  end
+
   def badge_class
     case notification_type
     when DossierNotification.notification_types.fetch(:dossier_depose)
