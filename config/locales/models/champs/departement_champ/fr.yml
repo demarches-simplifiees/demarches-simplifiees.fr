@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/departement_champ:
         hints:
-          value: "Renseignez le code ou le nom du département"
+          value: "Sélectionnez le département"
