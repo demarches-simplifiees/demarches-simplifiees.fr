@@ -31,6 +31,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillAddressTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:epci)
       TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ, revision)
+    when TypeDeChamp.type_champs.fetch(:formatted)
+      TypesDeChamp::PrefillFormattedTypeDeChamp.new(type_de_champ, revision)
     else
       new(type_de_champ, revision)
     end
