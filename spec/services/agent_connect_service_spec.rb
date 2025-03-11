@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-describe AgentConnectService do
+describe Pro_ConnectService do
   describe '.logout_url' do
     let(:id_token) { 'id_token' }
 
     before do
-      ::AGENT_CONNECT ||= {}
-      allow(AGENT_CONNECT).to receive(:[])
+      ::PRO_CONNECT ||= {}
+      allow(PRO_CONNECT).to receive(:[])
         .with(:end_session_endpoint).and_return("https://agent-connect.fr/logout")
     end
 

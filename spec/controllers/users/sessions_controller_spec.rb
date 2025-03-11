@@ -100,7 +100,7 @@ describe Users::SessionsController, type: :controller do
     xcontext 'when email domain is in mandatory list' do
       let(:email) { 'user@beta.gouv.fr' }
       it 'redirects to agent connect with force parameter and is not logged in' do
-        expect(AgentConnectService).to receive(:enabled?).and_return(true)
+        expect(Pro_ConnectService).to receive(:enabled?).and_return(true)
         subject
         expect(response).to redirect_to(pro_connect_path(force_pro_connect: true))
         expect(flash[:alert]).to eq("La connexion des agents passe à présent systématiquement par ProConnect")
@@ -115,7 +115,7 @@ describe Users::SessionsController, type: :controller do
     let(:agent_connect_id_token) { nil }
 
     before do
-      stub_const("AGENT_CONNECT", { end_session_endpoint: 'http://agent-connect/logout' })
+      stub_const("PRO_CONNECT", { end_session_endpoint: 'http://pro-connect/logout' })
       sign_in user
       delete :destroy
     end
@@ -145,11 +145,11 @@ describe Users::SessionsController, type: :controller do
       end
     end
 
-    context 'when user is connect with agent connect' do
+    context 'when user is connect with pro connect' do
       let(:loged_in_with_france_connect) { nil }
       let(:agent_connect_id_token) { 'qwerty' }
 
-      it 'redirect to agent connect logout page' do
+      it 'redirect to pro connect logout page' do
         expect(response.location).to include(agent_connect_id_token)
         expect(instructeur.reload.agent_connect_id_token).to be_nil
       end

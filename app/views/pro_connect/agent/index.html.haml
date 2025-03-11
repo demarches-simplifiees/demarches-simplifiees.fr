@@ -1,4 +1,4 @@
-- content_for(:title, t('.cta'))
+- content_for(:title, t('pro_connect.agent.index.cta'))
 
 #proconnect
   .fr-container
@@ -13,18 +13,18 @@
 
             .fr-mb-0.fr-fieldset
               .fr-fieldset__legend
-                %h2.fr-h6= t('.cta')
+                %h2.fr-h6= t('pro_connect.agent.index.cta')
 
               .fr-fieldset__element
-                %p= t('.explanation')
+                %p= t('pro_connect.agent.index.explanation')
 
                 .fr-connect-group.fr-my-2w
                   = link_to(pro_connect_login_path, class: "fr-btn fr-connect") do
                     %span.fr-connect__login
-                      = t('.signin_with')
+                      = t('pro_connect.agent.index.signin_with')
                     %span.fr-connect__brand ProConnect
                   %p
-                    = link_to t('.whats_proconnect'), 'https://proconnect.gouv.fr/', target: '_blank', rel: "noopener"
+                    = link_to t('pro_connect.agent.index.whats_proconnect'), 'https://proconnect.gouv.fr/', target: '_blank', rel: "noopener"
 
             - if !params[:force_pro_connect]
               %p.fr-hr-or= t('views.shared.france_connect_login.separator')
@@ -42,7 +42,7 @@
 
                 .fr-fieldset__element
                   = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email' }) do |c|
-                    - c.with_label { t('.pro_email') }
+                    - c.with_label { t('pro_connect.agent.index.pro_email') }
 
                 .fr-fieldset__element
                   = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
@@ -59,12 +59,12 @@
 
           %hr
 
-          %h2.fr-h6= t('.you_are_a_citizen')
-          .fr-btns-group= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
+          %h2.fr-h6= t('pro_connect.agent.index.you_are_a_citizen')
+          .fr-btns-group= link_to t('pro_connect.agent.index.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
 
       .fr-col-lg.fr-p-6w
-        = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
+        = render Dsfr::CalloutComponent.new(title: t('pro_connect.agent.index.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
           - c.with_body do
-            = t('.full_deploy_body')
-        %h2.fr-h6= t('.whats_ds', application_name: Current.application_name)
+            = t('pro_connect.agent.index.full_deploy_body')
+        %h2.fr-h6= t('pro_connect.agent.index.whats_ds', application_name: Current.application_name)
         = image_tag "landing/hero/dematerialiser.svg", class: "fr-responsive-img", alt: ""

@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 # doc: https://github.com/france-connect/Documentation-AgentConnect
-class AgentConnect::AgentController < ApplicationController
+class ProConnect::AgentController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
 
-  STATE_COOKIE_NAME = :agentConnect_state
-  NONCE_COOKIE_NAME = :agentConnect_nonce
+  STATE_COOKIE_NAME = :proConnect_state
+  NONCE_COOKIE_NAME = :proConnect_nonce
 
   def index
   end
 
   def login
-    uri, state, nonce = AgentConnectService.authorization_uri
+    uri, state, nonce = ProConnectService.authorization_uri
 
     cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
     cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
@@ -21,7 +21,7 @@ class AgentConnect::AgentController < ApplicationController
   end
 
   def callback
-    user_info, id_token, amr = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    user_info, id_token, amr = ProConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.delete NONCE_COOKIE_NAME
 
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class AgentConnectService
+class ProConnectService
   include OpenIDConnect
 
   MANDATORY_EMAIL_DOMAINS = []
 
   def self.enabled?
-    ENV['AGENT_CONNECT_BASE_URL'].present?
+    ENV['PRO_CONNECT_BASE_URL'].present?
   end
 
   def self.authorization_uri
@@ -44,7 +44,7 @@ class AgentConnectService
   def self.logout_url(id_token, host_with_port:)
     app_logout = Rails.application.routes.url_helpers.logout_url(host: host_with_port)
     h = { id_token_hint: id_token, post_logout_redirect_uri: app_logout }
-    "#{AGENT_CONNECT[:end_session_endpoint]}?#{h.to_query}"
+    "#{PRO_CONNECT[:end_session_endpoint]}?#{h.to_query}"
   end
 
   def self.email_domain_is_in_mandatory_list?(email)
@@ -56,9 +56,9 @@ class AgentConnectService
   # TODO: remove this block when migration to new domain is done
   def self.conf
     if Current.host.end_with?('.gouv.fr')
-      AGENT_CONNECT_GOUV
+      PRO_CONNECT_GOUV
     else
-      AGENT_CONNECT
+      PRO_CONNECT
     end
   end
 end
