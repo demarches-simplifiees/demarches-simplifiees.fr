@@ -103,8 +103,10 @@ FactoryBot.define do
     end
     factory :type_de_champ_formatted do
       type_champ { TypeDeChamp.type_champs.fetch(:formatted) }
-      options do
-        { formatted_mode: "simple" }
+      trait :simple do
+        options do
+          { formatted: "simple" }
+        end
       end
       trait :numbers_accepted do
         options do
