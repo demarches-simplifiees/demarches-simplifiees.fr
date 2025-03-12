@@ -113,8 +113,8 @@ class User < ApplicationRecord
     AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
   end
 
-  def self.create_or_promote_to_instructeur(email, password, administrateurs: [], agent_connect: false)
-    if agent_connect
+  def self.create_or_promote_to_instructeur(email, password, administrateurs: [], pro_connect: false)
+    if pro_connect
       user = User
         .create_with(password: password, confirmed_at: Time.zone.now, email_verified_at: Time.zone.now)
         .find_or_create_by(email: email)
