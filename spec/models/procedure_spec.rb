@@ -22,7 +22,7 @@ describe Procedure do
       expect { procedure.compute_dossiers_count }.to change(procedure, :estimated_dossiers_count).from(nil).to(2)
       expect { create(:dossier, procedure: procedure).passer_en_construction! }.not_to change(procedure, :estimated_dossiers_count)
 
-      travel_to(Time.zone.now + Procedure::DOSSIERS_COUNT_EXPIRING)
+      travel_to(Time.zone.now + Procedure::DOSSIERS_COUNT_EXPIRING + 1.minute)
       expect { procedure.compute_dossiers_count }.to change(procedure, :estimated_dossiers_count).from(2).to(3)
       travel_back
     end
