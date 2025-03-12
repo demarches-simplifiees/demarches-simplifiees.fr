@@ -73,7 +73,7 @@ class RecoveriesController < ApplicationController
 
   def ensure_agent_connect_is_used
     if current_instructeur&.last_agent_connect_information.nil?
-      redirect_to support_recovery_path(error: :must_use_agent_connect)
+      redirect_to support_recovery_path(error: :must_use_pro_connect)
     end
   end
 
