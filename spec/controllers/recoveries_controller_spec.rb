@@ -50,7 +50,7 @@ describe RecoveriesController, type: :controller do
     end
 
     context 'when agent connect is not used' do
-      it { is_expected.to redirect_to(support_recovery_path(error: :must_use_agent_connect)) }
+      it { is_expected.to redirect_to(support_recovery_path(error: :must_use_pro_connect)) }
     end
   end
 

@@ -12,12 +12,12 @@
       subject: 'Récupération de dossiers',
       class: 'fr-btn')
 
-  - when 'must_use_agent_connect'
+  - when 'must_use_pro_connect'
     %p Vous devez utiliser le portail ProConnect pour récupérer vos dossiers.
 
     = link_to pro_connect_login_path, class: "fr-btn fr-connect" do
       %span.fr-connect__login
-        = t('agent_connect.agent.index.signin_with')
+        = t('pro_connect.agent.index.signin_with')
       %span.fr-connect__brand ProConnect
 
     %p Vous n'avez pas encore de compte ProConnect ? Vous pouvez en créer un en utilisant MonComptePro.
