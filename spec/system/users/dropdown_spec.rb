@@ -22,15 +22,13 @@ describe 'dropdown list with other option activated', js: true do
 
     scenario 'Select other option and the other input hidden must appear' do
       fill_individual
-
-      choose "Autre"
+      choose I18n.t('shared.champs.drop_down_list.other'), allow_label_click: true
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
 
     scenario "Getting back from other save the new option" do
       fill_individual
-
-      choose I18n.t('shared.champs.drop_down_list.other')
+      choose I18n.t('shared.champs.drop_down_list.other'), allow_label_click: true
       fill_in(I18n.t('shared.champs.drop_down_list.other_label'), with: "My choice")
 
       wait_until { user_dossier.champs_public.first.value == "My choice" }
@@ -83,5 +81,7 @@ describe 'dropdown list with other option activated', js: true do
       click_on 'Continuer'
     end
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
+    # pf: wait for connected stimulus controller
+    expect(page).to have_css('[data-controller="autosave"][data-controller-connected="true"]')
   end
 end
