@@ -42,7 +42,7 @@ describe API::V1::DossiersController do
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
       let(:date_creation) { Time.zone.local(2008, 9, 1, 10, 5, 0) }
-      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :en_construction, procedure: procedure) } }
+      let!(:dossier) { travel_to(date_creation) { create(:dossier, :with_entreprise, :en_construction, procedure: procedure) } }
       let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
       it do
@@ -178,7 +178,7 @@ describe API::V1::DossiersController do
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
         let(:date_creation) { Time.zone.local(2008, 9, 1, 10, 5, 0) }
-        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :accepte, procedure: procedure, motivation: "Motivation") } }
+        let!(:dossier) { travel_to(date_creation) { create(:dossier, :with_entreprise, :accepte, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
         let(:field_list) { [:id, :created_at, :updated_at, :archived, :individual, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :email, :instructeurs, :attestation, :avis] }

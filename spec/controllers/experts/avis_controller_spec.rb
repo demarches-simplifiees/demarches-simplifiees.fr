@@ -251,8 +251,7 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#update' do
-      before { Timecop.freeze(now) }
-      after { Timecop.return }
+      before { travel_to(now) }
 
       let(:avis) { avis_without_answer }
 
@@ -328,10 +327,8 @@ describe Experts::AvisController, type: :controller do
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
-        Timecop.freeze(now)
+        travel_to(now)
       end
-
-      after { Timecop.return }
 
       it do
         subject
@@ -380,12 +377,10 @@ describe Experts::AvisController, type: :controller do
       let(:question_label) { '' }
 
       before do
-        Timecop.freeze(now)
+        travel_to(now)
         post :create_avis, params: { id: previous_avis.id, procedure_id:, avis: { emails:, introduction:, experts_procedure:, confidentiel:, invite_linked_dossiers:, introduction_file:, question_label: } }
         created_avis.reload
       end
-
-      after { Timecop.return }
 
       context 'from a revoked avis' do
         let(:previous_revoked_at) { Time.zone.now }

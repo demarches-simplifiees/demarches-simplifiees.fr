@@ -82,11 +82,9 @@ describe TagsSubstitutionConcern, type: :model do
     let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
     let(:instructeur) { create(:instructeur) }
 
-    before { Timecop.freeze(Time.zone.now) }
+    before { freeze_time }
 
     subject { template_concern.send(:replace_tags, template, dossier) }
-
-    after { Timecop.return }
 
     context 'when the dossier and the procedure has an individual' do
       let(:for_individual) { true }

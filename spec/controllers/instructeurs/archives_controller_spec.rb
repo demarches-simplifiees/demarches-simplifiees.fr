@@ -12,14 +12,13 @@ describe Instructeurs::ArchivesController, type: :controller do
   before do
     sign_in(instructeur.user)
   end
-  after { Timecop.return }
 
   describe '#index' do
     before do
       create_dossier_for_month(procedure1, 2021, 3)
       create_dossier_for_month(procedure1, 2021, 3)
       create_dossier_for_month(procedure1, 2021, 2)
-      Timecop.freeze(Time.zone.local(2021, 3, 5))
+      travel_to(Time.zone.local(2021, 3, 5))
     end
     subject { get :index, params: { procedure_id: procedure1.id } }
 
@@ -71,7 +70,7 @@ describe Instructeurs::ArchivesController, type: :controller do
   private
 
   def create_dossier_for_month(procedure, year, month)
-    Timecop.freeze(Time.zone.local(year, month, 5))
+    travel_to(Time.zone.local(year, month, 5))
     create(:dossier, :accepte, :with_attestation, procedure: procedure)
   end
 end

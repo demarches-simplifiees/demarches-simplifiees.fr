@@ -9,12 +9,10 @@ RSpec.describe Cron::AdministrateurActivateBeforeExpirationJob, type: :job do
     subject { Cron::AdministrateurActivateBeforeExpirationJob.perform_now }
 
     before do
-      Timecop.freeze(Time.zone.local(2018, 03, 20))
+      travel_to(Time.zone.local(2018, 03, 20))
       administrateur.reload
       allow(AdministrateurMailer).to receive(:activate_before_expiration).and_return(mailer_double)
     end
-
-    after { Timecop.return }
 
     context "with an inactive administrateur" do
       before { user.update(last_sign_in_at: nil) }

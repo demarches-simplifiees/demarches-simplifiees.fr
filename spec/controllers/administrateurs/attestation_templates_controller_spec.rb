@@ -13,10 +13,8 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
   before do
     procedure
     sign_in(admin.user)
-    Timecop.freeze(Time.zone.now)
+    freeze_time
   end
-
-  after { Timecop.return }
 
   shared_examples 'rendering a PDF successfully' do
     render_views

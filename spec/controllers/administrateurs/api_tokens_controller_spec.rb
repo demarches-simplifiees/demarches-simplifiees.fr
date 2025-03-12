@@ -6,8 +6,7 @@ describe Administrateurs::APITokensController, type: :controller do
 
   before { sign_in(admin.user) }
 
-  before { Timecop.freeze(Time.zone.local(2020, 1, 1, 12, 0, 0)) }
-  after { Timecop.return }
+  before { travel_to(Time.zone.local(2020, 1, 1, 12, 0, 0)) }
 
   describe 'create' do
     let(:default_params) do

@@ -20,8 +20,6 @@ describe ProcedureArchiveService do
     let!(:dossier) { create_dossier_for_month(year, month) }
     let!(:dossier_2020) { create_dossier_for_month(2020, month) }
 
-    after { Timecop.return }
-
     context 'for a specific month' do
       let(:archive) { create(:archive, user_profile: administrateur, time_span_type: 'monthly', job_status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
       let(:year) { 2021 }
@@ -150,7 +148,7 @@ describe ProcedureArchiveService do
   private
 
   def create_dossier_for_month(year, month)
-    Timecop.freeze(Time.zone.local(year, month, 5))
+    travel_to(Time.zone.local(year, month, 5))
     create(:dossier, :accepte, :with_attestation, procedure: procedure)
   end
 end

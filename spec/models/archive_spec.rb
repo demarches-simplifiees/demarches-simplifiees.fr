@@ -3,8 +3,7 @@
 describe Archive do
   include ActiveJob::TestHelper
 
-  before { Timecop.freeze(Time.zone.now) }
-  after { Timecop.return }
+  before { freeze_time }
 
   let!(:archive) { create(:archive, job_status: :pending) }
 
