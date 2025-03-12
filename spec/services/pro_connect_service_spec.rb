@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-describe Pro_ConnectService
+describe Pro_ConnectService do
+describe '.logout_url' do
+  let(:id_token) { 'id_token' }
+
     before do
       ::PRO_CONNECT ||= {}
       allow(PRO_CONNECT).to receive(:[])
