@@ -144,7 +144,7 @@ describe 'Instructing a dossier:', js: true do
       perform_enqueued_jobs(only: ExportJob)
     end
 
-    page.driver.browser.navigate.refresh
+    page.refresh
     expect(page).to have_text('Télécharger l’export')
   end
 
