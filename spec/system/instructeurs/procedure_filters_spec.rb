@@ -93,7 +93,7 @@ describe "procedure filters" do
     find('#search-filter', wait: 5).click
     find('.fr-menu__item', text: "En construction le", wait: 5).click
     find("input#value[type=date]", visible: true)
-    fill_in "Valeur", with: "10/10/2010"
+    fill_in "Valeur", with: Date.parse("10/10/2010")
     click_button "Ajouter le filtre"
     expect(page).to have_no_css("#search-filter", visible: true)
 
