@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# doc: https://github.com/france-connect/Documentation-AgentConnect
+# doc: https://github.com/numerique-gouv/proconnect-documentation/tree/main
 class ProConnect::AgentController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
@@ -27,7 +27,7 @@ class ProConnect::AgentController < ApplicationController
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
 
     if instructeur.nil?
-      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], agent_connect: true)
+      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], pro_connect: true)
       instructeur = user.instructeur
     end
 

@@ -14,7 +14,7 @@ describe Administrateurs::ServicesController, type: :controller do
 
     subject { get :new, params: { procedure_id: procedure.id } }
 
-    context 'when admin has a SIRET from AgentConnect' do
+    context 'when admin has a SIRET from ProConnect' do
       let(:siret) { "20004021000060" }
 
       before do

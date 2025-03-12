@@ -48,7 +48,7 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      agent_connect_id_token = current_user&.instructeur&.agent_connect_id_token
+      pro_connect_id_token = current_user&.instructeur&.agent_connect_id_token
 
       current_user.update(loged_in_with_france_connect: nil)
       current_user&.instructeur&.update(agent_connect_id_token: nil)
@@ -59,8 +59,8 @@ class Users::SessionsController < Devise::SessionsController
         return redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
       end
 
-      if agent_connect_id_token.present?
-        return redirect_to ProConnectService.logout_url(agent_connect_id_token, host_with_port: request.host_with_port),
+      if pro_connect_id_token.present?
+        return redirect_to ProConnectService.logout_url(pro_connect_id_token, host_with_port: request.host_with_port),
           allow_other_host: true
       end
     end
