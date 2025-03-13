@@ -24,6 +24,7 @@ module SystemHelpers
 
     perform_enqueued_jobs do
       click_on 'Se connecter'
+      expect(page).to have_text("Se déconnecter")
     end
 
     if sign_in_by_link
