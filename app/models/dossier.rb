@@ -692,6 +692,8 @@ class Dossier < ApplicationRecord
 
     create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
 
+    DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, groupe_instructeur)
+
     if !brouillon?
       unfollow_stale_instructeurs
       if author.present?
