@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Pro_ConnectService do
+describe ProConnectService do
 describe '.logout_url' do
   let(:id_token) { 'id_token' }
 

@@ -205,15 +205,11 @@ Rails.application.routes.draw do
     get 'confirm_email/:token', to: 'particulier#confirm_email', as: :confirm_email
   end
 
-  scope path: 'pro_connect', module: 'pro_connect', as: 'pro_connect' do
+  namespace :pro_connect do
     get '' => 'agent#index'
     get 'login' => 'agent#login'
     get 'callback' => 'agent#callback'
   end
-
-  # Backward compatibility for AgentConnect callbacks
-  # get 'agent_connect/callback' => 'agent_connect/agent#callback'
-  # get 'agent_connect/callback' => 'pro_connect/agent#callback'
 
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
