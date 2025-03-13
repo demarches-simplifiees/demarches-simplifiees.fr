@@ -10,6 +10,12 @@ describe 'Instructing a dossier:', js: true do
 
   let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur], types_de_champ_private: [{ type: 'checkbox', libelle: 'Yes/No', stable_id: 99 }, { libelle: 'Nom', condition: ds_eq(champ_value(99), constant(true)) }]) }
   let!(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+
+  scenario 'A instructeur can signin by email' do
+    log_in(instructeur.email, password, check_email: true)
+    expect(page).to have_current_path(instructeur_procedures_path)
+  end
+
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
@@ -126,9 +132,7 @@ describe 'Instructing a dossier:', js: true do
   end
 
   scenario 'A instructeur can request an export' do
-    assert_performed_jobs 1 do
-      log_in(instructeur.email, password)
-    end
+    log_in(instructeur.email, password)
 
     click_on(procedure.libelle, visible: true)
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
@@ -315,7 +319,7 @@ describe 'Instructing a dossier:', js: true do
     end
   end
 
-  def log_in(email, password, check_email: true)
+  def log_in(email, password, check_email: false)
     visit new_user_session_path
     expect(page).to have_current_path(new_user_session_path)
 

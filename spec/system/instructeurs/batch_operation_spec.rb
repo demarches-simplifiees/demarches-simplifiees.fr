@@ -163,11 +163,11 @@ describe 'BatchOperation a dossier:', js: true do
     end
   end
 
-  def log_in(email, password, check_email: true)
+  def log_in(email, password)
     visit new_user_session_path
     expect(page).to have_current_path(new_user_session_path)
 
-    sign_in_with(email, password, check_email)
+    sign_in_with(email, password)
 
     expect(page).to have_current_path(instructeur_procedures_path)
   end
