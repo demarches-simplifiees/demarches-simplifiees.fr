@@ -696,6 +696,7 @@ class Dossier < ApplicationRecord
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
+        DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, groupe_instructeur)
       end
     end
   end
