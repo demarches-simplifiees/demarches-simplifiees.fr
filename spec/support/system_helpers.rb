@@ -3,17 +3,6 @@
 module SystemHelpers
   include ActiveJob::TestHelper
 
-  def login_admin
-    user = create :user
-    login_as user, scope: :user
-    user
-  end
-
-  def login_instructeur
-    instructeur = create(:instructeur)
-    login_as instructeur, scope: :instructeur
-  end
-
   def sign_in_with(email, password, sign_in_by_link = false)
     fill_in :user_email, with: email
     fill_in :user_password, with: password

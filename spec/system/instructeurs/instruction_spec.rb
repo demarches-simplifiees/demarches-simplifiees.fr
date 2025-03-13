@@ -324,10 +324,6 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_current_path(instructeur_procedures_path)
   end
 
-  def log_out
-    click_on 'Se déconnecter'
-  end
-
   def ask_confidential_avis(to, introduction)
     fill_in 'avis_emails', with: to
     fill_in 'avis_introduction', with: introduction
