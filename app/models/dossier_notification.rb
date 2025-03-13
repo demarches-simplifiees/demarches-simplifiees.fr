@@ -13,6 +13,8 @@ class DossierNotification < ApplicationRecord
   scope :to_display, -> { where('display_at <= ?', Time.current) }
 
   def self.create_notification(dossier, notification_type, instructeur = nil)
+    return if notification_already_exist?(dossier.id, notification_type, instructeur&.id)
+
     params = { dossier_id: dossier.id, notification_type: }
 
     case notification_type
@@ -86,5 +88,11 @@ class DossierNotification < ApplicationRecord
     when DossierNotification.notification_types.fetch(:dossier_depose)
       "DÉPOSÉ DEPUIS #{(Time.current - display_at).to_i/1.day} J."
     end
+  end
+
+  private
+
+  def self.notification_already_exist?(dossier_id, notification_type, instructeur_id)
+    DossierNotification.exists?(dossier_id:, notification_type:, instructeur_id:)
   end
 end
