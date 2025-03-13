@@ -1252,6 +1252,21 @@ describe Procedure do
         expect(DossierRebaseJob).not_to have_been_enqueued.with(dossier_termine)
       end
     end
+
+    context 'when a type de champ is transformed from a drop_down_list with referentiel to a textarea' do
+      let(:procedure) { create(:procedure, types_de_champ_public:) }
+      let(:types_de_champ_public) { [{ type: :drop_down_list, referentiel:, drop_down_mode: 'advanced' }] }
+      let(:referentiel) { create(:csv_referentiel, :with_items) }
+      let(:tdc) { procedure.draft_revision.types_de_champ_public.last }
+
+      before do
+        procedure.draft_revision.types_de_champ_public.last.update(type_champ: :textarea, options: { "character_limit" => "" })
+      end
+
+      it 'nullifies the referentiel' do
+        expect(procedure.draft_revision.types_de_champ_public.first.referentiel).to be_nil
+      end
+    end
   end
 
   describe "#reset_draft_revision!" do
