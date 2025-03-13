@@ -31,7 +31,7 @@ describe RecoveriesController, type: :controller do
     it { is_expected.to have_http_status(:success) }
   end
 
-  describe 'ensure_agent_connect_is_used' do
+  describe 'ensure_pro_connect_is_used' do
     subject { post :selection }
 
     before do
@@ -58,7 +58,7 @@ describe RecoveriesController, type: :controller do
     subject { post :selection }
 
     before do
-      allow(controller).to receive(:ensure_agent_connect_is_used).and_return(true)
+      allow(controller).to receive(:ensure_pro_connect_is_used).and_return(true)
       allow(controller).to receive(:siret).and_return('123')
       allow(controller).to receive(:selection).and_return(true)
     end
