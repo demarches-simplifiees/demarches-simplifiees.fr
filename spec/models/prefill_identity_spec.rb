@@ -10,27 +10,12 @@ RSpec.describe PrefillIdentity do
       let(:params) {
         {
           "identite_prenom" => "Prénom",
-          "identite_nom" => "Nom",
-          "identite_genre" => "Mme"
+          "identite_nom" => "Nom"
         }
       }
 
       it "builds an array of hash(id, value) matching all the given params" do
-        expect(prefill_identity_hash).to match({ prenom: "Prénom", nom: "Nom", gender: "Mme" })
-      end
-    end
-
-    context "if genre is not correct" do
-      let(:params) {
-        {
-          "identite_prenom" => "Prénom",
-          "identite_nom" => "Nom",
-          "identite_genre" => "error"
-        }
-      }
-
-      it "builds an array of hash(id, value) matching all the given params" do
-        expect(prefill_identity_hash).to match({ prenom: "Prénom", nom: "Nom", gender: nil })
+        expect(prefill_identity_hash).to match({ prenom: "Prénom", nom: "Nom" })
       end
     end
   end
