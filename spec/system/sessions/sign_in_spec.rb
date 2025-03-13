@@ -8,7 +8,7 @@ describe 'Signin in:' do
     visit root_path
     click_on 'Se connecter', match: :first
 
-    sign_in_with user.email, 'invalid-password'
+    try_sign_in_with user.email, 'invalid-password'
     expect(page).to have_content 'Adresse électronique ou mot de passe incorrect.'
     expect(page).to have_field('Adresse électronique', with: user.email)
 
@@ -36,10 +36,10 @@ describe 'Signin in:' do
     visit root_path
     click_on 'Se connecter', match: :first
 
-    5.times { sign_in_with user.email, 'bad password' }
+    5.times { try_sign_in_with user.email, 'bad password' }
     expect(user.reload.access_locked?).to be false
 
-    sign_in_with user.email, 'bad password'
+    try_sign_in_with user.email, 'bad password'
     expect(user.reload.access_locked?).to be true
   end
 
@@ -79,8 +79,15 @@ describe 'Signin in:' do
       visit root_path
       click_on 'Se connecter', match: :first
 
-      sign_in_with user.email, password
+      try_sign_in_with user.email, password
       expect(page).to have_content('Vous devez confirmer votre compte par email.')
     end
+  end
+
+  def try_sign_in_with(email, password)
+    fill_in :user_email, with: email
+    fill_in :user_password, with: password
+
+    click_on 'Se connecter'
   end
 end

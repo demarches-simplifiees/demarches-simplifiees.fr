@@ -13,6 +13,7 @@ module SystemHelpers
 
     perform_enqueued_jobs do
       click_on 'Se connecter'
+      expect(page).to have_text("Voir mon profil")
     end
 
     if sign_in_by_link
