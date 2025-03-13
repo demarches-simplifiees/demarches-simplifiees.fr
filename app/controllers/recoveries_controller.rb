@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RecoveriesController < ApplicationController
-  before_action :ensure_agent_connect_is_used, except: [:nature, :post_nature, :support]
+  before_action :ensure_pro_connect_is_used, except: [:nature, :post_nature, :support]
   before_action :ensure_collectivite_territoriale, except: [:nature, :post_nature, :support]
 
   def nature
@@ -58,7 +58,7 @@ class RecoveriesController < ApplicationController
   private
 
   def nature_params = params[:nature]
-  def siret = current_instructeur.last_agent_connect_information.siret
+  def siret = current_instructeur.last_pro_connect_information.siret
   def previous_email = params[:previous_email]
   def procedure_ids = params[:procedure_ids].map(&:to_i)
 
@@ -71,8 +71,8 @@ class RecoveriesController < ApplicationController
     APIRechercheEntreprisesService.new.call(siret:).value![:nom_complet]
   end
 
-  def ensure_agent_connect_is_used
-    if current_instructeur&.last_agent_connect_information.nil?
+  def ensure_pro_connect_is_used
+    if current_instructeur&.last_pro_connect_information.nil?
       redirect_to support_recovery_path(error: :must_use_pro_connect)
     end
   end
