@@ -54,6 +54,7 @@ class Instructeur < ApplicationRecord
   def follow(dossier)
     begin
       followed_dossiers << dossier
+      DossierNotification.destroy_notification(dossier, :dossier_depose)
       # If the user tries to follow a dossier she already follows,
       # we just fail silently: it means the goal is already reached.
     rescue ActiveRecord::RecordNotUnique

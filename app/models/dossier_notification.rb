@@ -25,4 +25,9 @@ class DossierNotification < ApplicationRecord
       end
     end
   end
+
+  def self.destroy_notification(dossier, notification_type)
+    notification = DossierNotification.find_by(dossier_id: dossier.id, notification_type:)
+    notification&.destroy
+  end
 end
