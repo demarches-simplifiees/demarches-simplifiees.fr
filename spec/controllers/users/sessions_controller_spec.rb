@@ -100,7 +100,7 @@ describe Users::SessionsController, type: :controller do
     xcontext 'when email domain is in mandatory list' do
       let(:email) { 'user@beta.gouv.fr' }
       it 'redirects to agent connect with force parameter and is not logged in' do
-        expect(Pro_ConnectService).to receive(:enabled?).and_return(true)
+        expect(ProConnectService).to receive(:enabled?).and_return(true)
         subject
         expect(response).to redirect_to(pro_connect_path(force_pro_connect: true))
         expect(flash[:alert]).to eq("La connexion des agents passe à présent systématiquement par ProConnect")
