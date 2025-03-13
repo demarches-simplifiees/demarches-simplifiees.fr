@@ -99,5 +99,25 @@ describe Champs::DropDownListChamp do
     it '#referentiel_item_column_values' do
       expect(champ.referentiel_item_column_values).to eq([["option", "fromage"], ["calorie (kcal)", "145"], ["poids (g)", "60"]])
     end
+
+    context "when value is a value from simple mode" do
+      let(:types_de_champ_public) { [{ type: :drop_down_list, drop_down_mode: "simple" }] }
+      let(:value) { "fromage" }
+
+      before do
+        champ.save!
+        champ.reload
+      end
+
+      it "clear old value without error" do
+        expect(champ.value).to eq("fromage")
+
+        champ.type_de_champ.update!(options: { "drop_down_mode": "advanced" }, referentiel:)
+        champ.reload
+
+        champ.save!
+        expect(champ.value).to be_nil
+      end
+    end
   end
 end
