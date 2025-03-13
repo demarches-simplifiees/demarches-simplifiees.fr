@@ -754,6 +754,7 @@ fr:
         email_domain_not_allowed: "Votre domaine d'email n'est pas autorisé à utiliser ProConnect sur cette plateforme."
       france_connect:
         connexion: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez réessayer."
+        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       siret:
         network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
         not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro SIRET.'
@@ -863,7 +864,7 @@ fr:
           en_instruction: "en cours d’instruction par l’administration"
           accepte: "accepté"
           refuse: "refusé"
-          sans_suite: "classé sans suite"
+          sans suite: "classé sans suite"
         administrative_service: "Service administratif"
         generated_at: "Fait le %{date},"
         signature: "La direction de %{app_name}"
