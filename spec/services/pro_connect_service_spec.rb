@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe ProConnectService do
-describe '.logout_url' do
-  let(:id_token) { 'id_token' }
+  describe '.logout_url' do
+    let(:id_token) { 'id_token' }
 
     before do
       ::PRO_CONNECT ||= {}
