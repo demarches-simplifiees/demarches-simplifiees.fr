@@ -388,8 +388,7 @@ describe 'The user', js: true do
     expect(page).to have_text('white.png')
 
     click_on("Supprimer le fichier file.pdf")
-    expect(page).not_to have_text('file.pdf')
-    expect(page).to have_text("La pièce jointe a bien été supprimée")
+    expect(page).to have_text("La pièce jointe (file.pdf) a bien été supprimée. Vous pouvez en ajouter une autre.")
 
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/black.png')
 
