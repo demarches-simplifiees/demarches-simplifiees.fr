@@ -22,4 +22,10 @@ class DossierNotification < ApplicationRecord
       end
     end
   end
+
+  def self.destroy_notifications_by_dossier_and_type(dossier_id, notification_type)
+    DossierNotification
+      .where(dossier_id:, notification_type:)
+      .destroy_all
+  end
 end
