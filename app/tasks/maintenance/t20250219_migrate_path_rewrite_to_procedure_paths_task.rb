@@ -32,7 +32,7 @@ module Maintenance
 
       previous_canonical_path = destination_procedure.canonical_path
 
-      destination_procedure.claim_path!(destination_procedure.administrateurs.first, element.from)
+      destination_procedure.procedure_paths << ProcedurePath.find_or_initialize_by(path: element.from)
 
       # reset the canonical path
       destination_procedure.claim_path!(destination_procedure.administrateurs.first, previous_canonical_path)

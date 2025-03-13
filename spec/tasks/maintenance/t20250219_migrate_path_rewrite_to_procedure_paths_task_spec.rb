@@ -48,6 +48,25 @@ module Maintenance
           expect { process }.not_to change { ProcedurePath.count }
         end
       end
+
+      context "when source and destination paths lead to different procedures with different administrators" do
+        let(:admin_source) { create(:administrateur) }
+        let(:admin_destination) { create(:administrateur) }
+        let!(:source_procedure) { create(:procedure, path: "source-path", administrateurs: [admin_source]) }
+        let!(:destination_procedure) { create(:procedure, path: "destination-path", administrateurs: [admin_destination]) }
+        let(:path_rewrite) { create(:path_rewrite, from: "source-path", to: "destination-path") }
+
+        it "stoles the procedure_path because path_rewrite takes priority" do
+          process
+
+          expect(Procedure.find_with_path("source-path").first).to eq(destination_procedure)
+        end
+
+        it "keeps the canonical path of the destination procedure" do
+          process
+          expect(destination_procedure.canonical_path).to eq("destination-path")
+        end
+      end
     end
 
     describe "#collection" do
