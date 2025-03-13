@@ -1,0 +1,28 @@
+- if display == 'true'
+  .fr-container{ id: "notifications-container-#{procedure_id}" }
+    - if notifications.empty?
+      %p Pas de notification
+
+    - else
+      - notifications.keys.each do |statut|
+        .flex.align-center
+          %p.fr-text--lg.font-weight-bold.fr-mr-2w.fr-mb-0
+            = t("instructeurs.procedures.index.statuts.#{statut}")
+          %p.fr-text--sm.fr-mb-0
+            Vous avez des notifications sur
+            %span.fr-text--bold= page_entries_info Kaminari.paginate_array(notifications[statut].keys).page(1)
+        .fr-hr
+        - notifications[statut].each.with_index do |(dossier_id, notifs), index|
+          - if index != 0
+            .fr-hr.fr-pb-1w.fr-mt-1w
+          .flex.align-center
+            .fr-col-2
+              = tags_notification(notifs)
+            .fr-col.flex.align-center
+              = link_to "N°#{dossier_id}", instructeur_dossier_path(procedure_id, dossier_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+              %p.fr-text--sm.fr-mb-0
+                par
+                %span.fr-text--bold #{notifs.first.dossier.owner_name}
+                (déposé le #{I18n.l(notifs.first.dossier.depose_at, format: '%-d %B %Y à %Hh%M')})
+- else
+  .fr-container{ id: "notifications-container-#{procedure_id}" }

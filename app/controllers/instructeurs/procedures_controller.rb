@@ -83,6 +83,19 @@ module Instructeurs
       redirect_to instructeur_procedures_path
     end
 
+    def display_notifications
+      if params[:display] == 'true'
+        notifications = DossierNotification.notifications_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
+      end
+
+      respond_to do |format|
+        @procedure_id = procedure_id
+        @notifications = notifications || {}
+        @display = params[:display]
+        format.turbo_stream
+      end
+    end
+
     def show
       @procedure = procedure
       # Technically, procedure_presentation already sets the attribute.
