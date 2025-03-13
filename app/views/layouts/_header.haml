@@ -42,8 +42,6 @@
                   %li= link_to 'Agent', pro_connect_path, class: "fr-btn fr-btn--tertiary fr-icon-government-fill fr-btn--icon-left"
                   %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn fr-btn--tertiary fr-icon-account-circle-fill fr-btn--icon-left"
 
-
-
                 %li
                   - if dossier.present? && nav_bar_profile == :user
                     = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
