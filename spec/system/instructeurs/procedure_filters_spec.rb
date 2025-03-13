@@ -40,7 +40,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add created_at column", js: true do
+  scenario "should add be able to add created_at column", chrome: true do
     add_column("Créé le")
     within ".dossiers-table" do
       expect(page).to have_link("Créé le")
@@ -48,7 +48,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add and remove custom type_de_champ column", js: true do
+  scenario "should add be able to add and remove custom type_de_champ column", chrome: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
@@ -93,7 +93,7 @@ describe "procedure filters" do
     find('#search-filter', wait: 5).click
     find('.fr-menu__item', text: "En construction le", wait: 5).click
     find("input#value[type=date]", visible: true)
-    fill_in "Valeur", with: "10/10/2010"
+    fill_in "Valeur", with: Date.parse("10/10/2010")
     click_button "Ajouter le filtre"
     expect(page).to have_no_css("#search-filter", visible: true)
 
@@ -183,6 +183,25 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
+  end
+
+  def add_filter(column_name, filter_value, type: :text)
+    click_on 'Sélectionner un filtre'
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter + button', wait: 5).click
+    find('.fr-menu__item', text: column_name, wait: 5).click
+    case type
+    when :text
+      fill_in "Valeur", with: filter_value
+    when :date
+      find("input#value[type=date]", visible: true)
+      fill_in "Valeur", with: Date.parse(filter_value)
+    when :enum
+      find("select#value", visible: false)
+      select filter_value, from: "Valeur"
+    end
+    click_button "Ajouter le filtre"
+    expect(page).to have_no_css("#search-filter", visible: true)
   end
 
   def remove_filter(filter_value)

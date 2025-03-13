@@ -18,6 +18,7 @@ gem 'aws-sdk-s3'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
+gem 'capybara-playwright-driver'
 gem 'charlock_holmes'
 gem 'chartkick'
 gem 'chunky_png'

@@ -38,8 +38,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     }
 
     # Champs are automatically saved
-    expect(page).to have_button('Ajouter un champ', disabled: false)
-    page.refresh
+    expect(page).to have_button('Ajouter un champ', disabled: false, match: :first)
     expect(page).to have_selector('.type-de-champ', count: 3)
 
     # Multiple champs can be edited
