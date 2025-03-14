@@ -205,7 +205,7 @@ Rails.application.routes.draw do
     get 'confirm_email/:token', to: 'particulier#confirm_email', as: :confirm_email
   end
 
-  namespace :agent_connect do
+  namespace :pro_connect do
     get '' => 'agent#index'
     get 'login' => 'agent#login'
     get 'callback' => 'agent#callback'
