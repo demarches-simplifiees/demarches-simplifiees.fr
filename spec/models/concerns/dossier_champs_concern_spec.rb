@@ -533,7 +533,7 @@ RSpec.describe DossierChampsConcern do
         expect(main_champ_994.value).to eq("Greer")
         expect(dossier.history.size).to eq(2)
 
-        Timecop.freeze(1.hour.from_now) do
+        travel_to(1.hour.from_now) do
           dossier.with_update_stream(dossier.user) { assign_champs_attributes(new_attributes) }
           dossier.save!
           dossier.merge_user_buffer_stream!
@@ -543,7 +543,7 @@ RSpec.describe DossierChampsConcern do
         expect(main_champ_994.value).to eq("Greer is the best")
         expect(dossier.history.size).to eq(4)
 
-        Timecop.freeze(2.hours.from_now) do
+        travel_to(2.hours.from_now) do
           dossier.with_update_stream(dossier.user) { assign_champs_attributes(bad_attributes) }
           dossier.save!
         end

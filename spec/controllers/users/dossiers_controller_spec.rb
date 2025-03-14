@@ -151,7 +151,7 @@ describe Users::DossiersController, type: :controller do
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
       let(:now) { Time.zone.parse('01/01/2100') }
       before do
-        Timecop.freeze(now) do
+        travel_to(now) do
           subject
         end
       end
@@ -519,7 +519,7 @@ describe Users::DossiersController, type: :controller do
     before { dossier.owner_editing_fork }
 
     subject do
-      Timecop.freeze(now) do
+      travel_to(now) do
         post :submit_en_construction, params: payload
       end
     end
@@ -692,7 +692,7 @@ describe Users::DossiersController, type: :controller do
     let(:payload) { submit_payload }
 
     subject do
-      Timecop.freeze(now) do
+      travel_to(now) do
         patch :update, params: payload, format: :turbo_stream
       end
     end
@@ -928,7 +928,7 @@ describe Users::DossiersController, type: :controller do
     let(:payload) { submit_payload }
 
     subject do
-      Timecop.freeze(now) do
+      travel_to(now) do
         patch :update, params: payload, format: :turbo_stream
       end
     end
@@ -1113,7 +1113,7 @@ describe Users::DossiersController, type: :controller do
     let(:payload) { submit_payload }
 
     subject do
-      Timecop.freeze(now) do
+      travel_to(now) do
         patch :update, params: payload, format: :turbo_stream
       end
     end
@@ -1381,10 +1381,10 @@ describe Users::DossiersController, type: :controller do
 
     describe 'sort order' do
       before do
-        Timecop.freeze(4.days.ago) { create(:dossier, user: user) }
-        Timecop.freeze(2.days.ago) { create(:dossier, user: user) }
-        Timecop.freeze(4.days.ago) { create(:invite, dossier: create(:dossier), user: user) }
-        Timecop.freeze(2.days.ago) { create(:invite, dossier: create(:dossier), user: user) }
+        travel_to(4.days.ago) { create(:dossier, user: user) }
+        travel_to(2.days.ago) { create(:dossier, user: user) }
+        travel_to(4.days.ago) { create(:invite, dossier: create(:dossier), user: user) }
+        travel_to(2.days.ago) { create(:invite, dossier: create(:dossier), user: user) }
         get(:index)
       end
 
@@ -1490,7 +1490,7 @@ describe Users::DossiersController, type: :controller do
     }
 
     before do
-      Timecop.freeze(now)
+      travel_to(now)
       sign_in(user)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
@@ -1499,8 +1499,6 @@ describe Users::DossiersController, type: :controller do
       create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true)
       create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false)
     end
-
-    after { Timecop.return }
 
     context 'commentaire creation' do
       it "creates a commentaire" do
@@ -1553,7 +1551,7 @@ describe Users::DossiersController, type: :controller do
       before 'instructeurs have no notification before the message' do
         expect(instructeur_with_instant_message.followed_dossiers.with_notifications).to eq([])
         expect(instructeur_without_instant_message.followed_dossiers.with_notifications).to eq([])
-        Timecop.travel(now + 1.day)
+        travel_to(now + 1.day)
         subject
       end
 

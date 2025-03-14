@@ -11,8 +11,7 @@ describe Expired::DossiersDeletionService do
   let(:service) { Expired::DossiersDeletionService.new }
 
   describe '#process_expired_dossiers_brouillon' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     let(:today) { Time.zone.now.at_beginning_of_day }
     let(:date_close_to_expiration) { today - procedure.duree_conservation_dossiers_dans_ds.months + 13.days }
@@ -51,8 +50,7 @@ describe Expired::DossiersDeletionService do
   end
 
   describe '#send_brouillon_expiration_notices' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     before do
       allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_return(double(deliver_later: nil))
@@ -91,8 +89,7 @@ describe Expired::DossiersDeletionService do
   end
 
   describe '#delete_expired_brouillons_and_notify' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     before do
       allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
@@ -139,8 +136,7 @@ describe Expired::DossiersDeletionService do
   end
 
   describe '#send_en_construction_expiration_notices' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     before do
       allow(DossierMailer).to receive(:notify_near_deletion_to_user).and_return(double(deliver_later: nil))
@@ -210,8 +206,7 @@ describe Expired::DossiersDeletionService do
   describe '#delete_expired_en_construction_and_notify' do
     let!(:warning_period) { 1.month + 5.days }
 
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     before do
       allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_call_original
@@ -283,8 +278,7 @@ describe Expired::DossiersDeletionService do
   end
 
   describe '#send_termine_expiration_notices' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
     let(:procedure_opts) do
       {
         procedure_expires_when_termine_enabled: true
@@ -356,8 +350,7 @@ describe Expired::DossiersDeletionService do
   end
 
   describe '#delete_expired_termine_and_notify' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     let(:procedure_opts) do
       {
@@ -452,8 +445,7 @@ describe Expired::DossiersDeletionService do
   end
 
   describe 'all_user_dossiers_brouillon_close_to_expiration' do
-    before { Timecop.freeze(reference_date) }
-    after  { Timecop.return }
+    before { travel_to(reference_date) }
 
     let(:today) { Time.zone.now.at_beginning_of_day }
     let(:date_expired) { today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }

@@ -26,8 +26,7 @@ RSpec.describe Cron::Datagouv::BaseJob, type: :job do
     end
 
     context 'when 2 months are missing' do
-      before { Timecop.freeze(Time.zone.parse('15/02/2024')) }
-      after { Timecop.return }
+      before { travel_to(Time.zone.parse('15/02/2024')) }
 
       let(:existing_csv) do
         csv = CSV::Table.new([], headers: Cron::Datagouv::AccountByMonthJob::HEADERS)
@@ -52,8 +51,7 @@ RSpec.describe Cron::Datagouv::BaseJob, type: :job do
     let(:default_csv) { CSV::Table.new([], headers: ["mois", "nb"]) }
     subject { Cron::Datagouv::BaseJob.new.send(:missing_months, csv) }
 
-    before { Timecop.freeze(Time.zone.parse('15/02/2024')) }
-    after { Timecop.return }
+    before { travel_to(Time.zone.parse('15/02/2024')) }
 
     context 'when there is no existing data' do
       let(:csv) { default_csv }

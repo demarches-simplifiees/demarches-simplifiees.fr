@@ -80,11 +80,11 @@ RSpec.describe BillSignature, type: :model do
       let(:current_date) { Time.zone.now }
 
       before do
-        Timecop.freeze(current_date)
+        travel_to(current_date)
         bill_signature.signature.attach(io: signature, filename: 'file') if signature.present?
         bill_signature.digest = signature_digest
         bill_signature.valid?
-        Timecop.return
+        travel_back
       end
 
       subject { bill_signature.errors.details[:signature] }

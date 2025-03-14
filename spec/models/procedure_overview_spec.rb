@@ -5,8 +5,7 @@ describe ProcedureOverview, type: :model do
   let(:friday) { Time.zone.local(2017, 5, 12) } # vendredi 12 mai 2017, de la semaine du 8 mai
   let(:monday) { Time.zone.local(2017, 5, 8) }
 
-  before { Timecop.freeze(friday) }
-  after { Timecop.return }
+  before { travel_to(friday) }
 
   let(:procedure_overview) { ProcedureOverview.new(procedure, monday, [procedure.defaut_groupe_instructeur]) }
 

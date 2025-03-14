@@ -18,8 +18,7 @@ RSpec.describe APIEntreprise::EffectifsJob, type: :job do
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  before { Timecop.freeze(now) }
-  after { Timecop.return }
+  before { travel_to(now) }
 
   subject { APIEntreprise::EffectifsJob.new.perform(etablissement.id, procedure_id) }
 

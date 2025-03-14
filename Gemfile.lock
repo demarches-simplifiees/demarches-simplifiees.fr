@@ -847,7 +847,6 @@ GEM
     thor (1.3.2)
     thread_safe (0.3.6)
     tilt (2.5.0)
-    timecop (0.9.10)
     timeout (0.4.3)
     ttfunk (1.7.0)
     turbo-rails (2.0.11)
@@ -1090,7 +1089,6 @@ DEPENDENCIES
   strong_migrations
   sys-proctable
   test-prof
-  timecop
   ttfunk (~> 1.7.0)
   turbo-rails
   typhoeus

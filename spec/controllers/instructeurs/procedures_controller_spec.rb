@@ -512,10 +512,10 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       describe 'statut' do
-        let!(:a_suivre_dossier) { Timecop.freeze(1.day.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
-        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
-        let!(:termine_dossier) { Timecop.freeze(3.days.ago) { create(:dossier, :accepte, procedure: procedure) } }
-        let!(:archived_dossier) { Timecop.freeze(4.days.ago) { create(:dossier, :en_instruction, procedure: procedure, archived: true) } }
+        let!(:a_suivre_dossier) { travel_to(1.day.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
+        let!(:new_followed_dossier) { travel_to(2.days.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
+        let!(:termine_dossier) { travel_to(3.days.ago) { create(:dossier, :accepte, procedure: procedure) } }
+        let!(:archived_dossier) { travel_to(4.days.ago) { create(:dossier, :en_instruction, procedure: procedure, archived: true) } }
 
         before do
           instructeur.followed_dossiers << new_followed_dossier

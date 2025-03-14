@@ -3,11 +3,10 @@
 describe Zone do
   let(:now) { Time.zone.parse("2022-08-11") }
   before do
-    Timecop.freeze(now)
+    travel_to(now)
   end
 
   after do
-    Timecop.return
   end
 
   describe '#label' do

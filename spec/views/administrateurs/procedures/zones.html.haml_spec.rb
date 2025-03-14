@@ -16,8 +16,7 @@ describe 'administrateurs/procedures/zones' do
   end
 
   context 'when procedure has never been published' do
-    before { Timecop.freeze(now) }
-    after { Timecop.return }
+    before { travel_to(now) }
 
     let(:procedure) { create(:procedure, zones: [Zone.find_by(acronym: 'MTEI')]) }
     let(:now) { Time.zone.parse('18/05/2022') }
@@ -32,14 +31,13 @@ describe 'administrateurs/procedures/zones' do
   end
 
   context 'when procedure has been published' do
-    before { Timecop.freeze(now) }
-    after { Timecop.return }
+    before { travel_to(now) }
 
     let(:procedure) { create(:procedure, zones: [Zone.find_by(acronym: 'MTEI')]) }
     let(:now) { Time.zone.parse('18/05/2022') }
 
     it 'displays zones with label available at the creation date' do
-      Timecop.freeze(Time.zone.parse('22/05/2022')) do
+      travel_to(Time.zone.parse('22/05/2022')) do
         procedure.publish!
       end
 

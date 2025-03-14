@@ -29,14 +29,12 @@ describe ProcedureStatsConcern do
     let(:procedure) { create(:procedure) }
 
     before do
-      Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
+      travel_to(Time.utc(2019, 6, 1, 12, 0))
 
       delays.each do |delay|
         create_dossier(depose_at: 1.week.ago - delay, en_instruction_at: 1.week.ago - delay + 12.hours, processed_at: 1.week.ago)
       end
     end
-
-    after { Timecop.return }
 
     context 'when there are several processed dossiers' do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
@@ -110,12 +108,10 @@ describe ProcedureStatsConcern do
     end
 
     before do
-      Timecop.freeze(Time.utc(2019, 6, 25, 12, 0))
+      travel_to(Time.utc(2019, 6, 25, 12, 0))
 
       create_dossiers(delays_by_month)
     end
-
-    after { Timecop.return }
 
     context 'when there are several processed dossiers' do
       let(:delays_by_month) {

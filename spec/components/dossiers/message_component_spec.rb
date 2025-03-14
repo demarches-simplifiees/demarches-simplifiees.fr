@@ -143,11 +143,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:present_date) { Time.zone.local(2018, 9, 2, 10, 5, 0) }
       let(:creation_date) { present_date }
       let(:commentaire) do
-        Timecop.freeze(creation_date) { create(:commentaire, email: "michel@pref.fr") }
+        travel_to(creation_date) { create(:commentaire, email: "michel@pref.fr") }
       end
 
       subject do
-        Timecop.freeze(present_date) { component.send(:commentaire_date) }
+        travel_to(present_date) { component.send(:commentaire_date) }
       end
 
       it 'doesn’t include the creation year' do
@@ -265,11 +265,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:present_date) { Time.zone.local(2018, 9, 2, 10, 5, 0) }
       let(:creation_date) { present_date }
       let(:commentaire) do
-        Timecop.freeze(creation_date) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin)) }
+        travel_to(creation_date) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin)) }
       end
 
       subject do
-        Timecop.freeze(present_date) { component.send(:commentaire_date) }
+        travel_to(present_date) { component.send(:commentaire_date) }
       end
 
       it 'doesn’t include the creation year' do

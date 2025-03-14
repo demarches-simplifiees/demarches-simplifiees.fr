@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 describe StatsController, type: :controller do
-  before { Timecop.travel(Date.parse("2021/12/15")) }
-  after { Timecop.return }
+  before { travel_to(Date.parse("2021/12/15")) }
 
   describe "#last_four_months_hash" do
     context "while a regular user is logged in" do
@@ -60,15 +59,13 @@ describe StatsController, type: :controller do
 
   describe '#cumulative_hash' do
     before do
-      Timecop.freeze(Time.zone.local(2016, 10, 2))
+      travel_to(Time.zone.local(2016, 10, 2))
       create(:procedure, created_at: 55.days.ago, updated_at: 43.days.ago)
       create(:procedure, created_at: 45.days.ago, updated_at: 40.days.ago)
       create(:procedure, created_at: 45.days.ago, updated_at: 20.days.ago)
       create(:procedure, created_at: 15.days.ago, updated_at: 20.days.ago)
       create(:procedure, created_at: 15.days.ago, updated_at: 1.hour.ago)
     end
-
-    after { Timecop.return }
 
     let (:association) { Procedure.all }
 
