@@ -5,6 +5,14 @@ module Manager
     #
     # Administrate overrides
     #
+    def index
+      search = params[:search]
+      if search.present? && DossierSearchService.id_compatible?(search)
+        @deleted_dossier = DeletedDossier.find_by(dossier_id: search)
+      end
+
+      super
+    end
 
     # Override this if you have certain roles that require a subset
     # this will be used to set the records shown on the `index` action.
