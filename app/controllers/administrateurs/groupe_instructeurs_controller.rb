@@ -394,15 +394,9 @@ module Administrateurs
     end
 
     def bulk_route
-      dossiers = procedure.dossiers.includes(:procedure, :groupe_instructeur, :champs, revision: [:types_de_champ]).state_not_termine
+      BulkRouteJob.perform_later(procedure)
 
-      dossiers.each do |dossier|
-        dossier.update_column(:forced_groupe_instructeur, false)
-        RoutingEngine.compute(dossier, assignment_mode: DossierAssignment.modes.fetch(:bulk_routing))
-      end
-      procedure.update!(routing_alert: false)
-
-      flash[:notice] = "Les dossiers ont étés routés vers les groupes d’instructeurs"
+      flash[:notice] = "Le routage des dossiers est lancé."
 
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
