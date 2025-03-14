@@ -4,5 +4,5 @@
                     [(@procedure.groupe_instructeurs.many? ? 'Groupes' : 'Instructeurs'), admin_procedure_groupe_instructeurs_path(@procedure)],
                     ['Ajout']] }
 
-= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
+= render Procedure::GroupeInstructeurMenuComponent.new(procedure: @procedure, display_menu: false) do
   = render Procedure::GroupesAjoutComponent.new(procedure: @procedure, groupe_instructeurs: @groupes_instructeurs)
