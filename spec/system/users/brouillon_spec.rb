@@ -154,7 +154,7 @@ describe 'The user', js: true do
     expect(page).to have_selector(".repetition .row", count: 1)
 
     # adding an element means we can ddestroy last item
-    click_on 'Ajouter un élément pour'
+    click_on 'Ajouter un élément supplémentaire à'
     expect(page).to have_selector(".repetition .row:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
     expect(page).to have_selector(".repetition .row", count: 2)
     expect(page).to have_selector(".repetition .row:last-child .utils-repetition-required-destroy-button", count: 1, visible: true)
@@ -166,7 +166,7 @@ describe 'The user', js: true do
 
     expect do
       within '.repetition .row:last-child' do
-        click_on 'Supprimer l’élément'
+        click_on 'Supprimer'
       end
       wait_until { page.all(".row").size == 1 }
       # removing a repetition means one child only, thus its button destroy is not visible
