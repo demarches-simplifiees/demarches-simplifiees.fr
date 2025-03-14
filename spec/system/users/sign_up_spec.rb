@@ -154,7 +154,11 @@ describe 'Signing up:', js: true do
 
     scenario 'they cannot signed in' do
       visit new_user_session_path
-      sign_in_with user_email, user_password
+      fill_in :user_email, with: user_email
+      fill_in :user_password, with: user_password
+
+      click_on 'Se connecter'
+      expect(page).to have_text "Votre compte n’est pas encore activé."
 
       expect(page).to have_current_path new_user_session_path
     end
