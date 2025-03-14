@@ -37,14 +37,6 @@ class Champs::MultipleDropDownListChamp < Champ
     "#{input_id}-#{Digest::MD5.hexdigest(value)}"
   end
 
-  def next_checkbox_id(value)
-    return nil if value.blank? || !selected_options.include?(value)
-    index = selected_options.index(value)
-    next_values = selected_options.reject { _1 == value }
-    next_value = next_values[index] || next_values.last
-    next_value ? checkbox_id(next_value) : nil
-  end
-
   def value=(value)
     return super(nil) if value.blank?
 
