@@ -1,5 +1,3 @@
 ---
 fr:
-  delete: Supprimer l’élément
-  delete_title: "Supprimer l’élément n°%{row_number}"
-  delete_label: "Supprimer l’élément numéro %{row_number}"
+  delete: "Supprimer %{libelle} %{row_number}"
