@@ -98,6 +98,7 @@ module ProcedurePublishConcern
   def publish_new_revision
     cleanup_types_de_champ_options!
     cleanup_types_de_champ_children!
+    nullify_unused_referentiels
     self.published_revision = draft_revision
     self.draft_revision = create_new_revision
     save!(context: :publication)
@@ -128,5 +129,13 @@ module ProcedurePublishConcern
     draft_revision.revision_types_de_champ
       .filter(&:orphan?)
       .each { draft_revision.remove_type_de_champ(_1.stable_id) }
+  end
+
+  def nullify_unused_referentiels
+    draft_revision.types_de_champ
+      .reject { _1.drop_down_list? || _1.referentiel? }
+      .each do |type_de_champ|
+        type_de_champ.update!(referentiel_id: nil)
+      end
   end
 end
