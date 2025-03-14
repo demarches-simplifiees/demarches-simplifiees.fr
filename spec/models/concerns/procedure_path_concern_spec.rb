@@ -157,6 +157,9 @@ describe ProcedurePathConcern do
       before do
         travel(1.minute)
         procedure.claim_path!(procedure.administrateurs.first, 'custom_path')
+        procedure.save!
+        procedure.reload
+
         travel(2.minutes)
         procedure.claim_path!(procedure.administrateurs.first, 'custom_path_2')
       end

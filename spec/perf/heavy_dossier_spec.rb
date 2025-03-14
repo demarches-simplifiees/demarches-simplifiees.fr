@@ -80,7 +80,7 @@ describe Users::DossiersController, type: :controller do
           post :submit_en_construction, params: { id: dossier.id }
         end
 
-        expect(query_count).to be_between(65, 75)
+        expect(query_count).to be_between(60, 70)
       end
     end
   end
