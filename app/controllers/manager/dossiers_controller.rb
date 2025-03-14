@@ -26,6 +26,12 @@ module Manager
       end
     end
 
+    def filter_resources(resources, search_term:)
+      return super if search_term.blank?
+
+      Dossier.where(id: search_term.strip.to_i)
+    end
+
     def transfer_edit
       @dossier = Dossier.find params[:id]
     end
