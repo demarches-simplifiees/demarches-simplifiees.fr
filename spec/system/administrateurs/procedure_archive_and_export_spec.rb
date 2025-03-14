@@ -15,7 +15,7 @@ describe 'Creating a new procedure', js: true do
       path: 'libelle-de-la-procedure')
   end
   let!(:dossiers) do
-    create(:dossier, :accepte, procedure: procedure)
+    create(:dossier, :accepte, procedure: procedure, processed_at: 1.month.ago.to_date)
   end
 
   before { login_as administrateur.user, scope: :user }
