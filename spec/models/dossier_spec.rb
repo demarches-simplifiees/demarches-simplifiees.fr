@@ -426,7 +426,7 @@ describe Dossier, type: :model do
       Timecop.freeze(date3)
       d.accepter!(instructeur: instructeur, motivation: "Motivation")
       Timecop.return
-      d
+      d.reload
     end
 
     describe "followers_instructeurs" do
