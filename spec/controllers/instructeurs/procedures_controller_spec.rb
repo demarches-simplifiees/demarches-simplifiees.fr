@@ -644,7 +644,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago) }
           render_views
           before do
-            export.file.attach(io: StringIO.new, filename: 'file')
+            export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
             subject
           end
 
@@ -1120,6 +1120,212 @@ describe Instructeurs::ProceduresController, type: :controller do
       expect(response.body).to include("Rendez-vous avec les usagers")
       expect(response.body).to match(/Dossier Nº\s.*123.*456.*789/)
       expect(response.body).to include("lundi 17 février à 10h00")
+    end
+  end
+
+  describe '#history' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+
+    before do
+      sign_in(instructeur.user)
+      procedure.revisions.update_all(published_at: nil)
+
+      unless InstructeursProcedure.exists?(instructeur: instructeur, procedure: procedure)
+        create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure)
+      end
+    end
+
+    context 'when there are no published revisions' do
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns an empty comparison_pairs array' do
+        expect(assigns(:comparison_pairs)).to eq([])
+      end
+    end
+
+    context 'when there is only one published revision' do
+      before do
+        create(:procedure_revision, procedure: procedure, published_at: 1.day.ago)
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns an empty comparison_pairs array' do
+        expect(assigns(:comparison_pairs)).to eq([])
+      end
+    end
+
+    context 'when there are two published revisions' do
+      let!(:old_revision) { create(:procedure_revision, procedure: procedure, published_at: 2.days.ago) }
+      let!(:new_revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns a comparison_pairs array with one pair' do
+        expect(assigns(:comparison_pairs).length).to eq(1)
+      end
+
+      it 'includes the correct revisions in the pair' do
+        pair = assigns(:comparison_pairs).first
+        expect(pair).to eq([new_revision, old_revision])
+      end
+    end
+
+    context 'when there are multiple published revisions' do
+      let!(:oldest_revision) { create(:procedure_revision, procedure: procedure, published_at: 4.days.ago) }
+      let!(:middle_revision) { create(:procedure_revision, procedure: procedure, published_at: 3.days.ago) }
+      let!(:recent_revision) { create(:procedure_revision, procedure: procedure, published_at: 2.days.ago) }
+      let!(:newest_revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'assigns a comparison_pairs array with the correct number of pairs' do
+        expect(assigns(:comparison_pairs).length).to eq(3)
+      end
+
+      it 'orders the pairs with the most recent first' do
+        pairs = assigns(:comparison_pairs)
+        expect(pairs[0][0]).to eq(newest_revision)
+        expect(pairs[0][1]).to eq(recent_revision)
+        expect(pairs[1][0]).to eq(recent_revision)
+        expect(pairs[1][1]).to eq(middle_revision)
+        expect(pairs[2][0]).to eq(middle_revision)
+        expect(pairs[2][1]).to eq(oldest_revision)
+      end
+    end
+
+    context 'when there are published and unpublished revisions' do
+      let!(:published_old) { create(:procedure_revision, procedure: procedure, published_at: 3.days.ago) }
+      let!(:unpublished) { create(:procedure_revision, procedure: procedure, published_at: nil) }
+      let!(:published_new) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      before do
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'only includes published revisions in the pairs' do
+        expect(assigns(:comparison_pairs).length).to eq(1)
+        pair = assigns(:comparison_pairs).first
+        expect(pair).to eq([published_new, published_old])
+      end
+    end
+
+    context 'when testing the latest_revision.present? condition' do
+      let!(:revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      context 'when latest_revision is present but present? returns false' do
+        before do
+          allow_any_instance_of(ProcedureRevision).to receive(:present?).and_return(false)
+          get :history, params: { procedure_id: procedure.id }
+        end
+
+        it 'does not update the last_revision_seen_id' do
+          instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+          expect(instructeur_procedure).to be_present
+          expect(instructeur_procedure.last_revision_seen_id).to be_nil
+        end
+      end
+    end
+
+    context 'when latest_revision is present and present? returns true' do
+      before do
+        @revision = create(:procedure_revision, procedure: procedure, published_at: 1.day.ago)
+        allow_any_instance_of(ProcedureRevision).to receive(:present?).and_return(true)
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'updates the last_revision_seen_id' do
+        instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+        expect(instructeur_procedure).to be_present
+        expect(instructeur_procedure.last_revision_seen_id).to eq(@revision.id)
+      end
+    end
+  end
+
+  describe 'mark_latest_revision_as_seen' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published) }
+
+    before do
+      sign_in(instructeur.user)
+
+      groupe_instructeur = create(:groupe_instructeur, procedure: procedure)
+      groupe_instructeur.instructeurs << instructeur
+
+      unless InstructeursProcedure.exists?(instructeur: instructeur, procedure: procedure)
+        create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure)
+      end
+    end
+
+    context 'when there are no published revisions' do
+      before do
+        procedure.revisions.update_all(published_at: nil)
+        get :history, params: { procedure_id: procedure.id }
+      end
+
+      it 'does not update last_revision_seen_id' do
+        instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+        expect(instructeur_procedure).to be_present
+        expect(instructeur_procedure.last_revision_seen_id).to be_nil
+      end
+    end
+
+    context 'when there are published revisions' do
+      let!(:revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+      context 'when visiting history page for the first time' do
+        before do
+          get :history, params: { procedure_id: procedure.id }
+        end
+
+        it 'updates last_revision_seen_id to the latest revision' do
+          instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+          expect(instructeur_procedure).to be_present
+          expect(instructeur_procedure.last_revision_seen_id).to eq(revision.id)
+        end
+      end
+
+      context 'when already seen the latest revision' do
+        before do
+          instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+          expect(instructeur_procedure).to be_present
+          instructeur_procedure.update(last_revision_seen_id: revision.id)
+
+          @original_id = instructeur_procedure.last_revision_seen_id
+
+          get :history, params: { procedure_id: procedure.id }
+        end
+
+        it 'does not update last_revision_seen_id again' do
+          instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+          expect(instructeur_procedure.last_revision_seen_id).to eq(@original_id)
+        end
+      end
+
+      context 'when a new revision is published' do
+        let!(:old_revision) { create(:procedure_revision, procedure: procedure, published_at: 3.days.ago) }
+        let!(:new_revision) { create(:procedure_revision, procedure: procedure, published_at: 1.day.ago) }
+
+        before do
+          instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+          expect(instructeur_procedure).to be_present
+          instructeur_procedure.update(last_revision_seen_id: old_revision.id)
+
+          get :history, params: { procedure_id: procedure.id }
+        end
+
+        it 'updates last_revision_seen_id to the latest revision' do
+          instructeur_procedure = InstructeursProcedure.find_by(instructeur: instructeur, procedure: procedure)
+          expect(instructeur_procedure).to be_present
+          expect(instructeur_procedure.last_revision_seen_id).to eq(new_revision.id)
+        end
+      end
     end
   end
 end

@@ -4,7 +4,13 @@ describe "procedure exports zip" do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, types_de_champ_public:, instructeurs: [instructeur]) }
   let(:types_de_champ_public) { [{ type: :text }] }
-  before { login_as(instructeur.user, scope: :user) }
+
+  before do
+    login_as(instructeur.user, scope: :user)
+    unless InstructeursProcedure.exists?(instructeur: instructeur, procedure: procedure)
+      create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure)
+    end
+  end
 
   scenario "create an export_template zip", chome: true do
     visit instructeur_procedure_path(procedure)
