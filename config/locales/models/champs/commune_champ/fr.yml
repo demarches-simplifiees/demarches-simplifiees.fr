@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/commune_champ:
         hints:
-          value: "Renseignez le nom ou le code postal de la ville puis, sélectionnez la commune dans la liste"
+          value: "Renseignez le nom ou le code postal de la ville puis, sélectionnez la commune dans la liste. Exemple : Strasbourg"

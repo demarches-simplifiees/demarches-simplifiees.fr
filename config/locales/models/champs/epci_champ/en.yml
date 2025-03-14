@@ -3,4 +3,4 @@ en:
     attributes:
       champs/epci_champ:
         hints:
-          value: "Enter the EPCI's department, then select the EPCI from the list."
+          value: "Select the EPCI department from the first list. Then select the EPCI."

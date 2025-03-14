@@ -3,4 +3,4 @@ en:
     attributes:
       champs/decimal_number_champ:
         hints:
-          value_html: "You can enter up to 3 decimal places after the decimal point. Example: 3.141"
+          value_html: "Expected format: 1 to 3 decimal places after the point. Example: 3.141"

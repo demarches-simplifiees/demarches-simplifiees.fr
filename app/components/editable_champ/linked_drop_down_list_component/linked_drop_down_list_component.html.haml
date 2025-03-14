@@ -11,7 +11,7 @@
         = @form.label :secondary_value, for: "#{@champ.input_id}-secondary", class: 'fr-label' do
           - sanitize(secondary_label)
         - if @champ.drop_down_secondary_description.present?
-          .notice{ id: "#{@champ.describedby_id}-secondary" }
+          .fr-hint-text{ id: "#{@champ.describedby_id}-secondary" }
             = render SimpleFormatComponent.new(@champ.drop_down_secondary_description, allow_a: true)
         = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], {}, required: @champ.required?, class: 'fr-select', id: "#{@champ.input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }
 - else

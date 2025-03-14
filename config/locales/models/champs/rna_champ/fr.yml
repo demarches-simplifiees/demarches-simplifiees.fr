@@ -17,7 +17,7 @@ fr:
         champs/rna_champ:
           attributes:
             value:
-              invalid_rna: "doit commencer par un W majuscule suivi de 9 chiffres ou lettres, saisissez un numéro RNA valide"
+              invalid_rna: "doit commencer par un W majuscule suivi de 9 chiffres ou lettres. Exemple : W503726238"
               not_found: "le numéro RNA saisi ne correspond à aucun établissement, saisissez un numéro RNA valide"
               network_error: "une erreur réseau a empêché l’association liée à ce RNA d’être trouvée, réessayez plus tard"
     attributes:

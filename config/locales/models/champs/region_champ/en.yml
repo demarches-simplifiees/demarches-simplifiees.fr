@@ -3,4 +3,4 @@ en:
     attributes:
       champs/region_champ:
         hints:
-          value: "Enter region"
+          value: "Select region"

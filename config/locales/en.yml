@@ -609,7 +609,7 @@ en:
         password: 'Password'
         requested_merge_into: 'new email address'
         hints:
-          email: 'Expected format : address@mail.com'
+          email: 'Example: address@mail.com'
       user:
         siret: 'SIRET number'
         << : *default_attributes
@@ -639,10 +639,9 @@ en:
 
     errors:
       messages:
-        not_a_phone: 'Invalid phone number'
-        not_a_rna: 'Invalid RNA number'
+        not_a_phone: 'is invalid. Enter a valid phone number. Example: 0612345678'
         url: 'is not a valid link'
-        invalid_email_format: 'is invalid. Please fill in a valid email ex: address@mail.com'
+        invalid_email_format: 'is invalid. Enter a valid email. Example: address@mail.com'
       models:
         attestation_template:
           attributes:

@@ -616,7 +616,7 @@ fr:
         password: 'Mot de passe'
         requested_merge_into: 'La nouvelle adresse électronique'
         hints:
-          email: 'Format attendu : adresse@mail.com'
+          email: 'Exemple : adresse@mail.com'
       user:
         siret: 'Numéro SIRET'
         << : *default_attributes
@@ -646,10 +646,9 @@ fr:
 
     errors:
       messages:
-        not_a_phone: 'est invalide. Saisir un numéro de téléphone valide, par exemple : 0612345678'
-        not_a_rna: 'Numéro RNA invalide'
+        not_a_phone: 'est invalide. Saisissez un numéro de téléphone valide. Exemple : 0612345678'
         url: 'n’est pas un lien valide'
-        invalid_email_format: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
+        invalid_email_format: 'est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com'
       models:
         attestation_template:
           attributes:
@@ -664,8 +663,8 @@ fr:
             reset_password_token:
               invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
             email:
-              blank: 'est vide. Saisir une adresse électronique'
-              invalid: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
+              blank: 'est vide. Saisissez une adresse électronique'
+              invalid: 'est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com'
               taken: 'déjà utilisé. Saisir une autre adresse électronique.'
             password:
               too_short: "est trop court. Saisir un mot de passe avec au moins 12 caractères"

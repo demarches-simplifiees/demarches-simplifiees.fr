@@ -849,7 +849,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq(["emaila.com : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com"]) }
+        it { expect(flash.alert).to eq(["emaila.com : Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com"]) }
         it { expect { subject }.not_to change(Avis, :count) }
         it { expect(dossier.last_avis_updated_at).to eq(nil) }
       end
@@ -871,7 +871,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com"]) }
+        it { expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com"]) }
         it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
         it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
