@@ -172,7 +172,9 @@ Rails.application.routes.draw do
   end
 
   post 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
-  get 'check_email' => 'email_checker#show', as: 'show_email_suggestions'
+  post 'check_email' => 'email_checker#show', as: 'show_email_suggestions'
+  # TODO remove in next release
+  get 'check_email' => 'email_checker#show'
 
   resources :targeted_user_links, only: [:show]
 
@@ -215,9 +217,12 @@ Rails.application.routes.draw do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
 
-    get ':dossier_id/:stable_id/siret', to: 'siret#show', as: :siret
-    get ':dossier_id/:stable_id/rna', to: 'rna#show', as: :rna
+    post ':dossier_id/:stable_id/siret', to: 'siret#show', as: :siret
+    post ':dossier_id/:stable_id/rna', to: 'rna#show', as: :rna
     delete ':dossier_id/:stable_id/options', to: 'options#remove', as: :options
+    # TODO remove in next release
+    get ':dossier_id/:stable_id/siret', to: 'siret#show'
+    get ':dossier_id/:stable_id/rna', to: 'rna#show'
 
     get ':dossier_id/:stable_id/carte/features', to: 'carte#index', as: :carte_features
     post ':dossier_id/:stable_id/carte/features', to: 'carte#create'
@@ -684,7 +689,9 @@ Rails.application.routes.draw do
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
-      get 'check_path' => 'procedures#check_path', as: :check_path
+      post 'check_path' => 'procedures#check_path', as: :check_path
+      # TODO remove in next release
+      get 'check_path' => 'procedures#check_path'
       get 'path'
       patch 'path', to: 'procedures#update_path', as: :update_path
       put 'publish' => 'procedures#publish', as: :publish
