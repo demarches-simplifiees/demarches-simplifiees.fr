@@ -9,11 +9,11 @@ class Logic::ChampValue < Logic::Term
     :drop_down_list,
     :multiple_drop_down_list,
     :address,
-    :communes,
-    :epci,
+    :communes, # inject departement sous forme de chiffre ?
+    :epci, # ne marche pas
     :departements,
     :regions,
-    :pays
+    :pays # a faire n'injecte pas encore ses valeurs
   )
 
   MANAGED_TYPE_DE_CHAMP_BY_CATEGORY = MANAGED_TYPE_DE_CHAMP.keys.map(&:to_sym)
