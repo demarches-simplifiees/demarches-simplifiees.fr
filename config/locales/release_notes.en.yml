@@ -3,7 +3,6 @@ en:
   release_notes:
     index:
       title: What’s new on %{app_name} ? 🚀
-      forbidden: You are not authorized to view the News page.
       no_content: No announcement here.
     page:
       previous_page: Previous announcements

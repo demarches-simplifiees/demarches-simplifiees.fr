@@ -37,19 +37,6 @@ RSpec.describe ReleaseNotesController, type: :controller do
       end
     end
 
-    describe 'acl' do
-      before { subject }
-      context 'user is normal' do
-        let(:user) { create(:user) }
-
-        it { is_expected.to be_redirection }
-      end
-
-      context 'no user' do
-        it { is_expected.to be_redirection }
-      end
-    end
-
     describe 'touch user announces_seen_at' do
       let(:user) { create(:user, administrateur: build(:administrateur)) }
 

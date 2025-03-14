@@ -3,7 +3,6 @@ fr:
   release_notes:
     index:
       title: Quoi de neuf sur %{app_name} ? 🚀
-      forbidden: Vous n’êtes pas autorisé(e) à consulter la page des Nouveautés.
       no_content: Aucune nouveauté annoncée de ce côté là.
     page:
       previous_page: Annonces précédentes
