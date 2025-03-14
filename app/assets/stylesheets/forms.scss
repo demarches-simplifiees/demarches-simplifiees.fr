@@ -378,6 +378,16 @@
         }
       }
     }
+
+    select {
+      @media (max-width: $two-columns-breakpoint) {
+        width: 100%;
+      }
+
+      @media (min-width: $two-columns-breakpoint) {
+      }
+      width: 33.33%;
+    }
   }
 
   input[type='checkbox'],

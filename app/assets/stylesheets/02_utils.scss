@@ -123,12 +123,6 @@
 // sizing
 .width-100 {
   width: 100%;
-
-  @media (max-width: $two-columns-breakpoint) {
-    &-mobile {
-      width: 100%;
-    }
-  }
 }
 
 .width-33 {
