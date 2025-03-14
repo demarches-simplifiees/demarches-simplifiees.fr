@@ -14,7 +14,7 @@ Si vous souhaitez modifier le mot de passe de votre compte, vous pouvez demander
 Pour cela :
 
 1. Ouvrez la page de [réinitialisation de mot de passe](/users/password/new)
-2. Indiquez l’adresse email de votre compte %{application_name}
+2. Indiquez l’adresse électronique de votre compte %{application_name}
 3. Vous recevrez par email un lien pour réinitialiser votre mot de passe.
 4. Cliquez sur ce lien, et rentrez le nouveau mot de passe que vous souhaitez utiliser.
 

@@ -13,7 +13,7 @@ En tant qu’administrateur, si après avoir nommé des instructeurs sur votre
 démarche ces derniers ne reçoivent pas d’email d’invitation à se connecter à %{application_name},
 alors vous vous trouvez peut-être dans la situation suivante :
 
-- Vous avez fait une erreur dans la saisie des adresses email en nommant les instructeurs.
+- Vous avez fait une erreur dans la saisie des adresses électroniques en nommant les instructeurs.
 
 - Les instructeurs sont déjà nommés sur une autre démarche. Leur compte étant déjà validé, ils ne reçoivent plus de nouvel email.
 

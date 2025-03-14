@@ -21,7 +21,7 @@ Dans cette situation, vous pouvez partager directement votre démarche avec votr
 - Cliquez sur votre démarche.
 - Accédez à l’onglet publication.
 - Suivez le bouton « _Envoyer une copie_ » en haut à droite.
-- Entrez l’adresse email de votre collègue.
+- Entrez l’adresse électronique de votre collègue.
 
 Votre collègue trouvera alors une copie de votre démarche dans ses démarches « En test ».
 

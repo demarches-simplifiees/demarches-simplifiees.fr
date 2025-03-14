@@ -347,6 +347,8 @@ en:
       first: First
       truncate: '&hellip;'
     shared:
+      label:
+        email: 'Email'
       greetings:
         hello: Dear Sir or Madam,
         best_regards: Best Regards,

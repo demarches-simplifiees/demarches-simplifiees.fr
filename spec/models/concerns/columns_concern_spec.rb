@@ -90,7 +90,7 @@ describe ColumnsConcern do
           { label: "Motivation de la décision", table: "self", column: "motivation", displayable: false, type: :text, filterable: false },
           { label: "Date de dernière modification (usager)", table: "self", column: "last_champ_updated_at", displayable: false, type: :text, filterable: false },
           { label: 'Demandeur', table: 'user', column: 'email', displayable: true, type: :text, filterable: true },
-          { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', displayable: true, type: :text, filterable: true },
+          { label: 'Adresse électronique instructeur', table: 'followers_instructeurs', column: 'email', displayable: true, type: :text, filterable: true },
           { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', displayable: true, type: :enum, filterable: true },
           { label: 'Avis oui/non', table: 'avis', column: 'question_answer', displayable: true, type: :text, filterable: false },
           { label: 'France connecté ?', table: 'self', column: 'user_from_france_connect?', displayable: false, type: :text, filterable: false },
@@ -201,7 +201,7 @@ describe ColumnsConcern do
         it "returns all usager columns" do
           expected = [
             procedure.find_column(label: "Nº dossier"),
-            procedure.find_column(label: "Email"),
+            procedure.find_column(label: "Adresse électronique"),
             procedure.find_column(label: "France connecté ?"),
             procedure.find_column(label: "Civilité"),
             procedure.find_column(label: "Nom"),
@@ -223,7 +223,7 @@ describe ColumnsConcern do
         it "returns all usager columns" do
           expected = [
             procedure.find_column(label: "Nº dossier"),
-            procedure.find_column(label: "Email"),
+            procedure.find_column(label: "Adresse électronique"),
             procedure.find_column(label: "France connecté ?"),
             procedure.find_column(label: "Établissement SIRET"),
             procedure.find_column(label: "Établissement siège social"),

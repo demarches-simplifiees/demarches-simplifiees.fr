@@ -45,9 +45,9 @@ describe 'France Connect Particulier Connexion' do
             end
 
             scenario 'he is redirected to user dossiers page', js: true do
-              expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+              expect(page).to have_content("Choisissez votre adresse électronique de contact pour finaliser votre connexion")
 
-              find('label', text: "Oui, utiliser #{fc_email} comme email de contact").click
+              find('label', text: "Oui, utiliser #{fc_email} comme adresse électronique de contact").click
 
               click_on 'Valider'
               expect(User.find_by(email: fc_email).email_verified_at).to be_present
@@ -56,7 +56,7 @@ describe 'France Connect Particulier Connexion' do
             scenario 'he can choose not to use FranceConnect email and input an alternative email', js: true do
               alternative_email = 'alternative@example.com'
 
-              expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+              expect(page).to have_content("Choisissez votre adresse électronique de contact pour finaliser votre connexion")
               find('label', text: 'utiliser une autre adresse').click
 
               expect(page).to have_selector("input[name='email']", visible: true, wait: 10)
@@ -103,7 +103,7 @@ describe 'France Connect Particulier Connexion' do
             scenario 'it uses another email that belongs to nobody' do
               page.find('#it-is-not-mine').click
               fill_in 'email', with: 'new_email@a.com'
-              click_on 'Utiliser ce mail'
+              click_on 'Utiliser cette adresse électronique'
 
               expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')
             end
@@ -118,7 +118,7 @@ describe 'France Connect Particulier Connexion' do
 
                 within '.new-account' do
                   fill_in 'email', with: 'an_existing_email@a.com'
-                  click_on 'Utiliser ce mail'
+                  click_on 'Utiliser cette adresse électronique'
                 end
 
                 expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')

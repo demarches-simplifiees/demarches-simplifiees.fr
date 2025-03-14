@@ -5,5 +5,5 @@ fr:
         dossier_transfer:
           attributes:
             email:
-              format: "L’adresse email %{message}"
+              format: "L’adresse électronique %{message}"
               invalid: "est invalide"

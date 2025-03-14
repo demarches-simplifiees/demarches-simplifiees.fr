@@ -134,9 +134,9 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
             allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(build(:france_connect_information))
 
             page.find('.fr-connect').click
-            expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+            expect(page).to have_content("Choisissez votre adresse électronique de contact pour finaliser votre connexion")
 
-            find('label', text: /Oui, utiliser .* comme email de contact/).click
+            find('label', text: /Oui, utiliser .* comme adresse électronique de contact/).click
 
             click_on 'Valider'
             expect(page).to have_content('Vous avez un dossier prérempli')

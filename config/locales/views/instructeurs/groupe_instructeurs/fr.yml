@@ -9,8 +9,8 @@ fr:
         wrong_adress: "L’adresse électronique saisie n’est pas valide."
       add_instructeur:
         wrong_address:
-          one: "%{emails} n’est pas une adresse email valide"
-          other: "%{emails} ne sont pas des adresses emails valides"
+          one: "%{emails} n’est pas une adresse électronique valide"
+          other: "%{emails} ne sont pas des adresses électroniques valides"
         assignment:
           one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} »."
           other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} »."

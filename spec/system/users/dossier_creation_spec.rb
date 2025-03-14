@@ -73,12 +73,12 @@ describe 'Creating a new dossier:', js: true do
             fill_in('Nom', with: 'nom')
           end
 
-          find('label', text: 'Par e-mail').click
+          find('label', text: 'Par adresse électronique').click
           fill_in('dossier_individual_attributes_email', with: 'prenom.nom@mail.com')
           find('label', text: 'Monsieur').click # force focus out
           within "#identite-form" do
             within '.suspect-email' do
-              expect(page).to have_content("L'adresse semble erronée Vouliez-vous écrire : prenom.nom@gmail.com ? Oui Non")
+              expect(page).to have_content("L'adresse électronique semble erronée Vouliez-vous écrire : prenom.nom@gmail.com ? Oui Non")
               click_button("Oui")
             end
             click_button("Continuer")
