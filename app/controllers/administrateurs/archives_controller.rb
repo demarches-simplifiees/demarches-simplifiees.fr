@@ -10,7 +10,12 @@ module Administrateurs
     def index
       @exports = Export.ante_chronological.by_key(all_groupe_instructeurs.map(&:id))
       @average_dossier_weight = @procedure.average_dossier_weight
-      @count_dossiers_termines_by_month = @procedure.dossiers.visible_by_administration.processed_by_month(all_groupe_instructeurs).count
+      @count_dossiers_termines_by_month = @procedure
+        .dossiers
+        .visible_by_administration
+        .where(processed_at: ...Date.current.beginning_of_month)
+        .processed_by_month(all_groupe_instructeurs)
+        .count
       @archives = Archive.for_groupe_instructeur(all_groupe_instructeurs).to_a
     end
 
