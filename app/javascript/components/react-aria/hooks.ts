@@ -67,7 +67,7 @@ function inputChanged(container: HTMLSpanElement, inputs: HTMLInputElement[]) {
 }
 
 const naturalSort: MatchSorterOptions['baseSort'] = (a, b) => {
-  return a.rankedValue.localeCompare(b.rankedValue, undefined, {
+  return String(a.rankedValue).localeCompare(String(b.rankedValue), undefined, {
     numeric: true,
     sensitivity: 'base'
   });
