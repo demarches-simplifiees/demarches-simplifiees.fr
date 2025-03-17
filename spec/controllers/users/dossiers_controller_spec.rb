@@ -394,7 +394,6 @@ describe Users::DossiersController, type: :controller do
     let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let!(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.project_champs_public.first }
-    let(:anchor_to_first_champ) { controller.helpers.link_to first_champ.libelle, brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
     let(:payload) { { id: dossier.id } }
@@ -441,7 +440,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
+      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.focusable_input_id}") }
       it { expect(response.body).to have_content(error_message) }
 
       it 'does not send an email' do
@@ -459,7 +458,7 @@ describe Users::DossiersController, type: :controller do
       before { subject }
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
+      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.focusable_input_id}") }
       it { expect(response.body).to have_content("doit être rempli") }
     end
 
@@ -511,7 +510,6 @@ describe Users::DossiersController, type: :controller do
     let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let(:dossier) { create(:dossier, :en_construction, procedure:, user: owner) }
     let(:first_champ) { dossier.owner_editing_fork.project_champs_public.first }
-    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
     let(:payload) { { id: dossier.id } }
@@ -561,7 +559,7 @@ describe Users::DossiersController, type: :controller do
 
         it { expect(response).to render_template(:modifier) }
         it { expect(response.body).to have_content("doit être rempli") }
-        it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
+        it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.focusable_input_id}") }
       end
 
       context 'when dossier has no champ' do
@@ -1094,7 +1092,6 @@ describe Users::DossiersController, type: :controller do
     let(:first_champ_user_buffer) { dossier.with_update_stream(dossier.user) { dossier.project_champs_public.first } }
     let(:piece_justificative_champ) { dossier.project_champs_public.last }
     let(:piece_justificative_champ_user_buffer) { dossier.with_update_stream(dossier.user) { dossier.project_champs_public.last } }
-    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:now) { Time.zone.parse('01/01/2100') }

@@ -17,6 +17,14 @@ class Champs::DropDownListChamp < Champ
     drop_down_options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
   end
 
+  def focusable_input_id
+    render_as_radios? ? radio_id(drop_down_options.first) : input_id
+  end
+
+  def radio_id(value)
+    "#{input_id}-#{Digest::MD5.hexdigest(value.to_s)}"
+  end
+
   def html_label?
     !render_as_radios?
   end
