@@ -62,7 +62,7 @@ describe 'fetch API Particulier Data', js: true do
       find('#api-particulier').click
       expect(page).to have_current_path(admin_procedure_api_particulier_path(procedure))
 
-      find('#add-jeton').click
+      find('#edit-jeton').click
       expect(page).to have_current_path(admin_procedure_api_particulier_jeton_path(procedure))
 
       fill_in 'procedure_api_particulier_token', with: expected_token

@@ -3,28 +3,27 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     [Procedure.human_attribute_name(:jeton_api_particulier)]] }
 
-.container
-  .flex
-    = link_to admin_procedure_api_particulier_jeton_path, class: 'card-admin', id: 'add-jeton' do
-      - if @procedure.api_particulier_token.blank?
-        %div
-          %p.fr-badge.fr-badge--info= t('.needs_configuration')
-      - else
-        %div
-          %p.fr-badge.fr-badge--success= t('.already_configured')
-      %div
-        %h3.fr-h6
-          = Procedure.human_attribute_name(:jeton_api_particulier)
-      %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')
+.fr-container
+  %h1.fr-h2= Procedure.human_attribute_name(:jeton_api_particulier)
+
+  .fr-grid-row.fr-grid-row--gutters.fr-pb-6w
+    .fr-col-12.fr-col-md-6
+      .fr-card.fr-card--shadow.fr-my-3w
+        .fr-card__body
+          .fr-card__content
+            %h2.fr-card__title= Procedure.human_attribute_name(:jeton_api_particulier)
+            %p.fr-badge.fr-badge--sm.fr-mb-2w{ class: @procedure.api_particulier_token.blank? ? 'fr-badge--info' : 'fr-badge--success' }
+              = @procedure.api_particulier_token.blank? ? t('.needs_configuration') : t('.already_configured')
+          .fr-card__footer
+            = link_to t('views.shared.actions.edit'), admin_procedure_api_particulier_jeton_path, class: 'fr-btn', id: 'edit-jeton'
 
     - if @procedure.api_particulier_scopes.present?
-      = link_to admin_procedure_api_particulier_sources_path, class: 'card-admin' do
-        - if @procedure.api_particulier_token.blank?
-          %div
-            %p.fr-badge.fr-badge--info= t('.needs_configuration')
-        - else
-          %div
-            %p.fr-badge.fr-badge--success= t('.already_configured')
-        %div
-          %p.card-admin-title= t('administrateurs.sources_particulier.show.data_sources')
-        %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')
+      .fr-col-12.fr-col-md-6
+        .fr-card.fr-card--shadow.fr-my-3w
+          .fr-card__body
+            .fr-card__content
+              %h2.fr-card__title= t('administrateurs.sources_particulier.show.data_sources')
+              %p.fr-badge.fr-badge--sm.fr-mb-2w{ class: @procedure.api_particulier_token.blank? ? 'fr-badge--info' : 'fr-badge--success' }
+                = @procedure.api_particulier_token.blank? ? t('.needs_configuration') : t('.already_configured')
+            .fr-card__footer
+              = link_to t('views.shared.actions.edit'), admin_procedure_api_particulier_sources_path, class: 'fr-btn'
