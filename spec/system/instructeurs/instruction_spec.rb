@@ -158,7 +158,7 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text('Télécharger l’export')
   end
 
-  scenario 'A instructeur can see the personnes impliquées and statut is maintened over avis/personnes impliquee paths', chrome: true do
+  scenario 'A instructeur can see the personnes impliquées and statut is maintened over avis/personnes impliquee paths' do
     instructeur2 = create(:instructeur, password: password)
 
     log_in(instructeur.email, password)
@@ -208,7 +208,7 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text("Dossier envoyé")
   end
 
-  scenario 'A instructeur can ask for an Archive', chrome: true do
+  scenario 'A instructeur can ask for an Archive' do
     archivable_procedure = create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur])
     create(:dossier, :accepte, procedure: archivable_procedure)
 
