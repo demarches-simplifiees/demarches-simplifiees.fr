@@ -43,11 +43,11 @@ class DelayedPurgeJob < ApplicationJob
 
   private
 
-  def delay = Integer(ENV['PURGE_LATER_DELAY_IN_DAY']).day.from_now.to_i.to_s
+  def delay = Integer(ENV['PURGE_LATER_DELAY_IN_DAY']).day.from_now.to_i
 
   # head object to update metadata makes pj unreadable. copy with extra headers
   def soft_delete
-    excon_response = client.copy_object(container, key, container, key, { "Content-Type" => blob.content_type, 'X-Delete-At' => delay })
+    excon_response = client.copy_object(container, key, container, key, { "Content-Type" => blob.content_type, 'X-Delete-At' => delay.to_s })
     if excon_response.status != 201
       Sentry.capture_message("Can't expire blob", extra: { key:, headers: })
     else
@@ -60,7 +60,7 @@ class DelayedPurgeJob < ApplicationJob
   end
 
   def soft_delete_enabled?
-    DelayedPurgeJob.openstack? && delay
+    DelayedPurgeJob.openstack? && delay.positive?
   rescue
     false
   end
