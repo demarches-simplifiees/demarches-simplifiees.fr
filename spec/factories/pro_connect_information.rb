@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :agent_connect_information do
+  factory :pro_connect_information do
     email { 'i@pro_connect.fr' }
     given_name { 'John' }
     usual_name { 'Doe' }

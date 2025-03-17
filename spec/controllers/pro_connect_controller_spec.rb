@@ -108,11 +108,11 @@ describe ProConnectController, type: :controller do
           expect(controller).to receive(:sign_in).twice
         end
 
-        it 'creates another agent_connect_information' do
+        it 'creates another pro_connect_information' do
           get :callback, params: { code: code, state: state }
           get :callback, params: { code: code, state: state }
 
-          expect(Instructeur.last.agent_connect_information.count).to eq(1)
+          expect(Instructeur.last.pro_connect_information.count).to eq(1)
         end
       end
 
@@ -121,14 +121,14 @@ describe ProConnectController, type: :controller do
           expect(controller).to receive(:sign_in).twice
         end
 
-        it 'creates another agent_connect_information' do
+        it 'creates another pro_connect_information' do
           expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
           get :callback, params: { code: code, state: state }
 
           expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info.merge('sub' => 'sub2'), id_token])
           get :callback, params: { code: code, state: state }
 
-          expect(Instructeur.last.agent_connect_information.pluck(:sub)).to match_array(['sub', 'sub2'])
+          expect(Instructeur.last.pro_connect_information.pluck(:sub)).to match_array(['sub', 'sub2'])
         end
       end
 

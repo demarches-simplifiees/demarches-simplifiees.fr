@@ -4,7 +4,7 @@ class Instructeur < ApplicationRecord
   include UserFindByConcern
   has_and_belongs_to_many :administrateurs
 
-  has_many :agent_connect_information, dependent: :destroy
+  has_many :pro_connect_information, dependent: :destroy
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, -> { order(:label) }, through: :assign_to
   has_many :unordered_groupe_instructeurs, through: :assign_to, source: :groupe_instructeur
@@ -329,7 +329,7 @@ class Instructeur < ApplicationRecord
   end
 
   def last_pro_connect_information
-    agent_connect_information.order(updated_at: :desc).first
+    pro_connect_information.order(updated_at: :desc).first
   end
 
   def export_templates_for(procedure)
