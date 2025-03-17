@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Procedure::GroupeInstructeurMenuComponent < ApplicationComponent
-  attr_reader :sticky
-  def initialize(procedure:, sticky: false)
+  def initialize(procedure:)
     @procedure = procedure
-    @sticky = sticky
   end
 
   private
