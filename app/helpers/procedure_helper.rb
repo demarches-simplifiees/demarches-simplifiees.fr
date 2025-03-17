@@ -70,4 +70,10 @@ module ProcedureHelper
     end
     admin_procedures_path(statut:)
   end
+
+  def replaced_and_publiee?(procedure)
+    procedure.closing_reason_internal_procedure? &&
+    procedure.replaced_by_procedure.present? &&
+    procedure.replaced_by_procedure.path.present?
+  end
 end
