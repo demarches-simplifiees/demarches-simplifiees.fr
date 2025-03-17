@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+describe 'users/dossiers/dossiers_list', type: :view do
+  let(:user) { dossier.user }
+
+  subject do
+    @rdvs_for_dossiers = []
+    render 'users/dossiers/dossiers_list', dossiers: [dossier], current_user: user
+  end
+  before do
+    [:paginate, :page_entries_info].map { allow(view).to receive(it).and_return("") }
+  end
+  context 'when procedure is not published and not path (sentry#6394294155)' do
+    let(:unpublished_procedure) { create(:procedure, :draft) }
+    let(:replaced_procedure) { create(:procedure, :closed, closing_reason: :internal_procedure, replaced_by_procedure: unpublished_procedure) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: replaced_procedure) }
+
+    it "renders successfully" do
+      unpublished_procedure.procedure_paths.delete_all
+      expect { subject }.not_to raise_error
+    end
+  end
+end
