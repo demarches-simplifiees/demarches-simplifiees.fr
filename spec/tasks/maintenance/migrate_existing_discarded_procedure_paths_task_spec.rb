@@ -3,12 +3,12 @@
 require "rails_helper"
 
 module Maintenance
-  RSpec.describe MigrateExistingProcedurePathsTask do
+  RSpec.describe MigrateExistingDiscardedProcedurePathsTask do
     describe "#process" do
       subject(:process) { described_class.process(element.reload) }
-
+      before { Procedure.ignored_columns = [] }
       context "when procedure is published" do
-        let(:element) { create(:procedure, :published) }
+        let(:element) { create(:procedure, :discarded) }
 
         before do
           element.update_column("path", "path-not-in-procedure-paths")
