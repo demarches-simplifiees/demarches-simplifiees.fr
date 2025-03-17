@@ -8,7 +8,7 @@ module Experts
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, except: [:index, :procedure, :notification_settings, :update_notification_settings]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :messagerie, :create_commentaire, :update, :telecharger_pjs]
     before_action :check_messaging_allowed, only: [:messagerie, :create_commentaire]
     before_action :set_procedure, only: [:notification_settings, :update_notification_settings]
 
