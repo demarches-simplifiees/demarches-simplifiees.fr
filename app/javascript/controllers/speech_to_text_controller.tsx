@@ -1,4 +1,7 @@
 import { ApplicationController } from './application_controller';
+import { FlashMessage } from '../components/shared/FlashMessage';
+import { createRoot } from 'react-dom/client';
+
 
 interface SpeechRecognition extends EventTarget {
   continuous: boolean;
@@ -57,7 +60,11 @@ export class SpeechToTextController extends ApplicationController {
     };
 
     this.speechRecognition.onresult = (event: SpeechRecognitionEvent) => {
-      this.extractTranscriptsInput(event);
+      if (this.hasInstructeurActionsTarget) {
+        this.extractTranscriptsInstructeur(event)
+      } else {
+        this.extractTranscriptsInput(event);
+      }
     };
 
     this.speechRecognition.onend = () => {
@@ -70,7 +77,31 @@ export class SpeechToTextController extends ApplicationController {
   }
 
   onClick() {
+    if(!this.speechRecognition) {
+      this.error("La reconnaissance vocale n'est pas supportée par votre navigateur.", 'alert')
+    }
+    else if (this.hasInstructeurActionsTarget) {
+      this.manageInstructeurActions();
+    } else {
       this.manageUserInput();
+    }
+  }
+
+  extractTranscriptsInstructeur(event: SpeechRecognitionEvent) {
+    const dossierAccepted = ["ok", "accepté", "accepter", "j'accepte"];
+
+    // The last character is sometimes a punctuation mark.
+    const result = event.results[0][0].transcript.replace(/[^a-zA-Z]+$/, '').toLowerCase();
+    
+    if (dossierAccepted.includes(result)) {
+      const form = document.getElementById('speech_to_text_instructeur_actions') as HTMLFormElement;
+      const inputProcessAction = form?.querySelector('[name="process_action"]') as HTMLInputElement;
+      inputProcessAction.value = 'accepter';
+      form?.dispatchEvent(new Event('submit', { bubbles: true }));
+    }
+    else {
+      this.error("L'action n'est pas comprise ou n'est pas supportée.", 'alert');
+    }
   }
 
   extractTranscriptsInput(event: SpeechRecognitionEvent) {
@@ -151,6 +182,24 @@ export class SpeechToTextController extends ApplicationController {
     return updatedTranscript;
   }
 
+  manageInstructeurActions() {
+    const button = this.instructeurActionsTarget.parentElement?.querySelector('#button-speech-to-text');
+    const stopIcon = button?.querySelector('.stop-speech-to-text');
+    const microphoneIcon = button?.querySelector('.microphone-speech-to-text');
+
+    if(stopIcon?.classList.contains('stop-recording-hidden')) {
+      stopIcon?.classList.replace('stop-recording-hidden', 'stop-recording-visible');
+      microphoneIcon?.classList.add('microphoneHidden');
+      button?.classList.add('fr-tag-bug');
+      this.startRecording();
+    } else {
+      stopIcon?.classList.replace('stop-recording-visible', 'stop-recording-hidden');
+      microphoneIcon?.classList.remove('microphoneHidden');
+      button?.classList.remove('fr-tag-bug');
+      this.stopRecording();
+    }
+  }
+
   manageUserInput() {
     const stopIcon = this.inputTarget.parentElement?.querySelector('.stop-speech-to-text');
     this.insertAccordingCursor();
@@ -197,8 +246,24 @@ export class SpeechToTextController extends ApplicationController {
     this.speechRecognition.stop();
   }
 
-  error(){
-    const error = this.inputTarget.parentElement?.parentElement?.querySelector('#speech_recognition_not_supported');
-    error?.classList.remove('hidden');
+  error(message: string, level: string){
+    if (this.hasInstructeurActionsTarget) {
+      const flashMessageContainer = document.getElementById('flash_messages');
+      if (!flashMessageContainer) {
+        console.error('Flash message container not found!');
+        return;
+      }
+
+      const root = createRoot(flashMessageContainer);
+      root.render(
+        <FlashMessage
+          message={message}
+          level={level}
+        />
+      );
+    } else {
+      const error = this.inputTarget.parentElement?.parentElement?.querySelector('#speech_recognition_not_supported');
+      error?.classList.remove('hidden');
+    }
   }
 }

@@ -1,3 +1,8 @@
+%li
+  - if Dossier.states[:en_instruction] == state && with_menu
+    = form_tag(defined?(form_path) ? form_path : terminer_instructeur_dossier_path(procedure_id, dossier_id), id: 'speech_to_text_instructeur_actions', data: { turbo: true, controller: 'speech-to-text', speech_to_text_target: 'instructeurActions' }, method: :post) do
+      = hidden_field_tag :process_action, "accepter"
+      = render partial: "shared/champs/speech_to_text"
 - if hidden_by_administration && hidden_by_expired
   %li
     = button_to repousser_expiration_and_restore_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: "fr-btn fr-icon-refresh-line" do
