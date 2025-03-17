@@ -1,1 +1,4 @@
-= @form.text_field(:value, input_opts(id: @champ.input_id, required: @champ.required?, aria: { describedby:"#{@champ.describedby_id} #{@champ.error_id}" }))
+%div.input-container{ data: { controller: 'speech-to-text' } }
+  = @form.text_field(:value, input_opts(id: @champ.input_id, required: false, aria: { describedby: @champ.describedby_id }, data: { speech_to_text_target: 'input' }))
+  = render partial: "shared/champs/speech_to_text"
+%p.fr-error-text.hidden{id: 'speech_recognition_not_supported'}= t('errors.messages.speech_recognition_not_supported')

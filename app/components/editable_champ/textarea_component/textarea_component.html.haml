@@ -1,4 +1,7 @@
-~ @form.text_area(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, rows: 6, required: @champ.required?, value: html_to_string(@champ.value), data: { controller: 'autoresize' }))
+%div.input-container{ data: { controller: 'speech-to-text' } }
+  ~ @form.text_area(:value, input_opts(id: @champ.input_id, aria: { describedby: @champ.describedby_id }, rows: 6, required: @champ.required?, value: html_to_string(@champ.value), data: { controller: 'autoresize', speech_to_text_target: 'input' }))
+  = render partial: "shared/champs/speech_to_text"
+%p.fr-error-text.hidden{id: 'speech_recognition_not_supported'}= t('errors.messages.speech_recognition_not_supported')
 
 %div{ role: 'status' }
   - if @champ.character_limit_info?

@@ -769,6 +769,7 @@ fr:
       not_a_date: "doit être une date correctement formatée"
       not_a_datetime: "doit être une date et heure correctement formatée"
       blank: "doit être rempli"
+      speech_recognition_not_supported: "La reconnaissance vocale n'est pas supportée par votre navigateur."
   time:
     formats:
       default: "%d %B %Y %R"
