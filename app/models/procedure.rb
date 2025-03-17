@@ -25,7 +25,7 @@ class Procedure < ApplicationRecord
 
   DOSSIERS_COUNT_EXPIRING = 1.hour
 
-  attr_encrypted :api_particulier_token
+  encrypts :api_particulier_token
 
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
