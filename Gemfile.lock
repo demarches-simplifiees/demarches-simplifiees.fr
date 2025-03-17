@@ -21,7 +21,6 @@ GEM
   specs:
     aasm (5.5.0)
       concurrent-ruby (~> 1.0)
-    acsv (0.0.1)
     actioncable (7.0.8.7)
       actionpack (= 7.0.8.7)
       activesupport (= 7.0.8.7)
@@ -811,6 +810,7 @@ GEM
       tilt (~> 2.0)
     skylight (6.0.4)
       activesupport (>= 5.2.0)
+    smarter_csv (1.13.1)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -949,7 +949,6 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
-  acsv
   active_model_serializers
   active_storage_validations
   activestorage-openstack
@@ -1081,6 +1080,7 @@ DEPENDENCIES
   simplecov
   simplecov-cobertura
   skylight
+  smarter_csv
   spreadsheet_architect
   spring
   spring-commands-rspec
