@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProConnect::AgentController, type: :controller do
+describe ProConnectController, type: :controller do
   describe '#login' do
     let(:uri) { 'https://www.proconnect.gouv.fr' }
     let(:state) { 'state' }

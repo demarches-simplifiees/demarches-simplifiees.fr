@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # doc: https://github.com/numerique-gouv/proconnect-documentation/tree/main
-class ProConnect::AgentController < ApplicationController
+class ProConnectController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
 
