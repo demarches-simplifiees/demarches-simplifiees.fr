@@ -55,7 +55,7 @@ describe ProConnectController, type: :controller do
             expect(last_user.email).to eq(email)
             expect(last_user.confirmed_at).to be_present
             expect(last_user.email_verified_at).to be_present
-            expect(last_user.instructeur.agent_connect_id_token).to eq('id_token')
+            expect(last_user.instructeur.pro_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
             expect(state_cookie).to be_nil
             expect(nonce_cookie).to be_nil
@@ -73,7 +73,7 @@ describe ProConnectController, type: :controller do
             expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
             instructeur.reload
 
-            expect(instructeur.agent_connect_id_token).to eq('id_token')
+            expect(instructeur.pro_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
 
@@ -96,7 +96,7 @@ describe ProConnectController, type: :controller do
 
             instructeur = user.reload.instructeur
 
-            expect(instructeur.agent_connect_id_token).to eq('id_token')
+            expect(instructeur.pro_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
         end

@@ -31,7 +31,7 @@ class ProConnectController < ApplicationController
       instructeur = user.instructeur
     end
 
-    instructeur.update!(agent_connect_id_token: id_token)
+    instructeur.update!(pro_connect_id_token: id_token)
     instructeur.user.update!(email_verified_at: Time.zone.now)
 
     aci = ProConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])

@@ -48,10 +48,10 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      pro_connect_id_token = current_user&.instructeur&.agent_connect_id_token
+      pro_connect_id_token = current_user&.instructeur&.pro_connect_id_token
 
       current_user.update(loged_in_with_france_connect: nil)
-      current_user&.instructeur&.update(agent_connect_id_token: nil)
+      current_user&.instructeur&.update(pro_connect_id_token: nil)
 
       sign_out :user
 

@@ -111,8 +111,8 @@ describe Users::SessionsController, type: :controller do
 
   describe '#destroy' do
     let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
-    let!(:instructeur) { create(:instructeur, user: user, agent_connect_id_token:) }
-    let(:agent_connect_id_token) { nil }
+    let!(:instructeur) { create(:instructeur, user: user, pro_connect_id_token:) }
+    let(:pro_connect_id_token) { nil }
 
     before do
       stub_const("PRO_CONNECT", { end_session_endpoint: 'http://pro-connect/logout' })
@@ -147,11 +147,11 @@ describe Users::SessionsController, type: :controller do
 
     context 'when user is connect with pro connect' do
       let(:loged_in_with_france_connect) { nil }
-      let(:agent_connect_id_token) { 'qwerty' }
+      let(:pro_connect_id_token) { 'qwerty' }
 
       it 'redirect to pro connect logout page' do
-        expect(response.location).to include(agent_connect_id_token)
-        expect(instructeur.reload.agent_connect_id_token).to be_nil
+        expect(response.location).to include(pro_connect_id_token)
+        expect(instructeur.reload.pro_connect_id_token).to be_nil
       end
     end
   end

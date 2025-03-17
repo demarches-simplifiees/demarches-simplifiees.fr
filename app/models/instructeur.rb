@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Instructeur < ApplicationRecord
+  alias_attribute :pro_connect_id_token, :agent_connect_id_token
+
   include UserFindByConcern
   has_and_belongs_to_many :administrateurs
 
