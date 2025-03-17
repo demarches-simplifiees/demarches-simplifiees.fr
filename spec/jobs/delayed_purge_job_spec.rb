@@ -26,7 +26,7 @@ describe DelayedPurgeJob, type: :job do
 
     expect(job).to receive(:client).and_return(double_client)
 
-    allow(Rails.application.config.active_storage).to receive(:service).and_return(:openstack)
+    allow(described_class).to receive(:openstack?).and_return(true)
 
     subject
 
