@@ -33,7 +33,7 @@ describe Administrateurs::ServicesController, type: :controller do
       end
     end
 
-    context 'when admin has no SIRET from AgentConnect' do
+    context 'when admin has no SIRET from ProConnect' do
       it 'does not prefill the SIRET' do
         subject
         expect(assigns[:service].siret).to be_nil
