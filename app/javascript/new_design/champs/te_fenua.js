@@ -352,13 +352,12 @@ function addInteractions(mapElement, map) {
       addMarkerButton.classList.toggle('active', markerMode);
 
       if (markerMode) {
-        addMarkerButton.textContent = "Marqueur actif";
+        addMarkerButton.textContent = 'Marqueur actif';
         // On désactive la sélection de parcelles/batiments
         map.un('click', lookForBatimentsAndParcelles);
         map.on('click', onMarkerClick);
-
       } else {
-        addMarkerButton.textContent = "Placer un marqueur";
+        addMarkerButton.textContent = 'Placer un marqueur';
         map.un('click', onMarkerClick);
         if (add_parcelle || add_batiment) {
           map.on('click', lookForBatimentsAndParcelles);

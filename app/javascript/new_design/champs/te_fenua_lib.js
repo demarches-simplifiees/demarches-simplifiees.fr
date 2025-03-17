@@ -136,7 +136,9 @@ export function createMarkerLayer() {
         anchorXUnits: 'fraction',
         anchorYUnits: 'fraction',
         scale: 0.8,
-        src: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        src:
+          'data:image/svg+xml;utf8,' +
+          encodeURIComponent(`
           <svg width="50" height="70" viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
             <path d="M25 0C11.192 0 0 11.415 0 25.5 0 44.625 25 70 25 70s25-25.375 25-44.5C50 11.415 38.808 0 25 0zm0 34.5c-5.247 0-9.5-4.253-9.5-9.5s4.253-9.5 9.5-9.5 9.5 4.253 9.5 9.5-4.253 9.5-9.5 9.5z" fill="#e74c3c"/>
           </svg>
