@@ -70,7 +70,6 @@
     border-radius: 5px;
   }
 
-
   &.add-zone {
     bottom: 2.5em;
     left: 0.4em;
@@ -109,7 +108,7 @@
   }
 
   #add-marker-button.active {
-    background-color: blue;
+    background-color: #0000FF;
     color: #FFFFFF;
   }
 
@@ -131,7 +130,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: red;
+      background-color: #FF0000;
       color: #FFFFFF;
     }
   }
@@ -147,9 +146,9 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-  
+
     #add-marker-button.active {
-      background-color: blue;
+      background-color: #0000FF;
       color: #FFFFFF;
     }
 
