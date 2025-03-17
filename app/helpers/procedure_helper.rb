@@ -71,9 +71,10 @@ module ProcedureHelper
     admin_procedures_path(statut:)
   end
 
-  def replaced_and_publiee?(procedure)
+  def can_recreate_a_dossier_from_a_procedure?(procedure)
     procedure.closing_reason_internal_procedure? &&
     procedure.replaced_by_procedure.present? &&
+    !procedure.replaced_by_procedure.discarded? &&
     procedure.replaced_by_procedure.path.present?
   end
 end
