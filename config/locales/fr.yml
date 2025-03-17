@@ -744,14 +744,14 @@ fr:
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:
-      saml_not_authorized: "Vous n'êtes pas autorisé à accéder à ce service."
-      dossier_not_found: "Le dossier n'existe pas ou vous n'y avez pas accès."
+      saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
+      dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
-      targeted_user_link_expired: "Ce lien d'invitation n'est plus valable ou le dossier n'est plus accessible."
-      procedure_not_found: "La démarche n'existe pas"
+      targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
+      procedure_not_found: "La démarche n’existe pas"
       pro_connect:
         connexion: "Une erreur est survenue lors de la connexion avec ProConnect. Veuillez réessayer."
-        email_domain_not_allowed: "Votre domaine d'email n'est pas autorisé à utiliser ProConnect sur cette plateforme."
+        email_domain_not_allowed: "Votre domaine d’email n’est pas autorisé à utiliser ProConnect sur cette plateforme."
       france_connect:
         connexion: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez réessayer."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
