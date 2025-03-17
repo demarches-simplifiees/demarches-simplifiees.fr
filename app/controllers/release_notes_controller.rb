@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReleaseNotesController < ApplicationController
-  before_action :ensure_access_allowed!
   after_action :touch_default_categories_seen_at
 
   def index
@@ -32,14 +31,5 @@ class ReleaseNotesController < ApplicationController
     return if current_user.announces_seen_at&.after?(@announces.max_by(&:released_on).released_on)
 
     current_user.touch(:announces_seen_at)
-  end
-
-  def ensure_access_allowed!
-    return if administrateur_signed_in?
-    return if instructeur_signed_in?
-    return if expert_signed_in?
-
-    flash[:alert] = t('release_notes.index.forbidden')
-    redirect_to root_path
   end
 end
