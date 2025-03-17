@@ -3,7 +3,7 @@ import {
   createCadastreLayer,
   createDefaultMap,
   createManualZoneLayer,
-  // createMarkerFeature,
+  createMarkerFeature,
   createMarkerLayer,
   createParcelleLayer,
   createTeFenuaLayer,
@@ -204,6 +204,13 @@ function initMap(mapElement, map) {
     const informations = mapElement.parentElement.querySelector('.geo-areas');
     // Prépare l'interpréteur GEOJSON.
     const geodata = JSON.parse(data);
+
+    if (geodata.position) {
+      const coords = geodata.position.geometry.coordinates;
+      const marker = createMarkerFeature(coords, MARKER_PATH);
+      map.markerLayer.getSource().addFeature(marker);
+    }
+
     initFeatures(geodata.parcelles, map.parcellesLayer);
     initFeatures(geodata.batiments, map.batimentsLayer);
     initFeatures(geodata.zones_manuelles, map.zoneManuellesLayer);
@@ -226,10 +233,16 @@ function addInteractions(mapElement, map) {
   // layer pour ajouter les zones manuelles
   let zoneManuellesLayer = map.zoneManuellesLayer;
   // entry types : parcelles, batiments, zone_manuelles ?
+  // récupération du bouton pour supprimer le marqueur
+  const removeMarkerButton = mapElement.querySelector('#remove-marker-button');
+  if (removeMarkerButton) {
+    removeMarkerButton.style.display = 'none';
+  }
   const entry_type = new Set(mapElement.getAttribute('data-entry').split(','));
   const add_zone = entry_type.has('zones_manuelles');
   const add_batiment = entry_type.has('batiments');
   const add_parcelle = entry_type.has('parcelles');
+  const add_marker = entry_type.has('marker');
   // help bubbles
   const bubbles = {
     add: mapElement.querySelector('.add'),
@@ -297,6 +310,69 @@ function addInteractions(mapElement, map) {
   }
 
   addBatimentParcelleInteraction();
+
+  if (removeMarkerButton) {
+    removeMarkerButton.addEventListener('click', () => {
+      map.markerLayer.getSource().clear();
+      delete geodata.position;
+      champ.value = JSON.stringify(geodata);
+      champ.dispatchEvent(new Event('change', { bubbles: true }));
+      removeMarkerButton.style.display = 'none';
+    });
+  }
+
+  const addMarkerButton = mapElement.querySelector('#add-marker-button');
+  if (addMarkerButton && add_marker) {
+    let markerMode = false;
+
+    const onMarkerClick = (evt) => {
+      map.markerLayer.getSource().clear();
+
+      // On crée le marqueur
+      const coords = evt.coordinate;
+      const feature = createMarkerFeature(coords, MARKER_PATH);
+      map.markerLayer.getSource().addFeature(feature);
+
+      // On met à jour geodata
+      geodata.position = {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: coords }
+      };
+      champ.value = JSON.stringify(geodata);
+      champ.dispatchEvent(new Event('change', { bubbles: true }));
+
+      // On affiche le bouton "supprimer le marqueur"
+      if (removeMarkerButton) {
+        removeMarkerButton.style.display = 'inline-block';
+      }
+    };
+
+    addMarkerButton.addEventListener('click', () => {
+      markerMode = !markerMode;
+      addMarkerButton.classList.toggle('active', markerMode);
+
+      if (markerMode) {
+        addMarkerButton.textContent = "Marqueur actif";
+        // On désactive la sélection de parcelles/batiments
+        map.un('click', lookForBatimentsAndParcelles);
+        map.on('click', onMarkerClick);
+
+      } else {
+        addMarkerButton.textContent = "Placer un marqueur";
+        map.un('click', onMarkerClick);
+        if (add_parcelle || add_batiment) {
+          map.on('click', lookForBatimentsAndParcelles);
+        }
+      }
+    });
+  } else if (addMarkerButton && !add_marker) {
+    addMarkerButton.style.display = 'none';
+  }
+
+  // Si on arrive avec un marqueur déjà enregistré, on affiche "supprimer"
+  if (removeMarkerButton && geodata.position) {
+    removeMarkerButton.style.display = 'inline-block';
+  }
 
   function hideHelps() {
     Object.keys(bubbles).forEach((b) => (bubbles[b].style.display = 'none'));

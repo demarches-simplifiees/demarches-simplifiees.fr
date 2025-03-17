@@ -97,4 +97,67 @@
       width: 0;
     }
   }
+
+  &.add-marker {
+    top: 2.5em;
+    right: 0.4em;
+    bottom: auto;
+    background-color: #FFFFFF;
+    color: #666666;
+    border-radius: 0px;
+    padding: 0px 0px 0px;
+  }
+
+  #add-marker-button.active {
+    background-color: blue;
+    color: #FFFFFF;
+  }
+
+  &.remove-marker {
+    top: 5.5em;
+    right: 0.4em;
+    bottom: auto;
+    background-color: #FFFFFF;
+    color: #000091;
+    border-radius: 0px;
+    padding: 0px 0px 0px;
+  }
+
+  #remove-marker-button {
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+
+    &:hover {
+      background-color: red;
+      color: #FFFFFF;
+    }
+  }
+
+  .te-fenua-help.add-marker {
+    top: 2.5em;
+    right: 0.4em;
+    bottom: auto;
+    background-color: #FFFFFF;
+    color: #666666;
+    border-radius: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  
+    #add-marker-button.active {
+      background-color: blue;
+      color: #FFFFFF;
+    }
+
+    button {
+      background-color: #FFFFFF;
+      color: #666666;
+      border-radius: 0px;
+      padding: 0 0.5em;
+    }
+  }
 }

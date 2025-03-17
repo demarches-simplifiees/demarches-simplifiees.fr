@@ -1,5 +1,5 @@
 class TypesDeChamp::TeFenuaTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  LAYERS = [:parcelles, :zones_manuelles] # , :batiments
+  LAYERS = [:parcelles, :zones_manuelles, :marker] # , :batiments
 
   class << self
     def champ_value_for_api(champ, version = 2)

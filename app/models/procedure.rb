@@ -1076,6 +1076,10 @@ class Procedure < ApplicationRecord
     draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
   end
 
+  def private_header_sections
+    draft_revision.revision_types_de_champ_private.filter { _1.type_de_champ.header_section? }
+  end
+
   def dossier_for_preview(user)
     # Try to use a preview or a dossier filled by current user
     dossiers.where(for_procedure_preview: true).or(dossiers.not_brouillon)

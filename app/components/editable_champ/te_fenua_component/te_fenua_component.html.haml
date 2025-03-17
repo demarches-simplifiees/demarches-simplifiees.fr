@@ -13,6 +13,12 @@
   .te-fenua-help.parcelle
     %p.te-fenua-header Aide
     = image_tag('te_fenua/add_parcelle.webp')
+  .te-fenua-help.add-marker
+    %button.fr-btn.fr-btn--secondary{ id: "add-marker-button", type: "button" }
+      Placer un marqueur
+  .te-fenua-help.remove-marker
+    %button.fr-btn.fr-btn--secondary{ id: "remove-marker-button", type: "button", style: "display:none;" }
+      Supprimer le marqueur
 
 .geo-areas
 

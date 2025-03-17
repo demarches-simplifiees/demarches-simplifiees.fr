@@ -4,9 +4,11 @@
                     ['Annotations privées']], preview: true }
 
 .fr-container
-  %h1.fr-h2 Annotations privées
+  .flex.justify-between.align-center.fr-mb-3w
+    %h1.fr-h2 Annotations privées
   = render  NestedForms::FormOwnerComponent.new
   .fr-grid-row
+    = render partial: 'administrateurs/procedures/champs_summary', locals: { procedure: @procedure, private: true, use_dom_id: true }
     .fr-col
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: true)
 

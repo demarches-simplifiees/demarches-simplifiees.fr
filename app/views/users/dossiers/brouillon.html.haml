@@ -9,4 +9,7 @@
     .fr-container
       = render partial: "shared/dossiers/header", locals: { dossier: @dossier }
 
-  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
+      .fr-grid-row
+        = render partial: "administrateurs/procedures/champs_summary", locals: { procedure: @dossier.procedure, private: false, use_dom_id: false }
+        .fr-col
+          = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }

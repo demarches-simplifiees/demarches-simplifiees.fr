@@ -13,6 +13,14 @@
             active: @tab == 'annotations-privees')
 
 - if @tab == 'dossier'
-  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
+  .fr-container
+    .fr-grid-row
+      = render partial: 'administrateurs/procedures/champs_summary', locals: { procedure: @dossier.procedure, private: false, use_dom_id: false }
+      .fr-col
+        = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
 - else
-  = render partial: "shared/dossiers/edit_annotations", locals: { dossier: @dossier, seen_at: nil }
+  .fr-container
+    .fr-grid-row
+      = render partial: 'administrateurs/procedures/champs_summary', locals: { procedure: @dossier.procedure, private: true, use_dom_id: false }
+      .fr-col
+        = render partial: "shared/dossiers/edit_annotations", locals: { dossier: @dossier }

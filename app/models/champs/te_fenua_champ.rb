@@ -22,6 +22,10 @@ class Champs::TeFenuaChamp < Champ
     type_de_champ&.batiments && type_de_champ.batiments != '0'
   end
 
+  def marker?
+    type_de_champ && type_de_champ.options["marker"] == "1"
+  end
+
   def zones_manuelles?
     type_de_champ&.zones_manuelles && type_de_champ.zones_manuelles != '0'
   end
@@ -40,6 +44,9 @@ class Champs::TeFenuaChamp < Champ
     end
     if zones_manuelles? then
       result << 'zones_manuelles'
+    end
+    if marker?
+      result << 'marker'
     end
     result.join(',')
   end
