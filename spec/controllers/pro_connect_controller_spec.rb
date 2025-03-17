@@ -39,7 +39,6 @@ describe ProConnectController, type: :controller do
       context 'and user_info returns some info' do
         before do
           expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
-          Flipper.enable(:agent_connect_2fa)
         end
 
         context 'and the instructeur does not have an account yet' do
