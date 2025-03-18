@@ -113,8 +113,8 @@ describe DossierFilterService do
 
       context 'for created_at column' do
         let!(:column) { procedure.find_column(label: 'Date de création') }
-        let!(:recent_dossier) { Timecop.freeze(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure:) } }
-        let!(:older_dossier) { Timecop.freeze(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure:) } }
+        let!(:recent_dossier) { travel_to(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure:) } }
+        let!(:older_dossier) { travel_to(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure:) } }
 
         it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
       end

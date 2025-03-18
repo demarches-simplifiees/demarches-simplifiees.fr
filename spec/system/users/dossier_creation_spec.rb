@@ -133,8 +133,7 @@ describe 'Creating a new dossier:', js: true do
         allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return([])
         allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
       end
-      before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
-      after { Timecop.return }
+      before { travel_to(Time.zone.local(2020, 3, 14)) }
 
       scenario 'the user can enter the SIRET of its etablissement and create a new draft' do
         visit commencer_path(path: procedure.path)

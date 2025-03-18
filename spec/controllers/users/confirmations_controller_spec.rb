@@ -11,7 +11,7 @@ describe Users::ConfirmationsController, type: :controller do
   describe '#show' do
     context 'when confirming within the auto-sign-in delay' do
       before do
-        Timecop.travel(1.hour.from_now) {
+        travel_to(1.hour.from_now) {
           get :show, params: { confirmation_token: confirmation_token }
         }
       end
@@ -34,7 +34,7 @@ describe Users::ConfirmationsController, type: :controller do
 
     context 'when the auto-sign-in delay has expired' do
       before do
-        Timecop.travel(3.hours.from_now) {
+        travel_to(3.hours.from_now) {
           get :show, params: { confirmation_token: confirmation_token }
         }
       end

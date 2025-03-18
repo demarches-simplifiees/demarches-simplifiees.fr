@@ -782,7 +782,7 @@ describe API::V2::GraphqlController do
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
-          Timecop.travel(3.hours.ago) {
+          travel_to(3.hours.ago) {
             dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
           }
         }

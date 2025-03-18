@@ -101,8 +101,7 @@ describe Instructeur, type: :model do
     let(:friday) { Time.zone.local(2017, 5, 12) }
     let(:monday) { Time.zone.now.beginning_of_week }
 
-    before { Timecop.freeze(friday) }
-    after { Timecop.return }
+    before { travel_to(friday) }
 
     context 'when no procedure published was active last week' do
       let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
@@ -276,10 +275,8 @@ describe Instructeur, type: :model do
 
     before do
       instructeur_2.followed_dossiers << dossier
-      Timecop.freeze(now)
+      travel_to(now)
     end
-
-    after { Timecop.return }
 
     subject { instructeur.notifications_for_groupe_instructeurs(gi_p1)[:en_cours] }
 
@@ -392,10 +389,9 @@ describe Instructeur, type: :model do
       let(:follow) { instructeur.follows.find_by(dossier: dossier) }
 
       before do
-        Timecop.freeze(freeze_date)
+        travel_to(freeze_date)
         instructeur.mark_tab_as_seen(dossier, :demande)
       end
-      after { Timecop.return }
 
       it { expect(follow.demande_seen_at).to eq(freeze_date) }
     end

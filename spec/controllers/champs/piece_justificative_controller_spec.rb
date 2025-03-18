@@ -57,8 +57,7 @@ describe Champs::PieceJustificativeController, type: :controller do
   end
 
   describe '#template' do
-    before { Timecop.freeze }
-    after { Timecop.return }
+    before { freeze_time }
 
     subject do
       get :template, params: {

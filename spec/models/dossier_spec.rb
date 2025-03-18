@@ -419,13 +419,13 @@ describe Dossier, type: :model do
     let(:date3) { 1.minute.ago }
     let(:dossier) do
       d = create(:dossier, :with_entreprise, user: user, procedure: procedure)
-      Timecop.freeze(date1)
+      travel_to(date1)
       d.passer_en_construction!
-      Timecop.freeze(date2)
+      travel_to(date2)
       d.passer_en_instruction!(instructeur: instructeur)
-      Timecop.freeze(date3)
+      travel_to(date3)
       d.accepter!(instructeur: instructeur, motivation: "Motivation")
-      Timecop.return
+      travel_back
       d
     end
 
@@ -518,8 +518,7 @@ describe Dossier, type: :model do
     let(:beginning_of_day) { Time.zone.now.beginning_of_day }
     let(:instructeur) { create(:instructeur) }
 
-    before { Timecop.freeze(beginning_of_day) }
-    after { Timecop.return }
+    before { travel_to(beginning_of_day) }
 
     context 'when dossier is en_construction' do
       context 'when the procedure.routing_enabled? is false' do
@@ -539,7 +538,7 @@ describe Dossier, type: :model do
 
         it 'should keep first en_construction_at date' do
           subject
-          Timecop.return
+          travel_back
           dossier.passer_en_instruction!(instructeur: instructeur)
           dossier.repasser_en_construction!(instructeur: instructeur)
 
@@ -638,7 +637,7 @@ describe Dossier, type: :model do
       it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
-        Timecop.return
+        travel_back
         dossier.repasser_en_construction!(instructeur: instructeur)
         dossier.passer_en_instruction!(instructeur: instructeur)
 
@@ -899,8 +898,7 @@ describe Dossier, type: :model do
     let!(:dossier) { create(:dossier) }
     let(:modif_date) { Time.zone.parse('01/01/2100') }
 
-    before { Timecop.freeze(modif_date) }
-    after { Timecop.return }
+    before { travel_to(modif_date) }
 
     subject do
       dossier.reload
@@ -1184,10 +1182,8 @@ describe Dossier, type: :model do
       allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
-      Timecop.freeze(now)
+      travel_to(now)
     end
-
-    after { Timecop.return }
 
     subject {
       dossier.accepter_automatiquement!
@@ -2071,7 +2067,7 @@ describe Dossier, type: :model do
       create(:dossier, user: user).hide_and_keep_track!(user, reason)
       create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
 
-      Timecop.travel(2.months.ago) do
+      travel_to(2.months.ago) do
         create(:dossier, user: user).hide_and_keep_track!(user, reason)
         create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
 
@@ -2079,7 +2075,7 @@ describe Dossier, type: :model do
         create(:dossier, :en_construction, user: user).procedure.discard_and_keep_track!(administrateur)
       end
 
-      Timecop.travel(1.week.ago) do
+      travel_to(1.week.ago) do
         create(:dossier, user: user).hide_and_keep_track!(user, reason)
         create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
       end
@@ -2454,7 +2450,7 @@ describe Dossier, type: :model do
     end
 
     subject do
-      Timecop.freeze(Time.zone.local(2021, 3, 5)) do
+      travel_to(Time.zone.local(2021, 3, 5)) do
         Dossier.processed_by_month(groupe_instructeurs).count
       end
     end
@@ -2588,13 +2584,13 @@ describe Dossier, type: :model do
   end
 
   def create_dossier_for_month(procedure, year, month)
-    Timecop.freeze(Time.zone.local(year, month, 5)) do
+    travel_to(Time.zone.local(year, month, 5)) do
       create(:dossier, :accepte, :with_attestation, procedure: procedure)
     end
   end
 
   def create_archived_dossier_for_month(procedure, year, month)
-    Timecop.freeze(Time.zone.local(year, month, 5)) do
+    travel_to(Time.zone.local(year, month, 5)) do
       create(:dossier, :accepte, :archived, :with_attestation, procedure: procedure)
     end
   end
