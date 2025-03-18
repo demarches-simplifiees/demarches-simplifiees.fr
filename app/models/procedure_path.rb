@@ -7,8 +7,6 @@ class ProcedurePath < ApplicationRecord
 
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { case_sensitive: false }
 
-  scope :by_updated_at, -> { order(updated_at: :desc) }
-
   def ensure_one_path
     return if procedure.procedure_paths.count > 1 || destroyed_by_association
 

@@ -513,6 +513,7 @@ module Administrateurs
       procedures
         .with_attached_logo
         .left_joins(groupe_instructeurs: :instructeurs)
+        .includes(:procedure_paths)
         .select('procedures.*,
                           COUNT(DISTINCT groupe_instructeurs.id) AS groupe_instructeurs_count,
                           COUNT(DISTINCT instructeurs.id) AS instructeurs_count')

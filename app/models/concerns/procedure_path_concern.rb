@@ -6,9 +6,8 @@ module ProcedurePathConcern
   included do
     self.ignored_columns += [:path]
 
-    has_many :procedure_paths, inverse_of: :procedure, dependent: :destroy, autosave: true
+    has_many :procedure_paths, -> { order(updated_at: :asc) }, inverse_of: :procedure, dependent: :destroy, autosave: true
 
-    after_initialize :ensure_path_exists
     before_validation :ensure_path_exists
 
     validates :procedure_paths, length: { minimum: 1 }
@@ -18,11 +17,11 @@ module ProcedurePathConcern
       left_joins(:procedure_paths).where(procedure_paths: { path: normalized_path }).limit(1)
     end
 
-    def path; canonical_path; end
+    def path = canonical_path
 
     def ensure_path_exists
-      uuid = SecureRandom.uuid
       if self.procedure_paths.empty?
+        uuid = SecureRandom.uuid
         self.procedure_paths.build(path: uuid)
       end
     end
@@ -34,7 +33,7 @@ module ProcedurePathConcern
     end
 
     def canonical_path
-      procedure_paths.by_updated_at.first&.path
+      procedure_paths.last&.path
     end
 
     def claim_path!(administrateur, new_path)
