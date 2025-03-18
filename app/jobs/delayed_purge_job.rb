@@ -24,6 +24,7 @@ class DelayedPurgeJob < ApplicationJob
   end
 
   if openstack?
+    require 'fog/openstack'
     discard_on Fog::OpenStack::Storage::NotFound
   end
 
