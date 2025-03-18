@@ -98,14 +98,6 @@ class ApplicationController < ActionController::Base
     current_expert.present?
   end
 
-  # calling current_user in a before_action will trigger the warden authentication (devise behavior)
-  # which is not what we want in a before_action of a sign_in action (current_user should be nil before explicit sign_in)
-  # so we need to override current_user to avoid this
-  # https://github.com/heartcombo/devise/issues/5602#issuecomment-1876164084
-  def current_user
-    super if warden.authenticated?(scope: :user)
-  end
-
   def current_account
     {
       gestionnaire: current_gestionnaire,
