@@ -52,6 +52,12 @@
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
+            - if type_de_champ.integer_number?
+              .cell.fr-mt-2w
+                .fr-toggle
+                  = form.check_box :positive_number, id: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__input'
+                  = form.label :positive_number, "Ce nombre doit être positif", for: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__label fr-label'
+
         .flex.justify-start.fr-mt-1w.flex-gap
           - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
             .flex.column.justify-start.width-33

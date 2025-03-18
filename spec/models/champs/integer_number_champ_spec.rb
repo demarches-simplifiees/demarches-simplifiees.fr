@@ -54,5 +54,23 @@ describe Champs::IntegerNumberChamp do
 
       it { is_expected.to be_truthy }
     end
+
+    context 'when the value is negative' do
+      context 'negative values are accepted' do
+        let(:value) { -1 }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'negative values are not accepted' do
+        before { champ.type_de_champ.update(options: { positive_number: '1' }) }
+        let(:value) { -1 }
+
+        it 'is not valid and contains errors' do
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être un nombre positif"])
+        end
+      end
+    end
   end
 end

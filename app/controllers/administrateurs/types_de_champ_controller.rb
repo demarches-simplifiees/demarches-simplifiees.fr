@@ -228,6 +228,7 @@ module Administrateurs
         :collapsible_explanation_enabled,
         :collapsible_explanation_text,
         :header_section_level,
+        :positive_number,
         :character_limit,
         :formatted_mode,
         :numbers_accepted,

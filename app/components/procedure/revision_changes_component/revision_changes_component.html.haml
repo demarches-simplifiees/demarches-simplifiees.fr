@@ -110,6 +110,9 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_condition", label: change.label, to: change.to)
+      - when :positive_number
+        - list.with_item do
+          = t(".#{prefix}.update_positive_number", label: change.label, to: change.to == '0' ? t(".#{prefix}.remove_positive_constraint") : t(".#{prefix}.add_positive_constraint"))
       - when :character_limit
         - if change.to.blank?
           - list.with_item do

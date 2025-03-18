@@ -48,6 +48,8 @@ class Champ < ApplicationRecord
     :prefillable?,
     :refresh_after_update?,
     :formatted_advanced?,
+    :positive_number,
+    :positive_number?,
     :character_limit?,
     :character_limit,
     :letters_accepted,

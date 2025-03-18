@@ -765,6 +765,7 @@ fr:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
         other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
+      not_positive: "doit être un nombre positif"
       not_a_float: "doit comprendre entre 1 et 3 chiffres après le point"
       not_a_date: "doit être une date correctement formatée"
       not_a_datetime: "doit être une date et heure correctement formatée"
