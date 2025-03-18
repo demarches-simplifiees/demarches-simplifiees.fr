@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe Dossier, type: :model do
+  include ActionView::Helpers::SanitizeHelper
+
   let(:user) { create(:user) }
 
   describe 'scopes' do
@@ -1304,7 +1306,7 @@ describe Dossier, type: :model do
       email_template = dossier.procedure.email_template_for(dossier.state)
       commentaire = dossier.commentaires.last
 
-      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
+      expect(commentaire.body).to include(sanitize(email_template.subject_for_dossier(dossier)), sanitize(email_template.body_for_dossier(dossier)))
       expect(commentaire.dossier).to eq(dossier)
     end
   end
