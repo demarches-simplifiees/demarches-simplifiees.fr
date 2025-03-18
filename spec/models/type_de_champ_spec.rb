@@ -402,6 +402,19 @@ describe TypeDeChamp do
       end
     end
 
+    context "Decimal number" do
+      let(:type_de_champ) { create(:type_de_champ_decimal_number, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { "positive_number" => "1" })
+        procedure.publish_revision!
+      end
+
+      it 'keeping the positive number options' do
+        is_expected.to eq({ "positive_number" => "1" })
+      end
+    end
+
     context "Piece justificative" do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative, procedure:) }
 

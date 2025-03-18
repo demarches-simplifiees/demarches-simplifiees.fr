@@ -633,6 +633,7 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:explication) => [:collapsible_explanation_enabled, :collapsible_explanation_text],
     type_champs.fetch(:textarea) => [:character_limit],
     type_champs.fetch(:integer_number) => [:positive_number],
+    type_champs.fetch(:decimal_number) => [:positive_number],
     type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
     type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],

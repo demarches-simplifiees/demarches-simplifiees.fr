@@ -451,7 +451,7 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.character_limit,
           to_type_de_champ.character_limit)
       end
-    elsif to_type_de_champ.integer_number?
+    elsif to_type_de_champ.integer_number? || to_type_de_champ.decimal_number?
       if from_type_de_champ.positive_number != to_type_de_champ.positive_number
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :positive_number,
