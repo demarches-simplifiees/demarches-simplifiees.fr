@@ -337,7 +337,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  scope :never_touched_brouillon_expired, -> { brouillon.where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, parent_dossier: nil).where(created_at: ..2.weeks.ago) }
+  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, identity_updated_at: nil, parent_dossier: nil).where(created_at: ..2.weeks.ago) }
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
