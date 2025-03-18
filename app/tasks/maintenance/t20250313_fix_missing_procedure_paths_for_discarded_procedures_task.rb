@@ -13,7 +13,7 @@ module Maintenance
 
     def process(element)
       element.ensure_path_exists
-      element.save!
+      element.save(validate: false)
     end
   end
 end

@@ -28,6 +28,19 @@ module Maintenance
       it "adds a procedure_path to the discarded procedure" do
         expect { process }.to change { discarded_procedure.procedure_paths.count }.from(0).to(1)
       end
+
+      context "when the procedure is invalid" do
+        subject(:process) { described_class.process(element) }
+        let(:element) {
+          discarded_procedure.update_column(:libelle, nil) # make it invalid
+          discarded_procedure
+        }
+
+        it "adds a procedure_path to the invalid discarded procedure" do
+          expect(element).not_to be_valid
+          expect { process }.to change { discarded_procedure.procedure_paths.count }.from(0).to(1)
+        end
+      end
     end
   end
 end
