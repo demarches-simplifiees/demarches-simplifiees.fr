@@ -35,7 +35,8 @@ module ReleaseNotesHelper
   end
 
   def render_release_note_content(content)
-    allowed_attributes.merge ["rel", "target"] # title already allowed
+    ActionText::ContentHelper.allowed_tags = sanitizer_allowed_tags + %w[a]
+    ActionText::ContentHelper.allowed_attributes = sanitizer_allowed_attributes + %w[rel target]
 
     content.body.fragment.source.css("a[href]").each do |link|
       uri = URI.parse(link['href'])
