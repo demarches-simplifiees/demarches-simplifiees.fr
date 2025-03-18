@@ -43,7 +43,7 @@ describe Rack::Attack, type: :request do
     context 'when the ip is whitelisted' do
       before do
         allow(IPService).to receive(:ip_trusted?).and_return(true)
-        allow(AgentConnectService).to receive(:enabled?).and_return(false)
+        allow(ProConnectService).to receive(:enabled?).and_return(false)
         allow_any_instance_of(Users::SessionsController).to receive(:create).and_return(:ok)
       end
 

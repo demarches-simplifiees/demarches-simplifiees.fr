@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-# doc: https://github.com/france-connect/Documentation-AgentConnect
-class AgentConnect::AgentController < ApplicationController
+# doc: https://github.com/numerique-gouv/proconnect-documentation/tree/main
+class ProConnectController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
 
-  STATE_COOKIE_NAME = :agentConnect_state
-  NONCE_COOKIE_NAME = :agentConnect_nonce
+  STATE_COOKIE_NAME = :proConnect_state
+  NONCE_COOKIE_NAME = :proConnect_nonce
 
   def index
   end
 
   def login
-    uri, state, nonce = AgentConnectService.authorization_uri
+    uri, state, nonce = ProConnectService.authorization_uri
 
     cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
     cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
@@ -21,20 +21,20 @@ class AgentConnect::AgentController < ApplicationController
   end
 
   def callback
-    user_info, id_token, amr = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    user_info, id_token, amr = ProConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.delete NONCE_COOKIE_NAME
 
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
 
     if instructeur.nil?
-      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], agent_connect: true)
+      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], pro_connect: true)
       instructeur = user.instructeur
     end
 
-    instructeur.update!(agent_connect_id_token: id_token)
+    instructeur.update!(pro_connect_id_token: id_token)
     instructeur.user.update!(email_verified_at: Time.zone.now)
 
-    aci = AgentConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
+    aci = ProConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
     aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:))
 
     sign_in(:user, instructeur.user)

@@ -568,7 +568,7 @@ fr:
           connection: Se connecter
           find_procedure: Trouvez votre démarche
           state_civil_servant: Vous êtes agent de la fonction publique d’État ?
-          connect_with_agent_connect: Accédez à notre page dédiée
+          connect_with_pro_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
           for_tiers_alert: Si vous remplissez un dossier pour un tiers, vous devez utiliser vos propres identifiants.
         link_sent:
@@ -746,15 +746,18 @@ fr:
     messages:
       saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
-      # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
+      # dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
       targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
       procedure_not_found: "La démarche n’existe pas"
+      pro_connect:
+        connexion: "Une erreur est survenue lors de la connexion avec ProConnect. Veuillez réessayer."
+        email_domain_not_allowed: "Votre domaine d’email n’est pas autorisé à utiliser ProConnect sur cette plateforme."
+      france_connect:
+        connexion: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez réessayer."
+        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       siret:
         network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
         not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro SIRET.'
-      france_connect:
-        connexion: "Erreur lors de la connexion à France Connect."
-        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       invalid_character_rules: Vous devez sélectionner au moins un type de caractère.
       invalid_character_length: "Le nombre minimum de caractères doit être inférieur au nombre maximum de caractères"
       evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance

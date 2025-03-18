@@ -7,7 +7,7 @@ class Users::SessionsController < Devise::SessionsController
 
   layout 'login', only: [:new, :create]
 
-  before_action :redirect_to_agent_connect_if_mandatory, only: [:create]
+  before_action :redirect_to_pro_connect_if_mandatory, only: [:create]
   before_action :restore_procedure_context, only: [:new, :create]
   skip_before_action :redirect_if_untrusted, only: [:reset_link_sent]
   # POST /resource/sign_in
@@ -48,10 +48,10 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      agent_connect_id_token = current_user&.instructeur&.agent_connect_id_token
+      pro_connect_id_token = current_user&.instructeur&.pro_connect_id_token
 
       current_user.update(loged_in_with_france_connect: nil)
-      current_user&.instructeur&.update(agent_connect_id_token: nil)
+      current_user&.instructeur&.update(pro_connect_id_token: nil)
 
       sign_out :user
 
@@ -59,8 +59,8 @@ class Users::SessionsController < Devise::SessionsController
         return redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
       end
 
-      if agent_connect_id_token.present?
-        return redirect_to AgentConnectService.logout_url(agent_connect_id_token, host_with_port: request.host_with_port),
+      if pro_connect_id_token.present?
+        return redirect_to ProConnectService.logout_url(pro_connect_id_token, host_with_port: request.host_with_port),
           allow_other_host: true
       end
     end
@@ -108,17 +108,17 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  # agent connect callback
+  # Pro connect callback
   def logout
     redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
   end
 
-  def redirect_to_agent_connect_if_mandatory
-    return if !AgentConnectService.enabled?
+  def redirect_to_pro_connect_if_mandatory
+    return if !ProConnectService.enabled?
 
-    return if !AgentConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
+    return if !ProConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
 
-    flash[:alert] = "La connexion des agents passe à présent systématiquement par AgentConnect"
-    redirect_to agent_connect_path(force_agent_connect: true)
+    flash[:alert] = "La connexion des agents passe à présent systématiquement par ProConnect"
+    redirect_to pro_connect_path(force_pro_connect: true)
   end
 end

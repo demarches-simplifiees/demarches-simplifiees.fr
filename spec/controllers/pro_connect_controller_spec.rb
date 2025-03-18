@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-describe AgentConnect::AgentController, type: :controller do
+describe ProConnectController, type: :controller do
   describe '#login' do
-    let(:uri) { 'https://agent-connect.fr' }
+    let(:uri) { 'https://www.proconnect.gouv.fr' }
     let(:state) { 'state' }
     let(:nonce) { 'nonce' }
 
     before do
-      expect(AgentConnectService).to receive(:authorization_uri).and_return([uri, state, nonce])
+      expect(ProConnectService).to receive(:authorization_uri).and_return([uri, state, nonce])
       get :login
     end
 
@@ -38,8 +38,7 @@ describe AgentConnect::AgentController, type: :controller do
 
       context 'and user_info returns some info' do
         before do
-          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
-          Flipper.enable(:agent_connect_2fa)
+          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
         end
 
         context 'and the instructeur does not have an account yet' do
@@ -55,7 +54,7 @@ describe AgentConnect::AgentController, type: :controller do
             expect(last_user.email).to eq(email)
             expect(last_user.confirmed_at).to be_present
             expect(last_user.email_verified_at).to be_present
-            expect(last_user.instructeur.agent_connect_id_token).to eq('id_token')
+            expect(last_user.instructeur.pro_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
             expect(state_cookie).to be_nil
             expect(nonce_cookie).to be_nil
@@ -73,7 +72,7 @@ describe AgentConnect::AgentController, type: :controller do
             expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
             instructeur.reload
 
-            expect(instructeur.agent_connect_id_token).to eq('id_token')
+            expect(instructeur.pro_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
 
@@ -96,7 +95,7 @@ describe AgentConnect::AgentController, type: :controller do
 
             instructeur = user.reload.instructeur
 
-            expect(instructeur.agent_connect_id_token).to eq('id_token')
+            expect(instructeur.pro_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
         end
@@ -104,15 +103,15 @@ describe AgentConnect::AgentController, type: :controller do
 
       context 'when the instructeur connects two times with the same domain' do
         before do
-          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token]).twice
+          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token]).twice
           expect(controller).to receive(:sign_in).twice
         end
 
-        it 'creates another agent_connect_information' do
+        it 'creates another pro_connect_information' do
           get :callback, params: { code: code, state: state }
           get :callback, params: { code: code, state: state }
 
-          expect(Instructeur.last.agent_connect_information.count).to eq(1)
+          expect(Instructeur.last.pro_connect_information.count).to eq(1)
         end
       end
 
@@ -121,20 +120,20 @@ describe AgentConnect::AgentController, type: :controller do
           expect(controller).to receive(:sign_in).twice
         end
 
-        it 'creates another agent_connect_information' do
-          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
+        it 'creates another pro_connect_information' do
+          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
           get :callback, params: { code: code, state: state }
 
-          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info.merge('sub' => 'sub2'), id_token])
+          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info.merge('sub' => 'sub2'), id_token])
           get :callback, params: { code: code, state: state }
 
-          expect(Instructeur.last.agent_connect_information.pluck(:sub)).to match_array(['sub', 'sub2'])
+          expect(Instructeur.last.pro_connect_information.pluck(:sub)).to match_array(['sub', 'sub2'])
         end
       end
 
       context 'but user_info raises and error' do
         before do
-          expect(AgentConnectService).to receive(:user_info).and_raise(Rack::OAuth2::Client::Error.new(500, error: 'Unknown'))
+          expect(ProConnectService).to receive(:user_info).and_raise(Rack::OAuth2::Client::Error.new(500, error: 'Unknown'))
         end
 
         it 'aborts the processus' do

@@ -20,7 +20,6 @@ end
 # A list of features to be deployed on first push
 features = [
   :administrateur_web_hook,
-  :agent_connect_2fa,
   :api_particulier,
   :attestation_v2,
   :blocking_pending_correction,

@@ -207,11 +207,11 @@ Rails.application.routes.draw do
     get 'confirm_email/:token', to: 'particulier#confirm_email', as: :confirm_email
   end
 
-  namespace :agent_connect do
-    get '' => 'agent#index'
-    get 'login' => 'agent#login'
-    get 'callback' => 'agent#callback'
-  end
+  get 'pro_connect' => 'pro_connect#index'
+  get 'pro_connect/login' => 'pro_connect#login'
+  get 'pro_connect/callback' => 'pro_connect#callback'
+  # to be migrated
+  get 'agent_connect/callback' => 'pro_connect#callback'
 
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition

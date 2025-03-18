@@ -14,12 +14,12 @@ describe Administrateurs::ServicesController, type: :controller do
 
     subject { get :new, params: { procedure_id: procedure.id } }
 
-    context 'when admin has a SIRET from AgentConnect' do
+    context 'when admin has a SIRET from ProConnect' do
       let(:siret) { "20004021000060" }
 
       before do
-        agi = build(:agent_connect_information, siret:)
-        admin.instructeur.agent_connect_information << agi
+        agi = build(:pro_connect_information, siret:)
+        admin.instructeur.pro_connect_information << agi
       end
 
       it 'prefills the SIRET and fetches service information' do
@@ -33,7 +33,7 @@ describe Administrateurs::ServicesController, type: :controller do
       end
     end
 
-    context 'when admin has no SIRET from AgentConnect' do
+    context 'when admin has no SIRET from ProConnect' do
       it 'does not prefill the SIRET' do
         subject
         expect(assigns[:service].siret).to be_nil

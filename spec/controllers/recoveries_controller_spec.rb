@@ -31,7 +31,7 @@ describe RecoveriesController, type: :controller do
     it { is_expected.to have_http_status(:success) }
   end
 
-  describe 'ensure_agent_connect_is_used' do
+  describe 'ensure_pro_connect_is_used' do
     subject { post :selection }
 
     before do
@@ -39,8 +39,8 @@ describe RecoveriesController, type: :controller do
       allow(controller).to receive(:selection).and_return(true)
     end
 
-    context 'when agent connect is used' do
-      let(:instructeur) { create(:instructeur, :with_agent_connect_information) }
+    context 'when pro connect is used' do
+      let(:instructeur) { create(:instructeur, :with_pro_connect_information) }
 
       before do
         allow(controller).to receive(:current_instructeur).and_return(instructeur)
@@ -49,8 +49,8 @@ describe RecoveriesController, type: :controller do
       it { is_expected.to have_http_status(:success) }
     end
 
-    context 'when agent connect is not used' do
-      it { is_expected.to redirect_to(support_recovery_path(error: :must_use_agent_connect)) }
+    context 'when pro connect is not used' do
+      it { is_expected.to redirect_to(support_recovery_path(error: :must_use_pro_connect)) }
     end
   end
 
@@ -58,7 +58,7 @@ describe RecoveriesController, type: :controller do
     subject { post :selection }
 
     before do
-      allow(controller).to receive(:ensure_agent_connect_is_used).and_return(true)
+      allow(controller).to receive(:ensure_pro_connect_is_used).and_return(true)
       allow(controller).to receive(:siret).and_return('123')
       allow(controller).to receive(:selection).and_return(true)
     end
@@ -80,8 +80,8 @@ describe RecoveriesController, type: :controller do
     end
   end
 
-  context 'when the current instructeur used agent connect and works for a collectivite territoriale' do
-    let(:instructeur) { create(:instructeur, :with_agent_connect_information) }
+  context 'when the current instructeur used pro connect and works for a collectivite territoriale' do
+    let(:instructeur) { create(:instructeur, :with_pro_connect_information) }
     let(:api_recherche_result) do
       { nom_complet: 'name', complements: { collectivite_territoriale: { is: :present } } }
     end
