@@ -37,12 +37,12 @@
 
           .fr-fieldset__element
             .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
+              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}", translate: "no"
               %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
                 = Individual.human_attribute_name('gender.female')
           .fr-fieldset__element
             .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
+              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}", translate: "no"
               %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
                 = Individual.human_attribute_name('gender.male')
       .fr-fieldset__element.fr-mb-0
@@ -72,7 +72,7 @@
         - Individual.notification_methods.each do |method, _|
           .fr-fieldset__element
             .fr-radio-group
-              = individual.radio_button :notification_method, method, required: true, id: "notification_method_#{method}", "data-action" => "for-tiers#toggleEmailInput", "data-for-tiers-target" => "notificationMethod"
+              = individual.radio_button :notification_method, method, required: true, id: "notification_method_#{method}", "data-action" => "for-tiers#toggleEmailInput", "data-for-tiers-target" => "notificationMethod", translate: "no"
               %label.fr-label{ for: "notification_method_#{method}" }
                 = t("activerecord.attributes.individual.notification_methods.#{method}")
 
