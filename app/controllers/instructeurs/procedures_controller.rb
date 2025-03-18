@@ -2,8 +2,10 @@
 
 module Instructeurs
   class ProceduresController < InstructeurController
+    include InstructeurProcedureConcern
     before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
+    after_action :mark_latest_revision_as_seen, only: [:history]
 
     ITEMS_PER_PAGE = 100
     BATCH_SELECTION_LIMIT = 500
@@ -86,6 +88,7 @@ module Instructeurs
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
 
       @current_filters = procedure_presentation.filters_for(statut)
       @current_filters.each do |filter|
@@ -249,6 +252,7 @@ module Instructeurs
 
     def exports
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @exports = Export.for_groupe_instructeurs(groupe_instructeur_ids).ante_chronological
       cookies.encrypted[cookies_export_key] = {
         value: DateTime.current,
@@ -265,6 +269,7 @@ module Instructeurs
 
     def export_templates
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @export_templates = current_instructeur.export_templates_for(@procedure).includes(:groupe_instructeur)
     end
 
@@ -276,6 +281,7 @@ module Instructeurs
 
     def usagers_rdvs
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @rdvs = @procedure.rdvs.by_starts_at
     end
 
@@ -321,10 +327,24 @@ module Instructeurs
     def apercu
       @procedure = procedure
       @dossier = procedure.active_revision.dossier_for_preview(current_user)
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       DossierPreloader.load_one(@dossier)
     end
 
+    def history
+      @procedure = procedure
+      @revisions = @procedure.revisions
+        .where.not(published_at: nil)
+        .reorder(published_at: :desc)
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
+    end
+
     private
+
+    def mark_latest_revision_as_seen
+      return if @procedure.published_revision_id.blank?
+      @instructeur_procedure.update(last_revision_seen_id: @procedure.published_revision_id)
+    end
 
     def groupe_instructeur_ids_params
       bulk_message_params = params.require(:bulk_message).permit(:without_group, groupe_instructeur_ids: {}).to_h

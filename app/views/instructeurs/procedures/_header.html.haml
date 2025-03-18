@@ -4,6 +4,7 @@
     %h1.fr-h3.fr-mb-0
       = procedure_libelle_with_number(procedure)
       = procedure_badge(procedure, 'super')
+
   %nav.fr-nav#navigation{ role: "navigation", "aria-label": t('instructeurs.dossiers.header.banner.procedure_navigation') }
     %ul.fr-nav__list
       %li.fr-nav__item
@@ -11,9 +12,18 @@
 
       %li.fr-nav__item.relative
         %button.fr-nav__btn{ 'aria-expanded': 'false', 'aria-controls': "menu-procedure", 'aria-current': ('page' if current_nav_section == 'procedure_management') }
-          = t('instructeurs.dossiers.header.banner.procedure_management')
+          %span.relative{ class: class_names("fr-pr-1w" => procedure_has_unseen_revisions?(@instructeur_procedure)) }
+            = t('instructeurs.dossiers.header.banner.procedure_management')
+            - if procedure_has_unseen_revisions?(@instructeur_procedure)
+              %span.notifications{ 'aria-label': 'notifications' }
         #menu-procedure.fr-collapse.fr-menu
           %ul.fr-menu__list
+            %li
+              = link_to procedure_history_instructeur_procedure_path(procedure), class: 'fr-nav__link position-relative' do
+                %span.relative{ class: class_names("fr-pr-2w" => procedure_has_unseen_revisions?(@instructeur_procedure)) }
+                  = t('instructeurs.dossiers.header.banner.history.title')
+                  - if procedure_has_unseen_revisions?(@instructeur_procedure)
+                    %span.notifications{ 'aria-label': 'notifications' }
             %li
               = link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(procedure), class: 'fr-nav__link'
 

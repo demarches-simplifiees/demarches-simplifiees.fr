@@ -4,13 +4,14 @@ module Instructeurs
   class GroupeInstructeursController < InstructeurController
     include EmailSanitizableConcern
     include GroupeInstructeursSignatureConcern
-
+    include InstructeurProcedureConcern
     before_action :ensure_allowed!
 
     ITEMS_PER_PAGE = 25
 
     def index
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       redirect_to instructeur_groupe_path(@procedure, @procedure.defaut_groupe_instructeur) if !@procedure.routing_enabled?
       @groupes_instructeurs = paginated_groupe_instructeurs
     end
@@ -18,6 +19,7 @@ module Instructeurs
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @instructeurs = paginated_instructeurs
       @maybe_typos = flash[:maybe_typos]
     end

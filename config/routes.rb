@@ -574,6 +574,7 @@ Rails.application.routes.draw do
         get 'export_templates'
         get 'email_notifications'
         get 'administrateurs'
+        get 'history', as: :procedure_history
         patch 'update_email_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'

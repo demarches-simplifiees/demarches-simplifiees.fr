@@ -1,0 +1,26 @@
+- title = t('instructeurs.dossiers.header.banner.history.title', procedure_libelle: @procedure.libelle)
+- content_for(:title, title)
+
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                        [t('instructeurs.dossiers.header.banner.history.title')]] }
+
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
+
+.fr-container
+  %h1.fr-h4= t('instructeurs.dossiers.header.banner.history.title')
+  - @revisions.each_cons(2) do |current_revision, previous_revision|
+    .fr-card.fr-mb-2w.fr-p-2w
+      %div
+        %h2.fr-card__title
+          = t('instructeurs.dossiers.header.banner.history.modification_published_at', date: l(current_revision.published_at, format: :human))
+          - if current_revision.id > @instructeur_procedure.last_revision_seen_id.to_i
+            %span.fr-badge.fr-badge--sm.fr-badge--new= t('instructeurs.dossiers.header.banner.history.new')
+      %div
+        = render Procedure::RevisionChangesComponent.new new_revision: current_revision, previous_revision: previous_revision
+  - if @revisions.size < 2
+    .fr-alert.fr-alert--info
+      %p= t('instructeurs.dossiers.header.banner.history.no_history')
