@@ -135,7 +135,7 @@ export function createMarkerLayer() {
         anchor: [0.5, 1],
         anchorXUnits: 'fraction',
         anchorYUnits: 'fraction',
-        scale: 0.8,
+        scale: 0.4,
         src:
           'data:image/svg+xml;utf8,' +
           encodeURIComponent(`

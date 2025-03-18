@@ -7,7 +7,7 @@
         - headers.each do |header|
           %li.fr-sidemenu__item
             - level = header.type_de_champ.header_section_level_value.to_i
-            - anchor_id = use_dom_id ? dom_id(header, :type_de_champ_editor) : HeaderSectionsHelper.anchor_id_for_header(header)
+            - anchor_id = use_dom_id ? dom_id(header, :type_de_champ_editor) : "champ-#{header.stable_id}"
             - if level == 1
               %a.fr-sidemenu__link{ href: "##{anchor_id}" }= header.libelle
             - else
