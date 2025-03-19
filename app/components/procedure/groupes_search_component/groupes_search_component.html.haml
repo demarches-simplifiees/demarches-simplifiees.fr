@@ -1,20 +1,15 @@
 = form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
   method: :get) do
-  #header-search.fr-search-bar.fr-mb-3w.fr-p-2w.fr-background-alt--grey{ role: "search" }
-    = label_tag :q, 'Rechercher un groupe (par nom)', class: 'sr-only'
-    = text_field_tag :q, @query, class: 'fr-input', type: 'search', autocomplete: 'off', placeholder: 'Rechercher un groupe (par nom)'
-    %button.fr-btn{ title: "Rechercher" } Rechercher
+  .header-search-container.fr-background-alt--grey.fr-mb-3w.fr-p-2w
+    #header-search.fr-search-bar.fr-mb-2w{ role: "search" }
+      = label_tag :q, 'Rechercher un groupe (par nom)', class: 'sr-only'
+      = text_field_tag :q, @query, class: 'fr-input', type: 'search', autocomplete: 'off', placeholder: 'Rechercher un groupe (par nom)'
+      %button.fr-btn{ title: "Rechercher" } Rechercher
+    - if show_to_configure?
+      .fr-toggle
+        = check_box_tag :filter, '1', @to_configure_filter, class: 'fr-toggle__input', data: { controller: 'autosubmit' }
+        = label_tag :filter, t('.to_configure_filter_html', count: @to_configure_count), class: 'fr-toggle__label'
   - if @query.present?
     = link_to "Réinitialiser la recherche",
       admin_procedure_groupe_instructeurs_path(@procedure),
       class: 'fr-link'
-  - if show_to_configure?
-    .flex.align-baseline
-      %ul.fr-btns-group.fr-btns-group--sm
-        %li.fr-checkbox-group.fr-ml-1w.fr-py-1w
-          .title.font-weight-bold.fr-mb-1w
-            %span.fr-icon-filter-fill.fr-icon--sm.fr-mr-1w{ 'aria-hidden': 'true' }
-              Filtre
-
-          = check_box_tag :filter, '1', @to_configure_filter, data: { controller: 'autosubmit' }
-          = label_tag :filter, t('.to_configure_filter', count: @to_configure_count)
