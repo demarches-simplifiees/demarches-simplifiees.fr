@@ -945,6 +945,22 @@ class API::V2::StoredQuery
     }
   }
 
+  mutation dossierModifierAnnotationDecimalNumber(
+    $input: DossierModifierAnnotationDecimalNumberInput!
+  ) {
+    dossierModifierAnnotationDecimalNumber(input: $input) {
+      annotation {
+        id
+        ... on DecimalNumberChamp {
+          value
+        }
+      }
+      errors {
+        message
+      }
+    }
+  }
+
   mutation dossierModifierAnnotationAjouterLigne(
     $input: DossierModifierAnnotationAjouterLigneInput!
   ) {
