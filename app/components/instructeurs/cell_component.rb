@@ -44,7 +44,7 @@ class Instructeurs::CellComponent < ApplicationComponent
   def format(raw_value, type)
     case @column.type
     when :boolean
-      if @column.tdc_type == 'checkbox'
+      if @column.type_de_champ? && @column.tdc_type == 'checkbox'
         raw_value ? I18n.t('activerecord.attributes.type_de_champ.type_champs.checkbox_true') : ''
       else
         raw_value ? I18n.t('utils.yes') : I18n.t('utils.no')
