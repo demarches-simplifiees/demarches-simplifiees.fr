@@ -14,11 +14,11 @@
 
 = turbo_stream.replace 'errors-summary', render(Procedure::ErrorsSummary.new(procedure: @procedure, validation_context: @coordinate&.private? ? :types_de_champ_private_editor : :types_de_champ_public_editor))
 
-= turbo_stream.replace 'summary', render(partial: 'administrateurs/procedures/champs_summary')
+= turbo_stream.replace 'summary', render(TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: @coordinate&.private?))
 
 - unless flash.alert
   = turbo_stream.show 'autosave-notice'
-  = turbo_stream.replace 'autosave-notice', render(partial: 'administrateurs/autosave_notice')
+  = turbo_stream.replace 'autosave-notice', render(AutosaveNoticeComponent.new(success: true, label_scope: :form))
   = turbo_stream.hide 'autosave-notice', delay: 30000
 
 - if @destroyed.present?

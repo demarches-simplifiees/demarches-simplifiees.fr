@@ -17,7 +17,11 @@ export class ClipboardController extends Controller {
   connect(): void {
     // some extensions or browsers block clipboard
     if (!navigator.clipboard) {
-      this.element.classList.add('hidden');
+      if (this.hasToHideTarget) {
+        this.toHideTarget.classList.add('hidden');
+      } else {
+        this.element.classList.add('hidden');
+      }
     }
   }
 

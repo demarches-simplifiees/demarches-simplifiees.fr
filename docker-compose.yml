@@ -44,7 +44,7 @@ services:
     restart: always
     ports:
       - ${PORT}:3000
-    secrets: 
+    secrets:
       - lexpol_key
       - lexpol_crt
     environment:
@@ -98,6 +98,7 @@ services:
       - DOLIST_USERNAME
       - DS_PROXY_URL
       - DS_ENV
+      - ELIGIBILITE_URL=${ELIGIBILITE_URL:-https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/eligibilite-des-dossiers}
       - ENCRYPTION_SERVICE_SALT
       - FAVICON_16PX_SRC
       - FAVICON_32PX_SRC
@@ -315,8 +316,8 @@ services:
     networks:
       - md-network
 
-secrets: 
-  lexpol_key: 
+secrets:
+  lexpol_key:
     file: ./config/secrets/mes-demarches@administration.gov.pf_key.pem
   lexpol_crt:
     file: ./config/secrets/mes-demarches@administration.gov.pf_crt.pem

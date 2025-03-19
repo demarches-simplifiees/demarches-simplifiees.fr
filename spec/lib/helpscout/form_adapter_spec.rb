@@ -5,7 +5,7 @@ describe Helpscout::FormAdapter do
     context 'create_conversation' do
       before do
         allow(api).to receive(:create_conversation)
-          .and_return(double(success?: false))
+          .and_return(double(success?: true, headers: {}))
         described_class.new(params, api).send_form
       end
 

@@ -1,5 +1,8 @@
+- if @attestation_template.draft?
+  = turbo_stream.update "sticky-header", render(partial: "sticky_header")
+
 = turbo_stream.show 'autosave-notice'
-= turbo_stream.replace 'autosave-notice', render(partial: 'administrateurs/autosave_notice', locals: { success: !@attestation_template.changed? })
+= turbo_stream.replace('autosave-notice', render(AutosaveNoticeComponent.new(success: !@attestation_template.changed?, label_scope: :attestation)))
 = turbo_stream.hide 'autosave-notice', delay: 15000
 
 - if @attestation_template.logo_blob&.previously_new_record?
@@ -10,7 +13,7 @@
   = turbo_stream.update dom_id(@attestation_template, :signature_attachment) do
     = render(Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false))
 
-- body_id = dom_id(@attestation_template, "json-body-messages")
+- body_id = "attestation-template-json-body-messages"
 - if @attestation_template.errors.include?(:json_body)
   = turbo_stream.update body_id do
     = render partial: "shared/errors_list", locals: { object: @attestation_template, attribute: :json_body }

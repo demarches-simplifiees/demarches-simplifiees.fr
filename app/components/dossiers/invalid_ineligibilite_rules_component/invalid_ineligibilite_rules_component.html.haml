@@ -1,0 +1,16 @@
+%div{ id: dom_id(@dossier, :ineligibilite_rules_broken), data: { controller: 'ineligibilite-rules-match', turbo_force: :server } }
+  %button.fr-sr-only{ aria: {controls: 'modal-eligibilite-rules-dialog' }, data: {'fr-opened': "false" } }
+    show modal
+
+  %dialog.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog", id: 'modal-eligibilite-rules-dialog', data: { 'ineligibilite-rules-match-target' => 'dialog' } }
+    .fr-container.fr-container--fluid.fr-container-md
+      .fr-grid-row.fr-grid-row--center
+        .fr-col-12.fr-col-md-8.fr-col-lg-6
+          .fr-modal__body
+            .fr-modal__header
+              %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-eligibilite-rules-dialog' }, title: t('.modal.close_alt') }= t('.modal.close')
+            .fr-modal__content
+              %h1#fr-modal-title-modal-1.fr-modal__title
+                %span.fr-icon-arrow-right-line.fr-icon--lg>
+                = t('.modal.title')
+              %p= error_message

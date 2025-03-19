@@ -160,7 +160,8 @@ Rails.application.routes.draw do
     get 'logout' => 'users/sessions#logout'
   end
 
-  get 'password_complexity/:complexity' => 'password_complexity#show', as: 'show_password_complexity', constraints: { complexity: /\d/ }
+  get 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
+  get 'check_email' => 'email_checker#show', as: 'show_email_suggestions'
 
   resources :targeted_user_links, only: [:show]
 
@@ -628,6 +629,14 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
+      resource :ineligibilite_rules, only: [:edit, :update, :destroy], param: :revision_id do
+        patch :change_targeted_champ, on: :member
+        patch :update_all_rows, on: :member
+        patch :add_row, on: :member
+        delete :delete_row, on: :member
+        patch :change
+      end
+
       patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 
       put 'clone'
@@ -696,7 +705,9 @@ Rails.application.routes.draw do
         get 'add_champ_engagement_juridique'
       end
 
-      resource :attestation_template_v2, only: [:show, :edit, :update, :create]
+      resource :attestation_template_v2, only: [:show, :edit, :update, :create] do
+        post :reset
+      end
 
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME

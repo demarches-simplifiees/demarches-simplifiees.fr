@@ -59,5 +59,14 @@ form.form > .conditionnel {
     select.alert {
       border-color: $dark-red;
     }
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      text-align: right;
+      padding-right: 0;
+    }
   }
 }

@@ -14,8 +14,14 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
   before { login_as(administrateur.user, scope: :user) }
 
   def find_attestation_card(with_nested_selector: nil)
+    attestation_path = if procedure.attestation_template&.version == 2 || procedure.feature_enabled?(:attestation_v2)
+      edit_admin_procedure_attestation_template_v2_path(procedure)
+    else
+      edit_admin_procedure_attestation_template_path(procedure)
+    end
+
     full_selector = [
-      "a[href=\"#{edit_admin_procedure_attestation_template_path(procedure)}\"]",
+      "a[href=\"#{attestation_path}\"]",
       with_nested_selector
     ].compact.join(" ")
     page.find(full_selector)
@@ -65,6 +71,13 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
   end
 
   context 'Update attestation v2' do
+    let(:procedure) do
+      create(:procedure, :published,
+        administrateurs: [administrateur],
+        libelle: 'libellé de la procédure',
+        path: 'libelle-de-la-procedure')
+    end
+
     before do
       Flipper.enable(:attestation_v2)
 
@@ -81,7 +94,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         find("a").click
       end
 
-      expect(procedure.reload.attestation_template_v2).to be_nil
+      expect(procedure.reload.attestation_templates.v2).to be_empty
 
       expect(page).to have_css("label", text: "Logo additionnel")
 
@@ -90,12 +103,12 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       attestation = nil
       wait_until {
-        attestation = procedure.reload.attestation_template_v2
+        attestation = procedure.reload.attestation_templates.v2.draft.first
         attestation.present?
       }
+      expect(page).to have_content("Attestation enregistrée")
       expect(attestation.label_logo).to eq("System Test")
-      expect(attestation.activated?).to be_falsey
-      expect(page).to have_content("Formulaire enregistré")
+      expect(attestation.activated?).to be_truthy
 
       click_on "date de décision"
 
@@ -130,6 +143,15 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       fill_in "Contenu du pied de page", with: ["line1", "line2", "line3", "line4"].join("\n")
       expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3\nline4")
+
+      click_on "Publier"
+      expect(attestation.reload).to be_published
+      expect(page).to have_text("L’attestation a été publiée")
+
+      fill_in "Intitulé de la direction", with: "plop"
+      click_on "Publier les modifications"
+      expect(procedure.reload.attestation_template.label_direction).to eq("plop")
+      expect(page).to have_text(/La nouvelle version de l’attestation/)
     end
 
     context "tag in error" do
@@ -137,7 +159,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         tdc = procedure.active_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
         procedure.publish_revision!
 
-        attestation = procedure.build_attestation_template_v2(json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, label_logo: "test")
+        attestation = procedure.build_attestation_template(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, label_logo: "test")
         attestation.json_body["content"] << { type: :mention, attrs: { id: "tdc#{tdc.stable_id}", label: tdc.libelle } }
         attestation.save!
 
@@ -150,14 +172,14 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
         click_on "date de décision"
 
-        expect(page).to have_content("Formulaire en erreur")
+        expect(page).to have_content("Attestation en erreur")
         expect(page).to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
 
         page.execute_script("document.getElementById('attestation_template_tiptap_body').type = 'text'")
         fill_in "attestation_template[tiptap_body]", with: AttestationTemplate::TIPTAP_BODY_DEFAULT.to_json
 
-        expect(page).to have_content("Formulaire enregistré")
-        expect(page).not_to have_content("Formulaire en erreur")
+        expect(page).to have_content("Attestation enregistrée")
+        expect(page).not_to have_content("Attestation en erreur")
         expect(page).not_to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
       end
     end

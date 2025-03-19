@@ -98,9 +98,7 @@ module Dsfr
           })
         end
 
-        if autoresize?
-          @opts.deep_merge!(data: { controller: 'autoresize' })
-        end
+        @opts.deep_merge!(data: { controller: token_list(@opts.dig(:data, :controller), 'autoresize' => autoresize?) })
 
         @opts
       end

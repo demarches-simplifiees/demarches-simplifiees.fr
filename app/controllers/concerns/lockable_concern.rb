@@ -3,7 +3,7 @@ module LockableConcern
 
   included do
     def lock_action(key)
-      lock = Kredis.flag(key, config: :volatile)
+      lock = Kredis.flag(key)
       head :locked and return if lock.marked?
 
       lock.mark(expires_in: 10.seconds)

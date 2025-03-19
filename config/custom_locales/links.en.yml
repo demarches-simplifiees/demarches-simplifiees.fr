@@ -15,10 +15,6 @@ en:
         demarches-simplifiees.fr, led by
       cgu:
         url: "https://mes-demarches.gitbook.io/documentation/cgu"
-      rgpd:
-        label: "Data protection"
-        title: "Data protection"
-        url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       doc:
         url: "https://mes-demarches.gitbook.io/documentation"
       releases:

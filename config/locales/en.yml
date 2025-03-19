@@ -86,7 +86,7 @@ en:
       close_modal: 'Close'
       back: "Back"
       back_title: "Revenir sur le site de mon administration"
-      main_menu: "Main menu"
+      # main_menu: "Main menu"
     locale_dropdown:
       select_locale: "Choose a language"
       locale_name: "English"
@@ -115,29 +115,41 @@ en:
         line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."
     accessibility_statement:
       title: "Accessibility statement"
-      line_one: "DINUM is committed to making its service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
-      line_two: "This accessibility statement applies to %{app_name} (%{host})."
+      line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
+      line_two_html: "This accessibility statement applies to <a href=\"%{host}\">%{app_name}</a> website."
       compliance:
         title: "Compliance status"
-        line_one_html: "The Mes-Démarches website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
+        content_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
       results:
         title: "Test results"
-        line_one: "As of 13 June 2023, the average compliance rate of the site is 80%."
-        line_three: "Users can follow the measures taken by the service to improve the accessibility of the site at the following address:"
+        content: "The internal audit performed in June 2023 revealed an overall compliance rate of 81.36% on the sample of pages analyzed."
         programme:
-          label: "Follow the DS accessibility continuous improvement programme"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+" #DS
-          title: "Follow the DS accessibility continuous improvement programme - new tab"
+          intro: "Users can follow the measures taken by the service to improve the accessibility of the site via "
+          label: "the DS accessibility continuous improvement programme"
+          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
+          title: "the DS accessibility continuous improvement programme - new tab"
       no_accessible:
         title: "Non-accessible content"
         subtitle_one: "Non-compliances"
-        examples_html: "Examples :
+        examples_html: "List of non-compliant criteria:
           <ul>
-            <li>The documentation pages are not fully accessible and are managed by a third party tool.</li>
-            <li>The same applies to the FAQ pages.</li>
-          </ul>
-          <p>We are taking this into account for the future development of the site's pages.</p>
-          "
+            <li>1.3 - A few alternative text descriptions of images conveying information are irrelevant.</li>
+            <li>3.1 - A few informations are conveyed solely through colour.</li>
+            <li>6.1 - Some links are not explicit.</li>
+            <li>7.1 - Some scripts are not compatible with assistive technologies.</li>
+            <li>7.5 - Some status messages are not correctly presented to assistive technologies.</li>
+            <li>8.9 - Some semantic elements are used for presentational effect.</li>
+            <li>9.3 - A few lists are not properly structured.</li>
+            <li>10.14 - A few additional contents appearing solely through CSS cannot be made visible by keyboard and any pointing device.</li>
+            <li>11.5 - A few related form fields are not regrouped.</li>
+            <li>11.11 - Input assistance does not provide suggestions to help correct errors.</li>
+            <li>13.3 - Some/Certain/A few downloadable documents do not have an accessible version.</li>
+          </ul>"
+        subtitle_two: "Additional notes"
+        content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
+          <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
+
+
       preparation:
         title: "Preparation of this accessibility statement"
         intro: "This statement was drawn up on April 27, 2022. It was updated on April 1, 2023."
@@ -172,17 +184,6 @@ en:
         page_five:
           label: "Authentification"
         page_six: "Home page - User search results"
-        page_seven:
-          label: "FAQ"
-          url: "/faq"
-          title: "FAQ - new tab"
-        page_eight:
-          label: "FAQ - User (submission of a file)"
-          url: "/faq#accordion-usager-0"
-          title: "FAQ - User (submission of a file)"
-        page_nine: "Documentation - Presentation"
-        page_ten: "Documentation - Start-up"
-        page_eleven: "Documentation - General"
         page_twelve: "File creation - Identity"
         page_thirteen: "File creation - Draft"
         page_fourteen: "Dossier - Summary"
@@ -196,17 +197,24 @@ en:
           adress_html: "By mail : DINUM , 20 avenue de Ségur 75007 Paris"
       remedies:
         title: "Remedies"
-        line_one: "If you notice a lack of accessibility that prevents you from accessing a content or functionality of the site, and you report it to us and do not manage to obtain a rapid response from us, you are entitled to send your complaints or a request for referral to the Rights Defender."
-        line_two: "Several means are available to you:"
+        line_one: "If you notice a lack of accessibility that prevents you from accessing a content or functionality of the site, and you report it to us and do not manage to obtain a rapid response from us, you are entitled to contact Arcom or send your complaints to the Human Rights Defender."
+        arcom_title: "Contact Arcom"
+        arcom_content_html: "To report one or more violations of digital accessibility regulations, please use the <a href=\"https://www.arcom.fr/contact\">contact form available on the Arcom website</a>."
+        ddd_title: "Reach Out to the Human Rights Defender"
+        ddd_intro: "There are a number of ways you can exercise your rights with regard to accessibility issues you may have encountered:"
         remedies_one:
           label: "A contact form"
           url: "https://www.defenseurdesdroits.fr/nous-contacter"
           title: "A contact form - new tab"
+          info: "Select “I am a victim of discrimination,” followed by “Private goods and services,” and then “Disability.”"
         remedies_two:
           label: "Contact the delegate of the Human Rights Defender in your region"
           url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
           title: "Contact the delegate of the Human Rights Defender in your region - new tab"
-        remedies_three: "Send a letter by mail (free of charge, no stamp) at Défenseur des droits Libre réponse 71120 75342 Paris CEDEX 07"
+        remedies_three_html: "Send a letter by post (free of charge, do not put a stamp) to the following address
+          <p class=\"fr-mb-2w\">Défenseur des droits
+          <br >Libre réponse 71120
+          <br>75342 Paris CEDEX 07</p>"
     prefill_descriptions:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
@@ -445,8 +453,11 @@ en:
           dossier_edit_l2: edit it
           dossier_edit_l3: and
           dossier_edit_l4: talk with an instructor.
+          download_dossier: Download your file
           acces_dossier: Access your file
           submit_dossier: Submit an other file
+          jdma_l1: Help us improve this service!
+          jdma_l2: Give us your feedback, it only takes 2 minutes.
         show:
           header:
             summary: "Summary"
@@ -555,6 +566,9 @@ en:
           connect_with_agent_connect: Visit our dedicated page
           subtitle: "Sign in with my account"
           for_tiers_alert: If you are completing a forme for someone else, you must use your own credentials.
+        link_sent:
+          consult_help_page_html: If you're seeing this page too often, <a target="_blank" rel="noopener noreferrer" href="%{href}">please consult our help page</a>.
+          email_cta_html: "We have to validate your email address <strong>%{email}</strong>."
       passwords:
         edit:
           subtitle: Change password
@@ -614,7 +628,8 @@ en:
         otp_attempt: 'OTP code (only if you have already activated 2FA)'
       procedure:
         zone: This procedure is run by
-      champ:
+        ineligibilite_rules: "Eligibility rules"
+      champs:
         value: Value
       champs/numero_dn_champ:
         date_de_naissance: date of birth
@@ -682,13 +697,16 @@ en:
           attributes:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
-              invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
-        champ:
-          format: "%{attribute} %{message}"
+              invalid: is not valid. It must countain between 3 and 200 characters among a-z, 0-9, '_' and '-'.
+        procedure_revision:
+          attributes:
+            ineligibilite_rules:
+              invalid: are invalid
+        "dossier/champs":
+          format: "%{message}"
           attributes:
             value:
               format: '%{message}'
-              missing: must be filled
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:

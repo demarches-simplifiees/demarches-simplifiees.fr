@@ -462,7 +462,9 @@ describe Users::DossiersController, type: :controller do
 
   describe '#submit_brouillon' do
     before { sign_in(user) }
-    let!(:dossier) { create(:dossier, user: user) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text }] }
+    let!(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to first_champ.libelle, brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
@@ -503,9 +505,9 @@ describe Users::DossiersController, type: :controller do
       render_views
       let(:error_message) { 'nop' }
       before do
-        expect_any_instance_of(Dossier).to receive(:validate).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors).and_return(
-          [double(inner_error: double(base: first_champ), message: 'nop')]
+        allow_any_instance_of(Dossier).to receive(:validate).and_return(false)
+        allow_any_instance_of(Dossier).to receive(:errors).and_return(
+          [instance_double(ActiveModel::NestedError, inner_error: double(base: first_champ), message: 'nop')]
         )
         subject
       end
@@ -525,11 +527,8 @@ describe Users::DossiersController, type: :controller do
       render_views
 
       let(:value) { nil }
-
-      before do
-        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-        subject
-      end
+      let(:types_de_champ_public) { [{ type: :text, mandatory: true, libelle: 'l' }] }
+      before { subject }
 
       it { expect(response).to render_template(:brouillon) }
       it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
@@ -612,8 +611,8 @@ describe Users::DossiersController, type: :controller do
       render_views
 
       before do
-        expect_any_instance_of(Dossier).to receive(:validate).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+        allow_any_instance_of(Dossier).to receive(:validate).and_return(false)
+        allow_any_instance_of(Dossier).to receive(:errors).and_return(
           [double(inner_error: double(base: first_champ), message: 'nop')]
         )
 
@@ -725,7 +724,8 @@ describe Users::DossiersController, type: :controller do
   describe '#update brouillon' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{}, { type: :piece_justificative }] }
     let(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:piece_justificative_champ) { dossier.champs_public.last }
@@ -818,13 +818,66 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    it "debounce search terms indexation" do
-      # dossier creation trigger a first indexation and flag,
-      # so we we have to remove this flag
-      dossier.debounce_index_search_terms_flag.remove
+    context 'having ineligibilite_rules setup' do
+      include Logic
+      render_views
 
-      assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
-        3.times { patch :update, params: payload, format: :turbo_stream }
+      let(:types_de_champ_public) { [{ type: :text }, { type: :integer_number }] }
+      let(:text_champ) { dossier.champs_public.first }
+      let(:number_champ) { dossier.champs_public.last }
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            groupe_instructeur_id: dossier.groupe_instructeur_id,
+            champs_public_attributes: {
+              text_champ.public_id => {
+                with_public_id: true,
+                value: "hello world"
+              },
+              number_champ.public_id => {
+                with_public_id: true,
+                value:
+              }
+            }
+          }
+        }
+      end
+      let(:must_be_greater_than) { 10 }
+
+      before do
+        procedure.published_revision.update(
+          ineligibilite_enabled: true,
+          ineligibilite_message: 'lol',
+          ineligibilite_rules: greater_than(champ_value(number_champ.stable_id), constant(must_be_greater_than))
+        )
+        procedure.published_revision.save!
+      end
+      render_views
+
+      context 'when it switches from true to false' do
+        let(:value) { must_be_greater_than + 1 }
+
+        it 'raises popup' do
+          subject
+          dossier.reload
+          expect(dossier.can_passer_en_construction?).to be_falsey
+          expect(assigns(:can_passer_en_construction_was)).to eq(true)
+          expect(assigns(:can_passer_en_construction_is)).to eq(false)
+          expect(response.body).to match(ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken))
+        end
+      end
+
+      context 'when it stays true' do
+        let(:value) { must_be_greater_than - 1 }
+        it 'does nothing' do
+          subject
+          dossier.reload
+          expect(dossier.can_passer_en_construction?).to be_truthy
+          expect(assigns(:can_passer_en_construction_was)).to eq(true)
+          expect(assigns(:can_passer_en_construction_is)).to eq(true)
+          expect(response.body).not_to have_selector("##{ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken)}")
+        end
       end
     end
   end
@@ -932,8 +985,8 @@ describe Users::DossiersController, type: :controller do
 
       context 'classic error' do
         before do
-          expect_any_instance_of(Dossier).to receive(:save).and_return(false)
-          expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          allow_any_instance_of(Dossier).to receive(:save).and_return(false)
+          allow_any_instance_of(Dossier).to receive(:errors).and_return(
             [message: 'nop', inner_error: double(base: first_champ)]
           )
           subject

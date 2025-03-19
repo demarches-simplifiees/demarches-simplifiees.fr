@@ -14,24 +14,16 @@ class SupportController < ApplicationController
       flash.notice = "Votre message a été envoyé sur la messagerie de votre dossier."
 
       redirect_to messagerie_dossier_path(dossier)
-    elsif create_conversation
-      flash.notice = "Votre message a été envoyé."
+      return
+    end
 
-      if params[:admin]
-        redirect_to root_path(formulaire_contact_admin_submitted: true)
-      else
-        redirect_to root_path(formulaire_contact_general_submitted: true)
-      end
+    create_conversation_later
+    flash.notice = "Votre message a été envoyé."
+
+    if params[:admin]
+      redirect_to root_path(formulaire_contact_admin_submitted: true)
     else
-      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contacter à #{helpers.mail_to(Current.contact_email)}."
-
-      if params[:admin]
-        setup_context_admin
-        render :admin
-      else
-        setup_context
-        render :index
-      end
+      redirect_to root_path(formulaire_contact_general_submitted: true)
     end
   end
 
@@ -48,17 +40,26 @@ class SupportController < ApplicationController
     @options = Helpscout::FormAdapter.admin_options
   end
 
-  def create_conversation
-    Helpscout::FormAdapter.new(
+  def create_conversation_later
+    if params[:piece_jointe]
+      blob = ActiveStorage::Blob.create_and_upload!(
+        io: params[:piece_jointe].tempfile,
+        filename: params[:piece_jointe].original_filename,
+        content_type: params[:piece_jointe].content_type,
+        identify: false
+      ).tap(&:scan_for_virus_later)
+    end
+
+    HelpscoutCreateConversationJob.perform_later(
+      blob_id: blob&.id,
       subject: params[:subject],
       email: email,
       phone: params[:phone],
       text: params[:text],
-      file: params[:piece_jointe],
       dossier_id: dossier&.id,
       browser: browser_name,
       tags: tags
-    ).send_form
+    )
   end
 
   def create_commentaire

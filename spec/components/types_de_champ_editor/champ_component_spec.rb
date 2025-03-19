@@ -2,12 +2,14 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
   describe 'render' do
     let(:component) { described_class.new(coordinate:, upper_coordinates: []) }
     let(:routing_rules_stable_ids) { [] }
+    let(:ineligibilite_rules_used?) { false }
 
     before do
       Flipper.enable_actor(:engagement_juridique_type_de_champ, procedure)
       allow_any_instance_of(Procedure).to receive(:stable_ids_used_by_routing_rules).and_return(routing_rules_stable_ids)
       # pf visa & tefenua champs are activated via Flipper which requires current_user which is not active in these tests
       allow_any_instance_of(TypesDeChampEditor::ChampComponent).to receive(:filter_featured_type_champ).and_return(true)
+      allow_any_instance_of(ProcedureRevisionTypeDeChamp).to receive(:used_by_ineligibilite_rules?).and_return(ineligibilite_rules_used?)
       render_inline(component)
     end
 
@@ -29,6 +31,15 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         it do
           expect(page).to have_css("select[disabled=\"disabled\"]")
           expect(page).to have_text(/utilisé pour\nle routage/)
+        end
+      end
+
+      context 'drop down tdc used for ineligibilite_rules' do
+        let(:ineligibilite_rules_used?) { true }
+
+        it do
+          expect(page).to have_css("select[disabled=\"disabled\"]")
+          expect(page).to have_text(/l’eligibilité des dossiers/)
         end
       end
     end

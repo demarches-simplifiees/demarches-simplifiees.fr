@@ -2,5 +2,6 @@
 en:
   submit: Submit the file
   submit_changes: Submit file changes
+  submit_disabled: File submission disabled
   submitting: Submitting…
   invite_notice: You are invited to make amendments to this file but <strong>only the owner themselves can submit it</strong>.

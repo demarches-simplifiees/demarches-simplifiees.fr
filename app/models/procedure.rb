@@ -50,9 +50,9 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
-  has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
-  has_one :attestation_template, -> { order(Arel.sql("CASE WHEN version = '1' THEN 0 ELSE 1 END")) }, dependent: :destroy, inverse_of: :procedure
+  has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -293,7 +293,7 @@ class Procedure < ApplicationRecord
 
   validates_with MonAvisEmbedValidator
 
-  validates_associated :draft_revision, on: :publication
+  validate :validates_associated_draft_revision_with_context
   validates_associated :initiated_mail, on: :publication
   validates_associated :received_mail, on: :publication
   validates_associated :closed_mail, on: :publication
@@ -434,11 +434,15 @@ class Procedure < ApplicationRecord
 
   def draft_changed?
     preload_draft_and_published_revisions
-    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && (types_de_champ_revision_changes.present? || ineligibilite_rules_revision_changes.present?)
   end
 
-  def revision_changes
-    published_revision.compare(draft_revision)
+  def types_de_champ_revision_changes
+    published_revision.compare_types_de_champ(draft_revision)
+  end
+
+  def ineligibilite_rules_revision_changes
+    published_revision.compare_ineligibilite_rules(draft_revision)
   end
 
   def preload_draft_and_published_revisions
@@ -562,6 +566,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_brouillon = false
     procedure.closing_notification_en_cours = false
     procedure.template = false
+    procedure.monavis_embed = nil
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
@@ -1072,10 +1077,6 @@ class Procedure < ApplicationRecord
     lien_dpo.present? && lien_dpo.match?(/@/)
   end
 
-  def header_sections
-    draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
-  end
-
   def dossier_for_preview(user)
     # Try to use a preview or a dossier filled by current user
     dossiers.where(for_procedure_preview: true).or(dossiers.not_brouillon)
@@ -1089,7 +1090,18 @@ class Procedure < ApplicationRecord
     update!(closing_reason: nil, closing_details: nil, replaced_by_procedure_id: nil, closing_notification_brouillon: false, closing_notification_en_cours: false)
   end
 
+  def monavis_embed_html_source(source)
+    monavis_embed.gsub('nd_source=button', "nd_source=#{source}").gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+  end
+
   private
+
+  def validates_associated_draft_revision_with_context
+    return if draft_revision.blank?
+    return if draft_revision.validate(validation_context)
+
+    draft_revision.errors.map { errors.import(_1) }
+  end
 
   def validate_auto_archive_on_in_the_future
     return if auto_archive_on.nil?

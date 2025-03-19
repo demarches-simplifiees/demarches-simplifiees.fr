@@ -2,7 +2,7 @@
   - list.with_empty do
     = t('.no_changes')
 
-  - @changes.each do |change|
+  - @tdc_changes.each do |change|
     - prefix = change.private? ? 'private' : 'public'
     - case change.op
     - when :add
@@ -193,3 +193,7 @@
     - list.with_item do
       .fr-alert.fr-alert--warning.fr-mt-1v
         = t(".invalid_routing_rules_alert")
+
+  - @ineligibilite_rules_changes.each do |change|
+    - list.with_item do
+      = t(".ineligibilite_rules.#{change.op}", **change.i18n_params)
