@@ -157,4 +157,21 @@ module ApplicationHelper
   end
 
   def asterisk = render(EditableChamp::AsteriskMandatoryComponent.new)
+
+  def add_pdf_draft_warning(pdf, dossier)
+    return unless dossier.revision.draft?
+
+    pdf.pad_top(20) do
+      pdf.fill_color "AA3300"
+      pdf.font 'marianne', style: :bold, size: 12 do
+        pdf.text "DÉMARCHE EN TEST"
+      end
+
+      pdf.font 'marianne', size: 10 do
+        pdf.text "Ce dossier est déposé sur une démarche en test par l’administration."
+        pdf.text "Il peut être supprimé à tout moment et sans préavis, même après avoir été accepté."
+      end
+      pdf.fill_color "000000"
+    end
+  end
 end

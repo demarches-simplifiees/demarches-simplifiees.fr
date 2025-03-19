@@ -328,6 +328,7 @@ prawn_document(page_size: "A4") do |pdf|
 
   pdf.pad_bottom(40) do
     pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
+    add_pdf_draft_warning(pdf, @dossier)
   end
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
