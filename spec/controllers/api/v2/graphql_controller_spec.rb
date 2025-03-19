@@ -128,6 +128,18 @@ describe API::V2::GraphqlController do
     end
 
     describe "token authentication" do
+      describe 'logging' do
+        it "generates correct LogRage payload" do
+          @rs = nil
+          expect(controller).to receive(:request_logs).and_wrap_original do |m, *args|
+            @rs = m.call(*args)
+          end
+          gql_data
+          expect(@rs[:user_id]).to eq(admin.user.id)
+          expect(@rs[:user_roles]).to eq("User, Instructeur, Administrateur")
+        end
+      end
+
       it {
         expect(gql_errors).to eq(nil)
         expect(gql_data).not_to be_nil
