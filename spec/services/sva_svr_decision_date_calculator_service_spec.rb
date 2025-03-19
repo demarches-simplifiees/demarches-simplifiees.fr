@@ -101,7 +101,7 @@ describe SVASVRDecisionDateCalculatorService do
             expect(subject).to eq(Date.new(2023, 7, 26))
           end
 
-          context 'when there are multiple corrections' do
+          context 'when there are mixed incorrect and incomplete corrections' do
             let!(:correction2) do
               created_at = Time.zone.local(2023, 5, 30, 18)
               resolved_at = Time.zone.local(2023, 6, 3, 8)
@@ -110,6 +110,19 @@ describe SVASVRDecisionDateCalculatorService do
 
             it 'calculates the date based on SVA rules with all correction delays' do
               expect(subject).to eq(Date.new(2023, 7, 31))
+            end
+          end
+
+          context 'when there are multiple incomplete corrections and last is not yet resolved' do
+            let!(:correction2) do
+              created_at = Time.zone.local(2023, 5, 30, 18)
+              create(:dossier_correction, :incomplete, dossier:, created_at:)
+            end
+
+            before { travel_to Time.zone.local(2023, 6, 5, 8) }
+
+            it 'calculates the date like if resolution is made today' do
+              expect(subject).to eq(Date.new(2023, 8, 6))
             end
           end
         end

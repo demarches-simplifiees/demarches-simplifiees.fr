@@ -55,7 +55,7 @@ class SVASVRDecisionDateCalculatorService
   end
 
   def latest_incomplete_correction_date
-    correction_date dossier.corrections.filter(&:dossier_incomplete?).max_by(&:resolved_at)
+    correction_date dossier.corrections.filter(&:dossier_incomplete?).max_by { _1.resolved_at || Time.current }
   end
 
   def latest_correction_date
