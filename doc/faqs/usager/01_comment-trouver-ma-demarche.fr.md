@@ -10,11 +10,11 @@ title: "Comment trouver ma démarche ?"
 # Comment trouver ma démarche ?
 
 > [!INFO]
-> *%{application_name}* est un service de la direction interministérielle du numérique, service du Premier ministre.
+> *%{application_name}* est un service de la Direction des talents et de l'innovation, service du territoire de la Polynésie française.
 
 > Ce site ne dispose pas d’un annuaire comprenant l’ensemble des démarches administratives en ligne. Vous pouvez retrouver des informations soit :
 
-> - sur le site [service-public.fr](https://www.service-public.fr) : site officiel d'information sur les démarches administratives
+> - sur le site [https://www.service-public.pf/demarches-en-ligne/](https://www.service-public.fr) : site officiel d'information sur les démarches administratives
 > - sur le site internet de l’administration concernée (ministère, organisme, préfecture, mairie…)
 
 > Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
