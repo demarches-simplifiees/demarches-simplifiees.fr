@@ -67,6 +67,8 @@ module Mutations
         TypeDeChamp.type_champs.fetch(:datetime)
       when :integer_number
         TypeDeChamp.type_champs.fetch(:integer_number)
+      when :decimal_number
+        TypeDeChamp.type_champs.fetch(:decimal_number)
       when :drop_down_list
         TypeDeChamp.type_champs.fetch(:drop_down_list)
       end

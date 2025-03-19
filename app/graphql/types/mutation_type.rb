@@ -21,6 +21,7 @@ module Types
     field :dossier_modifier_annotation_date, mutation: Mutations::DossierModifierAnnotationDate
     field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime
     field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
+    field :dossier_modifier_annotation_decimal_number, mutation: Mutations::DossierModifierAnnotationDecimalNumber
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
     field :dossier_modifier_annotation_drop_down_list, mutation: Mutations::DossierModifierAnnotationDropDownList
 
