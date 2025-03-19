@@ -1175,6 +1175,39 @@ class Dossier < ApplicationRecord
     end
   end
 
+  # dossier
+  def date_de_depot
+    depose_at
+  end
+
+  def date_de_passage_en_construction
+    en_construction_at
+  end
+
+  def date_de_passage_en_instruction
+    en_instruction_at
+  end
+
+  def date_de_traitement
+    processed_at
+  end
+
+  def numero_du_dossier
+    id
+  end
+
+  def depose_par_un_tiers
+    for_tiers?
+  end
+
+  def for_individual?
+    procedure.for_individual?
+  end
+
+  def for_enterprise?
+    !for_individual?
+  end
+
   private
 
   def create_missing_traitemets

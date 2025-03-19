@@ -29,6 +29,7 @@ features = [
   :qrcoded_pdf,
   :sva,
   :switch_domain,
+  # :lexpol,
   :visa
 ]
 

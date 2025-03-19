@@ -23,6 +23,8 @@ module SystemHelpers
     perform_enqueued_jobs do
       click_on 'Se connecter'
     end
+    # pf sometimes the queued job is not finished
+    sleep 0.5
 
     if sign_in_by_link
       mail = ActionMailer::Base.deliveries.last
@@ -91,6 +93,13 @@ module SystemHelpers
       page.find('body').click
     else # page after/inside a `within` block does not match body
       page.first('div').click
+    end
+  end
+
+  def playwright_debug
+    page.driver.with_playwright_page do |page|
+      page.context.enable_debug_console!
+      page.pause
     end
   end
 

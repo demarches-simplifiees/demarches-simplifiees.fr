@@ -589,5 +589,16 @@ module Administrateurs
     def cloned_from_library?
       params[:from_new_from_existing].present?
     end
+
+    def update_lexpol(champ)
+      return unless champ.lexpol?
+
+      if champ.value.blank?
+        champ.value = LexpolAPI.new.create_dossier(champ)
+      else
+        LexpolAPI.new.update_dossier(champ)
+      end
+      champ.save
+    end
   end
 end

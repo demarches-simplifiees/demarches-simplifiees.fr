@@ -18,6 +18,10 @@ class Champs::DateChamp < Champ
     # Text search is pretty useless for dates so we’re not including these champs
   end
 
+  def formatted_value
+    LexpolFieldsService.format_date(value)
+  end
+
   private
 
   def convert_to_iso8601

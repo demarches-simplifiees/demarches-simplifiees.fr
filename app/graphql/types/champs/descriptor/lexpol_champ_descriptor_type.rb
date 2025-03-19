@@ -1,0 +1,5 @@
+module Types::Champs::Descriptor
+  class LexpolChampDescriptorType < Types::BaseObject
+    implements Types::ChampDescriptorType
+  end
+end

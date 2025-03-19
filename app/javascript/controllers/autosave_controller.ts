@@ -40,6 +40,8 @@ export class AutosaveController extends ApplicationController {
     this.onGlobal('autosave:retry', () => this.didRequestRetry());
     this.on('change', (event) => this.onChange(event));
     this.on('input', (event) => this.onInput(event));
+    // pf: allows test waiting for connected stimulus
+    this.element.setAttribute('data-controller-connected', 'true');
   }
 
   disconnect() {

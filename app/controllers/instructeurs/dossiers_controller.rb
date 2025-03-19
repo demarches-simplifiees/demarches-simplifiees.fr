@@ -419,6 +419,7 @@ module Instructeurs
         :code_departement,
         :accreditation_number,
         :accreditation_birthdate,
+        :lexpol,
         :feature,
         value: []
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
@@ -497,6 +498,7 @@ module Instructeurs
 
     def redirect_on_dossier_not_found
       if !dossier_scope.exists?(id: params[:dossier_id])
+        Rails.logger.debug { "Redirecting because dossier ID #{params[:dossier_id]} not found in scope." }
         redirect_to instructeur_procedure_path(procedure)
       end
     end
@@ -505,9 +507,11 @@ module Instructeurs
       dossier_in_batch = begin
         dossier
                          rescue ActiveRecord::RecordNotFound
+                           Rails.logger.debug { "Dossier not found in batch operation for ID: #{params[:dossier_id]}" }
                            current_instructeur.dossiers.find(params[:dossier_id])
       end
       if dossier_in_batch.batch_operation.present?
+        Rails.logger.debug { "Redirecting because dossier ID #{params[:dossier_id]} is part of a batch operation." }
         flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
         redirect_back(fallback_location: instructeur_dossier_path(procedure, dossier_in_batch))
       end

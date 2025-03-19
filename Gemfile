@@ -18,6 +18,7 @@ gem 'aws-sdk-s3'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
+gem 'capybara-playwright-driver'
 gem 'charlock_holmes'
 gem 'chartkick'
 gem 'chunky_png'
@@ -82,6 +83,7 @@ gem 'prawn-qrcode' # to generate qrcode in pdfs
 gem 'prawn-rails' # PDF Generation
 gem 'prawn-table'
 gem 'premailer-rails'
+gem 'pry-byebug'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'

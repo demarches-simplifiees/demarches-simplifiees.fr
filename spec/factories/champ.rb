@@ -249,6 +249,10 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_visa, procedure: dossier.procedure }
     end
 
+    factory :champ_lexpol, class: 'Champs::LexpolChamp' do
+      type_de_champ { association :type_de_champ_lexpol, procedure: dossier.procedure }
+    end
+
     factory :champ_cnaf, class: 'Champs::CnafChamp' do
       type_de_champ { association :type_de_champ_cnaf, procedure: dossier.procedure }
     end

@@ -53,6 +53,7 @@ class Champ < ApplicationRecord
     :siret?,
     :carte?,
     :te_fenua?,
+    :lexpol?,
     :datetime?,
     :mandatory?,
     :prefillable?,

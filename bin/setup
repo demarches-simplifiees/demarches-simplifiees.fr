@@ -20,6 +20,7 @@ FileUtils.chdir APP_ROOT do
   # Install JavaScript dependencies
   system! 'bun --version'
   system! 'bun install'
+  system! 'bunx playwright install chromium'
 
   if ENV["UPDATE_WEBDRIVER"]
     puts "\n== Updating webdrivers =="

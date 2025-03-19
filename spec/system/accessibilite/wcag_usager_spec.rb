@@ -1,4 +1,6 @@
-describe 'wcag rules for usager', js: true do
+# frozen_string_literal: true
+
+describe 'wcag rules for usager', chrome: true do
   let(:procedure) { create(:procedure, :published, :with_service, :for_individual) }
   let(:password) { 'a very complicated password' }
   let(:litteraire_user) { create(:user, password: password) }

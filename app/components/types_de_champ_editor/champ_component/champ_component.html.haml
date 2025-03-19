@@ -64,8 +64,36 @@
               .cell.fr-mt-1w
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
+            - if type_de_champ.lexpol?
+              .cell.fr-mt-1w
+                = form.label :lexpol_modele, "Sélectionner un modèle Lexpol", class: 'flex-grow', for: dom_id(type_de_champ, :lexpol_modele)
+                - lexpol_models = APILexpol.new(current_user.email, '003962', true).get_models
+                - if lexpol_models.any?
+                  = form.select :lexpol_modele,
+                                lexpol_models.map { |k,v| [k.truncate(80), v] },
+                                { prompt: 'Sélectionnez un modèle' },
+                                { class: 'fr-select small-margin small', id: dom_id(type_de_champ, :lexpol_modele) }
+                - else
+                  .fr-message.fr-message--error
+                    %p Aucun modèle disponible ou erreur lors de la récupération des modèles.
+              .cell.fr-mt-1w
+                = form.label :lexpol_mapping, "Variables Lexpol", class: 'flex-grow', for: dom_id(type_de_champ, :lexpol_mapping)
+                = form.text_area :lexpol_mapping,
+                                value: type_de_champ.lexpol_mapping,
+                                class: 'fr-input small-margin small width-100 resize-y',
+                                rows: 3,
+                                placeholder: "variables_mes_demarches=variable_lexpol\n...",
+                                id: dom_id(type_de_champ, :lexpol_mapping)
 
+              .lexpol-variables-toggle.fr-mt-1w
+                %button.fr-btn.fr-btn--tertiary.fr-btn--sm{ type: "button", onclick: "var container = document.getElementById('lexpol-vars-#{dom_id(type_de_champ)}'); if (container.classList.contains('hidden')) { container.classList.remove('hidden'); this.innerText = 'Masquer les variables disponibles'; } else { container.classList.add('hidden'); this.innerText = 'Afficher les variables disponibles'; } return false;" }
+                  Afficher les variables disponibles
 
+              .lexpol-variables-list.fr-mt-1w.hidden{ id: "lexpol-vars-#{dom_id(type_de_champ)}" }
+                %strong Variables que vous pouvez utiliser dans votre modèle Lexpol :
+                %ul
+                  - LexpolService.lexpol_variables(type_de_champ).map do |variable|
+                    %li= variable
 
         .flex.justify-start.fr-mt-1w
           -# ----- Polynesia options

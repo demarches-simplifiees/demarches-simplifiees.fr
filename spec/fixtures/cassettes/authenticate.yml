@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://devapilexpol.cloud.pf/api/v1/geda/authentification
+    body:
+      encoding: UTF-8
+      string: '{"email":"monituru@jeunesse.gov.pf","motdepasse":"zAL6µ?Ki35}cA","email_agent":"redacteur.geda@jeunesse.gov.pf"}'
+    headers:
+      User-Agent:
+      - mes-demarches.gov.pf
+      Content-Type:
+      - application/json
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Dec 2024 16:18:22 GMT
+      Server:
+      - Apache
+      Referrer-Policy:
+      - strict-origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Security-Policy:
+      - 'default-src ''self'' blob: *.gstatic.com *.upf.pf fonts.google.com *.cloud.pf
+        *.lyra.com *.osb.pf www.uruati.com ; script-src ''self'' blob: *.cloud.pf
+        *.osb.pf *.lyra.com www.uruati.com *.upf.pf *.virtualearth.net ''unsafe-inline''
+        ''unsafe-eval''; style-src ''self'' blob: *.cloud.pf *.osb.pf *.lyra.com www.uruati.com
+        *.upf.pf *.googleapis.com ''unsafe-inline''; img-src ''self'' blob: *.cloud.pf
+        *.osb.pf *.lyra.com www.uruati.com *.tefenua.gov.pf *.upf.pf *.virtualearth.net
+        ''unsafe-inline'' data: w3.org/svg/2000;'
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/json
+      Set-Cookie:
+      - PHPSESSID=9680fb26ce94950fb839b79a528495b3; expires=Tue, 17 Dec 2024 04:18:22
+        GMT; Max-Age=43200; path=/; domain=.devapilexpol.cloud.pf; HttpOnly;HttpOnly;SameSite=Strict
+      - id=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0;HttpOnly;SameSite=Strict
+      - user_resolution=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0;HttpOnly;SameSite=Strict
+      - user_size=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0;HttpOnly;SameSite=Strict
+    body:
+      encoding: ASCII-8BIT
+      string: '{"jeton":"f3f749484b901402ac4de0a6cce82633"}'
+  recorded_at: Mon, 16 Dec 2024 16:18:23 GMT
+recorded_with: VCR 6.2.0

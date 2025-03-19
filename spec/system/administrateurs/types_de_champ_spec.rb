@@ -38,8 +38,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     }
 
     # Champs are automatically saved
-    expect(page).to have_button('Ajouter un champ', disabled: false)
-    page.refresh
+    expect(page).to have_button('Ajouter un champ', disabled: false, match: :first)
     expect(page).to have_selector('.type-de-champ', count: 3)
 
     # Multiple champs can be edited
@@ -203,6 +202,26 @@ describe 'As an administrateur I can edit types de champ', js: true do
       page.refresh
 
       expect(page).to have_content('boss@company.com')
+    end
+  end
+
+  context 'lexpol enabled' do
+    before { Flipper.enable(:lexpol, procedure) }
+    before do
+      allow_any_instance_of(APILexpol).to receive(:get_models).and_return([["Modele1", "Id1"], ["Modele2", "Id2"]])
+    end
+
+    it "Add lexpol champ" do
+      add_champ
+
+      select('Lexpol', from: 'Type de champ')
+      fill_in 'Libellé du champ', with: 'Libellé de champ lexpol', fill_options: { clear: :backspace }
+
+      wait_until { procedure.draft_types_de_champ_public.first.type_champ == TypeDeChamp.type_champs.fetch(:lexpol) }
+      expect(page).to have_content('Formulaire enregistré')
+
+      expect(page).to have_content('Sélectionner un modèle Lexpol')
+      expect(page).to have_content('Variables Lexpol')
     end
   end
 
