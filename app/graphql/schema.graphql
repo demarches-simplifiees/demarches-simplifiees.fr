@@ -3531,7 +3531,7 @@ type Mutation {
   ): DossierModifierAnnotationDatetimePayload
 
   """
-  Modifier l’annotation au format nombre decimal.
+  Modifier l’annotation au format nombre décimal.
   """
   dossierModifierAnnotationDecimalNumber(
     """

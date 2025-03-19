@@ -2,7 +2,7 @@
 
 module Mutations
   class DossierModifierAnnotationDecimalNumber < Mutations::DossierModifierAnnotation
-    description "Modifier l’annotation au format nombre decimal."
+    description "Modifier l’annotation au format nombre décimal."
 
     argument :value, Float, required: true
 
