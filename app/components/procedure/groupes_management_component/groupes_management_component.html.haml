@@ -38,6 +38,8 @@
                     %span= gi.label
                   - if gi.closed
                     %p.fr-badge.fr-badge--info.fr-badge--sm.fr-ml-1w inactif
+                  - elsif gi.routing_rule.nil?
+                    %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle vide
                   - elsif gi.invalid_rule?
                     %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle invalide
                   - elsif gi.non_unique_rule?
