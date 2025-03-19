@@ -2,6 +2,7 @@
 
 .commencer.form
   - if !user_signed_in?
+    = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
     = render Dsfr::CalloutComponent.new(title: t(".start_procedure"), heading_level: 'h2') do |c|
       - c.with_html_body do
         = render partial: 'shared/france_connect_login', locals: { url: commencer_france_connect_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), heading_level: :h3 }
@@ -13,7 +14,6 @@
                 #{Current.application_name}
           %li= link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary'
 
-    = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
 
   - else
     = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
