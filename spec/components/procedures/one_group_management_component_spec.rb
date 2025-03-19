@@ -25,7 +25,7 @@ describe Procedure::OneGroupeManagementComponent, type: :component do
         procedure.reload
         subject
       end
-      it { expect(page).to have_text('règle invalide') }
+      it { expect(page).to have_text('aucune règle') }
     end
   end
 end
