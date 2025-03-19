@@ -36,6 +36,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.pad_top(15) do
       pdf.fill_color grey
       pdf.text t('.receipt'), size: 14, align: :center
+      add_pdf_draft_warning(pdf, @dossier)
     end
   end
 
