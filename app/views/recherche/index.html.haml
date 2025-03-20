@@ -42,11 +42,11 @@
                         - if @notifications_dossier_ids.include?(dossier.id)
                           %span.notifications{ 'aria-label': 'notifications' }
                     %td.fr-cell--multiline= dossier.procedure.libelle
-                    %td= dossier.user.email
+                    %td= dossier.user&.email
                     %td.flex.column= status_badge(dossier.state)
 
                   - elsif hidden_by_administration
-                    = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: dossier.procedure.libelle, user_email: dossier.user.email}
+                    = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: dossier.procedure.libelle, user_email: dossier.user&.email}
 
                   - else
                     %td.fr-cell--numeric
@@ -59,7 +59,7 @@
                       %a{ href: path }= dossier.procedure.libelle
 
                     %td
-                      %a{ href: path }= dossier.user.email
+                      %a{ href: path }= dossier.user&.email
 
                     %td
                       %a.flex.column{ href: path }= status_badge(dossier.state)
