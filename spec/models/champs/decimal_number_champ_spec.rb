@@ -105,7 +105,7 @@ describe Champs::DecimalNumberChamp do
     end
     context 'with number having spaces' do
       let(:value) { " 120 " }
-      it { is_expected.to be_nil }
+      it { is_expected.to eq(120) }
     end
   end
 end
