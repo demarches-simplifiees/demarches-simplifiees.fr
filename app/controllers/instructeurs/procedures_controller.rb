@@ -164,6 +164,7 @@ module Instructeurs
 
     def deleted_dossiers
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @deleted_dossiers = @procedure
         .deleted_dossiers
         .order(:dossier_id)
@@ -230,6 +231,7 @@ module Instructeurs
 
     def email_notifications
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @assign_to = assign_tos.first
     end
 
@@ -243,6 +245,7 @@ module Instructeurs
 
     def stats
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @usual_traitement_time = @procedure.stats_usual_traitement_time
       @dossiers_funnel = @procedure.stats_dossiers_funnel
       @termines_states = @procedure.stats_termines_states
@@ -275,6 +278,7 @@ module Instructeurs
 
     def email_usagers
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @bulk_messages = BulkMessage.where(procedure: procedure)
       @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.visible_by_user.group(:groupe_instructeur_id).count
     end
@@ -321,6 +325,7 @@ module Instructeurs
 
     def administrateurs
       @procedure = procedure
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @administrateurs = procedure.administrateurs
     end
 
