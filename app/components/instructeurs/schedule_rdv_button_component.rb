@@ -9,6 +9,7 @@ class Instructeurs::ScheduleRdvButtonComponent < ApplicationComponent
     button_to instructeur_rdvs_path(@dossier.procedure, @dossier),
       data: { turbo: false },
       method: :post,
+      form: { target: '_blank' },
       class: 'fr-btn' do
       safe_join([
         button_text,
