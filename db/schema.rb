@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_17_104348) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_26_171141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -425,6 +425,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_17_104348) do
     t.datetime "updated_at", null: false
     t.index ["dossier_id"], name: "index_dossier_labels_on_dossier_id"
     t.index ["label_id"], name: "index_dossier_labels_on_label_id"
+  end
+
+  create_table "dossier_notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "display_at"
+    t.bigint "dossier_id", null: false
+    t.bigint "groupe_instructeur_id"
+    t.bigint "instructeur_id"
+    t.string "notification_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_dossier_notifications_on_dossier_id"
+    t.index ["groupe_instructeur_id"], name: "index_dossier_notifications_on_groupe_instructeur_id"
+    t.index ["instructeur_id"], name: "index_dossier_notifications_on_instructeur_id"
   end
 
   create_table "dossier_operation_logs", force: :cascade do |t|
@@ -1387,6 +1400,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_17_104348) do
   add_foreign_key "dossier_corrections", "dossiers"
   add_foreign_key "dossier_labels", "dossiers"
   add_foreign_key "dossier_labels", "labels"
+  add_foreign_key "dossier_notifications", "dossiers"
+  add_foreign_key "dossier_notifications", "groupe_instructeurs"
+  add_foreign_key "dossier_notifications", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"
