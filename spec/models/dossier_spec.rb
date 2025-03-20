@@ -2595,6 +2595,18 @@ describe Dossier, type: :model do
 
       it { is_expected.to contain_exactly(dossier) }
     end
+
+    context 'when the dossier has an etablissement' do
+      let!(:dossier_with_etablissement) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, etablissement: create(:etablissement)) } }
+
+      it { is_expected.not_to include(dossier_with_etablissement) }
+    end
+
+    context 'when the dossier has an individual' do
+      let!(:dossier_with_individual) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, individual: create(:individual)) } }
+
+      it { is_expected.not_to include(dossier_with_individual) }
+    end
   end
 
   private
