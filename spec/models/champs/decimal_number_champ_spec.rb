@@ -91,4 +91,21 @@ describe Champs::DecimalNumberChamp do
      end
    end
   end
+
+  describe 'for_export' do
+    let(:champ) { create(:champ_decimal_number, value:) }
+    subject { champ.for_export }
+    context 'with nil' do
+      let(:value) { 0 }
+      it { is_expected.to eq(0.0) }
+    end
+    context 'with simple number' do
+      let(:value) { "120" }
+      it { is_expected.to eq(120) }
+    end
+    context 'with number having spaces' do
+      let(:value) { " 120 " }
+      it { is_expected.to be_nil }
+    end
+  end
 end
