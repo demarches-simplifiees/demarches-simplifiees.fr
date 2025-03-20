@@ -3,7 +3,6 @@
 class Procedure < ApplicationRecord
   include APIEntrepriseTokenConcern
   include ProcedureStatsConcern
-  include EncryptableConcern
   include InitiationProcedureConcern
   include ProcedureGroupeInstructeurAPIHackConcern
   include ProcedureSVASVRConcern
