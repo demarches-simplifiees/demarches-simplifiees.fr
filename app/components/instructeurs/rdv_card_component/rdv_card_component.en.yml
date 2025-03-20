@@ -6,3 +6,7 @@ en:
   view_file: 'View file'
   appointment_on: 'On'
   info_and_cancellation: 'Info and cancellation:'
+  rdv_type:
+    home: 'At home'
+    phone: 'By phone'
+    visio: 'By video call'
