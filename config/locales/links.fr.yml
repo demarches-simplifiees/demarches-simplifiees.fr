@@ -1,9 +1,14 @@
 fr:
   links:
     provider:
-      provided_by: "la DINUM"
-      title: "Direction Interministérielle au Numérique"
-      url: "https://numerique.gouv.fr"
+      logo:
+        src: "footer/logo-dmra-horisontal.png"
+        alt: "Logo DMRA"
+        height: 90
+        width: 240
+      provided_by: "la DMRA"
+      title: "Direction des talents et de l'innovation"
+      url: "https://www.service-public.pf/voir/annuaire/dgrh-direction-generale-des-ressources-humaines/"
     common:
       faq:
         label: "FAQ"
@@ -22,9 +27,9 @@ fr:
         legals: Informations légales
         resources: Ressources
         diagnostic: Diagnostic
-      description_1: Démarches simplifiées est un service propulsé par
-      link_1_label: la direction de la modernisation et des réformes de l'administration (DMRA)
-      link_1_url: "https://www.numerique.gouv.fr/dinum/"
+      description_1: Mes-Démarches, adaptation polynésienne de Démarches Simplifiées en France est un service propulsé par
+      link_1_label: la direction des talents et de l'innovation (DTI)
+      link_1_url: "https://www.fonction-publique.gov.pf/"
       link_2_label: Le code source
       description_2: est disponible en licence libre.
       copy_html: "Sauf mention contraire, les données publiques de ce site sont sous %{link}"
@@ -42,21 +47,21 @@ fr:
       cgu:
         label: "CGU"
         title: "Conditions Générales d’Utilisation"
-        url: "https://doc.demarches-simplifiees.fr/cgu"
+        url: "https://mes-demarches.gitbook.io/documentation/cgu"
       rgpd:
         label: "Données personnelles"
         title: "Données personnelles"
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       code:
         label: "Code source"
-        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
+        url: "https://github.com/govpf/mes-demarches"
       contact_technique:
         label: "Contact technique"
         title: "Contacter notre équipe technique"
       doc:
         label: "Documentation"
         title: "Documentation utilisateur"
-        url: "https://doc.demarches-simplifiees.fr"
+        url: "https://mes-demarches.gitbook.io/documentation"
       vote_feature:
         label: "Améliorer le site"
         title: "Votez pour vos améliorations prioritaires ou proposez votre propre idée"
@@ -65,11 +70,11 @@ fr:
       releases:
         label: "Nouveautés"
         title: "Nouveautés : Les dernière mises à jour de la plateforme"
-        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
+        url: "https://github.com/govpf/mes-demarches/releases"
       security:
         label: "Sécurité"
         title: "Politique et procédure de sécurité"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
+        url: "https://github.com/govpf/mes-demarches/blob/devpf/SECURITY.md"
       stats:
         label: "Statistiques"
       carte:

@@ -106,35 +106,35 @@ en:
       title: "Legal Notices"
       editing: "Editor"
       editing_content:
-        line_one: "Interministerial Directorate for Digital Affairs (DINUM)"
+        line_one: "Direction des Talents et de l'innovation (DTI)"
       direction: "Publishing Department"
       direction_content: "Ms. Stéphanie Schaer, Interministerial Director of Digital Affairs."
       hosting: "Hosting provider"
       hosting_content:
-        firm: "OVH"
-        RCS_term: "Commercial register"
-        RCS_value: "Roubaix – Tourcoing 424 761 419 00045"
-        APE_term: "APE (business activity) code"
-        APE_value: "6202A"
-        TVA_term_html: "VAT NUMBER"
-        TVA_value: "FR 22 424 761 419"
-        headquarters_term: "Head office"
-        headquarters_value: "2 rue Kellermann - 59100 Roubaix - France"
+        firm: "GIP OKANTIS"
+        RCS_term: "SIRET"
+        RCS_value: "268 708 567 00055"
+        APE_term: "Code APE"
+        APE_value: "84.11Z"
+        TVA_term_html: "<abbr title='Numéro'>N°</abbr> TVA"
+        TVA_value: "FR35 268 708 567"
+        headquarters_term: "Siège social"
+        headquarters_value: "18 av. d'Ariane, 87280 Limoges"
     accessibility_statement:
       title: "Accessibility statement"
-      line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
+      line_one_html: "DTI is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
       line_two_html: "This accessibility statement applies to <a href=\"%{host}\">%{app_name}</a> website."
       compliance:
         title: "Compliance status"
-        content_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
+        content_html: "The website Mes-Démarches is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
       results:
         title: "Test results"
         content: "The internal audit performed in June 2023 revealed an overall compliance rate of 81.36% on the sample of pages analyzed."
         programme:
           intro: "Users can follow the measures taken by the service to improve the accessibility of the site via "
-          label: "the DS accessibility continuous improvement programme"
+          label: "the DS/Mes-Démarches accessibility continuous improvement programme"
           url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
-          title: "the DS accessibility continuous improvement programme - new tab"
+          title: "the DS/Mes-Démarches accessibility continuous improvement programme - new tab"
       no_accessible:
         title: "Non-accessible content"
         subtitle_one: "Non-compliances"
@@ -198,10 +198,10 @@ en:
         page_sixteen: "Dossier - Messaging"
       contact:
         title: "Feedback and contact"
-        intro: "If you are unable to access a specific area of the website, you can contact manager of Demarches-simplifiées to be directed to an accessible alternative or obtain the content in another form."
+        intro: "If you are unable to access a specific area of the website, you can contact manager of Mes-Démarches to be directed to an accessible alternative or obtain the content in another form."
         infos:
           email_html: "By email:"
-          adress_html: "By mail : DINUM , 20 avenue de Ségur 75007 Paris"
+          adress_html: "By mail : BP 124- 98713 Papeete TAHITI French Polynésia"
       remedies:
         title: "Remedies"
         line_one: "If you notice a lack of accessibility that prevents you from accessing a content or functionality of the site, and you report it to us and do not manage to obtain a rapid response from us, you are entitled to contact Arcom or send your complaints to the Human Rights Defender."
