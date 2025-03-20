@@ -11,9 +11,23 @@ class Instructeurs::ScheduleRdvButtonComponent < ApplicationComponent
       method: :post,
       class: 'fr-btn' do
       safe_join([
-        t('.schedule_rdv'),
+        button_text,
         content_tag(:span, nil, class: 'fr-ml-1w fr-icon-external-link-line', 'aria-hidden': 'true')
       ])
     end
+  end
+
+  private
+
+  def button_text
+    if has_existing_rdv?
+      t('.schedule_another_rdv')
+    else
+      t('.schedule_rdv')
+    end
+  end
+
+  def has_existing_rdv?
+    @dossier.rdvs.booked.any?
   end
 end
