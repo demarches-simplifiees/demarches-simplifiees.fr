@@ -6,3 +6,7 @@ fr:
   view_file: 'Voir le dossier'
   appointment_on: 'Le'
   info_and_cancellation: 'Infos et annulation :'
+  rdv_type:
+    home: 'À domicile'
+    phone: 'Par téléphone'
+    visio: 'Par visioconférence'
