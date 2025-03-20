@@ -1182,6 +1182,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       it 'updates the last_revision_seen_id in instructeur_procedure' do
         expect(assigns(:instructeur_procedure).last_revision_seen_id).to eq(revision.id)
+        expect(assigns(:instructeur_procedure).position).to eq(99)
       end
     end
 

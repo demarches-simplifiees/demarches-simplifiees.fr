@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_17_104348) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_20_153834) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -830,7 +830,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_17_104348) do
     t.datetime "created_at", null: false
     t.bigint "instructeur_id", null: false
     t.bigint "last_revision_seen_id"
-    t.integer "position"
+    t.integer "position", default: 99
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
     t.index ["instructeur_id", "procedure_id"], name: "index_instructeurs_procedures_on_instructeur_and_procedure", unique: true
