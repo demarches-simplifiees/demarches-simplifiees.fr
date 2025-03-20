@@ -338,10 +338,7 @@ module Administrateurs
         flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
       else
-        file = csv_file.read
-        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
-
-        csv_content = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase).map(&:to_h)
+        csv_content = SmarterCSV.process(csv_file, strings_as_keys: true, convert_values_to_numeric: false)
 
         if csv_content.first.has_key?("groupe") && csv_content.first.has_key?("email")
           groupes_emails = csv_content.map { |r| r.to_h.slice('groupe', 'email') }

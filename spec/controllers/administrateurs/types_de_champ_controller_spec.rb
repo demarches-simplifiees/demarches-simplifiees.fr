@@ -179,6 +179,15 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV")
         end
       end
+
+      context 'when the csv file has a bom' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel-with-bom.csv', 'text/csv') }
+
+        it 'creates a valid referentiel' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(13)
+          expect(ReferentielItem.first.data).to eq({ "row" => { "description" => "Direction des Affaires financières et sociales", "flex_value" => "AFS" } })
+        end
+      end
     end
   end
 

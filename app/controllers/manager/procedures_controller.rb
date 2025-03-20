@@ -157,9 +157,7 @@ module Manager
         flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
       else
-        file = tags_csv_file.read
-        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
-        procedure_tags = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+        procedure_tags = SmarterCSV.process(tags_csv_file, strings_as_keys: true, convert_values_to_numeric: false)
           .map { |r| r.to_h.slice('demarche', 'tag') }
 
         invalid_ids = []
