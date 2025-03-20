@@ -2,7 +2,7 @@
   .fr-fieldset__content
     - items.each do |value, option_id|
       .fr-radio-group
-        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id)
+        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no'
         %label.fr-label{ for: @champ.radio_id(option_id) }
           = value
 
@@ -22,7 +22,8 @@
     { required: @champ.required?,
     id: @champ.input_id,
     class: select_class_names,
-    aria: { describedby: select_aria_describedby } }
+    aria: { describedby: select_aria_describedby },
+    translate: 'no' }
 
 - if @champ.drop_down_other?
   %div{ class: other_element_class_names }

@@ -2,7 +2,7 @@
   .fr-select-group
     = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at
 
-    = @form.select :primary_value, @champ.primary_options, {}, required: @champ.required?, class: 'fr-select fr-mb-3v', id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }
+    = @form.select :primary_value, @champ.primary_options, {}, required: @champ.required?, class: 'fr-select fr-mb-3v', id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, translate: 'no'
 
 - if @champ.has_secondary_options_for_primary?
   .secondary
@@ -13,6 +13,6 @@
         - if @champ.drop_down_secondary_description.present?
           .fr-hint-text{ id: "#{@champ.describedby_id}-secondary" }
             = render SimpleFormatComponent.new(@champ.drop_down_secondary_description, allow_a: true)
-        = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], {}, required: @champ.required?, class: 'fr-select', id: "#{@champ.input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }
+        = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], {}, required: @champ.required?, class: 'fr-select', id: "#{@champ.input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }, translate: 'no'
 - else
   = @form.hidden_field :secondary_value, value: ''

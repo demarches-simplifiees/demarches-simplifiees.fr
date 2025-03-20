@@ -72,6 +72,7 @@ export function ComboBox({
           ref={inputRef}
           aria-busy={isLoading}
           placeholder={placeholder || undefined}
+          translate="no"
         />
         <Button
           aria-haspopup="false"
