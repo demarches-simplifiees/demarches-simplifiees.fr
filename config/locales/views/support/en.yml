@@ -4,8 +4,9 @@ en:
       contact: Contact
       intro_html: "<p>Contact us via this form and we will answer you as quickly as possible.</p>
         <p>Make sure you provide all the required information so we can help you in the best way.</p>"
+      notice_email: "(example: myaddress@mymail.com)"
       your_question: Your question
-      our_answer: 👉 Our answer
+      our_answer: Our answer
       notice_pj_product: A screenshot can help us identify the element to improve.
       notice_pj_other: A screenshot can help us identify the issue.
       notice_upload_group: "Maximum size: 200 MB. Supported formats: jpg, png, pdf."
@@ -19,7 +20,7 @@ en:
           <p>If you are facing technical issues on the website, use the form below. We will not be able to inform you about the instruction of your application.</p>"
       product:
         question: I have an idea to improve the website
-        answer_html: "<p>Got an idea? <a href=\"%{link_product}\" rel=\"noopener noreferrer\" target=\"_blank\" title=\"Open features dashboard - New tab\">Please check our enhancement dashboard</a> :</p>
+        answer_html: "<p>Got an idea? <a href=\"%{link_product}\" rel=\"noopener noreferrer\" target=\"_blank\" title=\"Please check our enhancement dashboard - New tab\">Please check our enhancement dashboard</a> :</p>
               <ul><li>Vote for your priority improvements</li>
               <li>Share your own ideas</li></ul>"
       lost_user:

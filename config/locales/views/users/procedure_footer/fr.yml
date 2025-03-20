@@ -17,7 +17,7 @@ fr:
           link: "Voir les statistiques de la démarche"
       legals:
         header: "Cadre juridique"
-        data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} mois"
+        data_retention: "%{application_name} conservera ce dossier : %{duree_conservation_dossiers_dans_ds} mois"
         data_retention_url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/archivage-longue-duree-des-demarches"
         data_retention_title: "Explications sur notre politique de rétention et d’archivage des données"
         terms: "Texte cadrant la demande d’information"

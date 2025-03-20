@@ -133,7 +133,8 @@ $landing-breakpoint: 1040px;
   }
 
   .number {
-    @extend %horizontal-list-item;
+    display: flex;
+    flex-direction: column;
     width: 320px;
     text-align: center;
 
@@ -143,6 +144,8 @@ $landing-breakpoint: 1040px;
   }
 
   .number-value {
+    padding-bottom: 0;
+    padding-inline-start: 0;
     color: var(--text-action-high-blue-france);
     font-size: 2rem;
     line-height: 2rem;
@@ -150,8 +153,9 @@ $landing-breakpoint: 1040px;
   }
 
   .number-label {
+    order: 2;
     max-width: 10rem;
-    margin: auto;
+    margin: 0 auto;
     font-weight: 600;
     font-size: 1.25rem;
     line-height: 1.5rem;
@@ -161,6 +165,10 @@ $landing-breakpoint: 1040px;
   .number-label-third {
     max-width: 13rem;
   }
+}
+
+html[lang="fr"] .landing .number-label-third::before {
+  content: "de ";
 }
 
 $users-breakpoint: 950px;

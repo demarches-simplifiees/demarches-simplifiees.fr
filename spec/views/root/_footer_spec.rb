@@ -2,7 +2,7 @@ describe 'root/_footer.html.haml', type: :view do
   subject { render }
 
   it "should contains polynesian links" do
-    expect(subject).to have_link('DMRA', href: 'https://www.service-public.pf/voir/annuaire/dmra-direction-modernisation-et-reformes-administration/')
+    expect(subject).to have_link("la direction des talents et de l'innovation (DTI)", href: 'https://www.fonction-publique.gov.pf/')
     expect(subject).to have_link('CGU', href: CGU_URL)
     expect(subject).to have_link('Données personnelles', href: RGPD_URL)
     expect(subject).to have_link('Mentions légales', href: MENTIONS_LEGALES_URL)

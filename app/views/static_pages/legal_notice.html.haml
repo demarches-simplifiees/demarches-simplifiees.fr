@@ -13,9 +13,12 @@
         .fr-mb-4w
           %h2
             = t('views.legal_notice.editing')
-          %p.fr-mb-2w= t('views.legal_notice.editing_content.line_one')
-          %p.fr-mb-2w= t('views.legal_notice.editing_content.line_two')
-          %p.fr-mb-2w= t('views.legal_notice.editing_content.line_three')
+          %p
+            = t('views.legal_notice.editing_content.line_one')
+            %br
+            = t('views.legal_notice.editing_content.line_two')
+            %br
+            = t('views.legal_notice.editing_content.line_three')
 
         .fr-mb-4w
           %h2
@@ -25,8 +28,18 @@
         .fr-mb-4w
           %h2
             = t('views.legal_notice.hosting')
-          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_one')
-          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_two')
-          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_three')
-          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_four')
-          %p.fr-mb-2w= t('views.legal_notice.hosting_content.line_five')
+          %h3
+            = t('views.legal_notice.hosting_content.firm')
+          %dl.pl-0
+            .flex
+              %dt= t('views.legal_notice.hosting_content.RCS_term')
+              %dd= t('views.legal_notice.hosting_content.RCS_value')
+            .flex
+              %dt= t('views.legal_notice.hosting_content.APE_term')
+              %dd= t('views.legal_notice.hosting_content.APE_value')
+            .flex
+              %dt= t('views.legal_notice.hosting_content.TVA_term_html')
+              %dd= t('views.legal_notice.hosting_content.TVA_value')
+            .flex
+              %dt= t('views.legal_notice.hosting_content.headquarters_term')
+              %dd= t('views.legal_notice.hosting_content.headquarters_value')
