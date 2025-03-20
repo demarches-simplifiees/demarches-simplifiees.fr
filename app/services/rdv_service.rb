@@ -13,6 +13,10 @@ class RdvService
     ENV["RDV_SERVICE_PUBLIC_URL"]
   end
 
+  def self.rdv_sp_org_config_url
+    "#{rdv_sp_host_url}/admin/organisations/configuration"
+  end
+
   def self.create_rdv_plan_url
     "#{rdv_sp_host_url}/api/v1/rdv_plans"
   end
