@@ -8,26 +8,32 @@
     .fr-col-12.fr-col-offset-md-2.fr-col-md-8
       %h1.fr-h2 Prise de rendez-vous
 
-      = render Dsfr::CalloutComponent.new(title: nil) do |c|
-        - c.with_body do
-          %p
-            Cette fonctionnalité permet aux instructeurs de proposer un rendez-vous aux usagers depuis l’onglet « Rendez-vous » de leur dossier (via le service&nbsp;
-            %strong> RDV Service Public
-            ).
-          - if current_administrateur.instructeur.rdv_connection.nil?
-            %br
+      %p
+        Cette fonctionnalité permet aux instructeurs de proposer un rendez-vous aux usagers depuis l’onglet « Rendez-vous » de leur dossier (via le service&nbsp;
+        %strong> RDV Service Public
+        ).
+
+      - if current_administrateur.instructeur.rdv_connection.nil?
+        = render Dsfr::CalloutComponent.new(title: nil) do |c|
+          - c.with_body do
             %p
               Pour activer cette fonctionnalité, vous devez commencer par connecter votre compte
               %strong RDV Service Public
               à votre compte Démarches Simplifiées.
-
-      - if current_administrateur.instructeur.rdv_connection.nil?
-        = form_tag('/auth/rdvservicepublic', method: 'post', data: {turbo: false}) do
-          %button.fr-btn{ type:'submit' }
-            Connecter RDV Service Public
-            %span.fr-ml-1w.fr-icon-external-link-line{ "aria-hidden": "true" }
+            = form_tag('/auth/rdvservicepublic', method: 'post', data: {turbo: false}) do
+              %button.fr-btn{ type:'submit' }
+                Connecter RDV Service Public
+                %span.fr-ml-1w.fr-icon-external-link-line{ "aria-hidden": "true" }
 
       - else
+        = render Dsfr::CalloutComponent.new(title: "Accès à la fonctionnalité par les instructeurs") do |c|
+          - c.with_body do
+            %p
+              Pour utiliser cette fonctionnalité, les instructeurs doivent être
+              %strong ajoutés dans votre configuration
+              du service RDV Service Public.
+            = link_to "Vérifier ma configuration dans RDV Service Public", RdvService.rdv_sp_org_config_url, class: 'fr-btn', target: '_blank'
+
         %ul.fr-toggle__list
           %li
             = form_for(@procedure,
