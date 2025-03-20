@@ -132,8 +132,8 @@
                             %span
                               = link_to_if dossier.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: @procedure)), path
 
-                        %td.follow-col
-                          %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+                        %td.follow-col{ colspan:'3' }
+                          %ul.inline-flex.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                             = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
                                         dossier_id: dossier.id,
                                         state: dossier.state,

@@ -1,0 +1,87 @@
+@import 'colors';
+
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-container input {
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.input-container .microphoneButton:has(.stop-recording-hidden) {
+  background-color: white;
+}
+
+.input-container .microphoneButton {
+  border-radius: 30px;
+  border-color: white;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  padding: 7px;
+}
+
+.speech_recognition_not_supported {
+  opacity: 0.4;
+}
+
+.microphoneButton:has(.stop-recording-visible) {
+  padding: 14px;
+}
+
+.follow-col .microphoneButton:has(.stop-recording-visible) {
+  padding: 15px;
+}
+
+.stop-recording-hidden, .microphoneHidden {
+  display: none;
+}
+
+.input-container .icon.microphone, .input-container .icon.stop {
+  left: 25%;
+}
+
+.icon.stop {
+  position: absolute;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, $white 25%, $blue-france-500 60%, $white 25%);
+  background-size: 200% 100%;
+  animation: speechToTextAnimation 2s infinite linear;
+  width: 13px;
+  height: 13px;
+}
+
+.header-actions .icon.stop, .follow-col .icon.stop {
+  transform: translate(-50%, -50%);
+}
+
+.header-actions .microphoneButton, .follow-col .microphoneButton {
+  box-shadow: 0 0 0 1px var(--border-action-high-blue-france);
+  margin: 1px;
+}
+
+.header-actions .microphoneButton:has(.stop-recording-hidden) {
+  padding: 5px;
+}
+
+.follow-col .microphoneButton:has(.stop-recording-hidden) {
+  padding: 7px;
+}
+
+.stop-recording-visible:hover {
+  background-color: #1212ff;
+}
+
+@keyframes speechToTextAnimation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

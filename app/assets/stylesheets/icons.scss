@@ -125,6 +125,16 @@
   &.mandatory {
     width: 10px;
   }
+
+  &.microphone {
+    background-image: image-url('icons/microphone.svg');
+    margin-right: 0px;
+  }
+
+  &.stop {
+    background-image: image-url('icons/stop.svg');
+    margin-right: 0px;
+  }
 }
 
 // How to add a new remix icon and work with DSFR markup:
