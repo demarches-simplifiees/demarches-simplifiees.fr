@@ -393,12 +393,12 @@ describe TypeDeChamp do
       let(:type_de_champ) { create(:type_de_champ_integer_number, procedure:) }
 
       before do
-        type_de_champ.update!(options: { "positive_number" => "1" })
+        type_de_champ.update!(options: { "positive_number" => "1", "range_number" => '1', "min_number" => '2', "max_number" => '18' })
         procedure.publish_revision!
       end
 
       it 'keeping the positive number options' do
-        is_expected.to eq({ "positive_number" => "1" })
+        is_expected.to eq({ "positive_number" => "1", "range_number" => '1', "min_number" => '2', "max_number" => '18' })
       end
     end
 
@@ -406,12 +406,12 @@ describe TypeDeChamp do
       let(:type_de_champ) { create(:type_de_champ_decimal_number, procedure:) }
 
       before do
-        type_de_champ.update!(options: { "positive_number" => "1" })
+        type_de_champ.update!(options: { "positive_number" => "1", "range_number" => '1', "min_number" => '2.5', "max_number" => '18' })
         procedure.publish_revision!
       end
 
       it 'keeping the positive number options' do
-        is_expected.to eq({ "positive_number" => "1" })
+        is_expected.to eq({ "positive_number" => "1", "range_number" => '1', "min_number" => '2.5', "max_number" => '18' })
       end
     end
 

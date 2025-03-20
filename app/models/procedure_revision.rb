@@ -458,6 +458,24 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.positive_number,
           to_type_de_champ.positive_number)
       end
+      if from_type_de_champ.range_number != to_type_de_champ.range_number
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :range_number,
+          from_type_de_champ.range_number,
+          to_type_de_champ.range_number)
+      end
+      if from_type_de_champ.min_number != to_type_de_champ.min_number
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :min_number,
+          from_type_de_champ.min_number,
+          to_type_de_champ.min_number)
+      end
+      if from_type_de_champ.max_number != to_type_de_champ.max_number
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :max_number,
+          from_type_de_champ.max_number,
+          to_type_de_champ.max_number)
+      end
     elsif to_type_de_champ.formatted?
       if from_type_de_champ.expression_reguliere != to_type_de_champ.expression_reguliere
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,

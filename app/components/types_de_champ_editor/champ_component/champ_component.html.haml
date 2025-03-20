@@ -53,10 +53,33 @@
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
             - if type_de_champ.integer_number? || type_de_champ.decimal_number?
-              .cell.fr-mt-2w
-                .fr-toggle
-                  = form.check_box :positive_number, id: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__input'
-                  = form.label :positive_number, "Ce nombre doit être positif", for: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__label fr-label'
+              .vertical-border.fr-pl-2w.fr-mt-2w
+                .cell
+                  %legend.fake-label
+                    Format accepté
+                  .fr-toggle
+                    = form.check_box :positive_number, id: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__input'
+                    = form.label :positive_number, "Ce nombre doit être positif", for: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__label fr-label'
+
+                .cell.fr-mt-2w
+                  .fr-toggle
+                    = form.check_box :range_number, id: dom_id(type_de_champ, :range_number), class: 'fr-toggle__input'
+                    = form.label :range_number, "Ce nombre doit être compris entre des valeurs limites", for: dom_id(type_de_champ, :range_number), class: 'fr-toggle__label fr-label'
+
+                - if form.object.range_number?
+                  .cell.fr-mt-1w
+                    %fieldset.fr-fieldset
+                      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                        .fr-input-group
+                          = form.label :min_number, for: dom_id(type_de_champ, :min_number) do
+                            valeur minimale
+                          = form.number_field :min_number, class: "fr-input", id: dom_id(type_de_champ, :min_number)
+
+                      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                        .fr-input-group
+                          = form.label :max_number, for: dom_id(type_de_champ, :max_number) do
+                            valeur maximale
+                          = form.number_field :max_number, class: "fr-input", id: dom_id(type_de_champ, :max_number)
 
         .flex.justify-start.fr-mt-1w.flex-gap
           - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
