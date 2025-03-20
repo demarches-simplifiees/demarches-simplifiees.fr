@@ -19,4 +19,15 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
       @rdv.instructeur.email
     end
   end
+
+  def icon_class
+    case rdv.location_type
+    when "phone"
+      "fr-icon-phone-fill"
+    when "visio"
+      "fr-icon-vidicon-fill"
+    when "home"
+      "fr-icon-home-4-fill"
+    end
+  end
 end

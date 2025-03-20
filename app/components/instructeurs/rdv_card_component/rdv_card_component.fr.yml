@@ -7,3 +7,7 @@ fr:
   appointment_on: 'Le'
   info_and_cancellation: 'Infos et annulation :'
   you: 'Vous'
+  rdv_type:
+    home: 'À domicile'
+    phone: 'Par téléphone'
+    visio: 'Par visioconférence'
