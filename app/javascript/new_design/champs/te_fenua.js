@@ -205,10 +205,12 @@ function initMap(mapElement, map) {
     // Prépare l'interpréteur GEOJSON.
     const geodata = JSON.parse(data);
 
-    if (geodata.position) {
-      const coords = geodata.position.geometry.coordinates;
-      const marker = createMarkerFeature(coords, MARKER_PATH);
-      map.markerLayer.getSource().addFeature(marker);
+    if (geodata.positions && Array.isArray(geodata.positions)) {
+      geodata.positions.forEach((pos) => {
+        const coords = pos.geometry.coordinates;
+        const marker = createMarkerFeature(coords, MARKER_PATH);
+        map.markerLayer.getSource().addFeature(marker);
+      });
     }
 
     initFeatures(geodata.parcelles, map.parcellesLayer);
@@ -238,11 +240,12 @@ function addInteractions(mapElement, map) {
   if (removeMarkerButton) {
     removeMarkerButton.style.display = 'none';
   }
-  const entry_type = new Set(mapElement.getAttribute('data-entry').split(','));
-  const add_zone = entry_type.has('zones_manuelles');
-  const add_batiment = entry_type.has('batiments');
-  const add_parcelle = entry_type.has('parcelles');
-  const add_marker = entry_type.has('marker');
+  const entry_type = mapElement.getAttribute('data-entry') || '';
+
+  const add_zone = entry_type === 'zones_manuelles';
+  const add_batiment = entry_type === 'batiments';
+  const add_parcelle = entry_type === 'parcelles';
+  const add_marker = entry_type === 'marker';
   // help bubbles
   const bubbles = {
     add: mapElement.querySelector('.add'),
@@ -309,6 +312,8 @@ function addInteractions(mapElement, map) {
     });
   }
 
+  createControl(map, clickOnGeolocate, 'geolocate', 'Me localiser');
+
   addBatimentParcelleInteraction();
 
   if (removeMarkerButton) {
@@ -322,55 +327,87 @@ function addInteractions(mapElement, map) {
   }
 
   const addMarkerButton = mapElement.querySelector('#add-marker-button');
-  if (addMarkerButton && add_marker) {
+  if (add_marker) {
     let markerMode = false;
 
     const onMarkerClick = (evt) => {
-      map.markerLayer.getSource().clear();
+      const featureAtPixel = map.forEachFeatureAtPixel(
+        evt.pixel,
+        (feature) => feature,
+        {
+          layerFilter: (layer) => layer === map.markerLayer
+        }
+      );
 
-      // On crée le marqueur
-      const coords = evt.coordinate;
-      const feature = createMarkerFeature(coords, MARKER_PATH);
-      map.markerLayer.getSource().addFeature(feature);
+      if (featureAtPixel) {
+        map.markerLayer.getSource().removeFeature(featureAtPixel);
 
-      // On met à jour geodata
-      geodata.position = {
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: coords }
-      };
-      champ.value = JSON.stringify(geodata);
-      champ.dispatchEvent(new Event('change', { bubbles: true }));
+        geodata.positions = geodata.positions.filter(
+          (pos) =>
+            JSON.stringify(pos.geometry.coordinates) !==
+            JSON.stringify(featureAtPixel.getGeometry().getCoordinates())
+        );
 
-      // On affiche le bouton "supprimer le marqueur"
-      if (removeMarkerButton) {
-        removeMarkerButton.style.display = 'inline-block';
+        champ.value = JSON.stringify(geodata);
+        champ.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        const coords = evt.coordinate;
+        const feature = createMarkerFeature(coords, MARKER_PATH);
+        map.markerLayer.getSource().addFeature(feature);
+
+        if (!geodata.positions) {
+          geodata.positions = [];
+        }
+
+        geodata.positions.push({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: coords }
+        });
+
+        champ.value = JSON.stringify(geodata);
+        champ.dispatchEvent(new Event('change', { bubbles: true }));
       }
     };
 
-    addMarkerButton.addEventListener('click', () => {
-      markerMode = !markerMode;
-      addMarkerButton.classList.toggle('active', markerMode);
+    const isMarkerOnlyMode = !add_parcelle && !add_batiment && !add_zone;
 
-      if (markerMode) {
-        addMarkerButton.textContent = 'Marqueur actif';
-        // On désactive la sélection de parcelles/batiments
-        map.un('click', lookForBatimentsAndParcelles);
-        map.on('click', onMarkerClick);
-      } else {
-        addMarkerButton.textContent = 'Placer un marqueur';
-        map.un('click', onMarkerClick);
-        if (add_parcelle || add_batiment) {
-          map.on('click', lookForBatimentsAndParcelles);
-        }
+    if (isMarkerOnlyMode) {
+      markerMode = true;
+      map.on('click', onMarkerClick);
+
+      if (addMarkerButton) {
+        addMarkerButton.style.display = 'none';
       }
-    });
-  } else if (addMarkerButton && !add_marker) {
-    addMarkerButton.style.display = 'none';
+    } else if (addMarkerButton) {
+      addMarkerButton.addEventListener('click', () => {
+        markerMode = !markerMode;
+        addMarkerButton.classList.toggle('active', markerMode);
+
+        if (markerMode) {
+          addMarkerButton.textContent = 'Marqueur actif';
+          map.on('click', onMarkerClick);
+          map.un('click', lookForBatimentsAndParcelles);
+        } else {
+          addMarkerButton.textContent = 'Placer un marqueur';
+          map.un('click', onMarkerClick);
+          if (add_parcelle || add_batiment) {
+            map.on('click', lookForBatimentsAndParcelles);
+          }
+        }
+      });
+    }
+
+    if (geodata.positions) {
+      geodata.positions.forEach((pos) => {
+        const coords = pos.geometry.coordinates;
+        const marker = createMarkerFeature(coords, MARKER_PATH);
+        map.markerLayer.getSource().addFeature(marker);
+      });
+    }
   }
 
-  // Si on arrive avec un marqueur déjà enregistré, on affiche "supprimer"
-  if (removeMarkerButton && geodata.position) {
-    removeMarkerButton.style.display = 'inline-block';
+  if (removeMarkerButton) {
+    removeMarkerButton.style.display = 'none';
   }
 
   function hideHelps() {
@@ -412,6 +449,26 @@ function addInteractions(mapElement, map) {
   function clickOnToggleCadastre(e) {
     e.preventDefault();
     map.cadastreLayer.setVisible(!map.cadastreLayer.getVisible());
+  }
+
+  function clickOnGeolocate(e) {
+    e.preventDefault();
+
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = [position.coords.longitude, position.coords.latitude];
+          map.getView().animate({ center: coords, zoom: 18 });
+        },
+        (error) => {
+          alert('Impossible d’obtenir votre position.');
+          console.error(error);
+        },
+        { enableHighAccuracy: true }
+      );
+    } else {
+      alert('Votre navigateur ne prend pas en charge la géolocalisation.');
+    }
   }
 
   function deleteSelectedZones() {

@@ -2,7 +2,7 @@
 
 .ol-control-add {
   left: 0.5em;
-  top: 5em;
+  top: 7em;
 
   button {
     background-image: image-url("icons/polygon.svg");
@@ -12,7 +12,7 @@
 
 .ol-control-delete {
   left: 0.5em;
-  top: 7em;
+  top: 9em;
 
   button {
     background-image: image-url("icons/trash-gray.svg");
@@ -22,12 +22,29 @@
 
 .ol-control-layers {
   left: 0.5em;
-  top: 9em;
+  top: 11em;
 
   button {
     background-image: image-url("icons/layers.svg");
     background-size: cover;
   }
+}
+
+.ol-control-geolocate {
+  left: 0.5em;
+  top: 5em;
+}
+
+.ol-control-geolocate button {
+  background: url("img.icons8.com/material-outlined/24/000000/marker.png") no-repeat center center;
+  background-size: 16px;
+  cursor: pointer;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 2px;
+  background-color: #FFFFFF;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .te-fenua {

@@ -170,7 +170,8 @@ module Administrateurs
         :lexpol_mapping,
         editable_options: [
           *INSTANCE_EDITABLE_OPTIONS,
-          *TypesDeChamp::CarteTypeDeChamp::LAYERS
+          *TypesDeChamp::CarteTypeDeChamp::LAYERS,
+          :te_fenua_layer
         ])
     end
 

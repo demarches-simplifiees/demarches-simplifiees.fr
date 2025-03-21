@@ -1,4 +1,4 @@
-.te-fenua.edit{ class: "te-fenua-#{@form.index}", data: { entry: @champ.entry, marker: image_url('marker-icon.png') } }
+.te-fenua.edit{ class: "te-fenua-#{@form.index}", data: { entry: @champ.type_de_champ.options["te_fenua_layer"], marker: image_url('marker-icon.png') } }
   -# .place
   -#   %input{ data: { te_fenua_place: true, autocomplete: 'te_fenua' }, placeholder: 'Hopital Raiatea, Eglise Faaone, K210 Pirae', 'aria-label': 'Adresse' }
   .te-fenua-help.add
@@ -13,12 +13,9 @@
   .te-fenua-help.parcelle
     %p.te-fenua-header Aide
     = image_tag('te_fenua/add_parcelle.webp')
-  .te-fenua-help.add-marker
-    %button.fr-btn.fr-btn--secondary{ id: "add-marker-button", type: "button" }
-      Placer un marqueur
-  .te-fenua-help.remove-marker
-    %button.fr-btn.fr-btn--secondary{ id: "remove-marker-button", type: "button", style: "display:none;" }
-      Supprimer le marqueur
+  .te-fenua-help.marker
+    %p.te-fenua-header Aide
+    = image_tag('te_fenua/add_marker.webp', style: 'width: 150px;')
 
 .geo-areas
 
