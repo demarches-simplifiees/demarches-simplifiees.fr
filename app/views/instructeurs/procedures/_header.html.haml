@@ -48,8 +48,9 @@
           %ul.fr-menu__list
             %li
               = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-            %li
-              = link_to t('instructeurs.dossiers.header.banner.users_with_rdvs'), RdvService.rdv_sp_host_url, target: "_blank", class: 'fr-nav__link'
+            - if @procedure.rdv_enabled?
+              %li
+                = link_to t('instructeurs.dossiers.header.banner.users_with_rdvs'), RdvService.rdv_sp_host_url, target: "_blank", class: 'fr-nav__link'
             %li
               = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_instructeur_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-nav__link'
             %li
