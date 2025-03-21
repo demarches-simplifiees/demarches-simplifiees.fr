@@ -25,10 +25,10 @@
         has_termine_notifications: @has_termine_notifications }
 
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
-    .flex.align-center
+    .flex
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
         = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation }
-        = render Dossiers::NotifiedToggleComponent.new(procedure_presentation: @procedure_presentation) if @statut != 'a-suivre'
+        = render Dossiers::NotifiedToggleComponent.new(procedure_presentation: @procedure_presentation)
 
         .fr-ml-auto
           - if @dossiers_count > 0
