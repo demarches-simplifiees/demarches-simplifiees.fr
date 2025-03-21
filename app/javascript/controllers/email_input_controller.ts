@@ -46,21 +46,6 @@ export class EmailInputController extends ApplicationController {
         this.suggestionTarget.innerHTML = data.suggestions[0];
         show(this.ariaRegionTarget);
         this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
-      } else if (email.toLowerCase().endsWith('.pf')) {
-        this.discard();
-      } else {
-        const url = new URL(this.urlValue, document.baseURI);
-        url.searchParams.append('email', email);
-
-        const data: checkEmailResponse | null = await httpRequest(
-          url.toString()
-        ).json();
-
-        if (data && data.email_suggestions && data.email_suggestions.length > 0) {
-          this.suggestionTarget.innerHTML = data.email_suggestions[0];
-          show(this.ariaRegionTarget);
-          this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
-        }
       }
     }
   }
