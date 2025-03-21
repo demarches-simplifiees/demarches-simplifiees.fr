@@ -7,7 +7,7 @@ class Champs::DossierLinkChamp < Champ
   private
 
   def dossier_exists
-    if mandatory? && !Dossier.exists?(value)
+    if !Dossier.exists?(value)
       errors.add(:value, :not_found)
     end
   end
