@@ -161,7 +161,7 @@ describe "procedure filters" do
       fill_in "Valeur", with: filter_value
     when :date
       find("input#value[type=date]", visible: true)
-      fill_in "Valeur", with: filter_value
+      fill_in "Valeur", with: Date.parse(filter_value)
     when :enum
       find("select#value", visible: false)
       select filter_value, from: "Valeur"
