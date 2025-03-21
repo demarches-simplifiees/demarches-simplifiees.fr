@@ -105,8 +105,6 @@
                           - else
                             %a.fr-link.relative{ href: path }
                               = dossier.id
-                              - if @not_archived_notifications_dossier_ids.include?(dossier.id)
-                                %span.notifications{ 'aria-label': 'notifications' }
                             - if @notifications[dossier.id].present?
                               - @notifications[dossier.id].each do |notif|
                                 .fr-mt-1v
@@ -125,12 +123,7 @@
                                 = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}" if dossier.hidden_by_user_at.present?
 
                         %td
-                          - status = [status_badge(dossier.state)]
-                          - if dossier.pending_correction?
-                            - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                          - elsif dossier.last_correction_resolved?
-                            - status << correction_resolved_badge(html_class: "fr-mt-1v")
-                          = link_to_if(dossier.hidden_by_administration_at.blank?, safe_join(status), path, class: "flex column")
+                          = link_to_if(dossier.hidden_by_administration_at.blank?, status_badge(dossier.state), path)
 
                         - if @procedure.sva_svr_enabled?
                           %td
