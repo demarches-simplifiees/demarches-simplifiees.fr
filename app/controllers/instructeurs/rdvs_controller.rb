@@ -5,7 +5,7 @@ module Instructeurs
     before_action :set_dossier
 
     def create
-      pending_rdv = @dossier.rdvs.pending.first
+      pending_rdv = @dossier.rdvs.pending_for_instructeur(current_instructeur).first
 
       if pending_rdv.present?
         return redirect_to pending_rdv.rdv_plan_url, allow_other_host: true

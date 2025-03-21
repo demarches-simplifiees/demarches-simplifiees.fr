@@ -11,4 +11,12 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
   def dossier
     @rdv.dossier
   end
+
+  def owner
+    if @rdv.instructeur == current_instructeur
+      t('.you')
+    else
+      @rdv.instructeur.email
+    end
+  end
 end

@@ -114,7 +114,7 @@ module Instructeurs
         RdvService.new(rdv_connection: current_instructeur.rdv_connection).update_pending_rdv_plan!(dossier:)
       end
 
-      @rdvs = dossier.rdvs.by_starts_at
+      @booked_rdvs = dossier.rdvs.booked.by_starts_at
     end
 
     def send_to_instructeurs
