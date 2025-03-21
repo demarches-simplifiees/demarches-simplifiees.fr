@@ -11,6 +11,7 @@ class Rdv < ApplicationRecord
   scope :pending, -> { where(rdv_external_id: nil) }
   scope :upcoming, -> { where("starts_at > ?", Time.zone.now) }
   scope :by_starts_at, -> { order(starts_at: :desc) }
+  scope :pending_for_instructeur, -> (instructeur) { where(instructeur:).pending }
 
   def rdv_plan_url
     "#{ENV["RDV_SERVICE_PUBLIC_URL"]}/agents/rdv_plans/#{rdv_plan_external_id}"
