@@ -1,7 +1,3 @@
-- render_parent
-
-= @form.hidden_field :value
-= @form.hidden_field :external_id
-= react_component("ComboAnnuaireEducationSearch",
-  **react_input_opts,
-  **react_combo_props)
+%react-fragment
+  = render ReactComponent.new "ComboBox/RemoteComboBox", **react_props do
+    = render ReactComponent.new "ComboBox/ComboBoxValueSlot", field: :label, name: @form.field_name(:value)

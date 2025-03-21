@@ -1,6 +1,6 @@
 describe 'Sign out' do
   context 'when a user is logged in' do
-    let(:user) { create(:administrateur).user }
+    let(:user) { administrateurs(:default_admin).user }
 
     before { login_as user, scope: :user }
 

@@ -1,5 +1,5 @@
 describe Administrateurs::DossierSubmittedMessagesController, type: :controller do
-   let(:administrateur) { create(:administrateur) }
+   let(:administrateur) { administrateurs(:default_admin) }
 
    before { sign_in(administrateur.user) }
 

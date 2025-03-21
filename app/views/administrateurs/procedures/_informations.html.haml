@@ -122,17 +122,16 @@
   .fr-fieldset__element
     = f.label :tags, 'Associez des thématiques à la démarche', class: 'fr-label'
     %p.fr-hint-text Par des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
-    = hidden_field_tag  'procedure[tags]', JSON.generate(@procedure.tags)
-    = react_component("ComboMultiple",
-      id: "procedure_tags_combo",
-      options: Procedure.tags,
-      selected: @procedure.tags,
-      disabled: [],
-      label: 'Tags',
-      group: '.procedure_tags_combo',
-      name: 'tags',
-      describedby: 'procedure-tags',
-      acceptNewValues: true)
+    %react-fragment
+      = render ReactComponent.new "ComboBox/MultiComboBox",
+        id: "procedure_tags_combo",
+        items: Procedure.tags,
+        selected_keys: @procedure.tags,
+        name: 'procedure[tags][]',
+        value_separator: ',|;',
+        allows_custom_value: true,
+        'aria-label': 'Tags',
+        'aria-describedby': 'procedure-tags'
 
 %fieldset.fr-fieldset
   %legend.fr-fieldset__legend Cadre relatif au RGS et RGPD

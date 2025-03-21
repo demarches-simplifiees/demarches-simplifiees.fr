@@ -16,7 +16,7 @@ describe EmailCheckerController, type: :controller do
       let(:params) { { email: 'martin@orane.fr' } }
       it do
         expect(response).to have_http_status(:success)
-        expect(body).to eq({ success: true, email_suggestions: ['martin@orange.fr'] })
+        expect(body).to eq({ success: true, suggestions: ['martin@orange.fr'] })
       end
     end
 

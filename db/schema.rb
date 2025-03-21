@@ -1147,7 +1147,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
     t.datetime "created_at"
     t.text "description"
     t.string "libelle"
-    t.boolean "mandatory", default: false
+    t.boolean "mandatory", default: true
     t.jsonb "options"
     t.boolean "private", default: false, null: false
     t.bigint "stable_id"

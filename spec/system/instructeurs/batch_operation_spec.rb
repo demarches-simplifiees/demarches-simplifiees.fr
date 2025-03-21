@@ -4,7 +4,7 @@ describe 'BatchOperation a dossier:', js: true do
 
   let(:password) { 'demarches-simplifiees' }
   let(:instructeur) { create(:instructeur, password: password) }
-  let(:procedure) { create(:simple_procedure, :published, instructeurs: [instructeur], administrateurs: [create(:administrateur)]) }
+  let(:procedure) { create(:simple_procedure, :published, instructeurs: [instructeur], administrateurs: [administrateurs(:default_admin)]) }
 
   context 'with an instructeur' do
     scenario 'create a BatchOperation', chrome: true do

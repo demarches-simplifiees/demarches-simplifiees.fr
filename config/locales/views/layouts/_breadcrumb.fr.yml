@@ -10,7 +10,7 @@ fr:
       since: "depuis le %{date}"
       closed: "Close"
       published: "Publiée"
-      draft: "En test"
+      draft: "En test"
       more_info_on_test: "Pour plus d’information sur la phase de test"
       go_to_FAQ: "consulter la FAQ"
       url_FAQ: "/faq#accordion-administrateur-2"

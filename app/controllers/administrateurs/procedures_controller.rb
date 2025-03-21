@@ -531,11 +531,10 @@ module Administrateurs
         :accuse_lecture,
         :api_entreprise_token,
         :duree_conservation_dossiers_dans_ds,
-        { zone_ids: [] },
         :lien_dpo,
         :opendata,
         :procedure_expires_when_termine_enabled,
-        :tags
+        { zone_ids: [], tags: [] }
       ]
 
       editable_params << :piece_justificative_multiple if @procedure && !@procedure.piece_justificative_multiple?
@@ -547,9 +546,6 @@ module Administrateurs
       end
       if permited_params[:auto_archive_on].present?
         permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day
-      end
-      if permited_params[:tags].present?
-        permited_params[:tags] = JSON.parse(permited_params[:tags])
       end
       permited_params
     end

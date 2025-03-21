@@ -130,7 +130,7 @@ module Administrateurs
 
     def build_default_attestation
       state = should_edit_draft? ? :draft : :published
-      @procedure.build_attestation_template(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, activated: true, state:)
+      @procedure.attestation_templates.build(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, activated: true, state:)
     end
 
     def should_edit_draft? = !@procedure.brouillon?

@@ -1,7 +1,9 @@
 import { Actions } from '@coldwired/actions';
 import { parseTurboStream } from '@coldwired/turbo-stream';
+import { createRoot, createReactPlugin, type Root } from '@coldwired/react';
 import invariant from 'tiny-invariant';
 import { session as TurboSession, type StreamElement } from '@hotwired/turbo';
+import type { ComponentType } from 'react';
 
 import { ApplicationController } from './application_controller';
 
@@ -20,6 +22,7 @@ export class TurboController extends ApplicationController {
 
   #submitting = false;
   #actions?: Actions;
+  #root?: Root;
 
   // `actions` instrface exposes all available actions as methods and also `applyActions` method
   // wich allows to apply a batch of actions. On top of regular `turbo-stream` actions we also
@@ -32,6 +35,17 @@ export class TurboController extends ApplicationController {
   }
 
   connect() {
+    this.#root = createRoot({
+      layoutComponentName: 'Layout/Layout',
+      loader,
+      schema: {
+        fragmentTagName: 'react-fragment',
+        componentTagName: 'react-component',
+        slotTagName: 'react-slot',
+        loadingClassName: 'loading'
+      }
+    });
+    const plugin = createReactPlugin(this.#root);
     this.#actions = new Actions({
       element: document.body,
       schema: {
@@ -40,12 +54,17 @@ export class TurboController extends ApplicationController {
         focusDirectionAttribute: 'data-turbo-focus-direction',
         hiddenClassName: 'hidden'
       },
+      plugins: [plugin],
       debug: false
     });
 
     // actions#observe() is an interface over specialized mutation observers.
     // They allow us to preserve certain HTML changes across mutations.
     this.#actions.observe();
+
+    this.#actions.ready().then(() => {
+      document.body.classList.add('dom-ready');
+    });
 
     // setup spinner events
     this.onGlobal('turbo:submit-start', () => this.startSpinner());
@@ -73,6 +92,11 @@ export class TurboController extends ApplicationController {
     });
   }
 
+  disconnect(): void {
+    this.#actions?.disconnect();
+    this.#root?.destroy();
+  }
+
   private startSpinner() {
     this.#submitting = true;
     this.actions.show({ targets: this.spinnerTargets });
@@ -88,4 +112,25 @@ export class TurboController extends ApplicationController {
       TurboSession.navigator.currentVisit.scrolled = true;
     }
   }
+}
+
+type Loader = (exportName: string) => Promise<ComponentType<unknown>>;
+const componentsRegistry: Record<string, Loader> = {};
+const components = import.meta.glob('../components/*.tsx');
+
+const loader: Loader = (name) => {
+  const [moduleName, exportName] = name.split('/');
+  const loader = componentsRegistry[moduleName];
+  invariant(loader, `Cannot find a React component with name "${name}"`);
+  return loader(exportName ?? 'default');
+};
+
+for (const [path, loader] of Object.entries(components)) {
+  const [filename] = path.split('/').reverse();
+  const componentClassName = filename.replace(/\.(ts|tsx)$/, '');
+  console.debug(`Registered lazy export for "${componentClassName}" component`);
+  componentsRegistry[componentClassName] = (exportName) =>
+    loader().then(
+      (m) => (m as Record<string, ComponentType<unknown>>)[exportName]
+    );
 }

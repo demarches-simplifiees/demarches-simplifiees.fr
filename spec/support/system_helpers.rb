@@ -115,25 +115,10 @@ module SystemHelpers
     end
   end
 
-  def select_combobox(libelle, fill_with, value, check: true)
-    fill_in libelle, with: fill_with
-    find('li[role="option"][data-reach-combobox-option]', text: value, wait: 5).click
-    if check
-      check_selected_value(libelle, with: value)
-    end
-  end
-
-  def check_selected_value(libelle, with:)
-    field = find_hidden_field_for(libelle)
-    value = field.value.starts_with?('[') ? JSON.parse(field.value) : field.value
-    if value.is_a?(Array)
-      if with.is_a?(Array)
-        expect(value.sort).to eq(with.sort)
-      else
-        expect(value).to include(with)
-      end
-    else
-      expect(value).to eq(with)
+  def select_combobox(libelle, value, custom_value: false)
+    fill_in libelle, with: custom_value ? "#{value}," : value
+    if !custom_value
+      find_field(libelle).send_keys(:down, :enter)
     end
   end
 

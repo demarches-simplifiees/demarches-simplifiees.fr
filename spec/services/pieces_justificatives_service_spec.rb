@@ -1,6 +1,6 @@
 describe PiecesJustificativesService do
   describe 'pjs_for_champs' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }, { type: :repetition, children: [{ type: :piece_justificative }] }]) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, mandatory: false }, { type: :repetition, mandatory: false, children: [{ type: :piece_justificative, mandatory: false }] }]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
     let(:witness) { create(:dossier, procedure: procedure) }
@@ -478,8 +478,8 @@ describe PiecesJustificativesService do
     let(:user_profile) { build(:administrateur) }
     let(:types_de_champ_public) do
       [
-        { type: :repetition, children: [{ type: :piece_justificative }] },
-        { type: :repetition, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
+        { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }] },
+        { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
       ]
     end
 

@@ -83,18 +83,18 @@ describe Gestionnaire, type: :model do
   describe "#unread_commentaires?" do
     context "over three different groupe_gestionnaire" do
       let(:gestionnaire) { create(:gestionnaire) }
-      let(:administrateur) { create(:administrateur) }
+      let(:administrateur) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, gestionnaire: gestionnaire, sender: administrateur, commentaire_seen_at: Time.zone.now) }
 
       let(:gestionnaire_unread_commentaire_cause_never_seen) { create(:gestionnaire) }
-      let(:administrateur_unread_commentaire_cause_never_seen) { create(:administrateur) }
+      let(:administrateur_unread_commentaire_cause_never_seen) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire_unread_commentaire_cause_never_seen) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire_unread_commentaire_cause_never_seen]) }
       let!(:commentaire_groupe_gestionnaire_unread_commentaire_cause_never_seen) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_unread_commentaire_cause_never_seen, sender: administrateur_unread_commentaire_cause_never_seen, created_at: 12.hours.ago) }
 
       let(:gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire) { create(:gestionnaire) }
-      let(:administrateur_unread_commentaire_cause_seen_at_before_last_commentaire) { create(:administrateur) }
+      let(:administrateur_unread_commentaire_cause_seen_at_before_last_commentaire) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire]) }
       let!(:commentaire_groupe_gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire, sender: administrateur_unread_commentaire_cause_seen_at_before_last_commentaire, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire, gestionnaire: gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire, sender: administrateur_unread_commentaire_cause_seen_at_before_last_commentaire, commentaire_seen_at: 1.day.ago) }
@@ -110,7 +110,7 @@ describe Gestionnaire, type: :model do
       let(:gestionnaire) { create(:gestionnaire) }
       let(:gestionnaire_unread_commentaire_cause_never_seen) { create(:gestionnaire) }
       let(:gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire) { create(:gestionnaire) }
-      let(:administrateur) { create(:administrateur) }
+      let(:administrateur) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire, gestionnaire_unread_commentaire_cause_never_seen, gestionnaire_unread_commentaire_cause_seen_at_before_last_commentaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
 
@@ -128,7 +128,7 @@ describe Gestionnaire, type: :model do
   describe "#commentaire_seen_at" do
     context "when already seen commentaire" do
       let(:gestionnaire) { create(:gestionnaire) }
-      let(:administrateur) { create(:administrateur) }
+      let(:administrateur) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, gestionnaire: gestionnaire, sender: administrateur, commentaire_seen_at: Time.zone.now) }
@@ -138,7 +138,7 @@ describe Gestionnaire, type: :model do
 
     context "when never seen commentaire" do
       let(:gestionnaire) { create(:gestionnaire) }
-      let(:administrateur) { create(:administrateur) }
+      let(:administrateur) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
 
@@ -150,7 +150,7 @@ describe Gestionnaire, type: :model do
     context "when already seen commentaire" do
       let(:now) { Time.zone.now.beginning_of_minute }
       let(:gestionnaire) { create(:gestionnaire) }
-      let(:administrateur) { create(:administrateur) }
+      let(:administrateur) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, gestionnaire: gestionnaire, sender: administrateur, commentaire_seen_at: 12.hours.ago) }
@@ -170,7 +170,7 @@ describe Gestionnaire, type: :model do
     context "when never seen commentaire" do
       let(:now) { Time.zone.now.beginning_of_minute }
       let(:gestionnaire) { create(:gestionnaire) }
-      let(:administrateur) { create(:administrateur) }
+      let(:administrateur) { administrateurs(:default_admin) }
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
 

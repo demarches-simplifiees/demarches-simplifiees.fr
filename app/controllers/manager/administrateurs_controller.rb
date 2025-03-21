@@ -35,6 +35,21 @@ module Manager
       redirect_to manager_administrateurs_path
     end
 
+    def data_exports
+    end
+
+    def export_last_month
+      administrateurs = Administrateur.joins(:user).where(created_at: 6.months.ago..).where.not(users: { email_verified_at: nil })
+      csv = CSV.generate(headers: true) do |csv|
+        csv << ['ID', 'Email', 'Date de création']
+        administrateurs.each do |administrateur|
+          csv << [administrateur.id, administrateur.email, administrateur.created_at]
+        end
+      end
+
+      send_data csv, filename: "administrateurs_#{Date.today.strftime('%d-%m-%Y')}.csv"
+    end
+
     private
 
     def create_administrateur_params

@@ -29,11 +29,18 @@ class AttachmentsController < ApplicationController
 
     flash.notice = 'La pièce jointe a bien été supprimée.'
 
-    @champ_id = params[:champ_id]
+    @champ = find_champ if params[:dossier_id]
 
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_back(fallback_location: root_url) }
     end
+  end
+
+  private
+
+  def find_champ
+    dossier = policy_scope(Dossier).includes(:champs).find(params[:dossier_id])
+    dossier.champs.find_by(stable_id: params[:stable_id], row_id: params[:row_id])
   end
 end

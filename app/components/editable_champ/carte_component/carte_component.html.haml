@@ -1,14 +1,6 @@
 .fr-fieldset__element
-  = render @autocomplete_component
-
-  = react_component("MapEditor",
-    { featureCollection: @champ.to_feature_collection,
-    champId: @champ.input_id,
-    url: update_path,
-    options: @champ.render_options,
-    autocompleteAnnounceTemplateId: @autocomplete_component.announce_template_id,
-    autocompleteScreenReaderInstructions: t("combo_search_component.screen_reader_instructions") },
-    {class: 'width-100'})
+  %react-fragment.width-100
+    = render ReactComponent.new "MapEditor", **react_props
 
   .geo-areas{ id: dom_id(@champ, :geo_areas) }
     = render Dossiers::GeoAreasComponent.new(champ: @champ, editing: true)

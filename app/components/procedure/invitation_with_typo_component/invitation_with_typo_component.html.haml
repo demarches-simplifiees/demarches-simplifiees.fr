@@ -1,0 +1,10 @@
+= render Dsfr::AlertComponent.new(title: "nous pensons avoir identifié une faute de frappe : ", state: :warning, extra_class_names: 'fr-mb-3w') do |c|
+  - c.with_body do
+    %p= @title
+    %ul#maybe_typos_errors
+      - @maybe_typos.each do |(actual_email, suggested_email)|
+        %li
+          = "Je confirme "
+          = button_to "#{actual_email}", @url, method: :POST, params: { final_email: actual_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
+          = " ou "
+          = button_to "#{suggested_email}", @url, method: :POST, params: { final_email: suggested_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}

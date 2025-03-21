@@ -37,7 +37,7 @@ RSpec.describe ProcedureHelper, type: :helper do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }, { type: :piece_justificative }]) }
 
       it 'rounds up the duration to the minute' do
-        expect(subject).to eq(2)
+        expect(subject).to eq(3)
       end
     end
 

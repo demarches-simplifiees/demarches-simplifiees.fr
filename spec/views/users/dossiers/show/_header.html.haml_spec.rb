@@ -47,7 +47,7 @@ describe 'users/dossiers/show/header', type: :view do
     end
 
     it 'can download the dossier' do
-      expect(rendered).to have_selector('a[title="Tout le dossier"]')
+      expect(rendered).to have_text('Télécharger mon dossier')
     end
   end
 
@@ -65,7 +65,7 @@ describe 'users/dossiers/show/header', type: :view do
     end
 
     it 'can download the dossier' do
-      expect(rendered).to have_selector('a[title="Tout le dossier"]')
+      expect(rendered).to have_text('Télécharger mon dossier')
     end
 
     it 'does not display a new procedure link' do
@@ -88,7 +88,7 @@ describe 'users/dossiers/show/header', type: :view do
     end
 
     it 'can download the dossier' do
-      expect(rendered).to have_selector('a[title="Tout le dossier"]')
+      expect(rendered).to have_text('Télécharger mon dossier')
     end
 
     it 'displays a new procedure link' do
@@ -125,7 +125,7 @@ describe 'users/dossiers/show/header', type: :view do
     end
 
     it 'can download the dossier' do
-      expect(rendered).to have_selector('a[title="Tout le dossier"]')
+      expect(rendered).to have_text('Télécharger mon dossier')
     end
   end
 
@@ -144,7 +144,7 @@ describe 'users/dossiers/show/header', type: :view do
       end
 
       it 'can not download the dossier' do
-        expect(rendered).not_to have_selector('a[title="Tout le dossier"]')
+        expect(rendered).not_to have_text('Télécharger mon dossier')
       end
     end
   end

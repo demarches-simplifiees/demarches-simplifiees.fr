@@ -233,11 +233,11 @@ describe 'As an administrateur I can edit types de champ', js: true do
       # It displays the estimate when adding a new champ
       add_champ
       select('Pièce justificative', from: 'Type de champ')
-      expect(page).to have_content('Durée de remplissage estimée : 2 min')
+      expect(page).to have_content('Durée de remplissage estimée : 3 min')
 
       # It updates the estimate when updating the champ
-      check 'Champ obligatoire'
-      expect(page).to have_content('Durée de remplissage estimée : 3 min')
+      uncheck 'Champ obligatoire'
+      expect(page).to have_content('Durée de remplissage estimée : 2 min')
 
       # It updates the estimate when removing the champ
       page.accept_alert do

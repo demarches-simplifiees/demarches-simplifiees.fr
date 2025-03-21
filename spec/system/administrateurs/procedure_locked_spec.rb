@@ -1,5 +1,5 @@
 describe 'procedure locked' do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   before do
     login_as administrateur.user, scope: :user

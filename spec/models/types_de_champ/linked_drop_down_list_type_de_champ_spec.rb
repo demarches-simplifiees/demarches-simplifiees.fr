@@ -89,17 +89,35 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
         END_OPTIONS
       end
 
-      it do
-        expect(subject.secondary_options).to eq(
-          {
-            '' => [],
-            'Primary 1' => ['', 'secondary 1.1', 'secondary 1.2'],
-            'Primary 2' => ['', 'secondary 2.1', 'secondary 2.2', 'secondary 2.3']
-          }
-        )
+      context "mandatory tdc" do
+        it do
+          expect(subject.secondary_options).to eq(
+            {
+              '' => [],
+              'Primary 1' => ['secondary 1.1', 'secondary 1.2'],
+              'Primary 2' => ['secondary 2.1', 'secondary 2.2', 'secondary 2.3']
+            }
+          )
+        end
+
+        it { expect(subject.primary_options).to eq(['Primary 1', 'Primary 2']) }
       end
 
-      it { expect(subject.primary_options).to eq(['', 'Primary 1', 'Primary 2']) }
+      context "not mandatory" do
+        let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list_value: menu_options, mandatory: false) }
+
+        it do
+          expect(subject.secondary_options).to eq(
+            {
+              '' => [],
+              'Primary 1' => ['', 'secondary 1.1', 'secondary 1.2'],
+              'Primary 2' => ['', 'secondary 2.1', 'secondary 2.2', 'secondary 2.3']
+            }
+          )
+        end
+
+        it { expect(subject.primary_options).to eq(['', 'Primary 1', 'Primary 2']) }
+      end
     end
   end
 end

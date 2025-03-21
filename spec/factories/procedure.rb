@@ -17,10 +17,14 @@ FactoryBot.define do
     sva_svr { {} }
 
     groupe_instructeurs { [association(:groupe_instructeur, :default, procedure: instance, strategy: :build)] }
-    administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
+    administrateurs { [administrateur] }
+
+    trait(:new_administrateur) do
+      administrateur { create(:administrateur) }
+    end
 
     transient do
-      administrateur {}
+      administrateur { Administrateur.find_by(user: { email: "default_admin@admin.com" }) }
       instructeurs { [] }
       types_de_champ_public { [] }
       types_de_champ_private { [] }
@@ -78,10 +82,8 @@ FactoryBot.define do
       end
 
       after(:create) do |procedure, evaluator|
-        user = create(:user)
-        evaluator.dossiers_count.times do
-          create(:dossier, procedure: procedure, user: user)
-        end
+        user = User.find_by(email: "default_user@user.com")
+        create_list(:dossier, evaluator.dossiers_count, procedure: procedure, user: user)
       end
     end
 

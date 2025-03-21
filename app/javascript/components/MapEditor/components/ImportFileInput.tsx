@@ -1,4 +1,4 @@
-import React, { useState, useCallback, MouseEvent, ChangeEvent } from 'react';
+import { useState, useCallback, MouseEvent, ChangeEvent } from 'react';
 import type { FeatureCollection } from 'geojson';
 import invariant from 'tiny-invariant';
 

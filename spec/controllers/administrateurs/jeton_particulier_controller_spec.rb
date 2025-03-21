@@ -1,5 +1,5 @@
 describe Administrateurs::JetonParticulierController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, administrateur: admin) }
 
   before do

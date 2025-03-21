@@ -222,8 +222,8 @@ module Administrateurs
     end
 
     def add_instructeur
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
+      emails = params[:emails].presence || []
+      emails = emails.map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
 
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
@@ -243,9 +243,15 @@ module Administrateurs
           "Les instructeurs ont bien été affectés à la démarche"
         end
 
-        GroupeInstructeurMailer
-          .notify_added_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
-          .deliver_later
+        known_instructeurs, new_instructeurs = instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
+
+        new_instructeurs.each { InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe_instructeur, current_administrateur.email).deliver_later }
+
+        if known_instructeurs.present?
+          GroupeInstructeurMailer
+            .notify_added_instructeurs(groupe_instructeur, known_instructeurs, current_administrateur.email)
+            .deliver_later
+        end
       end
 
       if procedure.routing_enabled?

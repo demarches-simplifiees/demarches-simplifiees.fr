@@ -3,8 +3,8 @@ describe 'The routing with rules', js: true do
 
   let(:procedure) do
     create(:procedure, :with_service, :for_individual, :with_zone, types_de_champ_public: [
-      { type: :text, libelle: 'un premier champ text' },
-      { type: :drop_down_list, libelle: 'Spécialité', options: ["", "littéraire", "scientifique", "artistique"] }
+      { type: :text, libelle: 'un premier champ text', mandatory: false },
+      { type: :drop_down_list, libelle: 'Spécialité', options: ["", "littéraire", "scientifique", "artistique"], mandatory: false }
     ])
   end
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }
@@ -293,8 +293,8 @@ describe 'The routing with rules', js: true do
   end
 
   def register_instructeur_and_log_in(email)
-    confirmation_email = emails_sent_to(email)
-      .find { |m| m.subject == 'Activez votre compte instructeur' }
+    confirmation_email = emails_sent_to(email).reverse
+      .find { |m| m.subject.starts_with?('Vous avez été ajouté(e) au groupe') }
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"

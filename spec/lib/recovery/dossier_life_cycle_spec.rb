@@ -3,7 +3,7 @@ describe 'Dossier::Recovery::LifeCycle' do
     let(:procedure) do
       create(:procedure,
              types_de_champ_public: [
-               { type: :repetition, children: [{ type: :piece_justificative }] },
+               { type: :repetition, children: [{ type: :piece_justificative }], mandatory: false },
                { type: :carte },
                { type: :siret }
              ])

@@ -12,8 +12,8 @@ class AgentConnect::AgentController < ApplicationController
   def login
     uri, state, nonce = AgentConnectService.authorization_uri
 
-    cookies.encrypted[STATE_COOKIE_NAME] = state
-    cookies.encrypted[NONCE_COOKIE_NAME] = nonce
+    cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
+    cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
 
     redirect_to uri, allow_other_host: true
   end
@@ -25,7 +25,7 @@ class AgentConnect::AgentController < ApplicationController
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
 
     if instructeur.nil?
-      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20])
+      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], agent_connect: true)
       instructeur = user.instructeur
     end
 

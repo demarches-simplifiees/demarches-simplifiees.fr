@@ -1,7 +1,5 @@
 describe Administrateurs::ProceduresController, type: :controller do
-  include ActiveJob::TestHelper
-
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:bad_procedure_id) { 100000 }
 
   let(:path) { 'ma-jolie-demarche' }
@@ -16,7 +14,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:base_params) { { rgpd: '1', rgs_stamp: '1' } }
   let(:zone) { create(:zone) }
   let(:zone_ids) { [zone.id] }
-  let(:tags) { "[\"planete\",\"environnement\"]" }
+  let(:tags) { ["planete", "environnement"] }
 
   describe '#apercu' do
     subject { get :apercu, params: base_params.merge({ id: procedure.id }) }
@@ -127,8 +125,8 @@ describe Administrateurs::ProceduresController, type: :controller do
     context 'for default admin zones' do
       let(:zone1) { create(:zone) }
       let(:zone2) { create(:zone) }
-      let!(:procedure1) { create(:procedure, :published, zones: [zone1]) }
-      let!(:procedure2) { create(:procedure, :published, zones: [zone1, zone2]) }
+      let!(:procedure1) { create(:procedure, :published, :new_administrateur, zones: [zone1]) }
+      let!(:procedure2) { create(:procedure, :published, :new_administrateur, zones: [zone1, zone2]) }
       let!(:admin_procedure) { create(:procedure, :published, zones: [zone2], administrateur: admin) }
 
       subject { get :all, params: { zone_ids: :admin_default } }
@@ -387,16 +385,15 @@ describe Administrateurs::ProceduresController, type: :controller do
       let!(:large_closed_procedure)  { create(:procedure_with_dossiers, :closed,  dossiers_count: 2) }
       let!(:small_closed_procedure)  { create(:procedure_with_dossiers, :closed,  dossiers_count: 1) }
 
-      it 'displays published and closed procedures' do
+      it 'displays expected procedures' do
+        # published and closed procedures' do
         expect(response_procedures).to include(large_published_procedure)
         expect(response_procedures).to include(large_closed_procedure)
-      end
 
-      it 'doesn’t display procedures without a significant number of dossiers' do
+        # doesn’t display procedures without a significant number of dossiers'
         expect(response_procedures).not_to include(small_closed_procedure)
-      end
 
-      it 'doesn’t display draft procedures' do
+        # doesn’t display draft procedures'
         expect(response_procedures).not_to include(large_draft_procedure)
       end
     end
@@ -489,19 +486,19 @@ describe Administrateurs::ProceduresController, type: :controller do
           post :create, params: base_params.merge({ procedure: procedure_params })
         end
 
-        describe 'procedure attributs in database' do
-          subject { Procedure.last }
+        subject { Procedure.last }
 
-          it { expect(subject.libelle).to eq(libelle) }
-          it { expect(subject.description).to eq(description) }
-          it { expect(subject.organisation).to eq(organisation) }
-          it { expect(subject.administrateurs).to eq([admin]) }
-          it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
-          it { expect(subject.tags).to eq(["planete", "environnement"]) }
+        it "create attributes" do
+          expect(subject.libelle).to eq(libelle)
+          expect(subject.description).to eq(description)
+          expect(subject.organisation).to eq(organisation)
+          expect(subject.administrateurs).to eq([admin])
+          expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
+          expect(subject.tags).to eq(["planete", "environnement"])
+
+          expect(response).to redirect_to(champs_admin_procedure_path(Procedure.last))
+          expect(flash[:notice]).to be_present
         end
-
-        it { is_expected.to redirect_to(champs_admin_procedure_path(Procedure.last)) }
-        it { expect(flash[:notice]).to be_present }
       end
 
       describe "procedure is saved with custom retention period" do
@@ -513,10 +510,9 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         subject { post :create, params: { procedure: procedure_params } }
 
-        it { expect { subject }.to change { Procedure.count }.by(1) }
-
         it "must save retention period and max retention period" do
-          subject
+          expect { subject }.to change { Procedure.count }.by(1)
+
           last_procedure = Procedure.last
           expect(last_procedure.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
           expect(last_procedure.max_duree_conservation_dossiers_dans_ds).to eq(Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH)
@@ -592,15 +588,19 @@ describe Administrateurs::ProceduresController, type: :controller do
         describe 'procedure attributs in database' do
           subject { procedure }
 
-          it { expect(subject.libelle).to eq(libelle) }
-          it { expect(subject.description).to eq(description) }
-          it { expect(subject.organisation).to eq(organisation) }
-          it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
-          it { expect(subject.procedure_expires_when_termine_enabled).to eq(true) }
+          it "update attributes" do
+          expect(subject.libelle).to eq(libelle)
+          expect(subject.description).to eq(description)
+          expect(subject.organisation).to eq(organisation)
+          expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
+          expect(subject.procedure_expires_when_termine_enabled).to eq(true)
+        end
         end
 
-        it { is_expected.to redirect_to(admin_procedure_path id: procedure.id) }
-        it { expect(flash[:notice]).to be_present }
+        it do
+          is_expected.to redirect_to(admin_procedure_path id: procedure.id)
+          expect(flash[:notice]).to be_present
+        end
       end
 
       context 'when many attributs are not valid' do
@@ -632,11 +632,11 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         subject { update_procedure }
 
-        describe 'only some properties can be updated' do
-          it { expect(subject.libelle).to eq procedure_params[:libelle] }
-          it { expect(subject.description).to eq procedure_params[:description] }
-          it { expect(subject.organisation).to eq procedure_params[:organisation] }
-          it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
+        it 'only some properties can be updated' do
+          expect(subject.libelle).to eq procedure_params[:libelle]
+          expect(subject.description).to eq procedure_params[:description]
+          expect(subject.organisation).to eq procedure_params[:organisation]
+          expect(subject.for_individual).not_to eq procedure_params[:for_individual]
         end
       end
     end
@@ -676,7 +676,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when admin is not the owner of the procedure' do
-      let(:admin_2) { create(:administrateur) }
+      let(:admin_2) { administrateurs(:default_admin) }
 
       before do
         sign_out(admin.user)
@@ -691,7 +691,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when procedure has invalid fields' do
-      let(:admin_2) { create(:administrateur) }
+      let(:admin_2) { administrateurs(:default_admin) }
       let(:path) { 'spec/fixtures/files/invalid_file_format.json' }
 
       before do
@@ -918,7 +918,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context "when administrateur does not own the procedure" do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, procedure: create(:procedure, :new_administrateur)) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
@@ -958,30 +958,26 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'when all attributes are present' do
         render_views
 
-        before { update_monavis }
+        subject { update_monavis }
 
         context 'when the embed code is valid' do
-          describe 'the monavis field is updated' do
-            subject { procedure }
+          it 'the monavis field is updated' do
+            subject
 
-            it { expect(subject.monavis_embed).to eq(monavis_embed) }
+            expect(procedure.monavis_embed).to eq(monavis_embed)
+            expect(flash[:notice]).to be_present
+            expect(response).to redirect_to(admin_procedure_path(procedure.id))
           end
-
-          it { expect(flash[:notice]).to be_present }
-          it { expect(response).to redirect_to(admin_procedure_path(procedure.id)) }
         end
 
         context 'when the embed code is not valid' do
           let(:monavis_embed) { 'invalid embed code' }
 
-          describe 'the monavis field is not updated' do
-            subject { procedure }
-
-            it { expect(subject.monavis_embed).to eq(nil) }
+          it 'the monavis field is not updated' do
+            expect(subject.monavis_embed).to eq(nil)
+            expect(flash[:alert]).to be_present
+            expect(response.body).to include "MonAvis"
           end
-
-          it { expect(flash[:alert]).to be_present }
-          it { expect(response.body).to include "MonAvis" }
         end
       end
 
@@ -1019,26 +1015,32 @@ describe Administrateurs::ProceduresController, type: :controller do
     context 'when jeton is valid' do
       let(:token_is_valid) { true }
 
-      it { expect(flash.alert).to be_nil }
-      it { expect(flash.notice).to eq('Le jeton a bien été mis à jour') }
-      it { expect(procedure.reload.api_entreprise_token).to eq(token) }
+      it do
+        expect(flash.alert).to be_nil
+        expect(flash.notice).to eq('Le jeton a bien été mis à jour')
+        expect(procedure.reload.api_entreprise_token).to eq(token)
+      end
     end
 
     context 'when jeton is invalid' do
       let(:token_is_valid) { false }
 
-      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide") }
-      it { expect(flash.notice).to be_nil }
-      it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
+      it do
+      expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide")
+      expect(flash.notice).to be_nil
+      expect(procedure.reload.api_entreprise_token).not_to eq(token)
+    end
     end
 
     context 'when jeton is not a jwt' do
       let(:token) { "invalid" }
       let(:token_is_valid) { true } # just to check jwt format by procedure model
 
-      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide") }
-      it { expect(flash.notice).to be_nil }
-      it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
+      it do
+        expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide")
+        expect(flash.notice).to be_nil
+        expect(procedure.reload.api_entreprise_token).not_to eq(token)
+      end
     end
   end
 
@@ -1071,7 +1073,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   describe 'PUT #publish' do
     let(:procedure) { create(:procedure, administrateur: admin, lien_site_web: lien_site_web) }
     let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
-    let(:procedure3) { create(:procedure, :published, lien_site_web: lien_site_web) }
+    let(:procedure3) { create(:procedure, :published, :new_administrateur, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
 
     subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }
@@ -1232,10 +1234,12 @@ describe Administrateurs::ProceduresController, type: :controller do
     context 'when admin is unknow' do
       let(:email_admin) { 'plop' }
 
-      it { expect(subject.status).to eq 302 }
-      it { expect(response.body).to include(admin_procedure_transfert_path(procedure.id)) }
-      it { expect(flash[:alert]).to be_present }
-      it { expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n’existe pas") }
+      it do
+        expect(subject.status).to eq 302
+        expect(response.body).to include(admin_procedure_transfert_path(procedure.id))
+        expect(flash[:alert]).to be_present
+        expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n’existe pas")
+      end
     end
 
     context 'when admin is known' do
@@ -1244,8 +1248,10 @@ describe Administrateurs::ProceduresController, type: :controller do
       context "and its email address is correct" do
         let(:email_admin) { 'new_admin@admin.com' }
 
-        it { expect(subject.status).to eq 302 }
-        it { expect { subject }.to change(new_admin.procedures, :count).by(1) }
+        it do
+          expect { subject }.to change(new_admin.procedures, :count).by(1)
+          expect(subject.status).to eq 302
+        end
 
         it "should create a new service" do
           subject
@@ -1256,8 +1262,10 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'when admin is know but its email was not downcased' do
         let(:email_admin) { "NEW_admin@adMIN.com" }
 
-        it { expect(subject.status).to eq 302 }
-        it { expect { subject }.to change(Procedure, :count).by(1) }
+        it do
+          expect { subject }.to change(Procedure, :count).by(1)
+          expect(subject.status).to eq 302
+        end
       end
 
       describe "correctly assigns the new admin" do
@@ -1319,8 +1327,10 @@ describe Administrateurs::ProceduresController, type: :controller do
         procedure.reload
       end
 
-      it { expect(procedure.discarded?).to be_falsy }
-      it { expect(procedure.dossiers.first.hidden_by_administration_at).to be_nil }
+      it do
+        expect(procedure.discarded?).to be_falsy
+        expect(procedure.dossiers.first.hidden_by_administration_at).to be_nil
+      end
     end
   end
 end

@@ -1,4 +1,4 @@
-@import "placeholders";
+@import 'placeholders';
 
 html,
 body {
@@ -29,3 +29,6 @@ body {
   @extend %container;
 }
 
+react-fragment {
+  display: block;
+}

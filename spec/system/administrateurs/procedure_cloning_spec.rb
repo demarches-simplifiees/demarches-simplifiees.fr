@@ -3,8 +3,7 @@ require 'system/administrateurs/procedure_spec_helper'
 describe 'As an administrateur I wanna clone a procedure', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
-  let(:procedure_path) { 'toto' }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   before do
     create(:procedure, :with_service, :with_instructeur, :with_zone,

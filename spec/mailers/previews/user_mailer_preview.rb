@@ -34,7 +34,7 @@ class UserMailerPreview < ActionMailer::Preview
   end
 
   def notify_after_closing
-    UserMailer.notify_after_closing([user])
+    UserMailer.notify_after_closing(user, "Cette démarche est close")
   end
 
   private

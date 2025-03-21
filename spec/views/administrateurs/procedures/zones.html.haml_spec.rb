@@ -1,5 +1,5 @@
 describe 'administrateurs/procedures/zones' do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure) }
   let(:populate_zones_task) { Rake::Task['after_party:populate_zones_with_tchap_hs'] }
 

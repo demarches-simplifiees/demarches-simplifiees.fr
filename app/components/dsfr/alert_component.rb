@@ -2,6 +2,17 @@
 class Dsfr::AlertComponent < ApplicationComponent
   renders_one :body
 
+  attr_reader :state, :title, :size, :block, :extra_class_names, :heading_level
+
+  def initialize(state:, title: '', size: '', extra_class_names: nil, heading_level: 'h3')
+    @state = state
+    @title = title
+    @size = size
+    @block = block
+    @extra_class_names = extra_class_names
+    @heading_level = heading_level
+  end
+
   def prefix_for_state
     case state
     when :error then "Erreur : "
@@ -19,19 +30,4 @@ class Dsfr::AlertComponent < ApplicationComponent
       extra_class_names => true
     )
   end
-
-  private
-
-  def initialize(state:, title: '', size: '', extra_class_names: nil, heading_level: 'h3')
-    @state = state
-    @title = title
-    @size = size
-    @block = block
-    @extra_class_names = extra_class_names
-    @heading_level = heading_level
-  end
-
-  attr_reader :state, :title, :size, :block, :extra_class_names, :heading_level
-
-  private
 end

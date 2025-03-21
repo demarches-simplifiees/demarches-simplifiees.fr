@@ -64,7 +64,7 @@ describe 'Dossier Inéligibilité', js: true do
   end
 
   describe 'ineligibilite_rules with a Or' do
-    let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'l1' }, { type: :drop_down_list, libelle: 'l2', options: ['Paris', 'Marseille'] }] }
+    let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'l1' }, { type: :drop_down_list, libelle: 'l2', options: ['Paris', 'Marseille'], mandatory: false }] }
     let(:ineligibilite_rules) do
       ds_or([
         ds_eq(champ_value(first_tdc.stable_id), constant(true)),
@@ -134,7 +134,7 @@ describe 'Dossier Inéligibilité', js: true do
   end
 
   describe 'ineligibilite_rules with a And and all visible champs' do
-    let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'l1' }, { type: :drop_down_list, libelle: 'l2', options: ['Paris', 'Marseille'] }] }
+    let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'l1' }, { type: :drop_down_list, libelle: 'l2', options: ['Paris', 'Marseille'], mandatory: false }] }
     let(:ineligibilite_rules) do
       ds_and([
         ds_eq(champ_value(first_tdc.stable_id), constant(true)),
