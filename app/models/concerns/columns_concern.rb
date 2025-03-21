@@ -75,7 +75,7 @@ module ColumnsConcern
       dossier_col(table: 'self', column: 'state', type: :enum, options_for_select:, displayable: false)
     end
 
-    def notifications_column = dossier_col(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
+    def notifications_column = dossier_col(table: 'notifications', column: 'notifications', label: "notifications", filterable: false, displayable: false)
 
     def sva_svr_columns(for_export: false)
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
