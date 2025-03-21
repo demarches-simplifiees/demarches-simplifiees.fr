@@ -12,13 +12,10 @@
                     ['Configuration des champs']],
   preview: @procedure.validate(@coordinate&.private? ? :types_de_champ_private_editor : :types_de_champ_public_editor) })
 
-= turbo_stream.replace 'errors-summary', render(Procedure::ErrorsSummary.new(procedure: @procedure, validation_context: (@coordinate&.private? ? :types_de_champ_private_editor : :types_de_champ_public_editor)))
-- if @coordinate&.private?
-  = turbo_stream.replace 'summary' do
-    = render partial: 'administrateurs/procedures/champs_summary', locals: { procedure: @procedure, private: true, use_dom_id: true }
-- else
-  = turbo_stream.replace 'summary' do
-    = render partial: 'administrateurs/procedures/champs_summary', locals: { procedure: @procedure, private: false, use_dom_id: true }
+= turbo_stream.replace 'errors-summary', render(Procedure::ErrorsSummary.new(procedure: @procedure, validation_context: @coordinate&.private? ? :types_de_champ_private_editor : :types_de_champ_public_editor))
+
+= turbo_stream.replace 'summary', render(partial: 'administrateurs/procedures/champs_summary')
+
 - unless flash.alert
   = turbo_stream.show 'autosave-notice'
   = turbo_stream.replace 'autosave-notice', render(partial: 'administrateurs/autosave_notice')

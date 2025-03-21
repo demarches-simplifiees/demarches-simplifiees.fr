@@ -62,8 +62,4 @@
 
       - types_de_champ = dossier.revision.types_de_champ_public
       - if types_de_champ.any? || dossier.procedure.routing_enabled?
-        .fr-container
-          .fr-grid-row
-            = render partial: 'administrateurs/procedures/champs_summary', locals: { procedure: dossier.procedure, private: false, use_dom_id: false }
-            .fr-col
-              = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
+        = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
