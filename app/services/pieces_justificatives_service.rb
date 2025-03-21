@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class PiecesJustificativesService
-  def initialize(user_profile:, export_template:)
+  def initialize(user_profile:, export_template:, with_bills: false)
     @user_profile = user_profile
     @export_template = export_template
+    @with_bills = with_bills
   end
 
   def liste_documents(dossiers)
@@ -119,7 +120,7 @@ class PiecesJustificativesService
       }
     when Instructeur
       {
-        with_bills: false,
+        with_bills: @with_bills,
         with_champs_private: true,
         with_avis_piece_justificative: true
       }
