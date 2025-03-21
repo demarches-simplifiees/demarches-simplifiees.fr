@@ -79,6 +79,11 @@ module ProcedureHelper
   end
 
   def procedure_has_unseen_revisions?(instructeur_procedure)
-    instructeur_procedure.last_revision_seen_id.to_i < instructeur_procedure.procedure.published_revision_id.to_i
+    return false if instructeur_procedure.procedure.published_revision_id.blank?
+
+    last_seen_id = instructeur_procedure.last_revision_seen_id
+    return false if last_seen_id.blank?
+
+    last_seen_id < instructeur_procedure.procedure.published_revision_id
   end
 end
