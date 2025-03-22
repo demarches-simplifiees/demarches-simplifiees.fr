@@ -136,6 +136,10 @@ class TypeDeChamp < ApplicationRecord
                  :drop_down_secondary_libelle,
                  :drop_down_secondary_description,
                  :drop_down_other,
+                 :positive_number,
+                 :min_number,
+                 :max_number,
+                 :range_number,
                  :character_limit,
                  :formatted_mode,
                  :numbers_accepted,
@@ -291,6 +295,14 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_other?
     drop_down_list? && (drop_down_other == "1" || drop_down_other == true)
+  end
+
+  def positive_number?
+    positive_number == "1"
+  end
+
+  def range_number?
+    range_number == "1"
   end
 
   def character_limit?
@@ -627,6 +639,8 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:header_section) => [:header_section_level],
     type_champs.fetch(:explication) => [:collapsible_explanation_enabled, :collapsible_explanation_text],
     type_champs.fetch(:textarea) => [:character_limit],
+    type_champs.fetch(:integer_number) => [:positive_number, :min_number, :max_number, :range_number],
+    type_champs.fetch(:decimal_number) => [:positive_number, :min_number, :max_number, :range_number],
     type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
     type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],

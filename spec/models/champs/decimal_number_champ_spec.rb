@@ -58,6 +58,76 @@ describe Champs::DecimalNumberChamp do
       it { is_expected.to be_truthy }
     end
 
+    context 'when the value is negative' do
+      context 'negative values are accepted' do
+        let(:value) { -0.5 }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'negative values are not accepted' do
+        before { champ.type_de_champ.update(options: { positive_number: '1' }) }
+        let(:value) { -0.5 }
+
+        it 'is not valid and contains errors' do
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être un nombre positif"])
+        end
+      end
+    end
+
+    context 'when there is a range' do
+      before { champ.type_de_champ.update(options: { range_number: '1', min_number: '2.5', max_number: '18' }) }
+      context 'the value is in the range' do
+        let(:value) { 4.5 }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'the value is not in the range' do
+        let(:value) { 19 }
+
+        it 'is not valid and contains errors' do
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être un nombre compris entre 2.5 et 18.0"])
+        end
+      end
+
+      context 'the value is bigger than max' do
+        before { champ.type_de_champ.update(options: { range_number: '1', min_number: '', max_number: '18.5' }) }
+        let(:value) { 19.5 }
+
+        it 'is not valid and contains errors' do
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être un nombre inférieur ou égal à 18.5"])
+        end
+      end
+
+      context 'the value is smaller than min' do
+        before { champ.type_de_champ.update(options: { range_number: '1', min_number: '2.3', max_number: '' }) }
+        let(:value) { 1.5 }
+
+        it 'is not valid and contains errors' do
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être un nombre supérieur ou égal à 2.3"])
+        end
+      end
+
+      context 'the range is not activated' do
+        before { champ.type_de_champ.update(options: { range_number: '0', min_number: '2', max_number: '18' }) }
+        let(:value) { 19 }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'the range is activated but min and max values are not defined' do
+        before { champ.type_de_champ.update(options: { range_number: '0', min_number: '', max_number: '' }) }
+        let(:value) { 19 }
+
+        it { is_expected.to be_truthy }
+      end
+    end
+
     context 'when the champ is private, value is invalid, but validation is public' do
       let(:types_de_champ_public) { [] }
       let(:types_de_champ_private) { [{ type: :decimal_number }] }

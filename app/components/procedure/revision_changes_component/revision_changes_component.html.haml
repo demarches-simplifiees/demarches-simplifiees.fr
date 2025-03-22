@@ -110,6 +110,26 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_condition", label: change.label, to: change.to)
+      - when :positive_number
+        - list.with_item do
+          = t(".#{prefix}.update_positive_number", label: change.label, to: change.to == '0' ? t(".#{prefix}.remove_positive_constraint") : t(".#{prefix}.add_positive_constraint"))
+      - when :range_number
+        - list.with_item do
+          = t(".#{prefix}.update_range_number", label: change.label, to: change.to == '0' ? t(".#{prefix}.remove_range_number_constraint") : t(".#{prefix}.add_range_number_constraint"))
+      - when :min_number
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_min_number", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_min_number", label: change.label, to: change.to)
+      - when :max_number
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_max_number", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_max_number", label: change.label, to: change.to)
       - when :character_limit
         - if change.to.blank?
           - list.with_item do

@@ -389,6 +389,32 @@ describe TypeDeChamp do
       end
     end
 
+    context "Integer number" do
+      let(:type_de_champ) { create(:type_de_champ_integer_number, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { "positive_number" => "1", "range_number" => '1', "min_number" => '2', "max_number" => '18' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping the positive number options' do
+        is_expected.to eq({ "positive_number" => "1", "range_number" => '1', "min_number" => '2', "max_number" => '18' })
+      end
+    end
+
+    context "Decimal number" do
+      let(:type_de_champ) { create(:type_de_champ_decimal_number, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { "positive_number" => "1", "range_number" => '1', "min_number" => '2.5', "max_number" => '18' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping the positive number options' do
+        is_expected.to eq({ "positive_number" => "1", "range_number" => '1', "min_number" => '2.5', "max_number" => '18' })
+      end
+    end
+
     context "Piece justificative" do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative, procedure:) }
 
