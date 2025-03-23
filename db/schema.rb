@@ -520,6 +520,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_20_153834) do
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "user_id"
+    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
@@ -965,7 +966,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_20_153834) do
 
   create_table "procedure_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_procedure_tags_on_name", unique: true

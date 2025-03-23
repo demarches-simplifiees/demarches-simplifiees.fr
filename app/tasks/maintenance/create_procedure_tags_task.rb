@@ -98,8 +98,22 @@ module Maintenance
     def process(tag)
       procedure_tag = ProcedureTag.find_or_create_by(name: tag)
 
-      Procedure.where("? ILIKE ANY(tags)", tag).find_each(batch_size: 500) do |procedure|
-        procedure.procedure_tags << procedure_tag unless procedure.procedure_tags.include?(procedure_tag)
+      sql = <<-SQL.squish
+        SELECT id FROM procedures
+        WHERE tags IS NOT NULL
+        AND $1 = ANY(tags)
+      SQL
+
+      procedure_ids = ActiveRecord::Base.connection.exec_query(
+        sql,
+        'Fetch procedures with tag',
+        [tag]
+      ).map { |row| row['id'] }
+
+      procedure_ids.each_slice(500) do |batch_ids|
+        Procedure.where(id: batch_ids).find_each do |procedure|
+          procedure.procedure_tags << procedure_tag unless procedure.procedure_tags.include?(procedure_tag)
+        end
       end
     end
 

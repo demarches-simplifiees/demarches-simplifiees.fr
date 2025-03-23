@@ -15,6 +15,7 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
+  self.ignored_columns += [:tags]
 
   default_scope -> { kept }
 

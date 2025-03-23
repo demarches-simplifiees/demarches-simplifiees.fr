@@ -8,7 +8,14 @@ module Maintenance
       subject(:process) { described_class.new.process(tag) }
 
       let(:tag) { "Accompagnement" }
-      let!(:procedure) { create(:procedure, tags: ["Accompagnement"]) }
+      let!(:procedure) { create(:procedure) }
+
+      before do
+        # Insertion directe du tag dans la base de données
+        ActiveRecord::Base.connection.execute(
+          "UPDATE procedures SET tags = ARRAY['#{tag}'] WHERE id = #{procedure.id}"
+        )
+      end
 
       it "creates the ProcedureTag if it does not exist" do
         expect { process }.to change { ProcedureTag.count }.by(1)

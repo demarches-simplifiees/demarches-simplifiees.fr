@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 describe DemarchesPubliquesExportService do
-  let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, estimated_dossiers_count: 4) }
+  let(:procedure) do
+    create(:procedure, :published, :with_service, :with_type_de_champ, estimated_dossiers_count: 4).tap do |p|
+      p.procedure_tags.create(name: "Tag1")
+      p.procedure_tags.create(name: "Tag2")
+    end
+  end
   let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   let(:gzip_filename) { "demarches.json.gz" }
 
@@ -28,7 +33,7 @@ describe DemarchesPubliquesExportService do
         deliberation: nil,
         datePublication: procedure.published_at.iso8601,
         zones: ["Ministère de l'Education Populaire"],
-        tags: [],
+        tags: ["Tag1", "Tag2"],
         dossiersCount: 1,
         revision: {
           champDescriptors: [
