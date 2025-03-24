@@ -40,14 +40,16 @@
               .cell.fr-mt-1w
                 = render TypesDeChampEditor::HeaderSectionComponent.new(form: form, tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ))
             - if type_de_champ.explication?
-              .cell.fr-mt-1w
-                = form.label :collapsible_explanation_enabled, for: dom_id(type_de_champ, :collapsible_explanation_enabled) do
-                  Afficher un texte complementaire affichable au clic
-                = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
+              .cell.fr-mt-2w
+                .fr-toggle
+                  = form.check_box :collapsible_explanation_enabled, id: dom_id(type_de_champ, :collapsible_explanation_enabled), class: 'fr-toggle__input'
+                  = form.label :collapsible_explanation_enabled, "Afficher un texte complémentaire affichable au clic", for: dom_id(type_de_champ, :collapsible_explanation_enabled), class: 'fr-toggle__label fr-label'
+
                 - if form.object.collapsible_explanation_enabled?
-                  = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
-                    = "Texte à afficher quand l'utiliser a choisi de l'afficher"
-                  = form.text_area :collapsible_explanation_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
+                  .cell.fr-mt-1w
+                    = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
+                      = "Texte complémentaire"
+                    = form.text_area :collapsible_explanation_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
               .cell.fr-mt-1w
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)

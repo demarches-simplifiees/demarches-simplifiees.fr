@@ -2,7 +2,7 @@
   .cell
     %fieldset.fr-fieldset{ aria_labelledby: 'checkboxes-inline-legend' }
       .fr-fieldset__element.fr-mb-0
-        %legend.fr-fieldset__legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
+        %legend.fr-fieldset__legend.fake-label#checkboxes-inline-legend= t('.labels.accepted_format')
       .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
         .fr-checkbox-group
           = form.check_box :numbers_accepted, id: dom_id(type_de_champ, :numbers_accepted)
