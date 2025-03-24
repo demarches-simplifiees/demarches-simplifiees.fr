@@ -57,6 +57,16 @@ fr:
     update_expression_reguliere_error_message: Le message d’erreur de l’expression régulière du champ « %{label} » a été modifié. Le nouveau message est « %{to} ».
     update_referentiel: "Le référentiel du champ « %{label} » a été modifié."
     update_drop_down_mode: "Le type de liste de choix du champ « %{label} » a été modifié."
+    update_positive_number: "Le champ « %{label} » a été modifié.  %{to} "
+    add_positive_constraint: "Le nombre doit désormais être positif"
+    remove_positive_constraint: "Le nombre peut désormais être négatif"
+    update_range_number: "Le champ « %{label} » a été modifié.  %{to} "
+    add_range_number_constraint: "La limite des valeurs a été activée."
+    remove_range_number_constraint: "La limite des valeurs a été désactivé."
+    remove_min_number: La valeur minimale pour le champ « %{label} » a été supprimé.
+    update_min_number: La valeur minimale pour le champ « %{label} » a été modifié. Le minimum est désormais %{to}.
+    remove_max_number: La valeur maximale pour le champ « %{label} » a été supprimé.
+    update_max_number: La valeur maximale pour le champ « %{label} » a été modifié. Le maximum est désormais %{to}.
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
     remove: L’annotation privée « %{label} » a été supprimée.

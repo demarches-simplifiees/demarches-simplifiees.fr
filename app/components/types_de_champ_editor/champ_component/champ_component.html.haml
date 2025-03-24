@@ -40,17 +40,48 @@
               .cell.fr-mt-1w
                 = render TypesDeChampEditor::HeaderSectionComponent.new(form: form, tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ))
             - if type_de_champ.explication?
-              .cell.fr-mt-1w
-                = form.label :collapsible_explanation_enabled, for: dom_id(type_de_champ, :collapsible_explanation_enabled) do
-                  Afficher un texte complementaire affichable au clic
-                = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
+              .cell.fr-mt-2w
+                .fr-toggle
+                  = form.check_box :collapsible_explanation_enabled, id: dom_id(type_de_champ, :collapsible_explanation_enabled), class: 'fr-toggle__input'
+                  = form.label :collapsible_explanation_enabled, "Afficher un texte complémentaire affichable au clic", for: dom_id(type_de_champ, :collapsible_explanation_enabled), class: 'fr-toggle__label fr-label'
+
                 - if form.object.collapsible_explanation_enabled?
-                  = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
-                    = "Texte à afficher quand l'utiliser a choisi de l'afficher"
-                  = form.text_area :collapsible_explanation_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
+                  .cell.fr-mt-1w
+                    = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
+                      = "Texte complémentaire"
+                    = form.text_area :collapsible_explanation_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
               .cell.fr-mt-1w
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
+
+            - if type_de_champ.integer_number? || type_de_champ.decimal_number?
+              .vertical-border.fr-pl-2w.fr-mt-2w
+                .cell
+                  %legend.fake-label
+                    Format accepté
+                  .fr-toggle
+                    = form.check_box :positive_number, id: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__input'
+                    = form.label :positive_number, "Ce nombre doit être positif", for: dom_id(type_de_champ, :positive_number), class: 'fr-toggle__label fr-label'
+
+                .cell.fr-mt-2w
+                  .fr-toggle
+                    = form.check_box :range_number, id: dom_id(type_de_champ, :range_number), class: 'fr-toggle__input'
+                    = form.label :range_number, "Ce nombre doit être compris entre des valeurs limites", for: dom_id(type_de_champ, :range_number), class: 'fr-toggle__label fr-label'
+
+                - if form.object.range_number?
+                  .cell.fr-mt-1w
+                    %fieldset.fr-fieldset
+                      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                        .fr-input-group
+                          = form.label :min_number, for: dom_id(type_de_champ, :min_number) do
+                            valeur minimale
+                          = form.number_field :min_number, class: "fr-input", id: dom_id(type_de_champ, :min_number)
+
+                      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                        .fr-input-group
+                          = form.label :max_number, for: dom_id(type_de_champ, :max_number) do
+                            valeur maximale
+                          = form.number_field :max_number, class: "fr-input", id: dom_id(type_de_champ, :max_number)
 
         .flex.justify-start.fr-mt-1w.flex-gap
           - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?

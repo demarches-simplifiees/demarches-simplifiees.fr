@@ -1,6 +1,6 @@
 fr:
   labels:
-    accepted_format: Format de saisie accepté
+    accepted_format: Format accepté
     numbers: 'Chiffres'
     letters: 'Lettres'
     special_characters: "Caractères spéciaux (-_\/:* ...)"
