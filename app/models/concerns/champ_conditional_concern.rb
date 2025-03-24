@@ -16,6 +16,8 @@ module ChampConditionalConcern
       # Huge gain perf for cascade conditions
       return @visible if instance_variable_defined? :@visible
 
+      return false if parent_hidden?
+
       @visible = if conditional?
         type_de_champ.condition.compute(champs_for_condition)
       else
@@ -31,6 +33,15 @@ module ChampConditionalConcern
 
     def champs_for_condition
       dossier.filled_champs.filter { _1.row_id.nil? || _1.row_id == row_id }
+    end
+
+    def parent_hidden?
+      parent = dossier.project_champs_public
+        .find { it.type_de_champ == dossier.revision.parent_of(type_de_champ) }
+
+      return false if parent.nil?
+
+      !parent.visible?
     end
   end
 end

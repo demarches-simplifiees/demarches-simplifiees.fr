@@ -43,5 +43,39 @@ describe ChampConditionalConcern do
         expect(last_champ.valid?(:champs_public_value)).to eq(true)
       }
     end
+
+    context 'inside a repetition' do
+      let(:procedure) do
+        create(:procedure, :published, types_de_champ_public: [
+          {
+            type: :repetition,
+            children: [{ type: :yes_no }],
+            condition:
+          }
+        ])
+      end
+
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:first_repet) { dossier.champs.find { it.type == "Champs::RepetitionChamp" } }
+      let(:first_yes_no) { dossier.champs.find { it.type == "Champs::YesNoChamp" && it.row_id == first_repet.row_id } }
+
+      context 'when the repetition is visible' do
+        let(:condition) { nil }
+
+        it 'the enclosed champ is hidden' do
+          expect(first_repet.visible?).to be true
+          expect(first_yes_no.visible?).to be true
+        end
+      end
+
+      context 'when the repetition is hidden' do
+        let(:condition) { ds_eq(constant(true), constant(false)) }
+
+        it 'the enclosed champ is hidden' do
+          expect(first_repet.visible?).to be false
+          expect(first_yes_no.visible?).to be false
+        end
+      end
+    end
   end
 end
