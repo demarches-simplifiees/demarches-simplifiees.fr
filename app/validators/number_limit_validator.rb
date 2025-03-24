@@ -37,12 +37,12 @@ class NumberLimitValidator < ActiveModel::Validator
     end
   end
 
-  def convert_to_number(record, champ)
-    return '' if record.method(champ).call.blank?
-    record.type == "Champs::IntegerNumberChamp" ? record.method(champ).call.to_i : record.method(champ).call.to_f
+  def convert_to_number(record, attribute)
+    return '' if record.method(attribute).call.blank?
+    record.integer_number? ? record.method(attribute).call.to_i : record.method(attribute).call.to_f
   end
 
   def not_in_range(min, max, value)
-    !(min <= value && value <= max)
+    !(min..max).cover?(value)
   end
 end
