@@ -36,7 +36,7 @@ module ChampConditionalConcern
     end
 
     def parent_hidden?
-      parent = dossier.project_champs_public
+      parent = dossier.project_champs
         .find { it.type_de_champ == dossier.revision.parent_of(type_de_champ) }
 
       return false if parent.nil?
