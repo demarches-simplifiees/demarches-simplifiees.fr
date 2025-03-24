@@ -24,6 +24,10 @@ module DossierChampsConcern
     @project_champs_private ||= revision.types_de_champ_private.map { project_champ(_1) }
   end
 
+  def project_champs
+    project_champs_public + project_champs_private
+  end
+
   def filled_champs_public
     @filled_champs_public ||= project_champs_public.flat_map do |champ|
       if champ.repetition?

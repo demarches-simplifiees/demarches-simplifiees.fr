@@ -36,10 +36,16 @@ module ChampConditionalConcern
     end
 
     def parent_hidden?
-      parent = dossier.project_champs_public
-        .find { it.type_de_champ == dossier.revision.parent_of(type_de_champ) }
+      # if there is no row_id, it always has been a root champ
+      return false if !child?
 
-      return false if parent.nil?
+      # otherwise maybe the champ has been moved outside a repetition
+      parent_tdc = dossier.revision.parent_of(type_de_champ)
+
+      return false if parent_tdc.nil?
+
+      parent = dossier.project_champs
+        .find { it.type_de_champ == parent_tdc }
 
       !parent.visible?
     end
