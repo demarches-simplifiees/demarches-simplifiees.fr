@@ -79,6 +79,7 @@
       .fr-hidden.fr-unhidden-lg
         %h3.font-weight-normal.fr-link.fr-mx-2w
           = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+          = render Dsfr::CopyButtonComponent.new(text: commencer_url(p.path), title: t('instructeurs.dossiers.header.banner.copy_link_button'))
         = procedure_badge(p)
 
     .flex.align-center.fr-hidden-lg.fr-mb-2w
