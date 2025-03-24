@@ -2,12 +2,12 @@
 
 class Champs::DossierLinkChamp < Champ
   validate :value_integerable, if: -> { value.present? }, on: :prefill
-  validate :dossier_exists, if: -> { validate_champ_value? && !value.nil? }
+  validate :dossier_exists, if: -> { validate_champ_value? && value.present? }
 
   private
 
   def dossier_exists
-    if mandatory? && !Dossier.exists?(value)
+    if !Dossier.exists?(value)
       errors.add(:value, :not_found)
     end
   end
