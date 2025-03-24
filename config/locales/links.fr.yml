@@ -83,7 +83,7 @@ fr:
       status_page:
         label: "Disponibilité"
         title: "Statistiques de disponibilité du site demarches-simplifiees"
-        url: "https://status.demarches-simplifiees.fr"
+        url: "https://updown.io/cugq"
       suivi:
         label: "Suivi d’audience et vie privée"
       solidarite_numerique:
