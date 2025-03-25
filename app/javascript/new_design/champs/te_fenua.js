@@ -46,12 +46,9 @@ function initializeTeFenuaMap(container) {
 
 // Initialise la carte TeFenua quand le DOM est prêt
 async function initialize() {
-  const elements = document.querySelectorAll('.te-fenua:not([data-initialized])');
   initializeTeFenuaMap(document);
 
   window.viewOnMap = viewOnMap;
-
-  elements.forEach((element) => {})
 
   // delegate('change', '[data-te-fenua-place]', (event) => {
   //   let map = getMapFromAddress(event.target);
