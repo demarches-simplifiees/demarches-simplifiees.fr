@@ -1175,7 +1175,7 @@ class Dossier < ApplicationRecord
     app_traces = caller.reject { _1.match?(%r{/ruby/.+/gems/}) }.map { _1.sub(Rails.root.to_s, "") }
 
     payload = {
-      message: "Dossier destroyed",
+      message: "Dossier destroyed #{id}",
       dossier_id: id,
       procedure_id: procedure.id,
       request_id: Current.request_id,
