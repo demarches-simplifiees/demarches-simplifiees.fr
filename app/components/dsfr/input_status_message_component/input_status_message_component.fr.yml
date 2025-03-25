@@ -2,3 +2,7 @@
 fr:
   rna:
     data_fetched: "Ce RNA correspond à : %{title}, %{address}"
+  referentiel:
+    fetching: "Recherche en cours."
+    error: "Aucun élément trouvé pour la référence : %{value}"
+    success: "Référence trouvée : %{value}"
