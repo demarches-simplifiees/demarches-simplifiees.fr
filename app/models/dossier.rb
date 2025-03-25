@@ -1181,7 +1181,8 @@ class Dossier < ApplicationRecord
       request_id: Current.request_id,
       user_id: Current.user&.id,
       controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
-      caller: app_traces.first
+      caller: app_traces.first,
+      hidden_by_reason:
     }
 
     logger = Lograge.logger || Rails.logger
