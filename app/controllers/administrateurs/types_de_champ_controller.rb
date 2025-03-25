@@ -145,15 +145,10 @@ module Administrateurs
         flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
       else
-        file = referentiel_file.read
-        return flash[:alert] = "Importation impossible : votre fichier CSV est vide" if file.blank?
-
-        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
-
         type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
         begin
-          csv_to_code = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true).map(&:to_h)
+          csv_to_code = SmarterCSV.process(referentiel_file, strings_as_keys: true, keep_original_headers: true, convert_values_to_numeric: false)
         rescue CSV::MalformedCSVError
           return flash[:alert] = "Importation impossible : le fichier est mal formaté"
         end
