@@ -23,7 +23,7 @@ module Dsfr
       type_de_champ.referentiel? && (
         @champ.fetch_external_data_pending? ||
         @champ.fetch_external_data_error? ||
-        @champ.displayable_value.present?
+        @champ.value.present?
       )
     end
 
@@ -36,8 +36,8 @@ module Dsfr
           t(".referentiel.fetching")
         elsif @champ.fetch_external_data_error?
           t(".referentiel.error", value: @champ.external_id)
-        elsif @champ.displayable_value.present?
-          t(".referentiel.success", value: @champ.displayable_value)
+        elsif @champ.value.present?
+          t(".referentiel.success", value: @champ.value)
         end
       end
     end

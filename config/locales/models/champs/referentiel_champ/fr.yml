@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        champs/referentiel_champ:
+          attributes:
+            value:
+              api_response_not_stored: 'Aucun résultat ne correspond à votre recherche.'
+
