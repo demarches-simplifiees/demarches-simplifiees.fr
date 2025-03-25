@@ -3,6 +3,9 @@
 class Champs::ReferentielChamp < Champ
   delegate :referentiel, to: :type_de_champ
 
+  validates :value, presence: true, allow_blank: true, allow_nil: true, if: -> { validate_champ_value? }
+  before_save :clear_previous_result, if: -> { external_id_changed? }
+
   def fetch_external_data
     ReferentielService.new(referentiel:).call(external_id)
   end
@@ -23,7 +26,12 @@ class Champs::ReferentielChamp < Champ
     true
   end
 
-  def displayable_value
-    external_id
+  private
+
+  def clear_previous_result
+    self.value = nil
+    self.data = nil
+    self.value_json = nil
+    self.fetch_external_data_exceptions = []
   end
 end
