@@ -2,6 +2,7 @@
 
 module Dsfr
   class InputStatusMessageComponent < ApplicationComponent
+    delegate :type_de_champ, to: :@champ
     def initialize(errors_on_attribute:, error_full_messages:, champ:)
       @errors_on_attribute = errors_on_attribute
       @error_full_messages = error_full_messages
@@ -10,19 +11,34 @@ module Dsfr
     end
 
     def statutable?
-      supports_statut? && @champ.value.present?
+      rna_support_statut? ||
+      referentiel_support_statut?
     end
 
-    def supports_statut?
-      @champ.type_de_champ.type_champ.in?([
-        TypeDeChamp.type_champs[:rna]
-      ])
+    def rna_support_statut?
+      type_de_champ.rna? && @champ.value.present?
+    end
+
+    def referentiel_support_statut?
+      type_de_champ.referentiel? && (
+        @champ.fetch_external_data_pending? ||
+        @champ.fetch_external_data_error? ||
+        @champ.displayable_value.present?
+      )
     end
 
     def statut_message
       case @champ.type_de_champ.type_champ
       when TypeDeChamp.type_champs[:rna]
         t(".rna.data_fetched", title: @champ.title, address: @champ.full_address)
+      when TypeDeChamp.type_champs[:referentiel]
+        if @champ.fetch_external_data_pending?
+          t(".referentiel.fetching")
+        elsif @champ.fetch_external_data_error?
+          t(".referentiel.error", value: @champ.external_id)
+        elsif @champ.displayable_value.present?
+          t(".referentiel.success", value: @champ.displayable_value)
+        end
       end
     end
   end
