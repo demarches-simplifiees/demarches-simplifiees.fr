@@ -251,7 +251,8 @@ function addInteractions(mapElement, map) {
     add: mapElement.querySelector('.add'),
     add_zone: mapElement.querySelector('.add-zone'),
     add_batiment: mapElement.querySelector('.batiment'),
-    add_parcelle: mapElement.querySelector('.parcelle')
+    add_parcelle: mapElement.querySelector('.parcelle'),
+    add_marker: mapElement.querySelector('.marker')
   };
 
   hideHelps();
@@ -419,6 +420,7 @@ function addInteractions(mapElement, map) {
       map.on('click', lookForBatimentsAndParcelles);
     if (add_parcelle) bubbles.add_parcelle.style.display = 'block';
     if (add_batiment) bubbles.add_batiment.style.display = 'block';
+    if (add_marker) bubbles.add_marker.style.display = 'block';
   }
 
   function clickOnAddZone(e) {
