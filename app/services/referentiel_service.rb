@@ -15,6 +15,8 @@ class ReferentielService
     case result
     in Success(body:)
       Success(body)
+    in Failure(code: 404) # search may not have been found
+      Failure(retryable: false, reason: StandardError.new('Not Found'))
     in Failure
       result
     end
