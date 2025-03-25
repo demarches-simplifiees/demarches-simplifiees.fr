@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class Referentiels::APIReferentiel < Referentiel
-  validates :mode, inclusion: { in: ['exact_match', 'autocomplete'] }, allow_blank: true, allow_nil: true
+  enum :mode, {
+    exact_match: 'exact_match',
+    autocomplete: 'autocomplete'
+  }
+  validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
 
   before_save :name_as_url
 
