@@ -83,6 +83,31 @@
                             valeur maximale
                           = form.number_field :max_number, class: "fr-input", id: dom_id(type_de_champ, :max_number)
 
+            - if type_de_champ.date? || type_de_champ.datetime?
+              .vertical-border.fr-pl-2w.fr-mt-2w
+                .cell
+                  %legend.fake-label
+                    Format accepté
+                .cell.fr-mt-2w
+                  .fr-toggle
+                    = form.check_box :range_date, id: dom_id(type_de_champ, :range_date), class: 'fr-toggle__input'
+                    = form.label :range_date, "Cette date doit être comprise entre des dates limites", for: dom_id(type_de_champ, :range_date), class: 'fr-toggle__label fr-label'
+
+                - if form.object.range_date?
+                  .cell.fr-mt-1w
+                    %fieldset.fr-fieldset
+                      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                        .fr-input-group
+                          = form.label :start_date, for: dom_id(type_de_champ, :start_date) do
+                            date de début
+                          = form.date_field :start_date, class: "fr-input", value: type_de_champ.start_date, id: dom_id(type_de_champ, :start_date)
+
+                      .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                        .fr-input-group
+                          = form.label :end_date, for: dom_id(type_de_champ, :end_date) do
+                            date de fin
+                          = form.date_field :end_date, class: "fr-input", value: type_de_champ.end_date, id: dom_id(type_de_champ, :end_date)
+
         .flex.justify-start.fr-mt-1w.flex-gap
           - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
             .flex.column.justify-start.width-33

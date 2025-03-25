@@ -140,6 +140,9 @@ class TypeDeChamp < ApplicationRecord
                  :min_number,
                  :max_number,
                  :range_number,
+                 :range_date,
+                 :start_date,
+                 :end_date,
                  :character_limit,
                  :formatted_mode,
                  :numbers_accepted,
@@ -303,6 +306,10 @@ class TypeDeChamp < ApplicationRecord
 
   def range_number?
     range_number == "1"
+  end
+
+  def range_date?
+    range_date == "1"
   end
 
   def character_limit?
@@ -641,6 +648,8 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:textarea) => [:character_limit],
     type_champs.fetch(:integer_number) => [:positive_number, :min_number, :max_number, :range_number],
     type_champs.fetch(:decimal_number) => [:positive_number, :min_number, :max_number, :range_number],
+    type_champs.fetch(:date) => [:start_date, :end_date, :range_date],
+    type_champs.fetch(:datetime) => [:start_date, :end_date, :range_date],
     type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
     type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],

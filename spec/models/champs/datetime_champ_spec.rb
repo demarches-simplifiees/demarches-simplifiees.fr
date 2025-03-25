@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 describe Champs::DatetimeChamp do
-  let(:datetime_champ) { described_class.new }
+  let(:types_de_champ_public) { [{ type: :datetime }] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:datetime_champ) { dossier.champs.first }
 
   describe '#convert_to_iso8601' do
     it 'preserves nil' do
@@ -44,6 +47,61 @@ describe Champs::DatetimeChamp do
       champ = champ_with_value("21/12/2023 03:20")
       champ.run_callbacks(:validation)
       expect(champ.value).to eq(Time.zone.parse("2023-12-21T03:20:00").iso8601)
+    end
+  end
+
+  context 'when there is a range' do
+    let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
+    subject { champ.validate(:champs_public_value) }
+
+    before { champ.type_de_champ.update(options: { range_date: '1', start_date: '2017-11-30', end_date: '2017-12-31' }) }
+    context 'the value is in the range' do
+      let(:value) { "2017-12-15T00:01:00+01:00" }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'the value is not in the range' do
+      let(:value) { "2017-10-15T00:01:00+01:00" }
+
+      it 'is not valid and contains errors' do
+        is_expected.to be_falsey
+        expect(champ.errors[:value]).to eq(["doit être une date comprise entre le 30 novembre 2017 et le 31 décembre 2017"])
+      end
+    end
+
+    context 'the value is bigger than max' do
+      before { champ.type_de_champ.update(options: { range_date: '1', start_date: '', end_date: '2017-12-31' }) }
+      let(:value) { "2018-12-15T00:01:00+01:00" }
+
+      it 'is not valid and contains errors' do
+        is_expected.to be_falsey
+        expect(champ.errors[:value]).to eq(["doit être une date inférieure ou égale au 31 décembre 2017"])
+      end
+    end
+
+    context 'the value is smaller than min' do
+      before { champ.type_de_champ.update(options: { range_date: '1', start_date: '2017-11-30', end_date: '' }) }
+      let(:value) { "2016-12-15T00:01:00+01:00" }
+
+      it 'is not valid and contains errors' do
+        is_expected.to be_falsey
+        expect(champ.errors[:value]).to eq(["doit être une date supérieure ou égale au 30 novembre 2017"])
+      end
+    end
+
+    context 'the range is not activated' do
+      before { champ.type_de_champ.update(options: { range_date: '0', start_date: '2017-11-30', end_date: '2017-12-31' }) }
+      let(:value) { "2017-12-15T00:01:00+01:00" }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'the range is activated but min and max values are not defined' do
+      before { champ.type_de_champ.update(options: { range_date: '0', start_date: '', end_date: '' }) }
+      let(:value) { "2017-12-15T00:01:00+01:00" }
+
+      it { is_expected.to be_truthy }
     end
   end
 
