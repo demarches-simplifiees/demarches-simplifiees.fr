@@ -5,11 +5,12 @@
   .card
     = form_for @groupe_instructeur,
       url: admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
-      method: :patch do |f|
+      method: :patch,
+      data: { controller: 'enable-submit-if-filled' } do |f|
       = f.label :label, 'Nom du groupe', class: 'fr-label fr-mb-1w'
-      .flex
-        = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w'
-        = f.button 'Renommer', class: 'fr-btn fr-btn--tertiary'
+      .flex{ data: { 'action': "input->enable-submit-if-filled#fill" } }
+        = f.text_field :label, required: true, class: 'fr-input flex auto fr-mr-2w', data: { 'enable-submit-if-filled-target': 'input' }
+        = f.button 'Renommer', { class: 'fr-btn fr-btn--tertiary', disabled: true, data: { 'enable-submit-if-filled-target': 'submit' } }
 
     = form_for @groupe_instructeur,
       url: admin_procedure_groupe_instructeur_update_state_path(@procedure, @groupe_instructeur),
