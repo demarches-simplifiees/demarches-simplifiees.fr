@@ -318,6 +318,10 @@ class TypeDeChamp < ApplicationRecord
     character_limit.present?
   end
 
+  def api?
+    referentiel.api?
+  end
+
   def collapsible_explanation_enabled?
     collapsible_explanation_enabled == "1"
   end

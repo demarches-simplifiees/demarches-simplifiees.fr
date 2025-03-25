@@ -4,6 +4,10 @@ class Referentiel < ApplicationRecord
   has_many :items, -> { order(:id) }, class_name: 'ReferentielItem', dependent: :destroy, inverse_of: :referentiel
   has_many :types_de_champ, inverse_of: :referentiel, dependent: :nullify
 
+  def api?
+    self.class == Referentiels::APIReferentiel
+  end
+
   def headers_with_path
     headers.map { [_1, self.class.header_to_path(_1)] }
   end
