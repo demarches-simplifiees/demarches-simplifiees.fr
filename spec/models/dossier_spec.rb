@@ -426,7 +426,7 @@ describe Dossier, type: :model do
       travel_to(date3)
       d.accepter!(instructeur: instructeur, motivation: "Motivation")
       travel_back
-      d
+      d.reload
     end
 
     describe "followers_instructeurs" do
