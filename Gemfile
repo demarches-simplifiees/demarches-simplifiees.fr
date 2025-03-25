@@ -46,7 +46,7 @@ gem 'geocoder'
 gem 'geo_coord', require: "geo/coord"
 gem 'gitlab-sidekiq-fetcher', require: 'sidekiq-reliable-fetch', git: 'https://github.com/demarches-simplifiees/reliable-fetch.git'
 gem 'gon'
-gem 'graphql', '2.4.4'
+gem 'graphql', '2.4.13'
 gem 'graphql-batch'
 gem 'groupdate'
 gem 'haml-rails'
