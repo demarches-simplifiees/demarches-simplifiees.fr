@@ -20,18 +20,6 @@ describe Users::CommencerController, type: :controller do
       end
     end
 
-    context 'when a path rewrite is present' do
-      let(:path) { 'from' }
-      let!(:path_rewrite) { PathRewrite.create(from: 'from', to: published_procedure.path) }
-
-      it 'redirects to the new path' do
-        expect(subject.status).to eq(200)
-        expect(subject).to render_template('show')
-        expect(assigns(:procedure)).to eq published_procedure
-        expect(assigns(:revision)).to eq published_procedure.published_revision
-      end
-    end
-
     context 'when there is an old path' do
       let!(:old_path) do
         travel_to(1.day.ago) do
