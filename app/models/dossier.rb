@@ -143,6 +143,7 @@ class Dossier < ApplicationRecord
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :dossier_labels, dependent: :destroy
   has_many :labels, -> { order(:position, :id) }, through: :dossier_labels
+  has_many :dossier_notifications, dependent: :destroy
 
   has_many :rdvs, dependent: :destroy
 
