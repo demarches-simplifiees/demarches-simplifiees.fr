@@ -428,6 +428,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
     t.index ["label_id"], name: "index_dossier_labels_on_label_id"
   end
 
+  create_table "dossier_notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "display_at"
+    t.bigint "dossier_id", null: false
+    t.bigint "groupe_instructeur_id"
+    t.bigint "instructeur_id"
+    t.string "notification_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id", "notification_type", "groupe_instructeur_id"], name: "unique_dossier_groupe_instructeur_notification", unique: true, where: "((groupe_instructeur_id IS NOT NULL) AND (instructeur_id IS NULL))"
+    t.index ["dossier_id", "notification_type", "instructeur_id"], name: "unique_dossier_instructeur_notification", unique: true, where: "((instructeur_id IS NOT NULL) AND (groupe_instructeur_id IS NULL))"
+    t.index ["dossier_id"], name: "index_dossier_notifications_on_dossier_id"
+    t.index ["groupe_instructeur_id"], name: "index_dossier_notifications_on_groupe_instructeur_id"
+    t.index ["instructeur_id"], name: "index_dossier_notifications_on_instructeur_id"
+  end
+
   create_table "dossier_operation_logs", force: :cascade do |t|
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "bill_signature_id"
@@ -1391,6 +1406,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
   add_foreign_key "dossier_corrections", "dossiers"
   add_foreign_key "dossier_labels", "dossiers"
   add_foreign_key "dossier_labels", "labels"
+  add_foreign_key "dossier_notifications", "dossiers"
+  add_foreign_key "dossier_notifications", "groupe_instructeurs"
+  add_foreign_key "dossier_notifications", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"
