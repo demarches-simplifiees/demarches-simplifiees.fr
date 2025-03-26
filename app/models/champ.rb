@@ -56,6 +56,7 @@ class Champ < ApplicationRecord
     :date_in_past,
     :date_in_past?,
     :range_date,
+    :range_date?,
     :start_date,
     :end_date,
     :character_limit?,
