@@ -105,6 +105,7 @@ class EmailChecker
     'suez.com',
     'univ-st-etienne.fr',
     'korian.fr',
+    'bnf.fr',
     'developpement-durable.gouv.fr',
     'modernisation.gouv.fr',
     'social.gouv.fr',
