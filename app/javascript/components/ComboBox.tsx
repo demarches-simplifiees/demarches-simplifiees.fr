@@ -172,6 +172,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     valueSeparator,
     className,
     maxItemsDisplay,
+    focusOnSelect,
     ...props
   } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
 
@@ -187,13 +188,18 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   } = useMultiList({
     defaultItems,
     defaultSelectedKeys,
-    onChange: dispatch,
     formValue,
     allowsCustomValue,
     valueSeparator,
     maxItemsDisplay,
     focusInput: () => {
       inputRef.current?.focus();
+    },
+    onChange: () => {
+      dispatch();
+      if (focusOnSelect) {
+        document.getElementById(focusOnSelect)?.focus();
+      }
     }
   });
   const formResetRef = useOnFormReset(onReset);
