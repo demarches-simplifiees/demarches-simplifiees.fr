@@ -11,8 +11,8 @@
         = t("views.shared.groupe_instructeurs.notification_alert_html")
 
   = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_admin_procedure_groupe_instructeur_path(@procedure, groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
-  = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
-    .instructeur-wrapper
+  = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form', data: { controller: 'enable-submit-if-filled' } } do |f|
+    .instructeur-wrapper{ data: { 'action': "change->enable-submit-if-filled#fillCombobox" } }
       %p= t('views.shared.groupe_instructeurs.instructeur_emails')
       %p.fr-hint-text= t('views.shared.groupe_instructeurs.copy_paste_hint')
 
@@ -20,9 +20,9 @@
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
       - else
         %react-fragment
-          = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
+          = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails', data: { 'enable-submit-if-filled-target': 'input' }
 
-      = f.submit t('views.shared.groupe_instructeurs.assign'), class: 'fr-btn fr-btn--tertiary', disabled: disabled_as_super_admin
+      = f.submit t('views.shared.groupe_instructeurs.assign'), class: 'fr-btn fr-btn--tertiary', disabled: true, id: 'emails-submit'
 
   %hr.fr-mt-4w
   .flex.justify-between.align-baseline

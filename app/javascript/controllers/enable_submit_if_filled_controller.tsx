@@ -13,4 +13,18 @@ export class EnableSubmitIfFilledController extends Controller {
       this.submitTarget.disabled = true;
     }
   }
+
+  fillCombobox() {
+    const submitInput = document.querySelector(
+      '#emails-submit'
+    ) as HTMLButtonElement | null;
+
+    if (submitInput) {
+      if (document.querySelectorAll('.fr-ds-combobox__multiple')) {
+        submitInput.disabled = false;
+      } else {
+        submitInput.disabled = true;
+      }
+    }
+  }
 }
