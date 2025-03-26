@@ -27,6 +27,7 @@ class Instructeur < ApplicationRecord
   has_many :exports, as: :user_profile
   has_many :archives, as: :user_profile
   has_many :instructeurs_procedures, dependent: :destroy
+  has_many :dossier_notifications, dependent: :destroy
 
   has_one :rdv_connection, dependent: :destroy
 
