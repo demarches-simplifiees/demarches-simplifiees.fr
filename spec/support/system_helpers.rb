@@ -18,13 +18,13 @@ module SystemHelpers
 
     if sign_in_by_link
       User.find_by(email: email)&.instructeur&.update!(bypass_email_login_token: false)
+      # pf something not initialized if we don't wait, mail is not sent
+      sleep 5
     end
 
     perform_enqueued_jobs do
       click_on 'Se connecter'
     end
-    # pf sometimes the queued job is not finished
-    sleep 0.5
 
     if sign_in_by_link
       mail = ActionMailer::Base.deliveries.last
