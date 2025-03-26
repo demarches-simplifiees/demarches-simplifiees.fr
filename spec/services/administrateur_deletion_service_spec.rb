@@ -40,7 +40,7 @@ describe AdministrateurDeletionService do
     end
 
     context 'when admin has some procedures with dossiers and only one admin' do
-      let(:owned_procedure_with_dossier) { create(:procedure_with_dossiers, service: owned_procedure_service, administrateurs: [admin]) }
+      let(:owned_procedure_with_dossier) { create(:procedure_with_dossiers, :published, service: owned_procedure_service, administrateurs: [admin]) }
 
       it "doesn't destroy admin" do
         owned_procedure_with_dossier

@@ -73,7 +73,7 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    procedures.with_discarded.all? { |p| p.administrateurs.count > 1 || p.dossiers.empty? }
+    procedures.with_discarded.not_brouillon.all? { |p| p.administrateurs.count > 1 || p.dossiers.empty? }
   end
 
   def merge(old_admin)
