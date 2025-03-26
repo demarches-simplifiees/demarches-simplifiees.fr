@@ -130,6 +130,9 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_max_number", label: change.label, to: change.to)
+      - when :date_in_past
+        - list.with_item do
+          = t(".#{prefix}.update_date_in_past", label: change.label, to: change.to == '0' ? t(".#{prefix}.remove_date_in_past_constraint") : t(".#{prefix}.add_date_in_past_constraint"))
       - when :range_date
         - list.with_item do
           = t(".#{prefix}.update_range_date", label: change.label, to: change.to == '0' ? t(".#{prefix}.remove_range_date_constraint") : t(".#{prefix}.add_range_date_constraint"))

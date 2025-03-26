@@ -62,6 +62,27 @@ describe Champs::DateChamp do
     end
   end
 
+  context 'when the value is not in the past' do
+    let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
+    subject { champ.validate(:champs_public_value) }
+
+    context 'all dates are accepted' do
+      let(:value) { Date.today }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'dates not in past are not accepted' do
+      before { champ.type_de_champ.update(options: { date_in_past: '1' }) }
+      let(:value) { Date.today }
+
+      it 'is not valid and contains errors' do
+        is_expected.to be_falsey
+        expect(champ.errors[:value]).to eq(["doit être une date dans le passé"])
+      end
+    end
+  end
+
   context 'when there is a range' do
     let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
     subject { champ.validate(:champs_public_value) }

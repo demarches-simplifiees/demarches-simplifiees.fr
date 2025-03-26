@@ -88,6 +88,10 @@
                 .cell
                   %legend.fake-label
                     Format accepté
+                  .fr-toggle
+                    = form.check_box :date_in_past, id: dom_id(type_de_champ, :date_in_past), class: 'fr-toggle__input'
+                    = form.label :date_in_past, "Cette date doit être dans le passé", for: dom_id(type_de_champ, :date_in_past), class: 'fr-toggle__label fr-label'
+
                 .cell.fr-mt-2w
                   .fr-toggle
                     = form.check_box :range_date, id: dom_id(type_de_champ, :range_date), class: 'fr-toggle__input'

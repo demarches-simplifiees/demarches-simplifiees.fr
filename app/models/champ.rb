@@ -53,6 +53,8 @@ class Champ < ApplicationRecord
     :min_number,
     :max_number,
     :range_number,
+    :date_in_past,
+    :date_in_past?,
     :range_date,
     :start_date,
     :end_date,
