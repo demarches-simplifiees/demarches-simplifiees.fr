@@ -12,6 +12,7 @@ class GroupeInstructeur < ApplicationRecord
   has_many :assignments, class_name: 'DossierAssignment', dependent: :nullify, inverse_of: :groupe_instructeur
   has_many :previous_assignments, class_name: 'DossierAssignment', dependent: :nullify, inverse_of: :previous_groupe_instructeur
   has_many :export_templates, dependent: :destroy
+  has_many :dossier_notifications, dependent: :destroy
   has_and_belongs_to_many :exports, dependent: :destroy
 
   has_one :defaut_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :defaut_groupe_instructeur_id, dependent: :nullify, inverse_of: :defaut_groupe_instructeur
