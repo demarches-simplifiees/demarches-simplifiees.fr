@@ -3,7 +3,7 @@ describe '20220705164551_feature_flag_visa_champs' do
   let!(:procedure_with_admin_featured) { create(:procedure) }
   let!(:types_de_champ_private) { [{ type: :visa }] }
   let!(:procedure_with_visa_with_admin_featured) { create(:procedure, types_de_champ_private:, administrateurs: [procedure_with_admin_featured.administrateurs.first]) }
-  let!(:procedure_without_admin_featured) { create(:procedure) }
+  let!(:procedure_without_admin_featured) { create(:procedure, :new_administrateur) }
   let!(:procedure_with_visa_without_admin_featured) { create(:procedure, types_de_champ_private:, administrateurs: [procedure_without_admin_featured.administrateurs.first]) }
 
   subject(:run_task) do
