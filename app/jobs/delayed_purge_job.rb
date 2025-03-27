@@ -4,7 +4,7 @@ class DelayedPurgeJob < ApplicationJob
   queue_as :low
 
   # when storage is down, errors come in a variety of forms
-  with_options(wait: :exponentially_longer) do
+  with_options(wait: :polynomially_longer) do
     retry_on Excon::Error::BadGateway
     retry_on Excon::Error::ServiceUnavailable
     retry_on Excon::Error::InternalServerError

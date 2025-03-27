@@ -237,7 +237,7 @@ Rails.application.routes.draw do
   resources :attachments, only: [:show, :destroy]
   resources :recherche, only: [:index]
 
-  get "patron" => "root#patron" if Rails.env.development? || Rails.env.test?
+  get "patron" => "root#patron" if Rails.env.local?
   get "suivi" => "root#suivi"
   post "save_locale" => "root#save_locale"
 

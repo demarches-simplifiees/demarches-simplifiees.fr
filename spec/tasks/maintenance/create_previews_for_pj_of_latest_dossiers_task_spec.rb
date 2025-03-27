@@ -8,25 +8,14 @@ module Maintenance
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile' }]) }
       let(:dossier) { create(:dossier, procedure:) }
       let(:champ_pj) { dossier.champs.first }
-      let(:blob_info) do
-        {
-          filename: file.original_filename,
-          byte_size: file.size,
-          checksum: Digest::SHA256.file(file.path),
-          content_type: file.content_type,
-          # we don't want to run virus scanner on this file
-          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-        }
-      end
-      let(:blob) do
-        blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_info)
-        blob.upload(file)
-        blob
-      end
-
-      let(:attachment) { ActiveStorage::Attachment.create(name: "test", blob: blob, record: champ_pj) }
 
       before do
+        champ_pj.piece_justificative_file.attach(
+          io: file,
+          filename: file.original_filename,
+          content_type:  file.content_type,
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
         dossier.update(
           depose_at: Date.new(2024, 05, 23),
           state: "en_construction"
@@ -39,6 +28,7 @@ module Maintenance
         let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
         it "creates a preview" do
+          attachment = champ_pj.piece_justificative_file.attachments.first
           expect(attachment.preview(resize_to_limit: [400, 400]).image.attached?).to be false
           expect { subject }.to change { attachment.reload.preview(resize_to_limit: [400, 400]).image.attached? }
         end

@@ -2,7 +2,7 @@
 
 class FetchCadastreRealGeometryJob < ApplicationJob
   MAX_ATTEMPT = 10
-  retry_on StandardError, attempts: MAX_ATTEMPT, wait: :exponentially_longer
+  retry_on StandardError, attempts: MAX_ATTEMPT, wait: :polynomially_longer
 
   def perform(geo_area)
     parcelle_data = APIIgn::API.fetch_parcelle(id: geo_area.parcelle_id)
