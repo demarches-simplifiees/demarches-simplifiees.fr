@@ -1,0 +1,5 @@
+fr:
+  administrateurs:
+    select_procedure_drop_down_list_component:
+      label: "Accès direct"
+      placeholder: "Sélectionnez une démarche"
