@@ -3,8 +3,8 @@
 require 'fog/openstack'
 
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossiers(dossiers:, user_profile:, export_template: nil)
-    pj_service = PiecesJustificativesService.new(user_profile:, export_template:)
+  def self.create_list_from_dossiers(dossiers:, user_profile:, export_template: nil, with_bills: false)
+    pj_service = PiecesJustificativesService.new(user_profile:, export_template:, with_bills:)
 
     files = []
     DossierPreloader.new(dossiers).in_batches_with_block do |loaded_dossiers|
