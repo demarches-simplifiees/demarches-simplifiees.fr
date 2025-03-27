@@ -29,7 +29,6 @@ features = [
   :export_order_by_revision,
   :export_template,
   :referentiel_type_de_champ,
-  :expression_reguliere_type_de_champ,
   :groupe_instructeur_api_hack,
   :rdv,
   :sva,

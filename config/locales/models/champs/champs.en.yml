@@ -7,4 +7,4 @@ en:
             value:
               format: '%{message}'
               missing: must be filled
-
+              invalid_regexp: '%{expression_reguliere_error_message}'

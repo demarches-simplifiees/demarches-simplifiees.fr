@@ -2663,34 +2663,6 @@ type ExplicationChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
-type ExpressionReguliereChampDescriptor implements ChampDescriptor {
-  """
-  Description des champs d’un bloc répétable.
-  """
-  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
-
-  """
-  Description du champ.
-  """
-  description: String
-  id: ID!
-
-  """
-  Libellé du champ.
-  """
-  label: String!
-
-  """
-  Est-ce que le champ est obligatoire ?
-  """
-  required: Boolean!
-
-  """
-  Type de la valeur du champ.
-  """
-  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
-}
-
 type File {
   byteSize: Int! @deprecated(reason: "Utilisez le champ `byteSizeBigInt` à la place.")
   byteSizeBigInt: BigInt!
@@ -4656,11 +4628,6 @@ enum TypeDeChamp {
   Explication
   """
   explication
-
-  """
-  Expression régulière
-  """
-  expression_reguliere
 
   """
   Champ formaté

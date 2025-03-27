@@ -53,10 +53,9 @@ fr:
           cnaf: 'Données de la Caisse nationale des allocations familiales'
           dgfip: 'Données de la Direction générale des Finances publiques'
           pole_emploi: 'Situation Pôle emploi'
-          mesri: "Données du Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation"
-          epci: "EPCI"
-          cojo: "Accréditation Paris 2024"
-          expression_reguliere: 'Expression régulière'
+          mesri: 'Données du Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation'
+          epci: 'EPCI'
+          cojo: 'Accréditation Paris 2024'
           formatted: Champ formaté
           referentiel: 'Référentiel à configurer (avancé)'
         default_libelle:
