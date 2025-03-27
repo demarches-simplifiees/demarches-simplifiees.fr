@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'fog/openstack'
+require 'connection_pool'
 
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(dossiers:, user_profile:, export_template: nil)
@@ -25,7 +26,12 @@ class ActiveStorage::DownloadableFile
       else
         service = file.blob.service
         begin
-          client.head_object(service.container, file.blob.key)
+          client_pool.with do |client|
+            Rails.logger.info("*" * 100)
+            Rails.logger.info("Using connection from pool")
+            Rails.logger.info("*" * 100)
+            client.head_object(service.container, file.blob.key)
+          end
           true
         rescue Fog::OpenStack::Storage::NotFound
           false
@@ -36,11 +42,13 @@ class ActiveStorage::DownloadableFile
 
   private
 
-  def self.client
-    credentials = Rails.application.config.active_storage
-      .service_configurations['openstack']['credentials']
+  def self.client_pool
+    @client_pool ||= ConnectionPool.new(size: 5, timeout: 3) do
+      credentials = Rails.application.config.active_storage
+        .service_configurations['openstack']['credentials']
 
-    Fog::OpenStack::Storage.new(credentials)
+      Fog::OpenStack::Storage.new(credentials)
+    end
   end
 
   def self.bill_and_path(bill)
