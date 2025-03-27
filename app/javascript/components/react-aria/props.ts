@@ -56,7 +56,8 @@ export const MultiComboBoxProps = s.assign(
       selectedKeys: s.array(s.string()),
       allowsCustomValue: s.boolean(),
       valueSeparator: s.union([s.string(), s.literal(false)]),
-      maxItemsDisplay: s.number()
+      maxItemsDisplay: s.number(),
+      focusOnSelect: s.string()
     })
   )
 );

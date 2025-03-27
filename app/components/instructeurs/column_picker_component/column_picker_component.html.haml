@@ -1,5 +1,5 @@
 = form_with model: [:instructeur, @procedure_presentation], class: 'dropdown-form large columns-form' do
   %react-fragment
-    = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_columns_for_select, selected_keys: @displayable_columns_selected, name: 'displayed_columns[]', 'aria-label': 'Colonne à afficher', value_separator: false
+    = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_columns_for_select, selected_keys: @displayable_columns_selected, name: 'displayed_columns[]', 'aria-label': 'Colonne à afficher', focus_on_select: dom_id(@procedure_presentation, "submit"), value_separator: false
 
-  = submit_tag t('.save'), class: 'fr-btn fr-btn--secondary'
+  = submit_tag t('.save'), id: dom_id(@procedure_presentation, "submit"), class: 'fr-btn fr-btn--secondary'
