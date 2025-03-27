@@ -9,14 +9,14 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
   before do
     login_as(administrateur.user, scope: :user)
-    Flipper.enable(:attestation_v2) # fully enabled on prod, pending removal in code
 
     response = Typhoeus::Response.new(code: 200, body: 'Hello world')
     Typhoeus.stub(WEASYPRINT_URL).and_return(response)
   end
 
-  def find_attestation_card(with_nested_selector: nil)
-    attestation_path = edit_admin_procedure_attestation_template_v2_path(procedure)
+  def find_attestation_card(v2: true, with_nested_selector: nil)
+    attestation_path = v2 ? edit_admin_procedure_attestation_template_v2_path(procedure)
+                          : edit_admin_procedure_attestation_template_path(procedure)
 
     full_selector = [
       "a[href=\"#{attestation_path}\"]",
@@ -35,14 +35,9 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
     scenario do
       visit admin_procedure_path(procedure)
 
-      within find_attestation_card do
+      within find_attestation_card(v2: false) do
         expect(page).to have_content('Activée')
         click
-      end
-
-      within('.fr-alert--info') do
-        expect(page).to have_content("Nouvel éditeur d’attestation")
-        click_on 'cliquez ici'
       end
 
       fill_in "Titre de l’attestation", with: 'BOOM'
@@ -59,7 +54,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       # check attestation is now disabled
       visit admin_procedure_path(procedure)
 
-      find_attestation_card(with_nested_selector: ".fr-badge")
+      find_attestation_card(v2: false, with_nested_selector: ".fr-badge")
       expect(page).to have_content('Désactivée')
     end
   end

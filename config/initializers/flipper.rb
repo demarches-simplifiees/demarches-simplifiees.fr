@@ -21,7 +21,6 @@ end
 features = [
   :administrateur_web_hook,
   :api_particulier,
-  :attestation_v2,
   :blocking_pending_correction,
   :cojo_type_de_champ,
   :dossier_pdf_vide,

@@ -128,7 +128,7 @@
             = link_to("créez-vous un dossier", new_dossier_path(procedure_id: @procedure, brouillon: true), **external_link_attributes)
             et acceptez-le : l’aperçu l’utilisera.
 
-  - if @procedure.feature_enabled?(:attestation_v2) && @attestation_template.draft?
+  - if @attestation_template.draft?
     - content_for(:sticky_header) do
       = render partial: "sticky_header"
 
