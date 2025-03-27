@@ -154,6 +154,7 @@ class Procedure < ApplicationRecord
   has_one_attached :deliberation
 
   scope :brouillons,             -> { where(aasm_state: :brouillon) }
+  scope :not_brouillon,          -> { where.not(aasm_state: :brouillon) }
   scope :publiees,               -> { where(aasm_state: :publiee) }
   scope :publiees_ou_brouillons, -> { where(aasm_state: [:publiee, :brouillon]) }
   scope :closes,                 -> { where(aasm_state: [:close, :depubliee]) }
