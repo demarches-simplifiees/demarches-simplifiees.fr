@@ -19,13 +19,15 @@ class ActiveStorage::DownloadableFile
       return files
     end
 
+    cached_client = self.client
+
     files.filter do |file, _filename|
       if file.is_a?(ActiveStorage::FakeAttachment)
         true
       else
         service = file.blob.service
         begin
-          client.head_object(service.container, file.blob.key)
+          cached_client.head_object(service.container, file.blob.key)
           true
         rescue Fog::OpenStack::Storage::NotFound
           false
