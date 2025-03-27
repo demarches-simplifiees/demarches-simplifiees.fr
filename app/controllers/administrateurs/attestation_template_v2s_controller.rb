@@ -3,7 +3,6 @@
 module Administrateurs
   class AttestationTemplateV2sController < AdministrateurController
     before_action :retrieve_procedure
-    before_action :ensure_feature_active
     before_action :retrieve_attestation_template
     before_action :preload_revisions, only: [:edit, :update, :create]
 
@@ -109,10 +108,6 @@ module Administrateurs
     end
 
     private
-
-    def ensure_feature_active
-      redirect_to root_path if !@procedure.feature_enabled?(:attestation_v2)
-    end
 
     def retrieve_attestation_template
       v2s = @procedure.attestation_templates_v2
