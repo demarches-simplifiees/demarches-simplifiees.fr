@@ -81,7 +81,8 @@ class Attachment::EditComponent < ApplicationComponent
       id: input_id,
       data: {
         auto_attach_url:,
-        turbo_force: :server
+        turbo_force: :server,
+        'enable-submit-if-uploaded-target': 'input'
       }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
     }
 

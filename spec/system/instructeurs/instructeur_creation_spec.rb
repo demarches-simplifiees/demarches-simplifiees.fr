@@ -11,7 +11,8 @@ describe 'As an instructeur', js: true do
     visit admin_procedure_path(procedure)
     find('#groupe-instructeurs').click
 
-    fill_in 'Emails', with: instructeur_email
+    select_combobox('Emails', instructeur_email, custom_value: true)
+
     perform_enqueued_jobs { click_on 'Affecter' }
 
     expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")

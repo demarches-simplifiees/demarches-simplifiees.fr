@@ -68,14 +68,16 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Le nom est à présent « littéraire ». ')
 
     # add victor to littéraire groupe
-    fill_in 'Emails', with: 'victor@gouv.fr'
+    select_combobox('Emails', 'victor@gouv.fr', custom_value: true)
+
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur victor@gouv.fr a été affecté")
 
     victor = User.find_by(email: 'victor@gouv.fr').instructeur
 
     # add alain to littéraire groupe
-    fill_in 'Emails', with: 'alain@gouv.fr'
+    select_combobox('Emails', 'alain@gouv.fr', custom_value: true)
+
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur alain@gouv.fr a été affecté")
 
@@ -96,14 +98,15 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Le nom est à présent « scientifique ». ')
 
     # add marie to scientifique groupe
-    fill_in 'Emails', with: 'marie@gouv.fr'
+    select_combobox('Emails', 'marie@gouv.fr', custom_value: true)
+
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur marie@gouv.fr a été affecté")
 
     marie = User.find_by(email: 'marie@gouv.fr').instructeur
 
     # add superwoman to scientifique groupe
-    fill_in 'Emails', with: 'alain@gouv.fr'
+    select_combobox('Emails', 'alain@gouv.fr', custom_value: true)
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur alain@gouv.fr a été affecté")
 

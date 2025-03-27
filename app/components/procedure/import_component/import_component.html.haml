@@ -28,6 +28,6 @@
             = template_detail
       .fr-hint-text.fr-mb-1w
         = t('.csv_import.file_size_limit', max_file_size: number_to_human_size(csv_max_size))
-      .flex.column
-        = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w'
-        = submit_tag t('.csv_import.import_file'), class: 'fr-btn fr-btn--tertiary', id: 'submit-button', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }, disabled: true
+      .flex.column{ data: { 'action': "input->enable-submit-if-uploaded#upload" } }
+        = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w', data: { 'enable-submit-if-uploaded-target': 'input' }
+        = submit_tag t('.csv_import.import_file'), class: 'fr-btn fr-btn--tertiary', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert'), 'enable-submit-if-uploaded-target': 'submit' }, disabled: true
