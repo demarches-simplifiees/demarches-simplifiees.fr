@@ -59,4 +59,41 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
       end
     end
   end
+
+  describe "#icon_class" do
+    let(:rdv) { create(:rdv, dossier: dossier, location_type: location_type, instructeur: create(:instructeur)) }
+    let(:component) { described_class.new(rdv: rdv) }
+
+    context "when location_type is phone" do
+      let(:location_type) { "phone" }
+
+      it "returns the phone icon class" do
+        expect(component.icon_class).to eq("fr-icon-phone-fill")
+      end
+    end
+
+    context "when location_type is visio" do
+      let(:location_type) { "visio" }
+
+      it "returns the video icon class" do
+        expect(component.icon_class).to eq("fr-icon-vidicon-fill")
+      end
+    end
+
+    context "when location_type is home" do
+      let(:location_type) { "home" }
+
+      it "returns the home icon class" do
+        expect(component.icon_class).to eq("fr-icon-home-4-fill")
+      end
+    end
+
+    context "when location_type is something else" do
+      let(:location_type) { "other" }
+
+      it "returns nil" do
+        expect(component.icon_class).to be_nil
+      end
+    end
+  end
 end
