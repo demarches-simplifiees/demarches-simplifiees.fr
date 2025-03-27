@@ -179,9 +179,6 @@ FactoryBot.define do
       value_json { AddressProxy::ADDRESS_PARTS.index_by(&:itself).merge(title: "Fondation SFR", department_code: 'department_code') }
     end
 
-    factory :champ_do_not_use_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do
-    end
-
     factory :champ_do_not_use_formatted, class: 'Champs::FormattedChamp' do
     end
 

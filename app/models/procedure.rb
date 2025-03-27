@@ -228,7 +228,6 @@ class Procedure < ApplicationRecord
 
   validates :draft_types_de_champ_public,
     'types_de_champ/condition': true,
-    'types_de_champ/expression_reguliere': true,
     'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
