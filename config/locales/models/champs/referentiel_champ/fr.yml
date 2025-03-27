@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        champs/formatted_champ:
+          attributes:
+            value:
+              api_response_not_stored: 'Aucun résultat ne correspond à votre recherche.'
