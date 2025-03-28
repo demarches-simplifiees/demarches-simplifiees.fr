@@ -53,20 +53,30 @@ describe User, type: :model do
 
   describe '#invite?' do
     let(:dossier) { create :dossier }
-    let(:user) { dossier.user }
+    let(:invite_user) { create(:user) }
 
-    subject { user.invite? dossier }
+    subject { -> (dossier) { invite_user.invite?(dossier) } }
 
     context 'when user is invite at the dossier' do
       before do
-        create :invite, dossier_id: dossier.id, user: user
+        create :invite, dossier_id: dossier.id, user: invite_user
       end
 
-      it { is_expected.to be_truthy }
+      it { expect(subject.call(dossier)).to be_truthy }
     end
 
     context 'when user is not invite at the dossier' do
-      it { is_expected.to be_falsey }
+      it { expect(subject.call(dossier)).to be_falsey }
+    end
+
+    context 'when user is invite to the origin dossier of a forked dossier' do
+      let(:editing_fork) { dossier.owner_editing_fork }
+
+      before do
+        create :invite, dossier_id: dossier.id, user: invite_user
+      end
+
+      it { expect(subject.call(editing_fork)).to be_truthy }
     end
   end
 
