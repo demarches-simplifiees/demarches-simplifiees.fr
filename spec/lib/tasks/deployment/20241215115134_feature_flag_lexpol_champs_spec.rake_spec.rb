@@ -3,7 +3,7 @@ describe '20241215115134_feature_flag_lexpol_champs' do
   let!(:procedure_with_admin_featured) { create(:procedure) }
   let!(:types_de_champ_private) { [{ type: :lexpol }] }
   let!(:procedure_with_lexpol_with_admin_featured) { create(:procedure, types_de_champ_private:, administrateurs: [procedure_with_admin_featured.administrateurs.first]) }
-  let!(:procedure_without_admin_featured) { create(:procedure) }
+  let!(:procedure_without_admin_featured) { create(:procedure, :new_administrateur) }
   let!(:procedure_with_lexpol_without_admin_featured) { create(:procedure, types_de_champ_private:, administrateurs: [procedure_without_admin_featured.administrateurs.first]) }
 
   subject(:run_task) do

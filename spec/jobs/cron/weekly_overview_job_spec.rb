@@ -21,8 +21,10 @@ RSpec.describe Cron::WeeklyOverviewJob, type: :job do
           run_job
         end
 
-        it { expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur) }
-        it { expect(mailer_double).to have_received(:deliver_later) }
+        it do
+          expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur)
+          expect(mailer_double).to have_received(:deliver_later).at_least(1).times
+        end
       end
 
       context 'with one instructeur with no overviews' do

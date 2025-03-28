@@ -22,21 +22,19 @@ RSpec.describe Champs::AnnuaireEducationChamp do
       it_behaves_like "a data updater (without updating the value)", ''
     end
 
-    context 'when data is inconsistent' do
-      let(:data) { { 'yo' => 'lo' } }
-      it_behaves_like "a data updater (without updating the value)", { 'yo' => 'lo' }
-    end
-
     context 'when data is consistent' do
       let(:data) {
         {
-          'nom_etablissement': "karrigel an ankou",
+          'nom_etablissement' => "karrigel an ankou",
           'nom_commune' => 'kumun',
           'identifiant_de_l_etablissement' => '666667'
-        }.with_indifferent_access
+        }
       }
-      it { expect { subject }.to change { champ.reload.data }.to(data) }
-      it { expect { subject }.to change { champ.reload.value }.to('karrigel an ankou, kumun (666667)') }
+      it_behaves_like "a data updater (without updating the value)", {
+        'nom_etablissement' => "karrigel an ankou",
+        'nom_commune' => 'kumun',
+        'identifiant_de_l_etablissement' => '666667'
+      }
     end
   end
 end

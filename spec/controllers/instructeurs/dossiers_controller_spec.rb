@@ -2,11 +2,10 @@ describe Instructeurs::DossiersController, type: :controller do
   render_views
 
   let(:instructeur) { create(:instructeur) }
-  let(:administrateur) { create(:administrateur) }
   let(:administration) { create(:administration) }
   let(:instructeurs) { [instructeur] }
   let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs) }
-  let(:procedure_accuse_lecture) { create(:procedure, :published, :for_individual, :accuse_lecture, instructeurs: instructeurs) }
+  let(:procedure_accuse_lecture) { create(:procedure, :published, :for_individual, :accuse_lecture, :new_administrateur, instructeurs: instructeurs) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier_accuse_lecture) { create(:dossier, :en_construction, :with_individual, procedure: procedure_accuse_lecture) }
   let(:dossier_for_tiers) { create(:dossier, :en_construction, :for_tiers_with_notification, procedure: procedure) }
@@ -29,7 +28,7 @@ describe Instructeurs::DossiersController, type: :controller do
       post(
         :send_to_instructeurs,
         params: {
-          recipients: [recipient.id].to_json,
+          recipients: [recipient.id],
           procedure_id: procedure.id,
           dossier_id: dossier.id
         }
@@ -777,7 +776,7 @@ describe Instructeurs::DossiersController, type: :controller do
       }
     end
 
-    let(:emails) { "[\"email@a.com\"]" }
+    let(:emails) { ["email@a.com"] }
 
     context "notifications updates" do
       context 'when an instructeur follows the dossier' do
@@ -812,7 +811,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(response).to redirect_to(avis_instructeur_dossier_path(dossier.procedure, dossier)) }
 
       context "with an invalid email" do
-        let(:emails) { "[\"emaila.com\"]" }
+        let(:emails) { ["emaila.com"] }
 
         before { subject }
 
@@ -823,7 +822,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context "with no email" do
-        let(:emails) { "" }
+        let(:emails) { [] }
 
         before { subject }
 
@@ -834,7 +833,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with multiple emails' do
-        let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
+        let(:emails) { ["toto.fr", "titi@titimail.com"] }
 
         before { subject }
 
@@ -846,7 +845,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'when the expert do not want to receive notification' do
-        let(:emails) { "[\"email@a.com\"]" }
+        let(:emails) { ["email@a.com"] }
         let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure, notify_on_new_avis: false) }
 
         before { subject }
@@ -1317,9 +1316,7 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#reaffectation' do
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
     let!(:gi_3) { GroupeInstructeur.create(label: 'troisième groupe', procedure: procedure) }
-    # pf strange : should not work on DS: groupe_instructeurs is sorted according label so routed_procedure.groupe_instructeurs.first returns 'deuxième groupe' and not default
-    # let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
-    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.where(label: "défaut").first) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.reorder(:id).first) }
 
     before do
       post :reaffectation,
@@ -1371,8 +1368,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe '#personnes_impliquees' do
     let(:routed_procedure) { create(:procedure, :routee, :published, :for_individual) }
-    let(:gi_1) { routed_procedure.groupe_instructeurs.first }
-    let(:gi_2) { routed_procedure.groupe_instructeurs.last }
+    let(:gi_1) { routed_procedure.groupe_instructeurs.reorder(:id).first }
+    let(:gi_2) { routed_procedure.groupe_instructeurs.reorder(:id).last }
     let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: routed_procedure, groupe_instructeur: gi_1) }
     let(:new_instructeur) { create(:instructeur) }
 

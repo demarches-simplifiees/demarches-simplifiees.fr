@@ -81,7 +81,7 @@ describe Champs::LinkedDropDownListChamp do
     subject { described_class.new(type_de_champ: type_de_champ) }
 
     context 'when the champ is not mandatory' do
-      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list_value: value) }
+      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, mandatory: false, drop_down_list_value: value) }
 
       it 'blank is fine' do
         is_expected.not_to be_mandatory_blank

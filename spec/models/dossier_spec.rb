@@ -1552,8 +1552,8 @@ describe Dossier, type: :model do
 
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:types_de_champ) { [type_de_champ] }
-    let(:type_de_champ) { {} }
+    let(:types_de_champ) { [type_de_champ].compact }
+    let(:type_de_champ) { nil }
     let(:errors) { dossier.check_mandatory_and_visible_champs }
 
     it 'no mandatory champs' do
@@ -1575,7 +1575,7 @@ describe Dossier, type: :model do
       end
 
       context "conditionaly visible" do
-        let(:types_de_champ) { [{ type: :yes_no, stable_id: 99 }, type_de_champ] }
+        let(:types_de_champ) { [{ type: :yes_no, stable_id: 99, mandatory: false }, type_de_champ] }
         let(:type_de_champ) { { mandatory: true, condition: ds_eq(champ_value(99), constant(true)) } }
 
         it 'should not have errors' do
@@ -1636,7 +1636,7 @@ describe Dossier, type: :model do
 
         context "conditionaly visible" do
           let(:champ_with_error) { dossier.champs_public.second.champs.first }
-          let(:types_de_champ) { [{ type: :yes_no, stable_id: 99 }, type_de_champ] }
+          let(:types_de_champ) { [{ type: :yes_no, stable_id: 99, mandatory: false }, type_de_champ] }
           let(:type_de_champ) { { type: :repetition, mandatory: true, children: [{ mandatory: true }], condition: ds_eq(champ_value(99), constant(true)) } }
 
           it 'should not have errors' do
@@ -1849,7 +1849,7 @@ describe Dossier, type: :model do
   end
 
   describe 'brouillon_expired and en_construction_expired' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
     let(:reason) { DeletedDossier.reasons.fetch(:user_request) }
 

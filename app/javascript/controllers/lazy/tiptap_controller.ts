@@ -1,6 +1,6 @@
-import { Editor, type JSONContent } from '@tiptap/core';
+import { Editor } from '@tiptap/core';
 import { isButtonElement, isHTMLElement } from '@coldwired/utils';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 import { ApplicationController } from '../application_controller';
 import { getAction } from '../../shared/tiptap/actions';
@@ -61,7 +61,7 @@ export class TiptapController extends ApplicationController {
 
   insertTag(event: MouseEvent) {
     if (this.#editor && isHTMLElement(event.target)) {
-      const tag = tagSchema.parse(event.target.dataset);
+      const tag = s.create(event.target.dataset, tagSchema);
       const editor = this.#editor
         .chain()
         .focus()
@@ -77,12 +77,12 @@ export class TiptapController extends ApplicationController {
   private get content() {
     const value = this.inputTarget.value;
     if (value) {
-      return jsonContentSchema.parse(JSON.parse(value));
+      return s.create(JSON.parse(value), jsonContentSchema);
     }
   }
 
   private get tags(): TagSchema[] {
-    return this.tagTargets.map((tag) => tagSchema.parse(tag.dataset));
+    return this.tagTargets.map((tag) => s.create(tag.dataset, tagSchema));
   }
 
   private get menuButtons() {
@@ -92,13 +92,24 @@ export class TiptapController extends ApplicationController {
   }
 }
 
-const jsonContentSchema: z.ZodType<JSONContent> = z.object({
-  type: z.string().optional(),
-  text: z.string().optional(),
-  attrs: z.record(z.any()).optional(),
-  marks: z
-    .object({ type: z.string(), attrs: z.record(z.any()).optional() })
-    .array()
-    .optional(),
-  content: z.lazy(() => z.array(jsonContentSchema).optional())
+const Attrs = s.record(s.string(), s.any());
+const Marks = s.array(
+  s.type({
+    type: s.string(),
+    attrs: s.optional(Attrs)
+  })
+);
+type JSONContent = {
+  type?: string;
+  text?: string;
+  attrs?: s.Infer<typeof Attrs>;
+  marks?: s.Infer<typeof Marks>;
+  content?: JSONContent[];
+};
+const jsonContentSchema: s.Describe<JSONContent> = s.type({
+  type: s.optional(s.string()),
+  text: s.optional(s.string()),
+  attrs: s.optional(Attrs),
+  marks: s.optional(Marks),
+  content: s.lazy(() => s.optional(s.array(jsonContentSchema)))
 });

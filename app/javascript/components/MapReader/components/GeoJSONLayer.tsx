@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Popup, LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 

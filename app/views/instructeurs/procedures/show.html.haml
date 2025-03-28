@@ -110,14 +110,8 @@
                       = t('views.instructeurs.dossiers.personalize')
                     - menu.with_form do
                       = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
-                        = hidden_field_tag :values, nil
-                        = react_component("ComboMultiple",
-                          options: @displayable_fields_for_select,
-                          selected: @displayable_fields_selected,
-                          disabled: [],
-                          label: 'Colonne à afficher',
-                          group: '.columns-form',
-                          name: 'values')
+                        %react-fragment
+                          = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_fields_for_select, selected_keys: @displayable_fields_selected, name: 'values[]', 'aria-label': 'Colonne à afficher'
 
                         = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
 

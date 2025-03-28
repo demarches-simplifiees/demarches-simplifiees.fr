@@ -1,4 +1,6 @@
 class Champs::IntegerNumberChamp < Champ
+  before_validation :format_value
+
   validates :value, numericality: {
     only_integer: true,
     allow_nil: true,
@@ -9,9 +11,7 @@ class Champs::IntegerNumberChamp < Champ
     }
   }, if: :validate_champ_value_or_prefill?
 
-  validate :min_max_validation, if: -> {
-    validate_champ_value? || validation_context == :prefill
-  }
+  validate :min_max_validation, if: :validate_champ_value_or_prefill?
 
   def min_max_validation
     return if value.blank?
@@ -22,5 +22,11 @@ class Champs::IntegerNumberChamp < Champ
     if type_de_champ.max.present? && value.to_i > type_de_champ.max.to_i
       errors.add(:value, :less_than_or_equal_to, value: value, count: type_de_champ.max.to_i)
     end
+  end
+
+  def format_value
+    return if value.blank?
+
+    self.value = value.gsub(/[[:space:]]/, "")
   end
 end

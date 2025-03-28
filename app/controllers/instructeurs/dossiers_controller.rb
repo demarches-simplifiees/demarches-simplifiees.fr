@@ -86,9 +86,9 @@ module Instructeurs
     end
 
     def send_to_instructeurs
-      recipients = params['recipients'].presence || [].to_json
+      recipients = params['recipients'].presence || []
       # instructeurs are scoped by groupe_instructeur to avoid enumeration
-      recipients = dossier.groupe_instructeur.instructeurs.where(id: JSON.parse(recipients))
+      recipients = dossier.groupe_instructeur.instructeurs.where(id: recipients)
 
       if recipients.present?
         recipients.each do |recipient|
@@ -407,6 +407,7 @@ module Instructeurs
         :value,
         :value_other,
         :external_id,
+        :code,
         :primary_value,
         :secondary_value,
         :numero_allocataire,

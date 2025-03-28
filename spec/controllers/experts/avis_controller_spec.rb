@@ -367,7 +367,7 @@ describe Experts::AvisController, type: :controller do
       let(:previous_avis_confidentiel) { false }
       let(:previous_revoked_at) { nil }
       let!(:previous_avis) { create(:avis, dossier:, claimant:, experts_procedure:, confidentiel: previous_avis_confidentiel, revoked_at: previous_revoked_at) }
-      let(:emails) { '["a@b.com"]' }
+      let(:emails) { ["a@b.com"] }
       let(:introduction) { 'introduction' }
       let(:created_avis) { Avis.last }
       let!(:old_avis_count) { Avis.count }
@@ -394,7 +394,7 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'when an invalid email' do
-        let(:emails) { "[\"toto.fr\"]" }
+        let(:emails) { ["toto.fr"] }
 
         it do
           expect(response).to render_template :instruction
@@ -414,7 +414,7 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'ask review with attachment' do
-        let(:emails) { "[\"toto@totomail.com\"]" }
+        let(:emails) { ["toto@totomail.com"] }
 
         it do
           expect(created_avis.introduction_file).to be_attached
@@ -425,7 +425,7 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'with multiple emails' do
-        let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
+        let(:emails) { ["toto.fr", "titi@titimail.com"] }
 
         it do
           expect(response).to render_template :instruction

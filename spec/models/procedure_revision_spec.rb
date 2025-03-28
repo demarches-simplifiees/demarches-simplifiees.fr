@@ -439,6 +439,7 @@ describe ProcedureRevision do
         let(:new_tdc) do
           new_draft.add_type_de_champ(
             type_champ: TypeDeChamp.type_champs.fetch(:text),
+            mandatory: false,
             libelle: "Un champ text"
           )
         end
@@ -493,8 +494,8 @@ describe ProcedureRevision do
                 attribute: :mandatory,
                 label: first_tdc.libelle,
                 private: false,
-                from: false,
-                to: true,
+                from: true,
+                to: false,
                 stable_id: first_tdc.stable_id
               }
             ])

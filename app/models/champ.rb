@@ -293,7 +293,7 @@ class Champ < ApplicationRecord
     return if value.nil?
     return if value.present? && !value.include?("\u0000")
 
-    self.value = value.delete("\u0000")
+    write_attribute(:value, value.delete("\u0000"))
   end
 
   class NotImplemented < ::StandardError

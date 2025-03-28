@@ -1,12 +1,17 @@
 import type { SuggestionOptions, SuggestionProps } from '@tiptap/suggestion';
-import { z } from 'zod';
+import * as s from 'superstruct';
 import tippy, { type Instance as TippyInstance } from 'tippy.js';
 import { matchSorter } from 'match-sorter';
 
-export const tagSchema = z
-  .object({ tagLabel: z.string(), tagId: z.string() })
-  .transform(({ tagId, tagLabel }) => ({ label: tagLabel, id: tagId }));
-export type TagSchema = z.infer<typeof tagSchema>;
+export const tagSchema = s.coerce(
+  s.object({ label: s.string(), id: s.string() }),
+  s.type({
+    tagLabel: s.string(),
+    tagId: s.string()
+  }),
+  ({ tagId, tagLabel }) => ({ label: tagLabel, id: tagId })
+);
+export type TagSchema = s.Infer<typeof tagSchema>;
 
 class SuggestionMenu {
   #selectedIndex = 0;

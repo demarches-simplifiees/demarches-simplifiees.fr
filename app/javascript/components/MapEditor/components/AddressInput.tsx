@@ -1,33 +1,33 @@
-import React from 'react';
 import { fire } from '@utils';
 import type { FeatureCollection } from 'geojson';
 
-import ComboAdresseSearch from '../../ComboAdresseSearch';
-import { ComboSearchProps } from '~/components/ComboSearch';
+import { RemoteComboBox } from '../../ComboBox';
 
-export function AddressInput(
-  comboProps: Pick<
-    ComboSearchProps,
-    'screenReaderInstructions' | 'announceTemplateId'
-  > & { featureCollection: FeatureCollection; champId: string }
-) {
+export function AddressInput({
+  source,
+  featureCollection,
+  champId
+}: {
+  source: string;
+  featureCollection: FeatureCollection;
+  champId: string;
+}) {
   return (
-    <div
-      style={{
-        marginBottom: '10px'
-      }}
-    >
-      <ComboAdresseSearch
-        className="fr-input fr-mt-1w"
-        allowInputValues={false}
-        id={comboProps.champId}
-        onChange={(_, feature) => {
-          fire(document, 'map:zoom', {
-            featureCollection: comboProps.featureCollection,
-            feature
-          });
+    <div style={{ marginBottom: '10px' }}>
+      <RemoteComboBox
+        minimumInputLength={2}
+        id={champId}
+        loader={source}
+        label="Rechercher une Adresse"
+        description="Saisissez au moins 2 caractères"
+        onChange={(item) => {
+          if (item && item.data) {
+            fire(document, 'map:zoom', {
+              featureCollection,
+              feature: item.data
+            });
+          }
         }}
-        {...comboProps}
       />
     </div>
   );

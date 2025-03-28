@@ -31,6 +31,16 @@ describe Champs::IntegerNumberChamp do
       end
     end
 
+    context 'when the value is a number with sapces' do
+      let(:value) { ' 120 ' }
+
+      it 'is valid and is formated' do
+        is_expected.to be_truthy
+        champ.save!
+        expect(champ.value).to eq('120')
+      end
+    end
+
     context 'when the value is blank' do
       let(:value) { '' }
 

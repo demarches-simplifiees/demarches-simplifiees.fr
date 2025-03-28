@@ -473,8 +473,6 @@ en:
             dossier_number: "File n. %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
-            print: "print"
-            print_dossier: "All the file"
           status_overview:
             status_draft: draft
             status_in_progress: in progress

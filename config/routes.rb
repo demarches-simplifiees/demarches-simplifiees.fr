@@ -97,6 +97,7 @@ Rails.application.routes.draw do
     end
 
     resources :dubious_procedures, only: [:index]
+    resources :published_procedures, only: [:index]
     resources :outdated_procedures, only: [:index] do
       patch :bulk_update, on: :collection
     end
@@ -108,6 +109,10 @@ Rails.application.routes.draw do
       mount MaintenanceTasks::Engine => "/maintenance_tasks"
       mount Sidekiq::Web => "/sidekiq"
     end
+
+    get 'data_exports' => 'administrateurs#data_exports'
+    get 'exports/administrateurs/last_month' => 'administrateurs#export_last_month'
+    get 'exports/instructeurs/last_month' => 'instructeurs#export_last_month'
 
     get 'import_procedure_tags' => 'procedures#import_data'
     post 'import_tags' => 'procedures#import_tags'
@@ -261,6 +266,7 @@ Rails.application.routes.draw do
   namespace :data_sources do
     get :adresse, to: 'adresse#search', as: :data_source_adresse
     get :commune, to: 'commune#search', as: :data_source_commune
+    get :education, to: 'education#search', as: :data_source_education
 
     get :search_domaine_fonct, to: 'chorus#search_domaine_fonct', as: :search_domaine_fonct
     get :search_centre_couts, to: 'chorus#search_centre_couts', as: :search_centre_couts

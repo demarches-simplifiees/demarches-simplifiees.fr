@@ -3,7 +3,7 @@ describe 'Dossier::Recovery::LifeCycle' do
     let(:procedure) do
       create(:procedure,
              types_de_champ_public: [
-               { type: :repetition, children: [{ type: :piece_justificative }] },
+               { type: :repetition, children: [{ type: :piece_justificative }], mandatory: false },
                { type: :carte },
                { type: :siret }
              ])
@@ -15,8 +15,7 @@ describe 'Dossier::Recovery::LifeCycle' do
     let(:dossier) do
       d = create(:dossier, procedure:)
 
-      # pf default mandatory repetition already contains a row
-      # repetition(d).add_row(d.revision)
+      repetition(d).add_row(d.revision)
 
       pj_champ(d).piece_justificative_file.attach(some_file)
       carte(d).update(geo_areas: [geo_area])

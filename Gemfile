@@ -139,6 +139,7 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
+  gem "test-prof"
   gem 'timecop'
   gem 'vcr'
   gem 'webmock'

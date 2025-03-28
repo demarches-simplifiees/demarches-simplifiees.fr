@@ -1,5 +1,5 @@
 RSpec.describe NotificationMailer, type: :mailer do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure, :with_service) }
 

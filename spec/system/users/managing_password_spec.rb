@@ -29,7 +29,7 @@ describe 'Managing password:', js: true do
   end
 
   context 'for admins' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
     let(:weak_password) { '12345678' }
     let(:strong_password) { 'a new, long, and complicated password!' }

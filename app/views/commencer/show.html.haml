@@ -16,7 +16,11 @@
                 #{Current.application_name}
           %li= link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary fr-btn--lg fr-my-2w'
 
+    = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
+
   - else
+    = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
+
     - if @prefilled_dossier
       = render Dsfr::CalloutComponent.new(title: t(".prefilled_draft"), heading_level: 'h2') do |c|
         - c.with_body do

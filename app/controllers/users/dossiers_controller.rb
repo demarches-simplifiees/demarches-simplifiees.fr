@@ -557,6 +557,7 @@ module Users
         :value,
         :value_other,
         :external_id,
+        :code,
         :primary_value,
         :secondary_value,
         :numero_allocataire,

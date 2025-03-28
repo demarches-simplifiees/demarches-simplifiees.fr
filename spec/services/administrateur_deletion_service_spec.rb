@@ -1,13 +1,13 @@
 describe AdministrateurDeletionService do
   let(:super_admin) { create(:super_admin) }
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:service) { create(:service, administrateur: admin) }
   let(:other_admin) { create(:administrateur) }
   let(:procedure) { create(:procedure, service: service, administrateurs: [admin, other_admin]) }
   let(:owned_procedure_service) { create(:service, administrateur: admin) }
   let(:owned_procedure) { create(:procedure, service: owned_procedure_service, administrateurs: [admin]) }
 
-  describe '#call' do
+  describe '' do
     subject { AdministrateurDeletionService.new(super_admin, admin).call }
 
     context 'when admin can be deleted' do

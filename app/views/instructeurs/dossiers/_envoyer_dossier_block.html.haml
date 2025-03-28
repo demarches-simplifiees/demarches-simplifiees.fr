@@ -7,12 +7,7 @@
   %p.tab-paragrah.mb-1
     Le destinataire suivra automatiquement le dossier
   = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form fr-mb-4w' } do |f|
-    = hidden_field_tag :recipients, nil
-    = react_component("ComboMultiple",
-      options: potential_recipients.map{|r| [r.email, r.id]},
-      selected: [], disabled: [],
-      group: '.recipients-form',
-      name: 'recipients',
-      label: 'Emails')
+    %react-fragment
+      = render ReactComponent.new "ComboBox/MultiComboBox", items: potential_recipients.map { [_1.email, _1.id] }, name: 'recipients[]', 'aria-label': 'Emails'
 
     = f.submit "Envoyer", class: "fr-btn fr-mt-2w"

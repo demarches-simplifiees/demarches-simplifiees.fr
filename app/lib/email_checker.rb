@@ -615,7 +615,7 @@ class EmailChecker
     'ac-toulous.fr'
   ].freeze
 
-  def check(email:)
+  def self.check(email:)
     return { success: false } if email.blank?
 
     parsed_email = Mail::Address.new(EmailSanitizableConcern::EmailSanitizer.sanitize(email))
@@ -626,29 +626,29 @@ class EmailChecker
     similar_domains = closest_domains(domain: parsed_email.domain)
     return { success: true } if similar_domains.empty?
 
-    { success: true, email_suggestions: email_suggestions(parsed_email:, similar_domains:) }
+    { success: true, suggestions: suggestions(parsed_email:, similar_domains:) }
   rescue Mail::Field::IncompleteParseError
     return { success: false }
   end
 
   private
 
-  def closest_domains(domain:)
+  def self.closest_domains(domain:)
     KNOWN_DOMAINS.filter do |known_domain|
       close_by_distance_of(domain, known_domain, distance: 1) ||
       with_same_chars_and_close_by_distance_of(domain, known_domain, distance: 2)
     end
   end
 
-  def close_by_distance_of(a, b, distance:)
+  def self.close_by_distance_of(a, b, distance:)
     String::Similarity.levenshtein_distance(a, b) == distance
   end
 
-  def with_same_chars_and_close_by_distance_of(a, b, distance:)
+  def self.with_same_chars_and_close_by_distance_of(a, b, distance:)
     close_by_distance_of(a, b, distance: 2) && a.chars.sort == b.chars.sort
   end
 
-  def email_suggestions(parsed_email:, similar_domains:)
+  def self.suggestions(parsed_email:, similar_domains:)
     similar_domains.map { Mail::Address.new("#{parsed_email.local}@#{_1}").to_s }
   end
 end

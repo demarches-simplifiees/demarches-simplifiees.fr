@@ -2,12 +2,14 @@ describe Procedure do
   describe 'mail templates' do
     subject { create(:procedure) }
 
-    it { expect(subject.passer_en_construction_email_template).to be_a(Mails::InitiatedMail) }
-    it { expect(subject.passer_en_instruction_email_template).to be_a(Mails::ReceivedMail) }
-    it { expect(subject.accepter_email_template).to be_a(Mails::ClosedMail) }
-    it { expect(subject.refuser_email_template).to be_a(Mails::RefusedMail) }
-    it { expect(subject.classer_sans_suite_email_template).to be_a(Mails::WithoutContinuationMail) }
-    it { expect(subject.repasser_en_instruction_email_template).to be_a(Mails::ReInstructedMail) }
+    it "returns expected classes" do
+      expect(subject.passer_en_construction_email_template).to be_a(Mails::InitiatedMail)
+      expect(subject.passer_en_instruction_email_template).to be_a(Mails::ReceivedMail)
+      expect(subject.accepter_email_template).to be_a(Mails::ClosedMail)
+      expect(subject.refuser_email_template).to be_a(Mails::RefusedMail)
+      expect(subject.classer_sans_suite_email_template).to be_a(Mails::WithoutContinuationMail)
+      expect(subject.repasser_en_instruction_email_template).to be_a(Mails::ReInstructedMail)
+    end
   end
 
   describe 'compute_dossiers_count' do
@@ -1667,7 +1669,7 @@ describe Procedure do
             children: [
               { libelle: 'Nom', mandatory: true },
               { libelle: 'Prénom', mandatory: true },
-              { libelle: 'Age', type: :integer_number }
+              { libelle: 'Age', type: :integer_number, mandatory: false }
             ]
           }
         ]

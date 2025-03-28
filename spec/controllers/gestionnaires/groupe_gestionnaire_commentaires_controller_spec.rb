@@ -1,6 +1,6 @@
 describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :controller do
   let(:gestionnaire) { create(:gestionnaire).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire], administrateurs: [administrateur]) }
   let!(:commentaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur) }
 

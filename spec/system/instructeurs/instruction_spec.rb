@@ -161,13 +161,10 @@ describe 'Instructing a dossier:', js: true do
     within('.fr-sidemenu') { click_on 'Demander un avis' }
     expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
 
-    expert_email_formated = "[\"expert@tps.com\"]"
     expert_email = 'expert@tps.com'
-    ask_confidential_avis(expert_email_formated, 'a good introduction')
+    ask_confidential_avis(expert_email, 'a good introduction')
 
-    expert_email_formated = "[\"#{instructeur2.email}\"]"
-    expert_email = instructeur2.email
-    ask_confidential_avis(expert_email_formated, 'a good introduction')
+    ask_confidential_avis(instructeur2.email, 'a good introduction')
 
     click_on 'Personnes impliquées'
     expect(page).to have_text(expert_email)
@@ -190,8 +187,8 @@ describe 'Instructing a dossier:', js: true do
 
     click_on 'Personnes impliquées'
 
-    select_combobox('Emails', instructeur_2.email, instructeur_2.email, check: false)
-    select_combobox('Emails', instructeur_3.email, instructeur_3.email, check: false)
+    select_combobox('Emails', instructeur_2.email)
+    select_combobox('Emails', instructeur_3.email)
 
     click_on 'Envoyer'
 
@@ -287,7 +284,7 @@ describe 'Instructing a dossier:', js: true do
   end
 
   def ask_confidential_avis(to, introduction)
-    page.execute_script("document.querySelector('#avis_emails').value = '#{to}'")
+    fill_in 'avis_emails', with: to
     fill_in 'avis_introduction', with: introduction
     select 'confidentiel', from: 'avis_confidentiel'
     within('form#new_avis') { click_on 'Demander un avis' }

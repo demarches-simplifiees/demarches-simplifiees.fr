@@ -3,11 +3,11 @@ require 'system/administrateurs/procedure_spec_helper'
 describe 'Manage procedure instructeurs', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
-  let!(:procedure) { create(:procedure) }
-  let!(:administrateurs_procedure) { create(:administrateurs_procedure, administrateur: administrateur, procedure: procedure, manager: manager) }
+  let(:administrateur) { administrateurs(:default_admin) }
+  let(:procedure) { create(:procedure) }
   let(:manager) { false }
   before do
+    procedure.administrateurs_procedures.update_all(manager:)
     login_as administrateur.user, scope: :user
   end
 

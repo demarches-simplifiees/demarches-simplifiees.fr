@@ -1,6 +1,6 @@
 describe Manager::AdministrateursController, type: :controller do
   let(:super_admin) { create(:super_admin) }
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   before do
     sign_in super_admin

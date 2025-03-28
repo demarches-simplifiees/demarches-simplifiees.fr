@@ -13,6 +13,9 @@ describe 'The user', js: true do
 
     fill_individual
 
+    # wait for react components to be initialized
+    find('.dom-ready')
+
     # fill data
     fill_in('text', with: 'super texte', match: :first)
     fill_in('textarea', with: 'super textarea')
@@ -58,6 +61,11 @@ describe 'The user', js: true do
     wait_until { champ_value_for('address') == '78 Rue du Grés 30310 Vergèze' }
     wait_until { champ_for('address').full_address? }
     expect(champ_for('address').departement_code_and_name).to eq('30 – Gard')
+
+    scroll_to(find_field('annuaire_education'), align: :center)
+    fill_in('annuaire_education', with: 'Moulin')
+    find('.fr-menu__item', text: 'Ecole primaire Jean Moulin, Moulins (0030323K)').click
+    wait_until { champ_for('annuaire_education').external_id == "0030323K" }
 
     fill_in('dossier_link', with: dossier_to_link.id.to_s)
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
@@ -430,7 +438,7 @@ describe 'The user', js: true do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: },
+            { type: :integer_number, libelle: 'age', mandatory: false, stable_id: },
             {
               type: :repetition, libelle: 'repetition', condition:, children: [
                 { type: :text, libelle: 'nom', mandatory: true }
@@ -459,7 +467,7 @@ describe 'The user', js: true do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :checkbox, libelle: 'champ_a', stable_id: a_stable_id },
+            { type: :checkbox, libelle: 'champ_a', mandatory: false, stable_id: a_stable_id },
             {
               type: :repetition, libelle: 'repetition', mandatory: true, children: [
                 { type: :checkbox, libelle: 'champ_b', stable_id: b_stable_id },
@@ -496,7 +504,7 @@ describe 'The user', js: true do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: },
+            { type: :integer_number, libelle: 'age', mandatory: false, stable_id: },
             { type: :text, libelle: 'nom', mandatory: true, condition: }
           ])
       end
@@ -534,11 +542,11 @@ describe 'The user', js: true do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age du candidat', stable_id: age_stable_id },
-            { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
-            { type: :header_section, libelle: 'info voiture', condition: permis_condition },
-            { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
-            { type: :text, libelle: 'parking', condition: parking_condition }
+            { type: :integer_number, libelle: 'age du candidat', stable_id: age_stable_id, mandatory: false },
+            { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition, mandatory: false },
+            { type: :header_section, libelle: 'info voiture', condition: permis_condition, mandatory: false },
+            { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition, mandatory: false },
+            { type: :text, libelle: 'parking', condition: parking_condition, mandatory: false }
           ])
       end
 

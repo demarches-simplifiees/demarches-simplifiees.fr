@@ -58,7 +58,6 @@ class GroupeInstructeur < ApplicationRecord
     if not_found_emails.present?
       instructeurs_to_add += not_found_emails.map do |email|
         user = User.create_or_promote_to_instructeur(email, SecureRandom.hex, administrateurs: procedure.administrateurs)
-        user.invite_instructeur!
         user.instructeur
       end
     end

@@ -3,7 +3,7 @@ require 'system/administrateurs/procedure_spec_helper'
 describe 'As an administrateur I wanna clone a procedure', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let(:procedure_path) { 'toto' }
 
   before do
@@ -53,8 +53,8 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # then publish
       find('#publish-procedure-link').click
+      # pf default path computed is different
       expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
-      fill_in 'procedure_path', with: '' # workaround preventing appending value https://github.com/redux-form/redux-form/issues/686
       fill_in 'procedure_path', with: procedure_path
       expect(page).to have_content 'Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.'
 
@@ -92,8 +92,8 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # then publish
       find('#publish-procedure-link').click
+      # pf default path computed is different
       expect(find_field('procedure_path').value).to eq Procedure.last.service.suggested_path + '-libelle-de-la-procedure'
-      fill_in 'procedure_path', with: '' # workaround preventing appending value https://github.com/redux-form/redux-form/issues/686
       fill_in 'procedure_path', with: procedure_path
       expect(page).to have_content 'Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.'
       fill_in 'lien_site_web', with: 'http://some.website'

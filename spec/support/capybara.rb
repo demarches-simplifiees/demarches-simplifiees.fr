@@ -36,6 +36,12 @@ Capybara.register_driver :chrome do |app|
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
   options.add_argument('--mute-audio')
   options.add_argument('--window-size=1440,900')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--disable-software-rasterizer')
+  options.add_argument('--mute-audio')
+  # 🔹 Force la langue via les préférences utilisateur Chrome
+  options.add_preference('intl.accept_languages', 'fr-FR,fr')
+  options.add_preference('translate.enabled', false)
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux

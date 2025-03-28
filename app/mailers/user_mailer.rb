@@ -103,7 +103,7 @@ class UserMailer < ApplicationMailer
 
   def notify_after_closing(user, content, procedure = nil)
     @user = user
-    @subject = "Clôture d'une démarche sur #{APPLICATION_NAME}"
+    @subject = "Clôture d'une démarche sur #{Current.application_name}"
     @procedure = procedure
     @content = content
 
