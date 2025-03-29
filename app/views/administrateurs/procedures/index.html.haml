@@ -1,7 +1,10 @@
 .sub-header
   .flex.fr-container
     %h1.fr-h3 Mes démarches
-    .procedure-admin-listing-container.fr-mt-1v
+  .fr-container.flex.justify-between.fr-mb-3w
+    %div
+      = render Administrateurs::SelectProcedureDropDownListComponent.new(procedures: @procedures_publiees)
+    %div
       = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
   .fr-container
 

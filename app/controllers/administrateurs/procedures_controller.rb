@@ -474,6 +474,12 @@ module Administrateurs
       end
     end
 
+    def select_procedure
+      return redirect_to admin_procedure_path(params[:procedure_id]) if params[:procedure_id].present?
+
+      redirect_to admin_procedures_path
+    end
+
     private
 
     def reset_draft_procedure
