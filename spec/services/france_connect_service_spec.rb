@@ -3,8 +3,6 @@
 describe FranceConnectService do
   describe '.retrieve_user_informations_particulier' do
     let(:code) { 'plop' }
-    let(:access_token) { +'my access_token' }
-
     let(:given_name) { 'plop1' }
     let(:family_name) { 'plop2' }
     let(:birthdate) { '2012-12-31' }
@@ -13,15 +11,20 @@ describe FranceConnectService do
     let(:email) { 'plop@emaiL.com' }
     let(:phone) { '012345678' }
     let(:france_connect_particulier_id) { 'izhikziogjuziegj' }
+    let(:nonce) { 'a_nonce' }
 
-    let(:user_info_hash) { { sub: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace, email: email, phone: phone } }
+    let(:user_info_hash) { { sub: france_connect_particulier_id, given_name:, family_name:, birthdate:, gender:, birthplace:, email:, phone: } }
     let(:user_info) { instance_double('OpenIDConnect::ResponseObject::UserInfo', raw_attributes: user_info_hash) }
 
-    subject { described_class.find_or_retrieve_france_connect_information code }
+    subject { described_class.find_or_retrieve_france_connect_information(code, nonce) }
 
     before do
+      access_token = instance_double('OpenIDConnect::AccessToken')
       allow_any_instance_of(FranceConnectParticulierClient).to receive(:access_token!).and_return(access_token)
       allow(access_token).to receive(:userinfo!).and_return(user_info)
+      allow(access_token).to receive(:id_token).and_return('id_token')
+
+      allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(double(verify!: true))
     end
 
     it 'set code for FranceConnectEntrepriseClient' do
@@ -30,7 +33,9 @@ describe FranceConnectService do
     end
 
     it 'returns user informations' do
-      expect(subject).to have_attributes({
+      fci, id_token = subject
+
+      expect(fci).to have_attributes({
         given_name: given_name,
         family_name: family_name,
         birthdate: Time.zone.parse(birthdate).to_date,
@@ -39,6 +44,8 @@ describe FranceConnectService do
         email_france_connect: email,
         france_connect_particulier_id: france_connect_particulier_id
       })
+
+      expect(id_token).to eq('id_token')
     end
   end
 end
