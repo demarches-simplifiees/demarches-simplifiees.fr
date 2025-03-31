@@ -9,7 +9,7 @@ module TurboChampsConcern
     to_update = champs.filter { _1.public_id.in?(params.keys) }
       .filter { _1.refresh_after_update? || _1.user_buffer_changes? }
 
-    to_show, to_hide = champs.filter(&:conditional?)
+    to_show, to_hide = champs.filter { it.conditional? || it.child? }
       .partition(&:visible?)
       .map { champs_to_one_selector(_1 - to_update) }
 

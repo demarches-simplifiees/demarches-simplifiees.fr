@@ -427,12 +427,13 @@ describe 'The user', js: true do
     context 'with a repetition' do
       let(:stable_id) { 999 }
       let(:condition) { greater_than_eq(champ_value(stable_id), constant(18)) }
+      let(:repetition_mandatory) { false }
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
             { type: :integer_number, libelle: 'UNIQ_LABEL', mandatory: false, stable_id: },
             {
-              type: :repetition, libelle: 'repetition', condition:, children: [
+              type: :repetition, libelle: 'repetition', mandatory: repetition_mandatory, condition:, children: [
                 { type: :text, libelle: 'nom', mandatory: true }
               ]
             }
@@ -446,6 +447,21 @@ describe 'The user', js: true do
         fill_in('UNIQ_LABEL', with: 10)
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
+      end
+
+      context 'condition for a mandatory repetition' do
+        let(:repetition_mandatory) { true }
+
+        scenario 'default rows is visible when condition is satisfied' do
+          log_in(user, procedure)
+          fill_individual
+
+          fill_in('UNIQ_LABEL', with: 20)
+
+          fill_in('nom', with: "got it")
+          click_on 'Déposer le dossier'
+          expect(page).to have_current_path(merci_dossier_path(user_dossier))
+        end
       end
     end
 
