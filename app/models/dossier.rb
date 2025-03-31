@@ -945,7 +945,12 @@ class Dossier < ApplicationRecord
   end
 
   def remove_piece_justificative_file_not_visible!
-    champs.filter { _1.piece_justificative_file.attached? && !_1.visible? && _1.piece_justificative_file.purge_later }
+    champs.each do |champ|
+      next unless champ.piece_justificative_file.attached?
+      next if champ.visible?
+
+      champ.piece_justificative_file.purge_later
+    end
   end
 
   def check_mandatory_and_visible_champs

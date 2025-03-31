@@ -164,10 +164,14 @@ module Users
     def update_identite
       @dossier = dossier
       @no_description = true
+      email = dossier_params.dig('individual_attributes', 'email')
 
       if @dossier.update(dossier_params) && @dossier.individual.valid?
-        # TODO: remove this after proper mandat email validation
-        @dossier.individual.update!(email_verified_at: Time.zone.now)
+        # verify for_tiers email
+        if email.present?
+          User.create_or_promote_to_tiers(email, SecureRandom.hex, @dossier)
+        end
+
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 

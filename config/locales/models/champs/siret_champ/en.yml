@@ -3,4 +3,4 @@ en:
     attributes:
       champs/siret_champ:
         hints:
-          value: "Enter one letter or digit, followed by 5 digits, no space. Example : D12345 or 003970"
+          value: "Enter 14 digits. Example : 500 0012 345 6789"

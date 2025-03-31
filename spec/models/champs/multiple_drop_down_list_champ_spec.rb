@@ -41,8 +41,6 @@ describe Champs::MultipleDropDownListChamp do
           expect(champ.value).to eq("[\"val1\"]")
           champ.value = 'val2'
           expect(champ.value).to eq("[\"val1\",\"val2\"]")
-          champ.value = ''
-          expect(champ.value).to eq("[\"val1\",\"val2\"]")
           champ.value = "[brackets] val4"
           expect(champ.value).to eq("[\"val1\",\"val2\",\"[brackets] val4\"]")
           champ.value = nil
@@ -50,6 +48,10 @@ describe Champs::MultipleDropDownListChamp do
           champ.value = ["val1"]
           expect(champ.value).to eq("[\"val1\"]")
           champ.value = []
+          expect(champ.value).to be_nil
+          champ.value = ["val1"]
+          expect(champ.value).to eq("[\"val1\"]")
+          champ.value = ''
           expect(champ.value).to be_nil
         }
       end

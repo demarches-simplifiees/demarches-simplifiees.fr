@@ -99,6 +99,12 @@ class User < ApplicationRecord
     UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
   end
 
+  def invite_tiers!(dossier)
+    token = SecureRandom.hex(10)
+    self.update!(confirmation_token: token, confirmation_sent_at: Time.zone.now)
+    UserMailer.invite_tiers(self, token, dossier).deliver_later
+  end
+
   def invite_gestionnaire!(groupe_gestionnaire)
     UserMailer.invite_gestionnaire(self, set_reset_password_token, groupe_gestionnaire).deliver_later
   end
@@ -143,6 +149,17 @@ class User < ApplicationRecord
       user.create_gestionnaire!
     end
 
+    user
+  end
+
+  def self.create_or_promote_to_tiers(email, password, dossier = nil)
+    user = User
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
+
+    if user.valid? && user.unverified_email?
+      user.invite_tiers!(dossier)
+    end
     user
   end
 
