@@ -6,12 +6,18 @@ class FranceConnect::ParticulierController < ApplicationController
   before_action :securely_retrieve_fci_from_email_merge_token, only: [:merge_using_email_link]
   before_action :set_user_by_confirmation_token, only: [:confirm_email]
 
+  STATE_COOKIE_NAME = :france_connect_state
+  NONCE_COOKIE_NAME = :france_connect_nonce
+
   def login
-    if FranceConnectService.enabled?
-      redirect_to FranceConnectService.authorization_uri, allow_other_host: true
-    else
-      redirect_to new_user_session_path
-    end
+    return redirect_to new_user_session_path if !FranceConnectService.enabled?
+
+    uri, state, nonce = FranceConnectService.authorization_uri
+
+    cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
+    cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
+
+    redirect_to uri, allow_other_host: true
   end
 
   def callback

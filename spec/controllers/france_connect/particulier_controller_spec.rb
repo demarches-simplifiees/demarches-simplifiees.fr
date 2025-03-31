@@ -19,7 +19,11 @@ describe FranceConnect::ParticulierController, type: :controller do
   describe '#auth' do
     subject { get :login }
 
-    it { is_expected.to have_http_status(:redirect) }
+    it do
+      is_expected.to have_http_status(:redirect)
+      expect(cookies.encrypted[FranceConnect::ParticulierController::STATE_COOKIE_NAME]).to be_present
+      expect(cookies.encrypted[FranceConnect::ParticulierController::NONCE_COOKIE_NAME]).to be_present
+    end
   end
 
   describe '#callback' do
