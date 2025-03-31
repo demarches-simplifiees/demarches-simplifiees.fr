@@ -9,11 +9,11 @@ module Users
 
     def update_email
       requested_user = User.find_by(email: requested_email)
-      if requested_user.present? && current_user.ask_for_merge(requested_user)
-        current_user.update(unconfirmed_email: nil)
+      if requested_user.present?
+        current_user.ask_for_merge(requested_user)
 
         flash.notice = t('devise.registrations.update_needs_confirmation')
-      elsif current_user.update(update_email_params)
+      elsif update_with_lock(update_email_params)
         current_user.update(requested_merge_into: nil)
 
         flash.notice = t('devise.registrations.update_needs_confirmation')
@@ -22,6 +22,15 @@ module Users
       end
 
       redirect_to profil_path
+    rescue ActiveRecord::RecordInvalid => e
+      flash.alert = e.record.errors.full_messages
+      redirect_to profil_path
+    end
+
+    def update_with_lock(params)
+      current_user.with_lock do
+        current_user.update!(params)
+      end
     end
 
     def transfer_all_dossiers
