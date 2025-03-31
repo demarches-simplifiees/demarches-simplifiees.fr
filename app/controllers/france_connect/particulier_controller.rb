@@ -21,6 +21,10 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def callback
+    if cookies.encrypted[STATE_COOKIE_NAME] != params['state']
+      return redirect_to(new_user_session_path, alert: t('errors.messages.france_connect.connexion'))
+    end
+
     @fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
 
     if @fci.user.nil?
