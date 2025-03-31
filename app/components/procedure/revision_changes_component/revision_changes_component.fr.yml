@@ -69,14 +69,14 @@ fr:
     update_max_number: La valeur maximale pour le champ « %{label} » a été modifié. Le maximum est désormais %{to}.
     update_date_in_past: "Le champ « %{label} » a été modifié.  %{to} "
     add_date_in_past_constraint: "La date doit être dans le passé"
-    remove_date_in_past_constraint: "La date peut désormais être dans le futur"
+    remove_date_in_past_constraint: "La date n'est plus limitée à une date dans le passé."
     update_range_date: "Le champ « %{label} » a été modifié.  %{to} "
     add_range_date_constraint: "La limite des valeurs a été activée."
-    remove_range_date_constraint: "La limite des valeurs a été désactivé."
-    remove_start_date: La date de début pour le champ « %{label} » a été supprimé.
-    update_start_date: La date de début pour le champ « %{label} » a été modifié. Le date est désormais %{to}.
-    remove_end_date: La date de fin pour le champ « %{label} » a été supprimé.
-    update_end_date: La date de fin pour le champ « %{label} » a été modifié. La date est désormais %{to}.
+    remove_range_date_constraint: "La limite des valeurs a été désactivée."
+    remove_start_date: La date de début pour le champ « %{label} » a été supprimée.
+    update_start_date: La date de début pour le champ « %{label} » a été modifiée. Le date est désormais %{to}.
+    remove_end_date: La date de fin pour le champ « %{label} » a été supprimée.
+    update_end_date: La date de fin pour le champ « %{label} » a été modifiée. La date est désormais %{to}.
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
     remove: L’annotation privée « %{label} » a été supprimée.
