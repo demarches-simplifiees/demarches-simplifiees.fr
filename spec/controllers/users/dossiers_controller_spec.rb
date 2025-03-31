@@ -663,7 +663,10 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when dossier was already submitted' do
-      before { post :submit_en_construction, params: payload }
+      before do
+        expect_any_instance_of(Dossier).to receive(:remove_piece_justificative_file_not_visible!)
+        post :submit_en_construction, params: payload
+      end
 
       it 'redirects to the dossier' do
         subject
