@@ -3,7 +3,7 @@
 describe Users::DossiersController, type: :controller do
   include ActiveSupport::Testing::TimeHelpers
 
-  let(:user) { create(:user) }
+  let(:user) { users(:default_user) }
 
   describe 'before_actions' do
     it 'are present' do
@@ -78,7 +78,6 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe '#ensure_ownership_or_invitation!' do
-    let(:user) { create(:user) }
     let(:asked_dossier) { create(:dossier) }
     let(:ensure_authorized) { :ensure_ownership_or_invitation! }
 
