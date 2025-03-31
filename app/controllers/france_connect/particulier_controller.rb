@@ -8,6 +8,7 @@ class FranceConnect::ParticulierController < ApplicationController
 
   STATE_COOKIE_NAME = :france_connect_state
   NONCE_COOKIE_NAME = :france_connect_nonce
+  ID_TOKEN_COOKIE_NAME = :france_connect_id_token
 
   def login
     return redirect_to new_user_session_path if !FranceConnectService.enabled?
@@ -28,6 +29,8 @@ class FranceConnect::ParticulierController < ApplicationController
     @fci, id_token = FranceConnectService.find_or_retrieve_france_connect_information(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
 
     cookies.delete(NONCE_COOKIE_NAME)
+
+    cookies.encrypted[ID_TOKEN_COOKIE_NAME] = { value: id_token, secure: Rails.env.production?, httponly: true }
 
     if @fci.user.nil?
       preexisting_unlinked_user = User.find_by(email: sanitize(@fci.email_france_connect))
