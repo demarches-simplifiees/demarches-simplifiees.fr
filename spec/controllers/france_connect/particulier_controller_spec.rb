@@ -28,8 +28,13 @@ describe FranceConnect::ParticulierController, type: :controller do
 
   describe '#callback' do
     let(:code) { 'plop' }
+    let(:state) { 'good_state' }
 
-    subject { get :callback, params: { code: code } }
+    before do
+      cookies.encrypted[FranceConnect::ParticulierController::STATE_COOKIE_NAME] = 'good_state'
+    end
+
+    subject { get :callback, params: { code:, state: } }
 
     context 'when params are missing' do
       subject { get :callback }
@@ -75,6 +80,15 @@ describe FranceConnect::ParticulierController, type: :controller do
             before { controller.store_location_for(:user, stored_location) }
 
             it { is_expected.to redirect_to(stored_location) }
+          end
+
+          context 'but the state is not correct' do
+            let(:state) { 'bad_state' }
+
+            it 'redirects to the login path' do
+              subject
+              expect(response).to redirect_to(new_user_session_path)
+            end
           end
         end
 
