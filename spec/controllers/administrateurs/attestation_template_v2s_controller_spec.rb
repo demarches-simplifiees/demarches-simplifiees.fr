@@ -28,7 +28,6 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
   before do
     sign_in(admin.user)
-    Flipper.enable(:attestation_v2)
   end
 
   describe 'GET #show' do
