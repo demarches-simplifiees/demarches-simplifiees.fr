@@ -116,6 +116,10 @@ describe Users::SessionsController, type: :controller do
 
     before do
       stub_const("PRO_CONNECT", { end_session_endpoint: 'http://pro-connect/logout' })
+
+      cookies.encrypted[FranceConnect::ParticulierController::ID_TOKEN_COOKIE_NAME] = 'id_token'
+      cookies.encrypted[FranceConnect::ParticulierController::STATE_COOKIE_NAME] = 'state'
+
       sign_in user
       delete :destroy
     end
@@ -133,7 +137,16 @@ describe Users::SessionsController, type: :controller do
       let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
 
       it 'redirect to france connect logout page' do
-        expect(response).to redirect_to(FRANCE_CONNECT[:particulier][:logout_endpoint])
+        h = { id_token_hint: 'id_token', post_logout_redirect_uri: root_url, state: 'state' }
+        expect(response).to redirect_to("#{FRANCE_CONNECT[:particulier][:logout_endpoint]}?#{h.to_query}")
+
+        [
+          FranceConnect::ParticulierController::ID_TOKEN_COOKIE_NAME,
+          FranceConnect::ParticulierController::STATE_COOKIE_NAME
+        ].map(&:to_s).each do |cookie_name|
+          expect(response.cookies.keys).to include(cookie_name)
+          expect(response.cookies[cookie_name]).to be_nil
+        end
       end
     end
 

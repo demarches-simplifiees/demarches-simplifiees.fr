@@ -56,7 +56,14 @@ class Users::SessionsController < Devise::SessionsController
       sign_out :user
 
       if connected_with_france_connect == User.loged_in_with_france_connects.fetch(:particulier)
-        return redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
+        id_token = cookies.encrypted[FranceConnect::ParticulierController::ID_TOKEN_COOKIE_NAME]
+        state = cookies.encrypted[FranceConnect::ParticulierController::STATE_COOKIE_NAME]
+
+        cookies.delete(FranceConnect::ParticulierController::ID_TOKEN_COOKIE_NAME)
+        cookies.delete(FranceConnect::ParticulierController::STATE_COOKIE_NAME)
+
+        return redirect_to FranceConnectService.logout_url(id_token:, state:, host_with_port: request.host_with_port),
+          allow_other_host: true
       end
 
       if pro_connect_id_token.present?

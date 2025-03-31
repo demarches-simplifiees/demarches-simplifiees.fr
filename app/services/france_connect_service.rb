@@ -27,6 +27,12 @@ class FranceConnectService
     [fci_to_return, id_token]
   end
 
+  def self.logout_url(id_token:, host_with_port:, state:)
+    post_logout_redirect_uri = Rails.application.routes.url_helpers.root_url(host: host_with_port)
+    h = { id_token_hint: id_token, post_logout_redirect_uri:, state: }
+    "#{FRANCE_CONNECT[:particulier][:logout_endpoint]}?#{h.to_query}"
+  end
+
   private
 
   def self.retrieve_user_informations_particulier(code, nonce)
