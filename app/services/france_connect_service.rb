@@ -8,12 +8,17 @@ class FranceConnectService
   def self.authorization_uri
     client = FranceConnectParticulierClient.new
 
-    client.authorization_uri(
+    state = SecureRandom.alphanumeric(32)
+    nonce = SecureRandom.alphanumeric(32)
+
+    uri = client.authorization_uri(
       scope: [:profile, :email],
-      state: SecureRandom.hex(16),
-      nonce: SecureRandom.hex(16),
+      state:,
+      nonce:,
       acr_values: 'eidas1'
     )
+
+    [uri, state, nonce]
   end
 
   def self.find_or_retrieve_france_connect_information(code)
