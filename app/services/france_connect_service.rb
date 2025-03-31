@@ -21,21 +21,26 @@ class FranceConnectService
     [uri, state, nonce]
   end
 
-  def self.find_or_retrieve_france_connect_information(code)
-    fetched_fci = FranceConnectService.retrieve_user_informations_particulier(code)
-    FranceConnectInformation.find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) || fetched_fci
+  def self.find_or_retrieve_france_connect_information(code, nonce)
+    fetched_fci, id_token = FranceConnectService.retrieve_user_informations_particulier(code, nonce)
+    fci_to_return = FranceConnectInformation.find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) || fetched_fci
+    [fci_to_return, id_token]
   end
 
   private
 
-  def self.retrieve_user_informations_particulier(code)
+  def self.retrieve_user_informations_particulier(code, nonce)
     client = FranceConnectParticulierClient.new(code)
 
-    user_info = client.access_token!(client_auth_method: :secret)
-      .userinfo!
-      .raw_attributes
+    access_token = client.access_token!(client_auth_method: :secret)
 
-    FranceConnectInformation.new(
+    id_token = OpenIDConnect::ResponseObject::IdToken.decode(access_token.id_token, FRANCE_CONNECT[:particulier][:jwks])
+
+    id_token.verify!(issuer: FRANCE_CONNECT[:particulier][:issuer], nonce:, client_id: FRANCE_CONNECT[:particulier][:identifier])
+
+    user_info = access_token.userinfo!.raw_attributes
+
+    fci = FranceConnectInformation.new(
       gender: user_info[:gender],
       given_name: user_info[:given_name],
       family_name: user_info[:family_name],
@@ -44,5 +49,7 @@ class FranceConnectService
       birthplace: user_info[:birthplace],
       france_connect_particulier_id: user_info[:sub]
     )
+
+    [fci, access_token.id_token]
   end
 end
