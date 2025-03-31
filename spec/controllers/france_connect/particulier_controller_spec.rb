@@ -57,7 +57,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     context 'when code is correct' do
       before do
         allow(FranceConnectService).to receive(:retrieve_user_informations_particulier)
-          .and_return(FranceConnectInformation.new(user_info))
+          .and_return([FranceConnectInformation.new(user_info), 'id_token'])
       end
 
       context 'when france_connect_particulier_id exists in database' do
@@ -74,6 +74,7 @@ describe FranceConnect::ParticulierController, type: :controller do
             expect(controller.current_user).to eq(fc_user)
             expect(fc_user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
             expect(cookies.encrypted[FranceConnect::ParticulierController::NONCE_COOKIE_NAME]).to be_nil
+            expect(cookies.encrypted[FranceConnect::ParticulierController::ID_TOKEN_COOKIE_NAME]).to eq('id_token')
           end
 
           context 'and the user has a stored location' do
