@@ -27,6 +27,8 @@ class FranceConnect::ParticulierController < ApplicationController
 
     @fci, id_token = FranceConnectService.find_or_retrieve_france_connect_information(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
 
+    cookies.delete(NONCE_COOKIE_NAME)
+
     if @fci.user.nil?
       preexisting_unlinked_user = User.find_by(email: sanitize(@fci.email_france_connect))
 
