@@ -49,7 +49,7 @@ module EtablissementHelper
 
   def raison_sociale_or_name(etablissement)
     etablissement.association_titre.presence ||
-      etablissement.enseigne.presence ||
+      etablissement.enseigne.present? ? "#{etablissement.enseigne} - #{etablissement.localite}" : nil ||
       etablissement.entreprise_raison_sociale.presence ||
       "#{etablissement.entreprise_nom} #{etablissement.entreprise_prenom}"
   end
