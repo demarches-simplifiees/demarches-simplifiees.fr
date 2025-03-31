@@ -5,8 +5,7 @@ class TypeDeChamp < ApplicationRecord
   FEATURE_FLAGS = {
     referentiel: :referentiel_type_de_champ,
     engagement_juridique: :engagement_juridique_type_de_champ,
-    cojo: :cojo_type_de_champ,
-    expression_reguliere: :expression_reguliere_type_de_champ
+    cojo: :cojo_type_de_champ
   }
 
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
@@ -63,8 +62,7 @@ class TypeDeChamp < ApplicationRecord
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
-    cojo: REFERENTIEL_EXTERNE,
-    expression_reguliere: STANDARD
+    cojo: REFERENTIEL_EXTERNE
   }
 
   enum :type_champ, {
@@ -108,7 +106,6 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri',
     epci: 'epci',
     cojo: 'cojo',
-    expression_reguliere: 'expression_reguliere',
     referentiel: 'referentiel'
   }
 

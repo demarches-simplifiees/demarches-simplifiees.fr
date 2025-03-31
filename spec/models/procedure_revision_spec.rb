@@ -1060,7 +1060,7 @@ describe ProcedureRevision do
   describe "expressions_regulieres_are_valid" do
     let(:procedure) do
       create(:procedure).tap do |p|
-        p.draft_revision.add_type_de_champ(type_champ: :formatted, libelle: 'exemple', expression_reguliere:, expression_reguliere_exemple_text:)
+        p.draft_revision.add_type_de_champ(type_champ: :formatted, libelle: 'exemple', formatted_mode: 'advanced', expression_reguliere:, expression_reguliere_exemple_text:)
       end
     end
     let(:draft_revision) { procedure.draft_revision }
@@ -1107,7 +1107,7 @@ describe ProcedureRevision do
     context "When repetition" do
       let(:procedure) do
         create(:procedure,
-               types_de_champ_public: [{ type: :repetition, children: [{ type: :formatted, expression_reguliere:, expression_reguliere_exemple_text: }] }])
+          types_de_champ_public: [{ type: :repetition, children: [{ type: :formatted, formatted_mode: 'advanced', expression_reguliere:, expression_reguliere_exemple_text: }] }])
       end
 
       context "When bad expression_reguliere" do

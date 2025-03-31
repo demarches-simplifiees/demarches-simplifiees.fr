@@ -8,6 +8,7 @@ class TypesDeChamp::FormattedValidator < ActiveModel::EachValidator
       .each do |tdc|
         validate_characters_rules(procedure, attribute, tdc)
         validate_character_length(procedure, attribute, tdc)
+        validate_regexp(procedure, attribute, tdc)
       end
   end
 
@@ -34,6 +35,16 @@ class TypesDeChamp::FormattedValidator < ActiveModel::EachValidator
       procedure.errors.add(
         attribute,
         :invalid_character_length,
+        type_de_champ: tdc
+      )
+    end
+  end
+
+  def validate_regexp(procedure, attribute, tdc)
+    if tdc.formatted_mode == 'advanced' && tdc.invalid_regexp?
+      procedure.errors.add(
+        attribute,
+        procedure.errors.generate_message(attribute, :expression_reguliere_invalid, { value: tdc.libelle }),
         type_de_champ: tdc
       )
     end

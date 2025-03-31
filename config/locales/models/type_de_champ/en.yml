@@ -56,7 +56,6 @@ en:
           mesri: 'Data from Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation'
           epci: 'EPCI'
           cojo: 'Accreditation Paris 2024'
-          expression_reguliere: 'Regular expression'
           formatted: 'Formatted field'
           referentiel: 'External data to configure (advanced)'
         default_libelle:
