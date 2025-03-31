@@ -88,6 +88,23 @@ describe Expired::DossiersDeletionService do
     end
   end
 
+  describe '#process_never_touched_dossiers_brouillon' do
+    subject { service.process_never_touched_dossiers_brouillon }
+
+    context 'with never touched brouillon dossiers' do
+      let!(:never_touched_brouillon) { travel_to(20.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:never_touched_brouillon_2) { travel_to(7.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:never_touched_en_construction) { travel_to(20.days.ago) { create(:dossier, :en_construction, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:touched_brouillon) { travel_to(20.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: 1.day.ago, last_champ_piece_jointe_updated_at: nil) } }
+      let!(:touched_brouillon_2) { travel_to(20.days.ago) { create(:dossier, procedure: procedure, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: 1.day.ago) } }
+
+      it 'deletes never touched brouillons ' do
+        expect { subject }.to change { Dossier.never_touched_brouillon_expired.count }.from(1).to(0)
+        expect(Dossier.all).to contain_exactly(never_touched_brouillon_2, never_touched_en_construction, touched_brouillon, touched_brouillon_2)
+      end
+    end
+  end
+
   describe '#delete_expired_brouillons_and_notify' do
     before { travel_to(reference_date) }
 
