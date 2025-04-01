@@ -56,10 +56,10 @@ module MailerDefaultsConfigurableConcern
     private
 
     def set_currents_for_demarches_gouv_fr
-      Current.application_name = "demarches.gouv.fr"
-      Current.host = "demarches.gouv.fr"
-      Current.contact_email = "contact@demarches.gouv.fr"
-      Current.no_reply_email = NO_REPLY_EMAIL.sub("demarches-simplifiees.fr", "demarches.gouv.fr") # rubocop:disable DS/ApplicationName
+      Current.application_name = "demarches.numerique.gouv.fr"
+      Current.host = "demarches.numerique.gouv.fr"
+      Current.contact_email = "contact@demarches.numerique.gouv.fr"
+      Current.no_reply_email = NO_REPLY_EMAIL.sub("demarches-simplifiees.fr", "demarches.numerique.gouv.fr") # rubocop:disable DS/ApplicationName
     end
 
     def set_currents_for_legacy
