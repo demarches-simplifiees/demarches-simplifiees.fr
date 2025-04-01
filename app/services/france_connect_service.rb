@@ -30,7 +30,7 @@ class FranceConnectService
   def self.logout_url(id_token:, host_with_port:, state:)
     post_logout_redirect_uri = Rails.application.routes.url_helpers.root_url(host: host_with_port)
     h = { id_token_hint: id_token, post_logout_redirect_uri:, state: }
-    "#{FRANCE_CONNECT[:logout_endpoint]}?#{h.to_query}"
+    "#{FRANCE_CONNECT[:end_session_endpoint]}?#{h.to_query}"
   end
 
   private
@@ -43,7 +43,7 @@ class FranceConnectService
 
     id_token = OpenIDConnect::ResponseObject::IdToken.decode(access_token.id_token, FRANCE_CONNECT[:jwks])
 
-    id_token.verify!(issuer: FRANCE_CONNECT[:issuer], nonce:, client_id: FRANCE_CONNECT[:identifier])
+    id_token.verify!(FRANCE_CONNECT.merge(nonce:))
 
     user_info = access_token.userinfo!.raw_attributes
 
