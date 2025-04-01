@@ -3,6 +3,11 @@
 = render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation }
 
 .fr-container
+  - if @gallery_attachments.blank?
+    = render Dsfr::AlertComponent.new(state: :info, extra_class_names: "fr-my-6w") do |c|
+      - c.with_body do
+        %p Ce dossier ne comporte pas ou plus de pièce jointe.
+
   .gallery.gallery-pieces-jointes{ "data-controller": "lightbox" }
     - @gallery_attachments.each do |attachment|
       = render Attachment::GalleryItemComponent.new(attachment:, seen_at: @pieces_jointes_seen_at)
