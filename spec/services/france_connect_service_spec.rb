@@ -1,6 +1,30 @@
 # frozen_string_literal: true
 
 describe FranceConnectService do
+  describe '.authorization_uri' do
+    let(:client) { instance_double('OpenIDConnect::Client') }
+    let(:state) { 'a_state' }
+    let(:nonce) { 'a_nonce' }
+    let(:uri) { 'a_uri' }
+
+    subject { described_class.authorization_uri }
+
+    before do
+      stub_const('FRANCE_CONNECT', identifier: 'identifier')
+      allow(OpenIDConnect::Client).to receive(:new).and_return(client)
+      allow(SecureRandom).to receive(:alphanumeric).with(32).and_return(state, nonce)
+      allow(client).to receive(:authorization_uri).with(
+        scope: [:profile, :email],
+        state:, nonce:, acr_values: 'eidas1'
+      )
+        .and_return(uri)
+    end
+
+    it 'returns authorization uri' do
+      expect(subject).to eq([uri, state, nonce])
+    end
+  end
+
   describe '.retrieve_user_informations' do
     let(:code) { 'plop' }
     let(:given_name) { 'plop1' }
@@ -20,17 +44,12 @@ describe FranceConnectService do
 
     before do
       access_token = instance_double('OpenIDConnect::AccessToken')
-      allow_any_instance_of(FranceConnectParticulierClient).to receive(:access_token!).and_return(access_token)
+      allow_any_instance_of(OpenIDConnect::Client).to receive(:access_token!).and_return(access_token)
       allow(access_token).to receive(:userinfo!).and_return(user_info)
       allow(access_token).to receive(:id_token).and_return('id_token')
 
       allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(double(verify!: true))
       stub_const('FRANCE_CONNECT', identifier: 'identifier')
-    end
-
-    it 'set code for FranceConnectEntrepriseClient' do
-      expect_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_code=).with(code)
-      subject
     end
 
     it 'returns user informations' do
