@@ -48,10 +48,10 @@ module EtablissementHelper
   end
 
   def raison_sociale_or_name(etablissement)
-    etablissement.association_titre.presence ||
-      etablissement.enseigne.present? ? "#{etablissement.enseigne} - #{etablissement.localite}" : nil ||
-      etablissement.entreprise_raison_sociale.presence ||
-      "#{etablissement.entreprise_nom} #{etablissement.entreprise_prenom}"
+    return etablissement.association_titre if etablissement.association_titre.present?
+    return "#{etablissement.enseigne} - #{etablissement.localite}" if etablissement.enseigne.present?
+    return etablissement.entreprise_raison_sociale if etablissement.entreprise_raison_sociale.present?
+    "#{etablissement.entreprise_nom} #{etablissement.entreprise_prenom}"
   end
 
   def effectif(etablissement)
