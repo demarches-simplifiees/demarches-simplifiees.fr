@@ -12,6 +12,7 @@ module Administrateurs
     ITEMS_PER_PAGE = 25
 
     def index
+      @all_procedures = all_procedures
       @procedures_publiees = paginated_published_procedures
       @procedures_draft = paginated_draft_procedures
       @procedures_closed = paginated_closed_procedures
@@ -484,6 +485,14 @@ module Administrateurs
 
     def reset_draft_procedure
       @procedure.reset!
+    end
+
+    def all_procedures
+      current_administrateur
+        .procedures
+        .kept
+        .select(:id, :libelle, :created_at)
+        .order(created_at: :desc)
     end
 
     def paginated_published_procedures
