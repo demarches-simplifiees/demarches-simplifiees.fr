@@ -2,7 +2,7 @@
 
 class FranceConnectParticulierClient < OpenIDConnect::Client
   def initialize(code = nil)
-    config = FRANCE_CONNECT[:particulier].deep_dup
+    config = FRANCE_CONNECT.deep_dup
 
     # TODO: remove this block when migration to new domain is done
     # dirty hack to redirect to the right domain
