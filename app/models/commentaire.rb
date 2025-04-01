@@ -58,7 +58,7 @@ class Commentaire < ApplicationRecord
   end
 
   def sent_by_system?
-    SYSTEM_EMAILS.include?(email)
+    SYSTEM_EMAILS.any? { email.include?(it) }
   end
 
   def sent_by_instructeur?
