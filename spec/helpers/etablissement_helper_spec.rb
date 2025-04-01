@@ -50,8 +50,8 @@ RSpec.describe EtablissementHelper, type: :helper do
 
     context 'when etablissement is not the siege and enseigne exist' do
       let(:enseigne) { "mon enseigne" }
-      it 'display enseigne' do
-        expect(subject).to eq(enseigne)
+      it 'display enseigne and localité' do
+        expect(subject).to eq("mon enseigne - BOIS COLOMBES")
       end
     end
 
