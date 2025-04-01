@@ -1,3 +1,6 @@
+- if @champ.too_long_list?
+  .fr-hint-text
+    = t('.too_long_hint')
 - if @champ.render_as_radios?
   .fr-fieldset__content
     - items.each do |value, option_id|
