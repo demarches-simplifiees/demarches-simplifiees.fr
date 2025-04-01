@@ -6,7 +6,7 @@ class FranceConnectService
   end
 
   def self.authorization_uri
-    client = FranceConnectParticulierClient.new
+    client = OpenIDConnect::Client.new(conf)
 
     state = SecureRandom.alphanumeric(32)
     nonce = SecureRandom.alphanumeric(32)
@@ -36,7 +36,8 @@ class FranceConnectService
   private
 
   def self.retrieve_user_informations(code, nonce)
-    client = FranceConnectParticulierClient.new(code)
+    client = OpenIDConnect::Client.new(conf)
+    client.authorization_code = code
 
     access_token = client.access_token!(client_auth_method: :secret)
 
@@ -57,5 +58,17 @@ class FranceConnectService
     )
 
     [fci, access_token.id_token]
+  end
+
+  def self.conf
+    config = FRANCE_CONNECT.deep_dup
+
+    # TODO: remove this block when migration to new domain is done
+    # dirty hack to redirect to the right domain
+    if !Rails.env.test? && Current.host != ENV.fetch("APP_HOST")
+      config[:redirect_uri] = config[:redirect_uri].gsub(ENV.fetch("APP_HOST"), Current.host)
+    end
+
+    config
   end
 end
