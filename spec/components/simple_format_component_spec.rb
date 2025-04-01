@@ -111,7 +111,7 @@ TEXT
         bonjour https://www.demarches-simplifiees.fr
         nohttp www.ds.io
         ecrivez à ds@rspec.io
-        <a href="https://demarches.gouv.fr">lien html</a>
+        <a href="https://demarches.numerique.gouv.fr">lien html</a>
         [lien markdown](https://github.com)
       TEXT
     end
@@ -140,7 +140,7 @@ TEXT
 
       it "render html link" do
         link = page.find_link("lien html").native
-        expect(link[:href]).to eq("https://demarches.gouv.fr")
+        expect(link[:href]).to eq("https://demarches.numerique.gouv.fr")
       end
 
       it "convert markdown link" do

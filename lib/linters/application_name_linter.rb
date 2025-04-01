@@ -5,7 +5,7 @@ if defined?(HamlLint)
     class Linter::ApplicationNameLinter < Linter
       include LinterRegistry
 
-      FORBIDDEN = 'demarches.gouv.fr'
+      FORBIDDEN = 'demarches.numerique.gouv.fr'
       REPLACEMENT = "APPLICATION_NAME"
       MSG = 'Hardcoding %s is forbidden, use %s instead'
 
