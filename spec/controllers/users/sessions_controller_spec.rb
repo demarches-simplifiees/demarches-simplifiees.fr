@@ -116,7 +116,7 @@ describe Users::SessionsController, type: :controller do
 
     before do
       stub_const("PRO_CONNECT", { end_session_endpoint: 'http://pro-connect/logout' })
-      stub_const("FRANCE_CONNECT", { particulier: { logout_endpoint: 'http://france-connect/logout' } })
+      stub_const("FRANCE_CONNECT", { end_session_endpoint: 'http://france-connect/logout' })
 
       cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME] = 'id_token'
       cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'state'
@@ -139,7 +139,7 @@ describe Users::SessionsController, type: :controller do
 
       it 'redirect to france connect logout page' do
         h = { id_token_hint: 'id_token', post_logout_redirect_uri: root_url, state: 'state' }
-        expect(response).to redirect_to("#{FRANCE_CONNECT[:logout_endpoint]}?#{h.to_query}")
+        expect(response).to redirect_to("#{FRANCE_CONNECT[:end_session_endpoint]}?#{h.to_query}")
 
         [
           FranceConnectController::ID_TOKEN_COOKIE_NAME,
