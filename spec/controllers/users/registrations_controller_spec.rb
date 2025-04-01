@@ -61,7 +61,7 @@ describe Users::RegistrationsController, type: :controller do
 
         subject
 
-        expect(User.last.preferred_domain_demarches_gouv_fr?).to be_truthy
+        expect(User.last.preferred_domain_demarches_numerique_gouv_fr?).to be_truthy
       end
     end
 
