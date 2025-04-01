@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'France Connect Particulier Connexion' do
+describe 'France Connect Connexion' do
   let(:code) { 'plop' }
   let(:state) { 'state' }
   let(:id_token) { 'id_token' }
@@ -38,9 +38,9 @@ describe 'France Connect Particulier Connexion' do
       context 'when authentification is ok' do
         before do
           allow(FranceConnectService).to receive(:authorization_uri)
-            .and_return([france_connect_particulier_callback_path(code:, state:), state, 'nonce'])
+            .and_return([france_connect_callback_path(code:, state:), state, 'nonce'])
 
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier)
+          allow(FranceConnectService).to receive(:retrieve_user_informations)
             .and_return([france_connect_information, id_token])
         end
 
@@ -78,7 +78,7 @@ describe 'France Connect Particulier Connexion' do
               perform_enqueued_jobs
 
               confirmation_email = open_email(alternative_email)
-              link = confirmation_email.body.match(/href="[^"]*(\/france_connect\/particulier\/merge_using_email_link.*?)"/)[1]
+              link = confirmation_email.body.match(/href="[^"]*(\/france_connect\/merge_using_email_link.*?)"/)[1]
 
               visit link
 
@@ -155,8 +155,8 @@ describe 'France Connect Particulier Connexion' do
       context 'when authentification is not ok' do
         before do
           allow(FranceConnectService).to receive(:enabled?).and_return(true)
-          allow(FranceConnectService).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code:, state:), state, 'nonce')
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+          allow(FranceConnectService).to receive(:authorization_uri).and_return(france_connect_callback_path(code:, state:), state, 'nonce')
+          allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
           page.find('.fr-connect').click
         end
 

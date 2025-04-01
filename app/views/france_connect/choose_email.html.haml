@@ -9,11 +9,11 @@
       %p= t('.use_email_for_notifications')
 
       %fieldset.fr-fieldset
-        = form_with url: france_connect_particulier_merge_using_fc_email_path,
+        = form_with url: france_connect_merge_using_fc_email_path,
           method: :post,
           data: { controller: 'email-france-connect',
-            email_france_connect_fc_email_path_value: france_connect_particulier_merge_using_fc_email_path,
-            email_france_connect_custom_email_path_value: france_connect_particulier_send_email_merge_request_path,
+            email_france_connect_fc_email_path_value: france_connect_merge_using_fc_email_path,
+            email_france_connect_custom_email_path_value: france_connect_send_email_merge_request_path,
             email_france_connect_target: "form" } do |f|
 
           = hidden_field_tag :merge_token, @fci.merge_token
