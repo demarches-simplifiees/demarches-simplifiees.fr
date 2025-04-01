@@ -3,11 +3,9 @@
 if ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled"
   discover = OpenIDConnect::Discovery::Provider::Config.discover!("#{ENV.fetch('FC_PARTICULIER_BASE_URL')}/api/v2")
 
-  FRANCE_CONNECT = {}
-
   protocol = Rails.env.production? ? 'https' : 'http'
 
-  FRANCE_CONNECT[:particulier] = {
+  FRANCE_CONNECT = {
     authorization_endpoint: discover.authorization_endpoint,
     identifier: ENV.fetch('FC_PARTICULIER_ID'),
     issuer: discover.issuer,
