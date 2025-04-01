@@ -3,6 +3,8 @@
 describe 'Sign in', js: true do
   let(:user) { create(:user) }
 
+  before { allow(FranceConnectService).to receive(:enabled?).and_return(true) }
+
   scenario 'when a user is logged in english' do
     visit root_path
 

@@ -116,6 +116,7 @@ describe Users::SessionsController, type: :controller do
 
     before do
       stub_const("PRO_CONNECT", { end_session_endpoint: 'http://pro-connect/logout' })
+      stub_const("FRANCE_CONNECT", { particulier: { logout_endpoint: 'http://france-connect/logout' } })
 
       cookies.encrypted[FranceConnect::ParticulierController::ID_TOKEN_COOKIE_NAME] = 'id_token'
       cookies.encrypted[FranceConnect::ParticulierController::STATE_COOKIE_NAME] = 'state'

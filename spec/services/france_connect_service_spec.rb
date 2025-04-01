@@ -25,6 +25,7 @@ describe FranceConnectService do
       allow(access_token).to receive(:id_token).and_return('id_token')
 
       allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(double(verify!: true))
+      stub_const('FRANCE_CONNECT', identifier: 'identifier')
     end
 
     it 'set code for FranceConnectEntrepriseClient' do

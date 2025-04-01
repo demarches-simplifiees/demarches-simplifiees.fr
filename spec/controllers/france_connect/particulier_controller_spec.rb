@@ -16,8 +16,12 @@ describe FranceConnect::ParticulierController, type: :controller do
     }
   end
 
+  before { allow(FranceConnectService).to receive(:enabled?).and_return(true) }
+
   describe '#auth' do
     subject { get :login }
+
+    before { allow(FranceConnectService).to receive(:authorization_uri).and_return(['uri', 'state', 'nonce']) }
 
     it do
       is_expected.to have_http_status(:redirect)
