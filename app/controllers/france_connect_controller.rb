@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FranceConnect::ParticulierController < ApplicationController
+class FranceConnectController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :securely_retrieve_fci, only: [:merge_using_fc_email, :merge_using_password, :send_email_merge_request]
   before_action :securely_retrieve_fci_from_email_merge_token, only: [:merge_using_email_link]
@@ -47,7 +47,7 @@ class FranceConnect::ParticulierController < ApplicationController
     else
       if @fci.user.can_france_connect?
         @fci.update(updated_at: Time.zone.now)
-        connect_france_connect_particulier(@fci.user)
+        connect_france_connect(@fci.user)
       else
         destroy_fci_and_redirect_to_login(@fci)
       end
@@ -69,7 +69,7 @@ class FranceConnect::ParticulierController < ApplicationController
     )
       .deliver_later
 
-    redirect_to root_path, notice: t('france_connect.particulier.flash.confirmation_mail_sent')
+    redirect_to root_path, notice: t('france_connect.flash.confirmation_mail_sent')
   end
 
   def merge_using_fc_email
@@ -78,7 +78,7 @@ class FranceConnect::ParticulierController < ApplicationController
 
     sign_in(@fci.user)
 
-    redirect_to destination_path(@fci.user), notice: t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
+    redirect_to destination_path(@fci.user), notice: t('france_connect.flash.connection_done', application_name: Current.application_name)
   end
 
   def merge_using_password
@@ -91,10 +91,10 @@ class FranceConnect::ParticulierController < ApplicationController
     if user.present? && user.valid_for_authentication? { user.valid_password?(params[:password]) }
       @fci.safely_update_user(user:)
 
-      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
-      connect_france_connect_particulier(user)
+      flash.notice = t('france_connect.flash.connection_done', application_name: Current.application_name)
+      connect_france_connect(user)
     else
-      flash.alert = t('france_connect.particulier.flash.invalid_password')
+      flash.alert = t('france_connect.flash.invalid_password')
     end
   end
 
@@ -113,8 +113,8 @@ class FranceConnect::ParticulierController < ApplicationController
 
     @fci.user.update(email_verified_at: Time.zone.now)
 
-    flash.notice = t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
-    connect_france_connect_particulier(@fci.user)
+    flash.notice = t('france_connect.flash.connection_done', application_name: Current.application_name)
+    connect_france_connect(@fci.user)
   end
 
   # TODO mutualiser avec le controller Users::ActivateController
@@ -123,7 +123,7 @@ class FranceConnect::ParticulierController < ApplicationController
     if @user.confirmation_sent_at && 2.days.ago < @user.confirmation_sent_at
       @user.update(email_verified_at: Time.zone.now, confirmation_token: nil)
       @user.after_confirmation
-      redirect_to destination_path(@user), notice: I18n.t('france_connect.particulier.flash.email_confirmed')
+      redirect_to destination_path(@user), notice: I18n.t('france_connect.flash.email_confirmed')
       return
     end
 
@@ -131,9 +131,9 @@ class FranceConnect::ParticulierController < ApplicationController
 
     if fci
       fci.send_custom_confirmation_instructions
-      redirect_to root_path, notice: I18n.t('france_connect.particulier.flash.confirmation_mail_resent')
+      redirect_to root_path, notice: I18n.t('france_connect.flash.confirmation_mail_resent')
     else
-      redirect_to root_path, alert: I18n.t('france_connect.particulier.flash.confirmation_mail_resent_error')
+      redirect_to root_path, alert: I18n.t('france_connect.flash.confirmation_mail_resent_error')
     end
   end
 
@@ -143,12 +143,12 @@ class FranceConnect::ParticulierController < ApplicationController
     @user = User.find_by(confirmation_token: params[:token])
 
     if @user.nil?
-      return redirect_to root_path, alert: I18n.t('france_connect.particulier.flash.user_not_found')
+      return redirect_to root_path, alert: I18n.t('france_connect.flash.user_not_found')
     end
 
     if user_signed_in? && current_user != @user
       sign_out :user
-      redirect_to new_user_session_path, alert: I18n.t('france_connect.particulier.flash.redirect_new_user_session')
+      redirect_to new_user_session_path, alert: I18n.t('france_connect.flash.redirect_new_user_session')
     end
   end
 
@@ -158,7 +158,7 @@ class FranceConnect::ParticulierController < ApplicationController
     @fci = FranceConnectInformation.find_by(email_merge_token: params[:email_merge_token])
 
     if @fci.nil? || !@fci.valid_for_email_merge?
-      flash.alert = I18n.t('france_connect.particulier.flash.merger_token_expired', application_name: Current.application_name)
+      flash.alert = I18n.t('france_connect.flash.merger_token_expired', application_name: Current.application_name)
 
       redirect_to root_path
     else
@@ -170,7 +170,7 @@ class FranceConnect::ParticulierController < ApplicationController
     @fci = FranceConnectInformation.find_by(merge_token: params[:merge_token])
 
     if @fci.nil? || !@fci.valid_for_merge?
-      flash.alert = I18n.t('france_connect.particulier.flash.merger_token_expired', application_name: Current.application_name)
+      flash.alert = I18n.t('france_connect.flash.merger_token_expired', application_name: Current.application_name)
 
       redirect_to root_path
     end
@@ -187,7 +187,7 @@ class FranceConnect::ParticulierController < ApplicationController
     redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
   end
 
-  def connect_france_connect_particulier(user)
+  def connect_france_connect(user)
     sign_out :user if user_signed_in?
     sign_in user
 

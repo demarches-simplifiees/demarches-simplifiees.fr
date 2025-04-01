@@ -22,7 +22,7 @@ class FranceConnectService
   end
 
   def self.find_or_retrieve_france_connect_information(code, nonce)
-    fetched_fci, id_token = FranceConnectService.retrieve_user_informations_particulier(code, nonce)
+    fetched_fci, id_token = retrieve_user_informations(code, nonce)
     fci_to_return = FranceConnectInformation.find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) || fetched_fci
     [fci_to_return, id_token]
   end
@@ -35,7 +35,7 @@ class FranceConnectService
 
   private
 
-  def self.retrieve_user_informations_particulier(code, nonce)
+  def self.retrieve_user_informations(code, nonce)
     client = FranceConnectParticulierClient.new(code)
 
     access_token = client.access_token!(client_auth_method: :secret)

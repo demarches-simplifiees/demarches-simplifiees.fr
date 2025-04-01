@@ -896,34 +896,33 @@ en:
         to_archive: to archive
         trash: trash
   france_connect:
-    particulier:
-      choose_email:
-        intro_html: "Your FranceConnect account uses <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> as the contact email."
-        use_email_for_notifications: "Would you like to use it to receive notifications regarding the progress of your cases?"
-        confirm: "Confirm"
-        choose_email_contact: "Choose your contact email"
-        alternative_email: "Please provide the email to use for contacting you."
-        keep_fc_email_html: Yes, use <b class='bold'>%{email}</b> as contact email.
-        use_another_email: No, use another address.
-      merge:
-        title: "Merge your account FranceConnect and %{application_name}"
-        subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
-        label_select_merge_flow: Is %{email} one of your email account ?
-        title_fill_in_password:  To merge your accounts fill in your password
-        button_merge: Merge accounts
-        title_fill_in_email: Fill in the email that %{application_name} will use to contact you
-        button_use_this_email: Use this email
-        link_confirm_by_email: Confirm by receiving an email
-      flash:
-          confirmation_mail_sent: "An email with the confirmation link has been sent, please click on the link."
-          confirmation_mail_resent: "Confirmation link expired. A new link has been sent by email."
-          confirmation_mail_resent_error: "An unexpected error has occurred. Please contact support if the problem persists."
-          redirect_new_user_session: "You have been disconnected from your previous account. Please click on the confirmation link again."
-          email_confirmed: "Your email is confirmed"
-          user_not_found: "User not found"
-          invalid_password: "The password is not correct."
-          connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
-          merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
+    choose_email:
+      intro_html: "Your FranceConnect account uses <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> as the contact email."
+      use_email_for_notifications: "Would you like to use it to receive notifications regarding the progress of your cases?"
+      confirm: "Confirm"
+      choose_email_contact: "Choose your contact email"
+      alternative_email: "Please provide the email to use for contacting you."
+      keep_fc_email_html: Yes, use <b class='bold'>%{email}</b> as contact email.
+      use_another_email: No, use another address.
+    merge:
+      title: "Merge your account FranceConnect and %{application_name}"
+      subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
+      label_select_merge_flow: Is %{email} one of your email account ?
+      title_fill_in_password:  To merge your accounts fill in your password
+      button_merge: Merge accounts
+      title_fill_in_email: Fill in the email that %{application_name} will use to contact you
+      button_use_this_email: Use this email
+      link_confirm_by_email: Confirm by receiving an email
+    flash:
+        confirmation_mail_sent: "An email with the confirmation link has been sent, please click on the link."
+        confirmation_mail_resent: "Confirmation link expired. A new link has been sent by email."
+        confirmation_mail_resent_error: "An unexpected error has occurred. Please contact support if the problem persists."
+        redirect_new_user_session: "You have been disconnected from your previous account. Please click on the confirmation link again."
+        email_confirmed: "Your email is confirmed"
+        user_not_found: "User not found"
+        invalid_password: "The password is not correct."
+        connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
+        merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   shared:
     procedures:
       no_siret: "Some procedures have service without siret. Please update."

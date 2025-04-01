@@ -181,8 +181,8 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
         let(:user) { User.last }
 
         before do
-          allow(FranceConnectService).to receive(:authorization_uri).and_return([france_connect_particulier_callback_path(code: "c0d3", state: 'state'), 'state', 'nonce'])
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(build(:france_connect_information))
+          allow(FranceConnectService).to receive(:authorization_uri).and_return([france_connect_callback_path(code: "c0d3", state: 'state'), 'state', 'nonce'])
+          allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(build(:france_connect_information))
 
           page.find('.fr-connect').click
 

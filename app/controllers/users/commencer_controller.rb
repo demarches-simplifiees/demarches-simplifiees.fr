@@ -71,7 +71,7 @@ module Users
       return procedure_not_found if @procedure.blank?
 
       store_user_location!(@procedure)
-      redirect_to france_connect_particulier_path
+      redirect_to france_connect_path
     end
 
     def procedure_for_help

@@ -135,11 +135,11 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
 
             allow(FranceConnectService).to receive(:authorization_uri)
               .and_return([
-                france_connect_particulier_callback_path(code: "c0d3", state:),
+                france_connect_callback_path(code: "c0d3", state:),
                 state, nonce
               ])
 
-            allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return([build(:france_connect_information), 'id_token'])
+            allow(FranceConnectService).to receive(:retrieve_user_informations).and_return([build(:france_connect_information), 'id_token'])
 
             page.find('.fr-connect').click
             expect(page).to have_content("Choisissez votre adresse électronique de contact pour finaliser votre connexion")
