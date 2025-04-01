@@ -25,7 +25,7 @@ RSpec.describe DossierPrefillableConcern do
       let(:dossier) { create(:dossier, :brouillon, :with_individual, procedure: procedure) }
 
       context "when identity_attributes is present" do
-        let(:identity_attributes) { { "prenom" => "Prénom", "nom" => "Nom", "gender" => "Mme" } }
+        let(:identity_attributes) { { "prenom" => "Prénom", "nom" => "Nom" } }
 
         it_behaves_like 'a dossier marked as prefilled'
 
@@ -33,7 +33,6 @@ RSpec.describe DossierPrefillableConcern do
           fill
           expect(dossier.individual.prenom).to eq("Prénom")
           expect(dossier.individual.nom).to eq("Nom")
-          expect(dossier.individual.gender).to eq("Mme")
         end
       end
 

@@ -22,4 +22,23 @@ class Champs::CiviliteChamp < Champ
   def focusable_input_id
     female_input_id
   end
+
+  def female?
+    value == Individual::GENDER_FEMALE
+  end
+
+  def male?
+    value == Individual::GENDER_MALE
+  end
+
+  def value=(value)
+    case value
+    when '0', Individual::GENDER_FEMALE
+      super(Individual::GENDER_FEMALE)
+    when '1', Individual::GENDER_MALE
+      super(Individual::GENDER_MALE)
+    else
+      super(value)
+    end
+  end
 end
