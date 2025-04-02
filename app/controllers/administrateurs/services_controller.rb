@@ -103,7 +103,7 @@ module Administrateurs
     private
 
     def service_params
-      params.require(:service).permit(:nom, :organisme, :type_organisme, :email, :telephone, :horaires, :adresse, :siret)
+      params.require(:service).permit(:nom, :organisme, :type_organisme, :email, :telephone, :horaires, :adresse, :siret, :faq_link, :contact_link, :other_contact_info)
     end
 
     def service
