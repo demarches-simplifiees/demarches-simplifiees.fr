@@ -767,6 +767,7 @@ fr:
       france_connect:
         connexion: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez réessayer."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
+        internal_error: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez essayer un autre mode de connexion."
       siret:
         network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
         not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro SIRET.'

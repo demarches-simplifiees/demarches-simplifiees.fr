@@ -49,7 +49,36 @@ describe FranceConnectController, type: :controller do
     context 'when param code is missing' do
       let(:code) { nil }
 
-      it { is_expected.to redirect_to(new_user_session_path) }
+      it do
+        is_expected.to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to include('Une erreur est survenue lors de la connexion')
+      end
+    end
+
+    context 'when an error occurs' do
+      let(:params) { { code: '', state: '', error: } }
+
+      def check_error_handling(error, expected_message)
+        get :callback, params: { error: }
+        expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to include(expected_message)
+      end
+
+      context 'of type invalid_scope' do
+        let(:error) { 'invalid_scope' }
+
+        it do
+          check_error_handling('invalid_scope', 'Veuillez essayer un autre mode de connexion')
+
+          check_error_handling('invalid_request', 'Veuillez essayer un autre mode de connexion')
+
+          check_error_handling('access_denied', 'Veuillez réessayer.')
+
+          check_error_handling('server_error', 'Veuillez réessayer.')
+
+          check_error_handling('temporarily_unavailable', 'Veuillez réessayer.')
+        end
+      end
     end
 
     context 'when param code is empty' do

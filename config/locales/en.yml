@@ -756,6 +756,7 @@ en:
       france_connect:
         connexion: "Error trying to connect to France Connect."
         forbidden_html: "Only citizen can use FranceConnect. As an instructor or administrator, you should <a href='%{reset_link}'>reset your password</a>."
+        internal_error: "Error trying to connect to France Connect. Please try another way to connect."
       evil_regexp: The regular expression you have entered is potentially dangerous and could lead to performance issues.
       mismatch_regexp: The provided example must match the regular expression
       syntax_error_regexp: The syntax of the regular expression is invalid
