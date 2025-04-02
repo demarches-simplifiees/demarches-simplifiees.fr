@@ -35,9 +35,6 @@ module ReleaseNotesHelper
   end
 
   def render_release_note_content(content)
-    ActionText::ContentHelper.allowed_tags = sanitizer_allowed_tags + %w[a]
-    ActionText::ContentHelper.allowed_attributes = sanitizer_allowed_attributes + %w[rel target]
-
     content.body.fragment.source.css("a[href]").each do |link|
       uri = URI.parse(link['href'])
 
@@ -47,5 +44,14 @@ module ReleaseNotesHelper
     end
 
     content
+  end
+
+  # Note: this affects all ActionText content rendering
+  def sanitizer_allowed_tags
+    super + %w[a]
+  end
+
+  def sanitizer_allowed_attributes
+    super + %w[rel target]
   end
 end
