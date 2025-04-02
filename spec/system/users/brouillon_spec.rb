@@ -635,7 +635,8 @@ describe 'The user', js: true do
       allow_any_instance_of(Users::DossiersController).to receive(:update).and_raise("Server is busy")
       fill_in('texte obligatoire', with: 'a valid user input')
       blur
-      expect(page).to have_text('Attention : Impossible d’enregistrer le brouillon.')
+      expect(page).to have_css('.autosave-state-failed')
+      expect(page).to have_button('Réessayer')
       # Test that retrying after a failure works
       allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
       click_on 'Réessayer'
