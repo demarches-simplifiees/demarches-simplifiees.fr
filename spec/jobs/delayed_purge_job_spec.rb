@@ -7,6 +7,8 @@ describe DelayedPurgeJob, type: :job do
   let!(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
   let(:blob) { dossier.champs.first.piece_justificative_file.first.blob }
   let(:job) { described_class.new(blob) }
+  let(:client) { double('OpenStack client') }
+  let(:pool) { double('ConnectionPool') }
 
   before do
     stub_const('ENV', ENV.to_hash.merge('PURGE_LATER_DELAY_IN_DAY' => '1'))
@@ -19,12 +21,11 @@ describe DelayedPurgeJob, type: :job do
     double_service = double(container:)
     allow_any_instance_of(ActiveStorage::Blob).to receive(:service).and_return(double_service)
 
-    double_client = double()
-    expect(double_client).to receive(:copy_object)
+    allow(OpenStackStorage).to receive(:with_client).and_yield(client)
+
+    expect(client).to receive(:copy_object)
       .with(container, blob.key, container, blob.key, { 'X-Delete-At' => anything, "Content-Type" => blob.content_type })
       .and_return(double(status: 201))
-
-    expect(job).to receive(:client).and_return(double_client)
 
     allow(described_class).to receive(:openstack?).and_return(true)
 

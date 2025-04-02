@@ -19,15 +19,15 @@ class ActiveStorage::DownloadableFile
       return files
     end
 
-    cached_client = self.client
-
     files.filter do |file, _filename|
       if file.is_a?(ActiveStorage::FakeAttachment)
         true
       else
         service = file.blob.service
         begin
-          cached_client.head_object(service.container, file.blob.key)
+          OpenStackStorage.with_client do |client|
+            client.head_object(service.container, file.blob.key)
+          end
           true
         rescue Fog::OpenStack::Storage::NotFound
           false
@@ -37,13 +37,6 @@ class ActiveStorage::DownloadableFile
   end
 
   private
-
-  def self.client
-    credentials = Rails.application.config.active_storage
-      .service_configurations['openstack']['credentials']
-
-    Fog::OpenStack::Storage.new(credentials)
-  end
 
   def self.bill_and_path(bill)
     [

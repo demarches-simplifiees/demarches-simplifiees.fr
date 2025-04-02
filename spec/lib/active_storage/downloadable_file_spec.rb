@@ -44,7 +44,7 @@ describe ActiveStorage::DownloadableFile do
         require 'fog/openstack'
         Rails.application.config.active_storage.service = :openstack
 
-        allow(ActiveStorage::DownloadableFile).to receive(:client).and_return(active_storage_client)
+        allow(OpenStackStorage).to receive(:with_client).and_yield(active_storage_client)
       end
       after { Rails.application.config.active_storage.service = :test }
 
