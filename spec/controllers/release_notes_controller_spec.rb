@@ -62,5 +62,22 @@ RSpec.describe ReleaseNotesController, type: :controller do
         end
       end
     end
+
+    describe 'links rendering in release notes' do
+      let(:user) { admin }
+      let!(:note_admin) { create(:release_note, categories: ['administrateur'], body: 'Un lien vers <a href="https://example.gouv.fr">example.gouv.fr</a>', released_on: Date.new(2023, 10, 15)) }
+
+      render_views
+      before do
+        get :index
+      end
+
+      it 'renders links with proper rel and target attributes' do
+        expect(response.body).to include('href="https://example.gouv.fr"')
+        expect(response.body).to include('rel="noreferrer noopener"')
+        expect(response.body).to include('target="_blank"')
+        expect(response.body).to include('title=')
+      end
+    end
   end
 end
