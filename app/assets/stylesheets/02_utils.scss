@@ -173,8 +173,13 @@
   padding-left: $default-padding;
 }
 
-.border-left-1px {
+.border-left-light {
   border-left: 1px solid var(--border-default-grey);
+  padding-left: $default-padding;
+}
+
+.border-left-dark {
+  border-left: 1px solid var(--border-plain-grey);
   padding-left: $default-padding;
 }
 

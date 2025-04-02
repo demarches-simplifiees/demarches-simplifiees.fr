@@ -55,7 +55,7 @@
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
             - if type_de_champ.integer_number? || type_de_champ.decimal_number?
-              .vertical-border.fr-pl-2w.fr-mt-2w
+              .border-left-dark.fr-mt-2w
                 .cell
                   %legend.fake-label
                     Format accepté
@@ -84,7 +84,7 @@
                           = form.number_field :max_number, class: "fr-input", id: dom_id(type_de_champ, :max_number)
 
             - if type_de_champ.date? || type_de_champ.datetime?
-              .vertical-border.fr-pl-2w.fr-mt-2w
+              .border-left-dark.fr-mt-2w
                 .cell
                   %legend.fake-label
                     Format accepté
@@ -136,7 +136,7 @@
                       = form.radio_button :drop_down_mode, 'advanced', id: dom_id(type_de_champ, :advanced)
                       = form.label :drop_down_mode_advanced, t('.drop_down_list.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
-            .flex.column.justify-start.flex-grow.vertical-border.fr-pl-2w.fr-my-1w
+            .flex.column.justify-start.flex-grow.border-left-dark.fr-my-1w
               = render TypesDeChampEditor::ChampDropDownSimpleComponent.new(type_de_champ:, form:, procedure:)
               = render TypesDeChampEditor::ChampDropDownAdvancedComponent.new(type_de_champ:, form:, procedure:)
 
