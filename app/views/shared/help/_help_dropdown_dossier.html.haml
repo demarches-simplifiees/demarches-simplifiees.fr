@@ -6,15 +6,10 @@
     #help-menu.help-content.fr-collapse.fr-menu
       - title = dossier.brouillon? ? t("help_dropdown.help_brouillon_title") : t("help_dropdown.help_filled_dossier")
       %ul.fr-menu__list
-
-        - if dossier.messagerie_available?
-          %li.flex
-            = render partial: 'shared/help/dropdown_items/messagerie_item', locals: { dossier: dossier, title: title }
-
-        - elsif dossier.procedure.service.present?
+        - if dossier.procedure.service.present?
           %li.flex
             = render partial: 'shared/help/dropdown_items/service_item',
-              locals: { service: dossier.procedure.service, title: title }
+              locals: { service: dossier.procedure.service, title:, dossier: }
 
         %li.flex
           = render partial: 'shared/help/dropdown_items/faq_item'

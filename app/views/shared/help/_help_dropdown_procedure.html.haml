@@ -7,6 +7,6 @@
       %ul.fr-menu__list
         - if procedure.service.present?
           %li.flex
-            = render partial: 'shared/help/dropdown_items/service_item', locals: { service: procedure.service, title: t('help_dropdown.procedure_title') }
+            = render partial: 'shared/help/dropdown_items/service_item', locals: { service: procedure.service, title: t('help_dropdown.procedure_title'), dossier: nil }
         %li.flex
           = render partial: 'shared/help/dropdown_items/faq_item'
