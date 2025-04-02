@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled"
+if ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled" && ENV['FC_PARTICULIER_BASE_URL'].present?
   discover = OpenIDConnect::Discovery::Provider::Config.discover!("#{ENV.fetch('FC_PARTICULIER_BASE_URL')}/api/v2")
 
   protocol = Rails.env.production? ? 'https' : 'http'
