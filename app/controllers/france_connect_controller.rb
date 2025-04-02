@@ -177,8 +177,17 @@ class FranceConnectController < ApplicationController
   end
 
   def redirect_to_login_if_fc_aborted
-    if params[:code].blank?
-      redirect_to new_user_session_path
+    alert = case params[:error]
+    when 'invalid_scope', 'invalid_request'
+      t('errors.messages.france_connect.internal_error')
+    end
+
+    alert ||= if alert.nil? && params[:code].blank?
+      t('errors.messages.france_connect.connexion')
+    end
+
+    if alert.present?
+      redirect_to(new_user_session_path, alert:)
     end
   end
 
