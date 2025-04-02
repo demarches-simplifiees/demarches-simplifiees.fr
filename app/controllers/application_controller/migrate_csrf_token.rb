@@ -17,8 +17,6 @@ module ApplicationController::MigrateCsrfToken
 
       # Réutilise l'ancien token dans le nouveau format Rails 7.1
       self.csrf_token_storage_strategy.store(request, legacy_token)
-
-      cookies.delete(:_csrf_token)
     end
   end
 end
