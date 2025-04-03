@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '~> 7.0.8' # allows update to security fixes at any time
+gem 'rails', '~> 7.1.5' # allows update to security fixes at any time
 
 gem 'aasm'
 gem 'active_model_serializers'
@@ -155,6 +155,8 @@ group :development do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
+  gem 'spring' # Spring speeds up development by keeping your application running in the background
+  gem 'spring-commands-rspec'
   gem 'stackprof'
   gem 'web-console'
 end
@@ -166,6 +168,4 @@ group :development, :test do
   gem 'mina', require: false # Deploy
   gem 'rspec-rails'
   gem 'simple_xlsx_reader'
-  gem 'spring' # Spring speeds up development by keeping your application running in the background
-  gem 'spring-commands-rspec'
 end

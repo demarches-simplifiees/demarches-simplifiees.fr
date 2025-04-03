@@ -220,6 +220,9 @@ describe 'The user', js: true do
   end
 
   scenario 'fill address not in BAN' do
+    stub_request(:get, "https://api-adresse.data.gouv.fr/search?limit=10&q=2%20rue%20de%20la%20paix,%2092094%20Belgique")
+      .to_return(body: '{"type":"FeatureCollection","version":"draft","features":[]}')
+
     log_in(user, simple_procedure)
     fill_individual
 

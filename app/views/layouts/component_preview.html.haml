@@ -9,7 +9,7 @@
     = csrf_meta_tags
 
     %title
-      = content_for?(:title) ? "#{yield(:title)} · #{Current.application_name}" : Current.application_name
+      = content_for?(:title) ? "#{yield(:title).gsub("&nbsp;", " ")} · #{Current.application_name}" : Current.application_name
 
     = render partial: "layouts/favicons"
 

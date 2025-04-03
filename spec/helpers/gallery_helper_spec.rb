@@ -3,25 +3,18 @@
 RSpec.describe GalleryHelper, type: :helper do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile' }] }
-  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:dossier) { create(:dossier, procedure:) }
   let(:champ_pj) { dossier.champs.first }
 
-  let(:blob_info) do
-    {
+  let(:attachment) do
+    champ_pj.piece_justificative_file.attach(
+      io: file,
       filename: file.original_filename,
-      byte_size: file.size,
-      checksum: Digest::SHA256.file(file.path),
       content_type: file.content_type,
-      # we don't want to run virus scanner on this file
       metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-    }
+    )
+    champ_pj.piece_justificative_file.attachments.first
   end
-  let(:blob) do
-    blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_info)
-    blob.upload(file)
-    blob
-  end
-  let(:attachment) { ActiveStorage::Attachment.create(name: "test", blob: blob, record: champ_pj) }
 
   describe ".variant_url_for" do
     subject { variant_url_for(attachment) }
@@ -29,23 +22,28 @@ RSpec.describe GalleryHelper, type: :helper do
     context "when image attachment has a variant" do
       let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
 
-      before { attachment.variant(resize_to_limit: [400, 400]).processed }
-
-      it { is_expected.not_to eq("apercu-indisponible.png") }
+      it "returns the variant URL when processed" do
+        attachment.variant(resize_to_limit: [400, 400]).processed
+        expect(subject).not_to eq("apercu-indisponible.png")
+      end
     end
 
     context "when image attachment has no variant" do
       let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
 
-      it { expect { subject }.not_to change { ActiveStorage::VariantRecord.count } }
-      it { is_expected.to eq("apercu-indisponible.png") }
+      it "returns fallback image and doesn't create variant when not processed" do
+        expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
+        expect(subject).to eq("apercu-indisponible.png")
+      end
     end
 
     context "when attachment cannot be represented with a variant" do
       let(:file) { fixture_file_upload('spec/fixtures/files/instructeurs-file.csv', 'text/csv') }
 
-      it { expect { subject }.not_to change { ActiveStorage::VariantRecord.count } }
-      it { is_expected.to eq("apercu-indisponible.png") }
+      it "returns fallback image and doesn't create variant" do
+        expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
+        expect(subject).to eq("apercu-indisponible.png")
+      end
     end
   end
 
@@ -55,23 +53,28 @@ RSpec.describe GalleryHelper, type: :helper do
     context "when pdf attachment has a preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-      before { attachment.preview(resize_to_limit: [400, 400]).processed }
-
-      it { is_expected.not_to eq("pdf-placeholder.png") }
+      it "returns the preview URL when processed" do
+        attachment.preview(resize_to_limit: [400, 400]).processed
+        expect(subject).not_to eq("pdf-placeholder.png")
+      end
     end
 
     context "when pdf attachment has no preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-      it { expect { subject }.not_to change { ActiveStorage::VariantRecord.count } }
-      it { is_expected.to eq("pdf-placeholder.png") }
+      it "returns fallback image and doesn't create preview when not processed" do
+        expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
+        expect(subject).to eq("pdf-placeholder.png")
+      end
     end
 
     context "when attachment cannot be represented with a preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/instructeurs-file.csv', 'text/csv') }
 
-      it { expect { subject }.not_to change { ActiveStorage::VariantRecord.count } }
-      it { is_expected.to eq("pdf-placeholder.png") }
+      it "returns fallback image and doesn't create preview" do
+        expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
+        expect(subject).to eq("pdf-placeholder.png")
+      end
     end
   end
 

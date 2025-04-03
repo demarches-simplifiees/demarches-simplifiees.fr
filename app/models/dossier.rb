@@ -262,7 +262,7 @@ class Dossier < ApplicationRecord
 
   scope :processed_by_month, -> (all_groupe_instructeurs) {
     state_termine
-      .where(groupe_instructeurs: all_groupe_instructeurs)
+      .where(groupe_instructeur: all_groupe_instructeurs)
       .group_by_period(:month, :processed_at, reverse: true)
   }
 
