@@ -32,6 +32,11 @@ Rails.application.reloader.to_prepare do
   class ActiveStorage::BaseJob
     include ActiveJob::RetryOnTransientErrors
   end
+
+  class ActiveStorage::BaseController
+    # same store as ApplicationController
+    protect_from_forgery with: :exception, store: :cookie
+  end
 end
 
 # When an OpenStack service is initialized it makes a request to fetch

@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
-  protect_from_forgery with: :exception, store: :cookie
+  protect_from_forgery with: :exception, store: :cookie # define same store in config/initializers/active_storage.rb
 
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
