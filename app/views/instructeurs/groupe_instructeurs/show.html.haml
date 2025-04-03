@@ -21,6 +21,7 @@
       Démarche « #{@procedure.libelle} »
 
   .card.fr-mt-2w
+    = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_instructeur_groupe_path(@procedure, @groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
     %h2.fr-h3 Gestion des instructeurs
     = form_for(Instructeur.new(user: User.new), url: { action: :add_instructeur }, html: { class: 'form' }) do |f|
       %h3.fr-h4 Affecter un nouvel instructeur

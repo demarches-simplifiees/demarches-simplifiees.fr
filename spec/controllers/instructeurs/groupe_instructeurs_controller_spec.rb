@@ -86,7 +86,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'of a new instructeur' do
-      let(:new_instructeur_email) { 'new_instructeur@mail.com' }
+      let(:new_instructeur_email) { 'new_instructeur@gmail.com' }
       before { subject }
 
       it "works" do

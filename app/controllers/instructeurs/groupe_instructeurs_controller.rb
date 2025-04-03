@@ -1,5 +1,6 @@
 module Instructeurs
   class GroupeInstructeursController < InstructeurController
+    include EmailSanitizableConcern
     include UninterlacePngConcern
     include GroupeInstructeursSignatureConcern
 
@@ -19,16 +20,29 @@ module Instructeurs
     end
 
     def add_instructeur
-      instructeur = Instructeur.by_email(instructeur_email) ||
-        create_instructeur(instructeur_email)
+      email = instructeur_email.present? ? [instructeur_email] : []
+      email = check_if_typo(email)&.first
+      errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
+
+      if !errors.empty?
+        flash.now[:alert] = errors.join(". ") if !errors.empty?
+
+        @procedure = procedure
+        @groupe_instructeur = groupe_instructeur
+        @instructeurs = paginated_instructeurs
+        return render :show
+      end
+
+      instructeur = Instructeur.by_email(email) ||
+        create_instructeur(email)
 
       if instructeur.blank?
-        flash[:alert] = "L’adresse email « #{instructeur_email} » n’est pas valide."
+        flash[:alert] = "L’adresse email « #{email} » n’est pas valide."
       elsif groupe_instructeur.instructeurs.include?(instructeur)
-        flash[:alert] = "L’instructeur « #{instructeur_email} » est déjà dans le groupe."
+        flash[:alert] = "L’instructeur « #{email} » est déjà dans le groupe."
       else
         groupe_instructeur.add(instructeur)
-        flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
+        flash[:notice] = "L’instructeur « #{email} » a été affecté au groupe."
 
         if instructeur.user.email_verified_at
           GroupeInstructeurMailer
@@ -100,7 +114,7 @@ module Instructeurs
     end
 
     def instructeur_email
-      params[:instructeur][:email].strip.downcase
+      params.dig('instructeur', 'email')&.strip&.downcase
     end
 
     def instructeur_id
