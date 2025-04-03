@@ -279,12 +279,8 @@ class User < ApplicationRecord
   end
 
   def ask_for_merge(requested_user)
-    if update(requested_merge_into: requested_user)
-      UserMailer.ask_for_merge(self, requested_user.email).deliver_later
-      return true
-    else
-      return false
-    end
+    update!(requested_merge_into: requested_user, unconfirmed_email: nil)
+    UserMailer.ask_for_merge(self, requested_user.email).deliver_later
   end
 
   def send_devise_notification(notification, *args)

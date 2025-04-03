@@ -401,12 +401,39 @@ function getKey(item: Item) {
   return item.value;
 }
 
+const AnnuaireEducationPayload = s.type({
+  records: s.array(
+    s.type({
+      fields: s.type({
+        identifiant_de_l_etablissement: s.string(),
+        nom_etablissement: s.string(),
+        nom_commune: s.string()
+      })
+    })
+  )
+});
+
+const Coerce = {
+  Default: s.array(Item),
+  AnnuaireEducation: s.coerce(
+    s.array(Item),
+    AnnuaireEducationPayload,
+    ({ records }) =>
+      records.map((record) => ({
+        label: `${record.fields.nom_etablissement}, ${record.fields.nom_commune} (${record.fields.identifiant_de_l_etablissement})`,
+        value: record.fields.identifiant_de_l_etablissement,
+        data: record
+      }))
+  )
+};
+
 export const createLoader: (
   source: string,
   options?: {
     minimumInputLength?: number;
     limit?: number;
     param?: string;
+    coerce?: keyof typeof Coerce;
   }
 ) => Loader =
   (source, options) =>
@@ -427,14 +454,16 @@ export const createLoader: (
       });
       if (response.ok) {
         const json = await response.json();
-        const [err, result] = s.validate(json, s.array(Item), { coerce: true });
+        const struct = Coerce[options?.coerce ?? 'Default'];
+        const [err, items] = s.validate(json, struct, { coerce: true });
         if (!err) {
-          const items = matchSorter(result, filterText, {
-            keys: ['label']
-          });
-          return {
-            items: limit ? items.slice(0, limit) : items
-          };
+          if (items.length > limit) {
+            const filteredItems = matchSorter(items, filterText, {
+              keys: ['label']
+            });
+            return { items: filteredItems.slice(0, limit) };
+          }
+          return { items };
         }
       }
       return { items: [] };

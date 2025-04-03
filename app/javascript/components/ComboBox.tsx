@@ -48,6 +48,7 @@ export function ComboBox({
     <AriaComboBox
       {...props}
       className={`fr-ds-combobox ${className ?? ''}`}
+      menuTrigger="focus"
       shouldFocusWrap={true}
     >
       {label ? <Label className="fr-label">{label}</Label> : null}
@@ -231,6 +232,8 @@ export function RemoteComboBox({
     allowsCustomValue,
     minimumInputLength,
     limit,
+    debounce,
+    coerce,
     formValue,
     name,
     form,
@@ -244,14 +247,15 @@ export function RemoteComboBox({
   const load = useMemo(
     () =>
       typeof loader == 'string'
-        ? createLoader(loader, { minimumInputLength, limit })
+        ? createLoader(loader, { minimumInputLength, limit, coerce })
         : loader,
-    [loader, minimumInputLength, limit]
+    [loader, minimumInputLength, limit, coerce]
   );
   const { selectedItem, onReset, ...comboBoxProps } = useRemoteList({
     allowsCustomValue,
     defaultItems,
     defaultSelectedKey,
+    debounce,
     load,
     onChange: (item) => {
       onChange?.(item);
