@@ -77,10 +77,21 @@ module ProcedureStatsConcern
     traitement_times(first_processed_at..last_considered_processed_at)
       .group_by { |t| t[:processed_at].beginning_of_month }
       .transform_values { |month| month.map { |h| h[:processed_at] - h[:depose_at] } }
-      .transform_values { |traitement_times_for_month| traitement_times_for_month.percentile(USUAL_TRAITEMENT_TIME_PERCENTILE).ceil }
+      .transform_values { |traitement_times_for_month| winsorized_mean(traitement_times_for_month).ceil }
       .transform_values { |seconds| seconds == 0 ? nil : seconds }
       .transform_values { |seconds| convert_seconds_in_days(seconds) }
       .transform_keys { |month| pretty_month(month) }
+  end
+
+  # The winsorized mean is a useful estimator because by retaining the outliers without taking them too literally, it is less sensitive to observations at the extremes than the straightforward mean, and will still generate a reasonable estimate of central tendency or mean for almost all statistical models. In this regard it is referred to as a robust estimator.
+  def winsorized_mean(data, lower_perc = 5, upper_perc = 95)
+    data_points = data.sort
+    lower_bound_percentile = data_points.percentile(lower_perc)
+    upper_bound_percentile = data_points.percentile(upper_perc)
+
+    winsorized_data = data_points.map { |data_point| data_point < lower_bound_percentile ? lower_bound_percentile : (data_point > upper_bound_percentile ? upper_bound_percentile : data_point) }
+
+    winsorized_data.sum.to_f / winsorized_data.size
   end
 
   def usual_traitement_time_for_recent_dossiers(nb_days)

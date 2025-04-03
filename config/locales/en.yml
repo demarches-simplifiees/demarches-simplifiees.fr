@@ -928,7 +928,7 @@ en:
         processing_time: "Processing time"
         since_procedure_creation: "since the procedure was created"
         nb_days: "Nb Days"
-        processing_time_graph_description: "Processing time between instruction and final answer (accepted, rejected or closed) for 90% of files."
+        processing_time_graph_description: "Weiweighted mean time between last submission and final answer (accepted, rejected or closed)."
         status_evolution_details: "since the procedure launch"
         status_evolution: "Evolution of file statuses"
         acceptance_rate: "Acceptance rate"

@@ -123,8 +123,8 @@ describe ProcedureStatsConcern do
 }
 
       it 'computes a time representative of the dossier instruction delay for each month except current month' do
-        expect(procedure.usual_traitement_time_by_month_in_days['avril 2019']).to eq 60
-        expect(procedure.usual_traitement_time_by_month_in_days['mai 2019']).to eq 4
+        expect(procedure.usual_traitement_time_by_month_in_days['avril 2019']).to eq 54
+        expect(procedure.usual_traitement_time_by_month_in_days['mai 2019']).to eq 3
         expect(procedure.usual_traitement_time_by_month_in_days['juin 2019']).to eq nil
       end
     end

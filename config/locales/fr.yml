@@ -1007,7 +1007,7 @@ fr:
         processing_time: "Temps de traitement"
         since_procedure_creation: "depuis le lancement de la démarche"
         nb_days: "Nb Jours"
-        processing_time_graph_description: "Temps de traitement entre le passage en instruction et la réponse (accepté, refusé, ou classé sans suite) pour 90% des dossiers"
+        processing_time_graph_description: "Moyenne pondérée du temps de traitement entre la dernière date de dépot et la réponse (accepté, refusé, ou classé sans suite)."
         status_evolution_details: "depuis le lancement de la démarche"
         status_evolution: "Avancée des dossiers"
         acceptance_rate: "Taux d’acceptation"
