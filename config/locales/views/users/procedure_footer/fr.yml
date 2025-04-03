@@ -4,16 +4,6 @@ fr:
       managed_by:
         header: 'Cette démarche est gérée par'
       contact:
-        header: 'Poser une question sur la démarche'
-        in_app_mail:
-          link: "Directement par la messagerie"
-        email:
-          link: "Directement par courriel :"
-        phone:
-          label: 'Par téléphone au : '
-          link: '%{service_telephone}'
-        schedule:
-          prefix: "Horaires d’ouverture : "
         stats:
           link: "Voir les statistiques de la démarche"
       legals:

@@ -6,23 +6,13 @@
       %span{ lang: :fr }= service.pretty_nom
       %div{ lang: :fr }
         = render SimpleFormatComponent.new(service.adresse, class_names_map: {paragraph: 'fr-footer__content-desc'})
-  %h3.fr-footer__top-cat= I18n.t('users.procedure_footer.contact.header')
-  %ul.fr-footer__top-list
-    - if dossier.present? && dossier.messagerie_available?
-      %li
-        = link_to I18n.t('users.procedure_footer.contact.in_app_mail.link'), messagerie_dossier_path(dossier), class: 'fr-footer__link'
-    - elsif service.present?
-      %li
-        %span.fr-footer__top-link
-          = I18n.t('users.procedure_footer.contact.email.link')
-        = link_to service.email, "mailto:#{service.email}", class: "fr-footer__link"
-
-      - if service.telephone.present?
-        %li
-          %span.fr-footer__top-link
-            = I18n.t('users.procedure_footer.contact.phone.label')
-          = link_to I18n.t('users.procedure_footer.contact.phone.link', service_telephone: service.telephone), service.telephone_url, class: 'fr-footer__link'
-
-      - if service.horaires.present?
-        %li
-          = "#{I18n.t('users.procedure_footer.contact.schedule.prefix')}#{formatted_horaires(service.horaires)}"
+  %h3.fr-footer__top-cat
+    - if dossier.present? && dossier.depose_at.present?
+      = I18n.t('help_dropdown.help_filled_dossier')
+    - elsif dossier.present?
+      = I18n.t('help_dropdown.help_brouillon_title')
+    - else
+      = I18n.t('help_dropdown.procedure_title')
+  - if procedure.service.present?
+    %ul.fr-footer__top-list
+      = render Procedure::ServiceListContactComponent.new(service: procedure.service, dossier: dossier)

@@ -257,7 +257,7 @@ ul.dropdown-items {
   }
 }
 
-.help-content.fr-menu ul.fr-menu__list li {
+.help-content.fr-menu ul.fr-menu__list > li {
   padding: 0.75rem 1rem;
 
   @media (min-width: 62em) {
@@ -266,7 +266,7 @@ ul.dropdown-items {
   }
 }
 
-.help-content.fr-menu ul.fr-menu__list li:not(:last-child) {
+.help-content.fr-menu ul.fr-menu__list > li:not(:last-child) {
   @media (min-width: 62em) {
     border-bottom: 1px solid $border-grey;
   }

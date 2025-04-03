@@ -42,9 +42,6 @@ en:
     technical_contact_description: Send us a message to %{contact_email}.
     help_brouillon_title: "Need help filling out your file?"
     help_filled_dossier: "A question about your file?"
-    contact_instructeur: Send a message directly to the instructor.
-    faq_link: Consult the online help
-    contact_link: Consult the administration contact page
   utils:
     'yes': 'Yes'
     'no': 'No'
