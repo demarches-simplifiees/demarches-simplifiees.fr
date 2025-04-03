@@ -81,3 +81,7 @@ fr:
         intro_html: Les modifications effectuées ne seront visibles <strong>qu'à la prochaine publication</strong>
         see_changes: Voir les modifications
         publish_changes: Publier les modifications
+      add_administrateur:
+        wrong_address:
+          one: "%{value} n’est pas une adresse email valide"
+          other: "%{value} ne sont pas des adresses emails valides"
