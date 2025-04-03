@@ -520,6 +520,12 @@ module Users
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
+        :not_in_ban,
+        :street_address,
+        :city_name,
+        :city_code,
+        :country_code,
+        :commune_code,
         value: []
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with
