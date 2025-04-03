@@ -119,7 +119,7 @@ class PiecesJustificativesService
       }
     when Instructeur
       {
-        with_bills: false,
+        with_bills: export_with_horodatage?,
         with_champs_private: true,
         with_avis_piece_justificative: true
       }
@@ -318,6 +318,12 @@ class PiecesJustificativesService
     attachment
       .blob
       .virus_scan_result == ActiveStorage::VirusScanner::SAFE
+  end
+
+  def export_with_horodatage?
+    return false if @user_profile.nil?
+
+    Flipper.enabled?(:export_with_horodatage, @user_profile.user)
   end
 
   # given
