@@ -40,7 +40,7 @@ class TypesDeChamp::CommuneDePolynesieTypeDeChamp < TypesDeChamp::TextTypeDeCham
     end
 
     def champ_value_for_tag(champ, path = :value)
-      if champ.valid_value.present? && (city = APIGeo::API.commune_by_city_postal_code(champ.value))
+      if champ.value.present? && (city = APIGeo::API.commune_by_city_postal_code(champ.value))
         path = :commune if path == :value
         city[path]
       else

@@ -115,11 +115,6 @@ class Champ < ApplicationRecord
     [to_s]
   end
 
-  def valid_value
-    return unless valid_champ_value?
-    value
-  end
-
   def to_s
     TypeDeChamp.champ_value(type_champ, self)
   end
