@@ -17,7 +17,7 @@ class Referentiels::NewFormComponent < ApplicationComponent
   end
 
   def form_url
-    if @referentiel.persisted?
+    if @referentiel.persisted? && @referentiel.valid?
       admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel)
     else
       admin_procedure_referentiels_path(@procedure, @type_de_champ.stable_id)

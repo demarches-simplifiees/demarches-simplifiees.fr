@@ -3,10 +3,14 @@
 RSpec.describe Referentiels::MappingFormComponent, type: :component do
   let(:component) { described_class.new(referentiel:, type_de_champ:, procedure:) }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
-  let(:types_de_champ_public) { [{ type: :referentiel }] }
+  let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
-  let(:referentiel) { create(:api_referentiel, :configured) }
-
+  let(:referentiel) { create(:api_referentiel, :configured, url: whitelist.first) }
+  let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
+  before do
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with('API_WHITELIST', '').and_return(whitelist.join(','))
+  end
   describe 'render' do
     delegate :url_helpers, to: :routes
     delegate :routes, to: :application
@@ -25,7 +29,7 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
     end
 
     context 'when referentiel is properly configured' do
-      let(:referentiel) { create(:api_referentiel, :with_last_response, :configured) }
+      let(:referentiel) { create(:api_referentiel, :with_last_response, :configured, url: whitelist.first) }
 
       it 'table' do
         # thead
