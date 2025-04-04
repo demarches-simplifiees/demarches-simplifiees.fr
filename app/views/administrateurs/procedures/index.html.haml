@@ -1,9 +1,9 @@
 .sub-header
-  .flex.fr-container
-    %h1.fr-h3 Mes démarches
-    .procedure-admin-listing-container.fr-mt-1v
-      = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
   .fr-container
+    %h1.fr-h3 Mes démarches
+    .flex.justify-between.fr-mb-3w
+      = render SelectProcedureDropDownListComponent.new(procedures: @all_procedures, action_path: url_for([:select_procedure, :admin, :procedures]), form_class: 'width-66')
+      = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
       %ul.fr-tabs__list{ role: 'tablist' }
