@@ -85,12 +85,12 @@ export class AutosaveController extends ApplicationController {
         }, 0);
       },
       inputable: (target) => {
-        this.enqueueOnInput(target, true);
+        this.enqueueOnInput(target, this.needsValidation(target));
       },
       hidden: (target) => {
         // In comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
         // We want to debounce them.
-        this.enqueueOnInput(target, true);
+        this.enqueueOnInput(target, this.needsValidation(target));
       }
     });
   }
@@ -100,8 +100,7 @@ export class AutosaveController extends ApplicationController {
       inputable: (target) => {
         // Ignore input from React comboboxes. We trigger "change" events on them when selection is changed.
         if (target.getAttribute('role') != 'combobox') {
-          const validate = this.needsValidation(target);
-          this.enqueueOnInput(target, validate);
+          this.enqueueOnInput(target, this.needsValidation(target));
         }
       }
     });
@@ -122,7 +121,7 @@ export class AutosaveController extends ApplicationController {
   }
 
   private needsValidation(target: HTMLElement) {
-    return target.getAttribute('aria-invalid') == 'true';
+    return target.getAttribute('novalidate') != 'true';
   }
 
   private showConditionnalSpinner(
