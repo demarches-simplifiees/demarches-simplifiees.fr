@@ -625,6 +625,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_15_214140) do
   end
 
   create_table "export_templates", force: :cascade do |t|
+    t.jsonb "attestation"
     t.jsonb "content", default: {}
     t.datetime "created_at", null: false
     t.jsonb "dossier_folder", null: false

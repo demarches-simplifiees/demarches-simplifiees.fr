@@ -70,6 +70,7 @@ module Instructeurs
           :groupe_instructeur_id,
           dossier_folder: [:enabled, :template],
           export_pdf: [:enabled, :template],
+          attestation: [:enabled, :template],
           pjs: [:stable_id, :enabled, :template],
           exported_columns: []
         )

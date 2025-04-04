@@ -14,6 +14,7 @@ class ExportTemplate < ApplicationRecord
   attribute :dossier_folder, :export_item
   attribute :export_pdf, :export_item
   attribute :pjs, :export_item, array: true
+  attribute :attestation, :export_item
 
   attribute :exported_columns, :exported_column, array: true
 
@@ -33,9 +34,10 @@ class ExportTemplate < ApplicationRecord
     # TODO: remove default values for tabular export
     dossier_folder = ExportItem.default(prefix: 'dossier')
     export_pdf = ExportItem.default(prefix: 'export')
+    attestation = ExportItem.default(prefix: 'attestation')
     pjs = groupe_instructeur.procedure.exportables_pieces_jointes.map { |tdc| ExportItem.default_pj(tdc) }
 
-    new(name:, kind:, groupe_instructeur:, dossier_folder:, export_pdf:, pjs:)
+    new(name:, kind:, groupe_instructeur:, dossier_folder:, export_pdf:, attestation:, pjs:)
   end
 
   def tabular?
@@ -56,6 +58,8 @@ class ExportTemplate < ApplicationRecord
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     file_path = if attachment.name == 'pdf_export_for_instructeur'
       export_pdf.path(dossier, attachment:)
+    elsif attachment.record_type == 'Attestation' && attestation&.enabled?
+      attestation.path(dossier, attachment:)
     elsif attachment.record_type == 'Champ' && pj(champ.type_de_champ).enabled?
       pj(champ.type_de_champ).path(dossier, attachment:, index:, row_index:)
     else
