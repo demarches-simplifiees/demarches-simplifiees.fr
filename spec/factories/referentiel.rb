@@ -15,7 +15,6 @@ FactoryBot.define do
     end
 
     factory :api_referentiel, class: 'Referentiels::APIReferentiel' do
-      sequence(:url) { |n| "http://api-#{n}.com" }
     end
   end
 

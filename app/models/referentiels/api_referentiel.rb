@@ -6,6 +6,7 @@ class Referentiels::APIReferentiel < Referentiel
     autocomplete: 'autocomplete'
   }
   validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
+  validate :url_in_whitelist?
 
   before_save :name_as_url
 
@@ -34,5 +35,17 @@ class Referentiels::APIReferentiel < Referentiel
 
   def name_as_url
     self.name = url
+  end
+
+  def url_in_whitelist?
+    return if url.blank?
+
+    uri = Addressable::URI.parse(url)
+    whitelist = ENV.fetch('API_WHITELIST', '').split(',')
+    if whitelist.none? { |whitelisted_url| uri.host && whitelisted_url.include?(uri.host) }
+      errors.add(:url, "L'URL doit être dans la liste blanche")
+    end
+  rescue URI::InvalidURIError
+    errors.add(:url, "L'URL est invalide")
   end
 end
