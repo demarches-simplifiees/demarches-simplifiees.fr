@@ -195,7 +195,7 @@ module Dolist
     end
 
     def sender_id(domain)
-      if domain == "demarches.gouv.fr"
+      if domain == "demarches.numerique.gouv.fr"
         Rails.application.secrets.dolist[:gouv_sender_id]
       else
         Rails.application.secrets.dolist[:default_sender_id]
