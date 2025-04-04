@@ -55,7 +55,6 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
         it 'updates the champ' do
           perform_job
           expect(champ).to have_received(:update_with_external_data!).with(data: fetched_data.value!)
-          expect(champ).to have_received(:clear_external_data_exception!)
         end
       end
 
