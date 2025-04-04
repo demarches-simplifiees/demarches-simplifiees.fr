@@ -11,7 +11,7 @@ class Champs::ReferentielChamp < Champ
   end
 
   def update_with_external_data!(data:)
-    update!(data:, value_json: todo_map_stuff(data:))
+    update!(value: external_id, data:, value_json: todo_map_stuff(data:), fetch_external_data_exceptions: [])
   end
 
   def todo_map_stuff(data:)
