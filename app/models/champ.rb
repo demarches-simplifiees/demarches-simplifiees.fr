@@ -243,6 +243,10 @@ class Champ < ApplicationRecord
     update!(data: data)
   end
 
+  def clear_external_data_exception!
+    update_column(:fetch_external_data_exceptions, [])
+  end
+
   def status_message?
     false
   end
