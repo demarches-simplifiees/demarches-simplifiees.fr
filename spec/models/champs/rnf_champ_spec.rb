@@ -118,7 +118,7 @@ describe Champs::RNFChamp, type: :model do
           country_code: "FR",
           country_name: "France"
         }
-        expect(champ).to receive(:update!).with(data: anything, value_json:)
+        expect(champ).to receive(:update!).with(data: anything, value_json:, fetch_external_data_exceptions: [])
         champ.update_with_external_data!(data: subject.value!)
       end
     end

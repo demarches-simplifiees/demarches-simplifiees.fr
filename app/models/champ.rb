@@ -216,7 +216,7 @@ class Champ < ApplicationRecord
   end
 
   def log_fetch_external_data_exception(exception)
-    update_column(:fetch_external_data_exceptions, [exception.inspect])
+    update_columns(fetch_external_data_exceptions: [exception.inspect], data: nil, value_json: nil, value: nil)
   end
 
   def fetch_external_data?
@@ -240,11 +240,7 @@ class Champ < ApplicationRecord
   end
 
   def update_with_external_data!(data:)
-    update!(data: data)
-  end
-
-  def clear_external_data_exception!
-    update_column(:fetch_external_data_exceptions, [])
+    update!(data: data, fetch_external_data_exceptions: [])
   end
 
   def status_message?
