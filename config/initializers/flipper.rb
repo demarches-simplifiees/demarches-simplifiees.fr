@@ -31,7 +31,8 @@ features = [
   :groupe_instructeur_api_hack,
   :rdv,
   :sva,
-  :switch_domain
+  :switch_domain,
+  :export_avec_horodatage
 ]
 
 def database_exists?
