@@ -1841,6 +1841,39 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#champ' do
+    let(:stable_id) { 1234 }
+    let(:types_de_champ_public) { [{ type: :text, stable_id: }] }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, user:) }
+    let(:champ) { dossier.champs.first }
+
+    before do
+      sign_in(user)
+    end
+
+    subject { get :champ, params: { id: dossier.id, stable_id:, row_id: nil }, format: :turbo_stream }
+
+    context 'when the user owns the dossier' do
+      it 'renders the turbo_stream update template' do
+        subject
+        expect(response).to render_template(:update)
+        expect(assigns(:to_update)).to include(champ)
+      end
+    end
+
+    context 'when the user does not own the dossier' do
+      let(:other_user) { create(:user) }
+      let(:dossier) { create(:dossier, user: other_user) }
+
+      it 'redirects to the root path with an alert' do
+        subject
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to include("Vous n’avez pas accès à ce dossier")
+      end
+    end
+  end
+
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
