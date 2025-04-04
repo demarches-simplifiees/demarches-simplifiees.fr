@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FranceConnect::ParticulierController, type: :controller do
+describe FranceConnectController, type: :controller do
   let(:birthdate) { '20150821' }
   let(:email) { 'EMAIL_from_fc@test.com' }
 
@@ -16,16 +16,29 @@ describe FranceConnect::ParticulierController, type: :controller do
     }
   end
 
+  before { allow(FranceConnectService).to receive(:enabled?).and_return(true) }
+
   describe '#auth' do
     subject { get :login }
 
-    it { is_expected.to have_http_status(:redirect) }
+    before { allow(FranceConnectService).to receive(:authorization_uri).and_return(['uri', 'state', 'nonce']) }
+
+    it do
+      is_expected.to have_http_status(:redirect)
+      expect(cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME]).to be_present
+      expect(cookies.encrypted[FranceConnectController::NONCE_COOKIE_NAME]).to be_present
+    end
   end
 
   describe '#callback' do
     let(:code) { 'plop' }
+    let(:state) { 'good_state' }
 
-    subject { get :callback, params: { code: code } }
+    before do
+      cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'good_state'
+    end
+
+    subject { get :callback, params: { code:, state: } }
 
     context 'when params are missing' do
       subject { get :callback }
@@ -36,7 +49,36 @@ describe FranceConnect::ParticulierController, type: :controller do
     context 'when param code is missing' do
       let(:code) { nil }
 
-      it { is_expected.to redirect_to(new_user_session_path) }
+      it do
+        is_expected.to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to include('Une erreur est survenue lors de la connexion')
+      end
+    end
+
+    context 'when an error occurs' do
+      let(:params) { { code: '', state: '', error: } }
+
+      def check_error_handling(error, expected_message)
+        get :callback, params: { error: }
+        expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to include(expected_message)
+      end
+
+      context 'of type invalid_scope' do
+        let(:error) { 'invalid_scope' }
+
+        it do
+          check_error_handling('invalid_scope', 'Veuillez essayer un autre mode de connexion')
+
+          check_error_handling('invalid_request', 'Veuillez essayer un autre mode de connexion')
+
+          check_error_handling('access_denied', 'Veuillez réessayer.')
+
+          check_error_handling('server_error', 'Veuillez réessayer.')
+
+          check_error_handling('temporarily_unavailable', 'Veuillez réessayer.')
+        end
+      end
     end
 
     context 'when param code is empty' do
@@ -47,8 +89,8 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when code is correct' do
       before do
-        allow(FranceConnectService).to receive(:retrieve_user_informations_particulier)
-          .and_return(FranceConnectInformation.new(user_info))
+        allow(FranceConnectService).to receive(:retrieve_user_informations)
+          .and_return([FranceConnectInformation.new(user_info), 'id_token'])
       end
 
       context 'when france_connect_particulier_id exists in database' do
@@ -64,6 +106,8 @@ describe FranceConnect::ParticulierController, type: :controller do
             subject
             expect(controller.current_user).to eq(fc_user)
             expect(fc_user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+            expect(cookies.encrypted[FranceConnectController::NONCE_COOKIE_NAME]).to be_nil
+            expect(cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME]).to eq('id_token')
           end
 
           context 'and the user has a stored location' do
@@ -71,6 +115,15 @@ describe FranceConnect::ParticulierController, type: :controller do
             before { controller.store_location_for(:user, stored_location) }
 
             it { is_expected.to redirect_to(stored_location) }
+          end
+
+          context 'but the state is not correct' do
+            let(:state) { 'bad_state' }
+
+            it 'redirects to the login path' do
+              subject
+              expect(response).to redirect_to(new_user_session_path)
+            end
           end
         end
 
@@ -126,7 +179,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when code is not correct' do
       before do
-        allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+        allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
         subject
       end
 
@@ -226,7 +279,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         get :confirm_email, params: { token: 'expired_token' }
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t('france_connect.particulier.flash.confirmation_mail_resent_error'))
+        expect(flash[:alert]).to eq(I18n.t('france_connect.flash.confirmation_mail_resent_error'))
       end
 
       context 'when FranceConnectInformation exists' do
@@ -245,7 +298,7 @@ describe FranceConnect::ParticulierController, type: :controller do
             .with(expired_user_confirmation, expired_user_confirmation.reload.confirmation_token)
 
           expect(response).to redirect_to(root_path)
-          expect(flash[:notice]).to eq(I18n.t('france_connect.particulier.flash.confirmation_mail_resent'))
+          expect(flash[:notice]).to eq(I18n.t('france_connect.flash.confirmation_mail_resent'))
         end
       end
     end
@@ -266,7 +319,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         get :confirm_email, params: { token: 'expired_token' }
 
         expect(response).to redirect_to(new_user_session_path)
-        expect(flash[:alert]).to eq(I18n.t('france_connect.particulier.flash.redirect_new_user_session'))
+        expect(flash[:alert]).to eq(I18n.t('france_connect.flash.redirect_new_user_session'))
       end
     end
   end
@@ -283,7 +336,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       get :confirm_email, params: { token: 'valid_token' }
 
       expect(response).to redirect_to(new_user_session_path)
-      expect(flash[:alert]).to eq(I18n.t('france_connect.particulier.flash.redirect_new_user_session'))
+      expect(flash[:alert]).to eq(I18n.t('france_connect.flash.redirect_new_user_session'))
     end
 
     context 'when user is not found' do
@@ -291,7 +344,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         get :confirm_email, params: { token: 'invalid_token' }
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq(I18n.t('france_connect.particulier.flash.user_not_found'))
+        expect(flash[:alert]).to eq(I18n.t('france_connect.flash.user_not_found'))
       end
     end
   end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-describe 'France Connect Particulier Connexion' do
+describe 'France Connect Connexion' do
   let(:code) { 'plop' }
+  let(:state) { 'state' }
+  let(:id_token) { 'id_token' }
   let(:given_name) { 'titi' }
   let(:family_name) { 'toto' }
   let(:birthdate) { '20150821' }
@@ -23,7 +25,10 @@ describe 'France Connect Particulier Connexion' do
   end
 
   context 'when user is on login page' do
-    before { visit new_user_session_path }
+    before do
+      allow(FranceConnectService).to receive(:enabled?).and_return(true)
+      visit new_user_session_path
+    end
 
     scenario 'link to France Connect is present' do
       expect(page).to have_css('.fr-connect')
@@ -32,8 +37,11 @@ describe 'France Connect Particulier Connexion' do
     context 'and click on france connect link' do
       context 'when authentification is ok' do
         before do
-          allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(france_connect_information)
+          allow(FranceConnectService).to receive(:authorization_uri)
+            .and_return([france_connect_callback_path(code:, state:), state, 'nonce'])
+
+          allow(FranceConnectService).to receive(:retrieve_user_informations)
+            .and_return([france_connect_information, id_token])
         end
 
         context 'when no user is linked' do
@@ -70,7 +78,7 @@ describe 'France Connect Particulier Connexion' do
               perform_enqueued_jobs
 
               confirmation_email = open_email(alternative_email)
-              link = confirmation_email.body.match(/href="[^"]*(\/france_connect\/particulier\/merge_using_email_link.*?)"/)[1]
+              link = confirmation_email.body.match(/href="[^"]*(\/france_connect\/merge_using_email_link.*?)"/)[1]
 
               visit link
 
@@ -146,8 +154,9 @@ describe 'France Connect Particulier Connexion' do
 
       context 'when authentification is not ok' do
         before do
-          allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+          allow(FranceConnectService).to receive(:enabled?).and_return(true)
+          allow(FranceConnectService).to receive(:authorization_uri).and_return(france_connect_callback_path(code:, state:), state, 'nonce')
+          allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
           page.find('.fr-connect').click
         end
 
