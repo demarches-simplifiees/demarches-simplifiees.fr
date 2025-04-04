@@ -1872,6 +1872,19 @@ describe Users::DossiersController, type: :controller do
         expect(flash[:alert]).to include("Vous n’avez pas accès à ce dossier")
       end
     end
+
+    context 'when the champ is invalid' do
+      before do
+        allow(champ).to receive(:valid?).and_return(false)
+        allow(champ).to receive_message_chain(:errors, :full_messages).and_return(['Champ invalide'])
+      end
+
+      it 'still renders the turbo_stream update template' do
+        subject
+        expect(response).to render_template(:update)
+        expect(assigns(:to_update)).to include(champ)
+      end
+    end
   end
 
   private
