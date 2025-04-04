@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 describe Administrateurs::ReferentielsController, type: :controller do
-  before { sign_in(procedure.administrateurs.first.user) }
+  let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
+  before do
+    sign_in(procedure.administrateurs.first.user)
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with('API_WHITELIST', '').and_return(whitelist.join(','))
+  end
+
   let(:stable_id) { 123 }
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :referentiel, stable_id: }]) }
 
@@ -14,7 +20,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     context 'given a referentiel_id' do
       let(:original_data) do
         {
-          url: 'https://rnb.api',
+          url: 'https://rnb-api.beta.gouv.fr',
           test_data: 'test',
           hint: 'howtofillme',
           mode: 'exact_match'
@@ -85,7 +91,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     let(:referentiel_params) do
       {
         mode: 'autocomplete',
-        url: 'https://ban.fr/{search}/',
+        url: whitelist.first,
         hint: 'Rechercher par adresse',
         test_data: '18 rue du solférino, paris'
       }
@@ -129,7 +135,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe '#update_mapping_type_de_champ' do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :configured, url: whitelist.first, types_de_champ: [type_de_champ]) }
     let(:referentiel_mapping) do
       [
         {

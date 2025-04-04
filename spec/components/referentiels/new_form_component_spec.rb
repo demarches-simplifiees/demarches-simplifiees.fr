@@ -10,8 +10,10 @@ RSpec.describe Referentiels::NewFormComponent, type: :component do
     let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :referentiel }] }
     let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
-
+    let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
     before do
+      allow(ENV).to receive(:fetch).and_call_original
+      allow(ENV).to receive(:fetch).with('API_WHITELIST', '').and_return(whitelist.join(','))
       Flipper.enable_actor(:referentiel_type_de_champ, procedure)
       render_inline(component)
     end
@@ -62,7 +64,7 @@ RSpec.describe Referentiels::NewFormComponent, type: :component do
     end
 
     context 'when referentiel was persisted' do
-      let(:referentiel) { create(:api_referentiel, types_de_champ: [type_de_champ], url: "https://rnb.api") }
+      let(:referentiel) { create(:api_referentiel, types_de_champ: [type_de_champ], url: "https://rnb-api.beta.gouv.fr") }
       it 'render form to update' do
         expect(page).to have_css('form[method=post]')
         expect(page).to have_css('input[name=_method][value=patch]')
