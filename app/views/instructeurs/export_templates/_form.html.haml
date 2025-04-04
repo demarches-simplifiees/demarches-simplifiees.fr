@@ -45,6 +45,12 @@
             libelle: ExportTemplate.human_attribute_name(:export_pdf),
             prefix: 'export_template[export_pdf]' }
 
+        - if procedure.attestation_template&.activated?
+          = render partial: 'export_item',
+            locals: { item: export_template.attestation || ExportItem.default(prefix: 'attestation'),
+              libelle: ExportTemplate.human_attribute_name(:attestation),
+              prefix: 'export_template[attestation]' }
+
         - if procedure.exportables_pieces_jointes_for_all_versions.any?
           %h3 Pièces justificatives
 
