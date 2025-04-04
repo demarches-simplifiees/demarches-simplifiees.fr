@@ -36,13 +36,15 @@
                 %td.fr-cell--multiline{ scope: 'col' }
                   = link_to admin_procedure_groupe_instructeur_path(@procedure, gi), class: 'fr-link' do
                     %span= gi.label
-                  - if gi.closed
-                    %p.fr-badge.fr-badge--info.fr-badge--sm.fr-ml-1w inactif
-                  - elsif gi.invalid_rule?
-                    %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle invalide
-                  - elsif gi.non_unique_rule?
-                    %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle déjà attribuée à #{gi.groups_with_same_rule}
                   %p= gi.routing_rule&.to_s(@procedure.active_revision.types_de_champ)
+                  - if gi.closed
+                    %p.fr-badge.fr-badge--info.fr-badge--sm.fr-mt-1w inactif
+                  - elsif gi.routing_rule.nil?
+                    %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-mt-1w aucune règle
+                  - elsif gi.invalid_rule?
+                    %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-mt-1w règle invalide
+                  - elsif gi.non_unique_rule?
+                    %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-mt-1w règle déjà attribuée à #{gi.groups_with_same_rule}
 
                 %td{ scope: 'col' }
                   %span.fr-mr-1w

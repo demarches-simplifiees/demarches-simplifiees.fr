@@ -1,5 +1,5 @@
 ---
 fr:
-  to_configure_filter:
-    one: "Filtrer %{count} groupe à configurer"
-    other: "Filtrer les %{count} groupes à configurer"
+  to_configure_filter_html:
+    one: "<span>Afficher seulement le groupe avec alerte sur la règle de routage </ span><strong>(%{count})</strong>"
+    other: "<span>Afficher seulement les groupes avec alerte sur la règle de routage </ span><strong>(%{count})</strong>"
