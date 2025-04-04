@@ -20,7 +20,7 @@ class Champs::RNAChamp < Champ
   def update_with_external_data!(value:, data:)
     value_json = data.blank? ? nil : extract_value_json(data:)
     data = (data.presence)
-    update_columns(data:, value_json:, value:)
+    update_columns(data:, value_json:, value:, fetch_external_data_exceptions: [])
   end
 
   def identifier
