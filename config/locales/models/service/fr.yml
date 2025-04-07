@@ -42,6 +42,7 @@ fr:
     errors:
       models:
         service:
+          at_least_one_contact: Veuillez renseigner au moins un des deux champs de contact
           attributes:
             siret:
               format: 'Le numéro SIRET %{message}'
@@ -49,9 +50,11 @@ fr:
               checksum: 'comporte une erreur de saisie. Corrigez-la.'
               not_prefillable: 'Impossible de préremplir les informations pour ce SIRET, veuillez les saisir manuellement'
             contact_link:
-              at_least_one_contact: Veuillez renseigner au moins un des deux champs de contact
+              format: ""
             email:
-              at_least_one_contact: Veuillez renseigner au moins un des deux champs de contact
+              format: "%{message}"
+
+
   type_organisme:
     administration_centrale: 'Administration centrale'
     association: 'Association'
