@@ -229,6 +229,8 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   });
   const formResetRef = useOnFormReset(onReset);
 
+  const showAlert = (defaultItems?.length ?? 0) > 200;
+
   return (
     <div className={`fr-ds-combobox__multiple ${className ? className : ''}`}>
       {selectedItems.length > 0 ? (
@@ -252,10 +254,15 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
         allowsCustomValue={allowsCustomValue}
         inputRef={inputRef}
         menuTrigger="focus"
+        alertMessage={showAlert}
         {...comboBoxProps}
         {...props}
       >
-        {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
+        {(item) => (
+          <ComboBoxItem key={item.value} id={item.value}>
+            {item.label}
+          </ComboBoxItem>
+        )}
       </ComboBox>
       {name ? (
         <span ref={ref}>
