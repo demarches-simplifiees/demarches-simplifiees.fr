@@ -3,4 +3,4 @@ en:
     attributes:
       champs/date_champ:
         hints:
-          value: "Expected format: mm/dd/yyyy. Example: 01/15/2022"
+          value: "Expected format: mm/dd/yyyy."
