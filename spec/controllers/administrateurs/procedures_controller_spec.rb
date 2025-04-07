@@ -1495,4 +1495,46 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe '#select_procedure' do
+    let(:admin) { create(:administrateur) }
+
+    before do
+      sign_in(admin.user)
+    end
+
+    context 'when procedure_id is present' do
+      let(:procedure) { create(:procedure, administrateur: admin) }
+
+      it 'redirects to the procedure path' do
+        get :select_procedure, params: { procedure_id: procedure.id }
+
+        expect(response).to redirect_to(admin_procedure_path(procedure.id))
+      end
+    end
+
+    context 'when procedure_id is not present' do
+      it 'redirects to procedures index' do
+        get :select_procedure
+
+        expect(response).to redirect_to(admin_procedures_path)
+      end
+    end
+
+    context 'when procedure_id is empty string' do
+      it 'redirects to procedures index' do
+        get :select_procedure, params: { procedure_id: '' }
+
+        expect(response).to redirect_to(admin_procedures_path)
+      end
+    end
+
+    context 'when procedure_id is nil' do
+      it 'redirects to procedures index' do
+        get :select_procedure, params: { procedure_id: nil }
+
+        expect(response).to redirect_to(admin_procedures_path)
+      end
+    end
+  end
 end
