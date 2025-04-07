@@ -44,11 +44,13 @@ export function ComboBox({
   isLoading,
   isOpen,
   placeholder,
+  alertMessage,
   ...props
 }: ComboBoxProps & {
   inputRef?: RefObject<HTMLInputElement | null>;
   isOpen?: boolean;
   placeholder?: string;
+  alertMessage?: boolean;
 }) {
   return (
     <AriaComboBox
@@ -94,7 +96,23 @@ export function ComboBox({
         UNSTABLE_portalContainer={getPortal()!}
         isOpen={isOpen}
       >
-        <ListBox className="fr-menu__list">{children}</ListBox>
+        <ListBox className="fr-menu__list">
+          {typeof children === 'function'
+            ? Array.from(props.items ?? []).map((item) => children(item))
+            : children}
+          {alertMessage && (
+            <ListBoxItem
+              id="combo-alert-message"
+              textValue="alert"
+              aria-disabled={true}
+              isDisabled={true}
+              className="fr-menu__item fr-badge fr-badge--info fr-badge--no-text-transform width-100"
+            >
+              Toutes les options ne sont pas affichées. Commencez à saisir votre
+              choix puis sélectionnez-le dans la liste proposée.
+            </ListBoxItem>
+          )}
+        </ListBox>
       </Popover>
     </AriaComboBox>
   );
@@ -131,15 +149,22 @@ export function SingleComboBox({
     maxItemsDisplay
   });
 
+  const showAlert = (defaultItems?.length ?? 0) > 200;
+
   return (
     <>
       <ComboBox
         menuTrigger="focus"
         placeholder={placeholder}
+        alertMessage={showAlert}
         {...comboBoxProps}
         {...props}
       >
-        {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
+        {(item) => (
+          <ComboBoxItem key={item.value} id={item.value}>
+            {item.label}
+          </ComboBoxItem>
+        )}
       </ComboBox>
       {children || name ? (
         <span ref={ref}>
