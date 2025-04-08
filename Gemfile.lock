@@ -333,9 +333,10 @@ GEM
       i18n (>= 0.7)
       multi_json
       request_store (>= 1.0)
-    graphql (2.4.4)
+    graphql (2.5.2)
       base64
       fiber-storage
+      logger
     graphql-batch (0.6.0)
       graphql (>= 1.12.18, < 3)
       promise.rb (~> 0.7.2)
@@ -1021,7 +1022,7 @@ DEPENDENCIES
   geocoder
   gitlab-sidekiq-fetcher!
   gon
-  graphql (= 2.4.4)
+  graphql (~> 2.4)
   graphql-batch
   graphql-schema_comparator
   groupdate
