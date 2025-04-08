@@ -23,6 +23,15 @@ describe ProConnectController, type: :controller do
     let(:original_state) { 'original_state' }
     let(:nonce) { 'nonce' }
     let(:id_token) { 'id_token' }
+    let(:user_info) do
+      {
+        'sub' => 'sub',
+        'email' => email,
+        'given_name' => 'given',
+        'usual_name' => 'usual'
+      }
+    end
+    let(:amr) { [] }
     subject { get :callback, params: { code: code, state: state } }
 
     before do
@@ -33,113 +42,128 @@ describe ProConnectController, type: :controller do
     context 'when the callback code is correct' do
       let(:code) { 'correct' }
       let(:state) { original_state }
-      let(:user_info) { { 'sub' => 'sub', 'email' => email, 'given_name' => 'given', 'usual_name' => 'usual' } }
-      let(:amr) { [] }
 
       context 'and user_info returns some info' do
         before do
           expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
         end
 
-        context 'and the instructeur does not have an account yet' do
+        context 'and the user does not have an account yet' do
+          let(:initial_instructeur_count) { Instructeur.count }
+
           before do
             expect(controller).to receive(:sign_in)
           end
 
-          it 'creates the user, signs in and redirects to procedure_path' do
-            expect { subject }.to change { User.count }.by(1).and change { Instructeur.count }.by(1)
+          it 'creates the user but not an instructeur' do
+            expect { subject }.to change { User.count }.by(1).and change { Instructeur.count }.by(0)
 
             last_user = User.last
 
             expect(last_user.email).to eq(email)
             expect(last_user.confirmed_at).to be_present
             expect(last_user.email_verified_at).to be_present
-            expect(last_user.instructeur.pro_connect_id_token).to eq('id_token')
-            expect(response).to redirect_to(instructeur_procedures_path)
+            expect(response).to redirect_to(root_path)
             expect(state_cookie).to be_nil
             expect(nonce_cookie).to be_nil
+            expect(Instructeur.count).to eq(initial_instructeur_count)
           end
         end
 
-        context 'and the instructeur already has an account' do
-          let!(:instructeur) { create(:instructeur, email: email) }
+        context 'and the user already has an account but is not an instructeur' do
+          let!(:user) { create(:user, email: email) }
+          let(:initial_instructeur_count) { Instructeur.count }
 
           before do
             expect(controller).to receive(:sign_in)
           end
 
-          it 'reuses the account, signs in and redirects to procedure_path' do
+          it 'does not create an instructeur' do
+            expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
+            expect(response).to redirect_to(root_path)
+            expect(Instructeur.count).to eq(initial_instructeur_count)
+          end
+        end
+
+        context 'and the user already has an account as an instructeur' do
+          let!(:instructeur) { create(:instructeur, email: email) }
+          let(:initial_instructeur_count) { Instructeur.count }
+
+          before do
+            expect(controller).to receive(:sign_in)
+          end
+
+          it 'updates the instructeur pro_connect information' do
             expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
             instructeur.reload
 
             expect(instructeur.pro_connect_id_token).to eq('id_token')
-            expect(response).to redirect_to(instructeur_procedures_path)
+            expect(instructeur.pro_connect_information.first.sub).to eq('sub')
+            expect(instructeur.pro_connect_information.first.given_name).to eq('given')
+            expect(instructeur.pro_connect_information.first.usual_name).to eq('usual')
+            expect(response).to redirect_to(root_path)
+            expect(Instructeur.count).to eq(initial_instructeur_count)
           end
 
           it "sets email_verified_at" do
-            expect { subject }.to change { instructeur.user.reload.email_verified_at }.from(
-              nil
-            )
+            expect { subject }.to change { instructeur.user.reload.email_verified_at }.from(nil)
           end
         end
+      end
 
-        context 'and the instructeur already has an account as a user' do
+      context 'when connecting multiple times' do
+        context 'with the same domain' do
           let!(:user) { create(:user, email: email) }
+          let(:code) { 'correct' }
+          let(:state) { original_state }
+          let(:initial_instructeur_count) { Instructeur.count }
 
           before do
-            expect(controller).to receive(:sign_in)
+            expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr]).twice
+            expect(controller).to receive(:sign_in).twice
           end
 
-          it 'reuses the account, signs in and redirects to procedure_path' do
-            expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(1)
+          it 'does not create an instructeur' do
+            get :callback, params: { code: code, state: state }
+            get :callback, params: { code: code, state: state }
 
-            instructeur = user.reload.instructeur
+            expect(Instructeur.count).to eq(initial_instructeur_count)
+          end
+        end
 
-            expect(instructeur.pro_connect_id_token).to eq('id_token')
-            expect(response).to redirect_to(instructeur_procedures_path)
+        context 'with different domains' do
+          let!(:user) { create(:user, email: email) }
+          let(:code) { 'correct' }
+          let(:state) { original_state }
+          let(:initial_instructeur_count) { Instructeur.count }
+
+          before do
+            expect(controller).to receive(:sign_in).twice
+          end
+
+          it 'does not create an instructeur' do
+            expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
+            get :callback, params: { code: code, state: state }
+
+            expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info.merge('sub' => 'sub2'), id_token, amr])
+            get :callback, params: { code: code, state: state }
+
+            expect(Instructeur.count).to eq(initial_instructeur_count)
           end
         end
       end
 
-      context 'when the instructeur connects two times with the same domain' do
-        before do
-          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token]).twice
-          expect(controller).to receive(:sign_in).twice
-        end
+      context 'but user_info raises an error' do
+        let(:initial_instructeur_count) { Instructeur.count }
 
-        it 'creates another pro_connect_information' do
-          get :callback, params: { code: code, state: state }
-          get :callback, params: { code: code, state: state }
-
-          expect(Instructeur.last.pro_connect_information.count).to eq(1)
-        end
-      end
-
-      context 'when the instructeur connects two times with different domains' do
-        before do
-          expect(controller).to receive(:sign_in).twice
-        end
-
-        it 'creates another pro_connect_information' do
-          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
-          get :callback, params: { code: code, state: state }
-
-          expect(ProConnectService).to receive(:user_info).with(code, nonce).and_return([user_info.merge('sub' => 'sub2'), id_token])
-          get :callback, params: { code: code, state: state }
-
-          expect(Instructeur.last.pro_connect_information.pluck(:sub)).to match_array(['sub', 'sub2'])
-        end
-      end
-
-      context 'but user_info raises and error' do
         before do
           expect(ProConnectService).to receive(:user_info).and_raise(Rack::OAuth2::Client::Error.new(500, error: 'Unknown'))
         end
 
-        it 'aborts the processus' do
+        it 'aborts the process' do
           expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
-
           expect(response).to redirect_to(new_user_session_path)
+          expect(Instructeur.count).to eq(initial_instructeur_count)
         end
       end
     end
@@ -147,24 +171,26 @@ describe ProConnectController, type: :controller do
     context 'when the callback state is not the original' do
       let(:code) { 'correct' }
       let(:state) { 'another state' }
+      let(:initial_instructeur_count) { Instructeur.count }
 
       before { subject }
 
-      it 'aborts the processus' do
+      it 'aborts the process' do
         expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
-
         expect(response).to redirect_to(new_user_session_path)
+        expect(Instructeur.count).to eq(initial_instructeur_count)
       end
     end
 
     context 'when the callback code is blank' do
       let(:code) { '' }
       let(:state) { original_state }
+      let(:initial_instructeur_count) { Instructeur.count }
 
-      it 'aborts the processus' do
+      it 'aborts the process' do
         expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
-
         expect(response).to redirect_to(new_user_session_path)
+        expect(Instructeur.count).to eq(initial_instructeur_count)
       end
     end
   end
