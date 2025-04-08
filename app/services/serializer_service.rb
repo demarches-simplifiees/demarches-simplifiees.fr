@@ -339,7 +339,6 @@ class SerializerService
     }
 
     fragment ChampDescriptorFragment on ChampDescriptor {
-      __typename
       label
       description
       required

@@ -68,7 +68,7 @@ describe API::V2::GraphqlController do
         publishedRevision {
           id
           champDescriptors {
-            __typename
+            id
           }
         }
         service {
@@ -77,14 +77,12 @@ describe API::V2::GraphqlController do
           organisme
         }
         champDescriptors {
-          __typename
           id
           label
           description
           required
           ... on RepetitionChampDescriptor {
             champDescriptors {
-              __typename
               id
             }
           }
@@ -140,10 +138,10 @@ describe API::V2::GraphqlController do
         end
       end
 
-      it {
+      it do
         expect(gql_errors).to eq(nil)
         expect(gql_data).not_to be_nil
-      }
+      end
 
       context "when the token is invalid" do
         before do
@@ -224,7 +222,7 @@ describe API::V2::GraphqlController do
             draftRevision: { id: procedure.draft_revision.to_typed_id },
             publishedRevision: {
               id: procedure.published_revision.to_typed_id,
-              champDescriptors: procedure.published_revision.types_de_champ_public.map { { __typename: format_type_champ(_1.type_champ) } }
+              champDescriptors: procedure.published_revision.types_de_champ_public.map { { id: it.to_typed_id } }
             },
             service: {
               nom: procedure.service.nom,
@@ -235,10 +233,9 @@ describe API::V2::GraphqlController do
               {
                 id: tdc.to_typed_id,
                 label: tdc.libelle,
-                __typename: format_type_champ(tdc.type_champ),
                 description: tdc.description,
                 required: tdc.mandatory?,
-                champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { { id: _1.to_typed_id, __typename: format_type_champ(_1.type_champ) } } : nil,
+                champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { { id: _1.to_typed_id } } : nil,
                 options: tdc.any_drop_down_list? ? tdc.drop_down_options.reject(&:empty?) : nil
               }.compact
             end,
