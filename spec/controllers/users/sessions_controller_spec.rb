@@ -113,15 +113,19 @@ describe Users::SessionsController, type: :controller do
     let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
     let!(:instructeur) { create(:instructeur, user: user, pro_connect_id_token:) }
     let(:pro_connect_id_token) { nil }
+    let(:logged_in_with_france_connect) { false }
 
     before do
       stub_const("PRO_CONNECT", { end_session_endpoint: 'http://pro-connect/logout' })
       stub_const("FRANCE_CONNECT", { end_session_endpoint: 'http://france-connect/logout' })
 
-      cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME] = 'id_token'
-      cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'state'
-
       sign_in user
+
+      if logged_in_with_france_connect
+        cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME] = 'id_token'
+        cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'state'
+      end
+
       delete :destroy
     end
 
@@ -135,6 +139,7 @@ describe Users::SessionsController, type: :controller do
     end
 
     context 'when user is connect with france connect particulier' do
+      let(:logged_in_with_france_connect) { true }
       let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
 
       it 'redirect to france connect logout page' do
@@ -152,8 +157,6 @@ describe Users::SessionsController, type: :controller do
     end
 
     context 'when user is not connect with france connect' do
-      let(:loged_in_with_france_connect) { '' }
-
       it 'redirect to root page' do
         expect(response).to redirect_to(root_path)
       end
