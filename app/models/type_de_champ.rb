@@ -460,7 +460,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def exceed_options_threshold?
-    drop_down_list? && drop_down_options.size > 200
+    (drop_down_list? || multiple_drop_down_list?) && drop_down_options.size > 200
   end
 
   def header_section_level_value
