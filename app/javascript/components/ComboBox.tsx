@@ -346,7 +346,11 @@ export function RemoteComboBox({
         {...comboBoxProps}
         {...props}
       >
-        {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
+        {(item) => (
+          <ComboBoxItem key={item.value} id={item.value}>
+            {item.label}
+          </ComboBoxItem>
+        )}
       </ComboBox>
       {children || name ? (
         <span ref={ref}>
