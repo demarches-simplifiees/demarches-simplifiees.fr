@@ -18,6 +18,8 @@ class ExportTemplate < ApplicationRecord
 
   attribute :exported_columns, :exported_column, array: true
 
+  after_initialize :set_default_export_items
+
   before_validation :ensure_pjs_are_legit
 
   validates_with ExportTemplateValidator
@@ -32,12 +34,11 @@ class ExportTemplate < ApplicationRecord
 
   def self.default(name: nil, kind: 'zip', groupe_instructeur:)
     # TODO: remove default values for tabular export
-    dossier_folder = ExportItem.default(prefix: 'dossier')
-    export_pdf = ExportItem.default(prefix: 'export')
-    attestation = ExportItem.default(prefix: 'attestation')
     pjs = groupe_instructeur.procedure.exportables_pieces_jointes.map { |tdc| ExportItem.default_pj(tdc) }
 
-    new(name:, kind:, groupe_instructeur:, dossier_folder:, export_pdf:, attestation:, pjs:)
+    export_template = new(name:, kind:, groupe_instructeur:, pjs:)
+    export_template.set_default_export_items
+    export_template
   end
 
   def tabular?
@@ -80,6 +81,13 @@ class ExportTemplate < ApplicationRecord
   def in_export?(exported_column)
     @template_exported_columns ||= exported_columns.map(&:column)
     @template_exported_columns.include?(exported_column.column)
+  end
+
+  def set_default_export_items
+    self.dossier_folder ||= ExportItem.default(prefix: 'dossier')
+    self.export_pdf ||= ExportItem.default(prefix: 'export')
+    self.attestation ||= ExportItem.default(prefix: 'attestation')
+    self.pjs ||= []
   end
 
   private

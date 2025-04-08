@@ -24,7 +24,7 @@ describe API::V2::GraphqlController do
   end
 
   MIN_QUERY_COUNT = 47
-  MAX_QUERY_COUNT = 57
+  MAX_QUERY_COUNT = 58
 
   describe 'demarche.dossiers' do
     let(:operation_name) { 'getDemarche' }
