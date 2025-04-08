@@ -18,10 +18,11 @@ describe DelayedPurgeJob, type: :job do
 
   it 'emit request instead of destroying it' do
     container = "bucket"
+    client = double("client")
     double_service = double(container:)
     allow_any_instance_of(ActiveStorage::Blob).to receive(:service).and_return(double_service)
 
-    allow(OpenStackStorage).to receive(:with_client).and_yield(client)
+    allow_any_instance_of(DelayedPurgeJob).to receive(:client).and_return(client)
 
     expect(client).to receive(:copy_object)
       .with(container, blob.key, container, blob.key, { 'X-Delete-At' => anything, "Content-Type" => blob.content_type })

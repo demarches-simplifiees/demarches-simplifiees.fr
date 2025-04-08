@@ -25,9 +25,7 @@ class ActiveStorage::DownloadableFile
       else
         service = file.blob.service
         begin
-          OpenStackStorage.with_client do |client|
-            client.head_object(service.container, file.blob.key)
-          end
+          client.head_object(service.container, file.blob.key)
           true
         rescue Fog::OpenStack::Storage::NotFound
           false
@@ -37,6 +35,10 @@ class ActiveStorage::DownloadableFile
   end
 
   private
+
+  def self.client
+    ActiveStorage::Blob.service.send(:client)
+  end
 
   def self.bill_and_path(bill)
     [

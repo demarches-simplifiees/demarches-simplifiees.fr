@@ -996,7 +996,6 @@ DEPENDENCIES
   chunky_png
   clamav-client
   concurrent-ruby (< 1.3.5)
-  connection_pool
   daemons
   deep_cloneable
   delayed_cron_job
