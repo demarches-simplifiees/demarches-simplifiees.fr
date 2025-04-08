@@ -1175,13 +1175,14 @@ class Dossier < ApplicationRecord
     app_traces = caller.reject { _1.match?(%r{/ruby/.+/gems/}) }.map { _1.sub(Rails.root.to_s, "") }
 
     payload = {
-      message: "Dossier destroyed",
+      message: "Dossier destroyed #{id}",
       dossier_id: id,
       procedure_id: procedure.id,
       request_id: Current.request_id,
       user_id: Current.user&.id,
       controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
-      caller: app_traces.first
+      caller: app_traces.first,
+      hidden_by_reason:
     }
 
     logger = Lograge.logger || Rails.logger

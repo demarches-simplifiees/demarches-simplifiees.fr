@@ -2374,7 +2374,7 @@ describe Dossier, type: :model do
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       expect(JSON.parse(json_message)).to a_hash_including(
-        { message: "Dossier destroyed", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
+        { message: "Dossier destroyed #{dossier.id}", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
       )
 
       expect { dossier.procedure.reset! }.not_to raise_error
