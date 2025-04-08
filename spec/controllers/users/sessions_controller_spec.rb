@@ -15,6 +15,11 @@ describe Users::SessionsController, type: :controller do
     let(:send_password) { password }
     let(:remember_me) { '0' }
 
+    before do
+      cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME] = 'id_token'
+      cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'state'
+    end
+
     subject do
       post :create, params: {
         user: {
@@ -33,6 +38,14 @@ describe Users::SessionsController, type: :controller do
         expect(controller.current_user).to eq(user)
         expect(user.reload.loged_in_with_france_connect).to be(nil)
         expect(user.reload.remember_created_at).to be_nil
+
+        [
+          FranceConnectController::ID_TOKEN_COOKIE_NAME,
+          FranceConnectController::STATE_COOKIE_NAME
+        ].map(&:to_s).each do |cookie_name|
+          expect(response.cookies.keys).to include(cookie_name)
+          expect(response.cookies[cookie_name]).to be_nil
+        end
       end
 
       context 'when remember_me is specified' do

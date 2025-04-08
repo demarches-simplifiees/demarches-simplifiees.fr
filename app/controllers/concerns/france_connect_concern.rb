@@ -17,5 +17,10 @@ module FranceConnectConcern
 
       FranceConnectService.logout_url(id_token:, state:, callback:)
     end
+
+    def delete_france_connect_cookies
+      cookies.delete(FranceConnectController::ID_TOKEN_COOKIE_NAME)
+      cookies.delete(FranceConnectController::STATE_COOKIE_NAME)
+    end
   end
 end
