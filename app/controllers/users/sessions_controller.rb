@@ -16,6 +16,7 @@ class Users::SessionsController < Devise::SessionsController
     user = User.find_by(email: params[:user][:email])
 
     if user&.valid_password?(params[:user][:password])
+      delete_france_connect_cookies
       user.update(loged_in_with_france_connect: nil)
       user.update_preferred_domain(Current.host) if helpers.switch_domain_enabled?(request)
     end
