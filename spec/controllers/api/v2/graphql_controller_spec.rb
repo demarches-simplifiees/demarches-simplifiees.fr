@@ -700,7 +700,7 @@ describe API::V2::GraphqlController do
           end
 
           it "should return an error" do
-            expect(gql_errors).to eq([{ message: "Cannot return null for non-nullable field PersonneMorale.siegeSocial", extensions: { code: "invalid_null" } }])
+            expect(gql_errors).to eq([{:locations => [{:column => 19, :line => 13}], :message => "Cannot return null for non-nullable field PersonneMorale.siegeSocial", :path => ["dossier", "demandeur", "siegeSocial"]}])
           end
         end
       end
