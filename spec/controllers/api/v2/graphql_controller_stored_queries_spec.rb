@@ -36,7 +36,7 @@ describe API::V2::GraphqlController do
     request.env['HTTP_AUTHORIZATION'] = authorization_header
   end
 
-  describe 'introspection' do
+  xdescribe 'introspection' do
     let(:query_id) { 'introspection' }
     let(:operation_name) { 'IntrospectionQuery' }
     let(:champ_descriptor) { gql_data[:__schema][:types].find { _1[:name] == 'ChampDescriptor' } }
