@@ -269,7 +269,6 @@ class API::V2::StoredQuery
   }
 
   fragment DossierFragment on Dossier {
-    __typename
     id
     number
     archived
@@ -306,7 +305,6 @@ class API::V2::StoredQuery
       ...GroupeInstructeurFragment
     }
     demandeur {
-      __typename
       ...PersonnePhysiqueFragment
       ...PersonneMoraleFragment
       ...PersonneMoraleIncompleteFragment
@@ -400,7 +398,6 @@ class API::V2::StoredQuery
   }
 
   fragment ChampDescriptorFragment on ChampDescriptor {
-    __typename
     id
     label
     description
@@ -499,7 +496,6 @@ class API::V2::StoredQuery
   fragment ChampFragment on Champ {
     id
     champDescriptorId
-    __typename
     label
     stringValue
     updatedAt
@@ -653,7 +649,6 @@ class API::V2::StoredQuery
 
 
   fragment FileFragment on File {
-    __typename
     filename
     contentType
     checksum
