@@ -9,6 +9,7 @@
         "@coldwired/utils": "^0.16.0",
         "@formatjs/intl-listformat": "^7.7.10",
         "@frsource/autoresize-textarea": "^2.0.129",
+        "@gouvfr-lasuite/integration": "^1.0.2",
         "@gouvfr/dsfr": "^1.12.1",
         "@graphiql/plugin-explorer": "^3.2.5",
         "@graphiql/toolkit": "^0.11.1",
@@ -269,6 +270,8 @@
     "@formatjs/intl-localematcher": ["@formatjs/intl-localematcher@0.6.0", "", { "dependencies": { "tslib": "2" } }, "sha512-4rB4g+3hESy1bHSBG3tDFaMY2CH67iT7yne1e+0CLTsGLDcmoEWWpJjjpWVaYgYfYuohIRuo0E+N536gd2ZHZA=="],
 
     "@frsource/autoresize-textarea": ["@frsource/autoresize-textarea@2.0.129", "", {}, "sha512-oIKrr1LU48pnjaJu8IfRIe7NcFRDk7mkJ623M3yeoAmcNoBmjuGkkI3hQAXfXmpQEsIt2Yzpwb+3Y99GhPiAiA=="],
+
+    "@gouvfr-lasuite/integration": ["@gouvfr-lasuite/integration@1.0.2", "", { "peerDependencies": { "@types/react": "*", "@types/react-dom": "*", "react": "*", "react-dom": "*", "typescript": "*" } }, "sha512-npOotZQSyu6SffHiPP+jQVOkJ3qW2KE2cANhEK92sNLX9uZqQaCqljO5GhzsBmh0lB76fiXnrr9i8SIpnDUSZg=="],
 
     "@gouvfr/dsfr": ["@gouvfr/dsfr@1.12.1", "", { "peerDependencies": { "browser-sync": "^2.27.10" } }, "sha512-2zXBHSDjjlaNcxGtqbPQN/vyjJQKIRUP3CKOYoodj2/45pAWM1AXo3kCwXFLUo5kQOltShZUquQ7hSeVg4RRtA=="],
 
