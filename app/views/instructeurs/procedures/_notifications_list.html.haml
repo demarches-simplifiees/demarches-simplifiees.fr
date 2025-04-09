@@ -1,25 +1,30 @@
 - if display == 'true'
-  .fr-container{ id: "notifications-container-#{procedure_id}" }
+  .fr-container.fr-px-0{ id: "notifications-container-#{procedure_id}" }
     - if notifications.empty?
-      %p Pas de notification
+      .fr-text--sm.fr-mb-0
+        Pas de notification
 
     - else
-      - notifications.keys.each.with_index do |statut_dossiers, index|
-        - if index != 0
-          .fr-hr.fr-pb-1w.fr-mt-1w
-        %p.fr-text--lg.font-weight-bold.fr-mr-2w.fr-mb-0
-          = t("instructeurs.procedures.index.statuts.#{statut_dossiers}")
-        - notifications[statut_dossiers].keys.each do |notification_type|
-          .flex.align-center
-            .fr-col-3
-              = tag_notification(notifications[statut_dossiers][notification_type].first, generic: true)
-            .fr-col.flex.align-center
-              - notifications[statut_dossiers][notification_type].each.with_index do |notification, index|
-                - if index != 0
-                  .fr-ml-2w
-                    |
-                = link_to "#{notification.dossier_id}", instructeur_dossier_path(procedure_id, notification.dossier_id), class: "fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-pr-1w"
-                %fr-text--sm.fr-mb-0
-                  %span.fr-text--bold #{notification.dossier.owner_name}
+      .fr-container.fr-background-alt--grey.fr-p-1w{ data: { controller: 'truncate-notifications' } }
+        - notifications.keys.each.with_index do |statut_dossiers, index|
+          - if index != 0
+            .fr-hr.fr-pb-1w.fr-mt-1w
+          %p.font-weight-bold.fr-mr-2w.fr-mb-1w
+            = t("instructeurs.procedures.index.statuts.#{statut_dossiers}")
+          - notifications[statut_dossiers].keys.each do |notification_type|
+            .flex.align-center.notification-container-type
+              .fr-col-3.notification-badge
+                = tag_notification(notifications[statut_dossiers][notification_type].first, generic: true)
+              .fr-col-9.flex.align-center.notification-dossiers
+                - notifications[statut_dossiers][notification_type].each.with_index do |notification, index|
+                  .flex.align-center.notification-dossier
+                    - if index != 0
+                      .fr-mx-2w
+                        |
+                    .fr-link.fr-link--sm.fr-mr-1w
+                      = link_to "#{notification.dossier_id}", instructeur_dossier_path(procedure_id, notification.dossier_id)
+                    .fr-mb-0
+                      %span.no-wrap.fr-text--sm #{notification.dossier.owner_name}
+                %span.no-wrap.fr-text--sm.fr-text--bold.fr-mb-0.notification-indicator
 - else
   .fr-container{ id: "notifications-container-#{procedure_id}" }
