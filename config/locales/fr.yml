@@ -25,14 +25,13 @@ fr:
   help: 'Aide'
   help_dropdown:
     procedure_title: "Une question sur cette démarche ?"
-    problem_title: Un problème avec le site ?
-    problem_description: Trouvez votre réponse dans l’aide en ligne.
+    problem_title: Un problème avec le site %{app_name} ?
+    problem_description: Trouvez votre réponse dans la
+    problem_url_title: FAQ
     technical_contact_title: Contact technique
     technical_contact_description: Envoyez nous un message à %{contact_email}.
-    contact_administration: "Contactez directement l’administration :"
     help_brouillon_title: "Besoin d’aide pour remplir votre dossier ?"
     help_filled_dossier: "Une question sur votre dossier ?"
-    contact_instructeur: Envoyez directement un message à l’instructeur.
   utils:
     'yes': Oui
     'no': Non

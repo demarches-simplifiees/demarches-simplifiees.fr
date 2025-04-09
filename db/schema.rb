@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_20_153834) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_01_133421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1171,15 +1171,18 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_20_153834) do
   create_table "services", force: :cascade do |t|
     t.bigint "administrateur_id"
     t.text "adresse"
+    t.string "contact_link"
     t.datetime "created_at", precision: nil, null: false
     t.string "departement"
     t.string "email"
     t.jsonb "etablissement_infos", default: {}
     t.decimal "etablissement_lat", precision: 10, scale: 6
     t.decimal "etablissement_lng", precision: 10, scale: 6
+    t.string "faq_link"
     t.text "horaires"
     t.string "nom", null: false
     t.string "organisme"
+    t.text "other_contact_info"
     t.string "siret"
     t.string "telephone"
     t.string "type_organisme", null: false

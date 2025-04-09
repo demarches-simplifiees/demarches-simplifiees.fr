@@ -12,9 +12,14 @@ en:
     errors:
       models:
         service:
+          at_least_one_contact: Please fill in at least one of the two contact fields
           attributes:
             siret:
               format: 'SIRET number %{message}'
               length: 'must contain exactly 14 digits'
               checksum: 'is invalid'
               not_prefillable: 'Unable to pre-fill information for this SIRET, please fill it manually'
+            contact_link:
+              format: ""
+            email:
+              format: "%{message}"

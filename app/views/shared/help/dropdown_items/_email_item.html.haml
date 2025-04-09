@@ -1,5 +1,5 @@
-= mail_to CONTACT_EMAIL, class: 'flex' do
-  %span.fr-icon-mail-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
-  .fr-pl-1w
-    %h1= t('help_dropdown.technical_contact_title')
+%span.fr-icon-mail-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
+.fr-pl-1w
+  %h1= t('help_dropdown.technical_contact_title')
+  = mail_to CONTACT_EMAIL do
     %p= t('help_dropdown.technical_contact_description', contact_email: CONTACT_EMAIL)

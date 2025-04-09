@@ -1,4 +1,5 @@
-%span.fr-icon-question-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
+= image_tag('favicons/96x96.png', height: '24px', "aria-hidden": true)
 .fr-pl-1w
-  %h1= t('help_dropdown.problem_title')
-  = link_to t('help_dropdown.problem_description'), t("links.common.faq.url"), title: new_tab_suffix(t('help_dropdown.problem_description')), **external_link_attributes
+  %h1= t('help_dropdown.problem_title', app_name: APPLICATION_NAME)
+  = t('help_dropdown.problem_description')
+  = link_to t('help_dropdown.problem_url_title'), t("links.common.faq.url"), title: new_tab_suffix(t('help_dropdown.problem_url_title')), class: 'fr-link fr-link--sm', **external_link_attributes
