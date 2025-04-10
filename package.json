@@ -1,10 +1,10 @@
 {
   "type": "module",
   "dependencies": {
-    "@coldwired/actions": "^0.16.0",
-    "@coldwired/react": "^0.16.0",
+    "@coldwired/actions": "^0.16.1",
+    "@coldwired/react": "^0.16.1",
     "@coldwired/turbo-stream": "^0.16.0",
-    "@coldwired/utils": "^0.16.0",
+    "@coldwired/utils": "^0.16.1",
     "@formatjs/intl-listformat": "^7.7.10",
     "@frsource/autoresize-textarea": "^2.0.129",
     "@gouvfr/dsfr": "^1.12.1",

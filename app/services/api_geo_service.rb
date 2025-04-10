@@ -140,7 +140,8 @@ class APIGeoService
         postal_code: properties.fetch('postcode') { '' }, # API graphql / serializer requires non-null data
         street_number: properties['housenumber'],
         street_name: properties['street'],
-        geometry: feature['geometry']
+        geometry: feature['geometry'],
+        country_code: 'FR'
       }.merge(territory)
     end
 
@@ -233,6 +234,33 @@ class APIGeoService
         region_code:,
         region_name: region_name(region_code)
       }
+    end
+
+    def parse_city_code_and_postal_code(code)
+      if code.present? && code.match?(/-/)
+        codes = code.split('-')
+        return {} if codes.size != 2
+        city_code = codes.first
+        postal_code = codes.second
+        commune = communes_by_postal_code(postal_code).find { _1[:code] == city_code }
+        return {} if commune.blank?
+        region_code = commune[:region_code]
+        department_code = commune[:departement_code]
+
+        {
+          postal_code:,
+          city_code:,
+          city_name: commune[:name],
+          city_code:,
+          department_code:,
+          department_name: departement_name(department_code),
+          region_code:,
+          region_name: region_name(region_code),
+          country_code: 'FR'
+        }
+      else
+        {}
+      end
     end
 
     def safely_normalize_city_name(department_code, city_code, fallback)

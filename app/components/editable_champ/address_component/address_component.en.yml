@@ -1,0 +1,7 @@
+en:
+  street_label: Street
+  city_label: City
+  commune_label: Municipality
+  postal_code_label: Postal code
+  country_label: Country
+  not_in_ban: I can't find my address
