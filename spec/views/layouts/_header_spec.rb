@@ -50,6 +50,7 @@ describe 'layouts/_header', type: :view do
     it { is_expected.to have_css(".fr-header__logo") }
     it { is_expected.to have_link("Mes dossiers", href: dossiers_path) }
     it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
+    it { is_expected.not_to have_selector(:button, class: "lasuite-gaufre-btn") }
 
     it 'displays the Help button' do
       expect(subject).to have_link("Aide", href: I18n.t("links.common.faq.url"))
@@ -65,9 +66,30 @@ describe 'layouts/_header', type: :view do
 
     it { is_expected.to have_css(".fr-header__logo") }
     it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
+    it { is_expected.to have_selector(:button, class: "lasuite-gaufre-btn") }
 
     it 'displays the Help dropdown menu' do
       expect(subject).to have_selector("#help-menu")
+    end
+  end
+
+  context 'when rendering for admin' do
+    before do
+      allow(view).to receive(:administrateur_signed_in?).and_return((profile == :administrateur))
+      allow(view).to receive(:current_administrateur).and_return(current_administrateur)
+    end
+
+    let(:administrateur) { create(:administrateur) }
+    let(:user) { administrateur.user }
+    let(:profile) { :administrateur }
+    let(:current_administrateur) { administrateur }
+
+    it { is_expected.to have_css(".fr-header__logo") }
+    it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
+    it { is_expected.to have_selector(:button, class: "lasuite-gaufre-btn") }
+
+    it 'does not display the Help dropdown menu' do
+      expect(subject).not_to have_selector("#help-menu")
     end
   end
 end
