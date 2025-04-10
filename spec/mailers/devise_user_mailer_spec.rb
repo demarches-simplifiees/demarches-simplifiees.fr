@@ -57,13 +57,13 @@ RSpec.describe DeviseUserMailer, type: :mailer do
       end
 
       context "new domain" do
-        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+        let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
 
         it "respect preferred domain" do
-          expect(header_value("From", subject.message)).to eq("Ne pas répondre <ne-pas-repondre@demarches.gouv.fr>")
-          expect(header_value("Reply-To", subject.message)).to eq("Ne pas répondre <ne-pas-repondre@demarches.gouv.fr>")
-          expect(subject.message.to_s).to include("demarches.gouv.fr/users/confirmation")
-          expect(subject.message.to_s).to include("//demarches.gouv.fr/assets/mailer/republique")
+          expect(header_value("From", subject.message)).to eq("Ne pas répondre <ne-pas-repondre@demarches.numerique.gouv.fr>")
+          expect(header_value("Reply-To", subject.message)).to eq("Ne pas répondre <ne-pas-repondre@demarches.numerique.gouv.fr>")
+          expect(subject.message.to_s).to include("demarches.numerique.gouv.fr/users/confirmation")
+          expect(subject.message.to_s).to include("//demarches.numerique.gouv.fr/assets/")
         end
       end
     end
@@ -80,11 +80,11 @@ RSpec.describe DeviseUserMailer, type: :mailer do
       end
 
       context "new domain" do
-        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+        let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
 
         it "respect preferred domain" do
-          expect(header_value("From", subject.message)).to include("@demarches.gouv.fr")
-          expect(subject.message.to_s).to include("demarches.gouv.fr/users/password")
+          expect(header_value("From", subject.message)).to include("@demarches.numerique.gouv.fr")
+          expect(subject.message.to_s).to include("demarches.numerique.gouv.fr/users/password")
         end
       end
     end

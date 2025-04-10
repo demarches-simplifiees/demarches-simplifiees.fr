@@ -10,6 +10,3 @@ fr:
   download:
     one: Télécharger un dossier
     other: Télécharger %{count} dossiers
-  macros_doc:
-    title: "documentation sur les macros"
-    url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/exports-et-macros"

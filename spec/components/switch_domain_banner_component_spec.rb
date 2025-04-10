@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe SwitchDomainBannerComponent, type: :component do
   let(:app_host_legacy) { "demarches-simplifiees.fr" }
-  let(:app_host) { "demarches.gouv.fr" }
+  let(:app_host) { "demarches.numerique.gouv.fr" }
 
   let(:user) { create(:user) }
   let(:request_host) { app_host_legacy }
@@ -39,7 +39,7 @@ RSpec.describe SwitchDomainBannerComponent, type: :component do
     end
 
     context "when user has already set preferred domain" do
-      let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+      let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
 
       it "does not render the banner" do
         expect(rendered.to_html).to be_empty
@@ -51,7 +51,7 @@ RSpec.describe SwitchDomainBannerComponent, type: :component do
     let(:path) { "/admin/procedures" }
 
     it "generate an url to the new domain" do
-      expect(rendered.to_html).to have_link("demarches.gouv.fr", href: "http://demarches.gouv.fr/admin/procedures")
+      expect(rendered.to_html).to have_link("demarches.numerique.gouv.fr", href: "http://demarches.numerique.gouv.fr/admin/procedures")
       expect(rendered.to_html).not_to include("window.location")
       expect(rendered.to_html).to include("Suivez ce lien")
     end

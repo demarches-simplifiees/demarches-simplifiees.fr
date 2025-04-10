@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe FAQsLoaderService do
-  let(:substitutions) { { application_name: "demarches.gouv.fr", application_base_url: APPLICATION_BASE_URL, contact_email: CONTACT_EMAIL } }
+  let(:substitutions) { { application_name: "demarches.numerique.gouv.fr", application_base_url: APPLICATION_BASE_URL, contact_email: CONTACT_EMAIL } }
   let(:service) { FAQsLoaderService.new(substitutions) }
 
   context "behavior with stubbed markdown files" do
@@ -42,7 +42,7 @@ RSpec.describe FAQsLoaderService do
 
     describe '#find' do
       it 'returns a file with variable substitutions' do
-        expect(service.find('usager/faq1').content).to include('Welcome to demarches.gouv.fr')
+        expect(service.find('usager/faq1').content).to include('Welcome to demarches.numerique.gouv.fr')
       end
 
       it 'caches file readings', caching: true do
