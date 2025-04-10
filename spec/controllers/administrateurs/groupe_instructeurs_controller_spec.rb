@@ -632,6 +632,46 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         end
       end
 
+      context 'when csv file is in iso 8859 format' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_iso_8859.csv') }
+
+        before do
+          allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+            .and_return(double(deliver_later: true))
+          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+            .and_return(double(deliver_later: true))
+          subject
+        end
+
+        it 'works' do
+          expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
+          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Marne", "Loire", "deuxième groupe", "défaut"])
+          expect(flash.notice).to be_present
+          expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
+        end
+      end
+
+      context 'when csv file is in iso 8859 format with invalid characters' do
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_iso_8859_invalid_characters.csv') }
+
+        before do
+          allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+            .and_return(double(deliver_later: true))
+          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+            .and_return(double(deliver_later: true))
+          subject
+        end
+
+        it 'works but delete invalid characters' do
+          expect(flash.notice).to be_present
+          expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
+          expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhne-Alpes", "Vende", "défaut", "deuxième groupe"])
+          expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
+          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+        end
+      end
+
       context 'when the csv file length is more than 1 mo' do
         let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
 
