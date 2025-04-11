@@ -63,6 +63,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
 
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siret_value[0..8]}/)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
+    allow(FranceConnectService).to receive(:enabled?).and_return(true)
   end
 
   scenario "the user get the URL of a prefilled orphan brouillon dossier" do
@@ -130,8 +131,15 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
           let(:user) { User.last }
 
           before do
-            allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: "c0d3"))
-            allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(build(:france_connect_information))
+            state, nonce = ['state', 'nonce']
+
+            allow(FranceConnectService).to receive(:authorization_uri)
+              .and_return([
+                france_connect_callback_path(code: "c0d3", state:),
+                state, nonce
+              ])
+
+            allow(FranceConnectService).to receive(:retrieve_user_informations).and_return([build(:france_connect_information), 'id_token'])
 
             page.find('.fr-connect').click
             expect(page).to have_content("Choisissez votre adresse électronique de contact pour finaliser votre connexion")

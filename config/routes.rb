@@ -194,17 +194,18 @@ Rails.application.routes.draw do
   get '/stats' => 'stats#index'
   get '/stats/download' => 'stats#download'
 
-  namespace :france_connect do
-    get 'particulier' => 'particulier#login'
-    get 'particulier/callback' => 'particulier#callback'
+  scope 'france_connect', as: :france_connect, controller: :france_connect do
+    get '/' => :login
+    get 'callback'
+    post 'send_email_merge_request'
+    get 'merge_using_email_link/:email_merge_token' => :merge_using_email_link, as: :merge_using_email_link
+    post 'merge_using_fc_email'
+    post 'merge_using_password'
+    get 'confirm_email/:token' => :confirm_email, as: :confirm_email
 
-    post 'particulier/send_email_merge_request'
-
-    post 'particulier/merge_using_fc_email'
-    post 'particulier/merge_using_password'
-    get 'particulier/merge_using_email_link/:email_merge_token' => 'particulier#merge_using_email_link', as: :particulier_merge_using_email_link
-
-    get 'confirm_email/:token', to: 'particulier#confirm_email', as: :confirm_email
+    # to be migrated
+    get 'particulier/callback' => :callback
+    get 'particulier/merge_using_email_link/:email_merge_token' => :merge_using_email_link
   end
 
   get 'pro_connect' => 'pro_connect#index'

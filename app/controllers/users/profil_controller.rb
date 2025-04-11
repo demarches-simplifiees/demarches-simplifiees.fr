@@ -2,6 +2,8 @@
 
 module Users
   class ProfilController < UserController
+    include FranceConnectConcern
+
     before_action :ensure_update_email_is_authorized, only: :update_email
     before_action :find_transfers, only: [:show]
 
@@ -64,14 +66,16 @@ module Users
     end
 
     def destroy_fci
-      fci = FranceConnectInformation
-        .where(user: current_user)
-        .find(params[:fci_id])
-
+      fci = current_user.france_connect_informations.find_by(id: params[:fci_id])
       fci.destroy!
+
       flash.notice = "Le compte FranceConnect de « #{fci.full_name} » ne peut plus accéder à vos dossiers"
 
-      redirect_to profil_path
+      if logged_in_with_france_connect?
+        redirect_to france_connect_logout_url(callback: profil_url), allow_other_host: true
+      else
+        redirect_to profil_path
+      end
     end
 
     def preferred_domain
