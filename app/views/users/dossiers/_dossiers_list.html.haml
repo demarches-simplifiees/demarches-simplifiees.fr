@@ -122,7 +122,9 @@
 
 
             - else
-              = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
+              .flex.justify-end.flex-gap-2.column.row-lg.align-end
+                = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
+                = render(partial: 'users/dossiers/show/download_attestation', locals: { dossier: dossier })
 
   = paginate dossiers, views_prefix: 'shared'
 
