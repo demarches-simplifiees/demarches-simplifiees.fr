@@ -7,7 +7,7 @@ class API::V2::BaseController < ApplicationController
   # for the web interface, but not for the API endpoint. :null_session means that when the
   # request is not CSRF protected, we will not raise an exception,
   # but we will provide the controller with an empty session.
-  protect_from_forgery with: :null_session
+  protect_from_forgery with: :null_session, store: :cookie
   skip_before_action :setup_tracking
   before_action :authenticate_from_token
   before_action :ensure_authorized_network, if: -> { @api_token.present? }
