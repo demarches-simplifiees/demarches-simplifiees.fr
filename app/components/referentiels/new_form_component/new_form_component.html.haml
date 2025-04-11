@@ -2,12 +2,21 @@
   = form.hidden_field :referentiel_id, value: params[:referentiel_id]
   %div
     = render Dsfr::RadioButtonListComponent.new(form:, target: :type,
-      buttons: [ { label: 'À partir d’une URL', value: 'Referentiels::APIReferentiel', hint: 'Connectez un champ à une API', data: {controller: 'autosubmit'} } ,
+      buttons: [ { label: 'À partir d’une URL', value: 'Referentiels::APIReferentiel', hint: 'Connectez un champ à une API', data: { controller: 'autosubmit' } } ,
         { label: 'À partir d’un fichier CSV', value: 'Referentiels::CsvReferentiel', hint: 'Connectez un champ à un CSV', disabled: true }]) do ||
       Comment interroger votre référentiel ?
 
     - if @referentiel.type == 'Referentiels::APIReferentiel'
-      = render Dsfr::InputComponent.new(form:, attribute: :url)
+      = render Dsfr::InputComponent.new(form:, attribute: :url, opts: { data: { controller: 'autosubmit' } })
+      - if @referentiel.url.blank? || @referentiel.errors.where(:url).present?
+        = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
+          - c.with_body do
+            %p
+              %strong
+                %span.fr-text--bold= "Pour des raisons de cyber/sécuritées, seuls les endpoints terminant .gouv.fr seront automatiquement autorisées (pas les .beta.gouv.fr). Les autres endpoints seront soumis à une vérification manuelle de notre part, merci de nous en faire la demande par mail à "
+                = mail_to CONTACT_EMAIL, CONTACT_EMAIL, class: 'fr-link'
+                = "."
+
     - elsif @referentiel.type == 'Referentiels::CsvReferentiel'
       .fr-input-group
         = form.label :piece_justificative_template, class: 'fr-label', for: dom_id(@type_de_champ, :piece_justificative_template) do
