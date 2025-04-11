@@ -144,6 +144,7 @@ class Dossier < ApplicationRecord
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :dossier_labels, dependent: :destroy
   has_many :labels, -> { order(:position, :id) }, through: :dossier_labels
+  has_many :dossier_notifications, dependent: :destroy
 
   has_many :rdvs, dependent: :destroy
 
@@ -394,6 +395,11 @@ class Dossier < ApplicationRecord
       ' OR last_champ_piece_jointe_updated_at > follows.pieces_jointes_seen_at' \
       ' OR last_avis_piece_jointe_updated_at > follows.pieces_jointes_seen_at')
       .distinct
+  end
+
+  scope :with_notifications_v2, -> do
+    joins(:dossier_notifications)
+    .distinct
   end
 
   scope :by_statut, -> (statut, instructeur: nil, include_archived: false) do
@@ -690,6 +696,8 @@ class Dossier < ApplicationRecord
     update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
     create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
+
+    DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, groupe_instructeur)
 
     if !brouillon?
       unfollow_stale_instructeurs

@@ -133,6 +133,20 @@ module DossierHelper
     tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{Label.class_name(color)} no-wrap")
   end
 
+  def tag_notification(notification, generic: false)
+    tag.span(notification.badge_text(generic:), class: notification.badge_class)
+  end
+
+  def tags_notification(notifications)
+    if notifications.size > 1
+      tag.ul(class: 'fr-badge-group') do
+        safe_join(notifications.map { |notif| tag.li(tag_notification(notif)) })
+      end
+    elsif notifications.one?
+      tag_notification(notifications.first)
+    end
+  end
+
   def demandeur_dossier(dossier)
     if dossier.procedure.for_individual? && dossier.for_tiers?
       return t('shared.dossiers.beneficiaire', mandataire: dossier.mandataire_full_name, beneficiaire: "#{dossier&.individual&.prenom} #{dossier&.individual&.nom}")

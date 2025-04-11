@@ -83,11 +83,25 @@ module Instructeurs
       redirect_to instructeur_procedures_path
     end
 
+    def display_notifications
+      if params[:display] == 'true'
+        notifications = DossierNotification.notifications_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
+      end
+
+      respond_to do |format|
+        @procedure_id = procedure_id
+        @notifications = notifications || {}
+        @display = params[:display]
+        format.turbo_stream
+      end
+    end
+
     def show
       @procedure = procedure
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+
       @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
 
       @current_filters = procedure_presentation.filters_for(statut)
@@ -158,6 +172,8 @@ module Instructeurs
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
         .where(seen_at: nil)
         .distinct
+
+      @notifications = DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, current_instructeur, @filtered_sorted_paginated_ids)
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
