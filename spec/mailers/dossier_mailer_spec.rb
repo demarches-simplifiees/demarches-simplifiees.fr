@@ -137,7 +137,9 @@ RSpec.describe DossierMailer, type: :mailer do
 
     it 'verifies subject and body content for brouillon deletion notification' do
       expect(subject.subject).to eq("Un dossier en brouillon a été supprimé")
-      expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})")
+      expect(subject.body).to include("n° #{dossier.id}")
+      expect(subject.body).to include(dossier.procedure.libelle)
+      expect(subject.body).to include(commencer_url(dossier.procedure.path, host: ENV.fetch("APP_HOST_LEGACY")))
     end
   end
 
