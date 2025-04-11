@@ -48,13 +48,11 @@ class DelayedPurgeJob < ApplicationJob
 
   # head object to update metadata makes pj unreadable. copy with extra headers
   def soft_delete
-    OpenStackStorage.with_client do |client|
-      excon_response = client.copy_object(container, key, container, key, { "Content-Type" => blob.content_type, 'X-Delete-At' => delay.to_s })
-      if excon_response.status != 201
-        Sentry.capture_message("Can't expire blob", extra: { key:, headers: })
-      else
-        service.delete_prefixed("variants/#{key}/") if blob.image?
-      end
+    excon_response = client.copy_object(container, key, container, key, { "Content-Type" => blob.content_type, 'X-Delete-At' => delay.to_s })
+    if excon_response.status != 201
+      Sentry.capture_message("Can't expire blob", extra: { key:, headers: })
+    else
+      service.delete_prefixed("variants/#{key}/") if blob.image?
     end
   end
 
@@ -62,5 +60,9 @@ class DelayedPurgeJob < ApplicationJob
     DelayedPurgeJob.openstack? && delay.positive?
   rescue
     false
+  end
+
+  def client
+    ActiveStorage::Blob.service.send(:client)
   end
 end
