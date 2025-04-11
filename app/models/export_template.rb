@@ -56,6 +56,8 @@ class ExportTemplate < ApplicationRecord
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     file_path = if attachment.name == 'pdf_export_for_instructeur'
       export_pdf.path(dossier, attachment:)
+    elsif attachment.record_type == 'Attestation'
+      "pieces_justificatives/#{attachment.filename}"
     elsif attachment.record_type == 'Champ' && pj(champ.type_de_champ).enabled?
       pj(champ.type_de_champ).path(dossier, attachment:, index:, row_index:)
     else
