@@ -148,7 +148,7 @@ module Administrateurs
         type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
         begin
-          csv_to_code = SmarterCSV.process(referentiel_file, strings_as_keys: true, keep_original_headers: true, convert_values_to_numeric: false)
+          csv_to_code = SmarterCSV.process(referentiel_file, strings_as_keys: true, keep_original_headers: true, convert_values_to_numeric: false, force_utf8: true)
         rescue CSV::MalformedCSVError
           return flash[:alert] = "Importation impossible : le fichier est mal formaté"
         end
