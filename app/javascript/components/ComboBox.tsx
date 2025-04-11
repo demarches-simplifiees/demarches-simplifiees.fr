@@ -149,7 +149,8 @@ export function SingleComboBox({
     maxItemsDisplay
   });
 
-  const showAlert = (defaultItems?.length ?? 0) > 200;
+  const showAlert =
+    (defaultItems?.length ?? 0) > 200 && comboBoxProps.items.length >= 200;
 
   return (
     <>
@@ -229,7 +230,8 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   });
   const formResetRef = useOnFormReset(onReset);
 
-  const showAlert = (defaultItems?.length ?? 0) > 200;
+  const showAlert =
+    (defaultItems?.length ?? 0) > 200 && comboBoxProps.items.length >= 200;
 
   return (
     <div className={`fr-ds-combobox__multiple ${className ? className : ''}`}>
