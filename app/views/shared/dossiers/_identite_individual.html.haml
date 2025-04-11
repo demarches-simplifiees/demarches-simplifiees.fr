@@ -1,7 +1,8 @@
 %dl.fr-pl-0
-  .champ-row
-    %dt.champ-label= t('views.users.dossiers.identite.civility')
-    %dd.champ-content= dossier.individual.gender
+  - if dossier.individual.gender.present?
+    .champ-row
+      %dt.champ-label= t('views.users.dossiers.identite.civility')
+      %dd.champ-content= dossier.individual.gender
 
   .champ-row
     %dt.champ-label= t('views.users.dossiers.identite.first_name')

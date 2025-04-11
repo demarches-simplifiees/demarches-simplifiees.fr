@@ -82,7 +82,6 @@ describe 'linked dropdown lists', js: true do
   end
 
   def fill_individual
-    find('label', text: 'Monsieur').click
     within('.individual-infos') do
       fill_in('Prénom', with: 'prenom')
       fill_in('Nom', with: 'nom')
