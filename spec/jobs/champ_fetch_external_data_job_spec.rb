@@ -23,6 +23,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
     allow(champ).to receive(:fetch_external_data).and_return(fetched_data)
     allow(champ).to receive(:update_with_external_data!)
     allow(champ).to receive(:log_fetch_external_data_exception)
+    allow(champ).to receive(:clear_external_data_exception!)
   end
 
   shared_examples "a champ non-updater" do
