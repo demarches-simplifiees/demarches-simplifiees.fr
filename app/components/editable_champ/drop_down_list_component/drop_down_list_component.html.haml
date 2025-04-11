@@ -1,3 +1,6 @@
+- if @champ.exceed_options_threshold?
+  .fr-hint-text.fr-mt-0
+    = t('.exceed_options_threshold_hint')
 - if @champ.render_as_radios?
   .fr-fieldset__content
     - items.each do |value, option_id|
