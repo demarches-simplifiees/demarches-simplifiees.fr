@@ -174,22 +174,20 @@ en:
         tool_five: "Contrast Finder"
         tool_six: "Stylus (Firefox extension)"
         subtitle_four: "Pages of the site subject to the compliance check"
-        page_one:
-          label: "Home"
-        page_two:
-          label: "Contact"
-        page_three:
-          label: "Legal notices"
-        page_four:
-          label: "Accessibility statement"
-        page_five:
-          label: "Authentification"
-        page_six: "Home page - User search results"
-        page_twelve: "File creation - Identity"
-        page_thirteen: "File creation - Draft"
-        page_fourteen: "Dossier - Summary"
-        page_fifteen: "Dossier - Application"
-        page_sixteen: "Dossier - Messaging"
+        page_one: "Home"
+        page_two: "Contact"
+        page_three: "Legal notices"
+        page_four: "Accessibility statement"
+        page_five: "Help - Category"
+        page_six: "Help - Content"
+        page_seven: "Create an account"
+        page_height: "Procedure - Home"
+        page_nine: "Authentification"
+        page_ten: "Forgotten password"
+        page_eleven: "File - Identity"
+        page_twelve: "File - Draft"
+        page_thirteen: "File - Dispatch confirmation"
+        page_note_html: "The procedure <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit."
       contact:
         title: "Feedback and contact"
         intro: "If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form."
