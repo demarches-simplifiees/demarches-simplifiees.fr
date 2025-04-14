@@ -3,7 +3,7 @@
 # More info at https://github.com/italia/publiccode.yml
 
 publiccodeYmlVersion: '0.2'
-name: Démarches Simplifiéees
+name: Démarches Simplifiées
 url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr'
 landingURL: 'https://www.demarches-simplifiees.fr/'
 roadmap: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/wiki/Feuille-de-route'
