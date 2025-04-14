@@ -197,13 +197,13 @@ describe 'The user', js: true do
     fill_in('IBAN', with: 'FR')
     wait_until { champ_value_for('IBAN') == 'FR' }
 
-    expect(page).not_to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : 500 001 234 56789'
+    expect(page).not_to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
     blur
-    expect(page).to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : 500 001 234 56789'
+    expect(page).to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
 
     fill_in('IBAN', with: 'FR7630006000011234567890189')
     wait_until { champ_value_for('IBAN') == 'FR76 3000 6000 0112 3456 7890 189' }
-    expect(page).not_to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : 500 001 234 56789'
+    expect(page).not_to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
 
     # Check an incomplete dossier cannot be submitted when mandatory fields are missing
     click_on 'Déposer le dossier'
