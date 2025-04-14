@@ -9,6 +9,9 @@
     %meta{ name: "format-detection", content: "telephone=no,date=no,address=no,email=no,url=no" }
     = csrf_meta_tags
 
+    - if administrateur_signed_in? || instructeur_signed_in?
+      %script#lasuite-gaufre-script{ async: '', defer: 'defer', src: 'https://integration.lasuite.numerique.gouv.fr/api/v1/gaufre.js' }
+
     %title
       = content_for?(:title) ? "#{sanitize(yield(:title)).gsub("&nbsp;", " ")} · #{Current.application_name}" : Current.application_name
 
@@ -31,7 +34,7 @@
     = yield(:invisible_captcha_styles)
     = render partial: 'layouts/setup_theme'
 
-  %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo number-input fix-table-border la-gaufre' } }.compact }
+  %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo number-input fix-table-border' } }.compact }
     = render partial: 'layouts/skiplinks'
     = render partial: 'layouts/display_theme_modal'
 
