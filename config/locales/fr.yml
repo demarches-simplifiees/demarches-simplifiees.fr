@@ -144,8 +144,7 @@ fr:
             <li>13.3 - Des documents bureautiques en téléchargement ne possèdent pas de version accessible.</li>
           </ul>"
         subtitle_two: "Remarques complémentaires"
-        content_html: "<p class=\"fr-mb-2w\">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>
-          <p class=\"fr-mb-2w\">La gestion de la FAQ était déléguée à un outil tiers. Elle a été réintégrée à la plateforme en mai 2024 et n’a pas encore été auditée.</p>"
+        content_html: "<p class=\"fr-mb-2w\">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>"
 
       preparation:
         title: "Établissement de cette déclaration d’accessibilité"
@@ -184,9 +183,9 @@ fr:
         page_nine: "Authentification"
         page_ten: "Mot de passe oublié"
         page_ten_url: "/users/password/new"
-        page_eleven: "Dossier - Identité"
-        page_twelve: "Dossier - Brouillon"
-        page_thirteen: "Dossier - Confirmation d'envoi"
+        page_eleven: "Création d'un dossier - Identité"
+        page_twelve: "Création d'un dossier - Brouillon"
+        page_thirteen: "Création d'un dossier - Confirmation d'envoi"
         page_note_html: "La démarche <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l'audit."
       contact:
         title: "Retour d’information et contact"

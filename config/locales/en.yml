@@ -147,8 +147,7 @@ en:
             <li>13.3 - Some/Certain/A few downloadable documents do not have an accessible version.</li>
           </ul>"
         subtitle_two: "Additional notes"
-        content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
-          <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
+        content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>"
 
 
       preparation:
@@ -184,9 +183,9 @@ en:
         page_height: "Procedure - Home"
         page_nine: "Authentification"
         page_ten: "Forgotten password"
-        page_eleven: "File - Identity"
-        page_twelve: "File - Draft"
-        page_thirteen: "File - Dispatch confirmation"
+        page_eleven: "File creation - Identity"
+        page_twelve: "File creation - Draft"
+        page_thirteen: "File creation - Dispatch confirmation"
         page_note_html: "The procedure <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit."
       contact:
         title: "Feedback and contact"
