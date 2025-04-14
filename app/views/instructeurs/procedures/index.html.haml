@@ -5,8 +5,9 @@
     .flex.fr-mb-2v
       %h1.fr-h3.fr-mb-0 Démarches
       = render Instructeurs::TabsExplanationsComponent.new
-      = render SelectProcedureDropDownListComponent.new(procedures: @procedures, action_path: url_for([:select_procedure, :instructeur, :procedures]))
+
     = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
+    = render SelectProcedureDropDownListComponent.new(procedures: @procedures, action_path: url_for([:select_procedure, :instructeur, :procedures]), form_class: 'width-66 fr-mb-3w')
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
       %ul.fr-tabs__list{ role: 'tablist' }
@@ -26,7 +27,7 @@
 
   - if collection.present?
     = render Instructeurs::WarningBannerComponent.new(draft: @statut == "brouillons", single_procedure: false)
-    .fr-container.flex.justify-between.fr-mb-6w
+    .flex.justify-between.fr-mb-3w
       %h2.fr-h6.fr-m-0
         = page_entries_info collection
       - if (@statut == "en-cours" && @all_procedures_en_cours.size > 1)
