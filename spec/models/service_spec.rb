@@ -56,6 +56,32 @@ describe Service, type: :model do
       end
     end
 
+    describe "email and contact_link" do
+      it 'should be valid if only email is present' do
+        subject.email = 'super@email.com'
+        subject.contact_link = nil
+        expect(subject).to be_valid
+      end
+
+      it 'should be valid if only contact_link is present' do
+        subject.email = nil
+        subject.contact_link = 'www.test.fr/faq'
+        expect(subject).to be_valid
+      end
+
+      it 'should be valid if email and contact_link are present' do
+        subject.email = 'super@email.com'
+        subject.contact_link = 'www.test.fr/faq'
+        expect(subject).to be_valid
+      end
+
+      it 'should be invalid if none are present' do
+        subject.email = nil
+        subject.contact_link = nil
+        expect(subject).not_to be_valid
+      end
+    end
+
     context 'when a first service exists' do
       before { Service.create(params) }
 

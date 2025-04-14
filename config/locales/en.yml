@@ -35,14 +35,13 @@ en:
   help: 'Help'
   help_dropdown:
     procedure_title: "Do you have a question about this procedure?"
-    problem_title: A problem with the website?
-    problem_description: Find your answer in the online help.
+    problem_title: A problem with the website %{app_name}?
+    problem_description: Find your answer in the
+    problem_url_title: FAQ
     technical_contact_title: Technical contact
     technical_contact_description: Send us a message to %{contact_email}.
-    contact_administration: "Contact the administration directly:"
     help_brouillon_title: "Need help filling out your file?"
     help_filled_dossier: "A question about your file?"
-    contact_instructeur: Send a message directly to the instructor.
   utils:
     'yes': 'Yes'
     'no': 'No'

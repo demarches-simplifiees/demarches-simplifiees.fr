@@ -44,10 +44,19 @@
       %br
       Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier. En cas d’informations invalides, #{Current.application_name} se réserve le droit de suspendre la publication de la démarche.
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field)
+  = render Dsfr::InputComponent.new(form: f, attribute: :faq_link, input_type: :text_field, required: false)
+  .fr-input-group
+    = f.label :contact_link, class: "fr-label" do
+      Veuillez renseigner au moins un des deux champs de contact ci-dessous
+      = render EditableChamp::AsteriskMandatoryComponent.new
+    .border-left-dark.fr-mt-1w
+      = render Dsfr::InputComponent.new(form: f, attribute: :contact_link, input_type: :text_field, required: false)
+      = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, required: false, opts: {class: 'fr-mb-3w'})
+
   = render Dsfr::InputComponent.new(form: f, attribute: :telephone, input_type: :telephone_field)
   = render Dsfr::InputComponent.new(form: f, attribute: :horaires, input_type: :text_area)
   = render Dsfr::InputComponent.new(form: f, attribute: :adresse, input_type: :text_area)
+  = render Dsfr::InputComponent.new(form: f, attribute: :other_contact_info, input_type: :text_area, required: false)
 
   - if local_assigns[:procedure].present?
     = hidden_field_tag :procedure_id, procedure.id

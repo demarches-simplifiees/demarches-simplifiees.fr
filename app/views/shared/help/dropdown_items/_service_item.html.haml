@@ -1,23 +1,5 @@
-%span.fr-icon-user-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
+%span.fr-icon-question-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
 .fr-pl-1w
   %h1= title
-  %p.fr-mb-1w= t('help_dropdown.contact_administration')
-  %dl
-    .flex.fr-mb-1v
-      %dt.fr-mr-1v
-        %span.fr-icon-mail-fill.fr-icon--sm{ "aria-hidden": "true" }
-        %span.visually-hidden= t('layouts.mailers.service_footer.by_email')
-      %dd
-        = link_to service.email, "mailto:#{service.email}"
-    .flex.fr-mb-1v
-      %dt.fr-mr-1v
-        %span.fr-icon-phone-fill.fr-icon--sm{ "aria-hidden": "true" }
-        %span.visually-hidden= t('layouts.mailers.service_footer.by_phone')
-      %dd
-        = link_to service.telephone, service.telephone_url
-    .flex
-      %dt.fr-mr-1v
-        %span.fr-icon-time-fill.fr-icon--sm{ "aria-hidden": "true" }
-        %span.visually-hidden= t('layouts.mailers.service_footer.schedule')
-      %dd
-        = service.horaires
+  %ul
+    = render Procedure::ServiceListContactComponent.new(service: service, dossier: dossier)

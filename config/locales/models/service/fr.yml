@@ -10,6 +10,9 @@ fr:
         email: 'Adresse électronique de contact'
         telephone: 'Téléphone'
         nom: Nom du service
+        faq_link: Lien vers une page d'aide ou FAQ
+        contact_link: Lien vers une page ou formulaire de contact
+        other_contact_info: Précisions
         organisme: Organisme(s)
         hints:
           nom: |
@@ -18,6 +21,12 @@ fr:
           organisme: |
             Indiquez les organismes depuis l’échelon territorial jusqu’au ministère séparés par une virgule.
             Exemple : mairie de Mours, préfecture de l'Oise, ministère de la Culture
+          faq_link: |
+            Indiquez l'url d'une page présentant des contenus d'aide et/ou questions-réponses permettant d'orienter les usagers.
+            Exemple : https://www.mairie-de-mours.fr/faq
+          contact_link: |
+            Indiquez l'url d'une page présentant vos coordonnées et/ou un formulaire de contact en ligne.
+            Exemple : https://www.mairie-de-mours.fr/contact
           email: |
             Indiquez une adresse électronique valide qui permettra de recevoir et de répondre aux questions des usagers.
             Exemple : contact@mairie-de-mours.fr
@@ -27,17 +36,25 @@ fr:
             Exemple : Du lundi au vendredi de 9h30 à 17h30, le samedi de 9h30 à 12h.
           adresse: |
             Indiquez l’adresse à laquelle un usager peut vous contacter, par exemple s’il n’est pas en capacité de compléter son formulaire en ligne.
+          other_contact_info: |
+            Autres indications éventuelles que vous souhaitez fournir aux usagers concernant les modalités de contact du service.
       contact_information: *service
-
     errors:
       models:
         service:
+          at_least_one_contact: Veuillez renseigner au moins un des deux champs de contact
           attributes:
             siret:
               format: 'Le numéro SIRET %{message}'
               length: 'doit comporter exactement 14 chiffres. Exemple : 500 001 234 56789'
               checksum: 'comporte une erreur de saisie. Corrigez-la.'
               not_prefillable: 'Impossible de préremplir les informations pour ce SIRET, veuillez les saisir manuellement'
+            contact_link:
+              format: ""
+            email:
+              format: "%{message}"
+
+
   type_organisme:
     administration_centrale: 'Administration centrale'
     association: 'Association'
