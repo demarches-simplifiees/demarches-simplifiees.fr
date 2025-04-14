@@ -361,9 +361,9 @@ module Instructeurs
 
     def reachable_brouillons
       if procedure.routing_enabled?
-        procedure.dossiers.brouillon.visible_by_user.where(groupe_instructeur_id: groupe_instructeur_ids_params)
+        procedure.dossiers.state_brouillon.visible_by_user.where(groupe_instructeur_id: groupe_instructeur_ids_params)
       else
-        procedure.dossiers.brouillon.visible_by_user
+        procedure.dossiers.state_brouillon.visible_by_user
       end
     end
 
