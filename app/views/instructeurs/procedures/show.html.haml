@@ -103,8 +103,6 @@
                           - else
                             %a.fr-link.relative{ href: path }
                               = dossier.id
-                              - if @not_archived_notifications_dossier_ids.include?(dossier.id)
-                                %span.notifications{ 'aria-label': 'notifications' }
                             .flex.column
                               - if @notifications[dossier.id].present?
                                 - @notifications[dossier.id].each do |notif|
