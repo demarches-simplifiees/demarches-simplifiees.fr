@@ -110,8 +110,6 @@
                                     = tag_notification(notif)
                               - if dossier.pending_correction?
                                 = pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                              - elsif dossier.last_correction_resolved?
-                                = correction_resolved_badge(html_class: "fr-mt-1v")
 
                         - @procedure_presentation.displayed_columns.each do |column|
                           %td.fr-cell--multiline
