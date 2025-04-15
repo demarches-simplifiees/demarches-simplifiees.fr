@@ -132,21 +132,33 @@ en:
       no_accessible:
         title: "Non-accessible content"
         subtitle_one: "Non-compliances"
-        examples_html: "List of non-compliant criteria:
+        examples_html: "
+          <h4>Some scripts are not compatible with assistive technologies</h4>
           <ul>
-            <li>1.3 - A few alternative text descriptions of images conveying information are irrelevant.</li>
-            <li>3.1 - A few informations are conveyed solely through colour.</li>
-            <li>6.1 - Some links are not explicit.</li>
-            <li>7.1 - Some scripts are not compatible with assistive technologies.</li>
-            <li>7.5 - Some status messages are not correctly presented to assistive technologies.</li>
-            <li>8.9 - Some semantic elements are used for presentational effect.</li>
-            <li>9.3 - A few lists are not properly structured.</li>
-            <li>10.14 - A few additional contents appearing solely through CSS cannot be made visible by keyboard and any pointing device.</li>
-            <li>11.5 - A few related form fields are not regrouped.</li>
-            <li>11.11 - Input assistance does not provide suggestions to help correct errors.</li>
-            <li>13.3 - Some/Certain/A few downloadable documents do not have an accessible version.</li>
-          </ul>"
-        subtitle_two: "Additional notes"
+            <li>On the Chrome / TalkBack combination, focus is not captured in modals.
+              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
+            <li>On a procedure form, the title of the button used to display the error sequence is irrelevant. Once activated, the focus remains on the button.</li>
+            <li>The combobox action button <em>Adresse postale</em> has no label.</li>
+            <li>The action buttons in the <em>Invite someone to edit this file</em> and <em>Identity of the requester</em> panels have conflicting attributes (<code>aria-expanded</code> and <code>aria-haspopup</code>).</li>
+          </ul>
+          <h4>Some status messages are not correctly rendered by assistive technologies</h4>
+          <ul>
+            <li>On the account creation page, when the form submitted contains an error, the page reloads without the error being returned to the support technologies.</li>
+            <li>On a procedure form, the progress of an attachment upload (and the failure message, if applicable) are not returned to the assistive technologies.</li>
+            <li>On a procedure form, the automatic registration failure message is not returned to assistive technologies.</li>
+          </ul>
+          <h4>Some focus is impaired</h4>
+          <ul>
+            <li>On the FAQ, the visibility of the focus is altered on the summary buttons.
+            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
+            <li>In the mobile version, the focus on the link back to the files (or the home page) is altered.</li>
+            <li>In the mobile version, when the <em>Invite someone to edit this file</em> panel is open, it hides the following fields from focus.</li>
+          </ul>
+          <h4>Some PDF documents are not accessible</h4>
+          <p>The PDF document used to dematerialize a procedure is not accessible on the procedure pages.</p>"
+        subtitle_two: "Exempted content"
+        exemption_html: "<p class=\"fr-mb-2w\">The PDF documents, accessible via the <em>Laws regarding this data collection</em> link in the footer of each procedure, are provided by the administration in charge of the procedure.</p>"
+        subtitle_three: "Additional notes"
         content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>"
 
 

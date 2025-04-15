@@ -129,21 +129,33 @@ fr:
       no_accessible:
         title: "Contenus non accessibles"
         subtitle_one: "Non-conformités"
-        examples_html: "Liste des critères non conformes :
+        examples_html: "
+          <h4>Certains scripts ne sont pas compatibles avec les technologies d’assistance</h4>
           <ul>
-            <li>1.3 - Des alternatives textuelles d’images porteuses d’informations ne sont pas pertinentes.</li>
-            <li>3.1 - Des informations sont données uniquement par la couleur.</li>
-            <li>6.1 - Des liens ne sont pas explicites.</li>
-            <li>7.1 - Des scripts ne sont pas compatibles avec les technologies d’assistance. </li>
-            <li>7.5 - Des messages de statut ne sont pas correctement restitués par les technologies d’assistance.</li>
-            <li>8.9 - Des balises sont utilisées uniquement à des fins de présentation.</li>
-            <li>9.3 - Des listes ne sont pas correctement structurées.</li>
-            <li>10.14 - Des contenus additionnels apparaissant via les styles CSS uniquement ne peuvent pas être rendus visibles au clavier et par tout dispositif de pointage.</li>
-            <li>11.5 - Des champs de même nature ne sont pas regroupés.</li>
-            <li>11.11 - Des contrôles de saisie ne sont pas accompagnés de suggestions facilitant la correction des erreurs.</li>
-            <li>13.3 - Des documents bureautiques en téléchargement ne possèdent pas de version accessible.</li>
-          </ul>"
-        subtitle_two: "Remarques complémentaires"
+            <li>Sur la combinaison Chrome / TalkBack, le focus n'est pas capturé dans les modales.
+              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
+            <li>Sur le formulaire d'une démarche, l'intitulé du bouton permettant d'afficher la suite des erreurs n'est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
+            <li>Le bouton d'action de la combobox <em>Adresse postale</em> n'a pas d'étiquette.</li>
+            <li>Le bouton d'action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d'attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
+          </ul>
+          <h4>Certains messages de statut ne sont pas correctement restitués par les technologies d’assistance</h4>
+          <ul>
+            <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l'erreur ne soit restituée aux technologies d'assistance.</li>
+            <li>Sur le formulaire d'une démarche, la progression du téléversement d'une pièce jointe (et le message d'échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
+            <li>Sur le formulaire d'une démarche, le message d'échec de l'enregistrement automatique n'est pas restitué aux technologies d’assistance.</li>
+          </ul>
+          <h4>Certaines prises de focus sont altérées</h4>
+          <ul>
+            <li>Sur la FAQ, la visibilité de la prise de focus est altérée sur les boutons du sommaire.
+            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
+            <li>En version mobile, sur les pages d'une démarche, la visibilité de la prise de focus du lien de retour aux dossiers (ou à la page d'accueil) est altérée.</li>
+            <li>En version mobile, sur le formulaire d'une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
+          </ul>
+          <h4>Certains documents PDF ne sont pas accessibles</h4>
+          <p>Sur les pages d'une démarche, le document PDF de dématérialisation de la démarche n'est pas accessible.</p>"
+        subtitle_two: "Contenus exemptés"
+        exemption_html: "<p class=\"fr-mb-2w\">Les documents PDF, accessibles via le lien <em>Texte cadrant la demande d’information</em> présent dans le pied de pages de chaque démarche, sont fournis par l'administration en charge de la démarche.</p>"
+        subtitle_three: "Remarques complémentaires"
         content_html: "<p class=\"fr-mb-2w\">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>"
 
       preparation:
