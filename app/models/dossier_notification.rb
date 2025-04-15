@@ -7,7 +7,8 @@ class DossierNotification < ApplicationRecord
   validates :instructeur_id, presence: true, if: -> { groupe_instructeur_id.nil? }
 
   enum :notification_type, {
-    dossier_depose: 'dossier_depose'
+    dossier_depose: 'dossier_depose',
+    dossier_modifie: 'dossier_modifie'
   }
 
   scope :to_display, -> { where('display_at <= ?', Time.current) }
@@ -21,6 +22,19 @@ class DossierNotification < ApplicationRecord
         groupe_instructeur_id: dossier.groupe_instructeur_id
       ) do |notification|
         notification.display_at = dossier.depose_at + 7.days
+      end
+
+    when :dossier_modifie
+      instructeur_ids = dossier.followers_instructeur_ids
+      if instructeur_ids.present?
+        instructeur_ids.each do |instructeur_id|
+          DossierNotification.find_or_create_by!(
+            dossier_id: dossier.id,
+            notification_type:,
+            instructeur_id:) do |notification|
+              notification.display_at = Time.current
+            end
+        end
       end
     end
   end
@@ -86,6 +100,8 @@ class DossierNotification < ApplicationRecord
     case notification_type
     when DossierNotification.notification_types.fetch(:dossier_depose)
       "fr-badge fr-badge--sm fr-badge--warning"
+    when DossierNotification.notification_types.fetch(:dossier_modifie)
+      "fr-badge fr-badge--sm fr-badge--new"
     end
   end
 
@@ -93,6 +109,8 @@ class DossierNotification < ApplicationRecord
     case notification_type
     when DossierNotification.notification_types.fetch(:dossier_depose)
       generic ? "DÉPOSÉ DEPUIS LONGTEMPS" : "DÉPOSÉ DEPUIS #{(Time.current - display_at).to_i/1.day} J."
+    when DossierNotification.notification_types.fetch(:dossier_modifie)
+      'DOSSIER MODIFIÉ'
     end
   end
 end
