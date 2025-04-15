@@ -133,6 +133,17 @@ describe Users::DossiersController, type: :controller do
         get :attestation, params: { id: dossier.id }
         expect(response.location).to match '/rails/active_storage/disk/'
       end
+
+      context 'when the dossier is expired by automatic' do
+        before do
+          dossier.hide_and_keep_track!(:automatic, :expired)
+        end
+
+        it 'redirects to attestation pdf' do
+          get :attestation, params: { id: dossier.id }
+          expect(response.location).to match '/rails/active_storage/disk/'
+        end
+      end
     end
   end
 
