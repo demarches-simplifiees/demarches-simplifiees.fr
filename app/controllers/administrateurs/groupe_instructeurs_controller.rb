@@ -308,6 +308,7 @@ module Administrateurs
           GroupeInstructeurMailer
             .notify_removed_instructeur(groupe_instructeur, instructeur, current_administrateur.email)
             .deliver_later
+          DossierNotification.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
         else
           flash[:alert] = if procedure.routing_enabled?
             if instructeur.present?

@@ -102,6 +102,13 @@ class DossierNotification < ApplicationRecord
       .update_all(groupe_instructeur_id: new_groupe_instructeur.id)
   end
 
+  def self.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
+    DossierNotification
+      .where(instructeur_id: instructeur.id)
+      .where(dossier_id: groupe_instructeur.dossier_ids)
+      .destroy_all
+  end
+
   def badge_class
     case notification_type
     when DossierNotification.notification_types.fetch(:dossier_depose)
