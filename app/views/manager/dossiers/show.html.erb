@@ -61,9 +61,26 @@ as well as a link to its edit page.
           ) %>
           </dt>
 
-          <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
-              ><%= render_field attribute, page: page %></dd>
-        <% end %>
+            <% if attribute.name == 'procedure' %>
+              <%- procedure = attribute.data %>
+              <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
+                <%= link_to(
+                  procedure.libelle + " (#{procedure.id})",
+                  manager_procedure_path(procedure)
+                ) %>
+              </dd>
+
+              <dt class="attribute-label" id="procedure">
+                lien procedure
+              </dt>
+              <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
+                <%= link_to(commencer_path(procedure.canonical_path), commencer_path(procedure.canonical_path)) %>
+              </dd>
+            <% else %>
+              <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
+                  ><%= render_field attribute, page: page %></dd>
+            <% end %>
+          <% end %>
       </fieldset>
     <% end %>
   </dl>
