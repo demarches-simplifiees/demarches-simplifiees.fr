@@ -119,6 +119,7 @@
 
   .editable-champ {
     position: relative;
+    max-width: calc(100% - 1.5rem); // Prevent overflow on 320px wide viewports
 
     .updated-at {
       font-size: 0.875rem;
