@@ -3,14 +3,16 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['menu', 'input', 'dropdown'];
+  static targets = ['menu', 'input', 'dropdown', 'checkboxCount'];
 
   declare readonly menuTargets: HTMLButtonElement[];
   declare readonly inputTargets: HTMLInputElement[];
   declare readonly dropdownTargets: HTMLButtonElement[];
+  declare readonly checkboxCountTarget: HTMLElement;
 
   onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
+    this.updateCheckboxCount();
     deleteSelection();
   }
 
@@ -23,6 +25,7 @@ export class BatchOperationController extends ApplicationController {
     });
 
     this.toggleSubmitButtonWhenNeeded();
+    this.updateCheckboxCount();
 
     const pagination = document.querySelector(
       '.fr-table__footer .fr-pagination'
@@ -100,6 +103,7 @@ export class BatchOperationController extends ApplicationController {
     emptyCheckboxes();
     deleteSelection();
     this.toggleSubmitButtonWhenNeeded();
+    this.updateCheckboxCount();
   }
 
   toggleSubmitButtonWhenNeeded() {
@@ -147,6 +151,26 @@ export class BatchOperationController extends ApplicationController {
       buttons.forEach((button) => switchButton(button, false));
 
       this.dropdownTargets.forEach((e) => disable(e));
+    }
+  }
+
+  updateCheckboxCount() {
+    if (!this.checkboxCountTarget) return;
+
+    const checkedCount = this.inputTargets.filter(
+      (input) => input.checked
+    ).length;
+
+    const label = `${checkedCount} dossier${checkedCount > 1 ? 's' : ''} sélectionné${checkedCount > 1 ? 's' : ''}`;
+
+    this.checkboxCountTarget.textContent = label;
+
+    const classList = this.checkboxCountTarget.classList;
+
+    if (checkedCount > 0) {
+      classList.add('text-high-blue', 'font-weight-bold');
+    } else {
+      classList.remove('text-high-blue', 'font-weight-bold');
     }
   }
 }
