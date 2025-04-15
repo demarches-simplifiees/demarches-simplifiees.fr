@@ -1,4 +1,5 @@
 ---
 en:
-  prompt: "Select"
-  exceed_options_threshold_hint: "Start typing your choice and select it from the proposed list."
+  prompt: 'Select'
+  exceed_options_threshold_hint: 'Start typing your choice and select it from the proposed list.'
+  exceed_options_threshold_alert: Some choices are not visible. Begin typing your choice and select it from the proposed list.
