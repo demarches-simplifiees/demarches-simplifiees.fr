@@ -28,7 +28,7 @@ describe DelayedPurgeJob, type: :job do
       allow(described_class).to receive(:openstack?).and_return(true)
     end
 
-    it 'with attachements' do
+    it 'with attachments' do
       expect(client).not_to receive(:copy_object)
       subject
       perform_enqueued_jobs
