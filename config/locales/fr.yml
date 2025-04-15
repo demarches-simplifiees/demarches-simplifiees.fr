@@ -120,7 +120,7 @@ fr:
         content_html: "Le site Démarches simplifiées est <strong>partiellement conforme</strong> au <a href=\"https://accessibilite.numerique.gouv.fr/\">Référentiel Général d’Amélioration de l’Accessibilité (RGAA)</a> version 4.1.2 en raison des non-conformités listées ci-après."
       results:
         title: "Résultats des tests"
-        content: "L’audit réalisé en interne en juin 2023 révèle que le taux de conformité global est de 81,36% sur l’échantillon de pages analysés."
+        content: "L’audit réalisé en interne en avril 2025 révèle que le taux de conformité global est de 93,10% sur l’échantillon de pages analysés."
         programme:
           intro: "Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site grâce au "
           label: "programme d’amélioration continue de DS en matière d’accessibilité"
@@ -160,7 +160,7 @@ fr:
 
       preparation:
         title: "Établissement de cette déclaration d’accessibilité"
-        intro: "Cette déclaration a été établie le 27 avril 2022. Elle a été mise à jour le 14 juin 2024."
+        intro: "Cette déclaration a été établie le 27 avril 2022. Elle a été mise à jour le 15 avril 2025."
         subtitle_one: "Technologies utilisées pour la réalisation du site"
         techno_ruby:
           label: "Ruby on Rails"

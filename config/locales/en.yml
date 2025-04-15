@@ -123,7 +123,7 @@ en:
         content_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
       results:
         title: "Test results"
-        content: "The internal audit performed in June 2023 revealed an overall compliance rate of 81.36% on the sample of pages analyzed."
+        content: "The internal audit performed in April 2025 revealed an overall compliance rate of 93.10% on the sample of pages analyzed."
         programme:
           intro: "Users can follow the measures taken by the service to improve the accessibility of the site via "
           label: "the DS accessibility continuous improvement programme"
@@ -164,7 +164,7 @@ en:
 
       preparation:
         title: "Preparation of this accessibility declaration"
-        intro: "This declaration was drawn up on 27 April 2022. It was updated on 14 June 2024."
+        intro: "This declaration was drawn up on 27 April 2022. It was updated on 15 April 2025."
         subtitle_one: "Technologies used to create the site"
         techno_ruby:
           label: "Ruby on Rails"
