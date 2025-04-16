@@ -109,6 +109,12 @@ class DossierNotification < ApplicationRecord
       .destroy_all
   end
 
+  def self.destroy_notifications_instructeur_of_dossier(instructeur_id, dossier_id)
+    DossierNotification
+      .where(instructeur_id:, dossier_id:)
+      .destroy_all
+  end
+
   def badge_class
     case notification_type
     when DossierNotification.notification_types.fetch(:dossier_depose)
