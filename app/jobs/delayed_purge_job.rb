@@ -48,6 +48,11 @@ class DelayedPurgeJob < ApplicationJob
 
   # head object to update metadata makes pj unreadable. copy with extra headers
   def soft_delete
+    # ActiveStorage removes attachments first and then calls purge (or purge_later) on the blob.
+    # In a before_destroy hook, it checks if any attachments still exist. If no attachments are left, it deletes the blob.
+    # We should replicate the same behavior here.
+    # https://github.com/rails/rails/blob/ef88965e8a0c72496c210a5a0a48b85ec9a2ed17/activestorage/app/models/active_storage/blob.rb#L53-L55
+    return if blob.attachments.exists?
     excon_response = client.copy_object(container, key, container, key, { "Content-Type" => blob.content_type, 'X-Delete-At' => delay.to_s })
     if excon_response.status != 201
       Sentry.capture_message("Can't expire blob", extra: { key:, headers: })

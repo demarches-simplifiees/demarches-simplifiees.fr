@@ -16,28 +16,50 @@ describe DelayedPurgeJob, type: :job do
 
   let(:subject) { job.perform_now }
 
-  it 'emit request instead of destroying it' do
-    container = "bucket"
-    client = double("client")
-    double_service = double(container:)
-    allow_any_instance_of(ActiveStorage::Blob).to receive(:service).and_return(double_service)
+  context 'emit request instead of destroying it' do
+    let(:container) { "bucket" }
+    let(:client) { double("client") }
+    let(:double_service) { double(container:) }
+    let(:cloned_dossier) { dossier.clone }
 
-    allow_any_instance_of(DelayedPurgeJob).to receive(:client).and_return(client)
+    before do
+      allow_any_instance_of(ActiveStorage::Blob).to receive(:service).and_return(double_service)
+      allow_any_instance_of(DelayedPurgeJob).to receive(:client).and_return(client)
+      allow(described_class).to receive(:openstack?).and_return(true)
+    end
 
-    expect(client).to receive(:copy_object)
-      .with(container, blob.key, container, blob.key, { 'X-Delete-At' => anything, "Content-Type" => blob.content_type })
-      .and_return(double(status: 201))
+    it 'with attachments' do
+      expect(client).not_to receive(:copy_object)
+      subject
+      perform_enqueued_jobs
+    end
 
-    allow(described_class).to receive(:openstack?).and_return(true)
+    it 'without attachements' do
+      dossier.champs.first.piece_justificative_file.first.delete
+      expect(client).to receive(:copy_object)
+        .with(container, blob.key, container, blob.key, { 'X-Delete-At' => anything, "Content-Type" => blob.content_type })
+        .and_return(double(status: 201))
+      subject
+      perform_enqueued_jobs
+    end
 
-    subject
+    it 'with cloned dossier' do
+      expect { cloned_dossier.destroy }.to have_enqueued_job(DelayedPurgeJob)
+      perform_enqueued_jobs
 
-    perform_enqueued_jobs
+      expect(client).to receive(:copy_object)
+        .with(container, blob.key, container, blob.key, { 'X-Delete-At' => anything, "Content-Type" => blob.content_type })
+        .and_return(double(status: 201))
+
+      expect { dossier.destroy }.to have_enqueued_job(DelayedPurgeJob)
+      perform_enqueued_jobs
+    end
   end
 
   context 'when destroying an instance' do
     it 'uses our custom job' do
       expect { dossier.destroy }.to have_enqueued_job(DelayedPurgeJob)
+      perform_enqueued_jobs
     end
   end
 end
