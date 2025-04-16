@@ -1,0 +1,97 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://rnb-api.beta.gouv.fr/api/alpha/buildings/kthxbye/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: ''
+    headers:
+      Server:
+      - nginx/1.27.1
+      Date:
+      - Fri, 11 Apr 2025 13:44:44 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '179'
+      X-Frame-Options:
+      - DENY
+      Vary:
+      - origin
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+    body:
+      encoding: ASCII-8BIT
+      string: |2
+
+        <!doctype html>
+        <html lang="en">
+        <head>
+          <title>Not Found</title>
+        </head>
+        <body>
+          <h1>Not Found</h1><p>The requested resource was not found on this server.</p>
+        </body>
+        </html>
+  recorded_at: Fri, 11 Apr 2025 13:44:44 GMT
+- request:
+    method: get
+    uri: https://rnb-api.beta.gouv.fr/api/alpha/buildings/PG46YY6YWCX8/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.27.1
+      Date:
+      - Fri, 11 Apr 2025 13:44:44 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2554'
+      Vary:
+      - Accept, origin
+      Allow:
+      - GET, PATCH, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Ratelimit-Limit:
+      - '20'
+      Ratelimit-Policy:
+      - q=20;w=1
+    body:
+      encoding: ASCII-8BIT
+      string: '{"rnb_id":"PG46YY6YWCX8","status":"constructed","point":{"type":"Point","coordinates":[-0.570505392116188,44.841034137099996]},"shape":{"type":"MultiPolygon","coordinates":[[[[-0.570280674866822,44.84077010891215],[-0.570266534554258,44.84078678664414],[-0.570216757410612,44.84084066163719],[-0.57021549325346,44.84084070233097],[-0.570165716013095,44.8408945773021],[-0.57038352854418,44.84097318468645],[-0.570493893555193,44.8412346000065],[-0.570498893016816,44.8412335378075],[-0.570500385989195,44.8412370947547],[-0.570646462855594,44.841203551952326],[-0.570645027078788,44.841200894418094],[-0.570648705165646,44.84119897350007],[-0.570648533553692,44.84119627526716],[-0.570656061338606,44.84119513166363],[-0.570628163727203,44.84109508951354],[-0.570555522911404,44.840928893872714],[-0.570442458008472,44.84086403858294],[-0.570414463423371,44.84090189114245],[-0.570361202950893,44.84088107439267],[-0.570387990603872,44.840844161953605],[-0.570319217125699,44.84081843706597],[-0.570320366885589,44.84081659754895],[-0.570321573843764,44.840815657442946],[-0.57032272360352,44.8408138179259],[-0.570323930561594,44.84081287781987],[-0.570323816164808,44.84081107899784],[-0.570325023122807,44.84081013889179],[-0.570324965924399,44.84080923948077],[-0.570326172882338,44.840808299374714],[-0.57032605848549,44.840806500552674],[-0.570326001287068,44.84080560114165],[-0.570327208244913,44.84080466103559],[-0.570327093848039,44.84080286221355],[-0.570327036649606,44.84080196280253],[-0.570326979451173,44.840801063391524],[-0.570325600898172,44.84079930526454],[-0.570325543699765,44.840798405853505],[-0.570324222345258,44.84079754713753],[-0.570324165146875,44.8407966477265],[-0.570322786594071,44.84079488959948],[-0.570321465239689,44.84079403088345],[-0.570320143885347,44.84079317216742],[-0.570318822531043,44.84079231345137],[-0.570280674866822,44.84077010891215]]]]},"addresses":[{"id":"33063_1155_00002","source":"bdnb","street_number":"2","street_rep":"","street":"place
+        de la bourse","city_name":"Bordeaux","city_zipcode":"33000","city_insee_code":"33063"},{"id":"33063_1155_00008","source":"bdnb","street_number":"8","street_rep":"","street":"place
+        de la bourse","city_name":"Bordeaux","city_zipcode":"33000","city_insee_code":"33063"}],"ext_ids":[{"id":"bdnb-bc-M72P-QAA4-C5NT","source":"bdnb","created_at":"2023-12-09T20:03:28.553322+00:00","source_version":"2023_01"},{"id":"BATIMENT0000000248395542","source":"bdtopo","created_at":"2023-12-21T14:58:52.127485+00:00","source_version":"bdtopo_2023_09"}],"is_active":true}'
+  recorded_at: Fri, 11 Apr 2025 13:44:44 GMT
+recorded_with: VCR 6.3.1

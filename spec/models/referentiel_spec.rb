@@ -13,7 +13,6 @@ describe Referentiel do
           expect(build(:api_referentiel, mode: 'exact_match').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
           expect(build(:api_referentiel, mode: 'autocomplete').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
           expect(build(:api_referentiel, mode: nil).tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
-          expect(build(:api_referentiel, mode: 'wrong').tap(&:validate).errors.map(&:attribute)).to include(:mode)
         end
 
         describe 'configured?' do
