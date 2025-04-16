@@ -62,7 +62,12 @@ module Maintenance
         blob.attachments.each do |attachment|
           name, record_type, record_id = attachment.name, attachment.record_type, attachment.record_id
           if record_type == 'Champ'
-            champ_libelle = attachment.record.libelle
+            champ_libelle = begin
+              attachment.record.libelle
+                            # sometimes, a type de champ is found in the revision
+                            rescue StandardError
+                              ''
+            end
             dossier_id = attachment.record.dossier_id
             dossier_state = attachment.record.dossier.state
             email = attachment.record.dossier.user.email
