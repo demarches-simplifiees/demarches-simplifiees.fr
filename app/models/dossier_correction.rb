@@ -20,6 +20,7 @@ class DossierCorrection < ApplicationRecord
 
   def resolve
     self.resolved_at = Time.current
+    destroy_attente_correction_notification
   end
 
   def resolve!
@@ -28,4 +29,10 @@ class DossierCorrection < ApplicationRecord
   end
 
   def pending? = !resolved?
+end
+
+private
+
+def destroy_attente_correction_notification
+  DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :attente_correction)
 end
