@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_01_133421) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_15_214140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1243,6 +1243,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_01_133421) do
     t.bigint "user_id"
     t.index ["target_model_id"], name: "index_targeted_user_links_on_target_model_id"
     t.index ["user_id"], name: "index_targeted_user_links_on_user_id"
+  end
+
+  create_table "task_logs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.jsonb "data"
+    t.datetime "updated_at", null: false
   end
 
   create_table "task_records", id: false, force: :cascade do |t|
