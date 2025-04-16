@@ -12,6 +12,8 @@ class DossierNotification < ApplicationRecord
     dossier_depose: 'dossier_depose'
   }
 
+  scope :to_display, -> { where(display_at: ..Time.current) }
+
   def self.create_notification(dossier, notification_type)
     case notification_type
     when :dossier_depose
@@ -29,5 +31,29 @@ class DossierNotification < ApplicationRecord
     DossierNotification
       .where(dossier:, notification_type:)
       .destroy_all
+  end
+
+  def self.notifications_for_instructeur_procedure(groupe_instructeur_ids, instructeur)
+    dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+
+    dossiers_by_statut = {
+      'a-suivre' => dossiers.by_statut('a-suivre'),
+      'suivis' => dossiers.by_statut('suivis', instructeur:),
+      'traites' => dossiers.by_statut('traites')
+    }
+
+    notifications = DossierNotification
+      .where(dossier: dossiers, groupe_instructeur_id: groupe_instructeur_ids)
+      .or(DossierNotification.where(dossier: dossiers, instructeur:))
+      .to_display
+
+    notifications_by_dossier_id = notifications.group_by(&:dossier_id)
+
+    dossiers_by_statut.filter_map do |statut, dossiers|
+      notifs = dossiers.flat_map { |d| notifications_by_dossier_id[d.id] || [] }
+      next if notifs.empty?
+
+      [statut, notifs.group_by(&:notification_type)]
+    end.to_h
   end
 end

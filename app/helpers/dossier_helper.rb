@@ -133,6 +133,38 @@ module DossierHelper
     tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{Label.class_name(color)} no-wrap")
   end
 
+  def tag_notification(notification, generic: false)
+    tag.span(badge_notification_text(notification, generic:), class: badge_notification_class(notification))
+  end
+
+  def tags_notification(notifications, generic: false)
+    if notifications.size > 1
+      tag.ul(class: 'fr-badge-group') do
+        safe_join(notifications.map { |notif| tag.li(tag_notification(notif, generic:)) })
+      end
+    elsif notifications.one?
+      tag_notification(notifications.first, generic:)
+    end
+  end
+
+  def badge_notification_class(notification)
+    case notification.notification_type
+    when DossierNotification.notification_types.fetch(:dossier_depose)
+      "fr-badge fr-badge--sm fr-badge--warning"
+    end
+  end
+
+  def badge_notification_text(notification, generic)
+    case notification.notification_type
+    when DossierNotification.notification_types.fetch(:dossier_depose)
+      if generic[:generic]
+        t("activerecord.attributes.notification.#{notification.notification_type}.generic")
+      else
+        t("activerecord.attributes.notification.#{notification.notification_type}.specific", days: (Time.current.to_date - notification.display_at.to_date).to_i)
+      end
+    end
+  end
+
   def demandeur_dossier(dossier)
     if dossier.procedure.for_individual? && dossier.for_tiers?
       return t('shared.dossiers.beneficiaire', mandataire: dossier.mandataire_full_name, beneficiaire: "#{dossier&.individual&.prenom} #{dossier&.individual&.nom}")
