@@ -294,8 +294,10 @@ module Users
           dossier.merge_user_buffer_stream!
         end
 
+        DossierNotification.destroy_notifications_by_dossier_and_type(dossier_en_construction.id, :attente_correction) if dossier_en_construction.pending_correction?
         dossier_en_construction.submit_en_construction!
         DossierNotification.create_notification(dossier_en_construction, :dossier_modifie)
+
         redirect_to dossier_path(dossier_en_construction)
       else
         @dossier_for_editing = dossier

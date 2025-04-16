@@ -8,8 +8,9 @@ module Instructeurs
 
     def destroy
       retrieve_procedure_presentation if current_instructeur
-      set_notifications_dossier
       if commentaire.sent_by?(current_instructeur) || commentaire.sent_by?(current_expert)
+        DossierNotification.destroy_notifications_by_dossier_and_type(dossier.id, :attente_correction) if dossier.pending_correction?
+        set_notifications_dossier
         commentaire.soft_delete!
 
         flash.notice = t('.notice')
