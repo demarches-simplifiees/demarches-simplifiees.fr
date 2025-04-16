@@ -8,7 +8,8 @@ class DossierNotification < ApplicationRecord
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
-    dossier_modifie: 'dossier_modifie'
+    dossier_modifie: 'dossier_modifie',
+    attente_correction: 'attente_correction'
   }
 
   scope :to_display, -> { where('display_at <= ?', Time.current) }
@@ -24,7 +25,7 @@ class DossierNotification < ApplicationRecord
         notification.display_at = dossier.depose_at + 7.days
       end
 
-    when :dossier_modifie
+    when :dossier_modifie, :attente_correction
       instructeur_ids = dossier.followers_instructeur_ids
       if instructeur_ids.present?
         instructeur_ids.each do |instructeur_id|
@@ -121,6 +122,8 @@ class DossierNotification < ApplicationRecord
       "fr-badge fr-badge--sm fr-badge--warning"
     when DossierNotification.notification_types.fetch(:dossier_modifie)
       "fr-badge fr-badge--sm fr-badge--new"
+    when DossierNotification.notification_types.fetch(:attente_correction)
+      "fr-badge fr-badge--sm"
     end
   end
 
@@ -130,6 +133,8 @@ class DossierNotification < ApplicationRecord
       generic ? "DÉPOSÉ DEPUIS LONGTEMPS" : "DÉPOSÉ DEPUIS #{(Time.current - display_at).to_i/1.day} J."
     when DossierNotification.notification_types.fetch(:dossier_modifie)
       'DOSSIER MODIFIÉ'
+    when DossierNotification.notification_types.fetch(:attente_correction)
+      'EN ATTENTE DE CORRECTION'
     end
   end
 end
