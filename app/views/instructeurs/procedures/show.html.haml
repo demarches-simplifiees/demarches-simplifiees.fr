@@ -108,8 +108,6 @@
                                 - @notifications[dossier.id].each do |notif|
                                   .fr-mt-1v
                                     = tag_notification(notif)
-                              - if dossier.pending_correction?
-                                = pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
 
                         - @procedure_presentation.displayed_columns.each do |column|
                           %td.fr-cell--multiline
