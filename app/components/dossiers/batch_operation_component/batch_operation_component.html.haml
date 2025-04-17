@@ -1,25 +1,28 @@
-.batch-operation.fr-ml-auto.flex
-  - if available_operations[:options].count.between?(1,3)
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: dom_id(BatchOperation.new) }, data: { turbo: true, turbo_confirm: t('.operations.confirm') }) do |form|
-      - available_operations[:options].each do |opt|
-        = render Dossiers::BatchOperationInlineButtonsComponent.new(opt:, icons:, form:)
+.fr-background-alt--blue-france.fr-p-2w.fr-mb-n2w
+  .batch-operation.flex.align-center
+    %span.fr-mr-1w{ data: { batch_operation_target: 'checkboxCount' } }
+      0 dossier sélectionné
+    - if available_operations[:options].count.between?(1,3)
+      = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form', id: dom_id(BatchOperation.new) }, data: { turbo: true, turbo_confirm: t('.operations.confirm') }) do |form|
+        - available_operations[:options].each do |opt|
+          = render Dossiers::BatchOperationInlineButtonsComponent.new(opt:, icons:, form:)
 
-  - else
-    = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form flex', id: dom_id(BatchOperation.new) }, data: { turbo: true, turbo_confirm: t('.operations.confirm') }) do |form|
-      - available_operations[:options][0,2].each do |opt|
-        = render Dossiers::BatchOperationInlineButtonsComponent.new(opt:, icons:, form:)
+    - else
+      = form_for(BatchOperation.new, url: instructeur_batch_operations_path(procedure_id: procedure.id), method: :post, html: { class: 'form flex', id: dom_id(BatchOperation.new) }, data: { turbo: true, turbo_confirm: t('.operations.confirm') }) do |form|
+        - available_operations[:options][0,2].each do |opt|
+          = render Dossiers::BatchOperationInlineButtonsComponent.new(opt:, icons:, form:)
 
-      .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
-        -# Dropdown button title
-        %button#batch_operation_others.fr-btn.fr-btn--sm.fr-btn--secondary.fr-ml-1w.dropdown-button{ disabled: true, data: { menu_button_target: 'button', batch_operation_target: 'dropdown' } }
-          = t('.operations.other')
-          %span.fr-ml-2v{ 'aria-hidden': 'true' }
+        .dropdown{ data: { controller: 'menu-button', popover: 'true' } }
+          -# Dropdown button title
+          %button#batch_operation_others.fr-btn.fr-btn--sm.fr-btn--secondary.fr-ml-1w.dropdown-button{ disabled: true, data: { menu_button_target: 'button', batch_operation_target: 'dropdown' } }
+            = t('.operations.other')
+            %span.fr-ml-2v{ 'aria-hidden': 'true' }
 
-        #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, "aria-labelledby" => "batch_operation_others" }
-          %ul.dropdown-items
-            - available_operations[:options][2, available_operations[:options].count].each do |opt|
-              %li
-                = form.button opt[:label], class: 'dropdown-items-link ', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] } do
-                  %span{ class: icons[opt[:operation].to_sym] }
-                  .dropdown-description
-                    %h4= opt[:label]
+          #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, "aria-labelledby" => "batch_operation_others" }
+            %ul.dropdown-items
+              - available_operations[:options][2, available_operations[:options].count].each do |opt|
+                %li
+                  = form.button opt[:label], class: 'dropdown-items-link ', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] } do
+                    %span{ class: icons[opt[:operation].to_sym] }
+                    .dropdown-description
+                      %h4= opt[:label]

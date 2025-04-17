@@ -36,7 +36,7 @@
 
   %h2.fr-h3#dossiers-affectes Dossiers affectés
   .card
-    .flex.justify-between.align-center.fr-btns-group--sm.fr-btns-group--icon-right
+    .flex.justify-between.align-center.fr-btns-group--sm.fr-btns-group--icon-left
       %span.fr-icon.fr-icon-folder-2-line.fr-mr-2w
         = t('.number_of_files', count: @groupe_instructeur.dossiers.visible_by_administration.size)
       - if !@groupe_instructeur.can_delete?

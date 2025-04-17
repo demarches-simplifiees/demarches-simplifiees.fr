@@ -27,7 +27,7 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
         hidden_field_tag('filters[]', ''),    # to ensure the filters is not empty
         *other_hidden_fields(filter),         # other filters to keep
         hidden_field_tag('statut', @statut),  # collection to set
-        button_tag(button_content(filter), class: 'fr-tag fr-tag--dismiss fr-my-1w')
+        button_tag(button_content(filter), class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm')
       ])
     end
   end

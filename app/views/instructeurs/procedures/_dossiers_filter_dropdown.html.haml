@@ -1,4 +1,4 @@
-= render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: ['fr-btn--secondary', 'fr-btn--sm', 'fr-mr-1w', 'fr-mb-2w'] }, menu_options: { id: 'filter-menu', class:['left-aligned'] }) do |menu|
+= render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: ['fr-btn--secondary', 'fr-btn--sm'] }, menu_options: { id: 'filter-menu', class:['left-aligned'] }) do |menu|
   - menu.with_button_inner_html do
     = t('views.instructeurs.dossiers.filters.title')
 
