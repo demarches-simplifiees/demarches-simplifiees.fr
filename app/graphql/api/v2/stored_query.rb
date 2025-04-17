@@ -321,7 +321,7 @@ class API::V2::StoredQuery
       email
     }
     traitements @include(if: $includeTraitements) {
-      state
+      event
       emailAgentTraitant
       dateTraitement
       motivation

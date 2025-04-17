@@ -14,7 +14,7 @@
 
   = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: @invites_emails, title: "Personnes invitées par l'usager à modifier ce dossier", blank: "Aucune personne n’a été invitée par l'usager à modifier ce dossier" }
 
-  = render partial: 'instructeurs/dossiers/decisions_rendues_block', locals: { traitements: @dossier.traitements }
+  = render Instructeurs::DossierTraitementsComponent.new(traitements: @dossier.traitements)
 
   - if @dossier.procedure.routing_enabled?
     = render partial: 'instructeurs/dossiers/reaffectations_block', locals: { manual_assignments: @manual_assignments, dossier: @dossier }
