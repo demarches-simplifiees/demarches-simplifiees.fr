@@ -80,13 +80,15 @@ export function useSingleList({
   defaultSelectedKey,
   emptyFilterKey,
   onChange,
-  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY
+  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY,
+  maxItemsAlert
 }: {
   defaultItems?: Item[];
   defaultSelectedKey?: string | null;
   emptyFilterKey?: string | null;
   onChange?: (item: Item | null) => void;
   maxItemsDisplay?: number;
+  maxItemsAlert?: string;
 }) {
   const [selectedKey, setSelectedKey] = useState(defaultSelectedKey);
   const items = useMemo(
@@ -160,13 +162,22 @@ export function useSingleList({
     }
   }, [defaultSelectedKey, setSelection]);
 
+  const displayedItems = filteredItems.slice(0, maxItemsDisplay);
+
+  if (maxItemsAlert && filteredItems.length > maxItemsDisplay) {
+    displayedItems.push({
+      label: maxItemsAlert,
+      value: 'combo-alert-message'
+    });
+  }
+
   return {
     selectedItem,
     selectedKey,
     onSelectionChange,
     inputValue,
     onInputChange,
-    items: filteredItems.slice(0, maxItemsDisplay),
+    items: displayedItems,
     onReset
   };
 }
@@ -179,7 +190,8 @@ export function useMultiList({
   onChange,
   focusInput,
   formValue,
-  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY
+  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY,
+  maxItemsAlert
 }: {
   defaultItems?: Item[];
   defaultSelectedKeys?: string[];
@@ -189,6 +201,7 @@ export function useMultiList({
   focusInput?: () => void;
   formValue?: 'text' | 'key';
   maxItemsDisplay?: number;
+  maxItemsAlert?: string;
 }) {
   const valueSeparatorRegExp = useMemo(
     () =>
@@ -344,12 +357,21 @@ export function useMultiList({
     setInputValue('');
   });
 
+  const displayedItems = filteredItems.slice(0, maxItemsDisplay);
+
+  if (maxItemsAlert && filteredItems.length > maxItemsDisplay) {
+    displayedItems.push({
+      label: maxItemsAlert,
+      value: 'combo-alert-message'
+    });
+  }
+
   return {
     onRemove,
     onSelectionChange,
     onInputChange,
     selectedItems,
-    items: filteredItems.slice(0, maxItemsDisplay),
+    items: displayedItems,
     hiddenInputValues,
     inputValue,
     onReset

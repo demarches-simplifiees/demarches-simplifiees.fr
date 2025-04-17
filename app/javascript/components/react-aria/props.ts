@@ -45,6 +45,7 @@ export const SingleComboBoxProps = s.assign(
       selectedKey: s.nullable(s.string()),
       emptyFilterKey: s.nullable(s.string()),
       maxItemsDisplay: s.number(),
+      maxItemsAlert: s.string(),
       placeholder: s.string()
     })
   )
@@ -57,6 +58,7 @@ export const MultiComboBoxProps = s.assign(
       allowsCustomValue: s.boolean(),
       valueSeparator: s.union([s.string(), s.literal(false)]),
       maxItemsDisplay: s.number(),
+      maxItemsAlert: s.string(),
       focusOnSelect: s.string()
     })
   )

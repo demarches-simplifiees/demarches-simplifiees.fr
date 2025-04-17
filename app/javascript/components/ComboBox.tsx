@@ -101,6 +101,15 @@ export function ComboBox({
 }
 
 export function ComboBoxItem(props: ListBoxItemProps<Item>) {
+  if (props.id == 'combo-alert-message') {
+    return (
+      <ListBoxItem
+        {...props}
+        isDisabled={true}
+        className="fr-menu__item fr-badge fr-badge--info fr-badge--no-text-transform width-100"
+      />
+    );
+  }
   return <ListBoxItem {...props} className="fr-menu__item" />;
 }
 
@@ -118,6 +127,7 @@ export function SingleComboBox({
     form,
     data,
     maxItemsDisplay,
+    maxItemsAlert,
     ...props
   } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
@@ -128,7 +138,8 @@ export function SingleComboBox({
     defaultSelectedKey,
     emptyFilterKey,
     onChange: dispatch,
-    maxItemsDisplay
+    maxItemsDisplay,
+    maxItemsAlert
   });
 
   return (
@@ -172,6 +183,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     valueSeparator,
     className,
     maxItemsDisplay,
+    maxItemsAlert,
     focusOnSelect,
     ...props
   } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
@@ -192,6 +204,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     allowsCustomValue,
     valueSeparator,
     maxItemsDisplay,
+    maxItemsAlert,
     focusInput: () => {
       inputRef.current?.focus();
     },
