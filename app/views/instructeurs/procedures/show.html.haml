@@ -25,10 +25,10 @@
         has_termine_notifications: @has_termine_notifications }
 
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
-    .flex.align-center
+    .flex
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
         = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation }
-        = render Dossiers::NotifiedToggleComponent.new(procedure_presentation: @procedure_presentation) if @statut != 'a-suivre'
+        = render Dossiers::NotifiedToggleComponent.new(procedure_presentation: @procedure_presentation)
 
         .fr-ml-auto
           - if @dossiers_count > 0
@@ -103,9 +103,11 @@
                           - else
                             %a.fr-link.relative{ href: path }
                               = dossier.id
-                              - if @not_archived_notifications_dossier_ids.include?(dossier.id)
-                                %span.notifications{ 'aria-label': 'notifications' }
-
+                            .flex.column
+                              - if @notifications[dossier.id].present?
+                                - @notifications[dossier.id].each do |notif|
+                                  .fr-mt-1v
+                                    = tag_notification(notif)
 
                         - @procedure_presentation.displayed_columns.each do |column|
                           %td.fr-cell--multiline
@@ -120,12 +122,7 @@
                                 = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}" if dossier.hidden_by_user_at.present?
 
                         %td
-                          - status = [status_badge(dossier.state)]
-                          - if dossier.pending_correction?
-                            - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                          - elsif dossier.last_correction_resolved?
-                            - status << correction_resolved_badge(html_class: "fr-mt-1v")
-                          = link_to_if(dossier.hidden_by_administration_at.blank?, safe_join(status), path, class: "flex column")
+                          = link_to_if(dossier.hidden_by_administration_at.blank?, status_badge(dossier.state), path)
 
                         - if @procedure.sva_svr_enabled?
                           %td

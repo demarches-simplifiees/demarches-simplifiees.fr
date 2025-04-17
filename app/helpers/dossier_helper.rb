@@ -92,7 +92,7 @@ module DossierHelper
     status_text = dossier_display_state(state, lower: true)
     tag.span status_text, role: 'status', class: class_names(
       'fr-badge fr-badge--sm' => true,
-      'fr-badge--no-icon' => [Dossier.states.fetch(:en_instruction), Dossier.states.fetch(:accepte)].exclude?(state),
+      'fr-badge--no-icon' => Dossier.states.fetch(:accepte).exclude?(state),
       class_badge_state(state) => true,
       alignment_class => true
     )
@@ -110,8 +110,12 @@ module DossierHelper
     tag.span(status_text, class: "fr-badge #{status_class} ")
   end
 
-  def pending_correction_badge(for_profile, html_class: nil)
-    tag.span(Dossier.human_attribute_name("pending_correction.#{for_profile}"), class: ['fr-badge fr-badge--sm fr-badge--warning super', html_class], role: 'status')
+  def pending_correction_badge(profile, html_class: nil)
+    if profile == :for_user
+      tag.span(Dossier.human_attribute_name("pending_correction.#{profile}"), class: ['fr-badge fr-badge--sm fr-badge--warning super', html_class], role: 'status')
+    else
+      tag.span(Dossier.human_attribute_name("pending_correction.#{profile}"), class: ['fr-badge fr-badge--sm', html_class], role: 'status')
+    end
   end
 
   def correction_resolved_badge(html_class: nil)
@@ -131,6 +135,20 @@ module DossierHelper
 
   def tag_label(name, color)
     tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{Label.class_name(color)} no-wrap")
+  end
+
+  def tag_notification(notification, generic: false)
+    tag.span(notification.badge_text(generic:), class: notification.badge_class)
+  end
+
+  def tags_notification(notifications)
+    if notifications.size > 1
+      tag.ul(class: 'fr-badge-group') do
+        safe_join(notifications.map { |notif| tag.li(tag_notification(notif)) })
+      end
+    elsif notifications.one?
+      tag_notification(notifications.first)
+    end
   end
 
   def demandeur_dossier(dossier)
