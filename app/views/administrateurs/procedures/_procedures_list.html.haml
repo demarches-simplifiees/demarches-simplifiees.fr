@@ -71,7 +71,7 @@
             = t('draft', scope: [:layouts, :breadcrumb])
 
     .flex.justify-end
-      %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+      %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-left
         - unless procedure.discarded?
           %li
             = link_to admin_procedure_path(procedure), class: 'fr-btn fr-icon-draft-line fr-btn--tertiary' do

@@ -58,8 +58,8 @@ input[type='radio'] {
 }
 
 // dans le DSFR il est possible d'avoir un bouton seulement avec une icone mais j'ai du surcharger ici pour eviter d'avoir des marges de l'icone. Je n'ai pas bien compris pourquoi
-.fr-btns-group--sm.fr-btns-group--icon-right
-  .fr-btn[class*=' fr-icon-'].icon-only::after {
+.fr-btns-group--sm.fr-btns-group--icon-left
+  .fr-btn[class*=' fr-icon-'].icon-only::before {
   margin-left: 0;
   margin-right: 0;
 }
