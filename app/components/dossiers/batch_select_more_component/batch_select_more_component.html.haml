@@ -1,15 +1,15 @@
 %tr#js_batch_select_more.hidden
-  %td.fr-py-2w.fr-cell--center.fr-background-alt--blue-france{ colspan: 100 }
+  %td.fr-py-2w.fr-background-alt--blue-france{ colspan: 100 }
     #not_selected
       %p{ role: "status" }
         = t('.pagination_files_selected_html')
-        %button#js_select_more.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ data: not_selected_button_data }
+        %button#js_select_more.fr-btn.fr-btn--sm.fr-btn--tertiary{ data: not_selected_button_data }
           = not_selected_text
 
     #selected.hidden
       %p{ role: "status" }
         = selected_text
-        %button#js_delete_selection.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ data: selected_button_data }
+        %button#js_delete_selection.fr-btn.fr-btn--sm.fr-btn--tertiary{ data: selected_button_data }
           = t(".delete_selection")
 
       = hidden_field_tag :"batch_operation[dossier_ids][]", "", form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "input_multiple_ids")

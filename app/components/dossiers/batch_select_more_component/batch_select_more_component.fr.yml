@@ -1,7 +1,7 @@
 fr:
   pagination_files_selected_html: Les <span id='dynamic_number'>n</span> dossiers de cette page sont sélectionnés.
-  select_all: "Sélectionner tous les %{dossiers_count} dossiers."
+  select_all: "Sélectionner la totalité des %{dossiers_count} dossiers."
   select_all_limit: "Sélectionner les %{limit} premiers dossiers sur les %{dossiers_count}"
-  selected_all: "Tous les %{dossiers_count} dossiers sont sélectionnés."
+  selected_all: "%{dossiers_count} dossiers sont sélectionnés."
   selected_all_limit: "%{limit} dossiers sont sélectionnés."
   delete_selection: "Effacer la sélection"
