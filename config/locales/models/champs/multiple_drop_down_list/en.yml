@@ -3,4 +3,4 @@ en:
     attributes:
       champs/multiple_drop_down_list_champ:
         hints:
-          value: "Select one or more options."
+          value: "You can select one or more options."
