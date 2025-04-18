@@ -33,6 +33,9 @@
             = t('views.accessibility_statement.no_accessible.examples_html')
           %h3
             = t('views.accessibility_statement.no_accessible.subtitle_two')
+          = t('views.accessibility_statement.no_accessible.exemption_html')
+          %h3
+            = t('views.accessibility_statement.no_accessible.subtitle_three')
           = t('views.accessibility_statement.no_accessible.content_html')
 
         %div
@@ -89,27 +92,33 @@
             = t('views.accessibility_statement.preparation.subtitle_four')
           %ul.fr-mb-2w
             %li
-              = link_to t("views.accessibility_statement.preparation.page_one.label"), root_path
+              = link_to t("views.accessibility_statement.preparation.page_one"), root_path
             %li
-              = link_to t("views.accessibility_statement.preparation.page_two.label"), contact_path
+              = link_to t("views.accessibility_statement.preparation.page_two"), contact_path
             %li
-              = link_to t("views.accessibility_statement.preparation.page_three.label"), MENTIONS_LEGALES_URL
+              = link_to t("views.accessibility_statement.preparation.page_three"), MENTIONS_LEGALES_URL
             %li
-              = link_to t("views.accessibility_statement.preparation.page_four.label"), ACCESSIBILITE_URL
+              = link_to t("views.accessibility_statement.preparation.page_four"), ACCESSIBILITE_URL
             %li
-              = link_to t("views.accessibility_statement.preparation.page_five.label"), new_user_session_path
+              = link_to t("views.accessibility_statement.preparation.page_five"), t("links.common.faq.url")
             %li
-              = t("views.accessibility_statement.preparation.page_six")
+              = link_to t("views.accessibility_statement.preparation.page_six"), t("views.accessibility_statement.preparation.page_six_url")
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_seven"), t("views.accessibility_statement.preparation.page_seven_url")
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_height"), t("views.accessibility_statement.preparation.page_height_url")
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_nine"), new_user_session_path
+            %li
+              = link_to t("views.accessibility_statement.preparation.page_ten"), t("views.accessibility_statement.preparation.page_ten_url")
+            %li
+              = t("views.accessibility_statement.preparation.page_eleven")
             %li
               = t("views.accessibility_statement.preparation.page_twelve")
             %li
               = t("views.accessibility_statement.preparation.page_thirteen")
-            %li
-              = t("views.accessibility_statement.preparation.page_fourteen")
-            %li
-              = t("views.accessibility_statement.preparation.page_fifteen")
-            %li
-              = t("views.accessibility_statement.preparation.page_sixteen")
+          %p
+            = t("views.accessibility_statement.preparation.page_note_html")
 
         %div
           %h2

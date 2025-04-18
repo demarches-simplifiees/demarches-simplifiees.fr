@@ -123,7 +123,7 @@ en:
         content_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
       results:
         title: "Test results"
-        content: "The internal audit performed in June 2023 revealed an overall compliance rate of 81.36% on the sample of pages analyzed."
+        content: "The internal audit performed in April 2025 revealed an overall compliance rate of 93.10% on the sample of pages analyzed."
         programme:
           intro: "Users can follow the measures taken by the service to improve the accessibility of the site via "
           label: "the DS accessibility continuous improvement programme"
@@ -132,28 +132,39 @@ en:
       no_accessible:
         title: "Non-accessible content"
         subtitle_one: "Non-compliances"
-        examples_html: "List of non-compliant criteria:
+        examples_html: "
+          <h4>Some scripts are not compatible with assistive technologies</h4>
           <ul>
-            <li>1.3 - A few alternative text descriptions of images conveying information are irrelevant.</li>
-            <li>3.1 - A few informations are conveyed solely through colour.</li>
-            <li>6.1 - Some links are not explicit.</li>
-            <li>7.1 - Some scripts are not compatible with assistive technologies.</li>
-            <li>7.5 - Some status messages are not correctly presented to assistive technologies.</li>
-            <li>8.9 - Some semantic elements are used for presentational effect.</li>
-            <li>9.3 - A few lists are not properly structured.</li>
-            <li>10.14 - A few additional contents appearing solely through CSS cannot be made visible by keyboard and any pointing device.</li>
-            <li>11.5 - A few related form fields are not regrouped.</li>
-            <li>11.11 - Input assistance does not provide suggestions to help correct errors.</li>
-            <li>13.3 - Some/Certain/A few downloadable documents do not have an accessible version.</li>
-          </ul>"
-        subtitle_two: "Additional notes"
-        content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
-          <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
+            <li>On the Chrome / TalkBack combination, focus is not captured in modals.
+              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
+            <li>On a procedure form, the title of the button used to display the error sequence is irrelevant. Once activated, the focus remains on the button.</li>
+            <li>The combobox action button <em>Adresse postale</em> has no label.</li>
+            <li>The action buttons in the <em>Invite someone to edit this file</em> and <em>Identity of the requester</em> panels have conflicting attributes (<code>aria-expanded</code> and <code>aria-haspopup</code>).</li>
+          </ul>
+          <h4>Some status messages are not correctly rendered by assistive technologies</h4>
+          <ul>
+            <li>On the account creation page, when the form submitted contains an error, the page reloads without the error being returned to the support technologies.</li>
+            <li>On a procedure form, the progress of an attachment upload (and the failure message, if applicable) are not returned to the assistive technologies.</li>
+            <li>On a procedure form, the automatic registration failure message is not returned to assistive technologies.</li>
+          </ul>
+          <h4>Some focus is impaired</h4>
+          <ul>
+            <li>On the FAQ, the visibility of the focus is altered on the summary buttons.
+            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
+            <li>In the mobile version, the focus on the link back to the files (or the home page) is altered.</li>
+            <li>In the mobile version, when the <em>Invite someone to edit this file</em> panel is open, it hides the following fields from focus.</li>
+          </ul>
+          <h4>Some PDF documents are not accessible</h4>
+          <p>The PDF document used to dematerialize a procedure is not accessible on the procedure pages.</p>"
+        subtitle_two: "Exempted content"
+        exemption_html: "<p class=\"fr-mb-2w\">The PDF documents, accessible via the <em>Laws regarding this data collection</em> link in the footer of each procedure, are provided by the administration in charge of the procedure.</p>"
+        subtitle_three: "Additional notes"
+        content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>"
 
 
       preparation:
         title: "Preparation of this accessibility declaration"
-        intro: "This declaration was drawn up on 27 April 2022. It was updated on 14 June 2024."
+        intro: "This declaration was drawn up on 27 April 2022. It was updated on 15 April 2025."
         subtitle_one: "Technologies used to create the site"
         techno_ruby:
           label: "Ruby on Rails"
@@ -161,35 +172,33 @@ en:
           title: "Ruby on Rails - new tab"
         subtitle_two: "Test environment"
         environment_intro: "The content rendering checks were carried out on the basis of a combination provided by the RGAA reference base, with the following versions:"
-        environment_one: "Firefox 111.0.1 and NVDA 2022.4"
-        environment_two: "Safari and VoiceOver (version available on macOS Monterey 12.6.3)"
-        environment_three: "Edge and JAWS 2020"
-        environment_four: "Google Chrome and TalkBack 9.1"
-        environment_five: "Safari and VoiceOver (version available on iOS 15.7.4)"
+        environment_one: "Chrome 134 and NVDA 2024.4.2"
+        environment_two: "Safari and VoiceOver (MacOS 15.3.2 Sequoia)"
+        environment_three: "Firefox 136 and JAWS 2024"
+        environment_four: "Chrome 134 and TalkBack 15.2 (Android 13)"
+        environment_five: "Safari and VoiceOver (iOS 18.3.2)"
         subtitle_three: "Tools for assessing accessibility"
         tool_one: "RGAA Assistant (Firefox extension)"
         tool_two: "Web Developer (Firefox extension)"
         tool_three: "HeadingsMap (Firefox extension)"
         tool_four: "Colour Contrast Analyser application"
-        tool_five: "Contrast Finder"
-        tool_six: "Stylus (Firefox extension)"
+        tool_five: "Stylus (Firefox extension)"
+        tool_six: "Firefox developer tools"
         subtitle_four: "Pages of the site subject to the compliance check"
-        page_one:
-          label: "Home"
-        page_two:
-          label: "Contact"
-        page_three:
-          label: "Legal notices"
-        page_four:
-          label: "Accessibility statement"
-        page_five:
-          label: "Authentification"
-        page_six: "Home page - User search results"
-        page_twelve: "File creation - Identity"
-        page_thirteen: "File creation - Draft"
-        page_fourteen: "Dossier - Summary"
-        page_fifteen: "Dossier - Application"
-        page_sixteen: "Dossier - Messaging"
+        page_one: "Home"
+        page_two: "Contact"
+        page_three: "Legal notices"
+        page_four: "Accessibility statement"
+        page_five: "Help - Category"
+        page_six: "Help - Content"
+        page_seven: "Create an account"
+        page_height: "Procedure - Home"
+        page_nine: "Authentification"
+        page_ten: "Forgotten password"
+        page_eleven: "File creation - Identity"
+        page_twelve: "File creation - Draft"
+        page_thirteen: "File creation - Dispatch confirmation"
+        page_note_html: "The procedure <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit."
       contact:
         title: "Feedback and contact"
         intro: "If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form."
