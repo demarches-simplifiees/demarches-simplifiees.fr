@@ -5,12 +5,12 @@
 
 .dossiers-headers.sub-header
   .fr-container
-    %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
+    %h1.fr-h3= t('views.users.dossiers.index.dossiers')
 
     - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2  || @procedures_for_select.size > 1
       .fr-grid-row.fr-grid-row--gutters
         - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
-          .fr-col.fr-mb-5w
+          .fr-col
             #search-2.fr-search-bar
               = form_tag dossiers_path, method: :get, :role => "search", class: "width-100" do
                 = hidden_field_tag :procedure_id, params[:procedure_id]
@@ -20,7 +20,7 @@
                   %button.fr-btn.fr-btn--sm
                     = t('views.users.dossiers.search.label')
         - if @procedures_for_select.size > 1
-          .fr-col.fr-mb-5w
+          .fr-col
             = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
 
     - if @search_terms.blank?

@@ -182,6 +182,19 @@ input[type='radio'] {
   margin-top: 0.5rem;
 }
 
+// Improve tabs alignment because we are not displaying the border around the page content
+.fr-tabs__list {
+  padding-left: 0;
+  margin-left: -4px;
+}
+
 .fr-header__tools .fr-btns-group .fr-btn {
   margin-bottom: 0;
+}
+
+// We increase from 3rem the max-width to avoid truncating hint in header search
+@media (min-width: 62em) {
+  .fr-header__tools .fr-header__search {
+    max-width: 27rem;
+  }
 }
