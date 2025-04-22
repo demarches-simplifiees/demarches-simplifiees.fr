@@ -21,18 +21,20 @@ module Maintenance
 
     def process
       definitely_lost_keys = TaskLog.where("data->>'state' = ?", 'definitely lost')
+        .where.not("data ? 'notified'")
         .pluck(Arel.sql("data->>'blob_key'"))
         .uniq
 
       blob_champ_pjs = ActiveStorage::Blob.where(key: definitely_lost_keys)
         .filter { it.attachments.first&.record_type == 'Champ' }
         .flat_map { |blob| blob.attachments.map { |att| [blob, att.record] } }
+        .filter { |(_blob, champ)| champ&.public? }
 
       champ_pjs = blob_champ_pjs.map(&:second).uniq
 
       dossier_id_champs = champ_pjs.group_by { it.dossier_id }
 
-      brouillon_or_en_construction = Dossier.where(id: dossier_id_champs.keys, state: %w[brouillon en_construction])
+      brouillon_or_en_construction = Dossier.visible_by_user.where(id: dossier_id_champs.keys, state: %w[brouillon en_construction])
 
       brouillon_or_en_construction.group_by { it.user.email }.each do |to, dossiers|
         dossiers_and_champs = dossiers.map { |dossier| [dossier, dossier_id_champs[dossier.id]] }
@@ -49,7 +51,7 @@ module Maintenance
         end
       end
 
-      en_instruction = Dossier.en_instruction.where(id: dossier_id_champs.keys)
+      en_instruction = Dossier.visible_by_administration.en_instruction.where(id: dossier_id_champs.keys)
 
       # On envoie un mail à chaque premier instructeur qui suit le dossier (?)
       en_instruction.group_by { it.followers_instructeurs.first&.email }.each do |to, dossiers|
@@ -80,11 +82,12 @@ module Maintenance
       <<~TEXT
         Bonjour,<br><br>
 
-        En raison d'une erreur technique, les pièces jointes des dossiers suivants ne sont plus disponibles :
+        En raison d'une erreur technique, les pièces jointes suivantes ne sont plus disponibles :
 
         #{to_html_list(list_of_missing_pjs_and_dossier(dossiers_and_champs, link_for: :user))}
 
-        Si ce n'est déjà fait, nous vous invitons à joindre à nouveau ces fichiers.<br>
+        Nous vous invitons à joindre à nouveau ce(s) fichier(s)
+        même si un aperçu de la pièce jointe apparaît encore dans votre dossier.<br>
 
         Nous restons à votre disposition pour toute question sur #{CONTACT_EMAIL} .<br><br>
 

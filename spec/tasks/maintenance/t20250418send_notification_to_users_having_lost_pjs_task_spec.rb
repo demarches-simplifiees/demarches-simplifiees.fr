@@ -32,6 +32,9 @@ module Maintenance
           subject
 
           expect(TaskLog.pluck(:data).map { |log| log['notified'] }).to all(eq('user'))
+
+          expect(BlankMailer).to receive(:send_template).never
+          described_class.process
         end
 
         context 'when the dossier is in en_instruction' do
