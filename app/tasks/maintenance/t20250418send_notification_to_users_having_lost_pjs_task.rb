@@ -2,7 +2,9 @@
 
 module Maintenance
   class T20250418sendNotificationToUsersHavingLostPjsTask < MaintenanceTasks::Task
-    # Documentation: cette tâche modifie les données pour…
+    # Documentation: informe par email les usagers et instructeurs dont des PJ
+    # ont été perdues suite à un bug introduit dans la release 2025-03-11-01
+    # avec le storage OpenStack.
 
     no_collection
 
