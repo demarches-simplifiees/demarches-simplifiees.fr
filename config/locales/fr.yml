@@ -120,7 +120,7 @@ fr:
         content_html: "Le site Démarches simplifiées est <strong>partiellement conforme</strong> au <a href=\"https://accessibilite.numerique.gouv.fr/\">Référentiel Général d’Amélioration de l’Accessibilité (RGAA)</a> version 4.1.2 en raison des non-conformités listées ci-après."
       results:
         title: "Résultats des tests"
-        content: "L’audit réalisé en interne en juin 2023 révèle que le taux de conformité global est de 81,36% sur l’échantillon de pages analysés."
+        content: "L’audit réalisé en interne en avril 2025 révèle que le taux de conformité global est de 93,10% sur l’échantillon de pages analysés."
         programme:
           intro: "Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site grâce au "
           label: "programme d’amélioration continue de DS en matière d’accessibilité"
@@ -129,27 +129,38 @@ fr:
       no_accessible:
         title: "Contenus non accessibles"
         subtitle_one: "Non-conformités"
-        examples_html: "Liste des critères non conformes :
+        examples_html: "
+          <h4>Certains scripts ne sont pas compatibles avec les technologies d’assistance</h4>
           <ul>
-            <li>1.3 - Des alternatives textuelles d’images porteuses d’informations ne sont pas pertinentes.</li>
-            <li>3.1 - Des informations sont données uniquement par la couleur.</li>
-            <li>6.1 - Des liens ne sont pas explicites.</li>
-            <li>7.1 - Des scripts ne sont pas compatibles avec les technologies d’assistance. </li>
-            <li>7.5 - Des messages de statut ne sont pas correctement restitués par les technologies d’assistance.</li>
-            <li>8.9 - Des balises sont utilisées uniquement à des fins de présentation.</li>
-            <li>9.3 - Des listes ne sont pas correctement structurées.</li>
-            <li>10.14 - Des contenus additionnels apparaissant via les styles CSS uniquement ne peuvent pas être rendus visibles au clavier et par tout dispositif de pointage.</li>
-            <li>11.5 - Des champs de même nature ne sont pas regroupés.</li>
-            <li>11.11 - Des contrôles de saisie ne sont pas accompagnés de suggestions facilitant la correction des erreurs.</li>
-            <li>13.3 - Des documents bureautiques en téléchargement ne possèdent pas de version accessible.</li>
-          </ul>"
-        subtitle_two: "Remarques complémentaires"
-        content_html: "<p class=\"fr-mb-2w\">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>
-          <p class=\"fr-mb-2w\">La gestion de la FAQ était déléguée à un outil tiers. Elle a été réintégrée à la plateforme en mai 2024 et n’a pas encore été auditée.</p>"
+            <li>Sur la combinaison Chrome / TalkBack, le focus n'est pas capturé dans les modales.
+              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
+            <li>Sur le formulaire d'une démarche, l'intitulé du bouton permettant d'afficher la suite des erreurs n'est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
+            <li>Le bouton d'action de la combobox <em>Adresse postale</em> n'a pas d'étiquette.</li>
+            <li>Le bouton d'action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d'attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
+          </ul>
+          <h4>Certains messages de statut ne sont pas correctement restitués par les technologies d’assistance</h4>
+          <ul>
+            <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l'erreur ne soit restituée aux technologies d'assistance.</li>
+            <li>Sur le formulaire d'une démarche, la progression du téléversement d'une pièce jointe (et le message d'échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
+            <li>Sur le formulaire d'une démarche, le message d'échec de l'enregistrement automatique n'est pas restitué aux technologies d’assistance.</li>
+          </ul>
+          <h4>Certaines prises de focus sont altérées</h4>
+          <ul>
+            <li>Sur la FAQ, la visibilité de la prise de focus est altérée sur les boutons du sommaire.
+            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
+            <li>En version mobile, sur les pages d'une démarche, la visibilité de la prise de focus du lien de retour aux dossiers (ou à la page d'accueil) est altérée.</li>
+            <li>En version mobile, sur le formulaire d'une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
+          </ul>
+          <h4>Certains documents PDF ne sont pas accessibles</h4>
+          <p>Sur les pages d'une démarche, le document PDF de dématérialisation de la démarche n'est pas accessible.</p>"
+        subtitle_two: "Contenus exemptés"
+        exemption_html: "<p class=\"fr-mb-2w\">Les documents PDF, accessibles via le lien <em>Texte cadrant la demande d’information</em> présent dans le pied de pages de chaque démarche, sont fournis par l'administration en charge de la démarche.</p>"
+        subtitle_three: "Remarques complémentaires"
+        content_html: "<p class=\"fr-mb-2w\">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>"
 
       preparation:
         title: "Établissement de cette déclaration d’accessibilité"
-        intro: "Cette déclaration a été établie le 27 avril 2022. Elle a été mise à jour le 14 juin 2024."
+        intro: "Cette déclaration a été établie le 27 avril 2022. Elle a été mise à jour le 15 avril 2025."
         subtitle_one: "Technologies utilisées pour la réalisation du site"
         techno_ruby:
           label: "Ruby on Rails"
@@ -157,35 +168,37 @@ fr:
           title: "Ruby on Rails - nouvel onglet"
         subtitle_two: "Environnement de test"
         environment_intro: "Les vérifications de restitution de contenus ont été réalisées sur la base d’une combinaison fournie par la base de référence du RGAA, avec les versions suivantes :"
-        environment_one: "Firefox 111.0.1 et NVDA 2022.4"
-        environment_two: "Safari et VoiceOver (version disponible sur macOS Monterey 12.6.3)"
-        environment_three: "Edge et JAWS 2020"
-        environment_four: "Google Chrome et TalkBack 9.1"
-        environment_five: "Safari et VoiceOver (version disponible sur iOS 15.7.4)"
+        environment_one: "Chrome 134 et NVDA 2024.4.2"
+        environment_two: "Safari et VoiceOver (MacOS 15.3.2 Sequoia)"
+        environment_three: "Firefox 136 et JAWS 2024"
+        environment_four: "Chrome 134 et TalkBack 15.2 (Android 13)"
+        environment_five: "Safari et VoiceOver (iOS 18.3.2)"
         subtitle_three: "Outils pour évaluer l’accessibilité"
         tool_one: "Assistant RGAA (extension Firefox)"
         tool_two: "Web Developer (extension Firefox)"
         tool_three: "HeadingsMap (extension Firefox)"
         tool_four: "Application Colour Contrast Analyser"
-        tool_five: "Contrast Finder"
-        tool_six: "Stylus (extension Firefox)"
+        tool_five: "Stylus (extension Firefox)"
+        tool_six: "Outils de développement de Firefox"
         subtitle_four: "Pages du site ayant fait l’objet de la vérification de conformité"
-        page_one:
-          label: "Accueil"
-        page_two:
-          label: "Contact"
-        page_three:
-          label: "Mentions légales"
-        page_four:
-          label: "Déclaration d’accessibilité"
-        page_five:
-          label: "Authentification"
-        page_six: "Accueil connecté - Résultats de recherche usager"
-        page_twelve: "Création dossier - Identité"
-        page_thirteen: "Création dossier - Brouillon"
-        page_fourteen: "Dossier - Résumé"
-        page_fifteen: "Dossier - Demande"
-        page_sixteen: "Dossier - Messagerie"
+        page_one: "Accueil"
+        page_two: "Contact"
+        page_three: "Mentions légales"
+        page_four: "Déclaration d’accessibilité"
+        page_five: "Aide - Catégorie"
+        page_six: "Aide - Contenu"
+        page_six_url: "/faq/usager/comment-trouver-ma-demarche"
+        page_seven: "Création de compte"
+        page_seven_url: "/users/sign_up"
+        page_height: "Démarche - Accueil"
+        page_height_url: "/commencer/cd92-demande-amethyste-ph-v1"
+        page_nine: "Authentification"
+        page_ten: "Mot de passe oublié"
+        page_ten_url: "/users/password/new"
+        page_eleven: "Création d'un dossier - Identité"
+        page_twelve: "Création d'un dossier - Brouillon"
+        page_thirteen: "Création d'un dossier - Confirmation d'envoi"
+        page_note_html: "La démarche <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l'audit."
       contact:
         title: "Retour d’information et contact"
         intro: "Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de Démarches simplifiées pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme."
