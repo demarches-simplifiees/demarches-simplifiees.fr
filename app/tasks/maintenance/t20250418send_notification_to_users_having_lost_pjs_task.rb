@@ -6,8 +6,6 @@ module Maintenance
     # ont été perdues suite à un bug introduit dans la release 2025-03-11-01
     # avec le storage OpenStack.
 
-    no_collection
-
     include RunnableOnDeployConcern
     include StatementsHelpersConcern
 
@@ -19,57 +17,38 @@ module Maintenance
     # Vous devez définir host par défaut pour les URL absolues
     default_url_options[:host] = APPLICATION_BASE_URL
 
-    def process
-      definitely_lost_keys = TaskLog.where("data->>'state' = ?", 'definitely lost')
-        .where.not("data ? 'notified'")
-        .pluck(Arel.sql("data->>'blob_key'"))
+    def collection
+      TaskLog.where("data->>'state' = ?", 'definitely lost')
+        .where("data ? 'email'")
+        .pluck(Arel.sql("data->>'email'"))
         .uniq
+        .sort
+    end
 
-      blob_champ_pjs = ActiveStorage::Blob.where(key: definitely_lost_keys)
-        .filter { it.attachments.first&.record_type == 'Champ' }
+    def process(email)
+      task_logs = TaskLog.where("data->>'state' = ?", 'definitely lost')
+        .where("data->>'email' = ?", email)
+        .where.not("data ? 'notified'")
+
+      return if task_logs.empty?
+
+      blob_keys = task_logs.map { it.data["blob_key"] }
+
+      blob_champ_pjs = ActiveStorage::Blob.includes(:attachments).where(key: blob_keys)
+        .filter { it.attachments.first&.record_type == 'Champ' && it.attachments.first&.record&.public? }
         .flat_map { |blob| blob.attachments.map { |att| [blob, att.record] } }
-        .filter { |(_blob, champ)| champ&.public? }
 
-      champ_pjs = blob_champ_pjs.map(&:second).uniq
+      champ_pjs = blob_champ_pjs.map(&:second).uniq.sort_by(&:id)
 
       dossier_id_champs = champ_pjs.group_by { it.dossier_id }
 
-      brouillon_or_en_construction = Dossier.visible_by_user.where(id: dossier_id_champs.keys, state: %w[brouillon en_construction])
-
+      brouillon_or_en_construction = Dossier.visible_by_user.includes(:user).where(id: dossier_id_champs.keys, state: %w[brouillon en_construction])
       brouillon_or_en_construction.group_by { it.user.email }.each do |to, dossiers|
         dossiers_and_champs = dossiers.map { |dossier| [dossier, dossier_id_champs[dossier.id]] }
         send_mail(to:, body: user_body_email(dossiers_and_champs))
-
-        blobs = dossiers.map(&:id).map do |dossier_id|
-          dossier_id_champs[dossier_id]
-            .map { |c| blob_champ_pjs.filter { |_, champ| champ == c }.map(&:first) }
-        end.flatten.uniq
-
-        blobs.each do |blob|
-          TaskLog.where("data->>'blob_key' = ?", blob.key)
-            .update_all(%(data = jsonb_set(data, '{notified}', '"user"')))
-        end
       end
 
-      en_instruction = Dossier.visible_by_administration.en_instruction.where(id: dossier_id_champs.keys)
-
-      # On envoie un mail à chaque premier instructeur qui suit le dossier (?)
-      en_instruction.group_by { it.followers_instructeurs.first&.email }.each do |to, dossiers|
-        next if to.nil?
-
-        dossiers_and_champs = dossiers.map { |dossier| [dossier, dossier_id_champs[dossier.id]] }
-        send_mail(to:, body: instructeur_body_email(dossiers_and_champs))
-
-        blobs = dossiers.map(&:id).map do |dossier_id|
-          dossier_id_champs[dossier_id]
-            .map { |c| blob_champ_pjs.filter { |_, champ| champ == c }.map(&:first) }
-        end.flatten.uniq
-
-        blobs.each do |blob|
-          TaskLog.where("data->>'blob_key' = ?", blob.key)
-            .update_all(%(data = jsonb_set(data, '{notified}', '"instructeur"')))
-        end
-      end
+      task_logs.update_all(%(data = jsonb_set(data, '{notified}', '"user"')))
     end
 
     def send_mail(to:, body:)
@@ -88,22 +67,6 @@ module Maintenance
 
         Nous vous invitons à joindre à nouveau ce(s) fichier(s)
         même si un aperçu de la pièce jointe apparaît encore dans votre dossier.<br>
-
-        Nous restons à votre disposition pour toute question sur #{CONTACT_EMAIL} .<br><br>
-
-        Nous vous prions de nous excuser pour la gêne occasionnée par cet incident.
-      TEXT
-    end
-
-    def instructeur_body_email(dossiers_and_champs)
-      <<~TEXT
-        Bonjour,<br><br>
-
-        En raison d'une erreur technique, les pièces jointes des dossiers suivants ne sont plus disponibles :
-
-        #{to_html_list(list_of_missing_pjs_and_dossier(dossiers_and_champs, link_for: :instructeur))}
-
-        Si ces pièces sont toujours nécessaires au traitement du dossier, pourriez-vous recontacter les usagers par la messagerie pour leur demander de les retransmettre ?<br><br>
 
         Nous restons à votre disposition pour toute question sur #{CONTACT_EMAIL} .<br><br>
 
