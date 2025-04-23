@@ -89,7 +89,17 @@ module Maintenance
         end
 
         dossier_link = tag.a("dossier Nº #{number_with_delimiter(dossier.id)}", href: url)
-        "#{champs.map(&:libelle).join(', ')} du #{dossier_link} sur la démarche #{dossier.procedure.libelle}"
+        "#{safe_champs_libelles(champs).join(', ')} du #{dossier_link} sur la démarche #{dossier.procedure.libelle}"
+      end
+    end
+
+    def safe_champs_libelles(champs)
+      champs.filter_map do |champ|
+        begin
+          champ.libelle
+        rescue
+          # Ignore error like Type De Champ 3990816 not found in Revision 168536
+        end
       end
     end
 
