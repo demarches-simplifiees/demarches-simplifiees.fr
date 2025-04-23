@@ -515,6 +515,34 @@ describe TypeDeChamp do
 
       it { expect(subject).to eq('') }
     end
+
+    context 'text -> formatted' do
+      let(:last_write_type_champ) { :text }
+      let(:type_champ) { :formatted }
+
+      it { expect(subject).to eq('hello') }
+    end
+
+    context 'formatted -> text' do
+      let(:last_write_type_champ) { :formatted }
+      let(:type_champ) { :text }
+
+      it { expect(subject).to eq('hello') }
+    end
+
+    context 'formatted -> textarea' do
+      let(:last_write_type_champ) { :formatted }
+      let(:type_champ) { :textarea }
+
+      it { expect(subject).to eq('hello') }
+    end
+
+    context 'text -> textarea' do
+      let(:last_write_type_champ) { :text }
+      let(:type_champ) { :textarea }
+
+      it { expect(subject).to eq('hello') }
+    end
   end
 
   describe '#humanized_conditionable_types_by_category' do
