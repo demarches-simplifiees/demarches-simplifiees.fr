@@ -65,6 +65,8 @@ export class BatchOperationController extends ApplicationController {
     if (button) {
       button.focus();
     }
+
+    this.updateCheckboxCount();
   }
 
   onSubmitInstruction(event: { srcElement: HTMLInputElement }) {
@@ -157,17 +159,26 @@ export class BatchOperationController extends ApplicationController {
   updateCheckboxCount() {
     if (!this.checkboxCountTarget) return;
 
-    const checkedCount = this.inputTargets.filter(
-      (input) => input.checked
-    ).length;
+    // Use hidden input value if present
+    const hiddenInput = document.querySelector<HTMLInputElement>(
+      '#input_multiple_ids_batch_operation'
+    );
 
-    const label = `${checkedCount} dossier${checkedCount > 1 ? 's' : ''} sélectionné${checkedCount > 1 ? 's' : ''}`;
+    let count = 0;
 
+    if (hiddenInput && hiddenInput.value.trim() !== '') {
+      const ids = hiddenInput.value.split(',').filter((id) => id.trim() !== '');
+      count = ids.length;
+    } else {
+      // fallback to visible checked checkboxes
+      count = this.inputTargets.filter((input) => input.checked).length;
+    }
+
+    const label = `${count} dossier${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`;
     this.checkboxCountTarget.textContent = label;
 
     const classList = this.checkboxCountTarget.classList;
-
-    if (checkedCount > 0) {
+    if (count > 0) {
       classList.add('text-high-blue', 'font-weight-bold');
     } else {
       classList.remove('text-high-blue', 'font-weight-bold');

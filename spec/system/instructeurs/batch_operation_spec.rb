@@ -101,10 +101,10 @@ describe 'BatchOperation a dossier:', js: true do
       # click on check_all make the notice appear
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
       expect(page).to have_selector('#js_batch_select_more')
-      expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner tous les 3 dossiers.')
+      expect(page).to have_content('Les 2 dossiers de cette page sont sélectionnés. Sélectionner la totalité des 3 dossiers.')
 
       # click on selection link fill checkbox value with dossier_ids
-      click_on("Sélectionner tous les 3 dossiers")
+      click_on("Sélectionner la totalité des 3 dossiers")
       expect(page).to have_content('3 dossiers sont sélectionnés. Effacer la sélection ')
       expect(find_field("batch_operation[dossier_ids][]", type: :hidden).value).to eq "#{dossier_3.id},#{dossier_2.id},#{dossier_1.id}"
 
@@ -116,7 +116,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # click on check_all + notice link and submit
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check
-      click_on("Sélectionner tous les 3 dossiers")
+      click_on("Sélectionner la totalité des 3 dossiers")
 
       accept_alert do
         click_on "Suivre les dossiers"
