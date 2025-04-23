@@ -13,6 +13,7 @@ module Maintenance
     include ActionView::Helpers::UrlHelper
     include ActionView::Helpers::SanitizeHelper
     include Rails.application.routes.url_helpers
+    include DossierHelper
 
     # Vous devez définir host par défaut pour les URL absolues
     default_url_options[:host] = APPLICATION_BASE_URL
@@ -45,7 +46,7 @@ module Maintenance
       brouillon_or_en_construction = Dossier.visible_by_user.includes(:user).where(id: dossier_id_champs.keys, state: %w[brouillon en_construction])
       brouillon_or_en_construction.group_by { it.user.email }.each do |to, dossiers|
         dossiers_and_champs = dossiers.map { |dossier| [dossier, dossier_id_champs[dossier.id]] }
-        send_mail(to:, body: user_body_email(dossiers_and_champs))
+        send_mail(to:, body: user_body_email(to, dossiers_and_champs))
       end
 
       task_logs.update_all(%(data = jsonb_set(data, '{notified}', '"user"')))
@@ -57,39 +58,79 @@ module Maintenance
       BlankMailer.send_template(to:, subject:, title:, body:).deliver_later
     end
 
-    def user_body_email(dossiers_and_champs)
+    def user_body_email(to, dossiers_and_champs)
+      dossiers_by_state = dossiers_and_champs.group_by { |dossier, _| dossier.state }
+
       <<~TEXT
         Bonjour,<br><br>
 
         En raison d'une erreur technique, les pièces jointes suivantes ne sont plus disponibles :
 
-        #{to_html_list(list_of_missing_pjs_and_dossier(dossiers_and_champs, link_for: :user))}
+        #{to_html_list(format_missing_files(dossiers_and_champs), style: "margin-bottom: 0.5rem")}
 
-        Nous vous invitons à joindre à nouveau ce(s) fichier(s)
-        même si un aperçu de la pièce jointe apparaît encore dans votre dossier.<br>
+        <br><br>
 
-        Nous restons à votre disposition pour toute question sur #{CONTACT_EMAIL} .<br><br>
+        Nous vous invitons à joindre à nouveau ce(s) fichier(s) en suivant les instructions suivantes,
+        même si un aperçu de la pièce jointe apparaît encore dans votre dossier :<br><br>
 
-        Nous vous prions de nous excuser pour la gêne occasionnée par cet incident.
+        #{format_instructions(dossiers_by_state)}
+
+        <br><br>
+
+        Nous restons à votre disposition pour toute question sur #{CONTACT_EMAIL} et vous prions
+        de nous excuser pour la gêne occasionnée par cet incident.
       TEXT
     end
 
-    def list_of_missing_pjs_and_dossier(dossiers_and_champs, link_for:)
+    private
+
+    def format_missing_files(dossiers_and_champs)
       dossiers_and_champs.map do |dossier, champs|
-        url = if link_for == :user
-          Rails.application.routes.url_helpers.dossier_url(dossier)
+        url = Rails.application.routes.url_helpers.dossier_url(dossier)
+        dossier_link = tag.a("Dossier n° #{number_with_delimiter(dossier.id)}", href: url)
+
+        html = "#{dossier_link} (#{dossier_display_state(dossier.state, lower: true)}) - #{dossier.procedure.libelle} : "
+
+        html += if champs.size == 1
+          champs.first.libelle
         else
-          Rails.application.routes.url_helpers.instructeur_dossier_url(dossier.procedure.id, dossier)
+          to_html_list(champs.map(&:libelle))
         end
 
-        dossier_link = tag.a("dossier Nº #{number_with_delimiter(dossier.id)}", href: url)
-        "#{champs.map(&:libelle).join(', ')} du #{dossier_link} sur la démarche #{dossier.procedure.libelle}"
+        html
       end
     end
 
-    def to_html_list(messages)
+    def format_instructions(dossiers_by_state)
+      instructions = []
+
+      if dossiers_by_state['brouillon'].present?
+        instructions << <<~TEXT
+          <u>Pour un dossier en brouillon :</u>
+          <ul>
+            <li>Pour chaque pièce jointe, cliquez sur la corbeille puis réenvoyez votre document</li>
+            <li>Déposez votre dossier quand vous le souhaitez</li>
+          </ul>
+        TEXT
+      end
+
+      if dossiers_by_state['en_construction'].present?
+        instructions << <<~TEXT
+          <u>Pour un dossier en construction :</u>
+          <ul>
+            <li>Cliquez sur <em>Modifier mon dossier</em></li>
+            <li>Pour chaque pièce jointe, cliquez sur la corbeille puis réenvoyez votre document</li>
+            <li>Cliquez sur <em>Déposer les modifications</em> pour redéposer le dossier</li>
+          </ul>
+        TEXT
+      end
+
+      instructions.join("<br>")
+    end
+
+    def to_html_list(messages, style: nil)
       messages
-        .map { |message| tag.li(sanitize(message, scrubber: Sanitizers::MailScrubber.new)) }
+        .map { |message| tag.li(sanitize(message, scrubber: Sanitizers::MailScrubber.new), style:) }
         .then { |lis| tag.ul(lis.reduce(&:+)) }
     end
   end
