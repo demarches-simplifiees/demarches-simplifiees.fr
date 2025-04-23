@@ -759,13 +759,23 @@ describe ProcedureRevision do
         expect(draft_revision.validate(:ineligibilite_rules_editor)).to be_truthy
       end
     end
+
     context 'when ineligibilite_rules are invalid on simple champ' do
       let(:ineligibilite_rules) { ds_eq(constant(true), constant(1)) }
-      it 'is invalid' do
+      it 'is invalid when rule is incorrect' do
         expect(draft_revision.validate(:publication)).to be_falsey
         expect(draft_revision.validate(:ineligibilite_rules_editor)).to be_falsey
       end
     end
+
+    context 'when ineligibilite_rules are invalid on simple champ' do
+      let(:ineligibilite_rules) { empty_operator(empty, empty) }
+      it 'is invalid when rule is empty' do
+        expect(draft_revision.validate(:publication)).to be_falsey
+        expect(draft_revision.validate(:ineligibilite_rules_editor)).to be_falsey
+      end
+    end
+
     context 'when ineligibilite_rules are invalid on repetition champ' do
       let(:ineligibilite_rules) { ds_eq(constant(true), constant(1)) }
       let(:procedure) { create(:procedure, types_de_champ_public:) }

@@ -542,9 +542,12 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def ineligibilite_rules_are_valid?
-    if ineligibilite_rules
-      ineligibilite_rules.errors(types_de_champ_for(scope: :public).to_a)
-        .each { errors.add(:ineligibilite_rules, :invalid) }
+    return unless ineligibilite_rules
+
+    rules_errors = ineligibilite_rules.errors(types_de_champ_for(scope: :public).to_a)
+
+    if rules_errors.any? || ineligibilite_rules.type == :empty
+      errors.add(:ineligibilite_rules, :invalid)
     end
   end
 
