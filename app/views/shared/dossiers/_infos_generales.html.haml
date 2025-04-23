@@ -22,7 +22,7 @@
     - if dossier.motivation.present?
       = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
         - c.with_value do
-          = simple_format dossier.motivation
+          = render SimpleFormatComponent.new(dossier.motivation, allow_a: false)
 
     - if dossier.attestation.present? && dossier.attestation.pdf.attached?
       = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|

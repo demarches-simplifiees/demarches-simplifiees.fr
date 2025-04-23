@@ -14,7 +14,7 @@
             Demandeur :
             %span.email.font-weight-normal= safe_claimant_email(@avis.claimant)
             %span.fr-text--xs.fr-text-mention--grey.pull-right Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
-          %p.introduction= @avis.introduction
+          = render SimpleFormatComponent.new(@avis.introduction, allow_a: false)
 
           - if @avis.introduction_file.attached?
             = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
@@ -26,7 +26,7 @@
               .fr-form-group
                 %fieldset.fr-fieldset.fr-fieldset--inline
                   %legend#radio-inline-legend.fr-fieldset__legend.fr-text--regular
-                    = @avis.question_label
+                    = render SimpleFormatComponent.new(@avis.question_label, allow_a: false)
                   .fr-fieldset__content
                     .fr-radio-group
                       = f.radio_button :question_answer, true

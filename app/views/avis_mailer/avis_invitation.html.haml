@@ -19,8 +19,9 @@
 %p
   = "#{@avis.claimant.email} vous a écrit :"
   %br
-%p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
-  = @avis.introduction
+%div{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
+  = render SimpleFormatComponent.new(@avis.introduction, allow_a: false)
+
 
 %p
   = round_button("Donner votre avis", @url, :primary)

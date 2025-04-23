@@ -18,9 +18,10 @@
             = t('demande_envoyee_le', scope: 'views.shared.avis', date: l(avis.created_at, format: '%d/%m/%y à %H:%M'))
 
         .border-left
-          %p= avis.introduction
+          = render SimpleFormatComponent.new(avis.introduction, allow_a: false)
+
           - if avis.question_label
-            %p= avis.question_label
+            = render SimpleFormatComponent.new(avis.question_label, allow_a: false)
 
         %h2.fr-text--sm.fr-mt-5w.fr-mb-2w
           %span.fr-icon-message-2-line.fr-mr-1v
