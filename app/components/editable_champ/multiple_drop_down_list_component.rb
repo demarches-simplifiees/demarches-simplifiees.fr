@@ -19,7 +19,7 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
       selected_keys: @champ.selected_options,
       items:,
       value_separator: false,
-      'aria-labelledby': @champ.labelledby_id
+      max_items_alert: t('.exceed_options_threshold_alert')
     )
   end
 

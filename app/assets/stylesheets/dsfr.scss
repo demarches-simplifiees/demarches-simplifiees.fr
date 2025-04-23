@@ -143,6 +143,11 @@ input[type='radio'] {
 .fr-badge--lowercase {
   text-transform: lowercase;
 }
+// We use the DSFR badge design to highlight a warning in the combobox
+// but as it is a two sentences warning, we want to keep the original case
+.fr-badge--no-text-transform {
+  text-transform: none;
+}
 
 // Caption is bold, but all-procedures table use fr-tag in caption
 .fr-table caption .fr-tag {

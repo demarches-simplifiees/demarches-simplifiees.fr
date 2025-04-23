@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Champs::MultipleDropDownListChamp < Champ
+  delegate :exceed_options_threshold?, to: :type_de_champ
   validate :values_are_in_options, if: -> { value.present? && validate_champ_value? }
 
   THRESHOLD_NB_OPTIONS_AS_CHECKBOX = 5

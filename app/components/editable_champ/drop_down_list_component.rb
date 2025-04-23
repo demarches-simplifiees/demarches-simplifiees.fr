@@ -41,7 +41,7 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
       selected_key: @champ.selected,
       items:,
       empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil,
-      'aria-labelledby': @champ.labelledby_id
+      max_items_alert: t('.exceed_options_threshold_alert')
     )
   end
 
