@@ -1148,6 +1148,7 @@ class Dossier < ApplicationRecord
     followers_instructeurs.each do |instructeur|
       if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
         instructeur.unfollow(self)
+        DossierNotification.destroy_notifications_instructeur_of_dossier(instructeur, self)
         if visible_by_administration?
           DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
         end
