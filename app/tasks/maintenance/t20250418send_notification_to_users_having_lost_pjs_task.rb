@@ -94,10 +94,20 @@ module Maintenance
         html += if champs.size == 1
           champs.first.libelle
         else
-          to_html_list(champs.map(&:libelle))
+          to_html_list(safe_champs_libelles(champs))
         end
 
         html
+      end
+    end
+
+    def safe_champs_libelles(champs)
+      champs.filter_map do |champ|
+        begin
+          champ.libelle
+        rescue
+          # Ignore error like Type De Champ 3990816 not found in Revision 168536
+        end
       end
     end
 
