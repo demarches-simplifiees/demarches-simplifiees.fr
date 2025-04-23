@@ -102,6 +102,8 @@ class Columns::ChampColumn < Column
       parse_datetime(value)&.to_datetime
     when ['datetime', 'date'] # may lose some data, but who cares ?
       parse_datetime(value)&.to_date
+    when ['formatted', 'text'], ['text', 'formatted'], ['text', 'textarea'], ['formatted', 'textarea']
+      value
     else
       nil
     end

@@ -63,6 +63,24 @@ describe Columns::ChampColumn do
     context 'with cast' do
       def column(label) = procedure.find_column(label:)
 
+      context 'from a text' do
+        let(:champ) { Champs::TextChamp.new(value: 'hello') }
+
+        it do
+          expect(column('formatted').value(champ)).to eq('hello')
+          expect(column('textarea').value(champ)).to eq('hello')
+        end
+      end
+
+      context 'from a formatted' do
+        let(:champ) { Champs::FormattedChamp.new(value: 'hello') }
+
+        it do
+          expect(column('text').value(champ)).to eq('hello')
+          expect(column('textarea').value(champ)).to eq('hello')
+        end
+      end
+
       context 'from a integer_number' do
         let(:champ) { Champs::IntegerNumberChamp.new(value: '42') }
 
