@@ -9,7 +9,7 @@ describe TypesDeChampEditor::InfoReferentielComponent, type: :component do
 
     before do
       allow(ENV).to receive(:fetch).and_call_original
-      allow(ENV).to receive(:fetch).with('API_WHITELIST', '').and_return(whitelist.join(','))
+      allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
       referentiel
       type_de_champ
       Flipper.enable_actor(:referentiel_type_de_champ, procedure)

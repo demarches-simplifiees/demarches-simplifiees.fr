@@ -7,15 +7,20 @@
       Comment interroger votre référentiel ?
 
     - if @referentiel.type == 'Referentiels::APIReferentiel'
-      = render Dsfr::InputComponent.new(form:, attribute: :url, opts: { data: { controller: 'autosubmit' } })
-      - if @referentiel.url.blank? || @referentiel.errors.where(:url).present?
-        = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
-          - c.with_body do
-            %p
-              %strong
-                %span.fr-text--bold= "Pour des raisons de cyber/sécuritées, seuls les endpoints terminant .gouv.fr seront automatiquement autorisées (pas les .beta.gouv.fr). Les autres endpoints seront soumis à une vérification manuelle de notre part, merci de nous en faire la demande par mail à "
-                = mail_to CONTACT_EMAIL, CONTACT_EMAIL, class: 'fr-link'
-                = "."
+      = render Dsfr::InputComponent.new(form:, attribute: :url, opts: { data: { controller: 'autosubmit' } }) do |c|
+        - c.with_describedby do
+          - if @referentiel.url.blank? || @referentiel.errors.where(:url).present?
+            = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
+              - c.with_body do
+                %p
+                  Pour des raisons de sécurité,
+                  %strong seuls les domaines se terminant par .gouv.fr sont automatiquement autorisés
+                  (à l’exception de .beta.gouv.fr). Les autres domaines sont soumis à une validation manuelle de notre part, merci de nous en faire la demande par mail à "
+                  = mail_to CONTACT_EMAIL, CONTACT_EMAIL, class: 'fr-link'
+                  = "."
+          - else
+            .fr-mt-1w.fr-message.fr-message--info Attention si vous appelez une API qui renvoie de la donnée personnelle, vous devez en informer votre DPO.
+
 
     - elsif @referentiel.type == 'Referentiels::CsvReferentiel'
       .fr-input-group

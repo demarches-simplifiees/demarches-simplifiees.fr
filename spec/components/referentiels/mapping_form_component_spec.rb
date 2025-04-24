@@ -9,7 +9,7 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
   let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
   before do
     allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('API_WHITELIST', '').and_return(whitelist.join(','))
+    allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
   end
   describe 'render' do
     delegate :url_helpers, to: :routes

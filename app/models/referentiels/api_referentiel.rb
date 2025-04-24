@@ -6,7 +6,7 @@ class Referentiels::APIReferentiel < Referentiel
     autocomplete: 'autocomplete'
   }
   validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
-  validate :url_in_whitelist?
+  validate :url_allowed?
 
   before_save :name_as_url
 
@@ -37,18 +37,17 @@ class Referentiels::APIReferentiel < Referentiel
     self.name = url
   end
 
-  def url_in_whitelist?
+  def url_allowed?
     return if url.blank?
 
     uri = Addressable::URI.parse(url)
+    return if uri.tld == "gouv.fr" && uri.domain != "beta.gouv.fr"
 
-    return if uri.host && uri.host.match?(/\A(?:.*\.)?gouv\.fr\z/) && !uri.host.match?(/\A(?:.*\.)?beta\.gouv\.fr\z/)
-
-    whitelist = ENV.fetch('API_WHITELIST', '').split(',')
+    whitelist = ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',')
     if whitelist.none? { |whitelisted_url| uri.host && whitelisted_url.include?(uri.host) }
-      errors.add(:url, "L'URL doit être dans la liste blanche")
+      errors.add(:url, "L'URL doit être autorisée par notre équipe, veuillez nous contacter")
     end
-  rescue URI::InvalidURIError
+  rescue URI::InvalidURIError, PublicSuffix::DomainInvalid
     errors.add(:url, "L'URL est invalide")
   end
 end

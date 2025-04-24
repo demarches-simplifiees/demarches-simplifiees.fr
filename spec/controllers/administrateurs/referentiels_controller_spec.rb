@@ -5,7 +5,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
   before do
     sign_in(procedure.administrateurs.first.user)
     allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('API_WHITELIST', '').and_return(whitelist.join(','))
+    allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
   end
 
   let(:stable_id) { 123 }
