@@ -91,10 +91,15 @@ module Maintenance
 
         html = "#{dossier_link} (#{dossier_display_state(dossier.state, lower: true)}) - #{dossier.procedure.libelle} : "
 
-        html += if champs.size == 1
-          champs.first.libelle
+        if champs.size == 1
+          begin
+            html += champs.first.libelle
+          rescue
+            # Ignore error like Type De Champ 3990816 not found in Revision 168536
+            html = "#{dossier_link} (#{dossier_display_state(dossier.state, lower: true)}) - #{dossier.procedure.libelle}"
+          end
         else
-          to_html_list(safe_champs_libelles(champs))
+          html += to_html_list(safe_champs_libelles(champs))
         end
 
         html
