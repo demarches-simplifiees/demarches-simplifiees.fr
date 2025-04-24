@@ -12,6 +12,8 @@ module Instructeurs
       avis = Avis.find(params[:id])
       if avis.revoke_by!(current_instructeur)
         flash.notice = "#{avis.expert.email} ne peut plus donner son avis sur ce dossier."
+        DossierNotification.destroy_notifications_by_dossier_and_type(avis.dossier, :attente_avis) if avis.dossier.avis.without_answer.empty?
+
         redirect_back(fallback_location: avis_instructeur_dossier_path(avis.procedure, params[:statut], avis.dossier))
       end
     end
