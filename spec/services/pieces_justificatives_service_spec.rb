@@ -222,7 +222,7 @@ describe PiecesJustificativesService do
         context 'with export_template' do
           let(:export_template) { default_export_template }
 
-          it { expect(subject).to be_empty }
+          it { expect(subject).to match_array(dossier.attestation.pdf.attachment) }
         end
       end
 
