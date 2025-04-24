@@ -25,7 +25,7 @@ fr:
       pending_correction:
         for_instructeur: "en attente"
         for_user: "à corriger"
-        resolved: corrigé
+        resolved: "Dossier corrigé"
       traitement:
         state: "État"
       traitement/state:
