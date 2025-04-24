@@ -110,8 +110,13 @@ module DossierHelper
     tag.span(status_text, class: "fr-badge #{status_class} ")
   end
 
-  def pending_correction_badge(for_profile, html_class: nil)
-    tag.span(Dossier.human_attribute_name("pending_correction.#{for_profile}"), class: ['fr-badge fr-badge--sm fr-badge--warning super', html_class], role: 'status')
+  def pending_correction_badge(profile, html_class: nil)
+    tag.span(Dossier.human_attribute_name("pending_correction.#{profile}"), class:
+      class_names(
+        "fr-badge fr-badge--sm",
+        "fr-badge--warning super" => profile == :for_user,
+        html_class => true
+      ), role: 'status')
   end
 
   def correction_resolved_badge(html_class: nil)
