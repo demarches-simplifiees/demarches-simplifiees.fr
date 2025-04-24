@@ -467,6 +467,7 @@ en:
             request: "Request"
             mailbox: "Mailbox"
             rendez_vous: "Appointment"
+            dossier_number: "File number %{dossier_id}"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"

@@ -478,6 +478,7 @@ fr:
             request: "Demande"
             mailbox: "Messagerie"
             rendez_vous: "Rendez-vous"
+            dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
