@@ -950,9 +950,7 @@ en:
         sva: "Silence Vaut Accord"
         svr: "Silence Vaut Rejet"
     procedure_description:
-      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mins."
-      estimated_fill_duration_title: What is the procedure estimated fill time ?
-      estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} mins. This period may vary depending on the options you choose"
+      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mins. (may vary depending on the options)"
       usual_traitement_time_title: What are the processing times for this procedure?
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation
