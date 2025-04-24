@@ -194,7 +194,7 @@ describe 'The routing with rules', js: true do
     sign_in_with litteraire_user.email, password
 
     click_on litteraire_user.dossiers.first.procedure.libelle
-    click_on 'Modifier mon dossier'
+    click_on 'Modifier le dossier'
 
     fill_in litteraire_user.dossiers.first.project_champs_public.first.libelle, with: 'some value'
     wait_for_autosave
@@ -304,7 +304,7 @@ describe 'The routing with rules', js: true do
     login_as user, scope: :user
     visit dossiers_path
     click_on user.dossiers.first.procedure.libelle
-    click_on "Modifier mon dossier"
+    click_on "Modifier le dossier"
 
     choose(new_group, allow_label_click: true)
     wait_for_autosave

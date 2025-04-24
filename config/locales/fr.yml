@@ -509,7 +509,7 @@ fr:
           title: "Votre prochain rendez-vous"
         demande:
           edit_dossier: Modifier le dossier
-          edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
+          edit_dossier_title: "Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           prompt: (N° de dossier, nom / prénom, mots-clés)
