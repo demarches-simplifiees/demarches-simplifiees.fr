@@ -497,7 +497,7 @@ en:
         rendez_vous:
           title: "Your next appointment"
         demande:
-          edit_dossier: Edit file
+          edit_dossier: Edit my file
           edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
         search:
           search_file: Search a file (File number, keywords)
