@@ -10,8 +10,6 @@
       = tags_notification(notifications)
       - if dossier.pending_correction?
         = pending_correction_badge(:for_instructeur)
-      - elsif dossier.en_construction? && dossier.last_correction_resolved?
-        = correction_resolved_badge
       = render Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: dossier.procedure, with_label: true)
 
   = render partial: 'instructeurs/dossiers/expiration_banner', locals: { dossier: }

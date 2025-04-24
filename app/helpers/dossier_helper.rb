@@ -92,7 +92,7 @@ module DossierHelper
     status_text = dossier_display_state(state, lower: true)
     tag.span status_text, role: 'status', class: class_names(
       'fr-badge fr-badge--sm' => true,
-      'fr-badge--no-icon' => [Dossier.states.fetch(:en_instruction), Dossier.states.fetch(:accepte)].exclude?(state),
+      'fr-badge--no-icon' => Dossier.states.fetch(:accepte).exclude?(state),
       class_badge_state(state) => true,
       alignment_class => true
     )
