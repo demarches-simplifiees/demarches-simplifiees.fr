@@ -24,6 +24,7 @@ module Instructeurs
     after_action :mark_pieces_jointes_as_read, only: [:pieces_jointes]
     after_action -> { destroy_notification(:dossier_modifie) }, only: [:show], if: -> { @notifications.any?(&:dossier_modifie?) }
     after_action -> { destroy_notification(:message_usager) }, only: [:messagerie], if: -> { @notifications.any?(&:message_usager?) }
+    after_action -> { destroy_notification(:annotation_instructeur) }, only: [:annotations_privees], if: -> { @notifications.any?(&:annotation_instructeur?) }
 
     def extend_conservation
       dossier.extend_conservation(1.month)
