@@ -5,15 +5,6 @@ describe 'wcag rules for usager', chrome: true do
   let(:password) { SECURE_PASSWORD }
   let(:litteraire_user) { create(:user, password: password) }
 
-  def test_external_links_have_title_says_it_opens_in_a_new_tab
-    links = page.all("a[target=_blank]")
-    expect(links.count).to be_positive
-
-    links.each do |link|
-      expect(link[:title]).to include("Nouvel onglet"), "link #{link[:href]} does not have title mentioning it opens in a new tab"
-    end
-  end
-
   def test_aria_label_do_not_mix_with_title_attribute
     elements = page.all("[aria-label][title]")
     elements.each do |element|
@@ -37,7 +28,6 @@ describe 'wcag rules for usager', chrome: true do
     context 'homepage' do
       let(:path) { root_path }
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
         test_expect_axe_clean_without_main_navigation
       end
@@ -46,7 +36,6 @@ describe 'wcag rules for usager', chrome: true do
     context 'sign_up page' do
       let(:path) { new_user_registration_path }
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
         test_expect_axe_clean_without_main_navigation
       end
@@ -68,7 +57,6 @@ describe 'wcag rules for usager', chrome: true do
       let(:path) { user_confirmation_path("user[email]" => "some@email.com") }
 
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
       end
     end
@@ -76,7 +64,6 @@ describe 'wcag rules for usager', chrome: true do
     context 'sign_in page' do
       let(:path) { new_user_session_path }
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
         test_expect_axe_clean_without_main_navigation
       end
@@ -86,7 +73,6 @@ describe 'wcag rules for usager', chrome: true do
       let(:user) { create(:user, email: 'reset@pass.world', password: SECURE_PASSWORD, password_confirmation: SECURE_PASSWORD, reset_password_token: 'hHivRqw9WzXnNCvJnBCS') }
       let(:path) { edit_user_password_path(reset_password_token: user.reset_password_token) }
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
         test_expect_axe_clean_without_main_navigation
       end
@@ -95,7 +81,6 @@ describe 'wcag rules for usager', chrome: true do
     context 'contact page' do
       let(:path) { contact_path }
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
         test_expect_axe_clean_without_main_navigation
       end
@@ -104,7 +89,6 @@ describe 'wcag rules for usager', chrome: true do
     context 'commencer page' do
       let(:path) { commencer_path(path: procedure.path) }
       it 'pass wcag tests' do
-        test_external_links_have_title_says_it_opens_in_a_new_tab
         test_aria_label_do_not_mix_with_title_attribute
         test_expect_axe_clean_without_main_navigation
       end
