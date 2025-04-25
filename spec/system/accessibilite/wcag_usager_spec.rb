@@ -82,6 +82,16 @@ describe 'wcag rules for usager', chrome: true do
       end
     end
 
+    context 'password edit page' do
+      let(:user) { create(:user, email: 'reset@pass.world', password: SECURE_PASSWORD, password_confirmation: SECURE_PASSWORD, reset_password_token: 'hHivRqw9WzXnNCvJnBCS') }
+      let(:path) { edit_user_password_path(reset_password_token: user.reset_password_token) }
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
+    end
+
     context 'contact page' do
       let(:path) { contact_path }
       it 'pass wcag tests' do

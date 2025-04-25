@@ -52,4 +52,8 @@ class PasswordComplexityComponent < ApplicationComponent
       return t(".title.strong")
     end
   end
+
+  def heading_level
+    controller_name == 'passwords' && action_name == 'edit' ? 'h2' : 'h3'
+  end
 end
