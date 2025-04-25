@@ -54,6 +54,13 @@ class PasswordComplexityComponent < ApplicationComponent
   end
 
   def heading_level
-    controller_name == 'passwords' && action_name == 'edit' ? 'h2' : 'h3'
+    case [controller_name, action_name]
+    in ['passwords', 'edit']
+      'h2'
+    in ['avis', 'sign_up']
+      'h2'
+    else
+      'h3'
+    end
   end
 end

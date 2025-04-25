@@ -78,6 +78,17 @@ describe 'wcag rules for usager', chrome: true do
       end
     end
 
+    context 'password edit for experts' do
+      let(:user) { create(:user, email: 'reset@pass.world', password: SECURE_PASSWORD, password_confirmation: SECURE_PASSWORD, reset_password_token: 'hHivRqw9WzXnNCvJnBCS') }
+      let(:procedure) { create(:procedure, :published) }
+      let(:avis) { create(:avis, dossier: create(:dossier, procedure: procedure), expert: nil, email: 'k@thx.bye') }
+      let(:path) { sign_up_expert_avis_path(procedure_id: procedure.id, id: avis.id, email: avis.email) }
+      it 'pass wcag tests' do
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
+    end
+
     context 'contact page' do
       let(:path) { contact_path }
       it 'pass wcag tests' do
