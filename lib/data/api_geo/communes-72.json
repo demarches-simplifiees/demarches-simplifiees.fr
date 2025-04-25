@@ -1128,7 +1128,7 @@
     "postal_code": "72200"
   },
   {
-    "name": "Laigné-en-Belin",
+    "name": "Laigné-Saint-Gervais",
     "code": "72155",
     "epci_code": "247200447",
     "departement_code": "72",
@@ -2112,14 +2112,6 @@
     "postal_code": "72120"
   },
   {
-    "name": "Saint-Gervais-en-Belin",
-    "code": "72287",
-    "epci_code": "247200447",
-    "departement_code": "72",
-    "region_code": "52",
-    "postal_code": "72220"
-  },
-  {
     "name": "Sainte-Jamme-sur-Sarthe",
     "code": "72289",
     "epci_code": "200068963",
@@ -2190,14 +2182,6 @@
     "departement_code": "72",
     "region_code": "52",
     "postal_code": "72170"
-  },
-  {
-    "name": "Saint-Mars-de-Locquenay",
-    "code": "72298",
-    "epci_code": "200072684",
-    "departement_code": "72",
-    "region_code": "52",
-    "postal_code": "72440"
   },
   {
     "name": "Saint-Mars-d’Outillé",
@@ -2824,7 +2808,7 @@
     "postal_code": "72210"
   },
   {
-    "name": "Volnay",
+    "name": "Val-de-la-Hune",
     "code": "72382",
     "epci_code": "200072684",
     "departement_code": "72",

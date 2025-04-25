@@ -1264,7 +1264,7 @@
     "postal_code": "46150"
   },
   {
-    "name": "Lhospitalet",
+    "name": "Pern-Lhospitalet",
     "code": "46172",
     "epci_code": "200039519",
     "departement_code": "46",
@@ -1622,14 +1622,6 @@
     "departement_code": "46",
     "region_code": "76",
     "postal_code": "46300"
-  },
-  {
-    "name": "Pern",
-    "code": "46217",
-    "epci_code": "200039519",
-    "departement_code": "46",
-    "region_code": "76",
-    "postal_code": "46170"
   },
   {
     "name": "Pescadoires",
@@ -2464,7 +2456,7 @@
     "postal_code": "46260"
   },
   {
-    "name": "Le Vigan",
+    "name": "Le Vigan-en-Quercy",
     "code": "46334",
     "epci_code": "244600482",
     "departement_code": "46",

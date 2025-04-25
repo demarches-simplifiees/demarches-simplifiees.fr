@@ -116,13 +116,13 @@ describe Champs::EpciChamp, type: :model do
         end
 
         context 'when value is in departement epci names' do
-          let(:value) { 'CA Haut - Bugey Agglomération' }
+          let(:value) { 'CA Haut-Bugey Agglomération' }
 
           it { is_expected.to be_truthy }
         end
 
         context 'when value is in departement epci names' do
-          let(:value) { 'CA Haut - Bugey Agglomération' }
+          let(:value) { 'CA Haut-Bugey Agglomération' }
 
           it { is_expected.to be_truthy }
         end
@@ -132,7 +132,7 @@ describe Champs::EpciChamp, type: :model do
 
           it 'is valid and updates its own value' do
             expect(subject).to be_truthy
-            expect(champ.value).to eq('CA Haut - Bugey Agglomération')
+            expect(champ.value).to eq('CA Haut-Bugey Agglomération')
           end
         end
 

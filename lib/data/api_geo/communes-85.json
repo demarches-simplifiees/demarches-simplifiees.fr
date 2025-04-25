@@ -152,14 +152,6 @@
     "postal_code": "85490"
   },
   {
-    "name": "La Bernardière",
-    "code": "85021",
-    "epci_code": "200070233",
-    "departement_code": "85",
-    "region_code": "52",
-    "postal_code": "85610"
-  },
-  {
     "name": "Le Bernard",
     "code": "85022",
     "epci_code": "200071900",
@@ -464,7 +456,7 @@
     "postal_code": "85320"
   },
   {
-    "name": "Cugand",
+    "name": "Cugand-la-Bernardière",
     "code": "85076",
     "epci_code": "200070233",
     "departement_code": "85",
@@ -1527,7 +1519,7 @@
     "postal_code": "85800"
   },
   {
-    "name": "Sainte-Hermine",
+    "name": "Saint-Jean-d’Hermine",
     "code": "85223",
     "epci_code": "200073260",
     "departement_code": "85",
@@ -1573,14 +1565,6 @@
     "departement_code": "85",
     "region_code": "52",
     "postal_code": "85480"
-  },
-  {
-    "name": "Saint-Jean-de-Beugné",
-    "code": "85233",
-    "epci_code": "200073260",
-    "departement_code": "85",
-    "region_code": "52",
-    "postal_code": "85210"
   },
   {
     "name": "Saint-Jean-de-Monts",

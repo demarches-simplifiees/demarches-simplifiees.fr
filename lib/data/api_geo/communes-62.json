@@ -3464,7 +3464,7 @@
     "postal_code": "62360"
   },
   {
-    "name": "Hesdin",
+    "name": "Hesdin-la-Forêt",
     "code": "62447",
     "epci_code": "200044030",
     "departement_code": "62",
@@ -3574,14 +3574,6 @@
     "departement_code": "62",
     "region_code": "32",
     "postal_code": "62630"
-  },
-  {
-    "name": "Huby-Saint-Leu",
-    "code": "62461",
-    "epci_code": "200044030",
-    "departement_code": "62",
-    "region_code": "32",
-    "postal_code": "62140"
   },
   {
     "name": "Huclier",
@@ -4270,14 +4262,6 @@
     "departement_code": "62",
     "region_code": "32",
     "postal_code": "62730"
-  },
-  {
-    "name": "Marconne",
-    "code": "62549",
-    "epci_code": "200044030",
-    "departement_code": "62",
-    "region_code": "32",
-    "postal_code": "62140"
   },
   {
     "name": "Marconnelle",
@@ -5806,14 +5790,6 @@
     "departement_code": "62",
     "region_code": "32",
     "postal_code": "62170"
-  },
-  {
-    "name": "Sainte-Austreberthe",
-    "code": "62743",
-    "epci_code": "200044030",
-    "departement_code": "62",
-    "region_code": "32",
-    "postal_code": "62140"
   },
   {
     "name": "Sainte-Catherine",

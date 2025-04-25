@@ -672,7 +672,7 @@
     "postal_code": "09250"
   },
   {
-    "name": "Caychax",
+    "name": "Caychax-et-Senconac",
     "code": "09088",
     "epci_code": "200066363",
     "departement_code": "09",
@@ -2198,14 +2198,6 @@
     "departement_code": "09",
     "region_code": "76",
     "postal_code": "09140"
-  },
-  {
-    "name": "Senconac",
-    "code": "09287",
-    "epci_code": "200066363",
-    "departement_code": "09",
-    "region_code": "76",
-    "postal_code": "09250"
   },
   {
     "name": "Lorp-Sentaraille",

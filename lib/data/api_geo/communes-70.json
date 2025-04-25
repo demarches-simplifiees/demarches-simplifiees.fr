@@ -1136,7 +1136,7 @@
     "postal_code": "70140"
   },
   {
-    "name": "Choye",
+    "name": "Colombine",
     "code": "70152",
     "epci_code": "247000698",
     "departement_code": "70",
@@ -1344,7 +1344,7 @@
     "postal_code": "70000"
   },
   {
-    "name": "Courchaton",
+    "name": "Belles-Fontaines",
     "code": "70180",
     "epci_code": "247000714",
     "departement_code": "70",
@@ -1974,14 +1974,6 @@
     "departement_code": "70",
     "region_code": "27",
     "postal_code": "70240"
-  },
-  {
-    "name": "Georfans",
-    "code": "70264",
-    "epci_code": "247000714",
-    "departement_code": "70",
-    "region_code": "27",
-    "postal_code": "70110"
   },
   {
     "name": "Germigney",
@@ -3920,14 +3912,6 @@
     "postal_code": "70100"
   },
   {
-    "name": "Vellechevreux-et-Courbenans",
-    "code": "70530",
-    "epci_code": "247000714",
-    "departement_code": "70",
-    "region_code": "27",
-    "postal_code": "70110"
-  },
-  {
     "name": "Velleclaire",
     "code": "70531",
     "epci_code": "247000698",
@@ -4110,14 +4094,6 @@
     "departement_code": "70",
     "region_code": "27",
     "postal_code": "70160"
-  },
-  {
-    "name": "Villefrancon",
-    "code": "70557",
-    "epci_code": "247000698",
-    "departement_code": "70",
-    "region_code": "27",
-    "postal_code": "70700"
   },
   {
     "name": "La Villeneuve-Bellenoye-et-la-Maize",

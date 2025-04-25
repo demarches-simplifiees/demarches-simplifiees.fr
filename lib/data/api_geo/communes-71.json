@@ -1000,14 +1000,6 @@
     "postal_code": "71460"
   },
   {
-    "name": "Ciel",
-    "code": "71131",
-    "epci_code": "200040038",
-    "departement_code": "71",
-    "region_code": "27",
-    "postal_code": "71350"
-  },
-  {
     "name": "Ciry-le-Noble",
     "code": "71132",
     "epci_code": "247100290",
@@ -4328,7 +4320,7 @@
     "postal_code": "71130"
   },
   {
-    "name": "Verdun-sur-le-Doubs",
+    "name": "Verdun-Ciel",
     "code": "71566",
     "epci_code": "200040038",
     "departement_code": "71",

@@ -2664,14 +2664,6 @@
     "postal_code": "76280"
   },
   {
-    "name": "Le Héron",
-    "code": "76358",
-    "epci_code": "200069730",
-    "departement_code": "76",
-    "region_code": "28",
-    "postal_code": "76780"
-  },
-  {
     "name": "Héronchelles",
     "code": "76359",
     "epci_code": "200070449",
@@ -3424,7 +3416,7 @@
     "postal_code": "76270"
   },
   {
-    "name": "Morville-sur-Andelle",
+    "name": "Morville-le-Héron",
     "code": "76455",
     "epci_code": "200069730",
     "departement_code": "76",

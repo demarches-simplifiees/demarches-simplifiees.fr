@@ -1048,14 +1048,6 @@
     "postal_code": "16410"
   },
   {
-    "name": "Gardes-le-Pontaroux",
-    "code": "16147",
-    "epci_code": "200070282",
-    "departement_code": "16",
-    "region_code": "75",
-    "postal_code": "16320"
-  },
-  {
     "name": "Genac-Bignac",
     "code": "16148",
     "epci_code": "241600303",
@@ -1424,7 +1416,7 @@
     "postal_code": "16240"
   },
   {
-    "name": "Magnac-Lavalette-Villars",
+    "name": "Magnac-lès-Gardes",
     "code": "16198",
     "epci_code": "200070282",
     "departement_code": "16",
@@ -1616,14 +1608,6 @@
     "postal_code": "16310"
   },
   {
-    "name": "Montignac-Charente",
-    "code": "16226",
-    "epci_code": "200072023",
-    "departement_code": "16",
-    "region_code": "75",
-    "postal_code": "16330"
-  },
-  {
     "name": "Montignac-le-Coq",
     "code": "16227",
     "epci_code": "200070282",
@@ -1690,14 +1674,6 @@
   {
     "name": "Mouton",
     "code": "16237",
-    "epci_code": "200072023",
-    "departement_code": "16",
-    "region_code": "75",
-    "postal_code": "16460"
-  },
-  {
-    "name": "Moutonneau",
-    "code": "16238",
     "epci_code": "200072023",
     "departement_code": "16",
     "region_code": "75",
@@ -2680,7 +2656,7 @@
     "postal_code": "16460"
   },
   {
-    "name": "Vars",
+    "name": "La Boixe",
     "code": "16393",
     "epci_code": "200072023",
     "departement_code": "16",

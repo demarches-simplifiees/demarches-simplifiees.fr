@@ -1200,7 +1200,7 @@
     "postal_code": "80200"
   },
   {
-    "name": "Bussus-Bussuel",
+    "name": "Bussus-lès-Yaucourt",
     "code": "80155",
     "epci_code": "200070936",
     "departement_code": "80",
@@ -6142,14 +6142,6 @@
     "departement_code": "80",
     "region_code": "32",
     "postal_code": "80190"
-  },
-  {
-    "name": "Yaucourt-Bussus",
-    "code": "80830",
-    "epci_code": "200070936",
-    "departement_code": "80",
-    "region_code": "32",
-    "postal_code": "80135"
   },
   {
     "name": "Yvrench",

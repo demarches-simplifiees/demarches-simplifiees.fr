@@ -1728,14 +1728,6 @@
     "postal_code": "19320"
   },
   {
-    "name": "Saint-Martin-Sepert",
-    "code": "19223",
-    "epci_code": "200066603",
-    "departement_code": "19",
-    "region_code": "75",
-    "postal_code": "19210"
-  },
-  {
     "name": "Saint-Merd-de-Lapleau",
     "code": "19225",
     "epci_code": "241900133",
@@ -1774,14 +1766,6 @@
     "departement_code": "19",
     "region_code": "75",
     "postal_code": "19600"
-  },
-  {
-    "name": "Saint-Pardoux-Corbier",
-    "code": "19230",
-    "epci_code": "200066603",
-    "departement_code": "19",
-    "region_code": "75",
-    "postal_code": "19210"
   },
   {
     "name": "Saint-Pardoux-la-Croisille",
@@ -1920,7 +1904,7 @@
     "postal_code": "19200"
   },
   {
-    "name": "Saint-Ybard",
+    "name": "Les Trois-Saints",
     "code": "19248",
     "epci_code": "241927243",
     "departement_code": "19",

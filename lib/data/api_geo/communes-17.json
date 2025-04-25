@@ -2040,7 +2040,7 @@
     "postal_code": "17540"
   },
   {
-    "name": "Nuaillé-sur-Boutonne",
+    "name": "Rives-de-Boutonne",
     "code": "17268",
     "epci_code": "200041689",
     "departement_code": "17",
@@ -2558,14 +2558,6 @@
     "departement_code": "17",
     "region_code": "75",
     "postal_code": "17110"
-  },
-  {
-    "name": "Saint-Georges-de-Longuepierre",
-    "code": "17334",
-    "epci_code": "200041689",
-    "departement_code": "17",
-    "region_code": "75",
-    "postal_code": "17470"
   },
   {
     "name": "Saint-Georges-des-Agoûts",

@@ -544,14 +544,6 @@
     "postal_code": "42120"
   },
   {
-    "name": "La Côte-en-Couzan",
-    "code": "42072",
-    "epci_code": "200065886",
-    "departement_code": "42",
-    "region_code": "84",
-    "postal_code": "42111"
-  },
-  {
     "name": "Cottance",
     "code": "42073",
     "epci_code": "200065894",
@@ -624,7 +616,7 @@
     "postal_code": "42800"
   },
   {
-    "name": "Débats-Rivière-d’Orpra",
+    "name": "Solore-en-Forez",
     "code": "42084",
     "epci_code": "200065886",
     "departement_code": "42",
@@ -822,14 +814,6 @@
     "departement_code": "42",
     "region_code": "84",
     "postal_code": "42210"
-  },
-  {
-    "name": "L’Hôpital-sous-Rochefort",
-    "code": "42109",
-    "epci_code": "200065886",
-    "departement_code": "42",
-    "region_code": "84",
-    "postal_code": "42130"
   },
   {
     "name": "L’Horme",
@@ -1432,7 +1416,7 @@
     "postal_code": "42300"
   },
   {
-    "name": "Roche",
+    "name": "Roche-en-Forez",
     "code": "42188",
     "epci_code": "200065886",
     "departement_code": "42",
@@ -1656,7 +1640,7 @@
     "postal_code": "42140"
   },
   {
-    "name": "Saint-Didier-sur-Rochefort",
+    "name": "La Côte-Saint-Didier",
     "code": "42217",
     "epci_code": "200065886",
     "departement_code": "42",
@@ -1942,14 +1926,6 @@
     "departement_code": "42",
     "region_code": "84",
     "postal_code": "42210"
-  },
-  {
-    "name": "Saint-Laurent-Rochefort",
-    "code": "42252",
-    "epci_code": "200065886",
-    "departement_code": "42",
-    "region_code": "84",
-    "postal_code": "42130"
   },
   {
     "name": "Saint-Léger-sur-Roanne",

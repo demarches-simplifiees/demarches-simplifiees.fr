@@ -584,14 +584,6 @@
     "postal_code": "12170"
   },
   {
-    "name": "Conques-en-Rouergue",
-    "code": "12076",
-    "epci_code": "241200641",
-    "departement_code": "12",
-    "region_code": "76",
-    "postal_code": "12320"
-  },
-  {
     "name": "Cornus",
     "code": "12077",
     "epci_code": "241200906",
@@ -1662,6 +1654,14 @@
     "departement_code": "12",
     "region_code": "76",
     "postal_code": "12260"
+  },
+  {
+    "name": "Conques-en-Rouergue",
+    "code": "12218",
+    "epci_code": "241200641",
+    "departement_code": "12",
+    "region_code": "76",
+    "postal_code": "12320"
   },
   {
     "name": "Sainte-Eulalie-d’Olt",

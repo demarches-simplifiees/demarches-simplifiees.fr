@@ -104,14 +104,6 @@
     "postal_code": "61500"
   },
   {
-    "name": "Les Authieux-du-Puits",
-    "code": "61017",
-    "epci_code": "200069458",
-    "departement_code": "61",
-    "region_code": "28",
-    "postal_code": "61240"
-  },
-  {
     "name": "Avernes-Saint-Gourgon",
     "code": "61018",
     "epci_code": "200069458",
@@ -1160,14 +1152,6 @@
     "postal_code": "61270"
   },
   {
-    "name": "La Genevraie",
-    "code": "61188",
-    "epci_code": "200069458",
-    "departement_code": "61",
-    "region_code": "28",
-    "postal_code": "61240"
-  },
-  {
     "name": "Giel-Courteilles",
     "code": "61189",
     "epci_code": "246100390",
@@ -1182,14 +1166,6 @@
     "departement_code": "61",
     "region_code": "28",
     "postal_code": "61310"
-  },
-  {
-    "name": "Godisson",
-    "code": "61192",
-    "epci_code": "200069458",
-    "departement_code": "61",
-    "region_code": "28",
-    "postal_code": "61240"
   },
   {
     "name": "La Gonfrière",
@@ -1728,7 +1704,7 @@
     "postal_code": "61290"
   },
   {
-    "name": "Le Merlerault",
+    "name": "Merlerault-le-Pin",
     "code": "61275",
     "epci_code": "200069458",
     "departement_code": "61",
@@ -1958,14 +1934,6 @@
     "departement_code": "61",
     "region_code": "28",
     "postal_code": "61340"
-  },
-  {
-    "name": "Nonant-le-Pin",
-    "code": "61310",
-    "epci_code": "200069458",
-    "departement_code": "61",
-    "region_code": "28",
-    "postal_code": "61240"
   },
   {
     "name": "Occagnes",

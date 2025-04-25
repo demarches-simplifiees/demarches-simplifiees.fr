@@ -1568,7 +1568,7 @@
     "postal_code": "25620"
   },
   {
-    "name": "Éternoz",
+    "name": "Éternoz-Vallée-du-Lison",
     "code": "25223",
     "epci_code": "200068070",
     "departement_code": "25",
@@ -2112,14 +2112,6 @@
     "postal_code": "25790"
   },
   {
-    "name": "Le Gratteris",
-    "code": "25297",
-    "epci_code": "242500361",
-    "departement_code": "25",
-    "region_code": "27",
-    "postal_code": "25620"
-  },
-  {
     "name": "Grosbois",
     "code": "25298",
     "epci_code": "242504447",
@@ -2150,14 +2142,6 @@
     "departement_code": "25",
     "region_code": "27",
     "postal_code": "25390"
-  },
-  {
-    "name": "Hauterive-la-Fresse",
-    "code": "25303",
-    "epci_code": "242500320",
-    "departement_code": "25",
-    "region_code": "27",
-    "postal_code": "25650"
   },
   {
     "name": "Hérimoncourt",
@@ -2488,14 +2472,6 @@
     "postal_code": "25330"
   },
   {
-    "name": "La Longeville",
-    "code": "25347",
-    "epci_code": "242500320",
-    "departement_code": "25",
-    "region_code": "27",
-    "postal_code": "25650"
-  },
-  {
     "name": "Longevilles-Mont-d’Or",
     "code": "25348",
     "epci_code": "200069565",
@@ -2808,7 +2784,7 @@
     "postal_code": "25210"
   },
   {
-    "name": "Montbenoît",
+    "name": "Pays-de-Montbenoît",
     "code": "25390",
     "epci_code": "242500320",
     "departement_code": "25",
@@ -2862,14 +2838,6 @@
     "departement_code": "25",
     "region_code": "27",
     "postal_code": "25320"
-  },
-  {
-    "name": "Montflovin",
-    "code": "25398",
-    "epci_code": "242500320",
-    "departement_code": "25",
-    "region_code": "27",
-    "postal_code": "25650"
   },
   {
     "name": "Montgesoye",
@@ -3880,14 +3848,6 @@
     "postal_code": "25660"
   },
   {
-    "name": "Saraz",
-    "code": "25533",
-    "epci_code": "200068070",
-    "departement_code": "25",
-    "region_code": "27",
-    "postal_code": "25330"
-  },
-  {
     "name": "Sarrageois",
     "code": "25534",
     "epci_code": "200069565",
@@ -4478,14 +4438,6 @@
     "departement_code": "25",
     "region_code": "27",
     "postal_code": "25240"
-  },
-  {
-    "name": "Ville-du-Pont",
-    "code": "25620",
-    "epci_code": "242500320",
-    "departement_code": "25",
-    "region_code": "27",
-    "postal_code": "25650"
   },
   {
     "name": "Villeneuve-d’Amont",

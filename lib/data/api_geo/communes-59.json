@@ -40,7 +40,7 @@
     "postal_code": "59251"
   },
   {
-    "name": "Amfroipret",
+    "name": "L’Orée de Mormal",
     "code": "59006",
     "epci_code": "200043321",
     "departement_code": "59",
@@ -542,14 +542,6 @@
     "departement_code": "59",
     "region_code": "32",
     "postal_code": "59213"
-  },
-  {
-    "name": "Bermeries",
-    "code": "59070",
-    "epci_code": "200043321",
-    "departement_code": "59",
-    "region_code": "32",
-    "postal_code": "59570"
   },
   {
     "name": "Bersée",
