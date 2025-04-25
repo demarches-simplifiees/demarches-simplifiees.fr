@@ -20,16 +20,14 @@ class DossierFilterService
     table = sorted_column.column.table
     column = sorted_column.column.column
     order = sorted_column.order
-
     case table
     when 'notifications'
-      dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
+      dossiers_id_with_notifications = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
+      dossiers_id_with_notifications_v2 = dossiers.with_notifications_v2.ids
       if order == 'desc'
-        dossiers_id_with_notification +
-            (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
+        (dossiers_id_with_notifications_v2 + dossiers_id_with_notifications + dossiers.order('dossiers.updated_at desc').ids).uniq
       else
-        (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
-            dossiers_id_with_notification
+        dossiers.order('dossiers.updated_at asc').ids
       end
     when TYPE_DE_CHAMP
       stable_id = sorted_column.column.stable_id
