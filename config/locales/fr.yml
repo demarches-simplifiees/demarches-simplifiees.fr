@@ -1032,9 +1032,7 @@ fr:
         sva: "Silence Vaut Accord"
         svr: "Silence Vaut Rejet"
     procedure_description:
-      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} min"
-      estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
-      estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
+      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} min (variable selon les options choisies)"
       usual_traitement_time_title: Quels sont les délais d’instruction pour cette démarche ?
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation

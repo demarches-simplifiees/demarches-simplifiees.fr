@@ -73,15 +73,6 @@
         #accordion-117.fr-collapse
           = render estimated_delay_component
 
-
-    - if procedure.persisted? && procedure.estimated_duration_visible?
-      %section.fr-accordion
-        %h2.fr-accordion__title
-          %button.fr-accordion__btn{ "aria-controls" => "accordion-118", "aria-expanded" => "false" }
-            = t('shared.procedure_description.estimated_fill_duration_title')
-        #accordion-118.fr-collapse
-          = t('shared.procedure_description.estimated_fill_duration_detail', estimated_minutes: estimated_fill_duration_minutes(procedure))
-
   .fr-my-3w
     = render Procedure::NoticeComponent.new(procedure:)
 
