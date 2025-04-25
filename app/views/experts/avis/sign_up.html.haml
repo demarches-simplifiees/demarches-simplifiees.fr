@@ -10,7 +10,7 @@
             %p= t('asterisk_html', scope: [:utils])
 
           .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true, autocomplete: 'email' })
+            = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true })
 
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
