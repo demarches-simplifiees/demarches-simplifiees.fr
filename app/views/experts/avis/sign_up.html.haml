@@ -7,15 +7,14 @@
           = t('views.registrations.new.title', name: Current.application_name)
         %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
           .fr-fieldset__element
-            %p.fr-text--sm= t('utils.mandatory_champs')
+            %p= t('asterisk_html', scope: [:utils])
 
           .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true, autocomplete: 'email' })
+            = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true })
 
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-              opts: { autofocus: 'true',
-              autocomplete: 'new-password',
+              opts: { autocomplete: 'new-password',
               data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path },
               aria: {describedby: 'password_hint'}})
 
