@@ -397,6 +397,11 @@ class Dossier < ApplicationRecord
       .distinct
   end
 
+  scope :with_notifications_v2, -> do
+    joins(:dossier_notifications)
+      .distinct
+  end
+
   scope :by_statut, -> (statut, instructeur: nil, include_archived: false) do
     case statut
     when 'a-suivre'
