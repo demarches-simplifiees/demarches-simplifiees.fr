@@ -190,7 +190,10 @@ input[type='radio'] {
 // Improve tabs alignment because we are not displaying the border around the page content
 .fr-tabs__list {
   padding-left: 0;
-  margin-left: -4px;
+}
+
+.fr-tabs__list li:first-child .fr-tabs__tab {
+  margin-left: 0;
 }
 
 .fr-header__tools .fr-btns-group .fr-btn {
