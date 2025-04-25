@@ -116,6 +116,13 @@ module TPS
     config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption.fetch(:primary_key)
     config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption.fetch(:key_derivation_salt)
     config.active_record.partial_inserts = false
+    # Be aware that if your app was created before Rails 7.1, and your app marshals instances of the targeted model (for example, when caching)
+    # then you should set ActiveRecord.marshalling_format_version to 7.1
+    # or higher via either config.load_defaults 7.1
+    # or config.active_record.marshalling_format_version = 7.1.
+    # Otherwise, Marshal may attempt to serialize the normalization Proc and raise TypeError.
+    # used for ApplicationRecord#NORMALIZES_NON_PRINTABLE_PROC
+    config.active_record.marshalling_format_version = 7.1
 
     config.exceptions_app = self.routes
 

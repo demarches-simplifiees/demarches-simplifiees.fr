@@ -30,6 +30,8 @@ class Avis < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
   before_validation -> { strip_attribute(:question_label) }
 
+  normalizes :answer, with: NORMALIZES_NON_PRINTABLE_PROC
+
   default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
   scope :without_answer, -> { where(answer: nil) }

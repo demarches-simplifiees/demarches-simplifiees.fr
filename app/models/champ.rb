@@ -18,6 +18,7 @@ class Champ < ApplicationRecord
   belongs_to :etablissement, optional: true, dependent: :destroy
 
   delegate :procedure, to: :dossier
+  normalizes :value, with: NORMALIZES_NON_PRINTABLE_PROC
 
   def type_de_champ
     @type_de_champ ||= dossier.revision
