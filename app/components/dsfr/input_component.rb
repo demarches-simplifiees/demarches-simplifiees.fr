@@ -73,6 +73,10 @@ class Dsfr::InputComponent < ApplicationComponent
     @input_type == :password_field
   end
 
+  def password_confirmation?
+    attribute == :password_confirmation
+  end
+
   def email?
     @input_type == :email_field
   end

@@ -3,6 +3,9 @@ fr:
   show_password:
     aria_label: "Afficher le mot de passe"
     label: "Afficher"
+  show_password_confirmation:
+    aria_label: "Afficher la confirmation du mot de passe"
+    label: "Afficher"
   email_suggest:
     mistake: "L'adresse électronique semble erronée"
     wanna_say: "Vouliez-vous écrire :"

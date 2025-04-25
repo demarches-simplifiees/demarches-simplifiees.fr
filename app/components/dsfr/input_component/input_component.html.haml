@@ -28,6 +28,11 @@
       %input{ id: show_password_id, "aria-label" => t('.show_password.aria_label'), type: "checkbox" }/
       %label.fr--password__checkbox.fr-label{ for: show_password_id }= t('.show_password.label')
 
+  - if password_confirmation?
+    .fr-password__checkbox.fr-checkbox-group.fr-checkbox-group--sm
+      %input{ id: show_password_id, "aria-label" => t('.show_password_confirmation.aria_label'), type: "checkbox" }/
+      %label.fr--password__checkbox.fr-label{ for: show_password_id }= t('.show_password_confirmation.label')
+
   - if email?
     .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion' }, tabindex: '-1' }
       = render Dsfr::AlertComponent.new(title: t('.email_suggest.mistake'), state: '', extra_class_names: 'fr-alert--info' ) do |c|
