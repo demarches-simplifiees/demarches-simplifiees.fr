@@ -21,6 +21,7 @@ module Administrateurs
       if referentiel.configured? && referentiel.update(referentiel_params)
         redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
       else
+        referentiel.validate
         component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
         render turbo_stream: turbo_stream.replace(component.id, component)
       end

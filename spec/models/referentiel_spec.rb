@@ -9,22 +9,85 @@ describe Referentiel do
       end
 
       describe 'APIReferentiel' do
+        let(:whitelist) { %w[https://example.com https://allowed.com] }
+        before do
+          allow(ENV).to receive(:fetch).and_call_original
+          allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
+        end
         it 'validates presentater as exact_match/autocomplete or nil' do
           expect(build(:api_referentiel, mode: 'exact_match').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
           expect(build(:api_referentiel, mode: 'autocomplete').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
           expect(build(:api_referentiel, mode: nil).tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
-          expect(build(:api_referentiel, mode: 'wrong').tap(&:validate).errors.map(&:attribute)).to include(:mode)
         end
 
         describe 'configured?' do
           context 'when adapter is url' do
             it 'tests url params' do
-              referentiel = build(:api_referentiel)
+              referentiel = build(:api_referentiel, url: whitelist)
               expect(referentiel).to receive(:mode).and_return(double(present?: true))
               expect(referentiel).to receive(:url).and_return(double(present?: true))
               expect(referentiel).to receive(:test_data).and_return(double(present?: true))
 
               expect(referentiel.configured?).to eq(true)
+            end
+          end
+        end
+
+        describe 'url_in_whitelist?' do
+          let(:referentiel) { build(:api_referentiel, url:) }
+          let(:whitelist) { %w[https://example.com https://allowed.com] }
+
+          context 'when the URL is in the whitelist' do
+            let(:url) { whitelist.first }
+
+            it 'does not add an error' do
+              referentiel.validate
+              expect(referentiel.errors[:url]).to be_empty
+            end
+          end
+
+          context 'when the URL is not in the whitelist' do
+            let(:url) { "https://api.untrusted.com/resource" }
+
+            it 'adds an error' do
+              referentiel.validate
+              expect(referentiel.errors[:url]).to include("L'URL doit être autorisée par notre équipe, veuillez nous contacter")
+            end
+          end
+
+          context 'when the URL is invalid' do
+            let(:url) { "invalid_url" }
+
+            it 'adds an invalid URL error' do
+              referentiel.validate
+              expect(referentiel.errors[:url]).to include("L'URL est invalide")
+            end
+          end
+
+          context 'when the URL is blank' do
+            let(:url) { nil }
+
+            it 'does not add an error' do
+              referentiel.validate
+              expect(referentiel.errors[:url]).to be_empty
+            end
+          end
+
+          context 'when the URL ends with .gouv.fr' do
+            let(:url) { "https://ministere.gouv.fr/resource" }
+
+            it 'does not add an error' do
+              referentiel.validate
+              expect(referentiel.errors[:url]).to be_empty
+            end
+          end
+
+          context 'when the URL ends with .beta.gouv.fr' do
+            let(:url) { "https://api.beta.gouv.fr/resource" }
+
+            it 'adds an error' do
+              referentiel.validate
+              expect(referentiel.errors[:url]).to include("L'URL doit être autorisée par notre équipe, veuillez nous contacter")
             end
           end
         end

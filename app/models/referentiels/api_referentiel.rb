@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class Referentiels::APIReferentiel < Referentiel
-  validates :mode, inclusion: { in: ['exact_match', 'autocomplete'] }, allow_blank: true, allow_nil: true
+  enum :mode, {
+    exact_match: 'exact_match',
+    autocomplete: 'autocomplete'
+  }
+  validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
+  validate :url_allowed?
 
   before_save :name_as_url
 
@@ -30,5 +35,19 @@ class Referentiels::APIReferentiel < Referentiel
 
   def name_as_url
     self.name = url
+  end
+
+  def url_allowed?
+    return if url.blank?
+
+    uri = Addressable::URI.parse(url)
+    return if uri.tld == "gouv.fr" && uri.domain != "beta.gouv.fr"
+
+    whitelist = ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',')
+    if whitelist.none? { |whitelisted_url| uri.host && whitelisted_url.include?(uri.host) }
+      errors.add(:url, "L'URL doit être autorisée par notre équipe, veuillez nous contacter")
+    end
+  rescue URI::InvalidURIError, PublicSuffix::DomainInvalid
+    errors.add(:url, "L'URL est invalide")
   end
 end
