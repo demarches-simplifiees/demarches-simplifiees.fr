@@ -70,7 +70,7 @@ describe 'wcag rules for usager', chrome: true do
     end
 
     context 'password edit page' do
-      let(:user) { create(:user, email: 'reset@pass.world', password: SECURE_PASSWORD, password_confirmation: SECURE_PASSWORD, reset_password_token: 'hHivRqw9WzXnNCvJnBCS') }
+      let(:user) { create(:user, email: 'reset@pass.world', password: SECURE_PASSWORD, password_confirmation: SECURE_PASSWORD, reset_password_token: SecureRandom.hex) }
       let(:path) { edit_user_password_path(reset_password_token: user.reset_password_token) }
       it 'pass wcag tests' do
         test_aria_label_do_not_mix_with_title_attribute
@@ -79,7 +79,6 @@ describe 'wcag rules for usager', chrome: true do
     end
 
     context 'password edit for experts' do
-      let(:user) { create(:user, email: 'reset@pass.world', password: SECURE_PASSWORD, password_confirmation: SECURE_PASSWORD, reset_password_token: 'hHivRqw9WzXnNCvJnBCS') }
       let(:procedure) { create(:procedure, :published) }
       let(:avis) { create(:avis, dossier: create(:dossier, procedure: procedure), expert: nil, email: 'k@thx.bye') }
       let(:path) { sign_up_expert_avis_path(procedure_id: procedure.id, id: avis.id, email: avis.email) }
