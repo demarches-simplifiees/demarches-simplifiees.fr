@@ -73,6 +73,14 @@ class Dsfr::InputComponent < ApplicationComponent
     @input_type == :password_field
   end
 
+  def password_confirmation?
+    attribute == :password_confirmation
+  end
+
+  def aria_label_show_confirmation
+    t(".show_#{attribute}.aria_label")
+  end
+
   def email?
     @input_type == :email_field
   end

@@ -52,4 +52,15 @@ class PasswordComplexityComponent < ApplicationComponent
       return t(".title.strong")
     end
   end
+
+  def heading_level
+    case [controller_name, action_name]
+    in ['passwords', 'edit']
+      'h2'
+    in ['avis', 'sign_up']
+      'h2'
+    else
+      'h3'
+    end
+  end
 end
