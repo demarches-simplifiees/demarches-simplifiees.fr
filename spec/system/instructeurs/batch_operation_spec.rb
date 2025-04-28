@@ -56,7 +56,7 @@ describe 'BatchOperation a dossier:', js: true do
         .from(false).to(true)
 
       # ensure alert updates when jobs are run
-      click_on "Recharger la page"
+      visit instructeur_procedure_path(procedure, statut: 'traites')
       expect(page).to have_content("L’action de masse est terminée")
       expect(page).to have_content("1 dossier a été placé dans « à archiver »")
 

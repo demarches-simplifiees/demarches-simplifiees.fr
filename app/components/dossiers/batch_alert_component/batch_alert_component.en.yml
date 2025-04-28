@@ -110,6 +110,4 @@ en:
   title:
     finish: The bulk action is finished
     in_progress:  A bulk action is processing
-  link_text: Refresh this webpage
-  after_link_text: to check if the process is over.
   context: This bulk action was created by %{mail}, %{time_ago}
