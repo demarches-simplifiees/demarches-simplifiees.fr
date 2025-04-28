@@ -1,7 +1,7 @@
 - latest_message = dossier.commentaires.last
 - if latest_message.present?
   .latest-message-section
-    %h3.tab-title= t('views.users.dossiers.show.latest_message.latest_message')
+    %h2.fr-h5= t('views.users.dossiers.show.latest_message.latest_message')
 
     .message.fr-background-alt--grey
       = render Dossiers::MessageComponent.new(commentaire: latest_message, connected_user: current_user)
