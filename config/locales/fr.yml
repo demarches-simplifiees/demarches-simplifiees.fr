@@ -483,6 +483,7 @@ fr:
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
             download: "dossier-%{dossier_id}.pdf"
+            download_without_number: "dossier-DS.pdf"
           status_overview:
             status_draft: brouillon
             status_in_progress: en construction
@@ -894,7 +895,7 @@ fr:
       show:
         papertrail:
           get_papertrail: "Obtenir une attestation de dépôt de dossier"
-          filename: "attestation-de-depot.pdf"
+          filename: "attestation-depot_dossier-%{dossier_id}.pdf"
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
