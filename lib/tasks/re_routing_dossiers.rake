@@ -4,14 +4,17 @@ require Rails.root.join("lib", "tasks", "task_helper")
 
 namespace :re_routing_dossiers do
   desc <<~EOD
-    Given an procedure id in argument, run the RoutingEngine again for all "en construction" dossiers of the procedure
+    Given a procedure id in argument, run the RoutingEngine again for all dossiers of the procedure (included all states of dossier).
+    This task should be used only if field(s) used for routing have not been changed in procedure revisions. Otherwise, dossiers might be routed the wrong way.
+    Please check history of procedure revisions before using this task.
+    Consider running previously the task below reset_forced_groupe_instructeur, if manual reaffectations should be reset or not.
     ex: rails re_routing_dossiers:run\[85869\]
   EOD
 
   task :run, [:procedure_id] => :environment do |_t, args|
     procedure = Procedure.find_by(id: args[:procedure_id])
 
-    dossiers = procedure.dossiers.state_en_construction
+    dossiers = procedure.dossiers
 
     progress = ProgressReport.new(dossiers.count)
 
@@ -28,13 +31,13 @@ namespace :re_routing_dossiers do
   end
 
   desc <<~EOD
-    Given an procedure id in argument, reset value of forced_groupe_instructeur to false for all dossiers en_construction.
+    Given a procedure id in argument, reset value of forced_groupe_instructeur to false for all dossiers.
     ex: rails re_routing_dossiers:reset_forced_groupe_instructeur\[85869\]
   EOD
   task :reset_forced_groupe_instructeur, [:procedure_id] => :environment do |_t, args|
     procedure = Procedure.find_by(id: args[:procedure_id])
 
-    dossiers = procedure.dossiers.state_en_construction
+    dossiers = procedure.dossiers
 
     progress = ProgressReport.new(dossiers.count)
 
