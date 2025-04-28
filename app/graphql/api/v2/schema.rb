@@ -135,7 +135,14 @@ class API::V2::Schema < GraphQL::Schema
     # Capture type errors in Sentry. Thouse errors are our responsability and usually linked to
     # instances of "bad data".
     Sentry.capture_exception(error, extra: ctx.query_info)
-    super
+
+    if error.is_a?(GraphQL::InvalidNullError)
+      execution_error = GraphQL::ExecutionError.new(error.message, ast_node: error.ast_node, extensions: { code: :invalid_null })
+      execution_error.path = ctx[:current_path]
+      ctx.errors << execution_error
+    else
+      super
+    end
   end
 
   rescue_from(ActiveRecord::RecordNotFound) do |_error, _object, _args, _ctx, field|
