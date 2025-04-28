@@ -471,6 +471,7 @@ en:
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
+            download: "file-%{dossier_id}.pdf"
           status_overview:
             status_draft: draft
             status_in_progress: in progress
