@@ -869,7 +869,7 @@ en:
       show:
         papertrail:
           get_papertrail: "Get a deposit receipt"
-          filename: "deposit-receipt.pdf"
+          filename: "deposit-receipt_file-%{dossier_id}.pdf"
       papertrail:
         receipt: "Deposit receipt"
         description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."

@@ -893,7 +893,7 @@ fr:
       show:
         papertrail:
           get_papertrail: "Obtenir une attestation de dépôt de dossier"
-          filename: "attestation-de-depot.pdf"
+          filename: "attestation-depot_dossier-%{dossier_id}.pdf"
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
