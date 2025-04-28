@@ -24,5 +24,13 @@ fr:
         accepte: "Accepté"
         refuse: "Refusé"
         sans_suite: "Classé sans suite"
+      filterable_notification:
+        dossier_depose: 'DEPOSÉ DEPUIS LONGTEMPS'
+        dossier_modifie: 'DOSSIER MODIFIÉ'
+        message_usager: 'MESSAGE USAGER'
+        annotation_instructeur: 'ANNOTATION INSTRUCTEUR'
+        avis_externe: 'AVIS EXTERNE'
+        attente_correction: 'EN ATTENTE DE CORRECTION'
+        attente_avis: "EN ATTENTE D'AVIS EXTERNE"
       archived_block:
         archived: "Ce dossier a été déplacé dans « à archiver » le %{date} par %{email}"
