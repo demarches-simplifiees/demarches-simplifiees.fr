@@ -48,6 +48,10 @@ module TurboStreamHelper
       turbo_stream_action_tag :disable, targets:, delay:
     end
 
+    def refresh
+      turbo_stream_action_tag :refresh
+    end
+
     def dispatch(type, detail = nil)
       content = detail.present? ? tag.script(cdata_section(detail.to_json), type: 'application/json') : nil
       action_all :append, 'head', tag.dispatch_event(content, type:)

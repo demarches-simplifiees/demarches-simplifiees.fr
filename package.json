@@ -1,9 +1,9 @@
 {
   "type": "module",
   "dependencies": {
-    "@coldwired/actions": "^0.16.1",
+    "@coldwired/actions": "^0.17.1",
     "@coldwired/react": "^0.16.1",
-    "@coldwired/turbo-stream": "^0.16.0",
+    "@coldwired/turbo-stream": "^0.17.1",
     "@coldwired/utils": "^0.16.1",
     "@formatjs/intl-listformat": "^7.7.11",
     "@frsource/autoresize-textarea": "^2.0.142",
