@@ -25,7 +25,7 @@ describe 'As an instructeur', js: true do
     visit "users/activate?#{token_params}"
     fill_in :user_password, with: SECURE_PASSWORD
 
-    click_button 'Définir le mot de passe'
+    click_button 'Créer un compte'
 
     expect(page).to have_content 'Mot de passe enregistré'
   end

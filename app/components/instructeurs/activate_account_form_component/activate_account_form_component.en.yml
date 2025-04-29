@@ -1,6 +1,6 @@
 ---
 en:
-  title: Create your account for %{application_name}
-  activate: Activate your account %{email}
+  title: Create an account for %{application_name}
+  activate: Create an account with the e-mail address %{email}
   email_disabled: Instructor email address not changeable
-  submit: Choose password
+  submit: Create an account
