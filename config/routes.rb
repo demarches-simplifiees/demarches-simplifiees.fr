@@ -690,6 +690,7 @@ Rails.application.routes.draw do
 
       patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 
+      get 'clone_settings'
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication

@@ -679,6 +679,15 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #clone_settings' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:params) { { procedure_id: procedure.id } }
+
+    subject { get :clone_settings, params: params }
+
+    it { is_expected.to have_http_status(:success) }
+  end
+
   describe 'PUT #clone' do
     let(:procedure) { create(:procedure, :with_notice, :with_deliberation, :with_labels, administrateur: admin) }
     let(:params) { { procedure_id: procedure.id } }

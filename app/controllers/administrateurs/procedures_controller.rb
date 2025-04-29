@@ -138,6 +138,9 @@ module Administrateurs
       end
     end
 
+    def clone_settings
+    end
+
     def clone
       procedure = Procedure.find(params[:procedure_id])
       new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
