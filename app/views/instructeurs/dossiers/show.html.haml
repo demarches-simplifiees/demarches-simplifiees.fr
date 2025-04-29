@@ -1,6 +1,6 @@
 - content_for(:title, "Demande · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
 
-= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation }
+= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications }
 
 
 - if @dossier.etablissement&.as_degraded_mode?
