@@ -5,3 +5,4 @@ fr:
         dossier_depose:
           generic: Déposé depuis longtemps
           specific: "Dépose depuis %{days} J."
+        dossier_modifie: Dossier modifié

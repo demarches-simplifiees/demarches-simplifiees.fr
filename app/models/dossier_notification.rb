@@ -9,7 +9,8 @@ class DossierNotification < ApplicationRecord
   validates :instructeur_id, presence: true, if: -> { groupe_instructeur_id.nil? }
 
   enum :notification_type, {
-    dossier_depose: 'dossier_depose'
+    dossier_depose: 'dossier_depose',
+    dossier_modifie: 'dossier_modifie'
   }
 
   scope :to_display, -> { where(display_at: ..Time.current) }
@@ -23,6 +24,18 @@ class DossierNotification < ApplicationRecord
         groupe_instructeur_id: dossier.groupe_instructeur_id
       ) do |notification|
         notification.display_at = dossier.depose_at + 7.days
+      end
+
+    when :dossier_modifie
+      instructeur_ids = dossier.followers_instructeur_ids
+      instructeur_ids.each do |instructeur_id|
+        DossierNotification.find_or_create_by!(
+          dossier:,
+          notification_type:,
+          instructeur_id:
+        ) do |notification|
+          notification.display_at = Time.current
+        end
       end
     end
   end
