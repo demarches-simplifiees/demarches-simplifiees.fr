@@ -173,6 +173,8 @@ module Instructeurs
         .where(seen_at: nil)
         .distinct
 
+      @notifications = DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, current_instructeur, @filtered_sorted_paginated_ids)
+
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
 
