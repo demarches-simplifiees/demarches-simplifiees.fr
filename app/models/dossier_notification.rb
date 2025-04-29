@@ -56,4 +56,12 @@ class DossierNotification < ApplicationRecord
       [statut, notifs.group_by(&:notification_type)]
     end.to_h
   end
+
+  def self.notifications_for_instructeur_dossiers(groupe_instructeur_ids, instructeur, dossier_ids)
+    DossierNotification
+      .where(dossier_id: dossier_ids, groupe_instructeur_id: groupe_instructeur_ids)
+      .or(DossierNotification.where(dossier_id: dossier_ids, instructeur:))
+      .to_display
+      .group_by(&:dossier_id)
+  end
 end
