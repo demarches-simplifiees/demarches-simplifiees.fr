@@ -2,7 +2,7 @@
   - if !dossier.termine?
     .fr-grid-row.fr-grid-row--center
       .fr-col-md-8.text-center
-        %ul.status-timeline.fr-mb-4w
+        %ol.status-timeline.fr-mb-4w
           - if dossier.brouillon?
             %li.brouillon{ class: dossier.brouillon? ? 'active' : nil }
               = t('views.users.dossiers.show.status_overview.status_draft')

@@ -4,19 +4,12 @@
   display: inline-block;
   border: 1px solid var(--border-plain-grey);
   border-radius: 3px;
+  padding: 0 1.5rem;
 
   li {
     display: inline-block;
     padding-top: $default-spacer;
     padding-bottom: $default-spacer;
-
-    &:first-child {
-      padding-left: 20px;
-    }
-
-    &:last-child {
-      padding-right: 20px;
-    }
 
     &.active {
       font-weight: bold;
