@@ -92,4 +92,11 @@ class DossierNotification < ApplicationRecord
       .to_display
       .group_by(&:dossier_id)
   end
+
+  def self.notifications_for_instructeur_dossier(instructeur, dossier)
+    DossierNotification
+      .where(dossier:, groupe_instructeur_id: dossier.groupe_instructeur_id)
+      .or(DossierNotification.where(dossier:, instructeur:))
+      .to_display
+  end
 end

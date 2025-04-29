@@ -102,6 +102,7 @@ module Instructeurs
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+
       @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
 
       @current_filters = procedure_presentation.filters_for(statut)
