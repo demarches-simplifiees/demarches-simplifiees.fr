@@ -99,7 +99,7 @@ describe 'Dossier Inéligibilité', js: true do
 
       # Now test dossier modification
       click_on "Déposer le dossier"
-      click_on "Accéder à votre dossier"
+      click_on "Accéder au dossier"
       click_on "Modifier le dossier"
 
       # first matches, means i'm blocked to send my file.
@@ -160,7 +160,7 @@ describe 'Dossier Inéligibilité', js: true do
 
       # Now test dossier modification
       click_on "Déposer le dossier"
-      click_on "Accéder à votre dossier"
+      click_on "Accéder au dossier"
       click_on "Modifier le dossier"
 
       # second condition matches, means i'm blocked to send my file
