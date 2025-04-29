@@ -8,6 +8,11 @@ en:
         claimant: Claimant
         confidentiel: Confidential
         question_answer: "Answer yes/no"
+        introduction: Introduction message
+        question_label: Ask a question to the expert
+        introduction_file: Attachment
+        hints:
+          question_label: The expert could only answer by yes/no
   helpers:
     label:
       invite_linked_dossiers:
@@ -15,9 +20,9 @@ en:
         other: Invite also the expert on theses linked files n° %{ids}
       revoke: Revoke opinion request
       remind: Remind the expert
-      question_label: Ask a question to the expert
-      question_label_hint: (optional) the expert could answer by yes/no
-      introduction: Introduction message
+      avis_emails: Email addresses of the experts you wish to request advice from
+      avis_emails_hint: "You can enter the addresses individually, or copy and paste a list of addresses separated by semicolons into the field below (example: address1@mail.com; address2@mail.com; address3@mail.com)."
+      avis_emails_list_admin_hint: "Choose the experts you wish to request advice from from the list predefined by the process administrators."
       question_answer:
         true: 'yes'
         false: 'no'
