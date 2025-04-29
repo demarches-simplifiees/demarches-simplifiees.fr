@@ -27,6 +27,12 @@ class DossierNotification < ApplicationRecord
     end
   end
 
+  def self.update_notifications_groupe_instructeur(previous_groupe_instructeur, new_groupe_instructeur)
+    DossierNotification
+      .where(groupe_instructeur: previous_groupe_instructeur)
+      .update_all(groupe_instructeur_id: new_groupe_instructeur.id)
+  end
+
   def self.destroy_notifications_by_dossier_and_type(dossier, notification_type)
     DossierNotification
       .where(dossier:, notification_type:)
