@@ -10,7 +10,8 @@ class DossierNotification < ApplicationRecord
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
-    dossier_modifie: 'dossier_modifie'
+    dossier_modifie: 'dossier_modifie',
+    attente_correction: 'attente_correction'
   }
 
   scope :to_display, -> { where(display_at: ..Time.current) }
@@ -26,7 +27,7 @@ class DossierNotification < ApplicationRecord
         notification.display_at = dossier.depose_at + 7.days
       end
 
-    when :dossier_modifie
+    when :dossier_modifie, :attente_correction
       instructeur_ids = dossier.followers_instructeur_ids
       instructeur_ids.each do |instructeur_id|
         DossierNotification.find_or_create_by!(

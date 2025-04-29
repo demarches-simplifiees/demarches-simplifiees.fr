@@ -265,6 +265,7 @@ module Instructeurs
           dossier.flag_as_pending_correction!(commentaire, params[:reason].presence)
           dossier.touch(:last_commentaire_updated_at)
           current_instructeur.follow(dossier)
+          DossierNotification.create_notification(dossier, :attente_correction)
 
           flash.notice = "Dossier marqué comme en attente de correction."
         else
@@ -275,6 +276,7 @@ module Instructeurs
       respond_to do |format|
         format.turbo_stream do
           @dossier = dossier
+          @notifications = DossierNotification.notifications_for_instructeur_dossier(current_instructeur, dossier)
           render :change_state
         end
 
