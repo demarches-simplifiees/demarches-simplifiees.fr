@@ -1,9 +1,8 @@
-@import 'colors';
 @import 'constants';
 
 .status-timeline {
   display: inline-block;
-  border: 1px solid #808080;
+  border: 1px solid var(--border-plain-grey);
   border-radius: 3px;
 
   li {
@@ -24,7 +23,7 @@
     }
 
     &.active ~ li {
-      color: $dark-grey;
+      color: var(--text-mention-grey);
     }
 
     // Arrows
