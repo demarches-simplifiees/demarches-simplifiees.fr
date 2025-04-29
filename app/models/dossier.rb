@@ -694,6 +694,9 @@ class Dossier < ApplicationRecord
 
     if !brouillon?
       unfollow_stale_instructeurs
+      if previous_groupe_instructeur.present?
+        DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, groupe_instructeur)
+      end
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
       end

@@ -71,4 +71,10 @@ class DossierNotification < ApplicationRecord
       .or(DossierNotification.where(dossier:, instructeur:))
       .to_display
   end
+
+  def self.update_notifications_groupe_instructeur(previous_groupe_instructeur, new_groupe_instructeur)
+    DossierNotification
+      .where(groupe_instructeur: previous_groupe_instructeur)
+      .update_all(groupe_instructeur: new_groupe_instructeur)
+  end
 end
