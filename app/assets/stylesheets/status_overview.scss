@@ -11,11 +11,11 @@
     padding-top: $default-spacer;
     padding-bottom: $default-spacer;
 
-    &.active {
+    &[aria-current='true'] {
       font-weight: bold;
     }
 
-    &.active ~ li {
+    &:not([aria-current='true']) {
       color: var(--text-mention-grey);
     }
 
