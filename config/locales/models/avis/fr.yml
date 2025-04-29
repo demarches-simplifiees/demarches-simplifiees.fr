@@ -8,6 +8,11 @@ fr:
         claimant: Demandeur
         confidentiel: confidentiel
         question_answer: "Réponse oui/non"
+        introduction: Message d'introduction
+        question_label: Posez une question à l’expert
+        introduction_file: Pièce jointe
+        hints:
+          question_label: L’expert pourra uniquement répondre par oui/non
   helpers:
     label:
       invite_linked_dossiers:
@@ -15,9 +20,9 @@ fr:
         other: Inviter aussi l’expert sur les dossiers liés n° %{ids}
       revoke: Révoquer la demande d’avis
       remind: Relancer l’expert
-      question_label: Posez une question à l’expert
-      question_label_hint: (facultatif) l’expert pourra répondre par oui/non
-      introduction: Message d'introduction
+      avis_emails: Adresses électroniques des experts à qui vous souhaitez demander un avis
+      avis_emails_hint: "Vous pouvez saisir les adresses individuellement, ou bien copier-coller dans le champ ci-dessous une liste d’adresses séparées par des points virgules (exemple : adresse1@mail.com; adresse2@mail.com; adresse3@mail.com)."
+      avis_emails_list_admin_hint: "Choisissez des experts à qui vous souhaitez demander un avis parmi la liste prédéfinie par les administrateurs de la démarche"
       question_answer:
         true: oui
         false: non
