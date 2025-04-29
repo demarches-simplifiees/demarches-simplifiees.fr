@@ -4,8 +4,8 @@ module Instructeurs
   class DossiersController < ProceduresController
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
-    include CreateAvisConcern
     include DossierHelper
+    include AvisCreationHandler
     include TurboChampsConcern
     include InstructeurConcern
     include ActionController::Streaming
@@ -305,15 +305,18 @@ module Instructeurs
     end
 
     def create_avis
-      @avis = create_avis_from_params(dossier, current_instructeur)
+      @dossier = dossier
+      @procedure = dossier.procedure
 
-      if @avis.nil?
-        DossierNotification.create_notification(dossier, :attente_avis)
-        redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
-      else
-        @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
-        render :avis
-      end
+      @new_avis = Avis.new(dossier: @dossier) # <- utilisé si le form échoue
+
+      handle_create_avis(
+        dossier: @dossier,
+        user: current_instructeur,
+        params: avis_params,
+        success_path: avis_instructeur_dossier_path(@procedure, @dossier, statut: statut),
+        error_template: :avis_new
+      )
     end
 
     def update_annotations
@@ -427,6 +430,17 @@ module Instructeurs
     end
 
     private
+
+    def avis_params
+      params.require(:avis).permit(
+        :introduction_file,
+        :introduction,
+        :confidentiel,
+        :invite_linked_dossiers,
+        :question_label,
+        emails: []
+      )
+    end
 
     def navigate_through_dossiers_list
       dossier = dossier_scope.find(params[:dossier_id])

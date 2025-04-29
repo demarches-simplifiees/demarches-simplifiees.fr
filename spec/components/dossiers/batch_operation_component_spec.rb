@@ -13,6 +13,12 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
     cmp
   end
 
+  let(:user) { create(:user) }
+
+  before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+  end
+
   subject { render_inline(component).to_html }
   context 'statut traite' do
     let(:statut) { 'traites' }
