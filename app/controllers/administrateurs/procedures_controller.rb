@@ -139,6 +139,8 @@ module Administrateurs
     end
 
     def clone_settings
+      @procedure = Procedure.find(params[:procedure_id])
+      @cloned_from_library = cloned_from_library?
     end
 
     def clone
