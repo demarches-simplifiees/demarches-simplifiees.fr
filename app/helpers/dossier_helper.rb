@@ -151,6 +151,8 @@ module DossierHelper
     case notification.notification_type
     when DossierNotification.notification_types.fetch(:dossier_depose)
       "fr-badge fr-badge--sm fr-badge--warning"
+    when DossierNotification.notification_types.fetch(:dossier_modifie)
+      "fr-badge fr-badge--sm fr-badge--new"
     end
   end
 
@@ -162,6 +164,8 @@ module DossierHelper
       else
         t("activerecord.attributes.notification.#{notification.notification_type}.specific", days: (Time.current.to_date - notification.display_at.to_date).to_i)
       end
+    else
+      t("activerecord.attributes.notification.#{notification.notification_type}")
     end
   end
 
