@@ -169,6 +169,8 @@ module DossierHelper
       "fr-badge fr-badge--sm fr-badge--warning"
     when DossierNotification.notification_types.fetch(:dossier_modifie)
       "fr-badge fr-badge--sm fr-badge--new"
+    when DossierNotification.notification_types.fetch(:attente_correction)
+      "fr-badge fr-badge--sm"
     end
   end
 

@@ -6,3 +6,4 @@ fr:
           generic: Déposé depuis longtemps
           specific: "Dépose depuis %{days} J."
         dossier_modifie: Dossier modifié
+        attente_correction: En attente de correction
