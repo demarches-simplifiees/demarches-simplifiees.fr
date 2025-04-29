@@ -274,6 +274,7 @@ module Instructeurs
       respond_to do |format|
         format.turbo_stream do
           @dossier = dossier
+          @notifications = DossierNotification.notifications_for_instructeur_dossier(current_instructeur, dossier)
           render :change_state
         end
 
