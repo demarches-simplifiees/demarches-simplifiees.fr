@@ -81,6 +81,8 @@ class Champ < ApplicationRecord
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :prefilled, -> { where(prefilled: true) }
+  scope :public_only, -> { where(private: false) }
+  scope :private_only, -> { where(private: true) }
 
   before_save :cleanup_if_empty
 

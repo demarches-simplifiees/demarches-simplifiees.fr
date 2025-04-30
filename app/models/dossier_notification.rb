@@ -12,13 +12,14 @@ class DossierNotification < ApplicationRecord
     dossier_depose: 'dossier_depose',
     dossier_modifie: 'dossier_modifie',
     message_usager: 'message_usager',
+    annotation_instructeur: 'annotation_instructeur',
     attente_correction: 'attente_correction',
     attente_avis: 'attente_avis'
   }
 
   scope :to_display, -> { where(display_at: ..Time.current) }
 
-  def self.create_notification(dossier, notification_type, instructeur: nil)
+  def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
     case notification_type
     when :dossier_depose
       DossierNotification.find_or_create_by!(
@@ -29,8 +30,9 @@ class DossierNotification < ApplicationRecord
         notification.display_at = dossier.depose_at + 7.days
       end
 
-    when :dossier_modifie, :attente_correction, :attente_avis, :message_usager
+    when :dossier_modifie, :attente_correction, :attente_avis, :message_usager, :annotation_instructeur
       instructeur_ids = Array(instructeur&.id.presence || dossier.followers_instructeur_ids)
+      instructeur_ids -= [except_instructeur.id] if except_instructeur.present?
 
       instructeur_ids.each do |instructeur_id|
         DossierNotification.find_or_create_by!(
@@ -53,6 +55,7 @@ class DossierNotification < ApplicationRecord
   def self.refresh_notifications_instructeur_for_dossier(instructeur, dossier)
     create_notification(dossier, :dossier_modifie, instructeur:) if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
     create_notification(dossier, :message_usager, instructeur:) if dossier.commentaires.sent_by_user.present?
+    create_notification(dossier, :annotation_instructeur, instructeur:) if dossier.champs.private_only.present?
     create_notification(dossier, :attente_correction, instructeur:) if dossier.pending_correction?
     create_notification(dossier, :attente_avis, instructeur:) if dossier.avis.without_answer.present?
   end
