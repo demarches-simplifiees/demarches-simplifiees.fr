@@ -350,6 +350,8 @@ module Users
 
         @commentaire.dossier.touch(*timestamps)
 
+        DossierNotification.create_notification(dossier, :message_usager)
+
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)
       else
