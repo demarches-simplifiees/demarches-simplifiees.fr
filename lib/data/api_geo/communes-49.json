@@ -360,22 +360,6 @@
     "postal_code": "49123"
   },
   {
-    "name": "Orée d’Anjou",
-    "code": "49069",
-    "epci_code": "200060010",
-    "departement_code": "49",
-    "region_code": "52",
-    "postal_code": "49270"
-  },
-  {
-    "name": "Orée d’Anjou",
-    "code": "49069",
-    "epci_code": "200060010",
-    "departement_code": "49",
-    "region_code": "52",
-    "postal_code": "49530"
-  },
-  {
     "name": "Chanteloup-les-Bois",
     "code": "49070",
     "epci_code": "200071678",
@@ -574,6 +558,14 @@
     "departement_code": "49",
     "region_code": "52",
     "postal_code": "49700"
+  },
+  {
+    "name": "Orée d’Anjou",
+    "code": "49126",
+    "epci_code": "200060010",
+    "departement_code": "49",
+    "region_code": "52",
+    "postal_code": "49530"
   },
   {
     "name": "Durtal",

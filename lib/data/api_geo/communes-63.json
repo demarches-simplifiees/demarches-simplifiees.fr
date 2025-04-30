@@ -832,7 +832,7 @@
     "postal_code": "63720"
   },
   {
-    "name": "Le Cheix",
+    "name": "Le Cheix-sur-Morge",
     "code": "63108",
     "epci_code": "200070753",
     "departement_code": "63",
@@ -840,7 +840,7 @@
     "postal_code": "63200"
   },
   {
-    "name": "Chidrac",
+    "name": "Les Deux-Rives",
     "code": "63109",
     "epci_code": "200070407",
     "departement_code": "63",
@@ -2582,14 +2582,6 @@
     "departement_code": "63",
     "region_code": "84",
     "postal_code": "63390"
-  },
-  {
-    "name": "Saint-Cirgues-sur-Couze",
-    "code": "63330",
-    "epci_code": "200070407",
-    "departement_code": "63",
-    "region_code": "84",
-    "postal_code": "63320"
   },
   {
     "name": "Saint-Clément-de-Valorgue",

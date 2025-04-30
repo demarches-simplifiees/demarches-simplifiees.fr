@@ -3328,14 +3328,6 @@
     "postal_code": "39130"
   },
   {
-    "name": "Sainte-Agnès",
-    "code": "39474",
-    "epci_code": "200072056",
-    "departement_code": "39",
-    "region_code": "27",
-    "postal_code": "39190"
-  },
-  {
     "name": "Saint-Amour",
     "code": "39475",
     "epci_code": "200072056",
@@ -3806,14 +3798,6 @@
     "departement_code": "39",
     "region_code": "27",
     "postal_code": "39360"
-  },
-  {
-    "name": "Vaux-sur-Poligny",
-    "code": "39548",
-    "epci_code": "200071595",
-    "departement_code": "39",
-    "region_code": "27",
-    "postal_code": "39800"
   },
   {
     "name": "Verges",

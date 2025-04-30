@@ -512,14 +512,6 @@
     "postal_code": "32500"
   },
   {
-    "name": "Cabas-Loumassès",
-    "code": "32067",
-    "epci_code": "200072320",
-    "departement_code": "32",
-    "region_code": "76",
-    "postal_code": "32140"
-  },
-  {
     "name": "Cadeilhan",
     "code": "32068",
     "epci_code": "243200391",
@@ -2024,14 +2016,6 @@
     "postal_code": "32390"
   },
   {
-    "name": "Monbardon",
-    "code": "32260",
-    "epci_code": "200072320",
-    "departement_code": "32",
-    "region_code": "76",
-    "postal_code": "32420"
-  },
-  {
     "name": "Monblanc",
     "code": "32261",
     "epci_code": "243200599",
@@ -2864,7 +2848,7 @@
     "postal_code": "32700"
   },
   {
-    "name": "Saint-Blancard",
+    "name": "Cap d’Astarac",
     "code": "32365",
     "epci_code": "200072320",
     "departement_code": "32",
@@ -3246,14 +3230,6 @@
     "departement_code": "32",
     "region_code": "76",
     "postal_code": "32450"
-  },
-  {
-    "name": "Sarcos",
-    "code": "32413",
-    "epci_code": "200072320",
-    "departement_code": "32",
-    "region_code": "76",
-    "postal_code": "32420"
   },
   {
     "name": "Sarragachies",

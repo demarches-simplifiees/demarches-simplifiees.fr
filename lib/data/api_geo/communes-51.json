@@ -1528,14 +1528,6 @@
     "postal_code": "51480"
   },
   {
-    "name": "Dampierre-au-Temple",
-    "code": "51205",
-    "epci_code": "200066876",
-    "departement_code": "51",
-    "region_code": "44",
-    "postal_code": "51400"
-  },
-  {
     "name": "Dampierre-le-Château",
     "code": "51206",
     "epci_code": "200042703",
@@ -3576,7 +3568,7 @@
     "postal_code": "51170"
   },
   {
-    "name": "Saint-Hilaire-au-Temple",
+    "name": "La Neuville-au-Temple",
     "code": "51485",
     "epci_code": "200066876",
     "departement_code": "51",

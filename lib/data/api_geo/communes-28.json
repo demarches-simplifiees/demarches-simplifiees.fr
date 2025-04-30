@@ -160,14 +160,6 @@
     "postal_code": "28630"
   },
   {
-    "name": "Barmainville",
-    "code": "28025",
-    "epci_code": "200070159",
-    "departement_code": "28",
-    "region_code": "24",
-    "postal_code": "28310"
-  },
-  {
     "name": "Baudreville",
     "code": "28026",
     "epci_code": "200070159",
@@ -1896,14 +1888,6 @@
     "postal_code": "28210"
   },
   {
-    "name": "Neuvy-en-Beauce",
-    "code": "28276",
-    "epci_code": "200070159",
-    "departement_code": "28",
-    "region_code": "24",
-    "postal_code": "28310"
-  },
-  {
     "name": "Neuvy-en-Dunois",
     "code": "28277",
     "epci_code": "242852465",
@@ -2192,7 +2176,7 @@
     "postal_code": "28700"
   },
   {
-    "name": "Rouvray-Saint-Denis",
+    "name": "Neuville Saint Denis",
     "code": "28319",
     "epci_code": "200070159",
     "departement_code": "28",

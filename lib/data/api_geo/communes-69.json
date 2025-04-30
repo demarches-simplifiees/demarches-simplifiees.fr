@@ -704,7 +704,7 @@
     "postal_code": "69610"
   },
   {
-    "name": "Grigny",
+    "name": "Grigny-sur-Rhône",
     "code": "69096",
     "epci_code": "200046977",
     "departement_code": "69",
@@ -838,6 +838,14 @@
     "departement_code": "69",
     "region_code": "84",
     "postal_code": "69620"
+  },
+  {
+    "name": "Porte des Pierres Dorées",
+    "code": "69114",
+    "epci_code": "200040574",
+    "departement_code": "69",
+    "region_code": "84",
+    "postal_code": "69400"
   },
   {
     "name": "Limas",
@@ -1206,22 +1214,6 @@
     "departement_code": "69",
     "region_code": "84",
     "postal_code": "69490"
-  },
-  {
-    "name": "Porte des Pierres Dorées",
-    "code": "69159",
-    "epci_code": "200040574",
-    "departement_code": "69",
-    "region_code": "84",
-    "postal_code": "69400"
-  },
-  {
-    "name": "Porte des Pierres Dorées",
-    "code": "69159",
-    "epci_code": "200040574",
-    "departement_code": "69",
-    "region_code": "84",
-    "postal_code": "69640"
   },
   {
     "name": "Poule-les-Écharmeaux",

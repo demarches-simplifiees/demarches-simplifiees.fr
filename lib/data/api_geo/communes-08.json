@@ -2080,14 +2080,6 @@
     "postal_code": "08090"
   },
   {
-    "name": "Le Mont-Dieu",
-    "code": "08300",
-    "epci_code": "240800847",
-    "departement_code": "08",
-    "region_code": "44",
-    "postal_code": "08390"
-  },
-  {
     "name": "Montgon",
     "code": "08301",
     "epci_code": "240800920",
@@ -3144,7 +3136,7 @@
     "postal_code": "08360"
   },
   {
-    "name": "Tannay",
+    "name": "Tannay-le-Mont-Dieu",
     "code": "08439",
     "epci_code": "240800920",
     "departement_code": "08",

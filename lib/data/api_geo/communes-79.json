@@ -312,14 +312,6 @@
     "postal_code": "79240"
   },
   {
-    "name": "Caunay",
-    "code": "79060",
-    "epci_code": "200069755",
-    "departement_code": "79",
-    "region_code": "75",
-    "postal_code": "79190"
-  },
-  {
     "name": "Celles-sur-Belle",
     "code": "79061",
     "epci_code": "200069755",
@@ -1128,14 +1120,6 @@
     "postal_code": "79380"
   },
   {
-    "name": "Montalembert",
-    "code": "79180",
-    "epci_code": "200069755",
-    "departement_code": "79",
-    "region_code": "75",
-    "postal_code": "79190"
-  },
-  {
     "name": "Montravers",
     "code": "79183",
     "epci_code": "200040244",
@@ -1264,14 +1248,6 @@
     "postal_code": "79170"
   },
   {
-    "name": "Pers",
-    "code": "79205",
-    "epci_code": "200069755",
-    "departement_code": "79",
-    "region_code": "75",
-    "postal_code": "79190"
-  },
-  {
     "name": "La Petite-Boissière",
     "code": "79207",
     "epci_code": "200040244",
@@ -1302,14 +1278,6 @@
     "departement_code": "79",
     "region_code": "75",
     "postal_code": "79140"
-  },
-  {
-    "name": "Pliboux",
-    "code": "79212",
-    "epci_code": "200069755",
-    "departement_code": "79",
-    "region_code": "75",
-    "postal_code": "79190"
   },
   {
     "name": "Pompaire",
@@ -1832,7 +1800,7 @@
     "postal_code": "79200"
   },
   {
-    "name": "Sauzé-Vaussais",
+    "name": "Sauzé-entre-Bois",
     "code": "79307",
     "epci_code": "200069755",
     "departement_code": "79",

@@ -2384,14 +2384,6 @@
     "postal_code": "02110"
   },
   {
-    "name": "Filain",
-    "code": "02311",
-    "epci_code": "240200501",
-    "departement_code": "02",
-    "region_code": "32",
-    "postal_code": "02000"
-  },
-  {
     "name": "La Flamengrie",
     "code": "02312",
     "epci_code": "240200444",
@@ -4528,7 +4520,7 @@
     "postal_code": "02160"
   },
   {
-    "name": "Pargny-Filain",
+    "name": "Pargny-et-Filain",
     "code": "02589",
     "epci_code": "240200501",
     "departement_code": "02",

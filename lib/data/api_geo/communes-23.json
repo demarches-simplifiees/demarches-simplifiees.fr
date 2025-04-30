@@ -176,14 +176,6 @@
     "postal_code": "23270"
   },
   {
-    "name": "Blaudeix",
-    "code": "23023",
-    "epci_code": "200067544",
-    "departement_code": "23",
-    "region_code": "75",
-    "postal_code": "23140"
-  },
-  {
     "name": "Blessac",
     "code": "23024",
     "epci_code": "200044014",
@@ -1144,7 +1136,7 @@
     "postal_code": "23350"
   },
   {
-    "name": "Parsac-Rimondeix",
+    "name": "Parsac",
     "code": "23149",
     "epci_code": "200067544",
     "departement_code": "23",

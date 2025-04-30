@@ -175,14 +175,6 @@
     "postal_code": "22100"
   },
   {
-    "name": "Le Cambout",
-    "code": "22027",
-    "epci_code": "200067460",
-    "departement_code": "22",
-    "region_code": "53",
-    "postal_code": "22210"
-  },
-  {
     "name": "Camlez",
     "code": "22028",
     "epci_code": "200065928",
@@ -293,14 +285,6 @@
     "departement_code": "22",
     "region_code": "53",
     "postal_code": "22450"
-  },
-  {
-    "name": "Coëtlogon",
-    "code": "22043",
-    "epci_code": "200067460",
-    "departement_code": "22",
-    "region_code": "53",
-    "postal_code": "22210"
   },
   {
     "name": "Coëtmieux",
@@ -1399,14 +1383,6 @@
     "postal_code": "22740"
   },
   {
-    "name": "Pléven",
-    "code": "22200",
-    "epci_code": "200068989",
-    "departement_code": "22",
-    "region_code": "53",
-    "postal_code": "22130"
-  },
-  {
     "name": "Plévenon",
     "code": "22201",
     "epci_code": "200068989",
@@ -1687,7 +1663,7 @@
     "postal_code": "22290"
   },
   {
-    "name": "Pluduno",
+    "name": "Val-d’Arguenon",
     "code": "22237",
     "epci_code": "200068989",
     "departement_code": "22",
@@ -2181,14 +2157,6 @@
     "departement_code": "22",
     "region_code": "53",
     "postal_code": "22630"
-  },
-  {
-    "name": "Saint-Launeuc",
-    "code": "22309",
-    "epci_code": "200067460",
-    "departement_code": "22",
-    "region_code": "53",
-    "postal_code": "22230"
   },
   {
     "name": "Saint-Laurent",

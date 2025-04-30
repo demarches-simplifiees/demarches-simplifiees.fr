@@ -728,14 +728,6 @@
     "postal_code": "30170"
   },
   {
-    "name": "Corbès",
-    "code": "30094",
-    "epci_code": "200066918",
-    "departement_code": "30",
-    "region_code": "76",
-    "postal_code": "30140"
-  },
-  {
     "name": "Corconne",
     "code": "30095",
     "epci_code": "200034411",
@@ -2592,7 +2584,7 @@
     "postal_code": "30390"
   },
   {
-    "name": "Thoiras",
+    "name": "Thoiras-Corbès",
     "code": "30329",
     "epci_code": "200066918",
     "departement_code": "30",

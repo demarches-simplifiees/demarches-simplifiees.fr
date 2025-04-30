@@ -736,14 +736,6 @@
     "postal_code": "34310"
   },
   {
-    "name": "Dio-et-Valquières",
-    "code": "34093",
-    "epci_code": "200042646",
-    "departement_code": "34",
-    "region_code": "76",
-    "postal_code": "34650"
-  },
-  {
     "name": "Espondeilhan",
     "code": "34094",
     "epci_code": "243400769",
@@ -1144,7 +1136,7 @@
     "postal_code": "34140"
   },
   {
-    "name": "Lunas",
+    "name": "Lunas-les-Châteaux",
     "code": "34144",
     "epci_code": "200042646",
     "departement_code": "34",
@@ -1373,7 +1365,7 @@
     "epci_code": "243400017",
     "departement_code": "34",
     "region_code": "76",
-    "postal_code": "34080"
+    "postal_code": "34090"
   },
   {
     "name": "Montpellier",
@@ -1397,7 +1389,7 @@
     "epci_code": "243400017",
     "departement_code": "34",
     "region_code": "76",
-    "postal_code": "34090"
+    "postal_code": "34080"
   },
   {
     "name": "Montpeyroux",

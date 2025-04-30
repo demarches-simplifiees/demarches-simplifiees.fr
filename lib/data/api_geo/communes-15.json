@@ -232,6 +232,14 @@
     "postal_code": "15290"
   },
   {
+    "name": "Celles",
+    "code": "15031",
+    "epci_code": "200066637",
+    "departement_code": "15",
+    "region_code": "84",
+    "postal_code": "15170"
+  },
+  {
     "name": "Celoux",
     "code": "15032",
     "epci_code": "200066637",
@@ -254,6 +262,14 @@
     "departement_code": "15",
     "region_code": "84",
     "postal_code": "15320"
+  },
+  {
+    "name": "Chalinargues",
+    "code": "15035",
+    "epci_code": "200066637",
+    "departement_code": "15",
+    "region_code": "84",
+    "postal_code": "15170"
   },
   {
     "name": "Chalvignac",
@@ -326,6 +342,14 @@
     "departement_code": "15",
     "region_code": "84",
     "postal_code": "15700"
+  },
+  {
+    "name": "Chavagnac",
+    "code": "15047",
+    "epci_code": "200066637",
+    "departement_code": "15",
+    "region_code": "84",
+    "postal_code": "15300"
   },
   {
     "name": "Chazelles",
@@ -1016,7 +1040,7 @@
     "postal_code": "15250"
   },
   {
-    "name": "Neussargues en Pinatelle",
+    "name": "Neussargues-Moissac",
     "code": "15141",
     "epci_code": "200066637",
     "departement_code": "15",
@@ -1024,7 +1048,7 @@
     "postal_code": "15170"
   },
   {
-    "name": "Neussargues en Pinatelle",
+    "name": "Neussargues-Moissac",
     "code": "15141",
     "epci_code": "200066637",
     "departement_code": "15",
@@ -1254,6 +1278,14 @@
     "departement_code": "15",
     "region_code": "84",
     "postal_code": "15190"
+  },
+  {
+    "name": "Sainte-Anastasie",
+    "code": "15171",
+    "epci_code": "200066637",
+    "departement_code": "15",
+    "region_code": "84",
+    "postal_code": "15170"
   },
   {
     "name": "Saint-Antoine",

@@ -64,22 +64,6 @@
     "postal_code": "14860"
   },
   {
-    "name": "Aurseulles",
-    "code": "14011",
-    "epci_code": "200069524",
-    "departement_code": "14",
-    "region_code": "28",
-    "postal_code": "14240"
-  },
-  {
-    "name": "Aurseulles",
-    "code": "14011",
-    "epci_code": "200069524",
-    "departement_code": "14",
-    "region_code": "28",
-    "postal_code": "14250"
-  },
-  {
     "name": "Angerville",
     "code": "14012",
     "epci_code": "200065563",
@@ -1776,14 +1760,6 @@
     "postal_code": "14600"
   },
   {
-    "name": "Gerrots",
-    "code": "14300",
-    "epci_code": "200065563",
-    "departement_code": "14",
-    "region_code": "28",
-    "postal_code": "14430"
-  },
-  {
     "name": "Giberville",
     "code": "14301",
     "epci_code": "200065597",
@@ -2448,7 +2424,7 @@
     "postal_code": "14920"
   },
   {
-    "name": "May-sur-Orne",
+    "name": "Saint-Martin-de-May",
     "code": "14408",
     "epci_code": "200066728",
     "departement_code": "14",
@@ -3376,6 +3352,14 @@
     "postal_code": "14310"
   },
   {
+    "name": "Aurseulles",
+    "code": "14581",
+    "epci_code": "200069524",
+    "departement_code": "14",
+    "region_code": "28",
+    "postal_code": "14240"
+  },
+  {
     "name": "Saint-Germain-de-Livet",
     "code": "14582",
     "epci_code": "200069532",
@@ -3584,14 +3568,6 @@
     "postal_code": "14710"
   },
   {
-    "name": "Saint-Martin-de-Fontenay",
-    "code": "14623",
-    "epci_code": "200066728",
-    "departement_code": "14",
-    "region_code": "28",
-    "postal_code": "14320"
-  },
-  {
     "name": "Saint-Martin-de-la-Lieue",
     "code": "14625",
     "epci_code": "200069532",
@@ -3770,7 +3746,7 @@
   {
     "name": "Saint-Sylvain",
     "code": "14659",
-    "epci_code": "200066710",
+    "epci_code": "200065589",
     "departement_code": "14",
     "region_code": "28",
     "postal_code": "14190"
@@ -4264,7 +4240,7 @@
     "postal_code": "14170"
   },
   {
-    "name": "Victot-Pontfol",
+    "name": "Victot-en-Auge",
     "code": "14743",
     "epci_code": "200065563",
     "departement_code": "14",
