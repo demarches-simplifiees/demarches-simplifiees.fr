@@ -12,10 +12,10 @@ module InstructeurConcern
       @notifications = DossierNotification.notifications_for_instructeur_dossier(current_instructeur, dossier)
     end
 
-    def destroy_dossier_modifie_notification
+    def destroy_notification(notification_type)
       DossierNotification.destroy_notification_by_dossier_and_type_and_instructeur(
         dossier,
-        :dossier_modifie,
+        notification_type,
         current_instructeur
       )
     end
