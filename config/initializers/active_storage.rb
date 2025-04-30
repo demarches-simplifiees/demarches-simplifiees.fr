@@ -24,8 +24,8 @@ ActiveSupport.on_load(:active_storage_blob) do
 end
 
 ActiveSupport.on_load(:active_storage_attachment) do
-  include AttachmentImageProcessorConcern
   include AttachmentVirusScannerConcern
+  include AttachmentImageProcessorConcern
 end
 
 Rails.application.reloader.to_prepare do
