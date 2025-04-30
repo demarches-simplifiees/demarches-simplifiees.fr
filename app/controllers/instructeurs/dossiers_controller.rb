@@ -305,6 +305,7 @@ module Instructeurs
       @avis = create_avis_from_params(dossier, current_instructeur)
 
       if @avis.nil?
+        DossierNotification.create_notification(dossier, :attente_avis)
         redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
         @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at

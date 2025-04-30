@@ -11,7 +11,8 @@ class DossierNotification < ApplicationRecord
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
     dossier_modifie: 'dossier_modifie',
-    attente_correction: 'attente_correction'
+    attente_correction: 'attente_correction',
+    attente_avis: 'attente_avis'
   }
 
   scope :to_display, -> { where(display_at: ..Time.current) }
@@ -27,7 +28,7 @@ class DossierNotification < ApplicationRecord
         notification.display_at = dossier.depose_at + 7.days
       end
 
-    when :dossier_modifie, :attente_correction
+    when :dossier_modifie, :attente_correction, :attente_avis
       instructeur_ids = Array(instructeur&.id.presence || dossier.followers_instructeur_ids)
 
       instructeur_ids.each do |instructeur_id|
@@ -51,6 +52,7 @@ class DossierNotification < ApplicationRecord
   def self.refresh_notifications_instructeur_for_dossier(instructeur, dossier)
     create_notification(dossier, :dossier_modifie, instructeur:) if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
     create_notification(dossier, :attente_correction, instructeur:) if dossier.pending_correction?
+    create_notification(dossier, :attente_avis, instructeur:) if dossier.avis.without_answer.present?
   end
 
   def self.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
