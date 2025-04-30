@@ -6,7 +6,7 @@
     %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'activate-account-legend' } }
 
       %legend.fr-fieldset__legend#activate-account-legend
-        %h2.fr-h6.fr-mb-0= t('.activate', email: user.email)
+        %h2.fr-h6= t('.activate', email: user.email)
 
       .fr-fieldset__element
         %p= t('asterisk_html', scope: [:utils])
@@ -16,8 +16,7 @@
 
       .fr-fieldset__element
         = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-          opts: { autofocus: 'true',
-            autocomplete: 'new-password',
+          opts: { autocomplete: 'new-password',
             data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path },
             aria: {describedby: 'password_hint'}})
 
