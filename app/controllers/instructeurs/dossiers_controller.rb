@@ -323,6 +323,7 @@ module Instructeurs
       if annotation.save(context: :champs_private_value) && annotation_changed
         annotation.update_timestamps
         dossier.index_search_terms_later
+        DossierNotification.create_notification(dossier, :annotation_instructeur, except_instructeur: current_instructeur)
       end
 
       dossier.validate(context: :champs_private_value)
