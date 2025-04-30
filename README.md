@@ -1,7 +1,7 @@
 # demarches-simplifiees.fr
 
-> [!INFO]
-> *[Voir la version française](demarches-simplifiees.fr/README.fr.md)*
+> [!NOTE]
+> [Lire la version française du README](README.fr.md)
 
 ## Context
 

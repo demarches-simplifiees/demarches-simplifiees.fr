@@ -1,57 +1,63 @@
-# Comment contribuer
+# How to Contribute
 
-demarches-simplifiees.fr est un [logiciel libre](https://fr.wikipedia.org/wiki/Logiciel_libre). Vous pouvez lire et modifier son code-source, sous les termes de la licence AGPL.
+> [!NOTE]
+> [Lire la version française](CONTRIBUTING.fr.md)
 
-Si vous souhaitez apporter des améliorations à demarches-simplifiees.fr, c’est possible !
+demarches-simplifiees.fr is [free software](https://en.wikipedia.org/wiki/Free_software). You can read and modify its source code under the terms of the AGPL license.
 
-Le mieux pour cela est de **proposer une modification dans la base de code principale**. Une fois acceptée, votre amélioration sera ainsi disponible pour l’ensemble des utilisateurs de demarches-simplifiees.fr.
+If you would like to make improvements to demarches-simplifiees.fr, it's possible!
 
-Voici la marche à suivre recommandée pour effectuer une modification.
+The best way is to **propose a modification to the main codebase**. Once accepted, your improvement will be available to all users of demarches-simplifiees.fr.
 
-## 1. Discuter de l’amélioration
+Here is the recommended process for making a change.
 
-La première étape est généralement de discuter de l’amélioration que vous proposez (s’il ne s’agit pas d’un changement trivial, comme la correction d’une coquille).
+## 1. Discuss the improvement
 
-Pour cela, [créez une nouvelle issue](https://github.com/betagouv/demarches-simplifiees.fr/issues/new) concernant votre proposition. Autant que possible, indiquez clairement votre besoin, votre cas d’usage – et éventuellement comment vous pensez déjà le résoudre.
+The first step is usually to discuss the improvement you're proposing (if it's not a trivial change, such as fixing a typo).
 
-Nous pouvons alors discuter, pour vérifier que le besoin exprimé correspond à l’usage de demarches-simplifiees.fr, proposer éventuellement des alternatives, et se mettre d’accord sur une implémentation technique pertinente.
+To do this, [create a new issue](https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues/new) about your proposal. As much as possible, clearly state your need, your use case - and potentially how you already think about solving it.
 
-## 2. Proposer du code
+We can then discuss to verify that the expressed need aligns with the purpose of demarches-simplifiees.fr, possibly suggest alternatives, and agree on a relevant technical implementation.
 
-Une fois que la discussion est établie, et que les éléments techniques sont dégrossis, vous pouvez proposer des changements au code. Pour cela, effectuez vos modifications en local, et [ouvrez une Pull Request](https://github.com/betagouv/demarches-simplifiees.fr/issues/new) avec les changements que vous souhaitez apporter.
+## 2. Propose code
 
-Quelques conseils : pensez à bien décrire l’objectif et l’implémentation de votre PR au moment de la créer. Et si vos changements sont importants, découpez-les en plusieurs petites PRs successives, qui seront plus faciles à relire. N’oubliez pas d’ajouter des tests automatisés pour vous assurer que vos changements fonctionnent bien.
+Once the discussion is established and the technical elements are outlined, you can propose code changes. To do this, make your modifications locally and [open a Pull Request](https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues/new) with the changes you want to make.
 
-Chaque PR ouverte déclenche l’exécution des tests automatisés, et la vérification du format du code. Si vos tests ou votre formatage sont en rouge, corrigez les erreurs avant de continuer.
+Some tips: Be sure to clearly describe the objective and implementation of your PR when creating it. If your changes are significant, break them down into several smaller, sequential PRs, which will be easier to review. Don't forget to add automated tests to ensure your changes work properly.
 
-Une personne de l’équipe de développement fera une relecture, en demandant éventuellement des détails ou des changements. Si personne n’a réagi au bout de 5 jours, n’hésitez pas à relancer en ajoutant un commentaire à la PR.
+Each opened PR triggers automated tests and code format verification. If your tests or formatting show errors, fix them before continuing.
 
-## 3. Intégration
+A member of the development team will review your PR, possibly asking for details or changes. If no one has responded after 5 days, feel free to follow up by adding a comment to the PR.
 
-Une fois votre PR approuvée, elle sera intégrée dans la base de code principale.
+## 3. Integration
 
-Nous mettons en production au minimum une fois par semaine (et généralement plus) : vos changements seront disponibles en production sur [demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) quelques jours après.
+Once your PR is approved, it will be integrated into the main codebase.
 
-## Héberger demarches-simplifiees.fr
+We deploy to production at least once a week (and usually more often): your changes will be available in production on [demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) within a few days.
 
-demarches-simplifiees.fr est **compliqué à héberger**. Parmi les problématiques que nous rencontrons :
+## Hosting demarches-simplifiees.fr
 
-- **Sécurité et confidentialité des données** : par nature, demarches-simplifiees.fr est appelé à traiter des natures de données qui peuvent présenter des caractéristiqus plus ou moins sensibles. La sécurité de l’infrastructure doit être contrôlée et certifiée pour garantir la confidentialité des données. Cela implique par exemple une démarche de mise en conformité avec le [Référentiel Général de Sécurité](https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/le-referentiel-general-de-securite-rgs/), qui est un processus assez lourd.
-  C’est également valable pour le stockage des pièces-jointes, qui peuvent la aussi présenter des particularités et des sensibilités dont la confidentialité doit être garantie.
-- **Utilisation de services externes** : demarches-simplifiees.fr s’interconnecte à de nombreux services externes : des APIs (API Entreprise, API Carto, la Base Adresse Nationale, etc.) – mais aussi des services pour le stockage externe des pièces-jointes, l’analyse anti-virus ou l’envoi des emails. Le fonctionnement de demarches-simplifiees.fr dépend de la disponibilité de ces services externes.
-- **Mises à jour** : le schéma de la base de données change régulièrement. Nous codons également des scripts pour harmoniser les anciennes données. Parfois des modifications ponctuelles sont effectuées sur des démarches anciennes, pour les mettre en conformité avec de nouvelles règles métiers. Nous maintenons également les dépendances logicielles utilisées – notamment en réagissant rapidement lorsqu’une faille de sécurité est signalée. Ces mises à jour fréquentes en production sont indispensables au bon fonctionnement de l’outil.
+demarches-simplifiees.fr is **complicated to host**. Among the issues we face:
 
-Si vous souhaitez adapter demarches-simplifiees.fr à vos besoins, nous vous recommandons de **proposer vos modifications à la base de code principale** (par exemple en créant une issue) **plutôt que d’héberger une autre instance vous-même**.
+- **Data security and confidentiality**: by nature, demarches-simplifiees.fr is designed to process various types of data that may have more or less sensitive characteristics. The security of the infrastructure must be controlled and certified to guarantee data confidentiality. This involves, for example, a process of compliance with the [General Security Framework](https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/le-referentiel-general-de-securite-rgs/) (Référentiel Général de Sécurité), which is quite a heavy process.
+  This also applies to the storage of attachments, which may also present characteristics and sensitivities whose confidentiality must be guaranteed.
 
-Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous ne disposons malheureusement pas des moyens pour vous accompagner, ni d’assurer de support technique concernant votre installation.
+  The encryption of attachments is provided by our HTTP proxy : [DS Proxy](https://github.com/demarches-simplifiees/ds_proxy), but it's optional.
 
-Toutefois, certains acteurs (le ministère des armées, l’administration autonome en Polynésie française, l'association Adullact) ont déployé des instances séparées. Nous proposons aux personnes intéressées de les mettre en relation avec ces acteurs existants, pour obtenir un retour d’expérience et bénéficier de leur retour.
+- **Use of external services**: demarches-simplifiees.fr interconnects with many external services: APIs (API Entreprise, API Carto, the National Address Database, etc.) - but also services for external storage of attachments, anti-virus analysis, or sending emails. The operation of demarches-simplifiees.fr depends on the availability of these external services.
+- **Updates**: the database schema changes regularly. We also code scripts to harmonize old data. Sometimes specific modifications are made to old procedures to make them comply with new business rules. We also maintain the software dependencies used - especially by reacting quickly when a security flaw is reported. These frequent production updates are essential for the proper functioning of the tool.
 
-## Bonnes pratiques de code
+If you want to adapt demarches-simplifiees.fr to your needs, we recommend **proposing your modifications to the main codebase** (for example by creating an issue) **rather than hosting another instance yourself**.
 
-Votre contribution sera plus rapidement traitée si elle s'appuie sur nos habitudes de développement.
+If you are considering hosting an instance of demarches-simplifiees.fr yourself, unfortunately, we do not have the resources to assist you or provide technical support for your installation.
 
-Nous travaillons à rendre explicite un maximum de nos pratiques de dev, aussi il est chaudement recommandé
-de prendre connaissance des [bonnes pratiques de code](doc/Contributions/Pratiques-de-dev.md).
+However, some organizations (the Ministry of Defense, the autonomous administration in French Polynesia, the Adullact association) have deployed separate instances. We offer to connect interested parties with these existing actors to get feedback and benefit from their experience.
 
-Merci de votre intérêt pour le projet !
+## Good coding practices
+
+Your contribution will be processed more quickly if it follows our development habits.
+
+We work to make as many of our development practices explicit as possible, so it is strongly recommended
+to familiarize yourself with our [good development practices](doc/Contributions/Pratiques-de-dev.md).
+
+Thank you for your interest in the project!
