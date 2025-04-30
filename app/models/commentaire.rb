@@ -16,12 +16,18 @@ class Commentaire < ApplicationRecord
   normalizes :body, with: NORMALIZES_NON_PRINTABLE_PROC
 
   FILE_MAX_SIZE = 20.megabytes
+  SYSTEM_EMAILS = ["demarches.numerique.gouv.fr", CONTACT_EMAIL, OLD_CONTACT_EMAIL]
+
   validates :piece_jointe,
     content_type: AUTHORIZED_CONTENT_TYPES,
     size: { less_than: FILE_MAX_SIZE }
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
+  scope :sent_by_user, -> {
+    where(instructeur_id: nil, expert_id: nil)
+      .where.not(email: SYSTEM_EMAILS)
+  }
 
   after_create :notify
 
@@ -52,7 +58,7 @@ class Commentaire < ApplicationRecord
   end
 
   def sent_by_system?
-    ["demarches.gouv.fr", CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email)
+    SYSTEM_EMAILS.include?(email)
   end
 
   def sent_by_instructeur?
