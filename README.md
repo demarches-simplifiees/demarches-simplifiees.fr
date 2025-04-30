@@ -1,31 +1,34 @@
 # demarches-simplifiees.fr
 
-## Contexte
+> [!INFO]
+> *[Voir la version française](demarches-simplifiees.fr/README.fr.md)*
 
-[demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) est un site web conçu afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les démarches administratives.
+## Context
 
-## Comment contribuer ?
+[demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) is a web platform designed to address the French government's urgent need to comply with the directive for 100% digitization of administrative procedures.
 
-demarches-simplifiees.fr est un [logiciel libre](https://fr.wikipedia.org/wiki/Logiciel_libre) sous licence AGPL.
+## How to contribute?
 
-Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [guide de contribution](CONTRIBUTING.md).
+demarches-simplifiees.fr is [open source](https://en.wikipedia.org/wiki/Open-source_software) software under the AGPL license.
 
-## Installation pour le développement
+Would you like to make changes or improvements? Read our [contribution guide](CONTRIBUTING.md).
 
-### Dépendances techniques
+## Development setup
 
-#### Tous environnements
+### Technical dependencies
+
+#### All environments
 
 - postgresql
-- imagemagick et gsfonts pour générer les filigranes sur les titres d'identité ou générer des minitiatures d'images.
+- imagemagick and gsfonts to generate watermarks on identity documents or generate image thumbnails.
 
 > [!WARNING]
-> Pensez à restreindre la policy d'ImageMagick pour bloquer l'exploitation d'images malveillantes.
-> La configuration par défaut est généralement insuffisante pour des images provenant du web.
-> Par exemple sous debian/ubuntu dans `/etc/ImageMagick-6/policy.xml` :
+> Remember to restrict ImageMagick's policy to block exploitation of malicious images.
+> The default configuration is usually insufficient for images from the web.
+> For example, on Debian/Ubuntu in `/etc/ImageMagick-6/policy.xml`:
 
 ```xml
-<!-- en plus de la policy par défaut, ajoutez à la fin du fichier -->
+<!-- in addition to the default policy, add at the end of the file -->
 <policymap>
     <policy domain="coder" rights="none" pattern="*"/>
     <policy domain="coder" rights="read | write" pattern="{JPG,JPEG,PNG,JSON}"/>
@@ -33,27 +36,27 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 </policymap>
 ```
 
-Nous sommes en cours de migration de `delayed_job` vers `sidekiq` pour le traitement des jobs asynchrones.
-Pour faire tourner sidekiq, vous aurez besoin de :
+We are currently migrating from `delayed_job` to `sidekiq` for asynchronous job processing.
+To run sidekiq, you will need:
 
 - redis
 
-- lightgallery : une license a été souscrite pour soutenir le projet, mais elle n'est pas obligatoire si la librairie est utilisée dans le cadre d'une application open source.
+- lightgallery: a license has been purchased to support the project, but it is not required if the library is used as part of an open source application.
 
-#### Développement
+#### Development
 
-- rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
-- Bun : voir https://bun.sh/docs/installation
+- rbenv: see https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
+- Bun: see https://bun.sh/docs/installation
 
 #### Tests
 
 - Chrome
-- chromedriver :
-  * Mac : `brew install chromedriver`
-  * Linux : voir https://developer.chrome.com/blog/chrome-for-testing
+- chromedriver:
+  * Mac: `brew install chromedriver`
+  * Linux: see https://developer.chrome.com/blog/chrome-for-testing
 
-Si l'emplacement d'installation de Chrome n'est pas standard, ou que vous utilisez Brave ou Chromium à la place,
-il peut être nécessaire d'overrider pour votre machine le path vers le binaire Chrome, par exemple :
+If Chrome's installation location is non-standard, or if you're using Brave or Chromium instead,
+you may need to override the path to the Chrome binary for your machine, for example:
 
 ```ruby
 # create file spec/support/spec_config.local.rb
@@ -64,11 +67,11 @@ Selenium::WebDriver::Chrome.path = "/Applications/Brave Browser.app/Contents/Mac
 Webdrivers::Chromedriver.required_version = "103.0.5060.53"
 ```
 
-Il est également possible de faire une installation et mise à jour automatique lors de l'exécution de `bin/update` en définissant la variable d'environnement `UPDATE_WEBDRIVER`. Les binaires seront installés dans le repertoire `~/.local/bin/` qui doit être rajouté manuellement dans le path.
+It's also possible to automatically install and update when running `bin/update` by defining the `UPDATE_WEBDRIVER` environment variable. The binaries will be installed in the `~/.local/bin/` directory, which must be manually added to your path.
 
-### Création des rôles de la base de données
+### Creating database roles
 
-Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
+The information needed to initialize the database must be pre-configured manually using the following procedure:
 
     su - postgres
     psql
@@ -77,122 +80,116 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > \q
 
 
-### Initialisation de l'environnement de développement
+### Initializing the development environment
 
-Sous Ubuntu, certains packages doivent être installés au préalable :
+On Ubuntu, some packages must be installed first:
 
     sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev libcurl4-gnutls-dev zlib1g-dev
 
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
+To initialize the development environment, run the following command:
 
     bin/setup
 
-### Lancement de l'application
+### Launching the application
 
-On lance le serveur d'application ainsi :
+Start the application server like this:
 
     bin/dev
 
-L'application tourne alors à l'adresse `http://localhost:3000` avec en parallèle un worker pour les jobs et le bundler vitejs.
+The application will then run at `http://localhost:3000` with a worker for jobs and the vitejs bundler running in parallel.
 
-### Utilisateurs de test
+### Test users
 
-En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
+Locally, a test user is automatically created with the credentials `test@exemple.fr`/`this is a very complicated password !`. (see [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
 
-### Programmation des tâches récurrentes
+### Scheduling recurring tasks
 
     rails jobs:schedule
 
-### Voir les emails envoyés en local
+### Viewing emails sent locally
 
-Ouvrez la page [http://localhost:3000/letter_opener](http://localhost:3000/letter_opener).
+Open the page [http://localhost:3000/letter_opener](http://localhost:3000/letter_opener).
 
-### Mise à jour de l'application
+### Updating the application
 
-Pour mettre à jour votre environnement de développement, installer les nouvelles dépendances et faire jouer les migrations, exécutez :
+To update your development environment, install new dependencies, and run migrations:
 
     bin/update
 
-### Exécution des tests (RSpec)
+### Running tests (RSpec)
 
-Les tests ont besoin de leur propre base de données et certains d'entre eux utilisent Selenium pour s'exécuter dans un navigateur. N'oubliez pas de créer la base de test et d'installer chrome et chromedriver pour exécuter tous les tests.
+Tests need their own database, and some of them use Selenium to run in a browser. Don't forget to create the test database and install Chrome and chromedriver to run all tests.
 
-Pour exécuter les tests de l'application, plusieurs possibilités :
+To run the application tests, several options are available:
 
-- Lancer tous les tests
+- Run all tests
 
         bin/rake spec
         bin/rspec
 
-- Lancer un test en particulier
+- Run a specific test
 
         bin/rake spec SPEC=file_path/file_name_spec.rb:line_number
         bin/rspec file_path/file_name_spec.rb:line_number
 
-- Lancer tous les tests d'un fichier
+- Run all tests in a file
 
         bin/rake spec SPEC=file_path/file_name_spec.rb
         bin/rspec file_path/file_name_spec.rb
 
-- Relancer uniquement les tests qui ont échoué précédemment
+- Only rerun tests that previously failed
 
         bin/rspec --only-failures
 
-- Lancer un ou des tests systèmes avec un browser
+- Run one or more system tests with a visible browser
 
         NO_HEADLESS=1 bin/rspec spec/system
 
-- Afficher les logs js en error issus de la console du navigateur `console.error('coucou')`
+- Display JavaScript error logs from the browser console (`console.error('hello')`)
 
         JS_LOG=debug,log,error bin/rspec spec/system
 
-- Augmenter la latence lors de tests end2end pour déceler des bugs récalcitrants
+- Increase latency during end-to-end tests to detect stubborn bugs
 
         MAKE_IT_SLOW=1 bin/rspec spec/system
 
-### Ajout de taches à exécuter au déploiement
+### Adding tasks to run during deployment
 
         rails generate after_party:task task_name
 
 ### Linting
 
-Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
+The project uses several linters to check code readability and quality.
 
-- Faire tourner tous les linters : `bin/rake lint`
-- Vérifier l'état des traductions : `bundle exec i18n-tasks health`
-- [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
+- Run all linters: `bin/rake lint`
+- Check the status of translations: `bundle exec i18n-tasks health`
+- [AccessLint](http://accesslint.com/) runs automatically on PRs
 
-### Régénérer les binstubs
+### Regenerating binstubs
 
     bundle binstub railties --force
     bin/rake rails:update:bin
 
-## Déploiement
+## Deployment
 
-Voir les notes de déploiement dans [DEPLOYMENT.md](doc/DEPLOYMENT.md)
+See deployment notes in [DEPLOYMENT.md](doc/DEPLOYMENT.md)
 
-## Tâches courantes
+## Common tasks
 
-### Tâches de gestion des comptes super-admin
+### Super-admin account management tasks
 
-Des tâches de gestion des comptes super-admin sont prévues dans le namespace `superadmin`.
-Pour les lister : `bin/rake -D superadmin:`.
+Super-admin account management tasks are available in the `superadmin` namespace.
+To list them: `bin/rake -D superadmin:`.
 
-### Tâches d’aide au support
+### Support tasks
 
-Des tâches d’aide au support sont prévues dans le namespace `support`.
-Pour les lister : `bin/rake -D support:`.
-
-## Compatibilité navigateurs
-
-L'application gère les navigateurs récents, parmis lequels Firefox, Chrome, Safari et Edge (voir `config/initializers/browser.rb`).
-
-La compatibilité est testée par Browserstack.<br>[<img src="app/assets/images/browserstack-logo-600x315.png" width="200">](https://www.browserstack.com/)
+Support tasks are available in the `support` namespace.
+To list them: `bin/rake -D support:`.
 
 ## Performance
 
 [![View performance data on Skylight](https://badges.skylight.io/status/zAvWTaqO0mu1.svg)](https://oss.skylight.io/app/applications/zAvWTaqO0mu1)
 
-Nous utilisons Skylight pour suivre les performances de notre application.
+We use Skylight to monitor our application's performance.
 
-Par ailleurs, nous utilisons [Yabeda](https://github.com/yabeda-rb/yabeda) pour exporter des métriques au format prometheus pour Sidekiq. L'activation se fait via la variable d'environnement `PROMETHEUS_EXPORTER_ENABLED` voir config/env.example.optional .
+Additionally, we use [Yabeda](https://github.com/yabeda-rb/yabeda) to export Prometheus-format metrics for Sidekiq. This is activated via the `PROMETHEUS_EXPORTER_ENABLED` environment variable (see config/env.example.optional).
