@@ -1,8 +1,8 @@
-%li.fr-mb-1w
-  - if service.faq_link.present?
+- if service.faq_link.present?
+  %li.fr-mb-1w
     = link_to t('.faq_link'), service.faq_link , title: helpers.new_tab_suffix(t('.faq_link')), class: 'fr-link fr-link--sm', **helpers.external_link_attributes
-%li.fr-mb-2w
-  - if service.contact_link.present?
+- if service.contact_link.present?
+  %li.fr-mb-2w
     = link_to t('.contact_link'), service.contact_link, title: helpers.new_tab_suffix(t('.contact_link')), class: 'fr-link fr-link--sm', **helpers.external_link_attributes
 
 %li.border-left-dark
