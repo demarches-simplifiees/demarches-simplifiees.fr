@@ -72,8 +72,8 @@ describe Experts::AvisController, type: :controller do
 
           it do
             expect(response).to have_http_status(:success)
-            expect(assigns(:avis_a_donner)).to match([avis_without_answer, oldest_avis_without_answer])
-            expect(assigns(:avis_donnes)).to match([avis_with_answer])
+            expect(assigns(:avis_a_donner)).to match_array([avis_without_answer, oldest_avis_without_answer])
+            expect(assigns(:avis_donnes)).to match_array([avis_with_answer])
             expect(assigns(:statut)).to eq('a-donner')
           end
         end
