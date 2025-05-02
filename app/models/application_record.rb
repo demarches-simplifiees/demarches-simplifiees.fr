@@ -6,7 +6,6 @@ class ApplicationRecord < ActiveRecord::Base
   # Matches any character that is a control character in ASCII :
   # \x00-\x08: Matches control characters from NULL (0) through BACKSPACE (8)
   # \x0B: Matches VERTICAL TAB (11)
-  # \x0C: Matches FORM FEED (12)
   # \x0E-\x1F: Matches control characters from SHIFT OUT (14) through UNIT SEPARATOR (31)
   # \x7F: Matches DELETE (127)
   #
@@ -14,10 +13,15 @@ class ApplicationRecord < ActiveRecord::Base
   # \x09: HORIZONTAL TAB
   # \x0A: LINE FEED
   # \x0D: CARRIAGE RETURN
-  NON_PRINTABLE_REGEXP = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.freeze
+  NON_PRINTABLE_REGEXP = /[\x00-\x08\x0B\x0E-\x1F\x7F]/.freeze
+
+  # we want to replace line feed with a \n
+  LINE_FEED_REGEXP = /\x0A/.freeze
 
   # In practical terms, this regular expression is used to remove non-printable control characters from some user inputs
-  NORMALIZES_NON_PRINTABLE_PROC = -> (attr) { attr.gsub(NON_PRINTABLE_REGEXP, '') }
+  NORMALIZES_NON_PRINTABLE_PROC = -> (attr) do
+    attr.gsub(NON_PRINTABLE_REGEXP, '').gsub(LINE_FEED_REGEXP, "\n")
+  end
 
   def self.record_from_typed_id(id)
     class_name, record_id = GraphQL::Schema::UniqueWithinType.decode(id)

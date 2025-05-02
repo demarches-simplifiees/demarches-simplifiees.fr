@@ -71,7 +71,7 @@ describe Champ do
   describe "normalization" do
     it "should remove null bytes char using unicode escape sequence" do
       champ = Champ.new(value: "foo\u0000bar")
-      champ.normalize
+      champ.validate
       expect(champ.value).to eq "foobar"
     end
 
