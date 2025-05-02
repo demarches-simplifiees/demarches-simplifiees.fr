@@ -1,7 +1,8 @@
 = icon
 
 .width-100
-  %h2.fr-h6
+
+  = tag.send(heading_level, class: 'fr-h6') do
     %span.mail
       = commentaire_issuer
     - if commentaire_from_guest?
