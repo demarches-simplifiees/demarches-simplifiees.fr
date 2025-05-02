@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 class Dossiers::MessageComponent < ApplicationComponent
-  def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false, groupe_gestionnaire: nil)
+  def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false, groupe_gestionnaire: nil, heading_level: 'h2')
     @commentaire = commentaire
     @connected_user = connected_user
     @messagerie_seen_at = messagerie_seen_at
     @show_reply_button = show_reply_button
     @groupe_gestionnaire = groupe_gestionnaire
+    @heading_level = heading_level
   end
 
   attr_reader :commentaire, :connected_user, :messagerie_seen_at, :groupe_gestionnaire
+  def heading_level
+    @heading_level
+  end
 
   def correction_badge
     return if groupe_gestionnaire || commentaire.dossier_correction.nil?
