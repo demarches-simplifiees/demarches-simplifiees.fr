@@ -40,7 +40,7 @@
                 = form.text_field :expression_reguliere_exemple_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_exemple_text)
                 - if type_de_champ.invalid_regexp?
                   %p.fr-message.fr-message--error
-                    = type_de_champ.errors[:expression_reguliere_exemple_text].join(", ")
+                    = type_de_champ.errors.map(&:message).join(", ")
               .cell.fr-mt-1w
                 = form.label :expression_reguliere_error_message, for: dom_id(type_de_champ, :expression_reguliere_error_message) do
                   = t('.expression_reguliere.labels.error_message')

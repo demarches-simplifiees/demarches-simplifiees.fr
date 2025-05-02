@@ -100,7 +100,7 @@ export function useSingleList({
         ? null
         : selectedItem?.value == key
           ? selectedItem
-          : items.find((item) => item.value == key) ?? null;
+          : (items.find((item) => item.value == key) ?? null);
     onChange?.(item);
   });
   const onInputChange = useEvent<NonNullable<ComboBoxProps['onInputChange']>>(
@@ -353,7 +353,7 @@ export function useRemoteList({
         ? null
         : selectedItem?.value == key
           ? selectedItem
-          : items.find((item) => item.value == key) ?? null;
+          : (items.find((item) => item.value == key) ?? null);
     setSelectedItem(item);
     if (item) {
       setInputValue(item.label);
