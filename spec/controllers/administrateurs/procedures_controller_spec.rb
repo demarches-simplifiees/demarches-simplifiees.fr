@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe Administrateurs::ProceduresController, type: :controller do
+  include Logic
+
   let(:admin) { administrateurs(:default_admin) }
+  let(:administrateur_2) { create(:administrateur) }
+  let(:instructeur_2) { create(:instructeur) }
   let(:bad_procedure_id) { 100000 }
 
   let(:path) { 'ma-jolie-demarche' }
@@ -671,13 +675,34 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'PUT #clone' do
-    let(:procedure) { create(:procedure, :with_notice, :with_deliberation, :with_labels, administrateur: admin) }
+    let(:procedure) do
+      create(
+        :procedure,
+        :with_type_de_champ,
+        :with_type_de_champ_private,
+        :with_notice,
+        :with_deliberation,
+        :with_labels,
+        :with_zone,
+        :with_service,
+        :routee,
+        administrateurs: [admin, administrateur_2],
+        instructeurs: [admin.instructeur, instructeur_2],
+        attestation_template: build(:attestation_template)
+      )
+    end
+
+    let(:ineligibilite_message) { 'Votre demande est inéligible' }
+    let(:ineligibilite_enabled) { true }
+    let(:ineligibilite_rules) { ds_eq(constant(true), constant(true)) }
+
     let(:params) { { procedure_id: procedure.id } }
 
     subject { put :clone, params: params }
 
     before do
-      procedure
+      procedure.groupe_instructeurs.each { |gi| gi.update!(contact_information: create(:contact_information)) }
+      procedure.active_revision.update(ineligibilite_rules:, ineligibilite_message:, ineligibilite_enabled:)
 
       response = Typhoeus::Response.new(code: 200, body: 'Hello world')
       Typhoeus.stub(/active_storage\/disk/).and_return(response)
@@ -704,6 +729,121 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, from_new_from_existing: true } }
 
         it { expect(Procedure.last.cloned_from_library).to be(true) }
+      end
+
+      context 'when the admin clone the administrateurs' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { administrateurs: '1' } } }
+
+        it { expect(Procedure.last.administrateurs).to include(administrateur_2) }
+      end
+
+      context 'when the admin do not clone the administrateurs' do
+        let(:params) { { procedure_id: procedure.id } }
+
+        it do
+          expect(Procedure.last.administrateurs).not_to include(administrateur_2)
+          expect(Procedure.last.administrateurs).to include(admin)
+        end
+      end
+
+      context 'when the admin clone the instructeurs' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { instructeurs: '1' } } }
+
+        it { expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur, instructeur_2]) }
+      end
+
+      context 'when the admin do not clone the instructeurs' do
+        it do
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur])
+          expect(Procedure.last.groupe_instructeurs.count).to eq(2)
+          expect(Procedure.last.defaut_groupe_instructeur.contact_information).to be_nil
+        end
+      end
+
+      context 'when the admin clone the champs' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { champs: '1' } } }
+
+        it { expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1 }
+      end
+
+      context 'when the admin do not clone the champs' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { champs: '0' } } }
+
+        it { expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 0 }
+      end
+
+      context 'when the admin clone the annotations' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { annotations: '1' } } }
+
+        it { expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1 }
+      end
+
+      context 'when the admin do not clone the annotations' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { annotations: '0' } } }
+
+        it { expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 0 }
+      end
+
+      context 'when the admin clone the attestation' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { attestation_template: '1' } } }
+
+        it { expect(Procedure.last.attestation_template).not_to be_nil }
+      end
+
+      context 'when the admin do not clone the attestation' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { attestation_template: '0' } } }
+
+        it { expect(Procedure.last.attestation_template).to be_nil }
+      end
+
+      context 'when the admin clone the zones' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { zones: '1' } } }
+
+        it { expect(Procedure.last.zones).not_to be_blank }
+      end
+
+      context 'when the admin do not clone the zones' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { zones: '0' } } }
+
+        it { expect(Procedure.last.zones).to be_blank }
+      end
+
+      context 'when the admin clone the service' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { service: '1' } } }
+
+        it { expect(Procedure.last.service).not_to be_nil }
+      end
+
+      context 'when the admin do not clone the service' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { service: '0' } } }
+
+        it { expect(Procedure.last.service).to be_nil }
+      end
+
+      context 'when the admin clone the ineligibilite rules' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { ineligibilite: '1' } } }
+
+        it do
+          expect(Procedure.last.draft_revision.ineligibilite_rules).not_to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_truthy
+          expect(Procedure.last.draft_revision.ineligibilite_message).to eq('Votre demande est inéligible')
+        end
+      end
+
+      context 'when the admin do not clone the ineligibilite rules' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { ineligibilite: '0' } } }
+
+        it do
+          expect(Procedure.last.draft_revision.ineligibilite_rules).to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_falsey
+          expect(Procedure.last.draft_revision.ineligibilite_message).to be_nil
+        end
+      end
+
+      context 'when the admin changes the libelle' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { libelle: 'Démarche avec un nouveau nom' } } }
+
+        it { expect(Procedure.last.libelle).to eq 'Démarche avec un nouveau nom' }
       end
     end
 

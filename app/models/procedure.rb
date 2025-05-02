@@ -419,19 +419,12 @@ class Procedure < ApplicationRecord
     publiees.find(id)
   end
 
-  def clone(admin, from_library)
-    is_different_admin = !admin.owns?(self)
+  def clone(admin, options)
+    is_same_admin = admin.owns?(self)
 
     populate_champ_stable_ids
-    include_list = {
-      attestation_template: [],
-      draft_revision: {
-        revision_types_de_champ: [:type_de_champ],
-        dossier_submitted_message: []
-      }
-    }
-    include_list[:groupe_instructeurs] = [:instructeurs, :contact_information] if !is_different_admin
-    procedure = self.deep_clone(include: include_list) do |original, kopy|
+
+    procedure = self.deep_clone(include: clone_associations(options, is_same_admin)) do |original, kopy|
       ClonePiecesJustificativesService.clone_attachments(original, kopy)
     end
     procedure.claim_path!(admin, SecureRandom.uuid)
@@ -450,15 +443,31 @@ class Procedure < ApplicationRecord
     procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
 
-    if is_different_admin
+    if !options[:clone_administrateurs] || !is_same_admin
       procedure.administrateurs = [admin]
+    else
+      procedure.administrateurs = administrateurs
+    end
+
+    if !options[:clone_instructeurs] || !is_same_admin
+      procedure.groupe_instructeurs.each do |gi|
+        gi.instructeurs = [admin.instructeur]
+        gi.contact_information = nil
+      end
+    end
+
+    if !options[:clone_ineligibilite]
+      procedure.draft_revision.ineligibilite_rules = nil
+      procedure.draft_revision.ineligibilite_enabled = false
+      procedure.draft_revision.ineligibilite_message = nil
+    end
+
+    if !is_same_admin
       procedure.api_entreprise_token = nil
       procedure.encrypted_api_particulier_token = nil
       procedure.opendata = true
       procedure.api_particulier_scopes = []
       procedure.routing_enabled = false
-    else
-      procedure.administrateurs = administrateurs
     end
 
     procedure.initiated_mail = initiated_mail&.dup
@@ -469,11 +478,11 @@ class Procedure < ApplicationRecord
     procedure.re_instructed_mail = re_instructed_mail&.dup
     procedure.ask_birthday = false # see issue #4242
 
-    procedure.cloned_from_library = from_library
+    procedure.cloned_from_library = options[:cloned_from_library]
     procedure.parent_procedure = self
     procedure.canonical_procedure = nil
     procedure.replaced_by_procedure = nil
-    procedure.service = nil
+    procedure.service = nil if !options[:clone_service] || !is_same_admin
     procedure.closing_reason = nil
     procedure.closing_details = nil
     procedure.closing_notification_brouillon = false
@@ -481,6 +490,7 @@ class Procedure < ApplicationRecord
     procedure.template = false
     procedure.monavis_embed = nil
     procedure.labels = labels.map(&:dup)
+    procedure.libelle = options[:clone_libelle] if options[:clone_libelle].present?
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
@@ -494,7 +504,10 @@ class Procedure < ApplicationRecord
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
     end
 
-    if is_different_admin || from_library
+    procedure.draft_revision.types_de_champ_public = [] if !options[:clone_champs]
+    procedure.draft_revision.types_de_champ_private = [] if !options[:clone_annotations]
+
+    if !is_same_admin || options[:cloned_from_library]
       procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
 
@@ -912,5 +925,25 @@ class Procedure < ApplicationRecord
     return if auto_archive_on.future?
 
     errors.add(:auto_archive_on, 'doit être dans le futur')
+  end
+
+  def clone_associations(options, is_same_admin)
+    associations = {
+      draft_revision: {
+        revision_types_de_champ: [:type_de_champ],
+        dossier_submitted_message: []
+      },
+      groupe_instructeurs: [:instructeurs, :contact_information]
+    }
+
+    if options[:clone_attestation_template]
+      associations[:attestation_template] = []
+    end
+
+    if options[:clone_zones]
+      associations[:zones] = []
+    end
+
+    associations
   end
 end

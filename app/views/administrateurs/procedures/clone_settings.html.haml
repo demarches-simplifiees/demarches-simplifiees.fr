@@ -1,0 +1,92 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    ["Cloner la démarche « #{@procedure.libelle.truncate_words(10)} » (N° #{@procedure.id})"]] }
+
+.fr-container
+  %h1
+    = t('administrateurs.procedures.clone.title')
+    = "« #{@procedure.libelle} » (N° #{@procedure.id})"
+
+  = form_tag(admin_procedure_clone_path(@procedure), method: :put, class: 'clone-settings-form') do
+    %h2.fr-h5.fr-mb-1w
+      = t('administrateurs.procedures.clone.rename_title')
+    = label_tag 'clone_options[libelle]', class: "fr-label" do
+      = t('administrateurs.procedures.clone.libelle')
+    = text_field_tag 'clone_options[libelle]', @procedure.libelle, required: true, class: "fr-input fr-mb-5w"
+
+    %h2.fr-h5.fr-mb-2w
+      = t('administrateurs.procedures.clone.configurate_title')
+
+    %p.fr-alert.fr-alert--info.fr-alert--sm.fr-mb-3w
+      = t('administrateurs.procedures.clone.info')
+
+    %fieldset.fr-fieldset{id: "clone-options-checkboxes", aria: { labelledby: "clone-options-checkboxes" }}
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[champs]', '1', true, id: 'clone_champs'
+          %label.fr-label{ :for => 'clone_champs' }
+            = t('administrateurs.procedures.clone.types_de_champ_public')
+            %span.fr-hint-text
+              = t('administrateurs.procedures.clone.types_de_champ_count', count: @procedure.active_revision.types_de_champ_public.count)
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[annotations]', '1', true, id: 'clone_annotations'
+          %label.fr-label{ :for => 'clone_annotations' }
+            = t('administrateurs.procedures.clone.types_de_champ_private')
+            %span.fr-hint-text
+              = t('administrateurs.procedures.clone.types_de_champ_count', count: @procedure.active_revision.types_de_champ_private.count)
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[zones]', '1', true, id: 'clone_zones'
+          %label.fr-label{ :for => 'clone_zones' }
+            = t('administrateurs.procedures.clone.zones')
+            %span.fr-hint-text
+              = @procedure.zones.map(&:label).join(' | ')
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[ineligibilite]', '1', true, id: 'clone_ineligibilite'
+          %label.fr-label{ :for => 'clone_ineligibilite' }
+            = t('administrateurs.procedures.clone.ineligibilite')
+            %span.fr-hint-text
+              = t("administrateurs.procedures.clone.ineligibilite_hint.#{@procedure.active_revision.ineligibilite_enabled.to_s}")
+
+      - if @is_same_admin
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = check_box_tag 'clone_options[service]', '1', false, id: 'clone_service'
+            %label.fr-label{ :for => 'clone_service' }
+              = t('administrateurs.procedures.clone.service')
+              %span.fr-hint-text
+                = @procedure.service&.nom
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = check_box_tag 'clone_options[administrateurs]', '1', true, id: 'clone_administrateurs'
+            %label.fr-label{ :for => 'clone_administrateurs' }
+              = t('administrateurs.procedures.clone.administrateurs')
+              %span.fr-hint-text
+                = t('administrateurs.procedures.clone.administrateurs_count', count: @procedure.administrateurs.count)
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = check_box_tag 'clone_options[instructeurs]', '1', true, id: 'clone_instructeurs'
+            %label.fr-label{ :for => 'clone_instructeurs' }
+              = t('administrateurs.procedures.clone.instructeurs')
+              %span.fr-hint-text
+                = t('administrateurs.procedures.clone.instructeurs_count', count: @procedure.groupe_instructeurs.map {_1.instructeurs.count }.sum)
+                = t("administrateurs.procedures.clone.instructeurs_self_management.#{@procedure.instructeurs_self_management?.to_s}")
+                = t("administrateurs.procedures.clone.routing_enabled.#{@procedure.routing_enabled.to_s}")
+        - if @procedure.attestation_template&.activated?
+          .fr-fieldset__element
+            .fr-checkbox-group
+              = check_box_tag 'clone_options[attestation_template]', '1', true, id: 'clone_attestation_template'
+              %label.fr-label{ :for => 'clone_attestation_template' }
+                = t('administrateurs.procedures.clone.attestation_template')
+                %span.fr-hint-text
+                  = t('administrateurs.procedures.clone.attestation_template_hint')
+
+    .fixed-footer
+      .fr-container
+        %ul.fr-btns-group.fr-btns-group--inline-md.fr-ml-0
+          %li
+            = link_to 'Annuler', admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary fr-ml-0'
+          %li
+            = submit_tag 'Cloner la démarche', class: 'fr-btn', data: { disable_with: 'Clonage en cours...' }

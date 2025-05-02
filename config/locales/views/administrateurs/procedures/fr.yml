@@ -81,3 +81,38 @@ fr:
         intro_html: Les modifications effectuées ne seront visibles <strong>qu'à la prochaine publication</strong>
         see_changes: Voir les modifications
         publish_changes: Publier les modifications
+      clone:
+        title: Cloner la démarche
+        libelle: Titre de la démarche
+        info: L’ensemble des paramètres de la démarche resteront modifiables après clonage.
+        rename_title: Renommez votre démarche
+        configurate_title: Choisissez les paramètres de la démarche que vous souhaitez conserver lors du clonage
+        types_de_champ_public: Champs du formulaire
+        types_de_champ_private: Annotations privées
+        types_de_champ_count:
+          zero: Aucun champ
+          one: "%{count} champ"
+          other: "%{count} champs"
+        administrateurs: Administrateurs
+        administrateurs_count:
+          one: "%{count} administrateur"
+          other: "%{count} administrateurs"
+        instructeurs: Instructeurs
+        instructeurs_count:
+          zero: Aucun instructeur
+          one: "%{count} instructeur"
+          other: "%{count} instructeurs"
+        attestation_template: Attestation d’acceptation du dossier
+        attestation_template_hint: Activée
+        zones: Zones
+        service: Service
+        instructeurs_self_management:
+          true: "- Autogestion activée"
+          false: "- Autogestion désactivée"
+        routing_enabled:
+          true: "- Routage activé"
+          false: "- Routage désactivé"
+        ineligibilite: Inéligibilité des dossiers
+        ineligibilite_hint:
+          true: Activée
+          false: Désactivée

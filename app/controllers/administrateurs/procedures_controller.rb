@@ -138,11 +138,13 @@ module Administrateurs
     def clone_settings
       @procedure = Procedure.find(params[:procedure_id])
       @cloned_from_library = cloned_from_library?
+      @is_same_admin = current_administrateur.owns?(@procedure)
     end
 
     def clone
       procedure = Procedure.find(params[:procedure_id])
-      new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
+      options = clone_options_from_params.merge(cloned_from_library: cloned_from_library?)
+      new_procedure = procedure.clone(current_administrateur, options)
 
       if new_procedure.valid?
         flash.notice = 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
@@ -664,6 +666,31 @@ module Administrateurs
 
     def allow_decision_access_params
       params.require(:experts_procedure).permit(:allow_decision_access)
+    end
+
+    def clone_options_from_params
+      options = params.fetch(:clone_options, {}).permit(
+        :champs,
+        :annotations,
+        :administrateurs,
+        :instructeurs,
+        :attestation_template,
+        :libelle,
+        :zones,
+        :service,
+        :ineligibilite
+      )
+      {
+        clone_champs: options[:champs] == '1',
+        clone_annotations: options[:annotations] == '1',
+        clone_administrateurs: options[:administrateurs] == '1',
+        clone_instructeurs: options[:instructeurs] == '1',
+        clone_attestation_template: options[:attestation_template] == '1',
+        clone_zones: options[:zones] == '1',
+        clone_service: options[:service] == '1',
+        clone_ineligibilite: options[:ineligibilite] == '1',
+        clone_libelle: options[:libelle]
+      }
     end
 
     def cloned_from_library?
