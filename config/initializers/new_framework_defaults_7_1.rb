@@ -280,3 +280,11 @@ Rails.application.config.action_dispatch.debug_exception_log_level = :error
 # In previous versions of Rails, these test helpers always used an HTML4 parser.
 #++
 Rails.application.config.dom_testing_default_html_version = :html5
+
+# Be aware that if your app was created before Rails 7.1, and your app marshals instances of the targeted model (for example, when caching)
+# then you should set ActiveRecord.marshalling_format_version to 7.1
+# or higher via either config.load_defaults 7.1
+# or config.active_record.marshalling_format_version = 7.1.
+# Otherwise, Marshal may attempt to serialize the normalization Proc and raise TypeError.
+# used for ApplicationRecord#NORMALIZES_NON_PRINTABLE_PROC
+Rails.application.config.active_record.marshalling_format_version = 7.1
