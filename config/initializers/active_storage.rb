@@ -63,7 +63,7 @@ module Fog::OpenStack::Auth::Catalog
 
     def publicize(url)
       search = %r{^https://[^/]+/}
-      replace = "#{ENV['DS_PROXY_URL']}/"
+      replace = "https://dev.demarches-simplifiees.fr/upstream/"
       url.gsub(search, replace)
     end
   end
@@ -86,7 +86,7 @@ module Fog::OpenStack::Auth::Catalog
 
     def publicize(url)
       search = %r{^https://[^/]+/}
-      replace = "#{ENV['DS_PROXY_URL']}/"
+      replace = "https://dev.demarches-simplifiees.fr/upstream/"
       url.gsub(search, replace)
     end
   end
