@@ -292,6 +292,7 @@ Rails.application.routes.draw do
 
     get 'activate' => '/users/activate#new'
     patch 'activate' => '/users/activate#create'
+    get 'confirm_email/:token' => '/users/activate#confirm_email', as: :confirm_email
   end
 
   # order matters: we don't want those routes to match /admin/procedures/:id

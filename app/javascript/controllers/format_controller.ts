@@ -11,6 +11,13 @@ export class FormatController extends ApplicationController {
           replaceValue(target, value);
         });
         break;
+      case 'siret':
+        this.on('input', (event) => {
+          const target = event.target as HTMLInputElement;
+          const value = this.formatSIRET(target.value);
+          replaceValue(target, value);
+        });
+        break;
       case 'iban':
         this.on('input', (event) => {
           const target = event.target as HTMLInputElement;
@@ -38,7 +45,12 @@ export class FormatController extends ApplicationController {
   private formatList(value: string) {
     return value.replace(/;/g, ',');
   }
-
+  private formatSIRET(value: string) {
+    return value
+      .replace(/[^\d]/gi, '')
+      .replace(/^\s*(\d{3})\s*(\d{3})\s*(\d{3})\s*(\d{5})\s*$/gi, '$1 $2 $3 $4')
+      .trim();
+  }
   private formatIBAN(value: string) {
     return value
       .replace(/[^\dA-Z]/gi, '')

@@ -103,7 +103,7 @@ describe 'shared/dossiers/edit', type: :view do
       let(:options) { ['peach', 'banana', 'pear', 'apricot', 'apple', 'grapefruit'] }
 
       it 'renders the list as a multiple-selection dropdown' do
-        expect(subject).to have_selector('select')
+        expect(subject).to have_selector('react-fragment > react-component[name="ComboBox/MultiComboBox"]')
       end
     end
   end

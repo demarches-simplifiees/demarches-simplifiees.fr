@@ -217,19 +217,21 @@ describe Users::DossiersController, type: :controller do
   describe 'update_identite' do
     let(:procedure) { create(:procedure, :for_individual) }
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:now) { Time.zone.parse('01/01/2100') }
 
     subject { post :update_identite, params: { id: dossier.id, dossier: dossier_params } }
 
     before do
       sign_in(user)
-      Timecop.freeze(now) do
-        subject
-      end
     end
 
     context 'with correct individual and dossier params' do
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
+      let(:now) { Time.zone.parse('01/01/2100') }
+      before do
+        Timecop.freeze(now) do
+          subject
+        end
+      end
 
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
@@ -240,6 +242,7 @@ describe Users::DossiersController, type: :controller do
     context 'when the identite cannot be updated by the user' do
       let(:dossier) { create(:dossier, :with_individual, :en_instruction, user: user, procedure: procedure) }
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
+      before { subject }
 
       it 'redirects to the dossiers list' do
         expect(response).to redirect_to(dossier_path(dossier))
@@ -249,6 +252,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'with incorrect individual and dossier params' do
       let(:dossier_params) { { individual_attributes: { gender: '', nom: '', prenom: '' } } }
+      before { subject }
 
       it do
         expect(response).not_to have_http_status(:redirect)
@@ -256,17 +260,20 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when a dossier is in broullon, for_tiers and we want to update the individual' do
+    context 'when a dossier is in brouillon, for_tiers and we want to update the individual' do
       let(:dossier) { create(:dossier, :for_tiers_without_notification, state: "brouillon", user: user, procedure: procedure) }
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey', email: 'mickey@gmail.com', notification_method: 'email' } } }
 
       it 'updates the individual with valid notification_method' do
+        expect { subject }.to have_enqueued_mail(UserMailer, :invite_tiers)
+          .and change(User, :count).by(1)
+
         dossier.reload
         individual = dossier.individual.reload
         expect(individual.errors.full_messages).to be_empty
         expect(individual.notification_method).to eq('email')
         expect(individual.email).to eq('mickey@gmail.com')
-        expect(individual.email_verified_at).to be_present
+        expect(individual.email_verified_at).to eq nil
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
 
@@ -274,6 +281,8 @@ describe Users::DossiersController, type: :controller do
         let(:dossier_params) { { mandataire_first_name: "Jean", mandataire_last_name: "Dupont" } }
 
         it 'updates the dossier mandataire first and last name' do
+          expect { subject }.not_to have_enqueued_mail(UserMailer, :invite_tiers)
+
           dossier.reload
           individual = dossier.individual.reload
           expect(dossier.errors.full_messages).to be_empty

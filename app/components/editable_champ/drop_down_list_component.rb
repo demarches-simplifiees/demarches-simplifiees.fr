@@ -30,6 +30,8 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
       name: @form.field_name(:value),
       selected_key: @champ.selected,
       items: @champ.enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1 : [_1, _1] },
-      empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil)
+      empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil,
+      'aria-describedby': @champ.describedby_id,
+      'aria-labelledby': @champ.labelledby_id)
   end
 end

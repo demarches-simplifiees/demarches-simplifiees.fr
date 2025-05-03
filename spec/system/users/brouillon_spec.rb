@@ -38,8 +38,10 @@ describe 'The user', js: true do
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
 
     scroll_to(find_field('multiple_choice_drop_down_list_long'), align: :center)
-    select('alpha', from: form_id_for('multiple_choice_drop_down_list_long'))
-    select('charly', from: form_id_for('multiple_choice_drop_down_list_long'))
+    fill_in('multiple_choice_drop_down_list_long', with: 'alpha')
+    find('.fr-menu__item', text: 'alpha').click
+    fill_in('multiple_choice_drop_down_list_long', with: 'charly')
+    find('.fr-menu__item', text: 'charly').click
     wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha', 'charly'].to_json }
 
     select('Australie', from: form_id_for('pays'))
