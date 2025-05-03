@@ -27,20 +27,28 @@ import {
 const MAPS = new WeakMap();
 let MARKER_PATH = '';
 
+function initializeTeFenuaMap(container) {
+  const elements = container.querySelectorAll(
+    '.te-fenua:not([data-initialized])'
+  );
+
+  elements.forEach((element) => {
+    if (element.closest('.te-fenua[data-initialized]')) {
+      // on ignore les cartes déjà initialisée
+      return;
+    }
+
+    let map = displayMap(element);
+    MAPS.set(element, map);
+    element.setAttribute('data-initialized', 'true');
+  });
+}
+
 // Initialise la carte TeFenua quand le DOM est prêt
 async function initialize() {
-  const elements = document.querySelectorAll('.te-fenua');
+  initializeTeFenuaMap(document);
 
   window.viewOnMap = viewOnMap;
-
-  if (elements.length) {
-    // await loadOpenLayers(false);
-
-    for (let element of elements) {
-      let map = displayMap(element, true);
-      MAPS.set(element, map);
-    }
-  }
 
   // delegate('change', '[data-te-fenua-place]', (event) => {
   //   let map = getMapFromAddress(event.target);
@@ -461,6 +469,35 @@ function displayMap(mapElement) {
 
   return map;
 }
+
+// Écouteur générique pour mutations du DOM (attrape les cas non gérés par Turbo)
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.classList && node.classList.contains('te-fenua')) {
+              let map = displayMap(node, true);
+              MAPS.set(node, map);
+              node.setAttribute('data-initialized', 'true');
+            }
+
+            // Vérifier aussi les sous-éléments
+            if (node.querySelectorAll) {
+              initializeTeFenuaMap(node);
+            }
+          }
+        });
+      }
+    });
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+});
 
 addEventListener('DOMContentLoaded', initialize);
 
