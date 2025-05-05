@@ -18,7 +18,7 @@
       %p= t('.export_description', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i)
 
   - if @exports.present?
-    %div{ data: @exports.any?(&:pending?) ? { controller: "turbo-poll", turbo_poll_url_value: "", turbo_poll_interval_value: 10_000, turbo_poll_max_checks_value: 6 } : {} }
+    %div{ data: @exports.any?(&:pending?) ? { controller: "turbo-poll", turbo_poll_url_value: "", turbo_poll_interval_value: 10_000 } : {} }
       = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
 
     - if @exports.any?{_1.format == Export.formats.fetch(:zip)}
