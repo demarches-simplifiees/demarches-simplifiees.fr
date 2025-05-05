@@ -36,15 +36,15 @@ module Manager
     def decrypt_params
       @inviter_id = decrypted_params[:inviter_id]
       @invited_email = decrypted_params[:email]
-    rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
+    rescue ActiveSupport::MessageEncryptor::InvalidMessage
       flash[:error] = "Le lien que vous avez utilisé est invalide. Veuillez contacter la personne qui vous l'a envoyé."
       redirect_to manager_procedure_path(@procedure)
     end
 
     def decrypted_params
-      @decrypted_params ||= ActiveSupport::MessageVerifier.new(
-        Rails.application.key_generator.generate_key("confirm_adding_administrateur")
-      ).verify(Base64.urlsafe_decode64(params[:q])).symbolize_keys
+      @decrypted_params ||= message_encryptor_service
+        .decrypt_and_verify(params[:q], purpose: :confirm_adding_administrateur)
+        .symbolize_keys
     end
 
     def set_procedure
