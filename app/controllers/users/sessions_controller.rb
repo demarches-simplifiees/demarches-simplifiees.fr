@@ -30,12 +30,12 @@ class Users::SessionsController < Devise::SessionsController
       flash[:notice] = "Nous venons de vous renvoyer un nouveau lien de connexion sécurisée à #{Current.application_name}"
     end
 
-    signed_email = message_verifier.generate(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
+    signed_email = message_encryptor_service.encrypt_and_sign(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
     redirect_to link_sent_path(email: signed_email)
   end
 
   def link_sent
-    email = message_verifier.verify(params[:email], purpose: :reset_link) rescue nil
+    email = message_encryptor_service.decrypt_and_verify(params[:email], purpose: :reset_link) rescue nil
 
     if StrictEmailValidator::REGEXP.match?(email)
       @email = email

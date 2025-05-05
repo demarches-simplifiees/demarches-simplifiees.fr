@@ -29,7 +29,7 @@ class Users::PasswordsController < Devise::PasswordsController
   # end
 
   def reset_link_sent
-    @email = message_verifier.verify(params[:email], purpose: :reset_password) rescue nil
+    @email = message_encryptor_service.decrypt_and_verify(params[:email], purpose: :reset_password) rescue nil
   end
 
   protected
@@ -40,7 +40,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   def after_sending_reset_password_instructions_path_for(resource_name)
     flash.discard(:notice)
-    signed_email = message_verifier.generate(resource.email, purpose: :reset_password, expires_in: 1.hour)
+    signed_email = message_encryptor_service.encrypt_and_sign(resource.email, purpose: :reset_password, expires_in: 1.hour)
     users_password_reset_link_sent_path(email: signed_email)
   end
 
