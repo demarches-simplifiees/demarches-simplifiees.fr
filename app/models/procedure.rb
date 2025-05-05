@@ -462,6 +462,18 @@ class Procedure < ApplicationRecord
       procedure.draft_revision.ineligibilite_message = nil
     end
 
+    if !options[:clone_presentation]
+      procedure.description_target_audience = nil
+      procedure.description_pj = nil
+      procedure.logo = nil
+      procedure.lien_site_web = nil
+      procedure.deliberation = nil
+      procedure.notice = nil
+      procedure.lien_dpo = nil
+      procedure.procedure_tags = []
+      procedure.auto_archive_on = nil
+    end
+
     if !is_same_admin
       procedure.api_entreprise_token = nil
       procedure.encrypted_api_particulier_token = nil

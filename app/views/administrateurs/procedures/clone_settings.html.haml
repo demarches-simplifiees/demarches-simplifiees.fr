@@ -23,6 +23,13 @@
     %fieldset.fr-fieldset{id: "clone-options-checkboxes", aria: { labelledby: "clone-options-checkboxes" }}
       .fr-fieldset__element
         .fr-checkbox-group
+          = check_box_tag 'clone_options[presentation]', '1', true, id: 'clone_presentation'
+          %label.fr-label{ :for => 'clone_presentation' }
+            = t('administrateurs.procedures.clone.presentation')
+            %span.fr-hint-text
+              = t('administrateurs.procedures.clone.presentation_hint')
+      .fr-fieldset__element
+        .fr-checkbox-group
           = check_box_tag 'clone_options[champs]', '1', true, id: 'clone_champs'
           %label.fr-label{ :for => 'clone_champs' }
             = t('administrateurs.procedures.clone.types_de_champ_public')

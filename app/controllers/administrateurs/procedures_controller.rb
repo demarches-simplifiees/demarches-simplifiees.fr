@@ -678,7 +678,8 @@ module Administrateurs
         :libelle,
         :zones,
         :service,
-        :ineligibilite
+        :ineligibilite,
+        :presentation
       )
       {
         clone_champs: options[:champs] == '1',
@@ -689,6 +690,7 @@ module Administrateurs
         clone_zones: options[:zones] == '1',
         clone_service: options[:service] == '1',
         clone_ineligibilite: options[:ineligibilite] == '1',
+        clone_presentation: options[:presentation] == '1',
         clone_libelle: options[:libelle]
       }
     end

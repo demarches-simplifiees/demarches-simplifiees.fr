@@ -682,6 +682,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         :with_type_de_champ_private,
         :with_notice,
         :with_deliberation,
+        :with_logo,
         :with_labels,
         :with_zone,
         :with_service,
@@ -716,8 +717,6 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.cloned_from_library).to be_falsey
-        expect(Procedure.last.notice.attached?).to be_truthy
-        expect(Procedure.last.deliberation.attached?).to be_truthy
         expect(Procedure.last.labels.present?).to be_truthy
         expect(Procedure.last.labels.first.procedure_id).to eq(Procedure.last.id)
         expect(procedure.labels.first.procedure_id).to eq(procedure.id)
@@ -729,6 +728,26 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, from_new_from_existing: true } }
 
         it { expect(Procedure.last.cloned_from_library).to be(true) }
+      end
+
+      context 'when the admin clone the presentation' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { presentation: '1' } } }
+
+        it do
+          expect(Procedure.last.notice.attached?).to be_truthy
+          expect(Procedure.last.deliberation.attached?).to be_truthy
+          expect(Procedure.last.logo.attached?).to be_truthy
+        end
+      end
+
+      context 'when the admin do not clone the presentation' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { presentation: '0' } } }
+
+        it do
+          expect(Procedure.last.notice.attached?).to be_falsey
+          expect(Procedure.last.deliberation.attached?).to be_falsey
+          expect(Procedure.last.logo.attached?).to be_falsey
+        end
       end
 
       context 'when the admin clone the administrateurs' do
