@@ -192,7 +192,7 @@ describe ProcedureExportService do
         it 'can be read with BOM content' do
           expect(dossiers_sheet).not_to be_nil
           expect(dossiers_sheet.headers).to include('text')
-          expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('text')]).not_to eq(user_input)
+          expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('text')]).to eq("franco allemand")
         end
       end
     end
