@@ -13,6 +13,8 @@ class Commentaire < ApplicationRecord
 
   validates :body, presence: { message: "ne peut être vide" }, unless: :discarded?
 
+  normalizes :body, with: NORMALIZES_NON_PRINTABLE_PROC
+
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_jointe,
     content_type: AUTHORIZED_CONTENT_TYPES,

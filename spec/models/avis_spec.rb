@@ -179,4 +179,12 @@ RSpec.describe Avis, type: :model do
       expect(avis.question_label).to eq("my question")
     end
   end
+
+  describe 'normalization' do
+    it 'removes non-printable characters from answer (ASCII control character "End of Transmission Block), seen in pdf' do
+      avis = build(:avis, answer: "Valid\x17Answer")
+      avis.validate
+      expect(avis.answer).to eq("ValidAnswer")
+    end
+  end
 end

@@ -111,4 +111,12 @@ describe Commentaire do
       end
     end
   end
+
+  describe 'normalization' do
+    it 'removes non-printable characters from body' do
+      commentaire = build(:commentaire, body: "Valid\x00Body\x1F")
+      commentaire.validate
+      expect(commentaire.body).to eq("ValidBody")
+    end
+  end
 end

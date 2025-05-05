@@ -18,6 +18,7 @@ class Champ < ApplicationRecord
   belongs_to :etablissement, optional: true, dependent: :destroy
 
   delegate :procedure, to: :dossier
+  normalizes :value, with: NORMALIZES_NON_PRINTABLE_PROC
 
   def type_de_champ
     @type_de_champ ||= dossier.revision
@@ -82,7 +83,7 @@ class Champ < ApplicationRecord
   scope :prefilled, -> { where(prefilled: true) }
 
   before_save :cleanup_if_empty
-  before_save :normalize
+
   after_update_commit :fetch_external_data_later
 
   def public?
@@ -287,13 +288,6 @@ class Champ < ApplicationRecord
       update_column(:fetch_external_data_exceptions, [])
       ChampFetchExternalDataJob.perform_later(self, external_id)
     end
-  end
-
-  def normalize
-    return if value.nil?
-    return if value.present? && !value.include?("\u0000")
-
-    write_attribute(:value, value.delete("\u0000"))
   end
 
   MAIN_STREAM = 'main'
