@@ -15,6 +15,8 @@ class ExportedColumnFormatter
       format_enum(column:, raw_value:)
     when :enums
       format_enums(column:, raw_values: raw_value)
+    when :text
+      format_text(column:, raw_value:, format:)
     else
       raw_value
     end
@@ -26,6 +28,14 @@ class ExportedColumnFormatter
     if format == :ods
       raw_value ? 1 : 0
     else
+      raw_value
+    end
+  end
+
+  def self.format_text(column:, raw_value:, format:)
+    if [:xlsx, :ods].include?(format)
+      Sanitizers::Xml.sanitize(ActionView::Base.full_sanitizer.sanitize(raw_value))
+    else # nothing prevent csv to have weird characters, might break column alignment when read with some software, but it's still valid usecase
       raw_value
     end
   end
