@@ -75,7 +75,13 @@ module ColumnsConcern
       dossier_col(table: 'self', column: 'state', type: :enum, options_for_select:, displayable: false)
     end
 
-    def notifications_column = dossier_col(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
+    def notifications_column = dossier_col(table: 'notifications', column: 'notifications', label: "notifications", filterable: false, displayable: false)
+
+    def dossier_notifications_column
+      options_for_select = I18n.t('instructeurs.dossiers.filterable_notification').map(&:to_a).map(&:reverse)
+
+      dossier_col(table: 'dossier_notifications', column: 'notification_type', type: :enum, options_for_select:, displayable: false)
+    end
 
     def sva_svr_columns(for_export: false)
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
@@ -154,7 +160,8 @@ module ColumnsConcern
         groupe_instructeurs_id_column,
         dossier_col(table: 'avis', column: 'question_answer', filterable: false),
         user_france_connected_column,
-        dossier_labels_column
+        dossier_labels_column,
+        dossier_notifications_column
       ]
     end
 

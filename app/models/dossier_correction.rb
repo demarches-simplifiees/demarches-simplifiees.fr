@@ -25,7 +25,14 @@ class DossierCorrection < ApplicationRecord
   def resolve!
     resolve
     save!
+    destroy_attente_correction_notification
   end
 
   def pending? = !resolved?
+end
+
+private
+
+def destroy_attente_correction_notification
+  DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :attente_correction)
 end

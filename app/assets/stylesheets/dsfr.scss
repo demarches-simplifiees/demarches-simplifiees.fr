@@ -206,3 +206,8 @@ input[type='radio'] {
     max-width: 27rem;
   }
 }
+
+// Reduce the space between the toggle and the label
+.fr-toggle .fr-toggle__label::before {
+  margin-right: 1rem !important;
+}
