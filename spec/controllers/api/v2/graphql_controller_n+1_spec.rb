@@ -38,6 +38,8 @@ describe API::V2::GraphqlController do
       query_count = 0
 
       dossier
+      # Execute the query first time to ensure shared queries are never counted in the query counter
+      post :execute, params: { queryId: query_id, variables: variables, operationName: operation_name }.compact, as: :json
       ActiveSupport::Notifications.subscribed(lambda { |*_args| query_count += 1 }, "sql.active_record") { subject }
 
       expect(gql_errors).to be_nil
