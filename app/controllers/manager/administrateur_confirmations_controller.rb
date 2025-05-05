@@ -44,7 +44,7 @@ module Manager
     def decrypted_params
       @decrypted_params ||= ActiveSupport::MessageVerifier.new(
         Rails.application.key_generator.generate_key("confirm_adding_administrateur")
-      ).verify(Base64.urlsafe_decode64(params[:q]))
+      ).verify(Base64.urlsafe_decode64(params[:q])).symbolize_keys
     end
 
     def set_procedure
