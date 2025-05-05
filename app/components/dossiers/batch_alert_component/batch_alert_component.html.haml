@@ -1,19 +1,16 @@
-.fr-mb-5v
-  - if @batch.finished_at.present?
-    = render Dsfr::AlertComponent.new(title: t(".title.finish"), state: (@batch.errors? ? :warning : :success), heading_level: 'h2', extra_class_names: 'fr-my-2w') do |c|
-      - c.with_body do
-        %p
-          = t(".#{batch.operation}.finish.text_success", count: @batch.total_count, success_count: @batch.success_count)
+%div{ data: !@batch.finished_at? ? { controller: "turbo-poll", turbo_poll_url_value: polling_batch_operation_instructeur_procedure_path(@procedure, batch: @batch), turbo_poll_interval_value: 5_000, turbo_poll_max_checks_value: 12 } : {} }
+  .fr-mb-5v
+    - if @batch.finished_at.present?
+      = render Dsfr::AlertComponent.new(title: t(".title.finish"), state: (@batch.errors? ? :warning : :success), heading_level: 'h2', extra_class_names: 'fr-my-2w') do |c|
+        - c.with_body do
+          %p
+            = t(".#{batch.operation}.finish.text_success", count: @batch.total_count, success_count: @batch.success_count)
 
 
-  - else
-    = render Dsfr::AlertComponent.new(title: t(".title.in_progress"), state: :info, heading_level: 'h2', extra_class_names: 'fr-my-2w') do |c|
-      - c.with_body do
-        %p= t(".#{batch.operation}.in_progress.text_success", count: @batch.total_count, success_count: @batch.success_count)
+    - else
+      = render Dsfr::AlertComponent.new(title: t(".title.in_progress"), state: :info, heading_level: 'h2', extra_class_names: 'fr-my-2w') do |c|
+        - c.with_body do
+          %p= t(".#{batch.operation}.in_progress.text_success", count: @batch.total_count, success_count: @batch.success_count)
 
-        %p
-          = link_to t('.link_text'), procedure_path, data: { action: 'turbo-poll#refresh' }
-          = t('.after_link_text')
-
-        %p.fr-mt-2w
-          %small= t('.context', mail: @batch.instructeur.email, time_ago: time_ago_in_words(@batch.created_at))
+          %p.fr-mt-2w
+            %small= t('.context', mail: @batch.instructeur.email, time_ago: time_ago_in_words(@batch.created_at))

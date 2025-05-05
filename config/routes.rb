@@ -569,6 +569,7 @@ Rails.application.routes.draw do
         get 'download_export'
         post 'download_export'
         get 'polling_last_export'
+        get 'polling_batch_operation'
         get 'stats'
         get 'exports'
         get 'export_templates'

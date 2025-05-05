@@ -229,6 +229,10 @@ module Instructeurs
       end
     end
 
+    def polling_batch_operation
+      render turbo_stream: turbo_stream.refresh
+    end
+
     def email_notifications
       @procedure = procedure
       @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)

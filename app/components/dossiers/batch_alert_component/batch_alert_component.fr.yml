@@ -110,6 +110,4 @@ fr:
   title:
     finish: L’action de masse est terminée
     in_progress: Une action de masse est en cours
-  link_text: Recharger la page
-  after_link_text: pour voir si l'opération est finie.
   context: Cette opération a été lancée par %{mail}, il y a %{time_ago}
