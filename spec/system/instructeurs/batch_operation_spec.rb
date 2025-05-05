@@ -49,16 +49,24 @@ describe 'BatchOperation a dossier:', js: true do
       expect(page).to have_content("Information : Une action de masse est en cours")
       expect(page).to have_content("1 dossier est en cours de déplacement dans « à archiver »")
 
+      # ensure data-controller="turbo-poll" is present
+      expect(page).to have_selector('[data-controller~="turbo-poll"]')
+
       # ensure jobs are queued
       perform_enqueued_jobs(only: [BatchOperationEnqueueAllJob])
       expect { perform_enqueued_jobs(only: [BatchOperationProcessOneJob]) }
         .to change { dossier_1.reload.archived }
         .from(false).to(true)
 
+      # simulate a page reload
+      visit current_path
+
       # ensure alert updates when jobs are run
-      visit instructeur_procedure_path(procedure, statut: 'traites')
       expect(page).to have_content("L’action de masse est terminée")
       expect(page).to have_content("1 dossier a été placé dans « à archiver »")
+
+      # ensure data-controller="turbo-poll" is no longer present
+      expect(page).not_to have_selector('[data-controller~="turbo-poll"]')
 
       # clean alert after reload
       visit instructeur_procedure_path(procedure, statut: 'traites')
