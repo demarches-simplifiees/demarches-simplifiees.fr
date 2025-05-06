@@ -693,7 +693,13 @@ describe Administrateurs::ProceduresController, type: :controller do
         instructeurs: [admin.instructeur, instructeur_2],
         attestation_template: build(:attestation_template),
         accuse_lecture: true,
-        api_entreprise_token:
+        api_entreprise_token:,
+        initiated_mail:,
+        received_mail:,
+        closed_mail:,
+        refused_mail:,
+        without_continuation_mail:,
+        re_instructed_mail:
       )
     end
 
@@ -702,7 +708,12 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:ineligibilite_enabled) { true }
     let(:ineligibilite_rules) { ds_eq(constant(true), constant(true)) }
     let(:api_entreprise_token) { JWT.encode({ exp: 2.days.ago.to_i }, nil, "none") }
-
+    let(:initiated_mail) { build(:initiated_mail) }
+    let(:received_mail) { build(:received_mail) }
+    let(:closed_mail) { build(:closed_mail) }
+    let(:refused_mail) { build(:refused_mail) }
+    let(:without_continuation_mail) { build(:without_continuation_mail) }
+    let(:re_instructed_mail) { build(:re_instructed_mail) }
 
     let(:params) { { procedure_id: procedure.id } }
 
@@ -898,6 +909,32 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, clone_options: { api_entreprise_token: '0' } } }
 
         it { expect(Procedure.last[:api_entreprise_token]).to be_nil }
+      end
+
+      context 'when the admin clone the mail templates' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { mail_templates: '1' } } }
+
+        it do
+          expect(Procedure.last.initiated_mail).not_to be_nil
+          expect(Procedure.last.received_mail).not_to be_nil
+          expect(Procedure.last.closed_mail).not_to be_nil
+          expect(Procedure.last.refused_mail).not_to be_nil
+          expect(Procedure.last.without_continuation_mail).not_to be_nil
+          expect(Procedure.last.re_instructed_mail).not_to be_nil
+        end
+      end
+
+      context 'when the admin do not clone the mail templates' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { mail_templates: '0' } } }
+
+        it do
+          expect(Procedure.last.initiated_mail).to be_nil
+          expect(Procedure.last.received_mail).to be_nil
+          expect(Procedure.last.closed_mail).to be_nil
+          expect(Procedure.last.refused_mail).to be_nil
+          expect(Procedure.last.without_continuation_mail).to be_nil
+          expect(Procedure.last.re_instructed_mail).to be_nil
+        end
       end
 
       context 'when the admin clone the ineligibilite rules' do

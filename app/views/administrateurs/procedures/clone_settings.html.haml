@@ -77,6 +77,13 @@
             = t('administrateurs.procedures.clone.accuse_lecture')
             %span.fr-hint-text
               = t("administrateurs.procedures.clone.accuse_lecture_hint.#{@procedure.accuse_lecture.to_s}")
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[mail_templates]', '1', true, id: 'clone_mail_templates'
+          %label.fr-label{ :for => 'clone_mail_templates' }
+            = t('administrateurs.procedures.clone.mail_templates')
+            %span.fr-hint-text
+              = t('administrateurs.procedures.clone.mail_templates_hint')
 
       - if @is_same_admin
         .fr-fieldset__element

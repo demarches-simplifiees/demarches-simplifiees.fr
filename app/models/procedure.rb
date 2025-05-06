@@ -492,12 +492,15 @@ class Procedure < ApplicationRecord
       procedure.routing_enabled = false
     end
 
-    procedure.initiated_mail = initiated_mail&.dup
-    procedure.received_mail = received_mail&.dup
-    procedure.closed_mail = closed_mail&.dup
-    procedure.refused_mail = refused_mail&.dup
-    procedure.without_continuation_mail = without_continuation_mail&.dup
-    procedure.re_instructed_mail = re_instructed_mail&.dup
+    if options[:clone_mail_templates]
+      procedure.initiated_mail = initiated_mail&.dup
+      procedure.received_mail = received_mail&.dup
+      procedure.closed_mail = closed_mail&.dup
+      procedure.refused_mail = refused_mail&.dup
+      procedure.re_instructed_mail = re_instructed_mail&.dup
+      procedure.without_continuation_mail = without_continuation_mail&.dup
+    end
+
     procedure.ask_birthday = false # see issue #4242
 
     procedure.cloned_from_library = options[:cloned_from_library]
