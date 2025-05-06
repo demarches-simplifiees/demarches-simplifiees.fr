@@ -2,7 +2,7 @@
 
 - if @champ.html_label?
   = @form.label @champ.main_value_name, id: @champ.labelledby_id, for: @champ.focusable_input_id, class: 'fr-label' do
-    - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
+    - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at, row_number: @row_number
   - if @champ.description.present?
     .fr-hint-text.fr-mb-1w{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
   - if @champ.type_de_champ.formatted_advanced? &&  @champ.type_de_champ.expression_reguliere_indications.present?
