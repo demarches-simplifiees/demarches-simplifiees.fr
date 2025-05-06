@@ -12,7 +12,6 @@ class Dossier < ApplicationRecord
   include DossierSectionsConcern
   include DossierStateConcern
   include DossierChampsConcern
-  include DossierEmptyConcern
   include DossierExportConcern
 
   enum :state, {
@@ -338,6 +337,7 @@ class Dossier < ApplicationRecord
     end
   end
 
+  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where("dossiers.updated_at = dossiers.created_at").where(created_at: ..2.weeks.ago) }
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
@@ -941,7 +941,7 @@ class Dossier < ApplicationRecord
   end
 
   def hash_for_deletion_mail
-    { id: self.id, procedure_libelle: self.procedure.libelle }
+    { id: self.id, procedure_libelle: self.procedure.libelle, procedure_path: self.procedure.path }
   end
 
   def geo_data?
