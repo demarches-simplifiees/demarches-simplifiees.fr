@@ -4,11 +4,13 @@ class EditableChamp::SectionComponent < ApplicationComponent
   include ApplicationHelper
   include TreeableConcern
 
-  def initialize(dossier:, nodes: nil, types_de_champ: nil, row_id: nil)
+  def initialize(dossier:, nodes: nil, types_de_champ: nil, row_id: nil, row_number: nil, aria_labelledby_prefix: nil)
     nodes ||= to_tree(types_de_champ:)
     @dossier = dossier
     @row_id = row_id
+    @row_number = row_number
     @nodes = to_fieldset(nodes:)
+    @aria_labelledby_prefix = aria_labelledby_prefix
   end
 
   def render_within_fieldset?
