@@ -692,7 +692,8 @@ describe Administrateurs::ProceduresController, type: :controller do
         administrateurs: [admin, administrateur_2],
         instructeurs: [admin.instructeur, instructeur_2],
         attestation_template: build(:attestation_template),
-        accuse_lecture: true
+        accuse_lecture: true,
+        api_entreprise_token:
       )
     end
 
@@ -700,6 +701,8 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:ineligibilite_message) { 'Votre demande est inéligible' }
     let(:ineligibilite_enabled) { true }
     let(:ineligibilite_rules) { ds_eq(constant(true), constant(true)) }
+    let(:api_entreprise_token) { JWT.encode({ exp: 2.days.ago.to_i }, nil, "none") }
+
 
     let(:params) { { procedure_id: procedure.id } }
 
@@ -881,6 +884,20 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, clone_options: { accuse_lecture: '0' } } }
 
         it { expect(Procedure.last.accuse_lecture).to be_falsey }
+      end
+
+      context 'when the admin clone the API entreprise token' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { api_entreprise_token: '1' } } }
+
+        it do
+          expect(Procedure.last[:api_entreprise_token]).not_to be_nil
+        end
+      end
+
+      context 'when the admin do not clone the API entreprise token' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { api_entreprise_token: '0' } } }
+
+        it { expect(Procedure.last[:api_entreprise_token]).to be_nil }
       end
 
       context 'when the admin clone the ineligibilite rules' do

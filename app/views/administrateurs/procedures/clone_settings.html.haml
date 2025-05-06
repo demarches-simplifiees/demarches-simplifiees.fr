@@ -110,6 +110,14 @@
                 = t('administrateurs.procedures.clone.attestation_template')
                 %span.fr-hint-text
                   = t('administrateurs.procedures.clone.attestation_template_hint')
+        - if @is_same_admin && @procedure.api_entreprise_token.present?
+          .fr-fieldset__element
+            .fr-checkbox-group
+              = check_box_tag 'clone_options[api_entreprise_token]', '1', true, id: 'clone_api_entreprise_token'
+              %label.fr-label{ :for => 'clone_api_entreprise_token' }
+                = t('administrateurs.procedures.clone.api_entreprise_token')
+                %span.fr-hint-text
+                  = t('administrateurs.procedures.clone.api_entreprise_token_hint')
 
     .fixed-footer
       .fr-container

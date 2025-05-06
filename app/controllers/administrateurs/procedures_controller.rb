@@ -682,7 +682,8 @@ module Administrateurs
         :presentation,
         :monavis_embed,
         :dossier_submitted_message,
-        :accuse_lecture
+        :accuse_lecture,
+        :api_entreprise_token
       )
       {
         clone_champs: options[:champs] == '1',
@@ -697,6 +698,7 @@ module Administrateurs
         clone_monavis_embed: options[:monavis_embed] == '1',
         clone_dossier_submitted_message: options[:dossier_submitted_message] == '1',
         clone_accuse_lecture: options[:accuse_lecture] == '1',
+        clone_api_entreprise_token: options[:api_entreprise_token] == '1',
         clone_libelle: options[:libelle]
       }
     end

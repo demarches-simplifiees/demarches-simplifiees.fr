@@ -126,3 +126,5 @@ fr:
         accuse_lecture_hint:
           true: Activé
           false: Désactivé
+        api_entreprise_token: Jeton API entreprise
+        api_entreprise_token_hint: Jeton configuré

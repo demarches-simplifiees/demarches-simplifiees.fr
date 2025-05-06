@@ -483,8 +483,9 @@ class Procedure < ApplicationRecord
       procedure.draft_revision.dossier_submitted_message = nil
     end
 
+    procedure.api_entreprise_token = nil if !options[:clone_api_entreprise_token] || !is_same_admin
+
     if !is_same_admin
-      procedure.api_entreprise_token = nil
       procedure.encrypted_api_particulier_token = nil
       procedure.opendata = true
       procedure.api_particulier_scopes = []
