@@ -22,10 +22,38 @@ class Dossiers::ErrorsFullMessagesComponent < ApplicationComponent
     model = error.is_a?(ActiveModel::NestedError) ? error.inner_error.base : error.base
 
     if model.respond_to?(:libelle) # a Champ or something acting as a Champ
-      ErrorDescriptor.new("##{model.focusable_input_id}", model.libelle.truncate(200), error.message)
+      ErrorDescriptor.new("##{model.focusable_input_id}", model_libelle(model), error.message)
     else
       ErrorDescriptor.new("##{model.model_name.singular}_#{error.attribute}", model.class.human_attribute_name(error.attribute), error.message)
     end
+  end
+
+  def model_libelle(model)
+    parent_prefix(model) + model.libelle.truncate(200) + row_number_suffix(model)
+  end
+
+  def parent_prefix(model)
+    return "" if !model.child?
+
+    "#{[model.parent.libelle, is_in_fieldset?(model) ? row_number(model) : nil].compact.join(" ")} - "
+  end
+
+  def row_number_suffix(model)
+    return "" if !model.child? || is_in_fieldset?(model)
+
+    " #{row_number(model)}"
+  end
+
+  def row_number(model)
+    return 1 if !model.child?
+
+    model.dossier.repetition_row_ids(model.parent).index(model.row_id) + 1
+  end
+
+  def is_in_fieldset?(model)
+    return 0 if !model.child?
+
+    model.dossier.revision.children_of(model.parent).size > 1
   end
 
   def render?
