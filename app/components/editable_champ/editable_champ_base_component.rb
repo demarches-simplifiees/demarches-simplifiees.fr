@@ -5,8 +5,8 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
 
   attr_reader :attribute
 
-  def initialize(form:, champ:, seen_at: nil, opts: {})
-    @form, @champ, @seen_at, @opts = form, champ, seen_at, opts
+  def initialize(form:, champ:, seen_at: nil, opts: {}, input_labelled_by_prefix: nil)
+    @form, @champ, @seen_at, @opts, @input_labelled_by_prefix = form, champ, seen_at, opts, input_labelled_by_prefix
     @attribute = :value
   end
 
@@ -20,6 +20,10 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
 
   def describedby_id
     @champ.describedby_id
+  end
+
+  def labelledby_id
+    @input_labelled_by_prefix ? "#{@input_labelled_by_prefix} #{@champ.labelledby_id}" : @champ.labelledby_id
   end
 
   def fieldset_aria_opts
