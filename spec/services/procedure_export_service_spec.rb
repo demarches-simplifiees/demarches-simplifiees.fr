@@ -182,6 +182,19 @@ describe ProcedureExportService do
           expect(dossiers_sheet.headers).to include('Centre De Coût')
         end
       end
+
+      context 'with BOM input' do
+        let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:) }
+        let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+        let(:types_de_champ_public) { [{ type: :text, libelle: 'text' }] }
+        before { dossier.champs.first.update(value: user_input) }
+        let(:user_input) { "franco￾allemand" }
+        it 'can be read with BOM content' do
+          expect(dossiers_sheet).not_to be_nil
+          expect(dossiers_sheet.headers).to include('text')
+          expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('text')]).to eq("franco allemand")
+        end
+      end
     end
 
     describe 'Etablissement sheet' do

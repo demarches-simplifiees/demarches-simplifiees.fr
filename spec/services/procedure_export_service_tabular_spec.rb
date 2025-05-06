@@ -160,6 +160,21 @@ describe ProcedureExportService do
         end
       end
 
+      context 'with TypesDeChamp::TextAreaTypeDeChamp' do
+        let(:types_de_champ_public) { [{ type: :textarea, libelle: "textarea", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'textarea', column: procedure.find_column(label: 'textarea'))] }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        before do
+          dossier
+            .filled_champs_public
+            .first
+            .update(value: "franco￾allemand")
+        end
+        it 'can be read with BOM content' do
+          expect(dossiers_sheet.data.last.last).to eq "franco allemand"
+        end
+      end
+
       context 'with TypesDeChamp::Date' do
         let(:types_de_champ_public) { [{ type: :date, libelle: "date", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'date', column: procedure.find_column(label: 'date'))] }
