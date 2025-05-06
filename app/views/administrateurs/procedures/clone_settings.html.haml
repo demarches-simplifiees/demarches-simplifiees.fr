@@ -84,6 +84,16 @@
             = t('administrateurs.procedures.clone.mail_templates')
             %span.fr-hint-text
               = t('administrateurs.procedures.clone.mail_templates_hint')
+      - if @procedure.sva_svr_enabled?
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = check_box_tag 'clone_options[sva_svr]', '1', true, id: 'clone_sva_svr'
+            %label.fr-label{ :for => 'clone_sva_svr' }
+              = t('administrateurs.procedures.clone.sva_svr')
+              %span.fr-hint-text
+                = t("administrateurs.procedures.clone.sva_svr_hint.#{@procedure.sva_svr_decision.to_s}")
+                = t('administrateurs.procedures.clone.sva_svr_period', period: @procedure.sva_svr_configuration.period)
+                = t("administrateurs.procedures.clone.sva_svr_unit_labels.#{@procedure.sva_svr_configuration.unit}")
 
       - if @is_same_admin
         .fr-fieldset__element

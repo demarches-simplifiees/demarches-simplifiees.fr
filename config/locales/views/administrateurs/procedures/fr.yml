@@ -130,3 +130,12 @@ fr:
         api_entreprise_token_hint: Jeton configuré
         mail_templates: Configuration des emails
         mail_templates_hint: Contenu des 6 emails automatiques
+        sva_svr: Silence Vaut Accord ou Rejet
+        sva_svr_hint:
+          sva: SVA activé
+          svr: SVR activé
+        sva_svr_period: "- Après %{period}"
+        sva_svr_unit_labels:
+          months: mois
+          weeks: semaines
+          days: jours

@@ -688,6 +688,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         :with_service,
         :routee,
         :with_dossier_submitted_message,
+        :sva,
         monavis_embed:,
         administrateurs: [admin, administrateur_2],
         instructeurs: [admin.instructeur, instructeur_2],
@@ -909,6 +910,20 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, clone_options: { api_entreprise_token: '0' } } }
 
         it { expect(Procedure.last[:api_entreprise_token]).to be_nil }
+      end
+
+      context 'when the admin clone the SVA SVR configuration' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { sva_svr: '1' } } }
+
+        it do
+          expect(Procedure.last.sva_svr_configuration.decision).to eq('sva')
+        end
+      end
+
+      context 'when the admin do not clone the SVA SVR configuration' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { sva_svr: '0' } } }
+
+        it { expect(Procedure.last.sva_svr_configuration.decision).to eq('disabled') }
       end
 
       context 'when the admin clone the mail templates' do

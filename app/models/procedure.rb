@@ -484,6 +484,10 @@ class Procedure < ApplicationRecord
     end
 
     procedure.api_entreprise_token = nil if !options[:clone_api_entreprise_token] || !is_same_admin
+    if !options[:clone_sva_svr]
+      procedure.sva_svr_configuration.assign_attributes(decision: 'disabled')
+      procedure.assign_attributes(sva_svr: procedure.sva_svr_configuration.attributes)
+    end
 
     if !is_same_admin
       procedure.encrypted_api_particulier_token = nil
