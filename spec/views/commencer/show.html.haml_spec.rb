@@ -32,6 +32,8 @@ RSpec.describe 'commencer/show', type: :view do
   subject { render }
 
   context 'when no user is signed in' do
+    before { allow(FranceConnectService).to receive(:enabled?).and_return(true) }
+
     it 'renders sign-in and sign-up links' do
       subject
       expect(rendered).to have_link('Créer un compte')

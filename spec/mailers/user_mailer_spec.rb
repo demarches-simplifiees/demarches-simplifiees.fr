@@ -81,7 +81,7 @@ RSpec.describe UserMailer, type: :mailer do
 
     it 'sends to correct email with merge link' do
       expect(subject.to).to eq([email])
-      expect(subject.body).to include(france_connect_particulier_merge_using_email_link_url(email_merge_token: code))
+      expect(subject.body).to include(france_connect_merge_using_email_link_url(email_merge_token: code))
     end
 
     context 'without SafeMailer configured' do
