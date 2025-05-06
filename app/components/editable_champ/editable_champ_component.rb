@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class EditableChamp::EditableChampComponent < ApplicationComponent
-  def initialize(form:, champ:, seen_at: nil)
-    @form, @champ, @seen_at = form, champ, seen_at
+  def initialize(form:, champ:, seen_at: nil, row_number: nil, aria_labelledby_prefix: nil)
+    @form, @champ, @seen_at, @row_number, @aria_labelledby_prefix = form, champ, seen_at, row_number, aria_labelledby_prefix
     @attribute = :value
   end
 
   def champ_component
-    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
+    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at, aria_labelledby_prefix: @aria_labelledby_prefix)
   end
 
   private
