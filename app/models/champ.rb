@@ -205,6 +205,10 @@ class Champ < ApplicationRecord
   end
 
   def labelledby_id
+    label_id
+  end
+
+  def label_id
     "#{html_id}-label"
   end
 
