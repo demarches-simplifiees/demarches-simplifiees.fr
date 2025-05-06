@@ -56,6 +56,13 @@
             = t('administrateurs.procedures.clone.ineligibilite')
             %span.fr-hint-text
               = t("administrateurs.procedures.clone.ineligibilite_hint.#{@procedure.active_revision.ineligibilite_enabled.to_s}")
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[monavis_embed]', '1', true, id: 'clone_monavis_embed'
+          %label.fr-label{ :for => 'clone_monavis_embed' }
+            = t('administrateurs.procedures.clone.monavis_embed')
+            %span.fr-hint-text
+              = t('administrateurs.procedures.clone.monavis_embed_hint', code: @procedure.monavis_embed)
 
       - if @is_same_admin
         .fr-fieldset__element

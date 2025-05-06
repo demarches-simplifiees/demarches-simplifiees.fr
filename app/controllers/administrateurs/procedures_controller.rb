@@ -679,7 +679,8 @@ module Administrateurs
         :zones,
         :service,
         :ineligibilite,
-        :presentation
+        :presentation,
+        :monavis_embed
       )
       {
         clone_champs: options[:champs] == '1',
@@ -691,6 +692,7 @@ module Administrateurs
         clone_service: options[:service] == '1',
         clone_ineligibilite: options[:ineligibilite] == '1',
         clone_presentation: options[:presentation] == '1',
+        clone_monavis_embed: options[:monavis_embed] == '1',
         clone_libelle: options[:libelle]
       }
     end

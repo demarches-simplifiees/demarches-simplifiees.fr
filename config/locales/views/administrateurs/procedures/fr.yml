@@ -118,3 +118,5 @@ fr:
           false: Désactivée
         presentation: Présentation
         presentation_hint: Objet de la démarche, destinataires, liste des pièces jointes demandées, logo de la démarche, lien vers la démarche, cadre juridique, contact DPO, notice explicative, etc.
+        monavis_embed: Bouton « MonAvis »
+        monavis_embed_hint: "Code généré sur le site MonAvis : %{code}"

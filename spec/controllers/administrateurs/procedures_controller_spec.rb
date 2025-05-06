@@ -687,12 +687,14 @@ describe Administrateurs::ProceduresController, type: :controller do
         :with_zone,
         :with_service,
         :routee,
+        monavis_embed:,
         administrateurs: [admin, administrateur_2],
         instructeurs: [admin.instructeur, instructeur_2],
         attestation_template: build(:attestation_template)
       )
     end
 
+    let(:monavis_embed) { '<a href="https://monavis.numerique.gouv.fr/Demarches/123456?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d4"><img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" /></a>' }
     let(:ineligibilite_message) { 'Votre demande est inéligible' }
     let(:ineligibilite_enabled) { true }
     let(:ineligibilite_rules) { ds_eq(constant(true), constant(true)) }
@@ -837,6 +839,18 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, clone_options: { service: '0' } } }
 
         it { expect(Procedure.last.service).to be_nil }
+      end
+
+      context 'when the admin clone the bouton mon avis' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { monavis_embed: '1' } } }
+
+        it { expect(Procedure.last.monavis_embed).not_to be_nil }
+      end
+
+      context 'when the admin do not clone the bouton mon avis' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { monavis_embed: '0' } } }
+
+        it { expect(Procedure.last.monavis_embed).to be_nil }
       end
 
       context 'when the admin clone the ineligibilite rules' do

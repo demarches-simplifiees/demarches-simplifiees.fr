@@ -474,6 +474,8 @@ class Procedure < ApplicationRecord
       procedure.auto_archive_on = nil
     end
 
+    procedure.monavis_embed = nil if !options[:clone_monavis_embed]
+
     if !is_same_admin
       procedure.api_entreprise_token = nil
       procedure.encrypted_api_particulier_token = nil
@@ -500,7 +502,6 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_brouillon = false
     procedure.closing_notification_en_cours = false
     procedure.template = false
-    procedure.monavis_embed = nil
     procedure.labels = labels.map(&:dup)
     procedure.libelle = options[:clone_libelle] if options[:clone_libelle].present?
 
