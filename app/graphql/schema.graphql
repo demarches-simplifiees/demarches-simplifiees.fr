@@ -4527,10 +4527,73 @@ enum TitreIdentiteGrantType {
 type Traitement {
   dateTraitement: ISO8601DateTime!
   emailAgentTraitant: String
+  event: TraitementEvent!
   id: ID!
   motivation: String
   revision: Revision
-  state: DossierState!
+  state: DossierState! @deprecated(reason: "Utilisez le champ `event` à la place.")
+}
+
+enum TraitementEvent {
+  """
+  Accepte
+  """
+  accepte
+
+  """
+  Accepte automatiquement
+  """
+  accepte_automatiquement
+
+  """
+  Classe sans suite
+  """
+  classe_sans_suite
+
+  """
+  Depose
+  """
+  depose
+
+  """
+  Depose correction instructeur
+  """
+  depose_correction_instructeur
+
+  """
+  Depose correction usager
+  """
+  depose_correction_usager
+
+  """
+  Passe en instruction
+  """
+  passe_en_instruction
+
+  """
+  Passe en instruction automatiquement
+  """
+  passe_en_instruction_automatiquement
+
+  """
+  Refuse
+  """
+  refuse
+
+  """
+  Refuse automatiquement
+  """
+  refuse_automatiquement
+
+  """
+  Repasse en construction
+  """
+  repasse_en_construction
+
+  """
+  Repasse en instruction
+  """
+  repasse_en_instruction
 }
 
 enum TypeDeChamp {
