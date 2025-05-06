@@ -4,9 +4,9 @@ describe Champs::AddressChamp do
   let(:types_de_champ_public) { [{ type: :address }] }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, procedure:) }
-  let(:champ) { dossier.champs.first.tap { _1.update(value:, data:) } }
+  let(:champ) { dossier.champs.first.tap { _1.update(value:, value_json:) } }
   let(:value) { nil }
-  let(:data) { nil }
+  let(:value_json) { nil }
 
   context "with value but no data" do
     let(:value) { 'Paris' }
@@ -17,7 +17,7 @@ describe Champs::AddressChamp do
 
   context "with value and data" do
     let(:value) { '33 Rue Rébeval 75019 Paris' }
-    let(:data) do
+    let(:value_json) do
       {
         "type" => "housenumber",
         "label" => "33 Rue Rébeval 75019 Paris",
@@ -42,7 +42,7 @@ describe Champs::AddressChamp do
 
   context "with wrong code INSEE" do
     let(:value) { 'Rue du Bois Charles 27700 Les Trois Lacs' }
-    let(:data) do
+    let(:value_json) do
       {
         "type" => "housenumber",
         "label" => "Rue du Bois Charles 27700 Les Trois Lacs",
@@ -61,7 +61,7 @@ describe Champs::AddressChamp do
 
   context "with empty code postal" do
     let(:value) { '15 rue Baudelaire Nouméa' }
-    let(:data) do
+    let(:value_json) do
       {
         "type" => "housenumber",
         "label" => "15 Rue BAUDELAIRE Nouméa",
