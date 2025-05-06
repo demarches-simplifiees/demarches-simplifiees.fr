@@ -63,6 +63,13 @@
             = t('administrateurs.procedures.clone.monavis_embed')
             %span.fr-hint-text
               = t('administrateurs.procedures.clone.monavis_embed_hint', code: @procedure.monavis_embed)
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[dossier_submitted_message]', '1', true, id: 'clone_dossier_submitted_message'
+          %label.fr-label{ :for => 'clone_dossier_submitted_message' }
+            = t('administrateurs.procedures.clone.dossier_submitted_message')
+            %span.fr-hint-text
+              = t('administrateurs.procedures.clone.dossier_submitted_message_hint', message: @procedure.active_revision.dossier_submitted_message&.message_on_submit_by_usager)
 
       - if @is_same_admin
         .fr-fieldset__element

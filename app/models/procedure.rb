@@ -475,6 +475,11 @@ class Procedure < ApplicationRecord
     end
 
     procedure.monavis_embed = nil if !options[:clone_monavis_embed]
+    if options[:clone_dossier_submitted_message]
+      procedure.draft_revision.dossier_submitted_message = active_revision.dossier_submitted_message.dup
+    else
+      procedure.draft_revision.dossier_submitted_message = nil
+    end
 
     if !is_same_admin
       procedure.api_entreprise_token = nil

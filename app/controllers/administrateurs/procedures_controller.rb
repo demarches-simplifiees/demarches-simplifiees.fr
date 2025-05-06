@@ -680,7 +680,8 @@ module Administrateurs
         :service,
         :ineligibilite,
         :presentation,
-        :monavis_embed
+        :monavis_embed,
+        :dossier_submitted_message,
       )
       {
         clone_champs: options[:champs] == '1',
@@ -693,6 +694,7 @@ module Administrateurs
         clone_ineligibilite: options[:ineligibilite] == '1',
         clone_presentation: options[:presentation] == '1',
         clone_monavis_embed: options[:monavis_embed] == '1',
+        clone_dossier_submitted_message: options[:dossier_submitted_message] == '1',
         clone_libelle: options[:libelle]
       }
     end

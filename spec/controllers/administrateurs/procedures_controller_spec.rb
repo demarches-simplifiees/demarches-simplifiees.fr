@@ -687,6 +687,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         :with_zone,
         :with_service,
         :routee,
+        :with_dossier_submitted_message,
         monavis_embed:,
         administrateurs: [admin, administrateur_2],
         instructeurs: [admin.instructeur, instructeur_2],
@@ -851,6 +852,20 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, clone_options: { monavis_embed: '0' } } }
 
         it { expect(Procedure.last.monavis_embed).to be_nil }
+      end
+
+      context 'when the admin clone the dossier submitted message' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { dossier_submitted_message: '1' } } }
+
+        it do
+          expect(Procedure.last.draft_revision.dossier_submitted_message).not_to be_nil
+        end
+      end
+
+      context 'when the admin do not clone the dossier submitted message' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { dossier_submitted_message: '0' } } }
+
+        it { expect(Procedure.last.draft_revision.dossier_submitted_message).to be_nil }
       end
 
       context 'when the admin clone the ineligibilite rules' do
