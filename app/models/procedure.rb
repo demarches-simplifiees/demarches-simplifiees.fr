@@ -475,6 +475,8 @@ class Procedure < ApplicationRecord
     end
 
     procedure.monavis_embed = nil if !options[:clone_monavis_embed]
+    procedure.accuse_lecture = false if !options[:clone_accuse_lecture]
+
     if options[:clone_dossier_submitted_message]
       procedure.draft_revision.dossier_submitted_message = active_revision.dossier_submitted_message.dup
     else

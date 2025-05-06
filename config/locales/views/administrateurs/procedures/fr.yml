@@ -122,3 +122,7 @@ fr:
         monavis_embed_hint: "Code généré sur le site MonAvis : %{code}"
         dossier_submitted_message: Fin de dépôt
         dossier_submitted_message_hint: "(Message personnalisé) %{message}"
+        accuse_lecture: Accusé de lecture de la décision
+        accuse_lecture_hint:
+          true: Activé
+          false: Désactivé

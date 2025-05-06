@@ -691,7 +691,8 @@ describe Administrateurs::ProceduresController, type: :controller do
         monavis_embed:,
         administrateurs: [admin, administrateur_2],
         instructeurs: [admin.instructeur, instructeur_2],
-        attestation_template: build(:attestation_template)
+        attestation_template: build(:attestation_template),
+        accuse_lecture: true
       )
     end
 
@@ -866,6 +867,20 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:params) { { procedure_id: procedure.id, clone_options: { dossier_submitted_message: '0' } } }
 
         it { expect(Procedure.last.draft_revision.dossier_submitted_message).to be_nil }
+      end
+
+      context 'when the admin clone the accuse de lecture' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { accuse_lecture: '1' } } }
+
+        it do
+          expect(Procedure.last.accuse_lecture).to be_truthy
+        end
+      end
+
+      context 'when the admin do not clone the accuse de lecture' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { accuse_lecture: '0' } } }
+
+        it { expect(Procedure.last.accuse_lecture).to be_falsey }
       end
 
       context 'when the admin clone the ineligibilite rules' do

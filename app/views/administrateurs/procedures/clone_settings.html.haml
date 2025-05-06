@@ -70,6 +70,13 @@
             = t('administrateurs.procedures.clone.dossier_submitted_message')
             %span.fr-hint-text
               = t('administrateurs.procedures.clone.dossier_submitted_message_hint', message: @procedure.active_revision.dossier_submitted_message&.message_on_submit_by_usager)
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = check_box_tag 'clone_options[accuse_lecture]', '1', true, id: 'clone_accuse_lecture'
+          %label.fr-label{ :for => 'clone_accuse_lecture' }
+            = t('administrateurs.procedures.clone.accuse_lecture')
+            %span.fr-hint-text
+              = t("administrateurs.procedures.clone.accuse_lecture_hint.#{@procedure.accuse_lecture.to_s}")
 
       - if @is_same_admin
         .fr-fieldset__element
