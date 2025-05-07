@@ -24,6 +24,10 @@
                 %li
                   %span.fr-icon-pdf-2-line
                   #{export_template.export_pdf.path(dossier)}.pdf
+              - if export_template.attestation.enabled? && procedure.attestation_template&.activated?
+                %li
+                  %span.fr-icon-pdf-2-line
+                  #{export_template.attestation.path(dossier)}.pdf
 
               - procedure.exportables_pieces_jointes.each do |tdc|
                 - export_pj = export_template.pj(tdc)

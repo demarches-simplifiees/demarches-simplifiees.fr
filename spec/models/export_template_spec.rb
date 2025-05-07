@@ -59,6 +59,15 @@ describe ExportTemplate do
         expect(export_template.attachment_path(dossier, attachment, champ: champ_pj)).to eq("dossier-#{dossier.id}/justif-#{dossier.id}-01.png")
       end
     end
+
+    context 'for attestation' do
+      let!(:attestation) { create(:attestation, dossier:) }
+      let(:attachment) { ActiveStorage::Attachment.new(name: 'Attestation', record: attestation, blob: ActiveStorage::Blob.new(filename: "attestation.pdf")) }
+
+      it 'returns attestation and custom name for attestation' do
+        expect(export_template.attachment_path(dossier, attachment)).to eq("dossier-#{dossier.id}/attestation-#{dossier.id}.pdf")
+      end
+    end
   end
 
   describe '#tags and #pj_tags' do

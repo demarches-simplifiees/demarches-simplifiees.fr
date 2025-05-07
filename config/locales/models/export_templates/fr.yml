@@ -11,6 +11,7 @@ fr:
         name: "Nom du modèle"
         dossier_folder: Nom du répertoire
         export_pdf: "Dossier au format pdf"
+        attestation: "Attestation d'acceptation"
     errors:
       models:
         export_template:
