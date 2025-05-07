@@ -115,6 +115,8 @@ module TPS
 
     config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption.fetch(:primary_key)
     config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption.fetch(:key_derivation_salt)
+    config.active_record.encryption.support_sha1_for_non_deterministic_encryption = true # supports for encrypted attributes encoded in SHA1, before rails 7.1
+
     config.active_record.partial_inserts = false
 
     config.exceptions_app = self.routes
