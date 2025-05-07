@@ -29,6 +29,12 @@ class DeletedDossier < ApplicationRecord
   def self.create_from_dossier(dossier, reason)
     return if !dossier.log_operations?
 
+    deleted_at = if dossier.hidden_by_user_at && dossier.en_construction?
+      dossier.hidden_by_user_at
+    else
+      Time.current
+    end
+
     # We have some bad data because of partially deleted dossiers in the past.
     # For now use find_or_create_by! to avoid errors.
     create_with(
@@ -39,7 +45,7 @@ class DeletedDossier < ApplicationRecord
       procedure: dossier.procedure,
       state: dossier.state,
       depose_at: dossier.depose_at,
-      deleted_at: Time.zone.now
+      deleted_at:
     ).create_or_find_by!(dossier_id: dossier.id)
   end
 

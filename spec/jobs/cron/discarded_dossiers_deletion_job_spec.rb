@@ -74,6 +74,19 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
         context 'hidden long ago' do
           let(:hidden_at) { 1.week.ago - 1.hour }
           include_examples "does delete"
+
+          it "uses relevant deleted_at depending on user hidden it and state" do
+            subject
+
+            if state == :en_construction
+              expect(DeletedDossier.find_by(dossier_id: dossier.id).deleted_at).to be_within(1.second).of(dossier.hidden_by_user_at)
+            else
+              expect(DeletedDossier.find_by(dossier_id: dossier.id).deleted_at).to be_within(1.second).of(Time.current)
+            end
+
+            # dossier not hidden:
+            expect(DeletedDossier.find_by(dossier_id: dossier_2.id).deleted_at).to be_within(1.second).of(Time.current)
+          end
         end
       end
     end
