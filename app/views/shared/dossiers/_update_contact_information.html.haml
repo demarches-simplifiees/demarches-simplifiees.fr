@@ -13,6 +13,6 @@
       = I18n.t('help_dropdown.help_brouillon_title')
     - else
       = I18n.t('help_dropdown.procedure_title')
-  - if procedure.service.present?
+  - if service.present?
     %ul.fr-footer__top-list
-      = render Procedure::ServiceListContactComponent.new(service: procedure.service, dossier: dossier)
+      = render Procedure::ServiceListContactComponent.new(service_or_contact_information: service, dossier: dossier)
