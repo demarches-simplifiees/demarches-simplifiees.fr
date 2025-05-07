@@ -494,7 +494,6 @@ class Procedure < ApplicationRecord
       procedure.encrypted_api_particulier_token = nil
       procedure.opendata = true
       procedure.api_particulier_scopes = []
-      procedure.routing_enabled = false
     end
 
     if options[:clone_mail_templates]
@@ -519,6 +518,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_en_cours = false
     procedure.template = false
     procedure.labels = labels.map(&:dup)
+    procedure.routing_alert = false
     procedure.libelle = options[:clone_libelle] if options[:clone_libelle].present?
 
     if !procedure.valid?
