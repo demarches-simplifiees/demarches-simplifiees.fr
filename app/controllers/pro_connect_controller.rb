@@ -35,7 +35,7 @@ class ProConnectController < ApplicationController
     instructeur.user.update!(email_verified_at: Time.zone.now)
 
     aci = ProConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
-    aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:))
+    aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:, user_id: instructeur.user.id))
 
     sign_in(:user, instructeur.user)
 
