@@ -41,7 +41,7 @@ RSpec.describe FAQController, type: :controller do
 
   describe "GET #show" do
     before do
-      allow(Current).to receive(:application_name).and_return('demarches.gouv.fr')
+      allow(Current).to receive(:application_name).and_return('demarches.numerique.gouv.fr')
     end
 
     render_views
@@ -49,7 +49,7 @@ RSpec.describe FAQController, type: :controller do
     context "when the FAQ exists" do
       it "renders the show template with the FAQ content and metadata" do
         get :show, params: { category: 'usager', slug: 'je-veux-changer-mon-adresse-email' }
-        expect(response.body).to include('Si vous disposez d’un compte usager sur demarches.gouv.fr')
+        expect(response.body).to include('Si vous disposez d’un compte usager sur demarches.numerique.gouv.fr')
 
         # link to siblings
         expect(response.body).to include(faq_path(category: 'usager', slug: 'je-veux-changer-mon-mot-de-passe'))
