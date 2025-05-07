@@ -700,7 +700,8 @@ describe Administrateurs::ProceduresController, type: :controller do
         closed_mail:,
         refused_mail:,
         without_continuation_mail:,
-        re_instructed_mail:
+        re_instructed_mail:,
+        experts_require_administrateur_invitation:
       )
     end
 
@@ -715,6 +716,9 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:refused_mail) { build(:refused_mail) }
     let(:without_continuation_mail) { build(:without_continuation_mail) }
     let(:re_instructed_mail) { build(:re_instructed_mail) }
+    let(:experts_require_administrateur_invitation) { true }
+    let(:expert) { create(:expert) }
+    let!(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
 
     let(:params) { { procedure_id: procedure.id } }
 
@@ -969,6 +973,24 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.draft_revision.ineligibilite_rules).to be_nil
           expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_falsey
           expect(Procedure.last.draft_revision.ineligibilite_message).to be_nil
+        end
+      end
+
+      context 'when the admin clone the avis' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { avis: '1' } } }
+
+        it do
+          expect(Procedure.last.experts_require_administrateur_invitation).to be_truthy
+          expect(Procedure.last.experts).not_to be_blank
+        end
+      end
+
+      context 'when the admin do not clone the avis' do
+        let(:params) { { procedure_id: procedure.id, clone_options: { avis: '0' } } }
+
+        it do
+          expect(Procedure.last.experts_require_administrateur_invitation).to be_falsey
+          expect(Procedure.last.experts).to be_blank
         end
       end
 

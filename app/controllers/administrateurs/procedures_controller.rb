@@ -685,7 +685,8 @@ module Administrateurs
         :accuse_lecture,
         :api_entreprise_token,
         :mail_templates,
-        :sva_svr
+        :sva_svr,
+        :avis
       )
       {
         clone_champs: options[:champs] == '1',
@@ -703,6 +704,7 @@ module Administrateurs
         clone_api_entreprise_token: options[:api_entreprise_token] == '1',
         clone_mail_templates: options[:mail_templates] == '1',
         clone_sva_svr: options[:sva_svr] == '1',
+        clone_avis: options[:avis] == '1',
         clone_libelle: options[:libelle]
       }
     end

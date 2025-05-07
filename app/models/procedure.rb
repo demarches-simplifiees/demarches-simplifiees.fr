@@ -476,6 +476,7 @@ class Procedure < ApplicationRecord
 
     procedure.monavis_embed = nil if !options[:clone_monavis_embed]
     procedure.accuse_lecture = false if !options[:clone_accuse_lecture]
+    procedure.experts_require_administrateur_invitation = false if !options[:clone_avis]
 
     if options[:clone_dossier_submitted_message]
       procedure.draft_revision.dossier_submitted_message = active_revision.dossier_submitted_message.dup
@@ -970,6 +971,10 @@ class Procedure < ApplicationRecord
 
     if options[:clone_zones]
       associations[:zones] = []
+    end
+
+    if options[:clone_avis] && is_same_admin
+      associations[:experts_procedures] = :expert
     end
 
     associations

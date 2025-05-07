@@ -139,3 +139,5 @@ fr:
           months: mois
           weeks: semaines
           days: jours
+        avis: Avis externes
+        avis_hint: Activé - Gestions des experts avec liste prédéfinie

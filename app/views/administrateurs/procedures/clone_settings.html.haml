@@ -119,6 +119,14 @@
                 = t('administrateurs.procedures.clone.instructeurs_count', count: @procedure.groupe_instructeurs.map {_1.instructeurs.count }.sum)
                 = t("administrateurs.procedures.clone.instructeurs_self_management.#{@procedure.instructeurs_self_management?.to_s}")
                 = t("administrateurs.procedures.clone.routing_enabled.#{@procedure.routing_enabled.to_s}")
+        - if @procedure.experts_require_administrateur_invitation
+          .fr-fieldset__element
+            .fr-checkbox-group
+              = check_box_tag 'clone_options[avis]', '1', true, id: 'clone_avis'
+              %label.fr-label{ :for => 'clone_avis' }
+                = t('administrateurs.procedures.clone.avis')
+                %span.fr-hint-text
+                  = t('administrateurs.procedures.clone.avis_hint')
         - if @procedure.attestation_template&.activated?
           .fr-fieldset__element
             .fr-checkbox-group
