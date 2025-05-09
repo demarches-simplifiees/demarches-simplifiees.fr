@@ -10,9 +10,9 @@ RSpec.describe ReferentielService, type: :service do
       .to_return(status:, body: body&.to_json)
   end
 
-  describe '.test either it works, either it does not' do
+  describe '.validate_referentiel either it works, either it does not' do
     let(:query_params) { api_referentiel.test_data }
-    subject { described_class.new(referentiel: api_referentiel).test }
+    subject { described_class.new(referentiel: api_referentiel).validate_referentiel }
 
     context 'when referentiel works' do
       let(:status) { 200 }
