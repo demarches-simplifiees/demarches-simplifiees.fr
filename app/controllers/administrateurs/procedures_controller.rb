@@ -144,7 +144,7 @@ module Administrateurs
     def clone
       procedure = Procedure.find(params[:procedure_id])
       options = clone_options_from_params
-      new_procedure = procedure.clone(current_administrateur, options)
+      new_procedure = procedure.clone(options, current_administrateur)
 
       if new_procedure.valid?
         flash.notice = 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
