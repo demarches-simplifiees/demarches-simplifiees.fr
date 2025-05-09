@@ -34,7 +34,7 @@ class Referentiels::APIReferentiel < Referentiel
   end
 
   def name_as_url
-    self.name = url
+    self.name = SecureRandom.uuid
   end
 
   def url_allowed?

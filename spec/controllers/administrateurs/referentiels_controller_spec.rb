@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 describe Administrateurs::ReferentielsController, type: :controller do
-  let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
+  let(:allowed_domains) { ENV['ALLOWED_API_DOMAINS_FROM_FRONTEND'].split(',') }
   before do
     sign_in(procedure.administrateurs.first.user)
-    allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
   end
 
   let(:stable_id) { 123 }
@@ -91,7 +89,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     let(:referentiel_params) do
       {
         mode: 'autocomplete',
-        url: whitelist.first,
+        url: referentiel.url,
         hint: 'Rechercher par adresse',
         test_data: '18 rue du solférino, paris'
       }
@@ -135,7 +133,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe '#update_mapping_type_de_champ' do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, url: whitelist.first, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
     let(:referentiel_mapping) do
       [
         {

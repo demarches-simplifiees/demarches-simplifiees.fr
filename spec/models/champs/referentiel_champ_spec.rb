@@ -3,16 +3,11 @@
 require 'rails_helper'
 
 describe Champs::ReferentielChamp, type: :model do
-  let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
-  let(:referentiel) { create(:api_referentiel, :configured, url: whitelist.first) }
+  let(:referentiel) { create(:api_referentiel, :configured) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, procedure:) }
   let(:value) { "PG46YY6YWCX8" }
-  before do
-    allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
-  end
 
   def with_value(value:, data:)
     champ.tap do

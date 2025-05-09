@@ -7,11 +7,7 @@ describe 'Referentiel API:' do
   let(:administrateur) { create(:administrateur, user: create(:user)) }
   let(:types_de_champ_public) { [{ type: :text, libelle: 'un autre champ' }] }
 
-  let(:whitelist) { %w[https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/] }
-
   before do
-    allow(ENV).to receive(:fetch).and_call_original
-    allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
     login_as administrateur.user, scope: :user
   end
 
