@@ -42,9 +42,8 @@ class Referentiels::APIReferentiel < Referentiel
 
     uri = Addressable::URI.parse(url)
     return if uri.tld == "gouv.fr" && uri.domain != "beta.gouv.fr"
-
-    whitelist = ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',')
-    if whitelist.none? { |whitelisted_url| uri.host && whitelisted_url.include?(uri.host) }
+    allowed_domains = ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',')
+    if allowed_domains.none? { |allowed_domain| uri.host && allowed_domain.include?(uri.host) }
       errors.add(:url, "L'URL doit être autorisée par notre équipe, veuillez nous contacter")
     end
   rescue URI::InvalidURIError, PublicSuffix::DomainInvalid
