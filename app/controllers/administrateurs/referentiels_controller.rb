@@ -37,7 +37,7 @@ module Administrateurs
 
     def mapping_type_de_champ
       @service = ReferentielService.new(referentiel: @referentiel)
-      @service.test
+      @service.validate_referentiel
     end
 
     def update_mapping_type_de_champ

@@ -91,4 +91,34 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
     let(:data) { "present" }
     it_behaves_like "a champ non-updater"
   end
+
+  describe 'error handling and backoff strategy' do
+    before do
+      expect(champ).to receive(:fetch_external_data).and_return(failure)
+    end
+
+    context 'when a retryable error occurs' do
+      let(:failure) { Failure(API::Client::Error[:http, 429, true, reason]) }
+      let(:reason) { StandardError.new('Retryable error') }
+      it 'retries the job due to raising retryable error' do
+        expect { perform_job }.to raise_error(StandardError) # will be retried
+      end
+    end
+
+    context 'when a non-retryable error occurs' do
+      let(:failure) { Failure(API::Client::Error[:http, 400, false, reason]) }
+      let(:reason) { StandardError.new('non-retryable') }
+      it 'does not retry the job by swallowing the error gracefully' do
+        expect { perform_job }.not_to raise_error(reason)
+      end
+    end
+
+    context 'when an unknown error occurs' do
+      let(:failure) { Failure(API::Client::Error[:unknown, 418, false, reason]) }
+      let(:reason) { StandardError.new('Unknown') }
+      it 'does not retry the job by swallowing the error gracefully' do
+        expect { perform_job }.not_to raise_error(reason)
+      end
+    end
+  end
 end
