@@ -129,7 +129,7 @@ fr:
         api_entreprise_token: Jeton API entreprise
         api_entreprise_token_hint: Jeton configuré
         mail_templates: Configuration des emails
-        mail_templates_hint: Contenu des 6 emails automatiques
+        mail_templates_hint: Contenu des emails automatiques
         sva_svr: Silence Vaut Accord ou Rejet
         sva_svr_hint:
           sva: SVA activé
@@ -141,3 +141,7 @@ fr:
           days: jours
         avis: Avis externes
         avis_hint: Activé - Gestions des experts avec liste prédéfinie
+        actions:
+          clone: Cloner la démarche
+          cancel: Annuler
+          disable_with: Clonage en cours
