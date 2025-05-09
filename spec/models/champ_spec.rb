@@ -552,7 +552,7 @@ describe Champ do
 
     context "add execption to the log" do
       it do
-        expect(champ).to receive(:update_column).with(:fetch_external_data_exceptions, ['PAN'])
+        expect(champ).to receive(:update_columns).with(fetch_external_data_exceptions: ['PAN'], data: nil, value_json: nil, value: nil)
         champ.log_fetch_external_data_exception(double(inspect: 'PAN'))
       end
     end
