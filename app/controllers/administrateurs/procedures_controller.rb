@@ -143,7 +143,7 @@ module Administrateurs
 
     def clone
       procedure = Procedure.find(params[:procedure_id])
-      options = clone_options_from_params.merge(cloned_from_library: cloned_from_library?)
+      options = clone_options_from_params
       new_procedure = procedure.clone(current_administrateur, options)
 
       if new_procedure.valid?
@@ -705,7 +705,8 @@ module Administrateurs
         clone_mail_templates: options[:mail_templates] == '1',
         clone_sva_svr: options[:sva_svr] == '1',
         clone_avis: options[:avis] == '1',
-        clone_libelle: options[:libelle]
+        clone_libelle: options[:libelle],
+        cloned_from_library: params[:from_new_from_existing]
       }
     end
 

@@ -7,7 +7,7 @@
     = t('administrateurs.procedures.clone.title')
     = "« #{@procedure.libelle} » (N° #{@procedure.id})"
 
-  = form_tag(admin_procedure_clone_path(@procedure), method: :put) do
+  = form_tag(admin_procedure_clone_path(@procedure, from_new_from_existing: params[:from_new_from_existing]), method: :put) do
     %h2.fr-h5.fr-mb-1w
       = t('administrateurs.procedures.clone.rename_title')
     = label_tag 'clone_options[libelle]', class: "fr-label" do
