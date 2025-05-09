@@ -10,10 +10,7 @@ RSpec.describe Referentiels::NewFormComponent, type: :component do
     let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :referentiel }] }
     let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
-    let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
     before do
-      allow(ENV).to receive(:fetch).and_call_original
-      allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
       Flipper.enable_actor(:referentiel_type_de_champ, procedure)
       render_inline(component)
     end

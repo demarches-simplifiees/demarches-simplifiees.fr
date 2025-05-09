@@ -35,13 +35,8 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
     end
 
     context 'with referentiel champs' do
-      let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
-      let(:referentiel) { create(:api_referentiel, :configured, url: whitelist.first) }
+      let(:referentiel) { create(:api_referentiel, :configured) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
-      before do
-        allow(ENV).to receive(:fetch).and_call_original
-        allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
-      end
 
       context "when the field is a referentiel and fetch_external_data_pending? is true" do
         before do

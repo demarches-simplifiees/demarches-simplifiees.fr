@@ -9,11 +9,8 @@ describe Referentiel do
       end
 
       describe 'APIReferentiel' do
-        let(:whitelist) { %w[https://example.com https://allowed.com] }
-        before do
-          allow(ENV).to receive(:fetch).and_call_original
-          allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
-        end
+        let(:allowed_domains) { ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',') }
+
         it 'validates presentater as exact_match/autocomplete or nil' do
           expect(build(:api_referentiel, mode: 'exact_match').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
           expect(build(:api_referentiel, mode: 'autocomplete').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
@@ -23,7 +20,7 @@ describe Referentiel do
         describe 'configured?' do
           context 'when adapter is url' do
             it 'tests url params' do
-              referentiel = build(:api_referentiel, url: whitelist)
+              referentiel = build(:api_referentiel, url: allowed_domains)
               expect(referentiel).to receive(:mode).and_return(double(present?: true))
               expect(referentiel).to receive(:url).and_return(double(present?: true))
               expect(referentiel).to receive(:test_data).and_return(double(present?: true))
@@ -33,12 +30,11 @@ describe Referentiel do
           end
         end
 
-        describe 'url_in_whitelist?' do
+        describe 'url_in_allowed_domains?' do
           let(:referentiel) { build(:api_referentiel, url:) }
-          let(:whitelist) { %w[https://example.com https://allowed.com] }
 
-          context 'when the URL is in the whitelist' do
-            let(:url) { whitelist.first }
+          context 'when the URL is in the allowed_domains' do
+            let(:url) { ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',').first }
 
             it 'does not add an error' do
               referentiel.validate
@@ -46,7 +42,7 @@ describe Referentiel do
             end
           end
 
-          context 'when the URL is not in the whitelist' do
+          context 'when the URL is not in the allowed_domains' do
             let(:url) { "https://api.untrusted.com/resource" }
 
             it 'adds an error' do
@@ -83,7 +79,7 @@ describe Referentiel do
           end
 
           context 'when the URL ends with .beta.gouv.fr' do
-            let(:url) { "https://api.beta.gouv.fr/resource" }
+            let(:url) { "https://anything.beta.gouv.fr/resource" }
 
             it 'adds an error' do
               referentiel.validate
