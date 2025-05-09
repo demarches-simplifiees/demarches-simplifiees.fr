@@ -666,12 +666,39 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'GET #clone_settings' do
+    render_views
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:params) { { procedure_id: procedure.id } }
 
-    subject { get :clone_settings, params: params }
+    subject do
+      get :clone_settings, params: params
+    end
 
-    it { is_expected.to have_http_status(:success) }
+    context 'when admin is the owner of the procedure' do
+      it 'displays all options' do
+        is_expected.to have_http_status(:success)
+        expect(response.body).to include "Présentation"
+        expect(response.body).to include "Service"
+        expect(response.body).to include "Administrateurs"
+        expect(response.body).to include "Instructeurs"
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      before do
+        sign_out(admin.user)
+        sign_in(administrateur_2.user)
+        subject
+      end
+
+      it 'hides some options' do
+        is_expected.to have_http_status(:success)
+        expect(response.body).to include "Présentation"
+        expect(response.body).not_to include "Service"
+        expect(response.body).not_to include "Administrateurs"
+        expect(response.body).not_to include "Instructeurs"
+      end
+    end
   end
 
   describe 'PUT #clone' do
@@ -753,251 +780,97 @@ describe Administrateurs::ProceduresController, type: :controller do
         it { expect(Procedure.last.cloned_from_library).to be(true) }
       end
 
-      context 'when the admin clone the presentation' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { presentation: '1' } } }
+      context 'when the admin checks all options' do
+        let(:params) do
+          {
+            procedure_id: procedure.id,
+            clone_options: {
+              presentation: '1',
+              administrateurs: '1',
+              instructeurs: '1',
+              champs: '1',
+              annotations: '1',
+              attestation_template: '1',
+              zones: '1',
+              service: '1',
+              monavis_embed: '1',
+              dossier_submitted_message: '1',
+              accuse_lecture: '1',
+              api_entreprise_token: '1',
+              sva_svr: '1',
+              mail_templates: '1',
+              ineligibilite: '1',
+              avis: '1',
+              libelle: 'Démarche avec un nouveau nom'
+            }
+          }
+        end
 
-        it do
+        it 'clones everything' do
           expect(Procedure.last.notice.attached?).to be_truthy
           expect(Procedure.last.deliberation.attached?).to be_truthy
           expect(Procedure.last.logo.attached?).to be_truthy
-        end
-      end
-
-      context 'when the admin do not clone the presentation' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { presentation: '0' } } }
-
-        it do
-          expect(Procedure.last.notice.attached?).to be_falsey
-          expect(Procedure.last.deliberation.attached?).to be_falsey
-          expect(Procedure.last.logo.attached?).to be_falsey
-        end
-      end
-
-      context 'when the admin clone the administrateurs' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { administrateurs: '1' } } }
-
-        it { expect(Procedure.last.administrateurs).to include(administrateur_2) }
-      end
-
-      context 'when the admin do not clone the administrateurs' do
-        let(:params) { { procedure_id: procedure.id } }
-
-        it do
-          expect(Procedure.last.administrateurs).not_to include(administrateur_2)
-          expect(Procedure.last.administrateurs).to include(admin)
-        end
-      end
-
-      context 'when the admin clone the instructeurs' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { instructeurs: '1' } } }
-
-        it { expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur, instructeur_2]) }
-      end
-
-      context 'when the admin do not clone the instructeurs' do
-        it do
-          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur])
-          expect(Procedure.last.groupe_instructeurs.count).to eq(2)
-          expect(Procedure.last.defaut_groupe_instructeur.contact_information).to be_nil
-        end
-      end
-
-      context 'when the admin clone the champs' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { champs: '1' } } }
-
-        it { expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1 }
-      end
-
-      context 'when the admin do not clone the champs' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { champs: '0' } } }
-
-        it { expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 0 }
-      end
-
-      context 'when the admin clone the annotations' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { annotations: '1' } } }
-
-        it { expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1 }
-      end
-
-      context 'when the admin do not clone the annotations' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { annotations: '0' } } }
-
-        it { expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 0 }
-      end
-
-      context 'when the admin clone the attestation' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { attestation_template: '1' } } }
-
-        it { expect(Procedure.last.attestation_template).not_to be_nil }
-      end
-
-      context 'when the admin do not clone the attestation' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { attestation_template: '0' } } }
-
-        it { expect(Procedure.last.attestation_template).to be_nil }
-      end
-
-      context 'when the admin clone the zones' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { zones: '1' } } }
-
-        it { expect(Procedure.last.zones).not_to be_blank }
-      end
-
-      context 'when the admin do not clone the zones' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { zones: '0' } } }
-
-        it { expect(Procedure.last.zones).to be_blank }
-      end
-
-      context 'when the admin clone the service' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { service: '1' } } }
-
-        it { expect(Procedure.last.service).not_to be_nil }
-      end
-
-      context 'when the admin do not clone the service' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { service: '0' } } }
-
-        it { expect(Procedure.last.service).to be_nil }
-      end
-
-      context 'when the admin clone the bouton mon avis' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { monavis_embed: '1' } } }
-
-        it { expect(Procedure.last.monavis_embed).not_to be_nil }
-      end
-
-      context 'when the admin do not clone the bouton mon avis' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { monavis_embed: '0' } } }
-
-        it { expect(Procedure.last.monavis_embed).to be_nil }
-      end
-
-      context 'when the admin clone the dossier submitted message' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { dossier_submitted_message: '1' } } }
-
-        it do
+          expect(Procedure.last.administrateurs).to include(administrateur_2)
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur, instructeur_2])
+          expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1
+          expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1
+          expect(Procedure.last.attestation_template).not_to be_nil
+          expect(Procedure.last.zones).not_to be_blank
+          expect(Procedure.last.service).not_to be_nil
+          expect(Procedure.last.monavis_embed).not_to be_nil
           expect(Procedure.last.draft_revision.dossier_submitted_message).not_to be_nil
-        end
-      end
-
-      context 'when the admin do not clone the dossier submitted message' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { dossier_submitted_message: '0' } } }
-
-        it { expect(Procedure.last.draft_revision.dossier_submitted_message).to be_nil }
-      end
-
-      context 'when the admin clone the accuse de lecture' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { accuse_lecture: '1' } } }
-
-        it do
           expect(Procedure.last.accuse_lecture).to be_truthy
-        end
-      end
-
-      context 'when the admin do not clone the accuse de lecture' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { accuse_lecture: '0' } } }
-
-        it { expect(Procedure.last.accuse_lecture).to be_falsey }
-      end
-
-      context 'when the admin clone the API entreprise token' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { api_entreprise_token: '1' } } }
-
-        it do
           expect(Procedure.last[:api_entreprise_token]).not_to be_nil
-        end
-      end
-
-      context 'when the admin do not clone the API entreprise token' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { api_entreprise_token: '0' } } }
-
-        it { expect(Procedure.last[:api_entreprise_token]).to be_nil }
-      end
-
-      context 'when the admin clone the SVA SVR configuration' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { sva_svr: '1' } } }
-
-        it do
           expect(Procedure.last.sva_svr_configuration.decision).to eq('sva')
-        end
-      end
-
-      context 'when the admin do not clone the SVA SVR configuration' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { sva_svr: '0' } } }
-
-        it { expect(Procedure.last.sva_svr_configuration.decision).to eq('disabled') }
-      end
-
-      context 'when the admin clone the mail templates' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { mail_templates: '1' } } }
-
-        it do
           expect(Procedure.last.initiated_mail).not_to be_nil
           expect(Procedure.last.received_mail).not_to be_nil
           expect(Procedure.last.closed_mail).not_to be_nil
           expect(Procedure.last.refused_mail).not_to be_nil
           expect(Procedure.last.without_continuation_mail).not_to be_nil
           expect(Procedure.last.re_instructed_mail).not_to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_rules).not_to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_truthy
+          expect(Procedure.last.draft_revision.ineligibilite_message).to eq('Votre demande est inéligible')
+          expect(Procedure.last.experts_require_administrateur_invitation).to be_truthy
+          expect(Procedure.last.experts).not_to be_blank
+          expect(Procedure.last.libelle).to eq 'Démarche avec un nouveau nom'
         end
       end
 
-      context 'when the admin do not clone the mail templates' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { mail_templates: '0' } } }
+      context 'when the admin unchecks all options' do
+        let(:params) { { procedure_id: procedure.id } }
 
-        it do
+        it 'clones only mandatory params' do
+          expect(Procedure.last.notice.attached?).to be_falsey
+          expect(Procedure.last.deliberation.attached?).to be_falsey
+          expect(Procedure.last.logo.attached?).to be_falsey
+          expect(Procedure.last.administrateurs).not_to include(administrateur_2)
+          expect(Procedure.last.administrateurs).to include(admin)
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur])
+          expect(Procedure.last.groupe_instructeurs.count).to eq(2)
+          expect(Procedure.last.defaut_groupe_instructeur.contact_information).to be_nil
+          expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 0
+          expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 0
+          expect(Procedure.last.attestation_template).to be_nil
+          expect(Procedure.last.zones).to be_blank
+          expect(Procedure.last.service).to be_nil
+          expect(Procedure.last.monavis_embed).to be_nil
+          expect(Procedure.last.draft_revision.dossier_submitted_message).to be_nil
+          expect(Procedure.last.accuse_lecture).to be_falsey
+          expect(Procedure.last[:api_entreprise_token]).to be_nil
+          expect(Procedure.last.sva_svr_configuration.decision).to eq('disabled')
           expect(Procedure.last.initiated_mail).to be_nil
           expect(Procedure.last.received_mail).to be_nil
           expect(Procedure.last.closed_mail).to be_nil
           expect(Procedure.last.refused_mail).to be_nil
           expect(Procedure.last.without_continuation_mail).to be_nil
           expect(Procedure.last.re_instructed_mail).to be_nil
-        end
-      end
-
-      context 'when the admin clone the ineligibilite rules' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { ineligibilite: '1' } } }
-
-        it do
-          expect(Procedure.last.draft_revision.ineligibilite_rules).not_to be_nil
-          expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_truthy
-          expect(Procedure.last.draft_revision.ineligibilite_message).to eq('Votre demande est inéligible')
-        end
-      end
-
-      context 'when the admin do not clone the ineligibilite rules' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { ineligibilite: '0' } } }
-
-        it do
           expect(Procedure.last.draft_revision.ineligibilite_rules).to be_nil
           expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_falsey
           expect(Procedure.last.draft_revision.ineligibilite_message).to be_nil
-        end
-      end
-
-      context 'when the admin clone the avis' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { avis: '1' } } }
-
-        it do
-          expect(Procedure.last.experts_require_administrateur_invitation).to be_truthy
-          expect(Procedure.last.experts).not_to be_blank
-        end
-      end
-
-      context 'when the admin do not clone the avis' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { avis: '0' } } }
-
-        it do
           expect(Procedure.last.experts_require_administrateur_invitation).to be_falsey
           expect(Procedure.last.experts).to be_blank
         end
-      end
-
-      context 'when the admin changes the libelle' do
-        let(:params) { { procedure_id: procedure.id, clone_options: { libelle: 'Démarche avec un nouveau nom' } } }
-
-        it { expect(Procedure.last.libelle).to eq 'Démarche avec un nouveau nom' }
       end
     end
 
