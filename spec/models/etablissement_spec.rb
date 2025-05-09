@@ -119,6 +119,9 @@ describe Etablissement do
     let(:etablissement) { create(:etablissement, dossier: build(:dossier)) }
 
     it "schedule update search terms" do
+      etablissement
+      etablissement.dossier.debounce_index_search_terms_flag.remove
+
       assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
         etablissement.update(entreprise_nom: "nom")
       end

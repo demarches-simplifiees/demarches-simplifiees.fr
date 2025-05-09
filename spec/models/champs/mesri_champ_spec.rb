@@ -32,7 +32,9 @@ describe Champs::MesriChamp, type: :model do
   end
 
   describe '#validate' do
-    let(:champ) { described_class.new(dossier: create(:dossier), type_de_champ: create(:type_de_champ_mesri)) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :mesri, stable_id: 99 }]) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:champ) { described_class.new(dossier:, stable_id: 99) }
     let(:validation_context) { :create }
 
     subject { champ.valid?(validation_context) }

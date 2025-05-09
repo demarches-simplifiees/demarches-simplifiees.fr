@@ -9,6 +9,8 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model do
   let(:text_repetition) { prefillable_subchamps.first }
   let(:integer_repetition) { prefillable_subchamps.second }
   let(:region_repetition) { prefillable_subchamps.third }
+  let(:text_repetition_champs) { dossier.champs.where(stable_id: text_repetition.stable_id) }
+  let(:integer_repetition_champs) { dossier.champs.where(stable_id: integer_repetition.stable_id) }
 
   describe 'ancestors' do
     subject { described_class.build(type_de_champ, procedure.active_revision) }
@@ -61,13 +63,13 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model do
     context 'when the value is an array with some wrong keys' do
       let(:value) { [{ "champ_#{text_repetition.to_typed_id_for_query}" => "value", "blabla" => "value2" }, { "champ_#{integer_repetition.to_typed_id_for_query}" => "value3" }, { "blabla" => "false" }] }
 
-      it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: integer_repetition.champ.second.id, value: "value3" }]]) }
+      it { is_expected.to match([[{ id: text_repetition_champs.first.id, value: "value" }], [{ id: integer_repetition_champs.second.id, value: "value3" }]]) }
     end
 
     context 'when the value is an array with right keys' do
       let(:value) { [{ "champ_#{text_repetition.to_typed_id_for_query}" => "value" }, { "champ_#{text_repetition.to_typed_id_for_query}" => "value2" }] }
 
-      it { is_expected.to match([[{ id: text_repetition.champ.first.id, value: "value" }], [{ id: text_repetition.champ.second.id, value: "value2" }]]) }
+      it { is_expected.to match([[{ id: text_repetition_champs.first.id, value: "value" }], [{ id: text_repetition_champs.second.id, value: "value2" }]]) }
     end
   end
 end

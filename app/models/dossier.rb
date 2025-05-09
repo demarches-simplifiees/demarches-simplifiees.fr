@@ -243,10 +243,7 @@ class Dossier < ApplicationRecord
   scope :hidden_by_administration_since, -> (since) { where('dossiers.hidden_by_administration_at IS NOT NULL AND dossiers.hidden_by_administration_at >= ?', since) }
   scope :hidden_since,                   -> (since) { hidden_by_user_since(since).or(hidden_by_administration_since(since)) }
 
-  scope :with_type_de_champ, -> (stable_id) {
-    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
-      .where(types_de_champ: { stable_id: })
-  }
+  scope :with_type_de_champ, -> (stable_id) { joins(:champs).where(champs: { stream: 'main', stable_id: }) }
 
   scope :all_state,                   -> { not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
@@ -272,20 +269,18 @@ class Dossier < ApplicationRecord
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
   scope :with_champs, -> {
     includes(champs_public: [
-      :type_de_champ,
       :geo_areas,
       piece_justificative_file_attachments: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
+      champs: [piece_justificative_file_attachments: :blob]
     ])
   }
 
   scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
   scope :with_annotations, -> {
     includes(champs_private: [
-      :type_de_champ,
       :geo_areas,
       piece_justificative_file_attachments: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
+      champs: [piece_justificative_file_attachments: :blob]
     ])
   }
   scope :for_api, -> {
@@ -494,10 +489,10 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs_for_new_dossier
-    revision.build_champs_public.each do |champ|
+    revision.build_champs_public(self).each do |champ|
       champs_public << champ
     end
-    revision.build_champs_private.each do |champ|
+    revision.build_champs_private(self).each do |champ|
       champs_private << champ
     end
     champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|

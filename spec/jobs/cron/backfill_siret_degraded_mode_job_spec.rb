@@ -15,9 +15,14 @@ RSpec.describe Cron::BackfillSiretDegradedModeJob, type: :job do
     end
 
     context 'fix etablisEtablissementAdapter.newsement with champs with adresse nil' do
-      let(:champ_siret) { create(:champ_siret, etablissement: etablissement) }
+      let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+      let(:types_de_champ_public) { [{ type: :siret }] }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ_siret) { dossier.champs.first }
+
       before do
         champ_siret
+        champ_siret.update_column(:etablissement_id, etablissement.id)
       end
       it 'works' do
         allow_any_instance_of(APIEntreprise::EtablissementAdapter).to receive(:to_params).and_return({ adresse: new_adresse })

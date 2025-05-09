@@ -3,8 +3,8 @@ describe Champs::EpciChamp, type: :model do
     subject { champ.validate(:champs_public_value) }
 
     describe 'code_departement' do
-      let(:champ) { build(:champ_epci, code_departement: code_departement) }
-
+      let(:champ) { Champs::EpciChamp.new(code_departement: code_departement, dossier: build(:dossier)) }
+      before { allow(champ).to receive(:visible?).and_return(true) }
       context 'when nil' do
         let(:code_departement) { nil }
 
@@ -34,9 +34,13 @@ describe Champs::EpciChamp, type: :model do
     end
 
     describe 'external_id' do
-      let(:champ) { build(:champ_epci, code_departement: code_departement, external_id: nil) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :epci }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ) { dossier.champs.first }
 
       before do
+        champ.code_departement = code_departement
+        champ.external_id = nil
         champ.save!(validate: false)
         champ.update_columns(external_id: external_id)
       end
@@ -78,13 +82,16 @@ describe Champs::EpciChamp, type: :model do
     end
 
     describe 'value' do
-      subject { champ.validate(:champs_public_value) }
-
-      let(:champ) { build(:champ_epci, code_departement: code_departement, external_id: nil, value: nil) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :epci }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ) { dossier.champs.first }
 
       before do
+        champ.value = nil
+        champ.code_departement = code_departement
+        champ.external_id = nil
         champ.save!(validate: false)
-        champ.update_columns(external_id: external_id, value: value)
+        champ.update_columns(external_id:, value:)
       end
 
       context 'when code_departement is nil' do
@@ -147,10 +154,11 @@ describe Champs::EpciChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) { build(:champ_epci, external_id: nil, value: nil) }
+    let(:champ) { described_class.new }
     let(:epci) { APIGeoService.epcis('01').first }
 
     it 'with departement and code' do
+      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_epci))
       champ.code_departement = '01'
       champ.value = epci[:code]
       expect(champ.blank?).to be_falsey

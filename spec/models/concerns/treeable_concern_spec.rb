@@ -10,28 +10,40 @@ describe TreeableConcern do
 
   subject { ChampsToTree.new(types_de_champ:).root }
   describe "to_tree" do
-    let(:header_1) { build(:champ_header_section_level_1).type_de_champ }
-    let(:header_1_2) { build(:champ_header_section_level_2).type_de_champ }
-    let(:header_2) { build(:champ_header_section_level_1).type_de_champ }
-    let(:champ_text) { build(:champ_text).type_de_champ }
-    let(:champ_textarea) { build(:champ_textarea).type_de_champ }
-    let(:champ_explication) { build(:champ_explication).type_de_champ }
-    let(:champ_communes) { build(:champ_communes).type_de_champ }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) { [] }
+    let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
+
+    let(:header_1) { { type: :header_section, level: 1, stable_id: 99 } }
+    let(:header_1_2) { { type: :header_section, level: 2, stable_id: 199 } }
+    let(:header_2) { { type: :header_section, level: 1, stable_id: 299 } }
+    let(:champ_text) { { stable_id: 399 } }
+    let(:champ_textarea) { { type: :textarea, stable_id: 499 } }
+    let(:champ_explication) { { type: :explication, stable_id: 599 } }
+    let(:champ_communes) { { type: :communes, stable_id: 699 } }
+
+    let(:header_1_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 99 } }
+    let(:header_1_2_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 199 } }
+    let(:header_2_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 299 } }
+    let(:champ_text_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 399 } }
+    let(:champ_textarea_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 499 } }
+    let(:champ_explication_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 599 } }
+    let(:champ_communes_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 699 } }
 
     context 'without section' do
-      let(:types_de_champ) do
+      let(:types_de_champ_public) do
         [
           champ_text, champ_textarea
         ]
       end
       it 'inlines champs at root level' do
         expect(subject.size).to eq(types_de_champ.size)
-        expect(subject).to eq(types_de_champ)
+        expect(subject).to eq([champ_text_tdc, champ_textarea_tdc])
       end
     end
 
     context 'with header_section and champs' do
-      let(:types_de_champ) do
+      let(:types_de_champ_public) do
         [
           header_1,
           champ_explication,
@@ -44,14 +56,16 @@ describe TreeableConcern do
       it 'wraps champs within preview header section' do
         expect(subject.size).to eq(2)
         expect(subject).to eq([
-          [header_1, champ_explication, champ_text],
-          [header_2, champ_textarea]
+          [header_1_tdc, champ_explication_tdc, champ_text_tdc],
+          [header_2_tdc, champ_textarea_tdc]
         ])
       end
     end
 
     context 'leading champs, and in between sections only' do
-      let(:types_de_champ) do
+      let(:champ_textarea_bis) { { type: :textarea, stable_id: 799 } }
+      let(:champ_textarea_bis_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 799 } }
+      let(:types_de_champ_public) do
         [
           champ_text,
           champ_textarea,
@@ -59,22 +73,22 @@ describe TreeableConcern do
           champ_explication,
           champ_communes,
           header_2,
-          champ_textarea
+          champ_textarea_bis
         ]
       end
       it 'chunk by uniq champs' do
         expect(subject.size).to eq(4)
         expect(subject).to eq([
-          champ_text,
-          champ_textarea,
-          [header_1, champ_explication, champ_communes],
-          [header_2, champ_textarea]
+          champ_text_tdc,
+          champ_textarea_tdc,
+          [header_1_tdc, champ_explication_tdc, champ_communes_tdc],
+          [header_2_tdc, champ_textarea_bis_tdc]
         ])
       end
     end
 
     context 'with one sub sections' do
-      let(:types_de_champ) do
+      let(:types_de_champ_public) do
         [
           header_1,
           champ_explication,
@@ -87,18 +101,22 @@ describe TreeableConcern do
       it 'chunk by uniq champs' do
         expect(subject.size).to eq(2)
         expect(subject).to eq([
-          [header_1, champ_explication, [header_1_2, champ_communes]],
-          [header_2, champ_textarea]
+          [header_1_tdc, champ_explication_tdc, [header_1_2_tdc, champ_communes_tdc]],
+          [header_2_tdc, champ_textarea_tdc]
         ])
       end
     end
 
     context 'with consecutive subsection' do
-      let(:header_1) { build(:champ_header_section_level_1).type_de_champ }
-      let(:header_1_2_1) { build(:champ_header_section_level_2).type_de_champ }
-      let(:header_1_2_2) { build(:champ_header_section_level_2).type_de_champ }
-      let(:header_1_2_3) { build(:champ_header_section_level_2).type_de_champ }
-      let(:types_de_champ) do
+      let(:header_1_2_1) { { type: :header_section, level: 2, stable_id: 799 } }
+      let(:header_1_2_2) { { type: :header_section, level: 2, stable_id: 899 } }
+      let(:header_1_2_3) { { type: :header_section, level: 2, stable_id: 999 } }
+
+      let(:header_1_2_1_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 799 } }
+      let(:header_1_2_2_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 899 } }
+      let(:header_1_2_3_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 999 } }
+
+      let(:types_de_champ_public) do
        [
          header_1,
          header_1_2_1,
@@ -113,19 +131,20 @@ describe TreeableConcern do
         expect(subject.size).to eq(1)
         expect(subject).to eq([
           [
-            header_1,
-            [header_1_2_1, champ_text],
-            [header_1_2_2, champ_textarea],
-            [header_1_2_3, champ_communes]
+            header_1_tdc,
+            [header_1_2_1_tdc, champ_text_tdc],
+            [header_1_2_2_tdc, champ_textarea_tdc],
+            [header_1_2_3_tdc, champ_communes_tdc]
           ]
         ])
       end
     end
 
     context 'with one sub sections and one subsub section' do
-      let(:header_1_2_3) { build(:champ_header_section_level_3).type_de_champ }
+      let(:header_1_2_3) { { type: :header_section, level: 3, stable_id: 799 } }
+      let(:header_1_2_3_tdc) { procedure.active_revision.types_de_champ_public.find { _1.stable_id == 799 } }
 
-      let(:types_de_champ) do
+      let(:types_de_champ_public) do
         [
           header_1,
           champ_explication,
@@ -142,19 +161,19 @@ describe TreeableConcern do
         expect(subject.size).to eq(2)
         expect(subject).to eq([
           [
-            header_1,
-            champ_explication,
+            header_1_tdc,
+            champ_explication_tdc,
             [
-              header_1_2,
-              champ_communes,
+              header_1_2_tdc,
+              champ_communes_tdc,
               [
-                header_1_2_3, champ_text
+                header_1_2_3_tdc, champ_text_tdc
               ]
             ]
           ],
           [
-            header_2,
-            champ_textarea
+            header_2_tdc,
+            champ_textarea_tdc
           ]
         ])
       end

@@ -12,9 +12,9 @@ module Maintenance
 
     MODIFIED_BEFORE = 2.years.freeze
 
-    throttle_on do
+    throttle_on(backoff: 1.minute) do
       limit = Rails.cache.read(Helpscout::API::RATELIMIT_KEY)
-      limit.present? && limit.to_i <= 26 # check is made after each page (of 25 elements), and we need 25 calls to delete them all
+      limit.present? && limit.to_i <= 26 # check is made before each process but not before listing each page. External activity can affect the rate limit.
     end
 
     def count

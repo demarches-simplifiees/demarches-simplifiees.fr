@@ -50,7 +50,7 @@ module DossierRebaseConcern
     # index published types de champ coordinates by stable_id
     target_coordinates_by_stable_id = target_revision
       .revision_types_de_champ
-      .includes(:type_de_champ, :parent)
+      .includes(:parent)
       .index_by(&:stable_id)
 
     changes_by_op = pending_changes
@@ -58,7 +58,6 @@ module DossierRebaseConcern
       .tap { _1.default = [] }
 
     champs_by_stable_id = champs
-      .includes(:type_de_champ)
       .group_by(&:stable_id)
       .transform_values { Champ.where(id: _1) }
       .tap { _1.default = Champ.none }
@@ -77,14 +76,6 @@ module DossierRebaseConcern
 
     # update champ
     changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
-
-    # due to repetition tdc clone on update or erase
-    # we must reassign tdc to the latest version
-    champs_by_stable_id.each do |stable_id, champs|
-      if target_coordinates_by_stable_id[stable_id].present? && champs.present?
-        champs.update_all(type_de_champ_id: target_coordinates_by_stable_id[stable_id].type_de_champ_id)
-      end
-    end
 
     # update dossier revision
     update_column(:revision_id, target_revision.id)
@@ -134,7 +125,7 @@ module DossierRebaseConcern
           champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
             champs << create_champ(target_coordinate, champ_repetition, row_id:)
           end
-        elsif champ_repetition.mandatory?
+        elsif target_coordinate.parent.mandatory?
           champs << create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
         end
       end

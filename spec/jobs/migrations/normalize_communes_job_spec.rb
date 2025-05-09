@@ -1,6 +1,10 @@
 describe Migrations::NormalizeCommunesJob, type: :job do
   context 'when value is "", external_id is "", and code_departement is "undefined"' do
-    let(:champ) { create(:champ_communes) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :communes }] }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:champ) { dossier.champs.first }
+
     before { champ.update_columns(external_id: "", value: "", value_json: { code_departement: 'undefined', departement: 'undefined' }) }
     subject { described_class.perform_now([champ.id]) }
     it 'empty the champs' do

@@ -1,5 +1,8 @@
 RSpec.describe Attachment::EditComponent, type: :component do
-  let(:champ) { create(:champ_titre_identite, dossier: create(:dossier)) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :titre_identite }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
   let(:attached_file) { champ.piece_justificative_file }
   let(:attachment) { attached_file.attachments.first }
   let(:filename) { attachment.filename.to_s }
@@ -98,8 +101,6 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     context 'when watermark is pending' do
-      let(:champ) { create(:champ_titre_identite) }
-
       it 'displays the filename, but doesn’t allow to download the file' do
         expect(attachment.watermark_pending?).to be_truthy
         expect(subject).to have_text(filename)

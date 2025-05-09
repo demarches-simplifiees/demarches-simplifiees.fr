@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillAnnuaireEducationTypeDeChamp do
-  let(:procedure) { create(:procedure) }
-  let(:type_de_champ) { build(:type_de_champ_annuaire_education, procedure: procedure) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :annuaire_education }]) }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
 
   describe 'ancestors' do
     subject { described_class.new(type_de_champ, procedure.active_revision) }
@@ -11,7 +12,7 @@ RSpec.describe TypesDeChamp::PrefillAnnuaireEducationTypeDeChamp do
   end
 
   describe '#to_assignable_attributes' do
-    let(:champ) { create(:champ_annuaire_education, type_de_champ: type_de_champ) }
+    let(:champ) { dossier.champs.first }
     subject { described_class.build(type_de_champ, procedure.active_revision).to_assignable_attributes(champ, value) }
 
     context 'when the value is nil' do

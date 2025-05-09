@@ -210,16 +210,6 @@ class TypeDeChamp < ApplicationRecord
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
   }
 
-  has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
-    def build(params = {})
-      super(params.merge(proxy_association.owner.params_for_champ))
-    end
-
-    def create(params = {})
-      super(params.merge(proxy_association.owner.params_for_champ))
-    end
-  end
-
   has_one_attached :piece_justificative_template
   validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }, on: :update
   validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES, on: :update
@@ -288,7 +278,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def build_champ(params = {})
-    champ.build(params)
+    self.class.type_champ_to_champ_class_name(type_champ).constantize.new(params_for_champ.merge(params))
   end
 
   def check_mandatory
@@ -824,7 +814,6 @@ class TypeDeChamp < ApplicationRecord
       return true if type_champ_to_champ_class_name(type_champ) != champ.type
       # special case for linked drop down champ – it's blank implementation is not what you think
       return champ.value.blank? if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
-
       champ.blank?
     end
   end

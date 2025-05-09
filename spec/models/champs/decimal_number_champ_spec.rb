@@ -7,6 +7,14 @@ describe Champs::DecimalNumberChamp do
   subject { champ.validate(:champs_public_value) }
 
   describe 'validation' do
+    let(:champ) { Champs::DecimalNumberChamp.new(value:, dossier: build(:dossier)) }
+    before do
+      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_decimal_number))
+      allow(champ).to receive(:visible?).and_return(true)
+      champ.run_callbacks(:validation)
+    end
+    subject { champ.validate(:champs_public_value) }
+
     context 'when the value is integer number' do
       let(:value) { 2 }
 
@@ -29,7 +37,7 @@ describe Champs::DecimalNumberChamp do
     end
 
     context 'when value contain space' do
-      let(:champ) { create(:champ_decimal_number, :private, value:) }
+      before { champ.run_callbacks(:validation) }
       let(:value) { ' 2.6666 ' }
       it { expect(champ.value).to eq('2.6666') }
     end
@@ -56,7 +64,7 @@ describe Champs::DecimalNumberChamp do
     end
 
     context 'when the champ is private, value is invalid, but validation is public' do
-      let(:champ) { build(:champ_decimal_number, :private, value:) }
+      let(:champ) { Champs::DecimalNumberChamp.new(value:, private: true, dossier: build(:dossier)) }
       let(:value) { '2.6666' }
       it { is_expected.to be_truthy }
     end
@@ -99,7 +107,8 @@ describe Champs::DecimalNumberChamp do
   end
 
   describe 'for_export' do
-    let(:champ) { create(:champ_decimal_number, value:) }
+    let(:champ) { Champs::DecimalNumberChamp.new(value:) }
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_decimal_number)) }
     subject { champ.for_export }
     context 'with nil' do
       let(:value) { 0 }

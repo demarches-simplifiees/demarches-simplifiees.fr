@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :geo_area do
-    association :champ
     properties { {} }
     geometry { {} }
 

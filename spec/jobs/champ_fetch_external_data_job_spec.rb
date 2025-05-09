@@ -3,7 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe ChampFetchExternalDataJob, type: :job do
-  let(:champ) { build(:champ, external_id: champ_external_id, data:) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :communes }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
+
   let(:external_id) { "an ID" }
   let(:champ_external_id) { "an ID" }
   let(:data) { nil }
@@ -15,6 +19,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
   include Dry::Monads[:result]
 
   before do
+    champ.update_columns(external_id: champ_external_id, data:)
     allow(champ).to receive(:fetch_external_data).and_return(fetched_data)
     allow(champ).to receive(:update_with_external_data!)
     allow(champ).to receive(:log_fetch_external_data_exception)

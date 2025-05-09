@@ -2,8 +2,9 @@ class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern
 
+  self.ignored_columns += [:type_de_champ_id]
+
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
-  belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
   has_many_attached :piece_justificative_file
   has_many :champ_revisions, dependent: :destroy, inverse_of: :champ
@@ -15,6 +16,12 @@ class Champ < ApplicationRecord
   has_many :champs, foreign_key: :parent_id, inverse_of: :parent
 
   delegate :procedure, to: :dossier
+
+  def type_de_champ
+    @type_de_champ ||= dossier.revision
+      .types_de_champ
+      .find(-> { raise "Type De Champ #{stable_id} not found in Revision #{dossier.revision_id}" }) { _1.stable_id == stable_id }
+  end
 
   delegate :libelle,
     :type_champ,
@@ -230,7 +237,7 @@ class Champ < ApplicationRecord
   end
 
   def clone(fork = false)
-    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id, :stable_id, :stream]
+    champ_attributes = [:parent_id, :private, :row_id, :type, :stable_id, :stream]
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
     relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
