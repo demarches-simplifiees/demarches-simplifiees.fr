@@ -8,7 +8,7 @@ class Referentiels::APIReferentiel < Referentiel
   validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
   validate :url_allowed?
 
-  before_save :name_as_url
+  before_save :name_as_uuid
 
   def last_response_body
     (last_response || {}).fetch("body") { {} }
@@ -33,8 +33,8 @@ class Referentiels::APIReferentiel < Referentiel
     end
   end
 
-  def name_as_url
-    self.name = url
+  def name_as_uuid # should be uniq, using the url was an idea but not unique
+    self.name = SecureRandom.uuid
   end
 
   def url_allowed?

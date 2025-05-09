@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe ReferentielService, type: :service do
-  describe '.test' do
-    let(:whitelist) { %w[https://rnb-api.beta.gouv.fr] }
-    let(:api_referentiel) { create(:api_referentiel, :configured, url:, test_data:) }
-    let(:url) { "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/" }
+  let(:api_referentiel) { create(:api_referentiel, :configured, url:, test_data:) }
+  let(:url) { "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/" }
+  let(:test_data) { "PG46YY6YWCX8" }
 
   before do
     stub_request(:get, api_referentiel.url.gsub('{id}', query_params))
@@ -15,13 +14,9 @@ RSpec.describe ReferentielService, type: :service do
     let(:query_params) { api_referentiel.test_data }
     subject { described_class.new(referentiel: api_referentiel).test }
 
-    before do
-      allow(ENV).to receive(:fetch).and_call_original
-      allow(ENV).to receive(:fetch).with('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').and_return(whitelist.join(','))
-    end
-
-    context 'when referentiel works', vcr: 'referentiel/test' do
-      let(:test_data) { "PG46YY6YWCX8" }
+    context 'when referentiel works' do
+      let(:status) { 200 }
+      let(:body) { { rnb_id: api_referentiel.test_data } }
       it { is_expected.to eq(true) }
       it 'update referentiel.last_response and body' do
         expect { subject }.to change { api_referentiel.reload.last_response }.from(nil).to({ status:, body: }.with_indifferent_access)
