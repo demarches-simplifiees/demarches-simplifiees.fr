@@ -58,7 +58,17 @@ describe Users::PasswordsController, type: :controller do
     let(:email) { 'test@example.com' }
 
     it 'displays the page' do
-      signed_email = controller.message_verifier.generate(email, purpose: :reset_password)
+      crypted_email = controller.message_encryptor_service.encrypt_and_sign(email, purpose: :reset_password)
+
+      get 'reset_link_sent', params: { email: crypted_email }
+
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template('reset_link_sent')
+      expect(assigns(:email)).to eq email
+    end
+
+    it 'when message was only signed, displays the page' do
+      signed_email = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base).generate(email, purpose: :reset_password)
 
       get 'reset_link_sent', params: { email: signed_email }
 

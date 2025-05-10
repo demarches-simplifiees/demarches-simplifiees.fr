@@ -12,6 +12,10 @@ module Manager
       }
     end
 
+    def message_encryptor_service
+      @message_encryptor_service ||= MessageEncryptorService.new
+    end
+
     protected
 
     def authenticate_super_admin!

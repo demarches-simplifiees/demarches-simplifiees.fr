@@ -159,8 +159,6 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
   private
 
   def encrypt(parameters)
-    key = Rails.application.key_generator.generate_key("confirm_adding_administrateur")
-    verifier = ActiveSupport::MessageVerifier.new(key)
-    Base64.urlsafe_encode64(verifier.generate(parameters))
+    controller.message_encryptor_service.encrypt_and_sign(parameters, purpose: :confirm_adding_administrateur)
   end
 end

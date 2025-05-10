@@ -271,7 +271,7 @@ describe Users::SessionsController, type: :controller do
 
     before { get :link_sent, params: { email: signed_email } }
 
-    let(:signed_email) { controller.message_verifier.generate(link_email, purpose: :reset_link) }
+    let(:signed_email) { controller.message_encryptor_service.encrypt_and_sign(link_email, purpose: :reset_link) }
 
     context 'when the email is legit' do
       let(:link_email) { 'a@a.com' }
