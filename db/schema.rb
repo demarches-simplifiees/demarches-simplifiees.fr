@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_16_091043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -280,13 +280,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
     t.text "updated_by"
     t.string "value"
     t.jsonb "value_json"
+    t.index ["dossier_id", "stream", "stable_id", "row_id"], name: "index_champs_on_dossier_id_and_stream_and_stable_id_and_row_id", unique: true
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["stable_id"], name: "index_champs_on_stable_id"
     t.index ["type"], name: "index_champs_on_type"
-    t.index ["type_de_champ_id", "dossier_id", "row_id"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row_id", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
 
