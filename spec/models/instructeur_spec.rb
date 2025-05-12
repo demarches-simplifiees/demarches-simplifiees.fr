@@ -38,6 +38,49 @@ describe Instructeur, type: :model do
 
       it { expect(instructeur.follow?(already_followed_dossier)).to be true }
     end
+
+    context "when a instructeur is the first to follow a dossier" do
+      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_depose) }
+
+      before { instructeur.follow(dossier) }
+
+      it "destroy dossier_depose notification" do
+        expect(DossierNotification.exists?(notification.id)).to be_falsey
+      end
+    end
+
+    context "when a instructeur follow a dossier that has had notifications" do
+      let!(:dossier_with_notifications) { create(:dossier, :en_construction, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+      let!(:commentaire) { create(:commentaire, dossier: dossier_with_notifications) }
+      let!(:avis_with_answer) { create(:avis, :with_answer, dossier: dossier_with_notifications) }
+      let!(:avis_without_answer) { create(:avis, dossier: dossier_with_notifications) }
+      let!(:commentaire_correction) { create(:commentaire, dossier: dossier_with_notifications) }
+      let!(:correction) { create(:dossier_correction, dossier: dossier_with_notifications, commentaire: commentaire_correction) }
+
+      before { instructeur.follow(dossier_with_notifications) }
+
+      it "creates all previous notifications for the instructeur" do
+        expect(DossierNotification.count).to eq(6)
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :annotation_instructeur)
+        ).to be_truthy
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :message_usager)
+        ).to be_truthy
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :dossier_modifie)
+        ).to be_truthy
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :avis_externe)
+        ).to be_truthy
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :attente_avis)
+        ).to be_truthy
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :attente_correction)
+        ).to be_truthy
+      end
+    end
   end
 
   describe '#unfollow' do
@@ -52,6 +95,16 @@ describe Instructeur, type: :model do
 
       it { expect(instructeur.follow?(already_followed_dossier)).to be false }
       it { expect(instructeur.previously_followed_dossiers).to include(already_followed_dossier) }
+    end
+
+    context "when a instructeur has notifications on the dossier" do
+      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier: already_followed_dossier, instructeur:) }
+
+      it "destroy all notifications of the instructeur/dossier" do
+        instructeur.unfollow(already_followed_dossier)
+
+        expect(DossierNotification.exists?(notification.id)).to be_falsey
+      end
     end
   end
 

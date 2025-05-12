@@ -98,6 +98,29 @@ describe GroupeInstructeur, type: :model do
 
       it { is_expected.to be_falsey }
     end
+
+    context "when there are notifications for the instructeur" do
+      let(:procedure_to_remove) { procedure }
+      let(:groupe_instructeur) { procedure_to_remove.defaut_groupe_instructeur }
+      let!(:dossier) { create(:dossier, groupe_instructeur:) }
+      let!(:other_instructeur) { create(:instructeur) }
+      let!(:notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur) }
+
+      before { procedure_to_remove.defaut_groupe_instructeur.add(other_instructeur) }
+
+      it "destroy notifications only for the instructeur removed" do
+        subject
+
+        expect(
+          DossierNotification.exists?(instructeur:, dossier:)
+        ).to be_falsey
+
+        expect(
+          DossierNotification.exists?(instructeur: other_instructeur, dossier:)
+        ).to be_truthy
+      end
+    end
   end
 
   describe "active group validations" do
