@@ -31,8 +31,9 @@
     li {
       min-height: 36px;
       min-width: 6em;
-      color: var(--text-default-grey);
       position: relative;
+      border-left: 1px solid var(--border-default-grey);
+      flex: 1 1 auto;
 
       &:first-child {
         border-left: none;

@@ -1,6 +1,6 @@
 %li.list-style-type-none.fr-mb-3w
   .procedure-details
-    .fr-mb-2w.fr-mt-2w.flex.align-center
+    .fr-mb-2w.fr-mt-2w.flex.align-baseline
       %nav.fr-nav{ role: "navigation", "aria-label": "Menu de la procédure" }
         %ul.fr-nav__list
           %li.fr-nav__item.relative
@@ -80,69 +80,71 @@
                               = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(p), class: 'fr-nav__link'
 
       .fr-hidden.fr-unhidden-lg
-        %h3.font-weight-normal.fr-link.fr-mx-2w
-          = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
-          = render Dsfr::CopyButtonComponent.new(text: commencer_url(p.path), title: t('instructeurs.dossiers.header.banner.copy_link_button'))
-        = procedure_badge(p)
+        .flex.align-center
+          %h3.card-title.fr-mb-0.fr-ml-1w
+            = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+            = render Dsfr::CopyButtonComponent.new(text: commencer_url(p.path), title: t('instructeurs.dossiers.header.banner.copy_link_button'))
+
+          = procedure_badge(p)
 
     .flex.align-center.fr-hidden-lg.fr-mb-2w
-      %h3.font-weight-normal.fr-link.fr-mr-2w
+      %h3.card-title.fr-mb-0.fr-ml-1w
         = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
-      = procedure_badge(p)
+      = procedure_badge(p, 'fr-ml-2w')
 
-    %ul.procedure-stats.flex.wrap.flex-gap-1
-      %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+    %ul.procedure-stats.flex.fr-background-alt--grey.fr-p-1w.justify-around.wrap
+      %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to instructeur_procedure_path(p, statut: 'a-suivre') do
           - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
-          .center.fr-text--bold.fr-text--sm
+          .center.fr-text--bold
             = number_with_html_delimiter(a_suivre_count)
-          .center.fr-text--xs
+          .center.fr-text--sm
             = t('instructeurs.dossiers.labels.to_follow')
-      %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+      %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
           - if procedure_ids_en_cours_with_notifications.include?(p.id)
             %span.notifications{ 'aria-label': "notifications" }
           - followed_count = followed_dossiers_count_per_procedure[p.id] || 0
-          .center.fr-text--bold.fr-text--sm
+          .center.fr-text--bold
             = number_with_html_delimiter(followed_count)
-          .center.fr-text--xs
+          .center.fr-text--sm
             = t('instructeurs.dossiers.labels.followed', count: followed_count)
-      %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+      %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to(instructeur_procedure_path(p, statut: 'traites')) do
           - if procedure_ids_termines_with_notifications.include?(p.id)
             %span.notifications{ 'aria-label': "notifications" }
           - termines_count = dossiers_termines_count_per_procedure[p.id] || 0
-          .center.fr-text--bold.fr-text--sm
+          .center.fr-text--bold
             = number_with_html_delimiter(termines_count)
-          .center.fr-text--xs
+          .center.fr-text--sm
             = t('instructeurs.dossiers.labels.processed', count: termines_count)
-      %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+      %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to(instructeur_procedure_path(p, statut: 'tous')) do
           - dossier_count = dossiers_count_per_procedure[p.id] || 0
-          .center.fr-text--bold.fr-text--sm
+          .center.fr-text--bold
             = number_with_html_delimiter(dossier_count)
-          .center.fr-text--xs
+          .center.fr-text--sm
             = t('instructeurs.dossiers.labels.total')
 
       - if p.procedure_expires_when_termine_enabled
-        %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+        %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
           = link_to(instructeur_procedure_path(p, statut: 'expirant')) do
             - expirant_count = dossiers_expirant_count_per_procedure[p.id] || 0
-            .center.fr-text--bold.fr-text--sm
+            .center.fr-text--bold
               = number_with_html_delimiter(expirant_count)
-            .center.fr-text--xs
+            .center.fr-text--sm
               = t('instructeurs.dossiers.labels.close_to_expiration')
 
-      %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+      %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to(instructeur_procedure_path(p, statut: 'archives')) do
-          .center.fr-text--bold.fr-text--sm
+          .center.fr-text--bold
             %span.fr-icon-folder-2-line.fr-icon--sm
-          .center.fr-text--xs
+          .center.fr-text--sm
             = t('instructeurs.dossiers.labels.to_archive')
 
-      %li.fr-btn.fr-btn--tertiary.flex.justify-center.fr-enlarge-link.fr-mb-1w
+      %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to(instructeur_procedure_path(p, statut: 'supprimes')) do
-          .center.fr-text--bold.fr-text--sm
+          .center.fr-text--bold
             %span.fr-icon-delete-line.fr-icon--sm
-          .center.fr-text--xs
+          .center.fr-text--sm
             = t('instructeurs.dossiers.labels.trash')
