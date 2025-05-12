@@ -720,6 +720,20 @@ describe Dossier, type: :model do
       dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
       expect(dossier.groupe_instructeur).to eq(new_groupe_instructeur)
     end
+
+    context "when the groupe instructeur change" do
+      let!(:previous_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+      let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, dossier:, groupe_instructeur: previous_groupe_instructeur) }
+
+      before do
+        dossier.assign_to_groupe_instructeur(previous_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+      end
+
+      it "update notifications for groupe instructeur" do
+        dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        expect(notification.reload.groupe_instructeur_id).to eq(new_groupe_instructeur.id)
+      end
+    end
   end
 
   describe "#unfollow_stale_instructeurs" do

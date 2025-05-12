@@ -315,6 +315,33 @@ describe Experts::AvisController, type: :controller do
           expect(flash.alert).to eq("Vous n’avez pas accès à cet avis.")
         end
       end
+
+      context "when dossier had attente_avis notification" do
+        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_avis) }
+
+        it "destroy notification for all instructeurs" do
+          subject
+          expect(DossierNotification.exists?(notification.id)).to be_falsey
+        end
+      end
+
+      context "when there are instructeurs followers" do
+        let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
+
+        before do
+          dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+          instructeur.followed_dossiers << dossier
+        end
+
+        it "create avis_externe notification only for instructeur follower" do
+          expect { subject }.to change(DossierNotification, :count).by(1)
+
+          notification = DossierNotification.last
+          expect(notification.dossier_id).to eq(dossier.id)
+          expect(notification.instructeur_id).to eq(instructeur.id)
+          expect(notification.notification_type).to eq("avis_externe")
+        end
+      end
     end
 
     describe '#create_commentaire' do

@@ -122,12 +122,33 @@ describe DossierCorrectableConcern do
         expect(correction_log.data["subject"]["email"]).to eq(commentaire.instructeur.email)
       end
     end
+
+    context "when there are instructeurs followers" do
+      let!(:instructeur_follower) { create(:instructeur) }
+      let!(:instructeur_not_follower) { create(:instructeur) }
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, instructeur_not_follower]) }
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        instructeur_follower.followed_dossiers << dossier
+      end
+
+      it "create attente_correction notification only for instructeur follower" do
+        expect { subject }.to change(DossierNotification, :count).by(1)
+
+        notification = DossierNotification.last
+        expect(notification.dossier_id).to eq(dossier.id)
+        expect(notification.instructeur_id).to eq(instructeur_follower.id)
+        expect(notification.notification_type).to eq("attente_correction")
+      end
+    end
   end
 
   describe "#resolve_pending_correction!" do
     let(:dossier) { create(:dossier, :en_construction) }
 
     subject(:resolve) { dossier.resolve_pending_correction! }
+
     context "when dossier has no correction" do
       it { expect { resolve }.not_to change { dossier.corrections.pending.count } }
     end
@@ -138,6 +159,18 @@ describe DossierCorrectableConcern do
       it {
         expect { resolve }.to change { correction.reload.resolved_at }.from(nil)
       }
+    end
+
+    context "when dossier has attente_correction notification" do
+      let!(:correction) { create(:dossier_correction, dossier:) }
+      let!(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_correction) }
+
+      it "destroy notification for all instructeurs" do
+        subject
+
+        expect(DossierNotification.exists?(notification.id)).to be_falsey
+      end
     end
 
     context "when dossier has a already resolved correction" do
