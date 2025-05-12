@@ -85,3 +85,5 @@ fr:
             association_date_publication: 'Association date de publication'
           dossier_labels:
             label_id: Labels
+          dossier_notifications:
+            notification_type: Notifications sur le dossier
