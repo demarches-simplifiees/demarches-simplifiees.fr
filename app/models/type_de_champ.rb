@@ -459,10 +459,6 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
-  def exceed_options_threshold?
-    (drop_down_list? || multiple_drop_down_list?) && drop_down_options.size > 200
-  end
-
   def header_section_level_value
     if header_section_level.presence
       header_section_level.to_i

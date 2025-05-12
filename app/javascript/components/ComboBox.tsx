@@ -10,7 +10,9 @@ import {
   Button,
   TagGroup,
   TagList,
-  Tag
+  Tag,
+  Virtualizer,
+  ListLayout
 } from 'react-aria-components';
 import { useMemo, useRef, createContext, useContext } from 'react';
 import type { RefObject } from 'react';
@@ -87,7 +89,9 @@ export function ComboBox({
         </Button>
       </div>
       <Popover className="fr-ds-combobox__menu fr-menu" isOpen={isOpen}>
-        <ListBox className="fr-menu__list">{children}</ListBox>
+        <Virtualizer layout={ListLayout}>
+          <ListBox className="fr-menu__list">{children}</ListBox>
+        </Virtualizer>
       </Popover>
     </AriaComboBox>
   );
@@ -119,8 +123,6 @@ export function SingleComboBox({
     formValue,
     form,
     data,
-    maxItemsDisplay,
-    maxItemsAlert,
     ...props
   } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
@@ -130,9 +132,7 @@ export function SingleComboBox({
     defaultItems,
     defaultSelectedKey,
     emptyFilterKey,
-    onChange: dispatch,
-    maxItemsDisplay,
-    maxItemsAlert
+    onChange: dispatch
   });
 
   return (
@@ -175,8 +175,6 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     allowsCustomValue,
     valueSeparator,
     className,
-    maxItemsDisplay,
-    maxItemsAlert,
     focusOnSelect,
     ...props
   } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
@@ -196,8 +194,6 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     formValue,
     allowsCustomValue,
     valueSeparator,
-    maxItemsDisplay,
-    maxItemsAlert,
     focusInput: () => {
       inputRef.current?.focus();
     },
