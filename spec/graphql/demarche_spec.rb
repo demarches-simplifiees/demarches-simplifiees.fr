@@ -75,6 +75,42 @@ RSpec.describe Types::DemarcheType, type: :graphql do
     end
   end
 
+  describe 'add new administrateur without right ip' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { ADD_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: "no-admin@admin.com" } }
+
+    before do
+      allow(ENV).to receive(:fetch).with('CREATE_ADMINISTRATEUR_BY_API_AUTHORIZED_NETWORKS', '').and_return('203.0.113.0/24')
+    end
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheAjouterAdministrateur][:warnings]).to eq([{ message: "no-admin@admin.com n'est pas associé à un compte administrateur" }])
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+    end
+  end
+
+  describe 'add new administrateur with right ip' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { ADD_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: "no-admin@admin.com" } }
+
+    before do
+      allow(ENV).to receive(:fetch).with('CREATE_ADMINISTRATEUR_BY_API_AUTHORIZED_NETWORKS', '').and_return('192.0.0.0/8')
+    end
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheAjouterAdministrateur][:warnings].count).to eq(0)
+      procedure.reload
+      expect(procedure.administrateurs.count).to eq(2)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(procedure.administrateurs[1].email).to eq("no-admin@admin.com")
+    end
+  end
+
   describe 'remove administrateur' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
 
@@ -145,6 +181,9 @@ RSpec.describe Types::DemarcheType, type: :graphql do
       clientMutationId
       demarche {
         id
+      }
+      warnings {
+        message
       }
       errors {
         message
