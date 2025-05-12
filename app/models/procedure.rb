@@ -717,10 +717,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def flipper_id
-    "Procedure;#{id}"
-  end
-
   def average_dossier_weight
     if dossiers.termine.any?
       dossiers_sample = dossiers.termine.limit(100)
