@@ -134,8 +134,8 @@ class ApplicationController < ActionController::Base
     "window.location.href='#{path}'"
   end
 
-  def message_verifier
-    @message_verifier ||= ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base)
+  def message_encryptor_service
+    @message_encryptor_service ||= MessageEncryptorService.new
   end
 
   protected
@@ -307,7 +307,7 @@ class ApplicationController < ActionController::Base
       end
 
       send_login_token_or_bufferize(current_instructeur)
-      signed_email = message_verifier.generate(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
+      signed_email = message_encryptor_service.encrypt_and_sign(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
       redirect_to link_sent_path(email: signed_email)
     end
   end

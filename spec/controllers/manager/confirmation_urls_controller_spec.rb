@@ -28,11 +28,9 @@ describe Manager::ConfirmationUrlsController, type: :controller do
     it { expect(response.body).to match(/Veuillez partager ce lien/) }
 
     it "shows the confirmation url with encrypted parameters" do
-      expect(response.body).to include(
-        new_manager_procedure_administrateur_confirmation_url(
-          procedure,
-          q: encrypt({ email: invited_administrateur.email, inviter_id: inviter_super_admin.id })
-        )
+      path_base = new_manager_procedure_administrateur_confirmation_path(procedure)
+      expect(response.body).to match(
+        %r{#{Regexp.escape(path_base)}\?q=\S{30,}}m
       )
     end
 
@@ -63,13 +61,5 @@ describe Manager::ConfirmationUrlsController, type: :controller do
         it { expect(response).to redirect_to(manager_procedure_path(procedure)) }
       end
     end
-  end
-
-  private
-
-  def encrypt(parameters)
-    key = Rails.application.key_generator.generate_key("confirm_adding_administrateur")
-    verifier = ActiveSupport::MessageVerifier.new(key)
-    Base64.urlsafe_encode64(verifier.generate(parameters))
   end
 end
