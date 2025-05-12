@@ -45,12 +45,17 @@ export class FormatController extends ApplicationController {
   private formatList(value: string) {
     return value.replace(/;/g, ',');
   }
+
   private formatSIRET(value: string) {
     return value
-      .replace(/[^\d]/gi, '')
-      .replace(/^\s*(\d{3})\s*(\d{3})\s*(\d{3})\s*(\d{5})\s*$/gi, '$1 $2 $3 $4')
-      .trim();
+      .trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/, '') // remove non letter or digit
+      .replace(/(?<=.)[^\d]+/gi, '') // remove letters not in front
+      .replace(/^\s*(\d{3})\s*(\d{3})\s*(\d{3})\s*(\d{5})\s*$/gi, '$1 $2 $3 $4') // format 14 digit siret
+      .replace(/^\s*(\w\d{5})(\d{1,3})\s*$/, '$1-$2'); // format 9-digit number (tahiti number)
   }
+
   private formatIBAN(value: string) {
     return value
       .replace(/[^\dA-Z]/gi, '')
