@@ -55,7 +55,7 @@
     "maplibre-gl": "^4.5.0",
     "match-sorter": "^8.0.1",
     "react": "^19.1.0",
-    "react-aria-components": "^1.8.0",
+    "react-aria-components": "^1.9.0",
     "react-coordinate-input": "^1.0.0",
     "react-dom": "^19.1.0",
     "react-fast-compare": "^3.2.2",

@@ -14,7 +14,6 @@ import {
 } from 'react-aria-components';
 import { useMemo, useRef, createContext, useContext } from 'react';
 import type { RefObject } from 'react';
-import { findOrCreateContainerElement } from '@coldwired/react';
 import * as s from 'superstruct';
 
 import {
@@ -32,8 +31,6 @@ import {
   MultiComboBoxProps,
   RemoteComboBoxProps
 } from './react-aria/props';
-
-const getPortal = () => findOrCreateContainerElement('rac-portal');
 
 export function ComboBox({
   children,
@@ -89,11 +86,7 @@ export function ComboBox({
           {' '}
         </Button>
       </div>
-      <Popover
-        className="fr-ds-combobox__menu fr-menu"
-        UNSTABLE_portalContainer={getPortal()!}
-        isOpen={isOpen}
-      >
+      <Popover className="fr-ds-combobox__menu fr-menu" isOpen={isOpen}>
         <ListBox className="fr-menu__list">{children}</ListBox>
       </Popover>
     </AriaComboBox>
