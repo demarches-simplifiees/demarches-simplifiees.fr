@@ -7,7 +7,7 @@ module Types::Champs::Descriptor
     field :champ_descriptors, [Types::ChampDescriptorType], "Description des champs d’un bloc répétable.", null: true
 
     def champ_descriptors
-      Loaders::Association.for(object.class, revision_types_de_champ: :type_de_champ).load(object)
+      dataloader.with(Sources::Association, revision_types_de_champ: :type_de_champ).load(object)
     end
   end
 end
