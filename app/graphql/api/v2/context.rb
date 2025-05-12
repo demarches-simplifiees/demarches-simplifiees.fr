@@ -32,6 +32,10 @@ class API::V2::Context < GraphQL::Query::Context
     self[:write_access]
   end
 
+  def remote_ip
+    self[:remote_ip]
+  end
+
   def current_administrateur
     unless self[:administrateur_id]
       raise GraphQL::ExecutionError.new("Pour effectuer cette opération, vous avez besoin d’un jeton au nouveau format. Vous pouvez l’obtenir dans votre interface administrateur.", extensions: { code: :deprecated_token })

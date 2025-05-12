@@ -150,5 +150,8 @@ fr:
         callout_no_ask_twice: Il est donc inutile de les redemander dans d’autres champs du formulaire.
       add_administrateur:
         wrong_address:
-          one: "%{value} n’est pas une adresse email valide"
-          other: "%{value} ne sont pas des adresses emails valides"
+          one: "%{emails} n’est pas une adresse email valide"
+          other: "%{emails} ne sont pas des adresses emails valides"
+        not_administrateur:
+          one: "%{emails} n'est pas associé à un compte administrateur"
+          other: "%{emails} ne sont pas associés à des comptes administrateurs"

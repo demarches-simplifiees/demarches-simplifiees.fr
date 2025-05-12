@@ -18,25 +18,40 @@ module Mutations
       ids, emails = partition_administrators_by_profile_input(administrateurs)
 
       if context.authorized_demarche?(demarche)
-        administrateurs_added, invalid_emails = demarche.add_administrateurs(ids:, emails:)
+        can_create_administrateur = allowed_to_create_administrateur?(ip: context.remote_ip)
+        administrateurs_added, invalid_emails, not_found_email = demarche.add_administrateurs(ids:, emails:, can_create_administrateur:)
 
         if administrateurs_added.present?
           demarche.reload
         end
 
-        result = { demarche: }
-
+        warnings = []
         if invalid_emails.present?
-          warning = I18n.t('administrateurs.procedures.add_administrateur.wrong_address',
+          warnings.push I18n.t('administrateurs.procedures.add_administrateur.wrong_address',
                            count: invalid_emails.size,
                            emails: invalid_emails.join(', '))
-          result[:warnings] = [warning]
+        end
+        if not_found_email.present?
+          warnings.push I18n.t('administrateurs.procedures.add_administrateur.not_administrateur',
+                         count: not_found_email.size,
+                         emails: not_found_email.join(', '))
         end
 
-        result
+        { demarche:, warnings: }
       else
         { errors: ["Vous n'avez pas le droit d'ajouter un administrateur sur la démarche"] }
       end
+    end
+
+    private
+
+    def allowed_to_create_administrateur?(ip:)
+      return false if ip.blank?
+      whitelist = ENV.fetch('CREATE_ADMINISTRATEUR_BY_API_AUTHORIZED_NETWORKS', '').split(',')
+        .map { begin IPAddr.new(_1) rescue nil end }
+        .compact
+      return false if whitelist.blank?
+      whitelist.any? { |range| range.include?(ip) }
     end
   end
 end
