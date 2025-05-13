@@ -88,7 +88,9 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
       pdf.pad_top(7) do
         pdf.text "#{Service.model_name.human} : " + [service_or_contact_information.nom, service_or_contact_information.organisme].join(", "), size: 10, character_spacing: -0.2, align: :justify
         pdf.text "#{Service.human_attribute_name(:adresse)} : #{service_or_contact_information.adresse}", size: 10, character_spacing: -0.2, align: :justify
-        pdf.text "#{Service.human_attribute_name(:email)} : #{service_or_contact_information.email}", size: 10, character_spacing: -0.2, align: :justify
+        if service_or_contact_information.email.present?
+          pdf.text "#{Service.human_attribute_name(:email)} : #{service_or_contact_information.email}", size: 10, character_spacing: -0.2, align: :justify
+        end
         if service_or_contact_information.telephone.present?
           pdf.text "#{Service.human_attribute_name(:telephone)} : #{service_or_contact_information.telephone}", size: 10, character_spacing: -0.2, align: :justify
         end

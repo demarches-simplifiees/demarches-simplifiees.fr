@@ -5,7 +5,7 @@
     = succeed '.' do
       = link_to t('.file_messagerie'), messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
 
-- service_or_contact_information = dossier.service_or_contact_information || dossier.procedure.service
+- service_or_contact_information = dossier.service_or_contact_information
 - if service_or_contact_information.present?
   %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0", style: "cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;" }
     %tr
@@ -26,7 +26,7 @@
           %br
           - if dossier.present? && dossier.messagerie_available?
             = link_to t('.by_messagerie'), messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
-          - else
+          - elsif service_or_contact_information.email.present?
             = t('.by_email')
             = link_to service_or_contact_information.email, "mailto:#{service_or_contact_information.email}"
           - if service_or_contact_information.telephone_url.present?
