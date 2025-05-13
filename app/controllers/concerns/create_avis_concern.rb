@@ -5,34 +5,45 @@ module CreateAvisConcern
 
   private
 
-  def create_avis_from_params(dossier, instructeur_or_expert, confidentiel = false)
-    if create_avis_params[:emails].blank?
-      avis = Avis.new(create_avis_params)
+  def create_avis_from_params(dossier, instructeur_or_expert, avis_params = nil, confidentiel = false)
+    # If no avis_params is passed, fallback to params (used in controllers)
+    avis_params ||= params.require(:avis).permit(
+      :introduction_file, :introduction, :confidentiel,
+      :invite_linked_dossiers, :question_label, emails: []
+    )
+
+    # If emails are blank, create an Avis object with errors
+    if avis_params[:emails].all?(&:blank?)
+      avis = Avis.new(avis_params)
       errors = avis.errors
       errors.add(:emails, :blank)
 
-      flash.alert = errors.full_message(:emails, errors[:emails].first)
+      # Log the error instead of using flash
+      Rails.logger.error "Avis creation failed due to blank emails: #{errors.full_messages}"
 
       return avis
     end
 
-    confidentiel ||= create_avis_params[:confidentiel]
-    # Because of a limitation of the email_field rails helper,
-    # the :emails parameter is a 1-element array.
-    # Hence the call to first
-    # https://github.com/rails/rails/issues/17225
-    expert_emails = create_avis_params[:emails].presence || []
+    # If confidentiel is not passed, fall back to the value in avis_params
+    confidentiel ||= avis_params[:confidentiel]
+
+    # Process emails to remove spaces and ensure they are lowercase
+    expert_emails = avis_params[:emails].presence || []
     expert_emails = expert_emails.map(&:strip).map(&:downcase)
+
     allowed_dossiers = [dossier]
 
-    if create_avis_params[:invite_linked_dossiers].present?
+    # Add linked dossiers to the allowed dossiers list if specified in params
+    if avis_params[:invite_linked_dossiers].present?
       allowed_dossiers += dossier.linked_dossiers_for(instructeur_or_expert)
     end
 
-    if (instructeur_or_expert.is_a?(Instructeur)) && !instructeur_or_expert.follows.exists?(dossier: dossier)
+    # If instructeur_or_expert doesn't already follow the dossier, follow it
+    if instructeur_or_expert.is_a?(Instructeur) && !instructeur_or_expert.follows.exists?(dossier: dossier)
       instructeur_or_expert.follow(dossier)
     end
 
+    # Create avis records for each expert email
     create_results = Avis.create(
       expert_emails.flat_map do |email|
         user = User.create_or_promote_to_expert(email, SecureRandom.hex)
@@ -41,21 +52,25 @@ module CreateAvisConcern
           experts_procedure = user.valid? ? ExpertsProcedure.find_or_create_by(procedure: dossier.procedure, expert: user.expert) : nil
           {
             email: email,
-            introduction: create_avis_params[:introduction],
-            introduction_file: create_avis_params[:introduction_file],
+            introduction: avis_params[:introduction],
+            introduction_file: avis_params[:introduction_file],
             claimant: instructeur_or_expert,
             dossier: dossier,
             confidentiel: confidentiel,
             experts_procedure: experts_procedure,
-            question_label: create_avis_params[:question_label]
+            question_label: avis_params[:question_label]
           }
         end
       end
     )
-    dossier.avis.reload # unload non-persisted avis from dossier
 
+    # Reload the dossier avis to remove non-persisted avis
+    dossier.avis.reload
+
+    # Split the results into persisted and failed
     persisted, failed = create_results.partition(&:persisted?)
 
+    # If any avis were successfully created, send emails
     if persisted.any?
       dossier.touch(:last_avis_updated_at)
       sent_emails_addresses = []
@@ -70,27 +85,26 @@ module CreateAvisConcern
             end
           end
           sent_emails_addresses << avis.expert.email
-          # the email format is already verified, we update value to nil
-          avis.update_column(:email, nil)
+          avis.update_column(:email, nil) # Email already verified, set to nil
         end
       end
-      flash.notice = "Une demande d’avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
+      # Log success message
+      Rails.logger.info "Avis request sent successfully to #{sent_emails_addresses.uniq.join(', ')}"
     end
 
+    # Handle failed avis creation (if any)
     if failed.any?
-      flash.now.alert = failed
+      # Log the failure details
+      failure_messages = failed
         .filter { |avis| avis.errors.present? }
         .map { |avis| "#{avis.email} : #{avis.errors.full_messages_for(:email).join(', ')}" }
 
-      # When an error occurs, return the avis back to the controller
-      # to give the user a chance to correct and resubmit
-      Avis.new(create_avis_params.merge(emails: [failed.map(&:email).uniq.join(", ")]))
+      Rails.logger.error "Avis creation failed for: #{failure_messages.join('; ')}"
+
+      # Return the avis back to the controller with errors for correction
+      Avis.new(avis_params.merge(emails: [failed.map(&:email).uniq.join(', ')]))
     else
       nil
     end
-  end
-
-  def create_avis_params
-    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :question_label, emails: [])
   end
 end

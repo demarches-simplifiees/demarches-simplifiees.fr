@@ -1,0 +1,59 @@
+
+= f.label :emails, class: 'fr-label' do
+  = t('helpers.label.avis_emails')
+  = render EditableChamp::AsteriskMandatoryComponent.new
+  - if procedure.experts_require_administrateur_invitation
+    %span.fr-hint-text.fr-mb-1w
+      = t('helpers.label.avis_emails_list_admin_hint')
+  - else
+    %span.fr-hint-text.fr-mb-1w
+      = t('helpers.label.avis_emails_hint')
+.fr-input-group
+  %react-fragment
+    = render ReactComponent.new "ComboBox/MultiComboBox", items: current_expert_not_instructeur? ? [] : Expert.autocomplete_mails(procedure), name: f.field_name(:emails, multiple: true), id: 'avis_emails', 'aria-label': 'Emails', 'aria-describedby': 'avis-emails-description', allows_custom_value: !procedure.experts_require_administrateur_invitation
+
+.fr-input-group
+  = render Dsfr::InputComponent.new(form: f, attribute: :introduction, input_type: :text_area, opts: {value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.'})
+
+.fr-input-group
+  = render Dsfr::InputComponent.new(form: f, attribute: :question_label, input_type: :text_area, required: false)
+
+.fr-input-group
+  = f.label :introduction_file, class: 'fr-label'
+  = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
+
+- if linked_dossiers.present?
+  = f.check_box :invite_linked_dossiers, {}, true, false
+  = f.label :invite_linked_dossiers, t('helpers.label.invite_linked_dossiers', count: linked_dossiers.length, ids: linked_dossiers.map(&:id).to_sentence)
+
+.fr-input-group
+  - if must_be_confidentiel
+    %p.confidentiel.flex
+      %span.icon.lock
+      %span
+        Cet avis sera confidentiel : il ne sera pas affiché aux autres experts consultés, mais sera visible par les instructeurs.
+
+  - else
+    %fieldset.fr-fieldset{ name: "question_type" }
+      %legend.fr-fieldset__legend.fr-fieldset__legend--regular
+        Cet avis sera
+        = asterisk
+      .fr-fieldset__element
+        .fr-radio-group
+          = f.radio_button :confidentiel, false, id: 'confidentiel_false'
+          = f.label :confidentiel, false, class: 'fr-label', for: 'confidentiel_false' do
+            partagé avec les autres experts
+      .fr-fieldset__element
+        .fr-radio-group
+          = f.radio_button :confidentiel, true, id: 'confidentiel_true'
+          = f.label :confidentiel, true, class: 'fr-label', for: 'confidentiel_true' do
+            confidentiel
+            %span.fr-hint-text Il ne sera pas affiché aux autres experts consultés, mais sera visible par les instructeurs.
+
+-# = hidden_field_tag :"batch_operation[dossier_ids][]", "", form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "input_multiple_ids")
+-# = f.submit "Envoyer la demande d'avis", class: 'fr-btn fr-mt-2w'
+
+
+-# = f.submit "Envoyer la demande d'avis", class: 'fr-btn fr-mt-2w'
+
+= f.button "Envoyer la demande d'avis", name: "batch_operation[operation]", class: 'fr-btn fr-mt-2w', value: 'create_avis', data: { operation: 'create_avis'}

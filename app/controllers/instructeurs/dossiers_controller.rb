@@ -302,7 +302,7 @@ module Instructeurs
         redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
         @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
-        render :avis
+        render :avis_new
       end
     end
 

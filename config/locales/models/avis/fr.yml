@@ -2,17 +2,20 @@ fr:
   activerecord:
     models:
       avis: 'Avis'
+      batch_operation: 'BatchOperation'
+    shared_attributes: &shared_attrs
+      answer: "Réponse"
+      claimant: Demandeur
+      confidentiel: confidentiel
+      question_answer: "Réponse oui/non"
+      introduction: Message d'introduction
+      question_label: Posez une question à l’expert
+      introduction_file: Pièce jointe
+      hints:
+        question_label: L’expert pourra uniquement répondre par oui/non
     attributes:
-      avis:
-        answer: "Réponse"
-        claimant: Demandeur
-        confidentiel: confidentiel
-        question_answer: "Réponse oui/non"
-        introduction: Message d'introduction
-        question_label: Posez une question à l’expert
-        introduction_file: Pièce jointe
-        hints:
-          question_label: L’expert pourra uniquement répondre par oui/non
+      avis: *shared_attrs
+      batch_operation: *shared_attrs
   helpers:
     label:
       invite_linked_dossiers:
