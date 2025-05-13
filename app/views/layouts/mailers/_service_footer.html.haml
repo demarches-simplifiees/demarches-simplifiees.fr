@@ -5,16 +5,16 @@
     = succeed '.' do
       = link_to t('.file_messagerie'), messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
 
-- service = dossier&.service || dossier.procedure.service
-- if service.present?
+- service_or_contact_information = dossier.service_or_contact_information || dossier.procedure.service
+- if service_or_contact_information.present?
   %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0", style: "cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;" }
     %tr
       %td{ width: "50%", valign: "top" }
         %p
           %strong
             = t('.procedure_management')
-          = service.nom
-          = service.adresse
+          = service_or_contact_information.nom
+          = service_or_contact_information.adresse
         %p
           = t('.email_sent_to')
           %br
@@ -28,8 +28,8 @@
             = link_to t('.by_messagerie'), messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
           - else
             = t('.by_email')
-            = link_to service.email, "mailto:#{service.email}"
-          - if service.telephone_url.present?
+            = link_to service_or_contact_information.email, "mailto:#{service_or_contact_information.email}"
+          - if service_or_contact_information.telephone_url.present?
             %br= t('.by_phone')
-            = link_to service.telephone, service.telephone_url
-          %br= "#{t('.schedule')} #{ formatted_horaires(service.horaires) }"
+            = link_to service_or_contact_information.telephone, service_or_contact_information.telephone_url
+          %br= "#{t('.schedule')} #{ formatted_horaires(service_or_contact_information.horaires) }"

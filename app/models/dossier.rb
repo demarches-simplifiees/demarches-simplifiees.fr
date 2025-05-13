@@ -1008,7 +1008,7 @@ class Dossier < ApplicationRecord
     )
   end
 
-  def service
+  def service_or_contact_information
     if procedure.routing_enabled?
       groupe_instructeur&.contact_information || procedure.service
     else
