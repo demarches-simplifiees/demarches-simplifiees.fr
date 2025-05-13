@@ -9,56 +9,9 @@
         = t('asterisk_html', scope: [:utils])
 
   = render NestedForms::FormOwnerComponent.new
-  = form_for avis, url: url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier, :avis_by_instructeur) } } do |f|
-    = f.label :emails, class: 'fr-label' do
-      = t('helpers.label.avis_emails')
-      = render EditableChamp::AsteriskMandatoryComponent.new
-      - if @dossier.procedure.experts_require_administrateur_invitation
-        %span.fr-hint-text.fr-mb-1w
-          = t('helpers.label.avis_emails_list_admin_hint')
-      - else
-        %span.fr-hint-text.fr-mb-1w
-          = t('helpers.label.avis_emails_hint')
-    .fr-input-group
-      %react-fragment
-        = render ReactComponent.new "ComboBox/MultiComboBox", items: current_expert_not_instructeur? ? [] : @experts_emails, name: f.field_name(:emails, multiple: true), id: 'avis_emails', 'aria-label': 'Emails', 'aria-describedby': 'avis-emails-description', allows_custom_value: !@dossier.procedure.experts_require_administrateur_invitation
-
-    .fr-input-group
-      = render Dsfr::InputComponent.new(form: f, attribute: :introduction, input_type: :text_area, opts: {value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.'})
-
-    .fr-input-group
-      = render Dsfr::InputComponent.new(form: f, attribute: :question_label, input_type: :text_area, required: false)
-
-    .fr-input-group
-      = f.label :introduction_file, class: 'fr-label'
-      = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
-
-    - if linked_dossiers.present?
-      = f.check_box :invite_linked_dossiers, {}, true, false
-      = f.label :invite_linked_dossiers, t('helpers.label.invite_linked_dossiers', count: linked_dossiers.length, ids: linked_dossiers.map(&:id).to_sentence)
-
-    .fr-input-group
-      - if must_be_confidentiel
-        %p.confidentiel.flex
-          %span.icon.lock
-          %span
-            Cet avis sera confidentiel : il ne sera pas affiché aux autres experts consultés, mais sera visible par les instructeurs.
-
-      - else
-        %fieldset.fr-fieldset{ name: "question_type" }
-          %legend.fr-fieldset__legend.fr-fieldset__legend--regular
-            Cet avis sera
-            = asterisk
-          .fr-fieldset__element
-            .fr-radio-group
-              = f.radio_button :confidentiel, false
-              %label.fr-label{ for: "avis_confidentiel_false" }
-                partagé avec les autres experts
-          .fr-fieldset__element
-            .fr-radio-group
-              = f.radio_button :confidentiel, true
-              %label.fr-label{ for: "avis_confidentiel_true" }
-                confidentiel
-                %span.fr-hint-text Il ne sera pas affiché aux autres experts consultés, mais sera visible par les instructeurs.
-
-    = f.submit "Envoyer la demande d'avis", class: 'fr-btn fr-mt-2w'
+  - if batch_action
+    = form_for(BatchOperation.new, url: url, method: :post, html: { class: 'form', id: 'new_batch_operation_modal' }, data: { turbo: true, turbo_confirm: I18n.t('operations.confirm') }) do |f|
+      = render 'shared/avis/form_fields', f: f, dossier: @dossier, procedure:, avis:, linked_dossiers:, must_be_confidentiel:
+  - else
+    = form_for avis, url: url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier, :avis_by_instructeur) } } do |f|
+      = render 'shared/avis/form_fields', f: f, procedure:, avis:, linked_dossiers:, must_be_confidentiel:

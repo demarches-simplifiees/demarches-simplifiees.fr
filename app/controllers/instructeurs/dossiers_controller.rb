@@ -4,7 +4,6 @@ module Instructeurs
   class DossiersController < ProceduresController
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
-    include CreateAvisConcern
     include DossierHelper
     include TurboChampsConcern
     include InstructeurConcern
@@ -296,13 +295,27 @@ module Instructeurs
     end
 
     def create_avis
-      @avis = create_avis_from_params(dossier, current_instructeur)
+      avis_params = params.require(:avis).permit(
+        :introduction_file, :introduction, :confidentiel,
+        :invite_linked_dossiers, :question_label, emails: []
+      )
 
-      if @avis.nil?
+      result = CreateAvisService.call(
+        dossier: dossier,
+        instructeur_or_expert: current_instructeur,
+        params: avis_params
+      )
+
+      @avis = result.avis
+
+      if @avis.persisted?
+        emails = result.sent_emails.join(", ")
+        flash[:notice] = "Une demande d’avis a été envoyée à #{emails}"
         redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
+        flash.now[:alert] = @avis.errors.full_messages.join(', ')
         @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
-        render :avis
+        render :avis_new, status: :unprocessable_entity
       end
     end
 

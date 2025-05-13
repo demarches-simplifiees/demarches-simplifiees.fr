@@ -2,7 +2,6 @@
 
 module Experts
   class AvisController < ExpertController
-    include CreateAvisConcern
     include Zipline
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
@@ -90,13 +89,28 @@ module Experts
 
     def create_avis
       @procedure = Procedure.find(params[:procedure_id])
-      @new_avis = create_avis_from_params(avis.dossier, current_expert, avis.confidentiel)
+      dossier = avis.dossier
 
-      if @new_avis.nil?
-        redirect_to instruction_expert_avis_path(avis.procedure, avis)
+      avis_params = params.require(:avis).permit(
+        :introduction_file, :introduction, :confidentiel,
+        :invite_linked_dossiers, :question_label, emails: []
+      )
+
+      result = CreateAvisService.call(
+        dossier: dossier,
+        instructeur_or_expert: current_expert,
+        params: avis_params
+      )
+
+      @new_avis = result.avis
+
+      if @new_avis.persisted?
+        flash[:notice] = "Une demande d’avis a été envoyée à #{result.sent_emails.join(', ')}"
+        redirect_to instruction_expert_avis_path(@procedure, avis)
       else
+        flash.now[:alert] = @new_avis.errors.full_messages.join(', ')
         set_avis_and_dossier
-        render :instruction
+        render :instruction, status: :unprocessable_entity
       end
     end
 

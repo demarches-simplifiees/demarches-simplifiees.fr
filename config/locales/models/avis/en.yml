@@ -1,18 +1,21 @@
 en:
   activerecord:
     models:
-      avis: 'opinion'
+      avis: 'Opinion'
+      batch_operation: 'Batch Operation'
+    shared_attributes: &shared_attrs
+      answer: "Answer"
+      claimant: "Claimant"
+      confidentiel: "Confidential"
+      question_answer: "Yes/No Answer"
+      introduction: "Introduction Message"
+      question_label: "Ask the expert a question"
+      introduction_file: "Attachment"
+      hints:
+        question_label: "The expert can only respond with yes or no"
     attributes:
-      avis:
-        answer: "Answer"
-        claimant: Claimant
-        confidentiel: Confidential
-        question_answer: "Answer yes/no"
-        introduction: Introduction message
-        question_label: Ask a question to the expert
-        introduction_file: Attachment
-        hints:
-          question_label: The expert could only answer by yes/no
+      avis: *shared_attrs
+      batch_operation: *shared_attrs
   helpers:
     label:
       invite_linked_dossiers:
