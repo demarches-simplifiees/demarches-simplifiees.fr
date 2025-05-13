@@ -2,7 +2,7 @@
   %ul.messages-list{ data: { controller: 'scroll-to' } }
     - dossier.preloaded_commentaires.each do |commentaire|
       %li.message.fr-background-alt--grey{ class: commentaire_is_from_me_class(commentaire, connected_user), id: dom_id(commentaire) }
-        = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, show_reply_button: show_reply_button(commentaire, connected_user))
+        = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, show_reply_button: show_reply_button(commentaire, connected_user), heading_level: 'h2')
 
   - if dossier.messagerie_available?
     = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier }
