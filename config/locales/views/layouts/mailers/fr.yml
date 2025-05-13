@@ -10,6 +10,7 @@ fr:
         ask_question: "Poser une question sur votre dossier :"
         email_sent_to: "Cet email a été envoyé à l'adresse :"
         by_messagerie: Par la messagerie
+        by_contact_link: Par la page de contact
         by_email: "Par email :"
         by_phone: "Par téléphone :"
         schedule: "Horaires :"
