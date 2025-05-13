@@ -15,4 +15,8 @@ class ApplicationComponent < ViewComponent::Base
   def current_gestionnaire
     controller.current_gestionnaire
   end
+
+  def current_super_admin
+    controller.current_super_admin
+  end
 end

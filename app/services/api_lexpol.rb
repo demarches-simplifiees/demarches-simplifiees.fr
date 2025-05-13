@@ -9,6 +9,7 @@ class APILexpol
 
   BASE_URL = ENV.fetch('LEXPOL_BASE_URL', 'https://devapilexpol.cloud.pf/api/v1/geda')
   TOKEN_EXPIRATION_TIME = 290 # less than 5 minutes
+  MODEL_EXPIRATION_TIME = 900 # 15 min
 
   def initialize(email = nil, numero_tahiti = nil, is_manager = false)
     @email_agent = determine_email_agent(email, numero_tahiti, is_manager)
@@ -22,7 +23,7 @@ class APILexpol
   end
 
   def get_models
-    Rails.cache.fetch("lexpol_medels_#{@email_agent}", expires_in: TOKEN_EXPIRATION_TIME) do
+    Rails.cache.fetch("lexpol_models_#{@email_agent}", expires_in: MODEL_EXPIRATION_TIME) do
       body = request(:get, "/modeles", 'Erreur lors de la récupération des modèles')
       body['modeles'].map { |model| [model['libelle'], model['modele']] }
     end
@@ -46,11 +47,12 @@ class APILexpol
 
   private
 
+  LEXPOL_SERVICE_EMAILS = ENV.fetch('LEXPOL_SERVICE_EMAILS', '').scan(/([A-Z0-9][0-9]{5})\(([^)]+)\)/).to_h
+
   def determine_email_agent(email, numero_tahiti, is_manager)
     return email unless is_manager && numero_tahiti
 
-    service_emails = ENV.fetch('LEXPOL_SERVICE_EMAILS', '').scan(/([A-Z0-9][0-9]{5})\(([^)]+)\)/).to_h
-    service_emails[numero_tahiti] || email
+    LEXPOL_SERVICE_EMAILS[numero_tahiti] || email
   end
 
   def request_authentication
