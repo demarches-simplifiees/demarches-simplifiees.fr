@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/siret_champ:
         hints:
-          value: "Saisissez 14 chiffres. Exemple : 500 001 234 56789"
+          value: "Saisissez 9 caractères. Exemple : 002253-001 ou G33972-001"
