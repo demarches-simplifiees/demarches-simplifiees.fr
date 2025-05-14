@@ -12,17 +12,6 @@
   margin-bottom: $default-spacer * 4;
   background: #ffffff;
 
-  .card-title {
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 1.5rem;
-    margin-bottom: $default-spacer * 2;
-
-    a:not(:hover) {
-      background-image: none; // remove DSFR underline
-    }
-  }
-
   .logo {
     width: auto;
     max-width: 50px;
@@ -68,5 +57,16 @@
 
   p:not(:last-of-type) {
     margin-bottom: $default-spacer;
+  }
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1.5rem;
+  margin-bottom: $default-spacer * 2;
+
+  a:not(:hover) {
+    background-image: none; // remove DSFR underline
   }
 }
