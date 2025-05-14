@@ -62,6 +62,23 @@ FactoryBot.define do
       value { 'val1' }
     end
 
+    factory :champ_do_not_use_nationalites, class: 'Champs::NationaliteChamp' do
+      value { 'Française' }
+    end
+
+    factory :champ_do_not_use_commune_de_polynesie, class: 'Champs::CommuneDePolynesieChamp' do
+      value { 'Arue - Tahiti - 98701' }
+    end
+
+    factory :champ_do_not_use_code_postal_de_polynesie, class: 'Champs::CodePostalDePolynesieChamp' do
+      value { '98701 - Arue - Tahiti' }
+    end
+
+    factory :champ_do_not_use_numero_dn, class: 'Champs::NumeroDnChamp' do
+      numero_dn { "1234567" }
+      date_de_naissance { "2000-01-01" }
+    end
+
     factory :champ_do_not_use_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
       value { '["val1", "val2"]' }
     end
@@ -104,6 +121,10 @@ FactoryBot.define do
       value { create(:dossier, :en_construction).id }
     end
 
+    factory :champ_do_not_use_iban, class: 'Champs::IbanChamp' do
+      value { 'FR7630001007941234567890185' }
+    end
+
     factory :champ_do_not_use_piece_justificative, class: 'Champs::PieceJustificativeChamp' do
       transient do
         size { 4 }
@@ -142,23 +163,19 @@ FactoryBot.define do
       geo_areas { build_list(:geo_area, 2) }
     end
 
-    factory :champ_te_fenua, class: 'Champs::TeFenuaChamp' do
-      type_de_champ { association :type_de_champ_te_fenua, procedure: dossier.procedure }
+    factory :champ_do_not_use_te_fenua, class: 'Champs::TeFenuaChamp' do
     end
 
     factory :champ_do_not_use_annuaire_education, class: 'Champs::AnnuaireEducationChamp' do
     end
 
-    factory :champ_visa, class: 'Champs::VisaChamp' do
-      type_de_champ { association :type_de_champ_visa, procedure: dossier.procedure }
+    factory :champ_do_not_use_visa, class: 'Champs::VisaChamp' do
     end
 
-    factory :champ_lexpol, class: 'Champs::LexpolChamp' do
-      type_de_champ { association :type_de_champ_lexpol, procedure: dossier.procedure }
+    factory :champ_do_not_use_lexpol, class: 'Champs::LexpolChamp' do
     end
 
-    factory :champ_cnaf, class: 'Champs::CnafChamp' do
-      type_de_champ { association :type_de_champ_cnaf, procedure: dossier.procedure }
+    factory :champ_do_not_use_cnaf, class: 'Champs::CnafChamp' do
     end
 
     factory :champ_do_not_use_dgfip, class: 'Champs::DgfipChamp' do
@@ -217,7 +234,7 @@ FactoryBot.define do
       end
     end
 
-    factory :champ_repetition_with_piece_jointe, class: 'Champs::RepetitionChamp' do
+    factory :champ_do_not_use_repetition_with_piece_jointe, class: 'Champs::RepetitionChamp' do
       type_de_champ { association :type_de_champ_repetition, procedure: dossier.procedure }
 
       transient do

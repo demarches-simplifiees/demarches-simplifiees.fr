@@ -5,7 +5,8 @@ class ChampRevision < ApplicationRecord
 
   def self.create_or_update_revision(champ, instructeur_id)
     champ_revision = where(champ:).order(:id).last
-    if champ_revision.nil? || champ_revision.instructeur_id != instructeur_id || 4.minutes.ago.after?(champ_revision.updated_at)
+    min_delay = champ.type == 'Champs::TextareaChamp' ? 2.minutes : 5.seconds
+    if champ_revision.nil? || champ_revision.instructeur_id != instructeur_id || min_delay.ago.after?(champ_revision.updated_at)
       champ_revision = new(champ:, instructeur_id:)
     end
 

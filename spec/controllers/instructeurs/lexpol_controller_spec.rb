@@ -4,10 +4,12 @@ RSpec.describe Champs::LexpolController, type: :controller do
   render_views
 
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-  let(:dossier) { create(:dossier, procedure: procedure) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :lexpol }], instructeurs: [instructeur]) }
+  let(:tdc) { procedure.active_revision.types_de_champ.first }
+  let(:dossier) { create(:dossier, procedure:) }
+
   let(:value) { nil }
-  let(:champ) { create(:champ_lexpol, dossier:, value:) }
+  let(:champ) { dossier.champ_for_update(tdc, nil, updated_by: instructeur).tap { |c| c.value = value }.tap(&:save!) }
 
   before do
     allow(ENV).to receive(:fetch).and_call_original
@@ -15,8 +17,6 @@ RSpec.describe Champs::LexpolController, type: :controller do
     allow(ENV).to receive(:fetch).with('LEXPOL_PASSWORD').and_return('fake_password')
     allow(ENV).to receive(:fetch).with('LEXPOL_AGENT_EMAIL').and_return('fake_agent_email@example.com')
     sign_in instructeur.user
-    allow(Dossier).to receive(:find).and_return(dossier)
-    allow(dossier.champs).to receive(:find).and_return(champ)
   end
 
   describe 'POST #upsert' do
@@ -39,7 +39,7 @@ RSpec.describe Champs::LexpolController, type: :controller do
     context 'when dossier update is successful' do
       let(:value) { 'NOR-12345' }
       before do
-        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return('NOR-12345')
+        allow_any_instance_of(LexpolService).to receive(:upsert_dossier).and_return(value)
 
         post :upsert, params: {
           dossier_id: dossier.id,

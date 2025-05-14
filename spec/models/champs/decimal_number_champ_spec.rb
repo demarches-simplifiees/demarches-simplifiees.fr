@@ -9,7 +9,7 @@ describe Champs::DecimalNumberChamp do
   describe 'validation' do
     let(:champ) { Champs::DecimalNumberChamp.new(value:, dossier: build(:dossier)) }
     before do
-      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_decimal_number))
+      allow(champ).to receive(:type_de_champ).and_return(type_de_champ)
       allow(champ).to receive(:visible?).and_return(true)
       champ.run_callbacks(:validation)
     end

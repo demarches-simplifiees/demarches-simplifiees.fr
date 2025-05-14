@@ -3,7 +3,11 @@ describe Champs::IntegerNumberChamp do
   let(:max) { nil }
   let(:type_de_champ) { create(:type_de_champ, min:, max:) }
 
-  let(:champ) { build(:champ_integer_number, value:, type_de_champ:) }
+  let(:champ) { Champs::IntegerNumberChamp.new(value:, dossier: build(:dossier)) }
+  before do
+    allow(champ).to receive(:visible?).and_return(true)
+    allow(champ).to receive(:type_de_champ).and_return(type_de_champ)
+  end
   subject { champ.validate(:champs_public_value) }
 
   describe '#valid?' do

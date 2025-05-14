@@ -76,7 +76,6 @@ describe Logic::ChampValue do
 
         it { is_expected.to eq('val1') }
         it { expect(champ_value(champ.stable_id).options([champ.type_de_champ])).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"], [I18n.t('shared.champs.drop_down_list.other'), "__other__"]]) }
-      end
 
         context 'with other filled' do
           let(:other) { true }
@@ -127,13 +126,21 @@ describe Logic::ChampValue do
     end
 
     context 'commune_de_polynesie tdc' do
-      let(:champ) { create(:champ_commune_de_polynesie, value: 'Mangareva - 98755') }
+      let(:tdc_type) { :commune_de_polynesie }
+      let(:champ) do
+        Champs::CommuneDePolynesieChamp.new(value: 'Mangareva - 98755', stable_id: tdc.stable_id, dossier:)
+          .tap { |c| c.send(:on_value_change) } # private method called before save to fill value, which is required for compute
+      end
 
       it { is_expected.to eq({ archipel: 'Tuamotu-Gambiers' }) }
     end
 
     context 'code_postal_de_polynesie tdc' do
-      let(:champ) { create(:champ_code_postal_de_polynesie, value: '98755 - Mangareva') }
+      let(:tdc_type) { :code_postal_de_polynesie }
+      let(:champ) do
+        Champs::CodePostalDePolynesieChamp.new(value: '98755 - Mangareva', stable_id: tdc.stable_id, dossier:)
+          .tap { |c| c.send(:on_value_change) } # private method called before save to fill value, which is required for compute
+      end
 
       it { is_expected.to eq({ archipel: 'Tuamotu-Gambiers' }) }
     end

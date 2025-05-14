@@ -244,22 +244,34 @@ describe Champ do
 
     # pf displays links for PJs
     context 'when type_de_champ is piece_justificative' do
-      let(:champ) { create(:champ_piece_justificative) }
+      let(:champ) do
+        Champs::PieceJustificativeChamp.new().tap do |champ|
+          champ.piece_justificative_file.attach(fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png'))
+        end
+      end
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_piece_justificative)) }
 
-      it { expect(champ.for_export).to eq('toto.txt') }
+      it { expect(champ.for_export).to eq('logo_test_procedure.png') }
     end
   end
 
   describe '#for_tag' do
     # pf displays links for PJs
     context 'when type_de_champ is piece_justificative' do
-      let(:champ) { create(:champ_piece_justificative) }
-
-      it { expect(champ.for_tag).to include('<a href="http://') }
+      let(:champ) do
+        Champs::PieceJustificativeChamp.new(stable_id: 3, dossier_id: 5, created_at: Time.zone.now).tap do |champ|
+          champ.piece_justificative_file.attach(fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png'))
+          champ.piece_justificative_file.first.blob.update(virus_scan_result: ActiveStorage::VirusScanner::SAFE)
+        end
+      end
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_piece_justificative)) }
+      before { allow(champ).to receive(:dossier).and_return(build(:dossier)) }
+      it { expect(champ.for_tag).to include('<img src="http://') }
     end
 
     context 'when type_de_champ is numero_dn' do
-      let(:champ) { create(:champ_numero_dn) }
+      let(:champ) { Champs::NumeroDnChamp.new(numero_dn: '1234567', date_de_naissance: '2000-01-01') }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_numero_dn)) }
 
       it do
         expect(champ.for_tag).to eq("1234567")
@@ -268,7 +280,8 @@ describe Champ do
     end
 
     context 'when type_de_champ is commune de polynesie' do
-      let(:champ) { create(:champ_commune_de_polynesie) }
+      let(:champ) { Champs::CommuneDePolynesieChamp.new(value: 'Arue - Tahiti - 98701') }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_commune_de_polynesie)) }
 
       it do
         expect(champ.for_tag).to eq("Arue")
@@ -279,7 +292,8 @@ describe Champ do
     end
 
     context 'when type_de_champ is code postal de polynesie' do
-      let(:champ) { create(:champ_code_postal_de_polynesie) }
+      let(:champ) { Champs::CodePostalDePolynesieChamp.new(value: "98701 - Arue - Tahiti") }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_code_postal_de_polynesie)) }
 
       it do
         expect(champ.for_tag).to eq(98701)
@@ -357,21 +371,24 @@ describe Champ do
     end
 
     context 'for nationalités champ' do
-      let(:champ) { create(:champ_nationalites, value:) }
+      let(:champ) { Champs::NationaliteChamp.new(value:) }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_nationalites)) }
       let(:value) { "Française" }
 
       it { is_expected.to eq([value]) }
     end
 
     context 'for commune de polynésie champ' do
-      let(:champ) { create(:champ_commune_de_polynesie, value:) }
+      let(:champ) { Champs::CommuneDePolynesieChamp.new(value:) }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_commune_de_polynesie)) }
       let(:value) { "Arue - Tahiti - 98701" }
 
       it { is_expected.to eq(["Arue"]) }
     end
 
     context 'for code postal de polynésie champ' do
-      let(:champ) { create(:champ_code_postal_de_polynesie, value:) }
+      let(:champ) { Champs::CodePostalDePolynesieChamp.new(value:) }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_code_postal_de_polynesie)) }
       let(:value) { "98701 - Arue - Tahiti" }
 
       it { is_expected.to eq(["98701"]) }
@@ -420,7 +437,7 @@ describe Champ do
     end
 
     context 'for numero dn champ' do
-      let(:champ) { create(:champ_numero_dn, numero_dn: "1234567", date_de_naissance: "2000-01-01") }
+      let(:champ) { Champs::NumeroDnChamp.new(numero_dn: "1234567", date_de_naissance: "2000-01-01") }
 
       it { is_expected.to eq(["1234567", "01/01/2000"]) }
     end
@@ -457,13 +474,6 @@ describe Champ do
       let(:value) { "FR" }
 
       it { is_expected.to eq(['France']) }
-    end
-
-    context 'for nationalites champ' do
-      let(:champ) { build(:champ_nationalites) }
-      let(:value) { "Française" }
-
-      it { is_expected.to eq([value]) }
     end
 
     context 'for phone champ' do
