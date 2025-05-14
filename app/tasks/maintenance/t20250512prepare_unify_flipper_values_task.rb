@@ -23,6 +23,8 @@ module Maintenance
         flipper_gate_dup = flipper_gate.dup
         flipper_gate_dup.update(value: flipper_gate.value.sub(':', ';'))
       end
+    rescue ActiveRecord::RecordNotUnique
+      # NOOP
     end
   end
 end
