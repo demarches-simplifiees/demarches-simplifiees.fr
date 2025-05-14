@@ -440,6 +440,17 @@ describe TagsSubstitutionConcern, type: :model do
       it { is_expected.to eq('20/09/2024') }
     end
 
+    context "with a contact information name tag" do
+      let(:template) { '--nom du service instructeur--' }
+      let(:procedure) { create(:procedure, :routee) }
+      let(:groupe_instructeur) { procedure.defaut_groupe_instructeur }
+      let!(:contact_information) { create(:contact_information, groupe_instructeur:, nom: 'Service local') }
+
+      before { dossier.passer_en_construction! }
+
+      it { is_expected.to eq('Service local') }
+    end
+
     context "when the template has a libellé démarche tag" do
       let(:template) { 'body --libellé démarche--' }
 
