@@ -1,5 +1,6 @@
 %span.fr-icon-question-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
 .fr-pl-1w
-  %h1= title
+  %h1.fr-mb-1v
+    = title
   %ul
     = render Procedure::ServiceListContactComponent.new(service: service, dossier: dossier)
