@@ -29,6 +29,7 @@ const ComboBoxPropsSchema = s.partial(
     label: s.string(),
     description: s.string(),
     isRequired: s.boolean(),
+    isDisabled: s.boolean(),
     'aria-label': s.string(),
     'aria-labelledby': s.string(),
     'aria-describedby': s.string(),
@@ -70,7 +71,6 @@ export const RemoteComboBoxProps = s.assign(
       selectedKey: s.nullable(s.string()),
       minimumInputLength: s.number(),
       limit: s.number(),
-      allowsCustomValue: s.boolean(),
       debounce: s.number(),
       coerce: s.enums(['Default', 'AnnuaireEducation'])
     })

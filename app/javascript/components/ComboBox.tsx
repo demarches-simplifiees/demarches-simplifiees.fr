@@ -282,7 +282,6 @@ export function RemoteComboBox({
   const {
     items: defaultItems,
     selectedKey: defaultSelectedKey,
-    allowsCustomValue,
     minimumInputLength,
     limit,
     debounce,
@@ -305,7 +304,6 @@ export function RemoteComboBox({
   );
   const { selectedItem, onReset, shouldShowPopover, ...comboBoxProps } =
     useRemoteList({
-      allowsCustomValue,
       defaultItems,
       defaultSelectedKey,
       debounce,
@@ -323,7 +321,6 @@ export function RemoteComboBox({
           comboBoxProps.inputValue.length >= (minimumInputLength ?? 0)
         }
         isOpen={shouldShowPopover}
-        allowsCustomValue={allowsCustomValue}
         {...comboBoxProps}
         {...props}
       >
@@ -334,9 +331,7 @@ export function RemoteComboBox({
           <SelectedItemProvider value={selectedItem}>
             {name ? (
               <ComboBoxValueSlot
-                field={
-                  formValue == 'text' || allowsCustomValue ? 'label' : 'value'
-                }
+                field={formValue == 'text' ? 'label' : 'value'}
                 name={name}
                 form={form}
                 onReset={onReset}
