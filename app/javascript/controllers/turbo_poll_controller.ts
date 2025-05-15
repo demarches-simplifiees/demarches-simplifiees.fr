@@ -2,9 +2,6 @@ import { httpRequest } from '@utils';
 
 import { ApplicationController } from './application_controller';
 
-const DEFAULT_POLL_INTERVAL = 3000;
-const DEFAULT_MAX_CHECKS = 20;
-
 // Periodically check the state of a URL.
 //
 // Each time the given URL is requested, a turbo-stream is rendered, causing the state to be refreshed.
@@ -14,83 +11,107 @@ const DEFAULT_MAX_CHECKS = 20;
 export class TurboPollController extends ApplicationController {
   static values = {
     url: String,
-    maxChecks: { type: Number, default: DEFAULT_MAX_CHECKS },
-    interval: { type: Number, default: DEFAULT_POLL_INTERVAL }
+    strategy: { type: String, default: 'fibonacci' },
+    interval: Number
   };
 
   declare readonly urlValue: string;
-  declare readonly intervalValue: number;
-  declare readonly maxChecksValue: number;
+  declare readonly strategyValue: PollingStrategy;
+  declare readonly intervalValue?: number;
 
-  #timer?: ReturnType<typeof setTimeout>;
-  #abortController?: AbortController;
+  #stop?: () => void;
 
   connect(): void {
-    this.schedule();
+    this.#stop = startPolling((signal) => this.refresh(signal), {
+      strategy: this.strategyValue,
+      baseDelay: this.intervalValue,
+      jitter: true
+    });
   }
 
   disconnect(): void {
-    this.cancel();
+    this.#stop?.();
   }
 
-  refresh() {
-    this.#abortController = new AbortController();
-
-    httpRequest(this.urlValue, { signal: this.#abortController.signal })
-      .turbo()
-      .catch(() => null);
-  }
-
-  private schedule(): void {
-    this.cancel();
-    this.#timer = setInterval(() => {
-      const nextState = this.nextState();
-
-      if (!nextState) {
-        this.cancel();
-      } else {
-        this.refresh();
-      }
-    }, this.intervalValue);
-  }
-
-  private cancel(): void {
-    clearInterval(this.#timer);
-    this.#abortController?.abort();
-    this.#abortController = window.AbortController
-      ? new AbortController()
-      : undefined;
-  }
-
-  private nextState(): PollState | false {
-    const state = pollers.get(this.urlValue);
-
-    if (!state) {
-      return this.resetState();
-    }
-
-    state.checks += 1;
-    if (state.checks <= this.maxChecksValue) {
-      return state;
-    } else {
-      this.resetState();
-      return false;
-    }
-  }
-
-  private resetState(): PollState {
-    const state = {
-      interval: this.intervalValue,
-      checks: 0
-    };
-    pollers.set(this.urlValue, state);
-    return state;
+  async refresh(signal?: AbortSignal) {
+    await httpRequest(this.urlValue, { signal }).turbo();
   }
 }
 
-type PollState = {
-  checks: number;
-};
+type PollingStrategy =
+  | 'fixed'
+  | 'linear'
+  | 'exponential'
+  | 'fibonacci'
+  | 'randomized';
 
-// We keep a global state of the pollers. It will be reset on every page change.
-const pollers = new Map<string, PollState>();
+interface PollOptions {
+  strategy: PollingStrategy;
+  baseDelay?: number;
+  maxDelay?: number;
+  jitter?: boolean;
+}
+
+function startPolling(
+  fn: (signal: AbortSignal) => Promise<void>,
+  { strategy, baseDelay = 1000, maxDelay = 30_000, jitter = false }: PollOptions
+) {
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout>;
+  let attempt = 0;
+  const fib = [baseDelay, baseDelay];
+
+  const nextDelay = (): number => {
+    let delay: number;
+
+    switch (strategy) {
+      case 'fixed':
+        delay = baseDelay;
+        break;
+      case 'linear':
+        delay = baseDelay * (attempt + 1);
+        break;
+      case 'exponential':
+        delay = baseDelay * 2 ** attempt;
+        break;
+      case 'fibonacci':
+        if (attempt < 2) {
+          delay = fib[attempt];
+        } else {
+          fib[attempt] = fib[attempt - 1] + fib[attempt - 2];
+          delay = fib[attempt];
+        }
+        break;
+      case 'randomized':
+        delay = baseDelay + Math.random() * baseDelay;
+        break;
+      default:
+        delay = baseDelay;
+    }
+
+    if (jitter && strategy !== 'randomized') {
+      delay += Math.random() * baseDelay;
+    }
+
+    return Math.min(delay, maxDelay);
+  };
+
+  const poll = async () => {
+    try {
+      await fn(controller.signal);
+    } catch (error) {
+      console.error('Polling error:', error);
+    }
+
+    attempt++;
+    const delay = nextDelay();
+    timer = setTimeout(poll, delay);
+  };
+
+  poll();
+
+  return () => {
+    clearTimeout(timer);
+    controller.abort();
+  };
+}

@@ -1,5 +1,5 @@
 - if export.present?
-  %div{ data: !export.available? && !export.failed? ? { controller: "turbo-poll", turbo_poll_url_value: polling_last_export_instructeur_procedure_path(export_format: export.format, statut: statut), turbo_poll_interval_value: 5_000, turbo_poll_max_checks_value: 6 } : {} }
+  %div{ data: !export.available? && !export.failed? ? { controller: "turbo-poll", turbo_poll_url_value: polling_last_export_instructeur_procedure_path(export_format: export.format, statut: statut), turbo_poll_interval_value: 5_000 } : {} }
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-my-2w') do |c|
       - c.with_body do
         %p
