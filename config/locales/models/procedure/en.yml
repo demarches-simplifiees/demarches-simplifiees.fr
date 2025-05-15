@@ -72,16 +72,18 @@ en:
               invalid: 'invalid format'
             draft_types_de_champ_public:
               format: 'Public field %{message}'
-              invalid_condition: "« %{value} » have an invalid logic"
-              empty_repetition: '« %{value} » requires at least one field'
-              empty_drop_down: '« %{value} » requires at least one option'
-              inconsistent_header_section: "« %{value} » %{custom_message}"
+              invalid_condition: "have an invalid logic"
+              empty_repetition: 'requires at least one field'
+              empty_drop_down: 'requires at least one option'
+              inconsistent_header_section: "%{custom_message}"
+              expression_reguliere_invalid: "is invalid"
             draft_types_de_champ_private:
               format: 'Private field %{message}'
-              invalid_condition: "« %{value} » have an invalid logic"
-              empty_repetition: '« %{value} » requires at least one field'
-              empty_drop_down: '« %{value} » requires at least one option'
-              inconsistent_header_section: "« %{value} » %{custom_message}"
+              invalid_condition: "have an invalid logic"
+              empty_repetition: 'requires at least one field'
+              empty_drop_down: 'requires at least one option'
+              inconsistent_header_section: "%{custom_message}"
+              expression_reguliere_invalid: "is invalid"
             attestation_template:
               format: "%{attribute} %{message}"
             initiated_mail:

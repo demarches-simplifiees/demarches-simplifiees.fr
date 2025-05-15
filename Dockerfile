@@ -36,7 +36,7 @@ RUN bundle config specific_platform x86_64-linux \
 FROM base
 ENV APP_PATH /app
 #----- minimum set of packages
-RUN apt-get update && apt-get install -y curl git postgresql-client libicu72 imagemagick gnupg zip
+RUN apt-get update && apt-get install -y curl git postgresql-client libicu72 poppler-utils imagemagick ghostscript gnupg zip
 RUN (curl -sL "https://deb.nodesource.com/setup_18.x" | bash -) \
       && apt-get install -y nodejs
 

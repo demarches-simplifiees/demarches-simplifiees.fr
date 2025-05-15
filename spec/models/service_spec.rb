@@ -1,6 +1,6 @@
 describe Service, type: :model do
   describe 'validation' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:params) do
       {
         nom: 'service des jardins',

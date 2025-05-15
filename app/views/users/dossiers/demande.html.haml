@@ -6,18 +6,15 @@
 .dossier-container.fr-mb-4w
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
-  - if @dossier.en_construction?
-    .fr-container
-      .fr-grid-row.fr-grid-row--center
-        .fr-col-xl-10
+  .fr-container
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-md-9
+        - if @dossier.en_construction?
           = render Dossiers::EnConstructionNotSubmittedComponent.new(dossier: @dossier, user: current_user)
 
-  = render partial: 'shared/dossiers/demande', locals: { dossier: @dossier, demande_seen_at: nil, profile: 'usager' }
+        = render partial: 'shared/dossiers/demande', locals: { dossier: @dossier, demande_seen_at: nil, profile: 'usager' }
 
-
-  - if !@dossier.read_only?
-    .fr-container.fr-mt-2w
-      .fr-grid-row
-        .fr-col-xl-8.fr-col-offset-xl-2
-          %p= link_to t('views.users.dossiers.demande.edit_dossier'), modifier_dossier_path(@dossier), class: 'fr-btn fr-btn-sm',
-            title: t('views.users.dossiers.demande.edit_dossier_title')
+        - if !@dossier.read_only?
+          .fr-px-2w.fr-mt-2w
+            %p= link_to t('views.users.dossiers.demande.edit_dossier'), modifier_dossier_path(@dossier), class: 'fr-btn fr-btn-sm',
+              title: t('views.users.dossiers.demande.edit_dossier_title')

@@ -24,7 +24,7 @@ describe 'service tasks' do
   describe 'service:notify_no_siret' do
     let(:task) { 'service:email_no_siret' }
     let!(:procedure_without_siret_service) { create(:procedure, :published, service: service, administrateur: administrateur) }
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:service) do
       s = build(:service, siret: nil, administrateur: administrateur)
       s.save(validate: false)

@@ -2,7 +2,6 @@ fr:
   layouts:
     header:
       files: Mes dossiers
-    menu_aria_label: 'Menu mon profil'
     go_superadmin: "Passer en super-admin"
     go_user: "Passer en usager"
     go_instructor: "Passer en instructeur"
@@ -11,7 +10,7 @@ fr:
     go_gestionnaire: "Passer en gestionnaire"
     profile: "Voir mon profil"
     logout: "Se déconnecter"
-    my_account: "Mon compte"
+    my_account: "Mon profil"
     connected_as: "connecté en tant qu’%{profile}"
     instructeur: instructeur
     administrateur: administrateur

@@ -19,7 +19,8 @@
 
               .fr-collapse{ id: "accordion-#{category}-#{index}" }
                 - description = t(:description, scope: [:faq, :subcategories, subcategory], default: nil) # i18n-tasks-use t("faq.subcategories.#{subcategory}.description")
-                %p= description if description.present?
+                - if description
+                  %p= description
 
                 %ul
                   - faqs.each do |faq|

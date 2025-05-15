@@ -117,12 +117,12 @@ describe User, type: :model do
         user = subject
         expect(user.valid_password?(password)).to be true
         expect(user.confirmed_at).to be_present
-        expect(user.email_verified_at).to be_present
+        expect(user.email_verified_at).not_to be_present
         expect(user.instructeur).to be_present
       end
 
       context 'with an administrateur' do
-        let(:admins) { [create(:administrateur)] }
+        let(:admins) { [administrateurs(:default_admin)] }
 
         it do
           user = subject
@@ -141,7 +141,7 @@ describe User, type: :model do
       end
 
       context 'with an existing instructeur' do
-        let(:old_admins) { [create(:administrateur)] }
+        let(:old_admins) { [administrateurs(:default_admin)] }
         let(:admins) { [create(:administrateur)] }
         let!(:instructeur) { create(:instructeur, email: 'i@mail.com', administrateurs: old_admins) }
 
@@ -224,19 +224,20 @@ describe User, type: :model do
 
   describe '.create_or_promote_to_gestionnaire' do
     let(:email) { 'inst1@gmail.com' }
-    let(:password) { 'un super password !' }
+    let(:password) { 'un super p1ssw0rd !' }
 
     subject { User.create_or_promote_to_gestionnaire(email, password) }
 
-    it 'verifies its email' do
+    it 'creates a gestionnaire with unverified email' do
       user = subject
-      expect(user.email_verified_at).to be_present
+      expect(user.email_verified_at).to be_nil
+      expect(user.reload.gestionnaire?).to be true
     end
   end
 
   describe 'invite_administrateur!' do
     let(:super_admin) { create(:super_admin) }
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
 
     let(:mailer_double) { double('mailer', deliver_later: true) }
@@ -283,7 +284,7 @@ describe User, type: :model do
 
   describe '#can_be_deleted?' do
     let(:user) { create(:user) }
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:instructeur) { create(:instructeur) }
     let(:expert) { create(:expert) }
 
@@ -382,7 +383,7 @@ describe User, type: :model do
 
       it { expect { subject }.not_to raise_error }
       it { expect { subject }.to change { FranceConnectInformation.count }.from(2).to(0) }
-      it { expect { subject }.to change { User.count }.from(1).to(0) }
+      it { expect { subject }.to change { User.count }.by(-1) }
     end
   end
 

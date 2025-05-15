@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    attributes:
+      procedure_revision:
+        ineligibilite_message: Message d’inéligibilité
+        ineligibilite_rules: Les conditions d’inéligibilité
+        hints:
+          ineligibilite_message: "Ce message sera affiché à l’usager si son dossier est bloqué et lui expliquera la raison de son inéligibilité."

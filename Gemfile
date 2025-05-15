@@ -18,6 +18,7 @@ gem 'aws-sdk-s3'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
+gem 'capybara-playwright-driver'
 gem 'charlock_holmes'
 gem 'chartkick'
 gem 'chunky_png'
@@ -104,6 +105,7 @@ gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'skylight'
 gem 'spreadsheet_architect'
+gem 'string-similarity'
 gem 'strong_migrations' # lint database migrations
 gem 'sys-proctable'
 gem 'turbo-rails'
@@ -137,6 +139,7 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'simplecov', require: false
   gem 'simplecov-cobertura', require: false
+  gem "test-prof"
   gem 'timecop'
   gem 'vcr'
   gem 'webmock'

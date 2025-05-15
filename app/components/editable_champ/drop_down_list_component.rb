@@ -23,4 +23,15 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
     max_length = 100
     @champ.enabled_non_empty_options.any? { _1.size > max_length }
   end
+
+  def react_props
+    react_input_opts(id: @champ.input_id,
+      class: 'fr-mt-1w',
+      name: @form.field_name(:value),
+      selected_key: @champ.selected,
+      items: @champ.enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1 : [_1, _1] },
+      empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil,
+      'aria-describedby': @champ.describedby_id,
+      'aria-labelledby': @champ.labelledby_id)
+  end
 end

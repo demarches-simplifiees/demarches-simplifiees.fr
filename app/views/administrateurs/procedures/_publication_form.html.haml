@@ -8,7 +8,7 @@
       %p.mb-2= t('.draft_changed_procedure_alert')
       = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
         - c.with_body do
-          = render Procedure::RevisionChangesComponent.new changes: procedure.revision_changes, previous_revision: procedure.published_revision
+          = render Procedure::RevisionChangesComponent.new new_revision: procedure.draft_revision, previous_revision: procedure.published_revision
       - if procedure.close?
         = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures, form: f }
     - elsif @procedure.brouillon? && @procedure.missing_steps.empty?

@@ -1,9 +1,14 @@
 fr:
   links:
     provider:
-      provided_by: "la DINUM"
-      title: "Direction Interministérielle au Numérique"
-      url: "https://numerique.gouv.fr"
+      logo:
+        src: "footer/logo-dmra-horisontal.png"
+        alt: "Logo DMRA"
+        height: 90
+        width: 240
+      provided_by: "la DMRA"
+      title: "Direction des talents et de l'innovation"
+      url: "https://www.service-public.pf/voir/annuaire/dgrh-direction-generale-des-ressources-humaines/"
     common:
       faq:
         label: "FAQ"
@@ -22,19 +27,18 @@ fr:
         legals: Informations légales
         resources: Ressources
         diagnostic: Diagnostic
-      description_1: Démarches simplifiées est un service propulsé par
-      link_1_label: la direction de la modernisation et des réformes de l'administration (DMRA)
-      link_1_url: "https://www.numerique.gouv.fr/dinum/"
+      description_1: Mes-Démarches, adaptation polynésienne de Démarches Simplifiées en France est un service propulsé par
+      link_1_label: la direction des talents et de l'innovation (DTI)
+      link_1_url: "https://www.fonction-publique.gov.pf/"
       link_2_label: Le code source
       description_2: est disponible en licence libre.
       copy_html: "Sauf mention contraire, les données publiques de ce site sont sous %{link}"
       license: "licence etalab 2.0"
       accessibilite:
         label: "Accessibilité : partiellement conforme"
-        title: "Consulter notre déclaration d’accessibilité"
       api_doc:
         label: "Documentation de l’API"
-        title: "Documentation graphql de l’API"
+        title: "Documentation de l’API au format graphql"
         url: "https://doc.demarches-simplifiees.fr/api-graphql"
       dinum:
         title: "Le site de la DINUM — Direction interministérielle du numérique"
@@ -43,14 +47,13 @@ fr:
       cgu:
         label: "CGU"
         title: "Conditions Générales d’Utilisation"
-        url: "https://doc.demarches-simplifiees.fr/cgu"
+        url: "https://mes-demarches.gitbook.io/documentation/cgu"
       rgpd:
         label: "Données personnelles"
         title: "Données personnelles"
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       code:
         label: "Code source"
-        title: "Le code ouvert de Mes-Démarches basé sur démarches-simplifiées" #DS
         url: "https://github.com/govpf/mes-demarches"
       contact_technique:
         label: "Contact technique"
@@ -58,42 +61,37 @@ fr:
       doc:
         label: "Documentation"
         title: "Documentation utilisateur"
-        url: "https://doc.demarches-simplifiees.fr"
+        url: "https://mes-demarches.gitbook.io/documentation"
       vote_feature:
         label: "Améliorer le site"
         title: "Votez pour vos améliorations prioritaires ou proposez votre propre idée"
       mentions_legales:
         label: "Mentions légales"
-        title: "Consulter nos Mentions légales"
       releases:
         label: "Nouveautés"
-        title: "Les dernière mises à jour de la plateforme"
+        title: "Nouveautés : Les dernière mises à jour de la plateforme"
         url: "https://github.com/govpf/mes-demarches/releases"
       security:
         label: "Sécurité"
-        title: "Vous avez identifié une faille, comment nous en informer"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
+        title: "Politique et procédure de sécurité"
+        url: "https://github.com/govpf/mes-demarches/blob/devpf/SECURITY.md"
       stats:
         label: "Statistiques"
-        title: "Statistiques d’usage"
       carte:
         label: "Carte de déploiement"
         title: "Carte de déploiement par département"
       status_page:
         label: "Disponibilité"
-        title: "Disponibilité du site demarches-simplifiees"
-        url: "https://status.demarches-simplifiees.fr"
+        title: "Statistiques de disponibilité du site demarches-simplifiees"
+        url: "https://updown.io/cugq"
       suivi:
         label: "Suivi d’audience et vie privée"
-        title: "Consulter notre politique de respect de la vie privée"
       solidarite_numerique:
         label: "Besoin d’aide avec vos démarches en ligne ?"
         title: "Avez-vous besoin d’aide concernant vos démarchez informatisées, essayez solidarite-numerique.fr"
         url: "https://www.solidarite-numerique.fr/cartographie/"
       cookies:
         label: Gestion des cookies
-        title: Gestion des cookies
       contact:
         label: Nous contacter
-        title: Nous contacter
       display_params: Paramètres d'affichage

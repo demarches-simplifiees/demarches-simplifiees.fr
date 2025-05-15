@@ -10,7 +10,7 @@
   = render NestedForms::FormOwnerComponent.new
   = form_for dossier_for_editing, url: brouillon_dossier_url(dossier), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } do |f|
 
-    = render Dossiers::ErrorsFullMessagesComponent.new(dossier: @dossier, errors: @errors || [])
+    = render Dossiers::ErrorsFullMessagesComponent.new(dossier: dossier)
     %header.mb-6
       .fr-highlight
         %p.fr-text--sm
@@ -24,5 +24,7 @@
     %fieldset.fr-fieldset= render EditableChamp::SectionComponent.new(dossier: dossier_for_editing, types_de_champ: dossier_for_editing.revision.types_de_champ_public)
 
     = render Dossiers::PendingCorrectionCheckboxComponent.new(dossier: dossier)
+
+  = render Dossiers::InvalidIneligibiliteRulesComponent.new(dossier: dossier)
 
   = render Dossiers::EditFooterComponent.new(dossier: dossier_for_editing, annotation: false)

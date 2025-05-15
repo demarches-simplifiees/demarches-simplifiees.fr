@@ -48,7 +48,7 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = ENV.fetch("FORCE_SSL", "1") == "1"
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -62,16 +62,20 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   if ENV['REDIS_CACHE_URL'].present?
-    redis_options = { url: ENV['REDIS_CACHE_URL'] }
-    redis_options[:ssl] = (ENV['REDIS_CACHE_SSL'] == 'enabled')
+    redis_options = {
+      url: ENV['REDIS_CACHE_URL'],
+      connect_timeout: 0.2,
+      error_handler: -> (method:, returning:, exception:) {
+        Sentry.capture_exception exception, level: 'warning',
+          tags: { method: method, returning: returning }
+      }
+    }
+
+    redis_options[:ssl] = ENV['REDIS_CACHE_SSL'] == 'enabled'
+
     if ENV['REDIS_CACHE_SSL_VERIFY_NONE'] == 'enabled'
       redis_options[:ssl_params] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
     end
-
-    redis_options[:error_handler] = -> (method:, returning:, exception:) {
-      Sentry.capture_exception exception, level: 'warning',
-        tags: { method: method, returning: returning }
-    }
 
     config.cache_store = :redis_cache_store, redis_options
   end

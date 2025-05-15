@@ -38,8 +38,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     }
 
     # Champs are automatically saved
-    expect(page).to have_button('Ajouter un champ', disabled: false)
-    page.refresh
+    expect(page).to have_button('Ajouter un champ', disabled: false, match: :first)
     expect(page).to have_selector('.type-de-champ', count: 3)
 
     # Multiple champs can be edited
@@ -234,11 +233,11 @@ describe 'As an administrateur I can edit types de champ', js: true do
       # It displays the estimate when adding a new champ
       add_champ
       select('Pièce justificative', from: 'Type de champ')
-      expect(page).to have_content('Durée de remplissage estimée : 2 min')
+      expect(page).to have_content('Durée de remplissage estimée : 3 min')
 
       # It updates the estimate when updating the champ
-      check 'Champ obligatoire'
-      expect(page).to have_content('Durée de remplissage estimée : 3 min')
+      uncheck 'Champ obligatoire'
+      expect(page).to have_content('Durée de remplissage estimée : 2 min')
 
       # It updates the estimate when removing the champ
       page.accept_alert do
@@ -263,7 +262,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
   end
 
   context 'header section' do
-    scenario 'invalid order, it pops up errors summary' do
+    scenario 'with public tdc, having invalid order, it pops up errors summary' do
       add_champ
       select('Titre de section', from: 'Type de champ')
       wait_until { procedure.reload.active_revision.types_de_champ_public.first&.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
@@ -286,6 +285,11 @@ describe 'As an administrateur I can edit types de champ', js: true do
         end
       end
       expect(page).to have_content("devrait être précédé d'un titre de niveau 1")
+
+      # check summary refresh
+      procedure.reload.active_revision.types_de_champ_private.each do |header_section|
+        expect(page).to have_link(header_section.libelle)
+      end
     end
   end
 

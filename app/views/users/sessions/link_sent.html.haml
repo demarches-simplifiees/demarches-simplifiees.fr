@@ -3,27 +3,26 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-.fr-container.fr-my-5w
-  .fr-grid-row
-    .fr-col-12.fr-col-offset-md-1.fr-col-md-7
-      %h1.fr-mt-6w Encore une petite étape !
+.fr-container
+  .fr-col-12.fr-col-md-6.fr-col-offset-md-3
+    %h1.fr-mt-6w.fr-h2.center
+      = t('views.confirmation.new.title')
 
-      %section
-        %p.fr-text--lead
-          Nous venons de vous envoyer un courriel sur votre boite email <strong>#{@email}</strong>.
-          Veuillez l’ouvrir et cliquer sur le lien de <strong>connexion sécurisée à #{Current.application_name}</strong>.
+    %p.center{ aria: { hidden: true } }= image_tag("user/confirmation-email.svg", alt: t('views.confirmation.new.image_alt'))
 
-        %p.fr-text--lead
-          Ce lien est <strong>valide une semaine</strong> et peut être réutilisé <strong>plusieurs fois</strong>.
+    = render Dsfr::AlertComponent.new(title: '', state: :info, heading_level: 'h2', extra_class_names: 'fr-mt-6w fr-mb-3w') do |c|
+      - c.with_body do
+        %p= t('views.users.sessions.link_sent.email_cta_html', email: @email)
+        %p= t('views.confirmation.new.email_guidelines_html')
 
-        %p.fr-text--sm.fr-text-mention--grey
-          Ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver. Si vous n’avez pas reçu de courriel (n’hésitez pas à vérifier dans les indésirables), cliquez sur le bouton ci-dessous.
+    %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
+      = t('views.confirmation.new.email_missing')
 
-      = button_to instructeurs_reset_link_sent_path, class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-mail-line', method: 'POST' do
-        Renvoyer le courriel
+    = button_to instructeurs_reset_link_sent_path, class: 'fr-btn fr-btn--secondary', method: 'POST' do
+      = t('views.confirmation.new.resent')
 
-      %section
-        %p.fr-mt-3w
-          Si vous voyez cette page trop souvent, #{link_to "consultez notre aide", t("links.common.faq.confirmer_compte_chaque_connexion_url")}
-        %p.fr-mt-3w
-          = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_admin_url)
+    %p.fr-text--sm.fr-text-mention--grey.fr-mt-3w
+      = t('views.users.sessions.link_sent.consult_help_page_html', href: t("links.common.faq.confirmer_compte_chaque_connexion_url"))
+
+    %p.fr-text--sm.fr-text-mention--grey.fr-mt-3w.fr-mb-6w
+      = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_admin_url)

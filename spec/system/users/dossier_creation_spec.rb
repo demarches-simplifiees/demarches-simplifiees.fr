@@ -42,11 +42,10 @@ describe 'Creating a new dossier:', js: true do
         let(:expected_birthday) { Date.new(1987, 12, 10) }
 
         before do
-          fill_in 'Date de naissance', with: birthday_format
+          fill_in 'Date de naissance', with: expected_birthday
         end
 
         context 'when the birthday is asked' do
-          let(:birthday_format) { '12-10-1987' }
           it_behaves_like 'the user can create a new draft'
         end
       end

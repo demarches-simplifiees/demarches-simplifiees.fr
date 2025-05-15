@@ -1,72 +1,87 @@
 import { session } from '@hotwired/turbo';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
-const Gon = z
-  .object({
-    autosave: z
-      .object({
-        debounce_delay: z.number().default(0),
-        status_visible_duration: z.number().default(0)
-      })
-      .default({}),
-    autocomplete: z
-      .object({
-        api_geo_url: z.string().optional(),
-        api_adresse_url: z.string().optional(),
-        api_education_url: z.string().optional()
-      })
-      .default({}),
-    locale: z.string().default('fr'),
-    matomo: z
-      .object({
-        cookieDomain: z.string().optional(),
-        domain: z.string().optional(),
-        enabled: z.boolean().default(false),
-        host: z.string().optional(),
-        key: z.string().or(z.number()).nullish()
-      })
-      .default({}),
-    sentry: z
-      .object({
-        key: z.string().nullish(),
-        enabled: z.boolean().default(false),
-        environment: z.string().optional(),
-        user: z.object({ id: z.string() }).default({ id: '' }),
-        browser: z.object({ modern: z.boolean() }).default({ modern: false }),
-        release: z.string().nullish()
-      })
-      .default({}),
-    crisp: z
-      .object({
-        key: z.string().nullish(),
-        enabled: z.boolean().default(false),
-        administrateur: z
-          .object({
-            email: z.string(),
-            DS_SIGN_IN_COUNT: z.number(),
-            DS_NB_DEMARCHES_BROUILLONS: z.number(),
-            DS_NB_DEMARCHES_ACTIVES: z.number(),
-            DS_NB_DEMARCHES_ARCHIVES: z.number(),
-            DS_ID: z.number()
-          })
-          .default({
+function nullish<T, S>(struct: s.Struct<T, S>) {
+  return s.optional(s.union([s.literal(null), struct]));
+}
+
+const Gon = s.defaulted(
+  s.type({
+    autosave: s.defaulted(
+      s.type({
+        debounce_delay: s.defaulted(s.number(), 0),
+        status_visible_duration: s.defaulted(s.number(), 0)
+      }),
+      {}
+    ),
+    autocomplete: s.defaulted(
+      s.partial(
+        s.type({
+          api_geo_url: s.string(),
+          api_adresse_url: s.string(),
+          api_education_url: s.string()
+        })
+      ),
+      {}
+    ),
+    locale: s.defaulted(s.string(), 'fr'),
+    matomo: s.defaulted(
+      s.type({
+        cookieDomain: s.optional(s.string()),
+        domain: s.optional(s.string()),
+        enabled: s.defaulted(s.boolean(), false),
+        host: s.optional(s.string()),
+        key: nullish(s.union([s.string(), s.number()]))
+      }),
+      {}
+    ),
+    sentry: s.defaulted(
+      s.type({
+        key: nullish(s.string()),
+        enabled: s.defaulted(s.boolean(), false),
+        environment: s.optional(s.string()),
+        user: s.defaulted(s.type({ id: s.string() }), { id: '' }),
+        browser: s.defaulted(s.type({ modern: s.boolean() }), {
+          modern: false
+        }),
+        release: nullish(s.string())
+      }),
+      {}
+    ),
+    crisp: s.defaulted(
+      s.type({
+        key: nullish(s.string()),
+        enabled: s.defaulted(s.boolean(), false),
+        administrateur: s.defaulted(
+          s.type({
+            email: s.string(),
+            DS_SIGN_IN_COUNT: s.number(),
+            DS_NB_DEMARCHES_BROUILLONS: s.number(),
+            DS_NB_DEMARCHES_ACTIVES: s.number(),
+            DS_NB_DEMARCHES_ARCHIVES: s.number(),
+            DS_ID: s.number()
+          }),
+          {
             email: '',
             DS_SIGN_IN_COUNT: 0,
             DS_NB_DEMARCHES_BROUILLONS: 0,
             DS_NB_DEMARCHES_ACTIVES: 0,
             DS_NB_DEMARCHES_ARCHIVES: 0,
             DS_ID: 0
-          })
-      })
-      .default({}),
-    defaultQuery: z.string().optional(),
-    defaultVariables: z.string().optional()
-  })
-  .default({});
+          }
+        )
+      }),
+      {}
+    ),
+    defaultQuery: s.optional(s.string()),
+    defaultVariables: s.optional(s.string())
+  }),
+  {}
+);
 declare const window: Window & typeof globalThis & { gon: unknown };
 
 export function getConfig() {
-  return Gon.parse(window.gon);
+  return s.create(window.gon, Gon);
 }
 
 export function show(el: Element | null) {

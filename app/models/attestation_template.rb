@@ -2,10 +2,15 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, inverse_of: :attestation_template_v2
+  belongs_to :procedure, inverse_of: :attestation_template
 
   has_one_attached :logo
   has_one_attached :signature
+
+  enum state: {
+    draft: 'draft',
+    published: 'published'
+  }
 
   validates :title, tags: true, if: -> { procedure.present? && version == 1 }
   validates :body, tags: true, if: -> { procedure.present? && version == 1 }
@@ -67,9 +72,10 @@ class AttestationTemplate < ApplicationRecord
   }.freeze
 
   def attestation_for(dossier)
-    attestation = Attestation.new(title: replace_tags(title, dossier, escape: false))
+    attestation = Attestation.new
+    attestation.title = replace_tags(title, dossier, escape: false) if version == 1
     attestation.pdf.attach(
-      io: build_pdf(dossier),
+      io: StringIO.new(build_pdf(dossier)),
       filename: "attestation-dossier-#{dossier.id}.pdf",
       content_type: 'application/pdf',
       # we don't want to run virus scanner on this file
@@ -91,7 +97,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def dup
-    attestation_template = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
+    attestation_template = super
     ClonePiecesJustificativesService.clone_attachments(self, attestation_template)
     attestation_template
   end
@@ -184,7 +190,7 @@ class AttestationTemplate < ApplicationRecord
 
     if dossier.present?
       # 2x faster this way than with `replace_tags` which would reparse text
-      used_tags = tiptap.used_tags_and_libelle_for(json.deep_symbolize_keys)
+      used_tags = TiptapService.used_tags_and_libelle_for(json.deep_symbolize_keys)
       substitutions = tags_substitutions(used_tags, dossier, escape: false)
       body = tiptap.to_html(json, substitutions)
 
@@ -208,18 +214,42 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def used_tags
-    used_tags_for(title) + used_tags_for(body)
+    if version == 2
+      json = json_body&.deep_symbolize_keys
+      TiptapService.used_tags_and_libelle_for(json.deep_symbolize_keys).map(&:first)
+    else
+      used_tags_for(title) + used_tags_for(body)
+    end
   end
 
   def build_pdf(dossier)
+    if version == 2
+      build_v2_pdf(dossier)
+    else
+      build_v1_pdf(dossier)
+    end
+  end
+
+  def build_v1_pdf(dossier)
     attestation = render_attributes_for(dossier: dossier)
-    attestation_view = ApplicationController.render(
+    ApplicationController.render(
       template: 'administrateurs/attestation_templates/show',
       formats: :pdf,
       assigns: { attestation: attestation },
       locals: md_version(dossier.procedure)
     )
+  end
 
-    StringIO.new(attestation_view)
+  def build_v2_pdf(dossier)
+    body = render_attributes_for(dossier:).fetch(:body)
+
+    html = ApplicationController.render(
+      template: '/administrateurs/attestation_template_v2s/show',
+      formats: [:html],
+      layout: 'attestation',
+      assigns: { attestation_template: self, body: body }
+    )
+
+    WeasyprintService.generate_pdf(html, { procedure_id: procedure.id, dossier_id: dossier.id })
   end
 end

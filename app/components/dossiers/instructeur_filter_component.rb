@@ -8,10 +8,6 @@ class Dossiers::InstructeurFilterComponent < ApplicationComponent
 
   attr_reader :procedure, :procedure_presentation, :statut, :field_id
 
-  def filterable_fields_for_select
-    procedure_presentation.filterable_fields_options
-  end
-
   def field_type
     return :text if field_id.nil?
     procedure_presentation.field_type(field_id)
@@ -19,5 +15,17 @@ class Dossiers::InstructeurFilterComponent < ApplicationComponent
 
   def options_for_select_of_field
     procedure_presentation.field_enum(field_id)
+  end
+
+  def filter_react_props
+    {
+      selected_key: @field_id || '',
+      items: procedure_presentation.filterable_fields_options,
+      name: :field,
+      id: 'search-filter',
+      'aria-describedby': 'instructeur-filter-combo-label',
+      form: 'filter-component',
+      data: { no_autosubmit: 'input blur', no_autosubmit_on_empty: 'true', autosubmit_target: 'input' }
+    }
   end
 end

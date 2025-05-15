@@ -45,6 +45,9 @@
         #beta
           Env Test
 
+      #sticky-header.sticky-header-container
+        = content_for(:sticky_header)
+
       = render partial: "layouts/header"
       %main#contenu{ role: :main }
         = render partial: "layouts/flash_messages"
@@ -56,7 +59,5 @@
       - else
         = render 'footer'
 
-      - if Rails.env.development?
-        = vite_typescript_tag 'axe-core'
       = yield :charts_js
     = render Attachment::ProgressBarComponent.new

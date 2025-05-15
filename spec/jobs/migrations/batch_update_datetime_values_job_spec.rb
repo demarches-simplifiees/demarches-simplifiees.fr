@@ -28,6 +28,10 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   end
 
   context "when the value is a date not convertible to IS8061" do
+    before do
+      datetime_champ.type_de_champ.update!(mandatory: false)
+    end
+
     let!(:datetime_champ) { build(:champ_datetime, value: "blabla") }
 
     subject { described_class.perform_now([datetime_champ.id]) }

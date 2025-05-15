@@ -14,4 +14,9 @@
         %p
           Les informations sur l'entreprise arriveront d’ici quelques heures.
 
-= render partial: "shared/dossiers/demande", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at, profile: 'instructeur' }
+.fr-container
+  .fr-grid-row.fr-grid-row--center
+    - summary = ViewableChamp::HeaderSectionsSummaryComponent.new(dossier: @dossier, is_private: false)
+    = render summary
+    %div{ class: class_names("fr-col-12", "fr-col-xl-9" => summary.render?, "fr-col-xl-8" => !summary.render?) }
+      = render partial: "shared/dossiers/demande", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at, profile: 'instructeur' }

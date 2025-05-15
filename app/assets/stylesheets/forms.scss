@@ -431,41 +431,6 @@
     margin-bottom: 0;
   }
 
-  [data-reach-combobox-input] {
-    &:not([class^='width-']) {
-      width: 100%;
-      min-width: 50%;
-      max-width: 100%;
-    }
-
-    &:focus {
-      border-color: $blue-france-500;
-    }
-  }
-
-  [data-reach-combobox-token-list] {
-    padding: $default-spacer;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    list-style: none;
-  }
-
-  [data-reach-combobox-token] button {
-    border: solid 1px $border-grey;
-    border-radius: 4px;
-    padding: $default-spacer;
-    margin-right: $default-spacer;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-
-  [data-reach-combobox-token] button:focus {
-    background-color: $black;
-    color: $white;
-  }
-
   .editable-champ {
     &:not(.editable-champ-carte):not(.editable-champ-te_fenua) .algolia-autocomplete {
       margin-bottom: 2 * $default-padding;
@@ -599,91 +564,8 @@
   }
 }
 
-[data-react-component-value^="ComboMultiple"] {
+.fr-ds-combobox__multiple {
   margin-bottom: $default-fields-spacer;
-
-  [data-reach-combobox-input] {
-    flex-grow: 1;
-    background-image: image-url("icons/chevron-down");
-    background-size: 14px;
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    border-radius: 4px;
-    border: solid 1px $border-grey;
-    padding: $default-padding;
-    margin: $default-spacer;
-    margin-top: 0;
-    width: 100%;
-  }
-
-  ul {
-    list-style: none;
-
-    li {
-      margin-right: $default-spacer;
-      display: inline-block;
-    }
-  }
-}
-
-[data-reach-combobox-token-label] {
-  border: 1px solid #CCCCCC;
-  border-radius: 4px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-[data-reach-combobox-option] {
-  font-size: 16px;
-  list-style-type: none;
-}
-
-[data-reach-combobox-option][aria-selected="true"] {
-  background: $light-blue !important;
-  color: $white;
-}
-
-[data-reach-combobox-separator] {
-  font-size: 16px;
-  color: $dark-grey;
-  background: $light-grey;
-  padding: $default-spacer;
-}
-
-[data-reach-combobox-no-results] {
-  font-size: 16px;
-  color: $dark-grey;
-  background: $light-grey;
-  padding: $default-spacer;
-}
-
-[data-reach-combobox-token] button {
-  cursor: pointer;
-  background-color: transparent;
-  background-image: none;
-  border: none;
-  line-height: 1;
-  padding: 0;
-  margin-right: 4px;
-  display: flex;
-  align-items: center !important;
-}
-
-[data-reach-combobox-input] button:focus {
-  outline-color: $light-blue;
-}
-
-[data-fr-theme="dark"] [data-reach-combobox-popover] {
-  border: none;
-  background: var(--background-action-low-blue-france);
-}
-
-[data-fr-theme="dark"] [data-reach-combobox-option]:hover {
-  background: var(--background-action-low-blue-france-hover);
-}
-
-[data-reach-combobox-popover] {
-  z-index: 20;
 }
 
 .fconnect-form {
@@ -698,51 +580,17 @@ textarea::placeholder {
   color: $dark-grey;
 }
 
-@media (max-width: 62em) {
-
-  .padded-fixed-footer {
-    padding-top: 120px;
-  }
-}
-
-@media (min-width: 62em) {
-
-  .padded-fixed-footer {
-    padding-top: 60px;
-  }
-}
-
-[data-fr-theme="dark"] .fixed-footer {
-  border-top: 2px solid var(--background-action-low-blue-france-hover);
-  background-color: var(--background-action-low-blue-france);
-}
-
 .mandatory {
   fill: currentColor;
 }
 
-.fixed-footer {
-  border-top: 2px solid $blue-france-500;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding-top: $default-padding;
-  background-color: $white;
-  z-index: 2;
-}
-
-.fr-menu__list {
+:not(.fr-translate) .fr-menu__list {
   padding: $default-spacer;
   overflow-y: auto;
 
   .fr-menu__item {
     list-style-type: none;
     margin-bottom: $default-spacer;
-
-    &[aria-selected] {
-      font-weight: bold;
-    }
   }
 }
 

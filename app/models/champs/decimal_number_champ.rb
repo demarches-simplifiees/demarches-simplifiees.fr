@@ -36,6 +36,6 @@ class Champs::DecimalNumberChamp < Champ
   def format_value
     return if value.blank?
 
-    self.value = value.tr(",", ".")
+    self.value = value.tr(",", ".").gsub(/[[:space:]]/, "")
   end
 end

@@ -37,4 +37,32 @@ describe AssignTo, type: :model do
       end
     end
   end
+
+  describe '#cancel_notifications_for_inactive_instructeurs' do
+    let(:period) { AssignTo::MIN_INACTIVE_DAYS + 1 }
+    let(:procedure) { create(:procedure) }
+    let(:instructeur) { create(:instructeur) }
+    let(:assign_to) { create(:assign_to, procedure: procedure, instructeur:, updated_at: period.days.ago) }
+    describe "for instructeurs without followed dossier" do
+      it "cancel notifications" do
+        expect(assign_to.instant_email_dossier_notifications_enabled).to eq(true)
+        AssignTo.cancel_notifications_for_inactive_instructeurs
+        assign_to.reload
+        expect(assign_to.instant_email_dossier_notifications_enabled).to eq(false)
+      end
+    end
+    describe "for instructeurs who followed dossiers more than X days ago" do
+      let(:dossier) { create(:dossier, procedure:) }
+
+      it "cancel notifications" do
+        old_date = period.days.ago
+        instructeur.follow(dossier)
+        instructeur.follows.first.update(demande_seen_at: old_date, annotations_privees_seen_at: old_date, avis_seen_at: old_date, messagerie_seen_at: old_date)
+        expect(assign_to.instant_email_dossier_notifications_enabled).to eq(true)
+        AssignTo.cancel_notifications_for_inactive_instructeurs
+        assign_to.reload
+        expect(assign_to.instant_email_dossier_notifications_enabled).to eq(false)
+      end
+    end
+  end
 end

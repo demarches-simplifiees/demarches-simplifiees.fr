@@ -3,19 +3,19 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
-      "fingerprint": "1b805585567775589825c0eda58cb84c074fc760d0a7afb101c023a51427f2b5",
+      "fingerprint": "26f504696b074d18ef3f5568dc8f6a46d1283a67fe37822498fa25d0409664ab",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/dossiers/_merci.html.haml",
-      "line": 26,
+      "line": 30,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed",
+      "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed_html_source(\"site\")",
       "render_path": [
         {
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 309,
+          "line": 320,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -74,7 +74,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped parameter value",
       "file": "app/views/faq/show.html.haml",
-      "line": 12,
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Redcarpet::Markdown.new(Redcarpet::TrustedRenderer.new(view_context), :autolink => true).render(loader_service.find(\"#{params[:category]}/#{params[:slug]}\").content)",
       "render_path": [
@@ -237,6 +237,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-04-23 18:27:12 +0200",
+  "updated": "2024-06-10 11:21:19 +0200",
   "brakeman_version": "6.1.2"
 }

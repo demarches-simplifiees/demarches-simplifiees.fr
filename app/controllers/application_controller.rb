@@ -117,7 +117,7 @@ class ApplicationController < ActionController::Base
 
   def set_locale(locale)
     if locale && locale.to_sym.in?(I18n.available_locales)
-      cookies[:locale] = locale
+      cookies[:locale] = { value: locale, secure: Rails.env.production?, httponly: true }
       if user_signed_in?
         current_user.update(locale: locale)
       end
@@ -312,7 +312,8 @@ class ApplicationController < ActionController::Base
       path == '/contact-admin' ||
       path.start_with?('/connexion-par-jeton') ||
       path.start_with?('/api/') ||
-      path.start_with?('/lien-envoye')
+      path.start_with?('/lien-envoye') ||
+      path.start_with?('/faq')
 
       false
     else

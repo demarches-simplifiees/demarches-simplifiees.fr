@@ -1,6 +1,6 @@
 describe API::V2::BaseController, type: :controller do
   describe 'ensure_authorized_network and token_is_not_expired' do
-    let(:admin) { create(:administrateur) }
+    let(:admin) { administrateurs(:default_admin) }
     let(:token_bearer_couple) { APIToken.generate(admin) }
     let(:token) { token_bearer_couple[0] }
     let(:bearer) { token_bearer_couple[1] }

@@ -1,5 +1,6 @@
 
 .card
+  = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_admin_procedure_groupe_instructeur_path(@procedure, groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
   .card-title Affectation des instructeurs
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
@@ -9,14 +10,8 @@
       - if disabled_as_super_admin
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
       - else
-        = hidden_field_tag :emails, nil
-        = react_component("ComboMultiple",
-          options: available_instructeur_emails, selected: [], disabled: [],
-          group: '.instructeur-wrapper',
-          id: 'instructeur_emails',
-          name: 'emails',
-          label: 'Emails',
-          acceptNewValues: true)
+        %react-fragment
+          = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
 
       = f.submit 'Affecter', class: 'fr-btn', disabled: disabled_as_super_admin
 

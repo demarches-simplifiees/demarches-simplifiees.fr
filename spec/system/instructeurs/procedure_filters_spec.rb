@@ -40,7 +40,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add created_at column", js: true do
+  scenario "should add be able to add created_at column", chrome: true do
     add_column("Créé le")
     within ".dossiers-table" do
       expect(page).to have_link("Créé le")
@@ -48,7 +48,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add and remove custom type_de_champ column", js: true do
+  scenario "should add be able to add and remove custom type_de_champ column", chrome: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
@@ -88,33 +88,13 @@ describe "procedure filters" do
 
   scenario "should be able to user custom fiters", js: true do
     # use date filter
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
-    find('#search-filter', wait: 5).click
-    find('.fr-menu__item', text: "En construction le", wait: 5).click
-    find("input#value[type=date]", visible: true)
-    fill_in "Valeur", with: "10/10/2010"
-    click_button "Ajouter le filtre"
-    expect(page).to have_no_css("#search-filter", visible: true)
+    add_filter("En construction le", "10/10/2010", type: :date)
 
     # use statut dropdown filter
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
-    find('#search-filter', wait: 5).click
-    find('.fr-menu__item', text: "Statut", wait: 5).click
-    find("select#value", visible: false)
-    select 'En construction', from: "Valeur"
-    click_button "Ajouter le filtre"
-    expect(page).to have_no_css("#search-filter", visible: true)
+    add_filter('Statut', 'En construction', type: :enum)
 
     # use choice dropdown filter
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
-    find('#search-filter', wait: 5).click
-    find('.fr-menu__item', text: "Choix unique", wait: 5).click
-    find("select#value", visible: false)
-    select 'val1', from: "Valeur"
-    click_button "Ajouter le filtre"
+    add_filter('Choix unique', 'val1', type: :enum)
   end
 
   describe 'with a vcr cached cassette' do
@@ -124,14 +104,7 @@ describe "procedure filters" do
       departement_champ.reload
       champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
 
-      click_on 'Sélectionner un filtre'
-      wait_until { all("#search-filter").size == 1 }
-      find('#search-filter', wait: 5).click
-      find('.fr-menu__item', text: departement_champ.libelle, wait: 5).click
-      find("select#value", visible: true)
-      select champ_select_value, from: "Valeur"
-      click_button "Ajouter le filtre"
-      find("select#value", visible: false) # w8 for filter to be applied
+      add_filter(departement_champ.libelle, champ_select_value, type: :enum)
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
     end
 
@@ -140,14 +113,7 @@ describe "procedure filters" do
       region_champ.update!(value: 'Bretagne', external_id: '53')
       region_champ.reload
 
-      click_on 'Sélectionner un filtre'
-      wait_until { all("#search-filter").size == 1 }
-      find('#search-filter', wait: 5).click
-      find('.fr-menu__item', text: region_champ.libelle, wait: 5).click
-      find("select#value", visible: true)
-      select region_champ.value, from: "Valeur"
-      click_button "Ajouter le filtre"
-      find("select#value", visible: false) # w8 for filter to be applied
+      add_filter(region_champ.libelle, region_champ.value, type: :enum)
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
     end
   end
@@ -155,7 +121,7 @@ describe "procedure filters" do
   scenario "should be able to add and remove two filters for the same field", js: true do
     add_filter(type_de_champ.libelle, champ.value)
     add_filter(type_de_champ.libelle, champ_2.value)
-    add_enum_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label)
+    add_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label, type: :enum)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -185,40 +151,40 @@ describe "procedure filters" do
     end
   end
 
+  def add_filter(column_name, filter_value, type: :text)
+    click_on 'Sélectionner un filtre'
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter + button', wait: 5).click
+    find('.fr-menu__item', text: column_name, wait: 5).click
+    case type
+    when :text
+      fill_in "Valeur", with: filter_value
+    when :date
+      find("input#value[type=date]", visible: true)
+      fill_in "Valeur", with: Date.parse(filter_value)
+    when :enum
+      find("select#value", visible: false)
+      select filter_value, from: "Valeur"
+    end
+    click_button "Ajouter le filtre"
+    expect(page).to have_no_css("#search-filter", visible: true)
+  end
+
   def remove_filter(filter_value)
     click_link text: filter_value
   end
 
-  def add_filter(column_name, filter_value)
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
-    find('#search-filter', wait: 5).click
-    find('.fr-menu__item', text: column_name, wait: 5).click
-    fill_in "Valeur", with: filter_value
-    click_button "Ajouter le filtre"
-    expect(page).to have_no_css("#search-filter", visible: true)
-  end
-
-  def add_enum_filter(column_name, filter_value)
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
-    find('#search-filter', wait: 5).click
-    find('.fr-menu__item', text: column_name, wait: 5).click
-    select filter_value, from: "Valeur"
-    click_button "Ajouter le filtre"
-    expect(page).to have_no_css("#search-filter", visible: true)
-  end
-
   def add_column(column_name)
     click_on 'Personnaliser'
-    select_combobox('Colonne à afficher', column_name, column_name, check: false)
+    select_combobox('Colonne à afficher', column_name)
     click_button "Enregistrer"
   end
 
   def remove_column(column_name)
     click_on 'Personnaliser'
-    click_button column_name
-    find("body").native.send_key("Escape")
+    within '.fr-tag-list' do
+      find('.fr-tag', text: column_name).find('button').click
+    end
     click_button "Enregistrer"
   end
 end

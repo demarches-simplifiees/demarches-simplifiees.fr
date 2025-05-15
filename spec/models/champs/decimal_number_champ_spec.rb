@@ -28,6 +28,12 @@ describe Champs::DecimalNumberChamp do
       end
     end
 
+    context 'when value contain space' do
+      let(:champ) { create(:champ_decimal_number, :private, value:) }
+      let(:value) { ' 2.6666 ' }
+      it { expect(champ.value).to eq('2.6666') }
+    end
+
     context 'when the value has too many decimal' do
       let(:value) { '2.6666' }
 
@@ -90,5 +96,22 @@ describe Champs::DecimalNumberChamp do
        end
      end
    end
+  end
+
+  describe 'for_export' do
+    let(:champ) { create(:champ_decimal_number, value:) }
+    subject { champ.for_export }
+    context 'with nil' do
+      let(:value) { 0 }
+      it { is_expected.to eq(0.0) }
+    end
+    context 'with simple number' do
+      let(:value) { "120" }
+      it { is_expected.to eq(120) }
+    end
+    context 'with number having spaces' do
+      let(:value) { " 120 " }
+      it { is_expected.to eq(120) }
+    end
   end
 end

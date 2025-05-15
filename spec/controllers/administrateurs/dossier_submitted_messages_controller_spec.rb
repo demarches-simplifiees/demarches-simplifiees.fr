@@ -1,5 +1,5 @@
 describe Administrateurs::DossierSubmittedMessagesController, type: :controller do
-   let(:administrateur) { create(:administrateur) }
+   let(:administrateur) { administrateurs(:default_admin) }
 
    before { sign_in(administrateur.user) }
 
@@ -34,7 +34,7 @@ describe Administrateurs::DossierSubmittedMessagesController, type: :controller 
    describe '#edit' do
      context 'when procedure is draft and have a DossierSubmittedMessage' do
        let(:procedure) { create(:procedure, :with_dossier_submitted_message, administrateur: administrateur) }
-
+       render_views
        it 'assigns the existing DossierSubmittedMessage' do
          get(:edit, params: { procedure_id: procedure.id })
          expect(response).to have_http_status(200)

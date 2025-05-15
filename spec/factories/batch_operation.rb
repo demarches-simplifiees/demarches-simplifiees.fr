@@ -9,7 +9,7 @@ FactoryBot.define do
     trait :archiver do
       operation { BatchOperation.operations.fetch(:archiver) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure),
           create(:dossier, :with_individual, :refuse, procedure: procedure),
@@ -21,7 +21,7 @@ FactoryBot.define do
     trait :desarchiver do
       operation { BatchOperation.operations.fetch(:desarchiver) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure, archived: true),
           create(:dossier, :with_individual, :refuse, procedure: procedure, archived: true),
@@ -33,7 +33,7 @@ FactoryBot.define do
     trait :passer_en_instruction do
       operation { BatchOperation.operations.fetch(:passer_en_instruction) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_construction, procedure: procedure),
           create(:dossier, :with_individual, :en_construction, procedure: procedure)
@@ -44,7 +44,7 @@ FactoryBot.define do
     trait :repousser_expiration do
       operation { BatchOperation.operations.fetch(:repousser_expiration) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago),
           create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago)
@@ -55,7 +55,7 @@ FactoryBot.define do
     trait :accepter do
       operation { BatchOperation.operations.fetch(:accepter) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
           create(:dossier, :with_individual, :en_instruction, procedure: procedure)
@@ -66,7 +66,7 @@ FactoryBot.define do
     trait :refuser do
       operation { BatchOperation.operations.fetch(:refuser) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
           create(:dossier, :with_individual, :en_instruction, procedure: procedure)
@@ -77,7 +77,7 @@ FactoryBot.define do
     trait :classer_sans_suite do
       operation { BatchOperation.operations.fetch(:classer_sans_suite) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
           create(:dossier, :with_individual, :en_instruction, procedure: procedure)
@@ -88,7 +88,7 @@ FactoryBot.define do
     trait :follow do
       operation { BatchOperation.operations.fetch(:follow) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
           create(:dossier, :with_individual, :en_construction, procedure: procedure)
@@ -99,7 +99,7 @@ FactoryBot.define do
     trait :unfollow do
       operation { BatchOperation.operations.fetch(:unfollow) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure, followers_instructeurs: procedure.instructeurs),
           create(:dossier, :with_individual, :en_construction, procedure: procedure, followers_instructeurs: procedure.instructeurs)
@@ -110,7 +110,7 @@ FactoryBot.define do
     trait :restaurer do
       operation { BatchOperation.operations.fetch(:restaurer) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure, hidden_by_administration_at: Time.zone.now),
           create(:dossier, :with_individual, :refuse, procedure: procedure, hidden_by_administration_at: Time.zone.now)
@@ -121,7 +121,7 @@ FactoryBot.define do
     trait :repasser_en_construction do
       operation { BatchOperation.operations.fetch(:repasser_en_construction) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
           create(:dossier, :with_individual, :en_instruction, procedure: procedure)
@@ -132,7 +132,7 @@ FactoryBot.define do
     trait :supprimer do
       operation { BatchOperation.operations.fetch(:supprimer) }
       after(:build) do |batch_operation, evaluator|
-        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure),
           create(:dossier, :with_individual, :refuse, procedure: procedure)

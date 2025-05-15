@@ -1,6 +1,6 @@
 describe PiecesJustificativesService do
   describe 'pjs_for_champs' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }, { type: :repetition, children: [{ type: :piece_justificative }] }]) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, mandatory: false }, { type: :repetition, mandatory: false, children: [{ type: :piece_justificative, mandatory: false }] }]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
     let(:witness) { create(:dossier, procedure: procedure) }
@@ -54,8 +54,7 @@ describe PiecesJustificativesService do
       let(:second_champ) { repetition(dossier).champs.second }
 
       before do
-        # pf repetition has always one row by default
-        # repetition(dossier).add_row(dossier.revision)
+        repetition(dossier).add_row(dossier.revision)
         attach_file_to_champ(first_champ)
         attach_file_to_champ(first_champ)
 
@@ -478,8 +477,8 @@ describe PiecesJustificativesService do
     let(:user_profile) { build(:administrateur) }
     let(:types_de_champ_public) do
       [
-        { type: :repetition, children: [{ type: :piece_justificative }] },
-        { type: :repetition, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
+        { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }] },
+        { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
       ]
     end
 
@@ -511,12 +510,10 @@ describe PiecesJustificativesService do
       repet_0 = repetition(dossier_1, index: 0)
       repet_1 = repetition(dossier_1, index: 1)
 
-      # pf repetition has always one row by default
-      # repet_0.add_row(dossier_1.revision)
+      repet_0.add_row(dossier_1.revision)
       repet_0.add_row(dossier_1.revision)
 
-      # pf repetition has always one row by default
-      # repet_1.add_row(dossier_1.revision)
+      repet_1.add_row(dossier_1.revision)
       repet_1.add_row(dossier_1.revision)
     end
 

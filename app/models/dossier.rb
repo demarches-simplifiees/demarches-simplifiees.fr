@@ -157,7 +157,7 @@ class Dossier < ApplicationRecord
     state :sans_suite
 
     event :passer_en_construction, after: :after_passer_en_construction, after_commit: :after_commit_passer_en_construction do
-      transitions from: :brouillon, to: :en_construction
+      transitions from: :brouillon, to: :en_construction, guard: :can_passer_en_construction?
     end
 
     event :passer_en_instruction, after: :after_passer_en_instruction, after_commit: :after_commit_passer_en_instruction do
@@ -563,6 +563,12 @@ class Dossier < ApplicationRecord
     procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
   end
 
+  def can_passer_en_construction?
+    return true if !revision.ineligibilite_enabled || !revision.ineligibilite_rules
+
+    !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
+  end
+
   def can_passer_en_instruction?
     return false if blocked_with_pending_correction?
 
@@ -897,6 +903,7 @@ class Dossier < ApplicationRecord
 
     resolve_pending_correction!
     process_sva_svr!
+    remove_piece_justificative_file_not_visible!
   end
 
   def process_declarative!
@@ -937,6 +944,15 @@ class Dossier < ApplicationRecord
     champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
+  def remove_piece_justificative_file_not_visible!
+    champs.each do |champ|
+      next unless champ.piece_justificative_file.attached?
+      next if champ.visible?
+
+      champ.piece_justificative_file.purge_later
+    end
+  end
+
   def check_mandatory_and_visible_champs
     champs_for_revision(scope: :public)
       .filter { _1.child? ? _1.parent.visible? : true }
@@ -945,6 +961,7 @@ class Dossier < ApplicationRecord
       .map do |champ|
         champ.errors.add(:value, :missing)
       end
+      .each { errors.import(_1) }
   end
 
   def demander_un_avis!(avis)
@@ -1154,6 +1171,18 @@ class Dossier < ApplicationRecord
 
   def termine_and_accuse_lecture?
     procedure.accuse_lecture? && termine?
+  end
+
+  def track_can_passer_en_construction
+    if !revision.ineligibilite_enabled
+      yield
+      [true, true] # without eligibilite rules, we never reach dossier.champs.visible?, don't cache anything
+    else
+      from = can_passer_en_construction? # with eligibilite rules, self.champ[x].visible is cached by passing thru conditions checks
+      yield
+      champs.map(&:reset_visible) # we must reset self.champs[x].visible?, because an update occurred and we should re-evaluate champs[x] visibility
+      [from, can_passer_en_construction?]
+    end
   end
 
   # dossier

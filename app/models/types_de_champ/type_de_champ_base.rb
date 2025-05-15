@@ -76,12 +76,12 @@ class TypesDeChamp::TypeDeChampBase
       when 2
         champ_value(champ)
       else
-        champ.valid_value.presence || champ_default_api_value(version)
+        champ.value.presence || champ_default_api_value(version)
       end
     end
 
     def champ_value_for_export(champ, path = :value)
-      path == :value ? champ.valid_value.presence : champ_default_export_value(path)
+      path == :value ? champ.value.presence : champ_default_export_value(path)
     end
 
     def champ_value_for_tag(champ, path = :value)

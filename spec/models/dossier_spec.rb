@@ -476,18 +476,22 @@ describe Dossier, type: :model do
 
     context 'when dossier is en_construction' do
       context 'when the procedure.routing_enabled? is false' do
-        before do
+        subject do
           dossier.passer_en_construction!
           dossier.reload
         end
 
-        it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
-        it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
-        it { expect(dossier.depose_at).to eq(beginning_of_day) }
-        it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
-        it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
+        it do
+          subject
+          expect(dossier.state).to eq(Dossier.states.fetch(:en_construction))
+          expect(dossier.en_construction_at).to eq(beginning_of_day)
+          expect(dossier.depose_at).to eq(beginning_of_day)
+          expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction))
+          expect(dossier.traitement.processed_at).to eq(beginning_of_day)
+        end
 
         it 'should keep first en_construction_at date' do
+          subject
           Timecop.return
           dossier.passer_en_instruction!(instructeur: instructeur)
           dossier.repasser_en_construction!(instructeur: instructeur)
@@ -497,6 +501,45 @@ describe Dossier, type: :model do
           expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
           expect(dossier.depose_at).to eq(beginning_of_day)
           expect(dossier.en_construction_at).to be > beginning_of_day
+        end
+
+        context 'when dossier have piece_justificative or titre_identite' do
+          include Logic
+
+          let(:procedure) { create(:procedure, types_de_champ_public:) }
+          let(:dossier) { create(:dossier, :brouillon, :with_populated_champs, procedure:) }
+
+          before { expect(champ).to receive(:visible?).and_return(visible) }
+
+          context 'when piece_justificative' do
+            let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+            let(:champ) { dossier.champs_for_revision(scope: :public).find(&:piece_justificative?) }
+
+            context 'when not visible' do
+              let(:visible) { false }
+              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+            end
+
+            context 'when visible' do
+              let(:visible) { true }
+              it { expect { subject }.not_to change { champ.reload.piece_justificative_file.attached? } }
+            end
+          end
+
+          context 'when titre identite' do
+            let(:types_de_champ_public) { [{ type: :titre_identite }] }
+            let(:champ) { dossier.champs_for_revision(scope: :public).find(&:piece_justificative?) }
+
+            context 'when not visible' do
+              let(:visible) { false }
+              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+            end
+
+            context 'when visible' do
+              let(:visible) { true }
+              it { expect { subject }.not_to change { champ.reload.piece_justificative_file.attached? } }
+            end
+          end
         end
       end
 
@@ -685,8 +728,24 @@ describe Dossier, type: :model do
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-    let(:types_de_champ) { [] }
-    let(:types_de_champ_private) { [] }
+
+    let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
+    let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
+
+    let(:tdc_1) { { libelle: "specified champ-in-title" } }
+    let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
+    let(:tdc_3) { { libelle: "specified champ-in-body" } }
+    let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
+    let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
+    let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
+    let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
+    let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
+
+    before do
+      (dossier.champs_public + dossier.champs_private)
+        .filter { |c| c.libelle.match?(/^specified/) }
+        .each { |c| c.update_attribute(:value, "specified") }
+    end
 
     subject { dossier.unspecified_attestation_champs.map(&:libelle) }
 
@@ -696,11 +755,11 @@ describe Dossier, type: :model do
       it { is_expected.to eq([]) }
     end
 
-    context "with attestation template" do
+    context "with attestation template v1" do
       # Test all combinations:
       # - with tag specified and unspecified
       # - with tag in body and tag in title
-      # - with tag correponsing to a champ and an annotation privée
+      # - with tag correponding to a champ and an annotation privée
       # - with a dash in the champ libelle / tag
       let(:title) { "voici --specified champ-in-title-- un --unspecified champ-in-title-- beau --specified annotation privée-in-title-- titre --unspecified annotation privée-in-title-- non --numéro du dossier--" }
       let(:body) { "voici --specified champ-in-body-- un --unspecified champ-in-body-- beau --specified annotation privée-in-body-- body --unspecified annotation privée-in-body-- non ?" }
@@ -712,26 +771,8 @@ describe Dossier, type: :model do
         it { is_expected.to eq([]) }
       end
 
-      context "wich is enabled" do
+      context "which is enabled" do
         let(:activated) { true }
-
-        let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
-        let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
-
-        let(:tdc_1) { { libelle: "specified champ-in-title" } }
-        let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
-        let(:tdc_3) { { libelle: "specified champ-in-body" } }
-        let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
-        let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
-        let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
-        let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
-        let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
-
-        before do
-          (dossier.champs_public + dossier.champs_private)
-            .filter { |c| c.libelle.match?(/^specified/) }
-            .each { |c| c.update_attribute(:value, "specified") }
-        end
 
         it do
           is_expected.to eq([
@@ -741,6 +782,40 @@ describe Dossier, type: :model do
             "unspecified annotation privée-in-body"
           ])
         end
+      end
+    end
+
+    context "with attestation template v2" do
+      # Test all combinations:
+      # - with tag specified and unspecified
+      # - with tag correponding to a champ and an annotation privée
+      let(:body) {
+        [
+          { "type" => "mention", "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find {  _1.libelle == "unspecified champ-in-body" }.stable_id}", "label" => "unspecified champ-in-body" } }
+        ]
+      }
+      let(:attestation_template) { build(:attestation_template, :v2) }
+
+      before do
+        tdc_content = (types_de_champ + types_de_champ_private).filter_map do |tdc_config|
+          next if tdc_config[:libelle].include?("in-title")
+
+          {
+            "type" => "mention",
+            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] }
+          }
+        end
+
+        json_body = attestation_template.json_body["content"]
+        attestation_template.json_body["content"][-1]["content"].concat(tdc_content)
+        attestation_template.save!
+      end
+
+      it do
+        is_expected.to eq([
+          "unspecified champ-in-body",
+          "unspecified annotation privée-in-body"
+        ])
       end
     end
   end
@@ -1520,8 +1595,8 @@ describe Dossier, type: :model do
 
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:types_de_champ) { [type_de_champ] }
-    let(:type_de_champ) { {} }
+    let(:types_de_champ) { [type_de_champ].compact }
+    let(:type_de_champ) { nil }
     let(:errors) { dossier.check_mandatory_and_visible_champs }
 
     it 'no mandatory champs' do
@@ -1543,7 +1618,7 @@ describe Dossier, type: :model do
       end
 
       context "conditionaly visible" do
-        let(:types_de_champ) { [{ type: :yes_no, stable_id: 99 }, type_de_champ] }
+        let(:types_de_champ) { [{ type: :yes_no, stable_id: 99, mandatory: false }, type_de_champ] }
         let(:type_de_champ) { { mandatory: true, condition: ds_eq(champ_value(99), constant(true)) } }
 
         it 'should not have errors' do
@@ -1604,7 +1679,7 @@ describe Dossier, type: :model do
 
         context "conditionaly visible" do
           let(:champ_with_error) { dossier.champs_public.second.champs.first }
-          let(:types_de_champ) { [{ type: :yes_no, stable_id: 99 }, type_de_champ] }
+          let(:types_de_champ) { [{ type: :yes_no, stable_id: 99, mandatory: false }, type_de_champ] }
           let(:type_de_champ) { { type: :repetition, mandatory: true, children: [{ mandatory: true }], condition: ds_eq(champ_value(99), constant(true)) } }
 
           it 'should not have errors' do
@@ -1817,7 +1892,7 @@ describe Dossier, type: :model do
   end
 
   describe 'brouillon_expired and en_construction_expired' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
     let(:reason) { DeletedDossier.reasons.fetch(:user_request) }
 

@@ -8,7 +8,7 @@ fr:
       procedure:
         hints:
           description: Décrivez en quelques lignes le contexte, la finalité, etc.
-          description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
+          description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les conditions d’éligibilité s’il y en a, les pré-requis, etc.
           description_pj: Décrivez la liste des pièces jointes à fournir s’il y en a
           lien_site_web: "Il s'agit de la page de votre site web où le lien sera diffusé. Ex: https://exemple.gouv.fr/page_informant_sur_ma_demarche"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
@@ -78,16 +78,18 @@ fr:
               invalid: 'n’a pas le bon format'
             draft_types_de_champ_public:
               format: 'Le champ %{message}'
-              invalid_condition: "« %{value} » a une logique conditionnelle invalide"
-              empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
-              empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
-              inconsistent_header_section: "« %{value} » %{custom_message}"
+              invalid_condition: "a une logique conditionnelle invalide"
+              empty_repetition: 'doit comporter au moins un champ répétable'
+              empty_drop_down: 'doit comporter au moins un choix sélectionnable'
+              inconsistent_header_section: "%{custom_message}"
+              expression_reguliere_invalid: "est invalide, veuillez la corriger"
             draft_types_de_champ_private:
               format: 'L’annotation privée %{message}'
-              invalid_condition: "« %{value} » a une logique conditionnelle invalide"
-              empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
-              empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
-              inconsistent_header_section: "« %{value} » %{custom_message}"
+              invalid_condition: "a une logique conditionnelle invalide"
+              empty_repetition: 'doit comporter au moins un champ répétable'
+              empty_drop_down: 'doit comporter au moins un choix sélectionnable'
+              inconsistent_header_section: "%{custom_message}"
+              expression_reguliere_invalid: "est invalide, veuillez la corriger"
             attestation_template:
               format: "%{attribute} %{message}"
             initiated_mail:

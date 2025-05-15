@@ -26,6 +26,8 @@ class Dsfr::CalloutComponent < ApplicationComponent
       "fr-callout--brown-caramel"
     when :success
       "fr-callout--green-emeraude"
+    when :neutral
+      # default
     else
       "fr-background-alt--blue-france"
     end

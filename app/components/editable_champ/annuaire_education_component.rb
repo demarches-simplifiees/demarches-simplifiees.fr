@@ -1,12 +1,17 @@
-class EditableChamp::AnnuaireEducationComponent < EditableChamp::ComboSearchComponent
+class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBaseComponent
   def dsfr_input_classname
-    'fr-input'
+    'fr-select'
   end
 
-  def react_input_opts
-    opts = input_opts(id: @champ.input_id, required: @champ.required?, aria: { describedby: @champ.describedby_id })
-    opts[:className] = "#{opts.delete(:class)} fr-mt-1w"
-
-    opts
+  def react_props
+    react_input_opts(id: @champ.input_id,
+      class: "fr-mt-1w",
+      name: @form.field_name(:external_id),
+      selected_key: @champ.external_id,
+      items: @champ.selected_items,
+      loader: 'https://data.education.gouv.fr/api/records/1.0/search?dataset=fr-en-annuaire-education&rows=5',
+      coerce: 'AnnuaireEducation',
+      debounce: 500,
+      minimum_input_length: 5)
   end
 end

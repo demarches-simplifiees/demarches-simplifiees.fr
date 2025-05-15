@@ -115,11 +115,6 @@ class Champ < ApplicationRecord
     [to_s]
   end
 
-  def valid_value
-    return unless valid_champ_value?
-    value
-  end
-
   def to_s
     TypeDeChamp.champ_value(type_champ, self)
   end
@@ -293,7 +288,7 @@ class Champ < ApplicationRecord
     return if value.nil?
     return if value.present? && !value.include?("\u0000")
 
-    self.value = value.delete("\u0000")
+    write_attribute(:value, value.delete("\u0000"))
   end
 
   class NotImplemented < ::StandardError

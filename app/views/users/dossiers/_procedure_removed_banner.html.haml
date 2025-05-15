@@ -17,4 +17,4 @@
       = t('users.dossiers.header.banner.contact_service_html', service_name: dossier.procedure.service.nom, service_phone_number: Phonelib.parse(dossier.procedure.service.telephone_url).full_national, service_email: dossier.procedure.service.email)
 
     - if !dossier.brouillon?
-      = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
+      = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })

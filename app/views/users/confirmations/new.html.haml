@@ -17,7 +17,9 @@
         %p= t('views.confirmation.new.email_cta_html', email: resource.email)
         %p= t('views.confirmation.new.email_guidelines_html')
 
+    %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
+      = t('views.confirmation.new.email_missing')
+
     = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { class: 'fr-mb-6w'}) do |f|
-      %legend.fr-hint-text.fr-mb-3w= t('views.confirmation.new.email_missing')
       = f.hidden_field :email
       = f.submit t('views.confirmation.new.resent'), class: 'fr-btn fr-btn--secondary'

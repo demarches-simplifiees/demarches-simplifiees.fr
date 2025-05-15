@@ -5,4 +5,3 @@ en:
       Your file has 1 error. <a href="%{url}">Fix-it</a> to continue :
     other: |
       Your file has %{count} errors. <a href="%{url}">Fix-them</a> to continue :
-  see_more: Show all errors

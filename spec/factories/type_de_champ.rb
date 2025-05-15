@@ -3,8 +3,8 @@ FactoryBot.define do
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
     type_champ { TypeDeChamp.type_champs.fetch(:text) }
-    mandatory { false }
     add_attribute(:private) { false }
+    mandatory { !private }
 
     transient do
       procedure { nil }

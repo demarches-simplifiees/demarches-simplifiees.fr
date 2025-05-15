@@ -1,6 +1,7 @@
 module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper
+    include EmailSanitizableConcern
     include Logic
     include UninterlacePngConcern
     include GroupeInstructeursSignatureConcern
@@ -222,19 +223,22 @@ module Administrateurs
     end
 
     def add_instructeur
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
+      emails = params['emails'].presence || []
+      emails = check_if_typo(emails)
+      errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
 
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
       if invalid_emails.present?
-        flash[:alert] = t('.wrong_address',
-          count: invalid_emails.size,
-          emails: invalid_emails.join(', '))
+        errors += [
+          t('.wrong_address',
+                    count: invalid_emails.size,
+                    emails: invalid_emails.join(', '))
+        ]
       end
 
       if instructeurs.present?
-        flash[:notice] = if procedure.routing_enabled?
+        flash.now[:notice] = if procedure.routing_enabled?
           t('.assignment',
             count: instructeurs.size,
             emails: instructeurs.map(&:email).join(', '),
@@ -243,15 +247,29 @@ module Administrateurs
           "Les instructeurs ont bien été affectés à la démarche"
         end
 
-        GroupeInstructeurMailer
-          .notify_added_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
-          .deliver_later
+        known_instructeurs, new_instructeurs = instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
+
+        new_instructeurs.each { InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe_instructeur, current_administrateur.email).deliver_later }
+
+        if known_instructeurs.present?
+          GroupeInstructeurMailer
+            .notify_added_instructeurs(groupe_instructeur, known_instructeurs, current_administrateur.email)
+            .deliver_later
+        end
       end
 
+      flash.now[:alert] = errors.join(". ") if !errors.empty?
+
+      @procedure = procedure
+      @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
+
       if procedure.routing_enabled?
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+        @groupe_instructeur = groupe_instructeur
+        render :show
       else
-        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+        @groupes_instructeurs = paginated_groupe_instructeurs
+        render :index
       end
     end
 

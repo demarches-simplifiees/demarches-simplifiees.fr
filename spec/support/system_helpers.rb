@@ -18,6 +18,8 @@ module SystemHelpers
 
     if sign_in_by_link
       User.find_by(email: email)&.instructeur&.update!(bypass_email_login_token: false)
+      # pf something not initialized if we don't wait, mail is not sent
+      sleep 5
     end
 
     perform_enqueued_jobs do
@@ -94,6 +96,13 @@ module SystemHelpers
     end
   end
 
+  def playwright_debug
+    page.driver.with_playwright_page do |page|
+      page.context.enable_debug_console!
+      page.pause
+    end
+  end
+
   def pause
     $stderr.write 'Spec paused. Press enter to continue:'
     $stdin.gets
@@ -106,31 +115,16 @@ module SystemHelpers
     end
   end
 
-  def select_combobox(libelle, fill_with, value, check: true)
-    fill_in libelle, with: fill_with
-    find('li[role="option"][data-reach-combobox-option]', text: value, wait: 5).click
-    if check
-      check_selected_value(libelle, with: value)
-    end
-  end
-
-  def check_selected_value(libelle, with:)
-    field = find_hidden_field_for(libelle)
-    value = field.value.starts_with?('[') ? JSON.parse(field.value) : field.value
-    if value.is_a?(Array)
-      if with.is_a?(Array)
-        expect(value.sort).to eq(with.sort)
-      else
-        expect(value).to include(with)
-      end
-    else
-      expect(value).to eq(with)
+  def select_combobox(libelle, value, custom_value: false)
+    fill_in libelle, with: custom_value ? "#{value}," : value
+    if !custom_value
+      find_field(libelle).send_keys(:down, :enter)
     end
   end
 
   def log_out
     within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
-      click_button(title: 'Mon compte')
+      click_button(title: 'Mon profil')
       expect(page).to have_selector('#account.fr-collapse--expanded', visible: true)
       click_on 'Se déconnecter'
     end

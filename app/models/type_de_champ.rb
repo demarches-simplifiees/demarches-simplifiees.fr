@@ -292,7 +292,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def check_mandatory
-    if non_fillable?
+    if non_fillable? || private?
       self.mandatory = false
     else
       true
@@ -723,8 +723,7 @@ class TypeDeChamp < ApplicationRecord
     # We should refresh all champs after update except for champs using react or custom refresh
     # logic (RNA, SIRET, etc.)
     case type_champ
-    when type_champs.fetch(:annuaire_education),
-      type_champs.fetch(:carte),
+    when type_champs.fetch(:carte),
       type_champs.fetch(:piece_justificative),
       type_champs.fetch(:titre_identite),
       type_champs.fetch(:rna),
@@ -739,6 +738,10 @@ class TypeDeChamp < ApplicationRecord
 
   def routable?
     type_champ.in?(ROUTABLE_TYPES)
+  end
+
+  def conditionable?
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ)
   end
 
   def invalid_regexp?

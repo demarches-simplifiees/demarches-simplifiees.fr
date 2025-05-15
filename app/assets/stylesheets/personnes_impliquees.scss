@@ -9,41 +9,7 @@
     margin-left: 16px;
   }
 
-  [data-react-component-value^="ComboMultiple"] {
+  .fr-ds-combobox__multiple {
     margin-bottom: 0;
-
-    [data-reach-combobox-token-list] {
-      padding: 0.5 * $default-padding;
-      display: flex;
-    }
-
-    [data-reach-combobox-token] button {
-      border: solid 1px $border-grey;
-      margin-top: 0.5 * $default-padding;
-      margin-bottom: 0.5 * $default-padding;
-      margin-right: 0.5 * $default-padding;
-      border-radius: 4px;
-      padding: 0.5 * $default-padding;
-      cursor: pointer;
-      list-style: none;
-    }
-
-    [data-reach-combobox-token] button:focus {
-      background-color: $black;
-      color: $white;
-    }
-
-
-    [data-reach-combobox-input] {
-      outline: none;
-      border: none;
-      flex-grow: 1;
-      margin: 0.25rem;
-    }
-
-    [data-reach-combobox-input]:focus {
-      outline: solid;
-      outline-color: $light-blue;
-    }
   }
 }

@@ -217,19 +217,21 @@ describe Users::DossiersController, type: :controller do
   describe 'update_identite' do
     let(:procedure) { create(:procedure, :for_individual) }
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:now) { Time.zone.parse('01/01/2100') }
 
     subject { post :update_identite, params: { id: dossier.id, dossier: dossier_params } }
 
     before do
       sign_in(user)
-      Timecop.freeze(now) do
-        subject
-      end
     end
 
     context 'with correct individual and dossier params' do
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
+      let(:now) { Time.zone.parse('01/01/2100') }
+      before do
+        Timecop.freeze(now) do
+          subject
+        end
+      end
 
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
@@ -240,6 +242,7 @@ describe Users::DossiersController, type: :controller do
     context 'when the identite cannot be updated by the user' do
       let(:dossier) { create(:dossier, :with_individual, :en_instruction, user: user, procedure: procedure) }
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
+      before { subject }
 
       it 'redirects to the dossiers list' do
         expect(response).to redirect_to(dossier_path(dossier))
@@ -249,6 +252,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'with incorrect individual and dossier params' do
       let(:dossier_params) { { individual_attributes: { gender: '', nom: '', prenom: '' } } }
+      before { subject }
 
       it do
         expect(response).not_to have_http_status(:redirect)
@@ -256,17 +260,20 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when a dossier is in broullon, for_tiers and we want to update the individual' do
+    context 'when a dossier is in brouillon, for_tiers and we want to update the individual' do
       let(:dossier) { create(:dossier, :for_tiers_without_notification, state: "brouillon", user: user, procedure: procedure) }
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey', email: 'mickey@gmail.com', notification_method: 'email' } } }
 
       it 'updates the individual with valid notification_method' do
+        expect { subject }.to have_enqueued_mail(UserMailer, :invite_tiers)
+          .and change(User, :count).by(1)
+
         dossier.reload
         individual = dossier.individual.reload
         expect(individual.errors.full_messages).to be_empty
         expect(individual.notification_method).to eq('email')
         expect(individual.email).to eq('mickey@gmail.com')
-        expect(individual.email_verified_at).to be_present
+        expect(individual.email_verified_at).to eq nil
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
 
@@ -274,6 +281,8 @@ describe Users::DossiersController, type: :controller do
         let(:dossier_params) { { mandataire_first_name: "Jean", mandataire_last_name: "Dupont" } }
 
         it 'updates the dossier mandataire first and last name' do
+          expect { subject }.not_to have_enqueued_mail(UserMailer, :invite_tiers)
+
           dossier.reload
           individual = dossier.individual.reload
           expect(dossier.errors.full_messages).to be_empty
@@ -462,7 +471,9 @@ describe Users::DossiersController, type: :controller do
 
   describe '#submit_brouillon' do
     before { sign_in(user) }
-    let!(:dossier) { create(:dossier, user: user) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
+    let!(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to first_champ.libelle, brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
@@ -503,9 +514,9 @@ describe Users::DossiersController, type: :controller do
       render_views
       let(:error_message) { 'nop' }
       before do
-        expect_any_instance_of(Dossier).to receive(:validate).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors).and_return(
-          [double(inner_error: double(base: first_champ), message: 'nop')]
+        allow_any_instance_of(Dossier).to receive(:validate).and_return(false)
+        allow_any_instance_of(Dossier).to receive(:errors).and_return(
+          [instance_double(ActiveModel::NestedError, inner_error: double(base: first_champ), message: 'nop')]
         )
         subject
       end
@@ -525,11 +536,8 @@ describe Users::DossiersController, type: :controller do
       render_views
 
       let(:value) { nil }
-
-      before do
-        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-        subject
-      end
+      let(:types_de_champ_public) { [{ type: :text, mandatory: true, libelle: 'l' }] }
+      before { subject }
 
       it { expect(response).to render_template(:brouillon) }
       it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
@@ -581,7 +589,7 @@ describe Users::DossiersController, type: :controller do
   describe '#submit_en_construction' do
     before { sign_in(user) }
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
-    let(:types_de_champ_public) { [{ type: :text }] }
+    let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
     let(:first_champ) { dossier.owner_editing_fork.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
@@ -612,8 +620,8 @@ describe Users::DossiersController, type: :controller do
       render_views
 
       before do
-        expect_any_instance_of(Dossier).to receive(:validate).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors).and_return(
+        allow_any_instance_of(Dossier).to receive(:validate).and_return(false)
+        allow_any_instance_of(Dossier).to receive(:errors).and_return(
           [double(inner_error: double(base: first_champ), message: 'nop')]
         )
 
@@ -664,7 +672,10 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when dossier was already submitted' do
-      before { post :submit_en_construction, params: payload }
+      before do
+        expect_any_instance_of(Dossier).to receive(:remove_piece_justificative_file_not_visible!)
+        post :submit_en_construction, params: payload
+      end
 
       it 'redirects to the dossier' do
         subject
@@ -725,7 +736,8 @@ describe Users::DossiersController, type: :controller do
   describe '#update brouillon' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{}, { type: :piece_justificative, mandatory: false }] }
     let(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:piece_justificative_champ) { dossier.champs_public.last }
@@ -818,13 +830,66 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    it "debounce search terms indexation" do
-      # dossier creation trigger a first indexation and flag,
-      # so we we have to remove this flag
-      dossier.debounce_index_search_terms_flag.remove
+    context 'having ineligibilite_rules setup' do
+      include Logic
+      render_views
 
-      assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
-        3.times { patch :update, params: payload, format: :turbo_stream }
+      let(:types_de_champ_public) { [{ type: :text }, { type: :integer_number }] }
+      let(:text_champ) { dossier.champs_public.first }
+      let(:number_champ) { dossier.champs_public.last }
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            groupe_instructeur_id: dossier.groupe_instructeur_id,
+            champs_public_attributes: {
+              text_champ.public_id => {
+                with_public_id: true,
+                value: "hello world"
+              },
+              number_champ.public_id => {
+                with_public_id: true,
+                value:
+              }
+            }
+          }
+        }
+      end
+      let(:must_be_greater_than) { 10 }
+
+      before do
+        procedure.published_revision.update(
+          ineligibilite_enabled: true,
+          ineligibilite_message: 'lol',
+          ineligibilite_rules: greater_than(champ_value(number_champ.stable_id), constant(must_be_greater_than))
+        )
+        procedure.published_revision.save!
+      end
+      render_views
+
+      context 'when it switches from true to false' do
+        let(:value) { must_be_greater_than + 1 }
+
+        it 'raises popup' do
+          subject
+          dossier.reload
+          expect(dossier.can_passer_en_construction?).to be_falsey
+          expect(assigns(:can_passer_en_construction_was)).to eq(true)
+          expect(assigns(:can_passer_en_construction_is)).to eq(false)
+          expect(response.body).to match(ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken))
+        end
+      end
+
+      context 'when it stays true' do
+        let(:value) { must_be_greater_than - 1 }
+        it 'does nothing' do
+          subject
+          dossier.reload
+          expect(dossier.can_passer_en_construction?).to be_truthy
+          expect(assigns(:can_passer_en_construction_was)).to eq(true)
+          expect(assigns(:can_passer_en_construction_is)).to eq(true)
+          expect(response.body).not_to have_selector("##{ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken)}")
+        end
       end
     end
   end
@@ -932,8 +997,8 @@ describe Users::DossiersController, type: :controller do
 
       context 'classic error' do
         before do
-          expect_any_instance_of(Dossier).to receive(:save).and_return(false)
-          expect_any_instance_of(Dossier).to receive(:errors).and_return(
+          allow_any_instance_of(Dossier).to receive(:save).and_return(false)
+          allow_any_instance_of(Dossier).to receive(:errors).and_return(
             [message: 'nop', inner_error: double(base: first_champ)]
           )
           subject

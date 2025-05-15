@@ -1,6 +1,6 @@
 describe ActiveStorage::DownloadableFile do
   let(:dossier) { create(:dossier, :en_construction) }
-  let(:user_profile) { create(:administrateur) }
+  let(:user_profile) { administrateurs(:default_admin) }
   let(:dossiers) { Dossier.where(id: dossier.id) }
   subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossiers(user_profile:, dossiers:) }
 

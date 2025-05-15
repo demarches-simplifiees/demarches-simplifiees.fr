@@ -1,5 +1,5 @@
 class Cron::OperationsSignatureJob < Cron::CronJob
-  self.schedule_expression = "every day at 6 am"
+  self.schedule_expression = "every day at 06:00"
 
   def perform(*args)
     start_date = DossierOperationLog.where(bill_signature: nil).order(:executed_at).pick(:executed_at).beginning_of_day

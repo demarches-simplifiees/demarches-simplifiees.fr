@@ -1,7 +1,14 @@
 en:
   links:
     provider:
-      provided_by: "The DINUM"
+      logo:
+        src: "footer/logo-dmra-horisontal.png"
+        alt: "Logo DMRA"
+        height: 90
+        width: 240
+      provided_by: "DTI"
+      title: "Direction des talents et de l'innovation"
+      url: "https://www.service-public.pf/voir/annuaire/dgrh-direction-generale-des-ressources-humaines/"
     common:
       faq:
         label: "FAQ"
@@ -20,19 +27,18 @@ en:
         legals: Legal information
         resources: Resources
         diagnostic: Diagnostic
-      description_1: Démarches simplifiées is powered by
-      link_1_label: the interdepartmental direction of digital (DINUM).
-      link_1_url: "https://www.numerique.gouv.fr/dinum/"
+      description_1: Mes-Démarches, polynesian adaptation of Démarches Simplifiées french site, led by
+      link_1_label: direction of talends and innovation (DTI)
+      link_1_url: "https://www.fonction-publique.gov.pf/"
       link_2_label: The source code
       description_2: is available under a free license.
       copy_html: "Unless otherwise stated, all public data on this site are %{link}"
       license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
-        title: "Accessibility declaration"
       api_doc:
         label: "API Documentation"
-        title: "API Documentation"
+        title: "Graphql API Documentation"
         url: "https://doc.demarches-simplifiees.fr/api-graphql"
       dinum:
         title: "Le site de la DINUM — Direction interministérielle du numérique"
@@ -40,48 +46,43 @@ en:
         alt: "Direction interministérielle du numérique"
       code:
         label: "Source code"
-        title: "Our Source code is open source"
         url: "https://github.com/govpf/mes-demarches"
       cgu:
         label: "ToS"
         title: "Terms of Service"
-        url: "https://doc.demarches-simplifiees.fr/cgu"
+        url: "https://mes-demarches.gitbook.io/documentation/cgu"
       rgpd:
-        label: "Data protection"
-        title: "Data protection"
+        label: "Personal data"
+        title: "Personal data"
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       doc:
         label: "Documentation"
-        title: "Our Documentation"
-        url: "https://doc.demarches-simplifiees.fr"
+        title: "User Documentation"
+        url: "https://mes-demarches.gitbook.io/documentation"
       vote_feature:
         label: "Improve the site"
         title: "Vote for your priority improvements or share your own ideas"
       mentions_legales:
         label: "Legal notices"
-        title: "Legal notices regarding our platform"
       releases:
         label: "Releases notes"
-        title: "Our last updates"
-        url: "https://github.com/govpf/mes-demarches/releases"
+        title: "Releases notes: Our last updates"
+        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
       security:
         label: "Security"
-        title: "Security policy"
+        title: "Security policy and procedures"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
       carte:
         label: "Deployment map"
         title: "Deployment map by department"
       status_page:
         label: "Disponibility"
-        title: "Disponibility and availability"
-        url: "https://status.demarches-simplifiees.fr"
+        title: "Disponibility and availability statistics"
+        url: "https://updown.io/cugq"
       suivi:
         label: "Audience tracking and privacy"
-        title: "Tracking and privacy of demarches-simplifiees"
       cookies:
         label: Cookies
-        title: Cookies
       contact:
         label: Contact
-        title: Contact
       display_params: Display params

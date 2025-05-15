@@ -1,5 +1,5 @@
 describe 'fetch API Particulier Data', js: true do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   let(:expected_token) { 'd7e9c9f4c3ca00caadde31f50fd4521a' }
 
@@ -252,10 +252,10 @@ describe 'fetch API Particulier Data', js: true do
              instructeurs: [instructeur],
              api_particulier_sources: expected_sources,
              api_particulier_token: api_particulier_token).tap do |p|
-               p.active_revision.add_type_de_champ(type_champ: :cnaf, libelle: 'cnaf')
-               p.active_revision.add_type_de_champ(type_champ: :dgfip, libelle: 'dgfip')
-               p.active_revision.add_type_de_champ(type_champ: :pole_emploi, libelle: 'pole_emploi')
-               p.active_revision.add_type_de_champ(type_champ: :mesri, libelle: 'mesri')
+               p.active_revision.add_type_de_champ(type_champ: :cnaf, libelle: 'cnaf', mandatory: false)
+               p.active_revision.add_type_de_champ(type_champ: :dgfip, libelle: 'dgfip', mandatory: false)
+               p.active_revision.add_type_de_champ(type_champ: :pole_emploi, libelle: 'pole_emploi', mandatory: false)
+               p.active_revision.add_type_de_champ(type_champ: :mesri, libelle: 'mesri', mandatory: false)
              end
     end
 

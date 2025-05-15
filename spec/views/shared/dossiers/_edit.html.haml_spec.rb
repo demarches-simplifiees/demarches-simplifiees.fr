@@ -103,7 +103,7 @@ describe 'shared/dossiers/edit', type: :view do
       let(:options) { ['peach', 'banana', 'pear', 'apricot', 'apple', 'grapefruit'] }
 
       it 'renders the list as a multiple-selection dropdown' do
-        expect(subject).to have_selector('select')
+        expect(subject).to have_selector('react-fragment > react-component[name="ComboBox/MultiComboBox"]')
       end
     end
   end
@@ -147,6 +147,19 @@ describe 'shared/dossiers/edit', type: :view do
         expect(subject).to include(champ_drop_down.libelle)
         expect(subject).to include(dossier.groupe_instructeur.label)
       end
+    end
+  end
+
+  context 'when dossier transitions rules are computable and passer_en_construction is false' do
+    let(:types_de_champ_public) { [] }
+    let(:dossier) { create(:dossier, procedure:) }
+
+    before do
+      allow(dossier).to receive(:can_passer_en_construction?).and_return(false)
+    end
+
+    it 'renders broken transitions rules dialog' do
+      expect(subject).to have_selector("##{ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken)}")
     end
   end
 end

@@ -1,26 +1,34 @@
 .merci.text-center.mb-7
-  .container
-    = image_tag('user/envoi-dossier.svg', alt: '', class: 'mt-8')
-    %h1.mt-4.mb-3.mx-0= t('views.users.dossiers.merci.thanks')
-    %h2.send.m-2.text-lg
-      = t('views.users.dossiers.merci.dossier_send_l1')
-      %strong= procedure.libelle
-      = t('views.users.dossiers.merci.dossier_send_l2')
-    %p.m-2
-      = t('views.users.dossiers.merci.dossier_acces_l1')
-      %strong= t('views.users.dossiers.merci.dossier_acces_l2')
-    %p.m-2
-      = t('views.users.dossiers.merci.dossier_edit_l1')
-      - if !dossier&.read_only? && !procedure.declarative_accepte? && !procedure.sva_svr_enabled?
-        %strong= t('views.users.dossiers.merci.dossier_edit_l2')
-        = t('views.users.dossiers.merci.dossier_edit_l3')
-      %strong= t('views.users.dossiers.merci.dossier_edit_l4')
-    - if procedure.active_dossier_submitted_message
-      %p.m-2= procedure.active_dossier_submitted_message.message_on_submit_by_usager
+  .fr-container
+    .fr-grid-row.fr-col-offset-md-2.fr-col-md-8
+      .fr-col-12
+        = image_tag('user/envoi-dossier.svg', alt: '', class: 'mt-8')
+        %h1.fr-mt-4w.fr-mb-3w.mx-0= t('views.users.dossiers.merci.thanks')
+        %h2.send.fr-m-2w.text-lg
+          = t('views.users.dossiers.merci.dossier_send_l1')
+          %strong= procedure.libelle
+          = t('views.users.dossiers.merci.dossier_send_l2')
+        %p.fr-m-2w
+          = t('views.users.dossiers.merci.dossier_acces_l1')
+          %strong= t('views.users.dossiers.merci.dossier_acces_l2')
+        %p.fr-m-2w
+          = t('views.users.dossiers.merci.dossier_edit_l1')
+          - if !dossier&.read_only? && !procedure.declarative_accepte? && !procedure.sva_svr_enabled?
+            %strong= t('views.users.dossiers.merci.dossier_edit_l2')
+            = t('views.users.dossiers.merci.dossier_edit_l3')
+          %strong= t('views.users.dossiers.merci.dossier_edit_l4')
+        - if procedure.active_dossier_submitted_message
+          %p.fr-m-2= procedure.active_dossier_submitted_message.message_on_submit_by_usager
+    %p.justify-center.flex.fr-mb-5w.fr-mt-2w
+      = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
+      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'fr-btn fr-mx-2w'
 
-    .flex.column.align-center
-      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'fr-btn fr-btn--xl fr-mt-5w'
-      = link_to t('views.users.dossiers.merci.submit_dossier'), commencer_url(procedure.path), class: 'fr-btn fr-btn--secondary fr-mt-3w'
+    %hr.fr-hr
+      = link_to t('views.users.dossiers.merci.submit_dossier'), commencer_url(procedure.path), class: 'fr-btn fr-btn--secondary fr-mt-2w'
 
-      .monavis
-        != procedure.monavis_embed
+      - if procedure.monavis_embed
+        .monavis
+          %p.fr-mt-5w.fr-mb-1w
+            %strong= t('views.users.dossiers.merci.jdma_l1')
+          %p= t('views.users.dossiers.merci.jdma_l2')
+          != procedure.monavis_embed_html_source("site")

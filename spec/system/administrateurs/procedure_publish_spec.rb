@@ -3,7 +3,7 @@ require 'system/administrateurs/procedure_spec_helper'
 describe 'Publishing a procedure', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let(:other_administrateur) { create(:administrateur) }
 
   let(:instructeurs) { [administrateur.user.instructeur] }
@@ -72,8 +72,8 @@ describe 'Publishing a procedure', js: true do
         visit admin_procedure_path(procedure)
 
         expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
-        expect(page).to have_content("« Enfants » doit comporter au moins un champ répétable")
-        expect(page).to have_content("« Civilité » doit comporter au moins un choix sélectionnable")
+        expect(page).to have_content("Enfants doit comporter au moins un champ répétable")
+        expect(page).to have_content("Civilité doit comporter au moins un choix sélectionnable")
 
         visit admin_procedure_publication_path(procedure)
         expect(find_field('procedure_path').value).to eq procedure.path
@@ -195,7 +195,7 @@ describe 'Publishing a procedure', js: true do
     scenario 'an error message prevents the publication' do
       visit admin_procedure_path(procedure)
       expect(page).to have_content('Des problèmes empêchent la publication des modifications')
-      expect(page).to have_link('corriger', href: edit_admin_procedure_mail_template_path(procedure, Mails::InitiatedMail::SLUG))
+      expect(page).to have_link(href: edit_admin_procedure_mail_template_path(procedure, Mails::InitiatedMail::SLUG))
       expect(page).to have_button('Publier les modifications', disabled: true)
     end
   end

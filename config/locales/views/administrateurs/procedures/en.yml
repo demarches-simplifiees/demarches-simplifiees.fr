@@ -75,6 +75,3 @@ en:
         path_not_available:
           owner: This URL is identical to another of your published procedures. If you publish this procedure, the old one will be unpublished and will no longer be accessible to the public.
           not_owner: This URL is identical to another procedure, you must modify it.
-    autosave_notice:
-      form_saved: "Form saved"
-      form_error: "Form in error"

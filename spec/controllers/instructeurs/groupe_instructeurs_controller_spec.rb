@@ -32,34 +32,38 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when i am an instructeur of the procedure and instructeurs_self_management_enabled is true' do
-      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: true) }
+      let(:procedure) { create(:procedure, :published, instructeurs_self_management_enabled: true) }
       before { get :index, params: { procedure_id: procedure.id } }
 
-      context 'when a procedure has multiple groups' do
-        it { expect(response).to have_http_status(:ok) }
-        it { expect(response.body).to include(gi_1_2.label) }
-        it { expect(response.body).not_to include(gi_1_1.label) }
-        it { expect(response.body).not_to include(gi_2_2.label) }
+      it 'when a procedure has multiple groups' do
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(gi_1_2.label)
+        expect(response.body).not_to include(gi_1_1.label)
+        expect(response.body).not_to include(gi_2_2.label)
       end
     end
 
     context 'when i am an instructor of the procedure, and instructeurs_self_management_enabled is false' do
-      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: false) }
+      let(:procedure) { create(:procedure, :published, :new_administrateur, instructeurs_self_management_enabled: false) }
       before { get :index, params: { procedure_id: procedure.id } }
 
-      it { expect(response).to have_http_status(:redirect) }
-      it { expect(flash.alert).to eq("Vous n’avez pas le droit de gérer les instructeurs de cette démarche") }
+      it "works" do
+        expect(response).to have_http_status(:redirect)
+        expect(flash.alert).to eq("Vous n’avez pas le droit de gérer les instructeurs de cette démarche")
+      end
     end
 
     context 'i am an instructor, not on the procedure' do
-      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: true) }
+      let(:procedure) { create(:procedure, :published, :new_administrateur, instructeurs_self_management_enabled: true) }
       before do
         sign_in(create(:instructeur).user)
         get :index, params: { procedure_id: procedure.id }
       end
 
-      it { expect(response).to have_http_status(:redirect) }
-      it { expect(flash.alert).to eq("Vous n’avez pas accès à cette démarche") }
+      it "works" do
+        expect(response).to have_http_status(:redirect)
+        expect(flash.alert).to eq("Vous n’avez pas accès à cette démarche")
+      end
     end
   end
 
@@ -82,27 +86,33 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'of a new instructeur' do
-      let(:new_instructeur_email) { 'new_instructeur@mail.com' }
+      let(:new_instructeur_email) { 'new_instructeur@gmail.com' }
       before { subject }
 
-      it { expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email) }
-      it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2)) }
+      it "works" do
+        expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email)
+        expect(flash.notice).to be_present
+        expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
+      end
     end
 
     context 'of an instructeur already in the group' do
       let(:new_instructeur_email) { instructeur.email }
       before { subject }
 
-      it { expect(flash.alert).to be_present }
-      it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2)) }
+      it "works" do
+        expect(flash.alert).to be_present
+        expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
+      end
     end
 
     context 'invalid email' do
       let(:new_instructeur_email) { 'invalid' }
 
-      it { subject; expect(flash.alert).to include(new_instructeur_email) }
-      it { expect { subject }.not_to enqueue_email }
+      it "works" do
+        expect { subject }.not_to enqueue_email
+        expect(flash.alert).to include(new_instructeur_email)
+      end
     end
   end
 
@@ -128,10 +138,12 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     context 'when there are many instructeurs' do
       before { remove_instructeur(new_instructeur) }
 
-      it { expect(gi_1_1.instructeurs).to include(instructeur) }
-      it { expect(gi_1_1.reload.instructeurs.count).to eq(1) }
-      it { expect(new_instructeur.reload.follows.count).to eq(0) }
-      it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_1)) }
+      it "works" do
+        expect(gi_1_1.instructeurs).to include(instructeur)
+        expect(gi_1_1.reload.instructeurs.count).to eq(1)
+        expect(new_instructeur.reload.follows.count).to eq(0)
+        expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_1))
+      end
     end
 
     context 'when there is only one instructeur' do
@@ -140,10 +152,12 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         remove_instructeur(instructeur)
       end
 
-      it { expect(gi_1_1.instructeurs).to include(instructeur) }
-      it { expect(gi_1_1.instructeurs.count).to eq(1) }
-      it { expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un instructeur dans le groupe') }
-      it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_1)) }
+      it "works" do
+        expect(gi_1_1.instructeurs).to include(instructeur)
+        expect(gi_1_1.instructeurs.count).to eq(1)
+        expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un instructeur dans le groupe')
+        expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_1))
+      end
     end
   end
 
@@ -161,7 +175,9 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         }
     end
 
-    it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2)) }
-    it { expect(gi_1_2.reload.signature).to be_attached }
+    it "works" do
+      expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
+      expect(gi_1_2.reload.signature).to be_attached
+    end
   end
 end

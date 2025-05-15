@@ -24,6 +24,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.invite_instructeur(user, 'aedfa0d0')
   end
 
+  def invite_tiers
+    UserMailer.invite_tiers(user, 'aedfa0d0', Dossier.first)
+  end
+
   def invite_gestionnaire
     groupe_gestionnaire = GroupeGestionnaire.new(name: 'Root admins group')
     UserMailer.invite_gestionnaire(user, 'aedfa0d0', groupe_gestionnaire)
@@ -34,7 +38,7 @@ class UserMailerPreview < ActionMailer::Preview
   end
 
   def notify_after_closing
-    UserMailer.notify_after_closing([user])
+    UserMailer.notify_after_closing(user, "Cette démarche est close")
   end
 
   private

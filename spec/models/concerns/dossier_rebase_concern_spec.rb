@@ -1,6 +1,6 @@
 describe DossierRebaseConcern do
   describe '#can_rebase?' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :yes_no }], types_de_champ_private: [{}]) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :yes_no, mandatory: false }], types_de_champ_private: [{}]) }
     let(:attestation_template) { procedure.draft_revision.attestation_template.find_or_revise! }
     let(:type_de_champ) { procedure.active_revision.types_de_champ_public.find { |tdc| !tdc.mandatory? } }
     let(:private_type_de_champ) { procedure.active_revision.types_de_champ_private.first }
@@ -26,11 +26,12 @@ describe DossierRebaseConcern do
         dossier
       end
 
-      context 'with added type de champ' do
+      context 'with added non mandatory type de champ' do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text"
+            libelle: "Un champ text",
+            mandatory: false
           })
           procedure.publish_revision!
           dossier.reload
@@ -125,7 +126,7 @@ describe DossierRebaseConcern do
       end
 
       context 'with type de champ regexp and regexp change' do
-        let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :expression_reguliere }], types_de_champ_private: [{}]) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :expression_reguliere, mandatory: false }], types_de_champ_private: [{}]) }
 
         before do
           procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(expression_reguliere: /\d+/)
@@ -162,11 +163,12 @@ describe DossierRebaseConcern do
         dossier
       end
 
-      context 'with added type de champ' do
+      context 'with added non mandatory type de champ' do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text"
+            libelle: "Un champ text",
+            mandatory: false
           })
           procedure.publish_revision!
           dossier.reload

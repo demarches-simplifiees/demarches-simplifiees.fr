@@ -123,3 +123,9 @@ ministeres:
     labels:
       - '2022-05-20': "Non attribué"
       - '2020-07-06': "Ministère des Outre-mer"
+  - AI:
+    labels:
+      - '2024-07-04': "Autorité indépendante"
+  - CP:
+    labels:
+      - '2024-07-04': "Chambre parlementaire"

@@ -4,6 +4,7 @@ fr:
       contact: Contact
       intro_html: "<p>Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.</p>
         <p>Pensez bien à nous donner le plus d’informations possible pour que nous puissions vous aider au mieux.</p>"
+      notice_email: "(exemple : monadresse@monmail.com)"
       your_question: Votre question
       our_answer: Notre réponse
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
@@ -19,7 +20,7 @@ fr:
           <p>Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l’instruction de votre dossier.</p>"
       product:
         question: J’ai une idée d’amélioration pour votre site
-        answer_html: "<p>Une idée ? Pensez à <a href=\"%{link_product}\" rel=\"noopener noreferrer\" target=\"_blank\" title=\"Ouvrir le tableau des évolutions - Nouvel onglet\">consulter notre tableau de bord des améliorations</a> :</p>
+        answer_html: "<p>Une idée ? Pensez à <a href=\"%{link_product}\" rel=\"noopener noreferrer\" target=\"_blank\" title=\"Consulter notre tableau de bord des améliorations - Nouvel onglet\">consulter notre tableau de bord des améliorations</a> :</p>
           <ul><li>Votez pour vos améliorations prioritaires,</li>
           <li>Proposez votre propre idée.</li></ul>"
       lost_user:

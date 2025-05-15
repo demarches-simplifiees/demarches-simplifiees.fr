@@ -58,21 +58,20 @@
 
       - if @procedure.experts_require_administrateur_invitation?
         .card
+          = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: admin_procedure_experts_path(@procedure), title: "Avant d'ajouter l'email à la liste d'expert prédéfinie, veuillez confirmer" )
           = form_for :experts_procedure,
             url: admin_procedure_experts_path(@procedure),
             html: { class: 'form' } do |f|
 
             .instructeur-wrapper
               %p#experts-emails Entrez les adresses emails des experts que vous souhaitez ajouter à la liste prédéfinie
-              = hidden_field_tag :emails, nil
-              = react_component("ComboMultiple",
-                options: [],
-                selected: [], disabled: [],
-                group: '.instructeur-wrapper',
-                name: 'emails',
-                label: 'Emails',
-                describedby: 'experts-emails',
-                acceptNewValues: true)
+              %react-fragment
+                = render ReactComponent.new "ComboBox/MultiComboBox",
+                  id: 'emails',
+                  name: 'emails[]',
+                  allows_custom_value: true,
+                  'aria-label': 'Emails',
+                  'aria-describedby': 'experts-emails'
 
               = f.submit 'Ajouter à la liste', class: 'fr-btn'
 

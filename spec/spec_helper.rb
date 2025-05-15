@@ -18,7 +18,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
 #
-require 'simplecov' # see config in .simplecov file
+require 'simplecov' if ENV["CI"] || ENV["COVERAGE"] # see config in .simplecov file
 
 require 'rspec/retry'
 
@@ -63,27 +63,6 @@ RSpec.configure do |config|
       select_element && values.all? do |value|
         select_element.first(:option, value).selected?
       end
-    end
-  end
-
-  def save_timestamped_screenshot(page, meta)
-    filename = File.basename(meta[:file_path])
-    line_number = meta[:line_number]
-
-    time_now = Time.zone.now
-    timestamp = "#{time_now.strftime('%Y-%m-%d-%H-%M-%S.')}#{format('%03d', (time_now.usec / 1000).to_i)}"
-
-    screenshot_name = "screenshot-#{filename}-#{line_number}-#{timestamp}.png"
-    screenshot_path = "#{ENV.fetch('CIRCLE_ARTIFACTS', Rails.root.join('tmp', 'capybara'))}/#{screenshot_name}"
-
-    page.save_screenshot(screenshot_path, full: false)
-
-    puts "\n  Screenshot: #{screenshot_path}"
-  end
-
-  config.after(:each) do |example|
-    if example.metadata[:js]
-      save_timestamped_screenshot(Capybara.page, example.metadata) if example.exception
     end
   end
 end

@@ -18,6 +18,7 @@ class Instructeur < ApplicationRecord
 
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
+  has_many :all_follows, class_name: 'Follow', inverse_of: :instructeur
   has_many :follows, -> { active }, inverse_of: :instructeur
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
   has_many :followed_dossiers, through: :follows, source: :dossier

@@ -1,6 +1,6 @@
 RSpec.describe Cron::SendAPITokenExpirationNoticeJob, type: :job do
   describe 'perform' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let!(:token) { APIToken.generate(administrateur).first }
     let(:mailer_double) { double('mailer', deliver_later: true) }
     let(:today) { Date.new(2018, 01, 01) }

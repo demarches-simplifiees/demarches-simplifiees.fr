@@ -20,9 +20,9 @@ class GroupeInstructeurMailer < ApplicationMailer
     @current_instructeur_email = current_instructeur_email
 
     subject = if group.procedure.groupe_instructeurs.many?
-      "Vous avez été ajouté(e) au groupe \"#{group.label}\" de la démarche \"#{group.procedure.libelle}\""
+      "Vous avez été ajouté(e) au groupe « #{group.label} » de la démarche « #{group.procedure.libelle} »"
     else
-      "Vous avez été affecté(e) à la démarche \"#{group.procedure.libelle}\""
+      "Vous avez été affecté(e) à la démarche « #{group.procedure.libelle} »"
     end
 
     mail(bcc: added_instructeur_emails, subject: subject)

@@ -29,12 +29,12 @@ describe 'Managing password:', js: true do
   end
 
   context 'for admins' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
     let(:weak_password) { '12345678' }
     let(:strong_password) { 'a new, long, and complicated password!' }
 
-    scenario 'an admin can reset their password', js: true do
+    scenario 'an admin can reset their password' do
       visit root_path
       within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
         click_on 'Se connecter'
@@ -73,7 +73,7 @@ describe 'Managing password:', js: true do
     let(:weak_password) { '12345678' }
     let(:strong_password) { 'a new, long, and complicated password!' }
 
-    scenario 'a super-admin can reset their password', js: true do
+    scenario 'a super-admin can reset their password' do
       visit manager_root_path
       click_on 'Mot de passe oublié'
       expect(page).to have_current_path(new_super_admin_password_path)
