@@ -17,5 +17,15 @@ RSpec.describe ReleaseNotesHelper, type: :helper do
 
       expect(processed_content.body.to_s).to include("No links here")
     end
+
+    context "image" do
+      let(:release_note) { build(:release_note, body: '<img src="http://example.com/image.png">') }
+
+      it "renders img tag" do
+        processed_content = helper.render_release_note_content(release_note.body)
+
+        expect(processed_content.body.to_s).to include('<img src="http://example.com/image.png">')
+      end
+    end
   end
 end
