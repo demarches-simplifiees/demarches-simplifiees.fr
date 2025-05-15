@@ -5,3 +5,4 @@
 
 - if @update_contact_information
   = turbo_stream.update "contact_information", partial: 'shared/dossiers/update_contact_information', locals: { dossier: @dossier, procedure: @dossier.procedure }
+  = turbo_stream.update "help_dropdown_dossier", partial: 'shared/help/help_dropdown_dossier', locals: { dossier: @dossier }
