@@ -1,14 +1,6 @@
 - procedure = @export_template.procedure
 
 #export_template-edit.fr-my-4w
-  .fr-mb-6w
-    = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur de modèle d'export", heading_level: 'h3') do |c|
-      - c.with_body do
-        Cette page permet d'éditer un modèle d'export et ainsi personnaliser le contenu des exports (pour l'instant,
-        uniquement au format zip). Ainsi, vous pouvez notamment normaliser le nom des pièces jointes.
-        Essayez-le et donnez-nous votre avis
-        en nous envoyant un email à #{mail_to(CONTACT_EMAIL, subject: "Editeur de modèle d'export")}.
-
   .fr-grid-row.fr-grid-row--gutters
     .fr-col-12.fr-col-md-8.fr-pr-4w
       = form_with model: [:instructeur, procedure, export_template], data: { turbo: 'true', controller: 'autosubmit' } do |f|
@@ -44,6 +36,14 @@
           locals: { item: export_template.export_pdf,
             libelle: ExportTemplate.human_attribute_name(:export_pdf),
             prefix: 'export_template[export_pdf]' }
+
+        - if procedure.attestation_template&.activated?
+          %h3 Attestation d'acceptation au format PDF
+
+          = render partial: 'export_item',
+            locals: { item: export_template.attestation || ExportItem.default(prefix: 'attestation'),
+              libelle: ExportTemplate.human_attribute_name(:attestation),
+              prefix: 'export_template[attestation]' }
 
         - if procedure.exportables_pieces_jointes_for_all_versions.any?
           %h3 Pièces justificatives

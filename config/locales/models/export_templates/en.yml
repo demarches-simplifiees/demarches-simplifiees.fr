@@ -11,6 +11,7 @@ en:
         name: "Template's name"
         dossier_folder: "Directory's name for pdf format"
         export_pdf: "File in pdf format"
+        attestation: "Attestation of acceptance"
     errors:
       models:
         export_template:

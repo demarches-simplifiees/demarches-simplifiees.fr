@@ -20,6 +20,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       groupe_instructeur_id:,
       export_pdf:,
       dossier_folder: item_params(text: "DOSSIER_"),
+      attestation: item_params(text: "attestation"),
       pjs: [pj_item_params(stable_id: 3, text: "avis-commission-"), pj_item_params(stable_id: 666, text: "evil-hack")]
     }
   end
@@ -109,6 +110,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           groupe_instructeur_id: groupe_instructeur.id,
           export_pdf: item_params(text: "export"),
           dossier_folder: item_params(text: "dossier"),
+          attestation: item_params(text: "attestation"),
           exported_columns:
         }
       end
@@ -198,6 +200,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           groupe_instructeur_id: groupe_instructeur.id,
           export_pdf: item_params(text: "export"),
           dossier_folder: item_params(text: "dossier"),
+          attestation: item_params(text: "attestation"),
           exported_columns:
         }
       end
