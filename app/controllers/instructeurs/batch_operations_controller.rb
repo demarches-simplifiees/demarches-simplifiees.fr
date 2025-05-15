@@ -14,32 +14,10 @@ module Instructeurs
     private
 
     def batch_operation_params
-      permitted = params.require(:batch_operation).permit(
-        :operation,
-        :motivation,
-        :justificatif_motivation,
-        :introduction,
-        :question_label,
-        :introduction_file,
-        :confidentiel,
-        emails: [],
-        dossier_ids: []
-      )
-
-      {
-        operation: permitted[:operation],
-        instructeur: current_instructeur,
-        dossier_ids: Array(permitted[:dossier_ids]).map(&:to_s).uniq,
-        payload: permitted.slice(
-          :motivation,
-          :justificatif_motivation,
-          :emails,
-          :introduction,
-          :question_label,
-          :introduction_file,
-          :confidentiel
-        )
-      }
+      params.require(:batch_operation)
+        .permit(:operation, :motivation, :justificatif_motivation, dossier_ids: [])
+        .merge(dossier_ids: params['batch_operation']['dossier_ids'].join(',').split(',').uniq)
+        .merge(instructeur: current_instructeur)
     end
 
     def set_procedure

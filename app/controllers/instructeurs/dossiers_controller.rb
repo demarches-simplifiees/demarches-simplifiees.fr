@@ -295,11 +295,6 @@ module Instructeurs
     end
 
     def create_avis
-      avis_params = params.require(:avis).permit(
-        :introduction_file, :introduction, :confidentiel,
-        :invite_linked_dossiers, :question_label, emails: []
-      )
-
       result = CreateAvisService.call(
         dossier: dossier,
         instructeur_or_expert: current_instructeur,
@@ -317,6 +312,16 @@ module Instructeurs
         @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
         render :avis_new, status: :unprocessable_entity
       end
+    end
+
+    def create_batch_avis
+      batch = BatchOperation.safe_create!(batch_operation_params)
+
+      if batch.blank?
+        flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés"
+      end
+
+      redirect_back(fallback_location: instructeur_procedure_url(procedure_id))
     end
 
     def update_annotations
@@ -429,6 +434,25 @@ module Instructeurs
     end
 
     private
+
+    def batch_operation_params
+      params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
+        batch_params[:operation] = 'create_avis'
+        batch_params[:instructeur] = current_instructeur
+        batch_params.merge!(avis_params)
+      end
+    end
+
+    def avis_params
+      params.require(:avis).permit(
+        :introduction_file,
+        :introduction,
+        :confidentiel,
+        :invite_linked_dossiers,
+        :question_label,
+        emails: []
+      )
+    end
 
     def navigate_through_dossiers_list
       dossier = dossier_scope.find(params[:dossier_id])

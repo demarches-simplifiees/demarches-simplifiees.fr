@@ -188,7 +188,7 @@ export class BatchOperationController extends ApplicationController {
   injectSelectedIdsIntoModal(event: Event) {
     event.preventDefault();
 
-    const modalForm = document.querySelector<HTMLFormElement>('#new_batch_operation_modal');
+    const modalForm = document.querySelector<HTMLFormElement>('#new_avis');
     if (!modalForm) return;
 
     // Supprimer les inputs précédemment injectés
