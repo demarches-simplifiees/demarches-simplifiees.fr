@@ -77,7 +77,13 @@ class Cache::ProcedureDossierPagination
 
   def renew_ids(from_id:)
     value = read_cache
-    value[:ids] = fetch_ids_around(from_id:)
+    ids_around = fetch_ids_around(from_id:)
+
+    # if ids_around is empty, it means that the current dossier was not found in all fetch ids (it can have changed status)
+    # we do not want to refresh the cache in this case, it would break navigation
+    return if ids_around.empty?
+
+    value[:ids] = ids_around
 
     write_cache(value)
   end
