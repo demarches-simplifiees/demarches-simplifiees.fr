@@ -119,7 +119,7 @@ module TagsSubstitutionConcern
     {
       id: 'dossier_service_name',
       libelle: 'nom du service',
-      description: 'Le nom du service instructeur qui traite le dossier',
+      description: 'Le nom du service de la démarche',
       lambda: -> (d) { d.procedure.organisation_name || '' },
       available_for_states: Dossier::SOUMIS
     }
@@ -238,6 +238,14 @@ module TagsSubstitutionConcern
     }
   ]
 
+  CONTACT_INFORMATION_NAME_TAG = {
+    id: 'dossier_contact_information_name',
+    libelle: 'nom du service instructeur',
+    description: 'Le nom du service qui traite le dossier (celui des informations de contact du groupe instructeur s’il existe, sinon celui de la démarche)',
+    lambda: -> (d) { d.service&.nom || '' },
+    available_for_states: Dossier::SOUMIS
+  }
+
   SHARED_TAG_IDS = (DOSSIER_TAGS + DOSSIER_TAGS_FOR_MAIL + INDIVIDUAL_TAGS + ENTREPRISE_TAGS + ROUTAGE_TAGS).map { _1[:id] }
 
   def identity_tags
@@ -349,6 +357,7 @@ module TagsSubstitutionConcern
   def contextual_dossier_tags
     tags = []
     tags << DOSSIER_SVA_SVR_DECISION_DATE_TAG if respond_to?(:procedure) && procedure.sva_svr_enabled?
+    tags << CONTACT_INFORMATION_NAME_TAG if respond_to?(:procedure) && procedure.routing_enabled? && procedure.groupe_instructeurs.any? { _1.contact_information.present? }
     tags
   end
 
