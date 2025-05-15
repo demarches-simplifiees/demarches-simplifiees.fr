@@ -28,6 +28,7 @@ describe Cache::ProcedureDossierPagination do
       let(:next_page_ids) { (0..10).to_a }
 
       subject { instance.next_dossier_id(from_id: cached_ids.last) }
+
       before do
         allow(instance).to receive(:fetch_all_ids).and_return(next_page_ids)
       end
@@ -40,10 +41,26 @@ describe Cache::ProcedureDossierPagination do
     context 'when procedure.dossiers.by_statut does not include searched dossiers anymore' do
       let(:cached_ids) { [] }
       let(:next_page_ids) { [] }
+
       before { allow(instance).to receive(:fetch_all_ids).and_return(next_page_ids) }
 
       it 'works' do
         expect(instance.next_dossier_id(from_id: 50)).to eq(nil)
+      end
+    end
+
+    context "when dossier 4 change status" do
+      let(:cached_ids) { [1, 2, 3, 4] }
+      let(:all_ids_after_change) { [1, 2, 3] }
+
+      subject { instance.next_dossier_id(from_id: cached_ids.last) }
+
+      before do
+        allow(instance).to receive(:fetch_all_ids).and_return(all_ids_after_change)
+      end
+
+      it "should not refresh paginated_ids" do
+        expect { subject }.not_to change { instance.send(:ids) }.from(cached_ids)
       end
     end
   end
