@@ -111,11 +111,11 @@ RSpec.describe NotificationMailer, type: :mailer do
       end
 
       context "when user has preferred domain" do
-        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+        let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
 
         it 'adjusts links and sender email for user preferred domain' do
-          expect(mail.body).to have_link(href: dossier_url(dossier, host: 'demarches.gouv.fr'))
-          expect(header_value("From", mail)).to include("@demarches.gouv.fr")
+          expect(mail.body).to have_link(href: dossier_url(dossier, host: 'demarches.numerique.gouv.fr'))
+          expect(header_value("From", mail)).to include("@demarches.numerique.gouv.fr")
         end
       end
     end

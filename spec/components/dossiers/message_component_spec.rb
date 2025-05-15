@@ -118,8 +118,8 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       end
 
       describe 'autolink simple urls' do
-        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: "rdv sur https://demarches.gouv.fr") }
-        it { is_expected.to have_link("https://demarches.gouv.fr", href: "https://demarches.gouv.fr") }
+        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: "rdv sur https://demarches.numerique.gouv.fr") }
+        it { is_expected.to have_link("https://demarches.numerique.gouv.fr", href: "https://demarches.numerique.gouv.fr") }
       end
     end
 
