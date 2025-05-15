@@ -48,7 +48,7 @@ module ReleaseNotesHelper
 
   # Note: this affects all ActionText content rendering
   def sanitizer_allowed_tags
-    super + %w[a]
+    super + %w[a img] # re-add tag which removed from global config
   end
 
   def sanitizer_allowed_attributes
