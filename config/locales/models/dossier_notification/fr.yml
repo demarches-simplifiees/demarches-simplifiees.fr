@@ -11,3 +11,4 @@ fr:
         message_usager: Message usager
         # TODO: switch to ‘Annotation instructeur’ during global renaming
         annotation_instructeur: Annotation privée
+        avis_externe: Avis externe

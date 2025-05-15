@@ -111,6 +111,7 @@ module Experts
         @avis.dossier.touch(*timestamps)
 
         DossierNotification.destroy_notifications_by_dossier_and_type(@avis.dossier, :attente_avis) if @avis.dossier.avis.without_answer.empty?
+        DossierNotification.create_notification(@avis.dossier, :avis_externe)
 
         if !updated_recently
           @avis.dossier.followers_instructeurs
