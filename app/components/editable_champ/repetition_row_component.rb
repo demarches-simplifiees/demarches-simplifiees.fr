@@ -11,6 +11,6 @@ class EditableChamp::RepetitionRowComponent < ApplicationComponent
   private
 
   def section_component
-    EditableChamp::SectionComponent.new(dossier: @dossier, types_de_champ: @types_de_champ, row_id:)
+    EditableChamp::SectionComponent.new(dossier: @dossier, types_de_champ: @types_de_champ, row_id:, row_number:)
   end
 end
