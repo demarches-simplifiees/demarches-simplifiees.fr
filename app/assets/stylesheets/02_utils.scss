@@ -172,6 +172,10 @@
   vertical-align: super;
 }
 
+.align-middle {
+  vertical-align: middle;
+}
+
 .border-left {
   border-left: 4px solid var(--background-contrast-grey);
   padding-left: $default-padding;
