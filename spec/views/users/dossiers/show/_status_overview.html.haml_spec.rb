@@ -20,8 +20,6 @@ describe 'users/dossiers/show/_status_overview', type: :view do
 
     def item_selector(selector)
       item_selector = ".status-timeline #{selector}"
-      item_selector += '.active' if @active == true
-      item_selector += ':not(.active)' if @active == false
       item_selector
     end
   end
