@@ -242,7 +242,7 @@ module TagsSubstitutionConcern
     id: 'dossier_contact_information_name',
     libelle: 'nom du service instructeur',
     description: 'Le nom du service qui traite le dossier (celui des informations de contact du groupe instructeur s’il existe, sinon celui de la démarche)',
-    lambda: -> (d) { d.service&.nom || '' },
+    lambda: -> (d) { d.service_or_contact_information&.nom || '' },
     available_for_states: Dossier::SOUMIS
   }
 

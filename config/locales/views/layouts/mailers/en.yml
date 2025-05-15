@@ -9,6 +9,7 @@ en:
         ask_question: "Ask a question about your file:"
         email_sent_to: "This email has been sent to :"
         by_messagerie: By messaging
+        by_contact_link: By contact page
         by_email: "By email :"
         by_phone: "By phone :"
         schedule: "Schedule :"

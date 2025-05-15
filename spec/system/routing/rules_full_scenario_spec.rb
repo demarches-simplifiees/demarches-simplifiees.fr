@@ -291,7 +291,7 @@ describe 'The routing with rules', js: true do
     wait_for_autosave
 
     expect(dossier.reload.groupe_instructeur_id).not_to be_nil
-    expect(page).to have_text(dossier.service.nom)
+    expect(page).to have_text(dossier.service_or_contact_information.nom)
     expect(page).not_to have_text(procedure.service.nom)
 
     click_on 'Déposer le dossier'

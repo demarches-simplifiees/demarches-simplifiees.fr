@@ -79,18 +79,20 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
       pdf.text t('.dossier_state') + ' : ' + papertrail_dossier_state(@dossier), size: 10, character_spacing: -0.2, align: :justify
     end
 
-    service = @dossier.service
-    if service.present?
+    service_or_contact_information = @dossier.service_or_contact_information
+    if service_or_contact_information.present?
       pdf.fill_color black
       pdf.pad_top(30) { pdf.text t('.administrative_service'), size: 14, character_spacing: -0.2, align: :justify }
 
       pdf.fill_color grey
       pdf.pad_top(7) do
-        pdf.text "#{Service.model_name.human} : " + [service.nom, service.organisme].join(", "), size: 10, character_spacing: -0.2, align: :justify
-        pdf.text "#{Service.human_attribute_name(:adresse)} : #{service.adresse}", size: 10, character_spacing: -0.2, align: :justify
-        pdf.text "#{Service.human_attribute_name(:email)} : #{service.email}", size: 10, character_spacing: -0.2, align: :justify
-        if service.telephone.present?
-          pdf.text "#{Service.human_attribute_name(:telephone)} : #{service.telephone}", size: 10, character_spacing: -0.2, align: :justify
+        pdf.text "#{Service.model_name.human} : " + [service_or_contact_information.nom, service_or_contact_information.organisme].join(", "), size: 10, character_spacing: -0.2, align: :justify
+        pdf.text "#{Service.human_attribute_name(:adresse)} : #{service_or_contact_information.adresse}", size: 10, character_spacing: -0.2, align: :justify
+        if service_or_contact_information.email.present?
+          pdf.text "#{Service.human_attribute_name(:email)} : #{service_or_contact_information.email}", size: 10, character_spacing: -0.2, align: :justify
+        end
+        if service_or_contact_information.telephone.present?
+          pdf.text "#{Service.human_attribute_name(:telephone)} : #{service_or_contact_information.telephone}", size: 10, character_spacing: -0.2, align: :justify
         end
       end
     end
