@@ -14,14 +14,19 @@ class ChampFetchExternalDataJob < ApplicationJob
     Sentry.set_extras(external_id:)
 
     result = champ.fetch_external_data
+    handle_result(result, champ)
+  end
 
+  private
+
+  def handle_result(result, champ)
     if result.is_a?(Dry::Monads::Result)
       case result
       in Success(data)
         champ.update_with_external_data!(data:)
       in Failure(retryable: true, reason:)
         champ.log_fetch_external_data_exception(reason)
-        throw reason
+        raise reason
       in Failure(retryable: false, reason:)
         champ.log_fetch_external_data_exception(reason)
         Sentry.capture_exception(reason)

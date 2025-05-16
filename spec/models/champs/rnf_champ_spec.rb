@@ -116,7 +116,7 @@ describe Champs::RNFChamp, type: :model do
           region_name: "Île-de-France",
           title: "Fondation SFR"
         }
-        expect(champ).to receive(:update!).with(data: anything, value_json:)
+        expect(champ).to receive(:update!).with(data: anything, value_json:, fetch_external_data_exceptions: [])
         champ.update_with_external_data!(data: subject.value!)
       end
     end
