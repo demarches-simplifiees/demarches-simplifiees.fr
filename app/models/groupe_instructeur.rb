@@ -47,10 +47,13 @@ class GroupeInstructeur < ApplicationRecord
     return if !in?(instructeur.groupe_instructeurs)
 
     instructeur.groupe_instructeurs.destroy(self)
+
     instructeur.follows
       .joins(:dossier)
       .where(dossiers: { groupe_instructeur: self })
       .update_all(unfollowed_at: Time.zone.now)
+
+    DossierNotification.destroy_notifications_instructeur_of_groupe_instructeur(self, instructeur)
   end
 
   def add_instructeurs(ids: [], emails: [])
