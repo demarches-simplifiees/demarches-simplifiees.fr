@@ -720,6 +720,31 @@ describe Instructeurs::ProceduresController, type: :controller do
           expect(response.body).to have_selector('span.fr-tag', text: 'Urgent')
         end
       end
+
+      context 'when ProConnect is required' do
+        before do
+          procedure.update!(pro_connect_restricted: true)
+        end
+
+        it 'redirects to pro_connect_path and sets a flash message' do
+          subject
+
+          expect(response).to redirect_to(pro_connect_path)
+          expect(flash[:alert]).to eq("Vous devez vous connecter par ProConnect pour accéder à cette démarche")
+        end
+
+        context "and the cookie is set" do
+          before do
+            cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME] = { value: { user_id: instructeur.user.id }.to_json }
+          end
+
+          it "does not redirect to pro_connect_path" do
+            subject
+
+            expect(response).not_to redirect_to(pro_connect_path)
+          end
+        end
+      end
     end
 
     describe 'caches statut and page query param' do

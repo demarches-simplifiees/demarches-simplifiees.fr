@@ -3,6 +3,8 @@
 module Instructeurs
   class ProceduresController < InstructeurController
     include InstructeurProcedureConcern
+    include ProConnectSessionConcern
+
     before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
     after_action :mark_latest_revision_as_seen, only: [:history]
@@ -427,7 +429,16 @@ module Instructeurs
     def ensure_ownership!
       if !current_instructeur.procedures.include?(procedure)
         flash[:alert] = "Vous n’avez pas accès à cette démarche"
-        redirect_to root_path
+        return redirect_to root_path
+      end
+
+      ensure_pro_connect_if_required!
+    end
+
+    def ensure_pro_connect_if_required!
+      if procedure.pro_connect_restricted? && !logged_in_with_pro_connect?
+        flash[:alert] = "Vous devez vous connecter par ProConnect pour accéder à cette démarche"
+        redirect_to pro_connect_path
       end
     end
 
