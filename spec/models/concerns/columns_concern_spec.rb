@@ -95,6 +95,7 @@ describe ColumnsConcern do
           { label: 'Avis oui/non', table: 'avis', column: 'question_answer', displayable: true, type: :text, filterable: false },
           { label: 'France connecté ?', table: 'self', column: 'user_from_france_connect?', displayable: false, type: :text, filterable: false },
           { label: "Labels", table: "dossier_labels", column: "label_id", displayable: true, filterable: true },
+          { label: "Notifications sur le dossier", table: "dossier_notifications", column: "notification_type", displayable: false, filterable: true },
           { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', displayable: true, type: :text, filterable: true },
           { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', displayable: true, type: :text, filterable: true },
           { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', displayable: true, type: :text, filterable: true },

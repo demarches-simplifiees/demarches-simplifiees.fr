@@ -1,6 +1,6 @@
 - content_for(:title, "Personnes impliquées · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
 
-= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation }
+= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications }
 
 .personnes-impliquees.container
   = render partial: 'instructeurs/dossiers/envoyer_dossier_block', locals: { dossier: @dossier, potential_recipients: @potential_recipients }

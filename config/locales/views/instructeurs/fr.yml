@@ -5,11 +5,20 @@ fr:
       archive_ready_html: Télécharger l’archive<br>(demandée il y a %{generated_period})
     dossiers:
       filterable_state:
-        en_construction: 'En construction'
-        pending_correction: 'En attente'
-        en_instruction: 'En instruction'
-        accepte: 'Accepté'
-        refuse: 'Refusé'
-        sans_suite: 'Classé sans suite'
+        en_construction: "En construction"
+        pending_correction: "En attente"
+        en_instruction: "En instruction"
+        accepte: "Accepté"
+        refuse: "Refusé"
+        sans_suite: "Classé sans suite"
+      filterable_notification:
+        dossier_depose: 'Déposé depuis longtemps'
+        dossier_modifie: 'Dossier modifié'
+        message_usager: 'Message usager'
+        # TODO: switch to ‘Annotation instructeur’ during global renaming
+        annotation_instructeur: 'Annotation privée'
+        avis_externe: 'Avis externe'
+        attente_correction: 'En attente de correction'
+        attente_avis: "En attente d'avis externe"
       archived_block:
         archived: 'Ce dossier a été déplacé dans « à archiver » le %{date} par %{email}'

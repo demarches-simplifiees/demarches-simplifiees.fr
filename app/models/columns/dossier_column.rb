@@ -71,6 +71,10 @@ class Columns::DossierColumn < Column
       dossiers
         .joins(:groupe_instructeur)
         .where(groupe_instructeur_id: values)
+    when 'dossier_notifications'
+      dossiers
+        .joins(:dossier_notifications)
+        .where(dossier_notifications: { notification_type: values })
     end.ids
   end
 end

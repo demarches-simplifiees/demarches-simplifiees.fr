@@ -1,9 +1,12 @@
 = form_with model: [:instructeur, @procedure_presentation],
   data: { controller: 'autosubmit' } do
-  .fr-fieldset__element.fr-m-0
-    .fr-checkbox-group.fr-checkbox-group--sm
-      = hidden_field_tag 'sorted_column[id]', @procedure.notifications_column.id
-      = hidden_field_tag 'sorted_column[order]', 'asc', id: nil
-      = check_box_tag 'sorted_column[order]', 'desc', @sorted_column.sort_by_notifications?
-      = label_tag 'sorted_column[order]', t('.show_notified_first'), class: 'fr-label'
-      = submit_tag t('.show_notified_first'), data: {"checkbox-target": 'submit' }, class: 'visually-hidden'
+  .fr-toggle
+    = hidden_field_tag 'sorted_column[id]', @procedure.notifications_column.id
+    = hidden_field_tag 'sorted_column[order]', 'asc', id: nil
+    = check_box_tag 'sorted_column[order]', 'desc', @sorted_column.sort_by_notifications?,
+      class: 'fr-toggle__input',
+      id: 'toggle-notifications',
+      aria: { describedby: 'toggle-notifications-messages' }
+    = label_tag 'toggle-notifications', t('.show_notified_first'), class: 'fr-toggle__label fr-text--sm no-wrap'
+    .fr-messages-group{ id: 'toggle-notifications-messages', aria: { live: 'polite' } }
+  = submit_tag t('.show_notified_first'), data: { "checkbox-target": 'submit' }, class: 'visually-hidden'
