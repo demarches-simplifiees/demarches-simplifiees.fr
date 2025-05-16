@@ -139,7 +139,9 @@ module Instructeurs
 
     def follow
       current_instructeur.follow(dossier)
+
       flash.notice = 'Dossier suivi'
+
       redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
