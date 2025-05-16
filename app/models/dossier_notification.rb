@@ -16,7 +16,7 @@ class DossierNotification < ApplicationRecord
 
   scope :to_display, -> { where(display_at: ..Time.current) }
 
-  def self.create_notification(dossier, notification_type)
+  def self.create_notification(dossier, notification_type, instructeur: nil)
     case notification_type
     when :dossier_depose
       DossierNotification.find_or_create_by!(
@@ -28,7 +28,8 @@ class DossierNotification < ApplicationRecord
       end
 
     when :dossier_modifie, :attente_correction
-      instructeur_ids = dossier.followers_instructeur_ids
+      instructeur_ids = Array(instructeur&.id.presence || dossier.followers_instructeur_ids)
+
       instructeur_ids.each do |instructeur_id|
         DossierNotification.find_or_create_by!(
           dossier:,
@@ -45,6 +46,11 @@ class DossierNotification < ApplicationRecord
     DossierNotification
       .where(groupe_instructeur: previous_groupe_instructeur)
       .update_all(groupe_instructeur_id: new_groupe_instructeur.id)
+  end
+
+  def self.refresh_notifications_instructeur_for_dossier(instructeur, dossier)
+    create_notification(dossier, :dossier_modifie, instructeur:) if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
+    create_notification(dossier, :attente_correction, instructeur:) if dossier.pending_correction?
   end
 
   def self.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
