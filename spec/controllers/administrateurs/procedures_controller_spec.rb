@@ -717,7 +717,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
-  describe 'PUT #clone' do
+  describe 'POST #clone' do
     let(:procedure) do
       create(
         :procedure,
@@ -776,7 +776,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         }
       }
     end
-    subject { put :clone, params: params }
+    subject { post :clone, params: params }
 
     before do
       procedure.groupe_instructeurs.each { |gi| gi.update!(contact_information: create(:contact_information)) }
