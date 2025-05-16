@@ -7,7 +7,7 @@ module Administrateurs
     before_action :preload_revisions
 
     def index
-      @mail_templates = mail_templates
+      @mail_templates = @procedure.mail_templates
       @mail_templates.each(&:validate)
     end
 
@@ -52,19 +52,8 @@ module Administrateurs
 
     private
 
-    def mail_templates
-      [
-        @procedure.passer_en_construction_email_template,
-        @procedure.passer_en_instruction_email_template,
-        @procedure.accepter_email_template,
-        @procedure.refuser_email_template,
-        @procedure.classer_sans_suite_email_template,
-        @procedure.repasser_en_instruction_email_template
-      ]
-    end
-
     def find_mail_template_by_slug(slug)
-      mail_templates.find { |template| template.class.const_get(:SLUG) == slug }
+      @procedure.mail_templates.find { |template| template.class.const_get(:SLUG) == slug }
     end
 
     def update_params

@@ -10,6 +10,8 @@ FactoryBot.define do
 
     factory :refused_mail, class: Mails::RefusedMail
 
+    factory :re_instructed_mail, class: Mails::ReInstructedMail
+
     factory :without_continuation_mail, class: Mails::WithoutContinuationMail
 
     factory :initiated_mail, class: Mails::InitiatedMail do

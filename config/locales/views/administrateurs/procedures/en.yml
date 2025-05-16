@@ -81,3 +81,64 @@ en:
         intro_html: Changes made will only be visible <strong>after the next publication</strong>
         see_changes: View changes
         publish_changes: Publish changes
+      clone:
+        title: Clone a procedure
+        info: All procedure parameters will remain modifiable after cloning.
+        rename_title: Rename your procedure
+        configurate_title: Choose the procedure parameters you want to keep when cloning
+        types_de_champ_public: Form fields
+        types_de_champ_private: Private annotations
+        types_de_champ_count:
+          zero: No field
+          one: "%{count} field"
+          other: "%{count} fields"
+        administrateurs: Administrators
+        administrateurs_count:
+          one: "%{count} administrator"
+          other: "%{count} administrators"
+        instructeurs: Instructors
+        instructeurs_count:
+          zero: No instructor
+          one: "%{count} instructor"
+          other: "%{count} instructors"
+        attestation_template: Certificate of acceptance of the file
+        attestation_template_hint: Activated
+        zones: Zones
+        service: Service
+        instructeurs_self_management:
+          true: "- Self-management activated"
+          false: "- Self-management deactivated"
+        routing_enabled:
+          true: "- Routing activated"
+          false: "- Routing deactivated"
+        ineligibilite: Ineligibility of files
+        ineligibilite_hint: Enabled
+        monavis_embed: MonAvis button
+        monavis_embed_hint: "Code generated on MonAvis website : %{code}"
+        dossier_submitted_message: End of submission
+        dossier_submitted_message_hint: "(Custom message) %{message}"
+        accuse_lecture: Acknowledgment of receipt of the decision
+        accuse_lecture_hint: Enabled
+        api_entreprise_token: API company token
+        api_entreprise_token_hint: Configured token
+        mail_templates: Email configuration
+        mail_templates_hint: Content of the automatic emails
+        sva_svr: Silence is Worth Agreement or Rejection
+        sva_svr_hint:
+          sva: SVA enabled
+          svr: SVR enabled
+        sva_svr_period: "- After %{period}"
+        sva_svr_unit_labels:
+          months: months
+          weeks: weeks
+          days: days
+        avis: External opinions
+        avis_hint: Enabled - External opinions management with predefined list
+        labels: Labels
+        labels_count:
+          one: "%{count} label"
+          other: "%{count} labels"
+        actions:
+          clone: Clone the procedure
+          cancel: Cancel
+          disable_with: Cloning in progress

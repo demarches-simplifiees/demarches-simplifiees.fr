@@ -81,3 +81,64 @@ fr:
         intro_html: Les modifications effectuées ne seront visibles <strong>qu'à la prochaine publication</strong>
         see_changes: Voir les modifications
         publish_changes: Publier les modifications
+      clone:
+        title: Cloner la démarche
+        info: L’ensemble des paramètres de la démarche resteront modifiables après clonage.
+        rename_title: Renommez votre démarche
+        configurate_title: Choisissez les paramètres de la démarche que vous souhaitez conserver lors du clonage
+        types_de_champ_public: Champs du formulaire
+        types_de_champ_private: Annotations privées
+        types_de_champ_count:
+          zero: Aucun champ
+          one: "%{count} champ"
+          other: "%{count} champs"
+        administrateurs: Administrateurs
+        administrateurs_count:
+          one: "%{count} administrateur"
+          other: "%{count} administrateurs"
+        instructeurs: Instructeurs
+        instructeurs_count:
+          zero: Aucun instructeur
+          one: "%{count} instructeur"
+          other: "%{count} instructeurs"
+        attestation_template: Attestation d’acceptation du dossier
+        attestation_template_hint: Activée
+        zones: Zones
+        service: Service
+        instructeurs_self_management:
+          true: "- Autogestion activée"
+          false: "- Autogestion désactivée"
+        routing_enabled:
+          true: "- Routage activé"
+          false: "- Routage désactivé"
+        ineligibilite: Inéligibilité des dossiers
+        ineligibilite_hint: Activée
+        monavis_embed: Bouton « MonAvis »
+        monavis_embed_hint: "Code généré sur le site MonAvis : %{code}"
+        dossier_submitted_message: Fin de dépôt
+        dossier_submitted_message_hint: "(Message personnalisé) %{message}"
+        accuse_lecture: Accusé de lecture de la décision
+        accuse_lecture_hint: Activé
+        api_entreprise_token: Jeton API entreprise
+        api_entreprise_token_hint: Jeton configuré
+        mail_templates: Configuration des emails
+        mail_templates_hint: Contenu des emails automatiques
+        sva_svr: Silence Vaut Accord ou Rejet
+        sva_svr_hint:
+          sva: SVA activé
+          svr: SVR activé
+        sva_svr_period: "- Après %{period}"
+        sva_svr_unit_labels:
+          months: mois
+          weeks: semaines
+          days: jours
+        avis: Avis externes
+        avis_hint: Activé - Gestion des experts avec liste prédéfinie
+        labels: Labels
+        labels_count:
+          one: "%{count} label"
+          other: "%{count} labels"
+        actions:
+          clone: Cloner la démarche
+          cancel: Annuler
+          disable_with: Clonage en cours
