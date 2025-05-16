@@ -142,6 +142,7 @@ module Administrateurs
       @procedure = Procedure.find(params[:procedure_id])
       @cloned_from_library = cloned_from_library?
       @is_same_admin = current_administrateur.owns?(@procedure)
+      @updated_mail_templates = @procedure.mail_templates.any? { _1.updated_at.present? }
     end
 
     def clone

@@ -93,13 +93,14 @@
               .fr-hint-text
                 = t('administrateurs.procedures.clone.avis_hint')
 
-      .fr-fieldset__element
-        .fr-checkbox-group
-          = f.check_box 'clone_options[mail_templates]', checked: true
-          = f.label 'clone_options[mail_templates]', class: "fr-label" do
-            = t('administrateurs.procedures.clone.mail_templates')
-            .fr-hint-text
-              = t('administrateurs.procedures.clone.mail_templates_hint')
+      - if @updated_mail_templates
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = f.check_box 'clone_options[mail_templates]', checked: true
+            = f.label 'clone_options[mail_templates]', class: "fr-label" do
+              = t('administrateurs.procedures.clone.mail_templates')
+              .fr-hint-text
+                = t('administrateurs.procedures.clone.mail_templates_hint')
 
       - if @procedure.active_revision.types_de_champ_private.present?
         .fr-fieldset__element
