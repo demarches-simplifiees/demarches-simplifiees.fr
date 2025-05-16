@@ -12,7 +12,7 @@ fr:
         en_attente: "En attente de réponse"
       france_connect_login:
         title: 'Se créer un compte avec FranceConnect'
-        description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion aux services en ligne."
+        description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne."
         login_button: "S’identifier avec"
         help_link: "Qu’est-ce que FranceConnect ?"
         separator: 'ou'

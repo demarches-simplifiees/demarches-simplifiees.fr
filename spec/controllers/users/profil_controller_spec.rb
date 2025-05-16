@@ -186,5 +186,28 @@ describe Users::ProfilController, type: :controller do
       expect(FranceConnectInformation.where(user: user).count).to eq(0)
       expect(response).to redirect_to(profil_path)
     end
+
+    context 'when the user is logged in with France Connect' do
+      before do
+        stub_const('FRANCE_CONNECT', { end_session_endpoint: 'https://logout.franceconnect.gouv.fr' })
+        cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME] = 'id_token'
+        cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'state'
+      end
+
+      it 'deletes the cookies and redirect to France Connect logout' do
+        subject
+        expect(FranceConnectInformation.where(user: user).count).to eq(0)
+
+        [
+          FranceConnectController::ID_TOKEN_COOKIE_NAME,
+          FranceConnectController::STATE_COOKIE_NAME
+        ].map(&:to_s).each do |cookie_name|
+          expect(response.cookies.keys).to include(cookie_name)
+          expect(response.cookies[cookie_name]).to be_nil
+        end
+
+        expect(response).to redirect_to('https://logout.franceconnect.gouv.fr?id_token_hint=id_token&post_logout_redirect_uri=http%3A%2F%2Ftest.host%2Fprofil&state=state')
+      end
+    end
   end
 end

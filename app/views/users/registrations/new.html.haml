@@ -7,7 +7,7 @@
 
     %h1.fr-h2= t('views.registrations.new.title', name: Current.application_name)
 
-    = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+    = render partial: 'shared/france_connect_login', locals: { url: france_connect_path }
 
     %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
       %legend.fr-fieldset__legend#create-account-legend
