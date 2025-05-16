@@ -53,6 +53,12 @@ class DossierNotification < ApplicationRecord
       .destroy_all
   end
 
+  def self.destroy_notifications_instructeur_of_dossier(instructeur, dossier)
+    DossierNotification
+      .where(instructeur:, dossier:)
+      .destroy_all
+  end
+
   def self.destroy_notifications_by_dossier_and_type(dossier, notification_type)
     DossierNotification
       .where(dossier:, notification_type:)
