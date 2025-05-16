@@ -133,6 +133,56 @@ module DossierHelper
     tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{Label.class_name(color)} no-wrap")
   end
 
+  def tag_summary_notification(notification_type_count)
+    type, count = notification_type_count
+
+    tag.span(class: [badge_notification_class(type), 'fr-badge--no-icon']) do
+      safe_join([
+        tag.span(count, class: "fr-background-alt--grey fr-my-1v fr-mr-1v fr-px-1v fr-text-default--grey"),
+        tag.span(nil, class: [badge_notification_class(type), 'fr-my-0', 'fr-mx-0', 'fr-px-0'], aria: { hidden: true }),
+        badge_notification_text(type, generic: true)
+      ])
+    end
+  end
+
+  def tags_summary_notification(notifications_counts_by_type)
+    tag.ul(class: 'fr-badge-group fr-mt-2w') do
+      safe_join(notifications_counts_by_type.map { |notif| tag.li(tag_summary_notification(notif)) })
+    end
+  end
+
+  def tag_notification(notification, generic: false)
+    tag.span(badge_notification_text(notification, generic:), class: badge_notification_class(notification))
+  end
+
+  def tags_notification(notifications, generic: false)
+    tag.ul(class: 'fr-badge-group') do
+      safe_join(notifications.map { |notif| tag.li(tag_notification(notif, generic:)) })
+    end
+  end
+
+  def badge_notification_class(notification)
+    type = extract_notification_type(notification)
+
+    case type
+    when DossierNotification.notification_types.fetch(:dossier_depose)
+      "fr-badge fr-badge--sm fr-badge--warning"
+    end
+  end
+
+  def badge_notification_text(notification, generic)
+    type = extract_notification_type(notification)
+
+    case type
+    when DossierNotification.notification_types.fetch(:dossier_depose)
+      if generic[:generic]
+        t("activerecord.attributes.notification.#{type}.generic")
+      else
+        t("activerecord.attributes.notification.#{type}.specific", days: (Time.current.to_date - notification.display_at.to_date).to_i)
+      end
+    end
+  end
+
   def demandeur_dossier(dossier)
     if dossier.procedure.for_individual? && dossier.for_tiers?
       return t('shared.dossiers.beneficiaire', mandataire: dossier.mandataire_full_name, beneficiaire: "#{dossier&.individual&.prenom} #{dossier&.individual&.nom}")
@@ -171,5 +221,11 @@ module DossierHelper
     else
       t("shared.dossiers.france_connect_informations.details", name: user_information.full_name)
     end
+  end
+
+  private
+
+  def extract_notification_type(notification_or_type)
+    notification_or_type.is_a?(DossierNotification) ? notification_or_type.notification_type : notification_or_type
   end
 end

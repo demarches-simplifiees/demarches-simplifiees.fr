@@ -4,6 +4,13 @@ fr:
       index:
         close_button: Fermer
         procedure_menu: Menu de la démarche
+        statuts:
+          a-suivre: "À suivre"
+          suivis: "Suivis par moi"
+          traites: "Traités"
+          expirants: "Expirants"
+          archives: "À archiver"
+          supprimes: "Corbeille"
       show:
         file_tracking: Suivi des dossiers
         reinit_display: Votre affichage a dû être réinitialisé en raison d'un problème technique.

@@ -63,6 +63,7 @@ module Instructeurs
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
+      @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
     end
@@ -81,6 +82,19 @@ module Instructeurs
       return redirect_to instructeur_procedure_path(procedure_id: params[:procedure_id]) if params[:procedure_id].present?
 
       redirect_to instructeur_procedures_path
+    end
+
+    def display_notifications
+      if params[:display] == 'true'
+        notifications = DossierNotification.notifications_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
+      end
+
+      respond_to do |format|
+        @procedure_id = procedure_id
+        @notifications = notifications || {}
+        @display = params[:display]
+        format.turbo_stream
+      end
     end
 
     def show
