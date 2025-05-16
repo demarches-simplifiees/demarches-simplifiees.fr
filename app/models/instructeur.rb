@@ -348,6 +348,10 @@ class Instructeur < ApplicationRecord
     groupe_instructeurs.filter_map { [_1.label, _1.id] if _1.procedure == procedure }
   end
 
+  def feature_enabled?(feature)
+    Flipper.enabled?(feature, self)
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie, pieces_jointes)
