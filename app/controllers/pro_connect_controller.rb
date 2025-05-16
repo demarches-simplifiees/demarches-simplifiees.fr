@@ -2,6 +2,8 @@
 
 # doc: https://github.com/numerique-gouv/proconnect-documentation/tree/main
 class ProConnectController < ApplicationController
+  include ProConnectSessionConcern
+
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
 
@@ -47,6 +49,8 @@ class ProConnectController < ApplicationController
     if user.instructeur?
       user.instructeur.update!(pro_connect_id_token: id_token)
     end
+
+    set_pro_connect_session_info_cookie(user.id)
 
     sign_in(:user, user)
     redirect_to stored_location_for(:user) || root_path
