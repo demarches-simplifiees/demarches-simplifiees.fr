@@ -36,7 +36,7 @@ It renders the `_table` partial to display details about the resources.
   <section class='main-content__body'>
     <p>
     ⚠️⚠️ Le dossier n° <%= @deleted_dossier.dossier_id %> a été <b>supprimé le <%= l(@deleted_dossier.deleted_at) %></b> pour la raison : <b><%= t("activerecord.attributes.deleted_dossier.reason.#{@deleted_dossier.reason}") %></b>. ⚠️⚠️<br>
-    il appartenait à la procédure « <%= @deleted_dossier.procedure.libelle %> ».
+    il appartenait à la procédure <%= link_to "n° #{@deleted_dossier.procedure.id} « #{@deleted_dossier.procedure.libelle} »", manager_procedure_path(@deleted_dossier.procedure) %>
     </p>
   </section>
 <%- end -%>
