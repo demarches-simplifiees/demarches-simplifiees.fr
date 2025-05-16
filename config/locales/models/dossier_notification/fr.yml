@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    attributes:
+      notification:
+        dossier_depose:
+          generic: Déposé depuis longtemps
+          specific: "Dépose depuis %{days} J."
