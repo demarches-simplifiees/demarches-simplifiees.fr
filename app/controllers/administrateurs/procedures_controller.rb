@@ -688,7 +688,8 @@ module Administrateurs
         :api_entreprise_token,
         :mail_templates,
         :sva_svr,
-        :avis
+        :avis,
+        :labels
       )
       {
         clone_champs: options[:champs] == '1',
@@ -706,6 +707,7 @@ module Administrateurs
         clone_mail_templates: options[:mail_templates] == '1',
         clone_sva_svr: options[:sva_svr] == '1',
         clone_avis: options[:avis] == '1',
+        clone_labels: options[:labels] == '1',
         clone_libelle: params.fetch(:procedure)[:libelle],
         cloned_from_library: params[:from_new_from_existing]
       }

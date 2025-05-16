@@ -133,7 +133,11 @@ fr:
           weeks: semaines
           days: jours
         avis: Avis externes
-        avis_hint: Activé - Gestions des experts avec liste prédéfinie
+        avis_hint: Activé - Gestion des experts avec liste prédéfinie
+        labels: Labels
+        labels_count:
+          one: "%{count} label"
+          other: "%{count} labels"
         actions:
           clone: Cloner la démarche
           cancel: Annuler

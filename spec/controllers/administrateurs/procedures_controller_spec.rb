@@ -731,6 +731,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         :with_service,
         :routee,
         :with_dossier_submitted_message,
+        :with_labels,
         :sva,
         monavis_embed:,
         administrateurs: [admin, administrateur_2],
@@ -794,10 +795,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.cloned_from_library).to be_falsey
-        expect(Procedure.last.labels.present?).to be_truthy
-        expect(Procedure.last.labels.first.procedure_id).to eq(Procedure.last.id)
         expect(procedure.labels.first.procedure_id).to eq(procedure.id)
-
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
       end
 
@@ -839,7 +837,8 @@ describe Administrateurs::ProceduresController, type: :controller do
                 sva_svr: '1',
                 mail_templates: '1',
                 ineligibilite: '1',
-                avis: '1'
+                avis: '1',
+                labels: '1'
               }
             }
           }
@@ -873,12 +872,13 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.draft_revision.ineligibilite_message).to eq('Votre demande est inéligible')
           expect(Procedure.last.experts_require_administrateur_invitation).to be_truthy
           expect(Procedure.last.experts).not_to be_blank
+          expect(Procedure.last.labels).not_to be_blank
+          expect(Procedure.last.labels.first.procedure_id).to eq(Procedure.last.id)
           expect(Procedure.last.libelle).to eq 'Démarche avec un nouveau nom'
         end
       end
 
       context 'when the admin unchecks all options' do
-        let(:params) { { procedure_id: procedure.id } }
         let(:params) do
           {
             procedure_id: procedure.id,
@@ -899,7 +899,8 @@ describe Administrateurs::ProceduresController, type: :controller do
                 sva_svr: '0',
                 mail_templates: '0',
                 ineligibilite: '0',
-                avis: '0'
+                avis: '0',
+                labels: '0'
               }
             }
           }
@@ -937,6 +938,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.draft_revision.ineligibilite_message).to be_nil
           expect(Procedure.last.experts_require_administrateur_invitation).to be_falsey
           expect(Procedure.last.experts).to be_blank
+          expect(Procedure.last.labels).to be_blank
         end
       end
     end
@@ -952,7 +954,6 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
-        expect(Procedure.last.labels.present?).to be_truthy
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
       end
     end
