@@ -753,6 +753,17 @@ class Procedure < ApplicationRecord
     monavis_embed.gsub('nd_source=button', "nd_source=#{source}").gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
   end
 
+  def mail_templates
+    [
+      self.passer_en_construction_email_template,
+      self.passer_en_instruction_email_template,
+      self.accepter_email_template,
+      self.refuser_email_template,
+      self.classer_sans_suite_email_template,
+      self.repasser_en_instruction_email_template
+    ]
+  end
+
   private
 
   def stable_ids_used_by_routing_rules
