@@ -15,7 +15,7 @@ module Mutations
       demarche = Procedure.find_by(id: demarche_number)
 
       if demarche.present? && (demarche.opendata? || context.authorized_demarche?(demarche))
-        cloned_demarche = demarche.clone(context.current_administrateur, false)
+        cloned_demarche = demarche.clone(admin: context.current_administrateur)
         cloned_demarche.update!(libelle: title) if title.present?
 
         { demarche: cloned_demarche.draft_revision }

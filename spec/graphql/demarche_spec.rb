@@ -29,7 +29,7 @@ RSpec.describe Types::DemarcheType, type: :graphql do
 
   describe 'demarche with clone' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
-    let(:procedure_clone) { procedure.clone(admin, false) }
+    let(:procedure_clone) { procedure.clone(admin:) }
     let(:query) { DEMARCHE_WITH_CHAMP_DESCRIPTORS_QUERY }
     let(:variables) { { number: procedure_clone.id } }
     let(:champ_descriptor_id) { procedure.draft_revision.types_de_champ_public.first.to_typed_id }

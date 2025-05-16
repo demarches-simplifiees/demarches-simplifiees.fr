@@ -38,6 +38,8 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       page.all('.card .dropdown .fr-btn').first.click
       page.all('.clone-btn').first.click
+      check 'Instructeurs', allow_label_click: true
+      click_on 'Cloner la démarche'
       visit admin_procedures_path(statut: "brouillons")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       click_on Procedure.last.libelle
@@ -76,6 +78,8 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
       expect(page).to have_content(Procedure.last.libelle)
       find('.button_to>button').click
       click_on 'Cloner'
+      check 'Instructeurs', allow_label_click: true
+      click_on 'Cloner la démarche'
       visit admin_procedures_path(statut: "brouillons")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       click_on Procedure.last.libelle

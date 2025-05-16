@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe Administrateurs::ProceduresController, type: :controller do
+  include Logic
+
   let(:admin) { administrateurs(:default_admin) }
+  let(:administrateur_2) { create(:administrateur) }
+  let(:instructeur_2) { create(:instructeur) }
   let(:bad_procedure_id) { 100000 }
 
   let(:path) { 'ma-jolie-demarche' }
@@ -680,22 +684,103 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'GET #clone_settings' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
+    render_views
+    let(:procedure) { create(:procedure, :with_service, administrateur: admin, instructeurs: [admin.instructeur]) }
     let(:params) { { procedure_id: procedure.id } }
 
-    subject { get :clone_settings, params: params }
+    subject do
+      get :clone_settings, params: params
+    end
 
-    it { is_expected.to have_http_status(:success) }
+    context 'when admin is the owner of the procedure' do
+      it 'displays all options' do
+        is_expected.to have_http_status(:success)
+        expect(response.body).to include "Service"
+        expect(response.body).to include "Administrateurs"
+        expect(response.body).to include "Instructeurs"
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      before do
+        sign_out(admin.user)
+        sign_in(administrateur_2.user)
+        subject
+      end
+
+      it 'hides some options' do
+        is_expected.to have_http_status(:success)
+        expect(response.body).not_to include "Service"
+        expect(response.body).not_to include "Administrateurs"
+        expect(response.body).not_to include "Instructeurs"
+      end
+    end
   end
 
   describe 'PUT #clone' do
-    let(:procedure) { create(:procedure, :with_notice, :with_deliberation, :with_labels, administrateur: admin) }
-    let(:params) { { procedure_id: procedure.id } }
+    let(:procedure) do
+      create(
+        :procedure,
+        :with_type_de_champ,
+        :with_type_de_champ_private,
+        :with_notice,
+        :with_deliberation,
+        :with_logo,
+        :with_labels,
+        :with_zone,
+        :with_service,
+        :routee,
+        :with_dossier_submitted_message,
+        :sva,
+        monavis_embed:,
+        administrateurs: [admin, administrateur_2],
+        instructeurs: [admin.instructeur, instructeur_2],
+        attestation_template: build(:attestation_template),
+        accuse_lecture: true,
+        api_entreprise_token:,
+        initiated_mail:,
+        received_mail:,
+        closed_mail:,
+        refused_mail:,
+        without_continuation_mail:,
+        re_instructed_mail:,
+        experts_require_administrateur_invitation:,
+        instructeurs_self_management_enabled:
+      )
+    end
 
+    let(:monavis_embed) { '<a href="https://monavis.numerique.gouv.fr/Demarches/123456?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d4"><img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" /></a>' }
+    let(:ineligibilite_message) { 'Votre demande est inéligible' }
+    let(:ineligibilite_enabled) { true }
+    let(:ineligibilite_rules) { ds_eq(constant(true), constant(true)) }
+    let(:api_entreprise_token) { JWT.encode({ exp: 2.days.ago.to_i }, nil, "none") }
+    let(:initiated_mail) { build(:initiated_mail) }
+    let(:received_mail) { build(:received_mail) }
+    let(:closed_mail) { build(:closed_mail) }
+    let(:refused_mail) { build(:refused_mail) }
+    let(:without_continuation_mail) { build(:without_continuation_mail) }
+    let(:re_instructed_mail) { build(:re_instructed_mail) }
+    let(:experts_require_administrateur_invitation) { true }
+    let(:expert) { create(:expert) }
+    let!(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    let(:instructeurs_self_management_enabled) { true }
+
+    let(:params) do
+      {
+        procedure_id: procedure.id,
+        procedure: {
+          libelle: procedure.libelle,
+          clone_options: {
+            instructeurs: '0'
+          }
+        }
+      }
+    end
     subject { put :clone, params: params }
 
     before do
-      procedure
+      procedure.groupe_instructeurs.each { |gi| gi.update!(contact_information: create(:contact_information)) }
+      procedure.active_revision.update(ineligibilite_rules:, ineligibilite_message:, ineligibilite_enabled:)
 
       response = Typhoeus::Response.new(code: 200, body: 'Hello world')
       Typhoeus.stub(/active_storage\/disk/).and_return(response)
@@ -709,19 +794,150 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.cloned_from_library).to be_falsey
-        expect(Procedure.last.notice.attached?).to be_truthy
-        expect(Procedure.last.deliberation.attached?).to be_truthy
         expect(Procedure.last.labels.present?).to be_truthy
         expect(Procedure.last.labels.first.procedure_id).to eq(Procedure.last.id)
         expect(procedure.labels.first.procedure_id).to eq(procedure.id)
 
-        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
       end
 
       context 'when the procedure is cloned from the library' do
-        let(:params) { { procedure_id: procedure.id, from_new_from_existing: true } }
+        let(:params) do
+          {
+            procedure_id: procedure.id,
+            from_new_from_existing: true,
+            procedure: {
+              libelle: procedure.libelle,
+              clone_options: {
+                instructeurs: '0'
+              }
+            }
+          }
+        end
 
         it { expect(Procedure.last.cloned_from_library).to be(true) }
+      end
+
+      context 'when the admin checks all options' do
+        let(:params) do
+          {
+            procedure_id: procedure.id,
+            procedure: {
+              libelle: 'Démarche avec un nouveau nom',
+              clone_options: {
+                administrateurs: '1',
+                instructeurs: '1',
+                champs: '1',
+                annotations: '1',
+                attestation_template: '1',
+                zones: '1',
+                service: '1',
+                monavis_embed: '1',
+                dossier_submitted_message: '1',
+                accuse_lecture: '1',
+                api_entreprise_token: '1',
+                sva_svr: '1',
+                mail_templates: '1',
+                ineligibilite: '1',
+                avis: '1'
+              }
+            }
+          }
+        end
+
+        it 'clones everything' do
+          expect(Procedure.last.notice.attached?).to be_truthy
+          expect(Procedure.last.deliberation.attached?).to be_truthy
+          expect(Procedure.last.logo.attached?).to be_truthy
+          expect(Procedure.last.administrateurs).to include(administrateur_2)
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur, instructeur_2])
+          expect(Procedure.last.instructeurs_self_management_enabled).to be_truthy
+          expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1
+          expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1
+          expect(Procedure.last.attestation_template).not_to be_nil
+          expect(Procedure.last.zones).not_to be_blank
+          expect(Procedure.last.service).not_to be_nil
+          expect(Procedure.last.monavis_embed).not_to be_nil
+          expect(Procedure.last.draft_revision.dossier_submitted_message).not_to be_nil
+          expect(Procedure.last.accuse_lecture).to be_truthy
+          expect(Procedure.last[:api_entreprise_token]).not_to be_nil
+          expect(Procedure.last.sva_svr_configuration.decision).to eq('sva')
+          expect(Procedure.last.initiated_mail).not_to be_nil
+          expect(Procedure.last.received_mail).not_to be_nil
+          expect(Procedure.last.closed_mail).not_to be_nil
+          expect(Procedure.last.refused_mail).not_to be_nil
+          expect(Procedure.last.without_continuation_mail).not_to be_nil
+          expect(Procedure.last.re_instructed_mail).not_to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_rules).not_to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_truthy
+          expect(Procedure.last.draft_revision.ineligibilite_message).to eq('Votre demande est inéligible')
+          expect(Procedure.last.experts_require_administrateur_invitation).to be_truthy
+          expect(Procedure.last.experts).not_to be_blank
+          expect(Procedure.last.libelle).to eq 'Démarche avec un nouveau nom'
+        end
+      end
+
+      context 'when the admin unchecks all options' do
+        let(:params) { { procedure_id: procedure.id } }
+        let(:params) do
+          {
+            procedure_id: procedure.id,
+            procedure: {
+              libelle: procedure.libelle,
+              clone_options: {
+                administrateurs: '0',
+                instructeurs: '0',
+                champs: '0',
+                annotations: '0',
+                attestation_template: '0',
+                zones: '0',
+                service: '0',
+                monavis_embed: '0',
+                dossier_submitted_message: '0',
+                accuse_lecture: '0',
+                api_entreprise_token: '0',
+                sva_svr: '0',
+                mail_templates: '0',
+                ineligibilite: '0',
+                avis: '0'
+              }
+            }
+          }
+        end
+
+        it 'clones only mandatory params' do
+          expect(Procedure.last.notice.attached?).to be_truthy
+          expect(Procedure.last.deliberation.attached?).to be_truthy
+          expect(Procedure.last.logo.attached?).to be_truthy
+          expect(Procedure.last.administrateurs).not_to include(administrateur_2)
+          expect(Procedure.last.administrateurs).to include(admin)
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur])
+          expect(Procedure.last.groupe_instructeurs.count).to eq(1)
+          expect(Procedure.last.routing_enabled).to be_falsey
+          expect(Procedure.last.defaut_groupe_instructeur.contact_information).to be_nil
+          expect(Procedure.last.instructeurs_self_management_enabled).to be_falsey
+          expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 0
+          expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 0
+          expect(Procedure.last.attestation_template).to be_nil
+          expect(Procedure.last.zones).to be_blank
+          expect(Procedure.last.service).to be_nil
+          expect(Procedure.last.monavis_embed).to be_nil
+          expect(Procedure.last.draft_revision.dossier_submitted_message).to be_nil
+          expect(Procedure.last.accuse_lecture).to be_falsey
+          expect(Procedure.last[:api_entreprise_token]).to be_nil
+          expect(Procedure.last.sva_svr_configuration.decision).to eq('disabled')
+          expect(Procedure.last.initiated_mail).to be_nil
+          expect(Procedure.last.received_mail).to be_nil
+          expect(Procedure.last.closed_mail).to be_nil
+          expect(Procedure.last.refused_mail).to be_nil
+          expect(Procedure.last.without_continuation_mail).to be_nil
+          expect(Procedure.last.re_instructed_mail).to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_rules).to be_nil
+          expect(Procedure.last.draft_revision.ineligibilite_enabled).to be_falsey
+          expect(Procedure.last.draft_revision.ineligibilite_message).to be_nil
+          expect(Procedure.last.experts_require_administrateur_invitation).to be_falsey
+          expect(Procedure.last.experts).to be_blank
+        end
       end
     end
 
@@ -737,7 +953,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.labels.present?).to be_truthy
-        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
       end
     end
 
@@ -769,7 +985,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.notice.attached?).to be_falsey
         expect(Procedure.last.deliberation.attached?).to be_falsey
-        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
+        expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
       end
     end
   end
