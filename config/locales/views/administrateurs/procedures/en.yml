@@ -134,6 +134,10 @@ en:
           days: days
         avis: External opinions
         avis_hint: Enabled - External opinions management with predefined list
+        labels: Labels
+        labels_count:
+          one: "%{count} label"
+          other: "%{count} labels"
         actions:
           clone: Clone the procedure
           cancel: Cancel

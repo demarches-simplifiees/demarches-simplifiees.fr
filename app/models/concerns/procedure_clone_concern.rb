@@ -32,6 +32,7 @@ module ProcedureCloneConcern
 
     procedure.draft_revision.revision_types_de_champ.public_only.each(&:destroy) if !options[:clone_champs]
     procedure.draft_revision.revision_types_de_champ.private_only.each(&:destroy) if !options[:clone_annotations]
+    procedure.labels = [] if !options[:clone_labels]
 
     if !same_admin?(admin) || options[:cloned_from_library]
       procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -110,7 +111,8 @@ module ProcedureCloneConcern
       clone_monavis_embed: true,
       clone_dossier_submitted_message: true,
       clone_accuse_lecture: true,
-      clone_mail_templates: true
+      clone_mail_templates: true,
+      clone_labels: true
     }
   end
 

@@ -158,6 +158,15 @@
               .fr-hint-text
                 = t('administrateurs.procedures.clone.accuse_lecture_hint')
 
+      - if @procedure.labels.present?
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = f.check_box 'clone_options[labels]', checked: true
+            = f.label 'clone_options[labels]', class: "fr-label" do
+              = t('administrateurs.procedures.clone.labels')
+              .fr-hint-text
+                = t('administrateurs.procedures.clone.labels_count', count: @procedure.labels.count)
+
     .fixed-footer
       .fr-container
         %ul.fr-btns-group.fr-btns-group--inline-md.fr-ml-0
