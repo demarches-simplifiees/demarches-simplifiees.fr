@@ -1,0 +1,10 @@
+en:
+  activerecord:
+    errors:
+      models:
+        champs/referentiel_champ:
+          attributes:
+            value:
+              api_response_pending: 'Pending response...'
+              api_response_error: 'Not found.'
+              unexpected_state: 'Unexpected state, our tech team must investigate.'

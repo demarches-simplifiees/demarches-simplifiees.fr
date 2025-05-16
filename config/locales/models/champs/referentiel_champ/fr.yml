@@ -1,0 +1,10 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        champs/referentiel_champ:
+          attributes:
+            value:
+              api_response_pending: 'En attente de réponse...'
+              api_response_error: 'Aucun résultat ne correspond à votre recherche.'
+              unexpected_state: 'Erreur inattendue, nos équipes techniques doivent investiguer.'

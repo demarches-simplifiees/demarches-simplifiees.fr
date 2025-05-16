@@ -3,15 +3,21 @@
 class Champs::ReferentielChamp < Champ
   delegate :referentiel, to: :type_de_champ
 
-  validates :value, presence: true, allow_blank: true, allow_nil: true, if: -> { validate_champ_value? }
   before_save :clear_previous_result, if: -> { external_id_changed? }
+
+  validates_with ReferentielChampValidator, if: :validate_champ_value?
 
   def fetch_external_data
     ReferentielService.new(referentiel:).call(external_id)
   end
 
   def update_with_external_data!(data:)
-    update!(value: external_id, data:, value_json: todo_map_stuff(data:), fetch_external_data_exceptions: [])
+    update!(
+      value: external_id,                # now that we have the data, we can set the value
+      data:,                             # keep raw API response
+      value_json: todo_map_stuff(data:), # columnize the data
+      fetch_external_data_exceptions: [] # void previous errors
+    )
   end
 
   def todo_map_stuff(data:)

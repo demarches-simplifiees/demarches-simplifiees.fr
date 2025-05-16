@@ -1872,6 +1872,36 @@ describe Users::DossiersController, type: :controller do
         expect(flash[:alert]).to include("Vous n’avez pas accès à ce dossier")
       end
     end
+
+    context 'when champ is pollable' do
+      let(:referentiel) { create(:api_referentiel, :configured) }
+      let(:types_de_champ_public) { [{ type: :referentiel, referentiel:, stable_id: }] }
+
+      context 'when the requested external_id had not been fetched' do
+        before { dossier.champs.first.update_columns(external_id: 'kthxbye') }
+
+        it 'does not validates errors' do
+          subject
+          expect(response).not_to include('Aucun résultat ne correspond à votre recherche.')
+        end
+      end
+
+      context 'when the requested external_id had been fetched' do
+        before { dossier.champs.first.update_columns(external_id: 'kthxbye', value: "OK", data: {}) }
+        it 'validates errors' do
+          subject
+          expect(response).not_to include('Référence trouvée : OK')
+        end
+      end
+
+      context 'when the requested external_id is in error' do
+        before { dossier.champs.first.update_columns(external_id: 'kthxbye', value: "OK", fetch_external_data_exceptions: [ExternalDataException.new(reason: "thxbye", code: 429)]) }
+        it 'validates errors' do
+          subject
+          expect(response).not_to include('Trop de demandes. Nous réessayons pour vous.')
+        end
+      end
+    end
   end
 
   private
