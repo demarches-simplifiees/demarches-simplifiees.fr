@@ -81,6 +81,12 @@ describe ProConnectController, type: :controller do
               nil
             )
           end
+
+          it "sets last_sign_in_at" do
+            expect { subject }.to change { instructeur.user.reload.last_sign_in_at }.from(
+              nil
+            )
+          end
         end
 
         context 'and the instructeur already has an account as a user' do
