@@ -1,0 +1,8 @@
+= render Dsfr::NoticeComponent.new(closable: true) do |c|
+  - c.with_title do
+    ÉVOLUTION – Vous savez maintenant à quoi correspond la pastille rouge sur vos dossiers !
+  - c.with_desc do
+    Un badge de notification est maintenant affiché à côté du N° de dossier concerné par un événement.
+  -# TODO: insert link to the doc
+  - c.with_link do
+    = link_to "En savoir plus sur les badges de notifications", t("links.instructeur.notification_notice.url"), class: "fr-notice__link", target: "_blank", rel: "noopener"

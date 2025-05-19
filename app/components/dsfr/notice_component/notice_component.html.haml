@@ -1,8 +1,15 @@
 .fr-notice.fr-notice--info{ **notice_data_attributes }
   .fr-container
     .fr-notice__body
-      %p.fr-notice__title
-        = title
+      %p
+        - if title
+          %span.fr-notice__title
+            = title
+        - if desc
+          %span.fr-notice__desc
+            = desc
+        - if link
+          = link
 
       - if closable?
         %button.fr-btn--close.fr-btn{ title: t('.close_notice'), data: { action: "dsfr-header#closeNotice" } }
