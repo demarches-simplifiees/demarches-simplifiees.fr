@@ -7,4 +7,12 @@ en:
             value:
               api_response_pending: 'Pending response...'
               api_response_error: 'Not found.'
-              unexpected_state: 'Unexpected state, our tech team must investigate.'
+              code_429: 'Too many requests. We are retrying for you.'
+              code_500: 'Server error. We are retrying for you.'
+              code_503: 'Service unavailable. We are retrying for you.'
+              code_408: 'The request took too long. We are retrying for you.'
+              code_502: 'Connection issue. We are retrying for you.'
+              code_404: 'Result not found. Please check your information.'
+              code_400: 'Invalid request. Please check your information.'
+              code_403: 'Access denied. You do not have the necessary permissions.'
+              code_401: 'Unauthorized. Please log in to continue.'

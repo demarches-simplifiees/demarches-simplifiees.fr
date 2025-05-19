@@ -75,16 +75,34 @@ describe 'Referentiel API:' do
       click_on 'Continuer'
     end
 
-    # fill in champ
     expect(page).to have_content("Identité enregistrée")
     expect(page).to have_css('label', text: "Nunero de bâtiment")
+
+    # fill in champ
+    fill_in("Nunero de bâtiment", with: "okokok")
+    fill_in("un autre champ", with: "focus out for autosave")
+    # update champ should not trigger an error and render a feedback
+    expect(page).to have_content("Recherche en cours.")
+
+    # but submitting bef  ore API response was fetched should trigger an error
+    click_on("Déposer le dossier")
+    expect(page).to have_content("En attente de réponse...")
+
+    # reload page, if API response was not fetched, it's an error
+    visit dossier_path(Dossier.last)
+    expect(page).to have_content("En attente de réponse...")
+
+    # and the page starts polling
+    expect(page).to have_content("Recherche en cours.")
 
     # failed search
     VCR.use_cassette('referentiel/kthxbye_as_user') do
       fill_in("Nunero de bâtiment", with: "kthxbye")
       fill_in("un autre champ", with: "focus out for autosave")
+
       perform_enqueued_jobs do
-        expect(page).to have_content("Aucun élément trouvé pour la référence : kthxbye")
+        # then the API response is fetched and tada... another error : bad data -> error
+        expect(page).to have_content("Résultat introuvable. Vérifiez vos informations.")
       end
     end
 
