@@ -149,7 +149,9 @@
           .center.fr-text--sm
             = t('instructeurs.dossiers.labels.trash')
 
-    - if notifications_counts_per_procedure[p.id]&.any?
-      = tags_summary_notification(notifications_counts_per_procedure[p.id])
-      .fr-container{ id: "notifications-container-#{p.id}" }
-      = link_to "Détails des notifications", instructeur_procedure_display_notifications_path(procedure_id: p.id, display: 'true'), class: "fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-down-s-line fr-btn--icon-right fr-btn--sm fr-px-0", id: "notifications-button-#{p.id}", data: { turbo: true }
+    - if current_instructeur.feature_enabled?(:notification)
+      - if notifications_counts_per_procedure[p.id]&.any?
+        = tags_summary_notification(notifications_counts_per_procedure[p.id])
+
+        .fr-container{ id: "notifications-container-#{p.id}" }
+        = link_to "Détails des notifications", instructeur_procedure_display_notifications_path(procedure_id: p.id, display: 'true'), class: "fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-down-s-line fr-btn--icon-right fr-btn--sm fr-px-0", id: "notifications-button-#{p.id}", data: { turbo: true }

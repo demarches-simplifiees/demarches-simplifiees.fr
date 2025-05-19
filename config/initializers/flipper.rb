@@ -32,7 +32,8 @@ features = [
   :rdv,
   :sva,
   :switch_domain,
-  :export_avec_horodatage
+  :export_avec_horodatage,
+  :notification
 ]
 
 def database_exists?
