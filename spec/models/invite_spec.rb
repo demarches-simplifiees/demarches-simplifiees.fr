@@ -33,7 +33,7 @@ describe Invite do
 
         it do
           expect(invite.save).to be false
-          expect(invite.errors.full_messages).to eq(["Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com"])
+          expect(invite.errors.full_messages).to eq(["Le champ « Adresse électronique » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com"])
         end
 
         context 'when an email is empty' do
@@ -41,7 +41,7 @@ describe Invite do
 
           it do
             expect(invite.save).to be false
-            expect(invite.errors.full_messages).to eq(["Le champ « Email » doit être rempli"])
+            expect(invite.errors.full_messages).to eq(["Le champ « Adresse électronique » doit être rempli"])
           end
         end
       end

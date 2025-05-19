@@ -1,0 +1,5 @@
+fr:
+  activerecord:
+    attributes:
+      invite:
+        email: 'Adresse électronique'
