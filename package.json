@@ -108,7 +108,7 @@
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "vite-bundle-visualizer": "bunx --bun vite-bundle-visualizer",
-    "graphql:doc:build": "magidoc generate -m bun -c",
+    "graphql:doc:build": "magidoc generate -c",
     "magidoc:dev": "magidoc dev -m bun -p 4000",
     "magidoc:generate": "magidoc generate -m bun -c",
     "magidoc:preview": "magidoc preview"
