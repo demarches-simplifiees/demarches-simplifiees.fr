@@ -402,6 +402,15 @@ class Dossier < ApplicationRecord
       .distinct
   end
 
+  scope :order_by_notifications_importance, -> do
+    includes(:dossier_notifications)
+      .sort_by do |dossier|
+        dossier.dossier_notifications.map do |notif|
+          DossierNotification.notification_types.keys.index(notif.notification_type)
+        end.min
+      end
+  end
+
   scope :by_statut, -> (statut, instructeur: nil, include_archived: false) do
     case statut
     when 'a-suivre'

@@ -20,6 +20,10 @@ class DossierNotification < ApplicationRecord
 
   scope :to_display, -> { where(display_at: ..Time.current) }
 
+  scope :order_by_importance, -> {
+    self.sort_by { |notif| notification_types.keys.index(notif.notification_type) }
+  }
+
   def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
     case notification_type
     when :dossier_depose
@@ -100,6 +104,7 @@ class DossierNotification < ApplicationRecord
       .where(dossier: dossiers, groupe_instructeur_id: groupe_instructeur_ids)
       .or(DossierNotification.where(dossier: dossiers, instructeur:))
       .to_display
+      .order_by_importance
       .group_by(&:dossier_id)
 
     dossier_ids_by_procedure.transform_values do |dossier_ids|
@@ -127,6 +132,7 @@ class DossierNotification < ApplicationRecord
       .where(dossier: dossiers, groupe_instructeur_id: groupe_instructeur_ids)
       .or(DossierNotification.where(dossier: dossiers, instructeur:))
       .to_display
+      .order_by_importance
       .group_by(&:dossier_id)
 
     dossiers_by_statut.filter_map do |statut, dossiers|
@@ -144,6 +150,7 @@ class DossierNotification < ApplicationRecord
       .where(dossier_id: dossier_ids, groupe_instructeur_id: groupe_instructeur_ids)
       .or(DossierNotification.where(dossier_id: dossier_ids, instructeur:))
       .to_display
+      .order_by_importance
       .group_by(&:dossier_id)
   end
 
@@ -152,5 +159,6 @@ class DossierNotification < ApplicationRecord
       .where(dossier:, groupe_instructeur_id: dossier.groupe_instructeur_id)
       .or(DossierNotification.where(dossier:, instructeur:))
       .to_display
+      .order_by_importance
   end
 end
