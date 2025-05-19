@@ -1,13 +1,13 @@
-import { createGraphiQLFetcher } from '@graphiql/toolkit';
 import { explorerPlugin } from '@graphiql/plugin-explorer';
+import { createGraphiQLFetcher } from '@graphiql/toolkit';
 import { GraphiQL } from 'graphiql';
 import { createElement, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { getConfig, csrfToken } from '@utils';
+import { csrfToken, getConfig } from '@utils';
 
+import '@graphiql/plugin-explorer/style.css';
 import 'graphiql/graphiql.css';
-import '@graphiql/plugin-explorer/dist/style.css';
 
 const { defaultQuery, defaultVariables } = getConfig();
 const fetcher = createGraphiQLFetcher({
