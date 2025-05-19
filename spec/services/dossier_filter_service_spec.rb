@@ -91,7 +91,7 @@ describe DossierFilterService do
       context 'in ascending order' do
         let(:order) { 'asc' }
 
-        it { is_expected.to eq([older_dossier, recent_dossier, notified_dossier].map(&:id)) }
+        it { is_expected.to eq([older_dossier, notified_dossier, recent_dossier].map(&:id)) }
       end
 
       context 'in descending order' do

@@ -19,7 +19,8 @@ describe 'instructeurs/procedures/_list', type: :view do
             dossiers_expirant_count_per_procedure: 0,
             followed_dossiers_count_per_procedure: 0,
             procedure_ids_en_cours_with_notifications: [],
-            procedure_ids_termines_with_notifications: [])
+            procedure_ids_termines_with_notifications: [],
+            notifications_counts_per_procedure: [])
   end
 
   context 'when procedure_expires_when_termine_enabled is true' do

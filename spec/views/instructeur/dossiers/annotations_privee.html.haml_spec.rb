@@ -4,6 +4,7 @@ describe 'instructeurs/dossiers/annotations_privees', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:dossier) { create(:dossier, :en_construction) }
   let(:procedure_presentation) { double(instructeur: current_instructeur, procedure: dossier.procedure) }
+  let(:notifications) { [] }
 
   before do
     sign_in(current_instructeur.user)
@@ -12,6 +13,7 @@ describe 'instructeurs/dossiers/annotations_privees', type: :view do
     allow(controller).to receive(:params).and_return({ statut: 'a-suivre' })
     assign(:dossier, dossier)
     assign(:procedure_presentation, procedure_presentation)
+    assign(:notifications, notifications)
   end
 
   subject { render }

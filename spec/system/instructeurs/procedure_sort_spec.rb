@@ -60,17 +60,17 @@ describe "procedure sort", js: true do
   scenario "should be able to sort with direct link to notification sort" do
     # the real input checkbox is hidden - DSFR set a fake checkbox with a label, so we can't use "check/uncheck" methods
     # but we can assert on the hidden checkbox state
-    expect(page).to have_checked_field("Remonter les dossiers avec une notification")
+    expect(page).to have_checked_field("Remonter les dossiers avec notification")
 
-    find("label", text: "Remonter les dossiers avec une notification").click # reverse order - sort by updated_at asc
+    find("label", text: "Remonter les dossiers avec notification").click # reverse order - sort by updated_at asc
 
-    expect(page).not_to have_checked_field("Remonter les dossiers avec une notification")
+    expect(page).not_to have_checked_field("Remonter les dossiers avec notification")
     expect(find(".dossiers-table tbody tr:nth-child(2) .fr-cell--numeric a").text).to eq(followed_dossier_2.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .fr-cell--numeric a").text).to eq(followed_dossier.id.to_s)
 
-    find("label", text: "Remonter les dossiers avec une notification").click # set order back - sort by updated_at desc
+    find("label", text: "Remonter les dossiers avec notification").click # set order back - sort by updated_at desc
 
-    expect(page).to have_checked_field("Remonter les dossiers avec une notification")
+    expect(page).to have_checked_field("Remonter les dossiers avec notification")
     expect(find(".dossiers-table tbody tr:nth-child(2) .fr-cell--numeric a").text).to eq(followed_dossier.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .fr-cell--numeric a").text).to eq(followed_dossier_2.id.to_s)
   end
@@ -78,10 +78,10 @@ describe "procedure sort", js: true do
   scenario "should be able to sort back by notification filter after any other sort" do
     click_on "Nº dossier" # sort by id asc
 
-    expect(page).not_to have_checked_field("Remonter les dossiers avec une notification")
+    expect(page).not_to have_checked_field("Remonter les dossiers avec notification")
 
-    find("label", text: "Remonter les dossiers avec une notification").click # sort by updated_at desc
-    expect(page).to have_checked_field("Remonter les dossiers avec une notification")
+    find("label", text: "Remonter les dossiers avec notification").click # sort by updated_at desc
+    expect(page).to have_checked_field("Remonter les dossiers avec notification")
 
     expect(find(".dossiers-table tbody tr:nth-child(2) .fr-cell--numeric a").text).to eq(followed_dossier.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .fr-cell--numeric a").text).to eq(followed_dossier_2.id.to_s)
