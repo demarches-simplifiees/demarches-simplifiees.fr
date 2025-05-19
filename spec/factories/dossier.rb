@@ -247,11 +247,11 @@ FactoryBot.define do
       after(:create) do |dossier, _evaluator|
         motivation = case dossier.state
         when Dossier.states.fetch(:refuse)
-          'L’entreprise concernée n’est pas agréée.'
+          'L’entreprise concernée n’est pas agréée. Plus d’informations sur https://prefecture-93.fr/faq'
         when Dossier.states.fetch(:sans_suite)
-          'Le département n’est pas éligible. Veuillez remplir un nouveau dossier auprès de la DDT du 93.'
+          'Le département n’est pas éligible. Veuillez remplir un nouveau dossier auprès de la DDT du 93. Voir https://ddt-93.fr'
         else
-          'Vous avez validé les conditions.'
+          'Vous avez validé les conditions. Retrouvez votre dossier sur https://demarches-simplifiees.fr'
         end
         dossier.traitements.last.update!(motivation: motivation)
       end
