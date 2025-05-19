@@ -63,16 +63,16 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
 
         it 'saves exception and raise' do
           expect { perform_job }.to raise_error StandardError
-          expect(champ).to have_received(:log_fetch_external_data_exception).with(reason)
+          expect(champ).to have_received(:log_fetch_external_data_exception).with(reason, 400)
         end
       end
 
       context 'fatal failure' do
-        let(:fetched_data) { Failure(API::Client::Error[:http, 400, false, reason]) }
+        let(:fetched_data) { Failure(API::Client::Error[:http, 404, false, reason]) }
 
         it 'saves exception' do
           perform_job
-          expect(champ).to have_received(:log_fetch_external_data_exception).with(reason)
+          expect(champ).to have_received(:log_fetch_external_data_exception).with(reason, 404)
         end
       end
     end

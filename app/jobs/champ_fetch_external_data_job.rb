@@ -24,11 +24,11 @@ class ChampFetchExternalDataJob < ApplicationJob
       case result
       in Success(data)
         champ.update_with_external_data!(data:)
-      in Failure(retryable: true, reason:)
-        champ.log_fetch_external_data_exception(reason)
+      in Failure(retryable: true, reason:, code:)
+        champ.log_fetch_external_data_exception(reason, code)
         raise reason
-      in Failure(retryable: false, reason:)
-        champ.log_fetch_external_data_exception(reason)
+      in Failure(retryable: false, reason:, code:)
+        champ.log_fetch_external_data_exception(reason, code)
         Sentry.capture_exception(reason)
       end
     elsif result.present?

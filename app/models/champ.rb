@@ -20,6 +20,8 @@ class Champ < ApplicationRecord
   delegate :procedure, to: :dossier
   normalizes :value, with: NORMALIZES_NON_PRINTABLE_PROC
 
+  attribute :fetch_external_data_exceptions, :external_data_exception, array: true
+
   def type_de_champ
     @type_de_champ ||= dossier.revision
       .types_de_champ
@@ -215,8 +217,8 @@ class Champ < ApplicationRecord
     "#{html_id}-error_id"
   end
 
-  def log_fetch_external_data_exception(exception)
-    update_columns(fetch_external_data_exceptions: [exception.inspect], data: nil, value_json: nil, value: nil)
+  def log_fetch_external_data_exception(exception, code)
+    update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
   end
 
   def fetch_external_data?
