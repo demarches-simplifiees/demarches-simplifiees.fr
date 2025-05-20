@@ -114,7 +114,9 @@ describe Champs::RNFChamp, type: :model do
           department_name: "Paris",
           region_code: "11",
           region_name: "Île-de-France",
-          title: "Fondation SFR"
+          title: "Fondation SFR",
+          country_code: "FR",
+          country_name: "France"
         }
         expect(champ).to receive(:update!).with(data: anything, value_json:)
         champ.update_with_external_data!(data: subject.value!)

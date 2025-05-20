@@ -484,7 +484,13 @@ module Instructeurs
         :code_departement,
         :accreditation_number,
         :accreditation_birthdate,
-        :feature,
+        :address,
+        :not_in_ban,
+        :street_address,
+        :city_name,
+        :country_code,
+        :commune_code,
+        :postal_code,
         value: []
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with

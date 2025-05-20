@@ -124,7 +124,9 @@ class APIGeoService
           region_name: region_name(region_code),
           region_code:,
           city_name: safely_normalize_city_name(department_code, city_code, properties['city']),
-          city_code:
+          city_code:,
+          country_code: 'FR',
+          country_name: country_name('FR')
         }
       else
         {
@@ -170,7 +172,9 @@ class APIGeoService
         departement_name: department_name,
         department_name:,
         region_code:,
-        region_name: region_name(region_code)
+        region_name: region_name(region_code),
+        country_code: 'FR',
+        country_name: country_name('FR')
       }
     end
 
@@ -200,7 +204,9 @@ class APIGeoService
         departement_name: department_name,
         department_name:,
         region_code:,
-        region_name: region_name(region_code)
+        region_name: region_name(region_code),
+        country_code: 'FR',
+        country_name: country_name('FR')
       }
     end
 
@@ -231,8 +237,37 @@ class APIGeoService
         departement_name: department_name,
         department_name:,
         region_code:,
-        region_name: region_name(region_code)
+        region_name: region_name(region_code),
+        country_code: etablissement.nom_pays.present? ? nil : 'FR',
+        country_name: etablissement.nom_pays || country_name('FR')
       }
+    end
+
+    def parse_city_code_and_postal_code(code)
+      if code.present? && code.match?(/-/)
+        codes = code.split('-')
+        return {} if codes.size != 2
+        city_code = codes.first
+        postal_code = codes.second
+        commune = communes_by_postal_code(postal_code).find { _1[:code] == city_code }
+        return {} if commune.blank?
+        region_code = commune[:region_code]
+        department_code = commune[:departement_code]
+
+        {
+          postal_code:,
+          city_code:,
+          city_name: commune[:name],
+          department_code:,
+          department_name: departement_name(department_code),
+          region_code:,
+          region_name: region_name(region_code),
+          country_code: 'FR',
+          country_name: country_name('FR')
+        }
+      else
+        {}
+      end
     end
 
     def safely_normalize_city_name(department_code, city_code, fallback)
@@ -245,29 +280,49 @@ class APIGeoService
       results.reject(&method(:code_metropole?)).flat_map do |result|
         item = {
           name: result[:nom].tr("'", '’'),
-          code: result[:code],
-          epci_code: result[:codeEpci],
-          departement_code: result[:codeDepartement]
+          code: result[:code]
         }.compact
 
-        if result[:codesPostaux].present?
+        items = if result[:codesPostaux].present?
           result[:codesPostaux].map { item.merge(postal_code: _1) }
         else
           [item]
-        end.map do |item|
+        end
+
+        items.map do |item|
+          label = "#{item[:name]} (#{item[:postal_code]})"
           if with_combined_code.present?
             {
-              label: "#{item[:name]} (#{item[:postal_code]})",
+              label:,
               value: "#{item[:code]}-#{item[:postal_code]}"
             }
           else
             {
-              label: "#{item[:name]} (#{item[:postal_code]})",
+              label:,
               value: item[:code],
               data: item[:postal_code]
             }
           end
         end
+      end
+    end
+
+    def format_address_response(results)
+      results[:features].flat_map do |feature|
+        if feature[:properties][:type] == 'municipality'
+          departement_code = feature[:properties][:context].split(',').first
+          commune_postal_codes(departement_code, feature[:properties][:citycode]).map do |postcode|
+            feature.deep_merge(properties: { postcode:, label: "#{feature[:properties][:label]} (#{postcode})" })
+          end
+        else
+          feature
+        end
+      end.map do
+        {
+          label: _1[:properties][:label],
+          value: _1[:properties][:label],
+          data: parse_ban_address(_1.deep_stringify_keys)
+        }
       end
     end
 

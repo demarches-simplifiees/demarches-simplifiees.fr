@@ -67,7 +67,9 @@ module Maintenance
               "department_name" => "Paris",
               "region_code" => "11",
               "region_name" => "Île-de-France",
-              "title" => "Fondation SFR"
+              "title" => "Fondation SFR",
+              "country_name" => "France",
+              "country_code" => "FR"
             })
         end
       end
@@ -94,7 +96,9 @@ module Maintenance
               "department_name" => "Paris",
               "region_code" => "11",
               "region_name" => "Île-de-France",
-              "title" => "Fondation SFR"
+              "title" => "Fondation SFR",
+              "country_name" => "France",
+              "country_code" => "FR"
             })
         end
       end

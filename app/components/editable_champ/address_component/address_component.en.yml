@@ -1,0 +1,7 @@
+en:
+  street_label: Street name and number or, place name
+  city_label: City
+  commune_label: City or Municipality
+  postal_code_label: Postal code
+  country_label: Country
+  not_in_ban: I cannot find my address in the suggestions

@@ -171,7 +171,7 @@ describe RoutingEngine, type: :model do
           gi_2.update(routing_rule: ds_in_departement(champ_value(address_tdc.stable_id), constant('42')))
           dossier.champs.first.update_columns(
             value: "2 rue de l'Hôtel de Ville 42000 Saint-Étienne",
-            data: { department_code: '42', region_code: '83' }
+            value_json: { department_code: '42', region_code: '83', city_code: '42218', postal_code: '42000', street_address: "2 rue de l'Hôtel de Ville", country_code: 'FR' }
           )
         end
 

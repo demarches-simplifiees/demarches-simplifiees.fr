@@ -147,7 +147,9 @@ describe Champs::RNAController, type: :controller do
             "street_address" => "33 rue de Modagor",
             "street_name" => "de Modagor",
             "street_number" => "33",
-            "title" => "LA PRÉVENTION ROUTIERE"
+            "title" => "LA PRÉVENTION ROUTIERE",
+            "country_code" => "FR",
+            "country_name" => "France"
           })
         end
       end

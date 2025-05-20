@@ -8,7 +8,7 @@ class DataSources::AdresseController < ApplicationController
       if response.success?
         results = JSON.parse(response.body, symbolize_names: true)
 
-        return render json: format_results(results)
+        return render json: APIGeoService.format_address_response(results)
       end
     end
 
@@ -24,24 +24,5 @@ class DataSources::AdresseController < ApplicationController
 
   def fetch_results
     Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: params[:q], limit: 10 }, timeout: 3)
-  end
-
-  def format_results(results)
-    results[:features].flat_map do |feature|
-      if feature[:properties][:type] == 'municipality'
-        departement_code = feature[:properties][:context].split(',').first
-        APIGeoService.commune_postal_codes(departement_code, feature[:properties][:citycode]).map do |postcode|
-          feature.deep_merge(properties: { postcode:, label: "#{feature[:properties][:label]} (#{postcode})" })
-        end
-      else
-        feature
-      end
-    end.map do
-      {
-        label: _1[:properties][:label],
-        value: _1[:properties][:label],
-        data: _1
-      }
-    end
   end
 end

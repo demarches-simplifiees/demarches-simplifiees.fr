@@ -30,6 +30,8 @@ module Maintenance
             "department_code" => "92",
             "departement_name" => "Hauts-de-Seine",
             "department_name" => "Hauts-de-Seine",
+            "country_code" => "FR",
+            "country_name" => "France",
 
             "entreprise_date_creation" => "1990-04-24",
             "entreprise_forme_juridique" => "SA à conseil d'administration (s.a.i.)",
