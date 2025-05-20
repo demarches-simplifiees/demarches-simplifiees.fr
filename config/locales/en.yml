@@ -372,6 +372,8 @@ en:
             write_message_placeholder: "Write your message here"
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
+          history: "File history"
+          en_construction_notice: "Unless otherwise indicated, fields were entered on the date the file was submitted."
           requester_identity: "Identity of the requester"
           mandataire_identity: "Identity of toe mandatary"
           requester_identity_updated_at: "updated on %{date}"

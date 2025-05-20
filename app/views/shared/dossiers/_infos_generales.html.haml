@@ -7,7 +7,7 @@
         = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.last_champ_updated_at))
 
     .fr-highlight
-      %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
+      %p.fr-text--sm.fr-text-mention--grey= t('views.shared.dossiers.demande.en_construction_notice')
 
   - if profile == 'usager' && dossier.hide_info_with_accuse_lecture?
     = render Dossiers::AccuseLectureComponent.new(dossier: dossier)

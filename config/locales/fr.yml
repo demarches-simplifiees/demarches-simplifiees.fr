@@ -378,7 +378,8 @@ fr:
             write_message_placeholder: "Écrivez votre message ici"
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
-          en_construction: "Date de dépôt du dossier"
+          history: "Historique du dossier"
+          en_construction_notice: "Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier."
           requester_identity: "Identité du demandeur"
           mandataire_identity: "Identité du mandataire"
           requester_identity_updated_at: "modifiée le %{date}"
