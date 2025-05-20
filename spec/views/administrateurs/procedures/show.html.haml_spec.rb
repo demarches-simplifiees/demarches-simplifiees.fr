@@ -18,11 +18,13 @@ describe 'administrateurs/procedures/show', type: :view do
         render
       end
 
-      it "render content" do
+      it "renders content" do
         expect(rendered).to have_css('#publish-procedure-link')
         expect(rendered).not_to have_css('#close-procedure-link')
         expect(rendered).to have_content('En test')
         expect(rendered).not_to have_css('#archive-procedure')
+        expect(rendered).to have_css('#delete-procedure')
+        expect(rendered).to have_css('#clone-procedure')
       end
     end
   end
@@ -34,12 +36,12 @@ describe 'administrateurs/procedures/show', type: :view do
       render
     end
 
-    describe 'archive button is visible' do
-      it { expect(rendered).not_to have_css('#publish-procedure-link') }
-      it { expect(rendered).to have_css('#close-procedure-link') }
-    end
-    describe 'archive button' do
-      it { expect(rendered).to have_css('#archive-procedure') }
+    it "renders content" do
+      expect(rendered).not_to have_css('#publish-procedure-link')
+      expect(rendered).to have_css('#close-procedure-link')
+      expect(rendered).to have_css('#archive-procedure')
+      expect(rendered).not_to have_css('#delete-procedure')
+      expect(rendered).to have_css('#clone-procedure')
     end
   end
 
@@ -48,16 +50,15 @@ describe 'administrateurs/procedures/show', type: :view do
       procedure.publish!
       procedure.close!
       procedure.reload
+      render
     end
 
-    describe 'Re-enable button is visible' do
-      before do
-        render
-      end
-
-      it { expect(rendered).not_to have_css('#close-procedure-link') }
-      it { expect(rendered).to have_css('#publish-procedure-link') }
-      it { expect(rendered).to have_content('Réactiver') }
+    it "renders content" do
+      expect(rendered).not_to have_css('#close-procedure-link')
+      expect(rendered).to have_css('#publish-procedure-link')
+      expect(rendered).to have_content('Réactiver')
+      expect(rendered).to have_css('#delete-procedure')
+      expect(rendered).to have_css('#clone-procedure')
     end
   end
 
