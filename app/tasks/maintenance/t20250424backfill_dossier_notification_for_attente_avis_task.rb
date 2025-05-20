@@ -22,15 +22,12 @@ module Maintenance
             .select(:dossier_id)
         )
         .includes(:followers_instructeurs)
-        .map do |dossier|
-          [dossier.id, dossier.followers_instructeur_ids]
-        end
     end
 
-    def process((dossier_id, instructeur_ids))
-      instructeur_ids.each do |instructeur_id|
+    def process(dossier)
+      dossier.followers_instructeur_ids.each do |instructeur_id|
         DossierNotification.find_or_create_by!(
-          dossier_id:,
+          dossier:,
           notification_type: :attente_avis,
           instructeur_id:
         ) do |notification|

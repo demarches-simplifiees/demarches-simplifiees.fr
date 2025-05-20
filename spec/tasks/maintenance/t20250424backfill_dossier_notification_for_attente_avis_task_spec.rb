@@ -17,7 +17,7 @@ module Maintenance
         let!(:follow) { create(:follow, dossier:, instructeur: follow_instructeur) }
 
         it do
-          expect(collection).to eq([[dossier.id, [follow_instructeur.id]]])
+          expect(collection).to eq([dossier])
         end
       end
 
@@ -25,7 +25,7 @@ module Maintenance
         let!(:avis) { create(:avis, dossier:) }
 
         it do
-          expect(collection).to eq([[dossier.id, []]])
+          expect(collection).to eq([dossier])
         end
       end
 
@@ -49,7 +49,7 @@ module Maintenance
         let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur) }
 
         it do
-          expect(collection).to eq([[dossier.id, []]])
+          expect(collection).to eq([dossier])
         end
       end
     end
@@ -58,10 +58,10 @@ module Maintenance
       let!(:dossier) { create(:dossier) }
       let!(:instructeur) { create(:instructeur) }
 
-      context "when instructeur_ids is empty" do
+      context "when there are not followers instructeurs is empty" do
         it "does not create any notification" do
           expect {
-            described_class.process([dossier.id, []])
+            described_class.process(dossier)
           }.not_to change(DossierNotification, :count)
         end
       end
@@ -71,15 +71,19 @@ module Maintenance
 
         it "does not create duplicate notification" do
           expect {
-            described_class.process([dossier.id, [instructeur.id]])
+            described_class.process(dossier)
           }.not_to change(DossierNotification, :count)
         end
       end
 
       context "when there are no existing notification" do
+        before do
+          dossier.followers_instructeurs << instructeur
+        end
+
         it "creates notification" do
           expect {
-            described_class.process([dossier.id, [instructeur.id]])
+            described_class.process(dossier)
           }.to change(DossierNotification, :count).by(1)
         end
       end
