@@ -20,7 +20,7 @@ module Types
     end
 
     def correction
-      Loaders::Association.for(object.class, :dossier_correction).load(object)
+      dataloader.with(Sources::Association, :dossier_correction).load(object)
     end
 
     def self.authorized?(object, context)

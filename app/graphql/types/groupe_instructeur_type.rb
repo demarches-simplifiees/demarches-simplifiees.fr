@@ -11,7 +11,7 @@ module Types
     field :closed, Boolean, "L’état du groupe instructeur.", null: false
 
     def instructeurs
-      Loaders::Association.for(object.class, :instructeurs).load(object)
+      dataloader.with(Sources::Association, :instructeurs).load(object)
     end
 
     def self.authorized?(object, context)

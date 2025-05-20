@@ -75,20 +75,20 @@ module Types
 
     def groupe_instructeurs(closed: nil)
       if closed.nil?
-        Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+        dataloader.with(Sources::Association, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
       elsif closed.true?
-        Loaders::Association.for(object.class, active_groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+        dataloader.with(Sources::Association, active_groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
       else
-        Loaders::Association.for(object.class, closed_groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+        dataloader.with(Sources::Association, closed_groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
       end
     end
 
     def service
-      Loaders::Association.for(object.class, :service).load(object)
+      dataloader.with(Sources::Association, :service).load(object)
     end
 
     def revisions
-      Loaders::Association.for(object.class, :revisions).load(object)
+      dataloader.with(Sources::Association, :revisions).load(object)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:, lookahead:)

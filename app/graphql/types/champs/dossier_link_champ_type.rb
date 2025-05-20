@@ -8,7 +8,7 @@ module Types::Champs
 
     def dossier
       if object.value.present?
-        Loaders::Dossier.for.load(object.value)
+        dataloader.with(Sources::RecordById, Dossier.visible_by_administration).load(object.value)
       end
     end
   end

@@ -92,7 +92,7 @@ module Types
     end
 
     def date_derniere_correction_en_attente
-      Loaders::Association.for(object.class, :pending_correction).load(object).then { _1&.created_at }
+      dataloader.with(Sources::Association, :pending_correction).load(object).then { _1&.created_at }
     end
 
     def date_derniere_modification_champs
@@ -122,47 +122,41 @@ module Types
     end
 
     def groupe_instructeur
-      Loaders::Association.for(object.class, groupe_instructeur: [:procedure]).load(object)
+      dataloader.with(Sources::Association, groupe_instructeur: [:procedure]).load(object)
     end
 
     def demandeur
       if object.revision.procedure.for_individual
-        Loaders::Association.for(object.class, :individual).load(object)
+        dataloader.with(Sources::Association, :individual).load(object)
       else
-        Loaders::Association.for(object.class, :etablissement).load(object)
+        dataloader.with(Sources::Association, :etablissement).load(object)
       end
     end
 
     def instructeurs
-      Loaders::Association.for(object.class, :followers_instructeurs).load(object)
+      dataloader.with(Sources::Association, :followers_instructeurs).load(object)
     end
 
     def traitements
-      Loaders::Association.for(object.class, :traitements).load(object)
+      dataloader.with(Sources::Association, :traitements).load(object)
     end
 
     def messages(id: nil)
-      Loaders::Association.for(object.class, commentaires: [:instructeur, :expert])
-        .load(object)
-        .then do |records|
-          if id.present?
-            find_record_by_typed_id(records, id)
-          else
-            records
-          end
-        end
+      records = dataloader.with(Sources::Association, commentaires: [:instructeur, :expert]).load(object)
+      if id.present?
+        find_record_by_typed_id(records, id)
+      else
+        records
+      end
     end
 
     def avis(id: nil)
-      Loaders::Association.for(object.class, avis: [:expert, :claimant])
-        .load(object)
-        .then do |records|
-          if id.present?
-            find_record_by_typed_id(records, id)
-          else
-            records
-          end
-        end
+      records = dataloader.with(Sources::Association, avis: [:expert, :claimant]).load(object)
+      if id.present?
+        find_record_by_typed_id(records, id)
+      else
+        records
+      end
     end
 
     def champs(id: nil)
@@ -209,15 +203,13 @@ module Types
 
     def attestation
       if object.termine? && object.attestation_template&.activated?
-        Loaders::Association.for(object.class, attestation: { pdf_attachment: :blob })
-          .load(object)
-          .then { |attestation| attestation&.pdf }
+        attestation = dataloader.with(Sources::Association, attestation: { pdf_attachment: :blob }).load(object)
+        attestation&.pdf
       end
     end
 
     def labels
-      Loaders::Association.for(object.class, :labels)
-        .load(object)
+      dataloader.with(Sources::Association, :labels).load(object)
     end
 
     def self.authorized?(object, context)
