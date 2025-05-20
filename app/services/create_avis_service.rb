@@ -61,7 +61,14 @@ class CreateAvisService
 
     if persisted.any?
       @dossier.touch(:last_avis_updated_at)
-      DossierNotification.create_notification(@dossier, :attente_avis)
+
+      if @instructeur_or_expert.is_a?(Instructeur)
+        follow = @instructeur_or_expert.follows.find_by(dossier: @dossier)
+        follow&.update_column(:avis_seen_at, Time.current)
+
+        DossierNotification.create_notification(@dossier, :attente_avis)
+        @instructeur_or_expert.mark_tab_as_seen(@dossier, :avis)
+      end
     end
 
     @dossier.avis.reload

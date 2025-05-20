@@ -812,10 +812,6 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:saved_avis) { dossier.avis.first }
     let!(:old_avis_count) { Avis.count }
 
-    before do
-      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :avis)
-    end
-
     subject do
       post :create_avis, params: {
         procedure_id: procedure.id,
@@ -844,6 +840,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'works' do
         subject
         expect(instructeur.followed_dossiers).to match_array([dossier])
+        expect(dossier.follows.first.avis_seen_at?).to eq(true)
       end
     end
 
