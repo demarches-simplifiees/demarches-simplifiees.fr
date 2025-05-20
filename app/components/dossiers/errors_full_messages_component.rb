@@ -17,10 +17,18 @@ class Dossiers::ErrorsFullMessagesComponent < ApplicationComponent
     model = error.inner_error.base
 
     if model.respond_to?(:libelle) # a Champ or something acting as a Champ
-      ErrorDescriptor.new("##{model.focusable_input_id}", model.libelle.truncate(200), error.message)
+      ErrorDescriptor.new("##{model.focusable_input_id}", model.libelle.truncate(200) + row_number_suffix(model), error.message)
     else
       ErrorDescriptor.new("##{model.model_name.singular}_#{error.attribute}", model.class.human_attribute_name(error.attribute), error.message)
     end
+  end
+
+  def row_number_suffix(model)
+    return "" if !model.child?
+
+    parent = model.dossier.revision.parent_of(model.type_de_champ)
+    number = model.dossier.repetition_row_ids(parent).index(model.row_id) + 1
+    " #{number}"
   end
 
   def render?
