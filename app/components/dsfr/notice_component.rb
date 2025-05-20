@@ -18,6 +18,6 @@ class Dsfr::NoticeComponent < ApplicationComponent
   end
 
   def notice_data_attributes
-    { "data-dsfr-header-target": "notice" }.merge(data_attributes)
+    { "data-controller": 'dsfr-notice', "data-dsfr-notice-target": "notice" }.merge(data_attributes)
   end
 end
