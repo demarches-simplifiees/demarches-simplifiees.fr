@@ -5,6 +5,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
   let(:admin) { administrateurs(:default_admin) }
   let(:administrateur_2) { create(:administrateur) }
+  let(:administrateur_3) { create(:administrateur) }
   let(:instructeur_2) { create(:instructeur) }
   let(:bad_procedure_id) { 100000 }
 
@@ -715,6 +716,20 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(response.body).not_to include "Instructeurs"
       end
     end
+
+    context 'when admin is not the owner of the procedure, and procedure is hidden as template' do
+      before do
+        sign_out(admin.user)
+        sign_in(administrateur_3.user)
+        procedure.update(hidden_at_as_template: Time.zone.now)
+        subject
+      end
+
+      it 'redirects to procedures index' do
+        is_expected.to redirect_to(admin_procedures_path)
+        expect(flash[:alert]).to be_present
+      end
+    end
   end
 
   describe 'POST #clone' do
@@ -944,17 +959,29 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when admin is not the owner of the procedure' do
-      let(:admin_2) { administrateurs(:default_admin) }
-
       before do
         sign_out(admin.user)
-        sign_in(admin_2.user)
+        sign_in(administrateur_3.user)
         subject
       end
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
+      end
+    end
+
+    context 'when admin is not the owner of the procedure, and procedure is hidden as template' do
+      before do
+        sign_out(admin.user)
+        sign_in(administrateur_3.user)
+        procedure.update(hidden_at_as_template: Time.zone.now)
+        subject
+      end
+
+      it 'redirects to procedures index' do
+        is_expected.to redirect_to(admin_procedures_path)
+        expect(flash[:alert]).to be_present
       end
     end
 

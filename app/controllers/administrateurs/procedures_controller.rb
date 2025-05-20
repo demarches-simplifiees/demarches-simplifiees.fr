@@ -143,10 +143,21 @@ module Administrateurs
       @cloned_from_library = cloned_from_library?
       @is_same_admin = current_administrateur.owns?(@procedure)
       @updated_mail_templates = @procedure.mail_templates.any? { _1.updated_at.present? }
+
+      if @procedure.hidden_as_template? && !@is_same_admin
+        flash.alert = "Cette démarche n’est pas clonable"
+        redirect_to admin_procedures_path
+      end
     end
 
     def clone
       procedure = Procedure.find(params[:procedure_id])
+
+      if procedure.hidden_as_template? && !current_administrateur.owns?(procedure)
+        flash.alert = "Cette démarche n’est pas clonable"
+        redirect_to admin_procedures_path and return
+      end
+
       new_procedure = procedure.clone(options: clone_options_from_params, admin: current_administrateur)
 
       if new_procedure.valid?
