@@ -19,7 +19,7 @@ Would you like to make changes or improvements? Read our [contribution guide](CO
 
 #### All environments
 
-- postgresql
+- postgresql (version >= 15)
 - imagemagick and gsfonts to generate watermarks on identity documents or generate image thumbnails.
 
 > [!WARNING]
@@ -52,8 +52,8 @@ To run sidekiq, you will need:
 
 - Chrome
 - chromedriver:
-  * Mac: `brew install chromedriver`
-  * Linux: see https://developer.chrome.com/blog/chrome-for-testing
+  - Mac: `brew install chromedriver`
+  - Linux: see https://developer.chrome.com/blog/chrome-for-testing
 
 If Chrome's installation location is non-standard, or if you're using Brave or Chromium instead,
 you may need to override the path to the Chrome binary for your machine, for example:
@@ -78,7 +78,6 @@ The information needed to initialize the database must be pre-configured manuall
     > create user tps_development with password 'tps_development' superuser;
     > create user tps_test with password 'tps_test' superuser;
     > \q
-
 
 ### Initializing the development environment
 
