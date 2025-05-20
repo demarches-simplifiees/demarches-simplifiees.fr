@@ -59,7 +59,7 @@ class Traitement < ApplicationRecord
         end
       end
     elsif state == Dossier.states.fetch(:en_instruction)
-      if previous_state != Dossier.states.fetch(:en_construction)
+      if previous_state != Dossier.states.fetch(:en_construction) && instructeur?
         :repasse_en_instruction
       elsif instructeur?
         :passe_en_instruction
