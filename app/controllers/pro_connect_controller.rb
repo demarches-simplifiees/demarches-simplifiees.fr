@@ -24,22 +24,31 @@ class ProConnectController < ApplicationController
     user_info, id_token, amr = ProConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.delete NONCE_COOKIE_NAME
 
-    instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
+    email = santized_email(user_info)
+    user = User.find_by(email:)
 
-    if instructeur.nil?
-      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], pro_connect: true)
-      instructeur = user.instructeur
+    if user.nil?
+      user = User.create!(
+        email:,
+        password: Devise.friendly_token[0, 20],
+        confirmed_at: Time.current,
+        email_verified_at: Time.current
+      )
+    else
+      user.update!(email_verified_at: Time.current)
     end
 
-    instructeur.update!(pro_connect_id_token: id_token)
-    instructeur.user.update!(email_verified_at: Time.zone.now)
+    if user.instructeur?
 
-    aci = ProConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
-    aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:))
+      user.instructeur.update!(pro_connect_id_token: id_token)
+      pro_connect_info = user.instructeur.pro_connect_information.find_or_initialize_by(sub: user_info['sub'])
+      pro_connect_info.update!(
+        user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:)
+      )
+    end
 
-    sign_in(:user, instructeur.user)
-
-    redirect_to stored_location_for(:user) || instructeur_procedures_path
+    sign_in(:user, user)
+    redirect_to stored_location_for(:user) || root_path
 
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
