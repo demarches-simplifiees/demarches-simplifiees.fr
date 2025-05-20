@@ -22,7 +22,9 @@ class API::V2::BaseController < ApplicationController
 
   def context
     if @api_token.present?
-      @api_token.context
+      ctx = @api_token.context
+      ctx[:remote_ip] = request.remote_ip
+      ctx
     # web interface (/graphql) give current_administrateur
     elsif current_administrateur.present?
       graphql_web_interface_context
@@ -35,7 +37,8 @@ class API::V2::BaseController < ApplicationController
     {
       administrateur_id: current_administrateur.id,
       procedure_ids: current_administrateur.procedure_ids,
-      write_access: true
+      write_access: true,
+      remote_ip: request.remote_ip
     }
   end
 
@@ -43,7 +46,8 @@ class API::V2::BaseController < ApplicationController
     {
       administrateur_id: nil,
       procedure_ids: [],
-      write_access: false
+      write_access: false,
+      remote_ip: request.remote_ip
     }
   end
 
