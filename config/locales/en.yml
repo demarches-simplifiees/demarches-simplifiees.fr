@@ -338,12 +338,12 @@ en:
         modal_highlight: "Invited people can view and edit your file"
         title: Invite someone
         email: Email address
-        invite_message: Add a message to the person you invite (optional)
+        invite_message: Optional message for the person you invite
         send_invitation: Send an invitation
         withdraw_permission: "Withdraw the permission"
         want_to_withdraw_permission: "Would you like to withdraw the permission of %{email}?"
         edit_dossier_html:
-          zero: '<p class="fr-h6">No user can edit this file.</p>'
+          zero: '<p class="fr-h6"><em>No user can view and edit this file at this time.</em></p>'
           one: '<h5 class="fr-h6">1 user can edit this file</h5>'
           other: '<h5 class="fr-h6">%{count} users can edit this file</h5>'
         submit_dossier_yourself: "You must submit the file yourself when it is complete."

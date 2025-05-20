@@ -340,14 +340,14 @@ fr:
         title: Ajouter un invité
         email: Adresse électronique
         email_hint: 'Exemple : adresse@mail.com'
-        invite_message: Ajouter un message à la personne invitée (optionnel)
+        invite_message: Message optionnel pour la personne invitée
         send_invitation: Envoyer une invitation
         withdraw_permission: "Révoquer l’autorisation"
         want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation de %{email} ?"
         edit_dossier_html:
-          zero: '<p class="fr-h6">Aucun invité peut modifier ce dossier.</p>'
-          one: '<h5 class="fr-h6">1 invité peut modifier ce dossier</h5>'
-          other: '<h5 class="fr-h6">%{count} invités peuvent modifier ce dossier</h5>'
+          zero: '<p class="fr-h6"><em>Aucun invité ne peut voir et modifier ce dossier pour l’instant.</em></p>'
+          one: '<h5>1 invité peut modifier ce dossier</h5>'
+          other: '<h5>%{count} invités peuvent modifier ce dossier</h5>'
         submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
     pagination:
       next: Suivant
@@ -369,7 +369,7 @@ fr:
         form:
           submitted_at: "Déposé le %{datetime}"
           updated_at: "Modifié le %{datetime}"
-          download_attestation: "Télécharger l‘attestation"
+          download_attestation: "Télécharger l’attestation"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
         messages:

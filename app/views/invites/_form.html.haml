@@ -1,5 +1,5 @@
 #invites-form.fr-p-2w
-  %h4.fr-h5= t('views.invites.form.modal_title')
+  %h4= t('views.invites.form.modal_title')
   %p.fr-highlight.fr-mb-3w= t('views.invites.form.modal_highlight')
 
   = t('views.invites.form.edit_dossier_html', count: invites.size)
@@ -15,15 +15,20 @@
     - if dossier.brouillon?
       %p= t('views.invites.form.submit_dossier_yourself')
 
+  %hr.fr-hr
+
   = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post do
     %fieldset.fr-fieldset
       %legend.fr-fieldset__legend
-        %h5.fr-h6= t('views.invites.form.title')
+        %h5= t('views.invites.form.title')
+
+      %p.fr-highlight.fr-mb-3w= t('asterisk_html', scope: [:utils])
 
       .fr-fieldset__element
         .fr-input-group
           = label_tag :invite_email, class: "fr-label" do
             = t('views.invites.form.email')
+            = render EditableChamp::AsteriskMandatoryComponent.new
             %span.fr-hint-text= t('views.invites.form.email_hint')
           = email_field_tag :invite_email, '', required: true, class: "fr-input"
 
