@@ -9,6 +9,7 @@ class Procedure < ApplicationRecord
   include ProcedureChorusConcern
   include ProcedurePublishConcern
   include ProcedurePathConcern
+  include ProcedureCloneConcern
   include PiecesJointesListConcern
   include ColumnsConcern
 
@@ -18,7 +19,6 @@ class Procedure < ApplicationRecord
   default_scope -> { kept }
 
   OLD_MAX_DUREE_CONSERVATION = 36
-  NEW_MAX_DUREE_CONSERVATION = Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
 
   MIN_WEIGHT = 350000
 
@@ -419,99 +419,6 @@ class Procedure < ApplicationRecord
     publiees.find(id)
   end
 
-  def clone(admin, from_library)
-    is_different_admin = !admin.owns?(self)
-
-    populate_champ_stable_ids
-    include_list = {
-      attestation_template: [],
-      draft_revision: {
-        revision_types_de_champ: [:type_de_champ],
-        dossier_submitted_message: []
-      }
-    }
-    include_list[:groupe_instructeurs] = [:instructeurs, :contact_information] if !is_different_admin
-    procedure = self.deep_clone(include: include_list) do |original, kopy|
-      ClonePiecesJustificativesService.clone_attachments(original, kopy)
-    end
-    procedure.claim_path!(admin, SecureRandom.uuid)
-    procedure.aasm_state = :brouillon
-    procedure.closed_at = nil
-    procedure.unpublished_at = nil
-    procedure.published_at = nil
-    procedure.auto_archive_on = nil
-    procedure.lien_notice = nil
-    procedure.duree_conservation_etendue_par_ds = false
-    if procedure.duree_conservation_dossiers_dans_ds > NEW_MAX_DUREE_CONSERVATION
-      procedure.duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
-      procedure.max_duree_conservation_dossiers_dans_ds = NEW_MAX_DUREE_CONSERVATION
-    end
-    procedure.estimated_dossiers_count = 0
-    procedure.published_revision = nil
-    procedure.draft_revision.procedure = procedure
-
-    if is_different_admin
-      procedure.administrateurs = [admin]
-      procedure.api_entreprise_token = nil
-      procedure.encrypted_api_particulier_token = nil
-      procedure.opendata = true
-      procedure.api_particulier_scopes = []
-      procedure.routing_enabled = false
-    else
-      procedure.administrateurs = administrateurs
-    end
-
-    procedure.initiated_mail = initiated_mail&.dup
-    procedure.received_mail = received_mail&.dup
-    procedure.closed_mail = closed_mail&.dup
-    procedure.refused_mail = refused_mail&.dup
-    procedure.without_continuation_mail = without_continuation_mail&.dup
-    procedure.re_instructed_mail = re_instructed_mail&.dup
-    procedure.ask_birthday = false # see issue #4242
-
-    procedure.cloned_from_library = from_library
-    procedure.parent_procedure = self
-    procedure.canonical_procedure = nil
-    procedure.replaced_by_procedure = nil
-    procedure.service = nil
-    procedure.closing_reason = nil
-    procedure.closing_details = nil
-    procedure.closing_notification_brouillon = false
-    procedure.closing_notification_en_cours = false
-    procedure.template = false
-    procedure.monavis_embed = nil
-    procedure.labels = labels.map(&:dup)
-
-    if !procedure.valid?
-      procedure.errors.attribute_names.each do |attribute|
-        next if [:notice, :deliberation, :logo].exclude?(attribute)
-        procedure.public_send("#{attribute}=", nil)
-      end
-    end
-
-    transaction do
-      procedure.save!
-      move_new_children_to_new_parent_coordinate(procedure.draft_revision)
-    end
-
-    if is_different_admin || from_library
-      procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
-    end
-
-    new_defaut_groupe = procedure.groupe_instructeurs
-      .find_by(label: defaut_groupe_instructeur.label) || procedure.groupe_instructeurs.first
-    procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
-
-    Flipper.features.each do |feature|
-      next if feature.enabled? # don't clone features globally enabled
-      next unless feature_enabled?(feature.key)
-
-      Flipper.enable(feature.key, procedure)
-    end
-
-    procedure
-  end
-
   def whitelisted?
     whitelisted_at.present?
   end
@@ -594,15 +501,6 @@ class Procedure < ApplicationRecord
         :extraneous_tag
       end
     end
-  end
-
-  def populate_champ_stable_ids
-    TypeDeChamp
-      .joins(:revisions)
-      .where(procedure_revisions: { procedure_id: id }, stable_id: nil)
-      .find_each do |type_de_champ|
-        type_de_champ.update_column(:stable_id, type_de_champ.id)
-      end
   end
 
   def missing_steps
@@ -853,6 +751,17 @@ class Procedure < ApplicationRecord
 
   def monavis_embed_html_source(source)
     monavis_embed.gsub('nd_source=button', "nd_source=#{source}").gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+  end
+
+  def mail_templates
+    [
+      self.passer_en_construction_email_template,
+      self.passer_en_instruction_email_template,
+      self.accepter_email_template,
+      self.refuser_email_template,
+      self.classer_sans_suite_email_template,
+      self.repasser_en_instruction_email_template
+    ]
   end
 
   private

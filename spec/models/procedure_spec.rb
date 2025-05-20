@@ -724,9 +724,20 @@ describe Procedure do
     let(:instructeur_2) { create(:instructeur) }
     let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
+    let(:options) do
+      {
+        clone_attestation_template: true,
+        cloned_from_library: from_library,
+        clone_presentation: true,
+        clone_instructeurs: true,
+        clone_mail_templates: true,
+        clone_champs: true,
+        clone_annotations: true
+      }
+    end
 
     subject do
-      @procedure = procedure.clone(administrateur, from_library)
+      @procedure = procedure.clone(options:, admin: administrateur)
       @procedure.save
       @procedure
     end
@@ -914,7 +925,7 @@ describe Procedure do
       it 'should have a default groupe instructeur' do
         expect(subject.groupe_instructeurs.size).to eq(1)
         expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL)
-        expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
+        expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(1)
       end
     end
 

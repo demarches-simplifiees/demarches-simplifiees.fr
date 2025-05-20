@@ -138,12 +138,30 @@ module Administrateurs
       end
     end
 
+    def clone_settings
+      @procedure = Procedure.find(params[:procedure_id])
+      @cloned_from_library = cloned_from_library?
+      @is_same_admin = current_administrateur.owns?(@procedure)
+      @updated_mail_templates = @procedure.mail_templates.any? { _1.updated_at.present? }
+
+      if @procedure.hidden_as_template? && !@is_same_admin
+        flash.alert = "Cette démarche n’est pas clonable"
+        redirect_to admin_procedures_path
+      end
+    end
+
     def clone
       procedure = Procedure.find(params[:procedure_id])
-      new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
+
+      if procedure.hidden_as_template? && !current_administrateur.owns?(procedure)
+        flash.alert = "Cette démarche n’est pas clonable"
+        redirect_to admin_procedures_path and return
+      end
+
+      new_procedure = procedure.clone(options: clone_options_from_params, admin: current_administrateur)
 
       if new_procedure.valid?
-        flash.notice = 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
+        flash.notice = 'Démarche clonée. Pensez à vérifier les paramètres avant publication.'
         redirect_to admin_procedure_path(id: new_procedure.id)
       else
         if cloned_from_library?
@@ -407,7 +425,7 @@ module Administrateurs
         flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n’existe pas"
       else
         procedure = current_administrateur.procedures.find(params[:procedure_id])
-        procedure.clone(admin, false)
+        procedure.clone(admin:)
         redirect_to admin_procedure_path(params[:procedure_id])
         flash.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
       end
@@ -662,6 +680,48 @@ module Administrateurs
 
     def allow_decision_access_params
       params.require(:experts_procedure).permit(:allow_decision_access)
+    end
+
+    def clone_options_from_params
+      options = params.dig(:procedure, :clone_options).permit(
+        :champs,
+        :annotations,
+        :administrateurs,
+        :instructeurs,
+        :attestation_template,
+        :libelle,
+        :zones,
+        :service,
+        :ineligibilite,
+        :monavis_embed,
+        :dossier_submitted_message,
+        :accuse_lecture,
+        :api_entreprise_token,
+        :mail_templates,
+        :sva_svr,
+        :avis,
+        :labels
+      )
+      {
+        clone_champs: options[:champs] == '1',
+        clone_annotations: options[:annotations] == '1',
+        clone_administrateurs: options[:administrateurs] == '1',
+        clone_instructeurs: options[:instructeurs] == '1',
+        clone_attestation_template: options[:attestation_template] == '1',
+        clone_zones: options[:zones] == '1',
+        clone_service: options[:service] == '1',
+        clone_ineligibilite: options[:ineligibilite] == '1',
+        clone_monavis_embed: options[:monavis_embed] == '1',
+        clone_dossier_submitted_message: options[:dossier_submitted_message] == '1',
+        clone_accuse_lecture: options[:accuse_lecture] == '1',
+        clone_api_entreprise_token: options[:api_entreprise_token] == '1',
+        clone_mail_templates: options[:mail_templates] == '1',
+        clone_sva_svr: options[:sva_svr] == '1',
+        clone_avis: options[:avis] == '1',
+        clone_labels: options[:labels] == '1',
+        clone_libelle: params.fetch(:procedure)[:libelle],
+        cloned_from_library: params[:from_new_from_existing]
+      }
     end
 
     def cloned_from_library?

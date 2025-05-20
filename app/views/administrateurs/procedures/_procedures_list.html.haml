@@ -90,7 +90,7 @@
 
           - if !procedure.discarded?
             - menu.with_item do
-              = link_to(admin_procedure_clone_path(procedure.id), role: 'menuitem', class: 'clone-btn', data: { method: :put }) do
+              = link_to(admin_procedure_clone_settings_path(procedure.id), role: 'menuitem', class: 'clone-btn', data: { method: :get }) do
                 = dsfr_icon('fr-icon-file-copy-line')
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.to_clone')
