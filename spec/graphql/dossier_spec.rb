@@ -8,7 +8,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   subject { API::V2::Schema.execute(query, variables: variables, context: context) }
 
   let(:data) { subject['data'].deep_symbolize_keys }
-  let(:errors) { subject['errors'].deep_symbolize_keys }
+  let(:errors) { subject['errors'] }
 
   describe 'dossier with attestation' do
     let(:dossier) { create(:dossier, :accepte, :with_attestation) }
