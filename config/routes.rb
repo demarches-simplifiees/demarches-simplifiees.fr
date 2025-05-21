@@ -491,6 +491,7 @@ Rails.application.routes.draw do
         #
         constraints statut: /a-suivre|suivis|traites|tous|supprimes|expirant|archives/ do
           get :show, path: "(:statut)", defaults: { statut: 'a-suivre' } # optional because some url may still live on with /procedure/:id
+          post 'create_batch_avis' => 'dossiers#create_batch_avis'
 
           resources :dossiers, only: [:show, :destroy], param: :dossier_id, path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
             member do

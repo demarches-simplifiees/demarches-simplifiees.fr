@@ -319,6 +319,16 @@ module Instructeurs
       )
     end
 
+    def create_batch_avis
+      batch = BatchOperation.safe_create!(batch_operation_params)
+
+      if batch.blank?
+        flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés"
+      end
+
+      redirect_back(fallback_location: instructeur_procedure_url(procedure_id))
+    end
+
     def update_annotations
       public_id, annotation_attributes = champs_private_attributes_params.to_h.first
       annotation = dossier.private_champ_for_update(public_id, updated_by: current_user.email)
@@ -430,6 +440,14 @@ module Instructeurs
     end
 
     private
+
+    def batch_operation_params
+      params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
+        batch_params[:operation] = 'create_avis'
+        batch_params[:instructeur] = current_instructeur
+        batch_params.merge!(avis_params)
+      end
+    end
 
     def avis_params
       params.require(:avis).permit(

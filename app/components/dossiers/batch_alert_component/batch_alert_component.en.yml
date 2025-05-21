@@ -107,6 +107,15 @@ en:
       text_success:
         one: "1 is being changed to in progress"
         other: "%{success_count}/%{count} files have been changed to in progress"
+  create_avis:
+    finish:
+      text_success:
+        one: "A review request has been sent for 1 file"
+        other: "Review requests have been sent for %{success_count}/%{count} files"
+    in_progress:
+      text_success:
+        one: "A review request is being sent for 1 file"
+        other: "Review requests are being sent for %{success_count}/%{count} files"
   title:
     finish: The bulk action is finished
     in_progress:  A bulk action is processing
