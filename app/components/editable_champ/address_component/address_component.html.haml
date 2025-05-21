@@ -13,27 +13,40 @@
 - if !@champ.ban?
   .fr-input-group
     = @form.label :country_code, for: @champ.country_input_id, class: 'fr-label' do
-      - t('.country_label')
+      - capture do
+        = t('.country_label')
+        = render EditableChamp::AsteriskMandatoryComponent.new
     = @form.select :country_code, pays_options, @champ.mandatory? ? { prompt: '' } : { include_blank: '' }, required: @champ.required?, id: @champ.country_input_id, class: "width-33-desktop fr-select small-margin"
 
   .fr-input-group
     = @form.label :street_address, for: @champ.street_input_id, class: 'fr-label' do
-      - t('.street_label')
+      - capture do
+        = t('.street_label')
+        = render EditableChamp::AsteriskMandatoryComponent.new
+        %span.fr-hint-text= t('.street_hint')
     = @form.text_field :street_address, class: "width-66-desktop fr-input small-margin", id: @champ.street_input_id
 
   - if @champ.international?
     .fr-input-group
       = @form.label :city_name, for: @champ.city_input_id, class: 'fr-label' do
-        - t('.city_label')
+        - capture do
+          = t('.city_label')
+          = render EditableChamp::AsteriskMandatoryComponent.new
+          %span.fr-hint-text= t('.city_hint')
       = @form.text_field :city_name, class: "width-33-desktop fr-input small-margin", id: @champ.city_input_id
 
     .fr-input-group
       = @form.label :postal_code, for: @champ.postal_code_input_id, class: 'fr-label' do
-        - t('.postal_code_label')
+        - capture do
+          = t('.postal_code_label')
+          = render EditableChamp::AsteriskMandatoryComponent.new
       = @form.text_field :postal_code, class: "width-33-desktop fr-input small-margin", id: @champ.postal_code_input_id
   - else
     .fr-input-group
       = @form.label :commune_name, for: @champ.city_input_id, class: 'fr-label' do
-        - t('.commune_label')
+        - capture do
+          = t('.commune_label')
+          = render EditableChamp::AsteriskMandatoryComponent.new
+          %span.fr-hint-text= t('.commune_hint')
       %react-fragment
         = render ReactComponent.new "ComboBox/RemoteComboBox", **commune_react_props

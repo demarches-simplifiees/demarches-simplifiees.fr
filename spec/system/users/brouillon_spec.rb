@@ -229,7 +229,7 @@ describe 'The user', js: true do
     fill_individual
 
     find('label', text: 'Je ne trouve pas mon adresse dans les suggestions').click
-    fill_in('Nom et numéro de voie, ou, lieu-dit', with: '2 rue de la paix')
+    fill_in('Numéro et nom de voie, ou lieu-dit', with: '2 rue de la paix')
     scroll_to(find_field('Ville ou commune'), align: :center)
     fill_in('Ville ou commune', with: '60400')
     find('.fr-menu__item', text: 'Brétigny (60400)').click
