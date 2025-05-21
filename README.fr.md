@@ -16,7 +16,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 
 #### Tous environnements
 
-- postgresql
+- postgresql (version >= 15)
 - imagemagick et gsfonts pour générer les filigranes sur les titres d'identité ou générer des minitiatures d'images.
 
 > [!WARNING]
@@ -49,8 +49,8 @@ Pour faire tourner sidekiq, vous aurez besoin de :
 
 - Chrome
 - chromedriver :
-  * Mac : `brew install chromedriver`
-  * Linux : voir https://developer.chrome.com/blog/chrome-for-testing
+  - Mac : `brew install chromedriver`
+  - Linux : voir https://developer.chrome.com/blog/chrome-for-testing
 
 Si l'emplacement d'installation de Chrome n'est pas standard, ou que vous utilisez Brave ou Chromium à la place,
 il peut être nécessaire d'overrider pour votre machine le path vers le binaire Chrome, par exemple :
@@ -75,7 +75,6 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > create user tps_development with password 'tps_development' superuser;
     > create user tps_test with password 'tps_test' superuser;
     > \q
-
 
 ### Initialisation de l'environnement de développement
 
