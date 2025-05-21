@@ -13,9 +13,6 @@
           Non renseigné
 
 - elsif @champ.render_as_combobox?
-  - if @champ.exceed_options_threshold?
-    .fr-hint-text.fr-mt-0
-      = t('.exceed_options_threshold_hint')
   %react-fragment
     = render ReactComponent.new "ComboBox/SingleComboBox", **react_props
 - else

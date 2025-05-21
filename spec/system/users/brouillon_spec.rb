@@ -40,6 +40,7 @@ describe 'The user', js: true do
     scroll_to(find_field('multiple_choice_drop_down_list_long'), align: :center)
     fill_in('multiple_choice_drop_down_list_long', with: 'alpha')
     find('.fr-menu__item', text: 'alpha').click
+    wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha'].to_json }
     fill_in('multiple_choice_drop_down_list_long', with: 'charly')
     find('.fr-menu__item', text: 'charly').click
     wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha', 'charly'].to_json }

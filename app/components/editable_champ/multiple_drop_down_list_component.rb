@@ -18,8 +18,7 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
       name: @form.field_name(:value, multiple: true),
       selected_keys: @champ.selected_options,
       items:,
-      value_separator: false,
-      max_items_alert: t('.exceed_options_threshold_alert')
+      value_separator: false
     )
   end
 
