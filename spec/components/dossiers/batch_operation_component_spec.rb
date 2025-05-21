@@ -33,6 +33,7 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
     it { is_expected.to have_button('Autres actions multiples', disabled: true) }
     it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
     it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
+    it { is_expected.to have_button('Demander un avis externe', disabled: true) }
   end
 
   context 'statut a-suivre' do

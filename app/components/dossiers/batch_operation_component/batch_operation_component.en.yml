@@ -18,6 +18,7 @@ fr:
     repasser_en_construction: 'Change selected files to in progress'
     other: Other batch operations
     confirm: Do you confirm the batch operation for selected files ?
+    create_avis: Ask for an opinion
   placeholders:
     accepter: "Explain to users why their file is accepted (optional)"
     refuser: "Explain to users why their file is refused (mandatory)"
