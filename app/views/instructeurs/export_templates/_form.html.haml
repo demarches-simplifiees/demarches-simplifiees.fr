@@ -10,11 +10,18 @@
 
         = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
 
-        .fr-input-group{ class: class_names('fr-hidden': groupe_instructeurs.one?) }
-          = f.label :groupe_instructeur_id, class: 'fr-label' do
-            = "#{ExportTemplate.human_attribute_name('groupe_instructeur_id')} #{asterisk}"
-            %span.fr-hint-text Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
-          = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+        - if groupe_instructeurs.many?
+          .fr-input-group
+            = f.label :groupe_instructeur_id, class: 'fr-label' do
+              Groupe instructeur éditeur du modèle
+              = render EditableChamp::AsteriskMandatoryComponent.new
+              %span.fr-hint-text
+                Le groupe propriétaire qui pourra modifier le modèle le cas échéant
+            = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+
+          .fr-checkbox-group.fr-input-group
+            = f.check_box :shared
+            = f.label :shared, "Partager avec tous les autres groupes instructeurs", class: 'fr-label'
 
         .fr-input-group{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
           = f.label '[dossier_folder][template]', class: "fr-label" do

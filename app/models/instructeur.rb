@@ -334,8 +334,17 @@ class Instructeur < ApplicationRecord
     pro_connect_information.order(updated_at: :desc).first
   end
 
+  TemplateExportGroup = Data.define(:name, :templates)
   def export_templates_for(procedure)
-    procedure.export_templates.where(groupe_instructeur: groupe_instructeurs).order(:name)
+    sharable_export_templates = procedure.export_templates
+      .sharable
+      .where.not(groupe_instructeur: groupe_instructeurs)
+      .order(:name)
+    if sharable_export_templates.present?
+      [TemplateExportGroup['My templates', export_templates.order(:name)], TemplateExportGroup['Other templates', sharable_export_templates]]
+    else
+      export_templates.order(:name)
+    end
   end
 
   def groupe_instructeur_options_for(procedure)

@@ -17,11 +17,15 @@
       - if groupe_instructeurs.many?
         .fr-input-group
           = f.label :groupe_instructeur_id, class: 'fr-label' do
-            = f.object.class.human_attribute_name(:groupe_instructeur_id)
+            Groupe instructeur éditeur du modèle
             = render EditableChamp::AsteriskMandatoryComponent.new
             %span.fr-hint-text
-              Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+              Le groupe propriétaire qui pourra modifier le modèle le cas échéant
           = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+
+        .fr-checkbox-group.fr-input-group
+          = f.check_box :shared
+          = f.label :shared, "Partager avec tous les autres groupes instructeurs", class: 'fr-label'
       - else
         = f.hidden_field :groupe_instructeur_id
 
