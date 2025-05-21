@@ -21,8 +21,24 @@
           #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, "aria-labelledby" => "batch_operation_others" }
             %ul.dropdown-items
               - available_operations[:options][2, available_operations[:options].count].each do |opt|
-                %li
-                  = form.button opt[:label], class: 'dropdown-items-link ', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] } do
-                    %span{ class: icons[opt[:operation].to_sym] }
-                    .dropdown-description
-                      %h4= opt[:label]
+                - unless !procedure.allow_expert_review && opt[:operation] == 'create_avis'
+                  %li
+                    = form.button opt[:label], class: 'dropdown-items-link', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation]}.merge(opt[:modal_data].to_h), aria: { controls: opt[:aria].present? ? opt[:aria] : nil} do
+                      %span{ class: icons[opt[:operation].to_sym] }
+                      .dropdown-description
+                        %h4= opt[:label]
+
+
+      %dialog#modal-avis-batch.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog" }
+        .fr-container.fr-container--fluid.fr-container-md
+          .fr-grid-row.fr-grid-row--center
+            .fr-col-12.fr-col-md-10.fr-col-lg-8
+              .fr-modal__body
+                .fr-modal__header
+                  %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-avis-batch' }, title: t('utils.modal_close_alt') }= t('utils.modal_close')
+                .fr-modal__content
+                  %h1#fr-modal-title-modal-1.fr-modal__title
+                    %span.fr-icon-arrow-right-line.fr-icon--lg>
+                    Demander un avis externe
+
+                  = render partial: "shared/avis/form", locals: {url: create_batch_avis_instructeur_procedure_path(procedure_id: procedure.id), linked_dossiers: nil, must_be_confidentiel: false, avis: Avis.new, batch_action: true, procedure: procedure }
