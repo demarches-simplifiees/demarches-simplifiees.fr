@@ -512,6 +512,15 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.traitements.last.browser_name).to eq('Unknown Browser')
       end
     end
+
+    it "create dossier_depose notification for the groupe_instructeur" do
+      expect { subject }.to change(DossierNotification, :count).by(1)
+
+      notification = DossierNotification.last
+      expect(notification.dossier_id).to eq(dossier.id)
+      expect(notification.groupe_instructeur_id).to eq(dossier.groupe_instructeur.id)
+      expect(notification.notification_type).to eq("dossier_depose")
+    end
   end
 
   describe '#submit_en_construction' do
@@ -656,6 +665,26 @@ describe Users::DossiersController, type: :controller do
               expect(response.body).to include("Cochez la case")
             end
           end
+        end
+      end
+
+      context "when there are instructeurs followers" do
+        let!(:instructeur_follower) { create(:instructeur) }
+        let!(:instructeur_not_follower) { create(:instructeur) }
+        let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, instructeur_not_follower]) }
+
+        before do
+          dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+          instructeur_follower.followed_dossiers << dossier
+        end
+
+        it "create dossier_modifie notification only for instructeur follower" do
+          expect { subject }.to change(DossierNotification, :count).by(1)
+
+          notification = DossierNotification.last
+          expect(notification.dossier_id).to eq(dossier.id)
+          expect(notification.instructeur_id).to eq(instructeur_follower.id)
+          expect(notification.notification_type).to eq("dossier_modifie")
         end
       end
     end
@@ -1565,6 +1594,29 @@ describe Users::DossiersController, type: :controller do
       it 'adds them a notification' do
         expect(instructeur_with_instant_message.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
         expect(instructeur_without_instant_message.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
+      end
+    end
+
+    context "when there are instructeurs followers" do
+      let!(:instructeur_not_follower) { create(:instructeur) }
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_with_instant_message, instructeur_without_instant_message, instructeur_not_follower]) }
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+      end
+
+      it "create message_usager notification only for instructeur follower" do
+        expect { subject }.to change(DossierNotification, :count).by(2)
+
+        notifications = DossierNotification.where(
+          dossier_id: dossier.id,
+          notification_type: :message_usager
+        )
+
+        expect(notifications.pluck(:instructeur_id)).to match_array([
+          instructeur_with_instant_message.id,
+          instructeur_without_instant_message.id
+        ])
       end
     end
   end

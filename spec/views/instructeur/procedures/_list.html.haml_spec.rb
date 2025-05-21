@@ -3,9 +3,11 @@
 describe 'instructeurs/procedures/_list', type: :view do
   let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
   let(:current_administrateur) { create(:administrateur) }
+  let(:current_instructeur) { create(:instructeur) }
 
   before do
     allow(view).to receive(:current_administrateur).and_return(current_administrateur)
+    allow(view).to receive(:current_instructeur).and_return(current_instructeur)
   end
 
   subject do
@@ -19,7 +21,8 @@ describe 'instructeurs/procedures/_list', type: :view do
             dossiers_expirant_count_per_procedure: 0,
             followed_dossiers_count_per_procedure: 0,
             procedure_ids_en_cours_with_notifications: [],
-            procedure_ids_termines_with_notifications: [])
+            procedure_ids_termines_with_notifications: [],
+            notifications_counts_per_procedure: [])
   end
 
   context 'when procedure_expires_when_termine_enabled is true' do

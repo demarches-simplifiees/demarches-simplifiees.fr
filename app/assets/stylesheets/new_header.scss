@@ -1,11 +1,3 @@
-// No drop shadow when a notice is shown.
-.fr-header.fr-header__with-notice-info {
-  &,
-  .fr-header__brand {
-    filter: none;
-  }
-}
-
 // Target mobile version
 .fr-header__menu.fr-modal {
   // Avoid overflow due to button width

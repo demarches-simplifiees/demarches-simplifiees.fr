@@ -724,6 +724,24 @@ describe Instructeurs::DossiersController, type: :controller do
     before { expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie) }
     subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
     it { expect(subject).to have_http_status(:ok) }
+
+    context "when the usager had sent a message" do
+      let!(:other_instructeur) { create(:instructeur) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :message_usager) }
+
+      it "destroy message_usager notification only for the current_instructeur" do
+        subject
+
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :message_usager)
+        ).to be_falsey
+
+        expect(
+          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :message_usager)
+        ).to be_truthy
+      end
+    end
   end
 
   describe "#create_commentaire" do
@@ -934,6 +952,24 @@ describe Instructeurs::DossiersController, type: :controller do
         end
       end
     end
+
+    context "when there are instructeurs followers" do
+      let!(:instructeur_not_follower) { create(:instructeur) }
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, instructeur_not_follower]) }
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+      end
+
+      it "create attente_avis notification only for instructeur follower" do
+        expect { subject }.to change(DossierNotification, :count).by(1)
+
+        notification = DossierNotification.last
+        expect(notification.dossier_id).to eq(dossier.id)
+        expect(notification.instructeur_id).to eq(instructeur.id)
+        expect(notification.notification_type).to eq("attente_avis")
+      end
+    end
   end
 
   describe "#show" do
@@ -985,6 +1021,24 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'assigns variable with true value' do
         get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
         expect(assigns(:is_dossier_in_batch_operation)).to eq(true)
+      end
+    end
+
+    context "when the dossier has been modified by the usager" do
+      let!(:other_instructeur) { create(:instructeur) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :dossier_modifie) }
+
+      it "destroy dossier_modifie notification only for the current_instructeur" do
+        get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
+
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :dossier_modifie)
+        ).to be_falsey
+
+        expect(
+          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :dossier_modifie)
+        ).to be_truthy
       end
     end
   end
@@ -1271,6 +1325,79 @@ describe Instructeurs::DossiersController, type: :controller do
         patch :update_annotations, params: params, format: :turbo_stream
         champ_datetime.reload
         expect(champ_datetime.value).to eq(Time.zone.parse('2024-03-30T07:03:00').iso8601)
+      end
+    end
+
+    context "when there are others instructeurs followers" do
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {
+              champ_datetime.public_id => {
+                value: '2024-03-30T07:03'
+              }
+            }
+          }
+        }
+      end
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        instructeur.followed_dossiers << dossier
+        another_instructeur.followed_dossiers << dossier
+        patch :update_annotations, params: params, format: :turbo_stream
+      end
+
+      it "create annotation_instructeur notification only for others instructeurs follower" do
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.last
+        expect(notification.dossier_id).to eq(dossier.id)
+        expect(notification.instructeur_id).to eq(another_instructeur.id)
+        expect(notification.notification_type).to eq("annotation_instructeur")
+      end
+    end
+  end
+
+  describe "#annotations_privees" do
+    context "when the dossier has an annotation_instructeur notification" do
+      let!(:other_instructeur) { create(:instructeur) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :annotation_instructeur) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :annotation_instructeur) }
+
+      it "destroy annotation_instructeur notification only for the current_instructeur" do
+        get :annotations_privees, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
+
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :annotation_instructeur)
+        ).to be_falsey
+
+        expect(
+          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :annotation_instructeur)
+        ).to be_truthy
+      end
+    end
+  end
+
+  describe "#avis" do
+    context "when the dossier has an avis_externe notification" do
+      let!(:other_instructeur) { create(:instructeur) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :avis_externe) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :avis_externe) }
+
+      it "destroy avis_externe notification only for the current_instructeur" do
+        get :avis, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
+
+        expect(
+          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :avis_externe)
+        ).to be_falsey
+
+        expect(
+          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :avis_externe)
+        ).to be_truthy
       end
     end
   end

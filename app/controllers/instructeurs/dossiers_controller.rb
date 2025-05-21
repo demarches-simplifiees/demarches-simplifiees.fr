@@ -15,12 +15,17 @@ module Instructeurs
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous]
     before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
+    before_action :set_notifications_dossier, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :pending_correction, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :create_avis, :create_commentaire]
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
     after_action :mark_pieces_jointes_as_read, only: [:pieces_jointes]
+    after_action -> { destroy_notification(:dossier_modifie) }, only: [:show], if: -> { @notifications.any?(&:dossier_modifie?) }
+    after_action -> { destroy_notification(:message_usager) }, only: [:messagerie], if: -> { @notifications.any?(&:message_usager?) }
+    after_action -> { destroy_notification(:annotation_instructeur) }, only: [:annotations_privees], if: -> { @notifications.any?(&:annotation_instructeur?) }
+    after_action -> { destroy_notification(:avis_externe) }, only: [:avis], if: -> { @notifications.any?(&:avis_externe?) }
 
     def extend_conservation
       dossier.extend_conservation(1.month)
@@ -137,12 +142,15 @@ module Instructeurs
 
     def follow
       current_instructeur.follow(dossier)
+
       flash.notice = 'Dossier suivi'
+
       redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end
 
     def unfollow
       current_instructeur.unfollow(dossier)
+
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
       redirect_back(fallback_location: instructeur_procedure_path(procedure))
@@ -271,6 +279,7 @@ module Instructeurs
       respond_to do |format|
         format.turbo_stream do
           @dossier = dossier
+          @notifications = DossierNotification.notifications_for_instructeur_dossier(current_instructeur, dossier)
           render :change_state
         end
 
@@ -299,6 +308,7 @@ module Instructeurs
       @avis = create_avis_from_params(dossier, current_instructeur)
 
       if @avis.nil?
+        DossierNotification.create_notification(dossier, :attente_avis)
         redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
         @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
@@ -315,6 +325,7 @@ module Instructeurs
       if annotation.save(context: :champs_private_value) && annotation_changed
         annotation.update_timestamps
         dossier.index_search_terms_later
+        DossierNotification.create_notification(dossier, :annotation_instructeur, except_instructeur: current_instructeur)
       end
 
       dossier.validate(context: :champs_private_value)

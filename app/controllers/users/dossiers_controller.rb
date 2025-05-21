@@ -242,6 +242,7 @@ module Users
 
       if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         @dossier.passer_en_construction!
+        DossierNotification.create_notification(@dossier, :dossier_depose)
         redirect_to merci_dossier_path(@dossier)
       else
         render :brouillon
@@ -294,6 +295,9 @@ module Users
         end
 
         dossier_en_construction.submit_en_construction!
+
+        DossierNotification.create_notification(dossier_en_construction, :dossier_modifie)
+
         redirect_to dossier_path(dossier_en_construction)
       else
         @dossier_for_editing = dossier
@@ -345,6 +349,8 @@ module Users
         timestamps << :last_commentaire_piece_jointe_updated_at if @commentaire.piece_jointe.attached?
 
         @commentaire.dossier.touch(*timestamps)
+
+        DossierNotification.create_notification(dossier, :message_usager)
 
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)

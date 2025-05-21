@@ -1,0 +1,5 @@
+- if display == 'true'
+  = link_to "Détail des notifications", instructeur_procedure_display_notifications_path(procedure_id: @procedure_id, display: 'false'), class: "fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-up-s-line fr-btn--icon-right fr-btn--sm fr-px-0", id: "notifications-button-#{@procedure_id}", data: { turbo: true }
+
+- else
+  = link_to "Détail des notifications", instructeur_procedure_display_notifications_path(procedure_id: @procedure_id, display: 'true'), class: "fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-down-s-line fr-btn--icon-right fr-btn--sm fr-px-0", id: "notifications-button-#{@procedure_id}", data: { turbo: true }

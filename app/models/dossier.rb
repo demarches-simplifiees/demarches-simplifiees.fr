@@ -143,6 +143,7 @@ class Dossier < ApplicationRecord
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :dossier_labels, dependent: :destroy
   has_many :labels, -> { order(:position, :id) }, through: :dossier_labels
+  has_many :dossier_notifications, dependent: :destroy
 
   has_many :rdvs, dependent: :destroy
 
@@ -394,6 +395,20 @@ class Dossier < ApplicationRecord
       ' OR last_champ_piece_jointe_updated_at > follows.pieces_jointes_seen_at' \
       ' OR last_avis_piece_jointe_updated_at > follows.pieces_jointes_seen_at')
       .distinct
+  end
+
+  scope :with_notifications_v2, -> do
+    joins(:dossier_notifications)
+      .distinct
+  end
+
+  scope :order_by_notifications_importance, -> do
+    includes(:dossier_notifications)
+      .sort_by do |dossier|
+        dossier.dossier_notifications.map do |notif|
+          DossierNotification.notification_types.keys.index(notif.notification_type)
+        end.min
+      end
   end
 
   scope :by_statut, -> (statut, instructeur: nil, include_archived: false) do
@@ -693,6 +708,9 @@ class Dossier < ApplicationRecord
 
     if !brouillon?
       unfollow_stale_instructeurs
+      if previous_groupe_instructeur.present?
+        DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, groupe_instructeur)
+      end
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
       end

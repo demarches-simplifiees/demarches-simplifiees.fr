@@ -27,6 +27,7 @@ class Instructeur < ApplicationRecord
   has_many :exports, as: :user_profile
   has_many :archives, as: :user_profile
   has_many :instructeurs_procedures, dependent: :destroy
+  has_many :dossier_notifications, dependent: :destroy
 
   has_one :rdv_connection, dependent: :destroy
 
@@ -53,6 +54,10 @@ class Instructeur < ApplicationRecord
   def follow(dossier)
     begin
       followed_dossiers << dossier
+
+      DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
+      DossierNotification.refresh_notifications_instructeur_for_dossier(self, dossier)
+
       # If the user tries to follow a dossier she already follows,
       # we just fail silently: it means the goal is already reached.
     rescue ActiveRecord::RecordNotUnique
@@ -67,6 +72,7 @@ class Instructeur < ApplicationRecord
     f = follows.find_by(dossier: dossier)
     if f.present?
       f.update(unfollowed_at: Time.zone.now)
+      DossierNotification.destroy_notifications_instructeur_of_dossier(self, dossier)
     end
   end
 
@@ -340,6 +346,10 @@ class Instructeur < ApplicationRecord
 
   def groupe_instructeur_options_for(procedure)
     groupe_instructeurs.filter_map { [_1.label, _1.id] if _1.procedure == procedure }
+  end
+
+  def feature_enabled?(feature)
+    Flipper.enabled?(feature, self)
   end
 
   private

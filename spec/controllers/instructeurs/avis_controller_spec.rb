@@ -16,14 +16,20 @@ describe Instructeurs::AvisController, type: :controller do
     before { sign_in(instructeur.user) }
 
     describe "#revoker" do
-      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
+      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_avis) }
 
       before do
-        patch :revoquer, params: { procedure_id: procedure.id, id: avis.id, statut: 'a-suivre' }
+        patch :revoquer, params: { procedure_id: procedure.id, id: avis_without_answer.id, statut: 'a-suivre' }
       end
 
       it "revoke the dossier" do
-        expect(flash.notice).to eq("#{avis.expert.email} ne peut plus donner son avis sur ce dossier.")
+        expect(flash.notice).to eq("#{avis_without_answer.expert.email} ne peut plus donner son avis sur ce dossier.")
+      end
+
+      context "when the avis has not been answered in the meantime" do
+        it "destroy attente_avis notification for all instructeurs" do
+          expect(DossierNotification.exists?(notification.id)).to be_falsey
+        end
       end
     end
 

@@ -7,7 +7,7 @@
 - is_expert_context = nav_bar_profile == :expert && expert_signed_in?
 - is_user_context = nav_bar_profile == :user
 - is_search_enabled = [params[:controller] == 'recherche', is_instructeur_context, is_expert_context].any?
-%header{ class: ["fr-header", content_for?(:notice_info) && "fr-header__with-notice-info"], role: "banner", "data-controller": "dsfr-header" }
+%header.fr-header{ role: "banner" }
   %nav{ :role => "navigation", "aria-label" => t('layouts.header.main_menu') }
     .fr-header__body
       .fr-container

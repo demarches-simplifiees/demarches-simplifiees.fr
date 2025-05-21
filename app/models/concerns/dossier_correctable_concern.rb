@@ -20,6 +20,8 @@ module DossierCorrectableConcern
 
       corrections.create!(commentaire:, reason:)
 
+      create_attente_correction_notification
+
       log_pending_correction_operation(commentaire, reason) if procedure.sva_svr_enabled?
 
       return if en_construction?
@@ -75,6 +77,10 @@ module DossierCorrectableConcern
       end
 
       log_dossier_operation(commentaire.instructeur, operation, commentaire)
+    end
+
+    def create_attente_correction_notification
+      DossierNotification.create_notification(self, :attente_correction)
     end
   end
 end

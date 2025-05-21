@@ -5,6 +5,7 @@ describe 'instructeurs/dossiers/show', type: :view do
   let(:dossier) { create(:dossier, :en_construction) }
   let(:statut) { { statut: 'tous' } }
   let(:procedure_presentation) { double(instructeur: current_instructeur, procedure: dossier.procedure, displayed_columns: []) }
+  let(:notifications) { [] }
 
   before do
     sign_in(current_instructeur.user)
@@ -12,6 +13,7 @@ describe 'instructeurs/dossiers/show', type: :view do
     allow(controller).to receive(:params).and_return(statut:)
     assign(:dossier, dossier)
     assign(:procedure_presentation, procedure_presentation)
+    assign(:notifications, notifications)
   end
 
   subject { render }
@@ -36,7 +38,9 @@ describe 'instructeurs/dossiers/show', type: :view do
   end
 
   context 'en_construction' do
+    let!(:instructeur) { create(:instructeur) }
     let(:dossier) { create(:dossier, :en_construction) }
+
     it 'displays the correct actions' do
       within("form[action=\"#{passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
         expect(subject).to have_button('Passer en instruction', disabled: false)
@@ -49,12 +53,17 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
 
     context 'with pending correction' do
-      before { create(:dossier_correction, dossier:) }
+      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: 'attente_correction') }
+
+      before do
+        create(:dossier_correction, dossier:)
+        assign(:notifications, [notification])
+      end
 
       it { expect(subject).to have_button('Passer en instruction', disabled: false) }
 
       it 'shows the correction badge' do
-        expect(subject).to have_selector('.fr-badge--warning', text: "en attente")
+        expect(subject).to have_selector('.fr-badge', text: "En attente de correction")
       end
 
       context 'with procedure blocking pending correction' do
@@ -68,10 +77,12 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
 
     context 'with resolved correction' do
-      before { create(:dossier_correction, dossier:, resolved_at: 1.minute.ago) }
+      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: 'dossier_modifie') }
+
+      before { assign(:notifications, [notification]) }
 
       it 'shows the resolved badge' do
-        expect(subject).to have_selector('.fr-badge--success', text: "corrigé")
+        expect(subject).to have_selector('.fr-badge--new', text: "Dossier modifié")
       end
     end
   end

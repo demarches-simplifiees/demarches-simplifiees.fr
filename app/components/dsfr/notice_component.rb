@@ -3,6 +3,8 @@
 # see: https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/bandeau-d-information-importante/
 class Dsfr::NoticeComponent < ApplicationComponent
   renders_one :title
+  renders_one :desc
+  renders_one :link
 
   attr_reader :data_attributes
 
@@ -16,6 +18,6 @@ class Dsfr::NoticeComponent < ApplicationComponent
   end
 
   def notice_data_attributes
-    { "data-dsfr-header-target": "notice" }.merge(data_attributes)
+    { "data-controller": 'dsfr-notice', "data-dsfr-notice-target": "notice" }.merge(data_attributes)
   end
 end

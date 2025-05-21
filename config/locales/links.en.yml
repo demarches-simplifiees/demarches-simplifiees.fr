@@ -76,3 +76,6 @@ en:
       contact:
         label: Contact
       display_params: Display params
+    instructeur:
+      notification_notice:
+        url: "https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-instructeur#a.-notifications-sur-les-dossiers"

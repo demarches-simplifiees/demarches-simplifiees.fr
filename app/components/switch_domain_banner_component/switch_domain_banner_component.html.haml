@@ -16,7 +16,7 @@
     })
 
 
-= render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-switch-domain-notice" => true }) do |c|
+= render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-notice-name" => "switch-domain"}) do |c|
   - c.with_title do
     = t(".message_new_domain")
     -# haml-lint:disable ApplicationNameLinter

@@ -23,9 +23,9 @@ fr:
         sans_suite: "Classé sans suite"
         a_corriger: À corriger
       pending_correction:
-        for_instructeur: "en attente"
+        for_instructeur: "en attente de correction"
         for_user: "à corriger"
-        resolved: corrigé
+        resolved: "Dossier corrigé"
       traitement:
         state: "État"
       traitement/state:
