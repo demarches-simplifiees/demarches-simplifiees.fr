@@ -2,7 +2,7 @@
 
 describe 'administrateurs/procedures/show', type: :view do
   let(:closed_at) { nil }
-  let(:procedure) { create(:procedure, :with_service, closed_at: closed_at) }
+  let(:procedure) { create(:procedure, :with_service, closed_at: closed_at, types_de_champ_public: [{ type: :yes_no }]) }
 
   before do
     assign(:procedure, procedure)
@@ -25,6 +25,7 @@ describe 'administrateurs/procedures/show', type: :view do
         expect(rendered).not_to have_css('#archive-procedure')
         expect(rendered).to have_css('#delete-procedure')
         expect(rendered).to have_css('#clone-procedure')
+        expect(rendered).to have_css('#preview-procedure')
       end
     end
   end
@@ -42,6 +43,7 @@ describe 'administrateurs/procedures/show', type: :view do
       expect(rendered).to have_css('#archive-procedure')
       expect(rendered).not_to have_css('#delete-procedure')
       expect(rendered).to have_css('#clone-procedure')
+      expect(rendered).to have_css('#preview-procedure')
     end
   end
 
@@ -59,6 +61,7 @@ describe 'administrateurs/procedures/show', type: :view do
       expect(rendered).to have_content('Réactiver')
       expect(rendered).to have_css('#delete-procedure')
       expect(rendered).to have_css('#clone-procedure')
+      expect(rendered).to have_css('#preview-procedure')
     end
   end
 
