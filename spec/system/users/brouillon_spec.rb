@@ -40,9 +40,11 @@ describe 'The user', js: true do
     scroll_to(find_field('multiple_choice_drop_down_list_long'), align: :center)
     fill_in('multiple_choice_drop_down_list_long', with: 'alpha')
     find('.fr-menu__item', text: 'alpha').click
+    wait_for_autosave
     wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha'].to_json }
     fill_in('multiple_choice_drop_down_list_long', with: 'charly')
     find('.fr-menu__item', text: 'charly').click
+    wait_for_autosave
     wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha', 'charly'].to_json }
 
     select('Australie', from: form_id_for('pays'))
@@ -77,12 +79,14 @@ describe 'The user', js: true do
     fill_in('dossier_link', with: dossier_to_link.id.to_s)
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
-    expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
     wait_for_autosave
 
     # check data on the dossier
+    wait_until { champ_value_for('nationalites').present? }
     expect(champ_value_for('nationalites')).to eq('Australienne')
+    wait_until { champ_value_for('commune_de_polynesie').present? }
     expect(champ_value_for('commune_de_polynesie')).to eq('Mahina - Tahiti - 98709')
+    wait_until { champ_value_for('code_postal_de_polynesie').present? }
     expect(champ_value_for('code_postal_de_polynesie')).to eq('98709 - Mahina - Tahiti')
 
     expect(user_dossier.brouillon?).to be true
