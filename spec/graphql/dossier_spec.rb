@@ -8,7 +8,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   subject { API::V2::Schema.execute(query, variables: variables, context: context) }
 
   let(:data) { subject['data'].deep_symbolize_keys }
-  let(:errors) { subject['errors'].deep_symbolize_keys }
+  let(:errors) { subject['errors'] }
 
   describe 'dossier with attestation' do
     let(:dossier) { create(:dossier, :accepte, :with_attestation) }
@@ -47,6 +47,37 @@ RSpec.describe Types::DossierType, type: :graphql do
         "street_address" => "33 Rue Rébeval",
         "department_code" => "75",
         "department_name" => "Paris"
+      }
+    end
+
+    let(:not_in_ban_address) do
+      {
+        not_in_ban: 'true',
+        label: "2 rue des Démarches grenoble (38100)",
+        city_code: "38100",
+        city_name: "grenoble",
+        postal_code: "38000",
+        region_code: "84",
+        region_name: "Auvergne-Rhones-Alpes",
+        street_address: "2 rue des Démarches",
+        department_code: "38",
+        department_name: "Isère",
+        country_code: "FR",
+        country_name: "France"
+      }
+    end
+
+    let(:international_address) do
+      {
+        not_in_ban: 'true',
+        label: "2 rue des Démarches Roma (1234)",
+        city_name: "Roma",
+        postal_code: "1234",
+        street_address: "2 rue des Démarches",
+        department_code: "99",
+        department_name: APIGeoService.departement_name('99'),
+        country_code: "IT",
+        country_name: APIGeoService.country_name('IT')
       }
     end
 
@@ -96,6 +127,32 @@ RSpec.describe Types::DossierType, type: :graphql do
       expect(data[:dossier][:champs][3][:rna][:address][:cityName]).to eq('Paris 14e')
       expect(data[:dossier][:champs][3][:rna][:address][:departmentName]).to eq(nil)
       expect(data[:dossier][:champs][3][:rna][:address][:regionName]).to eq(nil)
+    end
+
+    context 'not in ban' do
+      before do
+        dossier.project_champs_public.find(&:address?).update_columns(value_json: not_in_ban_address)
+      end
+
+      it 'should return address' do
+        expect(errors).to be_nil
+        expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
+        expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Isère')
+        expect(data[:dossier][:champs][1][:address][:countryName]).to eq('France')
+      end
+    end
+
+    context 'international' do
+      before do
+        dossier.project_champs_public.find(&:address?).update_columns(value_json: international_address)
+      end
+
+      it 'should return address' do
+        expect(errors).to be_nil
+        expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
+        expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Etranger')
+        expect(data[:dossier][:champs][1][:address][:countryName]).to eq('Italie')
+      end
     end
 
     context 'when etablissement is in degraded mode' do
@@ -489,6 +546,8 @@ RSpec.describe Types::DossierType, type: :graphql do
     streetNumber
     departmentName
     regionName
+    countryCode
+    countryName
   }
 
   fragment RNAChampFragment on RNAChamp {

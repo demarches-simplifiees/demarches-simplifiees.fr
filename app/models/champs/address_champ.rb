@@ -147,6 +147,7 @@ class Champs::AddressChamp < Champs::TextChamp
 
   def commune
     return unless full_address?
+    return if department_code == '99'
 
     commune_name = APIGeoService.commune_name(department_code, city_code)
     commune_code = APIGeoService.commune_code(department_code, city_name)
