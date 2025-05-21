@@ -10,7 +10,11 @@ module Types::Champs
 
     def address
       if object.full_address?
-        object.address.merge('city_code' => object.commune.fetch(:code))
+        object.address
+          .merge(
+            'city_code' => object.commune&.fetch(:code) || '',
+            'type' => object.address.fetch('type', 'housenumber')
+          )
       end
     end
   end

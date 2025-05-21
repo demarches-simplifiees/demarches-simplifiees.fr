@@ -52,6 +52,7 @@ class APIGeoService
     end
 
     def departement_name(code)
+      return 'Etranger' if code == '99'
       departements.find { _1[:code] == code }&.dig(:name)
     end
 
