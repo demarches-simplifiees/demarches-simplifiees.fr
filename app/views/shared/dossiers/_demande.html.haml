@@ -14,7 +14,7 @@
           = t('views.shared.dossiers.demande.accuse_lecture_without_agreement')
 
   %h2.fr-h6.fr-background-alt--grey.fr-mb-0
-    .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.en_construction')
+    .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.history')
 
   - if dossier.depose_at.present?
     = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier, profile: profile }

@@ -363,7 +363,12 @@ en:
         form:
           submitted_at: "Submitted on %{datetime}"
           updated_at: "Updated on %{datetime}"
+          switched_to_instruction_at: "Switched to instruction on %{datetime}"
+          revert_to_submitted_at: "Correction requested on on %{datetime}"
           download_attestation: "Download attestation"
+          acceptee_at: "Accepted on %{datetime}"
+          refuse_at: "Declined on %{datetime}"
+          closed_at: "Closed on %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
         messages:
