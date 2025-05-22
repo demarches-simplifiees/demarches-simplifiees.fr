@@ -30,14 +30,15 @@ describe Administrateurs::ReferentielsController, type: :controller do
         get :new, params: { procedure_id: procedure.id, referentiel_id: referentiel.id, stable_id: }
         expect(assigns(:referentiel).attributes.with_indifferent_access.slice(*original_data.keys))
           .to eq(original_data.with_indifferent_access)
+        expect(response).to have_http_status(:success)
       end
     end
   end
 
   describe '#create' do
-    subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
+    context 'partial update (selecting type)' do
+      subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
 
-    context 'partial update' do
       let(:referentiel_params) { { type: 'Referentiels::APIReferentiel' } }
       it 're-render form' do
         expect { subject }.not_to change { Referentiel.count }
@@ -45,7 +46,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
       end
     end
 
-    context 'full update' do
+    context 'partial update (autosave with url, hint etc...)' do
+      subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
+
       let(:referentiel_params) do
         {
           type: 'Referentiels::APIReferentiel',
@@ -56,7 +59,36 @@ describe Administrateurs::ReferentielsController, type: :controller do
         }
       end
 
-      it 'creates referentiel and redirects to mapping' do
+      it 'creates referentiel and continue live edition' do
+        expect { subject }.to change { Referentiel.count }.by(1)
+
+        referentiel = Referentiel.first
+
+        expect(response).to have_http_status(:success)
+
+        expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
+        expect(referentiel.type).to eq(referentiel_params[:type])
+        expect(referentiel.mode).to eq(referentiel_params[:mode])
+        expect(referentiel.url).to eq(referentiel_params[:url])
+        expect(referentiel.hint).to eq(referentiel_params[:hint])
+        expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+      end
+    end
+
+    context 'with commit params (submit save)' do
+      subject { post :create, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
+
+      let(:referentiel_params) do
+        {
+          type: 'Referentiels::APIReferentiel',
+          mode: 'exact_match',
+          url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+          hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
+          test_data: 'PG46YY6YWCX8'
+        }
+      end
+
+      it 'creates referentiel and continue redirect' do
         expect { subject }.to change { Referentiel.count }.by(1)
 
         referentiel = Referentiel.first
@@ -86,23 +118,44 @@ describe Administrateurs::ReferentielsController, type: :controller do
   describe "#update" do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
     let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
-    let(:referentiel_params) do
-      {
-        mode: 'autocomplete',
-        url: referentiel.url,
-        hint: 'Rechercher par adresse',
-        test_data: '18 rue du solférino, paris'
-      }
-    end
-    it 'works' do
-      patch :update, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }
-      expect(response).to have_http_status(:found)
-      referentiel.reload
 
-      expect(referentiel.mode).to eq(referentiel_params[:mode])
-      expect(referentiel.url).to eq(referentiel_params[:url])
-      expect(referentiel.hint).to eq(referentiel_params[:hint])
-      expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+    context 'partial update (updating hint only)' do
+      subject { patch :update, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
+
+      let(:referentiel_params) { { hint: 'Nouvel indice' } }
+
+      it 'updates the referentiel and re-renders the form' do
+        expect { subject }.to change { referentiel.reload.hint }.to('Nouvel indice')
+        expect(response).to have_http_status(:success)
+
+        referentiel.reload
+
+        expect(referentiel.hint).to eq(referentiel_params[:hint])
+      end
+    end
+
+    context 'full update (updating all attributes) without autosave' do
+      subject { patch :update, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
+
+      let(:referentiel_params) do
+        {
+          mode: 'exact_match',
+          url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+          hint: 'Identifiant unique du bâtiment dans le RNB',
+          test_data: 'PG46YY6YWCX8'
+        }
+      end
+
+      it 'updates the referentiel and redirects' do
+        expect { subject }.to change { referentiel.reload.attributes.slice(*referentiel_params.keys.map(&:to_s)) }
+          .to(referentiel_params.stringify_keys)
+        expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+        referentiel.reload
+        expect(referentiel.mode).to eq(referentiel_params[:mode])
+        expect(referentiel.url).to eq(referentiel_params[:url])
+        expect(referentiel.hint).to eq(referentiel_params[:hint])
+        expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+      end
     end
   end
 
