@@ -5,7 +5,7 @@ module Maintenance
     # Given a procedure id in argument, run the RoutingEngine again for all dossiers of the procedure (included all states of dossier).
     # This task should be used only if field(s) used for routing have not been changed in procedure revisions. Otherwise, dossiers might be routed the wrong way.
     # Please check history of procedure revisions before using this task.
-    # Consider running previously the task below reset_forced_groupe_instructeur, if manual reaffectations should be reset or not.
+    # Consider running previously the task T20250522resetForcedGroupInstructeurTask, if manual reaffectations should be reset or not.
 
     include RunnableOnDeployConcern
     include StatementsHelpersConcern
