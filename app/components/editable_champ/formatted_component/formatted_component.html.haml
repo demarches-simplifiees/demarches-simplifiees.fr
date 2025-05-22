@@ -1,1 +1,1 @@
-= @form.text_field(:value, input_opts(id: @champ.focusable_input_id, placeholder: @champ.formatted_advanced? ? @champ.expression_reguliere_exemple_text : nil, required: @champ.required?, aria: { describedby: @champ.describedby_id }))
+= @form.text_field(:value, input_opts(id: @champ.focusable_input_id, placeholder: @champ.formatted_advanced? ? @champ.expression_reguliere_exemple_text : nil, required: @champ.required?, aria: { labelledby: labelledby_id, describedby: @champ.describedby_id }))
