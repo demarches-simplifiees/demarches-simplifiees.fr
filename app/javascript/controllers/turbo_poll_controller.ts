@@ -12,7 +12,7 @@ export class TurboPollController extends ApplicationController {
   static values = {
     url: String,
     strategy: { type: String, default: 'fibonacci' },
-    interval: Number
+    interval: { type: Number, default: 2000 }
   };
 
   declare readonly urlValue: string;
