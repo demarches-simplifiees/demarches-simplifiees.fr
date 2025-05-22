@@ -16,11 +16,6 @@ module Maintenance
       Dossier
         .joins('INNER JOIN dossier_corrections ON dossier_corrections.dossier_id = dossiers.id')
         .merge(DossierCorrection.pending)
-        .where.not(
-          id: DossierNotification
-            .where(notification_type: :attente_correction)
-            .select(:dossier_id)
-        )
         .includes(:followers_instructeurs)
         .map do |dossier|
           [dossier.id, dossier.followers_instructeur_ids]

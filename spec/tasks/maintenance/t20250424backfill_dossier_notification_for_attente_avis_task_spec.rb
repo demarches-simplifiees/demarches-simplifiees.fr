@@ -35,15 +35,6 @@ module Maintenance
         end
       end
 
-      context 'when dossier has avis without answer and attente_avis notification' do
-        let!(:avis) { create(:avis, dossier:) }
-        let!(:attente_avis_notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur, notification_type: :attente_avis) }
-
-        it do
-          expect(collection).to eq([])
-        end
-      end
-
       context 'when dossier has avis without answer but not attente_avis notification' do
         let!(:avis) { create(:avis, dossier:) }
         let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur) }
