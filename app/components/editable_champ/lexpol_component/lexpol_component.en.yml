@@ -1,0 +1,7 @@
+en:
+  lexpol_component:
+    label_numero_nor: "NOR number:"
+    label_statut_dossier: "File status:"
+    button_creer_dossier: "Create Lexpol file"
+    button_mettre_a_jour: "Update Lexpol file"
+    button_creer_nouveau: "Create a new Lexpol file"

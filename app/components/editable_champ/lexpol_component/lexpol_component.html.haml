@@ -1,10 +1,11 @@
 - if @champ.value.blank?
-  - button_label = 'Créer le dossier Lexpol'
+  - button_label = t('.button_creer_dossier')
 - else
-  - button_label = 'Mettre à jour le dossier lexpol'
+  - button_label = t('.button_mettre_a_jour')
+
 .div.dossier-show
   %p.champ-label
-    Numéro NOR :
+    = t('.label_numero_nor')
     - if @champ.lexpol_dossier_url.present?
       = link_to @champ.value, @champ.lexpol_dossier_url, target: '_blank', class: 'fr-link'
     - else
@@ -12,12 +13,12 @@
 
   - if @champ.lexpol_status.present? || true
     %p.champ-label
-      Statut du dossier :
+      = t('.label_statut_dossier')
       %strong
         = @champ.data&.[]('lexpol_status')
     .fr-btn-group{ style: "display:flex; gap:1rem; align-items:center;" }
       = link_to button_label, champs_lexpol_upsert_dossier_path(dossier_id: @champ.dossier.id, stable_id: @champ.stable_id),
         method: :post, class: 'fr-btn fr-btn--secondary'
       - if @champ.lexpol_status == "Annulé"
-        = link_to 'Créer un nouveau dossier Lexpol', champs_lexpol_upsert_dossier_path(dossier_id: @champ.dossier.id, stable_id: @champ.stable_id, force_create: true),
+        = link_to t('.button_creer_nouveau'), champs_lexpol_upsert_dossier_path(dossier_id: @champ.dossier.id, stable_id: @champ.stable_id, force_create: true),
           method: :post, class: 'fr-btn fr-btn--secondary'

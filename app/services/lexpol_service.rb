@@ -47,9 +47,6 @@ class LexpolService
     champ.update!(value: nor)
     refresh_lexpol_data!
     nor
-  rescue => e
-    Rails.logger.error("Erreur Lexpol create_dossier : #{e.message}")
-    nil
   end
 
   def update_dossier

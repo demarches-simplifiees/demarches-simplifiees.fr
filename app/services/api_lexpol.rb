@@ -52,7 +52,11 @@ class APILexpol
   def determine_email_agent(email, numero_tahiti, is_manager)
     return email unless is_manager && numero_tahiti
 
-    LEXPOL_SERVICE_EMAILS[numero_tahiti] || email
+    APILexpol.service_emails[numero_tahiti] || email
+  end
+
+  def self.service_emails
+    LEXPOL_SERVICE_EMAILS
   end
 
   def request_authentication
