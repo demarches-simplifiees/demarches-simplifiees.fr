@@ -20,6 +20,8 @@ class Champ < ApplicationRecord
   delegate :procedure, to: :dossier
   normalizes :value, with: NORMALIZES_NON_PRINTABLE_PROC
 
+  attribute :fetch_external_data_exceptions, :external_data_exception, array: true
+
   def type_de_champ
     @type_de_champ ||= dossier.revision
       .types_de_champ
@@ -217,8 +219,8 @@ class Champ < ApplicationRecord
     "#{html_id}-error_id"
   end
 
-  def log_fetch_external_data_exception(exception)
-    update_column(:fetch_external_data_exceptions, [exception.inspect])
+  def log_fetch_external_data_exception(exception, code)
+    update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
   end
 
   def fetch_external_data?
@@ -234,7 +236,19 @@ class Champ < ApplicationRecord
   end
 
   def fetch_external_data_pending?
-    fetch_external_data? && poll_external_data? && external_id.present? && data.nil? && !fetch_external_data_error?
+    is_empty_response = data.nil? && !fetch_external_data_error?
+    fetch_external_data? &&
+      poll_external_data? &&
+      external_id.present? &&
+      is_empty_response
+  end
+
+  def external_data_fetched?
+    is_response_present = data.present? || fetch_external_data_error?
+    fetch_external_data? &&
+      poll_external_data? &&
+      external_id.present? &&
+      is_response_present
   end
 
   def fetch_external_data
@@ -242,7 +256,7 @@ class Champ < ApplicationRecord
   end
 
   def update_with_external_data!(data:)
-    update!(data: data)
+    update!(data: data, fetch_external_data_exceptions: [])
   end
 
   def status_message?

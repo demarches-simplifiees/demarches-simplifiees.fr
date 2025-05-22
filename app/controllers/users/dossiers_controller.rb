@@ -326,10 +326,13 @@ module Users
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
     end
 
+    # polling url for champ
     def champ
       @dossier = dossier_with_champs(pj_template: false)
       type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id], :public)
       champ = dossier.project_champ(type_de_champ, row_id: params[:row_id])
+
+      champ.validate(:champs_public_value) if champ.external_data_fetched?
 
       respond_to do |format|
         format.turbo_stream do
@@ -607,7 +610,7 @@ module Users
           end
         end
 
-        if params[:validate].present?
+        if params[:validate].present? && !champ.fetch_external_data_pending?
           dossier.validate(:champs_public_value)
         end
       end

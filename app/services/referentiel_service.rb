@@ -3,27 +3,48 @@
 class ReferentielService
   include Dry::Monads[:result]
 
+  RETRYABLE_STATUS_CODES = [429, 500, 503, 408, 502].freeze
+  NON_RETRYABLE_STATUS_CODES = [404, 400, 403, 401].freeze
+  API_TIMEOUT = 10
+
   attr_reader :referentiel, :service
 
   def initialize(referentiel:)
     @referentiel = referentiel
   end
 
-  def test
+  def call(query_params)
+    result = API::Client.new.call(url: referentiel.url.gsub('{id}', query_params), timeout: API_TIMEOUT)
+    handle_api_result(result)
+  end
+
+  def validate_referentiel
     case referentiel
     when Referentiels::APIReferentiel
-      result = API::Client.new.call(url: referentiel.url.gsub('{id}', referentiel.test_data))
-
+      result = call(referentiel.test_data)
       case result
-      in Success(data)
-        referentiel.update(last_response: { status: 200, body: data.body })
+      in Success(body)
+        referentiel.update_column(:last_response, { status: 200, body: })
         true
       in Failure(data)
-        referentiel.update(last_response: { status: data.code, body: data.try(:body) })
+        referentiel.update_column(:last_response, { status: data[:code], body: data[:body] })
         false
       end
-    else
-      fail "not yet implemented: #{referentiel.type}"
+    end
+  end
+
+  private
+
+  def handle_api_result(result)
+    case result
+    in Success(body:)
+      Success(body)
+    in Failure(code:) if code.in?(RETRYABLE_STATUS_CODES) # api may be rate limited, or down etc..
+      Failure(retryable: true, reason: StandardError.new('Retryable: 429, 500, 503, 408, 502'), code:)
+    in Failure(code:) if code.in?(NON_RETRYABLE_STATUS_CODES) # search may not have been found
+      Failure(retryable: false, reason: StandardError.new('Not retryable: 404, 400, 403, 401'), code:)
+    in Failure
+      Failure(retryable: false, reason: StandardError.new('Unknown error'), code:)
     end
   end
 end

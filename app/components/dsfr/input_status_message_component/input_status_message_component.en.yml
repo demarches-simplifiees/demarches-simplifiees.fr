@@ -2,3 +2,7 @@
 en:
   rna:
     data_fetched: "This RNA number is linked to: %{title}, %{address}."
+  referentiel:
+    fetching: "Search in progress."
+    error: "No item found for the reference: %{value}"
+    success: "Reference found: %{value}"
