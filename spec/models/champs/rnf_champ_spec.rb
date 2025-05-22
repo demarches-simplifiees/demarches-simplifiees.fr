@@ -1,14 +1,15 @@
 describe Champs::RNFChamp, type: :model do
-  let(:champ) { build(:champ_rnf, external_id:) }
-  let(:stub) { stub_request(:get, "#{url}/#{external_id}").to_return(body:, status:) }
-  let(:url) { RNFService.new.send(:url) }
-  let(:body) { Rails.root.join('spec', 'fixtures', 'files', 'api_rnf', "#{response_type}.json").read }
+  let(:champ) { described_class.new(external_id:) }
   let(:external_id) { '075-FDD-00003-01' }
-  let(:status) { 200 }
+  let(:body) { Rails.root.join('spec', 'fixtures', 'files', 'api_rnf', "#{response_type}.json").read }
   let(:response_type) { 'valid' }
 
   describe 'fetch_external_data' do
-    subject { stub; champ.fetch_external_data }
+    let(:url) { RNFService.new.send(:url) }
+    let(:status) { 200 }
+    before { stub_request(:get, "#{url}/#{external_id}").to_return(body:, status:) }
+
+    subject { champ.fetch_external_data }
 
     context 'success' do
       it do
@@ -84,7 +85,8 @@ describe Champs::RNFChamp, type: :model do
   end
 
   describe 'for_export' do
-    let(:champ) { build(:champ_rnf, external_id:, data: JSON.parse(body)) }
+    let(:champ) { described_class.new(external_id:, data: JSON.parse(body)) }
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rnf)) }
     it do
       expect(champ.for_export(:value)).to eq '075-FDD-00003-01'
       expect(champ.for_export(:nom)).to eq 'Fondation SFR'

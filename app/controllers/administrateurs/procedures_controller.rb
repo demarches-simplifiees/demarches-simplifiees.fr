@@ -480,7 +480,7 @@ module Administrateurs
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
       procedures_result = procedures_result.where(template: true) if filter.template?
-      procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
+      procedures_result = procedures_result.where(published_at: filter.from_publication_date..) if filter.from_publication_date.present?
       procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
       procedures_result = procedures_result.where(service: services) if services
       procedures_result = procedures_result.where(for_individual: filter.for_individual) if filter.for_individual.present?

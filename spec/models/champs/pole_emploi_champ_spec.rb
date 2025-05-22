@@ -1,5 +1,6 @@
 describe Champs::PoleEmploiChamp, type: :model do
-  let(:champ) { build(:champ_pole_emploi) }
+  let(:champ) { described_class.new(dossier: build(:dossier)) }
+  before { allow(champ).to receive(:type_de_champ).and_return(:type_de_champ_pole_emploi) }
 
   describe 'identifiant' do
     before do
@@ -32,7 +33,6 @@ describe Champs::PoleEmploiChamp, type: :model do
   end
 
   describe '#validate' do
-    let(:champ) { described_class.new(dossier: create(:dossier), type_de_champ: create(:type_de_champ_pole_emploi)) }
     let(:validation_context) { :create }
 
     subject { champ.valid?(validation_context) }

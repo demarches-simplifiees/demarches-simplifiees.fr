@@ -1591,12 +1591,15 @@ describe Procedure do
   end
 
   describe '#average_dossier_weight' do
-    let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }]) }
 
     before do
-      create_dossier_with_pj_of_size(4, procedure)
-      create_dossier_with_pj_of_size(5, procedure)
-      create_dossier_with_pj_of_size(6, procedure)
+      create(:dossier, :accepte, :with_populated_champs, procedure:)
+      create(:dossier, :accepte, :with_populated_champs, procedure:)
+      create(:dossier, :accepte, :with_populated_champs, procedure:)
+      ActiveStorage::Blob.first.update!(byte_size: 4)
+      ActiveStorage::Blob.second.update!(byte_size: 5)
+      ActiveStorage::Blob.third.update!(byte_size: 6)
     end
 
     it 'estimates average dossier weight' do

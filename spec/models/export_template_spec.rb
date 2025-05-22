@@ -136,46 +136,33 @@ describe ExportTemplate do
     end
 
     context 'for pj' do
-      let(:dossier) { procedure.dossiers.first }
-      let(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, stable_id: 3, procedure:) }
-      let(:champ_pj) { create(:champ_piece_justificative, type_de_champ: type_de_champ_pj) }
-
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ_pj) { dossier.champs.find(&:piece_justificative?) }
       let(:attachment) { ActiveStorage::Attachment.new(name: 'pj', record: champ_pj, blob: ActiveStorage::Blob.new(filename: "superpj.png")) }
 
-      before do
-        dossier.champs_public << champ_pj
-      end
       it 'returns pj and custom name for pj' do
         expect(export_template.attachment_and_path(dossier, attachment, champ: champ_pj)).to eq([attachment, "DOSSIER_#{dossier.id}/superpj_justif-1.png"])
       end
     end
     context 'pj repetable' do
-      let(:procedure) do
-        create(:procedure_with_dossiers, :for_individual, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'sub type de champ' }] }])
-      end
-      let(:type_de_champ_repetition) do
-        repetition = draft.types_de_champ_public.repetition.first
-        repetition.update(stable_id: 3333)
-        repetition
-      end
+      let(:procedure) { create(:procedure, :for_individual, types_de_champ_public:) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
       let(:draft) { procedure.draft_revision }
-      let(:dossier) { procedure.dossiers.first }
-
-      let(:type_de_champ_pj) do
-        draft.add_type_de_champ({
-          type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative),
-          libelle: "pj repet",
-          stable_id: 10,
-          parent_stable_id: type_de_champ_repetition.stable_id
-        })
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :repetition,
+            stable_id: 3333,
+            mandatory: true, children: [
+              { type: :text, libelle: 'sub type de champ' },
+              { type: :piece_justificative, stable_id: 10, libelle: 'pj repet' }
+            ]
+          }
+        ]
       end
-      let(:champ_pj) { create(:champ_piece_justificative, type_de_champ: type_de_champ_pj) }
-
+      let(:champ_pj) { dossier.champs.find(&:piece_justificative?) }
       let(:attachment) { ActiveStorage::Attachment.new(name: 'pj', record: champ_pj, blob: ActiveStorage::Blob.new(filename: "superpj.png")) }
 
-      before do
-        dossier.champs_public << champ_pj
-      end
       it 'rename repetable pj' do
         expect(export_template.attachment_and_path(dossier, attachment, champ: champ_pj)).to eq([attachment, "DOSSIER_#{dossier.id}/pj_repet_#{dossier.id}-1.png"])
       end
@@ -201,13 +188,14 @@ describe ExportTemplate do
   end
 
   describe '#tiptap_convert_pj' do
-    let(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile', procedure:) }
-    let(:champ_pj) { create(:champ_piece_justificative, type_de_champ: type_de_champ_pj) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile' }]) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:champ_pj) { dossier.champs.first }
     let(:attachment) { ActiveStorage::Attachment.new(name: 'pj', record: champ_pj, blob: ActiveStorage::Blob.new(filename: "superpj.png")) }
 
     it 'convert pj' do
       attachment
-      expect(export_template.tiptap_convert_pj(dossier, type_de_champ_pj.stable_id, attachment)).to eq "superpj_justif"
+      expect(export_template.tiptap_convert_pj(dossier, 3, attachment)).to eq "superpj_justif"
     end
   end
 

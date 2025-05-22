@@ -1,6 +1,6 @@
 describe Champs::PhoneChamp do
-  let(:champ) { build(:champ_phone) }
-
+  let(:champ) { Champs::PhoneChamp.new(dossier: build(:dossier)) }
+  before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_phone)) }
   describe '#validate' do
     it do
       expect(champ_with_value(nil).validate(:champs_public_value)).to be_truthy

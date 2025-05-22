@@ -1,16 +1,14 @@
 RSpec.describe Attachment::ShowComponent, type: :component do
-  let(:champ) { create(:champ_piece_justificative) }
-  let(:virus_scan_result) { nil }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
 
-  let(:attachment) {
-    champ.piece_justificative_file.attachments.first
-  }
-
+  let(:attachment) { champ.piece_justificative_file.attachments.first }
   let(:filename) { attachment.filename.to_s }
 
-  let(:component) do
-    described_class.new(attachment:)
-  end
+  let(:virus_scan_result) { nil }
+  let(:component) { described_class.new(attachment:) }
 
   subject { render_inline(component).to_html }
 

@@ -1,8 +1,14 @@
 describe Migrations::BatchUpdatePaysValuesJob, type: :job do
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :pays, mandatory: }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:pays_champ) { dossier.champs.first }
+  let(:mandatory) { true }
+  before { pays_champ.update_columns(attributes) }
   subject { described_class.perform_now([pays_champ.id]) }
 
   context "the value is correct" do
-    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'France', external_id: 'FR') } }
+    let(:attributes) { { value: 'France', external_id: 'FR' } }
 
     it 'does not change it' do
       subject
@@ -12,11 +18,8 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is incorrect" do
-    before do
-      pays_champ.type_de_champ.update!(mandatory: false)
-    end
-
-    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'Incorrect') } }
+    let(:attributes) { { value: 'Incorrect' } }
+    let(:mandatory) { false }
 
     it 'updates value to nil' do
       subject
@@ -26,7 +29,7 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is easily cleanable" do
-    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'Vietnam') } }
+    let(:attributes) { { value: 'Vietnam' } }
 
     it 'cleans the value' do
       subject
@@ -36,7 +39,7 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is hard to clean" do
-    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'CHRISTMAS (ILE)') } }
+    let(:attributes) { { value: 'CHRISTMAS (ILE)' } }
 
     it 'cleans the value' do
       subject

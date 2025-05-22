@@ -3,15 +3,16 @@
 require "rails_helper"
 
 RSpec.describe Attachment::PendingPollComponent, type: :component do
-  let(:champ) { create(:champ_titre_identite) }
-  let(:attachment) { champ.piece_justificative_file.attachments.first }
-  let(:component) {
-    described_class.new(poll_url: "poll-here", attachment:)
-  }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :titre_identite }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
 
-  subject {
-    render_inline(component).to_html
-  }
+  let(:attachment) { champ.piece_justificative_file.attachments.first }
+
+  let(:component) { described_class.new(poll_url: "poll-here", attachment:) }
+
+  subject { render_inline(component).to_html }
 
   context "when watermark is pending" do
     it "renders turbo poll attributes" do
@@ -48,7 +49,8 @@ RSpec.describe Attachment::PendingPollComponent, type: :component do
   end
 
   context "when antivirus is in progress on pj" do
-    let(:champ) { create(:champ_piece_justificative) }
+    let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+
     before do
       attachment.blob.virus_scan_result = ActiveStorage::VirusScanner::PENDING
     end

@@ -1,7 +1,7 @@
 describe Champs::EmailChamp do
   describe 'validation' do
-    let(:champ) { build(:champ_email, value: value) }
-
+    let(:champ) { described_class.new(value:, dossier: build(:dossier)) }
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_email)) }
     subject { champ.validate(:champs_public_value) }
 
     context 'when nil' do

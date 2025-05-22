@@ -435,37 +435,63 @@ module Instructeurs
       champs_private_params.fetch(:champs_private_attributes)
     end
 
-    def remove_changes_forbidden_by_visa
-      # shortcut : returns if there's no checked visa in the dossier
-      visa_type = TypeDeChamp.type_champs.fetch(:visa)
-      private_champs = dossier.champs_private.joins(:type_de_champ)
-      return champs_private_attributes_params unless private_champs.where(type_de_champ: { type_champ: visa_type }).where.not(value: ["", nil]).any?
+    # Trie les champs privés d'un dossier selon l'ordre défini par la révision
+    def ordered_private_champs(dossier_instance)
+      rtdcs = dossier_instance.revision.revision_types_de_champ_private.includes(:type_de_champ, parent: {})
 
-      # retrieve champ ordered like display (position of (parent | self), line, position)
-      order = Arel.sql("COALESCE(revision_types_de_champ_types_de_champ.position, procedure_revision_types_de_champ.position), \
-                       COALESCE(champs.row_id,' '), procedure_revision_types_de_champ.position")
-      ordered_champs = Champ.private_only.where(dossier:)
-        .joins(type_de_champ: :revision_types_de_champ)
-        .includes(:type_de_champ)
-        .where(procedure_revision_types_de_champ: { revision_id: dossier.revision_id })
-        .left_joins(parent: { type_de_champ: :revision_types_de_champ })
-        .where(revision_types_de_champ_types_de_champ: { revision_id: [dossier.revision_id, nil] })
-        .order(order)
+      # Créer des tables de recherche pour un accès plus rapide
+      rtdc_by_stable_id = {}
+      parent_positions = {}
+
+      rtdcs.each do |rtdc|
+        rtdc_by_stable_id[rtdc.type_de_champ.stable_id] = rtdc
+
+        # Pré-calculer les positions des parents
+        if rtdc.parent_id
+          parent_positions[rtdc.id] = rtdcs.find { |r| r.id == rtdc.parent_id }&.position || 0
+        end
+      end
+
+      # Ordonner les champs selon leur position dans la révision
+      champs = dossier_instance.champs_private.to_a
+      champs.sort_by! do |champ|
+        rtdc = rtdc_by_stable_id[champ.stable_id]
+        parent_position = rtdc&.parent_id ? parent_positions[rtdc.id] || 0 : 0
+        [parent_position, champ.row_id || ' ', rtdc&.position || 0]
+      end
+    end
+
+    # Vérifie si le dossier contient des champs de type visa validés
+    def has_validated_visa?(dossier_instance)
+      dossier_instance.champs_private
+        .where(type: 'Champs::VisaChamp')
+        .where.not(value: ["", nil])
+        .exists?
+    end
+
+    def remove_changes_forbidden_by_visa
+      return champs_private_attributes_params unless has_validated_visa?(dossier)
+
+      # Récupérer les champs ordonnés
+      ordered_champs = ordered_private_champs(dossier)
 
       params[:dossier][:champs_private_attributes]&.reject! do |k, _v|
-        # find modified champ
-        champ_index = ordered_champs.index { _1.public_id == k }
+        # Trouver le champ modifié
+        champ_index = ordered_champs.index { |c| c.public_id == k }
         next unless champ_index
 
-        # check following checked visa or header section level 1
-        row_id = ordered_champs[champ_index].row_id
+        # rechercher à la suite soit un visa soit un titre de sections de niveau 1
+        champ = ordered_champs[champ_index]
+        row_id = champ.row_id
         following_champ = ordered_champs[champ_index + 1..-1].find do |c|
-          next if c.row_id.present? && c.row_id != row_id # ignore champs from a different row
+          next if c.row_id.present? && c.row_id != row_id # ignorer les champs d'une ligne différente
 
-          (c.visa? && c.value.present?) || (c.header_section? && c.header_section_level_value == 1)
+          (c.type == 'Champs::VisaChamp' && c.value.present?) ||
+          (c.type == 'Champs::HeaderSectionChamp' && c.header_section_level_value == 1)
         end
-        to_reject = following_champ.present? && following_champ.visa?
-        Rails.logger.warn("Annulation sauvegarde de l'annotation '#{ordered_champs[champ_index].libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
+        # modification rejetée si l'élement qui suit est un visa
+        to_reject = following_champ.present? && following_champ.type == 'Champs::VisaChamp'
+        Rails.logger.warn("Annulation sauvegarde de l'annotation '#{champ.libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
         to_reject
       end
       champs_private_attributes_params

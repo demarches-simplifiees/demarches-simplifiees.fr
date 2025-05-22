@@ -97,7 +97,7 @@ module DossierChampsConcern
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
-      .create_with(type_de_champ:, **attributes)
+      .create_with(**attributes)
       .find_or_create_by!(stable_id: type_de_champ.stable_id, row_id:)
 
     attributes[:id] = champ.id
@@ -113,7 +113,7 @@ module DossierChampsConcern
 
     parent = revision.parent_of(type_de_champ)
     if parent.present?
-      attributes[:parent] = champs.find { _1.type_de_champ_id == parent.id }
+      attributes[:parent] = champs.find { _1.stable_id == parent.stable_id }
     else
       attributes[:parent] = nil
     end

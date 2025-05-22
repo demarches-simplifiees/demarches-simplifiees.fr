@@ -10,7 +10,7 @@ describe "Dossier en_construction", js: true do
   }
 
   let(:champ) {
-    dossier.find_editing_fork(dossier.user).champs_public.find { _1.type_de_champ_id == tdc.id }
+    dossier.find_editing_fork(dossier.user).champs_public.find { _1.stable_id == tdc.stable_id }
   }
 
   scenario 'delete a non mandatory piece justificative' do

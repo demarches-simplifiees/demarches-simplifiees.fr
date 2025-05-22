@@ -2,11 +2,18 @@ describe Logic::ChampValue do
   include Logic
 
   describe '#compute' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: tdc_type, drop_down_other: }]) }
+    let(:drop_down_other) { nil }
+    let(:tdc_type) { :text }
+    let(:tdc) { procedure.active_revision.types_de_champ.first }
+    let(:dossier) { create(:dossier, procedure:) }
+
     subject { champ_value(champ.stable_id).compute([champ]) }
 
     context 'yes_no tdc' do
+      let(:tdc_type) { :yes_no }
+      let(:champ) { Champs::YesNoChamp.new(value: value, stable_id: tdc.stable_id, dossier:) }
       let(:value) { 'true' }
-      let(:champ) { create(:champ_yes_no, value: value) }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:boolean) }
 
@@ -30,104 +37,137 @@ describe Logic::ChampValue do
     end
 
     context 'integer tdc' do
-      let(:champ) { create(:champ_integer_number, value: '42') }
+      let(:tdc_type) { :integer_number }
+      let(:champ) { Champs::IntegerNumberChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
+      let(:value) { '42' }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:number) }
       it { is_expected.to eq(42) }
 
       context 'with a blank value' do
-        let(:champ) { create(:champ_integer_number, value: '') }
+        let(:value) { '' }
 
         it { is_expected.to be nil }
       end
     end
 
     context 'decimal tdc' do
-      let(:champ) { create(:champ_decimal_number, value: '42.01') }
+      let(:tdc_type) { :decimal_number }
+      let(:champ) { Champs::DecimalNumberChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
+      let(:value) { '42.01' }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:number) }
       it { is_expected.to eq(42.01) }
     end
 
     context 'dropdown tdc' do
-      let(:champ) { create(:champ_drop_down_list, value: 'val1') }
+      let(:tdc_type) { :drop_down_list }
+      let(:champ) { Champs::DropDownListChamp.new(value:, other:, stable_id: tdc.stable_id, dossier:) }
+      let(:value) { 'val1' }
+      let(:other) { nil }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
       it { is_expected.to eq('val1') }
       it { expect(champ_value(champ.stable_id).options([champ.type_de_champ])).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"]]) }
 
       context 'with other enabled' do
-        let(:champ) { create(:champ_drop_down_list, value: 'val1', other: true) }
+        let(:tdc_type) { :drop_down_list }
+        let(:drop_down_other) { true }
 
         it { is_expected.to eq('val1') }
         it { expect(champ_value(champ.stable_id).options([champ.type_de_champ])).to match_array([["val1", "val1"], ["val2", "val2"], ["val3", "val3"], [I18n.t('shared.champs.drop_down_list.other'), "__other__"]]) }
-      end
 
-      context 'with other filled' do
-        let(:champ) { create(:champ_drop_down_list, value: 'other value', other: true) }
+        context 'with other filled' do
+          let(:other) { true }
 
-        it { is_expected.to eq(Champs::DropDownListChamp::OTHER) }
+          it { is_expected.to eq(Champs::DropDownListChamp::OTHER) }
+        end
       end
     end
 
     context 'checkbox tdc' do
-      let(:champ) { create(:champ_checkbox, value: 'true') }
+      let(:tdc_type) { :checkbox }
+      let(:champ) { Champs::CheckboxChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
+      let(:value) { 'true' }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:boolean) }
       it { is_expected.to eq(true) }
     end
 
     context 'departement tdc' do
-      let(:champ) { create(:champ_departements, value: '02') }
+      let(:tdc_type) { :departements }
+      let(:champ) { Champs::DepartementChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
+      let(:value) { '02' }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:departement_enum) }
       it { is_expected.to eq({ value: '02', code_region: '32' }) }
     end
 
     context 'region tdc' do
-      let(:champ) { create(:champ_regions, value: 'La Réunion') }
+      let(:tdc_type) { :regions }
+      let(:champ) { Champs::RegionChamp.new(value:, stable_id: tdc.stable_id, dossier:) }
+      let(:value) { 'La Réunion' }
 
       it { is_expected.to eq('04') }
     end
 
     context 'commune tdc' do
-      let(:champ) { create(:champ_communes, code_postal: '92500', external_id: '92063') }
+      let(:tdc_type) { :communes }
+      let(:champ) do
+        Champs::CommuneChamp.new(code_postal:, external_id:, stable_id: tdc.stable_id, dossier:)
+          .tap { |c| c.send(:on_codes_change) } # private method called before save to fill value, which is required for compute
+      end
+      let(:code_postal) { '92500' }
+      let(:external_id) { '92063' }
 
-      it { is_expected.to eq({ code_departement: '92', code_region: '11' }) }
+      it do
+        is_expected.to eq({ code_departement: '92', code_region: '11' })
+      end
     end
 
     context 'commune_de_polynesie tdc' do
-      let(:champ) { create(:champ_commune_de_polynesie, value: 'Mangareva - 98755') }
+      let(:tdc_type) { :commune_de_polynesie }
+      let(:champ) do
+        Champs::CommuneDePolynesieChamp.new(value: 'Mangareva - 98755', stable_id: tdc.stable_id, dossier:)
+          .tap { |c| c.send(:on_value_change) } # private method called before save to fill value, which is required for compute
+      end
 
       it { is_expected.to eq({ archipel: 'Tuamotu-Gambiers' }) }
     end
 
     context 'code_postal_de_polynesie tdc' do
-      let(:champ) { create(:champ_code_postal_de_polynesie, value: '98755 - Mangareva') }
+      let(:tdc_type) { :code_postal_de_polynesie }
+      let(:champ) do
+        Champs::CodePostalDePolynesieChamp.new(value: '98755 - Mangareva', stable_id: tdc.stable_id, dossier:)
+          .tap { |c| c.send(:on_value_change) } # private method called before save to fill value, which is required for compute
+      end
 
       it { is_expected.to eq({ archipel: 'Tuamotu-Gambiers' }) }
     end
 
     context 'epci tdc' do
-      let(:champ) { build(:champ_epci, code_departement: '43') }
-
-      before do
-        champ.save!
-        champ.update_columns(external_id: '244301016', value: 'CC des Sucs')
+      let(:tdc_type) { :epci }
+      let(:champ) do
+        Champs::EpciChamp.new(code_departement:, external_id:, stable_id: tdc.stable_id, dossier:)
+          .tap { |c| c.send(:on_epci_name_changes) } # private method called before save to fill value, which is required for compute
       end
+      let(:code_departement) { '43' }
+      let(:external_id) { '244301016' }
 
       it { is_expected.to eq({ code_departement: '43', code_region: '84' }) }
     end
 
     describe 'errors' do
-      let(:champ) { create(:champ) }
+      let(:tdc_type) { :number }
+      let(:champ) { Champs::IntegerNumberChamp.new(value: nil, stable_id: tdc.stable_id, dossier:) }
 
       it { expect(champ_value(champ.stable_id).errors([champ.type_de_champ])).to be_empty }
       it { expect(champ_value(champ.stable_id).errors([])).to eq([{ type: :not_available }]) }
     end
 
     describe '#sources' do
-      let(:champ) { create(:champ) }
+      let(:tdc_type) { :number }
+      let(:champ) { Champs::IntegerNumberChamp.new(value: nil, stable_id: tdc.stable_id, dossier:) }
 
       it { expect(champ_value(champ.stable_id).sources).to eq([champ.stable_id]) }
     end
