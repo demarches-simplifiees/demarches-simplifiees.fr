@@ -283,6 +283,7 @@ Rails.application.routes.draw do
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
       post '/repousser-expiration' => 'dossiers#extend_conservation'
+      post '/repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
     end
 
     # Redirection of legacy "/users/dossiers" route to "/dossiers"
@@ -510,6 +511,7 @@ Rails.application.routes.draw do
           member do
             resources :commentaires, only: [:destroy]
             post 'repousser-expiration' => 'dossiers#extend_conservation'
+            post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
             get 'geo_data'
             get 'apercu_attestation'
             get 'bilans_bdf'

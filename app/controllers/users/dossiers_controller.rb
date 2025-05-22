@@ -60,7 +60,7 @@ module Users
       @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
-      @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(ordered_dossiers)
+      @dossiers_supprimes_recemment = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
       @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
       @dossiers_supprimes_definitivement = deleted_dossiers
@@ -318,6 +318,12 @@ module Users
 
     def extend_conservation
       dossier.extend_conservation(dossier.procedure.duree_conservation_dossiers_dans_ds.months)
+      flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
+      redirect_back(fallback_location: dossier_path(@dossier))
+    end
+
+    def extend_conservation_and_restore
+      dossier.extend_conservation_and_restore(dossier.procedure.duree_conservation_dossiers_dans_ds.months, current_user)
       flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
       redirect_back(fallback_location: dossier_path(@dossier))
     end
@@ -593,6 +599,8 @@ module Users
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
+      elsif action_name == 'extend_conservation_and_restore'
+        Dossier.visible_by_user.or(Dossier.hidden_by_expired)
       else
         Dossier.visible_by_user
       end
@@ -619,18 +627,22 @@ module Users
 
     def update_dossier_and_compute_errors
       @dossier.update_champs_attributes(champs_public_attributes_params, :public, updated_by: current_user.email)
-      if @dossier.champs.any?(&:changed_for_autosave?)
+      updated_champs = @dossier.champs.filter(&:changed_for_autosave?)
+      if updated_champs.present?
         @dossier.last_champ_updated_at = Time.zone.now
-
-        if @dossier.champs_public.any? { _1.changed_for_autosave? && _1.used_by_routing_rules? }
-          RoutingEngine.compute(@dossier)
-        end
       end
 
       # We save the dossier without validating fields, and if it is successful and the client
       # requests it, we ask for field validation errors.
-      if @dossier.save && params[:validate].present?
-        @dossier.valid?(:champs_public_value)
+      if @dossier.save
+        if updated_champs.any?(&:used_by_routing_rules?)
+          @update_contact_information = true
+          RoutingEngine.compute(@dossier)
+        end
+
+        if params[:validate].present?
+          @dossier.valid?(:champs_public_value)
+        end
       end
 
       @dossier.errors

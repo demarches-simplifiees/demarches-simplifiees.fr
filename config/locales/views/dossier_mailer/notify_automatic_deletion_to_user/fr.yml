@@ -2,14 +2,11 @@ fr:
   dossier_mailer:
     notify_automatic_deletion_to_user:
       subject:
-        one: "Un dossier a été supprimé automatiquement de votre compte"
-        other: "Des dossiers ont été supprimés automatiquement de votre compte"
+        one: "Un dossier a été supprimé de votre compte"
+        other: "Des dossiers ont été supprimés de votre compte"
       header:
-        one: "Le délai maximum pour la conservation du dossier suivant a été atteint.\nLe dossier suivant a été automatiquement supprimé :"
-        other: "Le délai maximum pour la conservation des dossiers suivants a été atteint.\nLes dossiers suivants ont été automatiquement supprimés :"
-      account_active:
-        one: Votre compte reste disponible sur Mes-Démarches, seul le dossier est supprimé. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
-        other: Votre compte reste disponible sur Mes-Démarches, seuls les dossiers ont été supprimés. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
-      footer_en_construction:
-        one: "Le dossier ne sera pas traité, nous nous excusons de la gêne occasionnée."
-        other: "Les dossiers ne seront pas traités, nous nous excusons de la gêne occasionnée."
+        one: "Le délai maximum pour la conservation du dossier a été atteint.\nLe dossier suivant a été supprimé :"
+        other: "Le délai maximum pour la conservation des dossiers a été atteint.\nLes dossiers suivants ont été  supprimés :"
+      footer:
+        one: Vous pouvez retrouver ce dossier pendant encore une semaine depuis l’onglet « Supprimé » sur la page
+        other: Vous pouvez retrouver ces dossiers pendant encore une semaine depuis l’onglet « Supprimés » sur la page

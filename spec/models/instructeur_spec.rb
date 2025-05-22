@@ -727,6 +727,7 @@ describe Instructeur, type: :model do
         it { expect(subject['traites']).to eq(0) }
         it { expect(subject['tous']).to eq(0) }
         it { expect(subject['archives']).to eq(1) }
+        it { expect(subject['supprimes_recemment']).to eq(0) }
         it { expect(subject['expirant']).to eq(0) }
 
         context 'and terminer dossiers on each of the others groups' do
@@ -739,6 +740,7 @@ describe Instructeur, type: :model do
 
       context 'with an expirants dossier' do
         let!(:expiring_dossier_termine_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_administration_at: 2.days.ago) }
+        let!(:expiring_dossier_termine_auto_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_expired_at: 2.days.ago) }
         let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
         let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, procedure: procedure) }
         before { subject }
@@ -748,6 +750,7 @@ describe Instructeur, type: :model do
         it { expect(subject['traites']).to eq(1) }
         it { expect(subject['tous']).to eq(2) }
         it { expect(subject['archives']).to eq(0) }
+        it { expect(subject['supprimes_recemment']).to eq(2) }
         it { expect(subject['expirant']).to eq(2) }
       end
     end

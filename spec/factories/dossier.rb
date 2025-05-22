@@ -114,6 +114,16 @@ FactoryBot.define do
       hidden_at { Time.zone.now }
     end
 
+    trait :hidden_by_expired do
+      hidden_by_expired_at { 1.day.ago }
+      hidden_by_reason { DeletedDossier.reasons.fetch(:expired) }
+    end
+
+    trait :hidden_by_user do
+      hidden_by_user_at { 1.day.ago }
+      hidden_by_reason { DeletedDossier.reasons.fetch(:user_request) }
+    end
+
     trait :hidden_by_administration do
       hidden_by_administration_at { 1.day.ago }
       hidden_by_reason { DeletedDossier.reasons.fetch(:instructeur_request) }

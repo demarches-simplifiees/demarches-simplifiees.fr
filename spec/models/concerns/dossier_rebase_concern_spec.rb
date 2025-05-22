@@ -312,6 +312,10 @@ describe DossierRebaseConcern do
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "Un champ text"
         })
+        procedure.draft_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative),
+          libelle: "Un champ pj"
+        })
         procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ.stable_id).update(mandatory: false, libelle: "nouveau libelle")
         procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
         procedure.draft_revision.find_and_ensure_exclusive_use(repetition_text_type_de_champ.stable_id).update(libelle: "nouveau libelle dans une repetition")
@@ -361,8 +365,8 @@ describe DossierRebaseConcern do
 
         expect(procedure.revisions.size).to eq(3)
         expect(dossier.revision).to eq(procedure.published_revision)
-        expect(dossier.champs_public.size).to eq(6)
-        expect(dossier.champs.count(&:public?)).to eq(12)
+        expect(dossier.champs_public.size).to eq(7)
+        expect(dossier.champs.count(&:public?)).to eq(13)
         expect(rebased_text_champ.value).to eq(text_champ.value)
         expect(rebased_text_champ.type_de_champ).not_to eq(text_champ.type_de_champ)
         expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))

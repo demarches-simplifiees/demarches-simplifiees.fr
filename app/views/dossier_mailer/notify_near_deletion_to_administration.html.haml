@@ -4,18 +4,17 @@
 
 %p
   - if @state == Dossier.states.fetch(:en_construction)
-    = t('.header_en_construction', count: @dossiers.size)
+    = t('.header_en_construction', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   - else
-    = t('.header_termine', count: @dossiers.size)
+    = t('.header_termine', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
+
   %ul
     - @dossiers.each do |d|
       %li
         #{link_to("N° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", instructeur_dossier_url(d.procedure, d, format: :pdf))}
 
-%p
-  - if @state == Dossier.states.fetch(:en_construction)
-    = sanitize(t('.footer_en_construction', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)))
-  - else
-    = sanitize(t('.footer_termine', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)))
+- if @state == Dossier.states.fetch(:en_construction)
+  %p
+    = sanitize(t('.footer_en_construction'))
 
 = render partial: "layouts/mailers/signature"

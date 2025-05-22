@@ -222,10 +222,12 @@ class Dossier < ApplicationRecord
   scope :prefilled,                 -> { where(prefilled: true) }
   scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
-  scope :visible_by_user,           -> { where(for_procedure_preview: false).where(hidden_by_user_at: nil, editing_fork_origin_id: nil) }
+  scope :hidden_by_expired,         -> { where.not(hidden_by_expired_at: nil) }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false, hidden_by_user_at: nil, editing_fork_origin_id: nil, hidden_by_expired_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
+      .where(hidden_by_expired_at: nil)
       .merge(visible_by_user.or(state_not_en_construction))
   }
   scope :visible_by_user_or_administration, -> { visible_by_user.or(visible_by_administration) }
@@ -364,12 +366,12 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
-
   scope :deleted_by_user_expired, -> { where('dossiers.hidden_by_user_at < ?', 1.week.ago) }
   scope :deleted_by_administration_expired, -> { where('dossiers.hidden_by_administration_at < ?', 1.week.ago) }
-  scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired }
-  scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired }
-  scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired }
+  scope :deleted_by_automatic_expired, -> { where('dossiers.hidden_by_expired_at < ?', 1.week.ago) }
+  scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired.or(state_brouillon.deleted_by_automatic_expired) }
+  scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired.or(state_en_construction.deleted_by_automatic_expired) }
+  scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired.or(state_termine.deleted_by_automatic_expired) }
 
   scope :brouillon_near_procedure_closing_date, -> do
     # select users who have submitted dossier for the given 'procedures.id'
@@ -416,7 +418,7 @@ class Dossier < ApplicationRecord
     when 'tous'
       visible_by_administration.all_state
     when 'supprimes_recemment'
-      hidden_by_administration.state_termine
+      hidden_by_administration.state_termine.or(hidden_by_expired)
     when 'archives'
       visible_by_administration.archived
     when 'expirant'
@@ -601,6 +603,10 @@ class Dossier < ApplicationRecord
     termine? || reason == :procedure_removed
   end
 
+  def can_be_deleted_by_automatic?(reason)
+    reason == :expired && !en_instruction?
+  end
+
   def can_terminer_automatiquement_by_sva_svr?
     sva_svr_decision_triggered_at.nil? && !pending_correction? && (sva_svr_decision_on.today? || sva_svr_decision_on.past?)
   end
@@ -646,7 +652,12 @@ class Dossier < ApplicationRecord
 
   def close_to_expiration?
     return false if en_instruction?
-    expiration_notification_date < Time.zone.now
+    expiration_notification_date < Time.zone.now && Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago < expiration_notification_date
+  end
+
+  def has_expired?
+    return false if en_instruction?
+    expiration_notification_date < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
   end
 
   def after_notification_expiration_date
@@ -676,6 +687,12 @@ class Dossier < ApplicationRecord
       brouillon_close_to_expiration_notice_sent_at: nil,
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
+  end
+
+  def extend_conservation_and_restore(conservation_extension, author)
+    extend_conservation(conservation_extension)
+    update(hidden_by_expired_at: nil, hidden_by_reason: nil)
+    restore(author)
   end
 
   def show_procedure_state_warning?
@@ -767,6 +784,10 @@ class Dossier < ApplicationRecord
     !procedure.brouillon? && !brouillon?
   end
 
+  def hidden_by_expired?
+    hidden_by_expired_at.present?
+  end
+
   def hidden_by_user?
     hidden_by_user_at.present?
   end
@@ -829,37 +850,32 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def expired_keep_track_and_destroy!
-    transaction do
-      DeletedDossier.create_from_dossier(self, :expired)
-      log_automatic_dossier_operation(:supprimer, self)
-      dossier_operation_logs.purge_discarded
-      destroy!
-    end
-    true
-  rescue
-    false
-  end
-
-  def author_is_user(author)
+  def is_user?(author)
     author.is_a?(User)
   end
 
-  def author_is_administration(author)
+  def is_administration?(author)
     author.is_a?(Instructeur) || author.is_a?(Administrateur) || author.is_a?(SuperAdmin)
+  end
+
+  def is_automatic?(author)
+    author == :automatic
   end
 
   def hide_and_keep_track!(author, reason)
     transaction do
-      if author_is_administration(author) && can_be_deleted_by_administration?(reason)
+      if is_administration?(author) && can_be_deleted_by_administration?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
-      elsif author_is_user(author) && can_be_deleted_by_user?
+        log_dossier_operation(author, :supprimer, self)
+      elsif is_user?(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
+        log_dossier_operation(author, :supprimer, self)
+      elsif is_automatic?(author) && can_be_deleted_by_automatic?(reason)
+        update(hidden_by_expired_at: Time.zone.now, hidden_by_reason: reason)
+        log_automatic_dossier_operation(:supprimer, self)
       else
         raise "Unauthorized dossier hide attempt Dossier##{id} by #{author} for reason #{reason}"
       end
-
-      log_dossier_operation(author, :supprimer, self)
     end
 
     if en_construction? && !hidden_by_administration?
@@ -872,14 +888,18 @@ class Dossier < ApplicationRecord
 
   def restore(author)
     transaction do
-      if author_is_administration(author)
+      if is_administration?(author)
         update(hidden_by_administration_at: nil)
-      elsif author_is_user(author)
+      elsif is_user?(author)
         update(hidden_by_user_at: nil)
       end
 
       if !hidden_by_user? && !hidden_by_administration?
         update(hidden_by_reason: nil)
+      elsif hidden_by_user?
+        update(hidden_by_reason: :user_request)
+      elsif hidden_by_administration?
+        update(hidden_by_reason: :instructeur_request)
       end
 
       log_dossier_operation(author, :restaurer, self)

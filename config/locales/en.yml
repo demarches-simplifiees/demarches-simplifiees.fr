@@ -407,7 +407,6 @@ en:
           expirant: Records will not expire prior to the data retention period.
         archived_dossier: "This file will be kept for an additional month"
         delete_dossier: "Delete file"
-        deleted_by_user: "File deleted by user"
         acts_on_behalf: "acts for"
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
@@ -524,7 +523,6 @@ en:
           updated_at: updated at %{date}
           shared_with: File shared by %{owner} with
           deleted: Deleted at %{date}
-          deleted_badge: Deleted
           procedure_closed:
             brouillon:
               internal_procedure_html: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the %{link} which replaces it

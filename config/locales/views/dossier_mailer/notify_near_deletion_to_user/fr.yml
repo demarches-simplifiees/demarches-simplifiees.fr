@@ -2,23 +2,23 @@ fr:
   dossier_mailer:
     notify_near_deletion_to_user:
       subject_en_construction:
-        one: Un dossier en construction va bientôt être supprimé
-        other: Des dossiers en construction vont bientôt être supprimés
+        one: Un dossier en attente d'instruction va bientôt être supprimé
+        other: Des dossiers en attente d'instruction vont bientôt être supprimés
       subject_termine:
-        one: Un dossier dont le traitement est terminé va bientôt être supprimé
-        other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
+        one: Un dossier traité va bientôt être supprimé
+        other: Des dossiers traités vont bientôt être supprimés
       header_en_construction:
-        one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier en construction suivant sera supprimé automatiquement dans deux semaines :"
-        other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers en construction suivants seront supprimés automatiquement dans deux semaines :"
+        one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier en attente d'instruction suivant sera supprimé automatiquement dans deux semaines :"
+        other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers en attente d'instruction suivants seront supprimés automatiquement dans deux semaines :"
       header_termine:
-        one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier suivant dont le traitement est terminé sera supprimé automatiquement dans deux semaines :"
-        other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers suivants dont le traitement est terminé seront supprimés automatiquement dans deux semaines :"
+        one: "Afin de respecter la durée de conservation de vos données personnelles, ce dossier traité sera supprimé dans deux semaines :"
+        other: "Afin de respecter la durée de conservation de vos données personnelles, ces dossiers traités seront supprimés dans deux semaines :"
       account_active:
         one: Votre compte reste activé sur Mes-Démarches, seul le dossier sera supprimé. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
         other: Votre compte reste activé sur Mes-Démarches, seuls les dossiers seront supprimés. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
       footer_termine:
-        one: "Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
-        other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
+        one: Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page
+        other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page "
       footer_en_construction:
-        one: "Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface."
-        other: "Si vous souhaitez conserver vos dossiers plus longtemps, vous pouvez <b>prolonger leur durée de conservation</b> au cas par cas dans l’interface."
+        one: Depuis la page de votre dossier vous avez la possibilité de :<br>- prolonger la durée de conservation<br>- contacter l'administration qui gère votre dossier via la messagerie
+        other: Depuis la page de vos dossiers vous avez la possibilité de :<br>- prolonger la durée de conservation<br>- contacter l'administration qui gère votre dossier via la messagerie
