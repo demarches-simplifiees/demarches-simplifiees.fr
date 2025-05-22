@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe Rack::Attack, type: :request do
-  let(:limit) { 5 }
-  let(:period) { 20 }
+  let(:limit) { 30 }
+  let(:period) { 15 }
   let(:ip) { "1.2.3.4" }
 
   before(:each) do
