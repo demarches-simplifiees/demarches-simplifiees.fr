@@ -369,6 +369,11 @@ fr:
         form:
           submitted_at: "Déposé le %{datetime}"
           updated_at: "Modifié le %{datetime}"
+          switched_to_instruction_at: "Passé en instruction le %{datetime}"
+          revert_to_submitted_at: "Correction demandée le %{datetime}"
+          acceptee_at: "Accepté le %{datetime}"
+          refuse_at: "Refusé le %{datetime}"
+          closed_at: "Classé sans suite le %{datetime}"
           download_attestation: "Télécharger l’attestation"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
