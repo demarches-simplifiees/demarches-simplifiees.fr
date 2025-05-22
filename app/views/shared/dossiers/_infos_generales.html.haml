@@ -24,7 +24,7 @@
 
   - else
     - if dossier.justificatif_motivation.attached?
-      = render Dossiers::RowShowComponent.new(label: "Justificatif") do |c|
+      = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.show.status_overview.justificatif')) do |c|
         - c.with_value do
           .action
             = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
@@ -35,6 +35,6 @@
         %strong= simple_format(dossier.motivation)
 
     - if dossier.attestation.present? && dossier.attestation.pdf.attached?
-      = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
+      = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.show.status_overview.attestation')) do |c|
         - c.with_value do
           = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))
