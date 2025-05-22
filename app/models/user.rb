@@ -185,10 +185,6 @@ class User < ApplicationRecord
     user
   end
 
-  def flipper_id
-    "User:#{id}"
-  end
-
   def active?
     last_sign_in_at.present?
   end
