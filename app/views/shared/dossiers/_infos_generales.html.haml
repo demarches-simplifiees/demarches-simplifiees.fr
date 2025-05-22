@@ -30,9 +30,9 @@
             = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
     - if dossier.motivation.present?
-      = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
-        - c.with_value do
-          = render SimpleFormatComponent.new(dossier.motivation, allow_a: false)
+      %span.champ-label= t('views.users.dossiers.show.status_overview.motivation')
+      %blockquote.fr-m-0
+        %strong= simple_format(dossier.motivation)
 
     - if dossier.attestation.present? && dossier.attestation.pdf.attached?
       = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
