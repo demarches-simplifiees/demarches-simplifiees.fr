@@ -18,7 +18,34 @@ RSpec.describe ReferentielService, type: :service do
       let(:status) { 200 }
       let(:body) { { rnb_id: api_referentiel.test_data } }
       it { is_expected.to eq(true) }
-      it 'update referentiel.last_response and body' do
+      it 'update referentiel.last_response and body with expected data' do
+        expect { subject }.to change { api_referentiel.reload.last_response }.from(nil).to({ status:, body: }.with_indifferent_access)
+      end
+    end
+
+    context 'when response is 201, without content' do
+      let(:status) { 201 }
+      let(:body) { nil }
+      it { is_expected.to eq(false) }
+      it 'updates referentiel.last_response with status and body as failure' do
+        expect { subject }.to change { api_referentiel.reload.last_response }.from(nil).to({ status:, body: }.with_indifferent_access)
+      end
+    end
+
+    context 'when response is 201, with content ' do
+      let(:status) { 201 }
+      let(:body) { "{}" }
+      it { is_expected.to eq(true) }
+      it 'update referentiel.last_response with status (forced to 200 for now) and body' do
+        expect { subject }.to change { api_referentiel.reload.last_response }.from(nil).to({ status: 200, body: }.with_indifferent_access)
+      end
+    end
+
+    context 'when response is 300' do
+      let(:status) { 300 }
+      let(:body) { nil }
+      it { is_expected.to eq(false) }
+      it 'update referentiel.last_response with status and body' do
         expect { subject }.to change { api_referentiel.reload.last_response }.from(nil).to({ status:, body: }.with_indifferent_access)
       end
     end
