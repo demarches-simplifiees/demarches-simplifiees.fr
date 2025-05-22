@@ -50,7 +50,11 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
 
   def stimulus_values
     if @champ.fetch_external_data_pending?
-      { turbo_poll_url_value: }
+      {
+        turbo_poll_url_value:,
+        turbo_poll_interval_value: 2_000,
+        turbo_poll_strategy_value: 'fixed'
+      }
     else
       {}
     end
