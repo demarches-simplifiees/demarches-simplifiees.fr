@@ -1,4 +1,4 @@
-= @form.text_field :external_id, input_opts(id: @champ.focusable_input_id, required: @champ.required?, class: "width-33-desktop fr-input", aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" })
+= @form.text_field :external_id, input_opts(id: @champ.focusable_input_id, required: @champ.required?, class: "width-33-desktop fr-input", aria: { labelledby: labelledby_id, describedby: "#{@champ.describedby_id} #{@champ.error_id}" })
 
 .rnf-info{ id: dom_id(@champ, :rnf_info), role: 'status' }
   - if @champ.external_error?

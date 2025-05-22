@@ -5,7 +5,7 @@
   %p.fr-hint-text{ id: dom_id(@champ, :accreditation_number_notice) }= t('.accreditation_number_notice')
   = @form.text_field :accreditation_number,
     required: @champ.required?,
-    aria: { describedby: [dom_id(@champ, :accreditation_number_notice), @champ.accreditation_error? ? dom_id(@champ, :accreditation_number_error) : nil].compact.join(' ') },
+    aria: { labelledby: labelledby_id, describedby: [dom_id(@champ, :accreditation_number_notice), @champ.accreditation_error? ? dom_id(@champ, :accreditation_number_error) : nil].compact.join(' ') },
     data: { controller: 'format', format: 'integer' },
     class: "width-33-desktop fr-input small-margin", id: @champ.accreditation_number_input_id
 
@@ -20,5 +20,5 @@
   %p.fr-hint-text{ data: { controller: 'date-input-hint' } }= t('.accreditation_birthdate_hint')
   = @form.date_field :accreditation_birthdate,
     required: @champ.required?,
-    aria: { describedby: dom_id(@champ, :accreditation_birthdate) },
+    aria: { labelledby: labelledby_id, describedby: dom_id(@champ, :accreditation_birthdate) },
     class: "width-33-desktop fr-input small-margin", id: @champ.accreditation_birthdate_input_id
