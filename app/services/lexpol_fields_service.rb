@@ -64,7 +64,7 @@ module LexpolFieldsService
     begin
       parsed = date.is_a?(String) ? DateTime.parse(date) : date
       day = (parsed.day == 1 ? "1er" : parsed.day.to_s)
-      day + I18n.l(parsed, format: '%-d %B %Y à %H:%M')
+      day + I18n.l(parsed, format: ' %B %Y à %H:%M')
     rescue
       date.to_s
     end

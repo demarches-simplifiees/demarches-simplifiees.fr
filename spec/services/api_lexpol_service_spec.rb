@@ -52,4 +52,40 @@ RSpec.describe APILexpol do
       end
     end
   end
+
+  describe 'determine_email_agent' do
+    before do
+      allow(APILexpol).to receive(:service_emails).and_return({ '003970' => 'manager@example.com', '004200' => 'admin@other.gov.pf' })
+    end
+
+    context "when is_manager = false" do
+      let(:is_manager) { false }
+      it "keeps the provided email if no TAHITI is given" do
+        expect(api_lexpol.instance_variable_get(:@email_agent)).to eq("instructeur@mes-demarches.gov.pf")
+      end
+
+      it "keeps the provided email if TAHITI is given" do
+        local_api = described_class.new("usager@example.com", "003970", false)
+        expect(local_api.instance_variable_get(:@email_agent)).to eq("usager@example.com")
+      end
+    end
+
+    context "when is_manager = true" do
+      let(:is_manager) { true }
+
+      context "and a known TAHITI is provided" do
+        let(:numero_tahiti) { "003970" }
+        it "uses the corresponding service email" do
+          expect(api_lexpol.instance_variable_get(:@email_agent)).to eq("manager@example.com")
+        end
+      end
+
+      context "and an unknown TAHITI is provided" do
+        let(:numero_tahiti) { "999999" }
+        it "falls back to the initially given email" do
+          expect(api_lexpol.instance_variable_get(:@email_agent)).to eq("instructeur@mes-demarches.gov.pf")
+        end
+      end
+    end
+  end
 end

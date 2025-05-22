@@ -131,6 +131,13 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     revision.types_de_champ.any?(&:legacy_number?)
   end
 
+  def lexpol_models
+    service_siret = type_de_champ.procedure&.service&.siret
+    super_admin = current_super_admin.present?
+    email = current_super_admin&.email || current_user.email
+    APILexpol.new(email, service_siret, super_admin).get_models
+  end
+
   def options_for_character_limit
     [
       [t('.character_limit.unlimited'), nil],

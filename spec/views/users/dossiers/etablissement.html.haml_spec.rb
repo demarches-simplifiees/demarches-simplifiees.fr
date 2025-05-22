@@ -31,11 +31,11 @@ describe 'users/dossiers/etablissement', type: :view do
   end
 
   context 'etablissement as degraded mode' do
-    let(:etablissement) { Etablissement.create!(siret: '003970') }
+    let(:etablissement) { Etablissement.create!(siret: '003970001') }
 
     it "affiche une notice avec un lien de vérification vers l'annuaire" do
-      expect(rendered).to have_text(etablissement.siret)
-      expect(rendered).to have_link("Vérifier dans l'annuaire des entreprises", href: "https://www.ispf.pf/rte/attestation/#{etablissement.siret}")
+      expect(rendered).to have_text("#{etablissement.siret.first(6)}-#{etablissement.siret.last(3)}")
+      expect(rendered).to have_link("Vérifier dans l'annuaire des entreprises", href: "https://www.ispf.pf/rte/attestation/#{etablissement.siret.first(6)}/#{etablissement.siret.last(3)}")
     end
   end
 end
