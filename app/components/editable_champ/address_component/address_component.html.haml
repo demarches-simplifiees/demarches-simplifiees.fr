@@ -1,4 +1,4 @@
-.fr-input-group
+.fr-input-group.address-ban
   %react-fragment
     = render ReactComponent.new "ComboBox/RemoteComboBox", **react_props do
       = render ReactComponent.new "ComboBox/ComboBoxValueSlot", field: :data, name: @form.field_name(:address)

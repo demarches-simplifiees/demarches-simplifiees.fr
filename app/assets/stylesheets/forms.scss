@@ -437,6 +437,17 @@
     }
   }
 
+  .fr-input-address-ban--disabled {
+    & > .fr-label,
+    & > .fr-hint-text,
+    & > .fr-label .fr-hint-text {
+      color: var(--text-disabled-grey);
+    }
+    .address-ban .fr-ds-combobox .fr-autocomplete {
+      opacity: 0.5; // Réduit l'opacité de l'icône droite en background. L'input étant autant disabled, cette opacité s'ajoute à celle du disabled
+    }
+  }
+
   input.aa-input,
   input.aa-hint {
     border-radius: 4px;
