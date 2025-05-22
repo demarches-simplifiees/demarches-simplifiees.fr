@@ -16,11 +16,6 @@ module Maintenance
       Dossier
         .joins(:avis)
         .merge(Avis.without_answer)
-        .where.not(
-          id: DossierNotification
-            .where(notification_type: :attente_avis)
-            .select(:dossier_id)
-        )
         .includes(:followers_instructeurs)
     end
 

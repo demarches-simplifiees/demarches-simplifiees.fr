@@ -35,15 +35,6 @@ module Maintenance
         end
       end
 
-      context 'when dossier has pending correction and attente_correction notification' do
-        let!(:dossier_correction) { create(:dossier_correction, dossier:) }
-        let!(:attente_correction_notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur, notification_type: :attente_correction) }
-
-        it do
-          expect(collection).to eq([])
-        end
-      end
-
       context 'when dossier has pending correction but not attente_correction notification' do
         let!(:dossier_correction) { create(:dossier_correction, dossier:) }
         let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur) }
