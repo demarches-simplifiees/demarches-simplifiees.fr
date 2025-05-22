@@ -5,6 +5,7 @@ class ReferentielService
 
   RETRYABLE_STATUS_CODES = [429, 500, 503, 408, 502].freeze
   NON_RETRYABLE_STATUS_CODES = [404, 400, 403, 401].freeze
+  API_TIMEOUT = 10
 
   attr_reader :referentiel, :service
 
@@ -13,7 +14,7 @@ class ReferentielService
   end
 
   def call(query_params)
-    result = API::Client.new.call(url: referentiel.url.gsub('{id}', query_params))
+    result = API::Client.new.call(url: referentiel.url.gsub('{id}', query_params), timeout: API_TIMEOUT)
     handle_api_result(result)
   end
 
