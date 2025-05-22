@@ -22,7 +22,7 @@
     { required: @champ.required?,
     id: @champ.input_id,
     class: select_class_names,
-    aria: { describedby: select_aria_describedby },
+    aria: { labelledby: labelledby_id, describedby: select_aria_describedby },
     translate: 'no' }
 
 - if @champ.drop_down_other?

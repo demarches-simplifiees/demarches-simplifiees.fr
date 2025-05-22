@@ -1,4 +1,4 @@
 -# Allowed @formats:
 -# very light validation is made client-side
 -# stronger validation is made server-side
-= @form.phone_field(:value, input_opts(id: @champ.input_id, autocomplete: @champ.dossier.for_tiers? ? "off" : "tel", aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, required: @champ.required?, pattern: "[^a-z^A-Z]+"))
+= @form.phone_field(:value, input_opts(id: @champ.input_id, autocomplete: @champ.dossier.for_tiers? ? "off" : "tel", aria: { labelledby: labelledby_id, describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, required: @champ.required?, pattern: "[^a-z^A-Z]+"))

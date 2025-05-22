@@ -4,5 +4,5 @@
     %p.notice= t('.identifiant_notice')
     = @form.text_field :identifiant,
       required: @champ.required?,
-      aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
+      aria: { labelledby: labelledby_id, describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
       class: "width-33-desktop", id: @champ.input_id
