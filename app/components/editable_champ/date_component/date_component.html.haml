@@ -1,6 +1,6 @@
 = @form.date_field :value,
   input_opts(id: @champ.focusable_input_id,
-  aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
+  aria: { labelledby: labelledby_id, describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
   value: @champ.value,
   min: min_date,
   max: max_date,
