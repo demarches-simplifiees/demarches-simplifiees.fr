@@ -379,6 +379,7 @@ en:
           form: "Form"
           edit_siret: "Edit SIRET"
           edit_identity: "Edit identity data"
+          edit_identity_html: 'Edit identity <span aria-hidden="true">data<span>'
           accuse_lecture: This procedure is subject to a reading receipt.
           accuse_lecture_with_agreement: The user has read the decision taken on his file on %{agreement}.
           accuse_lecture_without_agreement: The user has not yet learned of the decision on their file.

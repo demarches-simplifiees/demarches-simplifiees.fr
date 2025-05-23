@@ -21,18 +21,18 @@
 
 
   - if dossier.for_tiers?
-    %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-      .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.mandataire_identity')
+    .fr-background-alt--grey.flex
+      %h2#mandataire_identity.fr-h6.fr-mb-0.flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.mandataire_identity')
 
       - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
-        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
+        = link_to t('views.shared.dossiers.demande.edit_identity_html'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline', id: 'edit_mandataire_identity', 'aria-labelledby': 'edit_mandataire_identity mandataire_identity'
 
 
     = render partial: "shared/dossiers/mandataire_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), dossier: dossier }
 
   .tab-title
-    %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
-      .flex-grow.fr-py-3v.fr-px-2w
+    .fr-background-alt--grey.flex
+      %h2#requester_identity.fr-h6.fr-mb-0.flex-grow.fr-py-3v.fr-px-2w
         = t('views.shared.dossiers.demande.requester_identity')
 
         - if dossier.identity_updated_at.present? && demande_seen_at&.<(dossier.identity_updated_at)
@@ -43,7 +43,7 @@
         = link_to t('views.shared.dossiers.demande.edit_siret'), siret_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
 
       - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
-        = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
+        = link_to t('views.shared.dossiers.demande.edit_identity_html'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline', id: 'edit_requester_identity', 'aria-labelledby': 'edit_requester_identity requester_identity'
 
 
   = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), for_tiers: dossier.for_tiers?, beneficiaire_mail: dossier.for_tiers? ? dossier.individual.email : ""}
