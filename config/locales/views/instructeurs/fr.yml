@@ -15,7 +15,7 @@ fr:
         dossier_depose: 'Déposé depuis longtemps'
         dossier_modifie: 'Dossier modifié'
         message_usager: 'Message usager'
-        # TODO: switch to ‘Annotation instructeur’ during global renaming
+        # TODO: switch to ’Annotation instructeur’ during global renaming
         annotation_instructeur: 'Annotation privée'
         avis_externe: 'Avis externe'
         attente_correction: 'En attente de correction'
