@@ -5,7 +5,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns, :path, :update_path, :rdv, :update_rdv]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns, :path, :update_path, :rdv, :update_rdv, :pro_connect_restricted, :update_pro_connect_restricted]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_draft_procedure, only: [:update]
 
@@ -272,6 +272,16 @@ module Administrateurs
     end
 
     def jeton
+    end
+
+    def pro_connect_restricted
+      @logged_in_with_pro_connect = logged_in_with_pro_connect?
+    end
+
+    def update_pro_connect_restricted
+      @procedure.update!(procedure_params)
+      flash.notice = @procedure.pro_connect_restricted? ? "La démarche est restreinte à ProConnect" : "La démarche n'est plus restreinte à ProConnect"
+      redirect_to pro_connect_restricted_admin_procedure_path(@procedure)
     end
 
     def rdv
@@ -636,6 +646,7 @@ module Administrateurs
         :opendata,
         :procedure_expires_when_termine_enabled,
         :rdv_enabled,
+        :pro_connect_restricted,
         { zone_ids: [], procedure_tag_names: [] }
       ]
 

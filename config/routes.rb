@@ -661,6 +661,8 @@ Rails.application.routes.draw do
         patch 'update_jeton'
         get 'rdv'
         patch 'rdv', to: 'procedures#update_rdv'
+        get 'pro_connect_restricted'
+        patch 'pro_connect_restricted', to: 'procedures#update_pro_connect_restricted'
         put :allow_expert_review
         put :allow_expert_messaging
         put :experts_require_administrateur_invitation
