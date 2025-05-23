@@ -386,6 +386,7 @@ fr:
           form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
+          edit_identity_html: 'Modifier <span aria-hidden="true">l’identité</span>'
           accuse_lecture: Cette démarche est soumise à un accusé de lecture.
           accuse_lecture_with_agreement: L’usager a pris connaissance de la décision concernant son dossier le %{agreement}.
           accuse_lecture_without_agreement: L’usager n’a pas encore pris connaissance de la décision concernant son dossier.
