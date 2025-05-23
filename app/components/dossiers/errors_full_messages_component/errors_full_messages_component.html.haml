@@ -1,7 +1,7 @@
 .fr-alert.fr-alert--error.fr-mb-3w{ role: 'alert' }
 
   - if dedup_and_partitioned_errors.size > 0
-    %h3#sumup-errors.fr-alert__title{ data: { controller: 'autofocus' }, tabindex: '-1' }
+    %h2#sumup-errors.fr-alert__title{ data: { controller: 'autofocus' }, tabindex: '-1' }
       = t('.sumup_html.title', count: dedup_and_partitioned_errors.size)
     %p= t('.sumup_html.content', count: dedup_and_partitioned_errors.size)
     = render ExpandableErrorList.new(errors: dedup_and_partitioned_errors)
