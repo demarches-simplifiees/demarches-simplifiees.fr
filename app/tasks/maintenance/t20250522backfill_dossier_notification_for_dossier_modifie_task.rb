@@ -18,9 +18,12 @@ module Maintenance
         .joins(:dossier)
         .where("dossiers.last_champ_updated_at > follows.demande_seen_at")
         .select(:id, :dossier_id, :instructeur_id)
+        .includes(:instructeur)
     end
 
     def process(follow)
+      return if follow.instructeur.nil? # we have follow without instructeur !
+
       DossierNotification.find_or_create_by!(
         dossier_id: follow.dossier_id,
         notification_type: :dossier_modifie,
