@@ -13,7 +13,7 @@
       = render Dsfr::InputComponent.new(form:, attribute: :url, opts: { data: { controller: 'autosubmit' } }) do |c|
         - c.with_describedby do
           - if @referentiel.url.blank? || @referentiel.errors.where(:url).present?
-            = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
+            = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names: 'fr-mt-2w') do |c|
               - c.with_body do
                 %p
                   Pour des raisons de sécurité,
