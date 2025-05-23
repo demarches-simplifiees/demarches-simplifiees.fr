@@ -74,7 +74,10 @@ module Administrateurs
       if params[:referentiel_id]
         Referentiel.find(params[:referentiel_id]).attributes.slice(*%w[url test_data hint mode type])
       else
-        referentiel_params
+        params = referentiel_params.to_h
+        params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?
+        params = params.merge(mode: Referentiels::APIReferentiel.modes.fetch(:exact_match)) if !Referentiels::APIReferentiel.autocomplete_available?
+        params
       end
     end
   end

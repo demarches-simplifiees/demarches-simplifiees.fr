@@ -25,13 +25,14 @@ RSpec.describe Referentiels::NewFormComponent, type: :component do
       context 'when mode was not selected' do
         it 'forward referentiel_id if present in params' do
           inputs = {
-            type: 2,
-            mode: 2,
             referentiel_id: 1,
             test_data: 1,
             hint: 1,
             url: 0
           }
+          input[:mode] = 2 if Referentiels::APIReferentiel.autocomplete_available?
+          input[:type] = 2 if Referentiels::APIReferentiel.csv_available?
+
           expect(page).to have_css('form[method=post]')
           expect(page).to have_css("form[action=\"#{url_helpers.admin_procedure_referentiels_path(procedure, type_de_champ.stable_id)}\"]")
           expect(page).not_to have_selector('input[type="file"]')

@@ -9,6 +9,13 @@ class Referentiels::APIReferentiel < Referentiel
   validate :url_allowed?
 
   before_save :name_as_uuid
+  def self.csv_available?
+    false
+  end
+
+  def self.autocomplete_available?
+    false
+  end
 
   def last_response_body
     (last_response || {}).fetch("body") { {} }
