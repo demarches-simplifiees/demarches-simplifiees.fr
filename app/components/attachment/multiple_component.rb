@@ -1,6 +1,6 @@
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::MultipleComponent < ApplicationComponent
-  DEFAULT_MAX_ATTACHMENTS = 10
+  DEFAULT_MAX_ATTACHMENTS = 12
 
   renders_one :template
 
