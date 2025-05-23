@@ -24,10 +24,9 @@
 
   - else
     - if dossier.justificatif_motivation.attached?
-      = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.show.status_overview.justificatif')) do |c|
-        - c.with_value do
-          .action
-            = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
+      .fr-mb-2w
+        %span.champ-label= t('views.users.dossiers.show.status_overview.justificatif')
+        = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
     - if dossier.motivation.present?
       %span.champ-label= t('views.users.dossiers.show.status_overview.motivation')
