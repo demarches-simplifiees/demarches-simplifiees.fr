@@ -31,28 +31,8 @@
 }
 
 .status-explanation {
-  p {
-    margin-bottom: $default-padding;
-  }
-
-  .decision {
-    font-size: 1.2em;
-    margin-top: $default-padding * 3;
-    margin-bottom: $default-padding * 3;
-  }
-
-  .icon {
-    margin-right: $default-spacer;
-  }
-
-  h3 {
-    font-weight: bold;
-    margin-bottom: $default-spacer;
-  }
-
   blockquote {
     quotes: '« ' ' »' '‘' '’';
-    margin-bottom: $default-padding * 3;
   }
 
   blockquote::before {
@@ -61,9 +41,5 @@
 
   blockquote::after {
     content: close-quote;
-  }
-
-  .action {
-    margin-bottom: $default-padding * 3;
   }
 }
