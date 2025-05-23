@@ -345,10 +345,10 @@ fr:
         withdraw_permission: "Révoquer l’autorisation"
         want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation de %{email} ?"
         edit_dossier_html:
-          zero: '<p class="fr-h6"><em>Aucun invité ne peut voir et modifier ce dossier pour l’instant.</em></p>'
-          one: '<h5>1 invité peut modifier ce dossier</h5>'
-          other: '<h5>%{count} invités peuvent modifier ce dossier</h5>'
-        submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
+          zero: '<p><em>Aucun invité ne peut voir et modifier ce dossier actuellement.</em></p>'
+          one: '<h3 class="fr-h6">1 personne invitée</h3>'
+          other: '<h3 class="fr-h6">%{count} personnes invitées</h3>'
+        submit_dossier_yourself: "Une fois le dossier complet, vous devrez le déposer vous-même."
     pagination:
       next: Suivant
       last: Dernier

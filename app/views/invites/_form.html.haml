@@ -1,5 +1,5 @@
 #invites-form.fr-p-2w
-  %h4= t('views.invites.form.modal_title')
+  %h2.fr-h5= t('views.invites.form.modal_title')
   %p.fr-highlight.fr-mb-3w= t('views.invites.form.modal_highlight')
 
   = t('views.invites.form.edit_dossier_html', count: invites.size)
@@ -13,14 +13,15 @@
               = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission', email: invite.email) }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline", id: "link_#{index}", "aria-labelledby": "link_#{index} invite_#{index}"
 
     - if dossier.brouillon?
-      %p= t('views.invites.form.submit_dossier_yourself')
+      .fr-alert.fr-alert--info.fr-mb-4w
+        %p= t('views.invites.form.submit_dossier_yourself')
 
   %hr.fr-hr
 
   = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post do
     %fieldset.fr-fieldset
       %legend.fr-fieldset__legend
-        %h5= t('views.invites.form.title')
+        %h3.fr-h5= t('views.invites.form.title')
 
       %p.fr-highlight.fr-mb-3w= t('asterisk_html', scope: [:utils])
 
