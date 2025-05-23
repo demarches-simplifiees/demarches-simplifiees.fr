@@ -8,7 +8,6 @@ class Procedure::RevisionChangesComponent < ApplicationComponent
 
     @tdc_changes = previous_revision.compare_types_de_champ(new_revision)
     @public_move_changes, @private_move_changes = @tdc_changes.filter { _1.op == :move }.partition { !_1.private? }
-
     @ineligibilite_rules_changes = previous_revision.compare_ineligibilite_rules(new_revision)
   end
 

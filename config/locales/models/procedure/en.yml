@@ -89,6 +89,7 @@ en:
               empty_csv: 'requires at least one csv file'
               inconsistent_header_section: "%{custom_message}"
               expression_reguliere_invalid: "is invalid"
+              referentiel_not_ready: "is not configured"
             draft_types_de_champ_private:
               format: 'Private field %{message}'
               invalid_condition: "have an invalid logic"
