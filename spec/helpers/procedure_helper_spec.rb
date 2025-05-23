@@ -46,7 +46,7 @@ RSpec.describe ProcedureHelper, type: :helper do
     context 'without champs' do
       let(:procedure) { create(:procedure) }
 
-      it 'never displays ‘zero minutes’' do
+      it 'never displays ’zero minutes’' do
         expect(subject).to eq(1)
       end
     end

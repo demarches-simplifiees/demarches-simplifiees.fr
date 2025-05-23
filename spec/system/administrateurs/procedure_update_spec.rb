@@ -41,7 +41,7 @@ describe 'Administrateurs can edit procedures', js: true do
   end
 
   context 'when the procedure is published' do
-    scenario 'the administrator can edit the libellé, but can‘t change the path' do
+    scenario 'the administrator can edit the libellé, but can’t change the path' do
       visit root_path
       click_on procedure.libelle
       find('#presentation').click
