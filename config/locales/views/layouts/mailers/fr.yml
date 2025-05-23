@@ -9,11 +9,11 @@ fr:
         procedure_management: "Cette démarche est gérée par :"
         ask_question: "Poser une question sur votre dossier :"
         email_sent_to: "Cet email a été envoyé à l'adresse :"
-        by_messagerie: Par la messagerie
-        by_contact_link: Par la page de contact
-        by_email: "Par email :"
-        by_phone: "Par téléphone :"
-        schedule: "Horaires :"
+        by_messagerie: "Messagerie :"
+        by_contact_link: "Page de contact :"
+        by_email: "Adresse électronique :"
+        by_phone: "Téléphone :"
+        schedule: "Horaires :"
       signature:
         team: "L’équipe"
       for_tiers:

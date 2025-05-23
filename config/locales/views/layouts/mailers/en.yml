@@ -8,11 +8,11 @@ en:
         procedure_management: "This procedure is managed by:"
         ask_question: "Ask a question about your file:"
         email_sent_to: "This email has been sent to :"
-        by_messagerie: By messaging
-        by_contact_link: By contact page
-        by_email: "By email :"
-        by_phone: "By phone :"
-        schedule: "Schedule :"
+        by_messagerie: "Messaging :"
+        by_contact_link: "Contact page :"
+        by_email: "Email :"
+        by_phone: "Phone :"
+        schedule: "Schedule :"
       signature:
         team: "The team"
       for_tiers:

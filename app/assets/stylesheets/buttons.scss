@@ -392,6 +392,8 @@ ul.dropdown-items {
 
 .account-btn {
   flex-wrap: wrap;
+  hyphens: auto;
+  text-align: left;
 
   &::before {
     content: none !important;

@@ -19,7 +19,7 @@ describe 'shared/dossiers/_infos_generales', type: :view do
         pdf = dossier.attestation.pdf
         expect(dossier).to receive(:attestation).and_return(double(pdf: pdf)).at_least(2)
         expect(subject).to have_text('Attestation')
-        expect(subject).to have_text("Télécharger l‘attestation")
+        expect(subject).to have_text("Télécharger l’attestation")
       end
     end
   end
@@ -49,7 +49,7 @@ describe 'shared/dossiers/_infos_generales', type: :view do
         pdf = dossier.attestation.pdf
         expect(dossier).to receive(:attestation).and_return(double(pdf: pdf)).at_least(2)
         expect(subject).to have_text('Attestation')
-        expect(subject).to have_text("Télécharger l‘attestation")
+        expect(subject).to have_text("Télécharger l’attestation")
       end
     end
 
