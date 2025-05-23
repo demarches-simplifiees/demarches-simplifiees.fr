@@ -150,27 +150,27 @@ describe 'The user', js: true do
     expect(page).to have_field('sub type de champ', with: 'super texte')
 
     # first repetition have a destroy hidden
-    expect(page).to have_selector(".repetition .row .utils-repetition-required-destroy-button", count: 1, visible: false)
-    expect(page).to have_selector(".repetition .row", count: 1)
+    expect(page).to have_selector(".repetition .champs-group .utils-repetition-required-destroy-button", count: 1, visible: false)
+    expect(page).to have_selector(".repetition .champs-group", count: 1)
 
     # adding an element means we can ddestroy last item
     click_on 'Ajouter un élément pour'
-    expect(page).to have_selector(".repetition .row:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
-    expect(page).to have_selector(".repetition .row", count: 2)
-    expect(page).to have_selector(".repetition .row:last-child .utils-repetition-required-destroy-button", count: 1, visible: true)
+    expect(page).to have_selector(".repetition .champs-group:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
+    expect(page).to have_selector(".repetition .champs-group", count: 2)
+    expect(page).to have_selector(".repetition .champs-group:last-child .utils-repetition-required-destroy-button", count: 1, visible: true)
 
-    within '.repetition .row:first-child' do
+    within '.repetition .champs-group:first-child' do
       fill_in('sub type de champ', with: 'un autre texte')
       blur
     end
 
     expect do
-      within '.repetition .row:last-child' do
+      within '.repetition .champs-group:last-child' do
         click_on 'Supprimer l’élément'
       end
-      wait_until { page.all(".row").size == 1 }
+      wait_until { page.all(".champs-group").size == 1 }
       # removing a repetition means one child only, thus its button destroy is not visible
-      expect(page).to have_selector(".repetition .row:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
+      expect(page).to have_selector(".repetition .champs-group:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
     end.to change { Champ.where.not(discarded_at: nil).count }
   end
 
@@ -229,7 +229,7 @@ describe 'The user', js: true do
     fill_individual
 
     find('label', text: 'Je ne trouve pas mon adresse dans les suggestions').click
-    fill_in('Nom et numéro de voie, ou, lieu-dit', with: '2 rue de la paix')
+    fill_in('Numéro et nom de voie, ou lieu-dit', with: '2 rue de la paix')
     scroll_to(find_field('Ville ou commune'), align: :center)
     fill_in('Ville ou commune', with: '60400')
     find('.fr-menu__item', text: 'Brétigny (60400)').click

@@ -410,16 +410,19 @@
         padding-left: 0;
       }
 
-      .row {
-        border-radius: 4px;
-        border: 1px solid $border-grey;
-        padding: $default-padding;
-        margin-bottom: 2 * $default-padding;
+      .champs-group {
+        margin-bottom: 2rem;
       }
     }
 
+    .champs-group {
+      border-radius: 4px;
+      border: 1px solid var(--border-default-grey);
+      padding: 1rem;
+    }
+
     .utils-repetition-required
-      .row:first-child
+      .champs-group:first-child
       .utils-repetition-required-destroy-button {
       display: none;
     }
@@ -431,6 +434,17 @@
   .mesri-inputs {
     label {
       font-weight: 400;
+    }
+  }
+
+  .fr-input-address-ban--disabled {
+    & > .fr-label,
+    & > .fr-hint-text,
+    & > .fr-label .fr-hint-text {
+      color: var(--text-disabled-grey);
+    }
+    .address-ban .fr-ds-combobox .fr-autocomplete {
+      opacity: 0.5; // Réduit l'opacité de l'icône droite en background. L'input étant autant disabled, cette opacité s'ajoute à celle du disabled
     }
   }
 

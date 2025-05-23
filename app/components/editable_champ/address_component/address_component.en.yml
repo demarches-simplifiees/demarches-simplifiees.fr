@@ -1,7 +1,11 @@
 en:
   street_label: Street name and number or, place name
+  street_fr_hint: 'Example : 12 Main Street'
+  street_international_hint: 'Example : 12 Main Street'
   city_label: City
+  city_hint: 'Example : London'
   commune_label: City or Municipality
+  commune_hint: 'Enter the name or postal code of the city then, select the municipality in the list. Example : Strasbourg'
   postal_code_label: Postal code
   country_label: Country
   not_in_ban: I cannot find my address in the suggestions

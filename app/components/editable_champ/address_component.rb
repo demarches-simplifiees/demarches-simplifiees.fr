@@ -5,6 +5,10 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
     'fr-select'
   end
 
+  def dsfr_group_classname
+    class_names(super, "fr-input-address-ban--disabled" => !@champ.ban?)
+  end
+
   def react_props
     react_input_opts(id: @champ.input_id,
       class: 'fr-mt-1w',

@@ -1,7 +1,11 @@
 fr:
-  street_label: Nom et numéro de voie, ou, lieu-dit
+  street_label: Numéro et nom de voie, ou lieu-dit
+  street_fr_hint: 'Exemple : 11 rue des Mimosas'
+  street_international_hint: 'Exemple : 12 Main Street'
   city_label: Ville
+  city_hint: 'Exemple : London'
   commune_label: Ville ou commune
+  commune_hint: 'Renseignez le nom ou le code postal de la ville puis, sélectionnez la commune dans la liste. Exemple : Strasbourg'
   postal_code_label: Code postal
   country_label: Pays
   not_in_ban: Je ne trouve pas mon adresse dans les suggestions
