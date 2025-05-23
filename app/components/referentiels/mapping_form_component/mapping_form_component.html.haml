@@ -5,6 +5,7 @@
     - c.with_body do
       %p L'API n'a pas retournée une réponse valide, veuillez vérifier les paramètres du referentiel :
       %pre Endpoint: #{@referentiel.url}
+      %pre Status: #{JSON.pretty_generate(@referentiel.last_response_status)}
       %pre Body: #{JSON.pretty_generate(@referentiel.last_response_body)}
 
   %ul.fr-btns-group.fr-btns-group--inline-sm
