@@ -51,9 +51,9 @@ class Referentiels::APIReferentiel < Referentiel
     return if uri.tld == "gouv.fr" && uri.domain != "beta.gouv.fr"
     allowed_domains = ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND', '').split(',')
     if allowed_domains.none? { |allowed_domain| uri.host && allowed_domain.include?(uri.host) }
-      errors.add(:url, "L'URL doit être autorisée par notre équipe, veuillez nous contacter")
+      errors.add(:url, :not_allowed, contact_email: CONTACT_EMAIL)
     end
   rescue URI::InvalidURIError, PublicSuffix::DomainInvalid
-    errors.add(:url, "L'URL est invalide")
+    errors.add(:url, :invalid_format)
   end
 end

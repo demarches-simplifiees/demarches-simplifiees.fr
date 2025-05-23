@@ -47,7 +47,7 @@ describe Referentiel do
 
             it 'adds an error' do
               referentiel.validate
-              expect(referentiel.errors[:url]).to include("L'URL doit être autorisée par notre équipe, veuillez nous contacter")
+              expect(referentiel.errors[:url]).to include("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
             end
           end
 
@@ -56,7 +56,7 @@ describe Referentiel do
 
             it 'adds an invalid URL error' do
               referentiel.validate
-              expect(referentiel.errors[:url]).to include("L'URL est invalide")
+              expect(referentiel.errors[:url]).to include("n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
             end
           end
 
@@ -83,7 +83,7 @@ describe Referentiel do
 
             it 'adds an error' do
               referentiel.validate
-              expect(referentiel.errors[:url]).to include("L'URL doit être autorisée par notre équipe, veuillez nous contacter")
+              expect(referentiel.errors[:url]).to include("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
             end
           end
         end
