@@ -42,7 +42,7 @@ describe 'users/dossiers/show/_status_overview', type: :view do
       expect(subject).to have_selector('.status-explanation .en-construction')
       expect(subject).to have_text('Selon nos estimations, à partir des délais d’instruction constatés')
       expect(subject).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour.")
-      expect(subject).to have_text("Les dossiers demandant quelques échanges le délai d’instruction est d‘environ : 2 jours.")
+      expect(subject).to have_text("Les dossiers demandant quelques échanges le délai d’instruction est d’environ : 2 jours.")
       expect(subject).to have_text("Si votre dossier est incomplet ou qu’il faut beaucoup d’échanges avec l’administration, le délai d’instruction est d’environ 3 jours.")
     end
   end
@@ -61,7 +61,7 @@ describe 'users/dossiers/show/_status_overview', type: :view do
       expect(subject).to have_selector('.status-explanation .en-instruction')
       expect(subject).to have_text('Selon nos estimations, à partir des délais d’instruction constatés')
       expect(subject).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour.")
-      expect(subject).to have_text("Les dossiers demandant quelques échanges le délai d’instruction est d‘environ : 2 jours.")
+      expect(subject).to have_text("Les dossiers demandant quelques échanges le délai d’instruction est d’environ : 2 jours.")
       expect(subject).to have_text("Si votre dossier est incomplet ou qu’il faut beaucoup d’échanges avec l’administration, le délai d’instruction est d’environ 3 jours.")
     end
   end

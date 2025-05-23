@@ -2,5 +2,5 @@
 fr:
   explanation: Selon nos estimations, à partir des délais d’instruction constatés sur %{percentile}% des demandes qui ont été traitées lors des %{nb_recent_dossiers} derniers jours, les délais d’instruction sont les suivants
   fast_html: "<strong>Dans le meilleur des cas</strong>, le délai d’instruction est : <strong>%{estimation}</strong>."
-  mean_html: "Les <strong>dossiers demandant quelques échanges</strong> le délai d’instruction est d‘environ : <strong>%{estimation}</strong>."
+  mean_html: "Les <strong>dossiers demandant quelques échanges</strong> le délai d’instruction est d’environ : <strong>%{estimation}</strong>."
   slow_html: "Si votre <strong>dossier est incomplet</strong> ou qu’il faut beaucoup d’échanges avec l’administration, le délai d’instruction est d’environ <strong>%{estimation}</strong>."

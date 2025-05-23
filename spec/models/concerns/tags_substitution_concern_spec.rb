@@ -184,17 +184,17 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has a type de champ with apostrophes' do
       let(:types_de_champ_public) do
         [
-          { libelle: "Intitulé de l'‘«\"évènement\"»’" }
+          { libelle: "Intitulé de l'’«\"évènement\"»’" }
         ]
       end
 
       context 'and they are used in the template' do
-        let(:template) { "--Intitulé de l'‘«\"évènement\"»’--" }
+        let(:template) { "--Intitulé de l'’«\"évènement\"»’--" }
 
         context 'and their value in the dossier are not nil' do
           before do
             dossier.project_champs_public
-              .find { |champ| champ.libelle == "Intitulé de l'‘«\"évènement\"»’" }
+              .find { |champ| champ.libelle == "Intitulé de l'’«\"évènement\"»’" }
               .update(value: 'ceci est mon évènement')
           end
 

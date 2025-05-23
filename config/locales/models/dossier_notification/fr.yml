@@ -9,6 +9,6 @@ fr:
         attente_correction: En attente de correction
         attente_avis: En attente d'avis externe
         message_usager: Message usager
-        # TODO: switch to ‘Annotation instructeur’ during global renaming
+        # TODO: switch to ’Annotation instructeur’ during global renaming
         annotation_instructeur: Annotation privée
         avis_externe: Avis externe
