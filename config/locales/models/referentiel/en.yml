@@ -8,5 +8,5 @@ fr:
         hint: "Expected format shown to the user"
         test_data: "Valid example used to test the API"
         hints:
-          url: "Example : https://api_1.ext/{id}, the segment {id} will be replaced by the field value. The http request will use the GET verb"
+          url_html: "Example : https://api_1.ext/<strong>{id}</strong>, the segment <strong>{id}</strong> will be replaced by the field value. The http request will use the GET verb"
           hint: "Example : ID containing 12 chars"
