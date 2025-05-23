@@ -2,18 +2,18 @@
   - if !dossier.termine?
     .fr-grid-row.fr-grid-row--center
       .fr-col-md-8.text-center
-        %ul.status-timeline.fr-mb-4w
+        %ol.status-timeline.fr-mb-4w
           - if dossier.brouillon?
-            %li.brouillon{ class: dossier.brouillon? ? 'active' : nil }
+            %li.brouillon{ 'aria-current': dossier.brouillon? ? 'true' : nil }
               = t('views.users.dossiers.show.status_overview.status_draft')
-          %li.en-construction{ class: dossier.en_construction? ? 'active' : nil }
+          %li.en-construction{ 'aria-current': dossier.en_construction? ? 'true' : nil }
             = t('views.users.dossiers.show.status_overview.status_in_progress')
 
             - if dossier.pending_correction.present?
               = "(#{Dossier.human_attribute_name("pending_correction.for_user")})"
-          %li.en-instruction{ class: dossier.en_instruction? ? 'active' : nil }
+          %li.en-instruction{ 'aria-current': dossier.en_instruction? ? 'true' : nil }
             = t('views.users.dossiers.show.status_overview.status_review')
-          %li.termine{ class: dossier.termine? ? 'active' : nil }
+          %li.termine{ 'aria-current': dossier.termine? ? 'true' : nil }
             = t('views.users.dossiers.show.status_overview.status_completed')
 
   - if dossier.en_construction?
