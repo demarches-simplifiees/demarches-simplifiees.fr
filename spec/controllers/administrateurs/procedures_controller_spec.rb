@@ -1768,6 +1768,41 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe '#update_pro_connect_restricted' do
+    let(:admin) { create(:administrateur) }
+    let(:procedure) { create(:procedure, administrateurs: [admin]) }
+
+    before { sign_in(admin.user) }
+
+    context 'when enabling pro_connect_restricted' do
+      before do
+        patch :update_pro_connect_restricted, params: {
+          id: procedure.id,
+          procedure: { pro_connect_restricted: true }
+        }
+      end
+
+      it { expect(procedure.reload.pro_connect_restricted).to be true }
+      it { expect(flash.notice).to eq("La démarche est restreinte à ProConnect") }
+      it { expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure)) }
+    end
+
+    context 'when disabling pro_connect_restricted' do
+      let(:procedure) { create(:procedure, pro_connect_restricted: true, administrateurs: [admin]) }
+
+      before do
+        patch :update_pro_connect_restricted, params: {
+          id: procedure.id,
+          procedure: { pro_connect_restricted: false }
+        }
+      end
+
+      it { expect(procedure.reload.pro_connect_restricted).to be false }
+      it { expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect") }
+      it { expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure)) }
+    end
+  end
+
   describe '#select_procedure' do
     let(:admin) { create(:administrateur) }
 
