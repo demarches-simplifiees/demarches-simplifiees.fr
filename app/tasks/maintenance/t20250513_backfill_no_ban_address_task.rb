@@ -10,9 +10,7 @@ module Maintenance
     include StatementsHelpersConcern
 
     def collection
-      with_statement_timeout("15min") do
-        Champs::AddressChamp.all
-      end
+      Champs::AddressChamp.all
     end
 
     def process(champ)
@@ -23,6 +21,12 @@ module Maintenance
           label: champ.value
         }
         champ.update_column(:value_json, value_json)
+      end
+    end
+
+    def count
+      with_statement_timeout("5min") do
+        collection.count(:id)
       end
     end
   end
