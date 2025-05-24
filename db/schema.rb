@@ -106,8 +106,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
     t.string "siret"
     t.string "sub", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.string "usual_name"
     t.index ["instructeur_id"], name: "index_agent_connect_informations_on_instructeur_id"
+    t.index ["user_id"], name: "index_agent_connect_informations_on_user_id"
   end
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
