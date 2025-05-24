@@ -6,8 +6,9 @@
       - if dossier.conservation_extension.positive?
         = t('instructeurs.dossiers.header.banner.expiration_date_extended')
 
-  - if dossier.close_to_expiration?
-    = render Dsfr::CalloutComponent.new(title: t('instructeurs.dossiers.header.banner.title'), theme: :warning) do |c|
+  - if dossier.close_to_expiration? || dossier.has_expired?
+    - title = dossier.has_expired? ? 'title_expired' : 'title'
+    = render Dsfr::CalloutComponent.new(title: t("instructeurs.dossiers.header.banner.#{title}"), theme: :warning) do |c|
       - c.with_body do
         - if dossier.brouillon?
           = t('instructeurs.dossiers.header.banner.states.brouillon')

@@ -2,8 +2,8 @@ fr:
   dossier_mailer:
     notify_brouillon_deletion:
       subject:
-        one: "Un dossier en brouillon a été supprimé automatiquement"
-        other: "Des dossiers en brouillon ont été supprimés automatiquement"
+        one: "Un dossier en brouillon a été supprimé"
+        other: "Des dossiers en brouillon ont été supprimés"
       header:
-        one: "Le délai maximum de conservation du dossier en brouillon suivant a été atteint, celui-ci a donc été supprimé :"
-        other: "Le délai maximum de conservation des dossiers en brouillon suivants a été atteint, ceux-ci ont donc été supprimés :"
+        one: "Le délai maximum de conservation du dossier en brouillon a été atteint, celui-ci a donc été supprimé :"
+        other: "Le délai maximum de conservation des dossiers en brouillon a été atteint, ceux-ci ont donc été supprimés :"

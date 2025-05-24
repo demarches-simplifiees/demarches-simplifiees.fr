@@ -219,7 +219,6 @@ fr:
           label: "Contacter le délégué du Défenseur des droits dans votre région"
           url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
           title: "Contacter le délégué du Défenseur des droits dans votre région - nouvel onglet"
-        remedies_three: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) Défenseur des droits Libre réponse 71120 75342 Paris CEDEX 07"
         remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :
           <p class=\"fr-mb-2w\">Défenseur des droits
           <br >Libre réponse 71120
@@ -416,10 +415,13 @@ fr:
           expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
-        deleted_by_user: "Dossier supprimé par l’usager"
+        deleted_reason:
+          user_request: supprimé par l'usager
+          expired: a expiré
         acts_on_behalf: "agit pour"
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
+        restore_and_extend: "Restaurer et étendre la conservation"
         filters:
           title: Sélectionner un filtre
         select_all: Tout selectionner
@@ -547,10 +549,11 @@ fr:
           updated_at: modifié le %{date}
           shared_with: Dossier partagé par %{owner} avec
           deleted: Supprimé le %{date}
-          deleted_badge: Supprimé
+          deleted_by_user: Supprimé le %{date} par l'usager
+          deleted_by_automatic: Supprimé le %{date} automatiquement du à la date d'expiration
         dossier_action:
           edit_dossier: "Modifier le dossier"
-          start_other_dossier: "Commencer un autre dossier vide"
+          start_other_dossier: "Commencer un nouveau dossier"
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"

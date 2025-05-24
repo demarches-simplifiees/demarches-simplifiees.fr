@@ -137,7 +137,7 @@ describe ExportTemplate do
 
     context 'for pj' do
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:champ_pj) { dossier.champs.find(&:piece_justificative?) }
+      let(:champ_pj) { dossier.champs.find { |c| c.type == 'Champs::PieceJustificativeChamp' } }
       let(:attachment) { ActiveStorage::Attachment.new(name: 'pj', record: champ_pj, blob: ActiveStorage::Blob.new(filename: "superpj.png")) }
 
       it 'returns pj and custom name for pj' do

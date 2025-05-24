@@ -13,12 +13,14 @@
         #{link_to("N° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}
 
 %p
-  %strong= t('.account_active', count: @dossiers.size)
-
-%p
   - if @state == Dossier.states.fetch(:en_construction)
     = sanitize(t('.footer_en_construction', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)))
   - else
     = sanitize(t('.footer_termine', count: @dossiers.size, dossiers_url: dossiers_url, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)))
+
+  = link_to("mes dossiers", dossiers_url)
+  \.
+%p
+  = t('.account_active', count: @dossiers.size)
 
 = render partial: "layouts/mailers/signature"

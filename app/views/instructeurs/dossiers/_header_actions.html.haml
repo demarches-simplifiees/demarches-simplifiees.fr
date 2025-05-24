@@ -8,6 +8,7 @@
               dossier_is_followed: current_instructeur&.follow?(dossier),
               close_to_expiration: dossier.close_to_expiration?,
               hidden_by_administration: dossier.hidden_by_administration?,
+              hidden_by_expired: dossier.hidden_by_expired?,
               has_pending_correction: dossier.pending_correction?,
               has_blocking_pending_correction: dossier.procedure.feature_enabled?(:blocking_pending_correction) && dossier.pending_correction?,
               turbo: true,

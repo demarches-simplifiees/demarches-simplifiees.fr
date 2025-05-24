@@ -3,6 +3,6 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.body', dossier_id: @deleted_dossier.dossier_id, procedure: @deleted_dossier.procedure.libelle)
+  = t('.body', dossier_id: @hidden_dossier.id, procedure: @hidden_dossier.procedure.libelle)
 
 = render partial: "layouts/mailers/signature"

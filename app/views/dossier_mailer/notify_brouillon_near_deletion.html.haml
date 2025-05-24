@@ -8,6 +8,8 @@
     - @dossiers.each do |d|
       %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))
 
-%p= sanitize(t('.footer', count: @dossiers.size))
+%p
+  = t('.account_active', count: @dossiers.size)
+
 
 = render partial: "layouts/mailers/signature"

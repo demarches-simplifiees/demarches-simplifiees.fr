@@ -2,6 +2,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
   describe '#perform' do
     let(:instructeur) { create(:instructeur) }
     let(:dossier) { create(:dossier, :with_individual, state) }
+    let(:dossier_2) { create(:dossier, :with_individual, state) }
 
     before do
       # hack to add passer_en_instruction and supprimer to dossier.dossier_operation_logs
@@ -9,6 +10,8 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
       dossier.send(:log_dossier_operation, instructeur, :supprimer, dossier)
       dossier.update_columns(hidden_by_user_at: hidden_at, hidden_by_administration_at: hidden_at)
       dossier.update_column(:hidden_by_reason, "user_request")
+      dossier_2.update_columns(hidden_by_expired_at: hidden_at)
+      dossier_2.update_column(:hidden_by_reason, "expired")
     end
 
     subject do
@@ -24,6 +27,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
 
       it 'does not delete it' do
         expect { dossier.reload }.not_to raise_error
+        expect { dossier_2.reload }.not_to raise_error
       end
 
       it 'does not delete its operations logs' do
@@ -36,6 +40,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
 
       it 'does delete it' do
         expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { dossier_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it 'deletes its operations logs except supprimer' do

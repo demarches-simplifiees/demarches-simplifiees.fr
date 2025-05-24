@@ -19,8 +19,7 @@
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = dossier.dossier_id
 
-          %span.fr-badge.fr-badge--sm.fr-badge--warning
-            = t('views.users.dossiers.dossiers_list.deleted_badge')
+          = status_badge(dossier.state, 'fr-mb-1w')
 
     = paginate deleted_dossiers, views_prefix: 'shared'
 

@@ -144,11 +144,12 @@
                       - if p.hidden_by_administration_at.present?
                         %span.cell-link
                           = column
-                          = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                          - if p.hidden_by_user_at.present?
+                            = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}"
                       - else
                         %a.cell-link{ href: path }
                           = column
-                          = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
+                          = "- #{t('views.instructeurs.dossiers.deleted_reason', reason: p.hidden_by_reason)}" if p.hidden_by_user_at.present?
 
                   %td.status-col
                     - status = [status_badge(p.state)]
@@ -172,6 +173,7 @@
                                   dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                   close_to_expiration: @statut == 'expirant',
                                   hidden_by_administration: @statut == 'supprimes_recemment',
+                                  hidden_by_expired: p.hidden_by_reason == 'expired',
                                   sva_svr: @procedure.sva_svr_enabled?,
                                   has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,
                                   turbo: false,

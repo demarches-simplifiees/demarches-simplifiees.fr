@@ -102,6 +102,7 @@
                                                                       dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                                                       close_to_expiration: nil,
                                                                       hidden_by_administration: nil,
+                                                                      hidden_by_expired: nil,
                                                                       sva_svr: p.sva_svr_decision_on.present?,
                                                                       has_blocking_pending_correction: p.pending_correction? && Flipper.enabled?(:blocking_pending_correction, ProcedureFlipperActor.new(procedure_id)),
                                                                       turbo: false,

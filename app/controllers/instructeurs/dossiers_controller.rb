@@ -23,6 +23,12 @@ module Instructeurs
       redirect_back(fallback_location: instructeur_dossier_path(@dossier.procedure, @dossier))
     end
 
+    def extend_conservation_and_restore
+      dossier.extend_conservation_and_restore(1.month, current_instructeur)
+      flash[:notice] = t('views.instructeurs.dossiers.archived_dossier')
+      redirect_back(fallback_location: instructeur_dossier_path(@dossier.procedure, @dossier))
+    end
+
     def geo_data
       send_data dossier.to_feature_collection.to_json,
                 type: 'application/json',
@@ -382,6 +388,10 @@ module Instructeurs
         Dossier
           .where(id: current_instructeur.dossiers.visible_by_administration)
           .or(Dossier.where(id: current_user.dossiers.for_procedure_preview))
+      elsif action_name == 'extend_conservation_and_restore'
+        Dossier
+          .where(id: current_instructeur.dossiers.visible_by_administration)
+          .or(Dossier.where(id: current_instructeur.dossiers.hidden_by_expired))
       else
         current_instructeur.dossiers.visible_by_administration
       end

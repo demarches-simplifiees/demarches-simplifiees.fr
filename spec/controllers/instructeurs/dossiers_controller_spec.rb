@@ -1315,6 +1315,71 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe '#extend_conservation and restore' do
+    subject { post :extend_conservation_and_restore, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+
+    before do
+      dossier.update(hidden_by_expired_at: 1.hour.ago, hidden_by_reason: 'expired')
+    end
+
+    context 'when dossier has expired but was not hidden by anyone' do
+      it 'works' do
+        expect(subject).to redirect_to(instructeur_dossier_path(procedure, dossier))
+      end
+
+      it 'extends conservation_extension by 1 month and let dossier not hidden' do
+        subject
+        expect(dossier.reload.conservation_extension).to eq(1.month)
+        expect(dossier.reload.hidden_by_reason).to eq(nil)
+        expect(dossier.reload.hidden_by_expired_at).to eq(nil)
+        expect(dossier.reload.hidden_by_administration_at).to eq(nil)
+        expect(dossier.reload.hidden_by_user_at).to eq(nil)
+      end
+
+      it 'flashed notice success' do
+        subject
+        expect(flash[:notice]).to eq(I18n.t('views.instructeurs.dossiers.archived_dossier'))
+      end
+    end
+
+    context 'when dossier has expired and was hidden by instructeur' do
+      let!(:dossier) { create(:dossier, :hidden_by_administration, :accepte, :with_individual, procedure: procedure) }
+
+      it 'extends conservation_extension by 1 month and restore dossier for instructeur' do
+        subject
+        expect(dossier.reload.conservation_extension).to eq(1.month)
+        expect(dossier.reload.hidden_by_reason).to eq(nil)
+        expect(dossier.reload.hidden_by_expired_at).to eq(nil)
+        expect(dossier.reload.hidden_by_administration_at).to eq(nil)
+        expect(dossier.reload.hidden_by_user_at).to eq(nil)
+      end
+    end
+
+    context 'when dossier has expired and was hidden by user' do
+      let!(:dossier) { create(:dossier, :hidden_by_user, :accepte, :with_individual, procedure: procedure) }
+      it 'extends conservation_extension by 1 month and let dossier hidden for user' do
+        subject
+        expect(dossier.reload.conservation_extension).to eq(1.month)
+        expect(dossier.reload.hidden_by_reason).to eq("user_request")
+        expect(dossier.reload.hidden_by_expired_at).to eq(nil)
+        expect(dossier.reload.hidden_by_administration_at).to eq(nil)
+        expect(dossier.reload.hidden_by_user_at).not_to eq(nil)
+      end
+    end
+
+    context 'when dossier has expired and was hidden by user and instructeur' do
+      let!(:dossier) { create(:dossier, :hidden_by_user, :hidden_by_administration, :accepte, :with_individual, procedure: procedure) }
+      it 'extends conservation_extension by 1 month and let dossier hidden for user' do
+        subject
+        expect(dossier.reload.conservation_extension).to eq(1.month)
+        expect(dossier.reload.hidden_by_reason).to eq("user_request")
+        expect(dossier.reload.hidden_by_expired_at).to eq(nil)
+        expect(dossier.reload.hidden_by_administration_at).to eq(nil)
+        expect(dossier.reload.hidden_by_user_at).not_to eq(nil)
+      end
+    end
+  end
+
   describe '#reaffectation' do
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
     let!(:gi_3) { GroupeInstructeur.create(label: 'troisième groupe', procedure: procedure) }
