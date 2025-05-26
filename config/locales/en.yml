@@ -474,9 +474,12 @@ en:
             request: "Request"
             mailbox: "Mailbox"
             rendez_vous: "Appointment"
+            dossier_number: "File number %{dossier_id}"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
+            download: "file-%{dossier_id}.pdf"
+            download_without_number: "DS-file.pdf"
           status_overview:
             status_draft: draft
             status_in_progress: in progress
@@ -507,7 +510,7 @@ en:
         rendez_vous:
           title: "Your next appointment"
         demande:
-          edit_dossier: Edit file
+          edit_dossier: Edit my file
           edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
         search:
           search_file: Search a file (File number, keywords)
@@ -878,7 +881,7 @@ en:
       show:
         papertrail:
           get_papertrail: "Get a deposit receipt"
-          filename: "deposit-receipt.pdf"
+          filename: "deposit-receipt_file-%{dossier_id}.pdf"
       papertrail:
         receipt: "Deposit receipt"
         description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."

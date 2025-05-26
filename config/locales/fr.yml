@@ -474,7 +474,7 @@ fr:
           dossier_edit_l4: échanger avec un instructeur.
           download_dossier: Télécharger mon dossier
           download_attestation: Télécharger mon attestation
-          acces_dossier: Accéder à votre dossier
+          acces_dossier: Accéder au dossier
           submit_dossier: Déposer un autre dossier
           jdma_l1: Aidez-nous à améliorer ce service !
           jdma_l2: Donnez-nous votre avis, cela ne prend que 2 minutes.
@@ -484,9 +484,12 @@ fr:
             request: "Demande"
             mailbox: "Messagerie"
             rendez_vous: "Rendez-vous"
+            dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
+            download: "dossier-%{dossier_id}.pdf"
+            download_without_number: "dossier-DS.pdf"
           status_overview:
             status_draft: brouillon
             status_in_progress: en construction
@@ -518,7 +521,7 @@ fr:
           title: "Votre prochain rendez-vous"
         demande:
           edit_dossier: Modifier le dossier
-          edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
+          edit_dossier_title: "Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           prompt: (N° de dossier, nom / prénom, mots-clés)
@@ -901,7 +904,7 @@ fr:
       show:
         papertrail:
           get_papertrail: "Obtenir une attestation de dépôt de dossier"
-          filename: "attestation-de-depot.pdf"
+          filename: "attestation-depot_dossier-%{dossier_id}.pdf"
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
