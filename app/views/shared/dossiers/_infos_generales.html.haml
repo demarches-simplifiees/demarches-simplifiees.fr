@@ -1,30 +1,39 @@
 .fr-px-2w.fr-mb-4w
   .fr-my-2w
-    %p
-      = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
-      %br
+    %ul
+      %li= t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
       - if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
-        = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.last_champ_updated_at))
+        %li= t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.last_champ_updated_at))
+      - if dossier.en_instruction? || dossier.termine?
+        %li= t(:switched_to_instruction_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.en_instruction_at))
+      - if dossier.en_construction?
+        %li= t(:revert_to_submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.en_construction_at))
+      - if dossier.termine?
+        - if dossier.accepte?
+          %li= t(:acceptee_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.processed_at))
+        - if dossier.refuse?
+          %li= t(:refuse_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.processed_at))
+        - if dossier.sans_suite?
+          %li= t(:closed_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.processed_at))
 
     .fr-highlight
-      %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
+      %p.fr-text--sm.fr-text-mention--grey= t('views.shared.dossiers.demande.en_construction_notice')
 
   - if profile == 'usager' && dossier.hide_info_with_accuse_lecture?
     = render Dossiers::AccuseLectureComponent.new(dossier: dossier)
 
   - else
     - if dossier.justificatif_motivation.attached?
-      = render Dossiers::RowShowComponent.new(label: "Justificatif") do |c|
-        - c.with_value do
-          .action
-            = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
+      .fr-mb-2w
+        %span.champ-label= t('views.users.dossiers.show.status_overview.justificatif')
+        = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
     - if dossier.motivation.present?
-      = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
-        - c.with_value do
-          = render SimpleFormatComponent.new(dossier.motivation, allow_a: false)
+      %span.champ-label= t('views.users.dossiers.show.status_overview.motivation')
+      %blockquote.fr-m-0
+        %strong= simple_format(dossier.motivation)
 
     - if dossier.attestation.present? && dossier.attestation.pdf.attached?
-      = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
+      = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.show.status_overview.attestation')) do |c|
         - c.with_value do
           = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))

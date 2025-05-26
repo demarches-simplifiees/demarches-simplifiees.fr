@@ -369,6 +369,11 @@ fr:
         form:
           submitted_at: "Déposé le %{datetime}"
           updated_at: "Modifié le %{datetime}"
+          switched_to_instruction_at: "Passé en instruction le %{datetime}"
+          revert_to_submitted_at: "Correction demandée le %{datetime}"
+          acceptee_at: "Accepté le %{datetime}"
+          refuse_at: "Refusé le %{datetime}"
+          closed_at: "Classé sans suite le %{datetime}"
           download_attestation: "Télécharger l’attestation"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
@@ -378,7 +383,8 @@ fr:
             write_message_placeholder: "Écrivez votre message ici"
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
-          en_construction: "Date de dépôt du dossier"
+          history: "Historique du dossier"
+          en_construction_notice: "Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier."
           requester_identity: "Identité du demandeur"
           mandataire_identity: "Identité du mandataire"
           requester_identity_updated_at: "modifiée le %{date}"
@@ -493,6 +499,9 @@ fr:
             delay_text_sva_svr: "Vous aurez un retour de l’administration au plus tard le %{date}."
             status_completed: terminé
             use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
+            motivation: "Motivation :"
+            attestation: "Attestation :"
+            justificatif: "Justificatif :"
             acceptee_html: "Votre dossier a été <strong>accepté</strong>."
             accepte_motivation: "Motif de l’acceptation"
             accepte_attestation: "Télécharger l’attestation"
