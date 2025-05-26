@@ -26,8 +26,8 @@
     - if @search_terms.blank?
       - if [@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_close_to_expiration, @dossiers_supprimes, @dossier_transferes].any?(&:present?)
         - cache([I18n.locale, current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
-          %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
-            %ul.fr-tabs__list{ role: 'tablist' }
+          %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.dossiers_menu') }
+            %ul.fr-tabs__list
               - if @user_dossiers.present?
                 = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
                   dossiers_path(statut: 'en-cours', procedure_id: params[:procedure_id]),

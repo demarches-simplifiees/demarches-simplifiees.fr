@@ -13,8 +13,8 @@
 
 
 
-        %nav.fr-tabs
-          %ul.fr-tabs__list{ role: 'tablist' }
+        %nav.fr-tabs{ role: 'navigation', 'aria-label': "Menu des avis" }
+          %ul.fr-tabs__list
             = tab_item('avis à donner',
               procedure_expert_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
               active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
