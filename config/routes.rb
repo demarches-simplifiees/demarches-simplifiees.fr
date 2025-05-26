@@ -4,6 +4,10 @@ require 'sidekiq/cron/web'
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
+  # Health check endpoints for Kubernetes
+  get '/health/liveness' => 'health#liveness'
+  get '/health/startup' => 'health#startup'
+
   get '/saml/auth' => 'saml_idp#new'
   post '/saml/auth' => 'saml_idp#create'
   get '/saml/metadata' => 'saml_idp#show'
