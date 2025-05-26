@@ -5,7 +5,7 @@ RSpec.shared_examples 'the user can edit the submitted demande' do
     visit dossier_path(dossier)
 
     expect(page).to have_current_path(dossier_path(dossier))
-    click_on 'Demande'
+    click_on 'Votre dossier'
 
     expect(page).to have_current_path(demande_dossier_path(dossier))
     click_on 'Modifier le dossier', match: :first
@@ -15,7 +15,7 @@ RSpec.shared_examples 'the user can edit the submitted demande' do
 
     click_on 'Déposer les modifications'
     expect(page).to have_current_path(dossier_path(dossier))
-    click_on 'Demande'
+    click_on 'Votre dossier'
     expect(page).to have_current_path(demande_dossier_path(dossier))
 
     expect(page).to have_content('Nouveau texte')
@@ -30,7 +30,7 @@ RSpec.shared_examples 'the user can send messages to the instructeur' do
     visit dossier_path(dossier)
 
     expect(page).to have_current_path(dossier_path(dossier))
-    click_on 'Messagerie'
+    click_on 'Messagerie administration'
 
     expect(page).to have_current_path(messagerie_dossier_path(dossier))
     expect(page).to have_content(commentaire.body)

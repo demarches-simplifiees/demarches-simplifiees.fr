@@ -29,7 +29,7 @@ Pour cela, cliquez sur le bouton _« Modifier le dossier »_ depuis la liste d
 
 ![Image illustrant où cliquer pour modifier un dossier en construction {aria-hidden="true"}](faq/usager-edit-identity-construction-1.png)
 
-Après avoir cliqué sur l’onglet _« Demande »_, suivez le lien _« Modifier l’identité »_ comme ci-dessous :
+Après avoir cliqué sur l’onglet _« Votre dossier »_, suivez le lien _« Modifier l’identité »_ comme ci-dessous :
 
 ![Image montrant où modifier l’identité dans un dossier en construction {aria-hidden="true"}](faq/usager-edit-identity-construction-2.png)
 

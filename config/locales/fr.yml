@@ -481,9 +481,9 @@ fr:
           jdma_l2: Donnez-nous votre avis, cela ne prend que 2 minutes.
         show:
           header:
-            summary: "Résumé"
-            request: "Demande"
-            mailbox: "Messagerie"
+            summary: "Suivi de votre dossier"
+            request: "Votre dossier"
+            mailbox: "Messagerie administration"
             rendez_vous: "Rendez-vous"
             dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"

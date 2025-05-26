@@ -471,9 +471,9 @@ en:
           jdma_l2: Give us your feedback, it only takes 2 minutes.
         show:
           header:
-            summary: "Summary"
-            request: "Request"
-            mailbox: "Mailbox"
+            summary: "Follow-up on your file"
+            request: "Your file"
+            mailbox: "Administration messaging"
             rendez_vous: "Appointment"
             dossier_number: "File number %{dossier_id}"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
