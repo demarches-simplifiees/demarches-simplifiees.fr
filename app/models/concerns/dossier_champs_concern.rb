@@ -321,12 +321,13 @@ module DossierChampsConcern
   def champ_upsert_by!(type_de_champ, row_id)
     check_valid_row_id_on_write?(type_de_champ, row_id)
 
-    row_id_or_null = row_id || Champ::NULL_ROW_ID
+    # FIXME: This is a temporary on-demand migration. It will be removed once the full migration is over.
+    Champ.where(dossier_id: id, row_id: Champ::NULL_ROW_ID).update_all(row_id: nil)
 
     champ = Dossier.no_touching do
       champs
         .create_with(**type_de_champ.params_for_champ)
-        .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id: row_id_or_null, stream:)
+        .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id:, stream:)
     end
 
     # Needed when a revision change the champ type in this case, we reset the champ data
@@ -334,7 +335,7 @@ module DossierChampsConcern
       champ = champ.becomes!(type_de_champ.champ_class)
       champ.assign_attributes(value: nil, value_json: nil, external_id: nil, data: nil)
     elsif stream != Champ::MAIN_STREAM && champ.previously_new_record?
-      main_stream_champ = champs.find_by(stable_id: type_de_champ.stable_id, row_id: row_id_or_null, stream: Champ::MAIN_STREAM)
+      main_stream_champ = champs.find_by(stable_id: type_de_champ.stable_id, row_id:, stream: Champ::MAIN_STREAM)
       champ.clone_value_from(main_stream_champ) if main_stream_champ.present?
     end
 
