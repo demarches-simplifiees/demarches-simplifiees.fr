@@ -495,7 +495,7 @@ en:
             use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
             motivation: "Motivation :"
             attestation: "Attestation :"
-            justificatif: "Justification :"
+            justificatif: "Justification of decision :"
             acceptee_html: "Your file had been <strong>accepted</strong>."
             accepte_motivation: "Reason"
             accepte_attestation: "Download the attestation"

@@ -505,7 +505,7 @@ fr:
             use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
             motivation: "Motivation :"
             attestation: "Attestation :"
-            justificatif: "Justificatif :"
+            justificatif: "Justificatif de décision :"
             acceptee_html: "Votre dossier a été <strong>accepté</strong>."
             accepte_motivation: "Motif de l’acceptation"
             accepte_attestation: "Télécharger l’attestation"
