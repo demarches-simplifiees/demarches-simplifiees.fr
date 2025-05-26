@@ -1,6 +1,6 @@
 #header-bottom.fr-container
-  %nav.fr-tabs
-    %ul.fr-tabs__list{ role: 'tablist' }
+  %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.instructeurs.dossiers.dossier_menu', id: dossier.id) }
+    %ul.fr-tabs__list
       - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.request'),

@@ -2,8 +2,8 @@
   .fr-container
     %h1.page-title Prévisualisation de la démarche «&nbsp;#{@dossier.procedure.libelle}&nbsp;»
 
-    %nav.fr-tabs
-      %ul.fr-tabs__list{ role: 'tablist' }
+    %nav.fr-tabs{ role: 'navigation', 'aria-label': "Menu de la démarche" }
+      %ul.fr-tabs__list
         = tab_item('le dossier',
           apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),
           active: @tab == 'dossier')

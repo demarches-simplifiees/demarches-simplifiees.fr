@@ -399,7 +399,10 @@ fr:
       groupe_gestionnaires:
         delete: Supprimer
     instructeurs:
+      procedure_menu: "Menu des dossiers de la démarche numero %{id}"
+      procedures_menu: "Menu des démarches"
       dossiers:
+        dossier_menu: "Menu d’instruction du dossier numéro %{id}"
         tab_steps:
           request: Demande
           private_annotations: Annotations privées
@@ -484,7 +487,6 @@ fr:
             request: "Demande"
             mailbox: "Messagerie"
             rendez_vous: "Rendez-vous"
-            dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
@@ -529,7 +531,8 @@ fr:
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »
-        secondary_menu: Menu secondaire
+        dossiers_menu: Menu des dossiers
+        dossier_menu: "Menu du dossier numéro %{id}"
         index:
           dossiers: "Mes dossiers"
         dossiers_list:

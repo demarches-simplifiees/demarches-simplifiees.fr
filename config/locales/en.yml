@@ -393,7 +393,10 @@ en:
       groupe_gestionnaires:
         delete: Delete
     instructeurs:
+      procedure_menu: "Procedure files menu number %{id}"
+      procedures_menu: "Procedures menu"
       dossiers:
+        dossier_menu: "Instruction menu of file n. %{id}"
         tab_steps:
           request: Request
           private_annotations: Private annotations
@@ -474,7 +477,6 @@ en:
             request: "Request"
             mailbox: "Mailbox"
             rendez_vous: "Appointment"
-            dossier_number: "File number %{dossier_id}"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
@@ -519,7 +521,8 @@ en:
           simple: Search
           result_term_title: Search result for « %{search_terms} »
           result_procedure_title: and procedure « %{procedure_libelle} »
-        secondary_menu: Secondary menu
+        dossiers_menu: Files menu
+        dossier_menu: "File n.%{id} menu"
         index:
           dossiers: "My files"
         dossiers_list:
