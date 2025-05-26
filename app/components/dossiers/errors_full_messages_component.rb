@@ -14,7 +14,7 @@ class Dossiers::ErrorsFullMessagesComponent < ApplicationComponent
   end
 
   def to_error_descriptor(error)
-    model = error.inner_error.base
+    model = error.is_a?(ActiveModel::NestedError) ? error.inner_error.base : error.base
 
     if model.respond_to?(:libelle) # a Champ or something acting as a Champ
       ErrorDescriptor.new("##{model.focusable_input_id}", model.libelle.truncate(200), error.message)
