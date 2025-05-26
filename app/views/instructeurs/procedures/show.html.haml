@@ -1,3 +1,5 @@
+= render partial: "notification_notice"
+
 - content_for(:title, "#{@procedure.libelle}")
 
 #procedure-show
@@ -104,8 +106,11 @@
                           - else
                             %a.fr-link.relative{ href: path }
                               = dossier.id
-                              - if @not_archived_notifications_dossier_ids.include?(dossier.id)
-                                %span.notifications{ 'aria-label': 'notifications' }
+                            - if @notifications[dossier.id].present?
+                              - @notifications[dossier.id].each do |notif|
+                                .fr-mt-1v
+                                  = tag_notification(notif)
+
 
                         - @procedure_presentation.displayed_columns.each do |column|
                           %td.fr-cell--multiline

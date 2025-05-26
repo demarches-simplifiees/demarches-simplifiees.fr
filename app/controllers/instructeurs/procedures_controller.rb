@@ -128,7 +128,6 @@ module Instructeurs
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
       @has_en_cours_notifications = notifications[:en_cours].present?
       @has_termine_notifications = notifications[:termines].present?
-      @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
       @has_export_notification = notify_exports?
       @last_export = last_export_for(statut)
