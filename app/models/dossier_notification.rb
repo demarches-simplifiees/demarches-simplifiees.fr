@@ -123,7 +123,6 @@ class DossierNotification < ApplicationRecord
       'a-suivre' => dossiers.by_statut('a-suivre'),
       'suivis' => dossiers.by_statut('suivis', instructeur:),
       'traites' => dossiers.by_statut('traites'),
-      'expirants' => dossiers.by_statut('expirant'),
       'archives' => dossiers.by_statut('archives'),
       'supprimes' => dossiers.by_statut('supprimes')
     }
