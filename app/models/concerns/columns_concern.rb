@@ -119,6 +119,8 @@ module ColumnsConcern
 
     def dossier_labels_column = dossier_col(table: 'dossier_labels', column: 'label_id', type: :enum, options_for_select: labels.map { [_1.name, _1.id] })
 
+    def traitements_email_column = dossier_col(table: 'traitements', column: 'instructeur_email', filterable: true, displayable: false)
+
     def procedure_chorus_columns
       ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
         .map { |column| dossier_col(table: 'procedure', column:, displayable: false, filterable: false) }
@@ -161,7 +163,8 @@ module ColumnsConcern
         dossier_col(table: 'avis', column: 'question_answer', filterable: false),
         user_france_connected_column,
         dossier_labels_column,
-        dossier_notifications_column
+        dossier_notifications_column,
+        traitements_email_column
       ]
     end
 

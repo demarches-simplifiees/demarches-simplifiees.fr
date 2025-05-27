@@ -36,6 +36,8 @@ en:
             centre_de_cout: Centre De Coût
           followers_instructeurs:
             email: Email instructeur
+          traitements:
+            instructeur_email: Email address of an agent who took part in the instruction of the file
           groupe_instructeur:
             id: Team
             label: Team
