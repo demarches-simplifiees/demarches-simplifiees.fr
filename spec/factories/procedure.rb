@@ -16,6 +16,7 @@ FactoryBot.define do
     lien_site_web { "https://mon-site.gouv" }
     declarative_with_state { nil }
     sva_svr { {} }
+    no_gender { true }
 
     groupe_instructeurs { [association(:groupe_instructeur, :default, procedure: instance, strategy: :build)] }
     administrateurs { [administrateur] }

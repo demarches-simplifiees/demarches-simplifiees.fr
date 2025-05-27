@@ -272,7 +272,6 @@ describe 'The routing with rules', js: true do
     visit commencer_path(path: procedure.reload.path)
     click_on 'Commencer la démarche'
 
-    find('label', text: 'Monsieur').click
     fill_in('Prénom', with: 'prenom', visible: true)
     fill_in('Nom', with: 'Nom', visible: true)
     within "#identite-form" do
