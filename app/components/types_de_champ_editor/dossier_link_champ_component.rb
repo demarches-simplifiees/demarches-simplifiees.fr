@@ -9,9 +9,10 @@ class TypesDeChampEditor::DossierLinkChampComponent < TypesDeChampEditor::BaseCh
   def react_props
     {
       id: dom_id(@type_de_champ, :procedures),
-      label: "Démarches concernées",
+      label: "Sélectionnez la ou les démarches concernées",
       items: @procedures.map { |procedure| ["N°#{procedure.id} - #{procedure.libelle}", procedure.id] },
-      name: @form.field_name(:procedures, multiple: true)
+      name: @form.field_name(:procedures, multiple: true),
+      selected_keys: @type_de_champ.procedures.map { |procedure| procedure.id.to_s }
     }
   end
 end

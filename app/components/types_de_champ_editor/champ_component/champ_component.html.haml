@@ -208,8 +208,15 @@
             = render TypesDeChampEditor::ChampFormattedSimpleComponent.new(type_de_champ:, form:, procedure:)
             = render TypesDeChampEditor::ChampFormattedAdvancedComponent.new(type_de_champ:, form:, procedure:)
 
-          - if type_de_champ.dossier_link?
-            = render TypesDeChampEditor::DossierLinkChampComponent.new(procedures: current_administrateur.procedures, type_de_champ: type_de_champ, form: form, procedure: procedure)
+          - if type_de_champ.dossier_link? && current_administrateur.procedures.count > 1
+            .flex.column.justify-start.flex-grow
+              .fr-toggle
+                = form.check_box :limiter_procedures, id: dom_id(type_de_champ, :limiter_procedures), class: 'fr-toggle__input'
+                = form.label :limiter_procedures, "Limiter à certaines démarches", for: dom_id(type_de_champ, :limiter_procedures), class: 'fr-toggle__label fr-label'
+
+              - if form.object.limiter_procedures?
+                .cell.fr-mt-1w  
+                  = render TypesDeChampEditor::DossierLinkChampComponent.new(procedures: current_administrateur.procedures, type_de_champ: type_de_champ, form: form, procedure: procedure)
 
     - if type_de_champ.referentiel?
       = render(TypesDeChampEditor::InfoReferentielComponent.new(procedure:, type_de_champ:))

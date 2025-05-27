@@ -157,7 +157,8 @@ class TypeDeChamp < ApplicationRecord
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
                  :header_section_level,
-                 :referentiel_mapping
+                 :referentiel_mapping,
+                 :limiter_procedures
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
 
@@ -360,6 +361,10 @@ class TypeDeChamp < ApplicationRecord
 
   def collapsible_explanation_enabled?
     collapsible_explanation_enabled == "1"
+  end
+
+  def limiter_procedures?
+    limiter_procedures == "1"
   end
 
   def prefillable?
