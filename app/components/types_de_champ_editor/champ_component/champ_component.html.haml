@@ -197,6 +197,9 @@
             = render TypesDeChampEditor::ChampFormattedSimpleComponent.new(type_de_champ:, form:, procedure:)
             = render TypesDeChampEditor::ChampFormattedAdvancedComponent.new(type_de_champ:, form:, procedure:)
 
+          - if type_de_champ.dossier_link?
+            = render TypesDeChampEditor::DossierLinkChampComponent.new(procedures: current_administrateur.procedures, type_de_champ: type_de_champ, form: form, procedure: procedure)
+
     - if type_de_champ.referentiel?
       = render(TypesDeChampEditor::InfoReferentielComponent.new(procedure:, type_de_champ:))
 
@@ -208,7 +211,7 @@
             = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)
 
     = render(Conditions::ChampsConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
-
+    
     .flex.justify-between.section.footer
       .position.flex.align-center= (@coordinate.position + 1).to_s
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
