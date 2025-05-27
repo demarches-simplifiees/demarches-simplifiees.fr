@@ -268,7 +268,6 @@ describe 'fetch API Particulier Data', js: true do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        find('label', text: 'Monsieur').click
         within('.individual-infos') do
           fill_in('Prénom', with: 'prenom')
           fill_in('Nom', with: 'nom')
@@ -329,7 +328,6 @@ describe 'fetch API Particulier Data', js: true do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        find('label', text: 'Monsieur').click
         within('.individual-infos') do
           fill_in('Prénom', with: 'Georges')
           fill_in('Nom', with: 'Moustaki')
@@ -405,7 +403,6 @@ describe 'fetch API Particulier Data', js: true do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        find('label', text: 'Madame').click
         within('.individual-infos') do
           fill_in('Prénom', with: 'Angela Claire Louise')
           fill_in('Nom', with: 'Dubois')
@@ -471,7 +468,6 @@ describe 'fetch API Particulier Data', js: true do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        find('label', text: 'Madame').click
         within('.individual-infos') do
           fill_in('Prénom', with: 'Karine')
           fill_in('Nom', with: 'FERRI')

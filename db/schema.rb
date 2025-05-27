@@ -1041,6 +1041,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.text "monavis_embed"
+    t.boolean "no_gender", default: false, null: false
     t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"

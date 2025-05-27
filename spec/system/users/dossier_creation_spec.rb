@@ -23,7 +23,6 @@ describe 'Creating a new dossier:', js: true do
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
         expect(page).to have_title(libelle)
 
-        find('label', text: 'Monsieur').click
         fill_in('Prénom', with: 'prenom', visible: true)
         fill_in('Nom', with: 'nom', visible: true)
       end
@@ -66,8 +65,6 @@ describe 'Creating a new dossier:', js: true do
             fill_in('Nom', with: 'Doe')
           end
 
-          find('label', text: 'Monsieur').click
-
           within('.individual-infos') do
             fill_in('Prénom', with: 'prenom')
             fill_in('Nom', with: 'nom')
@@ -75,7 +72,10 @@ describe 'Creating a new dossier:', js: true do
 
           find('label', text: 'Par adresse électronique').click
           fill_in('dossier_individual_attributes_email', with: 'prenom.nom@mail.com')
-          find('label', text: 'Monsieur').click # force focus out
+          within('.individual-infos') do
+            find('label', text: 'Prénom').click # force focus out
+          end
+
           within "#identite-form" do
             within '.suspect-email' do
               expect(page).to have_content("L'adresse électronique semble erronée Vouliez-vous écrire : prenom.nom@gmail.com ? Oui Non")
@@ -96,7 +96,6 @@ describe 'Creating a new dossier:', js: true do
             fill_in('Nom', with: 'Doe')
           end
 
-          find('label', text: 'Monsieur').click
           within('.individual-infos') do
             fill_in('Prénom', with: 'prenom')
             fill_in('Nom', with: 'nom')

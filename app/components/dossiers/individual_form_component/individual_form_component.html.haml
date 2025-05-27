@@ -29,22 +29,23 @@
           - else
             = t('.self_title')
 
-      .fr-fieldset__element.fr-mb-0
-        %fieldset.fr-fieldset
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-            = t('activerecord.attributes.individual.gender')
-            = render EditableChamp::AsteriskMandatoryComponent.new
+      - unless @dossier.procedure.no_gender?
+        .fr-fieldset__element.fr-mb-0
+          %fieldset.fr-fieldset
+            %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+              = t('activerecord.attributes.individual.gender')
+              = render EditableChamp::AsteriskMandatoryComponent.new
 
-          .fr-fieldset__element
-            .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}", translate: "no"
-              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
-                = Individual.human_attribute_name('gender.female')
-          .fr-fieldset__element
-            .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}", translate: "no"
-              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
-                = Individual.human_attribute_name('gender.male')
+            .fr-fieldset__element
+              .fr-radio-group
+                = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}", translate: "no"
+                %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
+                  = Individual.human_attribute_name('gender.female')
+            .fr-fieldset__element
+              .fr-radio-group
+                = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}", translate: "no"
+                %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
+                  = Individual.human_attribute_name('gender.male')
       .fr-fieldset__element.fr-mb-0
         .fr-fieldset.width-100
           .fr-fieldset__element.fr-fieldset__element--short-text

@@ -104,7 +104,6 @@ describe 'Referentiel API:' do
     visit commencer_path(procedure.path)
     click_on("Commencer la démarche")
     expect(page).to have_content("Votre identité")
-    find('label', text: 'Madame').click
     fill_in("Prénom", with: "Jeanne")
     fill_in("Nom", with: "Dupont")
     within "#identite-form" do
