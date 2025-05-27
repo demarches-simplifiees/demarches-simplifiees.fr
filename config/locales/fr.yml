@@ -481,9 +481,9 @@ fr:
           jdma_l2: Donnez-nous votre avis, cela ne prend que 2 minutes.
         show:
           header:
-            summary: "Résumé"
-            request: "Demande"
-            mailbox: "Messagerie"
+            summary: "Suivi de votre dossier"
+            request: "Votre dossier"
+            mailbox: "Messagerie administration"
             rendez_vous: "Rendez-vous"
             dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
@@ -505,7 +505,7 @@ fr:
             use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
             motivation: "Motivation :"
             attestation: "Attestation :"
-            justificatif: "Justificatif :"
+            justificatif: "Justificatif de décision :"
             acceptee_html: "Votre dossier a été <strong>accepté</strong>."
             accepte_motivation: "Motif de l’acceptation"
             accepte_attestation: "Télécharger l’attestation"

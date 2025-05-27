@@ -17,7 +17,7 @@ Pour contacter les services en charge de votre démarche, vous pouvez :
 
     Cela vous permet de communiquer directement avec l’équipe en charge de votre dossier à travers la plateforme.
 
-    Pour cela, suivez le lien **« Messagerie »** depuis le dossier concerné, et envoyez-leur un message.
+    Pour cela, suivez le lien **« Messagerie administration »** depuis le dossier concerné, et envoyez-leur un message.
 
     ![Vue de l’interface de messagerie avec le service traitant un dossier {aria-hidden="true"}](faq/usager-messagerie.png)
 

@@ -471,9 +471,9 @@ en:
           jdma_l2: Give us your feedback, it only takes 2 minutes.
         show:
           header:
-            summary: "Summary"
-            request: "Request"
-            mailbox: "Mailbox"
+            summary: "Follow-up on your file"
+            request: "Your file"
+            mailbox: "Administration messaging"
             rendez_vous: "Appointment"
             dossier_number: "File number %{dossier_id}"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
@@ -495,7 +495,7 @@ en:
             use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
             motivation: "Motivation :"
             attestation: "Attestation :"
-            justificatif: "Justification :"
+            justificatif: "Justification of decision :"
             acceptee_html: "Your file had been <strong>accepted</strong>."
             accepte_motivation: "Reason"
             accepte_attestation: "Download the attestation"

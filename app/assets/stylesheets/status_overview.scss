@@ -38,9 +38,20 @@
 
   blockquote::before {
     content: open-quote;
+    float: left;
+  }
+
+  blockquote > p:last-of-type {
+    display: inline;
+    margin-bottom: 0;
   }
 
   blockquote::after {
     content: close-quote;
+    display: inline;
+  }
+
+  blockquote > p:empty {
+    display: none;
   }
 }

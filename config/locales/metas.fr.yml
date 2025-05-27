@@ -12,11 +12,11 @@ fr:
         identite:
           title: "Nouveau dossier (%{procedure_label}) - Étape 1 : Identité"
         show:
-          title: "Résumé · Dossier %{number} (%{procedure_label})"
+          title: "Suivi de votre dossier · Dossier %{number} (%{procedure_label})"
         demande:
-          title: "Demande · Dossier %{number} (%{procedure_label})"
+          title: "Votre dossier · Dossier %{number} (%{procedure_label})"
         messagerie:
-          title: "Messagerie · Dossier %{number} (%{procedure_label})"
+          title: "Messagerie administration · Dossier %{number} (%{procedure_label})"
         brouillon:
           title: "Dossier %{number} en brouillon (%{procedure_label}) - Étape 2 : Formulaire"
         merci:

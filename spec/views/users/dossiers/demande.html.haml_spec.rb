@@ -18,7 +18,7 @@ describe 'users/dossiers/demande', type: :view do
   it 'renders the dossier infos' do
     expect(rendered).to have_text('Déposé le')
     expect(rendered).to have_text('Identité')
-    expect(rendered).to have_text('Demande')
+    expect(rendered).to have_text('Votre dossier')
   end
 
   context 'when the dossier is editable' do
