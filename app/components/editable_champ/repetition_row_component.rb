@@ -12,13 +12,17 @@ class EditableChamp::RepetitionRowComponent < ApplicationComponent
     @types_de_champ.size > 1
   end
 
-  def fieldset_legend_id
+  def parent_fieldset_legend_id
     "#{@type_de_champ.html_id}-legend"
+  end
+
+  def fieldset_legend_id
+    "#{@type_de_champ.html_id(@row_id)}-legend"
   end
 
   private
 
   def section_component
-    EditableChamp::SectionComponent.new(dossier: @dossier, types_de_champ: @types_de_champ, row_id:, row_number: has_fieldset? ? nil : @row_number, input_labelled_by_prefix: has_fieldset? ? fieldset_legend_id : nil)
+    EditableChamp::SectionComponent.new(dossier: @dossier, types_de_champ: @types_de_champ, row_id:, row_number: has_fieldset? ? nil : @row_number, aria_labelledby_prefix: has_fieldset? ? fieldset_legend_id : parent_fieldset_legend_id)
   end
 end
