@@ -1660,7 +1660,7 @@ describe API::V2::GraphqlController do
         it "should return an error" do
           expect(gql_data).to eq(dossierSupprimerLabel: {
             dossier: nil,
-            errors: [{ message: "Ce label n‘est pas associé au dossier" }]
+            errors: [{ message: "Ce label n’est pas associé au dossier" }]
           })
         end
       end

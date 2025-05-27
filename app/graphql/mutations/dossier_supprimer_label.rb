@@ -23,7 +23,7 @@ module Mutations
 
     def authorized?(dossier:, label:, **_args)
       if dossier.labels.exclude?(label)
-        [false, { errors: ["Ce label n‘est pas associé au dossier"] }]
+        [false, { errors: ["Ce label n’est pas associé au dossier"] }]
       else
         true
       end
