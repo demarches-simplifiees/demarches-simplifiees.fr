@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GeojsonService
-  def self.valid?(json)
+  def self.valid_schema?(json)
     schemer = JSONSchemer.schema(Rails.root.join('app/schemas/geojson.json'))
     if schemer.valid?(json)
       if ActiveRecord::Base.connection.execute("SELECT 1 as one FROM pg_extension WHERE extname = 'postgis';").count.zero?
@@ -26,6 +26,23 @@ class GeojsonService
     }
 
     polygon.to_json
+  def self.valid_wgs84_coordinates?(geometry)
+    coordinates = []
+    yield_each_coordinate_in_geojson(geometry.with_indifferent_access) { |coord| coordinates.push(coord) }
+    coordinates.all? { |coord| valid_wgs84_coord?(coord) }
+  rescue => e
+    Sentry.capture_exception(e, extra: { geometry: geometry })
+    false
+  end
+
+  # Check if the coordinates are valid WGS84 coordinates
+  # valid WGS84 coordinates are in the range of:
+  # longitude: -180 to 180
+  # latitude: -90 to 90
+  def self.valid_wgs84_coord?(coord)
+    return false unless coord.is_a?(Array) && coord.size >= 2
+    lng, lat = coord[0], coord[1]
+    lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90
   end
 
   # The following code is ported from turfjs
@@ -61,7 +78,7 @@ class GeojsonService
   def self.bbox(geojson)
     result = [-Float::INFINITY, -Float::INFINITY, Float::INFINITY, Float::INFINITY]
 
-    self.coord_each(geojson) do |coord|
+    self.yield_each_coordinate_in_geojson(geojson) do |coord|
       if result[3] > coord[1]
         result[3] = coord[1]
       end
@@ -79,41 +96,35 @@ class GeojsonService
     result
   end
 
-  def self.coord_each(geojson)
-    geometries = if geojson.fetch(:type) == "FeatureCollection"
-      geojson.fetch(:features).map { _1.fetch(:geometry) }
+  # Extrait la liste des géométries d'un GeoJSON (FeatureCollection, Feature, Geometry, etc.)
+  def self.geometries_from_geojson(geojson)
+    case geojson[:type]
+    when "FeatureCollection"
+      geojson[:features].map { |f| f[:geometry] }
+    when "Feature"
+      [geojson[:geometry]]
     else
-      [geojson.fetch(:geometry)]
+      [geojson]
     end.compact
+  end
 
+  # Itère sur toutes les coordonnées de toutes les géométries d'un GeoJSON
+  def self.yield_each_coordinate_in_geojson(geojson)
+    geometries = geometries_from_geojson(geojson)
     geometries.each do |geometry|
-      geometries = if geometry.fetch(:type) == "GeometryCollection"
-        geometry.fetch(:geometries)
-      else
-        [geometry]
-      end.compact
+      next unless geometry && geometry[:type]
 
-      geometries.each do |geometry|
-        case geometry.fetch(:type)
-        when "Point"
-          yield geometry.fetch(:coordinates).map(&:to_f)
-        when "LineString", "MultiPoint"
-          geometry.fetch(:coordinates).each { yield _1.map(&:to_f) }
-        when "Polygon", "MultiLineString"
-          geometry.fetch(:coordinates).each do |shapes|
-            shapes.each { yield _1.map(&:to_f) }
-          end
-        when "MultiPolygon"
-          geometry.fetch(:coordinates).each do |polygons|
-            polygons.each do |shapes|
-              shapes.each { yield _1.map(&:to_f) }
-            end
-          end
-        when "GeometryCollection"
-          geometry.fetch(:geometries).each do |geometry|
-            coord_each(geometry) { yield _1 }
-          end
-        end
+      case geometry[:type]
+      when "GeometryCollection"
+        geometry[:geometries].each { |g| yield_each_coordinate_in_geometry(g) { |c| yield c } }
+      when "Point"
+        yield geometry[:coordinates].map(&:to_f)
+      when "LineString", "MultiPoint"
+        geometry[:coordinates].each { |c| yield c.map(&:to_f) }
+      when "Polygon", "MultiLineString"
+        geometry[:coordinates].each { |shapes| shapes.each { |c| yield c.map(&:to_f) } }
+      when "MultiPolygon"
+        geometry[:coordinates].each { |polygons| polygons.each { |shapes| shapes.each { |c| yield c.map(&:to_f) } } }
       end
     end
   end

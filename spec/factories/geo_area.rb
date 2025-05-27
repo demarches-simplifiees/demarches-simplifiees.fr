@@ -156,5 +156,107 @@ FactoryBot.define do
         }
       end
     end
+
+    trait :point_invalid do
+      geometry do
+        {
+          "type": "Point",
+          "coordinates": [200, 100] # longitude > 180, latitude > 90
+        }
+      end
+    end
+
+    trait :linestring_invalid do
+      geometry do
+        {
+          "type": "LineString",
+          "coordinates": [
+            [2.4282521009445195, 46.53841410755813],
+            [181, 91] # invalid
+          ]
+        }
+      end
+    end
+
+    trait :multipoint_invalid do
+      geometry do
+        {
+          "type": "MultiPoint",
+          "coordinates": [
+            [2.4282521009445195, 46.53841410755813],
+            [181, 91] # invalid
+          ]
+        }
+      end
+    end
+
+    trait :polygon_invalid do
+      geometry do
+        {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [2.428439855575562, 46.538476837725796],
+              [2.4284291267395024, 46.53842148758162],
+              [200, 100], # invalid
+              [2.428439855575562, 46.538476837725796]
+            ]
+          ]
+        }
+      end
+    end
+
+    trait :multilinestring_invalid do
+      geometry do
+        {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [2.4282521009445195, 46.53841410755813],
+              [181, 91] # invalid
+            ]
+          ]
+        }
+      end
+    end
+
+    trait :multipolygon_invalid do
+      geometry do
+        {
+          "type": "MultiPolygon",
+          "coordinates": [
+            [
+              [
+                [2.428439855575562, 46.538476837725796],
+                [2.4284291267395024, 46.53842148758162],
+                [200, 100], # invalid
+                [2.428439855575562, 46.538476837725796]
+              ]
+            ]
+          ]
+        }
+      end
+    end
+
+    trait :geometrycollection_invalid do
+      geometry do
+        {
+          "type": "GeometryCollection",
+          "geometries": [
+            {
+              "type": "Point",
+              "coordinates": [200, 100] # invalid
+            },
+            {
+              "type": "LineString",
+              "coordinates": [
+                [2.4282521009445195, 46.53841410755813],
+                [181, 91] # invalid
+              ]
+            }
+          ]
+        }
+      end
+    end
   end
 end
