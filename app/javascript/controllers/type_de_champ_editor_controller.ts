@@ -59,7 +59,8 @@ export class TypeDeChampEditorController extends ApplicationController {
           this.requestSubmitForm(target.form);
         }
       },
-      changeable: (target) => this.save(target.form)
+      changeable: (target) => this.save(target.form),
+      hidden: (target) => this.save(target.form)
     });
   }
 
