@@ -12,20 +12,6 @@ class GeojsonService
     end
   end
 
-  def self.to_json_polygon_for_cadastre(coordinates)
-    polygon = {
-      geom: {
-        type: "Feature",
-        geometry: {
-          type: "Polygon",
-          coordinates: [
-            coordinates
-          ]
-        }
-      }
-    }
-
-    polygon.to_json
   def self.valid_wgs84_coordinates?(geometry)
     coordinates = []
     yield_each_coordinate_in_geojson(geometry.with_indifferent_access) { |coord| coordinates.push(coord) }
