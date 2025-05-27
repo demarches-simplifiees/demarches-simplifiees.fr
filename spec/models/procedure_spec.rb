@@ -955,6 +955,15 @@ describe Procedure do
       it { expect(subject.lien_notice).to be_nil }
     end
 
+    describe 'when a new attribute is added to Procedure' do
+      it 'the developer should choose what to do with it when cloning' do
+        # If this test fails, it is probably because you added an attribute to Procedure model.
+        # If so, you have to decide what to do with this new attribute when a procedure is cloned.
+        # More information in `app/models/concerns/procedure_clone_concern.rb`.
+        expect(procedure.attributes.keys.to_set).to eq(Procedure::MANAGED_ATTRIBUTES.to_set)
+      end
+    end
+
     describe 'procedure status is reset' do
       let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service, auto_archive_on: 3.weeks.from_now) }
 
