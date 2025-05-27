@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_27_121341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1040,6 +1040,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.text "monavis_embed"
+    t.boolean "no_gender", default: false, null: false
     t.boolean "opendata", default: true
     t.string "organisation"
     t.bigint "parent_procedure_id"
