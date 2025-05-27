@@ -65,3 +65,14 @@ Rails.application.configure do
   config.flipper.preload = -> (request) { !request.path.start_with?('/assets/', '/ping') }
   config.flipper.strict = Rails.env.development?
 end
+
+module Flipper
+  module Adapters
+    class ActiveRecord
+      class Gate < Model
+        validates :value, format: /\A[A-z]+;\d+\z/, if: -> { key == 'actors' }
+      end
+    end
+  end
+end
+# Cf https://github.com/flippercloud/flipper/blob/main/lib/flipper/adapters/active_record.rb
