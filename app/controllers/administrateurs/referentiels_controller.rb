@@ -30,12 +30,15 @@ module Administrateurs
     end
 
     def update_mapping_type_de_champ
-      flash = if @type_de_champ.update(type_de_champ_mapping_params)
-        { notice: "La configuration du mapping a bien été enregistrée" }
+      if @type_de_champ.update(type_de_champ_mapping_params)
+        redirect_to prefill_and_display_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration du mapping a bien été enregistrée" }
       else
-        { alert: "Une erreur est survenue" }
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { alert: "Une erreur est survenue" }
       end
-      redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash:
+    end
+
+    def prefill_and_display
+      render :prefill_and_display
     end
 
     private

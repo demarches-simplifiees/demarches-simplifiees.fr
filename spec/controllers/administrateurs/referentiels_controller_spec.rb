@@ -197,15 +197,56 @@ describe Administrateurs::ReferentielsController, type: :controller do
         }
       ]
     end
-    it 'update type de champ referentiel_mapping' do
-      expect do
-       patch :update_mapping_type_de_champ, params: {
-         procedure_id: procedure.id,
-         stable_id: stable_id,
-         id: referentiel.id,
-         type_de_champ: { referentiel_mapping: }
-       }
-     end.to change { type_de_champ.reload.referentiel_mapping }.from(nil).to(referentiel_mapping)
+
+    context 'when update succeeds' do
+      it 'updates type_de_champ referentiel_mapping and redirects to prefill_and_display' do
+        expect do
+          patch :update_mapping_type_de_champ, params: {
+            procedure_id: procedure.id,
+            stable_id: stable_id,
+            id: referentiel.id,
+            type_de_champ: { referentiel_mapping: referentiel_mapping }
+          }
+        end.to change { type_de_champ.reload.referentiel_mapping }.from(nil).to(referentiel_mapping)
+        expect(response).to redirect_to(prefill_and_display_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+        expect(flash[:notice]).to eq("La configuration du mapping a bien été enregistrée")
+      end
+    end
+
+    context 'when update fails' do
+      before do
+        allow_any_instance_of(TypeDeChamp).to receive(:update).and_return(false)
+      end
+      it 'redirects to mapping_type_de_champ_admin_procedure_referentiel_path with alert' do
+        patch :update_mapping_type_de_champ, params: {
+          procedure_id: procedure.id,
+          stable_id: stable_id,
+          id: referentiel.id,
+          type_de_champ: { referentiel_mapping: referentiel_mapping }
+        }
+        expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+        expect(flash[:alert]).to eq("Une erreur est survenue")
+      end
+    end
+  end
+
+  describe '#prefill_and_display' do
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+
+    context 'when admin not signed in' do
+      before { sign_out(procedure.administrateurs.first.user) }
+      it 'redirects to the login page' do
+        get :prefill_and_display, params: { procedure_id: procedure.id, stable_id: type_de_champ.stable_id, id: referentiel.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'when admin signed in' do
+      it 'returns http success' do
+        get :prefill_and_display, params: { procedure_id: procedure.id, stable_id: type_de_champ.stable_id, id: referentiel.id }
+        expect(response).to have_http_status(:success)
+      end
     end
   end
 end
