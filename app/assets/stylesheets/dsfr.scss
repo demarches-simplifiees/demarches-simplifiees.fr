@@ -206,3 +206,42 @@ input[type='radio'] {
     max-width: 27rem;
   }
 }
+
+// overide tab used as navigation in the header
+.fr-tabs__tab[aria-current='page']:not(:disabled) {
+  background-image:
+    linear-gradient(
+      0deg,
+      var(--border-active-blue-france),
+      var(--border-active-blue-france)
+    ),
+    linear-gradient(
+      0deg,
+      var(--border-default-grey),
+      var(--border-default-grey)
+    ),
+    linear-gradient(
+      0deg,
+      var(--border-default-grey),
+      var(--border-default-grey)
+    ),
+    linear-gradient(
+      0deg,
+      var(--border-default-grey),
+      var(--border-default-grey)
+    );
+  background-color: var(--background-default-grey);
+
+  --idle: transparent;
+  --hover: var(--background-default-grey-hover);
+  --active: var(--background-default-grey-active);
+  color: var(--text-active-blue-france);
+}
+
+.fr-tabs__tab[aria-current='page'] {
+  background-size:
+    100% 2px,
+    1px calc(100% - 1px),
+    1px calc(100% - 1px),
+    0 1px;
+}
