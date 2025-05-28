@@ -1,5 +1,5 @@
-- avis_statut = (@statut == Experts::AvisController::A_DONNER_STATUS) ? 'à donner' : 'rendus'
-- content_for(:title, "Avis #{avis_statut}")
+- avis_statut = (@statut == Experts::AvisController::A_DONNER_STATUS) ? t('.title.to_give') : t('.title.given')
+- content_for(:title, avis_statut)
 
 #procedure-show
   .sub-header
@@ -13,15 +13,15 @@
 
 
 
-        %nav.fr-tabs{ role: 'navigation', 'aria-label': "Menu des avis" }
+        %nav.fr-tabs{ role: 'navigation', 'aria-label': t('.tabs_aria_label') }
           %ul.fr-tabs__list
-            = tab_item('avis à donner',
+            = tab_item(t('.to_give'),
               procedure_expert_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
               active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
               badge: @avis_a_donner.count,
               notification: @avis_a_donner.any?)
 
-            = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
+            = tab_item(t('.given', count: @avis_donnes.count),
               procedure_expert_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
               active: @statut == Instructeurs::AvisController::DONNES_STATUS,
               badge: @avis_donnes.count)
@@ -35,9 +35,9 @@
             %table.dossiers-table
               %thead
                 %tr
-                  %th Nº dossier
-                  %th Demandeur
-                  %th Démarche
+                  %th= t('.th.dossier_number')
+                  %th= t('.th.applicant')
+                  %th= t('.th.procedure')
               %tbody
                 - @avis.each do |avis|
                   %tr
@@ -52,4 +52,4 @@
           = paginate @avis, views_prefix: 'shared'
         .fr-table__footer--end.flex-no-grow
   - else
-    %h2.empty-text Aucun avis
+    %h2.empty-text= t('.empty')

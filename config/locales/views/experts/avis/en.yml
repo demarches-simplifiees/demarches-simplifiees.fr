@@ -3,6 +3,19 @@ en:
     avis:
       procedure:
         management: Notification management of the procedure
+        to_give: "notices to give"
+        given:
+          one: "notice given"
+          other: "notices given"
+        tabs_aria_label: "Notices menu"
+        th:
+          dossier_number: "File number"
+          applicant: "Applicant"
+          procedure: "Procedure"
+        empty: "No notice"
+        title:
+          to_give: "Notices to give"
+          given: "Notices given"
       notification_settings:
         utils:
           positive: Yes
