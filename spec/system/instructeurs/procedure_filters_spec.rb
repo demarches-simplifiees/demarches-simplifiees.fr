@@ -221,8 +221,8 @@ describe "procedure filters" do
   def add_filter(column_name, filter_value, type: :text)
     click_on 'Sélectionner un filtre'
     wait_until { all("#search-filter").size == 1 }
-    find('#search-filter + button', wait: 5).click
-    find('.fr-menu__item', text: column_name, wait: 5).click
+    fill_in 'search-filter', with: column_name
+    select_combobox('Colonne', column_name)
     case type
     when :text
       fill_in "Valeur", with: filter_value

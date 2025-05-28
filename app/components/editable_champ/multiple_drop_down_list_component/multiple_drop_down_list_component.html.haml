@@ -8,8 +8,5 @@
             = b.text
 
 - else
-  - if @champ.exceed_options_threshold?
-    .fr-hint-text.fr-mt-0
-      = t('.exceed_options_threshold_hint')
   %react-fragment
     = render ReactComponent.new "ComboBox/MultiComboBox", **react_props
