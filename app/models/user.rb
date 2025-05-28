@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :merge_logs, dependent: :destroy
   has_many :requested_merge_from, class_name: 'User', dependent: :nullify, inverse_of: :requested_merge_into, foreign_key: :requested_merge_into_id
   has_many :france_connect_informations, dependent: :destroy
+  has_many :pro_connect_informations
 
   has_one :instructeur, dependent: :destroy
   has_one :administrateur, dependent: :destroy
