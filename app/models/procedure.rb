@@ -571,6 +571,10 @@ class Procedure < ApplicationRecord
     active_revision.revision_types_de_champ_public.filter(&:used_by_routing_rules?).map(&:libelle)
   end
 
+  def dossiers_count
+    dossiers.count
+  end
+
   def can_be_deleted_by_administrateur?
     brouillon? || dossiers.state_en_instruction.empty?
   end
