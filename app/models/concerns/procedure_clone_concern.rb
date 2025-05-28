@@ -3,6 +3,87 @@
 module ProcedureCloneConcern
   extend ActiveSupport::Concern
 
+  # What to do when an attribute is added to Procedure model ? Follow these steps:
+  # A) 3 options are available:
+  #   1) To keep the value in the cloned procedure -> nothing to do
+  #   2) To nullify or reset the value in the cloned procedure -> make the change in #initialize_clone_defaults
+  #   3) To let the admin choose to keep it or not -> add it to clone settings, following the example of commit 1138ab1 (PR #11644)
+  # B) Add the attribute to MANAGED_ATTRIBUTES to make the tests pass
+
+  MANAGED_ATTRIBUTES = [
+    'id',
+    'libelle',
+    'description',
+    'organisation',
+    'created_at',
+    'updated_at',
+    'euro_flag',
+    'lien_site_web',
+    'lien_notice',
+    'for_individual',
+    'auto_archive_on',
+    'published_at',
+    'hidden_at',
+    'whitelisted_at',
+    'ask_birthday',
+    'web_hook_url',
+    'cloned_from_library',
+    'parent_procedure_id',
+    'aasm_state',
+    'service_id',
+    'duree_conservation_dossiers_dans_ds',
+    'cadre_juridique',
+    'juridique_required',
+    'declarative_with_state',
+    'monavis_embed',
+    'closed_at',
+    'unpublished_at',
+    'canonical_procedure_id',
+    'api_entreprise_token',
+    'draft_revision_id',
+    'published_revision_id',
+    'allow_expert_review',
+    'experts_require_administrateur_invitation',
+    'encrypted_api_particulier_token',
+    'api_particulier_scopes',
+    'api_particulier_sources',
+    'routing_enabled',
+    'instructeurs_self_management_enabled',
+    'procedure_expires_when_termine_enabled',
+    'zone_id',
+    'lien_dpo',
+    'replaced_by_procedure_id',
+    'opendata',
+    'duree_conservation_etendue_par_ds',
+    'max_duree_conservation_dossiers_dans_ds',
+    'tags',
+    'piece_justificative_multiple',
+    'estimated_duration_visible',
+    'estimated_dossiers_count',
+    'dossiers_count_computed_at',
+    'allow_expert_messaging',
+    'defaut_groupe_instructeur_id',
+    'description_target_audience',
+    'description_pj',
+    'lien_notice_error',
+    'lien_dpo_error',
+    'sva_svr',
+    'hidden_at_as_template',
+    'chorus',
+    'template',
+    'closing_reason',
+    'closing_details',
+    'closing_notification_brouillon',
+    'closing_notification_en_cours',
+    'accuse_lecture',
+    'for_tiers_enabled',
+    'hide_instructeurs_email',
+    'api_entreprise_token_expires_at',
+    'rdv_enabled',
+    'routing_alert',
+    'api_particulier_token'
+  ]
+
   NEW_MAX_DUREE_CONSERVATION = Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
 
   def clone(options: nil, admin:)
