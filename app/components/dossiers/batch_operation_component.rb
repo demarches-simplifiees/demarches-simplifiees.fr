@@ -15,11 +15,11 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   def operations_for_dossier(dossier)
     case dossier.state
     when Dossier.states.fetch(:en_construction)
-      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:repousser_expiration)]
+      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:repousser_expiration), BatchOperation.operations.fetch(:create_avis)]
     when Dossier.states.fetch(:en_instruction)
       [
         BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser),
-        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction)
+        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:create_avis)
       ]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       [
@@ -142,6 +142,14 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.repasser_en_construction"),
               operation: BatchOperation.operations.fetch(:repasser_en_construction)
+            },
+
+            {
+              label: t(".operations.create_avis"),
+              operation: BatchOperation.operations.fetch(:create_avis),
+              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false" },
+              aria:  'modal-avis-batch'
+
             }
           ]
       }
@@ -162,7 +170,8 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       repasser_en_construction: 'fr-icon-draft-line',
       supprimer: 'fr-icon-delete-line',
       restaurer: 'fr-icon-refresh-line',
-      unfollow: 'fr-icon-star-fill'
+      unfollow: 'fr-icon-star-fill',
+      create_avis: 'fr-icon-questionnaire-line'
     }
   end
 end

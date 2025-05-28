@@ -13,6 +13,12 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
     cmp
   end
 
+  let(:user) { create(:user) }
+
+  before do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+  end
+
   subject { render_inline(component).to_html }
   context 'statut traite' do
     let(:statut) { 'traites' }
@@ -27,6 +33,7 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
     it { is_expected.to have_button('Autres actions multiples', disabled: true) }
     it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
     it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
+    it { is_expected.to have_button('Demander un avis externe', disabled: true) }
   end
 
   context 'statut a-suivre' do
