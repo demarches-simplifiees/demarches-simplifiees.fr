@@ -58,6 +58,14 @@ RSpec.describe Attachment::EditComponent, type: :component do
         end
       end
     end
+
+    describe "aria-labelledby" do
+      it "targets input_id" do
+        subject
+
+        expect(subject).to have_selector("input[aria-labelledby='#{champ.label_id}']")
+      end
+    end
   end
 
   context 'when there is an attachment' do

@@ -5,10 +5,10 @@
     %ul.fr-my-1v
       - each_attachment do |attachment, index|
         %li{ id: dom_id(attachment) }
-          = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, view_as:, user_can_destroy:, form_object_name:)
+          = render Attachment::EditComponent.new(champ:, attached_file:, attachment:, index:, view_as:, user_can_destroy:, form_object_name:, aria_labelledby:)
 
   %div{ id: empty_component_id, data: { turbo_force: :server } }
-    = render Attachment::EditComponent.new(champ:, as_multiple: champ.nil?, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:, form_object_name:, max: @max)
+    = render Attachment::EditComponent.new(champ:, as_multiple: champ.nil?, attached_file:, attachment: nil, index: attachments_count, user_can_destroy:, form_object_name:, max: @max, aria_labelledby:)
 
   // single poll and refresh message for all attachments
   = render Attachment::PendingPollComponent.new(attachments: attachments, poll_url:, context: poll_context)

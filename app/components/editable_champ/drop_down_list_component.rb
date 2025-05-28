@@ -41,7 +41,8 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
       placeholder: t('views.components.single_combobox'),
       selected_key: @champ.selected,
       items:,
-      empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil
+      empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil,
+      'aria-labelledby': labelledby_id
     )
   end
 
