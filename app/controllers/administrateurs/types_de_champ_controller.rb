@@ -124,7 +124,6 @@ module Administrateurs
       end
     end
 
-
     def nullify_referentiel
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
       type_de_champ.update!(referentiel_id: nil)
@@ -165,6 +164,8 @@ module Administrateurs
 
         ReferentielItem.insert_all(items_to_insert)
       end
+    end
+
     def simplify
       if params[:unstub]
         service = LLM::RevisionImproverService.new(@procedure)
