@@ -309,6 +309,7 @@ fr:
       new:
         title: "Creation de compte sur %{name}"
         subtitle: "Se créer un compte avec une adresse email"
+        social_title: "Rapide, simple et sûr, connectez-vous avec"
         email_label: 'Email'
         password_label: "Mot de passe"
         password_message: "Inscrivez un mot de passe"
