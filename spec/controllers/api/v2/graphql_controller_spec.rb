@@ -1288,7 +1288,6 @@ describe API::V2::GraphqlController do
 
         describe 'text' do
           let(:types_de_champ_private) { [{ type: :text }] }
-
           let(:query) do
             "mutation {
               dossierModifierAnnotationText(input: {
@@ -1322,6 +1321,7 @@ describe API::V2::GraphqlController do
         end
 
         describe 'piece_justificative' do
+          let(:types_de_champ_private) { [{ type: :piece_justificative }] }
           let(:query) do
             "mutation {
               dossierModifierAnnotationPieceJustificative(input: {
