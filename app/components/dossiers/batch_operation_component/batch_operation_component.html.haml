@@ -41,4 +41,4 @@
                     %span.fr-icon-arrow-right-line.fr-icon--lg>
                     Demander un avis externe
 
-                  = render partial: "shared/avis/form", locals: {url: create_batch_avis_instructeur_procedure_path(procedure_id: procedure.id), linked_dossiers: nil, must_be_confidentiel: false, avis: Avis.new, batch_action: true, procedure: procedure }
+                  = render partial: "shared/avis/form_wrapper", locals: {url: create_batch_avis_instructeur_procedure_path(procedure_id: procedure.id), linked_dossiers: nil, must_be_confidentiel: false, avis: Avis.new, batch_action: true, procedure: procedure, dossier_ids: @ids }

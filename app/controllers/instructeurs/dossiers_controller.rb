@@ -320,13 +320,53 @@ module Instructeurs
     end
 
     def create_batch_avis
-      batch = BatchOperation.safe_create!(batch_operation_params)
+      @procedure = Procedure.find(params[:procedure_id])
 
-      if batch.blank?
-        flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés"
+      emails = Array(avis_params[:emails]).map(&:strip).map(&:downcase).compact_blank
+      email_regex = StrictEmailValidator::REGEXP
+
+      invalid_emails = emails.filter { |email| email.present? && !(email =~ email_regex) }
+
+      avis = Avis.new(avis_params.except(:emails))
+      batch = nil
+
+      if emails.empty? || invalid_emails.any?
+        avis.errors.add(:email, "La liste d'emails est vide") if emails.empty?
+        invalid_emails.each { |email| avis.errors.add(:email, "Email invalide : #{email}") }
+      else
+        batch = BatchOperation.safe_create!(batch_operation_params)
       end
 
-      redirect_back(fallback_location: instructeur_procedure_url(procedure_id))
+      respond_to do |format|
+        format.turbo_stream do
+          if batch.blank? || avis.errors.any?
+            @ids = Array(params.dig(:batch_operation, :dossier_ids)).flat_map do |value|
+              value.is_a?(String) ? value.split(',') : value
+            end.compact_blank
+
+            render turbo_stream: turbo_stream.replace("modal-avis-batch-form", partial: "shared/avis/form_wrapper",
+              locals: {
+                url: create_batch_avis_instructeur_procedure_path(procedure_id: @procedure.id),
+                linked_dossiers: '',
+                must_be_confidentiel: false,
+                avis: avis,
+                batch_action: true,
+                procedure: @procedure,
+                dossier_ids: @ids
+              })
+          else
+            # render turbo_stream: turbo_stream.append(
+            #   "turbo-redirect",
+            #   tag.div(data: { controller: "redirect", redirect_url_value: instructeur_procedure_url(@procedure.id) })
+            # )
+          end
+        end
+
+        format.html do
+          flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
+        end
+      end
     end
 
     def update_annotations
