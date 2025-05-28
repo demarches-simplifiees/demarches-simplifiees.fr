@@ -70,6 +70,8 @@ module Mutations
         TypeDeChamp.type_champs.fetch(:datetime)
       when :integer_number
         TypeDeChamp.type_champs.fetch(:integer_number)
+      when :piece_justificative
+        TypeDeChamp.type_champs.fetch(:piece_justificative)
       when :drop_down_list
         TypeDeChamp.type_champs.fetch(:drop_down_list)
       end
