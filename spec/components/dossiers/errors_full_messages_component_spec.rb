@@ -7,10 +7,10 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
   let(:types_de_champ_public) { [type: :text] }
   let(:dossier) { create(:dossier, procedure:) }
   let(:component) { described_class.new(dossier:) }
-  subject { render_inline(component).to_html }
 
   describe 'render' do
     context 'when dossier does not have any error' do
+      subject { render_inline(component).to_html }
       it 'does not render' do
         expect(subject).to eq("")
       end
@@ -19,9 +19,10 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
     context 'when dossier have error' do
       let(:champ) { dossier.champs.first }
 
-      before do
+      subject do
         dossier.validate(:champs_public_value)
         dossier.check_mandatory_and_visible_champs
+        render_inline(component).to_html
       end
 
       context 'when champ is repetition' do
@@ -81,6 +82,16 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
       context 'when the champ is simple text' do
         it 'does render' do
           expect(subject).to have_link(champ.type_de_champ.libelle, href: "##{champ.focusable_input_id}")
+        end
+      end
+
+      context 'when champ is referentiel required and not filled' do
+        let(:referentiel) { create(:api_referentiel, :configured) }
+        let(:types_de_champ_public) { [{ type: :referentiel, referentiel:, mandatory: true }] }
+        before { champ.update(external_id: 'kthxbye') }
+
+        it 'focuses on focusable_input_id' do
+          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}", count: 1)
         end
       end
     end
