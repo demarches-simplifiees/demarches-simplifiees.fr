@@ -22,6 +22,8 @@ class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseCompone
       items: @champ.selected_items,
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
-      minimum_input_length: 2)
+      minimum_input_length: 2,
+      'aria-labelledby': labelledby_id
+      )
   end
 end
