@@ -4,6 +4,7 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
   include Dsfr::InputErrorable
 
   attr_reader :attribute
+  attr_reader :aria_labelledby_prefix
 
   def initialize(form:, champ:, seen_at: nil, opts: {}, aria_labelledby_prefix: nil)
     @form, @champ, @seen_at, @opts, @aria_labelledby_prefix = form, champ, seen_at, opts, aria_labelledby_prefix

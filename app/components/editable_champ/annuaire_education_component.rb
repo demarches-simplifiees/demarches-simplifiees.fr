@@ -14,6 +14,7 @@ class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBa
       loader: 'https://data.education.gouv.fr/api/records/1.0/search?dataset=fr-en-annuaire-education&rows=5',
       coerce: 'AnnuaireEducation',
       debounce: 500,
-      minimum_input_length: 5)
+      minimum_input_length: 5,
+      'aria-labelledby': labelledby_id)
   end
 end
