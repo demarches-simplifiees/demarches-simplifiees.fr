@@ -6,6 +6,14 @@ en:
           cadastre: Cadastral parcel
           quartier_prioritaire: Priority neighbourhood
           selection_utilisateur: User selection
+    errors:
+      models:
+        geo_area:
+          attributes:
+            geometry:
+              blank: "can't be blank"
+              invalid_geometry: "is not a valid GeoJSON"
+              invalid_crs: "contains invalid coordinates, please use the WGS84 coordinate system"
   geo_area:
     label:
       cadastre: "Parcel n° %{numero} - Sheet %{prefixe} %{section} - %{surface} m² - town %{commune}"

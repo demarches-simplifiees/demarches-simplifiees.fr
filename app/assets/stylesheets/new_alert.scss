@@ -27,6 +27,9 @@
   max-width: 700px;
   top: 10px;
   border-radius: 10px;
-  // Ensure fixed flash messages are above `position: absolute` elements (like maps)
-  z-index: $alert-z-index;
+  // highest z-index is modal with
+  //  .fr-modal__body { z-index: calc(var(--ground) + 2000); }
+  //  .fr-modal { z-index: 1750; }
+  // so we position the alert below the modal
+  z-index: calc(var(--ground) + 1250);
 }

@@ -51,12 +51,18 @@ RSpec.describe GeoArea, type: :model do
 
       context "nil" do
         let(:geo_area) { build(:geo_area, geometry: nil) }
-        it { expect(geo_area.errors).to have_key(:geometry) }
+        it do
+          expect(geo_area.errors).to have_key(:geometry)
+          expect(geo_area.errors[:geometry]).to include(I18n.t('activerecord.errors.models.geo_area.attributes.geometry.blank'))
+        end
       end
 
       context 'invalid point' do
         let(:geo_area) { build(:geo_area, :invalid_point, champ: nil) }
-        it { expect(geo_area.errors).to have_key(:geometry) }
+        it do
+          expect(geo_area.errors).to have_key(:geometry)
+          expect(geo_area.errors[:geometry]).to include(I18n.t('activerecord.errors.models.geo_area.attributes.geometry.invalid_crs'))
+        end
       end
 
       context 'invalid_right_hand_rule_polygon' do
@@ -66,6 +72,44 @@ RSpec.describe GeoArea, type: :model do
 
       context 'hourglass_polygon' do
         let(:geo_area) { build(:geo_area, :hourglass_polygon, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context 'point_invalid' do
+        let(:geo_area) { build(:geo_area, :point_invalid, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context 'linestring_invalid' do
+        let(:geo_area) { build(:geo_area, :linestring_invalid, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context 'multipoint_invalid' do
+        let(:geo_area) { build(:geo_area, :multipoint_invalid, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context 'polygon_invalid' do
+        let(:geo_area) { build(:geo_area, :polygon_invalid, champ: nil) }
+        it do
+          expect(geo_area.errors).to have_key(:geometry)
+          expect(geo_area.errors[:geometry]).to include(I18n.t('activerecord.errors.models.geo_area.attributes.geometry.invalid_crs'))
+        end
+      end
+
+      context 'multilinestring_invalid' do
+        let(:geo_area) { build(:geo_area, :multilinestring_invalid, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context 'multipolygon_invalid' do
+        let(:geo_area) { build(:geo_area, :multipolygon_invalid, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context 'geometrycollection_invalid' do
+        let(:geo_area) { build(:geo_area, :geometrycollection_invalid, champ: nil) }
         it { expect(geo_area.errors).to have_key(:geometry) }
       end
     end
