@@ -355,10 +355,13 @@ module Instructeurs
                 dossier_ids: @ids
               })
           else
-            # render turbo_stream: turbo_stream.append(
-            #   "turbo-redirect",
-            #   tag.div(data: { controller: "redirect", redirect_url_value: instructeur_procedure_url(@procedure.id) })
-            # )
+            render turbo_stream: turbo_stream.append(
+              "contenu",
+              partial: "shared/avis/redirect_and_close_modal",
+              locals: {
+                redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis')
+              }
+            )
           end
         end
 
