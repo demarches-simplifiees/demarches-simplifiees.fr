@@ -13,18 +13,19 @@ class Attachment::MultipleComponent < ApplicationComponent
   attr_reader :max
   attr_reader :view_as
   attr_reader :user_can_destroy
+  attr_reader :aria_labelledby
   alias user_can_destroy? user_can_destroy
 
   delegate :size, :empty?, to: :attachments, prefix: true
 
-  def initialize(champ: nil, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, max: nil)
+  def initialize(champ: nil, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, max: nil, aria_labelledby: nil)
     @champ = champ
     @attached_file = attached_file
     @form_object_name = form_object_name
     @view_as = view_as
     @user_can_destroy = user_can_destroy
     @max = max || DEFAULT_MAX_ATTACHMENTS
-
+    @aria_labelledby = aria_labelledby
     @attachments = attached_file.attachments || []
   end
 

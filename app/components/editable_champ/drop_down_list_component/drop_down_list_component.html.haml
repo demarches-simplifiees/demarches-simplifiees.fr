@@ -2,13 +2,13 @@
   .fr-fieldset__content
     - items.each do |value, option_id|
       .fr-radio-group
-        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no'
+        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no', aria: { labelledby: labelledby_id }
         %label.fr-label{ for: @champ.radio_id(option_id) }
           = value
 
     - if !@champ.mandatory?
       .fr-radio-group
-        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: @champ.radio_id(:blank)
+        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: @champ.radio_id(:blank), aria: { labelledby: labelledby_id}
         %label.fr-label{ for: @champ.radio_id(:blank) }
           Non renseigné
 

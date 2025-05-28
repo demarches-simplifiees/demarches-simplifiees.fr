@@ -1,4 +1,4 @@
-.fr-fieldset__element{ **fieldset_element_attributes }
+.fr-fieldset__element{ **fieldset_element_attributes, "data-type": champ_component.class.name }
   = content_tag((champ_component.dsfr_champ_container), html_options) do
     - if has_label?(@champ)
       = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at, row_number: @row_number
