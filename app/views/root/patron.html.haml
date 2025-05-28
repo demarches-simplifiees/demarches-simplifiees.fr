@@ -200,8 +200,8 @@
   .sub-header
     .container
       Titre
-      %nav.fr-tabs
-        %ul.fr-tabs__list{ role: 'navigation' }
+      %nav.fr-tabs{ role: 'navigation' }
+        %ul.fr-tabs__list
           = tab_item("Onglet actif", "#", active: true)
           = tab_item("Onglet inactif", "#")
           = tab_item("Onglet avec badge", "#", badge: 2)
