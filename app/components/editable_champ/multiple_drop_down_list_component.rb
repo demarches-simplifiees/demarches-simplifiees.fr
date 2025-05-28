@@ -18,7 +18,8 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
       name: @form.field_name(:value, multiple: true),
       selected_keys: @champ.selected_options,
       items:,
-      value_separator: false
+      value_separator: false,
+      'aria-labelledby': labelledby_id
     )
   end
 
