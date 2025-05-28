@@ -21,6 +21,7 @@ module Mutations
       end
 
       if annotation.validate(:champs_private_value) && annotation.save
+        ChampRevision.create_or_update_revision(annotation, instructeur.id)
         { annotation: }
       else
         { errors: annotation.errors.full_messages }
