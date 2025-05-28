@@ -31,66 +31,23 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     @dossier ||= @champ.blank? ? nil : Dossier.visible_by_administration.find_by(id: @champ.to_s)
   end
 
-  def dossier_options_for(champ)
-    type_champ = champ.type_de_champ
-    return [] unless type_champ
-
-    options = []
-
-    type_champ.procedures.each do |procedure|
-      dossiers = procedure.dossiers.select do |dossier|
-        dossier.user == current_user && !%w[brouillon supprimés].include?(dossier.state)
-      end
-      next if dossiers.empty?
-
-      options << {
-        value: "separator_#{procedure.id}",
-        label: "-- Démarche : #{procedure.libelle} --"
+  def dossier_options
+    dossiers = @champ.procedure.types_de_champ_for_tags.last.procedures.first.dossiers
+    dossiers.map do |dossier|
+      {
+        value: dossier.id.to_s,
+        label: dossier.id.to_s
       }
-
-      options.concat(dossiers.map do |dossier|
-        {
-          value: dossier.id.to_s,
-          label: "N° #{dossier.id} - déposé le #{dossier.depose_at.strftime('%d/%m/%Y')}"
-        }
-      end)
     end
-
-    options
   end
-
-
-
 
   def react_props
     {
-      items: dossier_options_for(@champ),
+      items: dossier_options,
       placeholder: "Sélectionnez un dossier",
       name: "dossier[champs_public_attributes][#{@champ.public_id}][value]",
       id: @champ.input_id,
-      class: "#{@champ.blank? ? '' : 'small-margin'}",
-        
+      class: "#{@champ.blank? ? '' : 'small-margin'}"
     }
-  end
-
-  private
-  def render_dossiers
-    type_champ = @champ.type_de_champ
-    return [] unless type_champ
-
-    type_champ.procedures.flat_map(&:dossiers)
-  end
-
-  def render_as_radios?
-    render_dossiers.size <= 5
-  end
-
-  def render_as_combobox?
-    render_dossiers.size >= 20
-  end
-
-  def contains_long_option?
-    max_length = 100
-    dossier_options_for(@champ).any? { |option| option[:label].size > max_length }
   end
 end
