@@ -211,7 +211,9 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_max_character_length", label: change.label, to: change.to)
-
+      - when :referentiel_url, :referentiel_mode, :referentiel_hint, :referentiel_test_data, :referentiel_mapping
+        - list.with_item do
+          = t(".update_referentiel.#{change.attribute}", label: change.label, to: change.to)
   - if @public_move_changes.present?
     - list.with_item do
       = t(".public.move", count: @public_move_changes.size)

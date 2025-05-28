@@ -537,7 +537,35 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.max_character_length,
           to_type_de_champ.max_character_length)
       end
+    elsif to_type_de_champ.referentiel?
+      compare_referentiel_changes(from_type_de_champ, to_type_de_champ).each do |change|
+        changes << change
+      end
     end
+    changes
+  end
+
+  def compare_referentiel_changes(from_type_de_champ, to_type_de_champ)
+    changes = []
+    from_referentiel = from_type_de_champ.referentiel
+    to_referentiel = to_type_de_champ.referentiel
+
+    [:url, :mode, :hint, :test_data].each do |field|
+      if from_referentiel&.send(field) != to_referentiel&.send(field)
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          "referentiel_#{field}".to_sym,
+          from_referentiel&.send(field),
+          to_referentiel&.send(field))
+      end
+    end
+
+    if from_type_de_champ.referentiel_mapping != to_type_de_champ.referentiel_mapping
+      changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+        :referentiel_mapping,
+        from_type_de_champ.referentiel_mapping,
+        to_type_de_champ.referentiel_mapping)
+    end
+
     changes
   end
 

@@ -94,6 +94,7 @@ fr:
               empty_csv: 'doit comporter au moins un fichier csv'
               inconsistent_header_section: "%{custom_message}"
               expression_reguliere_invalid: "est invalide, veuillez la corriger"
+              referentiel_not_ready: "n'est pas configuré"
             draft_types_de_champ_private:
               format: 'L’annotation privée %{message}'
               invalid_condition: "a une logique conditionnelle invalide"

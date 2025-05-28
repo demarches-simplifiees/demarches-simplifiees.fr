@@ -231,6 +231,7 @@ class Procedure < ApplicationRecord
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     'types_de_champ/formatted': true,
+    'types_de_champ/referentiel_ready': true,
     on: [:types_de_champ_public_editor, :publication]
 
   validates :draft_types_de_champ_private,
@@ -239,6 +240,7 @@ class Procedure < ApplicationRecord
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
     'types_de_champ/formatted': true,
+    'types_de_champ/referentiel_ready': true,
     on: [:types_de_champ_private_editor, :publication]
 
   validate :check_juridique, on: [:create, :publication]
