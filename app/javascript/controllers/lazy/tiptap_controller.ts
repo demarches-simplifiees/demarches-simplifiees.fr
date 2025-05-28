@@ -10,7 +10,8 @@ import { createEditor } from '../../shared/tiptap/editor';
 export class TiptapController extends ApplicationController {
   static targets = ['editor', 'input', 'button', 'tag'];
   static values = {
-    insertAfterTag: { type: String, default: '' }
+    insertAfterTag: { type: String, default: '' },
+    attributes: { type: Object, default: {} }
   };
 
   declare editorTarget: Element;
@@ -18,6 +19,7 @@ export class TiptapController extends ApplicationController {
   declare buttonTargets: HTMLButtonElement[];
   declare tagTargets: HTMLElement[];
   declare insertAfterTagValue: string;
+  declare attributesValue: Record<string, string>;
 
   #initializing = true;
   #editor?: Editor;
@@ -28,6 +30,7 @@ export class TiptapController extends ApplicationController {
       content: this.content,
       tags: this.tags,
       buttons: this.menuButtons,
+      attributes: { class: 'fr-input', ...this.attributesValue },
       onChange: ({ editor }) => {
         for (const button of this.buttonTargets) {
           const action = getAction(editor, button);

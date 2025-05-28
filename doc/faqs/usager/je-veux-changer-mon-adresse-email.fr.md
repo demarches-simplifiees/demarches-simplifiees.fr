@@ -22,10 +22,10 @@ Pour changer l’adresse email associée à votre compte, suivez les étapes sui
 
 1. [Connectez-vous](/users/sign_in) à votre compte sur %{application_name} ;
 2. Cliquez sur le menu contenant votre adresse email en haut à droite de la page, puis sur _« Voir mon profil »_, ou [suivez directement ce lien si vous êtes déjà connecté(e)](/profil).
-![Menu Usager avec lien Voir mon profil](faq/usager-dropdown.png)
+![Menu Usager avec lien Voir mon profil {aria-hidden="true"}](faq/usager-dropdown.png)
 
 3. Dans l’encadré _« Coordonnées »_, renseignez la nouvelle adresse email que vous souhaitez utiliser. Puis cliquez sur _« Changer mon adresse »_. **Attention** : Cette adresse ne doit pas être déjà utilisée par un autre compte sur %{application_name}.
-![Section Coordonées avec formulaire de modification d’email](faq/usager-edit-email.png)
+![Section Coordonées avec formulaire de modification d’email {aria-hidden="true"}](faq/usager-edit-email.png)
 
 4. Ouvrez la boîte email de votre nouvelle adresse, et cliquez sur le lien de confirmation que nous vous avons envoyé.
 

@@ -21,25 +21,25 @@ Pour appliquer un filtre à une liste de dossiers :
 4. Sélectionnez ensuite la valeur à filtrer.
 5. Cliquez enfin sur **« Ajouter le filtre »**.
 
-![Capture d’écran de l’interface de saisie d’un filtre](faq/instructeur-filtres-dropdown.png)
+![Capture d’écran de l’interface de saisie d’un filtre {aria-hidden="true"}](faq/instructeur-filtres-dropdown.png)
 
-![Capture d’écran de toutes les colonnes filtres](faq/instructeur-filtres-list.png)
+![Capture d’écran de toutes les colonnes filtres {aria-hidden="true"}](faq/instructeur-filtres-list.png)
 
 ## Appliquer plusieurs filtres
 
 Vous pouvez appliquer plusieurs filtres à une même liste. Quand vous appliquez des filtres sur des **types de champs différents**, les dossiers affichés sont ceux qui correspondent à **tous les filtres**.
 
-![Capture d’écran récapitulant une combinaison de filtres différents addifitifs](faq/instructeur-filtres-and.png)
+![Capture d’écran récapitulant une combinaison de filtres différents addifitifs {aria-hidden="true"}](faq/instructeur-filtres-and.png)
 
 Quand vous appliquez des filtres sur les **mêmes types de champs**, les dossiers affichés sont ceux qui correspondent à **l’une ou l’autre des valeurs**.
 
-![Capture d’écran récapitulant une combinaison de filtres sur une même colonne](faq/instructeur-filtres-and.png)
+![Capture d’écran récapitulant une combinaison de filtres sur une même colonne {aria-hidden="true"}](faq/instructeur-filtres-or.png)
 
 ## Appliquer un filtre à une date
 
 Pour appliquer un filtre sur une colonne de date, rentrez la date au format « JJ/MM/AAAA ».
 
-![Capture d’écran illustrant un filtre sur une date](faq/instructeur-filtres-date.png)
+![Capture d’écran illustrant un filtre sur une date {aria-hidden="true"}](faq/instructeur-filtres-date.png)
 
 ## Conseils sur les filtres
 
@@ -49,4 +49,4 @@ Pour appliquer un filtre sur une colonne de date, rentrez la date au format « J
 
 En complément, vous pouvez également utiliser le bouton **« Personnaliser le tableau »** afin d’avoir une idée des informations du dossier avant de l’instruire.
 
-![Capture d'écran de l’interface de personnalisation du tableau](faq/instructeur-dossiers-list-header.png)
+![Capture d'écran de l’interface de personnalisation du tableau {aria-hidden="true"}](faq/instructeur-dossiers-list-header.png)

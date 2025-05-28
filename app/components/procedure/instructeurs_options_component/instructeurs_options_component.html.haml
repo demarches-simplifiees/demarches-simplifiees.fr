@@ -24,8 +24,8 @@
       ROUTAGE_URL,
       title: t('.routage_doc.title'),
       **helpers.external_link_attributes)
-  - if @procedure.active_revision.routable_types_de_champ.none?
-    %p.fr-mt-2w= t('.routing_configuration_notice_2_html', path: champs_admin_procedure_path(@procedure))
+  - if @procedure.active_revision.conditionable_types_de_champ.none?
+    %p.fr-mt-2w= t('.routing_configuration_notice_2_html', path: champs_admin_procedure_path(@procedure), conditionable_types: TypeDeChamp.humanized_conditionable_types)
   - elsif @procedure.groupe_instructeurs.active.one?
     = link_to 'Configurer le routage', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn'
 

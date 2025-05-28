@@ -11,7 +11,7 @@ title: "Comment comprendre mon tableau de bord administrateur ?"
 
 Votre tableau de bord présente l'ensemble de vos démarches, classées en 4 catégories :
 
-![Capture d'écran du tableau de bord administrateur](faq/administrateur-procedures-list-header.png)
+![Capture d'écran du tableau de bord administrateur {aria-hidden="true"}](faq/administrateur-procedures-list-header.png)
 
 ## Publiées
 

@@ -1282,9 +1282,13 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierModifierAnnotation' do
-        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_annotations, administrateurs: [admin]) }
+        let(:procedure) do
+          create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin], types_de_champ_private:)
+        end
 
         describe 'text' do
+          let(:types_de_champ_private) { [{ type: :text }] }
+
           let(:query) do
             "mutation {
               dossierModifierAnnotationText(input: {
@@ -1371,6 +1375,8 @@ describe API::V2::GraphqlController do
         end
 
         describe 'checkbox' do
+          let(:types_de_champ_private) { [{ type: :checkbox }] }
+
           let(:value) { 'true' }
 
           let(:query) do
@@ -1421,6 +1427,7 @@ describe API::V2::GraphqlController do
         end
 
         describe 'yes_no' do
+          let(:types_de_champ_private) { [{ type: :yes_no }] }
           let(:value) { 'true' }
 
           let(:query) do
@@ -1471,6 +1478,8 @@ describe API::V2::GraphqlController do
         end
 
         describe 'date' do
+          let(:types_de_champ_private) { [{ type: :date }] }
+
           let(:query) do
             "mutation {
               dossierModifierAnnotationDate(input: {
@@ -1504,6 +1513,8 @@ describe API::V2::GraphqlController do
         end
 
         describe 'datetime' do
+          let(:types_de_champ_private) { [{ type: :datetime }] }
+
           let(:query) do
             "mutation {
               dossierModifierAnnotationDatetime(input: {
@@ -1536,7 +1547,55 @@ describe API::V2::GraphqlController do
           end
         end
 
+        describe 'drop_down_list' do
+          let(:drop_down_list_options) { ['bijour'] }
+          let(:types_de_champ_private) { [{ type: :drop_down_list, options: drop_down_list_options }] }
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationDropDownList(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'drop_down_list' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"#{value}\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            let(:value) { drop_down_list_options.first }
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDropDownList: {
+                annotation: {
+                  stringValue: dossier.reload.champs_private.find { |c| c.type_champ == 'drop_down_list' }.to_s
+                },
+                errors: nil
+              })
+            end
+          end
+          context "failure" do
+            let(:value) { drop_down_list_options.first.reverse }
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDropDownList: {
+                annotation: nil,
+                errors: [{ message: "doit être dans les options proposées" }]
+              })
+            end
+          end
+        end
+
         describe 'integer_number' do
+          let(:types_de_champ_private) { [{ type: :integer_number }] }
           let(:query) do
             "mutation {
               dossierModifierAnnotationIntegerNumber(input: {

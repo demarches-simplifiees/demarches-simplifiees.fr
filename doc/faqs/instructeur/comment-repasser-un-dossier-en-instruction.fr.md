@@ -9,7 +9,7 @@ title: "Comment repasser un dossier en instruction ?"
 
 # Comment repasser un dossier en instruction ?
 
-Une fois un dossier clôturé, vous avez la possibilité de le repasser en instruction, notamment si vous souhaitez que l’usager vous apporte des éléments complémentaires. 
+Une fois un dossier clôturé, vous avez la possibilité de le repasser en instruction, notamment si vous souhaitez que l’usager vous apporte des éléments complémentaires.
 
 Toutefois, **l’acceptation d’un dossier génère des droits pour l’usager**. De ce fait, **votre responsabilité peut être engagée en cas de retour sur des droits qui ont été octroyés**.
 

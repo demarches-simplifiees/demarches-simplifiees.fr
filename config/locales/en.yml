@@ -77,9 +77,7 @@ en:
   layouts:
     commencer:
       no_procedure:
-        line1: A simple tool
-        line2: to manage dematerialized
-        line3: administrative forms.
+        text: A simple tool to manage dematerialized administrative forms.
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
@@ -122,8 +120,8 @@ en:
         headquarters_value: "18 av. d'Ariane, 87280 Limoges"
     accessibility_statement:
       title: "Accessibility statement"
-      line_one_html: "DTI is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
-      line_two_html: "This accessibility statement applies to <a href=\"%{host}\">%{app_name}</a> website."
+      line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
+      line_two_html: "This accessibility statement applies to <a href=\"https://%{host}\">%{app_name}</a> website."
       compliance:
         title: "Compliance status"
         content_html: "The website Mes-Démarches is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
@@ -281,7 +279,7 @@ en:
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
           integer_number: 42
-          email: personne@fournisseur.fr
+          email: address@mail.com
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
@@ -620,7 +618,7 @@ en:
         password: 'Password'
         requested_merge_into: 'new email address'
         hints:
-          email: "Expected format : john.doe@example.com"
+          email: 'Expected format : address@mail.com'
       user:
         siret: 'TAHITI number'
         << : *default_attributes
@@ -661,7 +659,7 @@ en:
         not_a_phone: 'Invalid phone number'
         not_a_rna: 'Invalid RNA number'
         url: 'is not a valid link'
-        invalid_email_format: "is invalid. Please fill in a valid email ex: john.doe@exemple.fr"
+        invalid_email_format: 'is invalid. Please fill in a valid email ex: address@mail.com'
       models:
         attestation_template:
           attributes:
@@ -678,9 +676,9 @@ en:
             reset_password_token:
               invalid: ": is expired. Ask a new one"
             email:
-              blank: "is empty. Fill in the email"
-              invalid: "is invalid. Fill in a valid email address, example: john.doe@example.fr"
-              taken: "already in use. Fill in another email"
+              blank: 'is empty. Fill in the email'
+              invalid: 'is invalid. Fill in a valid email address, example: address@mail.com'
+              taken: 'already in use. Fill in another email'
             password:
               too_short: "is too short. Fill in a password with at least 8 characters"
               not_strong: "not strong enough. Fill in a stronger password"

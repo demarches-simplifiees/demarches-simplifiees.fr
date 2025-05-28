@@ -614,9 +614,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_091043) do
   create_table "export_templates", force: :cascade do |t|
     t.jsonb "content", default: {}
     t.datetime "created_at", null: false
+    t.jsonb "dossier_folder", null: false
+    t.jsonb "export_pdf", null: false
     t.bigint "groupe_instructeur_id", null: false
     t.string "kind", null: false
     t.string "name", null: false
+    t.jsonb "pjs", default: [], null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["groupe_instructeur_id"], name: "index_export_templates_on_groupe_instructeur_id"
   end

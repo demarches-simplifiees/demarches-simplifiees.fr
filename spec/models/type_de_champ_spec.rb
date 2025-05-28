@@ -302,4 +302,12 @@ describe TypeDeChamp do
     it { expect(create(:type_de_champ, :header_section, libelle: " 2.3 Test").libelle).to eq("2.3 Test") }
     it { expect(create(:type_de_champ, libelle: " fix me ").libelle).to eq("fix me") }
   end
+
+  describe '#safe_filename' do
+    subject { build(:type_de_champ, libelle:).libelle_as_filename }
+
+    let(:libelle) { "  #/🐉 1 très  intéressant Bilan " }
+
+    it { is_expected.to eq("1-tres-interessant-bilan") }
+  end
 end

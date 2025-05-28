@@ -817,7 +817,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq(["emaila.com : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"]) }
+        it { expect(flash.alert).to eq(["emaila.com : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com"]) }
         it { expect { subject }.not_to change(Avis, :count) }
         it { expect(dossier.last_avis_updated_at).to eq(nil) }
       end
@@ -839,7 +839,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"]) }
+        it { expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com"]) }
         it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
         it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
@@ -1477,25 +1477,37 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#pieces_jointes' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs:) }
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
-    let(:path) { 'spec/fixtures/files/logo_test_procedure.png' }
+    let(:logo_path) { 'spec/fixtures/files/logo_test_procedure.png' }
+    let(:rib_path) { 'spec/fixtures/files/RIB.pdf' }
+    let(:commentaire) { create(:commentaire, dossier: dossier) }
 
     before do
       dossier.champs.first.piece_justificative_file.attach(
-        io: File.open(path),
+        io: File.open(logo_path),
         filename: "logo_test_procedure.png",
         content_type: "image/png",
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
+
+      commentaire.piece_jointe.attach(
+        io: File.open(rib_path),
+        filename: "RIB.pdf",
+        content_type: "application/pdf",
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+
       get :pieces_jointes, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id
       }
     end
 
-    it do
+    it 'returns pieces jointes from champs and from messagerie' do
       expect(response.body).to include('Télécharger le fichier toto.txt')
       expect(response.body).to include('Télécharger le fichier logo_test_procedure.png')
+      expect(response.body).to include('Télécharger le fichier RIB.pdf')
       expect(response.body).to include('Visualiser')
+      expect(assigns(:attachments_and_libelles).count).to eq 3
     end
   end
 end

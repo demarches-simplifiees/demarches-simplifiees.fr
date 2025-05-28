@@ -20,6 +20,7 @@ class Attachment::EditComponent < ApplicationComponent
     @user_can_replace = user_can_replace
     @as_multiple = as_multiple
     @auto_attach_url = auto_attach_url
+
     # Adaptation pour la gestion des pièces jointes multiples
     @attachments = attachments.presence || (kwargs.key?(:attachment) ? [kwargs.delete(:attachment)] : [])
     @attachments << attached_file.attachment if attached_file.respond_to?(:attachment) && @attachments.empty?
@@ -55,7 +56,11 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def destroy_attachment_path
-    attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id)
+    if champ.present?
+      attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id)
+    else
+      attachment_path(auto_attach_url: @auto_attach_url, view_as: @view_as, direct_upload: @direct_upload)
+    end
   end
 
   def attachment_input_class
@@ -66,7 +71,7 @@ class Attachment::EditComponent < ApplicationComponent
     track_issue_with_missing_validators if missing_validators?
 
     options = {
-      class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true, "hidden": persisted?),
+      class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true),
       direct_upload: @direct_upload,
       id: input_id,
       aria: { describedby: champ&.describedby_id },
@@ -78,7 +83,7 @@ class Attachment::EditComponent < ApplicationComponent
 
     options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
     options[:multiple] = true if as_multiple?
-    options[:disabled] = true if @max && @index >= @max
+    options[:disabled] = true if (@max && @index >= @max) || persisted?
 
     options
   end
@@ -166,10 +171,10 @@ class Attachment::EditComponent < ApplicationComponent
   def input_id
     if champ.present?
       # There is always a single input by champ, its id must match the label "for" attribute.
-      return champ.input_id
+      champ.input_id
+    else
+      dom_id(@attached_file.record, attribute_name)
     end
-
-    helpers.field_id(@form_object_name || @attached_file.record, attribute_name)
   end
 
   def auto_attach_url

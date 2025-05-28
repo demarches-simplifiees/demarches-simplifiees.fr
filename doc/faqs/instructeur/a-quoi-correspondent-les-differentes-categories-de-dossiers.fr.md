@@ -20,4 +20,4 @@ Pour chaque démarche, les dossiers sont répartis dans plusieurs onglets :
 
 Notez qu’**un dossier peut être suivi par plusieurs instructeurs**. Vous pourrez donc retrouver les dossiers que vous ne suivez pas dans l’onglet **au total**. La somme des onglets *à suivre*, *suivis* et *traités* n’est donc pas nécessairement égale au nombre affiché *au total*.
 
-![Différents onglets répartissant les dossiers d’une démarche.](faq/instructeur-procedure-show.png)
+![Différents onglets répartissant les dossiers d’une démarche {aria-hidden="true"}](faq/instructeur-procedure-show.png)

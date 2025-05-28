@@ -33,6 +33,7 @@ export function createEditor({
   content,
   tags,
   buttons,
+  attributes,
   onChange
 }: {
   editorElement: Element;
@@ -40,8 +41,15 @@ export function createEditor({
   tags: TagSchema[];
   buttons: string[];
   onChange(change: { editor: Editor }): void;
+  attributes?: Record<string, string>;
 }): Editor {
-  const options = getEditorOptions(editorElement, tags, buttons, content);
+  const options = getEditorOptions(
+    editorElement,
+    tags,
+    buttons,
+    content,
+    attributes
+  );
   const editor = new Editor(options);
   editor.on('transaction', onChange);
   return editor;
@@ -51,7 +59,8 @@ function getEditorOptions(
   element: Element,
   tags: TagSchema[],
   actions: string[],
-  content?: JSONContent
+  content?: JSONContent,
+  attributes?: Record<string, string>
 ): Partial<EditorOptions> {
   const extensions: Extensions = [];
   for (const action of actions) {
@@ -123,7 +132,7 @@ function getEditorOptions(
   return {
     element,
     content,
-    editorProps: { attributes: { class: 'fr-input' } },
+    editorProps: { attributes },
     extensions: [
       actions.includes('title') ? DocumentWithHeader : Document,
       Hystory,

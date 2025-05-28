@@ -599,7 +599,7 @@ module Users
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
-      elsif action_name == 'extend_conservation_and_restore'
+      elsif action_name == 'extend_conservation_and_restore' || (action_name == 'show' && request.format.pdf?)
         Dossier.visible_by_user.or(Dossier.hidden_by_expired)
       else
         Dossier.visible_by_user

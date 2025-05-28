@@ -46,10 +46,10 @@ Pour compléter un dossier, [connectez-vous sur votre espace %{application_name}
 
 Pour commencer un nouveau dossier sur une démarche déjà réalisée, [connectez-vous](/users/sign_in) et cliquez sur **« Actions »** puis **« Commencer un autre dossier vide »**.
 
-![Image montrant le lien pour Commencer un autre dossier vide](faq/usager-dossier-actions-menu-start-new.png)
+![Image montrant le lien pour Commencer un autre dossier vide {aria-hidden="true"}](faq/usager-dossier-actions-menu-start-new.png)
 
 ### Si le bouton "Commencer un autre dossier vide" n’est pas affiché cela signifie que la démarche a été clôturée.
 
 Pour connaitre le nouveau lien vers la démarche en ligne, nous vous invitons à contacter le service en charge de la démarche. Vous trouverez les informations de contact en bas du formulaire dans la partie **« Poser une questions sur la démarche »** (en cliquant sur le numéro de dossier).
 
-![Image montrant comment trouver les informations de contact d’une démarche](faq/usager-procedure-close-focus-contact.png)
+![Image montrant comment trouver les informations de contact d’une démarche {aria-hidden="true"}](faq/usager-procedure-close-focus-contact.png)

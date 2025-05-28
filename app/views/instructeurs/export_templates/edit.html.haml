@@ -4,4 +4,4 @@
 .fr-container
   %h1 Mise à jour modèle d'export
 
-  = render partial: 'form', locals: { form_url: instructeur_export_template_path(@procedure, @export_template), groupe_instructeurs: @groupe_instructeurs }
+  = render partial: 'form', locals: { export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }

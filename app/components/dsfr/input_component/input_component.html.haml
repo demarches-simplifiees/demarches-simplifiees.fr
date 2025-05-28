@@ -29,10 +29,14 @@
       %label.fr--password__checkbox.fr-label{ for: show_password_id }= t('.show_password.label')
 
   - if email?
-    .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion'}, aria: { live: 'off' } }
-      = render Dsfr::AlertComponent.new(title: t('.email_suggest.wanna_say'), state: :info, heading_level: :div) do |c|
+    .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion' }, tabindex: '-1' }
+      = render Dsfr::AlertComponent.new(title: t('.email_suggest.mistake'), state: '', extra_class_names: 'fr-alert--info' ) do |c|
         - c.with_body do
-          %p{ data: { "email-input-target": 'suggestion'} } exemple@gmail.com &nbsp;?
+          %p
+            = t('.email_suggest.wanna_say')
+            %span{ data: { "email-input-target": 'suggestion'} }
+              exemple@gmail.com
+            = "?"
           %p
             = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-mr-3w', data: { action: 'click->email-input#accept'} do
               = t('utils.yes')

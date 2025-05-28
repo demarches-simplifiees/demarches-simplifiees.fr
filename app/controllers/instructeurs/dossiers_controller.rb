@@ -372,9 +372,24 @@ module Instructeurs
 
     def pieces_jointes
       @dossier = current_instructeur.dossiers.find(params[:dossier_id])
-      @champs_with_pieces_jointes = @dossier
+
+      champs_attachments_and_libelles = @dossier
         .champs
         .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
+        .flat_map do |c|
+          c.piece_justificative_file.map do |attachment|
+            [attachment, c.libelle]
+          end
+        end
+
+      commentaires_attachments_and_libelles = @dossier
+        .commentaires
+        .map(&:piece_jointe)
+        .map(&:attachments)
+        .flatten
+        .map { [_1, 'Messagerie'] }
+
+      @attachments_and_libelles = champs_attachments_and_libelles + commentaires_attachments_and_libelles
     end
 
     private

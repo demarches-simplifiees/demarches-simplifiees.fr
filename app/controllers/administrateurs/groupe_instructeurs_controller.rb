@@ -25,6 +25,9 @@ module Administrateurs
 
     def options
       @procedure = procedure
+      if params[:state] == 'choix' && @procedure.active_revision.simple_routable_types_de_champ.none?
+        configurate_routage_custom
+      end
     end
 
     def ajout
@@ -41,7 +44,7 @@ module Administrateurs
       @procedure = procedure
       stable_id = params[:create_simple_routing][:stable_id].to_i
 
-      tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
+      tdc = @procedure.active_revision.simple_routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
       case tdc.type_champ
       when TypeDeChamp.type_champs.fetch(:departements)
@@ -90,16 +93,20 @@ module Administrateurs
 
     def wizard
       if params[:choice][:state] == 'routage_custom'
-        new_label = procedure.defaut_groupe_instructeur.label + ' bis'
-        procedure.groupe_instructeurs
-          .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
-
-        procedure.toggle_routing
-
-        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+        configurate_routage_custom
       elsif params[:choice][:state] == 'routage_simple'
         redirect_to simple_routing_admin_procedure_groupe_instructeurs_path
       end
+    end
+
+    def configurate_routage_custom
+      new_label = procedure.defaut_groupe_instructeur.label + ' bis'
+      procedure.groupe_instructeurs
+        .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+
+      procedure.toggle_routing
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def destroy_all_groups_but_defaut

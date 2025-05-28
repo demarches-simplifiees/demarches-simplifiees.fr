@@ -133,7 +133,13 @@ module Administrateurs
       @procedure.attestation_templates.build(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, activated: true, state:)
     end
 
-    def should_edit_draft? = !@procedure.brouillon?
+    def should_edit_draft?
+      if @procedure.brouillon?
+        @procedure.attestation_templates.v1.published.any?
+      else
+        true
+      end
+    end
 
     def editor_params
       params.required(:attestation_template).permit(:activated, :official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state)

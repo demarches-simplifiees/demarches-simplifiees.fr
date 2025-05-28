@@ -110,9 +110,10 @@ RSpec.describe Export, type: :model do
     end
 
     context 'with export template' do
-      let(:export_template) { build(:export_template) }
+      let(:export_template) { create(:export_template, groupe_instructeur: gi_1) }
+
       it 'creates new export' do
-        expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, export_template: export_template, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, export_template:, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end
     end

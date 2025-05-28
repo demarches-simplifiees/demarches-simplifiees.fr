@@ -1,0 +1,26 @@
+.card.no-list
+  = hidden_field_tag("#{prefix}[stable_id]", item.stable_id)
+
+  .fr-checkbox-group{ data: { controller: 'hide-target' } }
+    - id = sanitize_to_id("#{prefix}_#{item.stable_id}_enabled")
+    = check_box_tag "#{prefix}[enabled]", true, item.enabled?, id:, data: { 'hide-target_target': 'source' }
+    = label_tag id, libelle, class: 'fr-label'
+
+    %div{ class: class_names('fr-hidden': !item.enabled?), data: { hide_target_target: 'toHide' } }
+      %div{ data: { controller: 'hide-target tiptap-to-template'} }
+        .fr-mt-2w{ data: { hide_target_target: 'toHide' } }
+          %span Nom du fichier :
+          %span{ data: { 'tiptap-to-template_target': 'output'} }= sanitize(item.template_string)
+          .fr-mt-2w
+            %button.fr-btn.fr-btn--tertiary.fr-btn--sm{ type: 'button', data: { 'hide-target_target': 'source' } } Renommer le fichier
+
+        .fr-mt-2w.fr-hidden{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json, hide_target_target: 'toHide' } }
+          %span Renommer le fichier :
+          .fr-mt-2w.tiptap-editor{ data: { tiptap_target: 'editor' } }
+            = hidden_field_tag "#{prefix}[template]", item.template_json, data: { tiptap_target: 'input' }, id: nil
+
+          .fr-mt-2w
+            %span.fr-text--sm Cliquez sur les étiquettes que vous souhaitez intégrer au nom du fichier
+          .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.pj_tags })
+
+          = button_tag "Valider", type: 'button', class: 'fr-btn fr-mt-2w', data: { 'tiptap-to-template_target': 'trigger', 'hide-target_target': 'source'}

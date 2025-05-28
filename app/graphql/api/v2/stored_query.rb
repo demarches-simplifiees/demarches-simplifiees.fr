@@ -916,6 +916,20 @@ class API::V2::StoredQuery
     }
   }
 
+  mutation dossierModifierAnnotationDropDownList(
+    $input: DossierModifierAnnotationDropDownListInput!
+  ) {
+    dossierModifierAnnotationDropDownList(input: $input) {
+      annotation {
+        id
+        value: stringValue
+      }
+      errors {
+        message
+      }
+    }
+  }
+
   mutation dossierModifierAnnotationIntegerNumber(
     $input: DossierModifierAnnotationIntegerNumberInput!
   ) {

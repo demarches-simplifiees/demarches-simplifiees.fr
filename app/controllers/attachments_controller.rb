@@ -29,7 +29,11 @@ class AttachmentsController < ApplicationController
 
     flash.notice = 'La pièce jointe a bien été supprimée.'
 
-    @champ = find_champ if params[:dossier_id]
+    if params[:dossier_id]
+      @champ = find_champ
+    else
+      @attachment_options = attachment_options
+    end
 
     respond_to do |format|
       format.turbo_stream
@@ -42,5 +46,14 @@ class AttachmentsController < ApplicationController
   def find_champ
     dossier = policy_scope(Dossier).includes(:champs).find(params[:dossier_id])
     dossier.champs.find_by(stable_id: params[:stable_id], row_id: params[:row_id])
+  end
+
+  def attachment_options
+    {
+      attached_file: @attachment.record.public_send(@attachment.name),
+      view_as: params[:view_as]&.to_sym,
+      direct_upload: params[:direct_upload] == "true",
+      auto_attach_url: params[:direct_upload] == "true" ? params[:auto_attach_url] : nil
+    }
   end
 end

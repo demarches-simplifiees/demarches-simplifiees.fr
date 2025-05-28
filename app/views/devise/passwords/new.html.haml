@@ -9,8 +9,8 @@
       = devise_error_messages!
 
       = form_for(resource, as: resource_name, url: password_path(resource_name)) do |f|
-        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-password-legend' } }
-          %legend.fr-fieldset__legend#new-password-legend
+        %fieldset.fr-mb-0.fr-fieldset
+          %legend.fr-fieldset__legend
             %h1.fr-h2= t('devise.passwords.new.forgot_your_password')
 
           .fr-fieldset__element

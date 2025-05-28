@@ -1298,6 +1298,7 @@ describe Dossier, type: :model do
     context "via procedure sva" do
       let(:procedure) { create(:procedure, :sva, :published, :for_individual) }
       let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, sva_svr_decision_on: 10.days.from_now) }
+      let(:sva_svr_decision_on) { SVASVRDecisionDateCalculatorService.new(dossier, procedure).decision_date }
 
       subject do
         dossier.process_sva_svr!
@@ -1307,7 +1308,7 @@ describe Dossier, type: :model do
       it 'passes dossier en instruction' do
         expect(subject.state).to eq('en_instruction')
         expect(subject.followers_instructeurs).not_to include(instructeur)
-        expect(subject.sva_svr_decision_on).to eq(Time.zone.today + 1.day + 2.months) # date is updated
+        expect(subject.sva_svr_decision_on).to eq(sva_svr_decision_on)
         expect(last_operation.operation).to eq('passer_en_instruction')
         expect(last_operation.automatic_operation?).to be_truthy
         expect(operation_serialized['operation']).to eq('passer_en_instruction')

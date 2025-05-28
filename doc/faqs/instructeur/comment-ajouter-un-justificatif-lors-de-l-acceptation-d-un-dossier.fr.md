@@ -11,7 +11,7 @@ title: "Comment ajouter un justificatif lors de l’acceptation d’un dossier"
 
 Lorsque vous acceptez, refusez ou classez sans suite un dossier, il est possible de joindre un document après avoir indiqué la raison derrière ce choix.
 
-![L’interface de l’instructeur pour accepter, refuser ou classer sans suite un dossier.](faq/instructeur-accepter-add-justificatif.png)
+![L’interface de l’instructeur pour accepter, refuser ou classer sans suite un dossier {aria-hidden="true"}](faq/instructeur-accepter-add-justificatif.png)
 
 ## Note importante
 
