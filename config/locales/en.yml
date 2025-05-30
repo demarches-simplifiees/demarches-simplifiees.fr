@@ -151,7 +151,6 @@ en:
         content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
           <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
 
-
       preparation:
         title: "Preparation of this accessibility statement"
         intro: "This statement was drawn up on April 27, 2022. It was updated on April 1, 2023."
@@ -520,15 +519,16 @@ en:
           deleted: Deleted at %{date}
           procedure_closed:
             brouillon:
-              internal_procedure_html: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the %{link} which replaces it
-              other_html: This process is closed, you cannot submit this file. %{link}
+              internal_procedure_html: This procedure is closed. You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.
+              other_html: This process is closed. You cannot submit this file, nor submit a new one for this procedure. %{link}
             en_cours:
-              internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration
-              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. %{link}
+              internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration. If necessary, you can submit a new file on the %{link} that replaces it.
+              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. You cannot submit a new file for this procedure. %{link}
             termine:
-              internal_procedure_html: This procedure is closed and replaced by %{link}. Your file has been processed by the administration
-              other_html: This process is closed, you cannot submit a new file. %{link}
-            closing_details: Details on the closed procedure
+              internal_procedure_html: This procedure is closed. Your file has been processed by the administration. If necessary, you can submit a new file on the %{link} that replaces it.
+              other_html: This process is closed. Your file has been processed by the administration. You cannot submit a new file for this procedure. %{link}
+            title_new_procedure: New procedure available
+            title_closing_details: More information on the closing procedure
             more_details: More information
             procedure: procedure
             this_procedure: this procedure

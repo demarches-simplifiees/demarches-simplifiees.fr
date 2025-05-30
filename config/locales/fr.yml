@@ -524,15 +524,16 @@ fr:
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed:
             brouillon:
-              internal_procedure_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace
-              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. %{link}
+              internal_procedure_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace.
+              other_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier, ni en déposer un nouveau pour cette démarche. %{link}
             en_cours:
-              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration
-              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier. %{link}
+              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
+              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
             termine:
-              internal_procedure_html: Cette démarche est close et remplacée par %{link}. Votre dossier a été traité par l'administration
-              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. %{link}
-            closing_details: Détails sur la fermeture de la démarche
+              internal_procedure_html: Cette démarche est close. Votre dossier a bien été traité par l'administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
+              other_html: Cette démarche est close. Votre dossier a bien été traité par l'administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
+            title_new_procedure: Nouvelle démarche disponible
+            title_closing_details: Plus d'informations sur la clôture de la démarche
             more_details: Plus d’informations
             procedure: démarche
             this_procedure: cette démarche

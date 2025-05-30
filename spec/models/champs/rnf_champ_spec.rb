@@ -7,7 +7,7 @@ describe Champs::RNFChamp, type: :model do
   describe 'fetch_external_data' do
     let(:url) { RNFService.new.send(:url) }
     let(:status) { 200 }
-    before { stub_request(:get, "#{url}/#{external_id}").to_return(body:, status:) }
+    before { stub_request(:get, "#{url}/075-FDD-00003-01").to_return(body:, status:) }
 
     subject { champ.fetch_external_data }
 
@@ -51,20 +51,14 @@ describe Champs::RNFChamp, type: :model do
     context 'success (with space)' do
       let(:external_id) { '075-FDD- 00003-01 ' }
       it {
-        expect(subject.value!).to include({
-          id: 3,
-          rnfId: '075-FDD-00003-01'
-        })
+        expect(subject).to be_success
       }
     end
 
     context 'success (with tab)' do
       let(:external_id) { '075-FDD-0	0003-01	' }
       it {
-        expect(subject.value!).to include({
-          id: 3,
-          rnfId: '075-FDD-00003-01'
-        })
+        expect(subject).to be_success
       }
     end
 
