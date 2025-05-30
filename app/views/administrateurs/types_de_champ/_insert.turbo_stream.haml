@@ -49,3 +49,10 @@
   = turbo_stream.hide dom_id(@created.coordinate.parent, :type_de_champ_add_button)
 - elsif @destroyed&.child? && @destroyed.parent.empty?
   = turbo_stream.show dom_id(@destroyed.parent, :type_de_champ_add_button)
+
+- if @procedure.draft_changed?
+  = turbo_stream.update "sticky-header" do
+    = render partial: "administrateurs/procedures/unpublished_changes_sticky_header", locals: { procedure: @procedure }
+
+- else
+  = turbo_stream.update "sticky-header", ""

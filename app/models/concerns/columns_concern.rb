@@ -21,9 +21,9 @@ module ColumnsConcern
         .map { |column| Column.new(table: 'self', column:, type: :date) }
 
       virtual_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
-        .map { |column| Column.new(table: 'self', column:, type: :date, virtual: true) }
+        .map { |column| Column.new(table: 'self', column:, type: :date, displayable: false) }
 
-      states = [Column.new(table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)]
+      states = [Column.new(table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)]
 
       [common, dates, sva_svr_columns(for_filters: true), virtual_dates, states].flatten.compact
     end
@@ -39,7 +39,7 @@ module ColumnsConcern
       ]
 
       if for_filters
-        columns << Column.new(table: 'self', column: 'sva_svr_decision_before', type: :date, virtual: true,
+        columns << Column.new(table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
                       label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
       end
 

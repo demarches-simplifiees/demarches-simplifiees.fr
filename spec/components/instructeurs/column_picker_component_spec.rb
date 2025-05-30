@@ -8,7 +8,7 @@ describe Instructeurs::ColumnPickerComponent, type: :component do
 
   describe "#displayable_columns_for_select" do
     let(:default_user_email) { Column.new(label: 'email', table: 'user', column: 'email') }
-    let(:excluded_displayable_field) { Column.new(label: "label1", table: "table1", column: "column1", virtual: true) }
+    let(:excluded_displayable_field) { Column.new(label: "label1", table: "table1", column: "column1", displayable: false) }
 
     subject { component.displayable_columns_for_select }
 

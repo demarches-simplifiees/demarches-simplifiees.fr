@@ -372,15 +372,20 @@ module Instructeurs
     end
 
     def procedure_presentation
-      @procedure_presentation ||= get_procedure_presentation
-    end
+      @procedure_presentation ||= begin
+        procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id)
 
-    def get_procedure_presentation
-      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id)
-      if errors.present?
-        flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
+        if errors.present?
+          msg = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
+          if request.get?
+            flash.now[:alert] = msg
+          else
+            flash[:alert] = msg
+          end
+        end
+
+        procedure_presentation
       end
-      procedure_presentation
     end
 
     def current_filters

@@ -20,7 +20,7 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
         end
       end
     else
-      find_type_de_champ(column.column).options_for_select
+      find_type_de_champ(column.column).options_for_select(column)
     end
   end
 

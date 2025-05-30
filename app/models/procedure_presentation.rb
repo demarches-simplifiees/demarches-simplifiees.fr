@@ -196,59 +196,63 @@ class ProcedurePresentation < ApplicationRecord
       .map do |(table, column), filters|
       values = filters.pluck('value')
       value_column = filters.pluck('value_column').compact.first || :value
-      case table
-      when 'self'
-        field = procedure.dossier_columns.find { |h| h.column == column }
-        if field.type == :date
-          dates = values
-            .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+      dossier_column = procedure.find_column(id: Column.make_id(table, column)) # hack to find json path columns
+      if dossier_column.is_a?(Columns::JSONPathColumn)
+        dossier_column.filtered_ids(dossiers, values)
+      else
+        case table
+        when 'self'
+          if dossier_column.type == :date
+            dates = values
+              .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
-          dossiers.filter_by_datetimes(column, dates)
-        elsif field.column == "state" && values.include?("pending_correction")
-          dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-        elsif field.column == "state" && values.include?("en_construction")
-          dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
-        else
-          dossiers.where("dossiers.#{column} IN (?)", values)
-        end
-      when TYPE_DE_CHAMP
-        dossiers.with_type_de_champ(column)
-          .filter_ilike(:champs, value_column, values)
-      when 'etablissement'
-        if column == 'entreprise_date_creation'
-          dates = values
-            .filter_map { |v| v.to_date rescue nil }
+            dossiers.filter_by_datetimes(column, dates)
+          elsif dossier_column.column == "state" && values.include?("pending_correction")
+            dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
+          elsif dossier_column.column == "state" && values.include?("en_construction")
+            dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+          else
+            dossiers.where("dossiers.#{column} IN (?)", values)
+          end
+        when TYPE_DE_CHAMP
+          dossiers.with_type_de_champ(column)
+            .filter_ilike(:champs, value_column, values)
+        when 'etablissement'
+          if column == 'entreprise_date_creation'
+            dates = values
+              .filter_map { |v| v.to_date rescue nil }
 
+            dossiers
+              .includes(table)
+              .where(table.pluralize => { column => dates })
+          else
+            dossiers
+              .includes(table)
+              .filter_ilike(table, column, values)
+          end
+        when 'followers_instructeurs'
+          assert_supported_column(table, column)
           dossiers
-            .includes(table)
-            .where(table.pluralize => { column => dates })
-        else
+            .includes(:followers_instructeurs)
+            .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
+            .filter_ilike('instructeurs_users', :email, values)
+        when 'user', 'individual', 'avis'
           dossiers
             .includes(table)
             .filter_ilike(table, column, values)
-        end
-      when 'followers_instructeurs'
-        assert_supported_column(table, column)
-        dossiers
-          .includes(:followers_instructeurs)
-          .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-          .filter_ilike('instructeurs_users', :email, values)
-      when 'user', 'individual', 'avis'
-        dossiers
-          .includes(table)
-          .filter_ilike(table, column, values)
-      when 'groupe_instructeur'
-        assert_supported_column(table, column)
-        if column == 'label'
-          dossiers
-            .joins(:groupe_instructeur)
-            .filter_ilike(table, column, values)
-        else
-          dossiers
-            .joins(:groupe_instructeur)
-            .where(groupe_instructeur_id: values)
-        end
-      end.pluck(:id)
+        when 'groupe_instructeur'
+          assert_supported_column(table, column)
+          if column == 'label'
+            dossiers
+              .joins(:groupe_instructeur)
+              .filter_ilike(table, column, values)
+          else
+            dossiers
+              .joins(:groupe_instructeur)
+              .where(groupe_instructeur_id: values)
+          end
+        end.pluck(:id)
+      end
     end.reduce(:&)
   end
 

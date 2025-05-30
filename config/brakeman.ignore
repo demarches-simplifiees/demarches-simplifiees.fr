@@ -7,7 +7,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/dossiers/_merci.html.haml",
-      "line": 30,
+      "line": 34,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed_html_source(\"site\")",
       "render_path": [
@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 320,
+          "line": 329,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -43,6 +43,29 @@
         79
       ],
       "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "5ba3f5d525b15c710215829e0db49f58e8cca06d68eff5931ebfd7d0ca0e35de",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/columns/json_path_column.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.with_type_de_champ(stable_id).where(\"#{search_occurences.count} OR #{\"(#{json_path_query_part} ILIKE ?)\"}\", *search_occurences.map do\n \"%#{value}%\"\n end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Columns::JSONPathColumn",
+        "method": "filtered_ids"
+      },
+      "user_input": "search_occurences.count",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "already sanitized"
     },
     {
       "warning_type": "SQL Injection",
@@ -237,6 +260,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-06-10 11:21:19 +0200",
+  "updated": "2024-08-20 14:34:27 +0200",
   "brakeman_version": "6.1.2"
 }

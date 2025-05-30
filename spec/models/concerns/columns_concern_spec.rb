@@ -3,11 +3,7 @@ describe ColumnsConcern do
     subject { procedure.columns }
 
     context 'when the procedure can have a SIRET number' do
-      let(:procedure) do
-        create(:procedure,
-               types_de_champ_public: Array.new(4) { { type: :text } },
-               types_de_champ_private: Array.new(4) { { type: :text } })
-      end
+      let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
       let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
       let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
       let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
@@ -61,17 +57,17 @@ describe ColumnsConcern do
         it { expect(subject).to eq(expected) }
       end
 
-      xcontext 'with rna' do
+      context 'with rna' do
         let(:types_de_champ_public) { [{ type: :rna, libelle: 'rna' }] }
         let(:types_de_champ_private) { [] }
-        xit { expect(subject.map(&:label)).to include('rna – commune') }
+        it { expect(subject.map(&:label)).to include('rna – commune') }
       end
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { Column.new(label: "Prénom", table: "individual", column: "prenom", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
-      let(:surname_field) { Column.new(label: "Nom", table: "individual", column: "nom", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
-      let(:gender_field) { Column.new(label: "Civilité", table: "individual", column: "gender", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:name_field) { Column.new(label: "Prénom", table: "individual", column: "prenom", classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:surname_field) { Column.new(label: "Nom", table: "individual", column: "nom", classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:gender_field) { Column.new(label: "Civilité", table: "individual", column: "gender", classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true) }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -82,8 +78,8 @@ describe ColumnsConcern do
       let(:procedure) { create(:procedure, :for_individual, :sva) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { Column.new(label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
-      let(:decision_before_field) { Column.new(label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_on) { Column.new(label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_before_field) { Column.new(label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", classname: '', displayable: false, type: :date, scope: '', value_column: :value, filterable: true) }
 
       it { is_expected.to include(decision_on, decision_before_field) }
     end
@@ -92,8 +88,8 @@ describe ColumnsConcern do
       let(:procedure) { create(:procedure, :for_individual, :svr) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { Column.new(label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
-      let(:decision_before_field) { Column.new(label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_on) { Column.new(label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_before_field) { Column.new(label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", classname: '', displayable: false, type: :date, scope: '', value_column: :value, filterable: true) }
 
       it { is_expected.to include(decision_on, decision_before_field) }
     end
