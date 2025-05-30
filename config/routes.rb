@@ -243,10 +243,10 @@ Rails.application.routes.draw do
   get "suivi" => "root#suivi"
   post "save_locale" => "root#save_locale"
 
-  get "contact", to: "support#index"
-  post "contact", to: "support#create"
+  get "contact", to: "contact#index"
+  post "contact", to: "contact#create"
 
-  get "contact-admin", to: "support#admin"
+  get "contact-admin", to: "contact#admin"
 
   get "mentions-legales", to: "static_pages#legal_notice"
   get "declaration-accessibilite", to: "static_pages#accessibility_statement"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_16_091043) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_29_160650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -326,6 +326,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_091043) do
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
     t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
+  end
+
+  create_table "contact_forms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "dossier_id"
+    t.string "email"
+    t.boolean "for_admin", default: false, null: false
+    t.string "phone"
+    t.string "question_type", null: false
+    t.string "subject", null: false
+    t.string "tags", default: [], array: true
+    t.text "text", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_contact_forms_on_user_id"
   end
 
   create_table "contact_informations", force: :cascade do |t|
@@ -1252,6 +1267,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_091043) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "contact_forms", "users"
   add_foreign_key "contact_informations", "groupe_instructeurs"
   add_foreign_key "dossier_assignments", "dossiers"
   add_foreign_key "dossier_batch_operations", "batch_operations"

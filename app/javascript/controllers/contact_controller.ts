@@ -1,7 +1,7 @@
 import { ApplicationController } from './application_controller';
 import { hide, show } from '@utils';
 
-export class SupportController extends ApplicationController {
+export class ContactController extends ApplicationController {
   static targets = ['inputRadio', 'content'];
 
   declare readonly inputRadioTargets: HTMLInputElement[];

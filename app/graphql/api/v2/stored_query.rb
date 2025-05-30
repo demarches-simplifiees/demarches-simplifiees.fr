@@ -750,6 +750,18 @@ class API::V2::StoredQuery
     }
   }
 
+  mutation dossierDesarchiver($input: DossierDesarchiverInput!) {
+    dossierDesarchiver(input: $input) {
+      dossier {
+        id
+        archived
+      }
+      errors {
+        message
+      }
+    }
+  }
+
   mutation dossierPasserEnInstruction($input: DossierPasserEnInstructionInput!) {
     dossierPasserEnInstruction(input: $input) {
       dossier {

@@ -6,8 +6,12 @@ require 'flipper/adapters/active_record'
 require 'flipper/adapters/active_support_cache_store'
 
 def setup_features(features)
-  features.each do |feature|
-    Flipper.add(feature) unless Flipper.exist?(feature)
+  existing = Flipper.preload_all.map { _1.name.to_sym }
+  missing = features - existing
+
+  missing.each do |feature|
+    # Feature is disabled by default
+    Flipper.add(feature.to_s)
   end
 end
 
@@ -40,23 +44,24 @@ rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::NoDatabaseError, PG
   false
 end
 
+Flipper.configure do |config|
+  config.adapter do
+    Flipper::Adapters::ActiveSupportCacheStore.new(
+      Flipper::Adapters::ActiveRecord.new,
+      ActiveSupport::Cache::MemoryStore.new,
+      10.seconds
+    )
+  end
+end
+
 ActiveSupport.on_load(:active_record) do
   if database_exists? && ActiveRecord::Base.connection.data_source_exists?('flipper_features')
     setup_features(features)
   end
 end
 
-Flipper.configure do |config|
-  config.adapter do
-    Flipper::Adapters::ActiveSupportCacheStore.new(
-      Flipper::Adapters::ActiveRecord.new,
-      ActiveSupport::Cache::MemoryStore.new,
-      expires_in: 10.seconds
-    )
-  end
-end
-
 Rails.application.configure do
+  config.flipper.actor_limit = 500 # default is 100 but hide_instructeur_email feature has ~478
   # don't preload features for /assets/* but do for everything else
   config.flipper.preload = -> (request) { !request.path.start_with?('/assets/', '/ping') }
   config.flipper.strict = Rails.env.development?

@@ -17,6 +17,12 @@ class API::Client
         timeout: TIMEOUT)
     end
     handle_response(response, schema:)
+  rescue StandardError => reason
+    if reason.is_a?(URI::InvalidURIError)
+      Failure(Error[:uri, 0, false, reason])
+    else
+      Failure(Error[:error, 0, false, reason])
+    end
   end
 
   private
