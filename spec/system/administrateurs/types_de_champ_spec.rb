@@ -447,13 +447,11 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_button('Publier les modifications', disabled: true)
 
       # Supprime dernier champ
-      all('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').last.click
-      page.driver.browser.switch_to.alert.accept rescue nil
+      accept_confirm { all('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').last.click }
 
       expect(page).to have_selector('.type-de-champ', count: 1, wait: 5)
-      click_on "Publier les modifications"
+      accept_confirm { click_on "Publier les modifications" }
 
-      page.driver.browser.switch_to.alert.accept
       expect(page).to have_content("démarche publiée")
 
       unpublished_procedure = create(:procedure)
