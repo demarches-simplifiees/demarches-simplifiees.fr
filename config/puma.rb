@@ -45,4 +45,3 @@ end
 plugin :tmp_restart
 
 activate_control_app
-plugin :yabeda

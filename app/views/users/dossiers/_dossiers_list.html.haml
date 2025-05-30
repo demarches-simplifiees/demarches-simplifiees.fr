@@ -7,7 +7,7 @@
       .flex.justify-between
         %div
           %h3.card-title
-            - if ["dossiers-transferes", "dossiers-supprimes-recemment"].exclude?(@statut)
+            - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = dossier.procedure.libelle
             - else
@@ -96,11 +96,11 @@
                 = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
 
 
-      - if ["dossiers-transferes", "dossiers-supprimes-recemment"].exclude?(@statut)
+      - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
         .flex.justify-end
           = render partial: 'dossier_actions', locals: { dossier: dossier }
 
-      - if @statut == "dossiers-supprimes-recemment"
+      - if @statut == "dossiers-supprimes"
         .flex.justify-end
           - if dossier.hidden_by_reason != 'expired'
             = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do

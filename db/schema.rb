@@ -877,7 +877,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_29_160650) do
     t.integer "assign_to_id"
     t.datetime "created_at"
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes_recemment"=>[]}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
     t.datetime "updated_at"
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true

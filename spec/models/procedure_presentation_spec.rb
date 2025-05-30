@@ -10,10 +10,10 @@ describe ProcedurePresentation do
     create(:procedure_presentation,
       assign_to: assign_to,
       displayed_fields: [
-        { "label" => "test1", "table" => "user", "column" => "email" },
-        { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }
+        { label: "test1", table: "user", column: "email" },
+        { label: "test2", table: "type_de_champ", column: first_type_de_champ_id }
       ],
-      sort: { "table" => "user", "column" => "email", "order" => "asc" },
+      sort: { table: "user", column: "email", "order" => "asc" },
       filters: filters)
   }
   let(:procedure_presentation_id) { procedure_presentation.id }
@@ -35,144 +35,20 @@ describe ProcedurePresentation do
     it { expect(build(:procedure_presentation)).to be_valid }
 
     context 'of displayed fields' do
-      it { expect(build(:procedure_presentation, displayed_fields: [{ "table" => "user", "column" => "reset_password_token", "order" => "asc" }])).to be_invalid }
+      it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
     end
 
     context 'of sort' do
-      it { expect(build(:procedure_presentation, sort: { "table" => "notifications", "column" => "notifications", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { "table" => "self", "column" => "id", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { "table" => "self", "column" => "state", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { "table" => "user", "column" => "reset_password_token", "order" => "asc" })).to be_invalid }
+      it { expect(build(:procedure_presentation, sort: { table: "notifications", column: "notifications", "order" => "asc" })).to be_valid }
+      it { expect(build(:procedure_presentation, sort: { table: "self", column: "id", "order" => "asc" })).to be_valid }
+      it { expect(build(:procedure_presentation, sort: { table: "self", column: "state", "order" => "asc" })).to be_valid }
+      it { expect(build(:procedure_presentation, sort: { table: "user", column: "reset_password_token", "order" => "asc" })).to be_invalid }
     end
 
     context 'of filters' do
-      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "reset_password_token", "order" => "asc" }] })).to be_invalid }
-      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
+      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "reset_password_token", "order" => "asc" }] })).to be_invalid }
+      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
     end
-  end
-
-  describe "#fields" do
-    context 'when the procedure can have a SIRET number' do
-      let(:procedure) do
-        create(:procedure,
-               types_de_champ_public: Array.new(4) { { type: :text } },
-               types_de_champ_private: Array.new(4) { { type: :text } })
-      end
-      let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
-      let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
-      let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
-      let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
-      let(:expected) {
-        [
-          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'En instruction le', "table" => 'self', "column" => 'en_instruction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Terminé le', "table" => 'self', "column" => 'processed_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "En construction depuis", "table" => "self", "column" => "en_construction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "En instruction depuis", "table" => "self", "column" => "en_instruction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Terminé depuis", "table" => "self", "column" => "processed_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum, "value_column" => :value, 'filterable' => true },
-          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Avis oui/non', "table" => 'avis', "column" => 'question_answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => false },
-          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Numéro TAHITI siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Numéro TAHITI', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true }
-        ]
-      }
-
-      before do
-        procedure.active_revision.types_de_champ_public[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.active_revision.types_de_champ_public[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
-        procedure.active_revision.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.active_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
-      end
-
-      subject { create(:procedure_presentation, assign_to: assign_to) }
-
-      it { expect(subject.fields).to eq(expected) }
-    end
-
-    context 'when the procedure is for individuals' do
-      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:procedure) { create(:procedure, :for_individual) }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
-
-      subject { procedure_presentation.fields }
-
-      it { is_expected.to include(name_field, surname_field, gender_field) }
-    end
-
-    context 'when the procedure is sva' do
-      let(:procedure) { create(:procedure, :for_individual, :sva) }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
-
-      let(:decision_on) { { "label" => "Date décision SVA", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:decision_before_field) { { "label" => "Date décision SVA avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-
-      subject { procedure_presentation.fields }
-
-      it { is_expected.to include(decision_on, decision_before_field) }
-    end
-
-    context 'when the procedure is svr' do
-      let(:procedure) { create(:procedure, :for_individual, :svr) }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
-
-      let(:decision_on) { { "label" => "Date décision SVR", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:decision_before_field) { { "label" => "Date décision SVR avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-
-      subject { procedure_presentation.fields }
-
-      it { is_expected.to include(decision_on, decision_before_field) }
-    end
-  end
-
-  describe "#displayable_fields_for_select" do
-    subject { create(:procedure_presentation, assign_to: assign_to) }
-    let(:excluded_displayable_field) { { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true } }
-    let(:included_displayable_field) { { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false } }
-
-    before do
-      allow(subject).to receive(:fields).and_return([
-        excluded_displayable_field,
-        included_displayable_field
-      ])
-    end
-
-    it { expect(subject.displayable_fields_for_select).to eq([[["label1", "table1/column1"]], ["user/email"]]) }
-  end
-  describe "#filterable_fields_options" do
-    subject { create(:procedure_presentation, assign_to: assign_to) }
-    let(:included_displayable_field) do
-      [
-        { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false },
-        { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true }
-      ]
-    end
-
-    before do
-      allow(subject).to receive(:fields).and_return(included_displayable_field)
-    end
-
-    it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
   end
 
   describe '#sorted_ids' do
@@ -181,7 +57,7 @@ describe ProcedurePresentation do
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, sort: sort) }
 
-    subject { procedure_presentation.sorted_ids(procedure.dossiers, procedure.dossiers.count) }
+    subject { procedure_presentation.send(:sorted_ids, procedure.dossiers, procedure.dossiers.count) }
 
     context 'for notifications table' do
       let(:table) { 'notifications' }
@@ -310,7 +186,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ_private table' do
       context 'with no revisions' do
-        let(:table) { 'type_de_champ_private' }
+        let(:table) { 'type_de_champ' }
         let(:column) { procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
 
         let(:biere_dossier) { create(:dossier, procedure: procedure) }
@@ -336,7 +212,7 @@ describe ProcedurePresentation do
 
       context 'with a revision adding a new type_de_champ' do
         let!(:tdc) { { type_champ: :text, private: true, libelle: 'nouveau champ' } }
-        let(:table) { 'type_de_champ_private' }
+        let(:table) { 'type_de_champ' }
         let(:column) { procedure.active_revision.types_de_champ_private.last.stable_id.to_s }
 
         let(:nothing_dossier) { create(:dossier, procedure: procedure) }
@@ -445,7 +321,7 @@ describe ProcedurePresentation do
   describe '#filtered_ids' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, filters: { "suivis" => filter }) }
 
-    subject { procedure_presentation.filtered_ids(procedure.dossiers.joins(:user), 'suivis') }
+    subject { procedure_presentation.send(:filtered_ids, procedure.dossiers.joins(:user), 'suivis') }
 
     context 'for self table' do
       context 'for created_at column' do
@@ -649,7 +525,7 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ_private table' do
-      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' }] }
+      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' }] }
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -665,8 +541,8 @@ describe ProcedurePresentation do
       context 'with multiple search values' do
         let(:filter) do
           [
-            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' },
-            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'and' }
+            { 'table' => 'type_de_champ', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'and' }
           ]
         end
 
@@ -859,7 +735,7 @@ describe ProcedurePresentation do
   end
 
   describe "#human_value_for_filter" do
-    let(:filters) { { "suivis" => [{ "label" => "label1", "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }] } }
+    let(:filters) { { "suivis" => [{ label: "label1", table: "type_de_champ", column: first_type_de_champ_id, "value" => "true" }] } }
 
     subject { procedure_presentation.human_value_for_filter(procedure_presentation.filters["suivis"].first) }
 
@@ -878,7 +754,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is state' do
-      let(:filters) { { "suivis" => [{ "table" => "self", "column" => "state", "value" => "en_construction" }] } }
+      let(:filters) { { "suivis" => [{ table: "self", column: "state", "value" => "en_construction" }] } }
 
       it 'should get i18n value' do
         expect(subject).to eq("En construction")
@@ -886,7 +762,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is a date' do
-      let(:filters) { { "suivis" => [{ "table" => "self", "column" => "en_instruction_at", "value" => "15/06/2023" }] } }
+      let(:filters) { { "suivis" => [{ table: "self", column: "en_instruction_at", "value" => "15/06/2023" }] } }
 
       it 'should get formatted value' do
         expect(subject).to eq("15/06/2023")
@@ -985,33 +861,6 @@ describe ProcedurePresentation do
         end
 
         it { is_expected.to eq(sorted_ids) }
-      end
-    end
-  end
-
-  describe '#field_enum' do
-    context "field is groupe_instructeur" do
-      let!(:gi_2) { instructeur.groupe_instructeurs.create(label: 'gi2', procedure:) }
-      let!(:gi_3) { instructeur.groupe_instructeurs.create(label: 'gi3', procedure: create(:procedure)) }
-
-      subject { procedure_presentation.field_enum('groupe_instructeur/id') }
-
-      it { is_expected.to eq([['défaut', procedure.defaut_groupe_instructeur.id], ['gi2', gi_2.id]]) }
-    end
-
-    context 'when field is dropdown' do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text }], types_de_champ_private: [{}]) }
-      let(:tdc) { procedure.published_revision.types_de_champ_public.first }
-      before do
-        procedure.draft_revision
-          .find_and_ensure_exclusive_use(tdc.stable_id)
-          .update(type_champ: :drop_down_list,
-                  drop_down_list_value: "Paris\nLyon\nMarseille")
-        procedure.publish_revision!
-      end
-      subject { procedure_presentation.field_enum("type_de_champ/#{tdc.id}") }
-      it 'find most recent tdc' do
-        expect(subject).to eq(["Paris", "Lyon", "Marseille"])
       end
     end
   end

@@ -233,7 +233,7 @@ class Instructeur < ApplicationRecord
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND not archived) AS tous,
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND archived) AS archives,
-        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NOT NULL AND not archived OR dossiers.hidden_by_expired_at IS NOT NULL) AS supprimes_recemment,
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NOT NULL AND not archived OR dossiers.hidden_by_expired_at IS NOT NULL) AS supprimes,
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND procedures.procedure_expires_when_termine_enabled
           AND (
             dossiers.state in ('accepte', 'refuse', 'sans_suite')

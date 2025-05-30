@@ -8,7 +8,7 @@ describe 'instructeurs/procedures/_list', type: :view do
             dossiers_a_suivre_count_per_procedure: 2,
             dossiers_archived_count_per_procedure: 1,
             dossiers_termines_count_per_procedure: 1,
-            dossiers_supprimes_recemment_count_per_procedure: 0,
+            dossiers_supprimes_count_per_procedure: 0,
             dossiers_expirant_count_per_procedure: 0,
             followed_dossiers_count_per_procedure: 0,
             procedure_ids_en_cours_with_notifications: [],

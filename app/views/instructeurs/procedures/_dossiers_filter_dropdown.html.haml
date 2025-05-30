@@ -3,4 +3,4 @@
     = t('views.instructeurs.dossiers.filters.title')
 
   - menu.with_form do
-    = render Dossiers::InstructeurFilterComponent.new(procedure: procedure, procedure_presentation: @procedure_presentation, statut: statut)
+    = render Instructeurs::ColumnFilterComponent.new(procedure:, procedure_presentation: @procedure_presentation, statut:)

@@ -23,6 +23,7 @@ class Individual < ApplicationRecord
                                   on: :update
 
   validates :email, strict_email: true, presence: true, if: -> { dossier.for_tiers? && self.email? }, on: :update
+  validate :email_different_from_mandataire, on: :update
 
   after_commit -> { dossier.index_search_terms_later }, if: -> { nom_previously_changed? || prenom_previously_changed? }
 
@@ -38,4 +39,10 @@ class Individual < ApplicationRecord
   end
 
   def unverified_email? = !email_verified_at?
+
+  def email_different_from_mandataire
+    if email.present? && email.casecmp?(dossier.user.email)
+      errors.add(:email, :must_be_different_from_mandataire)
+    end
+  end
 end

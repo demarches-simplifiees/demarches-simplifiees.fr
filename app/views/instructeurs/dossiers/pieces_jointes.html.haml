@@ -8,7 +8,7 @@
       .gallery-item
         - blob = attachment.blob
         - if displayable_pdf?(blob)
-          = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{libelle} -- #{blob.filename}" do
+          = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{libelle} -- #{sanitize(blob.filename.to_s)}" do
             .thumbnail
               = image_tag(preview_url_for(attachment), loading: :lazy)
               .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
@@ -18,7 +18,7 @@
           = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)
 
         - elsif displayable_image?(blob)
-          = link_to image_url(blob_url(attachment)), title: "#{libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
+          = link_to image_url(blob_url(attachment)), title: "#{libelle} -- #{sanitize(blob.filename.to_s)}", data: { src: blob.url }, class: 'gallery-link' do
             .thumbnail
               = image_tag(variant_url_for(attachment), loading: :lazy)
               .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }

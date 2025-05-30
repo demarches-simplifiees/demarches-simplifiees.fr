@@ -417,7 +417,7 @@ class Dossier < ApplicationRecord
       visible_by_administration.termine
     when 'tous'
       visible_by_administration.all_state
-    when 'supprimes_recemment'
+    when 'supprimes'
       hidden_by_administration.state_termine.or(hidden_by_expired)
     when 'archives'
       visible_by_administration.archived

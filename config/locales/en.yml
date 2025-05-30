@@ -150,7 +150,6 @@ en:
         subtitle_two: "Additional notes"
         content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
           <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
-
       preparation:
         title: "Preparation of this accessibility statement"
         intro: "This statement was drawn up on April 27, 2022. It was updated on April 1, 2023."
@@ -396,7 +395,7 @@ en:
           traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
           tous: All the files that have been submitted on this approach, included files to be follow and files followed by you or other instructors.
           tous_with_routing: All the files that have been submitted on this approach, and assigned to your instructors groups.
-          supprimes_recemment: All files not <strong>archive</strong>, <strong>completed</strong> and <strong>deleted by the instructors</strong> on this approach.
+          supprimes: All files not <strong>archive</strong>, <strong>completed</strong> and <strong>deleted by the instructors</strong> on this approach.
           archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
           expirant: Records will not expire prior to the data retention period.
         archived_dossier: "This file will be kept for an additional month"
@@ -415,7 +414,6 @@ en:
         repasser_en_construction: Revert to submitted
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
-        save: Save
         stop_follow: No longer follow
         no_file: No file
         dossier_synthesis: Summary of files
@@ -516,7 +514,8 @@ en:
           created_at: Created at %{date}
           updated_at: updated at %{date}
           shared_with: File shared by %{owner} with
-          deleted: Deleted at %{date}
+          deleted_by_user: Deleted on %{date} by user
+          deleted_by_automatic: Deleted on %{date} automatically due to expiration date
           procedure_closed:
             brouillon:
               internal_procedure_html: This procedure is closed. You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.
@@ -819,12 +818,9 @@ en:
     dossiers_invites:
       one: guest file
       other: guest files
-    dossiers_supprimes_recemment:
+    dossiers_supprimes:
       one: recently deleted file
       other: recently deleted files
-    dossiers_supprimes_definitivement:
-      one: permanently deleted file
-      other: permanently deleted files
     dossiers_transferes:
       one: transfer request
       other: transfer requests

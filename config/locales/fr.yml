@@ -403,8 +403,8 @@ fr:
           traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
           tous: Tous les dossiers déposés sur cette démarche, qu'ils soient à suivre, suivis par vous ou suivis par d'autres instructeurs.
           tous_with_routing: Tous les dossiers déposés sur cette démarche et attribués aux groupes d'instructeurs dont vous faites partie.
-          supprimes_recemment: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
-          archives: "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
+          supprimes: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
+          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
           expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
@@ -421,13 +421,12 @@ fr:
         batch_operation:
           enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
           disabled: "Impossible d'ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
-        show_deleted_dossiers: Afficher les dossiers supprimés
+        show_deleted_dossiers: Historique des dossiers supprimés
         personalize: Personnaliser
         passer_en_instruction: Passer en instruction
         repasser_en_construction: Repasser en construction
         follow_file: Suivre le dossier
         stop_follow: Ne plus suivre
-        save: Enregistrer
         no_file: Aucun dossier
         dossier_synthesis: Synthèse des dossiers
         passer_en_instruction_blocked_by_pending_correction: |
@@ -542,7 +541,6 @@ fr:
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
           shared_with: Dossier partagé par %{owner} avec
-          deleted: Supprimé le %{date}
           deleted_by_user: Supprimé le %{date} par l'usager
           deleted_by_automatic: Supprimé le %{date} automatiquement du à la date d'expiration
         dossier_action:
@@ -852,10 +850,10 @@ fr:
     dossiers_invites:
       one: dossier invité
       other: dossiers invités
-    dossiers_supprimes_recemment:
-      one:  supprimé récemment
-      other: supprimés récemment
-    dossiers_supprimes_definitivement:
+    dossiers_supprimes:
+      one:  supprimé
+      other: supprimés
+    dossiers_historique:
       one:  supprimé définitivement
       other: supprimés définitivement
     dossiers_transferes:

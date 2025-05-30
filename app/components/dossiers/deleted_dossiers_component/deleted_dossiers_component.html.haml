@@ -1,0 +1,47 @@
+
+.fr-container
+  %h1.fr-h2
+    Historique des dossiers supprimés
+
+.fr-container
+  - if @deleted_dossiers.present?
+    = render Dsfr::CalloutComponent.new(title: nil) do |c|
+      - c.with_body do
+        %p
+          = t('.deleted_explanation')
+
+        %ul
+          %li
+            = t(".deleted_explanation_first_#{role}")
+          %li
+            = t(".deleted_explanation_second_#{role}")
+
+    .fr-table.fr-table--layout-fixed.fr-mt-3w
+      %table
+        %thead
+          %tr
+            %th.number-col N° dossier
+            %th Libellé de la démarche
+            %th Raison de suppression
+            %th Date de suppression
+        %tbody
+          - @deleted_dossiers.each do |deleted_dossier|
+            %tr
+              %td.number-col
+                = deleted_dossier.dossier_id
+
+              %td.number-col
+                = deleted_dossier.procedure.libelle.truncate_words(10)
+
+              %td
+                = deletion_reason_badge(deleted_dossier.reason)
+                -# .fr-badge
+                -#   = t("activerecord.attributes.deleted_dossier.reason.#{deleted_dossier.reason}")
+              %td.deleted-cell
+                = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
+
+      = paginate @deleted_dossiers, views_prefix: 'shared'
+
+  - else
+    %p
+      = t('.no_deleted_dossiers')
