@@ -1,10 +1,6 @@
-.no-procedure
-  = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo", alt: ""
-  .baseline.center
-    .no-procedure-presentation
-      %p.simple= t('.line1')
-      %p= t('.line2')
-      %p= t('.line3')
-    %hr
-    %p.small-simple= t('.are_you_new', app_name: Current.application_name)
-    = link_to t('views.users.sessions.new.find_procedure'), t("links.common.faq.comment_trouver_ma_demarche_url"), title: new_tab_suffix(t('views.users.sessions.new.find_procedure')), class: "fr-btn fr-btn--secondary"
+.center
+  = image_tag "landing/hero/dematerialiser.svg", class: "fr-responsive-img fr-mb-1v", alt: ""
+  %p.fr-m-4w= t('.text')
+  %hr
+  %p= t('.are_you_new', app_name: Current.application_name)
+  = link_to t('views.users.sessions.new.find_procedure'), t("links.common.faq.comment_trouver_ma_demarche_url"), title: new_tab_suffix(t('views.users.sessions.new.find_procedure')), class: "fr-btn fr-btn--secondary"

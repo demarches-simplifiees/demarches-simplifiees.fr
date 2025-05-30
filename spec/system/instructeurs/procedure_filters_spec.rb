@@ -60,6 +60,12 @@ describe "procedure filters" do
       expect(page).not_to have_link(type_de_champ.libelle)
       expect(page).not_to have_link(champ.value)
     end
+
+    # Test removal of all customizable fields
+    remove_column("Demandeur")
+    within ".dossiers-table" do
+      expect(page).not_to have_link("Demandeur")
+    end
   end
 
   scenario "should be able to add and remove filter", js: true do

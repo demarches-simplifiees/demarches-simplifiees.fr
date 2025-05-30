@@ -19,10 +19,10 @@ class TiptapService
     children(node[:content], substitutions, 0)
   end
 
-  def to_path(node, substitutions = {})
+  def to_texts_and_tags(node, substitutions = {})
     return '' if node.nil?
 
-    children_path(node[:content], substitutions)
+    children_texts_and_tags(node[:content], substitutions)
   end
 
   private
@@ -31,18 +31,24 @@ class TiptapService
     @body_started = false
   end
 
-  def children_path(content, substitutions)
-    content.map { node_to_path(_1, substitutions) }.join
+  def children_texts_and_tags(content, substitutions)
+    content.map { node_to_texts_and_tags(_1, substitutions) }.join
   end
 
-  def node_to_path(node, substitutions)
+  def node_to_texts_and_tags(node, substitutions)
     case node
     in type: 'paragraph', content:
-      children_path(content, substitutions)
-    in type: 'text', text:, **rest
+      children_texts_and_tags(content, substitutions)
+    in type: 'paragraph' # empty paragraph
+      ''
+    in type: 'text', text:
       text.strip
-    in type: 'mention', attrs: { id: }, **rest
-      substitutions.fetch(id) { "--#{id}--" }
+    in type: 'mention', attrs: { id:, label: }
+      if substitutions.present?
+        substitutions.fetch(id) { "--#{id}--" }
+      else
+        "<span class='fr-tag fr-tag--sm'>#{label}</span>"
+      end
     end
   end
 

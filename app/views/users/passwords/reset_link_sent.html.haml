@@ -3,33 +3,34 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-#link-sent.container
-  = image_tag('user/confirmation-email.svg', "aria-hidden": true)
-  %h1
-    = t('views.users.passwords.reset_link_sent.got_it')
-    %br
-    = t('views.users.passwords.reset_link_sent.open_your_mailbox')
+.fr-container.fr-mt-4w.fr-mb-3w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-md-9.fr-col-lg-7
+      .center
+        = image_tag('user/confirmation-email.svg', alt: "")
+        %h1.fr-mb-6w
+          = t('views.users.passwords.reset_link_sent.got_it')
+          %br
+          = t('views.users.passwords.reset_link_sent.open_your_mailbox')
 
-  %section.link-sent-info
-    %p
-      = t('views.users.passwords.reset_link_sent.email_sent_html', email: @email, application_name: Current.application_name)
-    %p
-      = t('views.users.passwords.reset_link_sent.click_link_to_reset_password')
-    %p
-      = t('views.users.shared.email_can_take_a_while_html')
+      .fr-callout.fr-callout--green-emeraude.fr-mb-6w
+        %p.fr-callout__text.fr-mb-2w
+          = t('views.users.passwords.reset_link_sent.email_sent_html', email: @email, application_name: Current.application_name)
+        %p.fr-callout__text.fr-mb-2w
+          = t('views.users.passwords.reset_link_sent.click_link_to_reset_password')
+        %p.fr-callout__text
+          = t('views.users.shared.email_can_take_a_while_html')
 
-  %section.link-sent-help
-    %h2.link-sent-help-title= t('views.users.passwords.reset_link_sent.no_mail')
-    %ol.link-sent-help-list
-      %li
-        = t('views.users.passwords.reset_link_sent.check_spams')
-      %li
-        = t('views.users.passwords.reset_link_sent.check_account', email: @email, application_name: Current.application_name)
-      - if FranceConnectService.enabled?
+      %h2= t('views.users.passwords.reset_link_sent.no_mail')
+      %ol
         %li
-          = t('views.users.passwords.reset_link_sent.check_france_connect_html', href: france_connect_particulier_path)
-
-      %li
-        = t('views.users.passwords.reset_link_sent.check_gpdr')
-    %p
-      = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_url)
+          = t('views.users.passwords.reset_link_sent.check_spams')
+        %li
+          = t('views.users.passwords.reset_link_sent.check_account', email: @email, application_name: Current.application_name)
+        - if FranceConnectService.enabled?
+          %li
+            = t('views.users.passwords.reset_link_sent.check_france_connect_html', href: france_connect_particulier_path)
+        %li
+          = t('views.users.passwords.reset_link_sent.check_gpdr')
+      %p
+        = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_url)

@@ -20,7 +20,7 @@ module Mutations
         annotation.value = value
       end
 
-      if annotation.save
+      if annotation.validate(:champs_private_value) && annotation.save
         ChampRevision.create_or_update_revision(annotation, instructeur.id)
         { annotation: }
       else
@@ -72,6 +72,8 @@ module Mutations
         TypeDeChamp.type_champs.fetch(:integer_number)
       when :piece_justificative
         TypeDeChamp.type_champs.fetch(:piece_justificative)
+      when :drop_down_list
+        TypeDeChamp.type_champs.fetch(:drop_down_list)
       end
     end
   end

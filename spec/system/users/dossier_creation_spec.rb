@@ -76,7 +76,7 @@ describe 'Creating a new dossier:', js: true do
           find('label', text: 'Monsieur').click # force focus out
           within "#identite-form" do
             within '.suspect-email' do
-              expect(page).to have_content("Information : Voulez-vous dire ?")
+              expect(page).to have_content("L'adresse semble erronée Vouliez-vous écrire : prenom.nom@gmail.com ? Oui Non")
               click_button("Oui")
             end
             click_button("Continuer")

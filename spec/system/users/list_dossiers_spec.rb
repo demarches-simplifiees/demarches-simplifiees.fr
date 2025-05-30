@@ -246,6 +246,14 @@ describe 'user access to the list of their dossiers', js: true do
         expect(page).to have_content('2 supprimés récemment')
       end
     end
+
+    context 'when user download PDF of expired' do
+      scenario "generate PDF" do
+        click_on "3 supprimés récemment"
+        click_on 'Télécharger mon dossier', match: :first
+        # Test fails when an error happens during PDF generation
+      end
+    end
   end
 
   describe "user search bar" do

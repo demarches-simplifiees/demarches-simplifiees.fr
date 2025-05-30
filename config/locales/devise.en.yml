@@ -6,3 +6,7 @@ en:
     sessions:
       signed_in_multiple_profile: "You are connected ! You can switch between your multiple profiles : %{roles}."
       signed_out: You are now disconnected.
+  users:
+    confirmations:
+      show:
+        email_already_confirmed: 'Your account has already been activated.'

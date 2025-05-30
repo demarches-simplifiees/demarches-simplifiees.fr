@@ -150,4 +150,6 @@ module ApplicationHelper
       .map { |word| word[0].upcase }
       .join
   end
+
+  def asterisk = render(EditableChamp::AsteriskMandatoryComponent.new)
 end

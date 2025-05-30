@@ -6,12 +6,14 @@ en:
       export_template:
         hints:
           name: "The name will be visible by you and the other instructors"
-          tiptap_default_dossier_directory: "How would you like to name the directory containing the documents of a folder?"
-          tiptap_pdf_name: "How would you like to name the pdf file containing all the user's answers?"
+          dossier_folder: "How would you like to name the directory containing the documents of a folder?"
+          export_pdf: "How would you like to name the pdf file containing all the user's answers?"
         name: "Template's name"
-        tiptap_default_dossier_directory: "Directory's name for pdf format"
-        tiptap_pdf_name: "Export's filename"
+        dossier_folder: "Directory's name for pdf format"
+        export_pdf: "File in pdf format"
     errors:
       models:
         export_template:
-          dossier_number_mandatory: "must contain dossier's number"
+          dossier_number_required: "must contain dossier's number"
+          different_templates: "Files must have different names"
+          invalid_template: "A file name is invalid"

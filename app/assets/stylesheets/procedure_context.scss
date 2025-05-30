@@ -48,14 +48,6 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
   }
 }
 
-.no-procedure-presentation {
-  margin-bottom: 1.6rem;
-
-  p {
-    margin: 0;
-  }
-}
-
 .procedure-context-content {
   @media (max-width: $procedure-context-breakpoint) {
     input[type=submit] {

@@ -19,10 +19,10 @@ Il suffit de configurer vos notifications pour recevoir un email. En effet, pour
 
 Pour paramétrer vos notifications en tant qu’instructeur, vous devez cliquer sur la démarche pour laquelle vous souhaitez recevoir l’email, puis cliquer sur **« Gestion des notifications »** :
 
-![Écran d’en-tête d’une démarche affichant le lien vers la page de gestion des notifications](faq/instructeur-procedure-header.png)
+![Écran d’en-tête d’une démarche affichant le lien vers la page de gestion des notifications {aria-hidden="true"}](faq/instructeur-procedure-header.png)
 
 Sélectionnez les notifications que vous souhaitez recevoir par email et cliquez sur le bouton **« Enregistrer »** :
 
-![Capture d’écran de la page de gestion des notifications](faq/instructeur-procedure-notifications.png)
+![Capture d’écran de la page de gestion des notifications {aria-hidden="true"}](faq/instructeur-procedure-notifications.png)
 
 **Il est nécessaire de répéter cette opération pour chaque démarche pour laquelle vous souhaitez recevoir des notifications par email.**

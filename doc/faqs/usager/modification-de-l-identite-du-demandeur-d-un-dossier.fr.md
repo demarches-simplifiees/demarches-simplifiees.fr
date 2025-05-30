@@ -15,11 +15,11 @@ En tant qu’usager, vous avez la possibilité de modifier l’identité associ�
 
 Pour modifier votre dossier en brouillon, il suffit de cliquer sur le dossier concerné puis de cliquer sur le bouton _« Mon identité »_ situé à droite de l’écran comme ci-dessous :
 
-![Image montrant où cliquer pour modifier l’identité d’un dossier en brouillon](faq/usager-edit-identity-brouillon-1.png)
+![Image montrant où cliquer pour modifier l’identité d’un dossier en brouillon {aria-hidden="true"}](faq/usager-edit-identity-brouillon-1.png)
 
 Vous pourrez ensuite modifier votre identité depuis le bouton _« Modifier l’identité »_ :
 
-![Image montrant le bouton pour modifier l’identité](faq/usager-edit-identity-brouillon-2.png)
+![Image montrant le bouton pour modifier l’identité {aria-hidden="true"}](faq/usager-edit-identity-brouillon-2.png)
 
 ## Le dossier est en "construction"
 
@@ -27,11 +27,11 @@ Une fois votre dossier déposé, il devient _en construction_ (tant que l’admi
 
 Pour cela, cliquez sur le bouton _« Modifier le dossier »_ depuis la liste de vos dossiers.
 
-![Image illustrant où cliquer pour modifier un dossier en construction](faq/usager-edit-identity-construction-1.png)
+![Image illustrant où cliquer pour modifier un dossier en construction {aria-hidden="true"}](faq/usager-edit-identity-construction-1.png)
 
 Après avoir cliqué sur l’onglet _« Demande »_, suivez le lien _« Modifier l’identité »_ comme ci-dessous :
 
-![Image montrant où modifier l’identité dans un dossier en construction](faq/usager-edit-identity-construction-2.png)
+![Image montrant où modifier l’identité dans un dossier en construction {aria-hidden="true"}](faq/usager-edit-identity-construction-2.png)
 
 ## Le dossier a un autre statut
 

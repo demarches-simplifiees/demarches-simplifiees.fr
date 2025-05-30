@@ -31,7 +31,7 @@ export class EmailInputController extends ApplicationController {
       const address = email.substring(0, email.indexOf('@')) + '@gmail.com';
       this.suggestionTarget.innerHTML = address;
       show(this.ariaRegionTarget);
-      this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
+      this.ariaRegionTarget.focus();
     } else if (email.toLowerCase().endsWith('.pf')) {
       this.discard();
     } else {
@@ -45,7 +45,7 @@ export class EmailInputController extends ApplicationController {
       if (data && data.suggestions && data.suggestions.length > 0) {
         this.suggestionTarget.innerHTML = data.suggestions[0];
         show(this.ariaRegionTarget);
-        this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
+        this.ariaRegionTarget.focus();
       }
     }
   }

@@ -136,7 +136,7 @@ class TypeDeChamp < ApplicationRecord
   INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
   INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
-  ROUTABLE_TYPES = [
+  SIMPLE_ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
     type_champs.fetch(:commune_de_polynesie),
     type_champs.fetch(:code_postal_de_polynesie),
@@ -726,12 +726,18 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def routable?
-    type_champ.in?(ROUTABLE_TYPES)
+  def simple_routable?
+    type_champ.in?(SIMPLE_ROUTABLE_TYPES)
   end
 
   def conditionable?
     Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ)
+  end
+
+  def self.humanized_conditionable_types
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.map do
+      "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »"
+    end.to_sentence(last_word_connector: ' ou ')
   end
 
   def invalid_regexp?
@@ -758,6 +764,12 @@ class TypeDeChamp < ApplicationRecord
     else
       "#{stable_id}-#{row_id}"
     end
+  end
+
+  def libelle_as_filename
+    libelle.gsub(/[[:space:]]+/, ' ')
+      .truncate(30, omission: '', separator: ' ')
+      .parameterize
   end
 
   class << self

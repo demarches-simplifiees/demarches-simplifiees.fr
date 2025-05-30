@@ -6,9 +6,19 @@ body {
   scroll-behavior: smooth;
 }
 
+// Forces line breaks to prevent buttons from overflowing their container
+input[type="submit"] {
+  white-space: normal;
+}
+
 .page-wrapper {
   position: relative;
   min-height: 100%;
+}
+
+// Wrap text in pre tag
+pre {
+  white-space: pre-wrap;
 }
 
 // Mobile Safari doesn't bubble mouse events by default, unless:

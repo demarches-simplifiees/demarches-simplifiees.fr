@@ -68,9 +68,7 @@ fr:
   layouts:
     commencer:
       no_procedure:
-        line1: Un outil simple
-        line2: pour gérer les formulaires
-        line3: administratifs dématérialisés.
+        text: Un outil simple pour gérer les formulaires administratifs dématérialisés.
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
     header:
@@ -115,10 +113,8 @@ fr:
         headquarters_value: "18 av. d'Ariane, 87280 Limoges"
     accessibility_statement:
       title: "Déclaration d’accessibilité"
-      line_one: "La DTI s’engage à rendre son service accessible, conformément à l’article 47 de la loi n° 2005-102 du 11 février 2005."
-      line_two: "Cette déclaration d’accessibilité s’applique à %{app_name} (%{host})."
-      line_one_html: "La DTI s’engage à rendre son service accessible, conformément à l’<a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\">article 47 de la loi n° 2005-102 du 11 février 2005</a>."
-      line_two_html: "Cette déclaration d’accessibilité s’applique au site <a href=\"%{host}\">%{app_name}</a>."
+      line_one_html: "La DINUM s’engage à rendre son service accessible, conformément à l’<a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\">article 47 de la loi n° 2005-102 du 11 février 2005</a>."
+      line_two_html: "Cette déclaration d’accessibilité s’applique au site <a href=\"https://%{host}\">%{app_name}</a>."
       compliance:
         title: "État de conformité"
         line_one_html: "Le site Mes-Démarches est <strong>partiellement conforme</strong> avec le référentiel général d’amélioration de l’accessibilité (RGAA) version 4."
@@ -282,7 +278,7 @@ fr:
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
           integer_number: 42
-          email: personne@fournisseur.fr
+          email: adresse@mail.com
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
@@ -311,9 +307,9 @@ fr:
         json_description_copy: Copier la requête d’obtention de la description JSON
     registrations:
       new:
-        title: "Créez-vous un compte %{name}"
+        title: "Creation de compte sur %{name}"
+        subtitle: "Se créer un compte avec une adresse email"
         social_title: "Rapide, simple et sûr, connectez-vous avec"
-        subtitle: "Se créer un compte en choisissant un identifiant"
         email_label: 'Email'
         password_label: "Mot de passe"
         password_message: "Inscrivez un mot de passe"
@@ -341,7 +337,7 @@ fr:
         modal_highlight: Les invités ont le droit de voir et modifier votre dossier.
         title: Ajouter un invité
         email: Adresse mail
-        email_hint: "Exemple : camilya.martin@exemple.fr"
+        email_hint: 'Exemple : adresse@mail.com'
         invite_message: Ajouter un message à la personne invitée (optionnel)
         send_invitation: Envoyer une invitation
         withdraw_permission: "Révoquer l’autorisation"
@@ -635,7 +631,7 @@ fr:
         password: 'Mot de passe'
         requested_merge_into: 'La nouvelle adresse email'
         hints:
-          email: "Format attendu : john.doe@exemple.fr"
+          email: 'Format attendu : adresse@mail.com'
       user:
         siret: 'Numéro TAHITI'
         << : *default_attributes
@@ -677,7 +673,7 @@ fr:
         not_a_phone: 'Numéro de téléphone invalide'
         not_a_rna: 'Numéro RNA invalide'
         url: 'n’est pas un lien valide'
-        invalid_email_format: "est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"
+        invalid_email_format: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
       models:
         attestation_template:
           attributes:
@@ -692,9 +688,9 @@ fr:
             reset_password_token:
               invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
             email:
-              blank: "est vide. Saisir une adresse électronique"
-              invalid: "est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"
-              taken: "déjà utilisé. Saisir une autre adresse électronique."
+              blank: 'est vide. Saisir une adresse électronique'
+              invalid: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
+              taken: 'déjà utilisé. Saisir une autre adresse électronique.'
             password:
               too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
               not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"

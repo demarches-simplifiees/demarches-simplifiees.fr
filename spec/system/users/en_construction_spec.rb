@@ -32,6 +32,7 @@ describe "Dossier en_construction", js: true do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.txt"
+      expect(page).not_to have_text("toto.txt")
 
       input_selector = "#attachment-multiple-empty-#{champ.public_id}"
       expect(page).to have_selector(input_selector)
@@ -39,7 +40,6 @@ describe "Dossier en_construction", js: true do
 
       wait_until { champ.reload.for_export == 'file.pdf' }
       expect(page).to have_text("file.pdf")
-      expect(page).not_to have_text("toto.txt")
     end
   end
 
@@ -56,13 +56,13 @@ describe "Dossier en_construction", js: true do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.png"
+      expect(page).not_to have_text("toto.png")
 
       input_selector = "##{champ.input_id}"
       expect(page).to have_selector(input_selector)
       find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
 
       expect(page).to have_text("file.pdf")
-      expect(page).not_to have_text("toto.png")
     end
   end
 

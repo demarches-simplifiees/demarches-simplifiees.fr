@@ -23,6 +23,7 @@ module Types
     field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime
     field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
+    field :dossier_modifier_annotation_drop_down_list, mutation: Mutations::DossierModifierAnnotationDropDownList
 
     field :groupe_instructeur_modifier, mutation: Mutations::GroupeInstructeurModifier
     field :groupe_instructeur_creer, mutation: Mutations::GroupeInstructeurCreer

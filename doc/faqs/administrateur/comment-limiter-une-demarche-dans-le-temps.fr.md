@@ -22,6 +22,6 @@ Pour mettre en place la clôture automatique :
 1. Accédez à l’onglet « _Présentation_ » de votre démarche depuis le tableau de bord administrateur.
 2. Dans les « _Options avancées_ », recherchez le champ intitulé « _Date limite de dépôt des dossiers_ » et renseignez la date souhaitée.
 
-![Saisie de la date limite de dépôt](faq/administrateur-set-auto-close-date.png)
+![Saisie de la date limite de dépôt {aria-hidden="true"}](faq/administrateur-set-auto-close-date.png)
 
 **Attention** : Si vous fixez la date de clôture au « 14 septembre », la fin de dépôt des dossiers sera effective le **14 septembre à 23h59 (heure de Paris)**.

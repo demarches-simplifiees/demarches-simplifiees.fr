@@ -17,7 +17,7 @@ Pour contacter les services en charge de votre démarche, vous pouvez :
 
     Pour cela, il vous suffit de cliquer sur le lien **« Messagerie »** depuis le dossier concerné.
 
-    ![Vue de l’interface de messagerie avec le service traitant un dossier](faq/usager-messagerie.png)
+    ![Vue de l’interface de messagerie avec le service traitant un dossier {aria-hidden="true"}](faq/usager-messagerie.png)
 
     N’oubliez pas de cliquer sur le bouton **« Envoyer le message »**.
 
@@ -25,4 +25,4 @@ Pour contacter les services en charge de votre démarche, vous pouvez :
 
     La messagerie peut être désactivée lorsque le dossier est archivé ou fait l’objet d’une décision finale. Dans ce cas, vous pouvez contacter le service grâce aux informations de contact situées en bas du formulaire.
 
-    ![Coordonnées de contact du service traitant un dossier](faq/usager-footer-contact.png)
+    ![Coordonnées de contact du service traitant un dossier {aria-hidden="true"}](faq/usager-footer-contact.png)

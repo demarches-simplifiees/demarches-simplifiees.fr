@@ -1,6 +1,7 @@
 import '@gouvfr/dsfr/dist/core/core.module';
 import '@gouvfr/dsfr/dist/scheme/scheme.module';
 
+import '@gouvfr/dsfr/dist/component/display/display.module';
 import '@gouvfr/dsfr/dist/component/toggle/toggle.module';
 import '@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.module';
 import '@gouvfr/dsfr/dist/component/modal/modal.module';
