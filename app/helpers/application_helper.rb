@@ -74,7 +74,7 @@ module ApplicationHelper
     tags, type, dossier_id = options.values_at(:tags, :type, :dossier_id)
     options.except!(:tags, :type, :dossier_id)
 
-    params = { tags: tags, type: type, dossier_id: dossier_id }.compact
+    params = { tags: Array.wrap(tags), type: type, dossier_id: dossier_id }.compact
     link_to title, contact_url(params), options
   end
 

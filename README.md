@@ -196,4 +196,4 @@ La compatibilité est testée par Browserstack.<br>[<img src="app/assets/images/
 
 Nous utilisons Skylight pour suivre les performances de notre application.
 
-Par ailleurs, nous utilisons [Yabeda](https://github.com/yabeda-rb/yabeda) pour exporter des metriques au format prometheus. L'activation se fait via la variable d'environnement `PROMETHEUS_EXPORTER_ENABLED` voir config/env.example.optional .
+Par ailleurs, nous utilisons [Yabeda](https://github.com/yabeda-rb/yabeda) pour exporter des métriques au format prometheus pour Sidekiq. L'activation se fait via la variable d'environnement `PROMETHEUS_EXPORTER_ENABLED` voir config/env.example.optional .

@@ -27,6 +27,7 @@
     font-size: 8pt;
     content: counter(page) " / " counter(pages);
     margin-top: 17mm;
+    white-space: nowrap;
   }
 
   @bottom-left {
@@ -41,11 +42,12 @@
       flex-direction: column;
       justify-content: space-between; // This will push the footer down
       max-width: 21cm;
-      height: 29.7cm;
+      min-height: 29.7cm;
       padding: 17mm;
       margin: 0 auto;
       background: #FFFFFF;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); // Optional: for better visualization
+      position: relative;
     }
   }
 
@@ -165,9 +167,15 @@
     }
   }
 
-  .footer {
+  footer {
     position: running(footer);
     font-size: 7pt;
     font-weight: 100;
+    white-space: nowrap;
+
+    @media screen {
+      position: absolute;
+      bottom: 0;
+    }
   }
 }

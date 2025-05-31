@@ -7,7 +7,7 @@ describe Champs::RNFChamp, type: :model do
   describe 'fetch_external_data' do
     let(:url) { RNFService.new.send(:url) }
     let(:status) { 200 }
-    before { stub_request(:get, "#{url}/#{external_id}").to_return(body:, status:) }
+    before { stub_request(:get, "#{url}/075-FDD-00003-01").to_return(body:, status:) }
 
     subject { champ.fetch_external_data }
 
@@ -48,6 +48,20 @@ describe Champs::RNFChamp, type: :model do
       end
     end
 
+    context 'success (with space)' do
+      let(:external_id) { '075-FDD- 00003-01 ' }
+      it {
+        expect(subject).to be_success
+      }
+    end
+
+    context 'success (with tab)' do
+      let(:external_id) { '075-FDD-0	0003-01	' }
+      it {
+        expect(subject).to be_success
+      }
+    end
+
     context 'failure (schema)' do
       let(:response_type) { 'invalid' }
       it {
@@ -81,6 +95,25 @@ describe Champs::RNFChamp, type: :model do
         expect(subject.failure.retryable).to be_falsey
         expect(subject.failure.reason).to be_a(API::Client::HTTPError)
       }
+    end
+
+    describe 'update_with_external_data!' do
+      it 'works' do
+        value_json = {
+          :street_number => "16",
+          :street_name => "Rue du Général de Boissieu",
+          :street_address => "16 Rue du Général de Boissieu",
+          :postal_code => "75015",
+          :city_name => "Paris 15e Arrondissement",
+          :city_code => "75115",
+          :departement_code => "75",
+          :departement_name => "Paris",
+          :region_code => "11",
+          :region_name => "Île-de-France"
+        }
+        expect(champ).to receive(:update!).with(data: anything, value_json:)
+        champ.update_with_external_data!(data: subject.value!)
+      end
     end
   end
 

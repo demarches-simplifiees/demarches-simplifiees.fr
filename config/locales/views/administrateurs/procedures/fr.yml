@@ -75,3 +75,7 @@ fr:
         path_not_available:
           owner: Cette url est identique à celle d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.
           not_owner: Cette url est identique à celle d’une autre démarche, vous devez la modifier afin de pouvoir publier votre démarche.
+      unpublished_changes_sticky_header:
+        intro_html: Les modifications effectuées ne seront visibles <strong>qu'à la prochaine publication</strong>
+        see_changes: Voir les modifications
+        publish_changes: Publier les modifications

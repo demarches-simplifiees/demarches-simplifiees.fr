@@ -77,13 +77,33 @@ describe Individual do
     end
   end
 
-  context 'when an individual has an invalid notification_method' do
-    let(:invalid_individual) { build(:individual, notification_method: 'invalid_method') }
+  describe 'validate_mandant_email' do
+    let(:user) { create(:user, email: 'mandataire@example.com') }
+    let(:dossier) { create(:dossier, :for_tiers_with_notification, user: user) }
+    let(:individual) { dossier.individual }
 
-    it 'raises an ArgumentError' do
-      expect {
-        invalid_individual.valid?
-      }.to raise_error(ArgumentError, "'invalid_method' is not a valid notification_method")
+    context 'when validating email' do
+      it 'is valid when email is different from the mandataire' do
+        individual.email = 'different@example.com'
+        expect(individual).to be_valid
+      end
+
+      it 'is invalid when email is the same as the mandataire' do
+        individual.email = 'mandataire@example.com'
+        expect(individual).not_to be_valid
+        expect(individual.errors[:email]).to include(
+          I18n.t('activerecord.errors.models.individual.attributes.email.must_be_different_from_mandataire')
+        )
+      end
+
+      it 'is valid when email is not required (notification_method is not email)' do
+        dossier_without_notification = create(:dossier, :for_tiers_without_notification, user: user)
+        individual_without_notification = dossier_without_notification.individual
+
+        expect(individual_without_notification).to be_valid
+        expect(individual_without_notification.email).to be_nil
+        expect(individual_without_notification.notification_method).to eq('no_notification')
+      end
     end
   end
 end

@@ -594,7 +594,7 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def options_for_select
+  def options_for_select(column)
     if departement?
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
@@ -607,6 +607,8 @@ class TypeDeChamp < ApplicationRecord
       elsif checkbox?
         Champs::CheckboxChamp.options
       end
+    elsif siret? || rna? || rnf?
+      column.options_for_select
     end
   end
 

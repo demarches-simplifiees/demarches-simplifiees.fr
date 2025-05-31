@@ -1,7 +1,7 @@
 class TypesDeChamp::TypeDeChampBase
   include ActiveModel::Validations
 
-  delegate :description, :libelle, :mandatory, :mandatory?, :stable_id, :fillable?, :public?, to: :@type_de_champ
+  delegate :description, :libelle, :mandatory, :mandatory?, :stable_id, :fillable?, :public?, :type_champ, to: :@type_de_champ
 
   FILL_DURATION_SHORT  = 10.seconds
   FILL_DURATION_MEDIUM = 1.minute
@@ -104,6 +104,18 @@ class TypesDeChamp::TypeDeChampBase
         nil
       end
     end
+  end
+
+  def columns(table:)
+    [
+      Column.new(
+        table:,
+        column: stable_id.to_s,
+        label: libelle,
+        type: TypeDeChamp.filter_hash_type(type_champ),
+        value_column: TypeDeChamp.filter_hash_value_column(type_champ)
+      )
+    ]
   end
 
   private

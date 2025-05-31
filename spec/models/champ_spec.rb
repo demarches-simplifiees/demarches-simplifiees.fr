@@ -667,7 +667,7 @@ describe Champ do
     end
 
     context "fetch_external_data_later" do
-      let(:data) { 'some other data' }
+      let(:data) { { address: { city: "some external data" } }.with_indifferent_access }
 
       it "fill data from external source" do
         expect_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data) { data }

@@ -1,0 +1,12 @@
+- content_for(:title, t('.contact'))
+- content_for :footer do
+  = render partial: "root/footer"
+
+#contact-form
+  .fr-container
+    %h1
+      = t('.contact')
+
+    .fr-highlight= t('.intro_html')
+
+    = render partial: "form", object: @form

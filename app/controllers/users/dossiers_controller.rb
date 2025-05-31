@@ -9,7 +9,7 @@ module Users
     INSTANCE_ACTIONS_ALLOWED_TO_ANY_USER = [:qrcode]
     INSTANCE_ACIONS_ALLOWED_TO_OWNER_OR_INVITE = []
 
-    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new, :transferer_all] + INSTANCE_ACTIONS_ALLOWED_TO_ANY_USER
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new, :transferer_all, :deleted_dossiers] + INSTANCE_ACTIONS_ALLOWED_TO_ANY_USER
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ] + INSTANCE_ACIONS_ALLOWED_TO_OWNER_OR_INVITE
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -29,15 +29,12 @@ module Users
 
     def index
       ordered_dossiers = Dossier.includes(:procedure).order_by_updated_at
-      deleted_dossiers = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
 
       user_revisions = ProcedureRevision.where(dossiers: current_user.dossiers.visible_by_user)
       invite_revisions = ProcedureRevision.where(dossiers: current_user.dossiers_invites.visible_by_user)
-      deleted_dossier_procedures = Procedure.where(id: deleted_dossiers.pluck(:procedure_id))
       all_dossier_procedures = Procedure.where(revisions: user_revisions.or(invite_revisions))
 
       @procedures_for_select = all_dossier_procedures
-        .or(deleted_dossier_procedures)
         .distinct(:procedure_id)
         .order(:libelle)
         .pluck(:libelle, :id)
@@ -45,14 +42,12 @@ module Users
       @procedure_id = params[:procedure_id]
       if @procedure_id.present?
         ordered_dossiers = ordered_dossiers.where(procedures: { id: @procedure_id })
-        deleted_dossiers = deleted_dossiers.where(procedures: { id: @procedure_id })
       end
 
       @search_terms = params[:q]
       if @search_terms.present?
         dossiers_filter_by_search = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page
         ordered_dossiers = ordered_dossiers.merge(dossiers_filter_by_search)
-        deleted_dossiers = nil
       end
 
       @dossiers_visibles = ordered_dossiers.visible_by_user.preload(:etablissement, :individual, :invites)
@@ -60,12 +55,11 @@ module Users
       @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
-      @dossiers_supprimes_recemment = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
+      @dossiers_supprimes = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
       @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
-      @dossiers_supprimes_definitivement = deleted_dossiers
 
-      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
+      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 
       @dossiers = case @statut
       when 'en-cours'
@@ -74,10 +68,8 @@ module Users
         @dossiers_traites
       when 'dossiers-invites'
         @dossiers_invites
-      when 'dossiers-supprimes-recemment'
-        @dossiers_supprimes_recemment
-      when 'dossiers-supprimes-definitivement'
-        @dossiers_supprimes_definitivement
+      when 'dossiers-supprimes'
+        @dossiers_supprimes
       when 'dossiers-transferes'
         @dossier_transferes
       when 'dossiers-expirant'
@@ -494,18 +486,21 @@ module Users
       redirect_to dossier_path(@dossier)
     end
 
+    def deleted_dossiers
+      @deleted_dossiers = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at.page(page)
+    end
+
     private
 
     # if the status tab is filled, then this tab
     # else first filled tab
     # else en-cours
-    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transferes, dossiers_close_to_expiration, params_statut)
+    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes, dossier_transferes, dossiers_close_to_expiration, params_statut)
       tabs = {
         'en-cours' => mes_dossiers,
         'traites' => dossiers_traites,
         'dossiers-invites' => dossiers_invites,
-        'dossiers-supprimes-recemment' => dossiers_supprimes_recemment,
-        'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement,
+        'dossiers-supprimes' => dossiers_supprimes,
         'dossiers-transferes' => dossier_transferes,
         'dossiers-expirant' => dossiers_close_to_expiration
       }

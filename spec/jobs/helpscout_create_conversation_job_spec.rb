@@ -1,62 +1,110 @@
 require 'rails_helper'
 
 RSpec.describe HelpscoutCreateConversationJob, type: :job do
-  let(:args) { { email: 'sender@email.com' } }
+  let(:api) { instance_double("Helpscout::API") }
+  let(:email) { 'help@rspec.net' }
+  let(:subject_text) { 'Bonjour' }
+  let(:text) { "J'ai un pb" }
+  let(:tags) { ["first tag"] }
+  let(:question_type) { "lost" }
+  let(:phone) { nil }
+  let(:user) { nil }
+  let(:contact_form) { create(:contact_form, email:, user:, subject: subject_text, text:, tags:, phone:, question_type:) }
 
   describe '#perform' do
-    context 'when blob_id is not present' do
-      it 'sends the form without a file' do
-        form_adapter = double('Helpscout::FormAdapter')
-        allow(Helpscout::FormAdapter).to receive(:new).with(hash_including(args.merge(blob: nil))).and_return(form_adapter)
-        expect(form_adapter).to receive(:send_form)
+    before do
+      allow(Helpscout::API).to receive(:new).and_return(api)
+      allow(api).to receive(:create_conversation)
+        .and_return(double(
+              success?: true,
+              headers: { 'Resource-ID' => 'new-conversation-id' }
+            ))
+      allow(api).to receive(:add_tags)
+      allow(api).to receive(:add_phone_number) if phone.present?
+    end
 
-        described_class.perform_now(**args)
+    subject {
+      described_class.perform_now(contact_form)
+    }
+
+    context 'when no file is attached' do
+      it 'sends the form without a file' do
+        subject
+        expect(api).to have_received(:create_conversation).with(email, subject_text, text, nil)
+        expect(api).to have_received(:add_tags).with("new-conversation-id", match_array(tags.concat(["contact form", question_type])))
+        expect(contact_form).to be_destroyed
       end
     end
 
-    context 'when blob_id is present' do
-      let(:blob) {
-        ActiveStorage::Blob.create_and_upload!(io: StringIO.new("toto"), filename: "toto.png")
-      }
-
+    context 'when a file is attached' do
       before do
-        allow(blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: pending, safe?: safe))
+        file = fixture_file_upload('spec/fixtures/files/white.png', 'image/png')
+        contact_form.piece_jointe.attach(file)
       end
 
       context 'when the file has not been scanned yet' do
-        let(:pending) { true }
-        let(:safe) { false }
+        before do
+          allow_any_instance_of(ActiveStorage::Blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: true, safe?: false))
+        end
 
-        it 'reenqueue job' do
-          expect {
-            described_class.perform_now(blob_id: blob.id, **args)
-          }.to have_enqueued_job(described_class).with(blob_id: blob.id, **args)
+        it 'reenqueues job' do
+          expect { subject }.to have_enqueued_job(described_class).with(contact_form)
         end
       end
 
       context 'when the file is safe' do
-        let(:pending) { false }
-        let(:safe) { true }
+        before do
+          allow_any_instance_of(ActiveStorage::Blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: false, safe?: true))
+        end
 
-        it 'downloads the file and sends the form' do
-          form_adapter = double('Helpscout::FormAdapter')
-          allow(Helpscout::FormAdapter).to receive(:new).with(hash_including(args.merge(blob:))).and_return(form_adapter)
-          allow(form_adapter).to receive(:send_form)
-
-          described_class.perform_now(blob_id: blob.id, **args)
+        it 'sends the form with the file' do
+          subject
+          expect(api).to have_received(:create_conversation).with(email, subject_text, text, contact_form.piece_jointe)
         end
       end
 
       context 'when the file is not safe' do
-        let(:pending) { false }
-        let(:safe) { false }
+        before do
+          allow_any_instance_of(ActiveStorage::Blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: false, safe?: false))
+        end
 
-        it 'downloads the file and sends the form' do
-          form_adapter = double('Helpscout::FormAdapter')
-          allow(Helpscout::FormAdapter).to receive(:new).with(hash_including(args.merge(blob: nil))).and_return(form_adapter)
-          allow(form_adapter).to receive(:send_form)
+        it 'ignores the file' do
+          subject
+          expect(api).to have_received(:create_conversation).with(email, subject_text, text, nil)
+        end
+      end
+    end
 
-          described_class.perform_now(blob_id: blob.id, **args)
+    context 'with a phone' do
+      let(:phone) { "06" }
+
+      it 'associates the phone number' do
+        subject
+        expect(api).to have_received(:add_phone_number).with(email, phone)
+      end
+    end
+
+    context 'attached to an user' do
+      let(:email) { nil }
+      let(:user) { users(:default_user) }
+
+      it 'associates the email from user' do
+        subject
+        expect(api).to have_received(:create_conversation).with(user.email, subject_text, text, nil)
+        expect(contact_form).to be_destroyed
+        expect(user.reload).to be_truthy
+      end
+
+      context 'having dossiers' do
+        before do
+          create(:dossier, user:)
+        end
+
+        it 'associates the email from user' do
+          subject
+          expect(api).to have_received(:create_conversation).with(user.email, subject_text, text, nil)
+          expect(contact_form).to be_destroyed
+          expect(user.reload).to be_truthy
         end
       end
     end

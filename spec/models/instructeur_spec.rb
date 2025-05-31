@@ -722,13 +722,15 @@ describe Instructeur, type: :model do
       context 'with an archives dossier' do
         let!(:archives_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
 
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['traites']).to eq(0) }
-        it { expect(subject['tous']).to eq(0) }
-        it { expect(subject['archives']).to eq(1) }
-        it { expect(subject['supprimes_recemment']).to eq(0) }
-        it { expect(subject['expirant']).to eq(0) }
+        it do
+          expect(subject['a_suivre']).to eq(0)
+          expect(subject['suivis']).to eq(0)
+          expect(subject['traites']).to eq(0)
+          expect(subject['tous']).to eq(0)
+          expect(subject['archives']).to eq(1)
+          expect(subject['supprimes']).to eq(0)
+          expect(subject['expirant']).to eq(0)
+        end
 
         context 'and terminer dossiers on each of the others groups' do
           let!(:archives_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
@@ -745,13 +747,15 @@ describe Instructeur, type: :model do
         let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, procedure: procedure) }
         before { subject }
 
-        it { expect(subject['a_suivre']).to eq(1) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['traites']).to eq(1) }
-        it { expect(subject['tous']).to eq(2) }
-        it { expect(subject['archives']).to eq(0) }
-        it { expect(subject['supprimes_recemment']).to eq(2) }
-        it { expect(subject['expirant']).to eq(2) }
+        it do
+          expect(subject['a_suivre']).to eq(1)
+          expect(subject['suivis']).to eq(0)
+          expect(subject['traites']).to eq(1)
+          expect(subject['tous']).to eq(2)
+          expect(subject['archives']).to eq(0)
+          expect(subject['supprimes']).to eq(2)
+          expect(subject['expirant']).to eq(2)
+        end
       end
     end
   end

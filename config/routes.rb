@@ -243,10 +243,10 @@ Rails.application.routes.draw do
   get "suivi" => "root#suivi"
   post "save_locale" => "root#save_locale"
 
-  get "contact", to: "support#index"
-  post "contact", to: "support#create"
+  get "contact", to: "contact#index"
+  post "contact", to: "contact#create"
 
-  get "contact-admin", to: "support#admin"
+  get "contact-admin", to: "contact#admin"
 
   get "mentions-legales", to: "static_pages#legal_notice"
   get "declaration-accessibilite", to: "static_pages#accessibility_statement"
@@ -414,6 +414,7 @@ Rails.application.routes.draw do
 
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
+    get 'deleted_dossiers' => 'dossiers#deleted_dossiers'
 
     get 'profil' => 'profil#show'
     patch 'update_email' => 'profil#update_email'
@@ -498,7 +499,7 @@ Rails.application.routes.draw do
         end
 
         patch 'update_displayed_fields'
-        get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
+        get 'update_sort/:column_id' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
         post 'update_filter'
         get 'remove_filter'

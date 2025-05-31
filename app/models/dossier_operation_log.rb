@@ -41,7 +41,9 @@ class DossierOperationLog < ApplicationRecord
 
   def self.purge_discarded
     not_deletion.destroy_all
-    with_data.each(&:move_to_cold_storage!)
+
+    supprimer.map { _1.serialized.purge_later }
+    supprimer.update_all(data: nil)
   end
 
   def self.create_and_serialize(params)

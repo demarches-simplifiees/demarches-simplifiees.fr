@@ -1,4 +1,4 @@
-= form_tag update_sort_instructeur_procedure_path(procedure_id: @procedure.id, table: 'notifications', column: 'notifications', order: opposite_order), method: :get, data: { controller: 'autosubmit' } do
+= form_tag update_sort_instructeur_procedure_path(procedure_id: @procedure.id, column_id: 'notifications/notifications', order: opposite_order), method: :get, data: { controller: 'autosubmit' } do
   .fr-fieldset__element.fr-m-0
     .fr-checkbox-group.fr-checkbox-group--sm
       = check_box_tag :order, opposite_order, active?

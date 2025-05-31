@@ -1,0 +1,60 @@
+= form_for form, url: contact_path, method: :post, multipart: true, class: 'fr-form-group', data: {controller: :contact } do |f|
+  %p.fr-hint-text= t('asterisk_html', scope: [:utils])
+
+  - if form.require_email?
+    = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email' }) do |c|
+      - c.with_label { ContactForm.human_attribute_name(form.for_admin? ? :email_pro : :email) }
+
+  %fieldset.fr-fieldset{ name: "question_type" }
+    %legend.fr-fieldset__legend.fr-fieldset__legend--regular
+      = t('.your_question')
+      = render EditableChamp::AsteriskMandatoryComponent.new
+    .fr-fieldset__content
+      - form.options.each do |(question, question_type, link)|
+        .fr-radio-group
+          = f.radio_button :question_type, question_type, required: true, data: {"contact-target": "inputRadio" }, checked: question_type == form.question_type
+          = f.label "question_type_#{question_type}", { 'aria-controls': link ? "card-#{question_type}" : nil, class: 'fr-label' } do
+            = question
+
+          - if link.present?
+            .fr-ml-3w{ id: "card-#{question_type}",
+                       class: class_names('hidden' => question_type != form.question_type),
+                       "aria-hidden": question_type != form.question_type,
+                       data: { "contact-target": "content" } }
+              = render Dsfr::CalloutComponent.new(title: t('.our_answer')) do |c|
+                - c.with_html_body do
+                  -# i18n-tasks-use t("contact.index.#{question_type}.answer_html")
+                  = t('answer_html', scope: [:contact, :index, question_type], base_url: Current.application_base_url, "link_#{question_type}": link)
+
+
+  - if form.for_admin?
+    = render Dsfr::InputComponent.new(form: f, attribute: :phone, required: false)
+  - else
+    = render Dsfr::InputComponent.new(form: f, attribute: :dossier_id, required: false)
+
+  = render Dsfr::InputComponent.new(form: f, attribute: :subject)
+
+  = render Dsfr::InputComponent.new(form: f, attribute: :text, input_type: :text_area, opts: { rows: 6 })
+
+  - if !form.for_admin?
+    .fr-upload-group
+      = f.label :piece_jointe, class: 'fr-label' do
+        = t('pj', scope: [:utils])
+        %span.fr-hint-text
+          = t('.notice_upload_group')
+
+      %p.notice.hidden{ data: { 'contact-type-only': ContactForm::TYPE_AMELIORATION } }
+        = t('.notice_pj_product')
+      %p.notice.hidden{ data: { 'contact-type-only': ContactForm::TYPE_AUTRE } }
+        = t('.notice_pj_other')
+      = f.file_field :piece_jointe, class: 'fr-upload', accept: '.jpg, .jpeg, .png, .pdf'
+
+  - f.object.tags.each_with_index do |tag, index|
+    = f.hidden_field :tags, name: f.field_name(:tags, multiple: true), id: f.field_id(:tag, index), value: tag
+
+  = f.hidden_field :for_admin
+
+  = invisible_captcha
+
+  .fr-input-group.fr-my-3w
+    = f.submit t('send_mail', scope: [:utils]), type: :submit, class: 'fr-btn', data: { disable: true }

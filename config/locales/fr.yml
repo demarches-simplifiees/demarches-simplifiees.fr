@@ -43,9 +43,6 @@ fr:
     asterisk_html: "Les champs suivis d’un astérisque ( <svg aria-label='obligatoire' class='icon mandatory' height='10' role='img' viewBox='0 0 1200 1200' width='10' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'><desc>obligatoire</desc><path d='M489.838 29.354v443.603L68.032 335.894 0 545.285l421.829 137.086-260.743 358.876 178.219 129.398L600.048 811.84l260.673 358.806 178.146-129.398-260.766-358.783L1200 545.379l-68.032-209.403-421.899 137.07V29.443H489.84l-.002-.089z'></path></svg> ) sont obligatoires."
     mandatory_champs: Tous les champs sont obligatoires.
     no_mandatory: (facultatif)
-    file_number: Numéro de dossier
-    subject: Sujet
-    message: Message
     send_mail: Envoyer le message
     new_tab: "Nouvel onglet"
   helpers:
@@ -406,8 +403,8 @@ fr:
           traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
           tous: Tous les dossiers déposés sur cette démarche, qu'ils soient à suivre, suivis par vous ou suivis par d'autres instructeurs.
           tous_with_routing: Tous les dossiers déposés sur cette démarche et attribués aux groupes d'instructeurs dont vous faites partie.
-          supprimes_recemment: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
-          archives: "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
+          supprimes: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
+          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
           expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
@@ -424,13 +421,12 @@ fr:
         batch_operation:
           enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
           disabled: "Impossible d'ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
-        show_deleted_dossiers: Afficher les dossiers supprimés
+        show_deleted_dossiers: Historique des dossiers supprimés
         personalize: Personnaliser
         passer_en_instruction: Passer en instruction
         repasser_en_construction: Repasser en construction
         follow_file: Suivre le dossier
         stop_follow: Ne plus suivre
-        save: Enregistrer
         no_file: Aucun dossier
         dossier_synthesis: Synthèse des dossiers
         passer_en_instruction_blocked_by_pending_correction: |
@@ -527,15 +523,16 @@ fr:
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed:
             brouillon:
-              internal_procedure_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace
-              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. %{link}
+              internal_procedure_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace.
+              other_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier, ni en déposer un nouveau pour cette démarche. %{link}
             en_cours:
-              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration
-              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier. %{link}
+              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
+              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
             termine:
-              internal_procedure_html: Cette démarche est close et remplacée par %{link}. Votre dossier a été traité par l'administration
-              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. %{link}
-            closing_details: Détails sur la fermeture de la démarche
+              internal_procedure_html: Cette démarche est close. Votre dossier a bien été traité par l'administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
+              other_html: Cette démarche est close. Votre dossier a bien été traité par l'administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
+            title_new_procedure: Nouvelle démarche disponible
+            title_closing_details: Plus d'informations sur la clôture de la démarche
             more_details: Plus d’informations
             procedure: démarche
             this_procedure: cette démarche
@@ -544,7 +541,6 @@ fr:
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
           shared_with: Dossier partagé par %{owner} avec
-          deleted: Supprimé le %{date}
           deleted_by_user: Supprimé le %{date} par l'usager
           deleted_by_automatic: Supprimé le %{date} automatiquement du à la date d'expiration
         dossier_action:
@@ -854,10 +850,10 @@ fr:
     dossiers_invites:
       one: dossier invité
       other: dossiers invités
-    dossiers_supprimes_recemment:
-      one:  supprimé récemment
-      other: supprimés récemment
-    dossiers_supprimes_definitivement:
+    dossiers_supprimes:
+      one:  supprimé
+      other: supprimés
+    dossiers_historique:
       one:  supprimé définitivement
       other: supprimés définitivement
     dossiers_transferes:

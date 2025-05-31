@@ -1,18 +1,18 @@
 .fr-downloads-group
-  - if instructeur_signed_in? && feature_enabled?(:gallery_demande)
+  - if profile == 'instructeur' && feature_enabled?(:gallery_demande)
     .gallery-items-list
       - champ.piece_justificative_file.attachments.with_all_variant_records.each do |attachment|
         .gallery-item
           - blob = attachment.blob
           - if displayable_pdf?(blob)
-            = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{champ.libelle} -- #{blob.filename}" do
+            = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{champ.libelle} -- #{sanitize(blob.filename.to_s)}" do
               .thumbnail
                 = image_tag(preview_url_for(attachment), loading: :lazy)
                 .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
                   = 'Visualiser'
 
           - elsif displayable_image?(blob)
-            = link_to image_url(blob_url(attachment)), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
+            = link_to image_url(blob_url(attachment)), title: "#{champ.libelle} -- #{sanitize(blob.filename.to_s)}", data: { src: blob.url }, class: 'gallery-link' do
               .thumbnail
                 = image_tag(variant_url_for(attachment), loading: :lazy)
                 .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }

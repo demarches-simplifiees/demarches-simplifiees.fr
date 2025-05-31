@@ -1,0 +1,6 @@
+- content_for(:title, "Historique des dossiers supprimés")
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Historique des dossiers supprimés']] }
+
+= render Dossiers::DeletedDossiersComponent.new(deleted_dossiers: @deleted_dossiers)

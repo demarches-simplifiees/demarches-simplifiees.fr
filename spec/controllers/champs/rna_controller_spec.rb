@@ -117,6 +117,22 @@ describe Champs::RNAController, type: :controller do
           expect(champ.data["association_date_publication"]).to eq("2018-01-01")
           expect(champ.data["association_rna"]).to eq("W751080001")
         end
+        it 'populates the value_json and RNA on the model' do
+          champ.reload
+          expect(champ.value).to eq(rna)
+          expect(champ.value_json).to eq({
+            "city_code" => "75108",
+            "city_name" => "Paris",
+            "departement_code" => nil, # might seem broken lookup, but no, it's anonymized
+            "departement_name" => nil,
+            "postal_code" => "75009",
+            "region_code" => nil,
+            "region_name" => nil,
+            "street_address" => "33 rue de Modagor",
+            "street_name" => "de Modagor",
+            "street_number" => "33"
+          })
+        end
       end
     end
 

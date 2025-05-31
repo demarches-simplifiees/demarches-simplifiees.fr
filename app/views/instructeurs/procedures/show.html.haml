@@ -19,7 +19,7 @@
         suivis_count: @counts[:suivis],
         traites_count: @counts[:traites],
         tous_count: @counts[:tous],
-        supprimes_recemment_count: @counts[:supprimes_recemment],
+        supprimes_count: @counts[:supprimes],
         archives_count: @counts[:archives],
         expirant_count: @counts[:expirant],
         has_en_cours_notifications: @has_en_cours_notifications,
@@ -41,9 +41,9 @@
           = t('views.instructeurs.dossiers.tab_explainations.tous_with_routing')
         - else
           = t('views.instructeurs.dossiers.tab_explainations.tous')
-    - if @statut == 'supprimes_recemment'
+    - if @statut == 'supprimes'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment').html_safe
+        = t('views.instructeurs.dossiers.tab_explainations.supprimes').html_safe
     - if @statut == 'archives'
       %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
@@ -62,14 +62,9 @@
     .flex.align-center
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
         = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut}
-        = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
+        = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation) if @statut != 'a-suivre'
 
         .fr-ml-auto
-
-          - if @statut == 'archives'
-            = link_to deleted_dossiers_instructeur_procedure_path(@procedure), class: "fr-link fr-icon-delete-line fr-link--icon-left fr-mr-2w" do
-              = t('views.instructeurs.dossiers.show_deleted_dossiers')
-
           - if @dossiers_count > 0
             %span.dossiers-export
               = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
@@ -98,8 +93,8 @@
                   %th.text-center
                     %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
 
-                - @procedure_presentation.displayed_fields_for_headers.each do |field|
-                  = render partial: "header_field", locals: { field: field, classname: field['classname'] }
+                - @procedure_presentation.displayed_fields_for_headers.each do |column|
+                  = render Instructeurs::ColumnTableHeaderComponent.new(procedure_presentation: @procedure_presentation, column:)
 
                 %th.follow-col
                   Actions
@@ -109,12 +104,7 @@
                     - menu.with_button_inner_html do
                       = t('views.instructeurs.dossiers.personalize')
                     - menu.with_form do
-                      = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
-                        %react-fragment
-                          = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_fields_for_select, selected_keys: @displayable_fields_selected, name: 'values[]', 'aria-label': 'Colonne à afficher'
-
-                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
-
+                      = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
             %tbody
               = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
@@ -149,7 +139,7 @@
                       - else
                         %a.cell-link{ href: path }
                           = column
-                          = "- #{t('views.instructeurs.dossiers.deleted_reason', reason: p.hidden_by_reason)}" if p.hidden_by_user_at.present?
+                          = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
 
                   %td.status-col
                     - status = [status_badge(p.state)]
@@ -172,7 +162,7 @@
                                   archived: p.archived,
                                   dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                   close_to_expiration: @statut == 'expirant',
-                                  hidden_by_administration: @statut == 'supprimes_recemment',
+                                  hidden_by_administration: @statut == 'supprimes',
                                   hidden_by_expired: p.hidden_by_reason == 'expired',
                                   sva_svr: @procedure.sva_svr_enabled?,
                                   has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,

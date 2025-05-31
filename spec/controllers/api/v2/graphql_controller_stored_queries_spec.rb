@@ -47,6 +47,24 @@ describe API::V2::GraphqlController do
     }
   end
 
+  describe 'when not authenticated' do
+    let(:variables) { { dossierNumber: dossier.id } }
+    let(:operation_name) { 'getDossier' }
+    let!(:authorization_header) { nil }
+
+    context 'with query' do
+      let(:query) { 'query getDossier($dossierNumber: Int!) { dossier(number: $dossierNumber) { id } }' }
+
+      it { expect(gql_errors.first[:message]).to eq('Without a token, only persisted queries are allowed') }
+    end
+
+    context 'with queryId' do
+      let(:query_id) { 'ds-query-v2' }
+
+      it { expect(gql_errors.first[:message]).to eq('An object of type Dossier was hidden due to permissions') }
+    end
+  end
+
   describe 'ds-query-v2' do
     let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, depose_at: 4.days.ago) }
     let(:query_id) { 'ds-query-v2' }
@@ -885,6 +903,35 @@ describe API::V2::GraphqlController do
 
         it {
           expect(gql_data[:dossierArchiver][:errors].first[:message]).to eq('Un dossier ne peut être archivé qu’une fois le traitement terminé')
+        }
+      end
+    end
+
+    context 'dossierDesarchiver' do
+      let(:dossier) { create(:dossier, :refuse, :with_individual, :archived, procedure:) }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:operation_name) { 'dossierDesarchiver' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:dossierDesarchiver][:errors]).to be_nil
+        expect(gql_data[:dossierDesarchiver][:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossierDesarchiver][:dossier][:archived]).to be_falsey
+      }
+
+      context 'read only token' do
+        before { api_token.update(write_access: false) }
+
+        it {
+          expect(gql_data[:dossierDesarchiver][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+        }
+      end
+
+      context 'when not processed' do
+        let(:dossier) { create(:dossier, :refuse, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierDesarchiver][:errors].first[:message]).to eq('Un dossier non archivé ne peut pas être désarchivé')
         }
       end
     end

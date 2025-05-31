@@ -11,6 +11,7 @@ module Types
     field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
     field :dossier_repasser_en_construction, mutation: Mutations::DossierRepasserEnConstruction
     field :dossier_archiver, mutation: Mutations::DossierArchiver
+    field :dossier_desarchiver, mutation: Mutations::DossierDesarchiver
     field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
 
     # pf mutations

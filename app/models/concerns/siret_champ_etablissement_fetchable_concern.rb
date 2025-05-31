@@ -12,11 +12,10 @@ module SiretChampEtablissementFetchableConcern
     if @other_etablissements && other_etablissements.size > 1
       self.etablissement = etablissement
     else
-      update!(etablissement: etablissement)
+      update!(etablissement: etablissement, value_json: APIGeoService.parse_etablissement_address(etablissement))
     end
   rescue => error
     if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
-      # TODO: notify ops
       update!(
         etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, siret, user.id)
       )
