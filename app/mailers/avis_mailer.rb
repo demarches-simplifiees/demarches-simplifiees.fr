@@ -22,6 +22,25 @@ class AvisMailer < ApplicationMailer
     end
   end
 
+  def avis_invitation_and_confirm_email(user, token, avis, targeted_user_link = nil) # ensure re-entrance if existing AvisMailer.avis_invitation in queue
+    if avis.dossier.visible_by_administration?
+      targeted_user_link = avis.targeted_user_links
+        .find_or_create_by(target_context: 'avis',
+                                                  target_model_type: Avis.name,
+                                                  target_model_id: avis.id,
+                                                  user: avis.expert.user)
+      email = user.email
+      @token = token
+      @avis = avis
+      @url = targeted_user_link_url(targeted_user_link)
+      subject = "Donnez votre avis sur le dossier nº #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
+
+      bypass_unverified_mail_protection!
+
+      mail(to: email, subject: subject)
+    end
+  end
+
   # i18n-tasks-use t("avis_mailer.#{action}.subject")
   def notify_new_commentaire_to_expert(dossier, avis, expert)
     I18n.with_locale(dossier.user_locale) do

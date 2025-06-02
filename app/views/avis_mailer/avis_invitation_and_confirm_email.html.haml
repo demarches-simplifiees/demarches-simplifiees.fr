@@ -22,7 +22,12 @@
 %p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
   = @avis.introduction
 
-%p
-  = round_button("Donner votre avis", @url, :primary)
+- if @avis.expert.user.active?
+  %p
+    = round_button('Confirmez votre adresse email pour donner votre avis', users_confirm_email_url(token: @token), :primary)
+- else
+  %p
+    = round_button("Inscrivez-vous pour donner votre avis", @url, :primary)
+
 
 = render partial: "layouts/mailers/signature"

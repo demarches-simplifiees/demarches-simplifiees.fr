@@ -107,6 +107,18 @@ class User < ApplicationRecord
     UserMailer.invite_tiers(self, token, dossier).deliver_later
   end
 
+  def invite_expert_and_send_avis!(avis)
+    token = SecureRandom.hex(10)
+    self.update!(confirmation_token: token, confirmation_sent_at: Time.zone.now)
+    AvisMailer.avis_invitation_and_confirm_email(self, token, avis).deliver_later
+  end
+
+  def resend_confirmation_email!
+    token = SecureRandom.hex(10)
+    self.update!(confirmation_token: token, confirmation_sent_at: Time.zone.now)
+    UserMailer.resend_confirmation_email(self, token).deliver_later
+  end
+
   def invite_gestionnaire!(groupe_gestionnaire)
     UserMailer.invite_gestionnaire(self, set_reset_password_token, groupe_gestionnaire).deliver_later
   end
@@ -179,13 +191,11 @@ class User < ApplicationRecord
 
   def self.create_or_promote_to_expert(email, password)
     user = User
-      .create_with(password: password, confirmed_at: Time.zone.now, email_verified_at: Time.zone.now)
+      .create_with(password: password, confirmed_at: Time.zone.now)
       .find_or_create_by(email: email)
 
-    if user.valid?
-      if user.expert.nil?
-        user.create_expert!
-      end
+    if user.valid? && user.expert.nil?
+      user.create_expert!
     end
 
     user

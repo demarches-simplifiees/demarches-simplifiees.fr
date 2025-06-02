@@ -29,14 +29,14 @@ describe Instructeurs::AvisController, type: :controller do
 
     describe 'remind' do
       before do
-        allow(AvisMailer).to receive(:avis_invitation).and_return(double(deliver_later: nil))
+        allow(AvisMailer).to receive(:avis_invitation_and_confirm_email).and_return(double(deliver_later: nil))
       end
       context 'without question' do
         let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
 
         it 'sends a reminder to the expert' do
           get :remind, params: { procedure_id: procedure.id, id: avis.id }
-          expect(AvisMailer).to have_received(:avis_invitation).once.with(avis)
+          expect(AvisMailer).to have_received(:avis_invitation_and_confirm_email)
           expect(flash.notice).to eq("Un mail de relance a été envoyé à #{avis.expert.email}")
           expect(avis.reload.reminded_at).to be_present
         end
@@ -47,7 +47,7 @@ describe Instructeurs::AvisController, type: :controller do
 
         it 'sends a reminder to the expert' do
           get :remind, params: { procedure_id: procedure.id, id: avis.id }
-          expect(AvisMailer).to have_received(:avis_invitation).once.with(avis)
+          expect(AvisMailer).to have_received(:avis_invitation_and_confirm_email)
           expect(flash.notice).to eq("Un mail de relance a été envoyé à #{avis.expert.email}")
           expect(avis.reload.reminded_at).to be_present
         end

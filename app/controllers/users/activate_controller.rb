@@ -49,7 +49,7 @@ class Users::ActivateController < ApplicationController
     else
       if user.present?
         flash[:alert] = "Ce lien n'est plus valable, un nouveau lien a été envoyé à l'adresse #{user.email}"
-        User.create_or_promote_to_tiers(user.email, SecureRandom.hex)
+        user.resend_confirmation_email!
       else
         flash[:alert] = "Un problème est survenu, vous pouvez nous contacter sur #{Current.contact_email}"
       end
