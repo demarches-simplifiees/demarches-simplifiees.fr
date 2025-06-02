@@ -72,6 +72,8 @@ module Types
           Types::Champs::PieceJustificativeChampType
         when ::Champs::CarteChamp
           Types::Champs::CarteChampType
+        when ::Champs::TeFenuaChamp
+          Types::Champs::TeFenuaChampType
         when ::Champs::NumberChamp, ::Champs::IntegerNumberChamp
           Types::Champs::IntegerNumberChampType
         when ::Champs::DecimalNumberChamp
