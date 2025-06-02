@@ -383,24 +383,105 @@ RSpec.describe DossierChampsConcern do
     end
 
     context "champ with type change" do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: "Un champ text", stable_id: 99 }]) }
-      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:attributes) { { "99" => { primary_value: "primary" } } }
+      context 'text -> linked_drop_down_list' do
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: "Un champ text", stable_id: 99 }]) }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        let(:attributes) { { "99" => { primary_value: "primary" } } }
 
-      before do
-        tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
-        tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:linked_drop_down_list), drop_down_options: ["--primary--", "secondary"])
-        dossier.procedure.publish_revision!
-        perform_enqueued_jobs
-        dossier.reload
+        before do
+          tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
+          tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:linked_drop_down_list), drop_down_options: ["--primary--", "secondary"])
+          dossier.procedure.publish_revision!
+          perform_enqueued_jobs
+          dossier.reload
+        end
+
+        it {
+          expect { subject }.to change { dossier.champs.find_by(stable_id: 99).last_write_type_champ }
+            .from(TypeDeChamp.type_champs.fetch(:text))
+            .to(TypeDeChamp.type_champs.fetch(:linked_drop_down_list))
+          expect(champ_99.persisted?).to be_truthy
+          expect(champ_99.last_write_type_champ).to eq(TypeDeChamp.type_champs.fetch(:linked_drop_down_list))
+          expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
+          expect(champ_99.changed?).to be_truthy
+          expect(champ_99.value).to eq('["primary",""]')
+        }
       end
 
-      it {
-        subject
-        expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
-        expect(champ_99.changed?).to be_truthy
-        expect(champ_99.value).to eq('["primary",""]')
-      }
+      context 'textarea -> text' do
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :textarea, libelle: "Un champ textarea", stable_id: 99 }]) }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        let(:attributes) { { "99" => { value: "test text" } } }
+
+        before do
+          tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
+          tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:text))
+          dossier.procedure.publish_revision!
+          perform_enqueued_jobs
+          dossier.reload
+        end
+
+        it {
+          expect { subject }.to change { dossier.champs.find_by(stable_id: 99).last_write_type_champ }
+            .from(TypeDeChamp.type_champs.fetch(:textarea))
+            .to(TypeDeChamp.type_champs.fetch(:text))
+          expect(champ_99.persisted?).to be_truthy
+          expect(champ_99.last_write_type_champ).to eq(TypeDeChamp.type_champs.fetch(:text))
+          expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
+          expect(champ_99.changed?).to be_truthy
+          expect(champ_99.value).to eq('test text')
+        }
+      end
+
+      context 'yes_no -> checkbox' do
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :yes_no, libelle: "Un champ yes/no", stable_id: 99 }]) }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        let(:attributes) { { "99" => { value: "true" } } }
+
+        before do
+          tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
+          tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:checkbox))
+          dossier.procedure.publish_revision!
+          perform_enqueued_jobs
+          dossier.reload
+        end
+
+        it {
+          expect { subject }.to change { dossier.champs.find_by(stable_id: 99).last_write_type_champ }
+            .from(TypeDeChamp.type_champs.fetch(:yes_no))
+            .to(TypeDeChamp.type_champs.fetch(:checkbox))
+          expect(champ_99.persisted?).to be_truthy
+          expect(champ_99.last_write_type_champ).to eq(TypeDeChamp.type_champs.fetch(:checkbox))
+          expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
+          expect(champ_99.changed?).to be_truthy
+          expect(champ_99.value).to eq('true')
+        }
+      end
+
+      context 'regions -> text' do
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :regions, libelle: "Un champ regions", stable_id: 99 }]) }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        let(:attributes) { { "99" => { value: "test text" } } }
+
+        before do
+          tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
+          tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:text))
+          dossier.procedure.publish_revision!
+          perform_enqueued_jobs
+          dossier.reload
+        end
+
+        it {
+          expect { subject }.to change { dossier.champs.find_by(stable_id: 99).last_write_type_champ }
+            .from(TypeDeChamp.type_champs.fetch(:regions))
+            .to(TypeDeChamp.type_champs.fetch(:text))
+          expect(champ_99.persisted?).to be_truthy
+          expect(champ_99.last_write_type_champ).to eq(TypeDeChamp.type_champs.fetch(:text))
+          expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
+          expect(champ_99.changed?).to be_truthy
+          expect(champ_99.value).to eq('test text')
+        }
+      end
     end
   end
 

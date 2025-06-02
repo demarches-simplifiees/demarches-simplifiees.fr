@@ -330,7 +330,7 @@ module DossierChampsConcern
     end
 
     # Needed when a revision change the champ type in this case, we reset the champ data
-    if !champ.is_a?(type_de_champ.champ_class)
+    if champ.class != type_de_champ.champ_class
       champ = champ.becomes!(type_de_champ.champ_class)
       champ.assign_attributes(value: nil, value_json: nil, external_id: nil, data: nil)
     elsif stream != Champ::MAIN_STREAM && champ.previously_new_record?
