@@ -2,16 +2,15 @@
 
 describe "Dossier en_construction", js: true do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :for_individual, types_de_champ_public: [{ type: :piece_justificative }, { type: :titre_identite }]) }
+  let(:procedure) { create(:procedure, :for_individual, types_de_champ_public:) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, user:, procedure:) }
+  let(:mandatory) { false }
+  let(:types_de_champ_public) { [{ type: :piece_justificative, stable_id: 99, mandatory: }] }
+  let(:champ) { dossier.project_champs_public.find { _1.stable_id == 99 } }
 
-  let(:tdc) {
-    procedure.active_revision.types_de_champ_public.find { _1.type_champ == "piece_justificative" }
-  }
-
-  let(:champ) {
-    dossier.find_editing_fork(dossier.user).project_champs_public.find { _1.stable_id == tdc.stable_id }
-  }
+  def user_buffer_champ
+    dossier.reload.with_update_stream(user).project_champs_public.find { _1.stable_id == 99 }
+  end
 
   scenario 'delete a non mandatory piece justificative' do
     visit_dossier(dossier)
@@ -19,14 +18,12 @@ describe "Dossier en_construction", js: true do
     expect(page).not_to have_button("Remplacer")
     click_on "Supprimer le fichier toto.txt"
 
-    wait_until { champ.reload.blank? }
+    wait_until { user_buffer_champ.blank? }
     expect(page).to have_text("La pièce jointe (toto.txt) a bien été supprimée. Vous pouvez en ajouter une autre.")
   end
 
   context "with a mandatory piece justificative" do
-    before do
-      tdc.update_attribute(:mandatory, true)
-    end
+    let(:mandatory) { true }
 
     scenario 'remplace a mandatory piece justificative' do
       visit_dossier(dossier)
@@ -38,19 +35,13 @@ describe "Dossier en_construction", js: true do
       expect(page).to have_selector(input_selector)
       find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
 
-      wait_until { champ.reload.piece_justificative_file.first&.filename == 'file.pdf' }
+      wait_until { user_buffer_champ.piece_justificative_file.first&.filename == 'file.pdf' }
       expect(page).to have_text("file.pdf")
     end
   end
 
   context "with a mandatory titre identite" do
-    let(:tdc) {
-      procedure.active_revision.types_de_champ_public.find { _1.type_champ == "titre_identite" }
-    }
-
-    before do
-      tdc.update_attribute(:mandatory, true)
-    end
+    let(:types_de_champ_public) { [{ type: :titre_identite, stable_id: 99, mandatory: true }] }
 
     scenario 'remplace a mandatory titre identite' do
       visit_dossier(dossier)
