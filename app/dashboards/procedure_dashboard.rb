@@ -55,7 +55,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     tags: Field::Text,
     template: Field::Boolean,
     opendata: Field::Boolean,
-    hide_instructeurs_email: Field::Boolean
+    hide_instructeurs_email: Field::Boolean,
+    dossiers_count: Field::String
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -81,6 +82,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :path,
     :procedure_paths,
     :aasm_state,
+    :dossiers_count,
     :administrateurs,
     :instructeurs,
     :groupe_instructeurs,

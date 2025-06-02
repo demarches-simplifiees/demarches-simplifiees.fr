@@ -127,3 +127,4 @@ fr:
     label:
       procedure:
         routing_champs: Champ(s) de routage
+        dossiers_count: Nombre de dossiers
