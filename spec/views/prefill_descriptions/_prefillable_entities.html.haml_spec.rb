@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'prefill_descriptions/prefillable_entities.html.haml', type: :view do
   let(:prefill_description) { PrefillDescription.new(create(:procedure)) }
   let!(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure: prefill_description, drop_down_options: options) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe DossierIndexSearchTermsJob, type: :job do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
   let(:types_de_champ_public) { [{ type: :text }] }

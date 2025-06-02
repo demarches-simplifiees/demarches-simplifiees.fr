@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Invite do
   describe 'an email can be used for multiple dossier' do
     let(:email1) { 'plop@octo.com' }

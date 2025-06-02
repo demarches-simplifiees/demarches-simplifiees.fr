@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureRevision < ApplicationRecord
   include Logic
   self.implicit_order_column = :created_at

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Recovery::Revision::LifeCycle' do
   describe '.load_export_destroy_and_import' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no, libelle: 'YES!!!' }, {}]) }

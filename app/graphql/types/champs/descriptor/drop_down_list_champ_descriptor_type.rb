@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Champs::Descriptor
   class DropDownListChampDescriptorType < Types::BaseObject
     implements Types::ChampDescriptorType

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 cache_configuration = if Rails.cache.respond_to?(:redis)
   { cache: Rails.cache.redis, cache_options: { prefix: "geocoder:", expiration: 6.hours } }
 else

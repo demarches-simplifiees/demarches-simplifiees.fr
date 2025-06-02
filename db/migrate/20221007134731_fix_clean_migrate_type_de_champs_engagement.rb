@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixCleanMigrateTypeDeChampsEngagement < ActiveRecord::Migration[6.1]
   def change
     Champ.where(type: "Champs::EngagementChamp").in_batches do |batch|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :controller do
   include Rails.application.routes.url_helpers
 

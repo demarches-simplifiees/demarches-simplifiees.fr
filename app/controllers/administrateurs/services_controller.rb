@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class ServicesController < AdministrateurController
     skip_before_action :alert_for_missing_siret_service, only: :edit

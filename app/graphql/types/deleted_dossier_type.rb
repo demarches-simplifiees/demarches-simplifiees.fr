@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class DeletedDossierType < Types::BaseObject
     description "Un dossier supprimé"

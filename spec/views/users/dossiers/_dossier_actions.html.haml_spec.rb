@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/dossier_actions', type: :view do
   let(:procedure) { create(:procedure, :published) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }

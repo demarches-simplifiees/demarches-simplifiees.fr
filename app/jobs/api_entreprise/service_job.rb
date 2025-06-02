@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::ServiceJob < APIEntreprise::Job
   def perform(service_id)
     service = Service.find(service_id)

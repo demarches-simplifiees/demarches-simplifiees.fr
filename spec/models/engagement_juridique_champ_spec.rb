@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::EngagementJuridiqueChamp do
   describe 'validation' do
     let(:champ) do

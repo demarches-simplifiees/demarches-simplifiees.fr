@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: process_expired_dossiers_en_construction'
   task process_expired_dossiers_en_construction: :environment do

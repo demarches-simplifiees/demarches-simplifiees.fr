@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::PieceJustificativeController < Champs::ChampController
   def show
     # pf used to redirect to this route to download PJ ==> if param h is present (old pf link) then redirect to new route

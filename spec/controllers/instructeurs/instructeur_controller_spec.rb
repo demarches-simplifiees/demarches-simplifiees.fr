@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::InstructeurController, type: :controller do
   describe 'before actions: authenticate_instructeur!' do
     it 'is present' do

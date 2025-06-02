@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AutoRotateService
   def process(file, output)
     auto_rotate_image(file, output)

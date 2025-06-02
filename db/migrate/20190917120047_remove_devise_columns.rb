@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveDeviseColumns < ActiveRecord::Migration[5.2]
   def change
     remove_columns :administrateurs,

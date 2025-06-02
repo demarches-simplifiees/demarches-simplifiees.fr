@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV.key?('SENDINBLUE_BALANCING_VALUE')
   require 'sib-api-v3-sdk'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe DossierChampsConcern do
   let(:procedure) do
     create(:procedure, types_de_champ_public:, types_de_champ_private:)

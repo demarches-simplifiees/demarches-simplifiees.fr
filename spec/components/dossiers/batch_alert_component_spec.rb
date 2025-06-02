@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Dossiers::BatchAlertComponent, type: :component do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }

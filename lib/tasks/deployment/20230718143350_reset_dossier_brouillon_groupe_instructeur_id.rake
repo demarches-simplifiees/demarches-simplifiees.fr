@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: reset_dossier_brouillon_groupe_instructeur_id'
   task reset_dossier_brouillon_groupe_instructeur_id: :environment do

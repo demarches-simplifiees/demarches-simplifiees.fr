@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChampPolicy < ApplicationPolicy
   class BaseScope < ApplicationPolicy::ApplicationScope
     private

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::IntegerNumberChamp do
   let(:min) { nil }
   let(:max) { nil }

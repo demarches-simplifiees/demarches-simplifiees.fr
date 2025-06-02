@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system/users/dossier_shared_examples.rb'
 
 describe 'Invitations' do

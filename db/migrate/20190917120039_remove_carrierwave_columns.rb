@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveCarrierwaveColumns < ActiveRecord::Migration[5.2]
   def change
     remove_columns :procedures, :logo, :logo_secure_token

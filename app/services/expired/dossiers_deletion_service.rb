@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices

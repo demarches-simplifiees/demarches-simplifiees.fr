@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RepetitionChamp < Champ
   include ActionView::Helpers::TagHelper
 

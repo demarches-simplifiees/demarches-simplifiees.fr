@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Sentry.init do |config|
   secrets = Rails.application.secrets.sentry
 

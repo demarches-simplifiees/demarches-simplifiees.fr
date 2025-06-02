@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpandableErrorList < ApplicationComponent
   def initialize(errors:)
     @errors = errors

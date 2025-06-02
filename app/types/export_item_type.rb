@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExportItemType < ActiveRecord::Type::Value
   # form_input, or setter -> type
   def cast(value)

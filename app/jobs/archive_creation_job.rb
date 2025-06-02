@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ArchiveCreationJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GalleryHelper
   def displayable_pdf?(blob)
     blob.previewable? && blob.content_type.in?(AUTHORIZED_PDF_TYPES)

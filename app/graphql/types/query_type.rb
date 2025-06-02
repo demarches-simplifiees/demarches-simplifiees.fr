@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class QueryType < Types::BaseObject
     field :demarche, DemarcheType, null: false, description: "Informations concernant une démarche." do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MaxColumnDureeConservationDossiersDansDsToProcedure < ActiveRecord::Migration[6.1]
   def change
     add_column :procedures, :max_duree_conservation_dossiers_dans_ds, :integer

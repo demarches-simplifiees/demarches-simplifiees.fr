@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MessagerieHelper
   def show_reply_button(commentaire, connected_user)
     commentaire.dossier.present? &&

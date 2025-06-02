@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAncestryToGroupeGestionnaires < ActiveRecord::Migration[7.0]
   disable_ddl_transaction!
 

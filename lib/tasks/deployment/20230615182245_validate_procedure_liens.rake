@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: validate_procedure_liens'
   task validate_procedure_liens: :environment do

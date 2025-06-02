@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Changing an email' do
   let(:old_email) { 'old@email.com' }
   let(:user) { create(:user, email: old_email) }

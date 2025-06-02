@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'support' do
   describe 'remove_ex_team_member' do
     let(:rake_task) { Rake::Task['support:remove_ex_team_member'] }

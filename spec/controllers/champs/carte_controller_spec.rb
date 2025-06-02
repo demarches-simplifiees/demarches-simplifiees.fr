@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::CarteController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :carte, options: { cadastres: true } }]) }

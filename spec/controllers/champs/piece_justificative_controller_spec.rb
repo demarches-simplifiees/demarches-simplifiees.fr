@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::PieceJustificativeController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published, :with_instructeur, types_de_champ_public: [{ type: :piece_justificative }], types_de_champ_private: [{ type: :piece_justificative }]) }

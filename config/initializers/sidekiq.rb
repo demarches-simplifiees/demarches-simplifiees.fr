@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SIDEKIQ_ENABLED = ENV.key?('REDIS_SIDEKIQ_SENTINELS') || ENV.key?('REDIS_URL') || ENV['RAILS_QUEUE_ADAPTER'] == 'sidekiq'
 
 return if !SIDEKIQ_ENABLED

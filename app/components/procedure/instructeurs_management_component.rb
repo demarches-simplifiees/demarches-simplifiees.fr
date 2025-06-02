@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::InstructeursManagementComponent < ApplicationComponent
   def initialize(procedure:, groupe_instructeur:, instructeurs:, available_instructeur_emails:, disabled_as_super_admin:)
     @procedure = procedure

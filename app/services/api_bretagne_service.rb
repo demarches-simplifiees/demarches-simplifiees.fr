@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIBretagneService
   include Dry::Monads[:result]
   HOST = 'https://api.databretagne.fr'

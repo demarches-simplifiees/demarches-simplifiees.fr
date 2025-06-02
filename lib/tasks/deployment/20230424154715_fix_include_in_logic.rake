@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_include_in_logic'
   task fix_include_in_logic: :environment do

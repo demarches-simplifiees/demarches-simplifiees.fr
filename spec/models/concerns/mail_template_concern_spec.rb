@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe MailTemplateConcern do
   let(:procedure) { create(:procedure) }
   let(:dossier) { create(:dossier, procedure: procedure) }

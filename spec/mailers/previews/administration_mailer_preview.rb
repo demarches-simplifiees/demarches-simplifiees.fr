@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdministrationMailerPreview < ActionMailer::Preview
   def invite_admin
     AdministrationMailer.invite_admin(administrateur, "12345678")

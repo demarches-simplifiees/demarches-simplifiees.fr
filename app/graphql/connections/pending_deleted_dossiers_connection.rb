@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Connections
   class PendingDeletedDossiersConnection < CursorConnection
     def cursor_for(item)

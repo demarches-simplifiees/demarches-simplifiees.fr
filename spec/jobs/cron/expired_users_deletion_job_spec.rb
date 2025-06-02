@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Cron::ExpiredUsersDeletionJob do
   subject { described_class.perform_now }
 

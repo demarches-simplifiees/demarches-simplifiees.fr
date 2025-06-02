@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::DossiersController, type: :controller do
   include ActiveSupport::Testing::TimeHelpers
 

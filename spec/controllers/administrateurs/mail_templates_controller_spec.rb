@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::MailTemplatesController, type: :controller do
   render_views
   let(:procedure) { create :procedure }

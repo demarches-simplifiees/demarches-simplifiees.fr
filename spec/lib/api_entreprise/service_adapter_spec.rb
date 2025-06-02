@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::ServiceAdapter do
   before do
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)

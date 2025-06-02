@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ActiveStorage::DownloadableFile do
   let(:dossier) { create(:dossier, :en_construction) }
   let(:user_profile) { administrateurs(:default_admin) }

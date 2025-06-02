@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedurePresentation < ApplicationRecord
   EXTRA_SORT_COLUMNS = {
     'notifications' => ['notifications'],

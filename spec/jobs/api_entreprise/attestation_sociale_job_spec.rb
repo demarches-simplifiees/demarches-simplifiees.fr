@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 include ActiveJob::TestHelper
 
 RSpec.describe APIEntreprise::AttestationSocialeJob, type: :job do

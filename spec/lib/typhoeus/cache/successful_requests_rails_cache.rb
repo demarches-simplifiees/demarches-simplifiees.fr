@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
   let(:cache) { described_class.new }
 

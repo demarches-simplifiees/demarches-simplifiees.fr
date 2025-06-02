@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::OperationsSignatureJob < Cron::CronJob
   self.schedule_expression = "every day at 06:00"
 

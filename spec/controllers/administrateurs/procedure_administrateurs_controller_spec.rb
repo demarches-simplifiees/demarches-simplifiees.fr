@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::ProcedureAdministrateursController, type: :controller do
   let(:signed_in_admin) { administrateurs(:default_admin).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }
   let(:other_admin) { create(:administrateur).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }

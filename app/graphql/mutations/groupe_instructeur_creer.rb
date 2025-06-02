@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class GroupeInstructeurCreer < Mutations::BaseMutation
     class GroupeInstructeurAttributes < Types::BaseInputObject

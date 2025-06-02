@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Instructeurs
   class ExportTemplatesController < InstructeurController
     before_action :set_procedure_and_groupe_instructeurs

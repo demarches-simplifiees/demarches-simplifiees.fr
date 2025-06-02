@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierCorrectableConcern do
   describe "#pending_correction?" do
     let(:dossier) { create(:dossier, :en_construction) }

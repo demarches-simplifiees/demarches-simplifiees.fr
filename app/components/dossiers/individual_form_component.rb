@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::IndividualFormComponent < ApplicationComponent
   delegate :for_tiers?, to: :@dossier
 

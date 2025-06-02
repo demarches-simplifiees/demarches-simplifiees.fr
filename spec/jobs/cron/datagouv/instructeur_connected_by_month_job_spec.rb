@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::InstructeurConnectedByMonthJob, type: :job do
   let!(:user) { create(:user) }
   let!(:instructeur) { create(:instructeur, user: user, created_at: 1.month.ago) }

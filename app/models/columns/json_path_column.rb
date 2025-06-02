@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Columns::JSONPathColumn < Column
   def column
     "#{@column}->#{value_column}" # override column otherwise json path facets will have same id as other

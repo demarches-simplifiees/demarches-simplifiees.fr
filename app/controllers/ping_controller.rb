@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PingController < ApplicationController
   def index
     Rails.logger.silence do

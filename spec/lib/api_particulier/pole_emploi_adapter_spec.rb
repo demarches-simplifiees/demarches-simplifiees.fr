@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIParticulier::PoleEmploiAdapter do
   let(:adapter) { described_class.new(api_particulier_token, identifiant, requested_sources) }
 

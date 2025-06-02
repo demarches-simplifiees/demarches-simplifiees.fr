@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SimpleFormatComponent < ApplicationComponent
   # see: https://github.com/vmg/redcarpet#and-its-like-really-simple-to-use
   REDCARPET_EXTENSIONS = {

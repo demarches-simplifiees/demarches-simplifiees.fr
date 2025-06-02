@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gestionnaires
   class GroupeGestionnairesController < GestionnaireController
     before_action :retrieve_groupe_gestionnaire, only: [:show, :edit, :update, :destroy, :tree_structure]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'shared/dossiers/identite_entreprise', type: :view do
   subject { render 'shared/dossiers/identite_entreprise', etablissement: etablissement, profile: profile }
   let(:profile) { 'usager' }

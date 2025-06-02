@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This setup is primarily for first deployment, because consequently
 # we can add new features from the Web UI. However when the new DB is created
 # this will immediately migrate the default features to be controlled.

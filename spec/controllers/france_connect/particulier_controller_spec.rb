@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe FranceConnect::ParticulierController, type: :controller do
   let(:birthdate) { '20150821' }
   let(:email) { 'EMAIL_from_fc@test.com' }

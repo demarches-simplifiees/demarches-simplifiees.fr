@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class ArchivesController < AdministrateurController
     before_action :retrieve_procedure

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillPaysTypeDeChamp, type: :model do
   let(:procedure) { create(:procedure) }

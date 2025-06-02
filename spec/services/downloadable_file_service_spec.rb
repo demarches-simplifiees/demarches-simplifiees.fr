@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DownloadableFileService do
   let(:procedure) { create(:procedure, :published) }
   let(:service) { ProcedureArchiveService.new(procedure) }

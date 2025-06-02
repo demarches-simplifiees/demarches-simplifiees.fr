@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dsfr::SidemenuComponent < ApplicationComponent
   renders_many :links, "LinkComponent"
 

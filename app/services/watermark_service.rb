@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WatermarkService
   POINTSIZE = 30
   KERNING = 1.2

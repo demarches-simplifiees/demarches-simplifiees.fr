@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Dossiers::ExportLinkComponent, type: :component do
   let(:procedure) { create(:procedure) }
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure: procedure, instructeurs: [build(:instructeur)]) }

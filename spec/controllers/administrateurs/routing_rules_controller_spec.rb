@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::RoutingRulesController, type: :controller do
   include Logic
 

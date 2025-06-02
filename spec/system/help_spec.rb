@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Getting help:' do
   scenario 'a Help button is visible on public pages' do
     visit '/'

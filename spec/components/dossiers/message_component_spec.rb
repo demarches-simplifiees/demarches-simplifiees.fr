@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Dossiers::MessageComponent, type: :component do
   let(:component) do
     described_class.new(

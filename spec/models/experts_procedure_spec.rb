@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ExpertsProcedure, type: :model do
   describe '#invited_expert_emails' do
     let!(:procedure) { create(:procedure, :published) }

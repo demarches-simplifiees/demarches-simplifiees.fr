@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Procedure::Card::IneligibiliteDossierComponent, type: :component do
   describe 'render' do
     subject do

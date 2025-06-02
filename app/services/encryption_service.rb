@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EncryptionService
   def initialize
     len        = ActiveSupport::MessageEncryptor.key_len

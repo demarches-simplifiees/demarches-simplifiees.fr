@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::ProcedureProcessSVASVRJob, type: :job do
   let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 2.months.ago, sva_svr_decision_on: Date.current) }
   let!(:dossier_in_future) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 1.day.ago, sva_svr_decision_on: Date.yesterday + 2.months) }

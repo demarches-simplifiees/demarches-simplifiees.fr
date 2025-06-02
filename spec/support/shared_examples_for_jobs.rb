@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'a job retrying transient errors' do |job_class = described_class|
   ExconErrorJob = Class.new(job_class) do
     def perform

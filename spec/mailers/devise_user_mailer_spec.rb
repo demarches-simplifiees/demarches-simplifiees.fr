@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe DeviseUserMailer, type: :mailer do
   let(:user) { create(:user) }
   let(:token) { SecureRandom.hex }

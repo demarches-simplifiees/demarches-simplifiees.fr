@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ChampPolicy do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
   let(:dossier) { create(:dossier, procedure: procedure, user: dossier_owner) }

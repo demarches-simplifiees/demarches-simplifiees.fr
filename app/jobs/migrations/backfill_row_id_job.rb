@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::BackfillRowIdJob < ApplicationJob
   def perform(batch)
     batch.each do |(row_id, champ_ids)|

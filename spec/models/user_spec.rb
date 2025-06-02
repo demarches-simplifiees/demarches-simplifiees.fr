@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe User, type: :model do
   describe '#after_confirmation' do
     let(:email) { 'mail@beta.gouv.fr' }

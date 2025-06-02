@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
   let(:dossier) { create(:dossier, :en_instruction) }
 

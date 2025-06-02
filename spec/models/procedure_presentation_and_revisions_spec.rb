@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedurePresentation do
   describe "#types_de_champ_for_procedure_presentation" do
     subject { procedure.types_de_champ_for_procedure_presentation.not_repetition.pluck(:libelle) }

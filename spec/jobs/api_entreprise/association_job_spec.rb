@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe APIEntreprise::AssociationJob, type: :job do
   let(:siret) { '50480511000013' }
   let(:etablissement) { create(:etablissement, siret: siret) }

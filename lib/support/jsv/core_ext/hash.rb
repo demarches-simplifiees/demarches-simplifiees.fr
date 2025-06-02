@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Hash
   def to_jsv
     js_array = filter_map do |key, value|

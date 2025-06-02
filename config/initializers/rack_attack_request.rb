@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rack::Attack
   class Request < ::Rack::Request
     def remote_ip

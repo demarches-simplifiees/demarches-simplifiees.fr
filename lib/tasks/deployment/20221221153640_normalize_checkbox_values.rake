@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: normalize_checkbox_values'
   task normalize_checkbox_values: :environment do

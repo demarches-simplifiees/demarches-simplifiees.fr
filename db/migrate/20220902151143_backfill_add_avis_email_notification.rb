@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BackfillAddAvisEmailNotification < ActiveRecord::Migration[6.1]
   def up
     AssignTo.in_batches do |relation|

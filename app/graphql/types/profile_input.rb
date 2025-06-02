@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class ProfileInput < Types::BaseInputObject
     one_of

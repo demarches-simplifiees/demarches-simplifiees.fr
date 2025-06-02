@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Instructeurs
   class CommentairesController < ApplicationController
     before_action :authenticate_instructeur_or_expert!

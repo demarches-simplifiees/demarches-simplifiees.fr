@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: add_default_skip_validation_to_piece_justificative'
   task add_default_skip_validation_to_piece_justificative: :environment do

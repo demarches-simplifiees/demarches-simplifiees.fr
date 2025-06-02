@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContactController < ApplicationController
   invisible_captcha only: [:create], on_spam: :redirect_to_root
 

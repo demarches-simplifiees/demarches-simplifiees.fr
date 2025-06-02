@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeGestionnaire < ApplicationRecord
   has_many :administrateurs
   has_many :commentaire_groupe_gestionnaires

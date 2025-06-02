@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GroupeGestionnaire::GroupeGestionnaireTreeStructures::TreeStructureComponent, type: :component do
   let(:component) do
     described_class.new(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TreeableConcern
   extend ActiveSupport::Concern
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::ArchivesController, type: :controller do
   let(:procedure1) { create(:procedure, :published, groupe_instructeurs: [assign_to.groupe_instructeur]) }
   let(:procedure2) { create(:procedure, :published, groupe_instructeurs: [gi2]) }

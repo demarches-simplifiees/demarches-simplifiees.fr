@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ArchiveUploader
   # see: https://docs.ovh.com/fr/storage/pcs/capabilities-and-limitations/#max_file_size-5368709122-5gb
   # officialy it's 5Gb. but let's avoid to reach the exact spot of the limit

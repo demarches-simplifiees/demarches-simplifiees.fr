@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Procedure::ErrorsSummary, type: :component do
   subject { render_inline(described_class.new(procedure:, validation_context:)) }
 

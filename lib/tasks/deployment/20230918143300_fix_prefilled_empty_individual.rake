@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_prefilled_empty_individual'
   task fix_prefilled_empty_individual: :environment do

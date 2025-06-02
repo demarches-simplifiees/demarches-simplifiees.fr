@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::ColumnPickerComponent, type: :component do
   let(:component) { described_class.new(procedure:, procedure_presentation:) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CleanupAssignTosFromBetagouv < ActiveRecord::Migration[6.1]
   def up
     super_admin_emails = SuperAdmin.pluck(:email)

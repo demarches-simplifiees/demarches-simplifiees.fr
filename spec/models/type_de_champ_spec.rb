@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TypeDeChamp do
   describe 'validation' do
     context 'libelle' do

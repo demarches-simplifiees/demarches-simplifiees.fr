@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierPreloader
   DEFAULT_BATCH_SIZE = 2000
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTokenColumnsToFranceConnectInformation < ActiveRecord::Migration[6.1]
   def change
     add_column :france_connect_informations, :merge_token, :string

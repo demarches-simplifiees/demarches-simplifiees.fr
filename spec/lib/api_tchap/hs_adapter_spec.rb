@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APITchap::HsAdapter do
   let(:adapter) { described_class.new(email) }
   let(:email) { "louise@mjc.gouv.fr" }

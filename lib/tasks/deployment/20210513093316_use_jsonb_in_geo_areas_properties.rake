@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: use_jsonb_in_geo_areas_properties'
   task use_jsonb_in_geo_areas_properties: :environment do

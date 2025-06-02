@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Avis, type: :model do
   let(:claimant) { create(:instructeur) }
 

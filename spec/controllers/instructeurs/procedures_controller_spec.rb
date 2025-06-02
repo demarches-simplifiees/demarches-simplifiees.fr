@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::ProceduresController, type: :controller do
   describe "before_action: ensure_ownership!" do
     it "is present" do

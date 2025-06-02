@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RepetitionController < Champs::ChampController
   def add
     row = @champ.add_row(@champ.dossier.revision)

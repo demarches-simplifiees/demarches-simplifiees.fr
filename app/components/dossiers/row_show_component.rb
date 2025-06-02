@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::RowShowComponent < ApplicationComponent
   attr_reader :label
   attr_reader :profile

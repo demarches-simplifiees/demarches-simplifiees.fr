@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FollowCommentaireGroupeGestionnaire < ApplicationRecord
   belongs_to :gestionnaire
   belongs_to :groupe_gestionnaire

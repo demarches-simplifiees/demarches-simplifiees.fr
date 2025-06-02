@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::EpciTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   class << self
     def champ_value_for_export(champ, path = :value)

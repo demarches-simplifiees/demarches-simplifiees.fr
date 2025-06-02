@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EmailChecker do
   describe 'check' do
     subject { described_class }

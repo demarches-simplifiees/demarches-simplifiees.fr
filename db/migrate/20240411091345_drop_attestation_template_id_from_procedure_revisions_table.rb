@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropAttestationTemplateIdFromProcedureRevisionsTable < ActiveRecord::Migration[7.0]
   def up
     safety_assured do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::EditableChampComponent < ApplicationComponent
   def initialize(form:, champ:, seen_at: nil, turbo: false)
     @form, @champ, @seen_at, @turbo = form, champ, seen_at, turbo

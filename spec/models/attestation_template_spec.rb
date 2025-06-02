@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AttestationTemplate, type: :model do
   describe 'validates footer length' do
     let(:attestation_template) { build(:attestation_template, footer: footer) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::ChampValue < Logic::Term
   MANAGED_TYPE_DE_CHAMP = TypeDeChamp.type_champs.slice(
     :yes_no,

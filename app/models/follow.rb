@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Follow < ApplicationRecord
   belongs_to :instructeur, optional: false
   belongs_to :dossier, optional: false

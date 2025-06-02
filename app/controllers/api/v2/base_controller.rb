@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V2::BaseController < ApplicationController
   # This controller is used for API v2 through api endpoint (/api/v2/graphql)
   # and through the web interface (/graphql). When used through the web interface,

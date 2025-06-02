@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class GroupeGestionnairesController < Manager::ApplicationController
     def add_gestionnaire

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ChorusConfiguration do
   context 'empty' do
     subject { create(:procedure, :empty_chorus) }

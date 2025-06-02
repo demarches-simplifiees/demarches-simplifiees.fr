@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class AdministrateurController < ApplicationController
     before_action :authenticate_administrateur!

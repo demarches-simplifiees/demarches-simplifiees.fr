@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PriorizedMailDeliveryJob < ActionMailer::MailDeliveryJob
   discard_on ActiveJob::DeserializationError
 

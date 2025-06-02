@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe API::V2::BaseController, type: :controller do
   describe 'ensure_authorized_network and token_is_not_expired' do
     let(:admin) { administrateurs(:default_admin) }

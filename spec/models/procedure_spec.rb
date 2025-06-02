@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Procedure do
   describe 'mail templates' do
     subject { create(:procedure) }

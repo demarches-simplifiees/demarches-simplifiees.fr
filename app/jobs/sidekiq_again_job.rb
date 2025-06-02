@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SidekiqAgainJob < ApplicationJob
   self.queue_adapter = :sidekiq
   queue_as :default

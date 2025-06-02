@@ -16,7 +16,9 @@ module Maintenance
       return if data.blank?
       champ.update(value_json: APIGeoService.parse_rna_address(data['adresse']))
     rescue URI::InvalidURIError
-      # some data raise this error
+      # some Champs::RNAChamp contain spaces which raise this error
+    rescue ActiveRecord::RecordNotFound
+      # some Champs::RNAChamp procedure had been soft deleted
     end
 
     def count

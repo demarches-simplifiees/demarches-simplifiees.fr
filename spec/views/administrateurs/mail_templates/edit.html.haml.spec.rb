@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'administrateurs/mail_templates/edit', type: :view do
   let(:procedure) { create(:procedure) }
   let(:mail_template) { create(:received_mail, procedure: procedure) }

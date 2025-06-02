@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DgfipChamp, type: :model do
   let(:champ) { described_class.new }
 

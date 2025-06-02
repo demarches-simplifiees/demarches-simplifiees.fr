@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DownloadManager::ParallelDownloadQueue do
   let(:test_dir) { Dir.mktmpdir(nil, Dir.tmpdir) }
   let(:download_to_dir) { test_dir }

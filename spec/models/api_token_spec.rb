@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIToken, type: :model do
   let(:administrateur) { administrateurs(:default_admin) }
 

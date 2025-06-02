@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20201001161931_migrate_filters_to_use_stable_id' do
   let(:rake_task) { Rake::Task['after_party:migrate_filters_to_use_stable_id'] }
 

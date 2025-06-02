@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe PrefillChamps do
   describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }

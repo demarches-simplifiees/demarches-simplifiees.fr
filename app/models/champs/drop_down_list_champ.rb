@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::DropDownListChamp < Champ
   store_accessor :value_json, :other
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5

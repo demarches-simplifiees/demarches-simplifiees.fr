@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::AddressChamp do
   let(:champ) do
     described_class.new.tap do |champ|

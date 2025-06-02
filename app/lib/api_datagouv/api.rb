@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIDatagouv::API
   class RequestFailed < StandardError
     def initialize(url, response)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Loaders
   class Dossier < GraphQL::Batch::Loader
     def load(key)

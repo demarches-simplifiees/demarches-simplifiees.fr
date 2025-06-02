@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DownloadableFileService
   ARCHIVE_CREATION_DIR = ENV.fetch('ARCHIVE_CREATION_DIR') { '/tmp' }
   EXPORT_DIRNAME = 'export'

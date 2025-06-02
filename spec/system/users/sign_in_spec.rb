@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Sign in', js: true do
   let(:user) { create(:user) }
 

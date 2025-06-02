@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MailTemplatePresenterService
   include ActionView::Helpers::SanitizeHelper
   include ActionView::Helpers::TextHelper

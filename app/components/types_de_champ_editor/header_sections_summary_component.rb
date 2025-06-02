@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::HeaderSectionsSummaryComponent < ApplicationComponent
   def initialize(procedure:, is_private:)
     @procedure = procedure

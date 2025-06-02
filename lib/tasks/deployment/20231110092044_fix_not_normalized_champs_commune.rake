@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_not_normalized_champs_commune'
   task fix_not_normalized_champs_commune: :environment do

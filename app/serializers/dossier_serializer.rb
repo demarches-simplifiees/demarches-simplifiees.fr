@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierSerializer < ActiveModel::Serializer
   include DossierHelper
 

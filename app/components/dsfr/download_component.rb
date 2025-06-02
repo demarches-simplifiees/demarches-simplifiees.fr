@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dsfr::DownloadComponent < ApplicationComponent
   attr_reader :attachment
   attr_reader :html_class

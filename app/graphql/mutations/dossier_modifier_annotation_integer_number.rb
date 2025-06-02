@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierModifierAnnotationIntegerNumber < Mutations::DossierModifierAnnotation
     description "Modifier l’annotation au format nombre entier."
