@@ -244,7 +244,7 @@ class Champs::AddressChamp < Champs::TextChamp
         address_data['department_name'] = APIGeoService.departement_name('99')
       end
     elsif become_not_ban?
-      address_data['street_address'] = nil
+      address_data = { 'not_in_ban': 'true' }
     end
 
     if france?
