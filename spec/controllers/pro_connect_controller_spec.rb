@@ -98,9 +98,9 @@ describe ProConnectController, type: :controller do
             instructeur.reload
 
             expect(instructeur.pro_connect_id_token).to eq('id_token')
-            expect(instructeur.pro_connect_information.first.sub).to eq('sub')
-            expect(instructeur.pro_connect_information.first.given_name).to eq('given')
-            expect(instructeur.pro_connect_information.first.usual_name).to eq('usual')
+            expect(instructeur.user.pro_connect_informations.first.sub).to eq('sub')
+            expect(instructeur.user.pro_connect_informations.first.given_name).to eq('given')
+            expect(instructeur.user.pro_connect_informations.first.usual_name).to eq('usual')
             expect(response).to redirect_to(root_path)
             expect(Instructeur.count).to eq(initial_instructeur_count)
           end
