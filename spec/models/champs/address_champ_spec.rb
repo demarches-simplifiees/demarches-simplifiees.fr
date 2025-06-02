@@ -109,5 +109,20 @@ describe Champs::AddressChamp do
         expect(champ.value_json).to eq("not_in_ban" => "true", "country_code" => "FR")
       end
     end
+
+    context 'start from an empty address' do
+      let(:value_json) { nil }
+
+      it 'transition from nil to CH country_code mainting consistent departement_code/name' do
+        champ.update(country_code: 'CH', street_address: '128 Rue Brancion 75015 Paris', not_in_ban: 'true')
+        expect(champ.value_json).to eq({
+          "not_in_ban" => "true",
+          "country_code" => "CH",
+          "street_address" => '128 Rue Brancion 75015 Paris',
+          "department_code" => "99",
+          "department_name" => "Etranger"
+        })
+      end
+    end
   end
 end
