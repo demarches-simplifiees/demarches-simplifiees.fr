@@ -106,6 +106,20 @@ describe DossierFilterService do
 
         it { is_expected.to eq([notified_dossier, recent_dossier, older_dossier].map(&:id)) }
       end
+
+      context 'with notification V2' do
+        let(:order) { 'desc' }
+        let!(:dossier_notif_v2) { create(:dossier, :en_construction, procedure:) }
+        let!(:notif_instructeur) { create(:dossier_notification, :for_instructeur, instructeur:, dossier: dossier_notif_v2, notification_type: :attente_avis) }
+        let(:other_instructeur) { create(:instructeur) }
+        let!(:notif_other_instructeur) { create(:dossier_notification, :for_instructeur, instructeur: other_instructeur, dossier: recent_dossier) }
+        let!(:dossier_2_notif_v2) { create(:dossier, :en_construction, procedure:) }
+        let(:groupe_instructeur) { procedure.defaut_groupe_instructeur }
+        let!(:notif_groupe) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur:, dossier: dossier_2_notif_v2) }
+        let!(:notif_not_display) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur:, dossier: older_dossier, display_at: 1.day.from_now) }
+
+        it { is_expected.to eq([dossier_2_notif_v2, dossier_notif_v2, notified_dossier, recent_dossier, older_dossier].map(&:id)) }
+      end
     end
 
     context 'for self table' do
