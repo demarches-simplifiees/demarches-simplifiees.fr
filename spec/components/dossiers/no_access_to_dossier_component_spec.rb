@@ -18,7 +18,7 @@ RSpec.describe Dossiers::NoAccessToDossierComponent, type: :component do
     end
 
     it "renders administrator email" do
-      expect(subject).to have_text("default_admin@admin.com")
+      expect(subject).to have_link("default_admin@admin.com")
     end
 
     it "renders title" do
