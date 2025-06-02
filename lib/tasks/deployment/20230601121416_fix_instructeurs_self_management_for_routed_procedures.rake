@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_instructeurs_self_management_for_routed_procedures'
   task fix_instructeurs_self_management_for_routed_procedures: :environment do

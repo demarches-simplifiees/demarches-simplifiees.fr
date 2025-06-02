@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: update_procedure_dossiers_count'
   task update_procedure_dossiers_count: :environment do

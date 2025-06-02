@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:instructeur_email) { |n| "inst#{n}@inst.com" }
 

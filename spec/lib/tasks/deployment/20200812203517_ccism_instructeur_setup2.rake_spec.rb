@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20200812203517_ccism_instructeur_setup2.rake' do
   let(:rake_task) { Rake::Task['after_party:ccism_instructeur_setup2'] }
   let!(:procedure_to_unassign) { create(:procedure, id: 406) }

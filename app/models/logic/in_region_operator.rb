@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::InRegionOperator < Logic::BinaryOperator
   def operation
     :est_dans_la_region

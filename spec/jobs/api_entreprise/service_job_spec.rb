@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe APIEntreprise::ServiceJob, type: :job do
   let(:siret) { '30613890001294' }
   let(:service) { create(:service, siret: siret) }

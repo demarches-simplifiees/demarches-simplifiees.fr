@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::HeaderSectionComponent < ApplicationComponent
   def initialize(form: nil, champ:, seen_at: nil, html_class: {})
     @champ = champ

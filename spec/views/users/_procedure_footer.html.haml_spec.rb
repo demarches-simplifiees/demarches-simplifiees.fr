@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/procedure_footer', type: :view do
   let(:service) { create(:service) }
   let(:dossier) {

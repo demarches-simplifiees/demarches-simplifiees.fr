@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ViewableChamp::HeaderSectionsSummaryComponent < ApplicationComponent
   attr_reader :header_sections
 

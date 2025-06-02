@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Logic::BinaryOperator do
   include Logic
   let(:two_greater_than_one) { greater_than(constant(2), constant(1)) }

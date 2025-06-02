@@ -18,9 +18,11 @@ SimpleCov.start "rails" do
   add_filter "/channels/" # not used
   groups.delete("Channels")
 
+  add_filter "/lib/tasks/deployment/"
+
   add_group "Components", "app/components"
   add_group "API", ["app/graphql", "app/serializers"]
-  add_group "Manager", ["app/dashboards", "app/fields"]
+  add_group "Manager", ["app/dashboards", "app/fields", "app/controllers/manager"]
   add_group "Models", ["app/models", "app/validators"]
   add_group "Policies", "app/policies"
   add_group "Services", "app/services"

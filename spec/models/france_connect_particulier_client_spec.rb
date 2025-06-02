@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe FranceConnectParticulierClient do
   describe '#initialize' do
     subject { FranceConnectParticulierClient.new(code) }

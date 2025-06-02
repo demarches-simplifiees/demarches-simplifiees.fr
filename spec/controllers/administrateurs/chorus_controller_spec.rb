@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::ChorusController, type: :controller do
   let(:user) { create(:user) }
   let(:admin) { create(:administrateur, user: create(:user)) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Spring.after_fork do
   if ENV['DEBUGGER_STORED_RUBYLIB']
     ENV['DEBUGGER_STORED_RUBYLIB'].split(File::PATH_SEPARATOR).each do |path|
@@ -6,6 +8,7 @@ Spring.after_fork do
     end
   end
 end
+
 Spring.watch(
   ".ruby-version",
   ".rbenv-vars",

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ValidateChangeWriteAccessToNotNullInAPITokens < ActiveRecord::Migration[6.1]
   def change
     validate_check_constraint :api_tokens, name: "api_tokens_write_access_null"

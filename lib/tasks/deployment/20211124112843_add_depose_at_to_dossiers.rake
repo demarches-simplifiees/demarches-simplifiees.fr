@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: add_depose_at_to_dossiers'
   task add_depose_at_to_dossiers: :environment do

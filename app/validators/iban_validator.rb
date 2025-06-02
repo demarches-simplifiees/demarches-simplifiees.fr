@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'iban-tools'
 
 class IbanValidator < ActiveModel::Validator

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::SiretController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :siret }]) }

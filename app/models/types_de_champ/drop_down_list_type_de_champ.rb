@@ -1,2 +1,4 @@
-class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TextTypeDeChamp
+# frozen_string_literal: true
+
+class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end

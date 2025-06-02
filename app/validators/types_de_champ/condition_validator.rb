@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::ConditionValidator < ActiveModel::EachValidator
   # condition are valid when
   #   tdc.condition.left is present in upper tdcs

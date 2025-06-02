@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::GroupesSearchComponent < ApplicationComponent
   def initialize(procedure:, query:, to_configure_count:, to_configure_filter:)
     @procedure = procedure

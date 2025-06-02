@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProceduresFilter
   attr_reader :admin, :params
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Conditions::IneligibiliteRulesComponent, type: :component do
   include Logic
   let(:procedure) { create(:procedure) }

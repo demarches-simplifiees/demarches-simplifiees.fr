@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_private_champ_type_mismatch'
   task fix_private_champ_type_mismatch: :environment do

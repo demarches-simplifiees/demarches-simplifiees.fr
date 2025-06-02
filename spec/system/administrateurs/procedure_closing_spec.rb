@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system/administrateurs/procedure_spec_helper'
 
 describe 'Closing a procedure', js: true do

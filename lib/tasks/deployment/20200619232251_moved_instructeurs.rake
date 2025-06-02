@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: administrative_mails_no_longer_valid'
   task moved_instructeurs: :environment do

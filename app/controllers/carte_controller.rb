@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CarteController < ApplicationController
   def show
     @map_filter = MapFilter.new(params.fetch(:map_filter, {}).permit(:kind, :year))

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PiecesJointesListConcern do
   describe '#pieces_jointes_list' do
     include Logic

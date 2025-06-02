@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::MultipleComponent < ApplicationComponent
   DEFAULT_MAX_ATTACHMENTS = 12

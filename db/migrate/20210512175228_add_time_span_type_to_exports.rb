@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTimeSpanTypeToExports < ActiveRecord::Migration[6.1]
   def change
     add_column :exports, :time_span_type, :string, default: 'everything', null: false

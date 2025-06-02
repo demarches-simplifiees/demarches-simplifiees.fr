@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TurboStreamHelper
   def turbo_stream
     TagBuilder.new(self)

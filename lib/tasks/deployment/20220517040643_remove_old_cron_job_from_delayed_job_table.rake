@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: remove_old_cron_job_from_delayed_job_table'
   task remove_old_cron_job_from_delayed_job_table: :environment do

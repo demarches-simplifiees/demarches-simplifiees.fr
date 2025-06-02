@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::CodePostalDePolynesieTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   def paths
     paths = super

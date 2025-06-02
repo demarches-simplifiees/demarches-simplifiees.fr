@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'As an administrateur I can edit annotation', js: true do
   include ActionView::RecordIdentifier
   let(:administrateur) { procedure.administrateurs.first }

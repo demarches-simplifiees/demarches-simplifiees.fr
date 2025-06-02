@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIDatagouv::API do
   describe '#upload' do
     let(:dataset) { :descriptif_demarches_dataset }

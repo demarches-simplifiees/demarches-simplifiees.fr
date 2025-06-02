@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe NotificationService do
   describe '.send_instructeur_email_notification' do
     let(:procedure) { create(:procedure) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
   # Doc Métier : https://entreprise.api.gouv.fr/catalogue/insee/etablissements
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-generales/paths/~1v3~1insee~1sirene~1etablissements~1%7Bsiret%7D/get

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Conditions::ConditionsErrorsComponent, type: :component do
   include Logic
 

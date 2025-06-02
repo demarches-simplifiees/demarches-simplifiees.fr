@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_defaut_groupe_instructeur_id_for_cloned_procedure'
   task fix_defaut_groupe_instructeur_id_for_cloned_procedure: :environment do

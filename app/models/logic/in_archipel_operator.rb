@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::InArchipelOperator < Logic::BinaryOperator
   def operation
     :est_dans_l_archipel

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::TeFenuaChamp < Champ
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.

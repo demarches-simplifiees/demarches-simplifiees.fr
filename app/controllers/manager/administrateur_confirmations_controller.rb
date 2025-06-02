@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class AdministrateurConfirmationsController < Manager::ApplicationController
     before_action :set_procedure

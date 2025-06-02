@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :pjs do
   task stats: :environment do
   end

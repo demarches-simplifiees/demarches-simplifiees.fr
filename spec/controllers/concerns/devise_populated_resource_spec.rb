@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DevisePopulatedResource, type: :controller do
   controller(Devise::PasswordsController) do
     include DevisePopulatedResource

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdministrateurMailerPreview < ActionMailer::Preview
   def activate_before_expiration
     user = User.new(reset_password_sent_at: Time.zone.now)

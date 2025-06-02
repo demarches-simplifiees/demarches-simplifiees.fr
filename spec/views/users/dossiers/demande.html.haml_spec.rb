@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/demande', type: :view do
   let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private) }
   let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }

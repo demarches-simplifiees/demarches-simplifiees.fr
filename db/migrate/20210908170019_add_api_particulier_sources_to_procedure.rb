@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAPIParticulierSourcesToProcedure < ActiveRecord::Migration[6.0]
   def change
     add_column :procedures, :api_particulier_sources, :jsonb, :default => {}

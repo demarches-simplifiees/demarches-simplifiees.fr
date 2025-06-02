@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Exercice < ApplicationRecord
   belongs_to :etablissement, optional: false
 

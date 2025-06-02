@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dsfr::ComboboxComponent < ApplicationComponent
   def initialize(form: nil, options: nil, url: nil, selected: nil, allows_custom_value: false, limit: nil, input_html_options: {}, hidden_html_options: {})
     @form, @options, @url, @selected, @allows_custom_value, @limit, @input_html_options, @hidden_html_options = form, options, url, selected, allows_custom_value, limit, input_html_options, hidden_html_options

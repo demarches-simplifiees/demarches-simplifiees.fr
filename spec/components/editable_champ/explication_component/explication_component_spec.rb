@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EditableChamp::ExplicationComponent, type: :component do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }

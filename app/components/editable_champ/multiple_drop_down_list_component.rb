@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'shared/dossiers/champs', type: :view do
   let(:instructeur) { create(:instructeur) }
   let(:demande_seen_at) { nil }

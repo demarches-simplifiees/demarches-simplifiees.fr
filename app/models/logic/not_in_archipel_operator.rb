@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::NotInArchipelOperator < Logic::InArchipelOperator
   def operation
     :n_est_pas_dans_l_archipel

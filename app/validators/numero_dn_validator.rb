@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NumeroDnValidator < ActiveModel::Validator
   def validate(record)
     # we validate the dn against CPS Web Service

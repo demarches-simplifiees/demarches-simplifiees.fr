@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InstructeurMailerPreview < ActionMailer::Preview
   def last_week_overview
     InstructeurMailer.last_week_overview(Instructeur.first)

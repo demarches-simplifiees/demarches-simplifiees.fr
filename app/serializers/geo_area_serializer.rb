@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeoAreaSerializer < ActiveModel::Serializer
   attributes :geometry, :source, :geo_reference_id
 

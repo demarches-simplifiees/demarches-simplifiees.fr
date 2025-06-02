@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class ZonesController < Manager::ApplicationController
     # Overwrite any of the RESTful controller actions to implement custom behavior

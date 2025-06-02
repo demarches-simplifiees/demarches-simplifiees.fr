@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ASN1::Timestamp do
   let(:asn1timestamp) { File.read('spec/fixtures/files/bill_signature/signature.der') }
 

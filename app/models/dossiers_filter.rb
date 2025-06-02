@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossiersFilter
   attr_reader :user, :params
 

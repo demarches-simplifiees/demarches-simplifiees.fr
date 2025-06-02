@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: populate_bypass_email_login'
   task populate_bypass_email_login_again: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Dossiers::EditFooterComponent, type: :component do
   let(:annotation) { false }
   let(:component) { Dossiers::EditFooterComponent.new(dossier:, annotation:) }

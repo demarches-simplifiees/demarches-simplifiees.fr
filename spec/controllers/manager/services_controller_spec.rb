@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Manager::ServicesController, type: :controller do
   let(:super_admin) { create(:super_admin) }
   before do

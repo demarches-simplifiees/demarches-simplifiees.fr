@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'admin/_closed_mail_template_attestation_inconsistency_alert', type: :view do
   let(:procedure) { create(:procedure, closed_mail: closed_mail, attestation_template: attestation_template) }
   let(:attestation_template) { nil }

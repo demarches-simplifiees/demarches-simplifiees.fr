@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'administrateurs/procedures/edit', type: :view do
   let(:procedure) { create(:procedure, lien_site_web: 'http://some.website') }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIParticulier::Services::SourcesService do
   let(:service) { described_class.new(procedure) }
 

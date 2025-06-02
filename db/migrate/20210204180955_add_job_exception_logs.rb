@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddJobExceptionLogs < ActiveRecord::Migration[6.0]
   def change
     add_column :dossiers, :api_entreprise_job_exceptions, :string, array: true

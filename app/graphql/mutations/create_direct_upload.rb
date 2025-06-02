@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class CreateDirectUpload < Mutations::BaseMutation
     description "File information required to prepare a direct upload"

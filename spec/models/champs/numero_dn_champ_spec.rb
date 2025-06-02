@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::NumeroDnChamp do
   let!(:numero_dn) { '2106223' }
   let!(:date_de_naissance) { '28/11/1983' }

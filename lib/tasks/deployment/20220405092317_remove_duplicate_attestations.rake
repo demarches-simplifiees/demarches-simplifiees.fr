@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: remove_duplicate_attestations'
   task remove_duplicate_attestations: :environment do

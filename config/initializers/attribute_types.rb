@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SimpleJsonType < ActiveModel::Type::Value
   def cast(value)
     return nil if value.blank?

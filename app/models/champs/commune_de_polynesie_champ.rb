@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::CommuneDePolynesieChamp < Champs::TextChamp
   store_accessor :value_json, :archipel
   before_save :on_value_change, if: :should_refresh_after_value_change?

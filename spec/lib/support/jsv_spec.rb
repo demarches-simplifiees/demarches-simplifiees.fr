@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../../../lib/support/jsv"
 
 describe ".to_jsv support" do

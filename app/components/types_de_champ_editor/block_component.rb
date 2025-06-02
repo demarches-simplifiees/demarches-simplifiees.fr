@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::BlockComponent < ApplicationComponent
   def initialize(block:, coordinates:, upper_coordinates: [])
     @block = block

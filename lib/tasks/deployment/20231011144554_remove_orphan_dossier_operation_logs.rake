@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: remove_orphan_dossier_operation_logs. You can add JOB_LIMIT env var to limit the load and manually relaunch the process if needed.'
   task remove_orphan_dossier_operation_logs: :environment do

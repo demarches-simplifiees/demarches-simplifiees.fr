@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::BackfillStableIdJob < ApplicationJob
   queue_as :low_priority
 

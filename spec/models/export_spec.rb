@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Export, type: :model do
   describe 'associations' do
     let(:instructeur) { create(:instructeur) }

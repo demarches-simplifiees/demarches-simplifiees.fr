@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NestedForms::OwnedButtonComponent < ApplicationComponent
   renders_one :button_label
 

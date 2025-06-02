@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::OperationsSignatureJob, type: :job do
   describe 'perform' do
     subject { Cron::OperationsSignatureJob.perform_now }

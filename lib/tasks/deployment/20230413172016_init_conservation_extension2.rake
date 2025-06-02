@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: initialize conservation extension'
   task init_conservation_extension2: :environment do

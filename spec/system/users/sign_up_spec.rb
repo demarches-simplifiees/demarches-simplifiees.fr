@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Signing up:' do
   let(:user_email) { generate :user_email }
   let(:user_password) { SECURE_PASSWORD }

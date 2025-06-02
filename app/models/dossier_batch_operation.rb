@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierBatchOperation < ApplicationRecord
   belongs_to :dossier
   belongs_to :batch_operation

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V2::Schema < GraphQL::Schema
   default_max_page_size 100
   default_page_size 100

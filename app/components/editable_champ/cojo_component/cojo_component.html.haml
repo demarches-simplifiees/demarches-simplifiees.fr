@@ -17,6 +17,7 @@
 .fr-input-group{ class: input_group_class }
   = @form.label :accreditation_birthdate, for: @champ.accreditation_birthdate_input_id, class: 'fr-label' do
     - safe_join [t('.accreditation_birthdate_label'), @champ.required? ? render(EditableChamp::AsteriskMandatoryComponent.new) : ''], ' '
+  %p.fr-hint-text{ data: { controller: 'date-input-hint' } }= t('.accreditation_birthdate_hint')
   = @form.date_field :accreditation_birthdate,
     required: @champ.required?,
     aria: { describedby: dom_id(@champ, :accreditation_birthdate) },

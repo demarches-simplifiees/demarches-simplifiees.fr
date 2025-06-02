@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The certificate and secret key are not fetched from secrets.yml because there is a problem to set a secret key from a multiline env var"
 # So we fetch env var directly here
 

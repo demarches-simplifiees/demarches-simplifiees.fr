@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: migrate_filters_to_use_stable_id'
   task migrate_filters_to_use_stable_id: :environment do

@@ -4,6 +4,13 @@ export class FormatController extends ApplicationController {
   connect() {
     const format = this.element.getAttribute('data-format');
     switch (format) {
+      case 'deleteSpace':
+        this.on('change', (event) => {
+          const target = event.target as HTMLInputElement;
+          const value = this.deleteSpace(target.value);
+          replaceValue(target, value);
+        });
+        break;
       case 'list':
         this.on('change', (event) => {
           const target = event.target as HTMLInputElement;
@@ -40,6 +47,9 @@ export class FormatController extends ApplicationController {
         });
         break;
     }
+  }
+  private deleteSpace(value: string) {
+    return value.replace(/\s*/g, '');
   }
 
   private formatList(value: string) {

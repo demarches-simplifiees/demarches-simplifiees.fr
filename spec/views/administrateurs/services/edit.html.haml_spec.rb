@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'administrateurs/services/edit.html.haml', type: :view do

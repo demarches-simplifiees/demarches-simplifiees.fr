@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Commentaire do
   it { is_expected.to have_db_column(:email) }
   it { is_expected.to have_db_column(:body) }

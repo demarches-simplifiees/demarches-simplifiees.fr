@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'root/_footer.html.haml', type: :view do
   subject { render }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::ExportDropdownComponent < ApplicationComponent
   include ApplicationHelper
 

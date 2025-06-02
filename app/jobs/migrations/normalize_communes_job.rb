@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::NormalizeCommunesJob < ApplicationJob
   def perform(ids)
     Champs::CommuneChamp.where(id: ids).find_each do |champ|

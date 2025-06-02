@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :champ_do_not_use, class: 'Champ' do
     stream { 'main' }

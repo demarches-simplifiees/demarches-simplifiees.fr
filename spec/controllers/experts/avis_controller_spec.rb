@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Experts::AvisController, type: :controller do
   context 'with an expert signed in' do
     render_views

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TeFenuaController < ApplicationController
   def suggestions
     request = params[:request]

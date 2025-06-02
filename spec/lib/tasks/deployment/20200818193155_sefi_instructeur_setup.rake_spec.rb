@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20200818193155_sefi_instructeur_setup.rake' do
   let(:rake_task) { Rake::Task['after_party:sefi_instructeur_setup'] }
   let!(:procedure_to_unassign) { create(:procedure, id: 216) }

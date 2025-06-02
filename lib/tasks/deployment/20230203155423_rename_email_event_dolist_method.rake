@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: rename_email_event_dolist_method'
   task rename_email_event_dolist_method: :environment do

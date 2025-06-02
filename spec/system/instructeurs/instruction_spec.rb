@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
   include Logic

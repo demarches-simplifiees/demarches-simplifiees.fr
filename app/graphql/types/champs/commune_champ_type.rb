@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Champs
   class CommuneChampType < Types::BaseObject
     implements Types::ChampType

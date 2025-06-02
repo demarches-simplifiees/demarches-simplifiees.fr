@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::BackfillDossierRepetitionJob < ApplicationJob
   def perform(dossier_ids)
     Dossier.where(id: dossier_ids)

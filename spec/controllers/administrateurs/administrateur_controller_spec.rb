@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::AdministrateurController, type: :controller do
   describe 'before actions: authenticate_administrateur!' do
     it 'is present' do

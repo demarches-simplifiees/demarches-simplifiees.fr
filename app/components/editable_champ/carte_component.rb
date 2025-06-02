@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
   def dsfr_champ_container

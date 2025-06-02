@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_geo_area_without_geometry_again'
   task fix_geo_area_without_geometry_again: :environment do

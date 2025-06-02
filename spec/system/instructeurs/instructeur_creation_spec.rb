@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'As an instructeur', js: true do
   let(:administrateur) { create(:administrateur, :with_procedure) }
   let(:procedure) { administrateur.procedures.first }

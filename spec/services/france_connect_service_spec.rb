@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 describe FranceConnectService do
   describe '.retrieve_user_informations_particulier' do
     let(:code) { 'plop' }
-    let(:access_token) { 'my access_token' }
+    let(:access_token) { +'my access_token' }
 
     let(:given_name) { 'plop1' }
     let(:family_name) { 'plop2' }

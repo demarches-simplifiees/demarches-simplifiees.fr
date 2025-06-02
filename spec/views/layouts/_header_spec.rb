@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'layouts/_header', type: :view do
   let(:current_instructeur) { nil }
 

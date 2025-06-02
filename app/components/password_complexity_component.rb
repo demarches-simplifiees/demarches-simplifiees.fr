@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordComplexityComponent < ApplicationComponent
   def initialize(length: nil, min_length: nil, score: nil, min_complexity: nil)
     @length = length

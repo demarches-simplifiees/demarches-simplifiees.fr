@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::NumeroDnChamp < Champ
   store_accessor :value_json, :numero_dn, :date_de_naissance
 

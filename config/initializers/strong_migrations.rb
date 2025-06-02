@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Mark existing migrations as safe
 # StrongMigrations.start_after = 20220315125851
 # tmp ignore strong migrations

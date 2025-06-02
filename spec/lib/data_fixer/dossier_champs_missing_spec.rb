@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DataFixer::DossierChampsMissing do
   describe '#fix' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :datetime }, { type: :dossier_link }]) }

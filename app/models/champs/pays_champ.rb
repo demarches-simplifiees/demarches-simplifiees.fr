@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::PaysChamp < Champs::TextChamp
   with_options if: :validate_champ_value? do
     validates :external_id, inclusion: APIGeoService.countries.pluck(:code), allow_nil: true, allow_blank: false

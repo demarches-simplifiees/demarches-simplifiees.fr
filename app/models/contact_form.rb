@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContactForm < ApplicationRecord
   attr_reader :options
 

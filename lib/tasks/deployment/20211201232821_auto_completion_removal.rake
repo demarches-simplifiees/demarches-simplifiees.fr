@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: auto_completion_removal'
   task auto_completion_removal: :environment do

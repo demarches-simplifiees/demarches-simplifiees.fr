@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::TeFenuaTypeDeChamp < TypesDeChamp::TypeDeChampBase
   LAYERS = [:parcelles, :zones_manuelles] # , :batiments
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::NumeroDnTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def paths
     paths = super

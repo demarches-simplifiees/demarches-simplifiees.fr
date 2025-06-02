@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::PurgeOldSibMailsJob < Cron::CronJob
   self.schedule_expression = "every day at 00:15"
 

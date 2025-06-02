@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::Constant < Logic::Term
   attr_reader :value
 

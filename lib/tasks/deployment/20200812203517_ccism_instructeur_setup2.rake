@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: Setting up instructeurs for ccism procedures'
   task ccism_instructeur_setup2: :environment do

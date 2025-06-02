@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::PfAPI
   # as of 09/08/2023, i-taiete seems to timeout if we provide bearer token
   # ==> as i-taiete works without, bear token is no longer sent

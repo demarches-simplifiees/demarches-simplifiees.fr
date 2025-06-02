@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::ExercicesAdapter do
   let(:siret) { '41816609600051' }
   let(:procedure) { create(:procedure) }

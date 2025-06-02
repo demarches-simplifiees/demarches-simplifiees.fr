@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   APP_HOST = ENV['APP_HOST']
   APP_HOST_LEGACY = ENV['APP_HOST_LEGACY']

@@ -11,7 +11,7 @@ inherit_mode:
     - Include
 
 AllCops:
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.3
   DisabledByDefault: true
   SuggestExtensions: false
   NewCops: enable
@@ -23,6 +23,8 @@ AllCops:
     - "bin/*"
     - "node_modules/**/*"
     - "vendor/**/*"
+    - "storage/**/*"
+    - "tmp/**/*"
 
 DS/AddConcurrentIndex:
   Enabled: true
@@ -1176,7 +1178,7 @@ Style/FormatStringToken:
   EnforcedStyle: template
 
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: true
 
 Style/GlobalVars:
   Enabled: true

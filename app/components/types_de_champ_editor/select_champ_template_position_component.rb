@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::SelectChampTemplatePositionComponent < ApplicationComponent
   def initialize(block:, coordinates:)
     @block = block

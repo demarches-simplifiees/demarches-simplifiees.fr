@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class DemarcheDescriptorType < Types::BaseObject
     class FindDemarcheInput < Types::BaseInputObject

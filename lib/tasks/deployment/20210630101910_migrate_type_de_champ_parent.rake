@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: migrate_type_de_champ_parent'
   task migrate_type_de_champ_parent: :environment do

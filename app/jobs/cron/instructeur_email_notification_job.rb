@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::InstructeurEmailNotificationJob < Cron::CronJob
   self.schedule_expression = "from monday through friday at 8 am"
 

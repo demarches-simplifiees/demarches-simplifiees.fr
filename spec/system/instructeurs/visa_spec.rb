@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Using Visa field', js: true do
   include ActiveJob::TestHelper
 

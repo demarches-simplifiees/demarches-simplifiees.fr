@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::ReleaseCrashedExportJob < Cron::CronJob
   self.schedule_expression = "every 10 minute"
   SECSCAN_LIMIT = 20_000

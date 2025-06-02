@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class String
   JSV_REGEX_SPECIAL_CHARS = /[\[\]\{\}"\,]/.freeze
 

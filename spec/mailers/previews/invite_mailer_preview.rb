@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InviteMailerPreview < ActionMailer::Preview
   def invite_user
     InviteMailer.invite_user(invite)

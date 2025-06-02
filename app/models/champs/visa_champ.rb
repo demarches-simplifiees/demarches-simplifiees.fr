@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::VisaChamp < Champ
   def search_terms
     if value.present?

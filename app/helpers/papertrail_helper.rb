@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PapertrailHelper
   def papertrail_requester_identity(dossier)
     if dossier.etablissement.present?

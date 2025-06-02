@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gestionnaires
   class GroupeGestionnaireCommentairesController < GestionnaireController
     before_action :retrieve_groupe_gestionnaire

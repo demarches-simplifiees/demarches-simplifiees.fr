@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::WeeklyOverviewJob < Cron::CronJob
   self.schedule_expression = "every monday at 04:05"
 

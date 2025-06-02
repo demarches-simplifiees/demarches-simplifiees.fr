@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RNFChamp < Champ
   store_accessor :data, :title, :email, :phone, :createdAt, :updatedAt, :dissolvedAt, :address, :status
 

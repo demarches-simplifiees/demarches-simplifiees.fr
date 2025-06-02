@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/index', type: :view do
   let(:user) { create(:user) }
   let(:procedure_accuse_lecture) { create(:procedure, :accuse_lecture) }

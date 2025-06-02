@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FranceConnectInformation < ApplicationRecord
   MERGE_VALIDITY = 15.minutes
 

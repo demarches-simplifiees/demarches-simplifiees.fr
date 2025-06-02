@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper

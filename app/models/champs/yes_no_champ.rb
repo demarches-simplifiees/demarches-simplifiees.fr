@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::YesNoChamp < Champs::BooleanChamp
   def legend_label?
     true

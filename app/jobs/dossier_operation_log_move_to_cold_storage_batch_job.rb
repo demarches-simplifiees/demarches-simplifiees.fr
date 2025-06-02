@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierOperationLogMoveToColdStorageBatchJob < ApplicationJob
   queue_as :low_priority
 

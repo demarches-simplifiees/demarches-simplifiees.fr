@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecoveryService
   def self.recoverable_procedures(previous_user:, siret:)
     return [] if previous_user.nil?

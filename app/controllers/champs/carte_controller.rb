@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::CarteController < Champs::ChampController
   def index
     @focus = params[:focus].present?

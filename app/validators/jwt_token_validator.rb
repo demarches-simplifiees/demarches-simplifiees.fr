@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JwtTokenValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     begin

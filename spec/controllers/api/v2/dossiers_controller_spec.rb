@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe API::V2::DossiersController do
   let(:dossier) { create(:dossier, :accepte, :with_attestation) }
   let(:sgid) { dossier.to_sgid(expires_in: 1.hour, for: 'api_v2') }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "procedure sort", js: true do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }

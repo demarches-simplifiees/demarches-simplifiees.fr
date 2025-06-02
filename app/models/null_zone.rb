@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NullZone
   include ActiveModel::Model
   ReflectionAssociation = Struct.new(:class_name)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 OpenIDConnect.http_config do |config|
   config.response :jwt
 

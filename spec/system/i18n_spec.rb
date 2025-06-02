@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Accessing the website in different languages:' do
   context 'when the i18n feature-flag is enabled' do
     before { ENV['LOCALIZATION_ENABLED'] = 'true' }

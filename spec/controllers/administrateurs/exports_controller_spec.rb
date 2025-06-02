@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::ExportsController, type: :controller do
   describe '#download' do
     let(:administrateur) { administrateurs(:default_admin) }

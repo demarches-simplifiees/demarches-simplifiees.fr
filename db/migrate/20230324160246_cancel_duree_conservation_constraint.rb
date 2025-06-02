@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CancelDureeConservationConstraint < ActiveRecord::Migration[6.1]
   def change
     # We ignore strong_migrations safety warnings, because these table is relatively small

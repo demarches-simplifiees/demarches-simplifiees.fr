@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DeletedDossier do
   let(:deleted_dossier) { create(:deleted_dossier) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Etablissement < ApplicationRecord
   belongs_to :dossier, optional: true
 

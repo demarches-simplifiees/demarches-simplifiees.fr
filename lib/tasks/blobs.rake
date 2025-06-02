@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :blobs do
   desc <<~EOD
     given a file blob_ids.json with contains { blob_ids: [...] },

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportItemType do
   let(:type) { ExportItemType.new }
 

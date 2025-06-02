@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_dossier_transfer_with_uppercase'
   task fix_dossier_transfer_with_uppercase: :environment do

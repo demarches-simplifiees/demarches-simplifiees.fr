@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEffectifAnneeAnterieure < ActiveRecord::Migration[5.2]
   def change
     add_column :etablissements, :entreprise_effectif_annuel, :decimal

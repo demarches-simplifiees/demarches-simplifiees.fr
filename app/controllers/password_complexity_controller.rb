@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordComplexityController < ApplicationController
   def show
     @score, @words, @length = ZxcvbnService.new(password_param).complexity

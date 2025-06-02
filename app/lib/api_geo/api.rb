@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIGeo::API
   TIMEOUT = 15
   CACHE_DURATION = 1.day

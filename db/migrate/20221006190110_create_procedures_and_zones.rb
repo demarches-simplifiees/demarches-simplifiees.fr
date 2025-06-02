@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateProceduresAndZones < ActiveRecord::Migration[6.1]
   def change
     create_table :procedures_zones, id: false do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::NoEmptyDropDownValidator < ActiveModel::EachValidator
   def validate_each(procedure, attribute, types_de_champ)
     types_de_champ.filter(&:drop_down_list?).each do |drop_down|

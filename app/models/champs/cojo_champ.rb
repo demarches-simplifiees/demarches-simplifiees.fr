@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::COJOChamp < Champ
   store_accessor :value_json, :accreditation_number, :accreditation_birthdate
   store_accessor :data, :accreditation_success, :accreditation_first_name, :accreditation_last_name

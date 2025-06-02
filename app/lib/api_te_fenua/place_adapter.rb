@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APITeFenua::PlaceAdapter < APITeFenua::Adapter
   def initialize(place)
     super(place, [])

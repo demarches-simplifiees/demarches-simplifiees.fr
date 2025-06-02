@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChampFetchExternalDataJob < ApplicationJob
   discard_on ActiveJob::DeserializationError
 

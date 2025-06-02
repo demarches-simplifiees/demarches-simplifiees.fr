@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: set_dossiers_processed_at'
   task set_dossiers_processed_at: :environment do

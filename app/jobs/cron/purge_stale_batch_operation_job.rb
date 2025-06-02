@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::PurgeStaleBatchOperationJob < Cron::CronJob
   self.schedule_expression = "every 5 minutes"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierProjectionService do
   describe '#project' do
     subject { described_class.project(dossiers_ids, fields) }

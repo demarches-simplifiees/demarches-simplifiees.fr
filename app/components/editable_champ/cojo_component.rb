@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::COJOComponent < EditableChamp::EditableChampBaseComponent
   def input_group_class
     if @champ.accreditation_success?

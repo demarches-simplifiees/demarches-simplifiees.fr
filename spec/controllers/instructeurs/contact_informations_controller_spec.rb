@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::ContactInformationsController, type: :controller do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }

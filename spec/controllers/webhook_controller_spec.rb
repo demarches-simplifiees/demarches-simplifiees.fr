@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe WebhookController, type: :controller do
   let(:email) { Struct.new(:delivered_at, :subject, :status) }
   let(:sent_email) { email.new(1.day.ago, "subject", "opened") }

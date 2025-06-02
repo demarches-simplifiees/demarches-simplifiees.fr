@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'France Connect Particulier Connexion' do
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }

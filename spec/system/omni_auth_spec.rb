@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Omni Auth Connexion' do
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }

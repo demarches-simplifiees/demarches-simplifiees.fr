@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeur/dossiers/expiration_banner', type: :view do
   include DossierHelper
   let(:duree_conservation_dossiers_dans_ds) { 3 }

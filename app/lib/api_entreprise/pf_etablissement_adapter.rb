@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
   private
 

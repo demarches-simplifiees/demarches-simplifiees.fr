@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_repetition_champ_without_row_id'
   task backfill_repetition_champ_without_row_id: :environment do

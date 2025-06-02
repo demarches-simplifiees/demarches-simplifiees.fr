@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::PrivilegesAdapter do
   let(:body) { File.read('spec/fixtures/files/api_entreprise/privileges.json') }
   let(:status) { 200 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: init_procedure_estimated_duration_visible'
   task init_procedure_estimated_duration_visible: :environment do

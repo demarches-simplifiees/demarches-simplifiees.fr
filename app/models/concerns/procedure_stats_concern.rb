@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ProcedureStatsConcern
   extend ActiveSupport::Concern
 

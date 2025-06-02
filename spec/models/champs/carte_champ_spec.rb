@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::CarteChamp do
   let(:champ) { Champs::CarteChamp.new(geo_areas:) }
   before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_carte)) }

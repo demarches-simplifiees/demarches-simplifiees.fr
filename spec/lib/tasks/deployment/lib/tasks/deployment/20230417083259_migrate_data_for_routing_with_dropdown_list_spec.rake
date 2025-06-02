@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20230417083259_migrate_data_for_routing_with_dropdown_list' do
   include Logic
   let(:rake_task) { Rake::Task['after_party:migrate_data_for_routing_with_dropdown_list'] }

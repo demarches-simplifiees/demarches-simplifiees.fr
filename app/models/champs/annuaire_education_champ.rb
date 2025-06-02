@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::AnnuaireEducationChamp < Champs::TextChamp
   def fetch_external_data?
     true

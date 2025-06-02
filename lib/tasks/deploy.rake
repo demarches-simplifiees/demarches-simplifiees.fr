@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def domains_for_stage
   if ENV['DOMAINS'].present?
     ENV['DOMAINS'].split

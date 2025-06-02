@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::CommuneChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement, :code_postal, :code_region
   before_save :on_codes_change, if: :should_refresh_after_code_change?

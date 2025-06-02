@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: unroute_cloned_procedures_from_diffent_admin'
   task unroute_cloned_procedures_from_diffent_admin: :environment do

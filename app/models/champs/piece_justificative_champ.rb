@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::PieceJustificativeChamp < Champ
   FILE_MAX_SIZE = 200.megabytes
 

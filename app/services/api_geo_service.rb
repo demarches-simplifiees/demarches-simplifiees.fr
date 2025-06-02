@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIGeoService
   class << self
     def countries(locale: I18n.locale)

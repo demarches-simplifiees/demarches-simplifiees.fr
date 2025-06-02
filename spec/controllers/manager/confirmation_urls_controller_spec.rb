@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Manager::ConfirmationUrlsController, type: :controller do
   let(:inviter_super_admin) { create(:super_admin) }
   let(:inviter_administrateur) { create(:administrateur, email: inviter_super_admin.email) }

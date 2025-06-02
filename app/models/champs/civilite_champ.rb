@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::CiviliteChamp < Champ
   validates :value, inclusion: ["M.", "Mme"], allow_nil: true, allow_blank: false, if: :validate_champ_value_or_prefill?
 

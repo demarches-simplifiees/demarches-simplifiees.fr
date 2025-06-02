@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::ChampsRowsShowComponent < ApplicationComponent
   attr_reader :profile
   attr_reader :seen_at

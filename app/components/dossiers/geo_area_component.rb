@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::GeoAreaComponent < ApplicationComponent
   attr_reader :geo_area, :editing
 

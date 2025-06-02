@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, estimated_dossiers_count: 4) }
   let(:status) { 200 }

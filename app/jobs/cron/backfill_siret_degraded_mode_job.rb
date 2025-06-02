@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::BackfillSiretDegradedModeJob < Cron::CronJob
   self.schedule_expression = "every 2 hour"
 

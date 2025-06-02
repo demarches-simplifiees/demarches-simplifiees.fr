@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::FixedFooterComponent < ApplicationComponent
   def initialize(procedure:, form: nil, is_form_disabled: nil, extra_class_names: nil)
     @procedure = procedure

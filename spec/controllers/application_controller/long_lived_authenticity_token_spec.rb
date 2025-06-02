@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ApplicationController::LongLivedAuthenticityToken, type: :controller do
   controller(ActionController::Base) do
     include ApplicationController::LongLivedAuthenticityToken

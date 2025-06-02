@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :controller do
   let(:gestionnaire) { create(:gestionnaire).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }
   let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }

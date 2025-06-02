@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::API do
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }

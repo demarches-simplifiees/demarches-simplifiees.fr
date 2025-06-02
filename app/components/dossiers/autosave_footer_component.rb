@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::AutosaveFooterComponent < ApplicationComponent
   include ApplicationHelper
   attr_reader :dossier

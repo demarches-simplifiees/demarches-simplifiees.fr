@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: enable_procedure_expires_when_termine_enabled_on_procedure_without_dossiers'
   task enable_procedure_expires_when_termine_enabled_on_procedure_without_dossiers: :environment do

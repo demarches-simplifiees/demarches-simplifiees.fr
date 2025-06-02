@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Expired::DossiersDeletionService do
   let(:warning_period) { 1.month + 5.days }
   let(:conservation_par_defaut) { 3.months }

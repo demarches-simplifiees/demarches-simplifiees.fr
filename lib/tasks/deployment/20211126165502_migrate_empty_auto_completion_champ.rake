@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: migrate_empty_auto_completion_champ'
   task migrate_empty_auto_completion_champ: :environment do

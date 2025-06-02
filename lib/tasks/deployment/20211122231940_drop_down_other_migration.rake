@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: drop_down_other_migration'
   task drop_down_other_migration: :environment do

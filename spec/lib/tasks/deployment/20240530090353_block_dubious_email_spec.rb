@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20240530090353_block_dubious_email' do
   let(:rake_task) { Rake::Task['after_party:block_dubious_email'] }
   let(:now) { Time.current }

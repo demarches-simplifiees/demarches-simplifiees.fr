@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DubiousProcedure, type: :model do
   describe '#all' do
     let!(:procedure) { create(:procedure, types_de_champ_public: tdcs) }

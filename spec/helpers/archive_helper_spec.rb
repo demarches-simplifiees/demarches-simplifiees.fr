@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ArchiveHelper, type: :helper do
   describe ".estimate_weight" do
     let(:nb_dossiers_termines) { 5 }

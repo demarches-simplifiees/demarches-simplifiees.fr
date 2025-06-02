@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern

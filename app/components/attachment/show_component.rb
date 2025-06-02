@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Attachment::ShowComponent < ApplicationComponent
   def initialize(attachment:, new_tab: false, truncate: false)
     @attachment = attachment

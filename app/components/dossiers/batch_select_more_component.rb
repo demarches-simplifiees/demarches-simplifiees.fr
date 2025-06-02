@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::BatchSelectMoreComponent < ApplicationComponent
   def initialize(dossiers_count:, filtered_sorted_ids:)
     @dossiers_count = dossiers_count

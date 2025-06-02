@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
   let(:attestation_template) { build(:attestation_template) }

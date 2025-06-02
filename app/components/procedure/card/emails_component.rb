@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::Card::EmailsComponent < ApplicationComponent
   CUSTOMIZABLE_COUNT = 6
 

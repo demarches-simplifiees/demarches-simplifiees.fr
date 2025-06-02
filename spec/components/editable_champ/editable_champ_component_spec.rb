@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EditableChamp::EditableChampComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
   let(:types_de_champ_public) { [] }

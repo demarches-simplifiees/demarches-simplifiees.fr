@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierAjouterInstructeur < Mutations::BaseMutation
     include DossierHelper

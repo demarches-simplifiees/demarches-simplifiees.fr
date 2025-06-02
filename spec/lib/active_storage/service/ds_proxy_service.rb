@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ActiveStorage::Service::DsProxyService do
   let(:private_host) { 'storage.sbg1.cloud.ovh.net:443' }
   let(:public_host) { "static.#{FR_SITE}" }

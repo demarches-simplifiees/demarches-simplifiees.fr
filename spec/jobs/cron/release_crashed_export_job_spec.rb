@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Cron::ReleaseCrashedExportJob do
   let(:handler) { "whocares" }
 

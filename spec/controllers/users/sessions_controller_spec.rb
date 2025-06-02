@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::SessionsController, type: :controller do
   let(:email) { 'unique@plop.com' }
   let(:password) { SECURE_PASSWORD }

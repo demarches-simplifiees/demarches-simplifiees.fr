@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SuperAdmins::ReleaseNotesController < ApplicationController
   before_action :authenticate_super_admin!
   before_action :set_note, only: [:edit, :update, :destroy]

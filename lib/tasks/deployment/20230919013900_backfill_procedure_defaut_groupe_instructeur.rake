@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_procedure_defaut_groupe_instructeur'
   task backfill_procedure_defaut_groupe_instructeur: :environment do

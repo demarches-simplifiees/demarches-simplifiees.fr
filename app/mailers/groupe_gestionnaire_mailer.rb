@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeGestionnaireMailer < ApplicationMailer
   helper MailerHelper
   layout 'mailers/layout'

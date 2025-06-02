@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SuperAdminMailer < ApplicationMailer
   def dolist_report(to, csv_path)
     attachments["dolist_report.csv"] = File.read(csv_path)

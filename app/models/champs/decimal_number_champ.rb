@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::DecimalNumberChamp < Champ
   before_validation :format_value
 

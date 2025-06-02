@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # doc: https://github.com/france-connect/Documentation-AgentConnect
 class AgentConnect::AgentController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]

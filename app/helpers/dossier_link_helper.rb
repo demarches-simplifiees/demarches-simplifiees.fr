@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DossierLinkHelper
   def dossier_linked_path(user, dossier)
     if user.is_a?(Instructeur)

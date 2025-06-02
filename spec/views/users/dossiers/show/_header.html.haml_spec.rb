@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/show/header', type: :view do
   let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure)) }
   let(:user) { dossier.user }

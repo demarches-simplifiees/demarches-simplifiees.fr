@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CodeInsee do
   it 'converts to departement' do
     expect(CodeInsee.new('75002').to_departement).to eq('75')

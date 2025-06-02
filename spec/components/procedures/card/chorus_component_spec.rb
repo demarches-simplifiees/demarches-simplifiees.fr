@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Procedure::Card::ChorusComponent, type: :component do
   describe 'render' do
     let(:procedure) { create(:procedure) }

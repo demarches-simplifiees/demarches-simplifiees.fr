@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeojsonService
   def self.valid?(json)
     schemer = JSONSchemer.schema(Rails.root.join('app/schemas/geojson.json'))

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateS3Synchronizations < ActiveRecord::Migration[6.0]
   def change
     create_table :s3_synchronizations do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IndividualSerializer < ActiveModel::Serializer
   attribute :gender, key: :civilite
   attributes :nom, :prenom

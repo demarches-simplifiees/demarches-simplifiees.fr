@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::PaysChamp, type: :model do
   let(:champ) { described_class.new(value: nil) }
   before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_pays)) }

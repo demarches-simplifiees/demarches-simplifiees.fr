@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require Rails.root.join("lib", "tasks", "task_helper")
 
 namespace :token_expiration_email do

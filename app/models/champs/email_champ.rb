@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::EmailChamp < Champs::TextChamp
   include EmailSanitizableConcern
   before_validation -> { sanitize_email(:value) }

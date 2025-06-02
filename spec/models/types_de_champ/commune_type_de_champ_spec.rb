@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TypesDeChamp::CommuneTypeDeChamp do
   let(:subject) { create(:type_de_champ_communes, libelle: 'Ma commune') }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe HtmlToStringHelper do
   describe "#html_to_string" do
     describe 'does not change plain text' do

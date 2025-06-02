@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Ensure that the environment variables defined in the reference env vars file
 # are present in the execution environment.
 #
