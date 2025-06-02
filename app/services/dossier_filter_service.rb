@@ -23,7 +23,7 @@ class DossierFilterService
     case table
     when 'notifications'
       dossiers_id_with_notifications = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
-      dossiers_id_with_notifications_v2 = dossiers.with_notifications_v2.order_by_notifications_importance.map(&:id)
+      dossiers_id_with_notifications_v2 = dossiers.with_notifications_v2(instructeur).order_by_notifications_importance.map(&:id)
       if order == 'desc'
         (dossiers_id_with_notifications_v2 + dossiers_id_with_notifications + dossiers.order('dossiers.updated_at desc').ids).uniq
       else
