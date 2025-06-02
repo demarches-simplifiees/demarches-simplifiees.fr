@@ -10,3 +10,4 @@
 
     .fr-stepper__steps{ data: { "fr-current-step" => "2", "fr-steps" => "3" } }
 
+    = render Referentiels::ReferentielPrefillComponent.new(procedure: @procedure, type_de_champ: @type_de_champ, referentiel: @referentiel)
