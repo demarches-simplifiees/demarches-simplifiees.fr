@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LexpolFieldsService
   def self.object_field_values(source, field)
     return [] if source.blank? || field.blank?

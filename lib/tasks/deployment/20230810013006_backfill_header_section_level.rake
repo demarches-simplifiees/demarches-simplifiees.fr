@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill new header_section_level in HeaderChamp with pf level attribute'
   task backfill_header_section_level: :environment do

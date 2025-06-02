@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StampService
   def stamp(blob, url)
     blob.open do |file|

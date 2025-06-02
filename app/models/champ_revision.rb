@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChampRevision < ApplicationRecord
   belongs_to :champ, inverse_of: :champ_revisions, optional: false
   belongs_to :instructeur, inverse_of: false, optional: false

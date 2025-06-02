@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: create_pf_zones'
   task populate_pf_zones: :environment do

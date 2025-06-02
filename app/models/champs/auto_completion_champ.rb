@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::AutoCompletionChamp < Champ
   def options?
     drop_down_list_options?

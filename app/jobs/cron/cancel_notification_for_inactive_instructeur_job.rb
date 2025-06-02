@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::CancelNotificationForInactiveInstructeurJob < Cron::CronJob
   self.schedule_expression = "from monday through friday at 3 am"
 

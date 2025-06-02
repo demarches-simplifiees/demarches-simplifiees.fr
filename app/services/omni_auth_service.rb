@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OmniAuthService
   def self.enabled?(provider)
     ENV["#{provider.upcase}_CLIENT_ID"].present?

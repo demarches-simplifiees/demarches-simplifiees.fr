@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::NumeroDnController < Champs::ChampController
   def show
     @dn = params[:dn]

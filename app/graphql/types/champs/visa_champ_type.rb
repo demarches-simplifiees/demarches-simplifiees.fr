@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Champs
   class VisaChampType < Types::BaseObject
     implements Types::ChampType

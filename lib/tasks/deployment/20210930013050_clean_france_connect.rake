@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: delete_entries_without_user to prepare future db constraints'
   task clean_france_connect: :environment do

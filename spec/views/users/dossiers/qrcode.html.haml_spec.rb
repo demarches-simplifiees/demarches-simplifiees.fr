@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'users/dossiers/qrcode.html.haml', type: :view do

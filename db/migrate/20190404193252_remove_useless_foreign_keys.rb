@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUselessForeignKeys < ActiveRecord::Migration[5.2]
   @@rfks = {
     :administrateurs_gestionnaires => [:administrateurs, :gestionnaires],

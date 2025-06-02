@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def update_field(param)
   procedure = Procedure.find_by(id: param[:procedure])
   if procedure.nil?

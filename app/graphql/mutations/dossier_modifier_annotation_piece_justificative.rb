@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierModifierAnnotationPieceJustificative < Mutations::DossierModifierAnnotation
     description "Modifier l’annotation au format piece justificative en donnant le signed_id retournée par CreateDirectUpload."

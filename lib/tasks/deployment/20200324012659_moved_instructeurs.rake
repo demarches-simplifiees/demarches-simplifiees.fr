@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: desactivate_instructeurs_no_longer_present'
   task moved_instructeurs: :environment do

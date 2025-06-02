@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ChampRevision do
   describe "associations" do
     it {

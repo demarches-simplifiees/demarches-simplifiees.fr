@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OmniAuthClient < OpenIDConnect::Client
   def initialize(connection_keys, code = nil)
     super(connection_keys)

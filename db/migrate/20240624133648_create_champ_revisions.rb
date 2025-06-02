@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateChampRevisions < ActiveRecord::Migration[7.0]
   def change
     create_table :champ_revisions do |t|

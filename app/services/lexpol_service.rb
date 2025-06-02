@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LexpolService
   FIXED_METADATA_INDIVIDUEL = [
     ["individual.nom", "Demandeur nom"],

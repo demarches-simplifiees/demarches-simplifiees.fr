@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20220705164551_feature_flag_visa_champs' do
   let(:rake_task) { Rake::Task['after_party:feature_flag_visa_champs'] }
   let!(:procedure_with_admin_featured) { create(:procedure) }

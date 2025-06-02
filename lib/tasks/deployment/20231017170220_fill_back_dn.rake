@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: Fill back DNs for procedure 2077'
   task fill_back_dn: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: sefi_instructeur_setup'
   task sefi_instructeur_setup: :environment do

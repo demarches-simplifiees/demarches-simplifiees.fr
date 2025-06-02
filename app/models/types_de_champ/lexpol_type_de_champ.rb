@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::LexpolTypeDeChamp < TypesDeChamp::TypeDeChampBase
   class << self
     def champ_value_for_api(champ, version = 2)
