@@ -24,7 +24,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
     end
 
     context 'when the targeted_champ is unmanaged' do
-      let(:tdc) { create(:type_de_champ_address) }
+      let(:tdc) { create(:type_de_champ_email) }
       let(:source_tdcs) { [tdc] }
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(1))] }
 

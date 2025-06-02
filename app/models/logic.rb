@@ -46,7 +46,7 @@ module Logic
       operator_class = EmptyOperator
     in [:enum, _]
       operator_class = Eq
-    in [:commune_enum, _] | [:epci_enum, _]
+    in [:commune_enum, _] | [:epci_enum, _] | [:address, _]
       operator_class = InDepartementOperator
     in [:commune_de_polynesie_enum, _] | [:code_postal_de_polynesie_enum, _]
       operator_class = InArchipelOperator
@@ -65,7 +65,7 @@ module Logic
         Constant.new(true)
       when :empty
         Empty.new
-      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :commune_de_polynesie_enum, :code_postal_de_polynesie_enum
+      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :address, :commune_de_polynesie_enum, :code_postal_de_polynesie_enum
         Constant.new(left.options(type_de_champs).first.second)
       when :number
         Constant.new(0)
@@ -79,7 +79,7 @@ module Logic
     case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
-    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string] | [:commune_de_polynesie_enum, :string] | [:code_postal_de_polynesie_enum, :string]
+    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string] | [:address, :string] | [:commune_de_polynesie_enum, :string] | [:code_postal_de_polynesie_enum, :string]
       true
     else
       false
