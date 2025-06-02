@@ -4,7 +4,7 @@ fr:
       notification:
         dossier_depose:
           generic: Déposé depuis longtemps
-          specific: "Dépose depuis %{days} J."
+          specific: "Déposé depuis %{days} J."
         dossier_modifie: Dossier modifié
         attente_correction: En attente de correction
         attente_avis: En attente d'avis externe

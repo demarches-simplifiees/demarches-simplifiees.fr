@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DossierNotification < ApplicationRecord
+  DELAY_DOSSIER_DEPOSE = 7.days
+
   belongs_to :groupe_instructeur, optional: true
   belongs_to :instructeur, optional: true
   belongs_to :dossier
@@ -32,7 +34,7 @@ class DossierNotification < ApplicationRecord
         notification_type:,
         groupe_instructeur_id: dossier.groupe_instructeur_id
       ) do |notification|
-        notification.display_at = dossier.depose_at + 7.days
+        notification.display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
       end
 
     when :dossier_modifie, :attente_correction, :attente_avis, :message_usager, :annotation_instructeur, :avis_externe
