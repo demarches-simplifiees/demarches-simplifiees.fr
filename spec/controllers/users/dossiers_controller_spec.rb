@@ -723,7 +723,7 @@ describe Users::DossiersController, type: :controller do
     let(:owner) { create(:user) }
     let(:procedure_traits) { [] }
     let(:dossier_traits) { [] }
-    let(:procedure) { create(:procedure, :for_individual, :published, *procedure_traits, types_de_champ_public:).tap { Flipper.enable(:user_buffer_stream, _1) } }
+    let(:procedure) { create(:procedure, :for_individual, :published, *procedure_traits, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let(:dossier) { create(:dossier, :en_construction, :with_individual, *dossier_traits, procedure:, user: owner).tap { _1.with_update_stream(_1.user) } }
     let(:now) { Time.zone.parse('01/01/2100') }
@@ -1430,7 +1430,7 @@ describe Users::DossiersController, type: :controller do
     before { sign_in(user) }
 
     let(:types_de_champ_public) { [{}, { type: :piece_justificative }] }
-    let(:procedure) { create(:procedure, :published, types_de_champ_public:).tap { Flipper.enable(:user_buffer_stream, _1) } }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
     let(:first_champ) { dossier.project_champs_public.first }
     let(:first_champ_user_buffer) { dossier.with_update_stream(dossier.user) { dossier.project_champs_public.first } }
