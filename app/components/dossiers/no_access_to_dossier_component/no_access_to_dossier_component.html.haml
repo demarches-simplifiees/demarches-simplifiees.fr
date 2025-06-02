@@ -6,7 +6,8 @@
       .fr-col-12.fr-col-md-10.fr-col-lg-8
         .fr-modal__body
           .fr-modal__header
-            %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-no-access-to-dossier' }, title: t('.modal.close_alt')}= t('.modal.close')
+            %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-no-access-to-dossier' }, title: t('.modal.close_alt'), onclick: "window.history.back()"}
+              = t('.modal.close')
           .fr-modal__content
             %h1#fr-modal-title-modal-1.fr-modal__title
               %span.fr-icon-arrow-right-line.fr-icon--lg>
