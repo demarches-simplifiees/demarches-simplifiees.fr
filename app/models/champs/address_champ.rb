@@ -214,7 +214,7 @@ class Champs::AddressChamp < Champs::TextChamp
   end
 
   def become_international?
-    country_code_changed? && international? && country_code_was == 'FR'
+    country_code_changed? && international? && country_code_was.in?(['FR', nil])
   end
 
   def become_ban?
@@ -227,7 +227,6 @@ class Champs::AddressChamp < Champs::TextChamp
 
   def set_full_address
     address_data = self.value_json
-
     if become_ban? || become_france? || become_international?
       address_data.merge!(
         'department_code': nil,
@@ -244,7 +243,7 @@ class Champs::AddressChamp < Champs::TextChamp
         address_data['department_name'] = APIGeoService.departement_name('99')
       end
     elsif become_not_ban?
-      address_data['street_address'] = nil
+      address_data = { 'not_in_ban': 'true' }
     end
 
     if france?

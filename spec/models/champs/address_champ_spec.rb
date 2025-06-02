@@ -80,4 +80,49 @@ describe Champs::AddressChamp do
       expect(champ.commune_name).to eq("Nouméa")
     end
   end
+
+  context 'interaction with new address_component' do
+    context 'start with an address saved from the ban' do
+      let(:value_json) do
+        {
+          "type" => "housenumber",
+          "label" => "128 Rue Brancion 75015 Paris",
+          "geometry" => { "type" => "Point", "coordinates" => [2.301328, 48.828992] },
+          "city_code" => "75115",
+          "city_name" => "Paris 15e Arrondissement",
+          "not_in_ban" => "",
+          "postal_code" => "75015",
+          "region_code" => "11",
+          "region_name" => "Île-de-France",
+          "street_name" => "Rue Brancion",
+          "country_code" => "FR",
+          "country_name" => "France",
+          "street_number" => "128",
+          "street_address" => "128 Rue Brancion",
+          "department_code" => "75",
+          "department_name" => "Paris"
+        }
+      end
+      it 'changes to not in ban should reset other filled value' do
+        champ.not_in_ban = 'true'
+        champ.save!
+        expect(champ.value_json).to eq("not_in_ban" => "true", "country_code" => "FR")
+      end
+    end
+
+    context 'start from an empty address' do
+      let(:value_json) { nil }
+
+      it 'transition from nil to CH country_code mainting consistent departement_code/name' do
+        champ.update(country_code: 'CH', street_address: '128 Rue Brancion 75015 Paris', not_in_ban: 'true')
+        expect(champ.value_json).to eq({
+          "not_in_ban" => "true",
+          "country_code" => "CH",
+          "street_address" => '128 Rue Brancion 75015 Paris',
+          "department_code" => "99",
+          "department_name" => "Etranger"
+        })
+      end
+    end
+  end
 end
