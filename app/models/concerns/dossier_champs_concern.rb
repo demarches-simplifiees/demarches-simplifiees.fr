@@ -278,19 +278,14 @@ module DossierChampsConcern
   end
 
   def update_with_stream?
-    en_construction? && user_buffer_stream_enabled?
+    en_construction? && !with_editing_fork?
   end
 
   def update_with_fork?
-    en_construction? && !user_buffer_stream_enabled?
+    en_construction? && with_editing_fork?
   end
 
   private
-
-  def user_buffer_stream_enabled?
-    return false if with_editing_fork?
-    procedure.feature_enabled?(:user_buffer_stream) || champs.any? { !_1.main_stream? }
-  end
 
   def with_stream(stream)
     if block_given?
