@@ -30,7 +30,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
 
       it do
         expect(page).to have_css('.errors-summary')
-        expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse en france » et ne peut pas être utilisé comme champ cible.")
+        expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse électronique » et ne peut pas être utilisé comme champ cible.")
       end
     end
 

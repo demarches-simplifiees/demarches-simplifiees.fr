@@ -25,7 +25,7 @@ fr:
           dossier_link: 'Lien vers un autre dossier'
           explication: 'Explication'
           civilite: 'Civilité'
-          email: 'Adresse en france'
+          email: 'Adresse électronique'
           phone: 'Téléphone'
           address: 'Adresse en France'
           communes: 'Communes'
