@@ -18,8 +18,7 @@ describe Administrateurs::ServicesController, type: :controller do
       let(:siret) { "20004021000060" }
 
       before do
-        agi = build(:pro_connect_information, siret:)
-        admin.instructeur.pro_connect_information << agi
+        agi = create(:pro_connect_information, siret:, user: admin.instructeur.user)
       end
 
       it 'prefills the SIRET and fetches service information' do

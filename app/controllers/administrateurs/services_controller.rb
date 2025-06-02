@@ -13,7 +13,7 @@ module Administrateurs
       @procedure = procedure
       @service = Service.new
 
-      siret = current_administrateur.instructeur.last_pro_connect_information&.siret
+      siret = current_administrateur.user.last_pro_connect_information&.siret
       if siret
         @service.siret = siret
         @prefilled = handle_siret_prefill

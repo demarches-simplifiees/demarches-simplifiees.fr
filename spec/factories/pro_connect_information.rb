@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :pro_connect_information do
+    user
     email { 'i@pro_connect.fr' }
     given_name { 'John' }
     usual_name { 'Doe' }

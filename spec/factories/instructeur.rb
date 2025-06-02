@@ -21,7 +21,7 @@ FactoryBot.define do
 
     trait :with_pro_connect_information do
       after(:create) do |instructeur, _evaluator|
-        create(:pro_connect_information, instructeur: instructeur)
+        create(:pro_connect_information, user: instructeur.user)
       end
     end
   end

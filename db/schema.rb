@@ -100,7 +100,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "given_name"
-    t.bigint "instructeur_id", null: false
+    t.bigint "instructeur_id"
     t.string "organizational_unit"
     t.string "phone"
     t.string "siret"
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.bigint "user_id"
     t.string "usual_name"
     t.index ["instructeur_id"], name: "index_agent_connect_informations_on_instructeur_id"
+    t.index ["user_id", "sub"], name: "index_agent_connect_informations_on_user_id_and_sub", unique: true
     t.index ["user_id"], name: "index_agent_connect_informations_on_user_id"
   end
 
