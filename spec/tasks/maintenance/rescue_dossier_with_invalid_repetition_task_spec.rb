@@ -19,7 +19,7 @@ module Maintenance
       before { invalid_champ.update!(row_id: dossier.champs[1].row_id) }
 
       it "dissociate champ having a row_id without a parent_id" do
-        expect { described_class.process(dossier) }
+        expect { described_class.process(dossier.id) }
           .to change { Champ.exists?(invalid_champ.id) }.from(true).to(false)
       end
     end
