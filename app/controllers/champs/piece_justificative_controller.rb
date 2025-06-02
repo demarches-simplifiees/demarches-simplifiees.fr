@@ -31,7 +31,7 @@ class Champs::PieceJustificativeController < Champs::ChampController
       save_succeed = @champ.save(context:)
     end
 
-    if save_succeed && dossier.brouillon?
+    if save_succeed
       @champ.update_timestamps
     end
 
