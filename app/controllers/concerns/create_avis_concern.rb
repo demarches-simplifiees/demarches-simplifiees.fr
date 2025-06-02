@@ -62,7 +62,11 @@ module CreateAvisConcern
         avis.dossier.demander_un_avis!(avis)
         if avis.dossier == dossier
           if avis.experts_procedure.notify_on_new_avis?
-            AvisMailer.avis_invitation(avis).deliver_later
+            if avis.expert.user.unverified_email?
+              avis.expert.user.invite_expert_and_send_avis!(avis)
+            else
+              AvisMailer.avis_invitation(avis).deliver_later
+            end
           end
           sent_emails_addresses << avis.expert.email
           # the email format is already verified, we update value to nil

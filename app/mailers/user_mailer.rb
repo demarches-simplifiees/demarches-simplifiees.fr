@@ -74,6 +74,20 @@ class UserMailer < ApplicationMailer
       reply_to: Current.contact_email)
   end
 
+  def resend_confirmation_email(user, token)
+    @token = token
+    @user = user
+    subject = "Vérification de votre mail"
+
+    configure_defaults_for_user(user)
+
+    bypass_unverified_mail_protection!
+
+    mail(to: user.email,
+      subject: subject,
+      reply_to: Current.contact_email)
+  end
+
   def invite_gestionnaire(user, reset_password_token, groupe_gestionnaire)
     @reset_password_token = reset_password_token
     @user = user

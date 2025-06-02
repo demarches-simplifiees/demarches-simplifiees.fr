@@ -146,6 +146,7 @@ module Experts
 
       if user.valid?
         sign_in(user)
+        user.update!(email_verified_at: Time.zone.now) if user.unverified_email?
         redirect_to url_for(expert_all_avis_path)
       else
         flash[:alert] = user.errors.full_messages
