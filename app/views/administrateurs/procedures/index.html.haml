@@ -5,7 +5,7 @@
       = render SelectProcedureDropDownListComponent.new(procedures: @all_procedures, action_path: url_for([:select_procedure, :admin, :procedures]), form_class: 'width-66')
       = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
 
-    %nav.fr-tabs{ role: 'navigation', 'aria-label': "Menu de mes démarches" }
+    %nav.fr-tabs{ role: 'navigation', 'aria-label': t('administrateurs.procedures_menu') }
       %ul.fr-tabs__list
         = tab_item(t('pluralize.published', count: @procedures_publiees_count), admin_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
         = tab_item('en test', admin_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))

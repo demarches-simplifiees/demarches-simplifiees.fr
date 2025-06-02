@@ -394,10 +394,10 @@ en:
       groupe_gestionnaires:
         delete: Delete
     instructeurs:
-      procedure_menu: "Procedure files menu number %{id}"
-      procedures_menu: "Procedures menu"
+      procedure_menu: "Files of the procedure number %{id}"
+      procedures_menu: "Procedures"
       dossiers:
-        dossier_menu: "Instruction menu of file n. %{id}"
+        dossier_menu: "File number %{id}"
         tab_steps:
           request: Request
           private_annotations: Private annotations
@@ -522,8 +522,8 @@ en:
           simple: Search
           result_term_title: Search result for « %{search_terms} »
           result_procedure_title: and procedure « %{procedure_libelle} »
-        dossiers_menu: Files menu
-        dossier_menu: "File n.%{id} menu"
+        dossiers_menu: My files
+        dossier_menu: "File number %{id}"
         index:
           dossiers: "My files"
         dossiers_list:
@@ -844,6 +844,8 @@ en:
       one: deleted
       other: deleted
   administrateurs:
+    procedures_menu: "My procedures"
+    preview_menu: "Procedure « %{libelle} »"
     activate:
       new:
         title: Pick a password

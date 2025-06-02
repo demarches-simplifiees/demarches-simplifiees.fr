@@ -2,7 +2,7 @@
   .fr-container
     %h1.page-title Prévisualisation de la démarche «&nbsp;#{@dossier.procedure.libelle}&nbsp;»
 
-    %nav.fr-tabs{ role: 'navigation', 'aria-label': "Menu de la démarche" }
+    %nav.fr-tabs{ role: 'navigation', 'aria-label': t('administrateurs.preview_menu', libelle: @dossier.procedure.libelle) }
       %ul.fr-tabs__list
         = tab_item('le dossier',
           apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),

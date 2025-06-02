@@ -400,10 +400,10 @@ fr:
       groupe_gestionnaires:
         delete: Supprimer
     instructeurs:
-      procedure_menu: "Menu des dossiers de la démarche numero %{id}"
-      procedures_menu: "Menu des démarches"
+      procedure_menu: "Dossiers de la démarche numero %{id}"
+      procedures_menu: "Démarches"
       dossiers:
-        dossier_menu: "Menu d’instruction du dossier numéro %{id}"
+        dossier_menu: "Dossier numéro %{id}"
         tab_steps:
           request: Demande
           private_annotations: Annotations privées
@@ -532,8 +532,8 @@ fr:
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »
-        dossiers_menu: Menu des dossiers
-        dossier_menu: "Menu du dossier numéro %{id}"
+        dossiers_menu: "Mes dossiers"
+        dossier_menu: "Dossier numéro %{id}"
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
@@ -927,6 +927,8 @@ fr:
         to_archive: à archiver
         trash: corbeille
   administrateurs:
+    procedures_menu: "Mes démarches"
+    preview_menu: "Démarche « %{libelle} »"
     activate:
       new:
         title: Choix du mot de passe

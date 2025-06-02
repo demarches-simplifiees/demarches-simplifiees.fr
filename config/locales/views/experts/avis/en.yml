@@ -7,7 +7,7 @@ en:
         given:
           one: "notice given"
           other: "notices given"
-        tabs_aria_label: "Notices menu"
+        tabs_aria_label: "Notices"
         th:
           dossier_number: "File number"
           applicant: "Applicant"

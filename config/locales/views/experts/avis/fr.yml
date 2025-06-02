@@ -7,7 +7,7 @@ fr:
         given:
           one: "avis donné"
           other: "avis donnés"
-        tabs_aria_label: "Menu des avis"
+        tabs_aria_label: "Avis"
         th:
           dossier_number: "Nº dossier"
           applicant: "Demandeur"
