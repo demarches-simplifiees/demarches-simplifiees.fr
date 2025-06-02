@@ -6,6 +6,14 @@ fr:
           cadastre: Parcelle cadastrale
           quartier_prioritaire: Quartier prioritaire
           selection_utilisateur: Sélection utilisateur
+    errors:
+      models:
+        geo_area:
+          attributes:
+            geometry:
+              blank: "ne peut pas être vide"
+              invalid_geometry: "n'est pas un GeoJSON valide"
+              invalid_crs: "contient des coordonnées invalides, veuillez utiliser le système de coordonnées WGS84"
   geo_area:
     label:
       cadastre: "Parcelle n° %{numero} - Feuille %{prefixe} %{section} - %{surface} m² – commune %{commune}"

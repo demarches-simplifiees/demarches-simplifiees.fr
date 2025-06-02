@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { httpRequest, fire } from '@utils';
+import { httpRequest, fire, ResponseError } from '@utils';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 
 export const SOURCE_SELECTION_UTILISATEUR = 'selection_utilisateur';
@@ -119,8 +119,15 @@ export function useFeatureCollection(
         addFeatures(newFeatures, external);
         updateFeatureCollection((features) => [...features, ...newFeatures]);
       } catch (error) {
-        console.error(error);
-        onError('Le polygone dessiné n’est pas valide.');
+        if (error instanceof ResponseError && error.errors.length > 0) {
+          console.error(error.errors);
+          onError(
+            `Le polygone dessiné n’est pas valide : ${error.errors.join(', ')}`
+          );
+        } else {
+          console.error(error);
+          onError('Le polygone dessiné n’est pas valide.');
+        }
       }
     },
     [url, updateFeatureCollection, addFeatures, onError]
