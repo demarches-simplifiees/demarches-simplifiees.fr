@@ -61,6 +61,8 @@ module ColumnsConcern
       columns.concat([dossier_accuse_lecture_agreement_at_column]) if accuse_lecture?
       columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
       columns.concat([dossier_labels_column])
+      # columns.concat([Columns::ExpirationDateColumn.new(procedure_id: id)])
+      columns.concat([expiration_date_column])
 
       # ensure the columns exist in main list
       # otherwise, they will be found by the find_column method
@@ -126,6 +128,8 @@ module ColumnsConcern
         .map { |column| dossier_col(table: 'procedure', column:, displayable: false, filterable: false) }
     end
 
+    def expiration_date_column = dossier_col(table: 'self', column: 'expiration_date', type: :datetime, displayable: true, filterable: false)
+
     def dossier_non_displayable_dates_columns
       ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| dossier_col(table: 'self', column:, type: :date, displayable: false) }
@@ -152,6 +156,8 @@ module ColumnsConcern
       columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
       columns.concat(dossier_non_displayable_dates_columns)
       columns.concat([Columns::ReadAgreementColumn.new(procedure_id: id)])
+      # columns.concat([Columns::ExpirationDateColumn.new(procedure_id: id)])
+      columns.concat([expiration_date_column])
     end
 
     def standard_columns
