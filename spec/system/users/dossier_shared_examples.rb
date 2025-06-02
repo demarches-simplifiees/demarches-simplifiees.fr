@@ -30,7 +30,7 @@ RSpec.shared_examples 'the user can send messages to the instructeur' do
     visit dossier_path(dossier)
 
     expect(page).to have_current_path(dossier_path(dossier))
-    click_on 'Messagerie administration'
+    click_on 'Messagerie administration'
 
     expect(page).to have_current_path(messagerie_dossier_path(dossier))
     expect(page).to have_content(commentaire.body)
