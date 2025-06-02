@@ -62,7 +62,7 @@ class DossierNotification < ApplicationRecord
   def self.refresh_notifications_instructeur_for_dossier(instructeur, dossier)
     create_notification(dossier, :dossier_modifie, instructeur:) if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
     create_notification(dossier, :message_usager, instructeur:) if dossier.commentaires.sent_by_user.present?
-    create_notification(dossier, :annotation_instructeur, instructeur:) if dossier.champs.private_only.present?
+    create_notification(dossier, :annotation_instructeur, instructeur:) if dossier.last_champ_private_updated_at.present?
     create_notification(dossier, :avis_externe, instructeur:) if dossier.avis.with_answer.present?
     create_notification(dossier, :attente_correction, instructeur:) if dossier.pending_correction?
     create_notification(dossier, :attente_avis, instructeur:) if dossier.avis.without_answer.present?

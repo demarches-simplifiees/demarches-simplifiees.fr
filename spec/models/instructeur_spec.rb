@@ -50,7 +50,7 @@ describe Instructeur, type: :model do
     end
 
     context "when a instructeur follow a dossier that has had notifications" do
-      let!(:dossier_with_notifications) { create(:dossier, :en_construction, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+      let!(:dossier_with_notifications) { create(:dossier, :en_construction, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday, last_champ_private_updated_at: Time.zone.now) }
       let!(:commentaire) { create(:commentaire, dossier: dossier_with_notifications) }
       let!(:avis_with_answer) { create(:avis, :with_answer, dossier: dossier_with_notifications) }
       let!(:avis_without_answer) { create(:avis, dossier: dossier_with_notifications) }
