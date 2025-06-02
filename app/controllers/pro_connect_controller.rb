@@ -38,13 +38,14 @@ class ProConnectController < ApplicationController
       user.update!(email_verified_at: Time.current)
     end
 
+    pro_connect_info = ProConnectInformation.find_or_initialize_by(user:, sub: user_info['sub'])
+    pro_connect_info.update!(
+      user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone')
+      .merge(amr:)
+    )
+
     if user.instructeur?
       user.instructeur.update!(pro_connect_id_token: id_token)
-      pro_connect_info = ProConnectInformation.find_or_initialize_by(instructeur: user.instructeur, sub: user_info['sub'])
-      pro_connect_info.update!(
-        user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone')
-        .merge(amr:, user_id: user.id)
-      )
     end
 
     sign_in(:user, user)
