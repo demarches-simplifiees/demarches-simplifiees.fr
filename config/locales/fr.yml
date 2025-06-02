@@ -392,7 +392,7 @@ fr:
           form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
-          edit_identity_html: 'Modifier <span aria-hidden="true">l’identité</span>'
+          edit_identity_html: 'Modifier <span aria-hidden="true"> l’identité</span>'
           accuse_lecture: Cette démarche est soumise à un accusé de lecture.
           accuse_lecture_with_agreement: L’usager a pris connaissance de la décision concernant son dossier le %{agreement}.
           accuse_lecture_without_agreement: L’usager n’a pas encore pris connaissance de la décision concernant son dossier.
@@ -481,9 +481,9 @@ fr:
           jdma_l2: Donnez-nous votre avis, cela ne prend que 2 minutes.
         show:
           header:
-            summary: "Suivi de votre dossier"
+            summary_html: 'Suivi<span class="fr-hidden fr-unhidden-sm"> de votre dossier</span>'
             request: "Votre dossier"
-            mailbox: "Messagerie administration"
+            mailbox_html: 'Messagerie<span class="fr-hidden fr-unhidden-sm"> administration</span>'
             rendez_vous: "Rendez-vous"
             dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
