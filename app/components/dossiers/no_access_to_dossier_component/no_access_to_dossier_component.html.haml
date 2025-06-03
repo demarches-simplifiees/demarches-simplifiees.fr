@@ -1,4 +1,4 @@
-= render Dsfr::ModalComponent.new("no-access-to-dossier", "#{t(".link.title")} #{dossier.id}", t(".modal.title"), trigger_using_link: true) do |modal|
+= render Dsfr::ModalComponent.new("no-access-to-dossier", t(".modal.title"), "#{t(".link.title")} #{dossier.id}", trigger_using_link: true) do |modal|
   - modal.with_body do
     = render Dsfr::AlertComponent.new(state: :warning, heading_level: 'p') do |c|
       - c.with_body do
