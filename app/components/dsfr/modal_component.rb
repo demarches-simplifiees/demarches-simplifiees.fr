@@ -14,7 +14,7 @@ class Dsfr::ModalComponent < ApplicationComponent
   # @param modal_title [String] The title of the modal
   # @param trigger_using_link [Boolean] Whether to trigger the modal using a link or a button (default: true)
   # @param trigger_object_extra_classes [String] Additional classes to add to the trigger object (button or link)
-  def initialize(id, trigger_object_title, modal_title, trigger_using_link: false, trigger_object_extra_classes: "")
+  def initialize(id, modal_title, trigger_object_title, trigger_using_link: false, trigger_object_extra_classes: "")
     @modal_id = "modal-#{id}"
     @trigger_object_title = trigger_object_title
     @modal_title = modal_title
