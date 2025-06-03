@@ -168,7 +168,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       it 'redirects to root_path with an alert' do
         subject
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.")
+        expect(flash[:alert]).to eq("Le délai pour fusionner les comptes FranceConnect et mes-demarches.gov.pf est expiré. Veuillez recommencer la procédure pour fusionner les comptes.")
       end
     end
 
@@ -182,7 +182,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         subject
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
+        expect(flash[:alert]).to eq('Le délai pour fusionner les comptes FranceConnect et mes-demarches.gov.pf est expiré. Veuillez recommencer la procédure pour fusionner les comptes.')
       end
     end
   end
@@ -394,7 +394,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         fci.update!(requested_email: email.downcase)
       end
 
-      let!(:user) { create(:user, email:, password: 'abcdefgh') }
+      let!(:user) { create(:user, email:, password: 'this is a very complicated password !') }
 
       it 'merges the account, signs in, and delete the merge token' do
         subject
