@@ -73,7 +73,7 @@
           -#   - c.with_value do
           -#     %p= etablissement.entreprise.numero_tva_intracommunautaire
 
-          = render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(defined?(champ) ? champ : etablissement)}
+          = render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(etablissement) }
 
           -# = render Dossiers::RowShowComponent.new(label: "Capital social") do |c|
           -#   - c.with_value do
