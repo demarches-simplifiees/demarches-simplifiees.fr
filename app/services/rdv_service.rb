@@ -17,6 +17,10 @@ class RdvService
     "#{rdv_sp_host_url}/admin/organisations/configuration"
   end
 
+  def self.rdv_sp_agenda_url
+    "#{rdv_sp_host_url}/agents/agenda"
+  end
+
   def self.create_rdv_plan_url
     "#{rdv_sp_host_url}/api/v1/rdv_plans"
   end
@@ -31,6 +35,11 @@ class RdvService
 
   def self.rdv_sp_rdv_agent_url(rdv_id)
     "#{rdv_sp_host_url}/agents/rdvs/#{rdv_id}"
+  end
+
+  def self.list_rdvs_url(rdv_ids)
+    params = rdv_ids.map { |id| "id[]=#{id}" }.join('&')
+    "#{rdv_sp_host_url}/api/v1/rdvs?#{params}"
   end
 
   def create_rdv_plan(dossier:, first_name:, last_name:, email:, dossier_url:, return_url:)
@@ -120,6 +129,26 @@ class RdvService
         location_type: parsed_body["rdv_plan"]["rdv"]["location_type"]
       )
     end
+  end
+
+  def list_rdvs(rdv_ids)
+    refresh_token_if_expired!
+
+    response = Typhoeus.get(
+      self.class.list_rdvs_url(rdv_ids),
+      headers:
+    )
+
+    if !response.success?
+      error_message = "RdvService#list_rdvs failed #{response.code} #{response.body}"
+      Rails.logger.error(error_message)
+      Sentry.capture_message(error_message)
+      return nil
+    end
+
+    parsed_body = JSON.parse(response.body)
+
+    parsed_body["rdvs"]
   end
 
   def refresh_token_if_expired!

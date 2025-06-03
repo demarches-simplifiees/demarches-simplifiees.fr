@@ -123,4 +123,30 @@ describe RdvService do
       end
     end
   end
+
+  describe "#list_rdvs" do
+    let(:rdv_ids) { [10093] }
+    let(:rdv) {
+      {
+        "id" => 10093,
+        "url_for_agents" => "https://rdv.anct.gouv.fr/rdvs/10093",
+        "starts_at" => "2025-06-04 11:30:00 +0200",
+        "motif" => { "location_type" => "phone" },
+        "agents" => [{ "id" => 1957, "email" => "tom@plop.fr", "first_name" => "Tom", "last_name" => "Plop" }]
+      }
+    }
+
+    before do
+      stub_request(:get, described_class.list_rdvs_url(rdv_ids))
+        .to_return(body: {
+          rdvs: [rdv]
+        }.to_json)
+    end
+
+    subject { rdv_service.list_rdvs(rdv_ids) }
+
+    it "returns the rdvs" do
+      expect(subject).to eq([rdv])
+    end
+  end
 end

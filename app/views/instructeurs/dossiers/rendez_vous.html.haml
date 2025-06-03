@@ -3,7 +3,7 @@
 = render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications }
 
 .rendez-vous.container
-  - if @booked_rdvs.empty?
+  - if @booked_rdvs&.empty?
     %p Vous pouvez proposer un rendez-vous à l’usager, en le configurant sur le site RDV Service Public (date et horaire, par téléphone / en visioconférence / en présentiel).
   - if current_instructeur.rdv_connection.nil?
     %p
@@ -15,11 +15,15 @@
         Connecter RDV Service Public
         %span.fr-ml-1w.fr-icon-external-link-line{ "aria-hidden": "true" }
   - else
-    - if @booked_rdvs.any?
-      %p Cette fonctionnalité est en version expérimentale. Pensez à vérifier les horaires des rendez-vous sur le site RDV Service Public.
-
-    .fr-mb-2w
-      - @booked_rdvs.each do |rdv|
-        = render Instructeurs::RdvCardComponent.new(rdv:)
+    - if @booked_rdvs.nil?
+      %p
+        Une erreur est survenue lors de la récupération des rendez-vous. Veuillez réessayer plus tard.
+        Vous pouvez consulter les rendez-vous sur le site RDV Service Public.
+      %p
+        = link_to "Voir mon agenda dans RDV Service Public", RdvService.rdv_sp_agenda_url, class: 'fr-btn', target: '_blank'
+    - else
+      .fr-mb-2w
+        - @booked_rdvs&.each do |rdv|
+          = render Instructeurs::RdvCardComponent.new(rdv:)
 
     = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)

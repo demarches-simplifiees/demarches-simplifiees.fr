@@ -6,11 +6,11 @@
           %span.fr-icon-calendar-fill{ "aria-hidden": "true" }
           %strong
             = t('.appointment_on')
-            = l(rdv.starts_at, format: :human)
+            = l(starts_at, format: :human)
         %p
           %span{ "aria-hidden": "true", class: icon_class }
           %strong
-            = t(".rdv_type.#{rdv.location_type}")
+            = t(".rdv_type.#{location_type}")
         - if !for_user
           %p
             %span.fr-icon-user-fill{ "aria-hidden": "true" }
