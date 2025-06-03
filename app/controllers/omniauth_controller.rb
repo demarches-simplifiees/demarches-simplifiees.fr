@@ -104,7 +104,6 @@ class OmniauthController < ApplicationController
   def resend_and_renew_merge_confirmation
     merge_token = @fci.create_merge_token!
     provider = provider_param
-    UserMailer.omniauth_merge_confirmation(@fci.email_france_connect, merge_token, @fci.merge_token_created_at, provider).deliver_later
     redirect_to omniauth_merge_path(provider:, merge_token:),
                 notice: t('omniauth.flash.confirmation_mail_sent')
   end
