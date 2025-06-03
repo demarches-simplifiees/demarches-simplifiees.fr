@@ -11,10 +11,12 @@
 
   = render NestedForms::FormOwnerComponent.new
 
-  = form_for avis, url: url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: 'create_avis_form', remote: batch_action } } do |f|
+  - form_data = { controller: 'persisted-form', persisted_form_key_value: 'create_avis_form'}
+  - form_data.merge!({remote: true, 'batch-operation-target': 'modalForm'}) if batch_action
 
+  = form_for avis, url: url, html: { multipart: true, data: form_data } do |f|
     - if avis.errors.any?
-      .fr-alert.fr-alert--error
+      .fr-alert.fr-alert--error.fr-mb-3w
         %ul
           - avis.errors.full_messages.each do |msg|
             %li= msg

@@ -5,7 +5,7 @@ module Instructeurs
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
     include DossierHelper
-    include AvisCreationHandler
+    include AvisCreationConcern
     include TurboChampsConcern
     include InstructeurConcern
     include ActionController::Streaming
@@ -313,26 +313,26 @@ module Instructeurs
       handle_create_avis(
         dossier: @dossier,
         user: current_instructeur,
-        params: avis_params,
+        params: avis_create_params,
         success_path: avis_instructeur_dossier_path(@procedure, @dossier, statut: statut),
         error_template: :avis_new
       )
     end
 
     def create_batch_avis
-      @procedure = Procedure.find(params[:procedure_id])
+      @procedure = procedure
 
-      emails = Array(avis_params[:emails]).map(&:strip).map(&:downcase).compact_blank
+      emails = Array(avis_create_params[:emails]).map(&:strip).map(&:downcase).compact_blank
       email_regex = StrictEmailValidator::REGEXP
 
       invalid_emails = emails.filter { |email| email.present? && !(email =~ email_regex) }
 
-      avis = Avis.new(avis_params.except(:emails))
+      avis = Avis.new(avis_create_params.except(:emails))
       batch = nil
 
       if emails.empty? || invalid_emails.any?
-        avis.errors.add(:email, "La liste d'emails est vide") if emails.empty?
-        invalid_emails.each { |email| avis.errors.add(:email, "Email invalide : #{email}") }
+        avis.errors.add(:email, :blank) if emails.empty?
+        invalid_emails.each { |email| avis.errors.add(:email, "est invalide : #{email}") }
       else
         batch = BatchOperation.safe_create!(batch_operation_params)
       end
@@ -488,11 +488,11 @@ module Instructeurs
       params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
         batch_params[:operation] = 'create_avis'
         batch_params[:instructeur] = current_instructeur
-        batch_params.merge!(avis_params)
+        batch_params.merge!(avis_create_params)
       end
     end
 
-    def avis_params
+    def avis_create_params
       params.require(:avis).permit(
         :introduction_file,
         :introduction,

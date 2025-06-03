@@ -879,15 +879,26 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with multiple emails' do
-        let(:emails) { ["toto.fr", "titi@titimail.com"] }
+        context 'with 2 mails' do
+          let(:emails) { ["toto.fr", "titi@titimail.com"] }
 
-        before { subject }
+          before { subject }
 
-        it { expect(response).to render_template :avis_new }
-        it { expect(flash.alert).to eq("toto.fr : Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com") }
-        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
-        it { expect(Avis.count).to eq(old_avis_count + 1) }
-        it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
+          it { expect(response).to render_template :avis_new }
+          it { expect(flash.alert).to eq("toto.fr : Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com") }
+          it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
+          it { expect(Avis.count).to eq(old_avis_count + 1) }
+          it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
+        end
+
+        context 'with 5 mails' do
+          let(:emails) { ["test@test.com", "test2@test.com", "test3@test.com", "test4@test.com", "test5@test.com"] }
+
+          before { subject }
+
+          it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à 5 destinataires") }
+          it { expect(Avis.count).to eq(old_avis_count + 5) }
+        end
       end
 
       context 'when the expert do not want to receive notification' do

@@ -21,7 +21,7 @@
           #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, "aria-labelledby" => "batch_operation_others" }
             %ul.dropdown-items
               - available_operations[:options][2, available_operations[:options].count].each do |opt|
-                - unless !procedure.allow_expert_review && opt[:operation] == 'create_avis'
+                - unless expert_review_disallowed?(opt[:operation])
                   %li
                     = form.button opt[:label], class: 'dropdown-items-link', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation]}.merge(opt[:modal_data].to_h), aria: { controls: opt[:aria].present? ? opt[:aria] : nil} do
                       %span{ class: icons[opt[:operation].to_sym] }

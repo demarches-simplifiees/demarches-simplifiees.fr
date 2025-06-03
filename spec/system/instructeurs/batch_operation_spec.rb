@@ -196,11 +196,11 @@ describe 'BatchOperation a dossier:', js: true do
       expect(page).to have_content("Demander un avis externe ")
       click_on "Envoyer la demande d'avis"
 
-      expect(page).to have_content("La liste d'emails est vide")
+      expect(page).to have_content("Le champ « Email » doit être rempli")
 
       fill_in('avis_emails', with: 'mljkzmljz')
       click_on "Envoyer la demande d'avis"
-      expect(page).to have_content("Email invalide : mljkzmljz")
+      expect(page).to have_content("Le champ « Email » est invalide : mljkzmljz")
 
       fill_in('avis_emails', with: 'test@test.com')
       click_on "Envoyer la demande d'avis"

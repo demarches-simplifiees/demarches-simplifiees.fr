@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AvisCreationHandler
+module AvisCreationConcern
   extend ActiveSupport::Concern
 
   def handle_create_avis(dossier:, user:, params:, success_path:, error_template:, avis_source: nil)
@@ -11,7 +11,13 @@ module AvisCreationHandler
       avis_source: avis_source
     )
 
-    flash[:notice] = "Une demande d’avis a été envoyée à #{result.sent_emails.join(', ')}" if result.sent_emails.any?
+    if result.sent_emails.any?
+      if result.sent_emails.count < 5
+        flash[:notice] = "Une demande d’avis a été envoyée à #{result.sent_emails.join(', ')}"
+      else
+        flash[:notice] = "Une demande d’avis a été envoyée à #{result.sent_emails.count} destinataires"
+      end
+    end
 
     if result.failed_avis.any?
       @new_avis = result.avis

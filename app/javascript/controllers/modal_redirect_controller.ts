@@ -2,18 +2,16 @@ import { ApplicationController } from './application_controller';
 import * as Turbo from '@hotwired/turbo';
 
 export class ModalRedirectController extends ApplicationController {
-  static values = {
-    url: String
-  };
+  static targets = ['modal'];
+  static values = { url: String };
 
-  declare urlValue: string;
+  declare readonly modalTarget: HTMLElement;
+  declare readonly hasModalTarget: boolean;
+  declare readonly urlValue: string;
 
   connect(): void {
-    const modal = document.querySelector(
-      '#modal-avis-batch'
-    ) as HTMLElement | null;
-    if (modal) {
-      modal.remove();
+    if (this.hasModalTarget) {
+      this.modalTarget.remove();
     }
 
     if (this.urlValue) {
