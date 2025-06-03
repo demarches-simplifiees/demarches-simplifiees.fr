@@ -1,5 +1,11 @@
 en:
   modal:
     title: "You don't have access to this file"
-    close_alt: "Close this window"
-    close: "Close"
+    content:
+      consulter: "To access this file, you should "
+      contacter: "contact one of the administrators "
+      de_la_demarche: "from the procedure"
+      demander: "and ask him to "
+      ajouter: "add you as instructor"
+  link:
+    title: "File nº"

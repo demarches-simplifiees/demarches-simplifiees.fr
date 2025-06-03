@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-class Dossiers::NoAccessToDossierComponent < ViewComponent::Base
+# Component that displays an error message in a modal when an instructeur tries to access a dossier they don't have access to.
+# It also displays a list of administrators for the procedure, if any.
+class Dossiers::NoAccessToDossierComponent < ApplicationComponent
+  # Component constructor
+  # @param dossier [Dossier] the dossier that the instructeur access
   def initialize(dossier)
     @dossier = dossier
     procedure = @dossier.procedure
