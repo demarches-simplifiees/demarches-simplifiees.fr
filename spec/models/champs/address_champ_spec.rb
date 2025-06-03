@@ -82,7 +82,7 @@ describe Champs::AddressChamp do
   end
 
   context 'interaction with new address_component' do
-    context 'start with an address saved from the ban' do
+    context 'when the address was filled from the ban' do
       let(:value_json) do
         {
           "type" => "housenumber",
@@ -103,25 +103,53 @@ describe Champs::AddressChamp do
           "department_name" => "Paris"
         }
       end
+
       it 'changes to not in ban should reset other filled value' do
         champ.not_in_ban = 'true'
         champ.save!
         expect(champ.value_json).to eq("not_in_ban" => "true", "country_code" => "FR")
       end
+
+      it 'can be printed' do
+        expect(champ.to_s).to eq('128 Rue Brancion 75015 Paris')
+      end
     end
 
-    context 'start from an empty address' do
+    context 'legacy addresses' do
       let(:value_json) { nil }
 
-      it 'transition from nil to CH country_code mainting consistent departement_code/name' do
-        champ.update(country_code: 'CH', street_address: '128 Rue Brancion 75015 Paris', not_in_ban: 'true')
-        expect(champ.value_json).to eq({
-          "not_in_ban" => "true",
-          "country_code" => "CH",
-          "street_address" => '128 Rue Brancion 75015 Paris',
-          "department_code" => "99",
-          "department_name" => "Etranger"
-        })
+      context 'when address was not refilled' do
+        before do
+          champ.update(value: '128 Rue Brancion 75015 Paris', value_json: nil)
+          Maintenance::T20250513BackfillNoBanAddressTask.new.process(champ)
+        end
+        it 'to_s successfully' do
+          expect(champ.to_s).to eq('128 Rue Brancion 75015 Paris')
+        end
+      end
+
+      context 'when address was partially filled with an international address' do
+        before { champ.update(country_code: 'CH', street_address: '18 rue du gruyere', not_in_ban: 'true') }
+
+        it 'updates departement_code/name' do
+          expect(champ.value_json).to eq({
+            "not_in_ban" => "true",
+            "country_code" => "CH",
+            "street_address" => '18 rue du gruyere',
+            "department_code" => "99",
+            "department_name" => "Etranger"
+          })
+          expect(champ.full_address?).to be_falsey
+          expect(champ.to_s).to eq('')
+        end
+      end
+
+      context 'when address was fully filled with an international address' do
+        it 'can be to_s and is considered as full_address' do
+          champ.update(country_code: 'CH', street_address: '18 rue de la gruyere', not_in_ban: 'true', postal_code: '1010', city_name: 'Lausanne')
+          expect(champ.full_address?).to be_truthy
+          expect(champ.to_s).to eq('18 rue de la gruyere, Lausanne 1010 Suisse')
+        end
       end
     end
   end
