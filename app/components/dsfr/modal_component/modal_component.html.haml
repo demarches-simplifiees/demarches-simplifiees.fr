@@ -1,0 +1,20 @@
+- if trigger_using_link
+  = link_to(trigger_object_title, "##{modal_id}", data: {'fr-opened': "false"}, aria: {controls: modal_id}, class: "fr-icon-external-link-line fr-btn--icon-right #{trigger_object_extra_classes}")
+- else
+  %button{ aria: {controls: modal_id }, data: {'fr-opened': "false" }, class: "fr-btn #{trigger_object_extra_classes}" }
+    = trigger_object_title
+
+%dialog.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog", id: modal_id }
+  .fr-container.fr-container--fluid.fr-container-md
+    .fr-grid-row.fr-grid-row--center
+      .fr-col-12.fr-col-md-10.fr-col-lg-8
+        .fr-modal__body
+          .fr-modal__header
+            %button.fr-btn--close.fr-btn{ aria: { controls: modal_id }, title: t('.modal.close_alt'), onclick: on_click_value}
+              = t('.modal.close')
+          .fr-modal__content
+            %h1#fr-modal-title-modal-1.fr-modal__title
+              %span.fr-icon-arrow-right-line.fr-icon--lg>
+                = modal_title
+            = body
+
