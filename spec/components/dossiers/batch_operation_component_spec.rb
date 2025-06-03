@@ -8,12 +8,13 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   let(:component) do
     cmp = nil
     form_for(BatchOperation.new, url: Rails.application.routes.url_helpers.instructeur_batch_operations_path(procedure_id: 1), method: :post, data: { controller: 'batch-operation' }) do |_form|
-      cmp = described_class.new(statut: statut, procedure: create(:procedure))
+      cmp = described_class.new(statut: statut, procedure: procedure)
     end
     cmp
   end
 
   let(:user) { create(:user) }
+  let(:procedure) { create(:procedure) }
 
   before do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
@@ -28,12 +29,25 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   subject { render_inline(component).to_html }
   context 'statut suivis' do
     let(:statut) { 'suivis' }
+
     it { is_expected.to have_button('Passer les dossiers en instruction', disabled: true) }
     it { is_expected.to have_button('Instruire les dossiers', disabled: true) }
     it { is_expected.to have_button('Autres actions multiples', disabled: true) }
     it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
     it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
     it { is_expected.to have_button('Demander un avis externe', disabled: true) }
+
+    context 'with expert review disallowed procedure' do
+      before {
+        procedure.update!(allow_expert_review: false)
+      }
+      it { is_expected.to have_button('Passer les dossiers en instruction', disabled: true) }
+      it { is_expected.to have_button('Instruire les dossiers', disabled: true) }
+      it { is_expected.to have_button('Autres actions multiples', disabled: true) }
+      it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
+      it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
+      it { is_expected.not_to have_button('Demander un avis externe', disabled: true) }
+    end
   end
 
   context 'statut a-suivre' do

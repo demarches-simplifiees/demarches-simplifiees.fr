@@ -3,7 +3,7 @@
 module Experts
   class AvisController < ExpertController
     include Zipline
-    include AvisCreationHandler
+    include AvisCreationConcern
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, except: [:index, :procedure, :notification_settings, :update_notification_settings]
@@ -96,7 +96,7 @@ module Experts
       handle_create_avis(
         dossier: @dossier,
         user: current_expert,
-        params: avis_params,
+        params: avis_create_params,
         success_path: instruction_expert_avis_path(@procedure, @avis),
         error_template: :instruction,
         avis_source: @avis
@@ -261,7 +261,7 @@ module Experts
       params.require(:avis).permit(:answer, :piece_justificative_file, :question_answer)
     end
 
-    def avis_params
+    def avis_create_params
       params.require(:avis).permit(
         :introduction_file,
         :introduction,

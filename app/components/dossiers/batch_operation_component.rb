@@ -174,4 +174,8 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       create_avis: 'fr-icon-questionnaire-line'
     }
   end
+
+  def expert_review_disallowed?(operation)
+    operation == 'create_avis' && procedure.disallow_expert_review?
+  end
 end

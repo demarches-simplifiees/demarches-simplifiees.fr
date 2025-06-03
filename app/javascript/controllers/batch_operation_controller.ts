@@ -3,12 +3,14 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['menu', 'input', 'dropdown', 'checkboxCount'];
+  static targets = ['menu', 'input', 'dropdown', 'checkboxCount', 'modalForm'];
 
   declare readonly menuTargets: HTMLButtonElement[];
   declare readonly inputTargets: HTMLInputElement[];
   declare readonly dropdownTargets: HTMLButtonElement[];
   declare readonly checkboxCountTarget: HTMLElement;
+  declare readonly modalFormTarget: HTMLFormElement;
+  declare readonly hasModalFormTarget: boolean;
 
   onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
@@ -188,8 +190,8 @@ export class BatchOperationController extends ApplicationController {
   injectSelectedIdsIntoModal(event: Event) {
     event.preventDefault();
 
-    const modalForm = document.querySelector<HTMLFormElement>('#new_avis');
-    if (!modalForm) return;
+    if (!this.hasModalFormTarget) return;
+    const modalForm = this.modalFormTarget;
 
     // Supprimer les inputs précédemment injectés
     modalForm

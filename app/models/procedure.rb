@@ -766,6 +766,10 @@ class Procedure < ApplicationRecord
     ]
   end
 
+  def disallow_expert_review?
+    !allow_expert_review?
+  end
+
   private
 
   def stable_ids_used_by_routing_rules

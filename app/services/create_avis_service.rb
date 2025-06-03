@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateAvisService
-  Result = Struct.new(:avis, :sent_emails, :failed_avis)
+  Result = Data.define(:avis, :sent_emails, :failed_avis)
 
   def self.call(dossier:, instructeur_or_expert:, params:, avis_source: nil)
     new(dossier, instructeur_or_expert, params, avis_source).call
