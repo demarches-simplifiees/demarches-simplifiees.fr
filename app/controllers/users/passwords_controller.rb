@@ -5,6 +5,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   after_action :try_to_authenticate_instructeur, only: [:update]
   after_action :try_to_authenticate_administrateur, only: [:update]
+  after_action :update_email_verified_at, only: [:update]
 
   # GET /resource/password/new
   # def new
@@ -61,6 +62,12 @@ class Users::PasswordsController < Devise::PasswordsController
       if administrateur
         sign_in(administrateur.user)
       end
+    end
+  end
+
+  def update_email_verified_at
+    if user_signed_in?
+      current_user.update!(email_verified_at: Time.zone.now)
     end
   end
 end

@@ -18,7 +18,7 @@ describe 'Getting help:' do
         expect(page).to have_help_menu
       end
 
-      within('.help-dropdown') do
+      within('.help-content') do
         expect(page).to have_content(procedure.service.email)
         expect(page).to have_content(procedure.service.telephone)
         expect(page).to have_link(nil, href: I18n.t("links.common.faq.url"))
@@ -51,7 +51,7 @@ describe 'Getting help:' do
           expect(page).to have_help_menu
         end
 
-        within('.help-dropdown') do
+        within('.help-content') do
           expect(page).to have_content(dossier.procedure.service.email)
           expect(page).to have_content(dossier.procedure.service.telephone)
           expect(page).to have_link(nil, href: I18n.t("links.common.faq.url"))
@@ -69,7 +69,7 @@ describe 'Getting help:' do
           expect(page).to have_help_menu
         end
 
-        within('.help-dropdown') do
+        within('.help-content') do
           expect(page).to have_link(nil, href: messagerie_dossier_path(dossier))
           expect(page).to have_link(nil, href: I18n.t("links.common.faq.url"))
         end
@@ -97,6 +97,6 @@ describe 'Getting help:' do
   end
 
   def have_help_menu
-    have_selector('.help-dropdown')
+    have_selector("#help-menu")
   end
 end

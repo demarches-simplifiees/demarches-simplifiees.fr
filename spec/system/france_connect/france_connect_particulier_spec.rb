@@ -45,8 +45,24 @@ describe 'France Connect Particulier Connexion' do
             }
 
             scenario 'he is redirected to user dossiers page' do
-              expect(page).to have_content('Dossiers')
+              expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+              find("#use_france_connect_email_no").click
+              fill_in("email", with: "exemple@email.com")
+              page.find("input[type='submit'][name='commit'][value='Confirmer']").click
+              expect(page).to have_content("Confirmez votre email")
+              click_on 'Continuer'
               expect(User.find_by(email: email)).not_to be nil
+            end
+
+            scenario 'he can choose not to use FranceConnect email and input an alternative email' do
+              expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
+
+              expect(page).to have_selector("input[name='email']", visible: true, wait: 10)
+
+              fill_in 'email', with: 'alternative@example.com'
+              click_on 'Confirmer'
+
+              expect(page).to have_content("Confirmez votre email")
             end
           end
 
@@ -74,25 +90,23 @@ describe 'France Connect Particulier Connexion' do
               fill_in 'email', with: 'new_email@a.com'
               click_on 'Utiliser ce mail'
 
-              expect(page).to have_content('Dossiers')
+              expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')
             end
 
             context 'and the user wants an email that belongs to another account', js: true do
               let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: SECURE_PASSWORD) }
 
               scenario 'it uses another email that belongs to another account' do
-                page.find('#it-is-not-mine').click
-                fill_in 'email', with: 'an_existing_email@a.com'
-                click_on 'Utiliser ce mail'
+                find('label[for="it-is-not-mine"]').click
 
-                expect(page).to have_css('#password-for-another-account', visible: true, wait: 2)
+                expect(page).to have_css('.new-account', visible: true)
 
-                within '#new-account-password-confirmation' do
-                  fill_in 'password', with: SECURE_PASSWORD
-                  click_on 'Fusionner les comptes'
+                within '.new-account' do
+                  fill_in 'email', with: 'an_existing_email@a.com'
+                  click_on 'Utiliser ce mail'
                 end
 
-                expect(page).to have_content('Dossiers')
+                expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')
               end
             end
           end

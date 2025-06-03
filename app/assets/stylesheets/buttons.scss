@@ -254,6 +254,57 @@ ul.dropdown-items {
   margin-bottom: 0;
 }
 
+// Apply custom styles to DSFR fr-translate component
+.fr-translate__btn.fr-btn.help-btn::before {
+  content: none;
+}
+
+.help-content.fr-menu ul.fr-menu__list {
+  --text-decoration: underline;
+  text-align: left;
+  font-size: 1rem;
+
+  @media (min-width: 62em) {
+    font-size: 0.875rem;
+    padding: 0;
+    width: 360px;
+  }
+}
+
+.help-content.fr-menu ul.fr-menu__list li {
+  padding: 0.75rem 1rem;
+
+  @media (min-width: 62em) {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+.help-content.fr-menu ul.fr-menu__list li:not(:last-child) {
+  @media (min-width: 62em) {
+    border-bottom: 1px solid $border-grey;
+  }
+}
+
+.help-content.fr-menu ul.fr-menu__list {
+  h1,
+  p {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  dd {
+    word-break: break-all;
+  }
+}
+
+.help-content a[href]:hover,
+.help-content a[href]:active {
+  @media (hover: hover) and (pointer: fine) {
+    --text-decoration: none;
+  }
+}
+
 .dropdown-items {
   li {
     display: flex;

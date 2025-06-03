@@ -12,6 +12,7 @@ class UserDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number.with_options(searchable: true),
     email: Field::String,
+    email_verified_at: Field::DateTime,
     confirmed?: Field::Boolean,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -41,6 +42,7 @@ class UserDashboard < Administrate::BaseDashboard
     :id,
     :email,
     :confirmed?,
+    :email_verified_at,
     :current_sign_in_at,
     :created_at,
     :blocked_at,

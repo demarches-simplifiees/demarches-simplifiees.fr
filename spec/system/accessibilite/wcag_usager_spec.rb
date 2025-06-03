@@ -103,7 +103,7 @@ describe 'wcag rules for usager', chrome: true do
     scenario 'commencer page, help dropdown' do
       visit commencer_path(path: procedure.reload.path)
 
-      page.find("#help-menu_button").click
+      page.find(".fr-header__body .help-btn").click
       test_expect_axe_clean_without_main_navigation
     end
   end

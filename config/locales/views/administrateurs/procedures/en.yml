@@ -47,7 +47,7 @@ en:
         published_procedure_html: "This procedure is <strong>published</strong>, some elements can no longer be modified. To access it you can use the link:"
         public_link_procedure_html: "Be careful, always post the <strong>full link</strong> displayed above, and not a generic link to %{link}"
         missing_information_title: missing information
-        missing_information_content: "To be able to test this procedure, you must first assign it:"
+        missing_information_content: "To be able to publish this procedure, you must first assign it:"
         missing_information_service: You must provide the contact details of your Administrative Department before you can publish your procedure.
         missing_information_instructeurs: You must assign instructors before you can publish your procedure.
         missing_link: This procedure does not yet have a link, and is not accessible to the public.

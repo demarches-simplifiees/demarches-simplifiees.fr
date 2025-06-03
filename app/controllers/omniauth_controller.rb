@@ -22,7 +22,7 @@ class OmniauthController < ApplicationController
       preexisting_unlinked_user = User.find_by(email: fci.email_france_connect.downcase)
 
       if preexisting_unlinked_user.nil?
-        fci.associate_user!(fci.email_france_connect)
+        fci.safely_associate_user!(fci.email_france_connect)
         connect_user(provider, fci.user)
       elsif !preexisting_unlinked_user.can_openid_connect?(provider)
         fci.destroy
@@ -61,8 +61,7 @@ class OmniauthController < ApplicationController
 
         redirect_to root_path
       else
-        @fci.update(user: user)
-        @fci.delete_merge_token!
+        @fci.safely_update_user(user: user)
 
         flash.notice = t('omniauth.flash.connection_done', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
         connect_user(provider, user)
@@ -76,8 +75,7 @@ class OmniauthController < ApplicationController
     user = User.find_by(email: @fci.email_france_connect.downcase)
     provider = provider_param
     if user.can_openid_connect?(provider)
-      @fci.update(user: user)
-      @fci.delete_merge_token!
+      @fci.safely_update_user(user: user)
 
       flash.notice = t('omniauth.flash.connection_done', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
       connect_user(provider, user)
@@ -92,8 +90,7 @@ class OmniauthController < ApplicationController
     provider = provider_param
 
     if user.nil?
-      @fci.associate_user!(sanitized_email_params)
-      @fci.delete_merge_token!
+      @fci.safely_associate_user!(sanitized_email_params)
 
       flash.notice = t('omniauth.flash.connection_done', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
       connect_user(provider, @fci.user)
@@ -107,7 +104,6 @@ class OmniauthController < ApplicationController
   def resend_and_renew_merge_confirmation
     merge_token = @fci.create_merge_token!
     provider = provider_param
-    UserMailer.omniauth_merge_confirmation(@fci.email_france_connect, merge_token, @fci.merge_token_created_at, provider).deliver_later
     redirect_to omniauth_merge_path(provider:, merge_token:),
                 notice: t('omniauth.flash.confirmation_mail_sent')
   end

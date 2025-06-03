@@ -41,6 +41,6 @@ FileUtils.chdir APP_ROOT do
   puts "\n== Removing old logs =="
   system! 'bin/rails log:clear'
 
-  puts "\n== Done =="
-  puts "You can now start (or restart) the application server with `bin/rails server`."
+  puts "\n== Restarting application server =="
+  system! 'bin/rails restart'
 end

@@ -46,6 +46,8 @@
                       %li= link_to("des instructeurs", admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur))
                     - if @procedure.service.nil?
                       %li= link_to("un service", admin_services_path(procedure_id: @procedure))
+                    - if @procedure.service_test?
+                      %li= link_to("un service valide", admin_services_path(procedure_id: @procedure))
               = link_to t('.back_to_procedure'), admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-go-back-line fr-mt-2w'
 
           - else

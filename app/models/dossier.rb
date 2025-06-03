@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:re_instructed_at, :search_terms, :private_search_terms]
+  self.ignored_columns += [:re_instructed_at, :search_terms, :private_search_terms, :hidden_at]
 
   include DossierCloneConcern
   include DossierCorrectableConcern

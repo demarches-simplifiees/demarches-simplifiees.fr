@@ -1,0 +1,9 @@
+en:
+  activemodel:
+    attributes:
+      normalized_address:
+        full_address: Address
+        city_code: INSEE code
+        postal_code: Postal code
+        department: Department
+        region: Region & region code

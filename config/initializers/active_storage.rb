@@ -2,6 +2,7 @@
 
 Rails.application.config.active_storage.service_urls_expire_in = 1.hour
 
+Rails.application.config.active_storage.variant_processor = :mini_magick
 Rails.application.config.active_storage.analyzers.delete ActiveStorage::Analyzer::ImageAnalyzer
 Rails.application.config.active_storage.analyzers.delete ActiveStorage::Analyzer::VideoAnalyzer
 

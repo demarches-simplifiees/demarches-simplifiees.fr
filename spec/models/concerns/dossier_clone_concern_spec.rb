@@ -37,7 +37,6 @@ RSpec.describe DossierCloneConcern do
       expect(new_dossier.en_instruction_at).to be_nil
       expect(new_dossier.for_procedure_preview).to be_falsey
       expect(new_dossier.groupe_instructeur_updated_at).to be_nil
-      expect(new_dossier.hidden_at).to be_nil
       expect(new_dossier.hidden_by_administration_at).to be_nil
       expect(new_dossier.hidden_by_reason).to be_nil
       expect(new_dossier.hidden_by_user_at).to be_nil

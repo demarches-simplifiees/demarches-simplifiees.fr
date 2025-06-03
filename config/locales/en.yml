@@ -34,9 +34,8 @@ en:
     sentence_for_humans: 'If you are a human, ignore this field'
   help: 'Help'
   help_dropdown:
-    general_title: "Online help"
     procedure_title: "Do you have a question about this procedure?"
-    problem_title: A problem with the website ?
+    problem_title: A problem with the website?
     problem_description: Find your answer in the online help.
     technical_contact_title: Technical contact
     technical_contact_description: Send us a message to %{contact_email}.
@@ -47,6 +46,9 @@ en:
   utils:
     'yes': 'Yes'
     'no': 'No'
+    email_suggest:
+      wanna_say: 'Do you mean to say ?'
+
     deconnexion: "Log out"
     pj: "Attachments"
     asterisk_html: "Fields marked by an asterisk ( <svg aria-label='required' class='icon mandatory' height='10' role='img' viewBox='0 0 1200 1200' width='10' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'><desc>required</desc><path d='M489.838 29.354v443.603L68.032 335.894 0 545.285l421.829 137.086-260.743 358.876 178.219 129.398L600.048 811.84l260.673 358.806 178.146-129.398-260.766-358.783L1200 545.379l-68.032-209.403-421.899 137.07V29.443H489.84l-.002-.089z'></path></svg> ) are mandatory."
@@ -150,6 +152,8 @@ en:
         subtitle_two: "Additional notes"
         content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
           <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
+
+
       preparation:
         title: "Preparation of this accessibility statement"
         intro: "This statement was drawn up on April 27, 2022. It was updated on April 1, 2023."
@@ -771,6 +775,7 @@ en:
       cps_network_error: 'Sorry, DN number verification is temporarily down. Please, check carefully your input'
       france_connect:
         connexion: "Error trying to connect to France Connect."
+        forbidden_html: "Only citizen can use FranceConnect. As an instructor or administrator, you should <a href='%{reset_link}'>reset your password</a>."
       evil_regexp: The regular expression you have entered is potentially dangerous and could lead to performance issues.
       mismatch_regexp: The provided example must match the regular expression
       syntax_error_regexp: The syntax of the regular expression is invalid
@@ -911,10 +916,19 @@ en:
         to_follow: to follow
   france_connect:
     particulier:
-      password_confirmation:
-        back: 'back to previous step'
-        already_exists: An account with %{email} already existis on %{application_name}
-        fill_in_password: fill in your password to merge your accounts
+      choose_email:
+        intro_html: "Your FranceConnect account uses <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span> as the contact email."
+        use_email_for_notifications: "Would you like to use it to receive notifications regarding the progress of your cases?"
+        confirm: "Confirm"
+        choose_email_contact: "Choose your contact email"
+        alternative_email: "Please provide the email to use for contacting you."
+        keep_fc_email_html: Yes, use <b class='bold'>%{email}</b> as contact email.
+        use_another_email: No, use another address.
+      confirmation_sent:
+        confirmation_sent_by_email: "Confirm your email"
+        intro_html: "A confirmation email has been sent to your address <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span>"
+        click_the_link_in_the_email: "Please click the link in the email to confirm your account and connect with France Connect in the future."
+        continue: "Continue"
       merge:
         title: "Merge your account FranceConnect and %{application_name}"
         subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
@@ -926,6 +940,11 @@ en:
         link_confirm_by_email: Confirm by receiving an email
       flash:
           confirmation_mail_sent: "An email with the confirmation link has been sent, please click on the link."
+          confirmation_mail_resent: "Confirmation link expired. A new link has been sent by email."
+          confirmation_mail_resent_error: "An unexpected error has occurred. Please contact support if the problem persists."
+          redirect_new_user_session: "You have been disconnected from your previous account. Please click on the confirmation link again."
+          email_confirmed: "Your email is confirmed"
+          user_not_found: "User not found"
           invalid_password: "The password is not correct."
           connection_done: "The accounts for  FranceConnect and %{application_name} are now merged."
           merger_token_expired: "The delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."

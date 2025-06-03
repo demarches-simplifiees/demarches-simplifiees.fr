@@ -28,6 +28,22 @@ describe Champs::CommuneChamp do
       expect(champ.for_export(:departement)).to eq '63 – Puy-de-Dôme'
     end
 
+    context 'with tricky bug (should not happen, but it happens)' do
+      let(:champ) do
+        described_class.new(stable_id: 99, dossier:).tap do |champ|
+          champ.external_id = ''
+          champ.value = 'Gagny'
+          champ.run_callbacks(:save)
+        end
+      end
+
+      it 'fails' do
+        expect(champ).to receive(:instrument_external_id_error)
+        expect(champ.validate(:champs_public_value)).to be_falsey
+        expect(champ.errors).to include('external_id')
+      end
+    end
+
     context 'with code' do
       let(:champ) do
         described_class.new(stable_id: 99, dossier:).tap do |champ|

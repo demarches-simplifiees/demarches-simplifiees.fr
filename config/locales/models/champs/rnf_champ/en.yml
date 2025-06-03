@@ -12,10 +12,6 @@ en:
           dissolvedAt: Dissolved at
           address: Address
           status: Status
-          cityCode: City code
-          postalCode: Postal code
-          department: Department
-          label: Address
         paste: Copy the RNF to the clipboard
         paste_success: The RNF has been copied to the clipboard
   activerecord:

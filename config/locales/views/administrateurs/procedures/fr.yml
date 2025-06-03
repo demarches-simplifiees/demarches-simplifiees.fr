@@ -47,7 +47,7 @@ fr:
         published_procedure_html: "Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés. Pour y accéder vous pouvez utiliser le lien :"
         public_link_procedure_html: "Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers %{link}"
         missing_information_title: informations manquantes
-        missing_information_content: "Pour pouvoir tester cette démarche, vous devez d’abord lui affecter :"
+        missing_information_content: "Pour pouvoir publier cette démarche, vous devez d’abord lui affecter :"
         missing_information_service: Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
         missing_information_instructeurs: Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
         missing_link: Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.

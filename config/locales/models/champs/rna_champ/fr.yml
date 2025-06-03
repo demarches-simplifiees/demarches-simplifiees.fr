@@ -9,9 +9,6 @@ fr:
           association_date_creation: Date de création
           association_date_declaration: Date de déclaration
           association_date_publication: Date de publication
-          address: Adresse
-          code_insee: Code INSEE
-          code_postal: Code postal
         paste: Copier le RNA dans le presse-papier
         paste_success: Le RNA a été copié dans le presse-papier
   activerecord:

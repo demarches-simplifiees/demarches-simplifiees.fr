@@ -2,7 +2,7 @@
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user: dossier.user }
 
-.counter-start-header-section.dossier-show{ class: class_names('gallery': feature_enabled?(:gallery_demande), 'gallery-demande': feature_enabled?(:gallery_demande), "dossier-show-instructeur" => profile =="instructeur"), "data-controller": "lightbox" }
+.counter-start-header-section.dossier-show.gallery.gallery-demande{ class: class_names("dossier-show-instructeur" => profile =="instructeur"), "data-controller": "lightbox" }
 
   - if profile == 'instructeur' && dossier.termine_and_accuse_lecture?
     = render Dsfr::CalloutComponent.new(title: nil) do |c|

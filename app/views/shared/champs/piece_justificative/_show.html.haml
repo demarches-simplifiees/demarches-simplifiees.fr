@@ -1,5 +1,5 @@
 .fr-downloads-group
-  - if profile == 'instructeur' && feature_enabled?(:gallery_demande)
+  - if profile == 'instructeur'
     .gallery-items-list
       - champ.piece_justificative_file.attachments.with_all_variant_records.each do |attachment|
         .gallery-item

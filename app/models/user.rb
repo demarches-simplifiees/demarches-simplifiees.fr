@@ -81,7 +81,6 @@ class User < ApplicationRecord
 
   # Callback provided by Devise
   def after_confirmation
-    update!(email_verified_at: Time.zone.now)
     link_invites!
   end
 

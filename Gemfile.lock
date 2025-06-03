@@ -114,24 +114,26 @@ GEM
     anyway_config (2.6.3)
       ruby-next-core (~> 1.0)
     ast (2.4.2)
-    attr_required (1.0.1)
-    aws-eventstream (1.3.0)
-    aws-partitions (1.916.0)
-    aws-sdk-core (3.192.1)
+    attr_required (1.0.2)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1110.0)
+    aws-sdk-core (3.225.0)
       aws-eventstream (~> 1, >= 1.3.0)
-      aws-partitions (~> 1, >= 1.651.0)
-      aws-sigv4 (~> 1.8)
+      aws-partitions (~> 1, >= 1.992.0)
+      aws-sigv4 (~> 1.9)
+      base64
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.79.0)
-      aws-sdk-core (~> 3, >= 3.191.0)
-      aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.147.0)
-      aws-sdk-core (~> 3, >= 3.192.0)
+      logger
+    aws-sdk-kms (1.102.0)
+      aws-sdk-core (~> 3, >= 3.225.0)
+      aws-sigv4 (~> 1.5)
+    aws-sdk-s3 (1.189.0)
+      aws-sdk-core (~> 3, >= 3.225.0)
       aws-sdk-kms (~> 1)
-      aws-sigv4 (~> 1.8)
-    aws-sigv4 (1.8.0)
+      aws-sigv4 (~> 1.5)
+    aws-sigv4 (1.12.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    axe-core-api (4.8.1)
+    axe-core-api (4.8.2)
       dumb_delegator
       virtus
     axe-core-rspec (4.8.2)
@@ -152,7 +154,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (3.1.8)
+    bigdecimal (3.1.7)
     bindata (2.5.0)
     bindex (0.8.1)
     bootsnap (1.18.3)
@@ -161,7 +163,7 @@ GEM
       racc
     browser (5.3.1)
     builder (3.2.4)
-    byebug (11.1.3)
+    byebug (12.0.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -174,7 +176,7 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
-    capybara-playwright-driver (0.5.4)
+    capybara-playwright-driver (0.5.6)
       addressable
       capybara
       playwright-ruby-client (>= 1.16.0)
@@ -351,7 +353,7 @@ GEM
     hana (1.3.7)
     hashdiff (1.1.0)
     hashie (5.0.0)
-    hexapdf (0.40.0)
+    hexapdf (1.0.3)
       cmdparse (~> 3.0, >= 3.0.3)
       geom2d (~> 0.4, >= 0.4.1)
       openssl (>= 2.2.1)
@@ -436,7 +438,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    logger (1.6.6)
+    logger (1.6.0)
     lograge (0.14.0)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -469,6 +471,7 @@ GEM
       rake
     mini_magick (4.12.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.7)
     minitest (5.23.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
@@ -486,9 +489,8 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.16.5-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.5-x86_64-linux)
+    nokogiri (1.16.5)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     openid_connect (2.3.0)
       activemodel
@@ -503,7 +505,7 @@ GEM
       tzinfo
       validate_url
       webfinger (~> 2.0)
-    openssl (3.2.0)
+    openssl (3.3.0)
     orm_adapter (0.5.0)
     parallel (1.24.0)
     parsby (1.1.1)
@@ -513,7 +515,7 @@ GEM
     pdf-core (0.9.0)
     pg (1.5.6)
     phonelib (0.8.8)
-    playwright-ruby-client (1.49.0)
+    playwright-ruby-client (1.52.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
     prawn (2.4.0)
@@ -538,12 +540,12 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     prometheus-client (4.2.2)
     promise.rb (0.7.4)
-    pry (0.14.2)
+    pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.10.1)
-      byebug (~> 11.0)
-      pry (>= 0.13, < 0.15)
+    pry-byebug (3.11.0)
+      byebug (~> 12.0)
+      pry (>= 0.13, < 0.16)
     psych (5.1.2)
       stringio
     public_suffix (5.0.5)
@@ -633,7 +635,7 @@ GEM
       redis-client (>= 0.22.0)
     redis-client (0.22.1)
       connection_pool
-    regexp_parser (2.10.0)
+    regexp_parser (2.9.0)
     reline (0.5.3)
       io-console (~> 0.5)
     request_store (1.5.1)
@@ -641,7 +643,8 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.4.1)
+    rexml (3.3.6)
+      strscan
     rodf (1.2.0)
       builder (>= 3.0)
       rubyzip (>= 1.0)
@@ -714,7 +717,7 @@ GEM
     ruby-vips (2.2.0)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
-    rubyzip (2.4.1)
+    rubyzip (2.3.2)
     saml_idp (0.16.0)
       activesupport (>= 5.2)
       builder (>= 3.0)
@@ -740,9 +743,9 @@ GEM
     scss_lint (0.60.0)
       sass (~> 3.5, >= 3.5.5)
     selectize-rails (0.12.6)
-    selenium-devtools (0.133.0)
+    selenium-devtools (0.126.0)
       selenium-webdriver (~> 4.2)
-    selenium-webdriver (4.29.1)
+    selenium-webdriver (4.22.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -815,6 +818,7 @@ GEM
     stringio (3.1.0)
     strong_migrations (1.8.0)
       activerecord (>= 5.2)
+    strscan (3.1.0)
     swd (2.0.3)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -882,7 +886,7 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.1)
-    websocket (1.2.11)
+    websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -916,8 +920,7 @@ GEM
     zxcvbn-ruby (1.2.0)
 
 PLATFORMS
-  x86_64-darwin-22
-  x86_64-linux
+  ruby
 
 DEPENDENCIES
   aasm
