@@ -6,8 +6,7 @@ RSpec.describe Dossiers::NoAccessToDossierComponent, type: :component do
 
   context "when has administrators" do
     it "renders text properly" do
-      expect(subject).to have_text("Pour consulter ce dossier, vous devez\ncontacter l'un des administrateurs\nde la démarche\n#{dossier.procedure.libelle}")
-      expect(subject).to have_text("pour lui demander de\nvous ajouter comme instructeur :")
+      expect(subject).to have_text("Pour consulter ce dossier, vous devez\ncontacter l'un des administrateurs\nde la démarche\n#{dossier.procedure.libelle}\npour lui demander de\nvous ajouter comme instructeur :")
       # bold (<b>) is adding new lines to the test
     end
 
