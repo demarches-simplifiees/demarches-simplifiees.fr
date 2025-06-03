@@ -1,28 +1,16 @@
-= link_to("Dossier nº #{dossier.id}", "#modal-no-access-to-dossier", data: {'fr-opened': "false"}, aria: {controls: 'modal-no-access-to-dossier'}, class: "fr-icon-external-link-line fr-btn--icon-right")
-
-%dialog#modal-no-access-to-dossier.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog" }
-  .fr-container.fr-container--fluid.fr-container-md
-    .fr-grid-row.fr-grid-row--center
-      .fr-col-12.fr-col-md-10.fr-col-lg-8
-        .fr-modal__body
-          .fr-modal__header
-            %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-no-access-to-dossier' }, title: t('.modal.close_alt'), onclick: "window.history.back()"}
-              = t('.modal.close')
-          .fr-modal__content
-            %h1#fr-modal-title-modal-1.fr-modal__title
-              %span.fr-icon-arrow-right-line.fr-icon--lg>
-                = t(".modal.title")
-            = render Dsfr::AlertComponent.new(state: :warning, heading_level: 'p') do |c|
-              - c.with_body do
-                %p.fr-text 
-                  Pour consulter ce dossier, vous devez 
-                  %b contacter l'un des administrateurs 
-                  de la démarche 
-                  = "#{procedure_name}"
-                  pour lui demander de 
-                  %b vous ajouter comme instructeur :
-                  %ul
-                    - for email in administrateurs_emails
-                      %li
-                        = mail_to(email, email, target: 'blank', rel: 'noopener', class: 'fr-link fr-icon-external-link-line fr-btn--icon-right')
+= render Dsfr::ModalComponent.new("no-access-to-dossier", "#{t(".link.title")} #{dossier.id}", t(".modal.title"), trigger_using_link: true) do |modal|
+  - modal.with_body do
+    = render Dsfr::AlertComponent.new(state: :warning, heading_level: 'p') do |c|
+      - c.with_body do
+        %p.fr-text<
+          = t(".modal.content.consulter")
+          %b<
+            = t(".modal.content.contacter") 
+          = "#{t(".modal.content.de_la_demarche")} #{procedure_name} #{t(".modal.content.demander")}" 
+          %b<
+            = "#{t(".modal.content.ajouter")} :"
+          %ul
+            - for email in administrateurs_emails
+              %li
+                = mail_to(email, email, target: 'blank', rel: 'noopener', class: 'fr-link fr-icon-external-link-line fr-btn--icon-right')
 

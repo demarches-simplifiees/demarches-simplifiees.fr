@@ -1,5 +1,11 @@
 fr:
   modal:
     title: "Vous n'avez pas accès à ce dossier"
-    close_alt: "Fermer la fenêtre"
-    close: "Fermer"
+    content:
+      consulter: "Pour consulter ce dossier, vous devez "
+      contacter: "contacter l'un des administrateurs "
+      de_la_demarche: "de la démarche"
+      demander: "pour lui demander de "
+      ajouter: "vous ajouter comme instructeur"
+  link:
+    title: "Dossier nº"
