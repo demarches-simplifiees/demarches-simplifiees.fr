@@ -3,17 +3,38 @@
 class Instructeurs::RdvCardComponent < ApplicationComponent
   attr_reader :rdv, :with_dossier_infos
 
-  def initialize(rdv:, with_dossier_infos: false)
+  def initialize(rdv:, with_dossier_infos: false, for_user: false)
     @rdv = rdv
     @with_dossier_infos = with_dossier_infos
+    @for_user = for_user
   end
 
   def dossier
     @rdv.dossier
   end
 
+  def rdv_url
+    if @for_user
+      @rdv["url_for_agents"] # to fix when url will be available for users
+    else
+      @rdv["url_for_agents"]
+    end
+  end
+
+  def starts_at
+    DateTime.parse(@rdv["starts_at"])
+  end
+
+  def location_type
+    @rdv["motif"]["location_type"]
+  end
+
+  def agents_emails
+    @rdv["agents"].map { |agent| agent["email"] }
+  end
+
   def owner
-    if @rdv.instructeur == current_instructeur
+    if current_instructeur.email.in?(agents_emails)
       t('.you')
     else
       @rdv.instructeur.email
@@ -21,7 +42,7 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
   end
 
   def icon_class
-    case rdv.location_type
+    case location_type
     when "phone"
       "fr-icon-phone-fill"
     when "visio"
