@@ -668,6 +668,94 @@ describe ProcedureRevision do
           ])
         end
       end
+
+      describe '#compare_referentiel_changes' do
+        let(:procedure) { create(:procedure, types_de_champ_public:) }
+        let(:referentiel_1) do
+          create(
+            :referentiel,
+            name: SecureRandom.uuid,
+            url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+            mode: 'exact_match',
+            test_data: 'PG46YY6YWCX8',
+            hint: 'Saisissez le code de votre reference'
+          )
+        end
+        let(:referentiel_2) do
+          create(
+            :referentiel,
+            name: SecureRandom.uuid,
+            url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/v2',
+            mode: 'autocomplete',
+            test_data: 'une autre',
+            hint: 'Saisissez le code de votre autre reference'
+          )
+        end
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              referentiel: referentiel_1,
+              referentiel_mapping: { key: 'value1' },
+              stable_id: 123,
+              libelle: 'libelle'
+            }
+          ]
+        end
+
+        before do
+          updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
+          updated_tdc.update(referentiel: referentiel_2, referentiel_mapping: { key: 'value2' })
+        end
+
+        it 'detects changes in referentiel url' do
+          is_expected.to include({
+            :attribute => :referentiel_url,
+            :from => "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/",
+            :label => "libelle",
+            :op => :update,
+            :private => false,
+            :stable_id => 123,
+            :to => "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/v2"
+          })
+          is_expected.to include({
+            :attribute => :referentiel_mode,
+            :from => "exact_match",
+            :label => "libelle",
+            :op => :update,
+            :private => false,
+            :stable_id => 123,
+            :to => "autocomplete"
+          })
+          is_expected.to include({
+            :attribute => :referentiel_hint,
+            :from => 'Saisissez le code de votre reference',
+            :label => "libelle",
+            :op => :update,
+            :private => false,
+            :stable_id => 123,
+            :to => 'Saisissez le code de votre autre reference'
+          })
+          is_expected.to include({
+            :attribute => :referentiel_test_data,
+            :from => 'PG46YY6YWCX8',
+            :label => "libelle",
+            :op => :update,
+            :private => false,
+            :stable_id => 123,
+            :to => 'une autre'
+          })
+          is_expected.to include({
+            :attribute => :referentiel_mapping,
+            :from => { "key" => "value1" },
+            :label => "libelle",
+            :op => :update,
+            :private => false,
+            :stable_id => 123,
+            :to => { "key" => "value2" }
+          })
+        end
+      end
     end
   end
 

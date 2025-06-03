@@ -10,6 +10,14 @@ fr:
   add_option: "ajoutés : %{items}"
   remove_option: "supprimés : %{items}"
   invalid_routing_rules_alert: "Certains groupes d'instructeurs ont une règle de routage invalide. Veuillez mettre à jour la configuration des groupes d'instructeurs après avoir publié les modifications."
+
+  update_referentiel: &update_referentiel
+    referentiel_url: "L'URL de l'API du champ « %{label} » a été modifiée. La nouvelle URL est « %{to} »."
+    referentiel_mode: "Le mode d'intérogation du référentiel du champ « %{label} » a été modifié. Le nouveau mode est « %{to} »."
+    referentiel_hint: "L'indication à fournir à l'usager concernant le format de saisie attendu du champ « %{label} » a été modifiée. La nouvelle indication est « %{to} »."
+    referentiel_test_data: "L'exemple de saisie valide du champ « %{label} » a été modifié. Le nouvel exemple est « %{to} »."
+    referentiel_mapping: "Le mapping des données entre le champ et l'API du champ « %{label} » a été modifié."
+
   public:
     add: Le champ « %{label} » a été ajouté.
     add_mandatory: Le champ obligatoire « %{label} » a été ajouté.
@@ -77,6 +85,8 @@ fr:
     update_start_date: La date de début pour le champ « %{label} » a été modifiée. Le date est désormais %{to}.
     remove_end_date: La date de fin pour le champ « %{label} » a été supprimée.
     update_end_date: La date de fin pour le champ « %{label} » a été modifiée. La date est désormais %{to}.
+    <<: *update_referentiel
+
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
     remove: L’annotation privée « %{label} » a été supprimée.
@@ -110,6 +120,8 @@ fr:
     update_expression_reguliere_exemple_text: L’exemple d’expression régulière de l’annotation privée « %{label} » a été modifiée. Le nouvel exemple est « %{to} ».
     remove_expression_reguliere_error_message: Le message d’erreur de l’expression régulière de l’annotation privée « %{label} » a été supprimé.
     update_expression_reguliere_error_message: Le message d’erreur de l’expression régulière de l’annotation privée « %{label} » a été modifiée. Le nouveau message est « %{to} ».
+    <<: *update_referentiel
+
   ineligibilite_rules:
     add: La condition d’inéligibilité « %{new_condition} » a été ajoutée.
     remove: La condition d’inéligibilité « %{previous_condition} » a été supprimée
