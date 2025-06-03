@@ -109,7 +109,7 @@ RSpec.describe UserMailer, type: :mailer do
     it 'renders the headers' do
       expect(mail.subject).to eq('Confirmez votre email')
       expect(mail.to).to eq([user.email])
-      expect(mail.from).to eq(['contact@demarches-simplifiees.fr'])
+      expect(mail.from).to eq(['mes-demarches@modernisation.gov.pf'])
     end
 
     it 'renders the body' do
