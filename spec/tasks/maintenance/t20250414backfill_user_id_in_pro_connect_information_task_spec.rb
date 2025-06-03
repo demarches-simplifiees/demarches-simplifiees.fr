@@ -9,7 +9,7 @@ module Maintenance
 
       let(:instructeur) { create(:instructeur) }
       let!(:pro_connect_information_without_user) { create(:pro_connect_information, user_id: nil, instructeur:) }
-      let!(:pro_connect_information_with_user) { create(:pro_connect_information, user_id: 1, instructeur:) }
+      let!(:pro_connect_information_with_user) { create(:pro_connect_information, user: instructeur.user, instructeur:) }
 
       it 'returns only pro_connect_informations without user_id' do
         expect(collection).to contain_exactly(pro_connect_information_without_user)
@@ -34,7 +34,7 @@ module Maintenance
 
       before do
         create(:pro_connect_information, user_id: nil, instructeur:)
-        create(:pro_connect_information, user_id: 1, instructeur:)
+        create(:pro_connect_information, user: instructeur.user, instructeur:)
       end
 
       it 'returns the count of pro_connect_informations without user_id' do
