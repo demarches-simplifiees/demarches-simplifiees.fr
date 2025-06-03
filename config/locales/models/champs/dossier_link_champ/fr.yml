@@ -4,3 +4,11 @@ fr:
       champs/dossier_link_champ:
         hints:
           value: "Numéro de dossier"
+
+
+    errors:
+      models:
+        champs/dossier_link_champ:
+          attributes:
+            value:
+              not_found: "Le dossier n'existe pas"

@@ -192,6 +192,7 @@ FactoryBot.define do
     factory :champ_do_not_use_siret, class: 'Champs::SiretChamp' do
       association :etablissement, factory: [:etablissement]
       value { '44011762001530' }
+      value_json { AddressProxy::ADDRESS_PARTS.index_by(&:itself) }
     end
 
     factory :champ_do_not_use_rna, class: 'Champs::RNAChamp' do

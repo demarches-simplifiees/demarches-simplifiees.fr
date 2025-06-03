@@ -828,10 +828,26 @@ class TypeDeChamp < ApplicationRecord
       # no champ
       return true if champ.nil?
       # type de champ on the revision changed
-      return true if type_champ_to_champ_class_name(type_champ) != champ.type
+      if type_champ != champ.type_champ
+        return !castable_on_change?(type_champ, champ.type_champ)
+      end
       # special case for linked drop down champ – it's blank implementation is not what you think
       return champ.value.blank? if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
       champ.blank?
+    end
+
+    def castable_on_change?(from_type, to_type)
+      case [from_type, to_type]
+      when ['integer_number', 'decimal_number'], # recast numbers automatically
+        ['decimal_number', 'integer_number'], # may lose some data, but who cares ?
+        ['text', 'textarea'], # allow short text to long text
+        ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
+        ['date', 'datetime'], # date <=> datetime
+        ['datetime', 'date'] # may lose some data, but who cares ?
+        true
+      else
+        false
+      end
     end
   end
 

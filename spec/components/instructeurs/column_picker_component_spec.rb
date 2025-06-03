@@ -15,6 +15,9 @@ describe Instructeurs::ColumnPickerComponent, type: :component do
     subject { component.displayable_columns_for_select }
 
     before do
+      procedure_presentation.displayed_fields.first['virtual'] = true
+      procedure_presentation.save
+
       allow(procedure).to receive(:columns).and_return([
         default_user_email,
         excluded_displayable_field

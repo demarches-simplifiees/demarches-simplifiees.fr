@@ -641,7 +641,8 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.4.1)
+    rexml (3.3.6)
+      strscan
     rodf (1.2.0)
       builder (>= 3.0)
       rubyzip (>= 1.0)

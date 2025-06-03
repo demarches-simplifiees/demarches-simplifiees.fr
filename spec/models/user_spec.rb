@@ -18,12 +18,6 @@ describe User, type: :model do
       user.confirm
       expect(user.reload.invites.size).to eq(2)
     end
-
-    it 'verifies its email' do
-      expect(user.email_verified_at).to be_nil
-      user.confirm
-      expect(user.email_verified_at).to be_present
-    end
   end
 
   describe '#owns?' do

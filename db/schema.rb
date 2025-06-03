@@ -726,8 +726,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_29_141049) do
     t.string "gender"
     t.string "given_name"
     t.string "merge_token"
-    t.datetime "merge_token_created_at"
-    t.datetime "updated_at", null: false
+    t.datetime "merge_token_created_at", precision: nil
+    t.string "requested_email"
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
     t.index ["email_merge_token"], name: "index_france_connect_informations_on_email_merge_token"
     t.index ["merge_token"], name: "index_france_connect_informations_on_merge_token"
@@ -957,6 +958,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_29_141049) do
     t.boolean "for_tiers_enabled", default: true, null: false
     t.datetime "hidden_at"
     t.datetime "hidden_at_as_template", precision: nil
+    t.boolean "hide_instructeurs_email", default: false, null: false
     t.boolean "instructeurs_self_management_enabled", default: false
     t.boolean "juridique_required", default: true
     t.string "libelle"

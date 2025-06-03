@@ -9,9 +9,6 @@ en:
           association_date_creation: Creation date
           association_date_declaration: Declaration date
           association_date_publication: Publication date
-          address: Address
-          code_insee: INSEE code
-          code_postal: Postal code
         paste: Copy the RNA to the clipboard
         paste_success: The RNA has been copied to the clipboard
   activerecord:

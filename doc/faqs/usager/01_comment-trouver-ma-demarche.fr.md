@@ -19,6 +19,8 @@ title: "Comment trouver ma démarche ?"
 
 > Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
 
+> Par exemple s‘il s‘agit d'une démarche relative à un titre de séjour, vous trouverez l‘information sur le site de la préfécture dont vous dépendez. S‘il s'agit d‘une demande de Pass Culture, vous trouverez les liens utiles sur le site du Pass Culture, etc…
+
 ## 1. Trouver le lien de votre démarche
 
 Pour déposer un dossier sur %{application_name}, il est nécessaire de disposer du lien de la démarche qui vous intéresse. Il ressemble à un lien de cette forme :

@@ -36,13 +36,10 @@ class UserMailer < ApplicationMailer
     mail(to: email, subject: @subject)
   end
 
-  def omniauth_merge_confirmation(email, merge_token, merge_token_created_at, provider)
-    @merge_token = merge_token
-    @merge_token_created_at = merge_token_created_at
-    @subject = "Veuillez confirmer la fusion de compte"
-    @provider = provider
-
-    mail(to: email, subject: @subject)
+  def custom_confirmation_instructions(user, token)
+    @user = user
+    @token = token
+    mail(to: @user.email, subject: 'Confirmez votre email')
   end
 
   def invite_instructeur(user, reset_password_token)
@@ -148,7 +145,8 @@ class UserMailer < ApplicationMailer
       'france_connect_merge_confirmation',
       "new_account_warning",
       "ask_for_merge",
-      "invite_instructeur"
+      "invite_instructeur",
+      "custom_confirmation_instructions"
     ].include?(action_name)
   end
 end

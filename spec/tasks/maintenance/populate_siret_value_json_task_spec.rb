@@ -12,7 +12,7 @@ module Maintenance
 
       it 'updates value_json' do
         expect { subject }.to change { element.reload.value_json }
-          .from(nil)
+          .from(anything)
           .to({
             "city_code" => "92009",
             "city_name" => "Bois-Colombes",

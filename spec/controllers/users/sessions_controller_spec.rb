@@ -235,6 +235,7 @@ describe Users::SessionsController, type: :controller do
           it { is_expected.to redirect_to root_path }
           it { expect(controller.current_instructeur).to eq(instructeur) }
           it { expect(controller).to have_received(:trust_device) }
+          it { expect(controller.current_instructeur.user.email_verified_at).not_to be_nil }
         end
 
         context 'when the token is invalid' do

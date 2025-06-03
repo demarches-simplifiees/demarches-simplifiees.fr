@@ -24,7 +24,6 @@ fr:
     sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
   help: 'Aide'
   help_dropdown:
-    general_title: "Aide en ligne"
     procedure_title: "Une question sur cette démarche ?"
     problem_title: Un problème avec le site ?
     problem_description: Trouvez votre réponse dans l’aide en ligne.
@@ -37,6 +36,9 @@ fr:
   utils:
     'yes': Oui
     'no': Non
+    email_suggest:
+      wanna_say: 'Voulez-vous dire ?'
+
     i_dont_know: Je ne sais pas
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
@@ -987,10 +989,21 @@ fr:
     ministeres: Ministères
   france_connect:
     particulier:
-      password_confirmation:
-        back: 'revenir en arrière'
-        already_exists: Le compte %{email} existe déjà sur %{application_name}
-        fill_in_password: entrez votre mot de passe pour fusionner les comptes
+      choose_email:
+        intro_html: "Votre compte FranceConnect utilise <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span> comme email de contact."
+        use_email_for_notifications: Souhaitez-vous l'utiliser pour recevoir les notifications concernant l'avancement de vos dossiers ?
+        confirm: Confirmer
+        choose_email_contact: Choisissez votre email de contact pour finaliser votre connexion
+        alternative_email: Veuillez nous fournir l'email à utiliser pour vous contacter.
+        keep_fc_email_html: "Oui, utiliser %{email} comme email de contact."
+        use_another_email: Non, utiliser une autre adresse.
+        email_suggest:
+          wanna_say: 'Voulez-vous dire ?'
+      confirmation_sent:
+        confirmation_sent_by_email: Confirmez votre email
+        intro_html: "Un mail de confirmation a été envoyé à votre adresse <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span>"
+        click_the_link_in_the_email: Vous devez impérativement cliquer sur le lien du mail pour activer votre adresse et recevoir les notifications sur l'avancement de vos dossiers.
+        continue: Continuer
       merge:
         title: "Fusion des comptes FranceConnect et %{application_name}"
         subtitle_html: "Bonjour,<br /><br />Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme email de contact.<br />Or il existe un compte sur %{application_name} avec cet email."
@@ -1002,7 +1015,12 @@ fr:
         link_confirm_by_email: Confirmer mon compte par email
       flash:
         confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
-        invalid_password: "Mauvais mot de passe"
+        confirmation_mail_resent: "Le lien de confirmation a expiré. Un nouveau lien de confirmation vous a été envoyé par email."
+        confirmation_mail_resent_error: "Une erreur inattendue est survenue. Veuillez contacter le support si le problème persiste."
+        redirect_new_user_session: "Vous avez été déconnecté de votre précédent compte. Veuillez cliquer à nouveau sur le lien de confirmation."
+        email_confirmed: 'Votre email est bien vérifié'
+        user_not_found: 'Utilisateur non trouvé'
+        invalid_password: "Mot de passe incorrect"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour fusionner les comptes."
   omniauth:

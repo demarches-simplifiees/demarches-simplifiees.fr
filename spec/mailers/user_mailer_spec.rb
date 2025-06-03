@@ -81,7 +81,7 @@ RSpec.describe UserMailer, type: :mailer do
 
     it 'sends to correct email with merge link' do
       expect(subject.to).to eq([email])
-      expect(subject.body).to include(france_connect_particulier_mail_merge_with_existing_account_url(email_merge_token: code))
+      expect(subject.body).to include(france_connect_particulier_merge_using_email_link_url(email_merge_token: code))
     end
 
     context 'without SafeMailer configured' do
@@ -98,6 +98,31 @@ RSpec.describe UserMailer, type: :mailer do
       it 'enqueues email in default queue for high priority delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name)
       end
+    end
+  end
+
+  describe '#custom_confirmation_instructions' do
+    let(:user) { create(:user, email: 'user@example.com') }
+    let(:token) { 'confirmation_token_123' }
+    let(:mail) { UserMailer.custom_confirmation_instructions(user, token) }
+
+    it 'renders the headers' do
+      expect(mail.subject).to eq('Confirmez votre email')
+      expect(mail.to).to eq([user.email])
+      expect(mail.from).to eq(['contact@demarches-simplifiees.fr'])
+    end
+
+    it 'renders the body' do
+      expect(mail.body.encoded).to match(user.email)
+      expect(mail.body.encoded).to match(token)
+    end
+
+    it 'assigns @user' do
+      expect(mail.body.encoded).to match(user.email)
+    end
+
+    it 'assigns @token' do
+      expect(mail.body.encoded).to include(token)
     end
   end
 

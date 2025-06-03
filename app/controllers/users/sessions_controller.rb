@@ -101,6 +101,8 @@ class Users::SessionsController < Devise::SessionsController
       # redirect to root_path otherwise
 
       if instructeur_signed_in?
+        current_user.update!(email_verified_at: Time.zone.now)
+
         redirect_to after_sign_in_path_for(:user)
       else
         redirect_to new_user_session_path

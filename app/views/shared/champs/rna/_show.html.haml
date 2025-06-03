@@ -22,13 +22,4 @@
             - c.with_value do
               %p= l(champ.data[scope].to_date)
 
-      - if champ.data['address'].present?
-        = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rna_champ.data.address")) do |c|
-          - c.with_value do
-            %p= champ.full_address
-
-        - ['code_insee', 'code_postal'].each do |scope|
-          - if champ.data['address'][scope].present?
-            = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rna_champ.data.#{scope}")) do |c|
-              - c.with_value do
-                %p= champ.data['address'][scope]
+      = render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(champ) }

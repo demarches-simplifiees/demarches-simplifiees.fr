@@ -4,6 +4,9 @@ class Champs::CommuneChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement, :code_postal, :code_region
   before_save :on_codes_change, if: :should_refresh_after_code_change?
 
+  validates :external_id, presence: true, if: -> { validate_champ_value_or_prefill? && value.present? }
+  after_validation :instrument_external_id_error, if: -> { errors.include?(:external_id) }
+
   def departement_name
     APIGeoService.departement_name(code_departement)
   end
@@ -100,5 +103,12 @@ class Champs::CommuneChamp < Champs::TextChamp
 
   def should_refresh_after_code_change?
     !departement? || code_postal_changed? || external_id_changed?
+  end
+
+  def instrument_external_id_error
+    Sentry.capture_message(
+      "Commune with value and no external id Edge case reached",
+      extra: { request_id: Current.request_id }
+    )
   end
 end

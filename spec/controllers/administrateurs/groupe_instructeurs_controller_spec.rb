@@ -1035,4 +1035,41 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       expect(gi_1_1.signature).to be_attached
     end
   end
+
+  describe '#update_hide_instructeurs_email' do
+    let(:administrateur) { administrateurs(:default_admin) }
+    let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+
+    before do
+      sign_in(administrateur.user)
+    end
+
+    context 'when activating hide_instructeurs_email' do
+      it 'updates the procedure and redirects with correct notice' do
+        patch :update_hide_instructeurs_email, params: {
+          procedure_id: procedure.id,
+          procedure: { hide_instructeurs_email: "1" }
+        }
+
+        expect(procedure.reload.hide_instructeurs_email).to be true
+        expect(response).to redirect_to(options_admin_procedure_groupe_instructeurs_path(procedure))
+        expect(flash[:notice]).to eq("L'anonymisation des instructeurs est activée.")
+      end
+    end
+
+    context 'when deactivating hide_instructeurs_email' do
+      let(:procedure) { create(:procedure, hide_instructeurs_email: true, administrateurs: [administrateur]) }
+
+      it 'updates the procedure and redirects with correct notice' do
+        patch :update_hide_instructeurs_email, params: {
+          procedure_id: procedure.id,
+          procedure: { hide_instructeurs_email: "0" }
+        }
+
+        expect(procedure.reload.hide_instructeurs_email).to be false
+        expect(response).to redirect_to(options_admin_procedure_groupe_instructeurs_path(procedure))
+        expect(flash[:notice]).to eq("L'anonymisation des instructeurs est désactivée.")
+      end
+    end
+  end
 end
