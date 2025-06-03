@@ -2,7 +2,7 @@
 
 .ol-control-add {
   left: 0.5em;
-  top: 5em;
+  top: 7em;
 
   button {
     background-image: image-url("icons/polygon.svg");
@@ -12,7 +12,7 @@
 
 .ol-control-delete {
   left: 0.5em;
-  top: 7em;
+  top: 9em;
 
   button {
     background-image: image-url("icons/trash-gray.svg");
@@ -22,12 +22,31 @@
 
 .ol-control-layers {
   left: 0.5em;
-  top: 9em;
+  top: 11em;
 
   button {
     background-image: image-url("icons/layers.svg");
     background-size: cover;
   }
+}
+
+.ol-control-geolocate {
+  left: 0.5em;
+  top: 5em;
+}
+
+.ol-control-geolocate button {
+  background-image: image-url("icons/marker.svg");
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 2px;
+  background-color: #FFFFFF;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .te-fenua {
@@ -70,7 +89,6 @@
     border-radius: 5px;
   }
 
-
   &.add-zone {
     bottom: 2.5em;
     left: 0.4em;
@@ -81,7 +99,7 @@
     bottom: auto;
     left: 2.8em;
     right: auto;
-    top: 5em;
+    top: 6.1em;
 
     &::after {
       border: 0.357em solid transparent;
@@ -95,6 +113,69 @@
       position: absolute;
       top: 50%;
       width: 0;
+    }
+  }
+
+  &.add-marker {
+    top: 2.5em;
+    right: 0.4em;
+    bottom: auto;
+    background-color: #FFFFFF;
+    color: #666666;
+    border-radius: 0px;
+    padding: 0px 0px 0px;
+  }
+
+  #add-marker-button.active {
+    background-color: #0000FF;
+    color: #FFFFFF;
+  }
+
+  &.remove-marker {
+    top: 5.5em;
+    right: 0.4em;
+    bottom: auto;
+    background-color: #FFFFFF;
+    color: #000091;
+    border-radius: 0px;
+    padding: 0px 0px 0px;
+  }
+
+  #remove-marker-button {
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #FF0000;
+      color: #FFFFFF;
+    }
+  }
+
+  .te-fenua-help.add-marker {
+    top: 2.5em;
+    right: 0.4em;
+    bottom: auto;
+    background-color: #FFFFFF;
+    color: #666666;
+    border-radius: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    #add-marker-button.active {
+      background-color: #0000FF;
+      color: #FFFFFF;
+    }
+
+    button {
+      background-color: #FFFFFF;
+      color: #666666;
+      border-radius: 0px;
+      padding: 0 0.5em;
     }
   }
 }

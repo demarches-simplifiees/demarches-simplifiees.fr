@@ -12,6 +12,7 @@ fr:
     znieff: ZNIEFF
     parcelles: Parcelles du cadastre
     zones_manuelles: Zones Manuelles
+    marker: Marqueur
     batiments: Batiments
   character_limit:
     unlimited: Pas de limite de caractères

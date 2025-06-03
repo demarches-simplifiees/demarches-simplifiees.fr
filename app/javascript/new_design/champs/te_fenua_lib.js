@@ -9,9 +9,9 @@ import View from 'ol/View';
 import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style.js';
+import { Icon } from 'ol/style';
 import { get as getProjection } from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-import { Icon } from 'ol/style';
 import ScaleLine from 'ol/control/ScaleLine';
 import { defaults as olDefaultInteractions } from 'ol/interaction';
 import FullScreen from 'ol/control/FullScreen';
@@ -131,18 +131,18 @@ export function createMarkerLayer() {
     source: new VectorSource(),
     zIndex: 100,
     style: new Style({
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.4)'
-      }),
-      stroke: new Stroke({
-        color: '#be1c25',
-        width: 2
-      }),
-      image: new CircleStyle({
-        radius: 7,
-        fill: new Fill({
-          color: '#32dcfa'
-        })
+      image: new Icon({
+        anchor: [0.5, 1],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        scale: 0.4,
+        src:
+          'data:image/svg+xml;utf8,' +
+          encodeURIComponent(`
+          <svg width="50" height="70" viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 0C11.192 0 0 11.415 0 25.5 0 44.625 25 70 25 70s25-25.375 25-44.5C50 11.415 38.808 0 25 0zm0 34.5c-5.247 0-9.5-4.253-9.5-9.5s4.253-9.5 9.5-9.5 9.5 4.253 9.5 9.5-4.253 9.5-9.5 9.5z" fill="#e74c3c"/>
+          </svg>
+        `)
       })
     })
   });
