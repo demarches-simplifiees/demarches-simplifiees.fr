@@ -509,7 +509,7 @@ fr:
             acceptee_html: "Votre dossier a été <strong>accepté</strong>."
             accepte_motivation: "Motif de l’acceptation"
             accepte_attestation: "Télécharger l’attestation"
-            refuse_html: "Nous sommes désolés, votre dossier a malheureusement été <strong>refusé</strong>."
+            refuse_html: "Votre dossier a été <strong>refusé</strong>."
             refuse_motivation: "Motif du refus"
             refuse_reply: "Envoyer un message à l’administration"
             sans_suite_html: "Votre dossier a été classé <strong>sans suite</strong>."
