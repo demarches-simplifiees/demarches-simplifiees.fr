@@ -39,7 +39,11 @@ class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   end
 
   def champ_blank?(champ)
-    !champ.full_address?
+    if champ.migrated_legacy_address?
+      champ.value.blank?
+    else
+      !champ.full_address?
+    end
   end
 
   def columns(procedure:, displayable: true, prefix: nil)

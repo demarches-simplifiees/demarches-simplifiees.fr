@@ -33,6 +33,10 @@ class Champs::AddressChamp < Champs::TextChamp
     end
   end
 
+  def migrated_legacy_address?
+    not_ban? && value_json.keys.sort == %w[not_in_ban street_address label].sort
+  end
+
   def ban?
     france? && !(not_ban? || legacy_not_ban?)
   end
