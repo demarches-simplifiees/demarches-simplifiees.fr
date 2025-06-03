@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_03_100844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1382,6 +1382,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_110339) do
   add_foreign_key "administrateurs_procedures", "administrateurs"
   add_foreign_key "administrateurs_procedures", "procedures"
   add_foreign_key "agent_connect_informations", "instructeurs"
+  add_foreign_key "agent_connect_informations", "users"
   add_foreign_key "api_tokens", "administrateurs"
   add_foreign_key "archives_groupe_instructeurs", "archives"
   add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
