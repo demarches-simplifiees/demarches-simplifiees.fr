@@ -3,6 +3,7 @@
 class Champs::TeFenuaChamp < Champ
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
+  before_save :sync_geo_areas_from_value
 
   def parcelles
     geo_json_from_value[:parcelles][:features]
@@ -25,7 +26,7 @@ class Champs::TeFenuaChamp < Champ
   end
 
   def marker?
-    type_de_champ && type_de_champ.options["marker"] == "1"
+    type_de_champ && type_de_champ.options["te_fenua_layer"] == "marker"
   end
 
   def zones_manuelles?
@@ -58,7 +59,8 @@ class Champs::TeFenuaChamp < Champ
       position: position,
       batiments: batiments? ? batiments : [],
       cadastres: parcelles? ? parcelles : [],
-      zones_manuelles: zones_manuelles? ? zones_manuelles : []
+      zones_manuelles: zones_manuelles? ? zones_manuelles : [],
+      positions: marker? && geo_areas.present? ? geo_areas.map(&:to_feature) : []
     }
   end
 
@@ -110,5 +112,33 @@ class Champs::TeFenuaChamp < Champ
 
   def for_api
     nil
+  end
+
+  private
+
+  def sync_geo_areas_from_value
+    return unless value_changed? && value.present?
+
+    parsed_data = begin
+      JSON.parse(value, symbolize_names: true)
+                  rescue JSON::ParserError
+                    Rails.logger.error("Failed to parse JSON for Champs::TeFenuaChamp #{id} from value: #{value}")
+                    return
+    end
+
+    geo_areas.destroy_all
+
+    if marker? && parsed_data[:positions].present? && parsed_data[:positions].is_a?(Array)
+      parsed_data[:positions].each do |pos_data|
+        if pos_data[:geometry].is_a?(Hash) && pos_data[:geometry].present?
+          geo_areas.build(
+            source: GeoArea.sources.fetch(:selection_utilisateur),
+            geometry: pos_data[:geometry]
+          )
+        else
+          Rails.logger.warn("Invalid or missing geometry data for GeoArea in TeFenuaChamp #{id} from value: #{pos_data[:geometry]}")
+        end
+      end
+    end
   end
 end

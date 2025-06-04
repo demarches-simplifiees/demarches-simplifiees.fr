@@ -4567,6 +4567,31 @@ type SiretChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+type TeFenuaChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+  geoAreas: [GeoArea!]!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+}
+
 type TeFenuaChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.

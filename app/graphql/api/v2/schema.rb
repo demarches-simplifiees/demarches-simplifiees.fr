@@ -56,6 +56,7 @@ class API::V2::Schema < GraphQL::Schema
 
   orphan_types Types::Champs::AddressChampType,
     Types::Champs::CarteChampType,
+    Types::Champs::TeFenuaChampType,
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
     Types::Champs::CommuneChampType,
