@@ -38,12 +38,15 @@ Capybara.register_driver :chrome do |app|
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
   options.add_argument('--mute-audio')
   options.add_argument('--window-size=1440,900')
-  options.add_argument('--disable-dev-shm-usage')
-  options.add_argument('--disable-software-rasterizer')
-  options.add_argument('--mute-audio')
   # 🔹 Force la langue via les préférences utilisateur Chrome
   options.add_preference('intl.accept_languages', 'fr-FR,fr')
   options.add_preference('translate.enabled', false)
+  options.add_argument('--disable-search-engine-choice-screen')
+  if ENV['NO_HEADLESS'].blank?
+    options.add_argument('--headless')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-software-rasterizer')
+  end
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
@@ -90,9 +93,9 @@ Capybara.disable_animation = true
 Capybara::Screenshot.autosave_on_failure = true
 # Keep only the screenshots generated from the last failing test suite
 Capybara::Screenshot.prune_strategy = :keep_last_run
-# Tell Capybara::Screenshot how to take screenshots when using the headless_chrome driver
-Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
-  driver.browser.save_screenshot(path)
+# Tell Capybara::Screenshot how to take screenshots when using the chrome driver
+Capybara::Screenshot.register_driver :chrome do |driver, path|
+  driver.save_screenshot(path)
 end
 # Tell Capybara::Screenshot how to take screenshots when using the playwright driver
 Capybara::Screenshot.register_driver :playwright do |driver, path|

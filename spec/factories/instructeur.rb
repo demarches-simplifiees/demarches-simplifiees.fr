@@ -10,7 +10,13 @@ FactoryBot.define do
 
     transient do
       email { generate(:instructeur_email) }
-      password { 'somethingverycomplated!' }
+      password { '{my-%s3cure[]-p4$$w0rd' }
+    end
+
+    trait :email_verified do
+      after(:create) do |instructeur|
+        instructeur.user.update(email_verified_at: Time.zone.now)
+      end
     end
 
     trait :with_agent_connect_information do
