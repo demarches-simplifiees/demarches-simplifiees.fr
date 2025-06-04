@@ -29,7 +29,7 @@ describe 'As an administrateur I can edit annotation', js: true do
     select('Titre de niveau 2', from: dom_id(second_header, :header_section_level))
 
     within(".types-de-champ-block li:first-child") do
-      page.accept_alert do
+      accept_alert do
         click_on 'Supprimer'
       end
     end

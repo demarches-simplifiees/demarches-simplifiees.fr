@@ -32,10 +32,14 @@ class AddressProxy
       @city_name = etablissement.localite
       @postal_code = etablissement.code_postal
       @city_code = etablissement.code_insee_localite
-      @departement_name = APIGeoService.departement_name_by_postal_code(@postal_code)
-      @departement_code = APIGeoService.departement_code(@departement_name)
-      @region_code = APIGeoService.region_code_by_departement(@departement_code)
-      @region_name = APIGeoService.region_name(@region_code)
+      if @postal_code
+        @departement_name = APIGeoService.departement_name_by_postal_code(@postal_code)
+        @departement_code = APIGeoService.departement_code(@departement_name)
+        @region_code = APIGeoService.region_code_by_departement(@departement_code)
+        @region_name = APIGeoService.region_name(@region_code)
+      else # adresse without postal_code, ex:
+        @departement_name, @departement_code, @region_code, @region_name = nil
+      end
     end
   end
 

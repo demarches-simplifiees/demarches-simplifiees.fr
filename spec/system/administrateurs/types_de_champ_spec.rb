@@ -54,7 +54,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
     # Champs can be deleted
     within '.type-de-champ:nth-child(3)' do
-      page.accept_alert do
+      accept_alert do
         click_on 'Supprimer'
       end
     end
@@ -79,7 +79,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
     page.refresh
 
-    page.accept_alert do
+    accept_alert do
       click_on 'Supprimer'
     end
     expect(page).to have_content('Formulaire enregistré')
@@ -241,7 +241,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_content('Durée de remplissage estimée : 2 min')
 
       # It updates the estimate when removing the champ
-      page.accept_alert do
+      accept_alert do
         click_on 'Supprimer'
       end
       expect(page).not_to have_content('Durée de remplissage estimée')
@@ -281,7 +281,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
       select('Titre de niveau 2', from: dom_id(second_header, :header_section_level))
 
       within(".types-de-champ-block li:first-child") do
-        page.accept_alert do
+        accept_alert do
           click_on 'Supprimer'
         end
       end

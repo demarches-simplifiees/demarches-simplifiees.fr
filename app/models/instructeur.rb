@@ -215,6 +215,11 @@ class Instructeur < ApplicationRecord
     trusted_device_token&.token_young?
   end
 
+  def should_receive_email_activation?
+    # if was recently created or received an activation email more than 7 days ago
+    previously_new_record? || user.reset_password_sent_at.nil? || user.reset_password_sent_at < Devise.reset_password_within.ago
+  end
+
   def can_be_deleted?
     user.administrateur.nil? && procedures.all? { |p| p.defaut_groupe_instructeur.instructeurs.count > 1 }
   end
