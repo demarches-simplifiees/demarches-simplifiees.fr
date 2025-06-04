@@ -499,7 +499,7 @@ en:
             acceptee_html: "Your file had been <strong>accepted</strong>."
             accepte_motivation: "Reason"
             accepte_attestation: "Download the attestation"
-            refuse_html: "Sorry, your file had been <strong>rejected</strong>."
+            refuse_html: "Your file had been <strong>rejected</strong>."
             refuse_motivation: "Reason"
             refuse_reply: "Send a message to the administration"
             sans_suite_html: "Your file had been <strong>closed, no further action</strong>."
