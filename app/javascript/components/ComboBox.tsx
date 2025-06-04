@@ -129,6 +129,9 @@ export function SingleComboBox({
     formValue,
     form,
     data,
+    maxItemsDisplay,
+    maxItemsAlert,
+    className,
     ...props
   } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
@@ -141,6 +144,7 @@ export function SingleComboBox({
     onChange: dispatch
   });
 
+
   return (
     <>
       <ComboBox
@@ -149,7 +153,21 @@ export function SingleComboBox({
         {...comboBoxProps}
         {...props}
       >
-        {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
+
+        {(item) =>
+          typeof item.value === 'string' && item.value.startsWith('separator_') ? (
+            <ComboBoxItem key={item.value} id={item.value} isDisabled style={{ color: '#888' }}>
+              {item.label}
+            </ComboBoxItem>
+          ) : (
+            <ComboBoxItem key={item.value} id={item.value}>
+              {item.label}
+            </ComboBoxItem>
+          )
+        }
+
+
+
       </ComboBox>
       {children || name ? (
         <span ref={ref}>
