@@ -70,7 +70,17 @@
         = link_to 'Annuler', options_admin_procedure_groupe_instructeurs_path(@procedure), class: 'fr-btn fr-btn--secondary'
       %li
         %button.fr-btn{ disabled: true,  data: { 'enable-submit-if-checked-target': 'submit' } } Continuer
+
 - if params[:state] != 'choix'
+  %hr.fr-hr.fr-mt-5w.fr-mb-3w
+  = render Dsfr::CalloutComponent.new(title: t('.anonymisation_callout.title'), heading_level: 'h2') do |c|
+    - c.with_body do
+      %p
+        = t('.anonymisation_callout.content_part_1')
+        = link_to t('.anonymisation_callout.link_text'), t('.anonymisation_callout.link_url'), title: helpers.new_tab_suffix(t('.anonymisation_callout.link_text')), **helpers.external_link_attributes
+      %p
+        = t('.anonymisation_callout.content_part_2_html')
+
   .padded-fixed-footer
     .fixed-footer
       .fr-container

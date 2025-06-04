@@ -16,3 +16,9 @@ fr:
     Attention : tous les dossiers vont être déplacés dans le groupe « %{defaut_label} » et seuls les instructeurs présent dans ce groupe resteront affectés à la démarche. Souhaitez-vous continuer ?
   routage_doc:
     title: "Documentation sur le routage"
+  anonymisation_callout:
+    title: Identité des instructeurs
+    content_part_1: Toute décision prise par une administration comporte la signature de son auteur ainsi que la mention, en caractères lisibles, du prénom, du nom et de la qualité de celui-ci.
+    content_part_2_html: Pour activer l’option permettant de <strong>ne pas divulguer l’identité des instructeurs</strong> lors des échanges avec l’usager par le biais de la messagerie, contactez-nous sur contact@demarches-simplifiees.fr en indiquant votre numéro de démarche (104221).
+    link_text: Texte sur LegiFrance
+    link_url: https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000031366350/LEGISCTA000031367523/
