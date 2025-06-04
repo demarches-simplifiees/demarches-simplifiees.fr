@@ -586,15 +586,12 @@ fr:
           submit: Changer le mot de passe
           submit_loading: Envoi…
         reset_link_sent:
-          email_sent_html: "Si un compte <strong>%{application_name}</strong> existe avec l’adresse <strong>%{email}</strong>, nous vous avons envoyé un email."
-          click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
+          email_sent_html: "Si un compte existe avec l’adresse <strong>%{email}</strong>, nous vous avons envoyé un email pour réinitialiser votre mot de passe."
           no_mail: "Vous n’avez pas reçu l’email ?"
           check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
-          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
+          check_account_html: "Avez-vous bien créé un compte <strong>%{application_name}</strong> avec l’adresse <strong>%{email}</strong> ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
           check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
           check_gpdr: "Le compte a pu être supprimé en cas d’inactivité prolongée et sans dossier en cours. Dans ce cas vous devrez recréer un compte à partir d’une démarche."
-          got_it: "Bien reçu !"
-          open_your_mailbox: "Maintenant ouvrez votre boite email."
           title: "Lien de réinitialisation du mot de passe envoyé"
       shared:
         email_can_take_a_while_html: "<strong>Attention</strong>, ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."

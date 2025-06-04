@@ -1,0 +1,153 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.helpscout.net/v2/oauth2/token
+    body:
+      encoding: UTF-8
+      string: client_id=1234&client_secret=5678&grant_type=client_credentials
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Tue, 11 Jun 2024 14:13:26 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '94'
+      Server:
+      - kong/0.14.1
+      Cache-Control:
+      - no-store
+      Pragma:
+      - no-cache
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Expose-Headers:
+      - Location,Resource-Id
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"bearer","access_token":"redacted","expires_in":172800}'
+  recorded_at: Wed, 05 Jun 2024 00:00:00 GMT
+- request:
+    method: get
+    uri: https://api.helpscout.net/v2/customers?page=1&query=(%0A%20%20%20%20%20%20%20%20modifiedAt:%5B*%20TO%202022-06-05T00:00:00Z%5D%0A%20%20%20%20%20%20)&sortField=modifiedAt&sortOrder=desc
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Authorization:
+      - Bearer redacted
+      Content-Type:
+      - application/json; charset=UTF-8
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Tue, 11 Jun 2024 14:13:27 GMT
+      Content-Type:
+      - application/hal+json
+      X-Ratelimit-Limit-Minute:
+      - '200'
+      X-Ratelimit-Remaining-Minute:
+      - '199'
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - '0'
+      X-Frame-Options:
+      - DENY
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Expose-Headers:
+      - Location,Resource-Id
+      Correlation-Id:
+      - a9ca7664-2711-4c36-a092-73203365b474#13211836
+      X-Kong-Upstream-Latency:
+      - '640'
+      X-Kong-Proxy-Latency:
+      - '3'
+      Via:
+      - kong/0.14.1
+    body:
+      encoding: UTF-8
+      string: '{"_embedded":{"customers":[{"id":553306602,"firstName":"Energie","lastName":"","gender":"Unknown","photoType":"default","photoUrl":"https://d33v4339jhl8k0.cloudfront.net/customer-avatar/07.png","createdAt":"2022-08-19T06:50:27Z","updatedAt":"2022-08-19T06:50:27Z","background":"","draft":false,"_embedded":{"emails":[{"id":699846839,"value":"adresse@email.com","type":"work"}],"phones":[],"chats":[],"social_profiles":[],"websites":[],"properties":[]},"_links":{"address":{"href":"https://api.helpscout.net/v2/customers/553306602/address"},"chats":{"href":"https://api.helpscout.net/v2/customers/553306602/chats"},"emails":{"href":"https://api.helpscout.net/v2/customers/553306602/emails"},"phones":{"href":"https://api.helpscout.net/v2/customers/553306602/phones"},"social-profiles":{"href":"https://api.helpscout.net/v2/customers/553306602/social-profiles"},"websites":{"href":"https://api.helpscout.net/v2/customers/553306602/websites"},"self":{"href":"https://api.helpscout.net/v2/customers/553306602"}}},{"id":552485177,"firstName":"Ars-Ara-Adeli","lastName":"","gender":"Unknown","photoType":"default","photoUrl":"https://d33v4339jhl8k0.cloudfront.net/customer-avatar/04.png","createdAt":"2022-08-16T07:46:44Z","updatedAt":"2022-08-22T06:33:23Z","background":"","draft":false,"_embedded":{"emails":[{"id":699054288,"value":"adresse@email.com","type":"work"}],"phones":[],"chats":[],"social_profiles":[],"websites":[],"properties":[]},"_links":{"address":{"href":"https://api.helpscout.net/v2/customers/552485177/address"},"chats":{"href":"https://api.helpscout.net/v2/customers/552485177/chats"},"emails":{"href":"https://api.helpscout.net/v2/customers/552485177/emails"},"phones":{"href":"https://api.helpscout.net/v2/customers/552485177/phones"},"social-profiles":{"href":"https://api.helpscout.net/v2/customers/552485177/social-profiles"},"websites":{"href":"https://api.helpscout.net/v2/customers/552485177/websites"},"self":{"href":"https://api.helpscout.net/v2/customers/552485177"}}}]},"_links":{"next":{"href":"https://api.helpscout.net/v2/customers?query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])\u0026page=2"},"self":{"href":"https://api.helpscout.net/v2/customers?page=1\u0026query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])"},"first":{"href":"https://api.helpscout.net/v2/customers?query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])\u0026page=1"},"last":{"href":"https://api.helpscout.net/v2/customers?query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])\u0026page=403"},"page":{"href":"https://api.helpscout.net/v2/customers?page=1\u0026query=(modifiedAt:%5B*%20TO%202022-08-25T22:00:00Z%5D)"}},"page":{"size":2,"totalElements":4,"totalPages":2,"number":1}}
+      '
+  recorded_at: Wed, 05 Jun 2024 00:00:00 GMT
+
+- request:
+    method: get
+    uri: https://api.helpscout.net/v2/customers?page=1&query=(%0A%20%20%20%20%20%20%20%20modifiedAt:%5B*%20TO%202022-06-05T00:00:00Z%5D%0A%20%20%20%20%20%20)&sortField=modifiedAt&sortOrder=desc
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Authorization:
+      - Bearer redacted
+      Content-Type:
+      - application/json; charset=UTF-8
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Tue, 11 Jun 2024 14:13:27 GMT
+      Content-Type:
+      - application/hal+json
+      X-Ratelimit-Limit-Minute:
+      - '200'
+      X-Ratelimit-Remaining-Minute:
+      - '199'
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - '0'
+      X-Frame-Options:
+      - DENY
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Expose-Headers:
+      - Location,Resource-Id
+      Correlation-Id:
+      - a9ca7664-2711-4c36-a092-73203365b474#13211836
+      X-Kong-Upstream-Latency:
+      - '640'
+      X-Kong-Proxy-Latency:
+      - '3'
+      Via:
+      - kong/0.14.1
+    body:
+      encoding: UTF-8
+      string: '{"_embedded":{"customers":[{"id":553306602,"firstName":"Energie","lastName":"","gender":"Unknown","photoType":"default","photoUrl":"https://d33v4339jhl8k0.cloudfront.net/customer-avatar/07.png","createdAt":"2022-08-19T06:50:27Z","updatedAt":"2022-08-19T06:50:27Z","background":"","draft":false,"_embedded":{"emails":[{"id":699846839,"value":"adresse@email.com","type":"work"}],"phones":[],"chats":[],"social_profiles":[],"websites":[],"properties":[]},"_links":{"address":{"href":"https://api.helpscout.net/v2/customers/553306602/address"},"chats":{"href":"https://api.helpscout.net/v2/customers/553306602/chats"},"emails":{"href":"https://api.helpscout.net/v2/customers/553306602/emails"},"phones":{"href":"https://api.helpscout.net/v2/customers/553306602/phones"},"social-profiles":{"href":"https://api.helpscout.net/v2/customers/553306602/social-profiles"},"websites":{"href":"https://api.helpscout.net/v2/customers/553306602/websites"},"self":{"href":"https://api.helpscout.net/v2/customers/553306602"}}},{"id":552485177,"firstName":"Ars-Ara-Adeli","lastName":"","gender":"Unknown","photoType":"default","photoUrl":"https://d33v4339jhl8k0.cloudfront.net/customer-avatar/04.png","createdAt":"2022-08-16T07:46:44Z","updatedAt":"2022-08-22T06:33:23Z","background":"","draft":false,"_embedded":{"emails":[{"id":699054288,"value":"adresse@email.com","type":"work"}],"phones":[],"chats":[],"social_profiles":[],"websites":[],"properties":[]},"_links":{"address":{"href":"https://api.helpscout.net/v2/customers/552485177/address"},"chats":{"href":"https://api.helpscout.net/v2/customers/552485177/chats"},"emails":{"href":"https://api.helpscout.net/v2/customers/552485177/emails"},"phones":{"href":"https://api.helpscout.net/v2/customers/552485177/phones"},"social-profiles":{"href":"https://api.helpscout.net/v2/customers/552485177/social-profiles"},"websites":{"href":"https://api.helpscout.net/v2/customers/552485177/websites"},"self":{"href":"https://api.helpscout.net/v2/customers/552485177"}}}]},"_links":{"next":{"href":"https://api.helpscout.net/v2/customers?query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])\u0026page=2"},"self":{"href":"https://api.helpscout.net/v2/customers?page=1\u0026query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])"},"first":{"href":"https://api.helpscout.net/v2/customers?query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])\u0026page=1"},"last":{"href":"https://api.helpscout.net/v2/customers?query=(modifiedAt:[* TO 2022-08-25T22:00:00Z])\u0026page=403"},"page":{"href":"https://api.helpscout.net/v2/customers?page=1\u0026query=(modifiedAt:%5B*%20TO%202022-08-25T22:00:00Z%5D)"}},"page":{"size":2,"totalElements":4,"totalPages":1,"number":1}}
+      '
+  recorded_at: Wed, 05 Jun 2024 00:00:00 GMT

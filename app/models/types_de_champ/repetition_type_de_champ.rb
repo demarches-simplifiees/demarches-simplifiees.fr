@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
+  def self.champ_value_for_tag(champ, path = :value)
+    return nil if path != :value
+    return champ_default_value if champ.rows.blank?
+
+    ChampPresentations::RepetitionPresentation.new(champ.libelle, champ.rows)
+  end
+
   def estimated_fill_duration(revision)
     estimated_rows_in_repetition = 2.5
 

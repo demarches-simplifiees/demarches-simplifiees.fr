@@ -697,7 +697,6 @@ Rails.application.routes.draw do
           post 'create_simple_routing'
           delete 'destroy_all_groups_but_defaut'
           patch 'update_instructeurs_self_management_enabled'
-          patch 'update_hide_instructeurs_email'
           post 'import'
           get 'export_groupe_instructeurs'
         end

@@ -576,15 +576,13 @@ en:
           submit: Change password
           submit_loading: Sending…
         reset_link_sent:
-          got_it: Got it!
-          open_your_mailbox: Now open your mailbox.
-          email_sent_html: "If a <strong>%{application_name}</strong> account exists with the address <strong>%{email}</strong>, we have sent you an email."
-          click_link_to_reset_password: Click on the link in the email to change your password.
+          email_sent_html: "If an account exists with the address <strong>%{email}</strong>, we have sent you an email."
           no_mail: Didn't receive the email?
           check_spams: Check your junk or spam email.
-          check_account: Have you created a %{application_name} account with the adress %{email}? You will not receive any message if no account is linked to your email adress.
+          check_account_html: Have you created a <strong> %{application_name} </strong>account with the adress <strong> %{email}</strong>? You will not receive any message if no account is linked to your email adress.
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
           check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
+          title: "Password reset link sent"
       shared:
         email_can_take_a_while_html: <strong>Please note</strong> that this email can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
