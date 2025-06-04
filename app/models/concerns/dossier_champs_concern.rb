@@ -335,8 +335,8 @@ module DossierChampsConcern
       champ = champ.becomes!(type_de_champ.champ_class)
       champ.assign_attributes(value: nil, value_json: nil, external_id: nil, data: nil)
     elsif stream != Champ::MAIN_STREAM && champ.previously_new_record?
-      main_stream_champ = champs.find_by(stable_id: type_de_champ.stable_id, row_id:, stream: Champ::MAIN_STREAM)
-      champ.clone_value_from(main_stream_champ) if main_stream_champ.present?
+      # main_stream_champ = champs.find_by(stable_id: type_de_champ.stable_id, row_id:, stream: Champ::MAIN_STREAM)
+      # champ.clone_value_from(main_stream_champ) if main_stream_champ.present?
     end
 
     # If the champ returned from `create_or_find_by` is not the same as the one already loaded in `dossier.champs`, we need to update the association cache
