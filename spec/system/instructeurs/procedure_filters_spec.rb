@@ -109,6 +109,14 @@ describe "procedure filters" do
     end
   end
 
+  describe 'with repetition' do
+    let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Enfants', children: [{ libelle: 'Nom' }] }] }
+
+    scenario "should be able to user custom fiters", js: true do
+      add_filter('Enfants – Nom', 'Greer')
+    end
+  end
+
   describe 'with a vcr cached cassette' do
     describe 'departements' do
       let(:types_de_champ_public) { [{ type: :departements }] }

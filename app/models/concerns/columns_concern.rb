@@ -4,8 +4,6 @@ module ColumnsConcern
   extend ActiveSupport::Concern
 
   included do
-    TYPE_DE_CHAMP = 'type_de_champ'
-
     def find_column(id:) = columns.find { |f| f.id == id }
 
     def columns
@@ -75,13 +73,7 @@ module ColumnsConcern
     end
 
     def types_de_champ_columns
-      types_de_champ_for_procedure_presentation
-        .pluck(:type_champ, :libelle, :stable_id)
-        .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-        .flat_map do |(type_champ, libelle, stable_id)|
-          tdc = TypeDeChamp.new(type_champ:, libelle:, stable_id:)
-          tdc.dynamic_type.columns(table: TYPE_DE_CHAMP)
-        end
+      all_revisions_types_de_champ.flat_map(&:columns)
     end
   end
 end

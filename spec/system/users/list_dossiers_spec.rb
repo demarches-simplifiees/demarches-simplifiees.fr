@@ -58,7 +58,7 @@ describe 'user access to the list of their dossiers', js: true do
   context 'when there is more than one page' do
     let(:dossiers_per_page) { 2 }
 
-    scenario 'the user can navigate through the other pages' do
+    scenario 'the user can navigate through the other pages', chrome: true do
       expect(page).not_to have_link(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
       page.click_link("Suivant")
@@ -184,7 +184,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).not_to have_link('Supprimer le dossier', href: dossier_path(dossier_en_instruction))
     end
 
-    context 'when user clicks on delete button', js: true do
+    context 'when user clicks on delete button' do
       scenario 'the dossier is deleted' do
         expect(page).to have_content(dossier_en_construction.procedure.libelle)
         within(:css, ".card", match: :first) do
@@ -207,7 +207,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_link(nil, href: clone_dossier_path(dossier_en_instruction))
     end
 
-    context 'when user clicks on clone button', js: true do
+    context 'when user clicks on clone button' do
       scenario 'the dossier is cloned' do
         within(:css, ".card", match: :first) do
           click_on 'Autres actions'
@@ -227,7 +227,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_link('Télécharger mon dossier', href: dossier_path("#{dossier_traite_expire.id}.pdf"))
     end
 
-    context 'when user clicks on restore button', js: true do
+    context 'when user clicks on restore button' do
       scenario 'the dossier is restored' do
         click_on "3 supprimés"
         expect(page).to have_content(dossier_en_construction_supprime.procedure.libelle)
@@ -238,7 +238,7 @@ describe 'user access to the list of their dossiers', js: true do
       end
     end
 
-    context 'when user clicks on restore and extend button', js: true do
+    context 'when user clicks on restore and extend button' do
       scenario 'the dossier is restored and extended' do
         click_on "3 supprimés"
         expect(page).to have_content(dossier_en_construction_expire.procedure.libelle)

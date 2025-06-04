@@ -52,7 +52,8 @@ class Etablissement < ApplicationRecord
       adresse,
       code_postal,
       localite,
-      code_insee_localite
+      code_insee_localite,
+      nom_pays
     ]
   end
 

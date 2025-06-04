@@ -4,41 +4,22 @@ module AddressableColumnConcern
   extend ActiveSupport::Concern
 
   included do
-    def columns(table:)
+    def columns(displayable: true, prefix: nil)
       super.concat([
+        ["code postal (5 chiffres)", ['postal_code'], :text],
+        ["commune", ['city_name'], :text],
+        ["département", ['departement_code'], :enum],
+        ["region", ['region_name'], :enum]
+      ].map do |(label, value_column, type)|
         Columns::JSONPathColumn.new(
-          table:,
-          displayable: false,
+          table: Column::TYPE_DE_CHAMP_TABLE,
           column: stable_id,
-          label: "#{libelle} – code postal (5 chiffres)",
-          type: :text,
-          value_column: ['postal_code']
-        ),
-        Columns::JSONPathColumn.new(
-          table:,
+          label: "#{libelle_with_prefix(prefix)} – #{label}",
           displayable: false,
-          column: stable_id,
-          label: "#{libelle} – commune",
-          type: :text,
-          value_column: ['city_name']
-        ),
-        Columns::JSONPathColumn.new(
-          table:,
-          displayable: false,
-          column: stable_id,
-          label: "#{libelle} – département",
-          type: :enum,
-          value_column: ['departement_code']
-        ),
-        Columns::JSONPathColumn.new(
-          table:,
-          displayable: false,
-          column: stable_id,
-          label: "#{libelle} – région",
-          type: :enum,
-          value_column: ['region_name']
+          type:,
+          value_column:
         )
-      ])
+      end)
     end
   end
 end

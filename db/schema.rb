@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_30_125438) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_13_150318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -585,6 +585,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_30_125438) do
     t.string "libelle_naf"
     t.string "localite"
     t.string "naf"
+    t.string "nom_pays"
     t.string "nom_voie"
     t.string "numero_voie"
     t.boolean "siege_social"

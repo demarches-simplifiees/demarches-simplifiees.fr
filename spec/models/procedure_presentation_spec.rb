@@ -55,6 +55,11 @@ describe ProcedurePresentation do
     context 'of filters' do
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "reset_password_token", "order" => "asc" }] })).to be_invalid }
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
+
+      describe 'check_filters_max_integer' do
+        it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "self", column: "id", "value" => ProcedurePresentation::PG_INTEGER_MAX_VALUE.to_s }] })).to be_invalid }
+        it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "self", column: "id", "value" => (ProcedurePresentation::PG_INTEGER_MAX_VALUE - 1).to_s }] })).to be_valid }
+      end
     end
   end
 
@@ -568,7 +573,7 @@ describe ProcedurePresentation do
     context 'for type_de_champ using AddressableColumnConcern' do
       let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
-      let(:available_columns) { type_de_champ.dynamic_type.columns(table: 'type_de_champ') }
+      let(:available_columns) { type_de_champ.columns }
       let(:column) { available_columns.find { _1.value_column == value_column_searched } }
       let(:filter) { [column.to_json.merge({ "value" => value })] }
       let(:kept_dossier) { create(:dossier, procedure: procedure) }

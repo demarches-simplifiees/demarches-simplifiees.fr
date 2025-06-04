@@ -14,6 +14,8 @@ class ProcedurePresentation < ApplicationRecord
   TYPE_DE_CHAMP = 'type_de_champ'
 
   FILTERS_VALUE_MAX_LENGTH = 100
+  # https://www.postgresql.org/docs/current/datatype-numeric.html
+  PG_INTEGER_MAX_VALUE = 2147483647
 
   belongs_to :assign_to, optional: false
   has_many :exports, dependent: :destroy
@@ -25,6 +27,7 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
+  validate :check_filters_max_integer
 
   def displayed_fields_for_headers
     [
@@ -310,6 +313,16 @@ class ProcedurePresentation < ApplicationRecord
       next if filter['value']&.length.to_i <= FILTERS_VALUE_MAX_LENGTH
 
       errors.add(:base, "Le filtre #{filter['label']} est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)")
+    end
+  end
+
+  def check_filters_max_integer
+    filters.values.flatten.each do |filter|
+      next if !filter.is_a?(Hash)
+      next if filter['column'] != 'id'
+      next if filter['value']&.to_i&. < PG_INTEGER_MAX_VALUE
+
+      errors.add(:base, "Le filtre #{filter['label']} n'est pas un numéro de dossier possible")
     end
   end
 

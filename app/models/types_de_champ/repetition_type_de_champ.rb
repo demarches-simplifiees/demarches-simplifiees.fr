@@ -26,4 +26,10 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
     # /\*?[] are invalid Excel worksheet characters
     ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
   end
+
+  def columns(displayable: true, prefix: nil)
+    @type_de_champ.procedure
+      .all_revisions_types_de_champ(parent: @type_de_champ)
+      .flat_map { _1.columns(displayable: false, prefix: libelle) }
+  end
 end

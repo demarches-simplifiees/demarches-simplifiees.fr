@@ -1,5 +1,5 @@
--# We can't use &. because the controller may not implement #nav_bar_profile
-- nav_bar_profile = controller.try(:nav_bar_profile) || :guest
+-# We can't use &. or as helper methods because the controllers from view specs does not implement these methods
+- nav_bar_profile = controller.try(:nav_bar_profile) || controller.try(:fallback_nav_bar_profile) || :guest
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 - is_instructeur_context = nav_bar_profile == :instructeur && instructeur_signed_in?
@@ -65,13 +65,13 @@
                   %li= render partial: 'layouts/locale_dropdown'
 
 
-            - if params[:controller] == 'recherche'
-              = render partial: 'layouts/search_dossiers_form'
-
             - if is_instructeur_context
-              = render partial: 'layouts/search_dossiers_form'
+              = render partial: 'layouts/search_dossiers_form', locals: { context: :instructeur }
 
-            - if is_expert_context
+            - elsif is_expert_context
+              = render partial: 'layouts/search_dossiers_form', locals: { context: :expert }
+
+            - elsif params[:controller] == 'recherche'
               = render partial: 'layouts/search_dossiers_form'
 
     = render SwitchDomainBannerComponent.new(user: current_user)

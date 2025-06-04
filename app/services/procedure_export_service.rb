@@ -107,10 +107,10 @@ class ProcedureExportService
       .group_by(&:stable_id)
 
     procedure
-      .types_de_champ_for_procedure_presentation
+      .all_revisions_types_de_champ
       .repetition
       .filter_map do |type_de_champ_repetition|
-        types_de_champ = procedure.types_de_champ_for_procedure_presentation(type_de_champ_repetition).to_a
+        types_de_champ = procedure.all_revisions_types_de_champ(parent: type_de_champ_repetition).to_a
         rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
 
         if types_de_champ.present? && rows.present?
@@ -153,7 +153,7 @@ class ProcedureExportService
   end
 
   def spreadsheet_columns(format)
-    types_de_champ = procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a
+    types_de_champ = procedure.types_de_champ_for_procedure_export.to_a
 
     Proc.new do |instance|
       instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
