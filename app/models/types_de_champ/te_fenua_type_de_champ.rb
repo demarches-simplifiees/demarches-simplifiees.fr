@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TypesDeChamp::TeFenuaTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  LAYERS = [:parcelles, :zones_manuelles, :marker] # , :batiments
+  LAYERS = [:marker, :zones_manuelles] # :batiments, :parcelles
 
   class << self
     def champ_value_for_api(champ, version = 2)

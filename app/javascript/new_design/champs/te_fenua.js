@@ -266,6 +266,15 @@ function addInteractions(mapElement, map) {
   hideHelps();
   let draw, select, modify;
 
+  if (add_zone || add_marker) {
+    createControl(
+      map,
+      clickOnToggleCadastre,
+      'layers',
+      'Afficher/masquer le cadastre'
+    );
+  }
+
   if (add_zone) {
     bubbles.add.style.display = 'block';
     draw = new Draw({
@@ -280,12 +289,6 @@ function addInteractions(mapElement, map) {
     map.addInteraction(select);
     createControl(map, clickOnAddZone, 'add', 'Ajouter une zone');
     createControl(map, clickOnEffaceZone, 'delete', 'Effacer une zone');
-    createControl(
-      map,
-      clickOnToggleCadastre,
-      'layers',
-      'Afficher/masquer le cadastre'
-    );
     draw.on('drawend', (e) => {
       bubbles.add_zone.style.display = 'none';
       let source = map.zoneManuellesLayer.getSource();
@@ -344,7 +347,8 @@ function addInteractions(mapElement, map) {
         evt.pixel,
         (feature) => feature,
         {
-          layerFilter: (layer) => layer === map.markerLayer
+          layerFilter: (layer) => layer === map.markerLayer,
+          hitTolerance: 8
         }
       );
 

@@ -171,7 +171,8 @@ class TypeDeChamp < ApplicationRecord
                  :collapsible_explanation_text,
                  :lexpol_modele,
                  :lexpol_mapping,
-                 :header_section_level
+                 :header_section_level,
+                 :te_fenua_layer
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
@@ -197,6 +198,7 @@ class TypeDeChamp < ApplicationRecord
   serialize :condition, LogicSerializer
 
   after_initialize :set_dynamic_type
+  after_initialize :set_te_fenua_layer_default
   after_create :populate_stable_id
 
   attr_reader :dynamic_type
@@ -851,7 +853,13 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  private
+  def set_te_fenua_layer_default
+    if type_champ == 'te_fenua' && options['te_fenua_layer'].blank?
+      self.options['te_fenua_layer'] = 'marker'
+    end
+  end
+
+  private # TODO : Why 2 privates in this file ?
 
   DEFAULT_EMPTY = ['']
   def parse_drop_down_list_value(value)
