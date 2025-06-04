@@ -717,7 +717,8 @@ class Dossier < ApplicationRecord
     update!(archived: false, archived_at: nil, archived_by: nil)
   end
 
-  def text_summary
+  def text_summary(lien = nil)
+    #binding.pry
     if brouillon?
       parts = [
         "Dossier en brouillon répondant à la démarche ",
@@ -727,12 +728,15 @@ class Dossier < ApplicationRecord
       ]
     else
       parts = [
-        "Dossier déposé le ",
+        
+        "Dossier ",
+        lien,
+        " - déposé le ",
         depose_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
-        procedure.libelle,
+        "'#{procedure.libelle}'",
         " gérée par l'organisme ",
-        procedure.organisation_name
+        "'#{procedure.organisation_name}'"
       ]
     end
 
