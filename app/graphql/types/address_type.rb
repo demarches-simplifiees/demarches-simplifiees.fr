@@ -24,7 +24,7 @@ module Types
     field :department_code, String, "n° de département", null: true
 
     field :region_name, String, "nom de région", null: true
-    field :region_code, String, "n° de region", null: true
+    field :region_code, String, "n° de région", null: true
 
     field :geometry, Types::GeoJSON, "coordonnées géographique", null: true
 

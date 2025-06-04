@@ -324,13 +324,6 @@ module Administrateurs
       notice: "L’autogestion des instructeurs est #{procedure.instructeurs_self_management_enabled? ? "activée" : "désactivée"}."
     end
 
-    def update_hide_instructeurs_email
-      procedure.update!(hide_instructeurs_email_params)
-
-      redirect_to options_admin_procedure_groupe_instructeurs_path(procedure),
-      notice: "L'anonymisation des instructeurs est #{procedure.hide_instructeurs_email? ? "activée" : "désactivée"}."
-    end
-
     def import
       if procedure.publiee_or_close?
         if !CSV_ACCEPTED_CONTENT_TYPES.include?(csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
