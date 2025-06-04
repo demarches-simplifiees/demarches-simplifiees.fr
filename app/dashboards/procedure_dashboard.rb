@@ -56,7 +56,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     template: Field::Boolean,
     opendata: Field::Boolean,
     hide_instructeurs_email: Field::Boolean,
-    dossiers_count: Field::String
+    dossiers_count: Field::Number
   }.freeze
 
   # COLLECTION_ATTRIBUTES
