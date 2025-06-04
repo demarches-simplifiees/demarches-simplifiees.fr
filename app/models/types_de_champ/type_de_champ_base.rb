@@ -108,19 +108,24 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
-  def columns(table:)
+  def columns(displayable: true, prefix: nil)
     [
       Column.new(
-        table:,
+        table: Column::TYPE_DE_CHAMP_TABLE,
         column: stable_id.to_s,
-        label: libelle,
+        label: libelle_with_prefix(prefix),
         type: TypeDeChamp.filter_hash_type(type_champ),
-        value_column: TypeDeChamp.filter_hash_value_column(type_champ)
+        value_column: TypeDeChamp.filter_hash_value_column(type_champ),
+        displayable:
       )
     ]
   end
 
   private
+
+  def libelle_with_prefix(prefix)
+    [prefix, libelle].compact.join(' – ')
+  end
 
   def paths
     [

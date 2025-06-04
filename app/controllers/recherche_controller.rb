@@ -9,6 +9,18 @@ class RechercheController < ApplicationController
     { "table" => 'procedure', "column" => 'procedure_id' }
   ]
 
+  def nav_bar_profile
+    return super if request.blank? # Controller introspection does not contains params/request, see NavBarProfileConcern
+
+    context_params = params[:context]&.to_sym
+    case context_params
+    when :instructeur, :expert
+      context_params
+    else
+      :user
+    end
+  end
+
   def index
     @search_terms = search_terms
     @dossiers_count = 0
