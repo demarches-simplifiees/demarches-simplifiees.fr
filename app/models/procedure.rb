@@ -90,6 +90,56 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def types_de_champ_for_procedure_presentation(parent = nil)
+    if brouillon?
+      if parent.nil?
+        TypeDeChamp.fillable
+          .joins(:revision_types_de_champ)
+          .where(revision_types_de_champ: { revision_id: draft_revision_id, parent_id: nil })
+          .order(:private, :position)
+      else
+        draft_revision.children_of(parent)
+      end
+    else
+      # all published revisions
+      revision_ids = revisions.ids - [draft_revision_id]
+      # fetch all parent types de champ
+      parent_ids = if parent.present?
+        ProcedureRevisionTypeDeChamp
+          .where(revision_id: revision_ids)
+          .joins(:type_de_champ)
+          .where(type_de_champ: { stable_id: parent.stable_id })
+          .ids
+      end
+
+      # fetch all type_de_champ.stable_id for all the revisions expect draft
+      # and for each stable_id take the bigger (more recent) type_de_champ.id
+      recent_ids = TypeDeChamp
+        .fillable
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { revision_id: revision_ids, parent_id: parent_ids })
+        .group(:stable_id).select('MAX(types_de_champ.id)')
+
+      # fetch the more recent procedure_revision_types_de_champ
+      # which includes recents_ids
+      recents_prtdc = ProcedureRevisionTypeDeChamp
+        .where(type_de_champ_id: recent_ids)
+        .where.not(revision_id: draft_revision_id)
+        .group(:type_de_champ_id)
+        .select('MAX(id)')
+
+      TypeDeChamp
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { id: recents_prtdc }).then do |relation|
+          if feature_enabled?(:export_order_by_revision) # Fonds Verts, en attente d'exports personnalisables
+            relation.order(:private, 'revision_types_de_champ.revision_id': :desc, position: :asc)
+          else
+            relation.order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+          end
+        end
+    end
+  end
+
   def types_de_champ_for_procedure_export
     all_revisions_types_de_champ.not_repetition
   end
