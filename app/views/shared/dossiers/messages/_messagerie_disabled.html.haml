@@ -1,22 +1,7 @@
-.card.feedback
-  .card-title
-    La messagerie est désormais désactivée.
-  - if service.present?
-    %p
-      Pour poser une question sur ce dossier, contactez :
-    %p
-      = service.nom
-    %p
-      = service.organisme
+.flex.align-center.fr-mb-2w
+  %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mr-2w{ type: 'button', disabled: 'true' } Nouveau message
+  %p.fr-mb-0.fr-text-mention--grey La messagerie est désormais désactivée.
 
-    - if service.horaires.present?
-      = render SimpleFormatComponent.new("Horaires : #{formatted_horaires(service.horaires)}")
-    %p
-      = mail_to service.email,
-        service.email,
-        subject: "[#{Current.application_name}] Question sur le dossier Nº #{dossier.id} de la démarche Nº #{dossier.procedure.id}",
-        rel: "noopener noreferrer",
-        target: '_blank'
-
-    %p
-      Pensez bien à préciser que votre demande concerne le <b>dossier Nº #{dossier.id}</b>.
+  - if service.present? && controller.try(:nav_bar_profile) == :user
+    %button{ aria: {controls: 'messagerie-close-explanations' }, data: {'fr-opened': "false" }, class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-ml-2v' }
+      + d'infos

@@ -17,4 +17,8 @@
         %ul{ data: { 'file-input-reset-target': 'fileList' } }
 
   .fr-mt-3w
-    = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
+    %ul.fr-btns-group.fr-btns-group--inline-md
+      %li
+        %button.fr-btn.fr-btn--tertiary.fr-mb-2w{ type: 'button', data: { 'hide-target_target': 'reveal'} } Annuler
+      %li
+        = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
