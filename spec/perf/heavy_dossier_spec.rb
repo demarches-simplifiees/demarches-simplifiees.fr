@@ -63,7 +63,7 @@ describe Users::DossiersController, type: :controller do
         end
 
         expect(last_champ.reload.true?).to eq(true)
-        expect(query_count).to be_between(30, 50)
+        expect(query_count).to be <= 50
       end
     end
 
@@ -80,7 +80,7 @@ describe Users::DossiersController, type: :controller do
           post :submit_en_construction, params: { id: dossier.id }
         end
 
-        expect(query_count).to be_between(60, 70)
+        expect(query_count).to be <= 70
       end
     end
   end

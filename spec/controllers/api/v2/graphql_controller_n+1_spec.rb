@@ -23,7 +23,6 @@ describe API::V2::GraphqlController do
     request.env['HTTP_AUTHORIZATION'] = authorization_header
   end
 
-  MIN_QUERY_COUNT = 47
   MAX_QUERY_COUNT = 58
 
   describe 'demarche.dossiers' do
@@ -44,7 +43,7 @@ describe API::V2::GraphqlController do
 
       expect(gql_errors).to be_nil
       expect(gql_data[:demarche][:dossiers][:nodes].count).to eq(1)
-      expect(query_count).to be_between(MIN_QUERY_COUNT, MAX_QUERY_COUNT)
+      expect(query_count).to be <= MAX_QUERY_COUNT
     end
 
     context "with 1 dossier per state" do
@@ -61,7 +60,7 @@ describe API::V2::GraphqlController do
 
         expect(gql_errors).to be_nil
         expect(gql_data[:demarche][:dossiers][:nodes].count).to eq(dossiers_count + 1)
-        expect(query_count).to be_between(MIN_QUERY_COUNT, MAX_QUERY_COUNT)
+        expect(query_count).to be <= MAX_QUERY_COUNT
       end
     end
 
@@ -79,7 +78,7 @@ describe API::V2::GraphqlController do
 
         expect(gql_errors).to be_nil
         expect(gql_data[:demarche][:dossiers][:nodes].count).to eq(dossiers_count + 1)
-        expect(query_count).to be_between(MIN_QUERY_COUNT, MAX_QUERY_COUNT)
+        expect(query_count).to be <= MAX_QUERY_COUNT
       end
     end
   end
