@@ -397,10 +397,12 @@ class Dossier < ApplicationRecord
       .distinct
   end
 
-  scope :with_notifications_v2, -> do
+  scope :with_notifications_v2, -> (instructeur) {
     joins(:dossier_notifications)
+      .where(dossier_notifications: { instructeur_id: [instructeur.id, nil] })
+      .merge(DossierNotification.to_display)
       .distinct
-  end
+  }
 
   scope :order_by_notifications_importance, -> do
     includes(:dossier_notifications)
