@@ -63,7 +63,7 @@ describe Users::DossiersController, type: :controller do
         end
 
         expect(last_champ.reload.true?).to eq(true)
-        expect(query_count).to be_between(30, 50)
+        expect(query_count).to be_between(25, 45)
       end
     end
 

@@ -11,4 +11,4 @@
       %h2.fr-h6
         = t('views.users.dossiers.rendez_vous.title')
       - @rdvs.each do |rdv|
-        = render Instructeurs::RdvCardComponent.new(rdv:)
+        = render Instructeurs::RdvCardComponent.new(rdv:, for_user: true)

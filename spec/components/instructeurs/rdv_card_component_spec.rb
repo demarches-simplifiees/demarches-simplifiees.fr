@@ -23,17 +23,37 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
     it "displays appointment information" do
       expect(subject).to have_css("span.fr-icon-calendar-fill")
       expect(subject).to have_text(I18n.l(starts_at, format: :human))
-      expect(subject).to have_link(rdv.rdv_plan_url, href: rdv.rdv_plan_url)
-    end
-
-    it "displays the owner information" do
-      expect(subject).to have_css("span.fr-icon-user-fill")
-      expect(subject).to have_text("Instructeur :\n\n#{component.owner}")
     end
 
     it "does not show dossier information" do
       expect(subject).not_to have_css(".fr-icon-user-line")
       expect(subject).not_to have_text("Dossier Nº\n#{dossier.id}")
+    end
+
+    context "when rendering for instructeur" do
+      let(:component) { described_class.new(rdv: rdv, for_user: false) }
+
+      it "displays the owner information" do
+        expect(subject).to have_css("span.fr-icon-user-fill")
+        expect(subject).to have_text("Instructeur :\n\n#{component.owner}")
+      end
+
+      it "renders with agent URL" do
+        expect(subject).to have_link(href: RdvService.rdv_sp_rdv_agent_url(rdv.rdv_external_id))
+      end
+    end
+
+    context "when rendering for user" do
+      let(:component) { described_class.new(rdv: rdv, for_user: true) }
+
+      it "does not display the owner information" do
+        expect(subject).not_to have_css("span.fr-icon-user-fill")
+        expect(subject).not_to have_text("Instructeur :\n\n#{component.owner}")
+      end
+
+      it "renders with user URL" do
+        expect(subject).to have_link(href: RdvService.rdv_sp_rdv_user_url(rdv.rdv_external_id))
+      end
     end
   end
 

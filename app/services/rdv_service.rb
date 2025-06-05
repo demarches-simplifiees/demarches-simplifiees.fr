@@ -25,6 +25,14 @@ class RdvService
     "#{rdv_sp_host_url}/api/v1/rdv_plans/#{rdv_plan_external_id}"
   end
 
+  def self.rdv_sp_rdv_user_url(rdv_id)
+    "#{rdv_sp_host_url}/users/rdvs/#{rdv_id}"
+  end
+
+  def self.rdv_sp_rdv_agent_url(rdv_id)
+    "#{rdv_sp_host_url}/agents/rdvs/#{rdv_id}"
+  end
+
   def create_rdv_plan(dossier:, first_name:, last_name:, email:, dossier_url:, return_url:)
     refresh_token_if_expired!
 
