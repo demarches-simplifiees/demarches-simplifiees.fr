@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Instructeurs::RdvCardComponent < ApplicationComponent
-  attr_reader :rdv, :with_dossier_infos
+  attr_reader :rdv, :for_user
 
-  def initialize(rdv:, with_dossier_infos: false)
+  def initialize(rdv:, for_user: false)
     @rdv = rdv
-    @with_dossier_infos = with_dossier_infos
+    @for_user = for_user
   end
 
   def dossier
@@ -28,6 +28,14 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
       "fr-icon-vidicon-fill"
     when "home"
       "fr-icon-home-4-fill"
+    end
+  end
+
+  def rdv_url
+    if @for_user
+      RdvService.rdv_sp_rdv_user_url(@rdv.rdv_external_id)
+    else
+      RdvService.rdv_sp_rdv_agent_url(@rdv.rdv_external_id)
     end
   end
 end

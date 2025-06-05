@@ -303,12 +303,6 @@ module Instructeurs
       @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.visible_by_user.group(:groupe_instructeur_id).count
     end
 
-    def usagers_rdvs
-      @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
-      @rdvs = @procedure.rdvs.by_starts_at
-    end
-
     def create_multiple_commentaire
       @procedure = procedure
       errors = []
