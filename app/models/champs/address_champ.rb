@@ -214,7 +214,7 @@ class Champs::AddressChamp < Champs::TextChamp
   end
 
   def become_france?
-    country_code_changed? && france?
+    country_code_changed? && france? && country_code_was.present?
   end
 
   def become_international?
@@ -233,14 +233,14 @@ class Champs::AddressChamp < Champs::TextChamp
     address_data = self.value_json
     if become_ban? || become_france? || become_international?
       address_data.merge!(
-        'department_code': nil,
-        'department_name': nil,
-        'region_code': nil,
-        'region_name': nil,
-        'city_code': nil,
-        'city_name': nil,
-        'street_address': nil,
-        'postal_code': nil
+        'department_code' => nil,
+        'department_name' => nil,
+        'region_code' => nil,
+        'region_name' => nil,
+        'city_code' => nil,
+        'city_name' => nil,
+        'street_address' => nil,
+        'postal_code' => nil
       )
       if become_international?
         address_data['department_code'] = '99'
