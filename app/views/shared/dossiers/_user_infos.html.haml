@@ -3,4 +3,4 @@
     - if for_tiers
       = beneficiaire_mail
     - else
-      = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+      = user_deleted ? "#{email} #{t('views.shared.label.account_deleted')}": email

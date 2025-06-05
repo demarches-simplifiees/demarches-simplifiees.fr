@@ -358,6 +358,7 @@ fr:
     shared:
       label:
         email: 'Adresse électronique'
+        account_deleted: '(l’usager a supprimé son compte)'
       actions:
         save: Enregistrer
         edit: Modifier

@@ -1,7 +1,7 @@
 %dl.fr-pl-0
   = render Dossiers::RowComponent.new(label: t('views.shared.label.email'), profile: @profile) do |c|
     - c.with_value do
-      = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+      = user_deleted ? "#{email} #{t('views.shared.label.account_deleted')}": email
 
   = render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.first_name')) do |c|
     - c.with_value do
