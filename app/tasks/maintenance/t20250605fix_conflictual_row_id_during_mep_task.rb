@@ -13,7 +13,7 @@ module Maintenance
     OUTAGE_DATETIME = DateTime.new(2025, 6, 3, 12, 00)
     def collection
       Dossier.brouillon
-        .where("updated_at >= ?", OUTAGE_DATETIME)
+        .where(updated_at: OUTAGE_DATETIME..)
     end
 
     def process(dossier)
