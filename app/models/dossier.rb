@@ -390,10 +390,7 @@ class Dossier < ApplicationRecord
       ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
       ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
       ' OR last_avis_updated_at > follows.avis_seen_at' \
-      ' OR last_commentaire_updated_at > follows.messagerie_seen_at' \
-      ' OR last_commentaire_piece_jointe_updated_at > follows.pieces_jointes_seen_at' \
-      ' OR last_champ_piece_jointe_updated_at > follows.pieces_jointes_seen_at' \
-      ' OR last_avis_piece_jointe_updated_at > follows.pieces_jointes_seen_at')
+      ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
       .distinct
   end
 
