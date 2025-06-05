@@ -12,7 +12,7 @@ module Maintenance
     # run_on_first_deploy
 
     def collection
-      Dossier.where("updated_at > ?", Date.new(2025, 6, 3))
+      Dossier.where("updated_at > ?", Date.new(2025, 6, 2))
     end
 
     def process(dossier)
