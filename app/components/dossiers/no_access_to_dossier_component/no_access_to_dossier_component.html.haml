@@ -10,7 +10,7 @@
           %b<
             = "#{t(".modal.content.ajouter")} :"
           %ul
-            - for email in administrateurs_emails
+            - administrateurs_emails.each do |email|
               %li
                 = mail_to(email, email, target: 'blank', rel: 'noopener', class: 'fr-link fr-icon-external-link-line fr-btn--icon-right')
 
