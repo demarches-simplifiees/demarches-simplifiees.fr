@@ -547,6 +547,19 @@ class ProcedureRevision < ApplicationRecord
       compare_referentiel_changes(from_type_de_champ, to_type_de_champ).each do |change|
         changes << change
       end
+    elsif to_type_de_champ.dossier_link?
+      if from_type_de_champ.procedures_limit != to_type_de_champ.procedures_limit
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :procedures_limit,
+          from_type_de_champ.procedures_limit,
+          to_type_de_champ.procedures_limit)
+      end
+      if from_type_de_champ.procedures != to_type_de_champ.procedures
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :procedures,
+          from_type_de_champ.procedures,
+          to_type_de_champ.procedures)
+      end
     end
     changes
   end

@@ -86,6 +86,9 @@ fr:
     update_start_date: La date de début pour le champ « %{label} » a été modifiée. Le date est désormais %{to}.
     remove_end_date: La date de fin pour le champ « %{label} » a été supprimée.
     update_end_date: La date de fin pour le champ « %{label} » a été modifiée. La date est désormais %{to}.
+    add_procedures_limit: L'option « Limiter à certaines démarches » a été activée pour le champ « %{label} ».
+    remove_procedures_limit: L'option « Limiter à certaines démarches » a été désactivée pour le champ « %{label} ».
+    update_procedures: "Les démarches pour le champ « %{label} » ont été modifiées :"
     <<: *update_referentiel
 
   private:
