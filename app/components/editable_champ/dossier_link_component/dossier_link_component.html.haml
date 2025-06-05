@@ -1,4 +1,4 @@
-- if !@champ.type_de_champ&.options&.key?("limiter_procedures")
+- if @champ.type_de_champ&.options&.dig("procedures_limit")&.to_i == 0
   .fr-fieldset__content
 
     = @form.text_field(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, inputmode: :numeric, min: 1, pattern: "[0-9]{1,12}", autocomplete: 'off', required: @champ.required?, class: "#{@champ.blank? ? '' : 'small-margin'}"))
