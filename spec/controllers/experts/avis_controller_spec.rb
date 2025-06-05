@@ -598,7 +598,7 @@ describe Experts::AvisController, type: :controller do
 
       context 'with a random avis, procedure and user' do
         let(:avis_id) { create(:avis).id }
-        let(:random_user) { create(:user, password: '{$3cure-p4ssWord}') }
+        let(:random_user) { create(:user, password: '{Another-$3cure-p4ssWord}') }
         let(:email) { random_user.email }
 
         it 'doesn’t change the random user password' do
@@ -613,7 +613,7 @@ describe Experts::AvisController, type: :controller do
         let(:avis) { create(:avis) }
         let(:avis_id) { avis.id }
         let(:procedure_id) { avis.procedure.id }
-        let(:random_user) { create(:user, password: '{$3cure-p4ssWord}') }
+        let(:random_user) { create(:user, password: '{Another-$3cure-p4ssWord}') }
         let(:email) { random_user.email }
 
         it 'doesn’t change the random user password' do
@@ -629,7 +629,7 @@ describe Experts::AvisController, type: :controller do
 
         it 'doesn’t change the expert password' do
           subject
-          expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be false
+          expect(expert.user.reload.valid_password?('{Another-$3cure-p4ssWord}')).to be false
         end
 
         it { is_expected.to redirect_to new_user_session_url }

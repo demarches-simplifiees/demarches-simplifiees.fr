@@ -120,7 +120,7 @@ gem 'webrick', require: false
 gem 'yabeda-prometheus'
 gem 'yabeda-sidekiq'
 gem 'zipline'
-gem 'zxcvbn-ruby', require: 'zxcvbn'
+gem 'zxcvbn'
 
 group :test do
   gem 'axe-core-rspec' # accessibility rspec matchers

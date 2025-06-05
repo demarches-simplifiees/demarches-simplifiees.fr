@@ -2,8 +2,6 @@
 
 module Administrateurs
   class AttestationTemplatesController < AdministrateurController
-    include UninterlacePngConcern
-
     before_action :retrieve_procedure
     before_action :preload_revisions
 
@@ -64,16 +62,6 @@ module Administrateurs
       if @activated_attestation_params.nil?
         @activated_attestation_params = params.require(:attestation_template)
           .permit(:title, :body, :footer, :activated, :logo, :signature)
-
-        logo_file = params['attestation_template'].delete('logo')
-        signature_file = params['attestation_template'].delete('signature')
-
-        if logo_file.present?
-          @activated_attestation_params[:logo] = uninterlace_png(logo_file)
-        end
-        if signature_file.present?
-          @activated_attestation_params[:signature] = uninterlace_png(signature_file)
-        end
       end
 
       @activated_attestation_params

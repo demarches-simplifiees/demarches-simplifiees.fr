@@ -21,8 +21,8 @@ user = User.create!(
 user.create_instructeur!
 user.create_administrateur!
 
-user_fixer User.create(email: ENV.fetch('DEFAULT_INSTRUCTEUR_EMAIL') { CONTACT_EMAIL },
-                       password: Random.srand,
-                       confirmed_at: Time.zone.now,
-                       email_verified_at: Time.zone.now)
+user_fixer = User.create(email: ENV.fetch('DEFAULT_INSTRUCTEUR_EMAIL') { CONTACT_EMAIL },
+  password: Random.srand,
+  confirmed_at: Time.zone.now,
+  email_verified_at: Time.zone.now)
 user_fixer.create_instructeur!

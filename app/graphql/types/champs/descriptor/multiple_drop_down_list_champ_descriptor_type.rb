@@ -7,7 +7,7 @@ module Types::Champs::Descriptor
     field :options, [String], "List des options d’un champ avec selection.", null: true
 
     def options
-      object.type_de_champ.drop_down_list_options.reject(&:empty?)
+      object.type_de_champ.drop_down_options.reject(&:empty?)
     end
   end
 end

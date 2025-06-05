@@ -16,6 +16,12 @@ module NavBarProfileConcern
 
     private
 
+    def nav_bar_user_or_guest
+      # when instanciating manually the controller (see below),
+      # we don't have request and current_user would fail
+      request && current_user ? :user : :guest
+    end
+
     # Shared controllers (search, errors, release notes…) don't have specific context
     # Simple attempt to try to re-use the profile from the previous page
     # so user does'not feel lost.
@@ -28,6 +34,10 @@ module NavBarProfileConcern
 
       controller_instance = controller_class.new
       controller_instance.try(:nav_bar_profile)
+    rescue StandardError => e # we don't want broken logic in nav bar profile to fail the request
+      Sentry.capture_exception(e)
+
+      nil
     end
 
     # Fallback for shared controllers from user account

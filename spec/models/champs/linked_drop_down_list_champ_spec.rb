@@ -78,7 +78,7 @@ describe Champs::LinkedDropDownListChamp do
   end
 
   describe '#mandatory_and_blank' do
-    let(:value) { "--Primary--\nSecondary" }
+    let(:value) { "--Primary--\r\nSecondary" }
 
     subject { described_class.new }
     before { allow(subject).to receive(:type_de_champ).and_return(type_de_champ) }

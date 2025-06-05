@@ -8,7 +8,7 @@ FactoryBot.define do
 
     transient do
       email { generate(:gestionnaire_email) }
-      password { 'somethingverycomplated!' }
+      password { '{My-$3cure-p4ssWord}' }
     end
   end
 end

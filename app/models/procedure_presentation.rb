@@ -32,7 +32,7 @@ class ProcedurePresentation < ApplicationRecord
   def displayed_fields_for_headers
     [
       Column.new(table: 'self', column: 'id', classname: 'number-col'),
-      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys.except(:virtual)) }, # TODO: remove virtual after migration
+      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys) },
       Column.new(table: 'self', column: 'state', classname: 'state-col'),
       *procedure.sva_svr_columns
     ]

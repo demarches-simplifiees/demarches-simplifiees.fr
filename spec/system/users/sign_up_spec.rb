@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Signing up:' do
+describe 'Signing up:', js: true do
   let(:user_email) { generate :user_email }
   let(:user_password) { SECURE_PASSWORD }
   let(:procedure) { create :simple_procedure, :with_service }
@@ -42,7 +42,7 @@ describe 'Signing up:' do
       click_on "Créer un compte"
       expect(page).to have_selector('.suspect-email', visible: false)
       fill_in 'Adresse électronique', with: 'bidou@yahoo.rf'
-      fill_in 'Mot de passe', with: '12345'
+      fill_in 'Mot de passe', with: '1 2 3 4 5 6 '
     end
 
     scenario 'they can accept the suggestion', js: true do
@@ -69,12 +69,12 @@ describe 'Signing up:' do
 
   scenario 'a new user can’t sign-up with too short password when visiting a procedure' do
     visit commencer_path(path: procedure.path)
-    click_on "Créer un compte"
+    click_on 'Créer un compte'
 
     expect(page).to have_current_path new_user_registration_path
-    sign_up_with user_email, '1234567'
-    expect(page).to have_current_path user_registration_path
-    expect(page).to have_content "Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 8 caractères"
+    fill_in :user_email, with: user_email
+    fill_in :user_password, with: '1234567'
+    expect(page).to have_content "Le mot de passe doit faire au moins 12 caractères."
 
     # Then with a good password
     sign_up_with user_email, user_password

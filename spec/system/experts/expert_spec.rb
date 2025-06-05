@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Inviting an expert:' do
+describe 'Inviting an expert:', js: true do
   include ActiveJob::TestHelper
   include ActionView::Helpers
 
@@ -34,7 +34,8 @@ describe 'Inviting an expert:' do
       end
 
       scenario 'I can sign-in again afterwards' do
-        click_on 'Se déconnecter'
+        click_on(avis.expert.email.to_s, visible: true)
+        click_on('Se déconnecter', visible: true)
 
         visit new_user_session_path
         sign_in_with avis.expert.email, password
@@ -54,9 +55,10 @@ describe 'Inviting an expert:' do
 
         expect(page).to have_current_path(new_user_session_path)
         login_as avis.expert.user, scope: :user
-        sign_in_with(avis.expert.email, 'This is a very complicated password !')
+        sign_in_with(avis.expert.email, '{My-$3cure-p4ssWord}')
         expect(page).to have_content("connecté en tant qu’expert")
-        click_on 'Passer en usager'
+        click_on(avis.expert.email.to_s, visible: true)
+        click_on('Passer en usager', visible: true)
         expect(page).to have_current_path(dossiers_path)
       end
     end
@@ -111,10 +113,11 @@ describe 'Inviting an expert:' do
       expect(page).to have_text('Cet avis est confidentiel')
 
       # check validation
+      fill_in 'avis_answer', with: 'Ma réponse d’expert.'
       click_on 'Envoyer votre avis'
       expect(page).to have_content("Le champ « Réponse oui/non » n'est pas inclus(e) dans la liste")
 
-      choose 'non'
+      find('label', text: 'non').click
       fill_in 'avis_answer', with: 'Ma réponse d’expert.'
       click_on 'Envoyer votre avis'
 

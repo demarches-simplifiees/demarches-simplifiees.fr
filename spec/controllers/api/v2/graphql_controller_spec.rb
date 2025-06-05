@@ -219,7 +219,7 @@ describe API::V2::GraphqlController do
                 description: tdc.description,
                 required: tdc.mandatory?,
                 champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { { id: _1.to_typed_id, __typename: format_type_champ(_1.type_champ) } } : nil,
-                options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
+                options: tdc.drop_down_list? ? tdc.drop_down_options.reject(&:empty?) : nil
               }.compact
             end,
             dossiers: {
@@ -1550,8 +1550,8 @@ describe API::V2::GraphqlController do
         end
 
         describe 'drop_down_list' do
-          let(:drop_down_list_options) { ['bijour'] }
-          let(:types_de_champ_private) { [{ type: :drop_down_list, options: drop_down_list_options }] }
+          let(:drop_down_options) { ['bijour'] }
+          let(:types_de_champ_private) { [{ type: :drop_down_list, options: drop_down_options }] }
           let(:query) do
             "mutation {
               dossierModifierAnnotationDropDownList(input: {
@@ -1571,7 +1571,7 @@ describe API::V2::GraphqlController do
           end
 
           context "success" do
-            let(:value) { drop_down_list_options.first }
+            let(:value) { drop_down_options.first }
             it 'should be a success' do
               expect(gql_errors).to eq(nil)
 
@@ -1584,7 +1584,7 @@ describe API::V2::GraphqlController do
             end
           end
           context "failure" do
-            let(:value) { drop_down_list_options.first.reverse }
+            let(:value) { drop_down_options.first.reverse }
             it 'should be a success' do
               expect(gql_errors).to eq(nil)
 

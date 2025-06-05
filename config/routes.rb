@@ -214,6 +214,9 @@ Rails.application.routes.draw do
     get '' => 'agent#index'
     get 'login' => 'agent#login'
     get 'callback' => 'agent#callback'
+    get 'explanation_2fa' => 'agent#explanation_2fa'
+    get 'relogin_after_2fa_config' => 'agent#relogin_after_2fa_config'
+    get 'logout_from_mcp' => 'agent#logout_from_mcp'
   end
 
   namespace :champs do

@@ -2,8 +2,6 @@
 
 module Administrateurs
   class AttestationTemplateV2sController < AdministrateurController
-    include UninterlacePngConcern
-
     before_action :retrieve_procedure
     before_action :ensure_feature_active
     before_action :retrieve_attestation_template
@@ -72,17 +70,6 @@ module Administrateurs
         @attestation_template = @attestation_template.dup
         @attestation_template.state = :draft
         @attestation_template.procedure = @procedure
-      end
-
-      logo_file = attestation_params.delete(:logo)
-      signature_file = attestation_params.delete(:signature)
-
-      if logo_file
-        attestation_params[:logo] = uninterlace_png(logo_file)
-      end
-
-      if signature_file
-        attestation_params[:signature] = uninterlace_png(signature_file)
       end
 
       @attestation_template.assign_attributes(attestation_params)

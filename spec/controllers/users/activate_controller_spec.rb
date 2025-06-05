@@ -18,7 +18,7 @@ describe Users::ActivateController, type: :controller do
     let!(:instructeur) { create(:instructeur) }
     let!(:user) { instructeur.user }
     let(:token) { user.send(:set_reset_password_token) }
-    let(:password) { SECURE_PASSWORD }
+    let(:password) { '{another-password-ok?}' }
 
     before { post :create, params: { user: { reset_password_token: token, password: password } } }
 

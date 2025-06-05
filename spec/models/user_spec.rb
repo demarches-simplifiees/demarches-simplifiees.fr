@@ -103,7 +103,7 @@ describe User, type: :model do
 
   describe '.create_or_promote_to_instructeur' do
     let(:email) { 'inst1@gmail.com' }
-    let(:password) { 'un super password !' }
+    let(:password) { SECURE_PASSWORD }
     let(:admins) { [] }
 
     subject { User.create_or_promote_to_instructeur(email, password, administrateurs: admins) }
@@ -390,24 +390,27 @@ describe User, type: :model do
     # 2 - somewhat guessable: protection from unthrottled online attacks. (guesses < 10^8)
     # 3 - safely unguessable: moderate protection from offline slow-hash scenario. (guesses < 10^10)
     # 4 - very unguessable: strong protection from offline slow-hash scenario. (guesses >= 10^10)
-    passwords = ['password', '12pass23', 'démarches ', 'démarches-simple', '{My-$3cure-p4ssWord}']
+    passwords = ['000000000000', '123456789123', '123456789 123', 'lesdémarches', '{My-$3cure-p4ssWord}']
+    min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
 
     subject do
       user.valid?
       user.errors.full_messages
     end
 
-    shared_examples 'password_spec' do |min_complexity|
+    context 'for administrateurs' do
+      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur, user: nil)) }
+
       context 'when the password is too short' do
         let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
 
         it 'reports an error about password length (but not about complexity)' do
-          expect(subject).to eq(["Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 8 caractères"])
+          expect(subject).to eq(["Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 12 caractères"])
         end
       end
 
       passwords[0..(min_complexity - 1)].each do |simple_password|
-        context 'when the password is long enough, but complexity is too simple' + simple_password do
+        context 'when the password is long enough, but too simple' do
           let(:password) { simple_password }
 
           it { expect(subject).to eq(["Le champ « Mot de passe » n’est pas assez complexe. Saisir un mot de passe plus complexe"]) }
@@ -421,24 +424,26 @@ describe User, type: :model do
       end
     end
 
-    context 'for administrateurs' do
-      it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_ADMIN do
-        let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur, user: nil)) }
-        let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
-      end
-    end
+    context 'for simple users' do
+      let(:user) { build(:user, email: 'user@exemple.fr', password: password) }
 
-    context 'for instructeurs' do
-      it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR do
-        let(:user) { build(:user, email: 'instructeur@exemple.fr', password: password, instructeur: build(:instructeur, user: nil)) }
-        let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR }
-      end
-    end
+      context 'when the password is too short' do
+        let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
 
-    context 'for users' do
-      it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_USER do
-        let(:user) { build(:user, email: 'user@exemple.fr', password: password) }
-        let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_USER }
+        it 'reports an error about password length (but not about complexity)' do
+          expect(subject).to eq(["Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 12 caractères"])
+        end
+      end
+
+      context 'when the password is long enough, but simple' do
+        let(:password) { 'simple-password' }
+        it { expect(subject).to eq(["Le champ « Mot de passe » n’est pas assez complexe. Saisir un mot de passe plus complexe"]) }
+      end
+
+      context 'when the password is long and complex' do
+        let(:password) { passwords[min_complexity] }
+
+        it { expect(subject).to be_empty }
       end
     end
   end

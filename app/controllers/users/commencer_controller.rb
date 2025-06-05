@@ -90,9 +90,7 @@ module Users
       retrieve_procedure
     end
 
-    def nav_bar_profile
-      current_user ? :user : :guest
-    end
+    def nav_bar_profile = nav_bar_user_or_guest
 
     def closing_details
       @procedure = Procedure.find_by(path: params[:path])

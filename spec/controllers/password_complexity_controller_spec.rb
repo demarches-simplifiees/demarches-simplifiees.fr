@@ -3,7 +3,7 @@
 describe PasswordComplexityController, type: :controller do
   describe '#show' do
     let(:params) do
-      { complexity: 3, user: { password: 'moderately complex password' } }
+      { user: { password: 'motDePasseTropFacile' } }
     end
 
     subject { get :show, format: :turbo_stream, params: params }
@@ -15,7 +15,7 @@ describe PasswordComplexityController, type: :controller do
 
     context 'with a different resource name' do
       let(:params) do
-        { complexity: 4, super_admin: { password: 'moderately complex password' } }
+        { super_admin: { password: 'motDePasseTropFacile' } }
       end
 
       it 'computes a password score' do
@@ -29,7 +29,7 @@ describe PasswordComplexityController, type: :controller do
 
       it 'renders Javascript that updates the password complexity meter' do
         subject
-        expect(response.body).to include('Mot de passe acceptable')
+        expect(response.body).to include('Mot de passe vulnérable')
       end
     end
   end
