@@ -226,7 +226,7 @@ module Administrateurs
         :expression_reguliere_indications,
         :expression_reguliere_exemple_text,
         :expression_reguliere_error_message,
-        :limiter_procedures,
+        :procedures_limit,
         procedures: [],
         editable_options: [
           :cadastres,
