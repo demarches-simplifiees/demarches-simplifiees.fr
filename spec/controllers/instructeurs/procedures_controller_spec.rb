@@ -1117,30 +1117,6 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
   end
 
-  describe '#usagers_rdvs' do
-    subject { get :usagers_rdvs, params: { procedure_id: procedure.id } }
-    render_views
-
-    before do
-      sign_in(instructeur.user)
-      create(:groupe_instructeur, procedure:, instructeurs: [instructeur])
-    end
-
-    let(:procedure) { create(:procedure) }
-    let(:instructeur) { create(:instructeur) }
-    let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure, id: 123456789) }
-    let!(:rdv) { create(:rdv, dossier: dossier, instructeur: instructeur) }
-    let!(:rdv_with_details) { create(:rdv, dossier: dossier, instructeur: instructeur, rdv_external_id: "123", starts_at: Time.zone.parse("2025-02-17 10:00:00 +0100")) }
-
-    it 'renders the view successfully' do
-      subject
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include("Rendez-vous avec les usagers")
-      expect(response.body).to match(/Dossier Nº\s.*123.*456.*789/)
-      expect(response.body).to include("lundi 17 février à 10h00")
-    end
-  end
-
   describe '#history' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published) }
