@@ -10,9 +10,10 @@ module Maintenance
     # Uncomment only if this task MUST run imperatively on its first deployment.
     # If possible, leave commented for manual execution later.
     # run_on_first_deploy
-
+    OUTAGE_DATETIME = DateTime.new(2025, 6, 3, 12, 00)
     def collection
-      Dossier.where("updated_at > ?", Date.new(2025, 6, 2))
+      Dossier.brouillon
+        .where("updated_at >= ?", OUTAGE_DATETIME)
     end
 
     def process(dossier)
@@ -28,11 +29,6 @@ module Maintenance
         end
         dossier.champs.where(row_id: Champ::NULL_ROW_ID).update_all(row_id: nil)
       end
-    end
-
-    def count
-      # Optionally, define the number of rows that will be iterated over
-      # This is used to track the task's progress
     end
   end
 end
