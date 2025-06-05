@@ -1,17 +1,16 @@
-%dl.fr-pl-0
-  .champ-row
-    %dt.champ-label= t('views.users.dossiers.identite.civility')
-    %dd.champ-content= dossier.individual.gender
+= render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.civility')) do |c|
+  - c.with_value do
+    = dossier.individual.gender
 
-  .champ-row
-    %dt.champ-label= t('views.users.dossiers.identite.first_name')
-    %dd.champ-content= dossier.individual.prenom
+= render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.first_name')) do |c|
+  - c.with_value do
+    = dossier.individual.prenom
 
-  .champ-row
-    %dt.champ-label= t('views.users.dossiers.identite.last_name')
-    %dd.champ-content= dossier.individual.nom
+= render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.last_name')) do |c|
+  - c.with_value do
+    = dossier.individual.nom
 
-  - if dossier.individual.birthdate.present?
-    .champ-row
-      %dt.champ-label= t('views.users.dossiers.identite.birthdate')
-      %dd.champ-content= try_format_date(dossier.individual.birthdate)
+- if dossier.individual.birthdate.present?
+  = render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.birthdate')) do |c|
+    - c.with_value do
+      = try_format_date(dossier.individual.birthdate)
