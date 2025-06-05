@@ -234,7 +234,7 @@ describe Instructeur, type: :model do
     subject { instructeur.notifications_for_dossier(dossier) }
 
     context 'when the instructeur has just followed the dossier' do
-      it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false, pieces_jointes: false }) }
+      it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
     context 'when there is a modification on public champs' do
@@ -243,20 +243,20 @@ describe Instructeur, type: :model do
         dossier.update(last_champ_updated_at: Time.zone.now)
       }
 
-      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false, pieces_jointes: false }) }
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
     context 'when there is a modification on identity' do
       before { dossier.update(identity_updated_at: Time.zone.now) }
 
-      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false, pieces_jointes: false }) }
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
     context 'when there is a modification on groupe instructeur' do
       let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure: dossier.procedure) }
       before { dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto)) }
 
-      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false, pieces_jointes: false }) }
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
     context 'when there is a modification on private champs' do
@@ -265,7 +265,7 @@ describe Instructeur, type: :model do
         dossier.update(last_champ_private_updated_at: Time.zone.now)
       }
 
-      it { is_expected.to match({ demande: false, annotations_privees: true, avis: false, messagerie: false, pieces_jointes: false }) }
+      it { is_expected.to match({ demande: false, annotations_privees: true, avis: false, messagerie: false }) }
     end
 
     context 'when there is a modification on avis' do
@@ -274,34 +274,23 @@ describe Instructeur, type: :model do
         dossier.update(last_avis_updated_at: Time.zone.now)
       }
 
-      it { is_expected.to match({ demande: false, annotations_privees: false, avis: true, messagerie: false, pieces_jointes: false }) }
+      it { is_expected.to match({ demande: false, annotations_privees: false, avis: true, messagerie: false }) }
     end
 
     context 'messagerie' do
-      context 'when there is a new commentaire' do
-        context 'without a file' do
-          before {
-            create(:commentaire, dossier: dossier, email: 'a@b.com')
-            dossier.update(last_commentaire_updated_at: Time.zone.now)
-          }
+      context 'when there is a new commentaire of the usager' do
+        before {
+          create(:commentaire, dossier: dossier, email: 'a@b.com')
+          dossier.update(last_commentaire_updated_at: Time.zone.now)
+        }
 
-          it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: true, pieces_jointes: false }) }
-        end
-
-        context 'with a file' do
-          before {
-            create(:commentaire, :with_file, dossier: dossier, email: 'a@b.com')
-            dossier.update(last_commentaire_updated_at: Time.zone.now, last_commentaire_piece_jointe_updated_at: Time.zone.now)
-          }
-
-          it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: true, pieces_jointes: true }) }
-        end
+        it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: true }) }
       end
 
-      context 'when there is a new commentaire issued by tps' do
+      context 'when there is a new commentaire issued by DS' do
         before { create(:commentaire, dossier: dossier, email: CONTACT_EMAIL) }
 
-        it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false, pieces_jointes: false }) }
+        it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false }) }
       end
     end
   end
