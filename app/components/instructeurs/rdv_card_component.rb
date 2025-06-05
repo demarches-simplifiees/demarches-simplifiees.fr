@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class Instructeurs::RdvCardComponent < ApplicationComponent
-  attr_reader :rdv, :with_dossier_infos
+  attr_reader :rdv
 
-  def initialize(rdv:, with_dossier_infos: false)
+  def initialize(rdv:)
     @rdv = rdv
-    @with_dossier_infos = with_dossier_infos
   end
 
   def dossier
