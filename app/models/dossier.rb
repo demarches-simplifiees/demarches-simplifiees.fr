@@ -718,7 +718,6 @@ class Dossier < ApplicationRecord
   end
 
   def text_summary(lien = nil)
-    #binding.pry
     if brouillon?
       parts = [
         "Dossier en brouillon répondant à la démarche ",
