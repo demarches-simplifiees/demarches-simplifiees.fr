@@ -87,6 +87,9 @@ fr:
     update_end_date: La date de fin pour le champ « %{label} » a été modifiée. La date est désormais %{to}.
     <<: *update_referentiel
 
+    add_procedures_limit: L'option « Limiter à certaines démarches » a été activée pour le champ « %{label} ».
+    remove_procedures_limit: L'option « Limiter à certaines démarches » a été désactivée pour le champ « %{label} ».
+    update_procedures: "Les démarches pour le champ « %{label} » ont été modifiées :"
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
     remove: L’annotation privée « %{label} » a été supprimée.
