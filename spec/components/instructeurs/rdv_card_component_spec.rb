@@ -23,7 +23,6 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
     it "displays appointment information" do
       expect(subject).to have_css("span.fr-icon-calendar-fill")
       expect(subject).to have_text(I18n.l(starts_at, format: :human))
-      expect(subject).to have_link(rdv.rdv_plan_url, href: rdv.rdv_plan_url)
     end
 
     it "displays the owner information" do
@@ -31,9 +30,8 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
       expect(subject).to have_text("Instructeur :\n\n#{component.owner}")
     end
 
-    it "displays the owner information" do
-      expect(subject).to have_css("span.fr-icon-user-fill")
-      expect(subject).to have_text("Instructeur :\n\n#{component.owner}")
+    it "renders with agent URL" do
+      expect(subject).to have_link(href: "https://rdv.anct.gouv.fr/rdvs/123456")
     end
   end
 

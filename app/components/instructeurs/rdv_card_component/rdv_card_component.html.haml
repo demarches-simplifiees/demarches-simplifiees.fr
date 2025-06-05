@@ -11,11 +11,12 @@
           %span{ "aria-hidden": "true", class: icon_class }
           %strong
             = t(".rdv_type.#{rdv.location_type}")
-        %p
-          %span.fr-icon-user-fill{ "aria-hidden": "true" }
-          Instructeur :
-          %strong
-            = owner
+        - if !for_user
+          %p
+            %span.fr-icon-user-fill{ "aria-hidden": "true" }
+            Instructeur :
+            %strong
+              = owner
         %p.fr-mb-0
           = t('.info_and_cancellation')
-          = link_to rdv.rdv_plan_url, rdv.rdv_plan_url, class: "fr-link", target: "_blank"
+          = link_to rdv_url, rdv_url, class: "fr-link", target: "_blank"
