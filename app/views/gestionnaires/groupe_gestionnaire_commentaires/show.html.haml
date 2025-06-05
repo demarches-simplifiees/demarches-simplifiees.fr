@@ -12,4 +12,11 @@
       %li.message{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire), id: dom_id(commentaire) }
         = render(Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: @commentaire_seen_at, groupe_gestionnaire: @groupe_gestionnaire))
   - if @last_commentaire.sender
-    = render partial: "shared/dossiers/messages/form", locals: { commentaire: @commentaire, form_url: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire), last_commentaire: @last_commentaire }
+    .padded-fixed-footer
+      .fixed-footer
+        .fr-container
+          .fr-grid-row
+            %div{ data: { controller: 'hide-target' } }
+              %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mb-2w{ type: 'button', data: { 'hide-target_target': 'source', 'hide-target-hide-source': 'true' } } Nouveau message
+              .fr-mt-2w.fr-hidden{ data: { hide_target_target: 'toHide' } }
+                = render partial: "shared/dossiers/messages/form", locals: { commentaire: @commentaire, form_url: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire), last_commentaire: @last_commentaire }
