@@ -60,6 +60,20 @@ export const MultiComboBoxProps = s.assign(
     })
   )
 );
+export const MultiGroupComboBoxProps = s.assign(
+  ComboBoxPropsSchema,
+  s.partial(
+    s.object({
+      selectedKeys: s.array(s.string()),
+      maxItemsDisplay: s.number(),
+      maxItemsAlert: s.string(),
+      focusOnSelect: s.string(),
+      items: s.record(s.string(), s.array(Item)),
+      secondaryLabel: s.string(),
+      noItemsLabel: s.string()
+    })
+  )
+);
 export const RemoteComboBoxProps = s.assign(
   ComboBoxPropsSchema,
   s.partial(
@@ -76,6 +90,7 @@ export type SingleComboBoxProps = s.Infer<typeof SingleComboBoxProps> & {
   children?: ReactNode;
 };
 export type MultiComboBoxProps = s.Infer<typeof MultiComboBoxProps>;
+export type MultiGroupComboBoxProps = s.Infer<typeof MultiGroupComboBoxProps>;
 export type RemoteComboBoxProps = s.Infer<typeof RemoteComboBoxProps> & {
   children?: ReactNode;
   loader: Loader | string;

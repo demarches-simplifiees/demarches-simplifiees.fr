@@ -10,9 +10,24 @@ class TypesDeChampEditor::DossierLinkChampComponent < TypesDeChampEditor::BaseCh
     {
       id: dom_id(@type_de_champ, :procedures),
       label: "Sélectionnez la ou les démarches concernées",
-      items: @procedures.map { |procedure| ["N°#{procedure.id} - #{procedure.libelle}", procedure.id] },
+      items:,
       name: @form.field_name(:procedures, multiple: true),
-      selected_keys: @type_de_champ.procedures.map { |procedure| procedure.id.to_s }
+      selected_keys: @type_de_champ.procedures.map { |procedure| procedure.id.to_s },
+      'aria-label': "Liste des démarches",
+      secondary_label: "Démarches concernées",
+      no_items_label: "Aucune démarche sélectionnée"
     }
+  end
+
+  def items
+    items = { '--- Démarches publiées ---' => [], '--- Démarches en test ---' => [], '--- Démarches closes ---' => [] }
+
+    @procedures.each do |procedure|
+      items["--- Démarches publiées ---"] << { label: "N°#{procedure.id} - #{procedure.libelle}", value: procedure.id.to_s } if procedure.aasm_state == "publiee"
+      items["--- Démarches en test ---"] << { label: "N°#{procedure.id} - #{procedure.libelle}", value: procedure.id.to_s } if procedure.aasm_state == "brouillon"
+      items["--- Démarches closes ---"] << { label: "N°#{procedure.id} - #{procedure.libelle}", value: procedure.id.to_s } if procedure.aasm_state == "close"
+    end
+
+    items
   end
 end

@@ -350,6 +350,174 @@ export function useMultiList({
   };
 }
 
+export function useMultiGroupList({
+  defaultItems,
+  defaultSelectedKeys,
+  onChange,
+  focusInput,
+  formValue,
+  maxItemsDisplay = DEFAULT_MAX_ITEMS_DISPLAY,
+  maxItemsAlert
+}: {
+  defaultItems?: Record<string, Item[]>;
+  defaultSelectedKeys?: string[];
+  allowsCustomValue?: boolean;
+  valueSeparator?: string | false;
+  onChange?: () => void;
+  focusInput?: () => void;
+  formValue?: 'text' | 'key';
+  maxItemsDisplay?: number;
+  maxItemsAlert?: string;
+}) {
+  const [selectedKeys, setSelectedKeys] = useState(
+    () => new Set(defaultSelectedKeys ?? [])
+  );
+  const [inputValue, setInputValue] = useState('');
+  let defaultItemsArray: Item[] = [];
+
+  for (const key in defaultItems) {
+    defaultItemsArray = defaultItemsArray.concat(defaultItems[key]);
+  }
+
+  const items = useMemo(
+    () => (defaultItemsArray ? distinctBy(defaultItemsArray, 'value') : []),
+    [defaultItemsArray]
+  );
+  const itemsIndex = useMemo(() => {
+    const index = new Map<string, Item>();
+    for (const item of items) {
+      index.set(item.value, item);
+    }
+    return index;
+  }, [items]);
+  const filteredItems = useMemo(
+    () =>
+      inputValue.length == 0
+        ? items.filter((item) => !selectedKeys.has(item.value))
+        : matchSorter(
+            items.filter((item) => !selectedKeys.has(item.value)),
+            inputValue,
+            { keys: ['label'] }
+          ),
+    [items, inputValue, selectedKeys]
+  );
+  const selectedItems = useMemo(() => {
+    const selectedItems: Item[] = [];
+    for (const key of selectedKeys) {
+      const item = itemsIndex.get(key);
+      if (item) {
+        selectedItems.push(item);
+      }
+    }
+    return selectedItems;
+  }, [itemsIndex, selectedKeys]);
+  const hiddenInputValues = useMemo(() => {
+    const values = selectedItems.map((item) =>
+      formValue == 'text' ? item.label : item.value
+    );
+    if (inputValue == '') {
+      return values;
+    }
+    return [
+      ...new Set([
+        ...values
+      ])
+    ];
+  }, [
+    selectedItems,
+    inputValue,
+    formValue
+  ]);
+  const isSelectionSetRef = useRef(false);
+  const initialSelectedKeysRef = useRef(defaultSelectedKeys);
+
+  // reset default selected keys when props change
+  useEffect(() => {
+    if (!isEqual(initialSelectedKeysRef.current, defaultSelectedKeys)) {
+      initialSelectedKeysRef.current = defaultSelectedKeys;
+      setSelectedKeys(new Set(defaultSelectedKeys));
+    }
+  }, [defaultSelectedKeys]);
+
+  const onSelectionChange = useEvent<
+    NonNullable<ComboBoxProps['onSelectionChange']>
+  >((key) => {
+    if (key) {
+      isSelectionSetRef.current = true;
+      setSelectedKeys((keys) => {
+        const selectedKeys = new Set(keys.values());
+        selectedKeys.add(String(key));
+        return selectedKeys;
+      });
+      setInputValue('');
+      onChange?.();
+    }
+  });
+
+  const onInputChange = useEvent<NonNullable<ComboBoxProps['onInputChange']>>(
+    (value) => {
+      const isSelectionSet = isSelectionSetRef.current;
+      isSelectionSetRef.current = false;
+      if (isSelectionSet) {
+        setInputValue('');
+        return;
+      }
+      
+      setInputValue(value);
+    }
+  );
+
+  const onRemove = useEvent<NonNullable<TagGroupProps['onRemove']>>(
+    (removedKeys) => {
+      setSelectedKeys((keys) => {
+        const selectedKeys = new Set(keys.values());
+        for (const key of removedKeys) {
+          selectedKeys.delete(String(key));
+        }
+        // focus input when all items are removed
+        if (selectedKeys.size == 0) {
+          focusInput?.();
+        }
+        return selectedKeys;
+      });
+      onChange?.();
+    }
+  );
+
+  const onReset = useEvent(() => {
+    setSelectedKeys(new Set());
+    setInputValue('');
+  });
+
+  const displayedItems = filteredItems.slice(0, maxItemsDisplay);
+
+  const displayedItemsMap : Record<string, Item[]> = {};
+  for (const key in defaultItems){
+    displayedItemsMap[key] = defaultItems[key].filter((item) => {
+      return displayedItems.includes(item);
+    });
+
+  }
+
+  if (maxItemsAlert && filteredItems.length > maxItemsDisplay) {
+    displayedItemsMap[Object.keys(displayedItemsMap)[Object.keys(displayedItemsMap).length - 1]].push({
+      label: maxItemsAlert,
+      value: 'combo-alert-message'
+    });
+  }
+
+  return {
+    onRemove,
+    onSelectionChange,
+    onInputChange,
+    selectedItems,
+    items: displayedItemsMap,
+    hiddenInputValues,
+    inputValue,
+    onReset
+  };
+}
+
 export function useRemoteList({
   load,
   defaultItems,
