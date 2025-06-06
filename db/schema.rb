@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_06_140238) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -504,6 +504,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.datetime "en_construction_at", precision: nil
     t.datetime "en_construction_close_to_expiration_notice_sent_at", precision: nil
     t.datetime "en_instruction_at", precision: nil
+    t.datetime "expired_at"
     t.boolean "for_procedure_preview", default: false, null: false
     t.boolean "for_tiers", default: false, null: false
     t.boolean "forced_groupe_instructeur", default: false, null: false
