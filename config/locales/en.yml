@@ -394,7 +394,10 @@ en:
       groupe_gestionnaires:
         delete: Delete
     instructeurs:
+      procedure_menu: "Files of the procedure number %{id}"
+      procedures_menu: "Procedures"
       dossiers:
+        dossier_menu: "File number %{id}"
         tab_steps:
           request: Request
           private_annotations: Private annotations
@@ -475,7 +478,6 @@ en:
             request: "Your file"
             mailbox_html: '<span class="fr-hidden fr-unhidden-sm">Administration </span> messaging'
             rendez_vous: "Appointment"
-            dossier_number: "File number %{dossier_id}"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
@@ -520,7 +522,8 @@ en:
           simple: Search
           result_term_title: Search result for « %{search_terms} »
           result_procedure_title: and procedure « %{procedure_libelle} »
-        secondary_menu: Secondary menu
+        dossiers_menu: My files
+        dossier_menu: "File number %{id}"
         index:
           dossiers: "My files"
         dossiers_list:
@@ -841,6 +844,8 @@ en:
       one: deleted
       other: deleted
   administrateurs:
+    procedures_menu: "My procedures"
+    preview_menu: "Procedure « %{libelle} »"
     activate:
       new:
         title: Pick a password

@@ -400,7 +400,10 @@ fr:
       groupe_gestionnaires:
         delete: Supprimer
     instructeurs:
+      procedure_menu: "Dossiers de la démarche numero %{id}"
+      procedures_menu: "Démarches"
       dossiers:
+        dossier_menu: "Dossier numéro %{id}"
         tab_steps:
           request: Demande
           private_annotations: Annotations privées
@@ -485,7 +488,6 @@ fr:
             request: "Votre dossier"
             mailbox_html: 'Messagerie<span class="fr-hidden fr-unhidden-sm"> administration</span>'
             rendez_vous: "Rendez-vous"
-            dossier_number: "Dossier numéro %{dossier_id}"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
@@ -530,7 +532,8 @@ fr:
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »
-        secondary_menu: Menu secondaire
+        dossiers_menu: "Mes dossiers"
+        dossier_menu: "Dossier numéro %{id}"
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
@@ -924,6 +927,8 @@ fr:
         to_archive: à archiver
         trash: corbeille
   administrateurs:
+    procedures_menu: "Mes démarches"
+    preview_menu: "Démarche « %{libelle} »"
     activate:
       new:
         title: Choix du mot de passe
