@@ -3,4 +3,17 @@ fr:
     attributes:
       champs/address_champ:
         hints:
-          value: "Saisissez une adresse, une voie, un lieu-dit ou une commune. Exemple : 11 rue Réaumur, Paris"
+          value: 'Saisir une adresse, une voie, un lieu-dit ou une commune. Exemple : 11 rue Réaumur, Paris'
+    errors:
+      models:
+        champs/address_champ:
+          format: '%{message}'
+          attributes:
+            street_address:
+              required: Renseigner un numéro, une voie, ou un lieu-dit
+            commune_name:
+              required: Renseigner la commune
+            city_name:
+              required: Renseigner un nom de ville
+            postal_code:
+              required: Renseigner un code postal ou zip code
