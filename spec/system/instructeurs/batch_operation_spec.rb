@@ -169,6 +169,75 @@ describe 'BatchOperation a dossier:', js: true do
       expect(BatchOperation.count).to eq(1)
       expect(BatchOperation.last.dossiers).to match_array([dossier_2, dossier_3, dossier_4])
     end
+
+    scenario 'create a BatchOperation for create_avis with modal', chrome: true do
+      dossier_1 = create(:dossier, :en_construction, procedure: procedure)
+      dossier_2 = create(:dossier, :en_instruction, procedure: procedure)
+      instructeur.follow(dossier_1)
+      instructeur.follow(dossier_2)
+      log_in(instructeur.email, password)
+
+      visit instructeur_procedure_path(procedure, statut: 'suivis')
+
+      # check a11y with enabled checkbox
+      expect(page).to be_axe_clean
+      # ensure button is disabled by default
+      expect(page).to have_button("Autres actions multiples", disabled: true)
+
+      checkbox_id = dom_id(BatchOperation.new, "checkbox_#{dossier_1.id}")
+      # batch one dossier
+      check(checkbox_id)
+      expect(page).to have_button("Autres actions multiples")
+
+      click_on "Autres actions multiples"
+      click_on "Demander un avis externe"
+
+      # modal open
+      expect(page).to have_content("Demander un avis externe ")
+      click_on "Envoyer la demande d'avis"
+
+      expect(page).to have_content("Le champ « Email » doit être rempli")
+
+      fill_in('avis_emails', with: 'mljkzmljz')
+      click_on "Envoyer la demande d'avis"
+      expect(page).to have_content("Le champ « Email » est invalide : mljkzmljz")
+
+      fill_in('avis_emails', with: 'test@test.com')
+      click_on "Envoyer la demande d'avis"
+      # ensure batched dossier is disabled
+      expect(page).to have_selector("##{checkbox_id}[disabled]")
+      # ensure Batch is created
+      expect(BatchOperation.count).to eq(1)
+      # check a11y with disabled checkbox
+      expect(page).to be_axe_clean
+
+      # ensure alert is present
+      expect(page).to have_content("Information : Une action de masse est en cours")
+      expect(page).to have_content("Une demande d’avis est en cours d’envoi pour 1 dossier")
+
+      # ensure data-controller="turbo-poll" is present
+      expect(page).to have_selector('[data-controller~="turbo-poll"]')
+
+      # ensure jobs are queued
+      perform_enqueued_jobs(only: [BatchOperationEnqueueAllJob])
+      expect { perform_enqueued_jobs(only: [BatchOperationProcessOneJob]) }
+        .to change { dossier_1.reload.avis }
+        .from([]).to(anything)
+
+      # simulate a page reload
+      visit current_path
+
+      # ensure alert updates when jobs are run
+      expect(page).to have_content("L’action de masse est terminée")
+      expect(page).to have_content("Une demande d’avis a été envoyée pour 1 dossier")
+
+      # ensure data-controller="turbo-poll" is no longer present
+      expect(page).not_to have_selector('[data-controller~="turbo-poll"]')
+
+      # clean alert after reload
+      visit instructeur_procedure_path(procedure, statut: 'suivis')
+      expect(page).not_to have_content("L’action de masse est terminée")
+    end
   end
 
   def log_in(email, password)

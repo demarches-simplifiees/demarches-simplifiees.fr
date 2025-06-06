@@ -332,8 +332,8 @@ describe 'Instructing a dossier:', js: true do
   def ask_confidential_avis(to, introduction)
     fill_in 'avis_emails', with: to
     fill_in 'avis_introduction', with: introduction
-    select 'confidentiel', from: 'avis_confidentiel'
-    within('form#new_avis') { click_on 'Demander un avis' }
+    choose 'confidentiel_true', allow_label_click: true
+    within('form#new_avis') { click_on "Envoyer la demande d'avis" }
     click_on 'Demander un avis'
   end
 

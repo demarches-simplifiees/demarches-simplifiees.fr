@@ -4,8 +4,8 @@ module Instructeurs
   class DossiersController < ProceduresController
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
-    include CreateAvisConcern
     include DossierHelper
+    include AvisCreationConcern
     include TurboChampsConcern
     include InstructeurConcern
     include ActionController::Streaming
@@ -19,7 +19,7 @@ module Instructeurs
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
-    after_action :mark_avis_as_read, only: [:avis, :create_avis]
+    after_action :mark_avis_as_read, only: [:avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
     after_action :mark_pieces_jointes_as_read, only: [:pieces_jointes]
     after_action -> { destroy_notification(:dossier_modifie) }, only: [:show], if: -> { @notifications.any?(&:dossier_modifie?) }
@@ -305,14 +305,70 @@ module Instructeurs
     end
 
     def create_avis
-      @avis = create_avis_from_params(dossier, current_instructeur)
+      @dossier = dossier
+      @procedure = dossier.procedure
 
-      if @avis.nil?
-        DossierNotification.create_notification(dossier, :attente_avis)
-        redirect_to avis_instructeur_dossier_path(procedure, dossier, statut: statut)
+      @new_avis = Avis.new(dossier: @dossier) # <- utilisé si le form échoue
+
+      handle_create_avis(
+        dossier: @dossier,
+        user: current_instructeur,
+        params: avis_create_params,
+        success_path: avis_instructeur_dossier_path(@procedure, @dossier, statut: statut),
+        error_template: :avis_new
+      )
+    end
+
+    def create_batch_avis
+      @procedure = procedure
+
+      emails = Array(avis_create_params[:emails]).map(&:strip).map(&:downcase).compact_blank
+      email_regex = StrictEmailValidator::REGEXP
+
+      invalid_emails = emails.filter { |email| email.present? && !(email =~ email_regex) }
+
+      avis = Avis.new(avis_create_params.except(:emails))
+      batch = nil
+
+      if emails.empty? || invalid_emails.any?
+        avis.errors.add(:email, :blank) if emails.empty?
+        invalid_emails.each { |email| avis.errors.add(:email, "est invalide : #{email}") }
       else
-        @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
-        render :avis
+        batch = BatchOperation.safe_create!(batch_operation_params)
+      end
+
+      respond_to do |format|
+        format.turbo_stream do
+          if batch.blank? || avis.errors.any?
+            @ids = Array(params.dig(:batch_operation, :dossier_ids)).flat_map do |value|
+              value.is_a?(String) ? value.split(',') : value
+            end.compact_blank
+
+            render turbo_stream: turbo_stream.replace("modal-avis-batch-form", partial: "shared/avis/form_wrapper",
+              locals: {
+                url: create_batch_avis_instructeur_procedure_path(procedure_id: @procedure.id),
+                linked_dossiers: '',
+                must_be_confidentiel: false,
+                avis: avis,
+                batch_action: true,
+                procedure: @procedure,
+                dossier_ids: @ids
+              })
+          else
+            render turbo_stream: turbo_stream.append(
+              "contenu",
+              partial: "shared/avis/redirect_and_close_modal",
+              locals: {
+                redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis')
+              }
+            )
+          end
+        end
+
+        format.html do
+          flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
+        end
       end
     end
 
@@ -427,6 +483,25 @@ module Instructeurs
     end
 
     private
+
+    def batch_operation_params
+      params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
+        batch_params[:operation] = 'create_avis'
+        batch_params[:instructeur] = current_instructeur
+        batch_params.merge!(avis_create_params)
+      end
+    end
+
+    def avis_create_params
+      params.require(:avis).permit(
+        :introduction_file,
+        :introduction,
+        :confidentiel,
+        :invite_linked_dossiers,
+        :question_label,
+        emails: []
+      )
+    end
 
     def navigate_through_dossiers_list
       dossier = dossier_scope.find(params[:dossier_id])

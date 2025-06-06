@@ -141,5 +141,16 @@ FactoryBot.define do
         ]
       end
     end
+
+    trait :create_avis do
+      operation { BatchOperation.operations.fetch(:create_avis) }
+      after(:build) do |batch_operation, evaluator|
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
+        batch_operation.dossiers = [
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure),
+          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+        ]
+      end
+    end
   end
 end
