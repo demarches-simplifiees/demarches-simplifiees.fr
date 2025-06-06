@@ -14,14 +14,14 @@ describe "procedure exports zip" do
 
     find("button", text: "Téléchargements").click
 
-    click_on "Modèles d'export"
+    click_on "Modèles d’export"
 
-    click_on "Créer un modèle d'export zip"
+    click_on "Créer un modèle d’export zip"
 
     fill_in "Nom du modèle", with: "Mon modèle"
     expect(page).to have_content("Sélectionnez les fichiers que vous souhaitez exporter")
     click_on "Enregistrer"
 
-    expect(page).to have_content('Mon modèle')
+    expect(page).to have_content("Modèles d’export")
   end
 end

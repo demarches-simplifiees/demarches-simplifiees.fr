@@ -24,6 +24,8 @@ class ExportTemplate < ApplicationRecord
 
   validates_with ExportTemplateValidator
 
+  scope :shareable, -> { where(shared: true) }
+
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
 
   # when a pj has been added to a revision, it will not be present in the previous pjs
