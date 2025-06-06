@@ -2253,6 +2253,18 @@ describe Dossier, type: :model do
             expect(dossier.champ_values_for_export(type_champs, format: :xlsx).size).to eq(3)
           end
         end
+
+        context 'for dossier having a champ not in his revision' do
+          let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+          let(:dossier_second_revision) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+
+          it 'should see champ' do
+            expect do
+              dossier.rebase!
+              dossier.reload
+            end.not_to change { dossier.champ_values_for_export(procedure.types_de_champ_for_procedure_export, format: :xlsx) }
+          end
+        end
       end
 
       context "when procedure brouillon" do

@@ -17,6 +17,8 @@ module DossierExportConcern
 
   def champ_values_for_export(types_de_champ, row_id: nil, export_template: nil, format:)
     types_de_champ.flat_map do |type_de_champ|
+      # TODO: filled_champ? or another method that should be able to fetch champ value no matter if the champ is no more in revision
+
       champ = filled_champ(type_de_champ, row_id:)
       if export_template.present?
         export_template
