@@ -111,7 +111,8 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         end
 
         it 'displays datetime in the right style' do
-          expect(subject).to have_css('.highlighted')
+          # TODO: remove this test if we choose to remove the highlighting for new PJs
+          expect(subject).not_to have_css('.highlighted')
         end
       end
 
@@ -179,7 +180,8 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         end
 
         it 'displays datetime in the right style' do
-          expect(subject).to have_css('.highlighted')
+          # TODO: remove this test if we choose to remove the highlighting for new PJs
+          expect(subject).not_to have_css('.highlighted')
         end
       end
 
