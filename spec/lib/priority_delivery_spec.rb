@@ -58,6 +58,8 @@ RSpec.describe PriorityDeliveryConcern do
 
   class MockSendmail < TestMail; end
 
+  class MockDoList < TestMail; end
+
   class FixedSequence
     def initialize(sequence)
       @enumerator = sequence.each
@@ -71,6 +73,7 @@ RSpec.describe PriorityDeliveryConcern do
   before do
     ActionMailer::Base.add_delivery_method :mock_smtp, MockSmtp
     ActionMailer::Base.add_delivery_method :mock_sendmail, MockSendmail
+    ActionMailer::Base.add_delivery_method :dolist_api, MockDoList
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
 
     ExampleMailer.delivery_method = :balancer
@@ -124,6 +127,19 @@ RSpec.describe PriorityDeliveryConcern do
 
       mail3 = ExampleMailer.greet('Rahwa').deliver_now
       expect(mail3).to have_been_delivered_using(MockSmtp)
+    end
+
+    context 'when we reroot all orange mail by dolist' do
+      before { ENV['DOLIST_FOR_ORANGE'] = 'true' }
+      after { ENV.delete('DOLIST_FOR_ORANGE') }
+
+      it do
+        mail1 = ExampleMailer.greet('someone@orange.fr').deliver_now
+        expect(mail1).to have_been_delivered_using(MockDoList)
+
+        mail1 = ExampleMailer.greet('someone@gmail.com').deliver_now
+        expect(mail1).not_to have_been_delivered_using(MockDoList)
+      end
     end
   end
 

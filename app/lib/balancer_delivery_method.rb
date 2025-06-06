@@ -68,6 +68,14 @@ class BalancerDeliveryMethod
   end
 
   def delivery_method(mail)
+    if ENV['DOLIST_FOR_ORANGE'].present? && Dolist::API.sendable?(mail)
+      tos = Array.wrap(mail.to).compact
+
+      if tos.first&.downcase&.end_with?('@orange.fr', '@wanadoo.fr')
+        return :dolist_api
+      end
+    end
+
     return mail[FORCE_DELIVERY_METHOD_HEADER].value.to_sym if force_delivery_method?(mail)
 
     compatible_delivery_methods_for(mail)
