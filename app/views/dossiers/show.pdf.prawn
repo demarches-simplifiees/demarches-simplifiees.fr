@@ -188,7 +188,7 @@ def add_single_champ(pdf, champ)
   when 'Champs::AddressChamp'
     value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, value)
-    if champ.full_address?
+    if champ.full_address? && champ.france?
       format_in_2_lines(pdf, "Code INSEE :", champ.commune&.fetch(:code))
       format_in_2_lines(pdf, "Code Postal :", champ.commune&.fetch(:postal_code))
       format_in_2_lines(pdf, "Département :", champ.departement_code_and_name)

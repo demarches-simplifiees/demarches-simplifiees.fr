@@ -46,7 +46,9 @@ RSpec.describe Types::DossierType, type: :graphql do
         "street_number" => "33",
         "street_address" => "33 Rue Rébeval",
         "department_code" => "75",
-        "department_name" => "Paris"
+        "department_name" => "Paris",
+        "country_code" => "FR",
+        "country_name" => "France"
       }
     end
 
@@ -64,7 +66,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         department_name: "Isère",
         country_code: "FR",
         country_name: "France"
-      }
+      }.stringify_keys
     end
 
     let(:international_address) do
@@ -78,7 +80,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         department_name: APIGeoService.departement_name('99'),
         country_code: "IT",
         country_name: APIGeoService.country_name('IT')
-      }
+      }.stringify_keys
     end
 
     let(:rna) do

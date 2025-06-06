@@ -14,7 +14,10 @@ class Champs::AddressChamp < Champs::TextChamp
     :city_name,
     :street_address
 
-  before_update :set_full_address, if: :should_set_full_address?
+  before_validation :set_full_address, if: :should_set_full_address?, on: :update
+
+  validate :validate_not_in_ban_completed, if: -> { validate_champ_value? && !become_not_ban? && not_ban? && france? }
+  validate :validate_international_completed, if: -> { validate_champ_value? && international? }
 
   # Legacy attributes
   def code_departement
@@ -214,7 +217,7 @@ class Champs::AddressChamp < Champs::TextChamp
   end
 
   def become_france?
-    country_code_changed? && france?
+    country_code_changed? && france? && country_code_was.present?
   end
 
   def become_international?
@@ -233,14 +236,14 @@ class Champs::AddressChamp < Champs::TextChamp
     address_data = self.value_json
     if become_ban? || become_france? || become_international?
       address_data.merge!(
-        'department_code': nil,
-        'department_name': nil,
-        'region_code': nil,
-        'region_name': nil,
-        'city_code': nil,
-        'city_name': nil,
-        'street_address': nil,
-        'postal_code': nil
+        'department_code' => nil,
+        'department_name' => nil,
+        'region_code' => nil,
+        'region_name' => nil,
+        'city_code' => nil,
+        'city_name' => nil,
+        'street_address' => nil,
+        'postal_code' => nil
       )
       if become_international?
         address_data['department_code'] = '99'
@@ -264,6 +267,32 @@ class Champs::AddressChamp < Champs::TextChamp
 
     if full_address? && !ban?
       self.value_json['label'] = format_label
+    end
+  end
+
+  private
+
+  def validate_not_in_ban_completed
+    if street_address.blank? && (mandatory? || commune_name.present?)
+      errors.add(:street_address, :required)
+    end
+
+    if commune_name.blank? && (mandatory? || street_address.present?)
+      errors.add(:commune_name, :required)
+    end
+  end
+
+  def validate_international_completed
+    if street_address.blank? && (mandatory? || city_name.present? || postal_code.present?)
+      errors.add(:street_address, :required)
+    end
+
+    if city_name.blank? && (mandatory? || street_address.present? || postal_code.present?)
+      errors.add(:city_name, :required)
+    end
+
+    if postal_code.blank? && (mandatory? || street_address.present? || city_name.present?)
+      errors.add(:postal_code, :required)
     end
   end
 end

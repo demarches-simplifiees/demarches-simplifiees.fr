@@ -129,9 +129,11 @@ describe Champs::AddressChamp do
       end
 
       context 'when address was partially filled with an international address' do
-        before { champ.update(country_code: 'CH', street_address: '18 rue du gruyere', not_in_ban: 'true') }
+        # Champ must first be transformed as international before setting address data
+        before { champ.update(country_code: 'CH', not_in_ban: 'true') }
 
         it 'updates departement_code/name' do
+          champ.update(street_address: '18 rue du gruyere')
           expect(champ.value_json).to eq({
             "not_in_ban" => "true",
             "country_code" => "CH",
@@ -146,7 +148,8 @@ describe Champs::AddressChamp do
 
       context 'when address was fully filled with an international address' do
         it 'can be to_s and is considered as full_address' do
-          champ.update(country_code: 'CH', street_address: '18 rue de la gruyere', not_in_ban: 'true', postal_code: '1010', city_name: 'Lausanne')
+          champ.update(not_in_ban: true, country_code: "CH")
+          champ.update(street_address: '18 rue de la gruyere', postal_code: '1010', city_name: 'Lausanne')
           expect(champ.full_address?).to be_truthy
           expect(champ.to_s).to eq('18 rue de la gruyere, Lausanne 1010 Suisse')
         end
