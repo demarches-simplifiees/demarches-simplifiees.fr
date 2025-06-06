@@ -29,8 +29,8 @@ RSpec.describe EditableChamp::LexpolComponent, type: :component do
       allow(champ).to receive(:value).and_return(nil)
       result = render_inline(described_class.new(form: nil, champ: champ))
 
-      expect(result.text).to include("Button Creer Dossier")
-      expect(result.text).not_to include("Button Mettre A Jour")
+      expect(result.text).to include("Créer le dossier Lexpol")
+      expect(result.text).not_to include("Mettre à jour le dossier Lexpol")
     end
   end
 
@@ -39,8 +39,8 @@ RSpec.describe EditableChamp::LexpolComponent, type: :component do
       allow(champ).to receive(:value).and_return("NOR-ABC")
       result = render_inline(described_class.new(form: nil, champ: champ))
 
-      expect(result.text).to include("Button Mettre A Jour")
-      expect(result.text).not_to include("Button Creer Dossier")
+      expect(result.text).to include("Mettre à jour le dossier Lexpol")
+      expect(result.text).not_to include("Créer le dossier Lexpol")
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe EditableChamp::LexpolComponent, type: :component do
       allow(champ).to receive(:lexpol_status).and_return("Annulé")
 
       result = render_inline(described_class.new(form: nil, champ: champ))
-      expect(result.text).to include("Button Creer Nouveau")
+      expect(result.text).to include("Créer un nouveau dossier Lexpol")
     end
   end
 
