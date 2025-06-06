@@ -3909,10 +3909,12 @@ type ParcelleCadastrale implements GeoArea {
   codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   codeDep: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   commune: String!
+  communeAssociee: String!
   description: String
   feuille: Int! @deprecated(reason: "L’information n’est plus disponible.")
   geometry: GeoJSON!
   id: ID!
+  ile: String!
   nomCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   numero: String!
   prefixe: String!
@@ -4484,9 +4486,14 @@ type Row {
 }
 
 type SelectionUtilisateur implements GeoArea {
+  commune: String
+  communeAssociee: String
   description: String
   geometry: GeoJSON!
   id: ID!
+  ile: String
+  numero: String
+  section: String
   source: GeoAreaSource!
 }
 

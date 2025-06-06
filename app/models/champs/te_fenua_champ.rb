@@ -133,7 +133,7 @@ class Champs::TeFenuaChamp < Champ
       next if category == :positions
 
       collection[:features].each do |feature|
-        geo_areas.build(source:, geometry: feature[:geometry], properties: feature[:properties]&.reject { |k,_v| k == :style })
+        geo_areas.build(source:, geometry: feature[:geometry], properties: feature[:properties]&.reject { |k, _v| k == :style })
       end
     end
   end
