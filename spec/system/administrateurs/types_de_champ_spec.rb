@@ -159,7 +159,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     fill_in 'Libellé du champ', with: 'Libellé de champ Te Fenua', fill_options: { clear: :backspace }
     choose 'Marqueur'
 
-    wait_until { procedure.active_revision.types_de_champ_public.first.options["te_fenua_layer"] == 'marker' }
+    wait_until { procedure.active_revision.types_de_champ_public.first.te_fenua_layer == 'marker' }
     expect(page).to have_content('Formulaire enregistré')
 
     page.refresh

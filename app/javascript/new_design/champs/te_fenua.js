@@ -85,7 +85,7 @@ function getInputFromMap(mapElement) {
 // }
 
 function getLink(feature) {
-  const link = `<button type='button' onclick="window.viewOnMap(this, '${feature.getId()}')"><img alt='Voir sur la carte' src="${MARKER_PATH}" style="width: 12px"></button>`;
+  const link = `<button type="button" onclick="window.viewOnMap(this, '${feature.getId()}')"><img alt="Voir sur la carte" src="${MARKER_PATH}" style="max-width: 1rem; height: auto"></button>`;
   return link;
 }
 
@@ -107,7 +107,19 @@ let batimentToHtml = (html, feature) => {
 let zoneToHtml = (html, feature) => {
   const p = feature.getProperties();
   const area = formatArea(feature.getGeometry());
-  const labels = [feature.getId(), area, p.commune, p.ile]
+  const ca = p.commune_associee !== p.commune ? p.commune_associee : null;
+  const cadastre = p.section + p.numero;
+  const labels = [feature.getId(), area, cadastre, ca, p.commune, p.ile]
+    .filter(Boolean)
+    .join(' - ');
+  return `${html}\n<li>${getLink(feature)}&nbsp;${labels}</li>`;
+};
+
+let markerToHtml = (html, feature) => {
+  const p = feature.getProperties();
+  // const area = formatArea(feature.getGeometry());
+  const ca = p.commune_associee !== p.commune ? p.commune_associee : null;
+  const labels = [feature.getId(), p.section + p.numero, ca, p.commune, p.ile]
     .filter(Boolean)
     .join(' - ');
   return `${html}\n<li>${getLink(feature)}&nbsp;${labels}</li>`;
@@ -125,6 +137,7 @@ function viewOnMap(element, id) {
   let feature =
     map.batimentsLayer.getSource().getFeatureById(id) ||
     map.parcellesLayer.getSource().getFeatureById(id) ||
+    map.markerLayer.getSource().getFeatureById(id) ||
     map.zoneManuellesLayer.getSource().getFeatureById(id);
   if (feature) fitExtent(map, feature.getGeometry().getExtent());
 }
@@ -132,7 +145,7 @@ function viewOnMap(element, id) {
 function getHtml(layer, toHtml, title) {
   let features = layer.getSource().getFeatures();
   if (features.length) {
-    const header = `<div class='areas-title'>${title}</div>`;
+    const header = `<div class="areas-title">${title}</div>`;
     const zones = features.reduce(toHtml, '<ul>') + '</ul>';
     return header + zones;
   }
@@ -191,6 +204,7 @@ function updateInformations(informations, map) {
   informations.innerHTML =
     getHtml(map.parcellesLayer, parcelleToHtml, 'Parcelles') +
     getHtml(map.batimentsLayer, batimentToHtml, 'Batiments') +
+    getHtml(map.markerLayer, markerToHtml, 'Lieux') +
     getHtml(map.zoneManuellesLayer, zoneToHtml, 'Zones');
 }
 
@@ -213,19 +227,37 @@ function initMap(mapElement, map) {
     // Prépare l'interpréteur GEOJSON.
     const geodata = JSON.parse(data);
 
-    if (geodata.positions && Array.isArray(geodata.positions)) {
-      geodata.positions.forEach((pos) => {
-        const coords = pos.geometry.coordinates;
-        const marker = createMarkerFeature(coords, MARKER_PATH);
-        map.markerLayer.getSource().addFeature(marker);
-      });
-    }
-
     initFeatures(geodata.parcelles, map.parcellesLayer);
+    initFeatures(geodata.markers, map.markerLayer);
     initFeatures(geodata.batiments, map.batimentsLayer);
     initFeatures(geodata.zones_manuelles, map.zoneManuellesLayer);
     updateInformations(informations, map);
   }
+}
+
+// Fonction pour normaliser une clé
+function normaliserCle(cle) {
+  return cle
+    .normalize('NFD') // décompose les accents
+    .replace(/[\u0300-\u036f]/g, '') // supprime les accents
+    .replace(/[^\w\s]/g, '') // supprime caractères spéciaux (sauf lettres, chiffres, _)
+    .trim()
+    .replace(/\s+/g, '_') // remplace les espaces par _
+    .toLowerCase(); // met en minuscules
+}
+
+function toObject(texte) {
+  return Object.fromEntries(
+    texte
+      .trim()
+      .split('\n')
+      .map((ligne) => {
+        const [cle, ...valeurs] = ligne.split(':');
+        const cleNormalisee = normaliserCle(cle);
+        const valeur = valeurs.join(':').trim();
+        return [cleNormalisee, valeur];
+      })
+  );
 }
 
 // add interaction on the map to select parcelles(cadastres), batiments & add manually zones to the map.
@@ -253,7 +285,7 @@ function addInteractions(mapElement, map) {
   const add_zone = entry_type === 'zones_manuelles';
   const add_batiment = entry_type === 'batiments';
   const add_parcelle = entry_type === 'parcelles';
-  const add_marker = entry_type === 'marker';
+  const add_marker = !(add_zone || add_batiment || add_parcelle);
   // help bubbles
   const bubbles = {
     add: mapElement.querySelector('.add'),
@@ -275,6 +307,36 @@ function addInteractions(mapElement, map) {
     );
   }
 
+  function addFeatureToChamp(layer, feature, field, category) {
+    const source = layer.getSource();
+    let index = 1; // source.getFeatures().length + 1;
+    let id;
+    while (source.getFeatureById((id = `${category} ${index}`)) != null)
+      index++;
+    feature.setId(id);
+    const coord = getCenter(feature.getGeometry().getExtent());
+    let resolution = mapView.getResolution();
+    let projection = mapView.getProjection();
+    getCadastreFeatureInfo(coord, resolution, projection).then((pjson) => {
+      if (!pjson || pjson.type !== 'FeatureCollection') {
+        throw new Error('Invalid response returned');
+      }
+      // ajoute le nom de la commune et l'il à la zone créé
+      const features = geojson.readFeatures(pjson);
+      if (features.length) {
+        const p = toObject(features[0].getProperties().info_texte);
+        feature.setProperties({
+          commune: p.commune,
+          commune_associee: p.commune_associee,
+          ile: p.ile,
+          section: p.section,
+          numero: p.numero
+        });
+      }
+      setTimeout(() => updateChampWith(field, layer));
+    });
+  }
+
   if (add_zone) {
     bubbles.add.style.display = 'block';
     draw = new Draw({
@@ -291,30 +353,8 @@ function addInteractions(mapElement, map) {
     createControl(map, clickOnEffaceZone, 'delete', 'Effacer une zone');
     draw.on('drawend', (e) => {
       bubbles.add_zone.style.display = 'none';
-      let source = map.zoneManuellesLayer.getSource();
-      let index = source.getFeatures().length + 1;
-      let id;
-      while (source.getFeatureById((id = `Zone ${index}`)) != null) index++;
-      e.feature.setId(id);
-      const coord = getCenter(e.feature.getGeometry().getExtent());
-      let resolution = mapView.getResolution();
-      let projection = mapView.getProjection();
-      getCadastreFeatureInfo(coord, resolution, projection).then((pjson) => {
-        if (!pjson || pjson.type !== 'FeatureCollection') {
-          throw new Error('Invalid response returned');
-        }
-        // ajoute le nom de la commune et l'il à la zone créé
-        const features = geojson.readFeatures(pjson);
-        if (features.length) {
-          e.feature.setProperties({
-            commune: features[0].getProperties().commune,
-            ile: features[0].getProperties().ile
-          });
-        }
-        setTimeout(() =>
-          updateChampWith('zones_manuelles', map.zoneManuellesLayer)
-        );
-      });
+      const layer = map.zoneManuellesLayer;
+      addFeatureToChamp(layer, e.feature, 'zones_manuelles', 'Zone');
       // fin de dessin d'une zone ==> désactive l'ajout d'autres zones
       draw.setActive(false);
       // activate lookForBatimentsAndParcelles in a timeout so it doesn't get triggered
@@ -354,31 +394,11 @@ function addInteractions(mapElement, map) {
 
       if (featureAtPixel) {
         map.markerLayer.getSource().removeFeature(featureAtPixel);
-
-        geodata.positions = geodata.positions.filter(
-          (pos) =>
-            JSON.stringify(pos.geometry.coordinates) !==
-            JSON.stringify(featureAtPixel.getGeometry().getCoordinates())
-        );
-
-        champ.value = JSON.stringify(geodata);
-        champ.dispatchEvent(new Event('change', { bubbles: true }));
+        updateChampWith('markers', map.markerLayer);
       } else {
-        const coords = evt.coordinate;
-        const feature = createMarkerFeature(coords, MARKER_PATH);
+        const feature = createMarkerFeature(evt.coordinate, MARKER_PATH);
         map.markerLayer.getSource().addFeature(feature);
-
-        if (!geodata.positions) {
-          geodata.positions = [];
-        }
-
-        geodata.positions.push({
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: coords }
-        });
-
-        champ.value = JSON.stringify(geodata);
-        champ.dispatchEvent(new Event('change', { bubbles: true }));
+        addFeatureToChamp(map.markerLayer, feature, 'markers', 'Marqueur');
       }
     };
 

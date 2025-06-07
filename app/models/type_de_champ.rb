@@ -135,7 +135,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }.merge(INSTANCE_TYPE_CHAMPS)
 
-  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
+  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :te_fenua_layer, :min, :max, :level, :accredited_users, :lexpol_modele, :lexpol_mapping]
   INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
   SIMPLE_ROUTABLE_TYPES = [
@@ -169,10 +169,7 @@ class TypeDeChamp < ApplicationRecord
                  :expression_reguliere_error_message,
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
-                 :lexpol_modele,
-                 :lexpol_mapping,
-                 :header_section_level,
-                 :te_fenua_layer
+                 :header_section_level
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
@@ -198,7 +195,6 @@ class TypeDeChamp < ApplicationRecord
   serialize :condition, LogicSerializer
 
   after_initialize :set_dynamic_type
-  after_initialize :set_te_fenua_layer_default
   after_create :populate_stable_id
 
   attr_reader :dynamic_type
@@ -850,12 +846,6 @@ class TypeDeChamp < ApplicationRecord
       else
         false
       end
-    end
-  end
-
-  def set_te_fenua_layer_default
-    if type_champ == 'te_fenua' && options['te_fenua_layer'].blank?
-      self.options['te_fenua_layer'] = 'marker'
     end
   end
 
