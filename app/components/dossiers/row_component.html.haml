@@ -1,0 +1,15 @@
+.champ-row
+  %dt.champ-label
+    = "#{label}"
+    - if updated_at.present?
+      %span.fr-ml-3v.champ-updated{ class: badge_updated_class }
+        = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: helpers.try_format_datetime(updated_at, format: :veryshort))
+
+  - if blank?
+    %dd.champ-content.fr-text-mention--grey{ class: content_class }
+      - if usager?
+        %p.champ-blank= blank
+
+  - else
+    %dd.champ-content{ class: content_class }
+      = value

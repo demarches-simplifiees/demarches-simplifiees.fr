@@ -356,6 +356,7 @@ en:
     shared:
       label:
         email: 'Email'
+        account_deleted: '(the user has deleted his/her account)'
       greetings:
         hello: Dear Sir or Madam,
         best_regards: Best Regards,
