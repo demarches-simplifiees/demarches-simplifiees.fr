@@ -25,8 +25,8 @@
             %span.fr-download__detail
               ZIP
 
-    %nav.fr-tabs
-      %ul.fr-tabs__list{ role: 'tablist' }
+    %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.dossier_menu', id: dossier.id) }
+      %ul.fr-tabs__list
         = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
         = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
         - if avis.procedure.allow_expert_messaging

@@ -3,6 +3,19 @@ fr:
     avis:
       procedure:
         management: Gestion des notifications de la démarche
+        to_give: "avis à donner"
+        given:
+          one: "avis donné"
+          other: "avis donnés"
+        tabs_aria_label: "Avis"
+        th:
+          dossier_number: "Nº dossier"
+          applicant: "Demandeur"
+          procedure: "Démarche"
+        empty: "Aucun avis"
+        title:
+          to_give: "Avis à donner"
+          given: "Avis rendus"
       notification_settings:
         utils:
           positive: Oui
