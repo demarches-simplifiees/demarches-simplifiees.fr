@@ -23,7 +23,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       translations: {
         search_error:,
       },
-      is_disabled: @champ.not_ban?)
+      is_disabled: @champ.not_ban?,
+      'aria-labelledby': labelledby_id)
   end
 
   def commune_react_props
