@@ -82,7 +82,7 @@ module DossierHelper
 
   def status_badge_user(dossier, alignment_class = '')
     if dossier.hide_info_with_accuse_lecture?
-      tag.span 'traité', role: 'status', class: "fr-badge fr-badge--sm fr-badge--no-icon #{alignment_class}"
+      tag.span 'traité', class: "fr-badge fr-badge--sm fr-badge--no-icon #{alignment_class}"
     else
       status_badge(dossier.state, alignment_class)
     end
@@ -90,7 +90,7 @@ module DossierHelper
 
   def status_badge(state, alignment_class = '')
     status_text = dossier_display_state(state, lower: true)
-    tag.span status_text, role: 'status', class: class_names(
+    tag.span status_text, class: class_names(
       'fr-badge fr-badge--sm' => true,
       'fr-badge--no-icon' => Dossier.states.fetch(:accepte).exclude?(state),
       class_badge_state(state) => true,
@@ -116,11 +116,11 @@ module DossierHelper
         "fr-badge fr-badge--sm",
         "fr-badge--warning super" => profile == :for_user,
         html_class => true
-      ), role: 'status')
+      ))
   end
 
   def correction_resolved_badge(html_class: nil)
-    tag.span(Dossier.human_attribute_name("pending_correction.resolved"), class: ['fr-badge fr-badge--sm fr-badge--success', html_class], role: 'status')
+    tag.span(Dossier.human_attribute_name("pending_correction.resolved"), class: ['fr-badge fr-badge--sm fr-badge--success', html_class])
   end
 
   def tags_label(labels)
