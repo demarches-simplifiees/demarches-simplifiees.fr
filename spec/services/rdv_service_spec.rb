@@ -148,5 +148,75 @@ describe RdvService do
     it "returns the rdvs" do
       expect(subject).to eq([rdv])
     end
+
+    context "when the request fails" do
+      before do
+        stub_request(:get, described_class.list_rdvs_url(rdv_ids))
+          .to_return(status: 500)
+      end
+
+      it "returns nil" do
+        expect(subject).to be_nil
+      end
+    end
+  end
+
+  describe '.rdv_sp_host_url' do
+    it 'returns the RDV service public URL from environment' do
+      expect(described_class.rdv_sp_host_url).to eq(ENV["RDV_SERVICE_PUBLIC_URL"])
+    end
+  end
+
+  describe '.rdv_sp_org_config_url' do
+    it 'returns the organization configuration URL' do
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/admin/organisations/configuration"
+      expect(described_class.rdv_sp_org_config_url).to eq(expected_url)
+    end
+  end
+
+  describe '.rdv_sp_agenda_url' do
+    it 'returns the agenda URL' do
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/agents/agenda"
+      expect(described_class.rdv_sp_agenda_url).to eq(expected_url)
+    end
+  end
+
+  describe '.create_rdv_plan_url' do
+    it 'returns the create RDV plan URL' do
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/api/v1/rdv_plans"
+      expect(described_class.create_rdv_plan_url).to eq(expected_url)
+    end
+  end
+
+  describe '.update_pending_rdv_plan_url' do
+    it 'returns the update pending RDV plan URL' do
+      rdv_plan_external_id = "123"
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/api/v1/rdv_plans/#{rdv_plan_external_id}"
+      expect(described_class.update_pending_rdv_plan_url(rdv_plan_external_id)).to eq(expected_url)
+    end
+  end
+
+  describe '.rdv_sp_rdv_user_url' do
+    it 'returns the RDV user URL' do
+      rdv_id = "456"
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/users/rdvs/#{rdv_id}"
+      expect(described_class.rdv_sp_rdv_user_url(rdv_id)).to eq(expected_url)
+    end
+  end
+
+  describe '.rdv_sp_rdv_agent_url' do
+    it 'returns the RDV agent URL' do
+      rdv_id = "789"
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/agents/rdvs/#{rdv_id}"
+      expect(described_class.rdv_sp_rdv_agent_url(rdv_id)).to eq(expected_url)
+    end
+  end
+
+  describe '.list_rdvs_url' do
+    it 'returns the list RDVs URL with query parameters' do
+      rdv_ids = ["123", "456"]
+      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/api/v1/rdvs?id[]=123&id[]=456"
+      expect(described_class.list_rdvs_url(rdv_ids)).to eq(expected_url)
+    end
   end
 end
