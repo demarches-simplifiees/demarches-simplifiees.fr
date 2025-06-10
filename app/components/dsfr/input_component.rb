@@ -50,6 +50,10 @@ class Dsfr::InputComponent < ApplicationComponent
     )
   end
 
+  def label_id
+    @label_opts[:id]
+  end
+
   # errors helpers
   def error_messages
     errors.full_messages_for(attribute_or_rich_body)
