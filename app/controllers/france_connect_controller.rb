@@ -137,6 +137,19 @@ class FranceConnectController < ApplicationController
     end
   end
 
+  # OpenIdConnect use a special endpoint to retrieve the list of redirect URIs
+  # in case of multiple domains sharing the same sub by user
+  # see https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-sector_identifier
+  def redirect_uris
+    uris = [FRANCE_CONNECT[:redirect_uri]]
+
+    if ENV['APP_HOST_LEGACY'].present? && ENV['APP_HOST_LEGACY'] != ENV['APP_HOST']
+      uris << "https://#{ENV['APP_HOST_LEGACY']}/france_connect/particulier/callback"
+    end
+
+    render json: uris
+  end
+
   private
 
   def set_user_by_confirmation_token
