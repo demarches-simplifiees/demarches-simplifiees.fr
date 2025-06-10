@@ -23,7 +23,6 @@ class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseCompone
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
       minimum_input_length: 2,
-      'aria-labelledby': labelledby_id
-      )
+      'aria-labelledby': labelledby_id)
   end
 end
