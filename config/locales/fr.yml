@@ -561,8 +561,6 @@ fr:
             procedure: démarche
             this_procedure: cette démarche
           pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie</a>."
-          upcoming_rdv_html: "Vous avez rendez-vous avec un instructeur en visioconférence le <strong>%{date}</strong>."
-          upcoming_rdv_link: "Infos et annulation :"
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
