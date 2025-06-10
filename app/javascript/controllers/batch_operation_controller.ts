@@ -226,9 +226,10 @@ export class BatchOperationController extends ApplicationController {
       modalForm.appendChild(input);
     });
 
-    // Optionnel : cocher confidentiel par défaut
-    const confidentialRadio =
-      document.querySelector<HTMLInputElement>('#confidentiel_true');
+    // Optionnel : cocher not confidentiel par défaut
+    const confidentialRadio = document.querySelector<HTMLInputElement>(
+      '#confidentiel_false'
+    );
     if (confidentialRadio) {
       confidentialRadio.checked = true;
     }
