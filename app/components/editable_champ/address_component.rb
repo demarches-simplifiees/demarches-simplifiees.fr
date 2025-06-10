@@ -32,11 +32,56 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       items: @champ.commune_selected_items,
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
-      minimum_input_length: 2
+      minimum_input_length: 2,
+      'aria-labelledby': city_aria_labelledby
     }
   end
 
   def pays_options
     APIGeoService.countries.map { [_1[:name], _1[:code]] }
+  end
+
+  def not_in_ban_label_id
+    "#{@champ.focusable_input_id(:not_in_ban)}-label"
+  end
+
+  def not_in_ban_aria_labelledby
+    "#{aria_labelledby_prefix} #{not_in_ban_label_id}"
+  end
+
+  def country_label_id
+    "#{@champ.focusable_input_id(:country_code)}-label"
+  end
+
+  def country_aria_labelledby
+    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{country_label_id}"
+  end
+
+  def street_label_id
+    "#{@champ.focusable_input_id(:street_address)}-label"
+  end
+
+  def street_aria_labelledby
+    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{street_label_id}"
+  end
+
+  def city_label_id
+    "#{@champ.focusable_input_id(:city_name)}-label"
+  end
+
+  def city_aria_labelledby
+    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{city_label_id}"
+  end
+
+  def postal_code_label_id
+    "#{@champ.focusable_input_id(:postal_code)}-label"
+  end
+
+  def postal_code_aria_labelledby
+    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{postal_code_label_id}"
+  end
+
+  def fieldset_legend_id
+    "#{@champ.html_id}-legend"
   end
 end

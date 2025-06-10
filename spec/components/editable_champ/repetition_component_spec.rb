@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe EditableChamp::RepetitionComponent, type: :component do
-
   describe "aria-labelledby" do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, libelle: 'Répétition', children: }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
@@ -302,11 +301,10 @@ describe EditableChamp::RepetitionComponent, type: :component do
             expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
           end
         end
-
       end
 
       context "for type linked_drop_down_list" do
-        let(:children) { [{ type: :linked_drop_down_list }]}
+        let(:children) { [{ type: :linked_drop_down_list }] }
 
         it do
           expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
@@ -319,7 +317,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         end
 
         let(:children) { [{ type: :piece_justificative }] }
-        
+
         it do
           expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
         end
@@ -327,7 +325,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
       context "for type titre_identite" do
         let(:children) { [{ type: :titre_identite }] }
-        
+
         it do
           expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
         end
@@ -335,7 +333,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
       context "for type annuaire_education" do
         let(:children) { [{ type: :annuaire_education }] }
-        
+
         it do
           subject
           attribute = JSON.parse(page.first('react-component')['props'])['aria-labelledby']
@@ -343,12 +341,81 @@ describe EditableChamp::RepetitionComponent, type: :component do
         end
       end
 
-       # context "for all type de champ" do
-    #   # TypeDeChamp.type_champs.keys
+      context "for type address" do
+        let(:children) { [{ type: :address }] }
 
-    #   #  "address",
-    #   #  "carte",
+        it do
+          # first legend of the repetition
+          expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']")
 
+          # label
+          expect(subject).to have_selector("label[id='#{champ.html_id}-label']")
+          # input
+          subject
+          attribute = JSON.parse(page.first("react-component")['props'])['aria-labelledby']
+          expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+
+          # not in ban checkbox
+          expect(subject).to have_selector("label[id='#{champ.not_in_ban_input_id}-label']")
+          # input of the not in ban checkbox
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.not_in_ban_input_id}-label']")
+        end
+
+        context "when the address is not in the BAN" do
+          context "not in France" do
+            before do
+              champ.country_code = 'US'
+              champ.save!
+            end
+
+            it do
+              # first legend of the repetition
+              expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']")
+              # second legend of the champ address
+              expect(subject).to have_selector("legend[id='#{champ.html_id}-legend']")
+
+              # label of the country select
+              expect(subject).to have_selector("label[id='#{champ.country_input_id}-label']")
+              # select of the country
+              expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-country-label']")
+
+              # label of the street address
+              expect(subject).to have_selector("label[id='#{champ.street_input_id}-label']")
+              # input of the street address
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-street-label']")
+
+              # label of the city input
+              expect(subject).to have_selector("label[id='#{champ.city_input_id}-label']")
+              # input of the city
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-city-label']")
+
+              # label of the postal code input
+              expect(subject).to have_selector("label[id='#{champ.postal_code_input_id}-label']")
+              # input of the postal code
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-postal-code-label']")
+            end
+          end
+
+          context "in France" do
+            before do
+              champ.country_code = 'FR'
+              champ.not_in_ban = 'true'
+              champ.save!
+            end
+
+            it do
+              # label of the city input
+              expect(subject).to have_selector("label[id='#{champ.city_input_id}-label']")
+              # input of the city
+              attribute = JSON.parse(page.first(".not-in-ban-fieldset react-component")['props'])['aria-labelledby']
+              expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-city-label")
+            end
+          end
+        end
+      end
+
+      xcontext "for type carte" do
+      end
     end
 
     context "when the procedure has multiple champs per row" do
@@ -363,6 +430,5 @@ describe EditableChamp::RepetitionComponent, type: :component do
         expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.type_de_champ.html_id(text_champ_2.row_id)}-legend #{text_champ_2.html_id}-label']")
       end
     end
-  
   end
 end
