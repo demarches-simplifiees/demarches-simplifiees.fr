@@ -47,6 +47,10 @@
     flex-direction: column;
   }
 
+  &.column-reverse {
+    flex-direction: column-reverse;
+  }
+
   @media (min-width: $two-columns-breakpoint) {
     &.row-lg {
       flex-direction: row;
