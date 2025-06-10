@@ -429,6 +429,7 @@ class Dossier < ApplicationRecord
   delegate :france_connected_with_one_identity?, to: :user, allow_nil: true
 
   after_save :send_web_hook
+  after_save :update_expired_at, if: :brouillon?
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
@@ -1052,6 +1053,8 @@ class Dossier < ApplicationRecord
     end
     update_columns(attributes)
   end
+
+  def update_expired_at = update_column(:expired_at, expiration_date)
 
   private
 
