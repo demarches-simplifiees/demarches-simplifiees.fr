@@ -29,7 +29,7 @@
                         %h4= opt[:label]
 
 
-      %dialog#modal-avis-batch.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog" }
+      %dialog#modal-avis-batch.fr-modal{ "aria-labelledby" => "fr-modal-title-avis-batch", role: "dialog" }
         .fr-container.fr-container--fluid.fr-container-md
           .fr-grid-row.fr-grid-row--center
             .fr-col-12.fr-col-md-10.fr-col-lg-8
@@ -37,7 +37,7 @@
                 .fr-modal__header
                   %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-avis-batch' }, title: t('utils.modal_close_alt') }= t('utils.modal_close')
                 .fr-modal__content
-                  %h1#fr-modal-title-modal-1.fr-modal__title
+                  %h1#fr-modal-title-avis-batch.fr-modal__title
                     %span.fr-icon-arrow-right-line.fr-icon--lg>
                     Demander un avis externe
 

@@ -30,23 +30,27 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
   context 'statut suivis' do
     let(:statut) { 'suivis' }
 
-    it { is_expected.to have_button('Passer les dossiers en instruction', disabled: true) }
-    it { is_expected.to have_button('Instruire les dossiers', disabled: true) }
-    it { is_expected.to have_button('Autres actions multiples', disabled: true) }
-    it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
-    it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
-    it { is_expected.to have_button('Demander un avis externe', disabled: true) }
+    it do
+      is_expected.to have_button('Passer les dossiers en instruction', disabled: true)
+      is_expected.to have_button('Instruire les dossiers', disabled: true)
+      is_expected.to have_button('Autres actions multiples', disabled: true)
+      is_expected.to have_button('Repasser les dossiers en construction', disabled: true)
+      is_expected.to have_button('Ne plus suivre les dossiers', disabled: true)
+      is_expected.to have_button('Demander un avis externe', disabled: true)
+    end
 
     context 'with expert review disallowed procedure' do
       before {
         procedure.update!(allow_expert_review: false)
       }
-      it { is_expected.to have_button('Passer les dossiers en instruction', disabled: true) }
-      it { is_expected.to have_button('Instruire les dossiers', disabled: true) }
-      it { is_expected.to have_button('Autres actions multiples', disabled: true) }
-      it { is_expected.to have_button('Repasser les dossiers en construction', disabled: true) }
-      it { is_expected.to have_button('Ne plus suivre les dossiers', disabled: true) }
-      it { is_expected.not_to have_button('Demander un avis externe', disabled: true) }
+      it do
+        is_expected.to have_button('Passer les dossiers en instruction', disabled: true)
+        is_expected.to have_button('Instruire les dossiers', disabled: true)
+        is_expected.to have_button('Autres actions multiples', disabled: true)
+        is_expected.to have_button('Repasser les dossiers en construction', disabled: true)
+        is_expected.to have_button('Ne plus suivre les dossiers', disabled: true)
+        is_expected.not_to have_button('Demander un avis externe', disabled: true)
+      end
     end
   end
 
