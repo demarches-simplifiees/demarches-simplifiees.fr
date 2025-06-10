@@ -18,7 +18,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       items: @champ.selected_items,
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
-      is_disabled: @champ.not_ban?)
+      is_disabled: @champ.not_ban?,
+      'aria-labelledby': labelledby_id)
   end
 
   def commune_react_props
