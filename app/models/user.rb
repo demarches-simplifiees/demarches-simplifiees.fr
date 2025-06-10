@@ -57,6 +57,8 @@ class User < ApplicationRecord
   def min_password_complexity
     if administrateur?
       PASSWORD_COMPLEXITY_FOR_ADMIN
+    elsif gestionnaire?
+      PASSWORD_COMPLEXITY_FOR_GESTIONNAIRE
     elsif instructeur?
       PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
     else

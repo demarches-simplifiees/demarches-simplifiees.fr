@@ -729,9 +729,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_130351) do
     t.string "gender"
     t.string "given_name"
     t.string "merge_token"
-    t.datetime "merge_token_created_at", precision: nil
+    t.datetime "merge_token_created_at"
     t.string "requested_email"
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "updated_at", null: false
     t.integer "user_id"
     t.index ["email_merge_token"], name: "index_france_connect_informations_on_email_merge_token"
     t.index ["france_connect_particulier_id"], name: "idx_france_connect_particulier_id"
@@ -1277,6 +1277,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_130351) do
   add_foreign_key "bulk_messages", "procedures"
   add_foreign_key "champ_revisions", "champs"
   add_foreign_key "champs", "champs", column: "parent_id"
+  add_foreign_key "champs", "dossiers"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"

@@ -844,10 +844,6 @@ en:
       one: deleted
       other: deleted
   administrateurs:
-    activate:
-      new:
-        title: Pick a password
-        continue: Continue
     procedures:
       created_at: created at
       published_at: published at
@@ -855,11 +851,6 @@ en:
       updated_at: updated at
       closed_at: closed at
       auto_archive_on: will close at
-  gestionnaires:
-    activate:
-      new:
-        title: Pick a password
-        continue: Continue
   users:
     dossiers:
       test_procedure: 'This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file.'
