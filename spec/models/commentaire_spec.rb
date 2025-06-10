@@ -40,6 +40,18 @@ describe Commentaire do
 
       it { is_expected.to be_truthy }
     end
+
+    context 'with demarches.numerique.gouv.fr' do
+      let(:email) { "contact@demarches.numerique.gouv.fr" }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'other email' do
+      let(:email) { "me@spec.test" }
+
+      it { is_expected.to be_falsey }
+    end
   end
 
   describe "sent_by?" do

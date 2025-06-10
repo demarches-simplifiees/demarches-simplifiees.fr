@@ -32,8 +32,8 @@ module MailerDefaultsConfigurableConcern
     def configure_defaults_for_user(user)
       return if !user.is_a?(User) # not for super-admins
 
-      if user.preferred_domain_demarches_gouv_fr?
-        set_currents_for_demarches_gouv_fr
+      if user.preferred_domain_demarches_numerique_gouv_fr?
+        set_currents_for_demarches_numerique_gouv_fr
       else
         set_currents_for_legacy
       end
@@ -55,11 +55,11 @@ module MailerDefaultsConfigurableConcern
 
     private
 
-    def set_currents_for_demarches_gouv_fr
-      Current.application_name = "demarches.gouv.fr"
-      Current.host = "demarches.gouv.fr"
-      Current.contact_email = "contact@demarches.gouv.fr"
-      Current.no_reply_email = NO_REPLY_EMAIL.sub("demarches-simplifiees.fr", "demarches.gouv.fr") # rubocop:disable DS/ApplicationName
+    def set_currents_for_demarches_numerique_gouv_fr
+      Current.application_name = "demarches.numerique.gouv.fr"
+      Current.host = "demarches.numerique.gouv.fr"
+      Current.contact_email = "contact@demarches.numerique.gouv.fr"
+      Current.no_reply_email = NO_REPLY_EMAIL.sub("demarches-simplifiees.fr", "demarches.numerique.gouv.fr") # rubocop:disable DS/ApplicationName
     end
 
     def set_currents_for_legacy

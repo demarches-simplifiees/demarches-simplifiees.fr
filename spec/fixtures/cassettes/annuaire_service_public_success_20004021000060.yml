@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - demarches.gouv.fr
+      - demarches.numerique.gouv.fr
       Expect:
       - ''
   response:

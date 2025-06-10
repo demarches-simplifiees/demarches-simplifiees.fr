@@ -94,7 +94,7 @@ describe Users::SessionsController, type: :controller do
         it 'update preferred domain' do
           subject
 
-          expect(user.reload.preferred_domain_demarches_gouv_fr?).to be_truthy
+          expect(user.reload.preferred_domain_demarches_numerique_gouv_fr?).to be_truthy
         end
       end
     end
