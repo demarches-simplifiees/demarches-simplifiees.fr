@@ -49,15 +49,6 @@
             %br
             = pending_correction_badge(:for_user)
 
-      - @rdvs_for_dossiers[dossier.id]&.each do |rdv|
-        = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
-          - c.with_body do
-            %p
-              = t('views.users.dossiers.dossiers_list.upcoming_rdv_html', date: l(rdv.starts_at, format: :human))
-            %p
-              = t('views.users.dossiers.dossiers_list.upcoming_rdv_link')
-              = link_to rdv.rdv_plan_url, rdv.rdv_plan_url, class: "fr-link", target: "_blank"
-
       - if dossier.procedure.close?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do

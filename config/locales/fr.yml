@@ -522,6 +522,7 @@ fr:
           mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
         rendez_vous:
           title: "Votre prochain rendez-vous"
+          navigate_to_rdv_sp: "Voir mon rendez-vous sur RDV Service Public"
         demande:
           edit_dossier: Modifier le dossier
           edit_dossier_title: "Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"

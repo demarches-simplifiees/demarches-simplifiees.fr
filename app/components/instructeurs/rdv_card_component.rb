@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class Instructeurs::RdvCardComponent < ApplicationComponent
-  attr_reader :rdv, :for_user
+  attr_reader :rdv
 
-  def initialize(rdv:, for_user: false)
+  def initialize(rdv:)
     @rdv = rdv
-    @for_user = for_user
   end
 
   def dossier
@@ -13,11 +12,7 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
   end
 
   def rdv_url
-    if @for_user
-      @rdv["url_for_agents"] # to fix when url will be available for users
-    else
-      @rdv["url_for_agents"]
-    end
+    @rdv["url_for_agents"]
   end
 
   def starts_at
@@ -36,7 +31,7 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
     if current_instructeur.email.in?(agents_emails)
       t('.you')
     else
-      @rdv.instructeur.email
+      agents_emails.join(", ")
     end
   end
 
@@ -48,14 +43,6 @@ class Instructeurs::RdvCardComponent < ApplicationComponent
       "fr-icon-vidicon-fill"
     when "home"
       "fr-icon-home-4-fill"
-    end
-  end
-
-  def rdv_url
-    if @for_user
-      RdvService.rdv_sp_rdv_user_url(@rdv.rdv_external_id)
-    else
-      RdvService.rdv_sp_rdv_agent_url(@rdv.rdv_external_id)
     end
   end
 end

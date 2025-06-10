@@ -512,6 +512,7 @@ en:
           mailbox: "The mailbox allows you to contact the instructor in charge of your file."
         rendez_vous:
           title: "Your next appointment"
+          navigate_to_rdv_sp: "See my appointment on RDV Service Public"
         demande:
           edit_dossier: Edit my file
           edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"

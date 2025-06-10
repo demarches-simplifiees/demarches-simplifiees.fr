@@ -9,15 +9,22 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
     render_inline(component)
   end
 
+  let(:current_instructeur) { create(:instructeur) }
   let(:dossier) { create(:dossier, :en_instruction) }
-  let(:rdv) { create(:rdv, dossier:, instructeur: create(:instructeur)) }
-  let(:starts_at) { Time.zone.parse("2025-02-14 10:00:00") }
+  let(:rdv) {
+    {
+      "url_for_agents" => "https://rdv.anct.gouv.fr/rdvs/123456",
+      "starts_at" => "2025-06-04 11:30:00 +0200",
+      "motif" => { "location_type" => location_type },
+      "agents" => [{ "id" => 1957, "email" => current_instructeur.email, "first_name" => "Tom", "last_name" => "Plop" }]
+    }
+  }
+  let(:starts_at) { Time.zone.parse(rdv["starts_at"]) }
+  let(:location_type) { "phone" }
 
   before do
     allow(component).to receive(:current_instructeur).and_return(current_instructeur)
   end
-
-  let(:current_instructeur) { create(:instructeur) }
 
   describe "rendering" do
     it "displays appointment information" do
@@ -36,7 +43,6 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
   end
 
   describe "#icon_class" do
-    let(:rdv) { create(:rdv, dossier: dossier, location_type: location_type, instructeur: create(:instructeur)) }
     let(:component) { described_class.new(rdv: rdv) }
 
     context "when location_type is phone" do
