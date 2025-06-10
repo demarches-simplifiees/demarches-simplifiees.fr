@@ -1,43 +1,49 @@
-- if faq_link.present?
-  %li.fr-mb-1w
-    = link_to t('.faq_link'), faq_link , title: helpers.new_tab_suffix(t('.faq_link')), class: 'fr-link fr-link--sm', **helpers.external_link_attributes
-- if contact_link.present?
-  %li.fr-mb-2w
-    = link_to t('.contact_link'), contact_link, title: helpers.new_tab_suffix(t('.contact_link')), class: 'fr-link fr-link--sm', **helpers.external_link_attributes
+- if faq_link.present? && contact_link.present?
+  %ul
+    %li.fr-mb-2v
+      = link_to t('.faq_link'), faq_link , title: helpers.new_tab_suffix(t('.faq_link')), class: footer ? '' : 'fr-link fr-link--sm', **helpers.external_link_attributes
+    %li.fr-mb-2w
+      = link_to t('.contact_link'), contact_link, title: helpers.new_tab_suffix(t('.contact_link')), class: footer ? '' : 'fr-link fr-link--sm', **helpers.external_link_attributes
 
-%li.border-left-dark
-  %dl
-    - if dossier.present? && dossier&.messagerie_available?
-      .flex.fr-mb-2v
-        %dt.fr-mr-2v
-          %span.fr-icon-message-2-line.fr-icon--sm{ "aria-hidden": "true" }
-          %span.visually-hidden= t('layouts.mailers.service_footer.by_messagerie')
-        %dd
-          = link_to t('.contact_instructeur'), messagerie_dossier_path(dossier)
+- elsif faq_link.present? || contact_link.present?
+  .fr-mb-2w
+    - if faq_link.present?
+      = link_to t('.faq_link'), faq_link , title: helpers.new_tab_suffix(t('.faq_link')), class: footer ? '' : 'fr-link fr-link--sm', **helpers.external_link_attributes
+    - if contact_link.present?
+      = link_to t('.contact_link'), contact_link, title: helpers.new_tab_suffix(t('.contact_link')), class: footer ? '' : 'fr-link fr-link--sm', **helpers.external_link_attributes
 
-    - if email.present?
-      .flex.fr-mb-2v
-        %dt.fr-mr-2v
-          %span.fr-icon-mail-line.fr-icon--sm{ "aria-hidden": "true" }
-          %span.visually-hidden= t('layouts.mailers.service_footer.by_email')
-        %dd
-          = link_to email, "mailto:#{email}"
+%dl.border-left-dark
+  - if dossier.present? && dossier&.messagerie_available?
     .flex.fr-mb-2v
       %dt.fr-mr-2v
-        %span.fr-icon-phone-line.fr-icon--sm{ "aria-hidden": "true" }
-        %span.visually-hidden= t('layouts.mailers.service_footer.by_phone')
+        %span.fr-icon-message-2-line.fr-icon--sm{ "aria-hidden": "true" }
+        %span.visually-hidden= t('layouts.mailers.service_footer.by_messagerie')
       %dd
-        = link_to telephone, telephone_url
+        = link_to t('.contact_instructeur'), messagerie_dossier_path(dossier)
+
+  - if email.present?
     .flex.fr-mb-2v
       %dt.fr-mr-2v
-        %span.fr-icon-time-line.fr-icon--sm{ "aria-hidden": "true" }
-        %span.visually-hidden= t('layouts.mailers.service_footer.schedule')
+        %span.fr-icon-mail-line.fr-icon--sm{ "aria-hidden": "true" }
+        %span.visually-hidden= t('layouts.mailers.service_footer.by_email')
       %dd
-        = horaires
+        = link_to email, "mailto:#{email}"
+  .flex.fr-mb-2v
+    %dt.fr-mr-2v
+      %span.fr-icon-phone-line.fr-icon--sm{ "aria-hidden": "true" }
+      %span.visually-hidden= t('layouts.mailers.service_footer.by_phone')
+    %dd
+      = link_to telephone, telephone_url
+  .flex.fr-mb-2v
+    %dt.fr-mr-2v
+      %span.fr-icon-time-line.fr-icon--sm{ "aria-hidden": "true" }
+      %span.visually-hidden= t('layouts.mailers.service_footer.schedule')
+    %dd
+      = horaires
 
-    - if other_contact_info.present?
-      .flex.fr-mb-2v
-        %dt.fr-mr-2v
-          %span.fr-fi-info-line.fr-icon--sm{ "aria-hidden": "true" }
-        %dd
-          = other_contact_info
+  - if other_contact_info.present?
+    .flex.fr-mb-2v
+      %dt.fr-mr-2v
+        %span.fr-fi-info-line.fr-icon--sm{ "aria-hidden": "true" }
+      %dd
+        = other_contact_info
