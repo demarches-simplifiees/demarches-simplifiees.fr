@@ -11,13 +11,17 @@ module Maintenance
     # If possible, leave commented for manual execution later.
     # run_on_first_deploy
 
-    no_collection
+    def collection
+      Dossier.all
+    end
 
-    def process
-      with_statement_timeout("15min") do
-        Champ.where(row_id: Champ::NULL_ROW_ID)
-          .in_batches(of: 50_000)
-          .update_all(row_id: nil)
+    def process(dossier)
+      dossier.champs.where(row_id: Champ::NULL_ROW_ID).update_all(row_id: nil)
+    end
+
+    def count
+      with_statement_timeout("5min") do
+        collection.count
       end
     end
   end
