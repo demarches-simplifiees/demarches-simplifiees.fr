@@ -115,11 +115,13 @@ module Instructeurs
     end
 
     def rendez_vous
+      rdv_service = RdvService.new(rdv_connection: current_instructeur.rdv_connection)
+
       if current_instructeur.rdv_connection.present?
-        RdvService.new(rdv_connection: current_instructeur.rdv_connection).update_pending_rdv_plan!(dossier:)
+        rdv_service.update_pending_rdv_plan!(dossier:)
       end
 
-      @booked_rdvs = dossier.rdvs.booked.by_starts_at
+      @booked_rdvs = rdv_service.list_rdvs(dossier.rdvs.booked.pluck(:rdv_external_id))
     end
 
     def send_to_instructeurs

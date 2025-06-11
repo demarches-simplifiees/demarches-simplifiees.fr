@@ -4,7 +4,6 @@ describe 'users/dossiers/dossiers_list', type: :view do
   let(:user) { dossier.user }
 
   subject do
-    @rdvs_for_dossiers = []
     render 'users/dossiers/dossiers_list', dossiers: [dossier], current_user: user
   end
   before do

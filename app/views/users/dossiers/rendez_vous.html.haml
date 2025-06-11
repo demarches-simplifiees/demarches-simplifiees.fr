@@ -7,8 +7,8 @@
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
   .container
-    %p.messagerie-explanation
+    %p.fr-mb-2w
       %h2.fr-h6
         = t('views.users.dossiers.rendez_vous.title')
-      - @rdvs.each do |rdv|
-        = render Instructeurs::RdvCardComponent.new(rdv:, with_dossier_infos: false)
+      %p
+        = link_to t('views.users.dossiers.rendez_vous.navigate_to_rdv_sp'), RdvService.rdv_sp_rdv_user_url(@rdv.rdv_external_id), target: '_blank', class: 'fr-link'
