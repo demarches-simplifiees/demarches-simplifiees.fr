@@ -73,4 +73,16 @@ describe AccountDropdownComponent, type: :component do
       end
     end
   end
+
+  context 'when user is france connected' do
+    subject { render_inline(component) }
+
+    before do
+      user.france_connect_informations << build(:france_connect_information, user:)
+    end
+
+    it 'shows france connect badge' do
+      expect(subject).to have_text('via FranceConnect')
+    end
+  end
 end
