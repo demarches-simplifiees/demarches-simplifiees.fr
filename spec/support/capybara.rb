@@ -30,7 +30,7 @@ Capybara.register_driver :playwright do |app|
     headless: ENV['NO_HEADLESS'].blank?,
     locale: Rails.application.config.i18n.default_locale,
     downloadsPath: Capybara.save_path,
-    playwright_cli_executable_path: 'bunx playwright')
+    playwright_cli_executable_path: 'bun playwright')
 end
 
 Capybara.register_driver :chrome do |app|
