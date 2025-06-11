@@ -61,9 +61,9 @@ module Instructeurs
         'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
       }
 
-      @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
-      @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
+      @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
       @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
+
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
     end

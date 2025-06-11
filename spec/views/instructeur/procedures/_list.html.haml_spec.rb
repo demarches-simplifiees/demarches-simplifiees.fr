@@ -20,8 +20,7 @@ describe 'instructeurs/procedures/_list', type: :view do
             dossiers_supprimes_count_per_procedure: 0,
             dossiers_expirant_count_per_procedure: 0,
             followed_dossiers_count_per_procedure: 0,
-            procedure_ids_en_cours_with_notifications: [],
-            procedure_ids_termines_with_notifications: [],
+            procedure_ids_with_notifications: { suivis: [], traites: [] },
             notifications_counts_per_procedure: [])
   end
 

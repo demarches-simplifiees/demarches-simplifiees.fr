@@ -26,6 +26,8 @@ class DossierNotification < ApplicationRecord
     self.sort_by { |notif| notification_types.keys.index(notif.notification_type) }
   }
 
+  scope :type_news, -> { where(notification_type: [:dossier_modifie, :message_usager, :annotation_instructeur, :avis_externe]) }
+
   def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
     case notification_type
     when :dossier_depose
@@ -91,6 +93,25 @@ class DossierNotification < ApplicationRecord
     DossierNotification
       .find_by(dossier:, notification_type:, instructeur:)
       &.destroy
+  end
+
+  def self.notifications_sticker_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
+    dossiers_with_news_notification = Dossier
+      .where(groupe_instructeur_id: groupe_instructeur_ids)
+      .joins(:dossier_notifications)
+      .merge(DossierNotification.type_news)
+      .where(dossier_notifications: { instructeur: })
+      .includes(:procedure)
+      .distinct
+
+    dossiers_with_news_notification_by_statut = {
+      suivis: dossiers_with_news_notification.by_statut('suivis', instructeur:),
+      traites: dossiers_with_news_notification.by_statut('traites')
+    }
+
+    dossiers_with_news_notification_by_statut.transform_values do |dossiers|
+      dossiers.map { |dossier| dossier.procedure.id }.uniq
+    end
   end
 
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
