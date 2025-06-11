@@ -30,15 +30,19 @@ module Administrateurs
     end
 
     def update_mapping_type_de_champ
-      if @type_de_champ.update(type_de_champ_mapping_params)
+      if @type_de_champ.update(referentiel_mapping: @type_de_champ.safe_referentiel_mapping.deep_merge(referentiel_mapping_params))
         redirect_to prefill_and_display_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration du mapping a bien été enregistrée" }
       else
         redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { alert: "Une erreur est survenue" }
       end
     end
 
-    def prefill_and_display
-      render :prefill_and_display
+    def update_prefill_type_de_champ
+      if @type_de_champ.update(referentiel_mapping: @type_de_champ.safe_referentiel_mapping.deep_merge(referentiel_mapping_params))
+        redirect_to champs_admin_procedure_path(@procedure), flash: { notice: "La configuration du pré remplissage des champs et/ou affichage des données récupérées a bien été enregistrée" }
+      else
+        redirect_to prefill_and_display_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { alert: "Une erreur est survenue" }
+      end
     end
 
     private
@@ -53,9 +57,16 @@ module Administrateurs
       end
     end
 
-    def type_de_champ_mapping_params
+    def referentiel_mapping_params
+      permitted_mapping = {}
+
       params.require(:type_de_champ)
-        .permit(referentiel_mapping: {})
+        .require(:referentiel_mapping)
+        .each do |jsonpath_key, attributes|
+          permitted_mapping[jsonpath_key] = attributes.permit(:type, :prefill_stable_id, :example_value, :libelle, :prefill).to_h
+        end
+
+      permitted_mapping
     end
 
     def referentiel_params
