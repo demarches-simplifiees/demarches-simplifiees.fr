@@ -16,23 +16,12 @@ module Administrateurs
     end
 
     def create
-      referentiel = @type_de_champ.build_referentiel(referentiel_params)
-
-      if referentiel.configured? && referentiel.update(referentiel_params)
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
-      else
-        referentiel.validate
-        component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
-        render turbo_stream: turbo_stream.replace(component.id, component)
-      end
+      handle_referentiel_save(@type_de_champ.build_referentiel(referentiel_params))
     end
 
     def update
-      if @referentiel.update(referentiel_params)
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel)
-      else
-        render :edit
-      end
+      @referentiel.assign_attributes(referentiel_params)
+      handle_referentiel_save(@referentiel)
     end
 
     def mapping_type_de_champ
@@ -50,6 +39,16 @@ module Administrateurs
     end
 
     private
+
+    def handle_referentiel_save(referentiel)
+      if referentiel.configured? && referentiel.save && params[:commit].present?
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+      else
+        referentiel.validate
+        component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
+        render turbo_stream: turbo_stream.replace(component.id, component)
+      end
+    end
 
     def type_de_champ_mapping_params
       params.require(:type_de_champ)
@@ -75,7 +74,10 @@ module Administrateurs
       if params[:referentiel_id]
         Referentiel.find(params[:referentiel_id]).attributes.slice(*%w[url test_data hint mode type])
       else
-        referentiel_params
+        params = referentiel_params.to_h
+        params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?
+        params = params.merge(mode: Referentiels::APIReferentiel.modes.fetch(:exact_match)) if !Referentiels::APIReferentiel.autocomplete_available?
+        params
       end
     end
   end

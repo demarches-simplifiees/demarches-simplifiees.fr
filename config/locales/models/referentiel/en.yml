@@ -1,5 +1,12 @@
 fr:
   activerecord:
+    errors:
+      models:
+        referentiels/api_referentiel:
+          attributes:
+            url:
+              invalid_format: "The URL format is invalid, please enter a valid URL, e.g., https://api_1.ext/"
+              not_allowed: "must be authorized by our team. Please contact us by email (%{contact_email}) and provide the URL and the API documentation you wish to integrate."
     models:
       referentiel: 'Field type'
     attributes:
@@ -8,5 +15,5 @@ fr:
         hint: "Expected format shown to the user"
         test_data: "Valid example used to test the API"
         hints:
-          url: "Example : https://api_1.ext/{id}, the segment {id} will be replaced by the field value. The http request will use the GET verb"
+          url_html: "Expected format: https://api_1.ext/<strong>{id}</strong>, the segment <strong>{id}</strong> will be replaced by the field value. The http request will use the GET verb"
           hint: "Example : ID containing 12 chars"

@@ -7,10 +7,15 @@ class Dossiers::ErrorsFullMessagesComponent < ApplicationComponent
     @dossier = dossier
   end
 
-  def dedup_and_partitioned_errors
-    @dossier.errors.to_enum # ActiveModel::Errors.to_a is an alias to full_messages, we don't want that
+  def dedup_errors
+    @dedup_errors ||= @dossier.errors
+      .to_enum # ActiveModel::Errors.to_a is an alias to full_messages, we don't want that
       .to_a # but enum.to_a gives back an array
-      .map { |error| to_error_descriptor(error) }
+      .group_by { it.is_a?(ActiveModel::NestedError) ? it.inner_error.base : it.base }
+      .flat_map do |_champ_instance, errors|
+        errors = errors.reject { it.type == :missing } if errors.size > 1 # do not report missing when another exists
+        errors.map { to_error_descriptor(_1) }
+      end
   end
 
   def to_error_descriptor(error)

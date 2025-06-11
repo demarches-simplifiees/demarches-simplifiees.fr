@@ -28,13 +28,17 @@ describe 'Referentiel API:' do
 
     # configure connection
     VCR.use_cassette('referentiel/rnb_as_admin') do
-      find('label[for="referentiel_type_referentielsapireferentiel"]').click
+      if Referentiels::APIReferentiel.csv_available?
+        find('label[for="referentiel_type_referentielsapireferentiel"]').click
+      end
       find("#referentiel_url").fill_in(with: 'google.com')
-      expect(page).to have_content("L'URL est invalide")
+      expect(page).to have_content("n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
       find("#referentiel_url").fill_in(with: 'https://google.com')
-      expect(page).to have_content("L'URL doit être autorisée par notre équipe, veuillez nous contacter")
+      expect(page).to have_content("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
       find("#referentiel_url").fill_in(with: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/')
-      find('label[for="referentiel_mode_exact_match"]').click
+      if Referentiels::APIReferentiel.autocomplete_available?
+        find('label[for="referentiel_mode_exact_match"]').click
+      end
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "Saisir votre numero de bâtiment")
       fill_in("Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)", with: "PG46YY6YWCX8")
       click_on('Étape suivante')
