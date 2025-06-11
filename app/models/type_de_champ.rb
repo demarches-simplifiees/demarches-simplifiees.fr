@@ -651,6 +651,18 @@ class TypeDeChamp < ApplicationRecord
     end.sort
   end
 
+  def accredited_user_string
+    if accredited_user_list.present?
+      accredited_user_list.reject(&:empty?).join("\r\n")
+    else
+      ''
+    end
+  end
+
+  def accredited_user_string=(value)
+    self.accredited_users = value.blank? ? [] : value.split(/\s*[\r\n]+\s*/).map(&:downcase)
+  end
+
   def accredited_user_list?
     accredited_user_list.any?
   end
