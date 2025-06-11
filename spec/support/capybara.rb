@@ -5,6 +5,15 @@ require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
+module PlaywrightPatch
+  def send_message_to_server(guid, method, params = {}, metadata: nil)
+    params[:timeout] = 30_000 if params[:timeout].nil?
+    super(guid, method, params, metadata:)
+  end
+end
+
+Playwright::Connection.prepend(PlaywrightPatch)
+
 def setup_driver(app, download_path, options)
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:).tap do |driver|
     if ENV['MAKE_IT_SLOW'].present?
