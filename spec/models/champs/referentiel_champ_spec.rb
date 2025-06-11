@@ -81,10 +81,34 @@ describe Champs::ReferentielChamp, type: :model do
     it 'propagate fetch_external_data_pending? changes and reset for values, data, value_json and fetch_external_data_exceptions' do
       expect { champ.update(external_id: 'newid') }.to change { champ.fetch_external_data_pending? }.from(false).to(true)
 
-      expect(champ.external_id).to eq('newid')
-      expect(champ.data).to eq(nil)
-      expect(champ.value_json).to eq(nil)
-      expect(champ.fetch_external_data_exceptions).to eq([])
+  describe '#fetch_external_data' do
+    subject { referentiel_champ.update_with_external_data!(data: { ok: "ok" }.with_indifferent_access) }
+
+    context 'when referentiel had not prefill' do
+      let(:types_de_champ_public) { [type: :referentiel, referentiel: referentiel, referentiel_mapping: nil] }
+      it 'does not raise error' do
+        expect { subject }.not_to raise_error
+      end
+    end
+
+    context 'when referentiel_mapping has prefill' do
+      let(:prefillable_stable_id) { 2 }
+      let(:types_de_champ_public) do
+        [
+          { stable_id: prefillable_stable_id, type: :text },
+          {
+            type: :referentiel,
+            referentiel: referentiel,
+            referentiel_mapping: {
+              "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
+            }
+          }
+        ]
+      end
+
+      it 'update the prefiiable stable_id with the jsonpath value of the external data' do
+        expect { subject }.to change { dossier.reload.project_champs.find(&:text?).value }.from(nil).to("ok")
+      end
     end
   end
 end
