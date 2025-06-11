@@ -37,6 +37,14 @@ module Administrateurs
       end
     end
 
+    def update_prefill_type_de_champ
+      if @type_de_champ.update(referentiel_mapping: @type_de_champ.referentiel_mapping.deep_merge(type_de_champ_prefill_params))
+        redirect_to champs_admin_procedure_path(@procedure), flash: { notice: "La configuration du pré remplissage des champs et/ou affichage des données récupérées a bien été enregistrée" }
+      else
+        redirect_to prefill_and_display_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { alert: "Une erreur est survenue" }
+      end
+    end
+
     def prefill_and_display
       render :prefill_and_display
     end
@@ -56,6 +64,18 @@ module Administrateurs
     def type_de_champ_mapping_params
       params.require(:type_de_champ)
         .permit(referentiel_mapping: {})
+    end
+
+    def type_de_champ_prefill_params
+      permitted_mapping = {}
+
+      params.require(:type_de_champ)
+        .require(:referentiel_mapping)
+        .each do |jsonpath_key, attributes|
+          permitted_mapping[jsonpath_key] = attributes.permit(:type, :prefill_stable_id).to_h
+        end
+
+      permitted_mapping
     end
 
     def referentiel_params
