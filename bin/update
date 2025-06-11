@@ -17,7 +17,7 @@ FileUtils.chdir APP_ROOT do
   system('bundle check') || system!('bundle install')
   system! 'bun --version'
   system! 'bun install'
-  system! 'bunx playwright install chromium'
+  system! 'bun playwright install chromium'
 
   if ENV["UPDATE_WEBDRIVER"]
     puts "\n== Updating webdrivers =="
