@@ -7,10 +7,10 @@ describe Champs::ReferentielChamp, type: :model do
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, procedure:) }
-  let(:value) { "PG46YY6YWCX8" }
+  let(:referentiel_champ) { dossier.champs.find(&:referentiel?) }
 
   def with_value(external_id:, data: {}, fetch_external_data_exceptions: [])
-    champ.tap do
+    referentiel_champ.tap do
       _1.external_id = external_id
       _1.data = data
       _1.fetch_external_data_exceptions = fetch_external_data_exceptions
@@ -18,8 +18,6 @@ describe Champs::ReferentielChamp, type: :model do
   end
 
   describe '#valid?' do
-    let(:champ) { dossier.champs.first }
-
     context 'when external_id is nil and data is nil' do
       let(:state_not_filled) { { external_id: nil, data: nil } }
 
@@ -67,7 +65,6 @@ describe Champs::ReferentielChamp, type: :model do
   end
 
   describe 'updates external_id' do
-    let(:champ) { dossier.champs.first }
     before do
       values = {
         value: '123',
@@ -75,11 +72,18 @@ describe Champs::ReferentielChamp, type: :model do
         value_json: { ok: "ok" },
         fetch_external_data_exceptions: ['error']
       }
-      champ.update!(values)
+      referentiel_champ.update!(values)
     end
 
     it 'propagate fetch_external_data_pending? changes and reset for values, data, value_json and fetch_external_data_exceptions' do
-      expect { champ.update(external_id: 'newid') }.to change { champ.fetch_external_data_pending? }.from(false).to(true)
+      expect { referentiel_champ.update(external_id: 'newid') }.to change { referentiel_champ.fetch_external_data_pending? }.from(false).to(true)
+
+      expect(referentiel_champ.external_id).to eq('newid')
+      expect(referentiel_champ.data).to eq(nil)
+      expect(referentiel_champ.value_json).to eq(nil)
+      expect(referentiel_champ.fetch_external_data_exceptions).to eq([])
+    end
+  end
 
   describe '#fetch_external_data' do
     subject { referentiel_champ.update_with_external_data!(data: { ok: "ok" }.with_indifferent_access) }
