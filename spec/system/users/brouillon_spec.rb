@@ -729,7 +729,6 @@ describe 'The user', js: true do
   end
 
   def fill_individual
-    find('label', text: 'Monsieur').click
     fill_in('Prénom', with: 'prenom', visible: true)
     fill_in('Nom', with: 'Nom', visible: true)
     within "#identite-form" do
