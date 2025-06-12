@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Dossiers::MessageComponent < ApplicationComponent
+  include DossierHelper
+
   def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false, groupe_gestionnaire: nil, heading_level: 'h2')
     @commentaire = commentaire
     @connected_user = connected_user
@@ -20,6 +22,16 @@ class Dossiers::MessageComponent < ApplicationComponent
     return helpers.correction_resolved_badge if commentaire.dossier_correction.resolved?
 
     helpers.pending_correction_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
+  end
+
+  def commentaire_class(commentaire, connected_user)
+    if commentaire.sent_by_system?
+      'fr-background-alt--grey'
+    elsif commentaire.sent_by_usager?
+      'fr-background-alt--brown-cafe-creme'
+    else
+      'fr-background-alt--blue-cumulus'
+    end
   end
 
   private
@@ -54,24 +66,29 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   def icon
     if commentaire.sent_by_system?
-      dsfr_icon('fr-icon-message-2-fill', :sm, :mr)
-    elsif commentaire.sent_by?(connected_user)
-      dsfr_icon('fr-icon-user-fill', :sm, :mr)
+      dsfr_icon('fr-icon-mail-fill')
+    elsif commentaire.sent_by_usager?
+      dsfr_icon('fr-icon-folder-user-fill')
     else
-      dsfr_icon('fr-icon-discuss-fill', :sm, :mr)
+      dsfr_icon('fr-icon-user-fill')
     end
   end
 
   def commentaire_issuer
-    if commentaire.sent_by_system?
+    issuer = if commentaire.sent_by_system?
       t('.automatic_email')
-    elsif commentaire.sent_by?(connected_user)
-      t('.you')
+    elsif commentaire.sent_by_usager?
+      demandeur_dossier(commentaire.dossier)
     elsif groupe_gestionnaire
       commentaire.gestionnaire_id ? commentaire.gestionnaire_email : commentaire.sender_email
     else
       commentaire.redacted_email
     end
+
+    if commentaire.sent_by?(connected_user)
+      issuer.prepend("[#{t('.you')}] ")
+    end
+    issuer
   end
 
   def commentaire_from_guest?

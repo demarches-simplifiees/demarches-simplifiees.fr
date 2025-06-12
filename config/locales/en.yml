@@ -510,7 +510,7 @@ en:
           latest_message:
             latest_message: "Latest message"
         messagerie:
-          mailbox: "The mailbox allows you to contact the instructor in charge of your file."
+          mailbox: "The mailbox allows you to contact the administration in charge of your file."
         rendez_vous:
           title: "Your next appointment"
           navigate_to_rdv_sp: "See my appointment on RDV Service Public"

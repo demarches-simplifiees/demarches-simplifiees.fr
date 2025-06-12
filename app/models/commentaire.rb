@@ -69,6 +69,10 @@ class Commentaire < ApplicationRecord
     expert_id.present?
   end
 
+  def sent_by_usager?
+    !(sent_by_system? || sent_by_instructeur? || sent_by_expert?)
+  end
+
   def sent_by?(someone)
     someone.present? && email == someone&.email
   end
