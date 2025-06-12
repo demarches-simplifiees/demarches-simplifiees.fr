@@ -1,5 +1,5 @@
 - content_for(:title, "Messagerie · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
 
-= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications }
+= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications, notifications_sticker: @notifications_sticker }
 
 = render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_instructeur, messagerie_seen_at: @messagerie_seen_at , new_commentaire: @commentaire, form_url: commentaire_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]) }

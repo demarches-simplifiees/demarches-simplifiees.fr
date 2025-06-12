@@ -11,7 +11,7 @@
                       [t('show_dossier', scope: [:layouts, :breadcrumb], dossier_id: dossier.id, owner_name: dossier.owner_name)]] }
 
   = render partial: 'instructeurs/dossiers/header_top', locals: { dossier:, procedure_presentation:, notifications: }
-  = render partial: 'instructeurs/dossiers/header_bottom', locals: { dossier:, gallery_attachments: }
+  = render partial: 'instructeurs/dossiers/header_bottom', locals: { dossier:, gallery_attachments:, notifications_sticker: }
 
 .fr-container
   .print-header

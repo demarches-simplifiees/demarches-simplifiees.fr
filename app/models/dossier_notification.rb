@@ -128,6 +128,17 @@ class DossierNotification < ApplicationRecord
     }
   end
 
+  def self.notifications_sticker_for_instructeur_dossier(instructeur, dossier)
+    notifications = DossierNotification.where(dossier:, instructeur:)
+
+    {
+      demande: notifications.exists?(notification_type: :dossier_modifie),
+      annotations_instructeur: notifications.exists?(notification_type: :annotation_instructeur),
+      avis_externe: notifications.exists?(notification_type: :avis_externe),
+      messagerie: notifications.exists?(notification_type: :message_usager)
+    }
+  end
+
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
     dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
 

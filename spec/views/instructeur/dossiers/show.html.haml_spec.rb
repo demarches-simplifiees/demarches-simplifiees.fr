@@ -6,6 +6,7 @@ describe 'instructeurs/dossiers/show', type: :view do
   let(:statut) { { statut: 'tous' } }
   let(:procedure_presentation) { double(instructeur: current_instructeur, procedure: dossier.procedure, displayed_columns: []) }
   let(:notifications) { [] }
+  let(:notifications_sticker) { { demande: false, annotations_instructeur: false, avis_externe: false, messagerie: false } }
 
   before do
     sign_in(current_instructeur.user)
@@ -14,6 +15,7 @@ describe 'instructeurs/dossiers/show', type: :view do
     assign(:dossier, dossier)
     assign(:procedure_presentation, procedure_presentation)
     assign(:notifications, notifications)
+    assign(:notifications_sticker, notifications_sticker)
   end
 
   subject { render }
