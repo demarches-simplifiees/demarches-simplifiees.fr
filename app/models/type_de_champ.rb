@@ -674,7 +674,8 @@ class TypeDeChamp < ApplicationRecord
       :formatted_mode, :numbers_accepted, :letters_accepted, :special_characters_accepted,
       :min_character_length, :max_character_length,
       :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
-    ]
+    ],
+    type_champs.fetch(:referentiel) => [:referentiel_mapping]
   }
 
   def clean_options
