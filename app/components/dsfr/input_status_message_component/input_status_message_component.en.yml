@@ -6,3 +6,4 @@ en:
     fetching: "Search in progress."
     error: "No item found for the reference: %{value}"
     success: "Reference found: %{value}"
+  prefilled: "Prefilled data."
