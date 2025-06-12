@@ -1,4 +1,4 @@
-= render Dsfr::NoticeComponent.new(closable: true) do |c|
+= render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-notice-name" => "instr-notifications"}) do |c|
   - c.with_title do
     NOUVEAUTÉ – Vous savez maintenant à quoi correspond la pastille rouge sur vos dossiers !
   - c.with_desc do
