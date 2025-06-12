@@ -44,18 +44,32 @@ class Champs::ReferentielChamp < Champ
     self.fetch_external_data_exceptions = []
   end
 
+  def cast_value_for_type_de_champ(value, type_champ)
+    case type_champ
+    when 'integer_number'
+      value.to_i if value.present?
+    when 'decimal_number'
+      value.to_f if value.present?
+    when 'checkbox', 'yes_no'
+      bool = ActiveModel::Type::Boolean.new.cast(value)
+      bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
+    else # text, textarea, etc.
+      value.to_s unless value.nil?
+    end
+  end
+
   def propagate_prefill(data)
     type_de_champ.referentiel_mapping_prefillable_with_stable_id.each do |jsonpath, mapping|
       update_prefillable_champ(
         mapping[:prefill_stable_id],
-        JSONPath.value(data, jsonpath)
+        JSONPath.value(data.with_indifferent_access, jsonpath)
       )
     end
   end
 
-  def update_prefillable_champ(prefill_stable_id, value)
+  def update_prefillable_champ(prefill_stable_id, raw_value)
     prefill_champ = find_prefillable_champ(prefill_stable_id)
-    prefill_champ.update(value:) if prefill_champ.present?
+    prefill_champ.update(value: cast_value_for_type_de_champ(raw_value, prefill_champ.type_de_champ.type_champ)) if prefill_champ.present?
   end
 
   def find_prefillable_champ(prefill_stable_id)
