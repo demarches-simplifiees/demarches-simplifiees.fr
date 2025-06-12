@@ -24,7 +24,8 @@ class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
         add_file: t(".add_file"),
         choose_file: t(".choose_file"),
         delete_file: t(".delete_file")
-      }
+      },
+      ariaLabelledbyPrefix: "#{aria_labelledby_prefix} #{@champ.html_id}-label"
     }
   end
 

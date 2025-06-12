@@ -7,12 +7,14 @@ export function AddressInput({
   source,
   featureCollection,
   champId,
-  translations
+  translations,
+  ariaLabelledbyPrefix
 }: {
   source: string;
   featureCollection: FeatureCollection;
   champId: string;
   translations: Record<string, string>;
+  ariaLabelledbyPrefix?: string;
 }) {
   return (
     <div style={{ marginBottom: '10px' }}>
@@ -21,6 +23,7 @@ export function AddressInput({
         id={champId}
         loader={source}
         label={translations.address_input_label}
+        ariaLabelledbyPrefix={ariaLabelledbyPrefix}
         description={translations.address_input_description}
         placeholder={translations.address_placeholder}
         onChange={(item) => {
