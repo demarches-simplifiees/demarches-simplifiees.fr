@@ -26,7 +26,7 @@ class Champs::TeFenuaChamp < Champ
   end
 
   def marker?
-    type_de_champ && type_de_champ.options["te_fenua_layer"] == "marker"
+    type_de_champ && type_de_champ.te_fenua_layer == "marker"
   end
 
   def zones_manuelles?
@@ -128,16 +128,12 @@ class Champs::TeFenuaChamp < Champ
 
     geo_areas.destroy_all
 
-    if marker? && parsed_data[:positions].present? && parsed_data[:positions].is_a?(Array)
-      parsed_data[:positions].each do |pos_data|
-        if pos_data[:geometry].is_a?(Hash) && pos_data[:geometry].present?
-          geo_areas.build(
-            source: GeoArea.sources.fetch(:selection_utilisateur),
-            geometry: pos_data[:geometry]
-          )
-        else
-          Rails.logger.warn("Invalid or missing geometry data for GeoArea in TeFenuaChamp #{id} from value: #{pos_data[:geometry]}")
-        end
+    source = GeoArea.sources.fetch(:selection_utilisateur);
+    parsed_data.each do |category, collection|
+      next if category == :positions
+
+      collection[:features].each do |feature|
+        geo_areas.build(source:, geometry: feature[:geometry], properties: feature[:properties]&.reject { |k, _v| k == :style })
       end
     end
   end

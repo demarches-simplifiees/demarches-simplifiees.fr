@@ -1,7 +1,6 @@
 fr:
-  lexpol_component:
-    label_numero_nor: "Numéro NOR :"
-    label_statut_dossier: "Statut du dossier :"
-    button_creer_dossier: "Créer le dossier Lexpol"
-    button_mettre_a_jour: "Mettre à jour le dossier Lexpol"
-    button_creer_nouveau: "Créer un nouveau dossier Lexpol"
+  label_numero_nor: "Numéro NOR :"
+  label_statut_dossier: "Statut du dossier :"
+  button_creer_dossier: "Créer le dossier Lexpol"
+  button_mettre_a_jour: "Mettre à jour le dossier Lexpol"
+  button_creer_nouveau: "Créer un nouveau dossier Lexpol"

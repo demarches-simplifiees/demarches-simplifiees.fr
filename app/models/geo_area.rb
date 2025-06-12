@@ -211,6 +211,16 @@ class GeoArea < ApplicationRecord
     end
   end
 
+  # pf ile and commune associee are specific to French polynesia
+  def commune_associee
+    properties['commune_associee']
+  end
+
+  # pf ile and commune associee are specific to French polynesia
+  def ile
+    properties['ile']
+  end
+
   def cid
     if legacy_cadastre?
       "#{code_dep}#{code_com}#{code_arr}#{section}#{numero}"

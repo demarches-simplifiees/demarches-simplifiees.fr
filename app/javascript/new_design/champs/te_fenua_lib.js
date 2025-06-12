@@ -261,7 +261,7 @@ export function getBatimentFeatureInfo(coordinate, resolution, projection) {
 // @param projection
 // @return {Promise<any|never>}
 export function getCadastreFeatureInfo(coordinate, resolution, projection) {
-  const layers = 'TEFENUA:v_Cadastre_Parcelle';
+  const layers = 'TEFENUA:CADASTRE';
   //const possible = 'TEFENUA:Bati_ConstructionLineaire,TEFENUA:Bati_TerrainSport,TEFENUA:BiensPublics_Communes,TEFENUA:BiensPublics_Etat'
   return getFeatureInfo(coordinate, resolution, projection, {
     feature_count: 1,

@@ -9,6 +9,9 @@ module Types::GeoAreas
     field :surface, String, null: false
     field :prefixe, String, null: false
     field :commune, String, null: false
+    # pf fields
+    field :commune_associee, String, null: false
+    field :ile, String, null: false
 
     field :code_dep, String, null: false, deprecation_reason: 'Utilisez le champ `commune` à la place.'
     field :nom_com, String, null: false, deprecation_reason: 'Utilisez le champ `commune` à la place.'

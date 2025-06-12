@@ -135,7 +135,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }.merge(INSTANCE_TYPE_CHAMPS)
 
-  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
+  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :te_fenua_layer, :min, :max, :level, :accredited_users, :lexpol_modele, :lexpol_mapping]
   INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
   SIMPLE_ROUTABLE_TYPES = [
@@ -169,8 +169,6 @@ class TypeDeChamp < ApplicationRecord
                  :expression_reguliere_error_message,
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
-                 :lexpol_modele,
-                 :lexpol_mapping,
                  :header_section_level
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
@@ -855,7 +853,7 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  private
+  private # TODO : Why 2 privates in this file ?
 
   def populate_stable_id
     if !stable_id

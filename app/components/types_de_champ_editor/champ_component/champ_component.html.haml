@@ -178,14 +178,14 @@
                           = t(".layers.#{name}")
           - if type_de_champ.te_fenua?
             .flex.width-33
-              .flex.flex-grow.align-center.fr-m-3v
-                .cell
-                  .carte-options
-                    = form.fields_for :editable_options do |form|
-                      - TypesDeChamp::TeFenuaTypeDeChamp::LAYERS.each do |layer|
-                        = form.label :te_fenua_layer, for: dom_id(type_de_champ, "layer_#{layer}") do
-                          = form.radio_button :te_fenua_layer, layer, checked: type_de_champ.options["te_fenua_layer"] == layer.to_s, class: 'small-margin small', id: dom_id(type_de_champ, "layer_#{layer}")
-                          = t(".layers.#{layer}")
+            .flex.column.width-33
+              .cell
+                .carte-options
+                  = form.fields_for :editable_options do |form|
+                    - TypesDeChamp::TeFenuaTypeDeChamp::LAYERS.each do |layer|
+                      = form.label :te_fenua_layer, for: dom_id(type_de_champ, "layer_#{layer}") do
+                        = form.radio_button :te_fenua_layer, layer, checked: type_de_champ.options["te_fenua_layer"] == layer.to_s, class: 'small-margin small', id: dom_id(type_de_champ, "layer_#{layer}")
+                        = t(".layers.#{layer}")
           - if type_de_champ.textarea?
             .cell
               = form.label :character_limit, for: dom_id(type_de_champ, :character_limit) do
