@@ -107,7 +107,7 @@ describe TypeDeChamp do
       context 'when the target type_champ is not drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
-        it { expect(tdc.drop_down_options).to be_nil }
+        it { expect(tdc.drop_down_options).to be_empty }
       end
 
       context 'when the target type_champ is linked_drop_down_list' do
@@ -192,44 +192,19 @@ describe TypeDeChamp do
     end
   end
 
-  describe '#drop_down_list_options' do
-    let(:value) do
-      <<~EOS
-        Cohésion sociale
-        Dév.Eco / Emploi
-        Cadre de vie / Urb.
-        Pilotage / Ingénierie
-      EOS
+  describe '#drop_down_options' do
+    let(:type_de_champ) { create(:type_de_champ_drop_down_list) }
+
+    it "splits input" do
+      type_de_champ.drop_down_list_value = nil
+      expect(type_de_champ.drop_down_options).to eq([])
+
+      type_de_champ.drop_down_list_value = "\n\r"
+      expect(type_de_champ.drop_down_options).to eq([])
+
+      type_de_champ.drop_down_list_value = " 1 / 2 \r\n 3"
+      expect(type_de_champ.drop_down_options).to eq(['1 / 2', '3'])
     end
-    let(:type_de_champ) { create(:type_de_champ_drop_down_list, drop_down_list_value: value) }
-
-    it { expect(type_de_champ.drop_down_list_options).to eq ['', 'Cohésion sociale', 'Dév.Eco / Emploi', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
-
-    context 'when one value is empty' do
-      let(:value) do
-        <<~EOS
-          Cohésion sociale
-          Cadre de vie / Urb.
-          Pilotage / Ingénierie
-        EOS
-      end
-
-      it { expect(type_de_champ.drop_down_list_options).to eq ['', 'Cohésion sociale', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
-    end
-  end
-
-  describe 'disabled_options' do
-    let(:value) do
-      <<~EOS
-        tip
-        --top--
-        --troupt--
-        ouaich
-      EOS
-    end
-    let(:type_de_champ) { create(:type_de_champ_drop_down_list, drop_down_list_value: value) }
-
-    it { expect(type_de_champ.drop_down_list_disabled_options).to match(['--top--', '--troupt--']) }
   end
 
   describe '#public_only' do

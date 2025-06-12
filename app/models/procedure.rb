@@ -196,9 +196,7 @@ class Procedure < ApplicationRecord
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
-  has_one_attached :logo do |attachable|
-    attachable.variant :email, resize_to_limit: [450, 450]
-  end
+  has_one_attached :logo
   has_one_attached :notice
   has_one_attached :deliberation
 
@@ -746,7 +744,8 @@ class Procedure < ApplicationRecord
 
   def logo_url
     if logo.attached?
-      Rails.application.routes.url_helpers.url_for(logo)
+      logo_variant = logo.variant(resize_to_limit: [400, 400])
+      logo_variant.key.present? ? logo_variant.processed.url : Rails.application.routes.url_helpers.url_for(logo)
     else
       ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
     end

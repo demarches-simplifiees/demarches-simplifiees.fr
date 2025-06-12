@@ -523,16 +523,42 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def drop_down_list_options?
+    drop_down_list_options.any?
+  end
+
+  def drop_down_list_options
+    drop_down_options.presence || []
+  end
+
+  def drop_down_list_disabled_options
+    drop_down_list_options.filter { |v| (v =~ /^--.*--$/).present? }
+  end
+
+  def drop_down_options
+    Array.wrap(super)
+  end
+
+  def drop_down_list_enabled_non_empty_options(other: false)
+    list_options = drop_down_options.reject(&:empty?)
+
+    if other && drop_down_other?
+      list_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
+    else
+      list_options
+    end
+  end
+
   def drop_down_list_value
-    if drop_down_list_options.present?
-      drop_down_list_options.reject(&:empty?).join("\r\n")
+    if drop_down_options.present?
+      drop_down_options.reject(&:empty?).join("\r\n")
     else
       ''
     end
   end
 
   def drop_down_list_value=(value)
-    self.drop_down_options = parse_drop_down_list_value(value)
+    self.drop_down_options = value.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
   def header_section_level_value
@@ -613,28 +639,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def drop_down_list_options?
-    drop_down_list_options.any?
-  end
-
-  def drop_down_list_options
-    drop_down_options.presence || []
-  end
-
-  def drop_down_list_disabled_options
-    drop_down_list_options.filter { |v| (v =~ /^--.*--$/).present? }
-  end
-
-  def drop_down_list_enabled_non_empty_options(other: false)
-    list_options = (drop_down_list_options - drop_down_list_disabled_options).reject(&:empty?)
-
-    if other && drop_down_other?
-      list_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
-    else
-      list_options
-    end
-  end
-
   def layer_enabled?(layer)
     options && options[layer] && options[layer] != '0'
   end
@@ -654,7 +658,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def accredited_user_string=(value)
-    self.accredited_users = parse_accredited_user_string(value)
+    self.accredited_users = value.blank? ? [] : value.split(/\s*[\r\n]+\s*/).map(&:downcase)
   end
 
   def accredited_user_list?
@@ -850,17 +854,6 @@ class TypeDeChamp < ApplicationRecord
   end
 
   private # TODO : Why 2 privates in this file ?
-
-  DEFAULT_EMPTY = ['']
-  def parse_drop_down_list_value(value)
-    value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
-    result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
-    result.blank? ? [] : DEFAULT_EMPTY + result
-  end
-
-  def parse_accredited_user_string(value)
-    value.blank? ? [] : value.split(/\s*[\r\n]+\s*/).map(&:downcase)
-  end
 
   def populate_stable_id
     if !stable_id

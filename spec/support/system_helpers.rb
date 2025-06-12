@@ -63,7 +63,7 @@ module SystemHelpers
     confirmation_email = open_email(email)
     procedure_sign_in_link = confirmation_email.body.match(/href="([^"]*\/commencer\/[^"]*)"/)[1]
 
-    visit procedure_sign_in_link
+    visit URI.parse(procedure_sign_in_link).path
   end
 
   def click_reset_password_link_for(email)

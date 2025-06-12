@@ -440,11 +440,11 @@ class ProcedureRevision < ApplicationRecord
       end
     end
     if to_type_de_champ.drop_down_list?
-      if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
+      if from_type_de_champ.drop_down_options != to_type_de_champ.drop_down_options
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :drop_down_options,
-          from_type_de_champ.drop_down_list_options,
-          to_type_de_champ.drop_down_list_options)
+          from_type_de_champ.drop_down_options,
+          to_type_de_champ.drop_down_options)
       end
       if to_type_de_champ.linked_drop_down_list?
         if from_type_de_champ.drop_down_secondary_libelle != to_type_de_champ.drop_down_secondary_libelle

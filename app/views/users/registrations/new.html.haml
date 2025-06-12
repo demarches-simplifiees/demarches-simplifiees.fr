@@ -1,36 +1,27 @@
 = content_for(:page_id, 'auth')
 
-= render partial: 'shared/social_login', locals: { title: t('views.registrations.new.social_title') }
+.auth-form
+  = devise_error_messages!
+  = form_for resource, url: user_registration_path, html: { class: "fr-py-5w" } do |f|
 
-.form-column.procedure-context-content
-  .auth-form
-    = devise_error_messages!
-    = form_for resource, url: user_registration_path, html: { class: "fr-py-5w" } do |f|
+    %h1.fr-h2= t('views.registrations.new.title', name: Current.application_name)
 
-      %h1.fr-h3= t('views.registrations.new.title', name: Current.application_name)
+    -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
-      -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+    %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
+      %legend.fr-fieldset__legend#create-account-legend
+        %h2.fr-h6= I18n.t('views.registrations.new.subtitle')
 
-      %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
-        %legend.fr-fieldset__legend#create-account-legend
-          %h2.fr-h6= I18n.t('views.registrations.new.subtitle')
+      .fr-fieldset__element
+        %p.fr-text--sm= t('utils.mandatory_champs')
 
-        .fr-fieldset__element
-          %p.fr-text--sm= t('utils.mandatory_champs')
+      .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
-        .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: false })
+      .fr-fieldset__element
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+          opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }})
 
-        .fr-fieldset__element
-          - data_opts = { controller: resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path(resource.min_password_complexity) }
-          = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-              opts: { autofocus: false, autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH, data: data_opts }) do |c|
-            - c.with_describedby do
-              - if resource.validate_password_complexity?
-                %div{ id: c.describedby_id }
-                  #password_complexity
-                    = render PasswordComplexityComponent.new
-              - else
-                = render partial: "devise/password_rules", locals: { id: c.describedby_id }
+        #password_complexity
+          = render PasswordComplexityComponent.new
 
-      %ul.fr-btns-group
-        %li= f.submit t('views.shared.account.create'), class: "fr-btn"
+    = f.submit t('views.shared.account.create'), id: 'submit-password', disabled: :disabled, class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }

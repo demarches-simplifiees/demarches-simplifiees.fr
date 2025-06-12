@@ -11,16 +11,16 @@
       .fr-fieldset__element
         %p.fr-text--sm= t('utils.mandatory_champs')
 
-      .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: :disabled, class: 'fr-input-group--disabled', value: t('.email_disabled') })
+      .fr-fieldset__element
+        = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: :disabled, class: 'fr-input-group--disabled' })
 
-      .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password', autofocus: 'true', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path(@user.min_password_complexity) }})
+      .fr-fieldset__element
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+          opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path(user.min_password_complexity) }})
+
+        #password_complexity
+          = render PasswordComplexityComponent.new
 
       = f.hidden_field :reset_password_token, value: params[:token]
 
-      #password_complexity
-        = render PasswordComplexityComponent.new
-
-      .fr-fieldset__element
-        .fr-btns-group--right.fr-btns-group.fr-btns-group--inline.fr-btns-group.fr-btns-group--inline
-          %ul
-            %li= f.submit t('.submit'), id: 'submit-password', class: 'fr-mt-2v fr-btn fr-btn'
+      = f.submit t('.submit'), id: 'submit-password', disabled: :disabled, class: "fr-btn fr-btn--lg fr-mt-2w", data: { disabled: :disabled, disable_with: t('views.users.passwords.edit.submit_loading') }

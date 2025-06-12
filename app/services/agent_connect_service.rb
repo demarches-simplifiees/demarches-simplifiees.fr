@@ -14,10 +14,12 @@ class AgentConnectService
     nonce = SecureRandom.hex(16)
 
     uri = client.authorization_uri(
-      scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret],
+      scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
       state:,
       nonce:,
-      acr_values: 'eidas1'
+      acr_values: 'eidas1',
+      claims: { id_token: { amr: { essential: true } } }.to_json,
+      prompt: :login
     )
 
     [uri, state, nonce]
@@ -32,7 +34,15 @@ class AgentConnectService
     id_token = ResponseObject::IdToken.decode(access_token.id_token, conf[:jwks])
     id_token.verify!(conf.merge(nonce: nonce))
 
-    [access_token.userinfo!.raw_attributes, access_token.id_token]
+    amr = id_token.amr.present? ? JSON.parse(id_token.amr) : []
+
+    [access_token.userinfo!.raw_attributes, access_token.id_token, amr]
+  end
+
+  def self.logout_url(id_token, host_with_port:)
+    app_logout = Rails.application.routes.url_helpers.logout_url(host: host_with_port)
+    h = { id_token_hint: id_token, post_logout_redirect_uri: app_logout }
+    "#{AGENT_CONNECT[:end_session_endpoint]}?#{h.to_query}"
   end
 
   private

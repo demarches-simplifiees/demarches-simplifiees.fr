@@ -3,7 +3,6 @@
 module Instructeurs
   class GroupeInstructeursController < InstructeurController
     include EmailSanitizableConcern
-    include UninterlacePngConcern
     include GroupeInstructeursSignatureConcern
 
     before_action :ensure_allowed!

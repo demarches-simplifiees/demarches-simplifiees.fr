@@ -5,6 +5,10 @@ class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampB
     :fieldset
   end
 
+  def render?
+    @champ.drop_down_options.any?
+  end
+
   private
 
   def secondary_label

@@ -3,7 +3,7 @@
 describe 'Managing password:', js: true do
   context 'for simple users' do
     let(:user) { create(:user) }
-    let(:new_password) { 'démarches-simple' } # complexity = 2
+    let(:new_password) { 'a new, long, and complicated password!' }
 
     scenario 'a simple user can reset their password' do
       visit root_path
@@ -33,7 +33,7 @@ describe 'Managing password:', js: true do
   context 'for admins' do
     let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
-    let(:weak_password) { '12345678' }
+    let(:weak_password) { '000000000000' }
     let(:strong_password) { 'a new, long, and complicated password!' }
 
     scenario 'an admin can reset their password' do
@@ -72,7 +72,7 @@ describe 'Managing password:', js: true do
 
   context 'for super-admins' do
     let(:super_admin) { create(:super_admin) }
-    let(:weak_password) { '12345678' }
+    let(:weak_password) { '000000000000' }
     let(:strong_password) { 'a new, long, and complicated password!' }
 
     scenario 'a super-admin can reset their password' do
@@ -109,8 +109,8 @@ describe 'Managing password:', js: true do
     visit edit_user_password_path(reset_password_token: 'invalid-password-token')
     expect(page).to have_content 'Changement de mot de passe'
 
-    fill_in 'user_password', with: 'SomePassword'
-    fill_in 'user_password_confirmation', with: 'SomePassword'
+    fill_in 'user_password', with: SECURE_PASSWORD
+    fill_in 'user_password_confirmation', with: SECURE_PASSWORD
     click_on 'Changer le mot de passe'
     expect(page).to have_content('Votre lien de nouveau mot de passe a expiré')
   end

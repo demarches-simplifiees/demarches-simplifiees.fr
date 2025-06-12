@@ -134,7 +134,7 @@ module Types
 
     def options
       if type_de_champ.drop_down_list?
-        type_de_champ.drop_down_list_options.reject(&:empty?)
+        type_de_champ.drop_down_options.reject(&:empty?)
       end
     end
 

@@ -1,20 +1,22 @@
-.three-columns.avis-sign-up
-  .columns-container
-    .column.left
-      %h2.fr-py-5w.text-center= @dossier.procedure.libelle
-      %p.dossier Dossier nº #{@dossier.id}
-    .column
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-6
       = form_for(User.new(email: @email), url: sign_up_expert_avis_path(email: @email), method: :post, html: { class: "fr-py-5w" }) do |f|
-        %h1.fr-h2= t('views.registrations.new.title', name: Current.application_name)
+
+        %h1.fr-h2
+          = t('views.registrations.new.title', name: Current.application_name)
         %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
           .fr-fieldset__element
             %p.fr-text--sm= t('utils.mandatory_champs')
 
-          .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true, autocomplete: 'email' })
           .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH }) do |c|
-              - c.with_describedby do
-                = render partial: "devise/password_rules", locals: { id: c.describedby_id }
+            = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true, autocomplete: 'email' })
 
-        %ul.fr-btns-group
-          %li= f.submit t('views.shared.account.create'), class: "fr-btn"
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+              opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }})
+
+            #password_complexity
+              = render PasswordComplexityComponent.new
+
+        = f.submit t('views.shared.account.create'), id: 'submit-password', disabled: :disabled, class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }

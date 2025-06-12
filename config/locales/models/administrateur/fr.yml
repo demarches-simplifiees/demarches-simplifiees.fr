@@ -10,22 +10,22 @@ fr:
             email:
               blank: 'doit être rempli'
             password:
-              too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
-              not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
+              too_short: 'est trop court. Saisir un mot de passe avec au moins 12 caractères'
+              not_strong: 'n’est pas assez complexe. Saisir un mot de passe plus complexe'
               blank: 'doit être rempli'
         instructeur:
           attributes:
             email:
               blank: 'doit être rempli'
             password:
-              too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
-              not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
+              too_short: 'est trop court. Saisir un mot de passe avec au moins 12 caractères'
+              not_strong: 'n’est pas assez complexe. Saisir un mot de passe plus complexe'
               blank: 'doit être rempli'
         user:
           attributes:
             email:
               blank: 'doit être rempli'
             password:
-              too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
-              not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
+              too_short: 'est trop court. Saisir un mot de passe avec au moins 12 caractères'
+              not_strong: 'n’est pas assez complexe. Saisir un mot de passe plus complexe'
               blank: 'doit être rempli'

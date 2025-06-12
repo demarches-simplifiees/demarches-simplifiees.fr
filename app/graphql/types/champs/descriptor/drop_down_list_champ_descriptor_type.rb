@@ -12,7 +12,7 @@ module Types::Champs::Descriptor
     end
 
     def options
-      object.type_de_champ.drop_down_list_options.reject(&:empty?)
+      object.type_de_champ.drop_down_options.reject(&:empty?)
     end
   end
 end

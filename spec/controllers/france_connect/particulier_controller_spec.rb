@@ -394,7 +394,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         fci.update!(requested_email: email.downcase)
       end
 
-      let!(:user) { create(:user, email:, password: 'this is a very complicated password !') }
+      let!(:user) { create(:user, email:, password: SECURE_PASSWORD) }
 
       it 'merges the account, signs in, and delete the merge token' do
         subject

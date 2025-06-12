@@ -1243,7 +1243,7 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to be_nil
             expect(gql_data[:groupeInstructeurModifier][:errors]).to be_nil
             expect(gql_data[:groupeInstructeurModifier][:groupeInstructeur][:id]).to eq(dossier.groupe_instructeur.to_typed_id)
-            expect(routing_champ.reload.drop_down_list_options).to match_array(procedure.groupe_instructeurs.active.map(&:label))
+            expect(routing_champ.reload.drop_down_options).to match_array(procedure.groupe_instructeurs.active.map(&:label))
             expect(procedure.groupe_instructeurs.active.map(&:routing_rule)).to match_array(procedure.groupe_instructeurs.active.map { ds_eq(champ_value(routing_champ.stable_id), constant(_1.label)) })
           }
         end
@@ -1297,7 +1297,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to be_nil
           expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
           expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
-          expect(routing_champ.reload.drop_down_list_options).to match_array(procedure.groupe_instructeurs.map(&:label))
+          expect(routing_champ.reload.drop_down_options).to match_array(procedure.groupe_instructeurs.map(&:label))
           expect(procedure.groupe_instructeurs.map(&:routing_rule)).to match_array(procedure.groupe_instructeurs.map { ds_eq(champ_value(routing_champ.stable_id), constant(_1.label)) })
         }
       end
