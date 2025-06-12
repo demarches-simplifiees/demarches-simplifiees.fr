@@ -5,6 +5,13 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
            :referentiel_mapping_prefillable,
            to: :type_de_champ
 
+  MAPPING_TYPE_TO_TYPE_DE_CHAMP = {
+    "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret],
+    "Nombre à virgule"    => %w[decimal_number],
+    "Nombre Entier"       => %w[integer_number],
+    "Booléen"             => %w[checkbox yes_no]
+  }.freeze
+
   def source_tdcs
     @source_tdcs ||= procedure.draft_revision.types_de_champ_for(scope: :public)
   end
@@ -20,12 +27,13 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
   private
 
   def tdc_targets(referentiel_mapping_element)
-    if referentiel_mapping_element[:type].in?(Referentiels::MappingFormComponent::TYPES.values)
-      source_tdcs.reject { it.stable_id == @type_de_champ.stable_id }
-        .map { [it.libelle, it.stable_id] }
-    else
-      raise ArgumentError.new("unknown mapping type for #{referentiel_mapping_element[:type]}")
-    end
+    mapping_type = referentiel_mapping_element[:type]
+    allowed_types = MAPPING_TYPE_TO_TYPE_DE_CHAMP[mapping_type] || []
+
+    source_tdcs
+      .reject { |it| it.stable_id == @type_de_champ.stable_id }
+      .filter { |it| allowed_types.include?(it.type_champ) }
+      .map { |it| [it.libelle, it.stable_id] }
   end
 
   def render?
