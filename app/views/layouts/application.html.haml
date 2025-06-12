@@ -7,6 +7,10 @@
     %meta{ name: "application-name", content: Current.application_name }
     %meta{ name: "apple-mobile-web-app-title", content: Current.application_name }
     %meta{ name: "format-detection", content: "telephone=no,date=no,address=no,email=no,url=no" }
+
+    - if request.host != ENV["APP_HOST"]
+      %link{ rel: "canonical", href: "https://#{ENV['APP_HOST']}#{request.fullpath}" }
+
     = csrf_meta_tags
 
     - if administrateur_signed_in? || instructeur_signed_in?
