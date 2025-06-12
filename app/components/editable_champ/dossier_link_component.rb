@@ -41,19 +41,28 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
       dossiers = procedure.dossiers.select do |dossier|
         dossier.user == current_user && !%w[brouillon supprimés].include?(dossier.state)
       end
-      next if dossiers.empty?
 
       options << {
         value: "separator_#{procedure.id}",
         label: "-- Démarche : #{procedure.libelle} --"
       }
+      dossiers = dossiers.reject { |dossier| dossier.id == @champ.dossier_id } 
 
-      options.concat(dossiers.map do |dossier|
-        {
-          value: dossier.id.to_s,
-          label: "N° #{dossier.id} - déposé le #{dossier.depose_at.strftime('%d/%m/%Y')}"
+      if dossiers.empty?
+        
+        options << {
+          value: "no_dossier_#{procedure.id}",
+          label: "Vous n’avez déposé aucun dossier sur cette démarche. "
         }
-      end)
+      else
+
+        options.concat(dossiers.map do |dossier|
+          {
+            value: dossier.id.to_s,
+            label: "N° #{dossier.id} - déposé le #{dossier.depose_at.strftime('%d/%m/%Y')}"
+          }
+        end)
+      end
     end
 
     options
@@ -86,16 +95,28 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
   end
 
   def render_as_radios?
-    before_render_dossiers.size <= 5
+    before_render_dossiers.size > 0 && before_render_dossiers.size <= 5
   end
 
   def render_as_combobox?
     before_render_dossiers.size >= 20
   end
 
+  def render_no_dossier?
+    before_render_dossiers.blank?
+  end
+
   def contains_long_option?
     max_length = 100
     dossier_options_for(@champ).any? { |option| option[:label].size > max_length }
+  end
+
+  def procedures_limit_zero?
+    @champ.type_de_champ&.options&.dig("procedures_limit")&.to_i == 0
+  end
+
+  def show_info_text?
+    !@champ.blank? && !dossier.blank?
   end
 
   def before_render
