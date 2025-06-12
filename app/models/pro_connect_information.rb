@@ -3,6 +3,5 @@
 class ProConnectInformation < ApplicationRecord
   self.table_name = 'agent_connect_informations'
 
-  belongs_to :instructeur
-  belongs_to :user, optional: true
+  belongs_to :user
 end
