@@ -33,6 +33,6 @@ class SwitchDomainBannerComponent < ApplicationComponent
   private
 
   def url_options
-    request.params.except(:switch_domain).merge(host: ApplicationHelper::APP_HOST)
+    request.query_parameters.except(:switch_domain).merge(host: ApplicationHelper::APP_HOST)
   end
 end
