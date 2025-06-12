@@ -1,23 +1,13 @@
 # frozen_string_literal: true
 
-class Referentiels::MappingFormComponent < ApplicationComponent
+class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   TYPES = {
     String => "Chaine de caractère",
     Float => "Nombre à virgule",
     Integer => "Nombre Entier",
     TrueClass => "Booléen",
     FalseClass => "Booléen"
-  }
-
-  PREFIX = "type_de_champ[referentiel_mapping][]"
-
-  attr_reader :procedure, :type_de_champ, :referentiel
-
-  def initialize(procedure:, type_de_champ:, referentiel:)
-    @procedure = procedure
-    @type_de_champ = type_de_champ
-    @referentiel = referentiel
-  end
+  }.freeze
 
   def last_request_keys
     JSONPath.hash_to_jsonpath(referentiel.last_response_body)
@@ -71,12 +61,6 @@ class Referentiels::MappingFormComponent < ApplicationComponent
 
   def disabled?(jsonpath)
     lookup_existing_value(jsonpath, "prefill") == "1"
-  end
-
-  def lookup_existing_value(jsonpath, attribute)
-    type_de_champ.referentiel_mapping
-      &.find { _1["jsonpath"] == jsonpath }
-      &.fetch(attribute) { nil }
   end
 
   def value_to_type(value)

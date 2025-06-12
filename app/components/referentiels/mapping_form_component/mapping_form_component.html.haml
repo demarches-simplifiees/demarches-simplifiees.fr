@@ -54,7 +54,8 @@
                     %td
                       %span.hidden{ id: label_check_prefill(jsonpath) }= "Utiliser #{jsonpath} pour préremplir le formulaire"
                       = jsonpath
-                      = hidden_field_tag "type_de_champ[referentiel_mapping][][jsonpath]", jsonpath
+                      = hidden_field_tag attribute_name("jsonpath"), jsonpath
+                      = hidden_field_tag attribute_name("example_value"), example_value
                     %td.fr-cell--multiline= example_value
                     %td= cast_tag(jsonpath, example_value)
                     %td.text-center= prefill_tag(jsonpath)
@@ -62,7 +63,7 @@
                       %div{ data: { "referentiel-mapping-target": "enabledContent" }, class: disabled?(jsonpath) ? '' : 'hidden' }= enabled_libelle_tag(jsonpath)
                       %div{ data: { "referentiel-mapping-target": "disabledContent" }, class: disabled?(jsonpath) ? 'hidden' : '' }= disabled_libelle_tag(jsonpath)
 
-    %ul.fr-btns-group.fr-btns-group--inline-sm
-      %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary'
+    %ul.fr-btns-group.fr-btns-group--inline-sm.flex.justify-center
+      %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-3w'
       %li= link_to "Étape précédente", back_url, class: 'fr-btn fr-btn--secondary'
       %li= f.submit "Étape suivante", class: "fr-btn"
