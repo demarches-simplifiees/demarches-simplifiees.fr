@@ -20,7 +20,7 @@ class Referentiels::MappingFormComponent < ApplicationComponent
   end
 
   def last_request_keys
-    hash_to_jsonpath(referentiel.last_response_body)
+    JSONPath.hash_to_jsonpath(referentiel.last_response_body)
   end
 
   def error_title
@@ -81,20 +81,5 @@ class Referentiels::MappingFormComponent < ApplicationComponent
 
   def value_to_type(value)
     TYPES.fetch(value.class) { TYPES[String] }
-  end
-
-  def hash_to_jsonpath(hash, parent_path = '$')
-    hash.each_with_object({}) do |(key, value), result|
-      current_path = "#{parent_path}.#{key}"
-
-      if value.is_a?(Hash)
-        result.merge!(hash_to_jsonpath(value, current_path))
-      elsif value.is_a?(Array) && value[0].is_a?(Hash)
-
-        result.merge!(hash_to_jsonpath(value[0], "#{current_path}[0]"))
-      else
-        result[current_path] = value
-      end
-    end
   end
 end
