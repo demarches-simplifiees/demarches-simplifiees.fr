@@ -217,7 +217,7 @@ module DossierHelper
   end
 
   def safe_expiration_date(dossier)
-    l(dossier.expiration_date, format: '%d/%m/%Y')
+    l(dossier.expired_at, format: '%d/%m/%Y')
   end
 
   def annuaire_link(siren_or_siret = nil)
