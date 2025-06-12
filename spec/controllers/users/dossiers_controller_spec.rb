@@ -2123,10 +2123,38 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when the requested external_id had been fetched' do
-        before { dossier.champs.first.update_columns(external_id: 'kthxbye', value: "OK", data: {}) }
+        before { dossier.champs.find(&:referentiel?).update_columns(external_id: 'kthxbye', value: "OK", data: {}) }
         it 'validates errors' do
           subject
           expect(response).not_to include('Référence trouvée : OK')
+        end
+
+        context 'propagation du prefill (polling)' do
+          let(:referentiel) { create(:api_referentiel, :configured) }
+          let(:referentiel_stable_id) { 1 }
+          let(:prefillable_stable_id) { 42 }
+          let(:types_de_champ_public) do
+            [
+              {
+                type: :referentiel,
+                referentiel: referentiel,
+                referentiel_mapping: {
+                  "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
+                },
+                stable_id: referentiel_stable_id
+              },
+              { type: :text, stable_id: prefillable_stable_id }
+            ]
+          end
+
+          it 'inclut le champ principal et les champs pré-remplis dans @to_update' do
+            dossier.champs.find(&:referentiel?).update_with_external_data!(data: { ok: 'valeur préremplie' })
+
+            get :champ, params: { id: dossier.id, stable_id: referentiel_stable_id }, format: :turbo_stream
+
+            expect(assigns(:to_update).size).to eq(2)
+            expect(dossier.reload.project_champs.map(&:value)).to include('valeur préremplie')
+          end
         end
       end
 
