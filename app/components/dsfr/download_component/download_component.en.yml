@@ -1,4 +1,5 @@
 ---
 en:
+  action: "Download file "
   ephemeral_link: This link is ephemeral and should not be shared.
   virus_not_analyzed: this file has not been scanned by our antivirus, download it with care
