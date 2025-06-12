@@ -414,7 +414,14 @@ describe EditableChamp::RepetitionComponent, type: :component do
         end
       end
 
-      xcontext "for type carte" do
+      context "for type carte" do
+        let(:children) { [{ type: :carte }] }
+
+        it do
+          subject
+          attribute = JSON.parse(page.first("react-component")['props'])['address_aria_labelledby']
+          expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+        end
       end
     end
 
