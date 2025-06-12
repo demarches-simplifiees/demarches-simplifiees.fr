@@ -23,7 +23,8 @@ class TypeDeChamp < ApplicationRecord
     numero_dn: 'numero_dn',
     te_fenua: 'te_fenua',
     lexpol: 'lexpol',
-    visa: 'visa'
+    visa: 'visa',
+    formule: 'formule'
   }
 
   STRUCTURE = :structure
@@ -44,7 +45,8 @@ class TypeDeChamp < ApplicationRecord
     numero_dn: REFERENTIEL_EXTERNE,
     te_fenua: REFERENTIEL_EXTERNE,
     lexpol: REFERENTIEL_EXTERNE,
-    visa: STRUCTURE
+    visa: STRUCTURE,
+    formule: STANDARD
   }
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
@@ -135,7 +137,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }.merge(INSTANCE_TYPE_CHAMPS)
 
-  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :te_fenua_layer, :min, :max, :level, :accredited_users, :lexpol_modele, :lexpol_mapping]
+  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :te_fenua_layer, :min, :max, :level, :accredited_users, :lexpol_modele, :lexpol_mapping, :formule_expression]
   INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
   SIMPLE_ROUTABLE_TYPES = [
