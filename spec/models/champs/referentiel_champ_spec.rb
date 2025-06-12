@@ -86,32 +86,239 @@ describe Champs::ReferentielChamp, type: :model do
   end
 
   describe '#fetch_external_data' do
-    subject { referentiel_champ.update_with_external_data!(data: { ok: "ok" }.with_indifferent_access) }
+    subject { referentiel_champ.update_with_external_data!(data:) }
 
     context 'when referentiel had not prefill' do
+      let(:data) { {} }
       let(:types_de_champ_public) { [type: :referentiel, referentiel: referentiel, referentiel_mapping: nil] }
       it 'does not raise error' do
         expect { subject }.not_to raise_error
       end
     end
 
-    context 'when referentiel_mapping has prefill' do
+    context 'when prefill/mapping is configured' do
       let(:prefillable_stable_id) { 2 }
       let(:types_de_champ_public) do
         [
-          { stable_id: prefillable_stable_id, type: :text },
           {
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
               "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
             }
-          }
+          },
+          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }
         ]
       end
 
-      it 'update the prefiiable stable_id with the jsonpath value of the external data' do
-        expect { subject }.to change { dossier.reload.project_champs.find(&:text?).value }.from(nil).to("ok")
+      context 'when data is mapped to text' do
+        let(:data) { { ok: 'ok' } }
+        let(:prefilled_type_de_champ_type) { :text }
+
+        it 'update the prefiiable stable_id with the jsonpath value of the external data' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.find(&:text?).value }.from(nil).to("ok")
+        end
+      end
+
+      context 'when data is mapped to integer_number' do
+        let(:prefilled_type_de_champ_type) { :integer_number }
+
+        context 'when data is a string integer' do
+          let(:data) { { ok: "42" } }
+          it 'casts and updates the integer_number with the jsonpath value as integer' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:integer_number?).value }.from(nil).to("42")
+          end
+        end
+
+        context 'when data is an integer' do
+          let(:data) { { ok: 42 } }
+          it 'casts and updates the integer_number with the jsonpath value as integer' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:integer_number?).value }.from(nil).to("42")
+          end
+        end
+
+        context 'when data is a float' do
+          let(:data) { { ok: 42.2 } }
+          it 'casts and updates the integer_number with the jsonpath value as integer' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:integer_number?).value }.from(nil).to("42")
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'casts and updates the integer_number with the jsonpath value as integer' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:integer_number?).value }
+          end
+        end
+
+        context 'when data is blank string' do
+          let(:data) { { ok: nil } }
+          it 'casts and updates the integer_number with the jsonpath value as integer' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:integer_number?).value }
+          end
+        end
+      end
+
+      context 'when data is mapped to decimal_number' do
+        let(:prefilled_type_de_champ_type) { :decimal_number }
+
+        context 'when data is a float' do
+          let(:data) { { ok: 3.14 } }
+          it 'casts and updates the decimal_number with the jsonpath value as float' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:decimal_number?).value }.from(nil).to("3.14")
+          end
+        end
+
+        context 'when data is a string float' do
+          let(:data) { { ok: "3.14" } }
+          it 'casts and updates the decimal_number with the jsonpath value as float' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:decimal_number?).value }.from(nil).to("3.14")
+          end
+        end
+
+        context 'when data is an integer' do
+          let(:data) { { ok: 2 } }
+          it 'casts and updates the decimal_number with the jsonpath value as float' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:decimal_number?).value }.from(nil).to("2.0")
+          end
+        end
+
+        context 'when data is a string integer' do
+          let(:data) { { ok: "2" } }
+          it 'casts and updates the decimal_number with the jsonpath value as float' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:decimal_number?).value }.from(nil).to("2.0")
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the decimal_number value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:decimal_number?).value }.from(nil)
+          end
+        end
+
+        context 'when data is empty string' do
+          let(:data) { { ok: "" } }
+          it 'does not update the decimal_number value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:decimal_number?).value }.from(nil)
+          end
+        end
+      end
+
+      context 'when data is mapped to checkbox' do
+        let(:prefilled_type_de_champ_type) { :checkbox }
+
+        context 'when data is true' do
+          let(:data) { { ok: true } }
+          it 'casts and updates the checkbox with the jsonpath value as "true"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:checkbox?).value }.from(nil).to("true")
+          end
+        end
+
+        context 'when data is string "true"' do
+          let(:data) { { ok: "true" } }
+          it 'casts and updates the checkbox with the jsonpath value as "true"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:checkbox?).value }.from(nil).to("true")
+          end
+        end
+
+        context 'when data is 1' do
+          let(:data) { { ok: 1 } }
+          it 'casts and updates the checkbox with the jsonpath value as "true"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:checkbox?).value }.from(nil).to("true")
+          end
+        end
+
+        context 'when data is string "1"' do
+          let(:data) { { ok: "1" } }
+          it 'casts and updates the checkbox with the jsonpath value as "true"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:checkbox?).value }.from(nil).to("true")
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the checkbox value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:checkbox?).value }.from(nil)
+          end
+        end
+
+        context 'when data is empty string' do
+          let(:data) { { ok: "" } }
+          it 'does not update the checkbox value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:checkbox?).value }.from(nil)
+          end
+        end
+      end
+
+      context 'when data is mapped to yes_no' do
+        let(:prefilled_type_de_champ_type) { :yes_no }
+
+        context 'when data is false' do
+          let(:data) { { ok: false } }
+          it 'casts and updates the yes_no with the jsonpath value as "false"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil).to("false")
+          end
+        end
+
+        context 'when data is string "false"' do
+          let(:data) { { ok: "false" } }
+          it 'casts and updates the yes_no with the jsonpath value as "false"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil).to("false")
+          end
+        end
+
+        context 'when data is 0' do
+          let(:data) { { ok: 0 } }
+          it 'casts and updates the yes_no with the jsonpath value as "false"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil).to("false")
+          end
+        end
+
+        context 'when data is string "0"' do
+          let(:data) { { ok: "0" } }
+          it 'casts and updates the yes_no with the jsonpath value as "false"' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil).to("false")
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the yes_no value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil)
+          end
+        end
+
+        context 'when data is empty string' do
+          let(:data) { { ok: "" } }
+          it 'does not update the yes_no value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil)
+          end
+        end
       end
     end
   end
