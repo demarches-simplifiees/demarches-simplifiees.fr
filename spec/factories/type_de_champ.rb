@@ -259,5 +259,23 @@ FactoryBot.define do
         end
       end
     end
+
+    factory :type_de_champ_formule do
+      libelle { 'Champ formule' }
+      type_champ { TypeDeChamp.type_champs.fetch(:formule) }
+      formule_expression { '1 + 1' }
+
+      trait :with_simple_expression do
+        formule_expression { '2 * 3' }
+      end
+
+      trait :with_field_reference do
+        formule_expression { '{Montant HT} * 1.20' }
+      end
+
+      trait :with_text_formula do
+        formule_expression { 'CONCAT({Prénom}, " ", {Nom})' }
+      end
+    end
   end
 end
