@@ -22,28 +22,28 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def cast_tag(jsonpath, value)
-    attribute = "type"
-    current_value = lookup_existing_value(jsonpath, attribute) || value_to_type(value)
-
-    select_tag "#{PREFIX}[#{attribute}]", options_for_select(TYPES.values.uniq, current_value), class: "fr-select"
+    select_tag(
+      attribute_name(jsonpath, "type"),
+      options_for_select(self.class::TYPES.values.uniq, lookup_existing_value(jsonpath, "type") || value_to_type(value)),
+      class: "fr-select"
+    )
   end
 
   def prefill_tag(jsonpath)
-    attribute = "prefill"
-    current_value = lookup_existing_value(jsonpath, attribute) || false
     tag.div(class: "fr-checkbox-group") do
       safe_join([
-        check_box_tag("#{PREFIX}[#{attribute}]", "1", current_value, class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }, aria: { labelledby: label_check_prefill(jsonpath) }),
+        check_box_tag(attribute_name(jsonpath, "prefill"), "1", lookup_existing_value(jsonpath, "prefill") || false, class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }, aria: { labelledby: label_check_prefill(jsonpath) }),
         tag.label(for: jsonpath.parameterize, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") }
       ])
     end
   end
 
   def enabled_libelle_tag(jsonpath)
-    attribute = "libelle"
-    current_value = lookup_existing_value(jsonpath, attribute) || jsonpath
-    options = { class: 'fr-input', data: { "referentiel-mapping-target": "input", 'referentiel-mapping-enabled-value': disabled?(jsonpath) } }
-    text_field_tag "#{PREFIX}[#{attribute}]", current_value, options
+    text_field_tag(
+      attribute_name(jsonpath, "libelle"),
+      lookup_existing_value(jsonpath, "libelle") || jsonpath,
+      libelle_field_options(jsonpath)
+    )
   end
 
   def disabled_libelle_tag(jsonpath)
@@ -65,5 +65,15 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
 
   def value_to_type(value)
     TYPES.fetch(value.class) { TYPES[String] }
+  end
+
+  def libelle_field_options(jsonpath)
+    {
+      class: 'fr-input',
+      data: {
+        "referentiel-mapping-target": "input",
+        'referentiel-mapping-enabled-value': disabled?(jsonpath)
+      }
+    }
   end
 end

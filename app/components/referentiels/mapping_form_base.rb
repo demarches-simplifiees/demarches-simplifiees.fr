@@ -12,15 +12,13 @@ class Referentiels::MappingFormBase < ApplicationComponent
     @referentiel = referentiel
   end
 
-  def attribute_name(attribute_name)
-    "type_de_champ[referentiel_mapping][][#{attribute_name}]"
+  def attribute_name(jsonpath, attribute_name)
+    "type_de_champ[referentiel_mapping][#{jsonpath}][#{attribute_name}]"
   end
 
   private
 
   def lookup_existing_value(jsonpath, attribute)
-    lookup_existing_value(jsonpath, "prefill") == "1"
-      &.find { _1["jsonpath"] == jsonpath }
-      &.fetch(attribute) { nil }
+    referentiel_mapping&.dig(jsonpath, attribute)
   end
 end

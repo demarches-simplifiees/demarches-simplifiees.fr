@@ -55,7 +55,7 @@ module Administrateurs
 
     def type_de_champ_mapping_params
       params.require(:type_de_champ)
-        .permit(referentiel_mapping: [:jsonpath, :type, :prefill, :libelle])
+        .permit(referentiel_mapping: {})
     end
 
     def referentiel_params

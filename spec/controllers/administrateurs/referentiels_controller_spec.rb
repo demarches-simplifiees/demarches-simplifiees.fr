@@ -188,14 +188,13 @@ describe Administrateurs::ReferentielsController, type: :controller do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
     let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
     let(:referentiel_mapping) do
-      [
-        {
-          jsonpath: "jsonpath",
+      {
+        "$.jsonpath" => {
           type: "type",
           prefill: "prefill",
           libelle: "libelle"
         }
-      ]
+      }
     end
 
     context 'when update succeeds' do
@@ -207,7 +206,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
             id: referentiel.id,
             type_de_champ: { referentiel_mapping: referentiel_mapping }
           }
-        end.to change { type_de_champ.reload.referentiel_mapping }.from(nil).to(referentiel_mapping)
+        end.to change { type_de_champ.reload.referentiel_mapping }
+          .from(nil)
+          .to(referentiel_mapping.with_indifferent_access)
         expect(response).to redirect_to(prefill_and_display_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
         expect(flash[:notice]).to eq("La configuration du mapping a bien été enregistrée")
       end

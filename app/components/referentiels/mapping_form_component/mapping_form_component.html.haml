@@ -49,13 +49,12 @@
                     %br
                     (pour afficher à l'usager et/ou l'instructeur)
               %tbody
-                - last_request_keys.each do |jsonpath,example_value|
+                - last_request_keys.each do |jsonpath, example_value|
                   %tr{ data: { controller: "referentiel-mapping" } }
                     %td
                       %span.hidden{ id: label_check_prefill(jsonpath) }= "Utiliser #{jsonpath} pour préremplir le formulaire"
                       = jsonpath
-                      = hidden_field_tag attribute_name("jsonpath"), jsonpath
-                      = hidden_field_tag attribute_name("example_value"), example_value
+                      = hidden_field_tag attribute_name(jsonpath, "example_value"), example_value
                     %td.fr-cell--multiline= example_value
                     %td= cast_tag(jsonpath, example_value)
                     %td.text-center= prefill_tag(jsonpath)
