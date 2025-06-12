@@ -27,6 +27,7 @@ const ComboBoxPropsSchema = s.partial(
     className: s.string(),
     name: s.string(),
     label: s.string(),
+    ariaLabelledbyPrefix: s.string(),
     description: s.string(),
     isRequired: s.boolean(),
     isDisabled: s.boolean(),
