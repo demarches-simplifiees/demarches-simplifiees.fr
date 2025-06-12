@@ -1,7 +1,7 @@
 en:
   shared:
     dossiers:
-      beneficiaire: '%{beneficiaire}, file fill by %{mandataire}'
+      beneficiaire: '%{mandataire} (for %{beneficiaire})'
       france_connect_informations:
         details_no_name: "The file was submitted by a FranceConnect account."
         details: "The file was submitted by the account of %{name}."

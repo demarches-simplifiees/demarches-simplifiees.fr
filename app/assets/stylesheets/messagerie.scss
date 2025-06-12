@@ -1,13 +1,7 @@
-@import 'colors';
 @import 'constants';
 
 .messages-list {
-  max-height: 350px;
-  overflow-y: scroll;
-  border: 1px solid $border-grey;
-  padding: 2 * $default-spacer;
-  margin-bottom: $default-spacer;
-  border-radius: 4px;
+  padding: 0;
 
   .message {
     width: 80%;
@@ -18,12 +12,22 @@
   }
 }
 
-.messagerie {
-  .message-textarea {
+.icon-avatar {
+  padding: 2 * $default-spacer;
+  border-radius: 100%;
+  margin-right: 2 * $default-spacer;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: $default-padding;
+
+  h2 {
     margin-bottom: $default-spacer;
   }
 
-  .form input[type='file'] {
-    margin-bottom: 0;
+  .date {
+    float: right;
   }
 }

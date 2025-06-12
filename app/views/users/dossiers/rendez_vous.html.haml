@@ -6,9 +6,8 @@
 .dossier-container.mb-4
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
-  .container
-    %p.messagerie-explanation
-      %h2.fr-h6
-        = t('views.users.dossiers.rendez_vous.title')
-      - @rdvs.each do |rdv|
-        = render Instructeurs::RdvCardComponent.new(rdv:, with_dossier_infos: false)
+  .fr-container
+    %h2.fr-h6
+      = t('views.users.dossiers.rendez_vous.title')
+    - @rdvs.each do |rdv|
+      = render Instructeurs::RdvCardComponent.new(rdv:, with_dossier_infos: false)

@@ -1,7 +1,7 @@
-= icon
+.icon-avatar{ class: commentaire_class(commentaire, connected_user) }
+  = icon
 
-.width-100
-
+.width-100.fr-p-2w{ class: commentaire_class(commentaire, connected_user) }
   = tag.send(heading_level, class: 'fr-h6') do
     %span.mail
       = commentaire_issuer
