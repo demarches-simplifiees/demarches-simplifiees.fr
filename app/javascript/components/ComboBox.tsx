@@ -155,7 +155,7 @@ export function SingleComboBox({
       >
 
         {(item) =>
-          typeof item.value === 'string' && item.value.startsWith('separator_') ? (
+          typeof item.value === 'string' && item.value.startsWith('separator_') || typeof item.value === 'string' && item.value.startsWith('no_dossier_') ? (
             <ComboBoxItem key={item.value} id={item.value} isDisabled style={{ color: '#888' }}>
               {item.label}
             </ComboBoxItem>
