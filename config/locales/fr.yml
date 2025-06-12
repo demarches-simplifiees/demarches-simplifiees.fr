@@ -520,7 +520,7 @@ fr:
           latest_message:
             latest_message: "Dernier message"
         messagerie:
-          mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
+          mailbox: "La messagerie vous permet de contacter l’administration en charge de votre dossier."
         rendez_vous:
           title: "Votre prochain rendez-vous"
           navigate_to_rdv_sp: "Voir mon rendez-vous sur RDV Service Public"

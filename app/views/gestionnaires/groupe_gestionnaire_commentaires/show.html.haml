@@ -4,9 +4,9 @@
                     ["Messagerie", gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire)],
                     [@last_commentaire.sender_email]], preview: false }
 
-.container
+.fr-container
   %h1 Messages de « #{ @last_commentaire.sender_email } »
-.messagerie.container
+.messagerie.fr-container
   %ol.messages-list{ data: { controller: 'scroll-to' } }
     - @groupe_gestionnaire.current_commentaires_groupe_and_children_commentaires_groupe.where(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type).each do |commentaire|
       %li.message{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire), id: dom_id(commentaire) }

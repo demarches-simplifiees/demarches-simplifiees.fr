@@ -26,6 +26,18 @@ class CommentaireGroupeGestionnaire < ApplicationRecord
     false
   end
 
+  def sent_by_instructeur?
+    false
+  end
+
+  def sent_by_expert?
+    false
+  end
+
+  def sent_by_usager?
+    false
+  end
+
   def sent_by?(someone)
     if gestionnaire
       someone == gestionnaire
