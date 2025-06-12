@@ -35,6 +35,16 @@ class Champs::ReferentielChamp < Champ
     true
   end
 
+  def prefillable_stable_ids
+    type_de_champ
+      .referentiel_mapping_prefillable_with_stable_id
+      .map { |_jsonpath, mapping| mapping[:prefill_stable_id] }
+  end
+
+  def prefillable_champs
+    dossier.project_champs.filter { it.public_id.to_s.in?(prefillable_stable_ids.map(&:to_s)) }
+  end
+
   private
 
   def clear_previous_result
