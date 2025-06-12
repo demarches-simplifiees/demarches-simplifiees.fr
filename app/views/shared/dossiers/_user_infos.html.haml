@@ -1,6 +1,6 @@
-= render Dossiers::RowShowComponent.new(label: t('views.shared.label.email'), profile: @profile) do |c|
+= render Dossiers::RowComponent.new(label: t('views.shared.label.email'), profile: @profile) do |c|
   - c.with_value do
     - if for_tiers
       = beneficiaire_mail
     - else
-      = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+      = user_deleted ? "#{email} #{t('views.shared.label.account_deleted')}": email
