@@ -2130,6 +2130,7 @@ describe Users::DossiersController, type: :controller do
         end
 
         context 'propagation du prefill (polling)' do
+          render_views
           let(:referentiel) { create(:api_referentiel, :configured) }
           let(:referentiel_stable_id) { 1 }
           let(:prefillable_stable_id) { 42 }
@@ -2154,6 +2155,7 @@ describe Users::DossiersController, type: :controller do
 
             expect(assigns(:to_update).size).to eq(2)
             expect(dossier.reload.project_champs.map(&:value)).to include('valeur préremplie')
+            expect(response.body).to include('Donnée remplie automatiquement.')
           end
         end
       end

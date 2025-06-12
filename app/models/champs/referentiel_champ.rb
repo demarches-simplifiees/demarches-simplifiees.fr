@@ -79,7 +79,8 @@ class Champs::ReferentielChamp < Champ
 
   def update_prefillable_champ(prefill_stable_id, raw_value)
     prefill_champ = find_prefillable_champ(prefill_stable_id)
-    prefill_champ.update(value: cast_value_for_type_de_champ(raw_value, prefill_champ.type_de_champ.type_champ)) if prefill_champ.present?
+    prefill_champ.update(value: cast_value_for_type_de_champ(raw_value, prefill_champ.type_de_champ.type_champ),
+                         prefilled: true) if prefill_champ.present?
   end
 
   def find_prefillable_champ(prefill_stable_id)
