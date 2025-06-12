@@ -141,13 +141,33 @@ class FranceConnectController < ApplicationController
   # in case of multiple domains sharing the same sub by user
   # see https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-sector_identifier
   def redirect_uris
-    uris = [FRANCE_CONNECT[:redirect_uri]]
+    # rubocop:disable DS/ApplicationName
+    ds_dev_redirect_uris = [
+      'https://dev.demarches-simplifiees.fr/france_connect/particulier/callback',
+      'https://dev.demarches.numerique.gouv.fr/france_connect/particulier/callback'
+    ]
 
-    if ENV['APP_HOST_LEGACY'].present? && ENV['APP_HOST_LEGACY'] != ENV['APP_HOST']
-      uris << "https://#{ENV['APP_HOST_LEGACY']}/france_connect/particulier/callback"
+    ds_prod_redirect_uris = [
+      'https://www.demarches-simplifiees.fr/france_connect/particulier/callback',
+      'https://demarches.numerique.gouv.fr/france_connect/particulier/callback'
+    ]
+
+    is_ds_dev = Current.host.include?('dev.demarches-simplifiees.fr') ||
+      Current.host.include?('dev.demarches.numerique.gouv.fr')
+
+    is_ds_prod = Current.host.include?('www.demarches-simplifiees.fr') ||
+      Current.host.include?('demarches.numerique.gouv.fr')
+    # rubocop:enable DS/ApplicationName
+
+    redirect_uris = if is_ds_dev
+      ds_dev_redirect_uris
+    elsif is_ds_prod
+      ds_prod_redirect_uris
+    else
+      [FRANCE_CONNECT[:redirect_uri]]
     end
 
-    render json: uris
+    render json: redirect_uris
   end
 
   private
