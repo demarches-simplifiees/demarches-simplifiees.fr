@@ -937,8 +937,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.jsonb "displayed_columns", default: [], null: false, array: true
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
     t.jsonb "expirant_filters", default: [], null: false, array: true
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
-    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "filters", default: {"tous" => [], "suivis" => [], "traites" => [], "a-suivre" => [], "archives" => [], "expirant" => [], "supprimes" => []}, null: false
+    t.jsonb "sort", default: {"order" => "desc", "table" => "notifications", "column" => "notifications"}, null: false
     t.jsonb "sorted_column"
     t.jsonb "suivis_filters", default: [], null: false, array: true
     t.jsonb "supprimes_filters", default: [], null: false, array: true
@@ -1295,13 +1295,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.string "libelle"
     t.boolean "mandatory", default: true
     t.jsonb "options"
+
     t.boolean "private", default: false, null: false
     t.bigint "referentiel_id"
+
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at", precision: nil
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["referentiel_id"], name: "index_types_de_champ_on_referentiel_id"
+    t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -1420,7 +1423,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
-  add_foreign_key "etablissements", "dossiers"
+   add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
