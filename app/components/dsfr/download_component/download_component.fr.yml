@@ -1,5 +1,4 @@
 ---
 fr:
-  title: "Télécharger le fichier %{filename}"
   ephemeral_link: Ce lien est éphémère et ne devrait pas être partagé.
   virus_not_analyzed: ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution
