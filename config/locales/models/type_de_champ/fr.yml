@@ -64,8 +64,12 @@ fr:
           cojo: "Accréditation Paris 2024"
           lexpol: "Lexpol"
           expression_reguliere: 'Expression régulière'
+          formule: 'Champ formule'
     errors:
       type_de_champ:
         attributes:
           header_section_level:
             gap_error: "devrait être précédé d'un titre de niveau %{level}"
+          formule_expression:
+            invalid_field_reference: "Référence de champ invalide"
+            invalid_syntax: "Syntaxe invalide: %{message}"
