@@ -453,6 +453,22 @@ describe TypeDeChamp do
         is_expected.to eq({ 'formatted_mode' => 'advanced', 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789' })
       end
     end
+
+    context 'Champ referentiel' do
+      let(:procedure) { create(:procedure, types_de_champ_public:) }
+      let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
+      let(:referentiel) { create(:api_referentiel, :configured, :ready) }
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+
+      before do
+        type_de_champ.update!(options: { 'referentiel_mapping' => { 'kikoo' => 'lol' } })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the expression_reguliere, expression_reguliere_error_message and expression_reguliere_exemple_text' do
+        is_expected.to eq({ 'referentiel_mapping' => { 'kikoo' => 'lol' } })
+      end
+    end
   end
 
   describe 'champ_value with cast' do
