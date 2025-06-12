@@ -38,9 +38,9 @@ describe 'Inviting an expert:', js: true do
       fill_in 'Emails', with: expert2.email
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
-      page.select 'confidentiel', from: 'avis_confidentiel'
+      choose 'confidentiel_true', allow_label_click: true
 
-      within('form#new_avis') { click_on 'Demander un avis' }
+      within('form#new_avis') { click_on "Envoyer la demande d'avis" }
       perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
@@ -79,19 +79,15 @@ describe 'Inviting an expert:', js: true do
       fill_in 'Emails', with: "expert1@gouv.fr; expert2@gouv.fr; test@test.fr; email-invalide"
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
-      page.select 'confidentiel', from: 'avis_confidentiel'
+      choose 'confidentiel_true', allow_label_click: true
 
-      within('form#new_avis') { click_on 'Demander un avis' }
+      within('form#new_avis') { click_on "Envoyer la demande d'avis" }
       perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
-      expect(page).to have_content('Avis des invités')
-      within('section') do
-        expect(page).to have_content('expert1@gouv.fr')
-        expect(page).to have_content('expert2@gouv.fr')
-        expect(page).to have_content('test@test.fr')
-        expect(page).not_to have_content('email-invalide')
-      end
+      expect(page).to have_content('Demander un avis externe')
+      expect(page).to have_content('Une demande d’avis a été envoyée à expert1@gouv.fr, expert2@gouv.fr, test@test.fr')
+      expect(page).to have_content('email-invalide : Le champ « Email » est invalide. Saisissez une adresse électronique valide.')
     end
 
     context 'when experts list is restricted by admin' do
@@ -120,9 +116,9 @@ describe 'Inviting an expert:', js: true do
         select_combobox 'Emails', expert.email
         fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
         check 'avis_invite_linked_dossiers'
-        page.select 'confidentiel', from: 'avis_confidentiel'
+        choose 'confidentiel_true', allow_label_click: true
 
-        within('form#new_avis') { click_on 'Demander un avis' }
+        within('form#new_avis') { click_on "Envoyer la demande d'avis" }
         perform_enqueued_jobs
 
         expect(page).to have_content('Une demande d’avis a été envoyée')

@@ -6,7 +6,7 @@
         %ol.fr-breadcrumb__list
           %li= link_to('Avis', expert_all_avis_path, class: 'fr-breadcrumb__link')
           %li
-            = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(avis.procedure), class: "fr-breadcrumb__link")
+            = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(dossier.procedure), class: "fr-breadcrumb__link")
           %li= content_tag("a","Dossier nº #{dossier.id}", class: 'fr-breadcrumb__link', 'aria-current': 'page')
 
 
@@ -20,14 +20,14 @@
 
       .header-actions.fr-ml-auto
         .fr-download
-          = link_to telecharger_pjs_expert_avis_path(avis.procedure, avis), download: :download, class: "menu-item menu-link fr-download__link" do
+          = link_to telecharger_pjs_expert_avis_path(dossier.procedure, @avis), download: :download, class: "menu-item menu-link fr-download__link" do
             Télécharger le dossier et toutes ses pièces jointes
             %span.fr-download__detail
               ZIP
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.dossier_menu', id: dossier.id) }
       %ul.fr-tabs__list
-        = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
-        = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
-        - if avis.procedure.allow_expert_messaging
-          = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(avis.procedure, avis))
+        = dynamic_tab_item('Demande', expert_avis_path(dossier.procedure, @avis))
+        = dynamic_tab_item('Avis', instruction_expert_avis_path(dossier.procedure, @avis), notification: @avis.answer.blank?)
+        - if dossier.procedure.allow_expert_messaging
+          = dynamic_tab_item('Messagerie', messagerie_expert_avis_path(dossier.procedure, @avis))

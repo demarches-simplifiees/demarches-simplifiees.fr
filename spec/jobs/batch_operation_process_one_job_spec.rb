@@ -74,6 +74,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "demander un avis externe"' do
+      let(:batch_operation) do
+        create(:batch_operation, :create_avis,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'add avis to the dossier' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.avis }
+          .from([])
+          .to(anything)
+      end
+    end
+
     context 'when operation is "follow"' do
       let(:batch_operation) do
         create(:batch_operation, :follow,

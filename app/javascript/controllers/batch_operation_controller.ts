@@ -3,12 +3,14 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['menu', 'input', 'dropdown', 'checkboxCount'];
+  static targets = ['menu', 'input', 'dropdown', 'checkboxCount', 'modalForm'];
 
   declare readonly menuTargets: HTMLButtonElement[];
   declare readonly inputTargets: HTMLInputElement[];
   declare readonly dropdownTargets: HTMLButtonElement[];
   declare readonly checkboxCountTarget: HTMLElement;
+  declare readonly modalFormTarget: HTMLFormElement;
+  declare readonly hasModalFormTarget: boolean;
 
   onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
@@ -182,6 +184,54 @@ export class BatchOperationController extends ApplicationController {
       classList.add('text-high-blue', 'font-weight-bold');
     } else {
       classList.remove('text-high-blue', 'font-weight-bold');
+    }
+  }
+
+  injectSelectedIdsIntoModal(event: Event) {
+    event.preventDefault();
+
+    if (!this.hasModalFormTarget) return;
+    const modalForm = this.modalFormTarget;
+
+    // Supprimer les inputs précédemment injectés
+    modalForm
+      .querySelectorAll('input[name="batch_operation[dossier_ids][]"]')
+      .forEach((el) => el.remove());
+
+    const hiddenInput = document.querySelector<HTMLInputElement>(
+      '#input_multiple_ids_batch_operation'
+    );
+    let ids: string[] = [];
+
+    if (hiddenInput && hiddenInput.value.trim() !== '') {
+      // Cas 1 : sélection étendue (select all + select more)
+      ids = hiddenInput.value
+        .split(',')
+        .map((id) => id.trim())
+        .filter(Boolean);
+    } else {
+      // Cas 2 : sélection visible via les checkboxes
+      const checkedInputs = document.querySelectorAll<HTMLInputElement>(
+        'input[name="batch_operation[dossier_ids][]"]:checked:not(:disabled)'
+      );
+      ids = Array.from(checkedInputs).map((input) => input.value);
+    }
+
+    // Injecter les ids en champs cachés dans le formulaire
+    ids.forEach((id) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'batch_operation[dossier_ids][]';
+      input.value = id;
+      modalForm.appendChild(input);
+    });
+
+    // Optionnel : cocher not confidentiel par défaut
+    const confidentialRadio = document.querySelector<HTMLInputElement>(
+      '#confidentiel_false'
+    );
+    if (confidentialRadio) {
+      confidentialRadio.checked = true;
     }
   }
 }
