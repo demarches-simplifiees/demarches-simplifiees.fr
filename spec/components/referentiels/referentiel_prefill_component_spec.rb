@@ -36,40 +36,83 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
   end
 
   describe 'selectable source_tdcs' do
+    before { type_de_champ.update(referentiel_mapping:) }
     let(:prefill_stable_id) { nil }
 
     let(:referentiel_mapping) do
       {
         "$.jsonpath" => {
           "prefill" => '1',
-          'type' => Referentiels::MappingFormComponent::TYPES.values.first,
+          'type' => referentiel_mapping_type,
           'prefill_stable_id' => prefill_stable_id
         }
       }
     end
 
-    let(:types_de_champ_public) do
-      [
-        { type: :referentiel, referentiel: },
-        { stable_id: prefill_stable_id, type: :text, libelle: 'text' },
-        { stable_id: 2, type: :decimal_number, libelle: 'decimal' }
-      ]
-    end
+    context 'with mapping type "Chaine de caractère"' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[String] }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 1, type: :text, libelle: 'text' },
+          { stable_id: 2, type: :textarea, libelle: 'textarea' },
+          { stable_id: 6, type: :yes_no, libelle: 'yes_no' } # exclu (type non compatible)
+        ]
+      end
 
-    before { type_de_champ.update(referentiel_mapping:) }
-
-    context 'when prefill_stable_id is not selected' do
-      it 'shows all selectable source_tdcs except current' do
-        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['text', 'decimal'])
-        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', selected: [])
+      context 'when not selected' do
+        it 'shows only text and textarea' do
+          expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['text', 'textarea'])
+        end
+      end
+      context 'when prefill_stable_id is selected' do
+        let(:prefill_stable_id) { 1 }
+        it 'shows the selected prefill_stable_id' do
+          expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', selected: ['text'])
+        end
       end
     end
 
-    context 'when prefill_stable_id is selected' do
-      let(:prefill_stable_id) { 1 }
-      it 'shows the selected prefill_stable_id' do
-        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', selected: ['text'])
-        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', selected: ['text'])
+    context 'with mapping type "Nombre à virgule"' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[Float] }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 1, type: :text, libelle: 'text' }, # exclu (type non compatible)
+          { stable_id: 3, type: :decimal_number, libelle: 'decimal' }
+        ]
+      end
+      it 'shows only decimal_number' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['decimal'])
+      end
+    end
+
+    context 'with mapping type "Nombre Entier"' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[Integer] }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 3, type: :decimal_number, libelle: 'decimal' }, # exclu (type non compatible)
+          { stable_id: 4, type: :integer_number, libelle: 'integer' }
+        ]
+      end
+      it 'shows only integer_number' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['integer'])
+      end
+    end
+
+    context 'with mapping type "Booléen"' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[TrueClass] }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 1, type: :text, libelle: 'text' }, # exclu (type non compatible)
+          { stable_id: 5, type: :checkbox, libelle: 'checkbox' },
+          { stable_id: 6, type: :yes_no, libelle: 'yes_no' }
+        ]
+      end
+      it 'shows only checkbox and yes_no' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['checkbox', 'yes_no'])
       end
     end
   end
