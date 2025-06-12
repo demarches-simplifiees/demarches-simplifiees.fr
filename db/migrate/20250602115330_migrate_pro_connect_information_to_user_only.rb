@@ -8,7 +8,7 @@ class MigrateProConnectInformationToUserOnly < ActiveRecord::Migration[7.1]
     add_index :agent_connect_informations, [:user_id, :sub],
               unique: true,
               name: 'index_agent_connect_informations_on_user_id_and_sub',
-              algorithm: :concurrently
+              algorithm: :concurrently, if_not_exists: true
     remove_foreign_key :agent_connect_informations, :instructeurs
   end
 
