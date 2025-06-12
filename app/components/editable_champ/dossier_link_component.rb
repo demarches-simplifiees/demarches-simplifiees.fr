@@ -74,23 +74,32 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
   end
 
   private
-  def render_dossiers
+
+  def before_render_dossiers
     type_champ = @champ.type_de_champ
     return [] unless type_champ
 
-    type_champ.procedures.flat_map(&:dossiers)
+    type_champ.procedures.flat_map(&:dossiers).select do |dossier|
+      !%w[brouillon supprimés].include?(dossier.state) && dossier.user == @current_user
+    end
+
   end
 
   def render_as_radios?
-    render_dossiers.size <= 5
+    before_render_dossiers.size <= 5
   end
 
   def render_as_combobox?
-    render_dossiers.size >= 20
+    before_render_dossiers.size >= 20
   end
 
   def contains_long_option?
     max_length = 100
     dossier_options_for(@champ).any? { |option| option[:label].size > max_length }
+  end
+
+  def before_render
+    @current_user = current_user
+    @filtered_dossiers = before_render_dossiers
   end
 end
