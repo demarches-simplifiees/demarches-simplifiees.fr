@@ -114,6 +114,20 @@ class DossierNotification < ApplicationRecord
     end
   end
 
+  def self.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, instructeur)
+    dossiers_with_news_notification = Dossier
+      .where(groupe_instructeur_id: groupe_instructeur_ids)
+      .joins(:dossier_notifications)
+      .merge(DossierNotification.type_news)
+      .where(dossier_notifications: { instructeur: })
+      .distinct
+
+    {
+      suivis: dossiers_with_news_notification.by_statut('suivis', instructeur:).exists?,
+      traites: dossiers_with_news_notification.by_statut('traites').exists?
+    }
+  end
+
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
     dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
 

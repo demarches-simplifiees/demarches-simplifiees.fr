@@ -125,11 +125,6 @@ module Instructeurs
         .merge(dossiers.visible_by_administration)
         .pluck(:id)
 
-      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
-      @has_en_cours_notifications = notifications[:en_cours].present?
-      @has_termine_notifications = notifications[:termines].present?
-
-      @has_export_notification = notify_exports?
       @last_export = last_export_for(statut)
 
       begin
@@ -173,7 +168,9 @@ module Instructeurs
         .where(seen_at: nil)
         .distinct
 
+      @statut_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
       @notifications = DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, current_instructeur, @filtered_sorted_paginated_ids)
+      @has_export_notification = notify_exports?
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
