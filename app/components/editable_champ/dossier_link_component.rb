@@ -38,21 +38,19 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     options = []
 
     type_champ.procedures.each do |procedure|
-      dossiers = procedure.dossiers.select do |dossier|
-        dossier.user == current_user &&
-        dossier.state != 'brouillon' &&
-        dossier.hidden_by_user_at.nil? &&
-        dossier.hidden_by_administration_at.nil?
-      end
+      dossiers = procedure.dossiers
+        .visible_by_user_or_administration
+        .where(user_id: current_user.id, state: Dossier::SOUMIS)
+        .order(:id)
 
       options << {
         value: "separator_#{procedure.id}",
         label: "-- Démarche : #{procedure.libelle} --"
       }
-      dossiers = dossiers.reject { |dossier| dossier.id == @champ.dossier_id } 
+      dossiers = dossiers.reject { |dossier| dossier.id == @champ.dossier_id }
 
       if dossiers.empty?
-        
+
         options << {
           value: "no_dossier_#{procedure.id}",
           label: "Vous n’avez déposé aucun dossier sur cette démarche. "
@@ -81,7 +79,7 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
       name: "dossier[champs_public_attributes][#{@champ.public_id}][value]",
       id: @champ.input_id,
       class: "#{@champ.blank? ? '' : 'small-margin'}",
-        
+
     }
   end
 
@@ -91,13 +89,11 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     type_champ = @champ.type_de_champ
     return [] unless type_champ
 
-    dossiers =type_champ.procedures.flat_map(&:dossiers).select do |dossier|
-      dossier.state != 'brouillon' &&
-      dossier.hidden_by_user_at.nil? &&
-      dossier.hidden_by_administration_at.nil? &&
-      dossier.user == @current_user
+    dossiers = type_champ.procedures.flat_map do |procedure|
+        procedure.dossiers.visible_by_user_or_administration.where(user_id: @current_user_id, state: Dossier::SOUMIS)
+
     end
-    
+
     dossiers.reject { |dossier| dossier.id == @champ.dossier_id }
 
   end
@@ -128,7 +124,7 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
   end
 
   def before_render
-    @current_user = current_user
+    @current_user_id = current_user.id
     @filtered_dossiers = before_render_dossiers
   end
 end
