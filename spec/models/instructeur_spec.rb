@@ -227,116 +227,6 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe '#notifications_for_groupe_instructeurs' do
-    # a procedure, two groups, 2 instructeurs
-    let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private, :for_individual) }
-    let(:gi_p1) { procedure.groupe_instructeurs.last }
-    let!(:dossier) { create(:dossier, :en_construction, :with_individual, :followed, procedure: procedure, groupe_instructeur: gi_p1) }
-    let(:instructeur) { dossier.follows.first.instructeur }
-    let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [gi_p1]) }
-
-    # another procedure, dossier followed by a third instructeur
-    let!(:dossier_on_procedure_2) { create(:dossier, :en_construction, :followed) }
-    let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
-    let(:gi_p2) { dossier.groupe_instructeur }
-
-    let(:now) { Time.zone.parse("14/09/1867") }
-    let(:follow) { instructeur.follows.find_by(dossier: dossier) }
-    let(:follow2) { instructeur_2.follows.find_by(dossier: dossier) }
-
-    let(:seen_at_instructeur) { now - 1.hour }
-    let(:seen_at_instructeur2) { now - 1.hour }
-
-    before do
-      instructeur_2.followed_dossiers << dossier
-      travel_to(now)
-    end
-
-    subject { instructeur.notifications_for_groupe_instructeurs(gi_p1)[:en_cours] }
-
-    context 'when the instructeur has just followed the dossier' do
-      it { is_expected.to match([]) }
-    end
-
-    context 'when there is a modification on public champs' do
-      before do
-        dossier.update!(last_champ_updated_at: now)
-        follow.update_attribute('demande_seen_at', seen_at_instructeur)
-        follow2.update_attribute('demande_seen_at', seen_at_instructeur2)
-      end
-
-      it { is_expected.to match([dossier.id]) }
-      it { expect(instructeur_2.notifications_for_groupe_instructeurs(gi_p1)[:en_cours]).to match([dossier.id]) }
-      it { expect(instructeur_on_procedure_2.notifications_for_groupe_instructeurs(gi_p2)[:en_cours]).to match([]) }
-
-      context 'and there is a modification on private champs' do
-        before { dossier.project_champs_private.first.update_attribute('value', 'toto') }
-
-        it { is_expected.to match([dossier.id]) }
-      end
-
-      context 'when instructeur update it s public champs last seen' do
-        let(:seen_at_instructeur) { now + 1.hour }
-        let(:seen_at_instructeur2) { now - 1.hour }
-
-        it { is_expected.to match([]) }
-        it { expect(instructeur_2.notifications_for_groupe_instructeurs(gi_p1)[:en_cours]).to match([dossier.id]) }
-      end
-    end
-
-    context 'when there is a modification on public champs on a followed dossier from another procedure' do
-      before { dossier_on_procedure_2.project_champs_public.first.update_attribute('value', 'toto') }
-
-      it { is_expected.to match([]) }
-    end
-
-    context 'when there is a modification on private champs' do
-      before do
-        dossier.update!(last_champ_private_updated_at: now)
-        follow.update_attribute('annotations_privees_seen_at', seen_at_instructeur)
-      end
-
-      it { is_expected.to match([dossier.id]) }
-    end
-
-    context 'when there is a modification on avis' do
-      before do
-        dossier.update!(last_avis_updated_at: Time.zone.now)
-        follow.update_attribute('avis_seen_at', seen_at_instructeur)
-      end
-
-      it { is_expected.to match([dossier.id]) }
-    end
-
-    context 'the identity' do
-      context 'when there is a modification on the identity' do
-        before do
-          dossier.update!(identity_updated_at: Time.zone.now)
-          follow.update_attribute('demande_seen_at', seen_at_instructeur)
-        end
-
-        it { is_expected.to match([dossier.id]) }
-      end
-    end
-
-    context 'the messagerie' do
-      context 'when there is a new commentaire' do
-        before do
-          dossier.update!(last_commentaire_updated_at: Time.zone.now)
-          follow.update_attribute('messagerie_seen_at', seen_at_instructeur)
-        end
-
-        it { is_expected.to match([dossier.id]) }
-      end
-
-      context 'when there is a new commentaire issued by tps' do
-        before { create(:commentaire, dossier: dossier, email: CONTACT_EMAIL) }
-
-        it { is_expected.to match([]) }
-      end
-    end
-  end
-
   describe '#mark_tab_as_seen' do
     let!(:dossier) { create(:dossier, :en_construction, :followed) }
     let(:instructeur) { dossier.follows.first.instructeur }
@@ -401,19 +291,17 @@ describe Instructeur, type: :model do
     end
 
     context 'when a notification exists' do
-      before do
-        allow(instructeur).to receive(:notifications_for_groupe_instructeurs)
-          .with([procedure_to_assign.groupe_instructeurs.first.id])
-          .and_return(en_cours: [1, 2, 3], termines: [])
-      end
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
+      let!(:notification_to_count) { create(:dossier_notification, :for_instructeur, instructeur:, dossier:, notification_type: :dossier_modifie) }
+      let!(:notification_not_count) { create(:dossier_notification, :for_instructeur, instructeur:, dossier:) }
 
       it do
         expect(instructeur.email_notification_data).to eq([
           {
-            nb_en_construction: 0,
+            nb_en_construction: 1,
             nb_en_instruction: 0,
             nb_accepted: 0,
-            nb_notification: 3,
+            nb_notification: 1,
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle
           }

@@ -144,19 +144,6 @@ class Instructeur < ApplicationRecord
     assign_to.procedure_presentation_or_default_and_errors
   end
 
-  def notifications_for_groupe_instructeurs(groupe_instructeurs)
-    notifications_for(groupe_instructeur: groupe_instructeurs)
-      .pluck(:state, :id)
-      .reduce({ termines: [], en_cours: [] }) do |acc, e|
-        if Dossier::TERMINE.include?(e[0])
-          acc[:termines] << e[1]
-        elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(e[0])
-          acc[:en_cours] << e[1]
-        end
-        acc
-      end
-  end
-
   def notifications_for_dossiers(dossier_ids)
     notifications_for(id: dossier_ids)
       .pluck(:id)
