@@ -188,10 +188,6 @@ module Instructeurs
         .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'supprimes', 'expirant')
       @can_download_dossiers = (@tous_count + @archives_count) > 0 && !instructeur_as_manager?
 
-      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
-      @has_en_cours_notifications = notifications[:en_cours].present?
-      @has_termine_notifications = notifications[:termines].present?
-
       @statut = 'supprime'
     end
 
