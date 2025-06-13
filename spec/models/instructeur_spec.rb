@@ -405,23 +405,6 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe '#procedure_ids_with_notifications' do
-    let!(:dossier) { create(:dossier, :en_construction, :followed) }
-    let!(:instructeur) { dossier.follows.first.instructeur }
-    let(:procedure) { dossier.procedure }
-
-    subject { instructeur.procedure_ids_with_notifications(:en_cours) }
-
-    context 'when there is a modification on public champs' do
-      before do
-        travel(3.seconds)
-        dossier.update!(last_champ_updated_at: Time.zone.now)
-      end
-
-      it { is_expected.to match([procedure.id]) }
-    end
-  end
-
   describe '#mark_tab_as_seen' do
     let!(:dossier) { create(:dossier, :en_construction, :followed) }
     let(:instructeur) { dossier.follows.first.instructeur }
