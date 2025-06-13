@@ -694,11 +694,12 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when admin is the owner of the procedure' do
-      it 'displays all options' do
+      it 'displays all relevant options' do
         is_expected.to have_http_status(:success)
         expect(response.body).to include "Service"
         expect(response.body).to include "Administrateurs"
         expect(response.body).to include "Instructeurs"
+        expect(response.body).not_to include "Jeton API entreprise"
       end
     end
 
