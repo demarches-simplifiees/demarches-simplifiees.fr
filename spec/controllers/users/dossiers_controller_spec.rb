@@ -710,7 +710,7 @@ describe Users::DossiersController, type: :controller do
     let(:owner) { create(:user) }
     let(:procedure_traits) { [] }
     let(:dossier_traits) { [] }
-    let(:procedure) { create(:procedure, :for_individual, :published, *procedure_traits, types_de_champ_public:) }
+    let(:procedure) { create(:procedure, :for_individual, :published, *procedure_traits, types_de_champ_public:).tap { Flipper.enable(:user_buffer_stream, _1) } }
     let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let(:dossier) { create(:dossier, :en_construction, :with_individual, *dossier_traits, procedure:, user: owner).tap { _1.with_update_stream(_1.user) } }
     let(:now) { Time.zone.parse('01/01/2100') }
