@@ -16,6 +16,10 @@ class Referentiels::MappingFormBase < ApplicationComponent
     "type_de_champ[referentiel_mapping][#{jsonpath}][#{attribute_name}]"
   end
 
+  def bordered_container_class_names
+    "border-background-contrast-grey fr-p-4w"
+  end
+
   private
 
   def lookup_existing_value(jsonpath, attribute)
