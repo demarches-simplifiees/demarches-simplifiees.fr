@@ -1,0 +1,88 @@
+#export_template-edit.fr-my-4w
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-12.fr-col-md-8.fr-pr-4w
+      = form_with model: [:instructeur, procedure, export_template], data: { turbo: 'true', controller: 'autosubmit' } do |f|
+        %input.hidden{ type: 'submit', formaction: preview_instructeur_procedure_export_templates_path, data: { autosubmit_target: 'submitter' }, formnovalidate: 'true', formmethod: 'put' }
+
+        = f.hidden_field :kind, value: 'zip'
+
+        = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
+
+        - if groupe_instructeurs.many?
+          .fr-input-group
+            = f.label :groupe_instructeur_id, class: 'fr-label' do
+              Groupe instructeur éditeur du modèle
+              = render EditableChamp::AsteriskMandatoryComponent.new
+              %span.fr-hint-text
+                Le groupe propriétaire qui pourra modifier le modèle le cas échéant
+            = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+
+          .fr-checkbox-group.fr-input-group
+            = f.check_box :shared
+            = f.label :shared, "Partager avec tous les autres groupes instructeurs", class: 'fr-label'
+
+        .fr-input-group{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+          = f.label '[dossier_folder][template]', class: "fr-label" do
+            = "#{ExportTemplate.human_attribute_name('dossier_folder')} #{asterisk}"
+            %span.fr-hint-text Nom du répertoire contenant les différents fichiers à exporter
+          .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
+            = f.hidden_field "[dossier_folder][template]", data: { tiptap_target: 'input' }, value: export_template.dossier_folder.template_json
+            = f.hidden_field "[dossier_folder][enabled]", value: 'true'
+          .fr-mt-2w
+            %span.fr-text--sm Cliquez sur les étiquettes que vous souhaitez intégrer au nom du fichier
+          .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => export_template.tags })
+
+        = render Dsfr::NoticeComponent.new(data_attributes: { class: 'fr-my-4w' }) do |c|
+          - c.with_title do
+            Sélectionnez les fichiers que vous souhaitez exporter
+
+        %h3 Dossier au format PDF
+        = render partial: 'export_item',
+          locals: { item: export_template.export_pdf,
+            libelle: ExportTemplate.human_attribute_name(:export_pdf),
+            prefix: 'export_template[export_pdf]' }
+
+        - if procedure.attestation_template&.activated?
+          %h3 Attestation d'acceptation au format PDF
+
+          = render partial: 'export_item',
+            locals: { item: export_template.attestation || ExportItem.default(prefix: 'attestation'),
+              libelle: ExportTemplate.human_attribute_name(:attestation),
+              prefix: 'export_template[attestation]' }
+
+        - if procedure.exportables_pieces_jointes_for_all_versions.any?
+          %h3 Pièces justificatives
+
+          - procedure.exportables_pieces_jointes.each do |tdc|
+            - item = export_template.pj(tdc)
+            = render partial: 'export_item',
+              locals: { item:,
+                libelle: tdc.libelle,
+                prefix: 'export_template[pjs][]'}
+
+          - outdated_tdcs = procedure.outdated_exportables_pieces_jointes
+          - outdated_stable_ids = outdated_tdcs.map(&:stable_id)
+          - expanded = export_template.pjs.filter(&:enabled?).any? { _1.stable_id.in?(outdated_stable_ids) }
+
+          - if outdated_tdcs.any?
+            %section.fr-accordion.fr-mb-3w
+              %h3.fr-accordion__title
+                %button.fr-accordion__btn{ "aria-controls" => "accordion-106", "aria-expanded" => expanded.to_s, "type" => "button" }
+                  pièces justificatives uniquement présentes dans les versions précédentes
+              .fr-collapse#accordion-106
+
+                - outdated_tdcs.each do |tdc|
+                  - item = export_template.pj(tdc)
+                  = render partial: 'export_item',
+                    locals: { item:,
+                      libelle: tdc.libelle,
+                      prefix: 'export_template[pjs][]'}
+
+        .fixed-footer
+          .fr-container
+            %ul.fr-btns-group.fr-btns-group--inline-md
+              %li= link_to "Annuler", [:export_templates, :instructeur, procedure], class: "fr-btn fr-btn--secondary"
+              %li= f.button "Enregistrer", class: "fr-btn", data: { turbo: 'false' }
+
+    .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+      = render partial: 'preview', locals: { procedure:, export_template: }
