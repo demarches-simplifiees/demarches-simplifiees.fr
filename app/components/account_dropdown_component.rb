@@ -4,7 +4,7 @@ class AccountDropdownComponent < ViewComponent::Base
   attr_reader :dossier
   attr_reader :nav_bar_profile
 
-  delegate :current_email, :color_by_role, :multiple_devise_profile_connect?,
+  delegate :current_user, :current_email, :color_by_role, :multiple_devise_profile_connect?,
            :user_signed_in?, :instructeur_signed_in?, :expert_signed_in?,
            :administrateur_signed_in?, :gestionnaire_signed_in?, :super_admin_signed_in?,
            to: :helpers
@@ -15,7 +15,7 @@ class AccountDropdownComponent < ViewComponent::Base
   end
 
   def france_connected?
-    dossier&.france_connected_with_one_identity?
+    current_user&.france_connected_with_one_identity?
   end
 
   def show_profile_badge?
