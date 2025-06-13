@@ -188,6 +188,16 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(ReferentielItem.first.data).to eq({ "row" => { "description" => "Direction des Affaires financières et sociales", "flex_value" => "AFS" } })
         end
       end
+
+      context 'when the csv file has no separators' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel-without-separators.csv', 'text/csv') }
+        before { subject }
+
+        it 'catches smarter csv error' do
+          expect(flash.alert).to be_present
+          expect(flash.alert).to eq("Importation impossible : le fichier est mal formaté")
+        end
+      end
     end
   end
 
