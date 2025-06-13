@@ -173,8 +173,7 @@ class Instructeur < ApplicationRecord
       .reduce([]) do |acc, groupe|
       procedure = groupe.procedure
 
-      notifications = notifications_for_groupe_instructeurs([groupe.id])
-      nb_notification = notifications[:en_cours].count + notifications[:termines].count
+      nb_notification = DossierNotification.notifications_count_for_email_data([groupe.id], self)
 
       h = {
         nb_en_construction: groupe.dossiers.visible_by_administration.en_construction.count,

@@ -90,6 +90,6 @@ describe 'instructeur_mailer/send_notifications', type: :view do
     end
 
     it { expect(rendered).not_to have_text('en construction') }
-    it { expect(rendered).to have_text('1 notification') }
+    it { expect(rendered).to have_text("1 dossier avec des notifications \"nouveautés\"") }
   end
 end

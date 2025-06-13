@@ -208,4 +208,16 @@ class DossierNotification < ApplicationRecord
       .to_display
       .order_by_importance
   end
+
+  def self.notifications_count_for_email_data(groupe_instructeur_ids, instructeur)
+    Dossier
+      .where(groupe_instructeur_id: groupe_instructeur_ids)
+      .visible_by_administration
+      .not_archived
+      .joins(:dossier_notifications)
+      .merge(DossierNotification.type_news)
+      .where(dossier_notifications: { instructeur: })
+      .distinct
+      .count
+  end
 end
