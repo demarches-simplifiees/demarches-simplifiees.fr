@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_12_115833) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -100,7 +100,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "given_name"
-    t.bigint "instructeur_id"
     t.string "organizational_unit"
     t.string "phone"
     t.string "siret"
@@ -108,7 +107,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.string "usual_name"
-    t.index ["instructeur_id"], name: "index_agent_connect_informations_on_instructeur_id"
     t.index ["user_id", "sub"], name: "index_agent_connect_informations_on_user_id_and_sub", unique: true
     t.index ["user_id"], name: "index_agent_connect_informations_on_user_id"
   end
@@ -937,8 +935,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.jsonb "displayed_columns", default: [], null: false, array: true
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
     t.jsonb "expirant_filters", default: [], null: false, array: true
-    t.jsonb "filters", default: {"tous" => [], "suivis" => [], "traites" => [], "a-suivre" => [], "archives" => [], "expirant" => [], "supprimes" => []}, null: false
-    t.jsonb "sort", default: {"order" => "desc", "table" => "notifications", "column" => "notifications"}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
+    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
     t.jsonb "sorted_column"
     t.jsonb "suivis_filters", default: [], null: false, array: true
     t.jsonb "supprimes_filters", default: [], null: false, array: true
@@ -1295,16 +1293,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
     t.string "libelle"
     t.boolean "mandatory", default: true
     t.jsonb "options"
-
     t.boolean "private", default: false, null: false
     t.bigint "referentiel_id"
-
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at", precision: nil
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["referentiel_id"], name: "index_types_de_champ_on_referentiel_id"
-    t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -1384,7 +1379,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
   add_foreign_key "administrateurs_procedures", "administrateurs"
   add_foreign_key "administrateurs_procedures", "procedures"
-  add_foreign_key "agent_connect_informations", "instructeurs"
   add_foreign_key "agent_connect_informations", "users"
   add_foreign_key "api_tokens", "administrateurs"
   add_foreign_key "archives_groupe_instructeurs", "archives"
@@ -1423,7 +1417,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_04_104959) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
-   add_foreign_key "etablissements", "dossiers"
+  add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
