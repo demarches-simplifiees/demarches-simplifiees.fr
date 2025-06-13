@@ -144,25 +144,6 @@ class Instructeur < ApplicationRecord
     assign_to.procedure_presentation_or_default_and_errors
   end
 
-  def notifications_for_dossier(dossier)
-    follow = Follow.find_by(instructeur: self, dossier:)
-
-    if follow.present?
-      demande = dossier.last_champ_updated_at&.>(follow.demande_seen_at) ||
-        dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
-        dossier.identity_updated_at&.>(follow.demande_seen_at) ||
-        false
-
-      annotations_privees = dossier.last_champ_private_updated_at&.>(follow.annotations_privees_seen_at) || false
-      avis_notif = dossier.last_avis_updated_at&.>(follow.avis_seen_at) || false
-      messagerie = dossier.last_commentaire_updated_at&.>(follow.messagerie_seen_at) || false
-
-      annotations_hash(demande, annotations_privees, avis_notif, messagerie)
-    else
-      annotations_hash(false, false, false, false)
-    end
-  end
-
   def notifications_for_groupe_instructeurs(groupe_instructeurs)
     notifications_for(groupe_instructeur: groupe_instructeurs)
       .pluck(:state, :id)
@@ -337,15 +318,6 @@ class Instructeur < ApplicationRecord
   end
 
   private
-
-  def annotations_hash(demande, annotations_privees, avis, messagerie)
-    {
-      demande: demande,
-      annotations_privees: annotations_privees,
-      avis: avis,
-      messagerie: messagerie
-    }
-  end
 
   def notifications_for(condition)
     Dossier
