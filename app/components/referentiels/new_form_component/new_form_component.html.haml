@@ -1,53 +1,53 @@
 = form_with model: @referentiel, scope: :referentiel, url: form_url, **form_options do |form|
-  = form.hidden_field :referentiel_id, value: params[:referentiel_id]
-  %div
-    - if Referentiels::APIReferentiel.csv_available?
-      = render Dsfr::RadioButtonListComponent.new(form:, target: :type,
-        buttons: [ { label: 'À partir d’une URL', value: 'Referentiels::APIReferentiel', hint: 'Connectez un champ à une API', data: { controller: 'autosubmit' } } ,
-          { label: 'À partir d’un fichier CSV', value: 'Referentiels::CsvReferentiel', hint: 'Connectez un champ à un CSV', disabled: true }]) do ||
-        Comment interroger votre référentiel ?
-    - else
-      = form.hidden_field :type
+  %div{ class: bordered_container_class_names }
+    = form.hidden_field :referentiel_id, value: params[:referentiel_id]
+    %div
+      - if Referentiels::APIReferentiel.csv_available?
+        = render Dsfr::RadioButtonListComponent.new(form:, target: :type,
+          buttons: [ { label: 'À partir d’une URL', value: 'Referentiels::APIReferentiel', hint: 'Connectez un champ à une API', data: { controller: 'autosubmit' } } ,
+            { label: 'À partir d’un fichier CSV', value: 'Referentiels::CsvReferentiel', hint: 'Connectez un champ à un CSV', disabled: true }]) do ||
+          Comment interroger votre référentiel ?
+      - else
+        = form.hidden_field :type
 
-    - if @referentiel.type == 'Referentiels::APIReferentiel'
-      = render Dsfr::InputComponent.new(form:, attribute: :url, opts: { data: { controller: 'autosubmit' } }) do |c|
-        - c.with_describedby do
-          - if @referentiel.url.blank? || @referentiel.errors.where(:url).present?
-            = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names: 'fr-mt-2w') do |c|
-              - c.with_body do
-                %p
-                  Pour des raisons de sécurité,
-                  %strong seuls les domaines se terminant par .gouv.fr sont automatiquement autorisés
-                  (à l’exception de .beta.gouv.fr). Les autres domaines sont soumis à une validation manuelle de notre part, merci de nous en faire la demande par mail à "
-                  = mail_to CONTACT_EMAIL, CONTACT_EMAIL, class: 'fr-link'
-                  = "."
-          - else
-            .fr-mt-1w.fr-message.fr-message--info Attention si vous appelez une API qui renvoie de la donnée personnelle, vous devez en informer votre DPO.
+      - if @referentiel.type == 'Referentiels::APIReferentiel'
+        = render Dsfr::InputComponent.new(form:, attribute: :url, opts: { data: { controller: 'autosubmit' } }) do |c|
+          - c.with_describedby do
+            - if @referentiel.url.blank? || @referentiel.errors.where(:url).present?
+              = render Dsfr::AlertComponent.new(state: :warning, title: nil, size: :sm, heading_level: :p, extra_class_names: 'fr-mt-2w') do |c|
+                - c.with_body do
+                  %p
+                    Pour des raisons de sécurité,
+                    %strong seuls les domaines se terminant par .gouv.fr sont automatiquement autorisés
+                    (à l’exception de .beta.gouv.fr). Les autres domaines sont soumis à une validation manuelle de notre part, merci de nous en faire la demande par mail à "
+                    = mail_to CONTACT_EMAIL, CONTACT_EMAIL, class: 'fr-link'
+                    = "."
+            - else
+              .fr-mt-1w.fr-message.fr-message--info Attention si vous appelez une API qui renvoie de la donnée personnelle, vous devez en informer votre DPO.
 
 
-    - elsif @referentiel.type == 'Referentiels::CsvReferentiel'
-      .fr-input-group
-        = form.label :piece_justificative_template, class: 'fr-label', for: dom_id(@type_de_champ, :piece_justificative_template) do
-          Fichier CSV
-          %span.fr-text-hint Utilisez le modèle du fichier CSV fourni ci-dessous pour construire votre référentiel (le nombre de colonne n’est pas limité).
-        = render Attachment::EditComponent.new(attached_file: @type_de_champ.piece_justificative_template, view_as: :link)
+      - elsif @referentiel.type == 'Referentiels::CsvReferentiel'
+        .fr-input-group
+          = form.label :piece_justificative_template, class: 'fr-label', for: dom_id(@type_de_champ, :piece_justificative_template) do
+            Fichier CSV
+            %span.fr-text-hint Utilisez le modèle du fichier CSV fourni ci-dessous pour construire votre référentiel (le nombre de colonne n’est pas limité).
+          = render Attachment::EditComponent.new(attached_file: @type_de_champ.piece_justificative_template, view_as: :link)
 
-    %hr.fr-hr.fr-my-5w
+      %hr.fr-hr.fr-my-5w
 
-  %div
-    - if Referentiels::APIReferentiel.autocomplete_available?
-      = render Dsfr::RadioButtonListComponent.new(form:, target: :mode,
-        buttons: [ { label: 'Correspondance exacte', value: 'exact_match', hint: 'Vérification de l’existence de la donnée saisie dans la BDD du référentiel (exemple : plaque d’immatriculation, SIREN...)' } ,
-          { label: 'Autosuggestion au fur et à mesure de la saisie de l’usager', value: 'autocomplete', hint: 'Affichage de données issues de la BDD du référentiel correspondant en partie ou en totalité à la donnée saisie par l’usager (exemple : BDD de médicaments, modèles de véhicules...)', disabled: true }]) do
-        Mode de remplissage du champ par l’usager
-    - else
-      = form.hidden_field :mode
+    %div
+      - if Referentiels::APIReferentiel.autocomplete_available?
+        = render Dsfr::RadioButtonListComponent.new(form:, target: :mode,
+          buttons: [ { label: 'Correspondance exacte', value: 'exact_match', hint: 'Vérification de l’existence de la donnée saisie dans la BDD du référentiel (exemple : plaque d’immatriculation, SIREN...)' } ,
+            { label: 'Autosuggestion au fur et à mesure de la saisie de l’usager', value: 'autocomplete', hint: 'Affichage de données issues de la BDD du référentiel correspondant en partie ou en totalité à la donnée saisie par l’usager (exemple : BDD de médicaments, modèles de véhicules...)', disabled: true }]) do
+          Mode de remplissage du champ par l’usager
+      - else
+        = form.hidden_field :mode
 
-    = render Dsfr::InputComponent.new(form:, attribute: :hint)
-    = render Dsfr::InputComponent.new(form:, attribute: :test_data)
+      = render Dsfr::InputComponent.new(form:, attribute: :hint)
+      = render Dsfr::InputComponent.new(form:, attribute: :test_data)
+      .clearfix
 
-    %hr.fr-hr.fr-my-5w
-
-  %ul.fr-btns-group.fr-btns-group--inline-sm
+  %ul.fr-btns-group.fr-btns-group--inline-sm.flex.justify-center.fr-mt-5w
     %li= link_to "Annuler", back_url, class: 'fr-btn fr-btn--secondary'
     %li= form.submit 'Étape suivante', submit_options
