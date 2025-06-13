@@ -55,7 +55,7 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
 
   def export_button(export)
     if export.available?
-      render Dsfr::DownloadComponent.new(attachment: export.file, name: t('.download_export'))
+      render Dsfr::DownloadComponent.new(attachment: export.file, name: t('.download_export'), has_name: true)
     elsif export.pending?
       content_tag(:a, t('.refresh_page'), { href: "", class: 'fr-btn fr-btn--sm fr-btn--tertiary' })
     end

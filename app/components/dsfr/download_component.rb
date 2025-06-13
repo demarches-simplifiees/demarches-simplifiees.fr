@@ -8,8 +8,9 @@ class Dsfr::DownloadComponent < ApplicationComponent
   attr_reader :virus_not_analyzed
   attr_reader :new_tab
   attr_reader :truncate
+  attr_reader :has_name
 
-  def initialize(attachment:, name: nil, url: nil, ephemeral_link: false, virus_not_analyzed: false, new_tab: false, truncate: false, title: nil)
+  def initialize(attachment:, name: nil, url: nil, ephemeral_link: false, virus_not_analyzed: false, new_tab: false, truncate: false, has_name: false)
     @attachment = attachment
     @name = name || attachment.filename.to_s
     @url = url
@@ -17,11 +18,7 @@ class Dsfr::DownloadComponent < ApplicationComponent
     @virus_not_analyzed = virus_not_analyzed
     @new_tab = new_tab
     @truncate = truncate
-    @title = title
-  end
-
-  def title
-    @title || t(".title", filename: attachment.filename.to_s)
+    @has_name = has_name
   end
 
   def url
