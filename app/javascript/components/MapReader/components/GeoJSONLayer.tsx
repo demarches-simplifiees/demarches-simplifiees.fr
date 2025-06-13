@@ -56,7 +56,10 @@ export function GeoJSONLayer({
   useExternalEvents(featureCollection);
 
   const polygons = filterFeatureCollectionByGeometryType(
-    filterFeatureCollection(featureCollection, 'selection_utilisateur'),
+    filterFeatureCollection(featureCollection, [
+      'selection_utilisateur',
+      'cadastre'
+    ]),
     'Polygon'
   );
   const lines = filterFeatureCollectionByGeometryType(
