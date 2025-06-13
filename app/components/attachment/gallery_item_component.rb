@@ -80,7 +80,10 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def badge_updated_class
     class_names(
       "fr-badge fr-badge--sm" => true,
-      "highlighted" => seen_at.present? && updated_at&.>(seen_at)
+      # "highlighted" => seen_at.present? && updated_at&.>(seen_at)
+      # we remove the hihlighting.
+      # we let it commented because we want to test the reaction of instructors before deleting all the associated code
+      "highlighted" => false
     )
   end
 
