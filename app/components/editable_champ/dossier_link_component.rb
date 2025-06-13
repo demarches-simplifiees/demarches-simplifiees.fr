@@ -39,7 +39,10 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
 
     type_champ.procedures.each do |procedure|
       dossiers = procedure.dossiers.select do |dossier|
-        dossier.user == current_user && !%w[brouillon supprimés].include?(dossier.state)
+        dossier.user == current_user &&
+        dossier.state != 'brouillon' &&
+        dossier.hidden_by_user_at.nil? &&
+        dossier.hidden_by_administration_at.nil?
       end
 
       options << {
@@ -88,14 +91,19 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     type_champ = @champ.type_de_champ
     return [] unless type_champ
 
-    type_champ.procedures.flat_map(&:dossiers).select do |dossier|
-      !%w[brouillon supprimés].include?(dossier.state) && dossier.user == @current_user
+    dossiers =type_champ.procedures.flat_map(&:dossiers).select do |dossier|
+      dossier.state != 'brouillon' &&
+      dossier.hidden_by_user_at.nil? &&
+      dossier.hidden_by_administration_at.nil? &&
+      dossier.user == @current_user
     end
+    
+    dossiers.reject { |dossier| dossier.id == @champ.dossier_id }
 
   end
 
   def render_as_radios?
-    before_render_dossiers.size > 0 && before_render_dossiers.size <= 5
+    (1..5).include?(before_render_dossiers.size)
   end
 
   def render_as_combobox?
