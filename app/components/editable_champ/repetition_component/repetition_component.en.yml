@@ -1,4 +1,3 @@
 ---
 en:
-  add: "Add an element to « %{libelle} »"
-  add_title: "Add an element to « %{libelle} »"
+  add: "Add another element to « %{libelle} »"
