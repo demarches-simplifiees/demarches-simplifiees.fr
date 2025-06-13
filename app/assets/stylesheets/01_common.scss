@@ -42,3 +42,8 @@ pre {
 react-fragment {
   display: block;
 }
+
+// Hide unordered empty list
+ul:empty {
+  display: none;
+}

@@ -6,7 +6,7 @@
   %h1 Messagerie de « #{@groupe_gestionnaire.name} »
   .messagerie
     - if current_administrateur.commentaire_groupe_gestionnaires.where(groupe_gestionnaire: @groupe_gestionnaire).present?
-      %ul.messages-list{ data: { controller: 'scroll-to' } }
+      %ol.messages-list{ data: { controller: 'scroll-to' } }
         - current_administrateur.commentaire_groupe_gestionnaires.where(groupe_gestionnaire: @groupe_gestionnaire).each do |commentaire|
           %li.message{ class: commentaire_is_from_me_class(commentaire, current_administrateur), id: dom_id(commentaire) }
             = render(Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_administrateur, messagerie_seen_at: @commentaire_seen_at, groupe_gestionnaire: @groupe_gestionnaire))

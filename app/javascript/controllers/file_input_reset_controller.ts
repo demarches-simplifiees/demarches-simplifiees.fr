@@ -30,7 +30,8 @@ export class FileInputResetController extends ApplicationController {
       const deleteButton = this.createDeleteButton(deleteLabel, index);
       container.appendChild(deleteButton);
 
-      const listItem = document.createElement('div');
+      const listItem = document.createElement('span');
+      listItem.setAttribute('id', 'filename-' + index);
       listItem.textContent = file.name;
 
       container.appendChild(listItem);
@@ -40,6 +41,11 @@ export class FileInputResetController extends ApplicationController {
 
   createDeleteButton(deleteLabel: string, index: number) {
     const button = document.createElement('button');
+    button.setAttribute('id', 'delete-button-' + index);
+    button.setAttribute(
+      'aria-labelledby',
+      'delete-button-' + index + ' filename-' + index
+    );
     button.textContent = deleteLabel;
     button.classList.add(
       'fr-btn',

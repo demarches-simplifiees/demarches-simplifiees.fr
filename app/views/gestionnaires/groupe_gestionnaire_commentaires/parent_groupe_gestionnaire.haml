@@ -8,7 +8,7 @@
   %h1 Messages avec le groupe gestionnaire parent « #{ "(#{@groupe_gestionnaire.parent.name})" } »
 .messagerie.container
   - unless (commentaires = @groupe_gestionnaire.commentaire_groupe_gestionnaires.where(sender_id: current_gestionnaire.id, sender_type: "Gestionnaire")).empty?
-    %ul.messages-list{ data: { controller: 'scroll-to' } }
+    %ol.messages-list{ data: { controller: 'scroll-to' } }
       - commentaires.each do |commentaire|
         %li.message{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire), id: dom_id(commentaire) }
           = render(Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: @commentaire_seen_at, groupe_gestionnaire: @groupe_gestionnaire))
