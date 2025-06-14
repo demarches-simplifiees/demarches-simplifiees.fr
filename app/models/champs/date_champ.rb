@@ -12,30 +12,13 @@ class Champs::DateChamp < Champ
   private
 
   def convert_to_iso8601
-    return if likely_iso8601_format? && parsable_iso8601?
-
-    self.value = if /^\d{2}\/\d{2}\/\d{4}$/.match?(value)
-      Date.parse(value).iso8601
-    else
-      nil
-    end
+    self.value = DateDetectionUtils.convert_to_iso8601(value)
   end
 
   def iso_8601
-    return if parsable_iso8601? || value.blank?
+    return if value.blank? || DateDetectionUtils.parsable_iso8601_date?(value)
+
     # i18n-tasks-use t('errors.messages.not_a_date')
     errors.add :date, :not_a_date
-  end
-
-  def likely_iso8601_format?
-    /^\d{4}-\d{2}-\d{2}$/.match?(value)
-  end
-
-  def parsable_iso8601?
-    Date.parse(value)
-    true
-  rescue ArgumentError, # case 2023-27-02, out of range
-         TypeError # nil
-    false
   end
 end
