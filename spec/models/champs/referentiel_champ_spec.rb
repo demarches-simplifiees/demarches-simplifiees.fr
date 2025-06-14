@@ -320,6 +320,34 @@ describe Champs::ReferentielChamp, type: :model do
           end
         end
       end
+
+      context 'when data is mapped to date' do
+        let(:prefilled_type_de_champ_type) { :date }
+
+        context 'when data is ISO8601 date' do
+          let(:data) { { ok: '2024-06-14' } }
+          it 'casts and updates the date with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:date?).value }.from(nil).to('2024-06-14')
+          end
+        end
+
+        context 'when data is dd/mm/yyyy' do
+          let(:data) { { ok: '14/06/2024' } }
+          it 'casts and updates the date with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:date?).value }.from(nil).to('2024-06-14')
+          end
+        end
+
+        context 'when data is invalid date' do
+          let(:data) { { ok: '2024-13-14' } }
+          it 'does not update the date value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:date?).value }.from(nil)
+          end
+        end
+      end
     end
   end
 end
