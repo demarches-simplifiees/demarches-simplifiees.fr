@@ -6,7 +6,9 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
     Float => "Nombre à virgule",
     Integer => "Nombre Entier",
     TrueClass => "Booléen",
-    FalseClass => "Booléen"
+    FalseClass => "Booléen",
+    # detection
+    "Date" => "Date"
   }.freeze
 
   def last_request_keys
@@ -64,7 +66,11 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def value_to_type(value)
-    TYPES.fetch(value.class) { TYPES[String] }
+    if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
+      self.class::TYPES["Date"]
+    else
+      TYPES.fetch(value.class) { TYPES[String] }
+    end
   end
 
   def libelle_field_options(jsonpath)
