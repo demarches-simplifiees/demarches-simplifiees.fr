@@ -9,7 +9,8 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret],
     "Nombre à virgule"    => %w[decimal_number],
     "Nombre Entier"       => %w[integer_number],
-    "Booléen"             => %w[checkbox yes_no]
+    "Booléen"             => %w[checkbox yes_no],
+    "Date"                => %w[date]
   }.freeze
 
   def source_tdcs

@@ -115,5 +115,19 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['checkbox', 'yes_no'])
       end
     end
+
+    context 'with mapping type "Date"' do
+      let(:referentiel_mapping_type) { "Date" }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 7, type: :date, libelle: 'date' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only date' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['date'])
+      end
+    end
   end
 end
