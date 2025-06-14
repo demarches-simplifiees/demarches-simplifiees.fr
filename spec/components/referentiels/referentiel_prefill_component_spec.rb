@@ -129,5 +129,19 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['date'])
       end
     end
+
+    context 'with mapping type "DateTime"' do
+      let(:referentiel_mapping_type) { "Date et heure" }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 9, type: :datetime, libelle: 'datetime' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only datetime' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['datetime'])
+      end
+    end
   end
 end
