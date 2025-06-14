@@ -176,6 +176,10 @@
   vertical-align: middle;
 }
 
+.border-background-contrast-grey {
+  border: 3px solid var(--background-contrast-grey);
+}
+
 .border-left {
   border-left: 4px solid var(--background-contrast-grey);
   padding-left: $default-padding;

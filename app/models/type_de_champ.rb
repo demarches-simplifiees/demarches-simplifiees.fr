@@ -265,6 +265,18 @@ class TypeDeChamp < ApplicationRecord
       default: I18n.t(type_champ, scope: [:activerecord, :attributes, :type_de_champ, :type_champs]))
   end
 
+  def safe_referentiel_mapping
+    Hash(referentiel_mapping).with_indifferent_access
+  end
+
+  def referentiel_mapping_prefillable
+    safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] == "1" }
+  end
+
+  def referentiel_mapping_prefillable_with_stable_id
+    referentiel_mapping_prefillable.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id].present? }
+  end
+
   def params_for_champ
     {
       private: private?,
@@ -662,7 +674,8 @@ class TypeDeChamp < ApplicationRecord
       :formatted_mode, :numbers_accepted, :letters_accepted, :special_characters_accepted,
       :min_character_length, :max_character_length,
       :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
-    ]
+    ],
+    type_champs.fetch(:referentiel) => [:referentiel_mapping]
   }
 
   def clean_options

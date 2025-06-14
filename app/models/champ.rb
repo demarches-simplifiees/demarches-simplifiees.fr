@@ -255,6 +255,10 @@ class Champ < ApplicationRecord
     update!(data: data, fetch_external_data_exceptions: [])
   end
 
+  def prefillable_champs
+    []
+  end
+
   def status_message?
     false
   end
