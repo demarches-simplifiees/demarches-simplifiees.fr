@@ -348,6 +348,34 @@ describe Champs::ReferentielChamp, type: :model do
           end
         end
       end
+
+      context 'when data is mapped to datetime' do
+        let(:prefilled_type_de_champ_type) { :datetime }
+
+        context 'when data is ISO8601 datetime' do
+          let(:data) { { ok: '2024-06-14T12:34' } }
+          it 'casts and updates the datetime with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil).to(Time.zone.parse('2024-06-14T12:34').iso8601)
+          end
+        end
+
+        context 'when data is dd/mm/yyyy hh:mm' do
+          let(:data) { { ok: '14/06/2024 12:34' } }
+          it 'casts and updates the datetime with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil).to(Time.zone.parse('2024-06-14T12:34').iso8601)
+          end
+        end
+
+        context 'when data is invalid datetime' do
+          let(:data) { { ok: '2024-06-14T25:00' } }
+          it 'does not update the datetime value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil)
+          end
+        end
+      end
     end
   end
 end

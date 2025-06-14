@@ -10,7 +10,8 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     "Nombre à virgule"    => %w[decimal_number],
     "Nombre Entier"       => %w[integer_number],
     "Booléen"             => %w[checkbox yes_no],
-    "Date"                => %w[date]
+    "Date"                => %w[date],
+    "Date et heure"       => %w[datetime]
   }.freeze
 
   def source_tdcs

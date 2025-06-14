@@ -8,7 +8,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
     TrueClass => "Booléen",
     FalseClass => "Booléen",
     # detection
-    "Date" => "Date"
+    "Date" => "Date",
+    "DateTime" => "Date et heure"
   }.freeze
 
   def last_request_keys
@@ -66,7 +67,9 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def value_to_type(value)
-    if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
+    if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
+      self.class::TYPES["DateTime"]
+    elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
       self.class::TYPES["Date"]
     else
       TYPES.fetch(value.class) { TYPES[String] }

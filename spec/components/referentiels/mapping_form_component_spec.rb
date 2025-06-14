@@ -78,5 +78,15 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
     it "does not detect embedded date in string as Date" do
       expect(convert_json_value_to_human(value: "RDV le 2024-06-14 à 10h")).to eq("Date")
     end
+
+    it "detects ISO8601 datetime as DateTime" do
+      expect(convert_json_value_to_human(value: "2024-06-14T12:34")).to eq("Date et heure")
+      expect(convert_json_value_to_human(value: "2024-06-14T12:34:56+02:00")).to eq("Date et heure")
+    end
+
+    it "does not detect invalid date as DateTime" do
+      expect(convert_json_value_to_human(value: "2024-13-14T25:34")).to eq("Chaine de caractère")
+      expect(convert_json_value_to_human(value: "2024-06-31T25:34")).to eq("Chaine de caractère")
+    end
   end
 end

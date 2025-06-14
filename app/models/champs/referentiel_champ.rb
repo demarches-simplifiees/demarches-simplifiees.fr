@@ -65,6 +65,8 @@ class Champs::ReferentielChamp < Champ
       bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
     when 'date'
       DateDetectionUtils.convert_to_iso8601(value) if value.present?
+    when 'datetime'
+      DateDetectionUtils.convert_to_iso8601_datetime(value) if value.present?
     else # text, textarea, etc.
       value.to_s unless value.nil?
     end
