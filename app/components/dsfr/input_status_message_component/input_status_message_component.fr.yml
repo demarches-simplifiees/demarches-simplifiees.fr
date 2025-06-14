@@ -6,3 +6,4 @@ fr:
     fetching: "Recherche en cours."
     error: "Aucun élément trouvé pour la référence : %{value}"
     success: "Référence trouvée : %{value}"
+  prefilled: "Donnée remplie automatiquement."

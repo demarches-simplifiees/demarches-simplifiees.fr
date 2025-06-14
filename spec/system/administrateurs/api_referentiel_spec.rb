@@ -5,7 +5,15 @@ describe 'Referentiel API:' do
   let(:service) { create(:service, administrateur:) }
   let(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, zones: [zone], service:, administrateurs: [administrateur], instructeurs: [create(:instructeur)]) }
   let(:administrateur) { create(:administrateur, user: create(:user)) }
-  let(:types_de_champ_public) { [{ type: :text, libelle: 'un autre champ' }] }
+  let(:types_de_champ_public) do
+    [
+      { type: :textarea, libelle: 'un autre champ' },
+      { type: :text, libelle: 'prefill with $.statut', stable_id: prefill_text_stable_id },
+      { type: :checkbox, libelle: 'prefill with $.is_active', stable_id: prefill_boolean_stable_id }
+    ]
+  end
+  let(:prefill_text_stable_id) { 42 }
+  let(:prefill_boolean_stable_id) { 84 }
 
   before do
     login_as administrateur.user, scope: :user
@@ -14,12 +22,11 @@ describe 'Referentiel API:' do
   scenario 'Setup as admin', js: true, vcr: true do
     Flipper.enable(:referentiel_type_de_champ, procedure)
     visit champs_admin_procedure_path(procedure)
-
     # add a second champ (when editing as user, need another champ to focus out of the referentiel champ which triggers autosave)
-    within(find('.type-de-champ-add-button', match: :first)) do
+    within(all('.type-de-champ').last) do
       add_champ
     end
-    expect(page).to have_selector('.type-de-champ-container', count: 2) # wait 2nd champ added
+    expect(page).to have_selector('.type-de-champ-container', count: 4) # wait 4th champ added
     within(all('.type-de-champ-container').last) do
       select('Référentiel à configurer (avancé)', from: 'Type de champ')
       fill_in 'Libellé du champ', with: 'Nunero de bâtiment'
@@ -45,17 +52,42 @@ describe 'Referentiel API:' do
       expect(page).to have_content("Configuration du champ « Nunero de bâtiment » ")
     end
 
-    # check response and configure mapping
+    # ensure response and configure mapping
     click_on("Afficher la réponse récupérée à partir de la requête configurée")
     expect(page).to have_content("PG46YY6YWCX8") # ensure api was called
+
+    # checek prefill
+    find("label[for=status]").click
+    scroll_to(find_field('is_active'), align: :center)
+    find("label[for=is_active]").click
     click_on('Étape suivante')
 
-    # ensure it was setup as expected
+    # wait for next page load
     expect(page).to have_content("La configuration du mapping a bien été enregistrée")
 
+    # then ensure choosen option are reflected on model
+    referentiel_tdc = Referentiel.first.types_de_champ.first
+    expect(referentiel_tdc.referentiel_mapping.dig("$.status", "prefill")).to eq("1")
+    expect(referentiel_tdc.referentiel_mapping.dig("$.is_active", "prefill")).to eq("1")
+
+    # ensure checked boxes enabled prefill opts
+    expect(page).to have_content("$.status")
+    expect(page).to have_content("$.is_active")
+
+    # then choose another stable than the default one
+    page.find("select[name='type_de_champ[referentiel_mapping][$.status][prefill_stable_id]']")
+      .select('prefill with $.statut')
+
+    # now should decide mapping
+    click_on("Valider")
+    referentiel_tdc.reload
+
     # back to champs and ensure it's considered as configured
-    click_on("Champs du formulaire")
     expect(page).to have_content("Configuré")
+
+    # ensure referentiel deep option exists
+    expect(referentiel_tdc.referentiel_mapping.dig("$.status", "prefill_stable_id").to_s).to eq(prefill_text_stable_id.to_s)
+    expect(referentiel_tdc.referentiel_mapping.dig("$.is_active", "prefill_stable_id").to_s).to eq(prefill_boolean_stable_id.to_s)
 
     # now procedure should be publishable
     visit admin_procedure_path(procedure)
@@ -115,6 +147,16 @@ describe 'Referentiel API:' do
       fill_in("Nunero de bâtiment", with: "PG46YY6YWCX8")
       perform_enqueued_jobs do
         expect(page).to have_content("Référence trouvée : PG46YY6YWCX8")
+        dossier = Dossier.last
+        # check prefill in db
+        expect(dossier.project_champs.find(&:referentiel?).value).to eq("PG46YY6YWCX8")
+        expect(dossier.project_champs.find(&:checkbox?).value).to eq("true")
+        expect(dossier.project_champs.find(&:text?).value).to eq("constructed")
+
+        # check prefill reported in ui
+        expect(page).to have_selector("##{dossier.project_champs.find(&:checkbox?).input_id}[value='true'][checked]")
+        expect(page).to have_selector("##{dossier.project_champs.find(&:text?).input_id}[value='constructed']")
+        expect(page).to have_content("Donnée remplie automatiquement.", count: 2)
       end
     end
   end
