@@ -98,6 +98,7 @@ describe Champs::ReferentielChamp, type: :model do
 
     context 'when prefill/mapping is configured' do
       let(:prefillable_stable_id) { 2 }
+      let(:prefilled_type_de_champ_options) { {} }
       let(:types_de_champ_public) do
         [
           {
@@ -107,7 +108,7 @@ describe Champs::ReferentielChamp, type: :model do
               "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
             }
           },
-          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }
+          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
         ]
       end
 
@@ -373,6 +374,45 @@ describe Champs::ReferentielChamp, type: :model do
           it 'does not update the datetime value (remains nil)' do
             expect { subject }
               .not_to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil)
+          end
+        end
+      end
+
+      context 'when data is mapped to drop_down_list' do
+        let(:prefilled_type_de_champ_type) { :drop_down_list }
+
+        context 'when data is in options' do
+          let(:prefilled_type_de_champ_options) { { options: ['valid'] } }
+          let(:data) { { ok: 'valid' } }
+          it 'casts and updates the drop_down_list with the jsonpath value as string' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:drop_down_list?).value }.from(nil).to('valid')
+          end
+        end
+
+        context 'when data is not in options without other' do
+          let(:prefilled_type_de_champ_options) { { options: ['valid'] } }
+          let(:data) { { ok: 'invalid' } }
+          it 'does not cast' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:drop_down_list?).value }
+          end
+        end
+
+        context 'when data is not in options with other' do
+          let(:prefilled_type_de_champ_options) { { options: ['valid'] + [:other] } }
+          let(:data) { { ok: 'anything' } }
+          it 'allows other' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:drop_down_list?).value }.from(nil).to('anything')
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the drop_down_list value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:drop_down_list?).value }.from(nil)
           end
         end
       end
