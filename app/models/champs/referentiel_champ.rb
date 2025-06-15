@@ -55,32 +55,32 @@ class Champs::ReferentielChamp < Champ
   end
 
   def cast_value_for_type_de_champ(value, champ)
-    case champ.type_de_champ.type_champ
-    when 'integer_number'
-      value.to_i if value.present?
-    when 'decimal_number'
-      value.to_f if value.present?
-    when 'checkbox', 'yes_no'
-      bool = ActiveModel::Type::Boolean.new.cast(value)
-      bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
-    when 'date'
-      DateDetectionUtils.convert_to_iso8601(value) if value.present?
-    when 'datetime'
-      DateDetectionUtils.convert_to_iso8601_datetime(value) if value.present?
-    when 'drop_down_list'
-      value.to_s if champ.value_is_in_options?(value) || champ.type_de_champ.drop_down_other?
-    when 'multiple_drop_down_list'
-      case value
-      in nil | ''
-        nil
-      in Array => arr if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
-        arr.to_json
-      else
-        raise ArgumentError, "Invalid value for multiple_drop_down_list: #{value.inspect}"
-      end
-    else # text, textarea, etc.
-      value.to_s unless value.nil?
+    result = case [champ.type_de_champ.type_champ, value]
+    in ['integer_number', v] if v.present?
+      { value: v.to_i }
+    in ['decimal_number', v] if v.present?
+      { value: v.to_f }
+    in ['checkbox' | 'yes_no', v]
+      bool = ActiveModel::Type::Boolean.new.cast(v)
+      { value: (bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)) }
+    in ['date', v]
+      { value: DateDetectionUtils.convert_to_iso8601(v) }
+    in ['datetime', v]
+      { value: DateDetectionUtils.convert_to_iso8601_datetime(v) }
+    in ['drop_down_list', v] if champ.value_is_in_options?(v) || champ.type_de_champ.drop_down_other?
+      { value: v.to_s }
+    in ['multiple_drop_down_list', nil | '']
+      { value: nil }
+    in ['multiple_drop_down_list', Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
+      { value: arr.to_json }
+    in ['multiple_drop_down_list', v]
+      raise ArgumentError, "Invalid value for multiple_drop_down_list: #{v.inspect}"
+    in ['text'| 'textarea' |'engagement_juridique'| 'dossier_link' | 'email'| 'phone'| 'iban'| 'siret' | 'formatted', v]
+      { value: value.to_s }
+    else # nothing found, maybe an invalid something
+      {}
     end
+    (result || {}).merge(prefilled: true)
   end
 
   def propagate_prefill(data)
@@ -94,8 +94,7 @@ class Champs::ReferentielChamp < Champ
 
   def update_prefillable_champ(prefill_stable_id, raw_value)
     prefill_champ = find_prefillable_champ(prefill_stable_id)
-    prefill_champ.update(value: cast_value_for_type_de_champ(raw_value, prefill_champ),
-                         prefilled: true) if prefill_champ.present?
+    prefill_champ.update(cast_value_for_type_de_champ(raw_value, prefill_champ)) if prefill_champ.present?
   end
 
   def find_prefillable_champ(prefill_stable_id)
