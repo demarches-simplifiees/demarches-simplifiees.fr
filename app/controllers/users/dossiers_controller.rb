@@ -336,12 +336,10 @@ module Users
       champ = dossier.project_champ(type_de_champ, row_id: params[:row_id])
 
       champ.validate(:champs_public_value) if champ.external_data_fetched?
-
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide = []
-          @to_update = [champ]
-
+          @to_update = [champ].concat(champ.prefillable_champs)
           render :update, layout: false
         end
       end
