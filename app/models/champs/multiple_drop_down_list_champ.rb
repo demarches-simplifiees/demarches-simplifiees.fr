@@ -46,8 +46,7 @@ class Champs::MultipleDropDownListChamp < Champ
       JSON.parse(value) rescue selected_options + [value] # value may start by [ without being a real JSON value
     else
       selected_options + [value]
-    end.uniq.without('')
-
+    end.uniq.without('').filter { value_is_in_options?(it) }
     if values.empty?
       super(nil)
     else

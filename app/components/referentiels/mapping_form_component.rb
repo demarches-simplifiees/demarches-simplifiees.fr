@@ -72,7 +72,7 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
       self.class::TYPES["Date"]
     elsif value.is_a?(String) && DateDetectionUtils.likely_iso8601_datetime_format?(value) && DateDetectionUtils.parsable_iso8601_datetime?(value)
       self.class::TYPES["DateTime"]
-    elsif value.is_a?(Array) && value.all? { |v| !v.is_a?(Hash) && !v.is_a?(Array) }
+    elsif ReferentielMappingUtils.array_of_supported_simple_types?(value)
       self.class::TYPES["Liste à choix multiples"]
     else
       TYPES.fetch(value.class) { TYPES[String] }

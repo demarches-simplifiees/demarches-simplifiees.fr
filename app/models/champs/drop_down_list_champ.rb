@@ -91,10 +91,6 @@ class Champs::DropDownListChamp < Champ
     headers.map { [_1, Referentiel.header_to_path(_1)] }
   end
 
-  def value_is_in_options?(checked_value)
-    options_for_select.any? { _1.last == checked_value }
-  end
-
   private
 
   def referentiel_from(value)

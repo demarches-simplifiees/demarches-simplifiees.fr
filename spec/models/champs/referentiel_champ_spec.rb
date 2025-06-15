@@ -416,6 +416,42 @@ describe Champs::ReferentielChamp, type: :model do
           end
         end
       end
+
+      context 'when data is mapped to multiple_drop_down_list' do
+        let(:prefilled_type_de_champ_type) { :multiple_drop_down_list }
+        let(:prefilled_type_de_champ_options) { { options: ['valid', 'valid_one', 'valid_two'] } }
+
+        context 'when data is an array of strings' do
+          let(:data) { { ok: ['valid', 'valid_one'] } }
+          it 'casts and updates the multiple_drop_down_list with the jsonpath value as JSON array' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }.from(nil).to(['valid', 'valid_one'].to_json)
+          end
+        end
+
+        context 'when data is an array of object' do
+          let(:data) { { ok: [{ choice: '1' }, { choice: '2' }] } }
+          it 'raises' do
+            expect { subject }.to raise_error(ArgumentError)
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the multiple_drop_down_list value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }.from(nil)
+          end
+        end
+
+        context 'when data contains invalid options' do
+          let(:data) { { ok: ['valid', 'invalid_option'] } }
+          it 'does not update the multiple_drop_down_list value (remains nil)' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }.from(nil).to(['valid'].to_json)
+          end
+        end
+      end
     end
   end
 end
