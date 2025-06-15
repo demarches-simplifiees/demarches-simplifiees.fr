@@ -11,7 +11,8 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     "Nombre Entier"       => %w[integer_number],
     "Booléen"             => %w[checkbox yes_no],
     "Date"                => %w[date],
-    "Date et heure"       => %w[datetime]
+    "Date et heure"       => %w[datetime],
+    "Liste à choix multiples" => %w[multiple_drop_down_list]
   }.freeze
 
   def source_tdcs

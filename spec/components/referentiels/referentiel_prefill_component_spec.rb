@@ -143,5 +143,19 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['datetime'])
       end
     end
+
+    context 'with mapping type "Liste à choix multiples"' do
+      let(:referentiel_mapping_type) { "Liste à choix multiples" }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 10, type: :multiple_drop_down_list, libelle: 'multiple' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only multiple_drop_down_list' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['multiple'])
+      end
+    end
   end
 end
