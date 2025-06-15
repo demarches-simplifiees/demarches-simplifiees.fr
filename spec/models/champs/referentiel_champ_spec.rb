@@ -453,6 +453,15 @@ describe Champs::ReferentielChamp, type: :model do
           end
         end
       end
+
+      context 'when data is mapped to formatted' do
+        let(:prefilled_type_de_champ_type) { :formatted }
+        let(:data) { { ok: 'texte <b>formaté</b>' } }
+        it 'update le champ formatted avec la valeur string' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.find(&:formatted?).value }.from(nil).to('texte <b>formaté</b>')
+        end
+      end
     end
   end
 end
