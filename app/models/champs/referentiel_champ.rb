@@ -54,8 +54,8 @@ class Champs::ReferentielChamp < Champ
     self.fetch_external_data_exceptions = []
   end
 
-  def cast_value_for_type_de_champ(value, type_champ)
-    case type_champ
+  def cast_value_for_type_de_champ(value, champ)
+    case champ.type_de_champ.type_champ
     when 'integer_number'
       value.to_i if value.present?
     when 'decimal_number'
@@ -67,6 +67,8 @@ class Champs::ReferentielChamp < Champ
       DateDetectionUtils.convert_to_iso8601(value) if value.present?
     when 'datetime'
       DateDetectionUtils.convert_to_iso8601_datetime(value) if value.present?
+    when 'drop_down_list'
+      value.to_s if champ.value_is_in_options?(value) || champ.type_de_champ.drop_down_other?
     else # text, textarea, etc.
       value.to_s unless value.nil?
     end
@@ -83,7 +85,7 @@ class Champs::ReferentielChamp < Champ
 
   def update_prefillable_champ(prefill_stable_id, raw_value)
     prefill_champ = find_prefillable_champ(prefill_stable_id)
-    prefill_champ.update(value: cast_value_for_type_de_champ(raw_value, prefill_champ.type_de_champ.type_champ),
+    prefill_champ.update(value: cast_value_for_type_de_champ(raw_value, prefill_champ),
                          prefilled: true) if prefill_champ.present?
   end
 

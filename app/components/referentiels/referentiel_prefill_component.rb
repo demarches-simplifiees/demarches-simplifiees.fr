@@ -6,7 +6,7 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
            to: :type_de_champ
 
   MAPPING_TYPE_TO_TYPE_DE_CHAMP = {
-    "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret],
+    "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret drop_down_list],
     "Nombre à virgule"    => %w[decimal_number],
     "Nombre Entier"       => %w[integer_number],
     "Booléen"             => %w[checkbox yes_no],
