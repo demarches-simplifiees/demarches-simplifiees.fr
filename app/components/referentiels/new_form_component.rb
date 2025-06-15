@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
-class Referentiels::NewFormComponent < ApplicationComponent
-  attr_reader :referentiel, :type_de_champ, :procedure
-  def initialize(referentiel:, type_de_champ:, procedure:)
-    @referentiel = referentiel
-    @type_de_champ = type_de_champ
-    @procedure = procedure
-  end
-
+class Referentiels::NewFormComponent < Referentiels::MappingFormBase
   def id
     :new_referentiel
   end
