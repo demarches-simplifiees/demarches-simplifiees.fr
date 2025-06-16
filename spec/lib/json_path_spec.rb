@@ -84,4 +84,54 @@ describe JSONPath do
       expect(described_class.value(hash, '$.foo.bar[1].baz')).to be_nil
     end
   end
+  describe '.extract_key_after_array' do
+    it 'returns the string after the first bracket' do
+      expect(JSONPath.extract_key_after_array('foo[123].baz')).to eq('.baz')
+    end
+    it 'returns the string after the first bracket' do
+      expect(JSONPath.extract_key_after_array('foo[123].bar.baz')).to eq('.bar.baz')
+    end
+  end
+  describe '.extract_array_name' do
+    it 'returns the substring before the first bracket' do
+      expect(JSONPath.extract_array_name('foo[123].baz')).to eq('foo')
+      expect(JSONPath.extract_array_name('data[0].key')).to eq('data')
+      expect(JSONPath.extract_array_name('array[42]')).to eq('array')
+    end
+  end
+  describe '.get_array' do
+  let(:hash) do
+    {
+      'items' => [
+        { 'id' => 1, 'name' => 'foo' },
+        { 'id' => 2, 'name' => 'bar' }
+      ],
+      'data' => { 'not_array' => 'value' },
+      'empty' => []
+    }
+  end
+
+  it 'returns the array for a valid array path' do
+    expect(JSONPath.get_array(hash, '$.items[0]')).to eq([
+      { 'id' => 1, 'name' => 'foo' },
+      { 'id' => 2, 'name' => 'bar' }
+    ])
+  end
+
+  it 'returns nil if the key does not exist' do
+    expect(JSONPath.get_array(hash, '$.missing[0]')).to be_nil
+  end
+
+  it 'returns the value even if it is not an array' do
+    expect(JSONPath.get_array(hash, '$.data[0]')).to eq({ 'not_array' => 'value' })
+  end
+
+  it 'returns an empty array if the array is empty' do
+    expect(JSONPath.get_array(hash, '$.empty[0]')).to eq([])
+  end
+
+  it 'returns nil if hash is nil' do
+    expect(JSONPath.get_array(nil, '$.items[0]')).to be_nil
+  end
+end
 end

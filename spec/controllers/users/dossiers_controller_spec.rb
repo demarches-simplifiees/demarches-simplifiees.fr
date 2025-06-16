@@ -2133,29 +2133,40 @@ describe Users::DossiersController, type: :controller do
           render_views
           let(:referentiel) { create(:api_referentiel, :configured) }
           let(:referentiel_stable_id) { 1 }
-          let(:prefillable_stable_id) { 42 }
           let(:types_de_champ_public) do
             [
               {
                 type: :referentiel,
                 referentiel: referentiel,
+                stable_id: referentiel_stable_id,
                 referentiel_mapping: {
-                  "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
-                },
-                stable_id: referentiel_stable_id
+                  "$.ok" => { prefill: "1", prefill_stable_id: 2 },
+                  "$.repetition{0}.nom" => { prefill: "1", prefill_stable_id: 3 }
+                }
               },
-              { type: :text, stable_id: prefillable_stable_id }
+              {
+                type: :text,
+                stable_id: 2 # mapped with "$.ok"
+              },
+              {
+                type: :repetition,
+                children: [
+                  { type: :text, stable_id: 3 } # mapped with "$.repetition{0}.nom"
+                ]
+              }
             ]
           end
 
           it 'inclut le champ principal et les champs pré-remplis dans @to_update' do
-            dossier.champs.find(&:referentiel?).update_with_external_data!(data: { ok: 'valeur préremplie' })
+            dossier.champs.find(&:referentiel?).update_with_external_data!(data: { ok: 'valeur préremplie', repetition: [{ nom: 'Jeanne' }, { nom: "Bob" }, {}] })
 
             get :champ, params: { id: dossier.id, stable_id: referentiel_stable_id }, format: :turbo_stream
 
-            expect(assigns(:to_update).size).to eq(2)
+            expect(assigns(:to_update).size).to eq(3)
             expect(dossier.reload.project_champs.map(&:value)).to include('valeur préremplie')
             expect(response.body).to include('Donnée remplie automatiquement.')
+            expect(response.body).to include('Jeanne')
+            expect(response.body).to include('Bob')
           end
         end
       end

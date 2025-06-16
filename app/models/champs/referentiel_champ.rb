@@ -42,7 +42,14 @@ class Champs::ReferentielChamp < Champ
   end
 
   def prefillable_champs
-    dossier.project_champs.filter { it.public_id.to_s.in?(prefillable_stable_ids.map(&:to_s)) }
+    elligible_stable_ids = prefillable_stable_ids.map(&:to_s)
+    dossier.project_champs_public.filter do |champ|
+      if champ.repetition?
+        champ.rows.flatten.any? { it.type_de_champ.stable_id.to_s.in?(elligible_stable_ids) }
+      else
+        champ.public_id.to_s.in?(elligible_stable_ids)
+      end
+    end
   end
 
   private
@@ -82,7 +89,47 @@ class Champs::ReferentielChamp < Champ
   end
 
   def propagate_prefill(data)
-    type_de_champ.referentiel_mapping_prefillable_with_stable_id.each do |jsonpath, mapping|
+    type_de_champ
+      .referentiel_mapping_prefillable_with_stable_id.group_by { |_jsonpath, mapping| dossier.revision.parent_of(dossier.find_type_de_champ_by_stable_id(mapping[:prefill_stable_id])) }
+      .each do |repetition, mappings|
+        if repetition.present?
+          update_repetition_prefillable_champs(data, repetition, mappings)
+        else
+          update_simple_prefillable_champs(data, mappings)
+        end
+      end
+  end
+
+  def update_repetition_prefillable_champs(data, repetition, mappings)
+    group_mappings_by_json_array(mappings).each do |array_key, array_mappings|
+      json_array = JSONPath.get_array(data.with_indifferent_access, array_key) || []
+      next unless json_array.is_a?(Array)
+      json_array.each do |element|
+        next if element.blank?
+        row_id = dossier.repetition_add_row(repetition, updated_by: :api)
+        array_mappings.each do |jsonpath, mapping|
+          value = extract_value_for_mapping(element, jsonpath)
+          update_prefillable_champ(
+            stable_id: mapping[:prefill_stable_id],
+            raw_value: value,
+            row_id: row_id
+          )
+        end
+      end
+    end
+  end
+
+  def group_mappings_by_json_array(mappings)
+    mappings.group_by { |jsonpath, _| JSONPath.extract_array_name(JSONPath.simili_to_jsonpath(jsonpath)) }
+  end
+
+  def extract_value_for_mapping(element, jsonpath)
+    after_bracket = JSONPath.extract_key_after_array(JSONPath.simili_to_jsonpath(jsonpath))
+    JSONPath.value(element, after_bracket)
+  end
+
+  def update_simple_prefillable_champs(data, mappings)
+    mappings.each do |jsonpath, mapping|
       update_prefillable_champ(
         stable_id: mapping[:prefill_stable_id],
         raw_value: JSONPath.value(data.with_indifferent_access, JSONPath.simili_to_jsonpath(jsonpath))

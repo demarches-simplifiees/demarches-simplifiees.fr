@@ -462,6 +462,35 @@ describe Champs::ReferentielChamp, type: :model do
             .to change { dossier.reload.project_champs.find(&:formatted?).value }.from(nil).to('texte <b>formaté</b>')
         end
       end
+
+      context 'when data is mapped to child' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              referentiel: referentiel,
+              referentiel_mapping: {
+                "$.ok{0}.nom" => { prefill: "1", prefill_stable_id: 1 },
+                "$.ok{1}.age" => { prefill: "1", prefill_stable_id: 2 }
+              }
+            },
+            {
+              type: :repetition,
+              children: [
+                { type: :text, stable_id: 1 },
+                { type: :number, stable_id: 2 }
+              ]
+            }
+          ]
+        end
+        let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, { nom: "Bob", age: 12 }, {}] } }
+        it 'update le champ formatted avec la valeur string' do
+          subject
+          values = dossier.reload.champs.filter(&:text?).map(&:value)
+          expect(values).to include('Jeanne')
+          expect(values).to include('Bob')
+        end
+      end
     end
   end
 end

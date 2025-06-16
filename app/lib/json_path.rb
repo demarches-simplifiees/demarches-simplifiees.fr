@@ -34,7 +34,22 @@ class JSONPath
     jsonpath.tr('{', '[').tr('}', ']')
   end
 
+  # navigation
+  def self.extract_array_name(str)
+    str[/^[^\[]+/]
+  end
+
+  def self.extract_key_after_array(str)
+    str[/\[(.*?)\](.*)/, 2]
+  end
+
+  # getters
   def self.value(hash, jsonpath)
     hash&.dig(*jsonpath.split('.')[1..])
+  end
+
+  def self.get_array(hash, array_path)
+    root_path = extract_array_name(array_path)
+    value(hash, root_path)
   end
 end
