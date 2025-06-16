@@ -192,10 +192,9 @@ class DossierNotification < ApplicationRecord
     end.to_h
   end
 
-  def self.notifications_for_instructeur_dossiers(groupe_instructeur_ids, instructeur, dossier_ids)
+  def self.notifications_for_instructeur_dossiers(instructeur, dossier_ids)
     DossierNotification
-      .where(dossier_id: dossier_ids, groupe_instructeur_id: groupe_instructeur_ids)
-      .or(DossierNotification.where(dossier_id: dossier_ids, instructeur:))
+      .where(dossier_id: dossier_ids, instructeur_id: [instructeur.id, nil])
       .to_display
       .order_by_importance
       .group_by(&:dossier_id)

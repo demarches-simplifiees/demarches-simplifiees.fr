@@ -169,7 +169,7 @@ module Instructeurs
         .distinct
 
       @statut_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
-      @notifications = DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, current_instructeur, @filtered_sorted_paginated_ids)
+      @notifications = DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @filtered_sorted_paginated_ids)
       @has_export_notification = notify_exports?
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController

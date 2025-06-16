@@ -150,14 +150,11 @@ describe RechercheController, type: :controller do
       end
 
       context 'when dossier has notification' do
-        before do
-          instructeur.follow(dossier)
-          dossier.touch(:last_commentaire_updated_at)
-        end
+        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
 
         it 'assigns notification' do
           subject
-          expect(assigns(:notifications_dossier_ids)).to eq([dossier.id])
+          expect(assigns(:notifications)).to eq({ dossier.id => [notification] })
         end
       end
 

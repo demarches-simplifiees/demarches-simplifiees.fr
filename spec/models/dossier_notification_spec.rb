@@ -37,10 +37,9 @@ RSpec.describe DossierNotification, type: :model do
     end
 
     context 'a given instructeur and a list of dossiers' do
-      let!(:groupe_instructeur_ids) { [groupe_instructeur.id, other_groupe_instructeur.id] }
       let!(:dossier_ids) { [dossier.id, other_dossier.id] }
 
-      subject { DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, instructeur, dossier_ids) }
+      subject { DossierNotification.notifications_for_instructeur_dossiers(instructeur, dossier_ids) }
 
       it 'includes correct notifications and excludes the others' do
         expect(subject[dossier.id]).to include(notification_instructeur)

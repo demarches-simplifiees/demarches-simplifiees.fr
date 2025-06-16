@@ -39,8 +39,10 @@
                     %td.fr-cell--numeric
                       .relative
                         = dossier.id
-                        - if @notifications_dossier_ids.include?(dossier.id)
-                          %span.notifications{ 'aria-label': 'notifications' }
+                      - if @notifications[dossier.id].present?
+                        - @notifications[dossier.id].each do |notif|
+                          .fr-mt-1v
+                            = tag_notification(notif)
                     %td.fr-cell--multiline= dossier.procedure.libelle
                     %td= dossier.user&.email
                     %td.flex.column= status_badge(dossier.state)
@@ -52,8 +54,10 @@
                     %td.fr-cell--numeric
                       %a.fr-link.relative{ href: path }
                         = dossier.id
-                        - if @notifications_dossier_ids.include?(dossier.id)
-                          %span.notifications{ 'aria-label': 'notifications' }
+                      - if @notifications[dossier.id].present?
+                        - @notifications[dossier.id].each do |notif|
+                          .fr-mt-1v
+                            = tag_notification(notif)
 
                     %td
                       %a{ href: path }= dossier.procedure.libelle
