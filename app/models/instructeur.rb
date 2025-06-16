@@ -300,15 +300,6 @@ class Instructeur < ApplicationRecord
 
   private
 
-  def notifications_for(condition)
-    Dossier
-      .visible_by_administration
-      .not_archived
-      .where(condition)
-      .merge(followed_dossiers)
-      .with_notifications
-  end
-
   def assign_to_for_procedure_id(procedure_id)
     assign_to
       .joins(:groupe_instructeur)
