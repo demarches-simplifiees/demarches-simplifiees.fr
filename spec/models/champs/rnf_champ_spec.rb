@@ -99,6 +99,15 @@ describe Champs::RNFChamp, type: :model do
       }
     end
 
+    context 'failure (http 404)' do
+      let(:status) { 404 }
+      let(:response_type) { 'invalid' }
+      it {
+        expect(subject.failure.retryable).to be_falsey
+        expect(subject.failure.reason).to be_a(API::Client::HTTPError)
+      }
+    end
+
     describe 'update_with_external_data!' do
       it 'works' do
         value_json = {
