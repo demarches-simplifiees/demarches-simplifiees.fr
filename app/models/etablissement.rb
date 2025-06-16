@@ -35,7 +35,7 @@ class Etablissement < ApplicationRecord
   }.freeze
 
   EXPORTABLE_COLUMNS = {
-    "siege_social" => { type: :text },
+    "siege_social" => { type: :boolean },
     "code_naf" => { type: :text },
     "adresse" => { type: :text },
     "numero_voie" => { type: :text },
