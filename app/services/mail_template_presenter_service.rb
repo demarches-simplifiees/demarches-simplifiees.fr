@@ -3,7 +3,6 @@
 class MailTemplatePresenterService
   include ActionView::Helpers::SanitizeHelper
   include ActionView::Helpers::TextHelper
-  include ChampHelper
 
   def self.create_commentaire_for_state(dossier, state)
     if dossier.procedure.accuse_lecture? && Dossier::TERMINE.include?(state)
@@ -16,7 +15,7 @@ class MailTemplatePresenterService
   end
 
   def safe_body
-    format_text_value(@email_template.body_for_dossier(@dossier))
+    sanitize(@email_template.body_for_dossier(@dossier), scrubber: Sanitizers::MailScrubber.new)
   end
 
   def safe_subject
