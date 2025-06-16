@@ -9,7 +9,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
     FalseClass => "Booléen",
     # detection
     "Date" => "Date",
-    "DateTime" => "Date et heure"
+    "DateTime" => "Date et heure",
+    "Liste à choix multiples" => "Liste à choix multiples"
   }.freeze
 
   def last_request_keys
@@ -71,6 +72,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
       self.class::TYPES["DateTime"]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
       self.class::TYPES["Date"]
+    elsif ReferentielMappingUtils.array_of_supported_simple_types?(value)
+      self.class::TYPES["Liste à choix multiples"]
     else
       TYPES.fetch(value.class) { TYPES[String] }
     end

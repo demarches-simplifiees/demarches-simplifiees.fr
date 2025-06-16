@@ -471,6 +471,10 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
+  def value_is_in_options?(checked_value)
+    options_for_select.any? { _1.last == checked_value }
+  end
+
   def header_section_level_value
     if header_section_level.presence
       header_section_level.to_i

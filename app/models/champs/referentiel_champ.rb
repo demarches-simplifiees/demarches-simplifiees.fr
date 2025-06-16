@@ -69,6 +69,15 @@ class Champs::ReferentielChamp < Champ
       DateDetectionUtils.convert_to_iso8601_datetime(value) if value.present?
     when 'drop_down_list'
       value.to_s if champ.value_is_in_options?(value) || champ.type_de_champ.drop_down_other?
+    when 'multiple_drop_down_list'
+      case value
+      in nil | ''
+        nil
+      in Array => arr if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
+        arr.to_json
+      else
+        raise ArgumentError, "Invalid value for multiple_drop_down_list: #{value.inspect}"
+      end
     else # text, textarea, etc.
       value.to_s unless value.nil?
     end
