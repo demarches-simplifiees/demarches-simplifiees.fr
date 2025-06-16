@@ -2,6 +2,7 @@
 
 class DossierPreloader
   DEFAULT_BATCH_SIZE = 2000
+  MAX_CHAMPS_PER_BATCH = 200_000
 
   def initialize(dossiers, includes_for_champ: [], includes_for_etablissement: [])
     @dossiers = dossiers
@@ -9,14 +10,15 @@ class DossierPreloader
     @includes_for_champ = includes_for_champ
   end
 
-  def in_batches(size = DEFAULT_BATCH_SIZE)
+  def in_batches
     dossiers = @dossiers.to_a
-    dossiers.each_slice(size) { |slice| load_dossiers(slice) }
+    batch_size = adaptive_batch_size(dossiers)
+    dossiers.each_slice(batch_size) { load_dossiers(it) }
     dossiers
   end
 
-  def in_batches_with_block(size = DEFAULT_BATCH_SIZE, &block)
-    @dossiers.in_batches(of: size) do |batch|
+  def in_batches_with_block(&block)
+    @dossiers.in_batches(of: adaptive_batch_size(@dossiers)) do |batch|
       data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
 
       dossiers = data.to_a
@@ -94,5 +96,18 @@ class DossierPreloader
     end
 
     dossier.send(:reset_champs_cache)
+  end
+
+  def adaptive_batch_size(dossiers)
+    return DEFAULT_BATCH_SIZE if dossiers.count < DEFAULT_BATCH_SIZE
+
+    # Prend un ordre de grandeur de la taille de la démarche
+    champs_per_dossier = dossiers.last.revision.types_de_champ.count + 1
+
+    # Reste sur un multiple de 100
+    ideal_batch_size = (MAX_CHAMPS_PER_BATCH / champs_per_dossier).round(-2)
+
+    # ... avec un minimum de 100
+    ideal_batch_size.clamp(100..DEFAULT_BATCH_SIZE)
   end
 end
