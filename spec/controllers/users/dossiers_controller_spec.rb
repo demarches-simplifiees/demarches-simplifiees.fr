@@ -1463,21 +1463,6 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when the dossier is followed by an instructeur' do
-      let(:instructeur) { create(:instructeur) }
-      let!(:invite) { create(:invite, dossier:, user:) }
-
-      before do
-        instructeur.follow(dossier)
-      end
-
-      it 'the follower has a notification' do
-        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([])
-        subject
-        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([])
-      end
-    end
-
     context 'when the champ is a phone number' do
       let(:types_de_champ_public) { [{ type: :phone }] }
       let(:now) { Time.zone.parse('01/01/2100') }
@@ -1764,20 +1749,6 @@ describe Users::DossiersController, type: :controller do
         it 'does not send any email to the expert' do
           expect(AvisMailer).not_to have_received(:notify_new_commentaire_to_expert)
         end
-      end
-    end
-
-    context 'notification' do
-      before 'instructeurs have no notification before the message' do
-        expect(instructeur_with_instant_message.followed_dossiers.with_notifications).to eq([])
-        expect(instructeur_without_instant_message.followed_dossiers.with_notifications).to eq([])
-        travel_to(now + 1.day)
-        subject
-      end
-
-      it 'adds them a notification' do
-        expect(instructeur_with_instant_message.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
-        expect(instructeur_without_instant_message.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
       end
     end
 

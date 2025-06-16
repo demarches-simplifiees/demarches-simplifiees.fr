@@ -827,20 +827,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     let(:emails) { ["email@a.com"] }
 
-    context "notifications updates" do
-      context 'when an instructeur follows the dossier' do
-        let(:follower) { create(:instructeur) }
-        before { follower.follow(dossier) }
-
-        it 'the follower has a notification' do
-          expect(follower.followed_dossiers.with_notifications).to eq([])
-          subject
-          expect(follower.followed_dossiers.with_notifications).to eq([dossier.reload])
-        end
-      end
-    end
-
-    context 'as an instructeur, i auto follow the dossier so I get the notifications' do
+    context 'as an instructeur, i auto follow the dossier' do
       it 'works' do
         subject
         expect(instructeur.followed_dossiers).to match_array([dossier])
@@ -1238,12 +1225,6 @@ describe Instructeurs::DossiersController, type: :controller do
             expect(response).to have_http_status(200)
             assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
           }
-        end
-
-        it 'updates the annotations' do
-          travel_to(now + 1.hour)
-          expect(instructeur.followed_dossiers.with_notifications).to eq([])
-          expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
         end
       end
 
