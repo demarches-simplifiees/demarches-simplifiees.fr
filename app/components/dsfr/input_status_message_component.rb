@@ -3,6 +3,7 @@
 module Dsfr
   class InputStatusMessageComponent < ApplicationComponent
     delegate :type_de_champ, to: :@champ
+    delegate :prefilled?, to: :@champ
     def initialize(errors_on_attribute:, error_full_messages:, champ:)
       @errors_on_attribute = errors_on_attribute
       @error_full_messages = error_full_messages
@@ -12,7 +13,8 @@ module Dsfr
 
     def statutable?
       rna_support_statut? ||
-      referentiel_support_statut?
+      referentiel_support_statut? ||
+      prefilled?
     end
 
     def rna_support_statut?
@@ -28,6 +30,7 @@ module Dsfr
     end
 
     def statut_message
+      return t('.prefilled') if prefilled?
       case @champ.type_de_champ.type_champ
       when TypeDeChamp.type_champs[:rna]
         t(".rna.data_fetched", title: @champ.title, address: @champ.full_address)

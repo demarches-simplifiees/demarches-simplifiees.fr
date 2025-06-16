@@ -32,4 +32,8 @@ FactoryBot.define do
     test_data { 'PG46YY6YWCX8' }
     url { ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND').split(',').first }
   end
+
+  trait :ready do
+    last_response { { "status" => 200 } }
+  end
 end
