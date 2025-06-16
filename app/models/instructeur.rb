@@ -144,11 +144,6 @@ class Instructeur < ApplicationRecord
     assign_to.procedure_presentation_or_default_and_errors
   end
 
-  def notifications_for_dossiers(dossier_ids)
-    notifications_for(id: dossier_ids)
-      .pluck(:id)
-  end
-
   def mark_tab_as_seen(dossier, tab)
     attributes = {}
     attributes["#{tab}_seen_at"] = Time.zone.now
