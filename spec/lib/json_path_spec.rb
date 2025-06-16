@@ -15,7 +15,7 @@ describe JSONPath do
       result = described_class.hash_to_jsonpath(hash)
       expect(result).to eq({
         '$.foo.bar' => 1,
-        '$.foo.baz[0].qux' => 'valeur',
+        '$.foo.baz{0}.qux' => 'valeur',
         '$.simple' => 'ok'
       })
     end
@@ -34,7 +34,7 @@ describe JSONPath do
 
     it 'jsonpathify array in hash' do
       expect(described_class.hash_to_jsonpath({ data: [{ "key" => "value" }] })).to eq({
-        "$.data[0].key" => "value"
+        "$.data{0}.key" => "value"
       })
     end
 
@@ -47,18 +47,18 @@ describe JSONPath do
         "$.shape.coordinates",
         "$.rnb_id",
         "$.status",
-        "$.ext_ids[0].id",
-        "$.ext_ids[0].source",
-        "$.ext_ids[0].created_at",
-        "$.ext_ids[0].source_version",
-        "$.addresses[0].id",
-        "$.addresses[0].source",
-        "$.addresses[0].street",
-        "$.addresses[0].city_name",
-        "$.addresses[0].street_rep",
-        "$.addresses[0].city_zipcode",
-        "$.addresses[0].street_number",
-        "$.addresses[0].city_insee_code",
+        "$.ext_ids{0}.id",
+        "$.ext_ids{0}.source",
+        "$.ext_ids{0}.created_at",
+        "$.ext_ids{0}.source_version",
+        "$.addresses{0}.id",
+        "$.addresses{0}.source",
+        "$.addresses{0}.street",
+        "$.addresses{0}.city_name",
+        "$.addresses{0}.street_rep",
+        "$.addresses{0}.city_zipcode",
+        "$.addresses{0}.street_number",
+        "$.addresses{0}.city_insee_code",
         "$.is_active"
       ])
     end

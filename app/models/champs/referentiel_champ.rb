@@ -72,7 +72,7 @@ class Champs::ReferentielChamp < Champ
     type_de_champ.referentiel_mapping_prefillable_with_stable_id.each do |jsonpath, mapping|
       update_prefillable_champ(
         mapping[:prefill_stable_id],
-        JSONPath.value(data.with_indifferent_access, jsonpath)
+        JSONPath.value(data.with_indifferent_access, JSONPath.simili_to_jsonpath(jsonpath))
       )
     end
   end
