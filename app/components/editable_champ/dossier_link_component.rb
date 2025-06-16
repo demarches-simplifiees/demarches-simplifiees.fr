@@ -5,10 +5,6 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     class_names('width-100': contains_long_option?, 'fr-select': true)
   end
 
-  def dsfr_input_classname
-    'fr-select'
-  end
-
   def dsfr_champ_container
     render_as_radios? ? :fieldset : :div
   end
@@ -23,6 +19,7 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     describedby << @champ.error_id if errors_on_attribute?
     describedby.present? ? describedby.join(' ') : nil
   end
+
   def dsfr_input_classname
     'fr-input'
   end
@@ -69,9 +66,6 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     options
   end
 
-
-
-
   def react_props
     {
       items: dossier_options_for(@champ),
@@ -90,12 +84,10 @@ class EditableChamp::DossierLinkComponent < EditableChamp::EditableChampBaseComp
     return [] unless type_champ
 
     dossiers = type_champ.procedures.flat_map do |procedure|
-        procedure.dossiers.visible_by_user_or_administration.where(user_id: @current_user_id, state: Dossier::SOUMIS)
-
+      procedure.dossiers.visible_by_user_or_administration.where(user_id: @current_user_id, state: Dossier::SOUMIS)
     end
 
     dossiers.reject { |dossier| dossier.id == @champ.dossier_id }
-
   end
 
   def render_as_radios?
