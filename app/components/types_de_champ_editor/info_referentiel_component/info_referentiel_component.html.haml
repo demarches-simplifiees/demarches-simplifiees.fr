@@ -9,16 +9,25 @@
     - else
       %p.fr-badge.fr-badge--sm.fr-badge--success Configuré
 
-  .fr-notice.fr-notice--info.fr-mb-2w
-    .fr-container
-      .fr-notice__body
-        %p.fr-notice__title Ce champ sera présenté à l’usager sous forme d’un champ de type « Texte court ».
-        %p.notice__desc.fr-mt-2w Lors de la configuration, vous pourrez choisir de :
-        %ul.fr-mt-0
-          - if Referentiels::APIReferentiel.autocomplete_available?
-            %li proposer des autosuggestions au fur et à mesure de la saisie de l’usager (issue de la BDD du référentiel)
-          %li vérifier la correspondance exacte de saisie dans la BDD du référentiel
-          %li et/ou pré-remplir d'autres champ avec une donnée issues du référentiel
+  .fr-container
+    - if !ready?
+      .fr-notice.fr-notice--info.fr-mb-2w
+        .fr-notice__body
+          %p.fr-notice__title Ce champ sera présenté à l’usager sous forme d’un champ de type « Texte court ».
+          %p.notice__desc.fr-mt-2w Lors de la configuration, vous pourrez choisir de :
+          %ul.fr-mt-0
+            - if Referentiels::APIReferentiel.autocomplete_available?
+              %li proposer des autosuggestions au fur et à mesure de la saisie de l’usager (issue de la BDD du référentiel)
+            %li vérifier la correspondance exacte de saisie dans la BDD du référentiel
+            %li et/ou pré-remplir d'autres champ avec une donnée issues du référentiel
+  - if ready? && type_de_champ.referentiel_mapping_prefillable_with_stable_id.present?
+    = render Dsfr::AlertComponent.new(title: "Résumé du pré-remplissage automatique", state: :info, heading_level: 'h2', extra_class_names: 'fr-mb-2w') do |c|
+      - c.with_body do
+        %ul
+          - type_de_champ.referentiel_mapping_prefillable_with_stable_id.sort.each do |jsonpath, mapping|
+            - champ = procedure.draft_revision.types_de_champ.find { _1.stable_id.to_s == mapping[:prefill_stable_id].to_s }
+            %li
+              = "#{jsonpath.to_s} -> « #{champ&.libelle || mapping[:prefill_stable_id]} »"
 
   %p.flex.column.align-end
     = link_to "Configurer le champ", edit_referentiel_on_draft_or_clone_url, class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-equalizer-fill', data: { turbo: false }
