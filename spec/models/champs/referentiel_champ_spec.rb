@@ -112,6 +112,15 @@ describe Champs::ReferentielChamp, type: :model do
         ]
       end
 
+      describe 'when prefillable_stable_id has been destroyed' do
+        let(:prefillable_stable_id) { 9999 }
+        let(:prefilled_type_de_champ_type) { :text }
+
+        it 'does not raise an error' do
+          expect { subject }.to raise_error(StandardError)
+        end
+      end
+
       context 'when data is mapped to text' do
         let(:data) { { ok: 'ok' } }
         let(:prefilled_type_de_champ_type) { :text }

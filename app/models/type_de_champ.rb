@@ -277,6 +277,10 @@ class TypeDeChamp < ApplicationRecord
     referentiel_mapping_prefillable.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id].present? }
   end
 
+  def referentiel_mapping_prefillable_stable_ids
+    referentiel_mapping_prefillable_with_stable_id.map { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id] }
+  end
+
   def params_for_champ
     {
       private: private?,

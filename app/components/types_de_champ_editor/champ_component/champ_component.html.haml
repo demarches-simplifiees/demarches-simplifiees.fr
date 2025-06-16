@@ -225,7 +225,11 @@
             utilisé pour
             = link_to('l’eligibilité des dossiers', edit_admin_procedure_ineligibilite_rules_path(revision.procedure_id))
         - else
-          = button_to type_de_champ_path, class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
+          - if coordinate.prefilled_by_type_de_champ
+            %span
+              = "Champ prérempli (référentiel)"
+
+          = button_to type_de_champ_path, class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: } } do
             %span.sr-only Supprimer
 
   .type-de-champ-add-button{ class: class_names(root: !coordinate.child?, flex: true) }
