@@ -195,7 +195,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
         it 'catches smarter csv error' do
           expect(flash.alert).to be_present
-          expect(flash.alert).to eq("Importation impossible : le fichier est mal formaté")
+          expect(flash.alert).to eq("Importation impossible : le fichier est vide ou mal interprété")
         end
       end
     end
