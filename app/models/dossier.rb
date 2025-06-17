@@ -670,6 +670,7 @@ class Dossier < ApplicationRecord
       brouillon_close_to_expiration_notice_sent_at: nil,
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
+    update_expired_at
   end
 
   def extend_conservation_and_restore(conservation_extension, author)
