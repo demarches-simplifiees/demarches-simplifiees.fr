@@ -4,4 +4,8 @@ class EditableChamp::CiviliteComponent < EditableChamp::EditableChampBaseCompone
   def dsfr_champ_container
     :fieldset
   end
+
+  def fieldset_legend_id
+    "#{@champ.html_id}-label"
+  end
 end
