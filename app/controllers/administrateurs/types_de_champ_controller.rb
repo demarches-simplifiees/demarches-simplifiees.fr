@@ -138,51 +138,71 @@ module Administrateurs
     end
 
     def import_referentiel
-      if !CSV_ACCEPTED_CONTENT_TYPES.include?(referentiel_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
-        flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
+      return flash[:alert] = "Importation impossible : veuillez importer un fichier CSV" unless csv_file?
+      return flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}" if referentiel_file.size > CSV_MAX_SIZE
 
-      elsif referentiel_file.size > CSV_MAX_SIZE
-        flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+      type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+      csv_to_code = parse_csv(referentiel_file)
 
-      else
-        type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+      return flash[:alert] = "Importation impossible : le fichier est vide ou mal interprété" if csv_to_code.empty?
+      return flash[:alert] = "Importation impossible : votre fichier CSV fait plus de #{helpers.number_with_delimiter(CSV_MAX_LINES)} lignes" if csv_to_code.size > CSV_MAX_LINES
 
-        begin
-          csv_to_code = SmarterCSV.process(referentiel_file, strings_as_keys: true, keep_original_headers: true, convert_values_to_numeric: false, force_utf8: true)
-        rescue *[CSV::MalformedCSVError, SmarterCSV::NoColSepDetected]
-          return flash[:alert] = "Importation impossible : le fichier est mal formaté"
+      headers = csv_to_code.first.keys
+      digest = Digest::SHA256.hexdigest(csv_to_code.to_json)
+
+      ActiveRecord::Base.transaction do
+        referentiel = type_de_champ.create_referentiel!(
+          name: referentiel_file.original_filename,
+          headers: headers,
+          type: 'Referentiels::CsvReferentiel',
+          digest: digest
+        )
+
+        items_to_insert = csv_to_code.map do |row|
+          {
+            data: { row: row.transform_keys { Referentiel.header_to_path(_1) } },
+            referentiel_id: referentiel.id
+          }
         end
 
-        return flash[:alert] = "Importation impossible : votre fichier CSV fait plus de #{helpers.number_with_delimiter(CSV_MAX_LINES)} lignes" if csv_to_code.size > CSV_MAX_LINES
-
-        headers = csv_to_code.first.keys
-
-        digest = Digest::SHA256.hexdigest(csv_to_code.to_json)
-
-        ActiveRecord::Base.transaction do
-          # Create referentiel
-          referentiel = type_de_champ.create_referentiel!(name: referentiel_file.original_filename, headers:, type: 'Referentiels::CsvReferentiel', digest:)
-
-          # Create referentiel items
-          # We add headers to items in order to display them in instructeur view
-          # even if the referentiel has been deleted
-          items_to_insert = csv_to_code.map do |row|
-            {
-              data: {
-                row: row.transform_keys { Referentiel.header_to_path(_1) }
-              },
-              referentiel_id: referentiel.id
-            }
-          end
-
-          ReferentielItem.insert_all(items_to_insert)
-        end
-        @coordinate = draft.coordinate_for(type_de_champ)
-        @morphed = [champ_component_from(@coordinate)]
+        ReferentielItem.insert_all(items_to_insert)
       end
+
+      @coordinate = draft.coordinate_for(type_de_champ)
+      @morphed = [champ_component_from(@coordinate)]
     end
 
     private
+
+    def csv_file?
+      CSV_ACCEPTED_CONTENT_TYPES.include?(referentiel_file.content_type) ||
+        CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
+    end
+
+    def parse_csv(file)
+      raw_content = file.read
+
+      detection = CharlockHolmes::EncodingDetector.detect(raw_content)
+      source_encoding = detection[:encoding] || 'Windows-1252'
+
+      cleaned_content = CharlockHolmes::Converter.convert(raw_content, source_encoding, 'UTF-8')
+
+      Tempfile.create(['referentiel', '.csv'], encoding: 'UTF-8') do |tempfile|
+        tempfile.write(cleaned_content)
+        tempfile.rewind
+
+        begin
+          SmarterCSV.process(
+            tempfile.path,
+            strings_as_keys: true,
+            keep_original_headers: true,
+            convert_values_to_numeric: false
+          )
+        rescue *[CSV::MalformedCSVError, SmarterCSV::NoColSepDetected, ArgumentError]
+          []
+        end
+      end
+    end
 
     def changing_of_type?(type_de_champ)
       type_de_champ_update_params['type_champ'].present? && (type_de_champ_update_params['type_champ'] != type_de_champ.type_champ)
