@@ -37,10 +37,9 @@ RSpec.describe DossierNotification, type: :model do
     end
 
     context 'a given instructeur and a list of dossiers' do
-      let!(:groupe_instructeur_ids) { [groupe_instructeur.id, other_groupe_instructeur.id] }
       let!(:dossier_ids) { [dossier.id, other_dossier.id] }
 
-      subject { DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, instructeur, dossier_ids) }
+      subject { DossierNotification.notifications_for_instructeur_dossiers(instructeur, dossier_ids) }
 
       it 'includes correct notifications and excludes the others' do
         expect(subject[dossier.id]).to include(notification_instructeur)
@@ -60,6 +59,67 @@ RSpec.describe DossierNotification, type: :model do
         expect(subject['traites']['dossier_depose']).to include(notification_grp_instructeur)
         expect(subject['a-suivre']['dossier_depose']).to include(other_notification_instructeur)
         expect(subject['a-suivre']['dossier_depose']).to include(other_notification_grp_instructeur)
+      end
+    end
+  end
+
+  describe '.notifications_sticker_for' do
+    let(:procedure) { create(:procedure) }
+    let(:instructeur) { create(:instructeur) }
+    let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
+    let(:other_groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
+    let(:dossier) { create(:dossier, :accepte, procedure:, groupe_instructeur:) }
+    let(:other_dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur: other_groupe_instructeur) }
+    let!(:notification_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
+    let!(:notification_not_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:) }
+    let!(:other_notification_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:, notification_type: :annotation_instructeur) }
+    let!(:other_notification_not_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:) }
+
+    context 'a given instructeur on one dossier' do
+      subject { DossierNotification.notifications_sticker_for_instructeur_dossier(instructeur, dossier) }
+
+      it do
+        is_expected.to eq({
+          demande: true,
+          annotations_instructeur: false,
+          avis_externe: false,
+          messagerie: false
+        })
+      end
+    end
+
+    context 'a given instructeur on one procedure' do
+      let!(:groupe_instructeur_ids) { [groupe_instructeur.id, other_groupe_instructeur.id] }
+      let!(:dossier_ids) { [dossier.id, other_dossier.id] }
+
+      subject { DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, instructeur) }
+
+      before do
+        instructeur.followed_dossiers << other_dossier
+      end
+
+      it do
+        is_expected.to eq({
+          suivis: true,
+          traites: true
+        })
+      end
+    end
+
+    context 'a given instructeur on a list of procedures' do
+      let!(:groupe_instructeur_ids) { [groupe_instructeur.id, other_groupe_instructeur.id] }
+
+      subject { DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_instructeur_ids, instructeur) }
+
+      before do
+        instructeur.followed_dossiers << other_dossier
+      end
+
+      it do
+        is_expected.to eq({
+          suivis: [procedure.id],
+          traites: [procedure.id]
+        })
       end
     end
   end

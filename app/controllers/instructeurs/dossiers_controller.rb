@@ -16,6 +16,7 @@ module Instructeurs
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous]
     before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
     before_action :set_notifications_dossier, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :pending_correction, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :create_avis, :create_commentaire]
+    before_action :set_notifications_sticker, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :pending_correction, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :create_avis, :create_commentaire]
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]

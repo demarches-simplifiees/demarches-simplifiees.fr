@@ -9,13 +9,13 @@
       instructeur_procedure_path(procedure, statut: 'suivis'),
       active: statut == 'suivis',
       badge: number_with_html_delimiter(suivis_count),
-      notification: has_en_cours_notifications)
+      notification: statut_with_notifications[:suivis])
 
     = tab_item(i18n_tab_from_status('traites'),
       instructeur_procedure_path(procedure, statut: 'traites'),
       active: statut == 'traites',
       badge: number_with_html_delimiter(traites_count),
-      notification: has_termine_notifications)
+      notification: statut_with_notifications[:traites])
 
     = tab_item(i18n_tab_from_status('tous'),
       instructeur_procedure_path(procedure, statut: 'tous'),

@@ -383,18 +383,7 @@ class Dossier < ApplicationRecord
 
   scope :for_api_v2, -> { includes(:attestation_template, revision: [procedure: [:administrateurs]], etablissement: [], individual: [], traitement: [], procedure: [], user: [:france_connect_informations]) }
 
-  scope :with_notifications, -> do
-    joins(:follows)
-      .where('last_champ_updated_at > follows.demande_seen_at' \
-      ' OR identity_updated_at > follows.demande_seen_at' \
-      ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
-      ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
-      ' OR last_avis_updated_at > follows.avis_seen_at' \
-      ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
-      .distinct
-  end
-
-  scope :with_notifications_v2, -> (instructeur) {
+  scope :with_notifications, -> (instructeur) {
     joins(:dossier_notifications)
       .where(dossier_notifications: { instructeur_id: [instructeur.id, nil] })
       .merge(DossierNotification.to_display)

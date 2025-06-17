@@ -53,7 +53,7 @@ class RechercheController < ApplicationController
     @dossiers_count = matching_dossiers_ids.count
     @followed_dossiers_id = current_instructeur&.followed_dossiers&.where(id: @paginated_ids)&.ids || []
     @dossier_avis_ids_h = current_expert&.avis&.where(dossier_id: @paginated_ids)&.pluck(:dossier_id, :id).to_h || {}
-    @notifications_dossier_ids = current_instructeur&.notifications_for_dossiers(@paginated_ids) || []
+    @notifications = instructeur_signed_in? ? DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @paginated_ids) : {}
 
     # if an instructor search for a dossier which is in his procedures but not available to his intructor group
     # we want to display an alert in view

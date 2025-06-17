@@ -61,9 +61,9 @@ module Instructeurs
         'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
       }
 
-      @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
-      @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
+      @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
       @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
+
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
     end
@@ -125,11 +125,6 @@ module Instructeurs
         .merge(dossiers.visible_by_administration)
         .pluck(:id)
 
-      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
-      @has_en_cours_notifications = notifications[:en_cours].present?
-      @has_termine_notifications = notifications[:termines].present?
-
-      @has_export_notification = notify_exports?
       @last_export = last_export_for(statut)
 
       begin
@@ -173,7 +168,9 @@ module Instructeurs
         .where(seen_at: nil)
         .distinct
 
-      @notifications = DossierNotification.notifications_for_instructeur_dossiers(groupe_instructeur_ids, current_instructeur, @filtered_sorted_paginated_ids)
+      @statut_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
+      @notifications = DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @filtered_sorted_paginated_ids)
+      @has_export_notification = notify_exports?
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
@@ -190,10 +187,6 @@ module Instructeurs
         .dossiers_count_summary(groupe_instructeur_ids)
         .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'supprimes', 'expirant')
       @can_download_dossiers = (@tous_count + @archives_count) > 0 && !instructeur_as_manager?
-
-      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
-      @has_en_cours_notifications = notifications[:en_cours].present?
-      @has_termine_notifications = notifications[:termines].present?
 
       @statut = 'supprime'
     end

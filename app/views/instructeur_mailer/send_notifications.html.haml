@@ -16,7 +16,7 @@
         #{datum[:nb_en_construction]} #{'dossier'.pluralize(datum[:nb_en_construction])} en construction
       - if datum[:nb_notification] > 0
         %br
-        #{datum[:nb_notification]} #{'notification'.pluralize(datum[:nb_notification])}
+        #{datum[:nb_notification]} #{'dossier'.pluralize(datum[:nb_notification])} avec des notifications "nouveautés"
       - if datum[:nb_en_instruction] > 0
         %br
         #{datum[:nb_en_instruction]} #{'dossier'.pluralize(datum[:nb_en_instruction])} en instruction

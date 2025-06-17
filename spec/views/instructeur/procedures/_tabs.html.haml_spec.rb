@@ -16,8 +16,7 @@ describe 'instructeurs/procedures/_tabs', type: :view do
             supprimes_count: 0,
             archives_count: 0,
             expirant_count: 0,
-            has_en_cours_notifications: false,
-            has_termine_notifications: false)
+            statut_with_notifications: { suivis: false, traites: false })
   end
 
   context 'when procedure_expires_when_termine_enabled is true' do

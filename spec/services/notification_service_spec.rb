@@ -90,10 +90,8 @@ describe NotificationService do
       end
 
       context 'when there is a notification on this procedure' do
-        before do
-          allow_any_instance_of(Instructeur).to receive(:notifications_for_groupe_instructeurs)
-            .and_return(en_cours: [12], termines: [])
-        end
+        let(:dossier) { create(:dossier, :en_construction, procedure:) }
+        let!(:notification) { create(:dossier_notification, :for_instructeur, instructeur: instructeur_with_email_notifications, dossier:, notification_type: :dossier_modifie) }
 
         it do
           subject

@@ -143,54 +143,6 @@ class Instructeur < ApplicationRecord
     assign_to.procedure_presentation_or_default_and_errors
   end
 
-  def notifications_for_dossier(dossier)
-    follow = Follow.find_by(instructeur: self, dossier:)
-
-    if follow.present?
-      demande = dossier.last_champ_updated_at&.>(follow.demande_seen_at) ||
-        dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
-        dossier.identity_updated_at&.>(follow.demande_seen_at) ||
-        false
-
-      annotations_privees = dossier.last_champ_private_updated_at&.>(follow.annotations_privees_seen_at) || false
-      avis_notif = dossier.last_avis_updated_at&.>(follow.avis_seen_at) || false
-      messagerie = dossier.last_commentaire_updated_at&.>(follow.messagerie_seen_at) || false
-
-      annotations_hash(demande, annotations_privees, avis_notif, messagerie)
-    else
-      annotations_hash(false, false, false, false)
-    end
-  end
-
-  def notifications_for_groupe_instructeurs(groupe_instructeurs)
-    notifications_for(groupe_instructeur: groupe_instructeurs)
-      .pluck(:state, :id)
-      .reduce({ termines: [], en_cours: [] }) do |acc, e|
-        if Dossier::TERMINE.include?(e[0])
-          acc[:termines] << e[1]
-        elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(e[0])
-          acc[:en_cours] << e[1]
-        end
-        acc
-      end
-  end
-
-  def notifications_for_dossiers(dossier_ids)
-    notifications_for(id: dossier_ids)
-      .pluck(:id)
-  end
-
-  def procedure_ids_with_notifications(scope)
-    groupe_instructeur_ids = Dossier
-      .send(scope) # :en_cours or :termine (or any other Dossier scope)
-      .merge(followed_dossiers)
-      .visible_by_administration
-      .with_notifications
-      .select(:groupe_instructeur_id)
-
-    GroupeInstructeur.where(id: groupe_instructeur_ids).pluck(:procedure_id)
-  end
-
   def mark_tab_as_seen(dossier, tab)
     attributes = {}
     attributes["#{tab}_seen_at"] = Time.zone.now
@@ -202,8 +154,7 @@ class Instructeur < ApplicationRecord
       .reduce([]) do |acc, groupe|
       procedure = groupe.procedure
 
-      notifications = notifications_for_groupe_instructeurs([groupe.id])
-      nb_notification = notifications[:en_cours].count + notifications[:termines].count
+      nb_notification = DossierNotification.notifications_count_for_email_data([groupe.id], self)
 
       h = {
         nb_en_construction: groupe.dossiers.visible_by_administration.en_construction.count,
@@ -347,24 +298,6 @@ class Instructeur < ApplicationRecord
   end
 
   private
-
-  def annotations_hash(demande, annotations_privees, avis, messagerie)
-    {
-      demande: demande,
-      annotations_privees: annotations_privees,
-      avis: avis,
-      messagerie: messagerie
-    }
-  end
-
-  def notifications_for(condition)
-    Dossier
-      .visible_by_administration
-      .not_archived
-      .where(condition)
-      .merge(followed_dossiers)
-      .with_notifications
-  end
 
   def assign_to_for_procedure_id(procedure_id)
     assign_to
