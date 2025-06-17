@@ -27,6 +27,10 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     )
   end
 
+  def prefill_hidden_tag(jsonpath)
+    hidden_field_tag(attribute_name(jsonpath, "prefill"), lookup_existing_value(jsonpath, "prefill"))
+  end
+
   private
 
   def tdc_targets(referentiel_mapping_element)

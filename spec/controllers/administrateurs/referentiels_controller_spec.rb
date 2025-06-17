@@ -188,6 +188,14 @@ describe Administrateurs::ReferentielsController, type: :controller do
   describe '#update_mapping_type_de_champ' do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
     let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    subject do
+      patch :update_mapping_type_de_champ, params: {
+        procedure_id: procedure.id,
+            stable_id: stable_id,
+            id: referentiel.id,
+            type_de_champ: { referentiel_mapping: referentiel_mapping }
+      }
+    end
     let(:referentiel_mapping) do
       {
         "$.jsonpath" => {
@@ -197,17 +205,24 @@ describe Administrateurs::ReferentielsController, type: :controller do
         }
       }
     end
-
+    context 'when prefill is not in payload due to checkbox' do
+      let(:referentiel_mapping) do
+        {
+          "$.jsonpath" => {
+            type: "type",
+            libelle: "libelle"
+          }
+        }
+      end
+      it 'ensure presence of prefills' do
+        subject
+        expect(type_de_champ.reload.referentiel_mapping["$.jsonpath"]["prefill"]).to eq("0")
+      end
+    end
     context 'when update succeeds' do
       it 'updates type_de_champ referentiel_mapping and redirects to prefill_and_display' do
-        expect do
-          patch :update_mapping_type_de_champ, params: {
-            procedure_id: procedure.id,
-            stable_id: stable_id,
-            id: referentiel.id,
-            type_de_champ: { referentiel_mapping: referentiel_mapping }
-          }
-        end.to change { type_de_champ.reload.referentiel_mapping }
+        expect { subject }
+          .to change { type_de_champ.reload.referentiel_mapping }
           .from(nil)
           .to(referentiel_mapping.with_indifferent_access)
         expect(response).to redirect_to(prefill_and_display_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
@@ -216,16 +231,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
     end
 
     context 'when update fails' do
-      before do
-        allow_any_instance_of(TypeDeChamp).to receive(:update).and_return(false)
-      end
+      before { allow_any_instance_of(TypeDeChamp).to receive(:update).and_return(false) }
       it 'redirects to mapping_type_de_champ_admin_procedure_referentiel_path with alert' do
-        patch :update_mapping_type_de_champ, params: {
-          procedure_id: procedure.id,
-          stable_id: stable_id,
-          id: referentiel.id,
-          type_de_champ: { referentiel_mapping: referentiel_mapping }
-        }
+        subject
         expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
         expect(flash[:alert]).to eq("Une erreur est survenue")
       end
@@ -277,7 +285,8 @@ describe Administrateurs::ReferentielsController, type: :controller do
           referentiel_mapping: {
             "$.jsonpath1" => {
               "type" => "Chaine de caractères",
-              prefill_stable_id: prefillable_stable_id
+              prefill_stable_id: prefillable_stable_id,
+              "prefill" => "1"
             }
           }
         }
@@ -294,6 +303,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(flash[:notice]).to eq("La configuration du pré remplissage des champs et/ou affichage des données récupérées a bien été enregistrée")
         updated_mapping = type_de_champ.reload.referentiel_mapping
         expect(updated_mapping.dig('$.jsonpath1', "type")).to eq("Chaine de caractères")
+        expect(updated_mapping.dig('$.jsonpath1', "prefill")).to eq("1")
         expect(updated_mapping.dig('$.jsonpath1', "prefill_stable_id")).to eq(prefillable_stable_id.to_s)
       end
     end
