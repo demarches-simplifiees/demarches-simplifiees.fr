@@ -149,8 +149,9 @@ describe EditableChamp::RepetitionComponent, type: :component do
           it do
             subject
 
-            attribute = JSON.parse(page.first('react-component')['props'])['aria-labelledby']
-            expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+            props = JSON.parse(page.first('react-component')['props'])
+            expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
+            expect(props['labelId']).to eq("#{champ.html_id}-label")
           end
         end
       end
@@ -288,8 +289,9 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it do
           subject
-          attribute = JSON.parse(page.first('react-component')['props'])['aria-labelledby']
-          expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+          props = JSON.parse(page.first('react-component')['props'])
+          expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
+          expect(props['labelId']).to eq("#{champ.html_id}-label")
         end
       end
 
@@ -309,8 +311,9 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
           it do
             subject
-            attribute = JSON.parse(page.first('react-component')['props'])['aria-labelledby']
-            expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+            props = JSON.parse(page.first('react-component')['props'])
+            expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
+            expect(props['labelId']).to eq("#{champ.html_id}-label")
           end
         end
       end
@@ -349,8 +352,9 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it do
           subject
-          attribute = JSON.parse(page.first('react-component')['props'])['aria-labelledby']
-          expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+          props = JSON.parse(page.first('react-component')['props'])
+          expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
+          expect(props['labelId']).to eq("#{champ.html_id}-label")
         end
       end
 
@@ -365,8 +369,9 @@ describe EditableChamp::RepetitionComponent, type: :component do
           expect(subject).to have_selector("label[id='#{champ.html_id}-label']")
           # input
           subject
-          attribute = JSON.parse(page.first("react-component")['props'])['aria-labelledby']
-          expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+          props = JSON.parse(page.first("react-component")['props'])
+          expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
+          expect(props['labelId']).to eq("#{champ.html_id}-label")
 
           # not in ban checkbox
           expect(subject).to have_selector("label[id='#{champ.not_in_ban_input_id}-label']")
@@ -420,8 +425,9 @@ describe EditableChamp::RepetitionComponent, type: :component do
               # label of the city input
               expect(subject).to have_selector("label[id='#{champ.city_input_id}-label']")
               # input of the city
-              attribute = JSON.parse(page.first(".not-in-ban-fieldset react-component")['props'])['aria-labelledby']
-              expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-city-label")
+              props = JSON.parse(page.first(".not-in-ban-fieldset react-component")['props'])
+              expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-legend")
+              expect(props['labelId']).to eq("#{champ.html_id}-input-city-label")
             end
           end
         end
