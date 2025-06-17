@@ -62,9 +62,12 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         let(:procedure) { create(:procedure, hide_instructeurs_email: false) }
 
         context 'redacts the instructeur email but keeps the name' do
-          it { is_expected.to have_text(commentaire.body) }
-          it { is_expected.to have_text(instructeur.email.split('@').first) }
-          it { is_expected.not_to have_text(instructeur.email) }
+          it do
+            is_expected.to have_text(commentaire.body)
+            is_expected.to have_text(instructeur.email.split('@').first)
+            is_expected.not_to have_text("[Vous]")
+            is_expected.not_to have_text(instructeur.email)
+          end
         end
       end
 
@@ -81,6 +84,8 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
           it do
             is_expected.to have_selector("form[action=\"#{form_url}\"]")
             is_expected.to have_button(component.t('.delete_button'))
+            is_expected.to have_selector(".fr-background-alt--blue-cumulus")
+            is_expected.to have_text("[Vous]")
           end
         end
 
@@ -93,14 +98,22 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
         context 'on a procedure where commentaire had been written by connected an user' do
           let(:commentaire) { create(:commentaire, email: create(:user).email, body: 'Second message') }
+          let(:email) { create(:commentaire, email:, body: 'Second message') }
 
-          it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+          it do
+            is_expected.not_to have_selector("form[action=\"#{form_url}\"]")
+            is_expected.to have_selector(".fr-background-alt--brown-cafe-creme")
+            is_expected.not_to have_text("[Vous]")
+          end
         end
 
         context 'on a procedure where commentaire had been written by connected an expert' do
           let(:commentaire) { create(:commentaire, expert: create(:expert), body: 'Second message') }
 
-          it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+          it do
+            is_expected.not_to have_selector("form[action=\"#{form_url}\"]")
+            is_expected.to have_selector(".fr-background-alt--blue-cumulus")
+          end
         end
 
         context 'on a procedure where commentaire had been written another instructeur' do

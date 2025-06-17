@@ -817,6 +817,12 @@ fr:
   datetime:
     formats:
       long: "%d %B %y %H:%M"
+  dates:
+    today: "Aujourd’hui"
+    yesterday: "Hier"
+    days_ago:
+      one: "Il y a 1 jour"
+      other: "Il y a %{count} jours"
   pluralize:
     case:
       one: dossier

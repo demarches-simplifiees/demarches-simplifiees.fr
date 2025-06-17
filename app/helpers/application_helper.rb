@@ -125,6 +125,21 @@ module ApplicationHelper
     end
   end
 
+  def human_date(date)
+    today = Date.current
+
+    case date
+    when today
+      I18n.t('dates.today')
+    when today - 1
+      I18n.t('dates.yesterday')
+    when (today - 6)..(today - 2)
+      I18n.t('dates.days_ago', count: (today - date).to_i)
+    else
+      I18n.l(date, format: :long)
+    end
+  end
+
   def show_outdated_browser_banner?
     !BrowserSupport.supported?(browser)
   end

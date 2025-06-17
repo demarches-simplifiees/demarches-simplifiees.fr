@@ -22,7 +22,6 @@ class Commentaire < ApplicationRecord
     content_type: AUTHORIZED_CONTENT_TYPES,
     size: { less_than: FILE_MAX_SIZE }
 
-  default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
   scope :sent_by_user, -> {
     where(instructeur_id: nil, expert_id: nil)

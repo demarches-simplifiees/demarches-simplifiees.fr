@@ -14,4 +14,8 @@ module CommentaireHelper
       I18n.t('helpers.commentaire.reply_in_mailbox')
     end
   end
+
+  def grouped_commentaires_by_date(commentaires)
+    commentaires.group_by { |commentaire| commentaire.created_at.to_date }
+  end
 end

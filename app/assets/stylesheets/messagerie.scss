@@ -12,6 +12,10 @@
   }
 }
 
+ol.messages-list > li::marker {
+  content: none;
+}
+
 .icon-avatar {
   padding: 2 * $default-spacer;
   border-radius: 100%;
@@ -30,4 +34,24 @@
   .date {
     float: right;
   }
+}
+
+.date-header {
+  display: flex;
+  align-items: center;
+  color: var(--text-mention-grey);
+  font-weight: bold;
+  font-size: 1rem;
+  user-select: none;
+  margin: 1em 0;
+  gap: 1em;
+}
+
+.date-header::before,
+.date-header::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background: var(--border-default-grey);
+  margin: 0;
 }
