@@ -39,6 +39,10 @@ class Champs::MultipleDropDownListChamp < Champ
     "#{input_id}-#{Digest::MD5.hexdigest(value)}"
   end
 
+  def checkbox_label_id(value)
+    "#{checkbox_id(value)}-label"
+  end
+
   def value=(value)
     return super(nil) if value.blank?
 
