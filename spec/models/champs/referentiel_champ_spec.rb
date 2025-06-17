@@ -479,8 +479,8 @@ describe Champs::ReferentielChamp, type: :model do
               type: :referentiel,
               referentiel: referentiel,
               referentiel_mapping: {
-                "$.ok{0}.nom" => { prefill: "1", prefill_stable_id: 1 },
-                "$.ok{1}.age" => { prefill: "1", prefill_stable_id: 2 }
+                "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
+                "$.ok[1].age" => { prefill: "1", prefill_stable_id: 2 }
               }
             },
             {

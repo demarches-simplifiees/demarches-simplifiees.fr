@@ -14,7 +14,6 @@ class JSONPath
         result[current_path] = value
       end
     end
-      .transform_keys { jsonpath_to_simili(it) }
   end
 
   # posting real json path to controller is interpreted as nested hashes

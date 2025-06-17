@@ -63,7 +63,7 @@ module Administrateurs
       params.require(:type_de_champ)
         .require(:referentiel_mapping)
         .each do |jsonpath_key, attributes|
-          permitted_mapping[jsonpath_key] = attributes.permit(:type, :prefill_stable_id, :example_value, :libelle, :prefill).to_h
+          permitted_mapping[Referentiels::MappingFormBase.simili_to_jsonpath(jsonpath_key)] = attributes.permit(:type, :prefill_stable_id, :example_value, :libelle, :prefill).to_h
           permitted_mapping[jsonpath_key][:prefill] = "0" if !permitted_mapping[jsonpath_key].key?(:prefill)
         end
 

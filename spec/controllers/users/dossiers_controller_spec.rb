@@ -2141,7 +2141,7 @@ describe Users::DossiersController, type: :controller do
                 stable_id: referentiel_stable_id,
                 referentiel_mapping: {
                   "$.ok" => { prefill: "1", prefill_stable_id: 2 },
-                  "$.repetition{0}.nom" => { prefill: "1", prefill_stable_id: 3 }
+                  "$.repetition[0].nom" => { prefill: "1", prefill_stable_id: 3 }
                 }
               },
               {

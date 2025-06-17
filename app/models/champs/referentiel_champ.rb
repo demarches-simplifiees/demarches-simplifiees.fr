@@ -120,11 +120,11 @@ class Champs::ReferentielChamp < Champ
   end
 
   def group_mappings_by_json_array(mappings)
-    mappings.group_by { |jsonpath, _| JSONPath.extract_array_name(JSONPath.simili_to_jsonpath(jsonpath)) }
+    mappings.group_by { |jsonpath, _| JSONPath.extract_array_name((jsonpath)) }
   end
 
   def extract_value_for_mapping(element, jsonpath)
-    after_bracket = JSONPath.extract_key_after_array(JSONPath.simili_to_jsonpath(jsonpath))
+    after_bracket = JSONPath.extract_key_after_array((jsonpath))
     JSONPath.value(element, after_bracket)
   end
 
@@ -132,7 +132,7 @@ class Champs::ReferentielChamp < Champ
     mappings.each do |jsonpath, mapping|
       update_prefillable_champ(
         stable_id: mapping[:prefill_stable_id],
-        raw_value: JSONPath.value(data.with_indifferent_access, JSONPath.simili_to_jsonpath(jsonpath))
+        raw_value: JSONPath.value(data.with_indifferent_access, (jsonpath))
       )
     end
   end
