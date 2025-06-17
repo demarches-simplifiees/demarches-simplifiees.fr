@@ -15,6 +15,7 @@ class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBa
       coerce: 'AnnuaireEducation',
       debounce: 500,
       minimum_input_length: 5,
-      'aria-labelledby': labelledby_id)
+      ariaLabelledbyPrefix: aria_labelledby_prefix,
+      labelId: @champ.label_id)
   end
 end

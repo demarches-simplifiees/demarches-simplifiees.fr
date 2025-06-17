@@ -19,7 +19,9 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
       is_disabled: !@champ.ban?,
-      'aria-labelledby': labelledby_id)
+      ariaLabelledbyPrefix: aria_labelledby_prefix,
+      labelId: @champ.label_id
+    )
   end
 
   def commune_react_props
@@ -33,7 +35,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
       minimum_input_length: 2,
-      'aria-labelledby': city_aria_labelledby
+      ariaLabelledbyPrefix: city_aria_labelledby_prefix,
+      labelId: city_label_id
     }
   end
 
@@ -70,7 +73,11 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
   end
 
   def city_aria_labelledby
-    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{city_label_id}"
+    "#{city_aria_labelledby_prefix} #{city_label_id}"
+  end
+
+  def city_aria_labelledby_prefix
+    "#{aria_labelledby_prefix} #{fieldset_legend_id}"
   end
 
   def postal_code_label_id
