@@ -13,8 +13,16 @@ class Champs::YesNoChamp < Champs::BooleanChamp
     "#{input_id}-yes"
   end
 
+  def yes_input_label_id
+    "#{yes_input_id}-label"
+  end
+
   def no_input_id
     "#{input_id}-no"
+  end
+
+  def no_input_label_id
+    "#{no_input_id}-label"
   end
 
   def focusable_input_id
