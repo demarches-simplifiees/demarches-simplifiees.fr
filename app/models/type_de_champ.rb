@@ -241,6 +241,15 @@ class TypeDeChamp < ApplicationRecord
     errors.empty?
   end
 
+  def libelle_with_parent(revision)
+    if child?(revision)
+      parent_type_de_champ = revision.parent_of(self)
+      "#{parent_type_de_champ.libelle} - #{libelle}"
+    else
+      libelle
+    end
+  end
+
   alias_method :validate, :valid?
 
   def set_dynamic_type

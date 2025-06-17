@@ -40,7 +40,7 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     source_tdcs
       .reject { |it| it.stable_id == @type_de_champ.stable_id }
       .filter { |it| allowed_types.include?(it.type_champ) }
-      .map { |it| [it.libelle, it.stable_id] }
+      .map { |it| [it.libelle_with_parent(@procedure.draft_revision), it.stable_id] }
   end
 
   def render?
