@@ -15,8 +15,16 @@ class Champs::CiviliteChamp < Champ
     "#{input_id}-female"
   end
 
+  def female_input_label_id
+    "#{female_input_id}-label"
+  end
+
   def male_input_id
     "#{input_id}-male"
+  end
+
+  def male_input_label_id
+    "#{male_input_id}-label"
   end
 
   def focusable_input_id
