@@ -10,9 +10,9 @@ class RNFService
       Success(body)
     in Failure(code:, reason:) if code.in?(401..403)
       Failure(API::Client::Error[:unauthorized, code, false, reason])
-    # 400 errors are due to invalid rfn code
+    # 400/404 errors are due to invalid RNF code
     # it cannot be fixed so we do not retry
-    in Failure(code: 400, reason:)
+    in Failure(code:, reason:) if code.in?([400, 404])
       Failure(API::Client::Error[:bad_request, code, false, reason])
     else
       result
