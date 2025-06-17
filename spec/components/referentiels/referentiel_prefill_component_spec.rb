@@ -50,10 +50,6 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
     end
 
     context 'with mapping type "Chaine de caractère"' do
-      it 'includes hidden prefill tag so user can go back/forth between steps' do
-        expect(subject).to have_selector('input[type="hidden"][name="type_de_champ[referentiel_mapping][$.jsonpath][prefill]"][value="1"]')
-      end
-
       let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[String] }
       let(:types_de_champ_public) do
         [

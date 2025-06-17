@@ -282,6 +282,10 @@ class TypeDeChamp < ApplicationRecord
     safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] == "1" }
   end
 
+  def referentiel_mapping_displayable
+    safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] != "1" }
+  end
+
   def referentiel_mapping_prefillable_with_stable_id
     referentiel_mapping_prefillable.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id].present? }
   end
