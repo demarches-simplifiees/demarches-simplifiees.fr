@@ -26,7 +26,6 @@ fr:
         remove_all: "Supprimer tous les fichiers"
       piece_justificative:
         name: "Télécharger le modèle"
-        title: "Télécharger le modèle %{filename}"
       groupe_instructeurs:
         title: Affecter un nouvel instructeur
         table_title: Instructeurs

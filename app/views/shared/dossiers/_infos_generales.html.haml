@@ -36,4 +36,4 @@
     - if dossier.attestation.present? && dossier.attestation.pdf.attached?
       = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.show.status_overview.attestation')) do |c|
         - c.with_value do
-          = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))
+          = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]), has_name: true)
