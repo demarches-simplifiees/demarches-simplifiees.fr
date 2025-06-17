@@ -37,6 +37,7 @@ import {
 export function ComboBox({
   children,
   label,
+  labelId,
   ariaLabelledbyPrefix,
   description,
   className,
@@ -50,10 +51,14 @@ export function ComboBox({
   isOpen?: boolean;
   placeholder?: string;
 }) {
-  const labelId = useId();
+  const generatedId = useId();
+  // if label is passed, we need to generate an id for the input, otherwise we use the labelId passed in the props
+  const idToUse = label ? generatedId : labelId;
+
   const inputAriaLabelledby = ariaLabelledbyPrefix
-    ? `${ariaLabelledbyPrefix} ${labelId}`
-    : labelId;
+    ? `${ariaLabelledbyPrefix} ${idToUse}`
+    : idToUse;
+
   return (
     <AriaComboBox
       {...props}
