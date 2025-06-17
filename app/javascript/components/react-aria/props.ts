@@ -27,6 +27,7 @@ const ComboBoxPropsSchema = s.partial(
     className: s.string(),
     name: s.string(),
     label: s.string(),
+    labelId: s.string(), // if label is not in the component, we need to pass the label id
     ariaLabelledbyPrefix: s.string(),
     description: s.string(),
     isRequired: s.boolean(),
