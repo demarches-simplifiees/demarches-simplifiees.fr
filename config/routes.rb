@@ -535,7 +535,11 @@ Rails.application.routes.draw do
             end
           end
 
-          resources :batch_operations, only: [:create], path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' }
+          resources :batch_operations, only: [:create], path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
+            collection do
+              post 'create_batch_avis' => 'batch_operations#create_batch_avis'
+            end
+          end
         end
 
         #

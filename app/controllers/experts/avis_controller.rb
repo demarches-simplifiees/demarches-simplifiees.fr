@@ -2,13 +2,13 @@
 
 module Experts
   class AvisController < ExpertController
-    include CreateAvisConcern
     include Zipline
+    include AvisCreationConcern
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, except: [:index, :procedure, :notification_settings, :update_notification_settings]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :messagerie, :create_commentaire, :update, :telecharger_pjs]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :create_avis, :messagerie, :create_commentaire, :update, :telecharger_pjs]
     before_action :check_messaging_allowed, only: [:messagerie, :create_commentaire]
     before_action :set_procedure, only: [:notification_settings, :update_notification_settings]
 
@@ -89,20 +89,23 @@ module Experts
     end
 
     def create_avis
-      @procedure = Procedure.find(params[:procedure_id])
-      @new_avis = create_avis_from_params(avis.dossier, current_expert, avis.confidentiel)
+      # before_action set_avis_and_dossier
+      @procedure = @avis.procedure
+      @new_avis = Avis.new
 
-      if @new_avis.nil?
-        redirect_to instruction_expert_avis_path(avis.procedure, avis)
-      else
-        set_avis_and_dossier
-        render :instruction
-      end
+      handle_create_avis(
+        dossier: @dossier,
+        user: current_expert,
+        params: avis_create_params,
+        success_path: instruction_expert_avis_path(@procedure, @avis),
+        error_template: :instruction,
+        avis_source: @avis
+      )
     end
 
     def update
       updated_recently = @avis.updated_recently?
-      if @avis.update(avis_params)
+      if @avis.update(avis_answer_params)
         flash.notice = 'Votre réponse est enregistrée.'
 
         timestamps = [:last_avis_updated_at, :updated_at]
@@ -243,7 +246,9 @@ module Experts
 
     def set_avis_and_dossier
       @avis = current_expert.avis.find_by(id: params[:id])
-      redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cet avis." }) and return unless @avis
+      unless @avis
+        redirect_to expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cet avis." } and return
+      end
       @dossier = @avis.dossier
       set_sentry_dossier(@dossier)
     end
@@ -252,8 +257,19 @@ module Experts
       DossierPreloader.load_one(@dossier, pj_template: false)
     end
 
-    def avis_params
+    def avis_answer_params
       params.require(:avis).permit(:answer, :piece_justificative_file, :question_answer)
+    end
+
+    def avis_create_params
+      params.require(:avis).permit(
+        :introduction_file,
+        :introduction,
+        :confidentiel,
+        :invite_linked_dossiers,
+        :question_label,
+        emails: []
+      )
     end
 
     def commentaire_params
