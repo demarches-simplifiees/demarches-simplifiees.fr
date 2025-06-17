@@ -3,8 +3,8 @@
     - capture do
       .fr-fieldset__element
         .fr-checkbox-group
-          = b.check_box(checked: @champ.selected_options.include?(b.value), id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox', translate: 'no', aria: { labelledby: labelledby_id })
-          %label.fr-label{ for: @champ.checkbox_id(b.value) }
+          = b.check_box(checked: @champ.selected_options.include?(b.value), id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox', translate: 'no', aria: { labelledby: labelledby_id(@champ.checkbox_label_id(b.value)) })
+          %label.fr-label{ for: @champ.checkbox_id(b.value), id: @champ.checkbox_label_id(b.value) }
             = b.text
 
 - else

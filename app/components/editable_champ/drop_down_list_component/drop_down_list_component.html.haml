@@ -2,14 +2,14 @@
   .fr-fieldset__content
     - items.each do |value, option_id|
       .fr-radio-group
-        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no', aria: { labelledby: labelledby_id }
-        %label.fr-label{ for: @champ.radio_id(option_id) }
+        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no', aria: { labelledby: labelledby_id(@champ.radio_label_id(option_id)) }
+        %label.fr-label{ for: @champ.radio_id(option_id), id: @champ.radio_label_id(option_id) }
           = value
 
     - if !@champ.mandatory?
       .fr-radio-group
-        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: @champ.radio_id(:blank), aria: { labelledby: labelledby_id}
-        %label.fr-label{ for: @champ.radio_id(:blank) }
+        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: @champ.radio_id(:blank), aria: { labelledby: labelledby_id(@champ.radio_label_id(:blank)) }
+        %label.fr-label{ for: @champ.radio_id(:blank), id: @champ.radio_label_id(:blank) }
           Non renseigné
 
 - elsif @champ.render_as_combobox?

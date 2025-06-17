@@ -20,12 +20,20 @@ class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
     end
   end
 
+  def focusable_departement_label_id
+    "#{focusable_departement_input_id}-label"
+  end
+
   def focusable_epci_input_id
     if departement?
       @champ.focusable_input_id(:value)
     else
       @champ.focusable_input_id(:not_visible_do_not_care)
     end
+  end
+
+  def focusable_epci_label_id
+    "#{focusable_epci_input_id}-label"
   end
 
   private
