@@ -140,7 +140,9 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
-    dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+    dossiers = Dossier
+      .where(groupe_instructeur_id: groupe_instructeur_ids)
+      .visible_by_administration
 
     dossier_ids_by_procedure = dossiers
       .joins(:revision)
