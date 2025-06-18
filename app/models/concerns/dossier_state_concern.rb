@@ -96,6 +96,7 @@ module DossierStateConcern
   def after_commit_passer_automatiquement_en_instruction
     NotificationMailer.send_en_instruction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+    DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_depose)
   end
 
   def after_repasser_en_construction(h)

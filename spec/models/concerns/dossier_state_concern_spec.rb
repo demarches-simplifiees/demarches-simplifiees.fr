@@ -3,7 +3,7 @@
 RSpec.describe DossierStateConcern do
   include Logic
 
-  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:, declarative_with_state:) }
+  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:, declarative_with_state:, auto_archive_on:) }
   let(:types_de_champ_public) do
     [
       { type: :text, stable_id: 90 },
@@ -17,6 +17,7 @@ RSpec.describe DossierStateConcern do
       { type: :titre_identite, stable_id: 98 }
     ]
   end
+  let(:auto_archive_on) { nil }
   let(:declarative_with_state) { nil }
   let(:dossier_state) { :brouillon }
   let(:dossier) do
@@ -129,9 +130,10 @@ RSpec.describe DossierStateConcern do
 
   describe 'automatiquement' do
     let(:dossier_state) { :en_construction }
-    let(:declarative_with_state) { Dossier.states.fetch(:accepte) }
 
     describe 'accepter' do
+      let(:declarative_with_state) { Dossier.states.fetch(:accepte) }
+
       it do
         expect(dossier.champs.size).to eq(20)
         expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(2)
@@ -143,6 +145,20 @@ RSpec.describe DossierStateConcern do
         expect(dossier.champs.size).to eq(15)
         expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
         expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+      end
+    end
+
+    describe 'en_instruction' do
+      context "when dossier has a dossier_depose notification" do
+        let(:auto_archive_on) { 1.day.from_now }
+        let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur_id: dossier.groupe_instructeur_id, dossier:) }
+
+        it "destroy the notification" do
+          travel_to(2.days.from_now)
+          dossier.passer_automatiquement_en_instruction!
+
+          expect(DossierNotification.count).to eq(0)
+        end
       end
     end
   end
