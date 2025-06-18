@@ -14,6 +14,45 @@ RSpec.describe DossierNotification, type: :model do
     end
   end
 
+  describe 'create_notification' do
+    context 'dossier_depose notification' do
+      let(:procedure) { create(:procedure, sva_svr: {}, declarative_with_state: nil) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
+      let!(:dossier) { create(:dossier, groupe_instructeur:, depose_at: Time.zone.now, procedure:) }
+      let!(:notification_type) { :dossier_depose }
+
+      subject { DossierNotification.create_notification(dossier, notification_type) }
+
+      it 'create notification for the groupe_instructeur with the correct delay to display' do
+        subject
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.first
+        expect(notification.dossier).to eq(dossier)
+        expect(notification.groupe_instructeur).to eq(groupe_instructeur)
+        expect(notification.instructeur).to be_nil
+        expect(notification.notification_type).to eq('dossier_depose')
+        expect(notification.display_at.to_date).to eq(dossier.depose_at.to_date + DossierNotification::DELAY_DOSSIER_DEPOSE)
+      end
+
+      it 'does not create notification when procedure is sva/svr' do
+        procedure.update!(sva_svr: { 'decision' => 'sva' })
+        dossier.procedure.reload
+        subject
+
+        expect(DossierNotification.count).to eq(0)
+      end
+
+      it 'does not create notification when procedure is declarative' do
+        procedure.update!(declarative_with_state: "accepte")
+        dossier.procedure.reload
+        subject
+
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
+  end
+
   describe '.notifications_for' do
     let!(:instructeur) { create(:instructeur) }
     let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
