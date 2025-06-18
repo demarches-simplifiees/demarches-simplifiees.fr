@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_legacy
     # rubocop:disable DS/ApplicationName
-    if !user_signed_in? && request.host == "demarches.numerique.gouv.fr"
+    if !user_signed_in? && request.host == "demarches.numerique.gouv.fr" && ENV.fetch("REDIRECT_GOUV_TO_DS", 'true') == 'true'
       redirect_to "https://www.demarches-simplifiees.fr#{request.fullpath}", allow_other_host: true
     end
     # rubocop:enable DS/ApplicationName
