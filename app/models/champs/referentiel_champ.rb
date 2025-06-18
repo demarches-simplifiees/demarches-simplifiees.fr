@@ -38,16 +38,20 @@ class Champs::ReferentielChamp < Champ
   def prefillable_stable_ids
     type_de_champ
       .referentiel_mapping_prefillable_with_stable_id
-      .map { |_jsonpath, mapping| mapping[:prefill_stable_id] }
+      .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
   end
 
   def prefillable_champs
-    elligible_stable_ids = prefillable_stable_ids.map(&:to_s)
-    dossier.project_champs_public.filter do |champ|
+    elligible_stable_ids = prefillable_stable_ids
+    if public?
+      dossier.project_champs_public
+    else
+      dossier.project_champs_private
+    end.filter do |champ|
       if champ.repetition?
-        champ.rows.flatten.any? { it.type_de_champ.stable_id.to_s.in?(elligible_stable_ids) }
+        dossier.revision.children_of(champ.type_de_champ).any? { _1.stable_id.in?(elligible_stable_ids) }
       else
-        champ.public_id.to_s.in?(elligible_stable_ids)
+        champ.stable_id.in?(elligible_stable_ids)
       end
     end
   end
