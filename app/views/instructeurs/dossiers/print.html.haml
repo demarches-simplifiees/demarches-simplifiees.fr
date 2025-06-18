@@ -47,7 +47,7 @@
 %h2 Messagerie
 
 .messagerie
-  %ul.messages-list
+  %ol.messages-list
     - @dossier.commentaires.with_attached_piece_jointe.each do |commentaire|
       %li
         = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_instructeur)
