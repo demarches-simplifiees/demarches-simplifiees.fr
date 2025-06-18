@@ -38,11 +38,15 @@ class Champs::ReferentielChamp < Champ
   def prefillable_stable_ids
     type_de_champ
       .referentiel_mapping_prefillable_with_stable_id
-      .map { |_jsonpath, mapping| mapping[:prefill_stable_id] }
+      .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
   end
 
   def prefillable_champs
-    dossier.project_champs.filter { it.public_id.to_s.in?(prefillable_stable_ids.map(&:to_s)) }
+    if public?
+      dossier.project_champs_public_all.filter { it.stable_id.in?(prefillable_stable_ids) }
+    else
+      dossier.project_champs_private_all.filter { it.stable_id.in?(prefillable_stable_ids) }
+    end
   end
 
   private
@@ -69,6 +73,8 @@ class Champs::ReferentielChamp < Champ
   end
 
   def propagate_prefill(data)
+    # the champ is on the right stream, but the dossier might not be. We set dossier stream from the champ
+    dossier.with_champ_stream(self)
     type_de_champ.referentiel_mapping_prefillable_with_stable_id.each do |jsonpath, mapping|
       update_prefillable_champ(
         mapping[:prefill_stable_id],
