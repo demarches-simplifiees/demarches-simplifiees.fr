@@ -93,6 +93,8 @@ class Champs::ReferentielChamp < Champ
   end
 
   def propagate_prefill(data)
+    # the champ is on the right stream, but the dossier might not be. We set dossier stream from the champ
+    dossier.with_champ_stream(self)
     type_de_champ
       .referentiel_mapping_prefillable_with_stable_id.group_by { |_jsonpath, mapping| dossier.revision.parent_of(dossier.find_type_de_champ_by_stable_id(mapping[:prefill_stable_id])) }
       .each do |repetition, mappings|

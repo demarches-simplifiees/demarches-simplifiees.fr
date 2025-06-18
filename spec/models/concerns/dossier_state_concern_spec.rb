@@ -30,7 +30,7 @@ RSpec.describe DossierStateConcern do
       dossier.reload
       champ_repetition = dossier.project_champs_public.find { _1.stable_id == 94 }
       row_id = champ_repetition.row_ids.first
-      champ_repetition.remove_row(row_id, updated_by: 'test')
+      dossier.champs.filter(&:row?).find { _1.row_id == row_id }.touch(:discarded_at)
     end
   end
 
