@@ -30,6 +30,17 @@ module Maintenance
           expect(collection).to include(dossier)
         end
       end
+
+      context 'dossier not in state en_construction' do
+        # case of automatic switch en_instruction when the dossier is submitted
+        # (SVA/SVR, declarative procedure), and case of dossiers that have been
+        # unfollowed after the switch en_instruction.
+        let(:dossier) { create(:dossier, :en_instruction, depose_at: 10.days.ago) }
+
+        it do
+          expect(collection).not_to include(dossier)
+        end
+      end
     end
 
     describe "#process" do

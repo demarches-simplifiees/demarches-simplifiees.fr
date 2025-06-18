@@ -14,6 +14,7 @@ module Maintenance
 
     def collection
       Dossier
+        .state_en_construction
         .by_statut('a-suivre')
         .where(depose_at: ..7.days.ago)
         .select(:id, :groupe_instructeur_id, :depose_at)
