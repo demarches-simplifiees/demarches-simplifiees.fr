@@ -209,4 +209,62 @@ describe ApplicationController, type: :controller do
       end
     end
   end
+
+  describe '#redirect_to_legacy' do
+    before do
+      allow(@controller).to receive(:current_user).and_return(current_user)
+      allow(@controller).to receive(:redirect_to)
+      @request.host = host
+      @request.path = '/commencer/une_demarche'
+      @controller.send(:redirect_to_legacy)
+    end
+
+    context 'when a user is logged' do
+      let(:current_user) { create(:user) }
+
+      context 'when the host is a legacy domain' do
+        let(:host) { 'www.demarches-simplifiees.fr' }
+
+        it 'does not redirect' do
+          expect(@controller).not_to have_received(:redirect_to)
+        end
+      end
+
+      context 'when the host is demarches.numerique.gouv.fr' do
+        let(:host) { 'demarches.numerique.gouv.fr' }
+
+        it 'does not redirect' do
+          expect(@controller).not_to have_received(:redirect_to)
+        end
+      end
+    end
+
+    context 'when a user is not logged' do
+      let(:current_user) { nil }
+
+      context 'when the host is a legacy domain' do
+        let(:host) { 'www.demarches-simplifiees.fr' }
+
+        it 'does not redirect' do
+          expect(@controller).not_to have_received(:redirect_to)
+        end
+      end
+
+      context 'when the host is demarches.numerique.gouv.fr' do
+        let(:host) { 'demarches.numerique.gouv.fr' }
+
+        it 'does redirect' do
+          expect(@controller).to have_received(:redirect_to).with('https://www.demarches-simplifiees.fr/commencer/une_demarche', allow_other_host: true)
+        end
+      end
+
+      context 'when the host is dev.demarches.numerique.gouv.fr' do
+        let(:host) { 'dev.demarches.numerique.gouv.fr' }
+
+        it 'does redirect' do
+          expect(@controller).not_to have_received(:redirect_to)
+        end
+      end
+    end
+  end
 end
