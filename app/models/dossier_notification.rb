@@ -29,12 +29,14 @@ class DossierNotification < ApplicationRecord
   def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
     case notification_type
     when :dossier_depose
-      DossierNotification.find_or_create_by!(
-        dossier:,
-        notification_type:,
-        groupe_instructeur_id: dossier.groupe_instructeur_id
-      ) do |notification|
-        notification.display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
+      if !dossier.procedure.declarative? && !dossier.procedure.sva_svr_enabled?
+        DossierNotification.find_or_create_by!(
+          dossier:,
+          notification_type:,
+          groupe_instructeur_id: dossier.groupe_instructeur_id
+        ) do |notification|
+          notification.display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
+        end
       end
 
     when :dossier_modifie, :attente_correction, :attente_avis, :message_usager, :annotation_instructeur, :avis_externe
