@@ -2,11 +2,8 @@
 
 module Manager
   class ProceduresController < Manager::ApplicationController
-    CSV_MAX_SIZE = 1.megabyte
-    CSV_ACCEPTED_CONTENT_TYPES = [
-      "text/csv",
-      "application/vnd.ms-excel"
-    ]
+    include CsvParsingConcern
+
     #
     # Administrate overrides
     #
@@ -157,8 +154,7 @@ module Manager
         flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
       else
-        procedure_tags = SmarterCSV.process(tags_csv_file, strings_as_keys: true, convert_values_to_numeric: false, force_utf8: true)
-          .map { |r| r.to_h.slice('demarche', 'tag') }
+        procedure_tags = csv_parse(tags_csv_file).map { |r| r.to_h.slice('demarche', 'tag') }
 
         invalid_ids = []
         procedure_tags.each do |procedure_tag|
