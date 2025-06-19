@@ -173,6 +173,7 @@ module DossierHelper
     when DossierNotification.notification_types.fetch(:dossier_depose)
       "fr-badge fr-badge--sm fr-badge--warning"
     when DossierNotification.notification_types.fetch(:dossier_modifie),
+      DossierNotification.notification_types.fetch(:message),
       DossierNotification.notification_types.fetch(:message_usager),
       DossierNotification.notification_types.fetch(:annotation_instructeur),
       DossierNotification.notification_types.fetch(:avis_externe)

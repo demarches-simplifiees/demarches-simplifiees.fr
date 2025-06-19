@@ -14,7 +14,7 @@ fr:
       filterable_notification:
         dossier_depose: 'Déposé depuis longtemps'
         dossier_modifie: 'Dossier modifié'
-        message_usager: 'Message usager'
+        message: 'Message'
         # TODO: switch to ’Annotation instructeur’ during global renaming
         annotation_instructeur: 'Annotation privée'
         avis_externe: 'Avis externe'
