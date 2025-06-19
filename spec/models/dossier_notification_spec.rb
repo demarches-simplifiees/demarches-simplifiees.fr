@@ -93,6 +93,23 @@ RSpec.describe DossierNotification, type: :model do
           expect(notifications.map(&:notification_type)).to match_array(['message', 'message_usager'])
         end
       end
+
+      context "when instructeur send a message" do
+        let!(:notification_args) { { except_instructeur: instructeur_follower } }
+
+        it "create notification for instructeurs followers, except instructeur sender" do
+          subject
+
+          expect(DossierNotification.count).to eq(1)
+
+          notification = DossierNotification.first
+          expect(notification.dossier).to eq(dossier)
+          expect(notification.groupe_instructeur).to be_nil
+          expect(notification.instructeur).to eq(other_instructeur_follower)
+          expect(notification.notification_type).to eq('message')
+          expect(DossierNotification.to_display).to include(notification)
+        end
+      end
     end
   end
 

@@ -803,6 +803,27 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(flash.alert).to be_present
       end
     end
+
+    context "when there are others instructeurs followers" do
+      let(:another_instructeur) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        instructeur.followed_dossiers << dossier
+        another_instructeur.followed_dossiers << dossier
+        subject
+      end
+
+      it "create message notification only for others instructeurs follower" do
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.last
+        expect(notification.dossier_id).to eq(dossier.id)
+        expect(notification.instructeur_id).to eq(another_instructeur.id)
+        expect(notification.notification_type).to eq("message")
+      end
+    end
   end
 
   describe "#create_avis" do

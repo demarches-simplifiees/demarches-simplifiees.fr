@@ -299,6 +299,7 @@ module Instructeurs
       if @commentaire.errors.empty?
         @commentaire.dossier.touch(:last_commentaire_updated_at)
         current_instructeur.follow(dossier)
+        DossierNotification.create_notification(dossier, :message, except_instructeur: current_instructeur)
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
