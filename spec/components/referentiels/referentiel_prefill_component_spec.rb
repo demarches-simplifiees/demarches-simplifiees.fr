@@ -50,6 +50,10 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
     end
 
     context 'with mapping type "Chaine de caractère"' do
+      it 'includes hidden prefill tag so user can go back/forth between steps' do
+        expect(subject).to have_selector('input[type="hidden"][name="type_de_champ[referentiel_mapping][$.jsonpath][prefill]"][value="1"]')
+      end
+
       let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[String] }
       let(:types_de_champ_public) do
         [
@@ -113,6 +117,48 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
       it 'shows only checkbox and yes_no' do
         expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['checkbox', 'yes_no'])
+      end
+    end
+
+    context 'with mapping type "Date"' do
+      let(:referentiel_mapping_type) { "Date" }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 7, type: :date, libelle: 'date' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only date' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['date'])
+      end
+    end
+
+    context 'with mapping type "DateTime"' do
+      let(:referentiel_mapping_type) { "Date et heure" }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 9, type: :datetime, libelle: 'datetime' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only datetime' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['datetime'])
+      end
+    end
+
+    context 'with mapping type "Liste à choix multiples"' do
+      let(:referentiel_mapping_type) { "Liste à choix multiples" }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 10, type: :multiple_drop_down_list, libelle: 'multiple' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only multiple_drop_down_list' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['multiple'])
       end
     end
   end

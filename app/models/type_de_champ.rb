@@ -241,6 +241,15 @@ class TypeDeChamp < ApplicationRecord
     errors.empty?
   end
 
+  def libelle_with_parent(revision)
+    if child?(revision)
+      parent_type_de_champ = revision.parent_of(self)
+      "#{parent_type_de_champ.libelle} - #{libelle}"
+    else
+      libelle
+    end
+  end
+
   alias_method :validate, :valid?
 
   def set_dynamic_type
@@ -275,6 +284,10 @@ class TypeDeChamp < ApplicationRecord
 
   def referentiel_mapping_prefillable_with_stable_id
     referentiel_mapping_prefillable.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id].present? }
+  end
+
+  def referentiel_mapping_prefillable_stable_ids
+    referentiel_mapping_prefillable_with_stable_id.map { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id] }
   end
 
   def params_for_champ
@@ -469,6 +482,10 @@ class TypeDeChamp < ApplicationRecord
 
   def drop_down_options_from_text=(text)
     self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
+  end
+
+  def value_is_in_options?(checked_value)
+    options_for_select.any? { _1.last == checked_value }
   end
 
   def header_section_level_value

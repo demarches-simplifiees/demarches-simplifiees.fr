@@ -6,10 +6,13 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
            to: :type_de_champ
 
   MAPPING_TYPE_TO_TYPE_DE_CHAMP = {
-    "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret],
+    "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret drop_down_list formatted],
     "Nombre à virgule"    => %w[decimal_number],
     "Nombre Entier"       => %w[integer_number],
-    "Booléen"             => %w[checkbox yes_no]
+    "Booléen"             => %w[checkbox yes_no],
+    "Date"                => %w[date],
+    "Date et heure"       => %w[datetime],
+    "Liste à choix multiples" => %w[multiple_drop_down_list]
   }.freeze
 
   def source_tdcs
@@ -24,6 +27,10 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     )
   end
 
+  def prefill_hidden_tag(jsonpath)
+    hidden_field_tag(attribute_name(jsonpath, "prefill"), lookup_existing_value(jsonpath, "prefill"))
+  end
+
   private
 
   def tdc_targets(referentiel_mapping_element)
@@ -33,7 +40,7 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     source_tdcs
       .reject { |it| it.stable_id == @type_de_champ.stable_id }
       .filter { |it| allowed_types.include?(it.type_champ) }
-      .map { |it| [it.libelle, it.stable_id] }
+      .map { |it| [it.libelle_with_parent(@procedure.draft_revision), it.stable_id] }
   end
 
   def render?

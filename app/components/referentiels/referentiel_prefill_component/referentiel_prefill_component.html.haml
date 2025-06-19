@@ -15,7 +15,9 @@
               %tbody
                 - referentiel_mapping_prefillable.sort.each do |jsonpath, mapping_opts|
                   %tr
-                    %td= jsonpath
+                    %td
+                      = jsonpath
+                      = prefill_hidden_tag(jsonpath)
                     %td.fr-cell--multiline= mapping_opts[:example_value]
                     %td= mapping_opts[:type]
                     %td= prefill_stable_id_tag(jsonpath, mapping_opts)

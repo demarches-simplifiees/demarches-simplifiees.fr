@@ -141,4 +141,12 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       [t('.character_limit.limit', limit: '10 000'), 10000]
     ]
   end
+
+  def turbo_confirm
+    if coordinate.prefilled_by_type_de_champ
+      "Vous avez configuré un pré remplissage de ce champ à partir des données du référentiel du champ « #{coordinate.prefilled_by_type_de_champ.libelle} ». Voulez-vous vraiment le supprimer ?"
+    else
+      'Êtes vous sûr de vouloir supprimer ce champ ?'
+    end
+  end
 end

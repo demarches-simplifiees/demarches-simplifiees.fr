@@ -87,4 +87,10 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   def used_by_ineligibilite_rules?
     revision.ineligibilite_enabled? && stable_id.in?(revision.ineligibilite_rules&.sources || [])
   end
+
+  def prefilled_by_type_de_champ
+    revision.types_de_champ
+      .filter(&:referentiel?)
+      .find { stable_id.to_s.in?(it.referentiel_mapping_prefillable_stable_ids.map(&:to_s)) }
+  end
 end

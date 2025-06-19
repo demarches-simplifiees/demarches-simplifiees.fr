@@ -57,13 +57,46 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
   describe "value_to_type" do
     def convert_json_value_to_human(value:) = component.send(:value_to_type, JSON.parse({ value: }.to_json)["value"])
 
-    it "json value to human" do
+    it "simple json value to human" do
       expect(convert_json_value_to_human(value: 1)).to eq("Nombre Entier")
       expect(convert_json_value_to_human(value: 1.1)).to eq("Nombre à virgule")
       expect(convert_json_value_to_human(value: true)).to eq("Booléen")
       expect(convert_json_value_to_human(value: false)).to eq("Booléen")
       expect(convert_json_value_to_human(value: "hello")).to eq("Chaine de caractère")
-      expect(convert_json_value_to_human(value: [1, 2])).to eq("Chaine de caractère")
+    end
+
+    it "detects ISO8601 date as Date" do
+      expect(convert_json_value_to_human(value: "2024-06-14")).to eq("Date")
+    end
+
+    it "does not detect invalid date as Date" do
+      expect(convert_json_value_to_human(value: "2024-13-14")).to eq("Chaine de caractère")
+      expect(convert_json_value_to_human(value: "2024-06-31")).to eq("Chaine de caractère")
+    end
+
+    it "does not detect embedded date in string as Date" do
+      expect(convert_json_value_to_human(value: "RDV le 2024-06-14 à 10h")).to eq("Date")
+    end
+
+    it "detects ISO8601 datetime as DateTime" do
+      expect(convert_json_value_to_human(value: "2024-06-14T12:34")).to eq("Date et heure")
+      expect(convert_json_value_to_human(value: "2024-06-14T12:34:56+02:00")).to eq("Date et heure")
+    end
+
+    it "does not detect invalid date as DateTime" do
+      expect(convert_json_value_to_human(value: "2024-13-14T25:34")).to eq("Chaine de caractère")
+      expect(convert_json_value_to_human(value: "2024-06-31T25:34")).to eq("Chaine de caractère")
+    end
+
+    it "detects array of simple values as Liste à choix multiples" do
+      expect(convert_json_value_to_human(value: ["option1", "option2"]).to_s).to eq("Liste à choix multiples")
+      expect(convert_json_value_to_human(value: [1, 2, 3])).to eq("Liste à choix multiples")
+      expect(convert_json_value_to_human(value: [1.1, 2.2])).to eq("Liste à choix multiples")
+    end
+
+    it "does not detect array of objects as Liste à choix multiples" do
+      expect(convert_json_value_to_human(value: [{ a: 1 }, { b: 2 }])).to eq("Chaine de caractère")
+      expect(convert_json_value_to_human(value: [[1, 2], [3, 4]])).to eq("Chaine de caractère")
     end
   end
 end

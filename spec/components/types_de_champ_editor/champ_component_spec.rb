@@ -14,7 +14,8 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
     end
 
     describe 'tdc dropdown' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }]) }
+      let(:procedure) { create(:procedure, types_de_champ_public:) }
+      let(:types_de_champ_public) { [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }] }
       let(:tdc) { procedure.draft_revision.types_de_champ.first }
       let(:coordinate) { procedure.draft_revision.coordinate_for(tdc) }
 
@@ -40,6 +41,30 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         it do
           expect(page).to have_css("select[disabled=\"disabled\"]")
           expect(page).to have_text(/l’eligibilité des dossiers/)
+        end
+      end
+
+      context 'tdc used for prefill' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              stable_id: 1,
+              referentiel: create(:api_referentiel, :configured, :ready),
+              referentiel_mapping: {
+                '$.jsonpath' => {
+                  'prefill' => '1',
+                  'type' => 'drop_down_list',
+                  'prefill_stable_id' => 2
+                }
+              }
+            },
+            { type: :drop_down_list, stable_id: 2, libelle: 'Votre ville', options: ['Paris', 'Lyon'] }
+          ]
+        end
+        let(:coordinate) { procedure.draft_revision.coordinate_and_tdc(2).first }
+        it do
+          expect(page).to have_text(/Champ prérempli/)
         end
       end
     end

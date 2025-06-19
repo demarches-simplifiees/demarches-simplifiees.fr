@@ -6,7 +6,11 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
     Float => "Nombre à virgule",
     Integer => "Nombre Entier",
     TrueClass => "Booléen",
-    FalseClass => "Booléen"
+    FalseClass => "Booléen",
+    # detection
+    "Date" => "Date",
+    "DateTime" => "Date et heure",
+    "Liste à choix multiples" => "Liste à choix multiples"
   }.freeze
 
   def last_request_keys
@@ -64,7 +68,15 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def value_to_type(value)
-    TYPES.fetch(value.class) { TYPES[String] }
+    if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
+      self.class::TYPES["DateTime"]
+    elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
+      self.class::TYPES["Date"]
+    elsif ReferentielMappingUtils.array_of_supported_simple_types?(value)
+      self.class::TYPES["Liste à choix multiples"]
+    else
+      TYPES.fetch(value.class) { TYPES[String] }
+    end
   end
 
   def libelle_field_options(jsonpath)

@@ -98,6 +98,7 @@ describe Champs::ReferentielChamp, type: :model do
 
     context 'when prefill/mapping is configured' do
       let(:prefillable_stable_id) { 2 }
+      let(:prefilled_type_de_champ_options) { {} }
       let(:types_de_champ_public) do
         [
           {
@@ -107,8 +108,17 @@ describe Champs::ReferentielChamp, type: :model do
               "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
             }
           },
-          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }
+          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
         ]
+      end
+
+      describe 'when prefillable_stable_id has been destroyed' do
+        let(:prefillable_stable_id) { 9999 }
+        let(:prefilled_type_de_champ_type) { :text }
+
+        it 'does not raise an error' do
+          expect { subject }.to raise_error(StandardError)
+        end
       end
 
       context 'when data is mapped to text' do
@@ -318,6 +328,176 @@ describe Champs::ReferentielChamp, type: :model do
             expect { subject }
               .not_to change { dossier.reload.project_champs.find(&:yes_no?).value }.from(nil)
           end
+        end
+      end
+
+      context 'when data is mapped to date' do
+        let(:prefilled_type_de_champ_type) { :date }
+
+        context 'when data is ISO8601 date' do
+          let(:data) { { ok: '2024-06-14' } }
+          it 'casts and updates the date with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:date?).value }.from(nil).to('2024-06-14')
+          end
+        end
+
+        context 'when data is dd/mm/yyyy' do
+          let(:data) { { ok: '14/06/2024' } }
+          it 'casts and updates the date with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:date?).value }.from(nil).to('2024-06-14')
+          end
+        end
+
+        context 'when data is invalid date' do
+          let(:data) { { ok: '2024-13-14' } }
+          it 'does not update the date value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:date?).value }.from(nil)
+          end
+        end
+      end
+
+      context 'when data is mapped to datetime' do
+        let(:prefilled_type_de_champ_type) { :datetime }
+
+        context 'when data is ISO8601 datetime' do
+          let(:data) { { ok: '2024-06-14T12:34' } }
+          it 'casts and updates the datetime with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil).to(Time.zone.parse('2024-06-14T12:34').iso8601)
+          end
+        end
+
+        context 'when data is dd/mm/yyyy hh:mm' do
+          let(:data) { { ok: '14/06/2024 12:34' } }
+          it 'casts and updates the datetime with the jsonpath value as ISO8601' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil).to(Time.zone.parse('2024-06-14T12:34').iso8601)
+          end
+        end
+
+        context 'when data is invalid datetime' do
+          let(:data) { { ok: '2024-06-14T25:00' } }
+          it 'does not update the datetime value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:datetime?).value }.from(nil)
+          end
+        end
+      end
+
+      context 'when data is mapped to drop_down_list' do
+        let(:prefilled_type_de_champ_type) { :drop_down_list }
+
+        context 'when data is in options' do
+          let(:prefilled_type_de_champ_options) { { options: ['valid'] } }
+          let(:data) { { ok: 'valid' } }
+          it 'casts and updates the drop_down_list with the jsonpath value as string' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:drop_down_list?).value }.from(nil).to('valid')
+          end
+        end
+
+        context 'when data is not in options without other' do
+          let(:prefilled_type_de_champ_options) { { options: ['valid'] } }
+          let(:data) { { ok: 'invalid' } }
+          it 'does not cast' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:drop_down_list?).value }
+          end
+        end
+
+        context 'when data is not in options with other' do
+          let(:prefilled_type_de_champ_options) { { options: ['valid'] + [:other] } }
+          let(:data) { { ok: 'anything' } }
+          it 'allows other' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:drop_down_list?).value }.from(nil).to('anything')
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the drop_down_list value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:drop_down_list?).value }.from(nil)
+          end
+        end
+      end
+
+      context 'when data is mapped to multiple_drop_down_list' do
+        let(:prefilled_type_de_champ_type) { :multiple_drop_down_list }
+        let(:prefilled_type_de_champ_options) { { options: ['valid', 'valid_one', 'valid_two'] } }
+
+        context 'when data is an array of strings' do
+          let(:data) { { ok: ['valid', 'valid_one'] } }
+          it 'casts and updates the multiple_drop_down_list with the jsonpath value as JSON array' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }.from(nil).to(['valid', 'valid_one'].to_json)
+          end
+        end
+
+        context 'when data is an array of object' do
+          let(:data) { { ok: [{ choice: '1' }, { choice: '2' }] } }
+          it 'passthru' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }
+          end
+        end
+
+        context 'when data is nil' do
+          let(:data) { { ok: nil } }
+          it 'does not update the multiple_drop_down_list value (remains nil)' do
+            expect { subject }
+              .not_to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }.from(nil)
+          end
+        end
+
+        context 'when data contains invalid options' do
+          let(:data) { { ok: ['valid', 'invalid_option'] } }
+          it 'allows invalid value due to validation afterward' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:multiple_drop_down_list?).value }.from(nil).to(['valid', 'invalid_option'].to_json)
+          end
+        end
+      end
+
+      context 'when data is mapped to formatted' do
+        let(:prefilled_type_de_champ_type) { :formatted }
+        let(:data) { { ok: 'texte <b>formaté</b>' } }
+        it 'update le champ formatted avec la valeur string' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.find(&:formatted?).value }.from(nil).to('texte <b>formaté</b>')
+        end
+      end
+
+      context 'when data is mapped to child' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              referentiel: referentiel,
+              referentiel_mapping: {
+                "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
+                "$.ok[1].age" => { prefill: "1", prefill_stable_id: 2 }
+              }
+            },
+            {
+              type: :repetition,
+              children: [
+                { type: :text, stable_id: 1 },
+                { type: :number, stable_id: 2 }
+              ]
+            }
+          ]
+        end
+        let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, { nom: "Bob", age: 12 }, {}] } }
+        it 'update le champ formatted avec la valeur string' do
+          subject
+          values = dossier.reload.champs.filter(&:text?).map(&:value)
+          expect(values).to include('Jeanne')
+          expect(values).to include('Bob')
         end
       end
     end

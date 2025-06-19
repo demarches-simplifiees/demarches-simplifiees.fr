@@ -6,7 +6,7 @@ describe Champs::DatetimeChamp do
   let(:dossier) { create(:dossier, procedure:) }
   let(:datetime_champ) { dossier.champs.first }
 
-  describe '#convert_to_iso8601' do
+  describe '#convert_to_iso8601_date' do
     it 'preserves nil' do
       champ = champ_with_value(nil)
       champ.run_callbacks(:validation)

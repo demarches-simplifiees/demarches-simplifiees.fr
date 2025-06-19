@@ -42,7 +42,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def value_from_user?
-    value.present? && !value_is_in_options?
+    value.present? && !value_is_in_options?(value)
   end
 
   def value=(value)
@@ -109,11 +109,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def validate_value_is_in_options
-    return if value_is_in_options?
+    return if value_is_in_options?(value)
     errors.add(:value, :not_in_options)
-  end
-
-  def value_is_in_options?
-    options_for_select.any? { _1.last == value }
   end
 end
