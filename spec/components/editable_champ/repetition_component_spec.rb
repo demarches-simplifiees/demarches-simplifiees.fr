@@ -142,7 +142,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
           let(:children) { [{ type: :drop_down_list, drop_down_options: ["Option 1", "Option 2"] }] }
 
           it do
-            champ.options_for_select_with_other.each do |option, value|
+            champ.options_for_select_with_other.each do |_option, value|
               expect(subject).to have_selector("input[type='radio'][aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.radio_label_id(value)}']")
             end
           end
@@ -312,7 +312,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
           let(:children) { [{ type: :multiple_drop_down_list, drop_down_options: Array.new(3) { "Option #{it + 1}" } }] }
 
           it do
-            champ.options_for_select_with_other.each do |option, value|
+            champ.options_for_select_with_other.each do |_option, value|
               expect(subject).to have_selector("input[type='checkbox'][aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.checkbox_label_id(value)}']")
             end
           end
