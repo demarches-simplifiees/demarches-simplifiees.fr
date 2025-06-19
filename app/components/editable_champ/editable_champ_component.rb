@@ -1,13 +1,33 @@
 # frozen_string_literal: true
 
 class EditableChamp::EditableChampComponent < ApplicationComponent
-  def initialize(form:, champ:, seen_at: nil, row_number: nil, aria_labelledby_prefix: nil)
-    @form, @champ, @seen_at, @row_number, @aria_labelledby_prefix = form, champ, seen_at, row_number, aria_labelledby_prefix
+  def initialize(form:, champ:, seen_at: nil, row_number: nil)
+    @form, @champ, @seen_at, @row_number = form, champ, seen_at, row_number
     @attribute = :value
   end
 
   def champ_component
-    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at, aria_labelledby_prefix: @aria_labelledby_prefix)
+    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at, aria_labelledby_prefix: aria_labelledby_prefix)
+  end
+
+  def parent_fieldset_legend_id
+    "#{@champ.parent.html_id}-legend"
+  end
+
+  def fieldset_legend_id
+    "#{@champ.parent.html_id(@champ.row_id)}-legend"
+  end
+
+  def aria_labelledby_prefix
+    return "" if !number_of_siblings_if_in_repetition
+
+    number_of_siblings_if_in_repetition > 1 ? fieldset_legend_id : parent_fieldset_legend_id
+  end
+
+  def number_of_siblings_if_in_repetition
+    return if !@champ.child?
+
+    @number_of_siblings_if_in_repetition ||= @champ.dossier.revision.children_of(@champ.parent).count
   end
 
   private
