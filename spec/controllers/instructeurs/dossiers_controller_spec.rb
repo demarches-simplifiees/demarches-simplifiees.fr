@@ -727,18 +727,18 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "when the usager had sent a message" do
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :message_usager) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :message) }
 
-      it "destroy message_usager notification only for the current_instructeur" do
+      it "destroy message notification only for the current_instructeur" do
         subject
 
         expect(
-          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :message_usager)
+          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :message)
         ).to be_falsey
 
         expect(
-          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :message_usager)
+          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :message)
         ).to be_truthy
       end
     end

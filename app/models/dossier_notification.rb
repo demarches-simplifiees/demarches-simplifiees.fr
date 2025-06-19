@@ -13,6 +13,7 @@ class DossierNotification < ApplicationRecord
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
     dossier_modifie: 'dossier_modifie',
+    message: 'message',
     message_usager: 'message_usager',
     annotation_instructeur: 'annotation_instructeur',
     avis_externe: 'avis_externe',
@@ -26,33 +27,40 @@ class DossierNotification < ApplicationRecord
     self.sort_by { |notif| notification_types.keys.index(notif.notification_type) }
   }
 
-  scope :type_news, -> { where(notification_type: [:dossier_modifie, :message_usager, :annotation_instructeur, :avis_externe]) }
+  scope :type_news, -> { where(notification_type: [:dossier_modifie, :message, :message_usager, :annotation_instructeur, :avis_externe]) }
 
   def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
     case notification_type
     when :dossier_depose
       if !dossier.procedure.declarative? && !dossier.procedure.sva_svr_enabled?
-        DossierNotification.find_or_create_by!(
-          dossier:,
-          notification_type:,
-          groupe_instructeur_id: dossier.groupe_instructeur_id
-        ) do |notification|
-          notification.display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
-        end
+        groupe_instructeur_id = dossier.groupe_instructeur_id
+        display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
+
+        find_or_create_notification(dossier, notification_type, groupe_instructeur_id:, display_at:)
       end
 
-    when :dossier_modifie, :attente_correction, :attente_avis, :message_usager, :annotation_instructeur, :avis_externe
+    # TEMP : pendant la transition de :message_usager vers :message, on évite
+    # de créer une notification :message si une :message_usager existe déjà.
+    when :message
       instructeur_ids = Array(instructeur&.id.presence || dossier.followers_instructeur_ids)
       instructeur_ids -= [except_instructeur.id] if except_instructeur.present?
 
       instructeur_ids.each do |instructeur_id|
-        DossierNotification.find_or_create_by!(
+        next if DossierNotification.exists?(
           dossier:,
-          notification_type:,
-          instructeur_id:
-        ) do |notification|
-          notification.display_at = Time.current
-        end
+          instructeur_id:,
+          notification_type: :message_usager
+        )
+
+        find_or_create_notification(dossier, notification_type, instructeur_id:)
+      end
+
+    when :dossier_modifie, :attente_correction, :attente_avis, :annotation_instructeur, :avis_externe
+      instructeur_ids = Array(instructeur&.id.presence || dossier.followers_instructeur_ids)
+      instructeur_ids -= [except_instructeur.id] if except_instructeur.present?
+
+      instructeur_ids.each do |instructeur_id|
+        find_or_create_notification(dossier, notification_type, instructeur_id:)
       end
     end
   end
@@ -65,7 +73,7 @@ class DossierNotification < ApplicationRecord
 
   def self.refresh_notifications_instructeur_for_dossier(instructeur, dossier)
     create_notification(dossier, :dossier_modifie, instructeur:) if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
-    create_notification(dossier, :message_usager, instructeur:) if dossier.commentaires.sent_by_user.present?
+    create_notification(dossier, :message, instructeur:) if dossier.commentaires.sent_by_user.present?
     create_notification(dossier, :annotation_instructeur, instructeur:) if dossier.last_champ_private_updated_at.present?
     create_notification(dossier, :avis_externe, instructeur:) if dossier.avis.with_answer.present?
     create_notification(dossier, :attente_correction, instructeur:) if dossier.pending_correction?
@@ -132,17 +140,19 @@ class DossierNotification < ApplicationRecord
 
   def self.notifications_sticker_for_instructeur_dossier(instructeur, dossier)
     types = {
-      demande: :dossier_modifie,
-      annotations_instructeur: :annotation_instructeur,
-      avis_externe: :avis_externe,
-      messagerie: :message_usager
+      demande: [:dossier_modifie],
+      annotations_instructeur: [:annotation_instructeur],
+      avis_externe: [:avis_externe],
+      messagerie: [:message_usager, :message]
     }
 
     return types.transform_values { false } if dossier.archived
 
     notifications = DossierNotification.where(dossier:, instructeur:)
 
-    types.transform_values { |type| notifications.exists?(notification_type: type) }
+    types.transform_values do |notification_types|
+      notifications.exists?(notification_type: notification_types)
+    end
   end
 
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
@@ -167,7 +177,7 @@ class DossierNotification < ApplicationRecord
     dossier_ids_by_procedure.transform_values do |dossier_ids|
       notifications = dossier_ids
         .flat_map { |id| notifications_by_dossier_id[id] || [] }
-        .group_by(&:notification_type)
+        .group_by { |n| n.notification_type.in?(['message', 'message_usager']) ? 'message' : n.notification_type }
 
       notification_types.keys.index_with { |type| notifications[type]&.count }.compact
     end
@@ -190,12 +200,14 @@ class DossierNotification < ApplicationRecord
       .group_by(&:dossier_id)
 
     dossiers_by_statut.filter_map do |statut, dossiers|
-      notifs = dossiers.flat_map { |d| notifications_by_dossier_id[d.id] || [] }.group_by(&:notification_type)
-      next if notifs.empty?
+      notifications = dossiers
+        .flat_map { |d| notifications_by_dossier_id[d.id] || [] }
+        .group_by { |n| n.notification_type.in?(['message', 'message_usager']) ? 'message' : n.notification_type }
+      next if notifications.empty?
 
-      sorted_notifs = notification_types.keys.index_with { |type| notifs[type] }.compact
+      sorted_notifications = notification_types.keys.index_with { |type| notifications[type] }.compact
 
-      [statut, sorted_notifs]
+      [statut, sorted_notifications]
     end.to_h
   end
 
@@ -229,5 +241,18 @@ class DossierNotification < ApplicationRecord
       .where(dossier_notifications: { instructeur: })
       .distinct
       .count
+  end
+end
+
+private
+
+def find_or_create_notification(dossier, notification_type, groupe_instructeur_id: nil, instructeur_id: nil, display_at: Time.current)
+  DossierNotification.find_or_create_by!(
+    dossier:,
+    notification_type:,
+    groupe_instructeur_id:,
+    instructeur_id:
+  ) do |notification|
+    notification.display_at = display_at
   end
 end
