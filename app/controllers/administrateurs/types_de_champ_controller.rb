@@ -3,16 +3,10 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
     include ActiveSupport::NumberHelper
+    include CsvParsingConcern
 
     before_action :retrieve_procedure
     before_action :reload_procedure_with_includes, only: [:destroy]
-
-    CSV_MAX_SIZE = 1.megabyte
-    CSV_MAX_LINES = 5_000
-    CSV_ACCEPTED_CONTENT_TYPES = [
-      "text/csv",
-      "application/vnd.ms-excel"
-    ]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
@@ -142,7 +136,7 @@ module Administrateurs
       return flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}" if referentiel_file.size > CSV_MAX_SIZE
 
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
-      csv_to_code = parse_csv(referentiel_file)
+      csv_to_code = parse_csv(referentiel_file, keep_original_headers: true)
 
       return flash[:alert] = "Importation impossible : le fichier est vide ou mal interprété" if csv_to_code.empty?
       return flash[:alert] = "Importation impossible : votre fichier CSV fait plus de #{helpers.number_with_delimiter(CSV_MAX_LINES)} lignes" if csv_to_code.size > CSV_MAX_LINES
@@ -173,36 +167,6 @@ module Administrateurs
     end
 
     private
-
-    def csv_file?
-      CSV_ACCEPTED_CONTENT_TYPES.include?(referentiel_file.content_type) ||
-        CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
-    end
-
-    def parse_csv(file)
-      raw_content = file.read
-
-      detection = CharlockHolmes::EncodingDetector.detect(raw_content)
-      source_encoding = detection[:encoding] || 'Windows-1252'
-
-      cleaned_content = CharlockHolmes::Converter.convert(raw_content, source_encoding, 'UTF-8')
-
-      Tempfile.create(['referentiel', '.csv'], encoding: 'UTF-8') do |tempfile|
-        tempfile.write(cleaned_content)
-        tempfile.rewind
-
-        begin
-          SmarterCSV.process(
-            tempfile.path,
-            strings_as_keys: true,
-            keep_original_headers: true,
-            convert_values_to_numeric: false
-          )
-        rescue *[CSV::MalformedCSVError, SmarterCSV::NoColSepDetected, ArgumentError]
-          []
-        end
-      end
-    end
 
     def changing_of_type?(type_de_champ)
       type_de_champ_update_params['type_champ'].present? && (type_de_champ_update_params['type_champ'] != type_de_champ.type_champ)
