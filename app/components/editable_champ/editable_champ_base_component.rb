@@ -24,11 +24,10 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
   end
 
   def labelledby_id(label_id = nil)
-    
     labelledby = []
     labelledby << @aria_labelledby_prefix if @aria_labelledby_prefix.present?
     labelledby << fieldset_legend_id if dsfr_champ_container == :fieldset
-    labelledby << (label_id.present? ? label_id : @champ.labelledby_id)
+    labelledby << (label_id.presence || @champ.labelledby_id)
 
     labelledby.join(' ')
   end
