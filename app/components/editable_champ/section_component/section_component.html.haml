@@ -8,7 +8,7 @@
           = render section
         - else
           = fields_for champ.input_name, champ do |form|
-            = render EditableChamp::EditableChampComponent.new form:, champ:, aria_labelledby_prefix: @aria_labelledby_prefix
+            = render EditableChamp::EditableChampComponent.new form:, champ:
 - else
   - if header_section
     .fr-fieldset__legend.fr-my-0{ class: "reset-#{tag_for_depth}" }
@@ -18,4 +18,4 @@
       = render section
     - else
       = fields_for champ.input_name, champ do |form|
-        = render EditableChamp::EditableChampComponent.new form:, champ:, row_number: @row_number, aria_labelledby_prefix: @aria_labelledby_prefix
+        = render EditableChamp::EditableChampComponent.new form:, champ:, row_number: @row_number
