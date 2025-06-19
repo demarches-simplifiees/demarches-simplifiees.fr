@@ -29,7 +29,11 @@ describe Champs::ReferentielChamp, type: :model do
 
       it 'casts and stores displayable string value for usager' do
         referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
         expect(referentiel_champ.value_json.with_indifferent_access["$.string"]).to eq("abc")
+=======
+        expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.string"]).to eq("abc")
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
       end
     end
 
@@ -49,7 +53,11 @@ describe Champs::ReferentielChamp, type: :model do
 
       it 'casts and stores displayable float value for usager' do
         referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
         expect(referentiel_champ.value_json.with_indifferent_access["$.float"]).to eq(3.14)
+=======
+        expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.float"]).to eq(3.14)
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
       end
     end
 
@@ -69,7 +77,11 @@ describe Champs::ReferentielChamp, type: :model do
 
       it 'casts and stores displayable integer value for usager' do
         referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
         expect(referentiel_champ.value_json.with_indifferent_access["$.int"]).to eq(42)
+=======
+        expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.int"]).to eq(42)
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
       end
     end
 
@@ -91,7 +103,11 @@ describe Champs::ReferentielChamp, type: :model do
 
         it 'casts and stores displayable boolean value for usager' do
           referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
           expect(referentiel_champ.value_json.with_indifferent_access["$.bool"]).to eq(true)
+=======
+          expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.bool"]).to eq(true)
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
         end
       end
 
@@ -100,7 +116,11 @@ describe Champs::ReferentielChamp, type: :model do
 
         it 'casts and stores displayable boolean value for usager' do
           referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
           expect(referentiel_champ.value_json.with_indifferent_access["$.bool"]).to eq(false)
+=======
+          expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.bool"]).to eq(false)
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
         end
       end
     end
@@ -121,7 +141,11 @@ describe Champs::ReferentielChamp, type: :model do
 
       it 'casts and stores displayable date value for usager' do
         referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
         expect(referentiel_champ.value_json.with_indifferent_access["$.date"]).to eq("2024-06-19")
+=======
+        expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.date"]).to eq("2024-06-19")
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
       end
     end
 
@@ -141,7 +165,11 @@ describe Champs::ReferentielChamp, type: :model do
 
       it 'casts and stores displayable datetime value for usager' do
         referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
         expect(referentiel_champ.value_json.with_indifferent_access["$.datetime"]).to eq("2024-06-19T15:30:00+02:00")
+=======
+        expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.datetime"]).to eq("2024-06-19T15:30:00+02:00")
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
       end
     end
 
@@ -161,7 +189,11 @@ describe Champs::ReferentielChamp, type: :model do
 
       it 'casts and stores displayable list value for usager' do
         referentiel_champ.update_with_external_data!(data: data)
+<<<<<<< HEAD
         expect(referentiel_champ.value_json.with_indifferent_access["$.list"]).to eq(["a", "b", "c"])
+=======
+        expect(referentiel_champ.value_json.with_indifferent_access[:display_usager]["$.list"]).to eq(["a", "b", "c"])
+>>>>>>> b9ff70eba5 (feat(ReferentielChamp): map, cast and store choosen jsonpath from api responses to be shown to usager and/or instructeur)
       end
     end
   end

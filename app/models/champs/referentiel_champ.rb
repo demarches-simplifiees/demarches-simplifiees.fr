@@ -2,12 +2,7 @@
 
 class Champs::ReferentielChamp < Champ
   delegate :referentiel,
-<<<<<<< HEAD
            :referentiel_mapping_displayable,
-=======
-           :referentiel_mapping_displayable_for_instructeur,
-           :referentiel_mapping_displayable_for_usager,
->>>>>>> 84e2000f4e (refactor(ReferentielChamp): delegate some referentiel methods to type de champ)
            :referentiel_mapping_prefillable_with_stable_id,
            to: :type_de_champ
   before_save :clear_previous_result, if: -> { external_id_changed? }
@@ -39,12 +34,8 @@ class Champs::ReferentielChamp < Champ
   end
 
   def prefillable_stable_ids
-<<<<<<< HEAD
     referentiel_mapping_prefillable_with_stable_id
       .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
-=======
-    referentiel_mapping_prefillable_with_stable_id.map { |_jsonpath, mapping| mapping[:prefill_stable_id] }
->>>>>>> 84e2000f4e (refactor(ReferentielChamp): delegate some referentiel methods to type de champ)
   end
 
   def prefillable_champs
