@@ -6,8 +6,8 @@
 .dossier-container.mb-4
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
-  .container
-    %p.messagerie-explanation
+  .fr-container
+    %p.fr-text-mention--grey
       = t('views.users.dossiers.messagerie.mailbox')
 
   = render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_user, messagerie_seen_at: nil, new_commentaire: @commentaire, form_url: commentaire_dossier_path(@dossier) }
