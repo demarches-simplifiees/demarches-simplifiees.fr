@@ -513,6 +513,7 @@ en:
           mailbox: "The mailbox allows you to contact the instructor in charge of your file."
         rendez_vous:
           title: "Your next appointment"
+          navigate_to_rdv_sp: "See my appointment on RDV Service Public"
         demande:
           edit_dossier: Edit my file
           edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
@@ -536,8 +537,6 @@ en:
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
           pending_correction_html: "This file is waiting for your corrections. Consult the changes to be made in the <a href=\"%{link}\">messaging system</a>."
-          upcoming_rdv_html: "You have an appointment with an instructor on <strong>%{date}</strong>."
-          upcoming_rdv_link: "Infos and cancellation:"
           depose_at: First submission on %{date}
           created_at: Created at %{date}
           updated_at: updated at %{date}

@@ -1,27 +1,42 @@
 # frozen_string_literal: true
 
 class Instructeurs::RdvCardComponent < ApplicationComponent
-  attr_reader :rdv, :with_dossier_infos
+  attr_reader :rdv
 
-  def initialize(rdv:, with_dossier_infos: false)
+  def initialize(rdv:)
     @rdv = rdv
-    @with_dossier_infos = with_dossier_infos
   end
 
   def dossier
     @rdv.dossier
   end
 
+  def rdv_url
+    @rdv["url_for_agents"]
+  end
+
+  def starts_at
+    DateTime.parse(@rdv["starts_at"])
+  end
+
+  def location_type
+    @rdv["motif"]["location_type"]
+  end
+
+  def agents_emails
+    @rdv["agents"].map { |agent| agent["email"] }
+  end
+
   def owner
-    if @rdv.instructeur == current_instructeur
+    if current_instructeur.email.in?(agents_emails)
       t('.you')
     else
-      @rdv.instructeur.email
+      agents_emails.join(", ")
     end
   end
 
   def icon_class
-    case rdv.location_type
+    case location_type
     when "phone"
       "fr-icon-phone-fill"
     when "visio"
