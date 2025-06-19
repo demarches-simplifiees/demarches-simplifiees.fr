@@ -192,8 +192,16 @@ describe 'BatchOperation a dossier:', js: true do
       click_on "Autres actions multiples"
       click_on "Demander un avis externe"
 
-      # modal open
-      expect(page).to have_content("Demander un avis externe ")
+      # can close the modal
+      expect(page).to have_selector("#modal-avis-batch", visible: true)
+      click_on "Annuler", visible: true
+      expect(page).to have_selector("#modal-avis-batch", visible: false)
+
+      # reopen the modal
+      click_on "Autres actions multiples"
+      click_on "Demander un avis externe"
+      expect(page).to have_selector("#modal-avis-batch", visible: true)
+
       click_on "Envoyer la demande d'avis"
 
       expect(page).to have_content("Le champ « Email » doit être rempli")
