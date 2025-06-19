@@ -45,6 +45,14 @@ en:
   utils:
     'yes': 'Yes'
     'no': 'No'
+    string: String
+    decimal_number: Floating point number
+    integer_entier: Integer number
+    boolean: Boolean
+    date: Date
+    datetime: Date and time
+    array: Listt of simple elements
+
     email_suggest:
       wanna_say: 'Do you mean to say ?'
 

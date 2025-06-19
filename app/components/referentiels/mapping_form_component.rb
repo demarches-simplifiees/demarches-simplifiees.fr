@@ -1,17 +1,7 @@
 # frozen_string_literal: true
 
 class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
-  TYPES = {
-    String => "Chaine de caractère",
-    Float => "Nombre à virgule",
-    Integer => "Nombre Entier",
-    TrueClass => "Booléen",
-    FalseClass => "Booléen",
-    # detection
-    "Date" => "Date",
-    "DateTime" => "Date et heure",
-    "Liste à choix multiples" => "Liste à choix multiples"
-  }.freeze
+  TYPES = [:string, :decimal_number, :integer_number, :boolean, :date, :datetime, :array].index_by(&:itself).freeze
 
   def last_request_keys
     JSONPath.hash_to_jsonpath(referentiel.last_response_body)
@@ -28,7 +18,7 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   def cast_tag(jsonpath, value)
     select_tag(
       attribute_name(jsonpath, "type"),
-      options_for_select(self.class::TYPES.values.uniq, lookup_existing_value(jsonpath, "type") || value_to_type(value)),
+      options_for_select(self.class::TYPES.values.map { [t("utils.#{it}"), it] }, lookup_existing_value(jsonpath, "type") || value_to_type(value)),
       class: "fr-select"
     )
   end
@@ -70,13 +60,19 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
 
   def value_to_type(value)
     if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
-      self.class::TYPES["DateTime"]
+      self.class::TYPES[:datetime]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
-      self.class::TYPES["Date"]
+      self.class::TYPES[:date]
     elsif ReferentielMappingUtils.array_of_supported_simple_types?(value)
-      self.class::TYPES["Liste à choix multiples"]
+      self.class::TYPES[:array]
+    elsif value.is_a?(Float)
+      self.class::TYPES[:decimal_number]
+    elsif value.is_a?(Integer)
+      self.class::TYPES[:integer_number]
+    elsif value.is_a?(TrueClass) || value.is_a?(FalseClass)
+      self.class::TYPES[:boolean]
     else
-      TYPES.fetch(value.class) { TYPES[String] }
+      TYPES.fetch(:string)
     end
   end
 

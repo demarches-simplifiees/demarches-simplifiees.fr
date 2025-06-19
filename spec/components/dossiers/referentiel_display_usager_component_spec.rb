@@ -17,8 +17,8 @@ describe Dossiers::ReferentielDisplayUsagerComponent, type: :component do
     let(:types) { Referentiels::MappingFormComponent::TYPES }
     let(:referentiel_mapping) do
       {
-        "$.string" => { libelle: "Libellé string", display_usager: "1", type: types[String] },
-        "$.integer" => { display_usager: "1", type: types[Integer] } # pas de libellé, fallback sur jsonpath
+        "$.string" => { libelle: "Libellé string", display_usager: "1", type: types[:string] },
+        "$.integer" => { display_usager: "1", type: types[:integer_number] } # pas de libellé, fallback sur jsonpath
       }
     end
 
@@ -40,8 +40,8 @@ describe Dossiers::ReferentielDisplayUsagerComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.date" => { libelle: "Date de naissance", display_usager: "1", type: types["Date"] },
-          "$.datetime" => { libelle: "Date et heure de naissance", display_usager: "1", type: types["DateTime"] }
+          "$.date" => { libelle: "Date de naissance", display_usager: "1", type: types[:date] },
+          "$.datetime" => { libelle: "Date et heure de naissance", display_usager: "1", type: types[:datetime] }
         }
       end
 
@@ -58,8 +58,8 @@ describe Dossiers::ReferentielDisplayUsagerComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.bool_true" => { libelle: "Accepté", display_usager: "1", type: types[TrueClass] },
-          "$.bool_false" => { libelle: "Refusé", display_usager: "1", type: types[FalseClass] }
+          "$.bool_true" => { libelle: "Accepté", display_usager: "1", type: types[:boolean] },
+          "$.bool_false" => { libelle: "Refusé", display_usager: "1", type: types[:boolean] }
         }
       end
 
@@ -76,7 +76,7 @@ describe Dossiers::ReferentielDisplayUsagerComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.list" => { libelle: "Liste de choix", display_usager: "1", type: types["Liste à choix multiples"] }
+          "$.list" => { libelle: "Liste de choix", display_usager: "1", type: types[:array] }
         }
       end
 
@@ -91,7 +91,7 @@ describe Dossiers::ReferentielDisplayUsagerComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.xss" => { libelle: "Champ potentiellement dangereux", display_usager: "1", type: types[String] }
+          "$.xss" => { libelle: "Champ potentiellement dangereux", display_usager: "1", type: types[:string] }
         }
       end
 
@@ -107,7 +107,7 @@ describe Dossiers::ReferentielDisplayUsagerComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.object" => { libelle: "Champ objet", display_usager: "1", type: types[String] }
+          "$.object" => { libelle: "Champ objet", display_usager: "1", type: types[:string] }
         }
       end
 

@@ -19,7 +19,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         {
           "$.jsonpath" => {
             "prefill" => '1',
-            'type' => Referentiels::MappingFormComponent::TYPES.values.first
+            'type' => Referentiels::MappingFormComponent::TYPES[:string]
           }
         }
       end
@@ -49,8 +49,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       }
     end
 
-    context 'with mapping type "Chaine de caractère"' do
-      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[String] }
+    context 'with mapping type :string' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:string] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)
@@ -73,8 +73,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
     end
 
-    context 'with mapping type "Nombre à virgule"' do
-      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[Float] }
+    context 'with mapping type :float' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:decimal_number] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)
@@ -87,8 +87,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
     end
 
-    context 'with mapping type "Nombre Entier"' do
-      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[Integer] }
+    context 'with mapping type :integer' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:integer_number] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)
@@ -101,8 +101,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
     end
 
-    context 'with mapping type "Booléen"' do
-      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[TrueClass] }
+    context 'with mapping type :boolean' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:boolean] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)
@@ -116,8 +116,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
     end
 
-    context 'with mapping type "Date"' do
-      let(:referentiel_mapping_type) { "Date" }
+    context 'with mapping type :date' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:date] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)
@@ -130,8 +130,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
     end
 
-    context 'with mapping type "DateTime"' do
-      let(:referentiel_mapping_type) { "Date et heure" }
+    context 'with mapping type :datetime' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:datetime] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)
@@ -144,8 +144,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
     end
 
-    context 'with mapping type "Liste à choix multiples"' do
-      let(:referentiel_mapping_type) { "Liste à choix multiples" }
+    context 'with mapping type :array' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:array] }
       let(:types_de_champ_public) do
         [
           { type: :referentiel, referentiel: }, # exclu (champ courant)

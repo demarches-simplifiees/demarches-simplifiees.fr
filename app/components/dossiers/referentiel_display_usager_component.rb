@@ -26,38 +26,23 @@ class Dossiers::ReferentielDisplayUsagerComponent < ApplicationComponent
     display_usager.present?
   end
 
-  # Formatte la valeur pour l'affichage (date, booléen, etc.)
   def format(jsonpath, value)
-    mapping_type = safe_referentiel_mapping[jsonpath]&.dig(:type) || types[String]
-    case mapping_type
-    when types["Date"]
-      if (date = DateDetectionUtils.convert_to_iso8601_date(value))
-        I18n.l(Date.parse(date), format: '%d/%m/%y')
-      end
-    when types["DateTime"]
-      if (date = DateDetectionUtils.convert_to_iso8601_datetime(value))
-        I18n.l(DateTime.parse(date), format: '%d %B %Y à %R')
-      end
-    when types[TrueClass],
-        types[FalseClass]
-      case value
-      when true
-        I18n.t('utils.yes')
-      when false
-        I18n.t('utils.no')
-      else
-        value
-      end
-    when types["Liste à choix multiples"]
+    mapping_type = safe_referentiel_mapping[jsonpath]&.dig(:type) || Referentiels::MappingFormComponent::TYPES[:string]
+    case [mapping_type&.to_sym, value]
+    in [:date, value]
+      I18n.l(Date.parse(DateDetectionUtils.convert_to_iso8601_date(value)), format: '%d/%m/%y') rescue nil
+    in [:datetime, value]
+      I18n.l(DateTime.parse(DateDetectionUtils.convert_to_iso8601_datetime(value)), format: '%d %B %Y à %R') rescue nil
+    in [:boolean, TrueClass => value]
+      I18n.t('utils.yes')
+    in [:boolean, FalseClass => value]
+      I18n.t('utils.no')
+    in [:array, Array => value] if ReferentielMappingUtils.array_of_supported_simple_types?(value)
       Array(value).compact.join(", ")
-    when types[String] && value.is_a?(String)
+    in [:string | :decimal_number | :integer_number, String | Float | Integer => value]
       value
     else
       nil
     end
-  end
-
-  def types
-    Referentiels::MappingFormComponent::TYPES
   end
 end
