@@ -19,12 +19,24 @@ describe EditableChamp::RepetitionComponent, type: :component do
       let(:champ) { repetition_champ.rows.first.first }
 
       context "for type text" do
-        let(:children) { [{ type: :text }] }
+        let(:children) { [{ type: :text, libelle: 'Prénom' }] }
 
         it do
           # we should match
           # aria-labelledby="champ-66-legend champ-67-01JWAZPQ0MZFCTPJ4SRV8YSGP2-label"
           expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+        end
+
+        it "should have a fieldset legend for the repetition" do
+          expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']", text: "Répétition")
+        end
+
+        it "should not have a fieldset legend for the row" do
+          expect(subject).not_to have_selector("legend[id='#{champ.parent.html_id(champ.row_id)}-legend']")
+        end
+
+        it "the label in the rows should contain the row number" do
+          expect(subject).to have_selector("label[id='#{text_champ.html_id}-label']", text: "Prénom 1")
         end
       end
 
@@ -448,6 +460,19 @@ describe EditableChamp::RepetitionComponent, type: :component do
       let(:children) { [{ type: :text, libelle: 'Prénom' }, { type: :text, libelle: 'Nom' }] }
       let(:text_champ) { repetition_champ.rows.first.first }
       let(:text_champ_2) { repetition_champ.rows.first.last }
+
+      it "should have a fieldset legend for the repetition" do
+        expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']", text: "Répétition")
+      end
+
+      it "should have a fieldset legend for the row with the row number" do
+        expect(subject).to have_selector("legend[id='#{text_champ.parent.html_id(text_champ.row_id)}-legend']", text: "Répétition 1")
+      end
+
+      it "the label in the rows should not contain the row number" do
+        expect(subject).to have_selector("label[id='#{text_champ.html_id}-label']", text: "Prénom")
+        expect(subject).to have_selector("label[id='#{text_champ_2.html_id}-label']", text: "Nom")
+      end
 
       it "should have an aria-labelledby that contains the id of the row fieldset and the label id" do
         # we should match
