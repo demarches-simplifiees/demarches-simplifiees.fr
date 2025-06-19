@@ -20,8 +20,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       minimum_input_length: 2,
       is_disabled: !@champ.ban?,
       ariaLabelledbyPrefix: aria_labelledby_prefix,
-      labelId: @champ.label_id
-    )
+      labelId: @champ.label_id)
   end
 
   def commune_react_props
