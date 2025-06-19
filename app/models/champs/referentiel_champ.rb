@@ -18,15 +18,11 @@ class Champs::ReferentielChamp < Champ
       update!(
         value: external_id,                # now that we have the data, we can set the value
         data:,                             # keep raw API response
-        value_json: todo_map_stuff(data:), # columnize the data
+        value_json: cast_displayable_values(data.with_indifferent_access), # columnize the data
         fetch_external_data_exceptions: [] # void previous errors
       )
       propagate_prefill(data)
     end
-  end
-
-  def todo_map_stuff(data:)
-    data
   end
 
   def fetch_external_data?
@@ -88,6 +84,13 @@ class Champs::ReferentielChamp < Champ
       bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
     in [:text | :textarea | :engagement_juridique| :dossier_link | :email| :phone| :iban| :siret | :formatted, v]
       v.to_s
+    # case of type from mapping, used to store for display
+    in [:boolean, v]
+      ActiveModel::Type::Boolean.new.cast(v)
+    in [:array, Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
+      Array(arr)
+    in [:string, v]
+      v.to_s
     else
       nil
     end
@@ -95,6 +98,14 @@ class Champs::ReferentielChamp < Champ
 
   def cast_value_for_type_de_champ(value, type_de_champ)
     { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }.merge(prefilled: true)
+  end
+
+  def cast_displayable_values(data)
+    referentiel_mapping_displayable.reduce({}) do |accu, (jsonpath, mapping)|
+      casted_value = call_caster(mapping[:type], JSONPath.value(data, jsonpath))
+      accu[jsonpath] = casted_value if !casted_value.nil?
+      accu
+    end
   end
 
   def propagate_prefill(data)
