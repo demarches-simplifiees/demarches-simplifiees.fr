@@ -282,16 +282,24 @@ class TypeDeChamp < ApplicationRecord
     safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] == "1" }
   end
 
-  def referentiel_mapping_displayable
-    safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] != "1" }
-  end
-
   def referentiel_mapping_prefillable_with_stable_id
     referentiel_mapping_prefillable.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id].present? }
   end
 
   def referentiel_mapping_prefillable_stable_ids
     referentiel_mapping_prefillable_with_stable_id.map { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id] }
+  end
+
+  def referentiel_mapping_displayable
+    safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] != "1" }
+  end
+
+  def referentiel_mapping_displayable_for_instructeur
+    referentiel_mapping_displayable.filter { |_jsonpath, mapping| mapping[:display_instructeur] == "1" }
+  end
+
+  def referentiel_mapping_displayable_for_usager
+    referentiel_mapping_displayable.filter { |_jsonpath, mapping| mapping[:display_usager] == "1" }
   end
 
   def params_for_champ

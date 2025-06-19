@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class Champs::ReferentielChamp < Champ
-  delegate :referentiel, to: :type_de_champ
-
+  delegate :referentiel,
+           :referentiel_mapping_displayable_for_instructeur,
+           :referentiel_mapping_displayable_for_usager,
+           :referentiel_mapping_prefillable_with_stable_id,
+           to: :type_de_champ
   before_save :clear_previous_result, if: -> { external_id_changed? }
 
   validates_with ReferentielChampValidator, if: :validate_champ_value?
@@ -36,9 +39,7 @@ class Champs::ReferentielChamp < Champ
   end
 
   def prefillable_stable_ids
-    type_de_champ
-      .referentiel_mapping_prefillable_with_stable_id
-      .map { |_jsonpath, mapping| mapping[:prefill_stable_id] }
+    referentiel_mapping_prefillable_with_stable_id.map { |_jsonpath, mapping| mapping[:prefill_stable_id] }
   end
 
   def prefillable_champs
@@ -89,8 +90,8 @@ class Champs::ReferentielChamp < Champ
   end
 
   def propagate_prefill(data)
-    type_de_champ
-      .referentiel_mapping_prefillable_with_stable_id.group_by { |_jsonpath, mapping| dossier.revision.parent_of(dossier.find_type_de_champ_by_stable_id(mapping[:prefill_stable_id])) }
+    referentiel_mapping_prefillable_with_stable_id
+      .group_by { |_jsonpath, mapping| dossier.revision.parent_of(dossier.find_type_de_champ_by_stable_id(mapping[:prefill_stable_id])) }
       .each do |repetition, mappings|
         if repetition.present?
           update_repetition_prefillable_champs(data, repetition, mappings)
