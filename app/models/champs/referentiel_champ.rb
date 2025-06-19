@@ -19,15 +19,18 @@ class Champs::ReferentielChamp < Champ
       update!(
         value: external_id,                # now that we have the data, we can set the value
         data:,                             # keep raw API response
-        value_json: todo_map_stuff(data:), # columnize the data
+        value_json: map_displayable(data:), # columnize the data
         fetch_external_data_exceptions: [] # void previous errors
       )
       propagate_prefill(data)
     end
   end
 
-  def todo_map_stuff(data:)
-    data
+  def map_displayable(data:)
+    {
+      display_usager: cast_displayable_values(referentiel_mapping_displayable_for_usager, data.with_indifferent_access),
+      display_instructeur: cast_displayable_values(referentiel_mapping_displayable_for_instructeur, data.with_indifferent_access)
+    }
   end
 
   def fetch_external_data?
@@ -87,6 +90,35 @@ class Champs::ReferentielChamp < Champ
       {}
     end
     (result || {}).merge(prefilled: true)
+  end
+
+  def cast_displayable_values(mappings, data)
+    types = Referentiels::MappingFormComponent::TYPES
+
+    mappings.reduce({}) do |accu, (jsonpath, mapping)|
+      jsonpath = JSONPath.simili_to_jsonpath(jsonpath)
+      v = JSONPath.value(data, jsonpath)
+
+      case mapping[:type]
+      when types[String]
+        accu[jsonpath] = v
+      when types[Float]
+        accu[jsonpath] = v.to_f if v.present?
+      when types[Integer]
+        accu[jsonpath] = v.to_i if v.present?
+      when types[TrueClass], types[FalseClass]
+        accu[jsonpath] = ActiveModel::Type::Boolean.new.cast(v)
+      when types["Date"]
+        accu[jsonpath] = DateDetectionUtils.convert_to_iso8601_date(v)
+      when types["DateTime"]
+        accu[jsonpath] = DateDetectionUtils.convert_to_iso8601_datetime(v)
+      when types["Liste à choix multiples"]
+        accu[jsonpath] = v if v.is_a?(Array) && ReferentielMappingUtils.array_of_supported_simple_types?(v)
+      else
+        # unsupported
+      end
+      accu
+    end
   end
 
   def propagate_prefill(data)
