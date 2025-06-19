@@ -1,0 +1,11 @@
+%section.fr-accordion.fr-mt-2w
+  %h3.fr-accordion__title
+    %button.fr-accordion__btn{ type: :button, "aria-controls" => "display_usager", "aria-expanded" => "false" }
+      = t('.accordion_title', value: @champ.value)
+
+.fr-collapse#display_usager
+  %dl.fr-mt-1w
+    - data.each do |libelle, casted_value|
+      .referentiel-flex-row.flex.align-baselinle
+        %dt.fr-my-1w.fr-text--bold= "#{libelle} :"
+        %dd.fr-pl-1v.fr-my-1w.text-info-blue= casted_value
