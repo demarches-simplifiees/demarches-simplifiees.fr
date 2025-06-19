@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Champs::ReferentielChamp < Champ
-  delegate :referentiel, to: :type_de_champ
-
+  delegate :referentiel,
+           :referentiel_mapping_displayable,
+           :referentiel_mapping_prefillable_with_stable_id,
+           to: :type_de_champ
   before_save :clear_previous_result, if: -> { external_id_changed? }
 
   validates_with ReferentielChampValidator, if: :validate_champ_value?
@@ -36,8 +38,7 @@ class Champs::ReferentielChamp < Champ
   end
 
   def prefillable_stable_ids
-    type_de_champ
-      .referentiel_mapping_prefillable_with_stable_id
+    referentiel_mapping_prefillable_with_stable_id
       .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
   end
 
@@ -101,8 +102,7 @@ class Champs::ReferentielChamp < Champ
     dossier.with_champ_stream(self)
 
     types_de_champ_by_stable_id = dossier.revision.types_de_champ.index_by(&:stable_id)
-    type_de_champ
-      .referentiel_mapping_prefillable_with_stable_id
+    referentiel_mapping_prefillable_with_stable_id
       .transform_values do |mapping|
         types_de_champ_by_stable_id.fetch(mapping[:prefill_stable_id].to_i)
       end.group_by do |_, type_de_champ|
