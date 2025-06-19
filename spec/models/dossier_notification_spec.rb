@@ -15,13 +15,15 @@ RSpec.describe DossierNotification, type: :model do
   end
 
   describe 'create_notification' do
+    subject { DossierNotification.create_notification(dossier, notification_type, **notification_args) }
+
+    let(:notification_args) { {} }
+
     context 'dossier_depose notification' do
       let(:procedure) { create(:procedure, sva_svr: {}, declarative_with_state: nil) }
       let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
       let!(:dossier) { create(:dossier, groupe_instructeur:, depose_at: Time.zone.now, procedure:) }
       let!(:notification_type) { :dossier_depose }
-
-      subject { DossierNotification.create_notification(dossier, notification_type) }
 
       it 'create notification for the groupe_instructeur with the correct delay to display' do
         subject
@@ -49,6 +51,47 @@ RSpec.describe DossierNotification, type: :model do
         subject
 
         expect(DossierNotification.count).to eq(0)
+      end
+    end
+
+    context "message notification" do
+      let!(:dossier) { create(:dossier) }
+      let(:instructeur_follower) { create(:instructeur) }
+      let(:other_instructeur_follower) { create(:instructeur) }
+      let(:instructeur_not_follower) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, other_instructeur_follower, instructeur_not_follower]) }
+      let!(:notification_type) { :message }
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        instructeur_follower.followed_dossiers << dossier
+        other_instructeur_follower.followed_dossiers << dossier
+      end
+
+      context "when user send a message" do
+        it "create notification for instructeurs followers" do
+          subject
+
+          expect(DossierNotification.count).to eq(2)
+
+          notifications = DossierNotification.where(dossier:, notification_type: :message)
+
+          expect(notifications.map(&:instructeur_id)).to match_array([instructeur_follower.id, other_instructeur_follower.id])
+        end
+      end
+
+      context "when :message_usager notification already exists" do
+        let!(:already_notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: instructeur_follower, notification_type: :message_usager) }
+
+        it "does not duplicate notification" do
+          subject
+
+          notifications = DossierNotification.where(dossier:)
+
+          expect(notifications.count).to eq(2)
+
+          expect(notifications.map(&:notification_type)).to match_array(['message', 'message_usager'])
+        end
       end
     end
   end

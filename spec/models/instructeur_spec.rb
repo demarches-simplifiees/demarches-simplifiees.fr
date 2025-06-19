@@ -65,7 +65,7 @@ describe Instructeur, type: :model do
           DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :annotation_instructeur)
         ).to be_truthy
         expect(
-          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :message_usager)
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :message)
         ).to be_truthy
         expect(
           DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :dossier_modifie)
