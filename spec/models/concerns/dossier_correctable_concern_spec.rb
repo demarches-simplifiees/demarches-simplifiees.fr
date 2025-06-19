@@ -124,22 +124,34 @@ describe DossierCorrectableConcern do
     end
 
     context "when there are instructeurs followers" do
-      let!(:instructeur_follower) { create(:instructeur) }
-      let!(:instructeur_not_follower) { create(:instructeur) }
-      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, instructeur_not_follower]) }
+      let(:other_instructeur_follower) { create(:instructeur) }
+      let(:instructeur_not_follower) { create(:instructeur) }
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur_follower, instructeur_not_follower]) }
 
       before do
         dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-        instructeur_follower.followed_dossiers << dossier
+        instructeur.followed_dossiers << dossier
+        other_instructeur_follower.followed_dossiers << dossier
+      end
+
+      it do
+        expect { subject }.to change(DossierNotification, :count).by(3)
       end
 
       it "create attente_correction notification only for instructeur follower" do
-        expect { subject }.to change(DossierNotification, :count).by(1)
+        subject
+        notifications = DossierNotification.where(dossier:, notification_type: :attente_correction)
 
-        notification = DossierNotification.last
-        expect(notification.dossier_id).to eq(dossier.id)
-        expect(notification.instructeur_id).to eq(instructeur_follower.id)
-        expect(notification.notification_type).to eq("attente_correction")
+        expect(notifications.count).to eq(2)
+        expect(notifications.map(&:instructeur_id)).to match_array([instructeur.id, other_instructeur_follower.id])
+      end
+
+      it "create :message notification only for others instructeurs followers" do
+        subject
+        notifications = DossierNotification.where(dossier:, notification_type: :message)
+
+        expect(notifications.count).to eq(1)
+        expect(notifications.first.instructeur_id).to eq(other_instructeur_follower.id)
       end
     end
   end
