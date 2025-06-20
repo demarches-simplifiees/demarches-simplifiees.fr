@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module Maintenance
-  RSpec.describe T20250522backfillDossierNotificationForMessageUsagerTask do
+  RSpec.describe T20250522backfillDossierNotificationForMessageTask do
     describe "#collection" do
       subject(:collection) { described_class.collection }
 
@@ -13,11 +13,11 @@ module Maintenance
       let!(:dossier_2) { create(:dossier, last_commentaire_updated_at: 2.days.ago) }
       let!(:follow_2) { create(:follow, dossier: dossier_2, instructeur:, messagerie_seen_at: 1.day.ago) }
 
-      context "when the dossier has been updated before the instructeur last saw it" do
+      context "when the last message has been sent after the instructeur has consulted the message service" do
         it { expect(collection.map(&:id)).to include(follow_1.id) }
       end
 
-      context "when the dossier has been updated after the instructeur last saw it" do
+      context "when the last message has been sent before the instructeur has consulted the message service" do
         it { expect(collection.map(&:id)).not_to include(follow_2.id) }
       end
     end
@@ -27,8 +27,8 @@ module Maintenance
       let!(:instructeur) { create(:instructeur) }
       let!(:follow) { create(:follow, dossier:, instructeur:) }
 
-      context "when a notification already exists for an instructeur" do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
+      context "when a notification :messsage already exists" do
+        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message) }
 
         it "does not create duplicate notification" do
           expect {
@@ -42,6 +42,16 @@ module Maintenance
           expect {
             described_class.process(follow)
           }.to change(DossierNotification, :count).by(1)
+        end
+      end
+
+      context "when a notification :message_usager already exists" do
+        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
+
+        it "does not create duplicate notification" do
+          expect {
+            described_class.process(follow)
+          }.not_to change(DossierNotification, :count)
         end
       end
     end
