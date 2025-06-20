@@ -177,6 +177,7 @@ module Experts
         timestamps << :last_commentaire_piece_jointe_updated_at if @commentaire.piece_jointe.attached?
 
         @commentaire.dossier.touch(*timestamps)
+        DossierNotification.create_notification(avis.dossier, :message)
 
         flash.notice = "Message envoyé"
         redirect_to messagerie_expert_avis_path(avis.procedure, avis)
