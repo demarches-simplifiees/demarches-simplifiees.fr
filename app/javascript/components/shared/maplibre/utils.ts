@@ -41,12 +41,12 @@ export function findFeature<G extends Geometry>(
 
 export function filterFeatureCollection<G extends Geometry>(
   featureCollection: FeatureCollection<G>,
-  source: string
+  sources: string | string[]
 ): FeatureCollection<G> {
   return {
     type: 'FeatureCollection',
-    features: featureCollection.features.filter(
-      (feature) => feature.properties?.source === source
+    features: featureCollection.features.filter((feature) =>
+      sources.includes(feature.properties?.source)
     )
   };
 }
