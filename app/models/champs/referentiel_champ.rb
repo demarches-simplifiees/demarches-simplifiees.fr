@@ -65,31 +65,35 @@ class Champs::ReferentielChamp < Champ
     self.fetch_external_data_exceptions = []
   end
 
-  def cast_value_for_type_de_champ(value, type_de_champ)
-    result = case [type_de_champ.type_champ, value]
-    in ['integer_number', v] if v.present?
-      { value: v.to_i }
-    in ['decimal_number', v] if v.present?
-      { value: v.to_f }
-    in ['checkbox' | 'yes_no', v]
+  def call_caster(mapping_or_type_champ, value, type_de_champ = nil)
+    case [mapping_or_type_champ&.to_sym, value]
+    in [:integer_number, v] if v.present?
+      v.to_i
+    in [:decimal_number, v] if v.present?
+      v.to_f
+    in [:datetime, v]
+      DateDetectionUtils.convert_to_iso8601_datetime(v)
+    in [:date, v]
+      DateDetectionUtils.convert_to_iso8601_date(v)
+    # cases of type from tdc, used to store in a champ
+    in [:drop_down_list, Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
+      arr.first.to_s
+    in [:drop_down_list, v] if type_de_champ&.value_is_in_options?(v) || type_de_champ&.drop_down_other?
+      v.to_s
+    in [:multiple_drop_down_list, Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
+      arr.compact.to_json
+    in [:checkbox | :yes_no, v]
       bool = ActiveModel::Type::Boolean.new.cast(v)
-      { value: (bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)) }
-    in ['datetime', v]
-      { value: DateDetectionUtils.convert_to_iso8601_datetime(v) }
-    in ['date', v]
-      { value: DateDetectionUtils.convert_to_iso8601_date(v) }
-    in ['drop_down_list', Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
-      { value: arr.first.to_s }
-    in ['drop_down_list', v] if type_de_champ.value_is_in_options?(v) || type_de_champ.drop_down_other?
-      { value: v.to_s }
-    in ['multiple_drop_down_list', Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
-      { value: arr.to_json }
-    in ['text'| 'textarea' |'engagement_juridique'| 'dossier_link' | 'email'| 'phone'| 'iban'| 'siret' | 'formatted', v]
-      { value: value.to_s }
-    else # nothing found, maybe an invalid something
-      {}
+      bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
+    in [:text | :textarea | :engagement_juridique| :dossier_link | :email| :phone| :iban| :siret | :formatted, v]
+      v.to_s
+    else
+      nil
     end
-    (result || {}).merge(prefilled: true)
+  end
+
+  def cast_value_for_type_de_champ(value, type_de_champ)
+    { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }.merge(prefilled: true)
   end
 
   def propagate_prefill(data)

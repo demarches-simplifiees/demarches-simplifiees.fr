@@ -6,13 +6,13 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
            to: :type_de_champ
 
   MAPPING_TYPE_TO_TYPE_DE_CHAMP = {
-    "Chaine de caractère" => %w[text textarea engagement_juridique dossier_link email phone iban siret drop_down_list formatted],
-    "Nombre à virgule"    => %w[decimal_number],
-    "Nombre Entier"       => %w[integer_number],
-    "Booléen"             => %w[checkbox yes_no],
-    "Date"                => %w[date],
-    "Date et heure"       => %w[datetime],
-    "Liste à choix multiples" => %w[multiple_drop_down_list]
+    Referentiels::MappingFormComponent::TYPES[:string] => %w[text textarea engagement_juridique dossier_link email phone iban siret drop_down_list formatted],
+    Referentiels::MappingFormComponent::TYPES[:decimal_number] => %w[decimal_number],
+    Referentiels::MappingFormComponent::TYPES[:integer_number] => %w[integer_number],
+    Referentiels::MappingFormComponent::TYPES[:boolean] => %w[checkbox yes_no],
+    Referentiels::MappingFormComponent::TYPES[:date] => %w[date],
+    Referentiels::MappingFormComponent::TYPES[:datetime] => %w[datetime],
+    Referentiels::MappingFormComponent::TYPES[:array] => %w[multiple_drop_down_list]
   }.freeze
 
   def source_tdcs
@@ -35,7 +35,7 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
 
   def tdc_targets(referentiel_mapping_element)
     mapping_type = referentiel_mapping_element[:type]
-    allowed_types = MAPPING_TYPE_TO_TYPE_DE_CHAMP[mapping_type] || []
+    allowed_types = MAPPING_TYPE_TO_TYPE_DE_CHAMP[mapping_type.to_sym] || []
 
     source_tdcs
       .reject { |it| it.stable_id == @type_de_champ.stable_id }

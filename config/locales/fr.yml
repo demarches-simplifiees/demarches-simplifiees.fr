@@ -35,6 +35,13 @@ fr:
   utils:
     'yes': Oui
     'no': Non
+    string: Chaîne de caractères
+    decimal_number: Nombre à virgule
+    integer_entier: Nombre entier
+    boolean: Booléen
+    date: Date
+    datetime: Date et heure
+    array: Liste à choix multiple
     email_suggest:
       wanna_say: 'Voulez-vous dire ?'
 
