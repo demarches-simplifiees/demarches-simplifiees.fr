@@ -2,36 +2,41 @@
 
 describe 'Referentiel API:' do
   let(:zone) { create(:zone) }
+  let(:user) { create(:user) }
+  let(:administrateur) { create(:administrateur, user:) }
+  let(:instructeur) { create(:instructeur, user:) }
   let(:service) { create(:service, administrateur:) }
-  let(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, zones: [zone], service:, administrateurs: [administrateur], instructeurs: [create(:instructeur)]) }
-  let(:administrateur) { create(:administrateur, user: create(:user)) }
+  let!(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, zones: [zone], service:, administrateurs: [administrateur], instructeurs: [instructeur]) }
   let(:types_de_champ_public) do
     [
+      { type: :referentiel, libelle: 'Numero de bâtiment', stable_id: referentiel_stable_id },
       { type: :textarea, libelle: 'un autre champ' },
       { type: :text, libelle: 'prefill with $.statut', stable_id: prefill_text_stable_id },
-      { type: :checkbox, libelle: 'prefill with $.is_active', stable_id: prefill_boolean_stable_id }
+      { type: :checkbox, libelle: 'prefill with $.is_active', stable_id: prefill_boolean_stable_id },
+      {
+        type: :repetition,
+        libelle: "repetition",
+        mandatory: false,
+        children: [
+          { type: :text, libelle: 'prefill with $.addresses[0].street', stable_id: prefill_repetition_children_stable_id }
+        ]
+      }
     ]
   end
+  let(:referentiel_stable_id) { 21 }
   let(:prefill_text_stable_id) { 42 }
   let(:prefill_boolean_stable_id) { 84 }
+  let(:prefill_repetition_children_stable_id) { 168 }
 
   before do
-    login_as administrateur.user, scope: :user
+    Instructeur.where(user:).where.not(id: instructeur.id).destroy_all # remove other instructeurs
+    login_as instructeur.user, scope: :user
   end
 
-  scenario 'Setup as admin', js: true, vcr: true do
+  scenario 'Setup as admin, fill in as user, view it as instructeur', js: true, vcr: true do
     Flipper.enable(:referentiel_type_de_champ, procedure)
     visit champs_admin_procedure_path(procedure)
-    # add a second champ (when editing as user, need another champ to focus out of the referentiel champ which triggers autosave)
-    within(all('.type-de-champ').last) do
-      add_champ
-    end
-    expect(page).to have_selector('.type-de-champ-container', count: 4) # wait 4th champ added
-    within(all('.type-de-champ-container').last) do
-      select('Référentiel à configurer (avancé)', from: 'Type de champ')
-      fill_in 'Libellé du champ', with: 'Nunero de bâtiment'
-      click_on('Configurer le champ')
-    end
+    click_on('Configurer le champ')
 
     # configure connection
     VCR.use_cassette('referentiel/rnb_as_admin') do
@@ -49,46 +54,62 @@ describe 'Referentiel API:' do
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "Saisir votre numero de bâtiment")
       fill_in("Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)", with: "PG46YY6YWCX8")
       click_on('Étape suivante')
-      expect(page).to have_content("Configuration du champ « Nunero de bâtiment » ")
+      wait_until { Referentiel.count == 1 }
+      expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
     end
-
-    # ensure response and configure mapping
+    # check response and configure mapping
     click_on("Afficher la réponse récupérée à partir de la requête configurée")
-    expect(page).to have_content("PG46YY6YWCX8") # ensure api was called
+    expect(page).to have_content("PG46YY6YWCX8") # check api was called
 
-    # checek prefill
-    find("label[for=status]").click
-    scroll_to(find_field('is_active'), align: :center)
-    find("label[for=is_active]").click
+    #
+    # map prefilled champs
+    #
+    custom_check("status")
+    custom_check('is_active')
+    custom_check('addresses-0-street')
+
+    ## fill a custom libelle to display to user
+    fill_in("type_de_champ_referentiel_mapping__.point.coordinates_libelle", with: "Coordonées du point")
+    fill_in("type_de_champ_referentiel_mapping__.point.type_libelle", with: "Type de point")
+
+    # submit and check values
     click_on('Étape suivante')
-
-    # wait for next page load
     expect(page).to have_content("La configuration du mapping a bien été enregistrée")
-
-    # then ensure choosen option are reflected on model
     referentiel_tdc = Referentiel.first.types_de_champ.first
     expect(referentiel_tdc.referentiel_mapping.dig("$.status", "prefill")).to eq("1")
     expect(referentiel_tdc.referentiel_mapping.dig("$.is_active", "prefill")).to eq("1")
 
-    # ensure checked boxes enabled prefill opts
+    ##
+    # choose prefill stable ids
+    ###
     expect(page).to have_content("$.status")
-    expect(page).to have_content("$.is_active")
-
-    # then choose another stable than the default one
     page.find("select[name='type_de_champ[referentiel_mapping][$.status][prefill_stable_id]']")
       .select('prefill with $.statut')
-
-    # now should decide mapping
+    # one boolean champ, nothing to select
+    expect(page).to have_content("$.is_active")
+    # choose another stable than the default one for the repetition
+    expect(page).to have_content("$.addresses[0].street")
+    page.find("select[name='type_de_champ[referentiel_mapping][$.addresses{0}.street][prefill_stable_id]']")
+      .select('repetition - prefill with $.addresses[0].street')
+    ##
+    # choose display_usager display_instructeur
+    ###
+    # choose string value for usager and instructeur
+    custom_check('point-type-display_usager')
+    custom_check('point-type-display_instructeur')
+    # choose array values only for usager
+    custom_check('point-coordinates-display_usager')
+    # choose string value only instructeur
+    custom_check('shape-type-display_instructeur')
     click_on("Valider")
-    referentiel_tdc.reload
 
-    # back to champs and ensure it's considered as configured
+    wait_until { referentiel_tdc.reload .referentiel_mapping.dig("$.status", "prefill_stable_id").present? }
+    # back to champs and check it's considered as configured
     expect(page).to have_content("Configuré")
 
-    # ensure referentiel deep option exists
+    # check referentiel deep option exists
     expect(referentiel_tdc.referentiel_mapping.dig("$.status", "prefill_stable_id").to_s).to eq(prefill_text_stable_id.to_s)
     expect(referentiel_tdc.referentiel_mapping.dig("$.is_active", "prefill_stable_id").to_s).to eq(prefill_boolean_stable_id.to_s)
-
     # now procedure should be publishable
     visit admin_procedure_path(procedure)
     click_on("Publier")
@@ -99,6 +120,7 @@ describe 'Referentiel API:' do
     within(".form") do
       click_on("Publier")
     end
+    wait_until { procedure.reload.published_revision.present? }
 
     # start a dossier
     visit commencer_path(procedure.path)
@@ -112,10 +134,9 @@ describe 'Referentiel API:' do
     end
 
     expect(page).to have_content("Identité enregistrée")
-    expect(page).to have_css('label', text: "Nunero de bâtiment")
 
     # fill in champ
-    fill_in("Nunero de bâtiment", with: "okokok")
+    fill_in("Numero de bâtiment", with: "okokok")
     fill_in("un autre champ", with: "focus out for autosave")
     # update champ should not trigger an error and render a feedback
     expect(page).to have_content("Recherche en cours.")
@@ -133,7 +154,7 @@ describe 'Referentiel API:' do
 
     # failed search
     VCR.use_cassette('referentiel/kthxbye_as_user') do
-      fill_in("Nunero de bâtiment", with: "kthxbye")
+      fill_in("Numero de bâtiment", with: "kthxbye")
       fill_in("un autre champ", with: "focus out for autosave")
 
       perform_enqueued_jobs do
@@ -144,20 +165,54 @@ describe 'Referentiel API:' do
 
     # success search
     VCR.use_cassette('referentiel/rnb_as_user') do
-      fill_in("Nunero de bâtiment", with: "PG46YY6YWCX8")
+      fill_in("Numero de bâtiment", with: "PG46YY6YWCX8")
       perform_enqueued_jobs do
         expect(page).to have_content("Référence trouvée : PG46YY6YWCX8")
         dossier = Dossier.last
-        # check prefill in db
-        expect(dossier.project_champs.find(&:referentiel?).value).to eq("PG46YY6YWCX8")
-        expect(dossier.project_champs.find(&:checkbox?).value).to eq("true")
-        expect(dossier.project_champs.find(&:text?).value).to eq("constructed")
 
-        # check prefill reported in ui
-        expect(page).to have_selector("##{dossier.project_champs.find(&:checkbox?).input_id}[value='true'][checked]")
-        expect(page).to have_selector("##{dossier.project_champs.find(&:text?).input_id}[value='constructed']")
-        expect(page).to have_content("Donnée remplie automatiquement.", count: 2)
+        # check prefill values in db
+        expect(dossier.project_champs_public_all.find { it.stable_id.to_s == referentiel_stable_id.to_s }.value).to eq("PG46YY6YWCX8")
+        expect(dossier.project_champs_public_all.find { it.stable_id.to_s == prefill_text_stable_id.to_s }.value).to eq("constructed")
+        expect(dossier.project_champs_public_all.find { it.stable_id.to_s == prefill_boolean_stable_id.to_s }.value).to eq("true")
+        repetition_values = dossier.project_champs_public_all.filter { it.stable_id.to_s == prefill_repetition_children_stable_id.to_s }.map(&:value)
+        expect(repetition_values).to include("rue du puits")
+        expect(repetition_values).to include("place de la bourse")
+
+        # check webpage was also updated
+        expect(page).to have_content("Donnée remplie automatiquement.", count: 4)
+
+        # check display_usager populated web page too
+        page.find("button[aria-controls=display_usager]").click
+        within(".fr-collapse#display_usager") do
+          # now we check that the filled libelle for the mapping and the value are in the webpage, with the accordion
+          expect(page).to have_content("Coordonées du point : -0.570505392116188, 44.841034137099996")
+          expect(page).to have_content("Type de point : Point")
+        end
+
+        # check we can create a dossier
+        click_on("Déposer le dossier")
+        wait_until { Dossier.en_construction.count == 1 }
+
+        created_dossier = Dossier.last
+        # check data is also visible on demande page as an usager
+        visit demande_dossier_path(created_dossier)
+        expect(page).to have_content("Coordonées du point : -0.570505392116188, 44.841034137099996")
+        expect(page).to have_content("Type de point : Point")
+        expect(page).not_to have_content("$.shape.type") # not displayed to usager
+
+        # check data is also visible on demande page as an usager
+        visit instructeur_dossier_path(procedure, created_dossier)
+        expect(page).to have_content("Sections du formulaire")
+        expect(page).not_to have_content("Coordonées du point")
+        expect(page).to have_content("Type de point")
+        expect(page).to have_content("$.shape.type")
       end
     end
+  end
+
+  # find input, center it in the screen, then click on label (otherwise element out of scope)
+  def custom_check(field_id)
+    scroll_to(find_field(field_id), align: :center)
+    find("label[for=#{field_id}]").click
   end
 end
