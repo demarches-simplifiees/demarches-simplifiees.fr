@@ -27,7 +27,7 @@
         %pre= JSON.pretty_generate(@referentiel.last_response_body)
 
       %section
-        .fr-table
+        .fr-table.fr-table--bordered
           .fr-table__wrapper
             .fr-table__container
               .fr-table__content
@@ -35,10 +35,10 @@
                   %caption Complétez le tableau de mapping ci-dessous en fonction des données que vous souhaitez exploiter
                   %thead
                     %tr
-                      %th{ scope: "col" } Propriété
-                      %th.fr-cell--fixed{ scope: "col" } Exemple de donnée
-                      %th{ scope: "col" } Type de donnée
-                      %th{ scope: "col" }
+                      %th.fr-cell--fixed Propriété
+                      %th Exemple de donnée
+                      %th Type de donnée
+                      %th
                         Utiliser la donnée
                         %br
                         pour préremplir
@@ -46,14 +46,14 @@
                         un champ du
                         %br
                         formulaire
-                      %th{ scope: "col" }
+                      %th
                         Libellé de la donnée récupérée
                         %br
                         (pour afficher à l'usager et/ou l'instructeur)
                   %tbody
                     - last_request_keys.sort.each do |jsonpath, example_value|
                       %tr{ data: { controller: "referentiel-mapping" } }
-                        %td
+                        %td.fr-cell--fixed
                           %span.hidden{ id: label_check_prefill(jsonpath) }= "Utiliser #{jsonpath} pour préremplir le formulaire"
                           = jsonpath
                           = hidden_field_tag attribute_name(jsonpath, "example_value"), example_value

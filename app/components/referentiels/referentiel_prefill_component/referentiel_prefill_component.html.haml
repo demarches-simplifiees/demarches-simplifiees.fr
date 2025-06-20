@@ -1,4 +1,4 @@
-.fr-table
+.fr-table.fr-table--bordered
   .fr-table__wrapper
     .fr-table__container
       .fr-table__content
@@ -6,14 +6,14 @@
           %caption.fr-text--regular.fr-text--sm Indiquez les champs du formulaire usager qui doivent être préremplis avec les données issues du référentiel
           %thead
             %tr
-              %th{ scope: "col" } Propriété
-              %th.fr-cell--fixed{ scope: "col" } Exemple de donnée
+              %th.fr-cell--fixed{ role: "columnheader" } Propriété
+              %th{ scope: "col" } Exemple de donnée
               %th{ scope: "col" } Type de Donnée
               %th{ scope: "col" } Champ du formulaire usager à préremplir
           %tbody
             - referentiel_mapping_prefillable.sort.each do |jsonpath, mapping_opts|
               %tr
-                %td= jsonpath
+                %td.fr-cell--fixed= jsonpath
                 %td.fr-cell--multiline= mapping_opts[:example_value]
                 %td= mapping_opts[:type]
                 %td= prefill_stable_id_tag(jsonpath, mapping_opts)
