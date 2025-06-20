@@ -379,6 +379,22 @@ describe Experts::AvisController, type: :controller do
 
         it { is_expected.to redirect_to(root_path) }
       end
+
+      context "when there are instructeurs followers" do
+        before do
+          instructeur.followed_dossiers << dossier
+          subject
+        end
+
+        it "create message notification for instructeurs follower" do
+          expect(DossierNotification.count).to eq(1)
+
+          notification = DossierNotification.last
+          expect(notification.dossier_id).to eq(dossier.id)
+          expect(notification.instructeur_id).to eq(instructeur.id)
+          expect(notification.notification_type).to eq("message")
+        end
+      end
     end
 
     describe '#avis_new' do
