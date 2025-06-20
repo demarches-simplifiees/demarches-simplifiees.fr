@@ -16,6 +16,9 @@ describe ResetExpiringDossiersJob do
       expect(expiring_dossier_brouillon.reload.brouillon_close_to_expiration_notice_sent_at).to eq(nil)
       expect(expiring_dossier_en_construction.reload.en_construction_close_to_expiration_notice_sent_at).to eq(nil)
       expect(expiring_dossier_en_termine.reload.termine_close_to_expiration_notice_sent_at).to eq(nil)
+      expect(expiring_dossier_brouillon.expired_at).to be_within(1.hour).of(2.months.from_now)
+      expect(expiring_dossier_en_construction.expired_at).to be_within(1.hour).of(2.months.from_now)
+      expect(expiring_dossier_en_termine.expired_at).to be_within(1.hour).of(2.months.from_now)
     end
   end
 end

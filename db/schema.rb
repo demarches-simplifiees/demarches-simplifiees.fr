@@ -503,6 +503,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_115833) do
     t.datetime "en_construction_at", precision: nil
     t.datetime "en_construction_close_to_expiration_notice_sent_at", precision: nil
     t.datetime "en_instruction_at", precision: nil
+    t.datetime "expired_at"
     t.boolean "for_procedure_preview", default: false, null: false
     t.boolean "for_tiers", default: false, null: false
     t.boolean "forced_groupe_instructeur", default: false, null: false
