@@ -68,7 +68,7 @@ RSpec.describe DossierNotification, type: :model do
         other_instructeur_follower.followed_dossiers << dossier
       end
 
-      context "when user send a message" do
+      context "when user or expert send a message" do
         it "create notification for instructeurs followers" do
           subject
 
