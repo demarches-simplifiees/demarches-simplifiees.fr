@@ -3,6 +3,8 @@
 class Referentiels::ReferentielDisplayBaseComponent < ApplicationComponent
   delegate :type_de_champ, to: :@champ
   delegate :safe_referentiel_mapping,
+           :referentiel_mapping_displayable_for_usager,
+           :referentiel_mapping_displayable_for_instructeur,
            to: :type_de_champ
   attr_reader :champ
 
@@ -15,6 +17,10 @@ class Referentiels::ReferentielDisplayBaseComponent < ApplicationComponent
   end
 
   private
+
+  def safe_value_json
+    @safe_value_json ||= Hash(@champ.value_json).with_indifferent_access
+  end
 
   def libelle(jsonpath)
     safe_referentiel_mapping[jsonpath]&.dig(:libelle).presence || jsonpath
