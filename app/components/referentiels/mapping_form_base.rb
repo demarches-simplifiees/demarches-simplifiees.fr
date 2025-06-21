@@ -30,7 +30,7 @@ class Referentiels::MappingFormBase < ApplicationComponent
   end
 
   def attribute_name(jsonpath, attribute_name)
-    "type_de_champ[referentiel_mapping][#{jsonpath}][#{JSONPath.jsonpath_to_simili(attribute_name)}]"
+    "type_de_champ[referentiel_mapping][#{self.class.jsonpath_to_simili(jsonpath)}][#{attribute_name}]"
   end
 
   def bordered_container_class_names
