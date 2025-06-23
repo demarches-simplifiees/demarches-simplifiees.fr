@@ -23,7 +23,7 @@ module Dsfr
 
         {
           "#{dsfr_group_classname}--error" => errors_on_attribute?,
-          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute? && object.public_send(attribute).present?
+          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute? && object.try(attribute).present?
         }
       end
 

@@ -17,3 +17,7 @@ fr:
         hints:
           url_html: "Expected format: https://api_1.ext/<strong>{id}</strong>, the segment <strong>{id}</strong> will be replaced by the field value. The http request will use the GET verb"
           hint: "Example : ID containing 12 chars"
+          "authentication_data[header]": "Example: Authorization"
+          "authentication_data[value]": "Example: Bearer your_token_here"
+        "authentication_data[header]": "Header name for the authentication token"
+        "authentication_data[value]": "Authentication token value"

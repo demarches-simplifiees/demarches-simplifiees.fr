@@ -51,6 +51,24 @@ class Referentiels::APIReferentiel < Referentiel
     end
   end
 
+  def authentication_data_header
+    authentication_data&.fetch('header', '')
+  end
+
+  def authentication_header_token
+    authentication_data&.fetch('value', '')
+  end
+
+  def authentication_by_header_token?
+    [
+      authentication_method == 'header_token',
+      authentication_data_header.present?,
+      authentication_header_token.present?
+    ].all?
+  end
+
+  private
+
   def name_as_uuid # should be uniq, using the url was an idea but not unique
     self.name = SecureRandom.uuid
   end
