@@ -4,11 +4,11 @@ RSpec.describe ReferentielService, type: :service do
   let(:api_referentiel) { create(:api_referentiel, :configured, url:, test_data:) }
   let(:url) { "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/" }
   let(:test_data) { "PG46YY6YWCX8" }
-
-  before do
+  let(:stub_api_call) do
     stub_request(:get, api_referentiel.url.gsub('{id}', query_params))
       .to_return(status:, body: body&.to_json)
   end
+  before { stub_api_call }
 
   describe '.validate_referentiel either it works, either it does not' do
     let(:query_params) { api_referentiel.test_data }
@@ -98,6 +98,22 @@ RSpec.describe ReferentielService, type: :service do
       it "returns a retryable Failure" do
         expect(subject).to be_failure
         expect(subject.failure).to include(retryable: false, reason: StandardError.new('Unknown error'), code: 418)
+      end
+    end
+
+    context 'when referetiel has authentication' do
+      let(:api_referentiel) { create(:api_referentiel, :configured, url:, test_data:, authentication_method: 'header_token', authentication_data: { header: 'Authorization', value: 'Bearer kthxbye' }) }
+      let(:status) { 200 }
+      let(:body) { { body: :ok } }
+      let(:stub_api_call) do
+        stub_request(:get, api_referentiel.url.gsub('{id}', query_params))
+          .with(headers: { 'Authorization' => "Bearer kthxbye" })
+          .to_return(status:, body: body&.to_json)
+      end
+      it 'forwards the authentication header' do
+        expect(subject).to be_success
+        expect(WebMock).to have_requested(:get, api_referentiel.url.gsub('{id}', query_params))
+          .with(headers: { Authorization: "Bearer kthxbye" })
       end
     end
   end
