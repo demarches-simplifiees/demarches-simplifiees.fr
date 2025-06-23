@@ -37,7 +37,7 @@ module Administrateurs
       end
     end
 
-    def update_prefill_type_de_champ
+    def update_prefill_and_display_type_de_champ
       if @type_de_champ.update(referentiel_mapping: @type_de_champ.safe_referentiel_mapping.deep_merge(referentiel_mapping_params))
         redirect_to champs_admin_procedure_path(@procedure), flash: { notice: "La configuration du pré remplissage des champs et/ou affichage des données récupérées a bien été enregistrée" }
       else
@@ -63,16 +63,14 @@ module Administrateurs
       params.require(:type_de_champ)
         .require(:referentiel_mapping)
         .each do |jsonpath_key, attributes|
-          permitted_mapping[Referentiels::MappingFormBase.simili_to_jsonpath(jsonpath_key)] = attributes.permit(:type, :prefill_stable_id, :example_value, :libelle, :prefill).to_h
-          permitted_mapping[jsonpath_key][:prefill] = "0" if !permitted_mapping[jsonpath_key].key?(:prefill)
+          permitted_mapping[Referentiels::MappingFormBase.simili_to_jsonpath(jsonpath_key)] = attributes.permit(:type, :prefill_stable_id, :example_value, :libelle, :prefill, :display_instructeur, :display_usager).to_h
         end
-
       permitted_mapping
     end
 
     def referentiel_params
       params.require(:referentiel)
-        .permit(:type, :mode, :url, :hint, :test_data)
+        .permit(:type, :mode, :url, :hint, :test_data, :authentication_method, authentication_data: [:header, :value])
     rescue ActionController::ParameterMissing
       {}
     end
@@ -87,7 +85,7 @@ module Administrateurs
 
     def build_or_clone_by_id_params
       if params[:referentiel_id]
-        Referentiel.find(params[:referentiel_id]).attributes.slice(*%w[url test_data hint mode type])
+        Referentiel.find(params[:referentiel_id]).attributes.slice(*%w[url test_data hint mode type authentication_data authentication_method])
       else
         params = referentiel_params.to_h
         params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?

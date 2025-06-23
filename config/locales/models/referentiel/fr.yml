@@ -17,4 +17,7 @@ fr:
         hints:
           url_html: "Format attendu : https://api_1.ext/<strong>{id}</strong>, la section <strong>{id}</strong> sera remplacée par la valeur du champ. L'appel se fera en HTTP GET"
           hint: "Exemple : Identifiant de 12 caractères comportant des chiffres et des lettres (exemple : PG46YY6YWCX8)"
-    
+          "authentication_data[header]": "Exemple : Authorization"
+          "authentication_data[value]": "Exemple : Bearer your_token_here"
+        "authentication_data[header]": "Nom de l'en-tête pour le jeton d'authentification"
+        "authentication_data[value]": "Valeur du jeton d'authentification"

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Referentiels::APIReferentiel < Referentiel
+  encrypts :authentication_data
+
   enum :mode, {
     exact_match: 'exact_match',
     autocomplete: 'autocomplete'
@@ -39,6 +41,20 @@ class Referentiels::APIReferentiel < Referentiel
       false
     end
   end
+
+  def authentication_header
+    authentication_data&.fetch('header', '')
+  end
+
+  def authentication_by_header_token?
+    [
+      authentication_method == 'header_token',
+      authentication_data&.fetch('header', '').present?,
+      authentication_data&.fetch('value', '').present?
+    ].all?
+  end
+
+  private
 
   def name_as_uuid # should be uniq, using the url was an idea but not unique
     self.name = SecureRandom.uuid

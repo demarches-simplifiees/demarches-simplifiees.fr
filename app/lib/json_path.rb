@@ -16,23 +16,6 @@ class JSONPath
     end
   end
 
-  # posting real json path to controller is interpreted as nested hashes
-  # ie : repetition[0].field_name becomes
-  # {
-  #   "repetition": [
-  #     { "field_name": "value" }
-  #   ]
-  # }
-  # In case of deeply nested structure it becomes a pain to handle with StrongParameters
-  # So we rewrite the jsonpath to avoid this
-  def self.jsonpath_to_simili(jsonpath)
-    jsonpath.tr('[', '{').tr(']', '}')
-  end
-
-  def self.simili_to_jsonpath(jsonpath)
-    jsonpath.tr('{', '[').tr('}', ']')
-  end
-
   # navigation
   def self.extract_array_name(str)
     str[/^[^\[]+/]
@@ -44,7 +27,14 @@ class JSONPath
 
   # getters
   def self.value(hash, jsonpath)
-    hash&.dig(*jsonpath.split('.')[1..])
+    if jsonpath.include?('[')
+      array_name = extract_array_name(jsonpath)
+      array = get_array(hash, array_name)&.dig(0) || {}
+      key_after_array = extract_key_after_array(jsonpath)
+      value(array, key_after_array)
+    else
+      hash&.dig(*jsonpath.split('.')[1..])
+    end
   end
 
   def self.get_array(hash, array_path)
