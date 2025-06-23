@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
 class Referentiels::APIReferentiel < Referentiel
+  # An encrypted JSON object is used to store authentication data securely and flexibly.
+  # This allows us to store various authentication methods in a single field.
+  # Examples of authentication_data structure:
+  #
+  #   Basic Auth : { "username": "...", "password": "..." }
+  #   OAuth2 : { "client_id": "...", "client_secret": "...", "token_url": "..." }
+  #   Custom header : { "header": "X-API-Key", "value": "..." }
+  #   JWT : { "header": "Authorization", "value": "Bearer ...", "jwt_options": {...} }
+  encrypts :authentication_data
+
   enum :mode, {
     exact_match: 'exact_match',
     autocomplete: 'autocomplete'
   }
+
   validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
   validate :url_allowed?
 
