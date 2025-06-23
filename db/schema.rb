@@ -1143,6 +1143,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
   end
 
   create_table "referentiels", force: :cascade do |t|
+    t.jsonb "authentication_data", default: {}
+    t.string "authentication_method"
     t.datetime "created_at", null: false
     t.string "digest"
     t.string "headers", default: [], array: true
