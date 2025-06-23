@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Referentiels::APIReferentiel < Referentiel
+  encrypts :authentication_data
+
   enum :mode, {
     exact_match: 'exact_match',
     autocomplete: 'autocomplete'
