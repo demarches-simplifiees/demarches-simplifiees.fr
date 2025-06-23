@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_12_115833) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_23_034320) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1138,6 +1138,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_115833) do
   end
 
   create_table "referentiels", force: :cascade do |t|
+    t.jsonb "authentication_data", default: {}
+    t.string "authentication_method"
     t.datetime "created_at", null: false
     t.string "digest"
     t.string "headers", default: [], array: true
