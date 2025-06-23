@@ -54,7 +54,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
           mode: 'exact_match',
           url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
           hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
-          test_data: 'PG46YY6YWCX8'
+          test_data: 'PG46YY6YWCX8',
+          authentication_data: { header: 'Authorization', value: 'Bearer secret-token' },
+          authentication_method: 'header_token'
         }
       end
 
@@ -71,6 +73,8 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(referentiel.url).to eq(referentiel_params[:url])
         expect(referentiel.hint).to eq(referentiel_params[:hint])
         expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+        expect(referentiel.authentication_data).to eq(referentiel_params[:authentication_data])
+        expect(referentiel.authentication_method).to eq(referentiel_params[:authentication_method])
       end
     end
 

@@ -70,7 +70,7 @@ module Administrateurs
 
     def referentiel_params
       params.require(:referentiel)
-        .permit(:type, :mode, :url, :hint, :test_data)
+        .permit(:type, :mode, :url, :hint, :test_data, :authentication_method, authentication_data: [:header, :value])
     rescue ActionController::ParameterMissing
       {}
     end
@@ -85,7 +85,7 @@ module Administrateurs
 
     def build_or_clone_by_id_params
       if params[:referentiel_id]
-        Referentiel.find(params[:referentiel_id]).attributes.slice(*%w[url test_data hint mode type])
+        Referentiel.find(params[:referentiel_id]).attributes.slice(*%w[url test_data hint mode type authentication_data authentication_method])
       else
         params = referentiel_params.to_h
         params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?
