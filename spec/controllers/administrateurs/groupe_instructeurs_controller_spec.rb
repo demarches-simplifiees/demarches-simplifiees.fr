@@ -633,7 +633,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
 
       context 'when csv file is in iso 8859 format' do
-        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_iso_8859.csv') }
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_iso_8859.csv', 'text/csv') }
 
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
@@ -653,7 +653,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
 
       context 'when csv file is in iso 8859 format with invalid characters' do
-        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_iso_8859_invalid_characters.csv') }
+        let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_iso_8859_invalid_characters.csv', 'text/csv') }
 
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
@@ -663,10 +663,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           subject
         end
 
-        it 'works but delete invalid characters' do
+        it 'works and keep special characters' do
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
-          expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhne-Alpes", "Vende", "défaut", "deuxième groupe"])
+          expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "deuxième groupe", "défaut"])
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
           expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
         end

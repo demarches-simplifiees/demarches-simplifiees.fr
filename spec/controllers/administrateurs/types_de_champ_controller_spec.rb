@@ -198,6 +198,15 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(flash.alert).to eq("Importation impossible : le fichier est vide ou mal interprété")
         end
       end
+
+      context 'when the csv file is iso-8859 format, with CRLF line terminators and special characters (even in header)' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel-iso-8859-crlf-special-characters.csv', 'text/csv') }
+        it 'works' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(2)
+          expect(ReferentielItem.first.data).to eq({ "row" => { "adresse" => "115, Boulevard Exelmans, Paris, 75016", "email" => "moha.ali@diplomatie.gouv.fr", "nom" => "Mohamed Ali", "numero" => "UK +447 864 743 320" } })
+          expect(Referentiel.first.headers).to eq(["adresse", "nom", "numéro", "email"])
+        end
+      end
     end
   end
 

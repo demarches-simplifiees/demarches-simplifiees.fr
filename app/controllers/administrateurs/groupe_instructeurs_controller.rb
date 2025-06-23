@@ -6,15 +6,11 @@ module Administrateurs
     include EmailSanitizableConcern
     include Logic
     include GroupeInstructeursSignatureConcern
+    include CsvParsingConcern
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
     ITEMS_PER_PAGE = 25
-    CSV_MAX_SIZE = 1.megabyte
-    CSV_ACCEPTED_CONTENT_TYPES = [
-      "text/csv",
-      "application/vnd.ms-excel"
-    ]
 
     def index
       @procedure = procedure
@@ -343,7 +339,7 @@ module Administrateurs
         flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
       else
-        csv_content = SmarterCSV.process(csv_file, strings_as_keys: true, convert_values_to_numeric: false, force_utf8: true)
+        csv_content = parse_csv(csv_file)
 
         if csv_content.first.has_key?("groupe") && csv_content.first.has_key?("email")
           groupes_emails = csv_content.map { |r| r.to_h.slice('groupe', 'email') }
