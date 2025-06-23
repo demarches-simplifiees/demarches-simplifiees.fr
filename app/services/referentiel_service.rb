@@ -14,7 +14,7 @@ class ReferentielService
   end
 
   def call(query_params)
-    result = API::Client.new.call(url: referentiel.url.gsub('{id}', query_params), timeout: API_TIMEOUT)
+    result = API::Client.new.call(url: referentiel.url.gsub('{id}', query_params), timeout: API_TIMEOUT, headers:)
     handle_api_result(result)
   end
 
@@ -45,6 +45,14 @@ class ReferentielService
       Failure(retryable: false, reason: StandardError.new('Not retryable: 404, 400, 403, 401'), code:)
     in Failure
       Failure(retryable: false, reason: StandardError.new('Unknown error'), code:)
+    end
+  end
+
+  def headers
+    if referentiel.authentication_by_header_token?
+      { referentiel.authentication_header => referentiel.authentication_data['value'] }
+    else
+      {}
     end
   end
 end
