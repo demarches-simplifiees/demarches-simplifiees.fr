@@ -416,6 +416,103 @@ describe Champs::ReferentielChamp, type: :model do
           expect(values).to include('Bob')
         end
       end
+
+      context 'when data is an array of values' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              referentiel: referentiel,
+              referentiel_mapping: {
+                "$.records[0].A" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
+              }
+            },
+            { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
+          ]
+        end
+
+        context 'when data is mapped to text' do
+          let(:data) { { records: [{ A: 'ok' }] } }
+          let(:prefilled_type_de_champ_type) { :text }
+
+          it 'update the prefiiable stable_id with the jsonpath value of the external data' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:text?).value }.from(nil).to("ok")
+          end
+        end
+      end
+
+      context 'when data is an array of nested objects (grist like)' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              referentiel: referentiel,
+              referentiel_mapping: {
+                "$.records[0].fields.B" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
+              }
+            },
+            { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
+          ]
+        end
+
+        context 'when data is mapped to text' do
+          let(:data) do
+            {
+              records: [
+                {
+                  fields: {
+                    B: 'ok'
+                  }
+                }
+              ]
+            }
+          end
+          let(:prefilled_type_de_champ_type) { :text }
+
+          it 'update the prefiiable stable_id with the jsonpath value of the external data' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:text?).value }.from(nil).to("ok")
+          end
+        end
+      end
+
+      context 'when data is an nested array of values' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :referentiel,
+              referentiel: referentiel,
+              referentiel_mapping: {
+                "$.records[0].A[0].B" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
+              }
+            },
+            { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
+          ]
+        end
+
+        context 'when data is mapped to text' do
+          let(:data) do
+            {
+              records: [
+                {
+                  A: [
+                    {
+                      B: 'ok'
+                    }
+                  ]
+                }
+              ]
+            }
+          end
+          let(:prefilled_type_de_champ_type) { :text }
+
+          it 'update the prefiiable stable_id with the jsonpath value of the external data' do
+            expect { subject }
+              .to change { dossier.reload.project_champs.find(&:text?).value }.from(nil).to("ok")
+          end
+        end
+      end
     end
   end
 end

@@ -80,8 +80,11 @@ describe JSONPath do
       expect(described_class.value(hash, '$.simple')).to eq 42
     end
 
-    it 'returns nil if the path is missing' do
-      expect(described_class.value(hash, '$.foo.bar[1].baz')).to be_nil
+    it 'returns nil if the path is not found' do
+      expect(described_class.value(hash, '$.foo.baz[0].baz')).to be_nil
+    end
+    it 'returns nested keys' do
+      expect(described_class.value(hash, '$.foo.bar[1].baz')).to eq('valeur')
     end
   end
   describe '.extract_key_after_array' do
