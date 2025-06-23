@@ -2,6 +2,7 @@
 
 class Expired::DossiersDeletionService < Expired::MailRateLimiter
   BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY = ENV.fetch("BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY", 10_000).to_i
+  BATCH_SIZE = ENV.fetch("EXPIRED_DOSSIERS_BATCH_SIZE", 1000).to_i
 
   def process_never_touched_dossiers_brouillon; delete_never_touched_brouillons; end
 
@@ -26,17 +27,20 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
       .without_brouillon_expiration_notice_sent
       .limit(BROUILLON_DELETION_EMAILS_LIMIT_PER_DAY)
 
-    user_notifications = group_by_user_email(dossiers_close_to_expiration)
+    dossiers_close_to_expiration.includes(:user, :procedure).find_in_batches(batch_size: BATCH_SIZE) do |batch|
+      user_notifications = batch
+        .group_by(&:user)
+        .map { |(user, dossiers)| [user.email, dossiers] }
 
-    user_notifications.each do |(email, dossiers)|
-      all_user_dossiers = all_user_dossiers_brouillon_close_to_expiration(dossiers.first.user).to_a
-      mail = DossierMailer.notify_brouillon_near_deletion(
-        all_user_dossiers,
-        email
-      )
+      user_notifications.each do |(email, dossiers)|
+        mail = DossierMailer.notify_brouillon_near_deletion(
+          dossiers,
+          email
+        )
 
-      send_with_delay(mail)
-      Dossier.where(id: all_user_dossiers.map(&:id)).update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
+        send_with_delay(mail)
+        Dossier.where(id: dossiers.map(&:id)).update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
+      end
     end
   end
 
@@ -59,17 +63,20 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   end
 
   def delete_expired_brouillons_and_notify
-    user_notifications = group_by_user_email(Dossier.brouillon_expired)
-      .map { |(email, dossiers)| [email, dossiers.map(&:hash_for_deletion_mail)] }
+    Dossier.brouillon_expired.find_in_batches(batch_size: BATCH_SIZE) do |batch|
+      user_notifications = batch
+        .group_by(&:user)
+        .map { |(user, dossiers)| [user.email, dossiers.map(&:hash_for_deletion_mail)] }
 
-    Dossier.brouillon_expired.in_batches.destroy_all
+      Dossier.where(id: batch.map(&:id)).destroy_all
 
-    user_notifications.each do |(email, dossiers_hash)|
-      mail = DossierMailer.notify_brouillon_deletion(
-        dossiers_hash,
-        email
-      )
-      send_with_delay(mail)
+      user_notifications.each do |(email, dossiers_hash)|
+        mail = DossierMailer.notify_brouillon_deletion(
+          dossiers_hash,
+          email
+        )
+        send_with_delay(mail)
+      end
     end
   end
 
