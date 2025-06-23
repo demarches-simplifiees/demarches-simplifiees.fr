@@ -180,7 +180,7 @@ RSpec.describe DossierNotification, type: :model do
       it do
         is_expected.to eq({
           demande: true,
-          annotations_instructeur: false,
+          annotations_privees: false,
           avis_externe: false,
           messagerie: false
         })

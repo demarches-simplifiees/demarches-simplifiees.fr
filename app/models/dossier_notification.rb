@@ -141,7 +141,7 @@ class DossierNotification < ApplicationRecord
   def self.notifications_sticker_for_instructeur_dossier(instructeur, dossier)
     types = {
       demande: [:dossier_modifie],
-      annotations_instructeur: [:annotation_instructeur],
+      annotations_privees: [:annotation_instructeur],
       avis_externe: [:avis_externe],
       messagerie: [:message_usager, :message]
     }
