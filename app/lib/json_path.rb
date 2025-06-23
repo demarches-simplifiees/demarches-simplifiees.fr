@@ -27,7 +27,14 @@ class JSONPath
 
   # getters
   def self.value(hash, jsonpath)
-    hash&.dig(*jsonpath.split('.')[1..])
+    if jsonpath.include?('[')
+      array_name = extract_array_name(jsonpath)
+      array = get_array(hash, array_name)&.dig(0) || {}
+      key_after_array = extract_key_after_array(jsonpath)
+      value(array, key_after_array)
+    else
+      hash&.dig(*jsonpath.split('.')[1..])
+    end
   end
 
   def self.get_array(hash, array_path)
