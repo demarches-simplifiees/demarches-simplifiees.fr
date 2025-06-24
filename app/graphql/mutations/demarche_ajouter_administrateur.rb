@@ -2,7 +2,7 @@
 
 module Mutations
   class DemarcheAjouterAdministrateur < Mutations::BaseMutation
-    description "Ajouter un administrateur a une démarche"
+    description "Ajouter un administrateur existant a une démarche. A moins que utilisiez cette mutation sur une instance autre que demarches.numerique.gouv.fr, l'administrateur doit avoir été crée a priori."
 
     argument :demarche, Types::DemarcheDescriptorType::FindDemarcheInput, "La démarche", required: true
     argument :administrateurs, [Types::ProfileInput], "Administrateur à ajouter.", required: true
