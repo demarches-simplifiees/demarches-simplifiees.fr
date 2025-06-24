@@ -3971,7 +3971,9 @@ type Mutation {
   ): CreateDirectUploadPayload
 
   """
-  Ajouter un administrateur a une démarche
+  Ajouter un administrateur existant a une démarche. A moins que utilisiez cette
+  mutation sur une instance autre que demarches.numerique.gouv.fr,
+  l'administrateur doit avoir été crée a priori.
   """
   demarcheAjouterAdministrateur(
     """
