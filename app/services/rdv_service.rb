@@ -132,6 +132,8 @@ class RdvService
   end
 
   def list_rdvs(rdv_ids)
+    return [] if rdv_ids.blank?
+
     refresh_token_if_expired!
 
     response = Typhoeus.get(
