@@ -12,7 +12,6 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception, store: :cookie # define same store in config/initializers/active_storage.rb
 
-  before_action :redirect_to_legacy
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { ENV.fetch("MAINTENANCE_MODE", 'false') == 'true' }
@@ -46,14 +45,6 @@ class ApplicationController < ActionController::Base
       Current.contact_email = CONTACT_EMAIL
       Current.application_base_url = APPLICATION_BASE_URL
     end
-  end
-
-  def redirect_to_legacy
-    # rubocop:disable DS/ApplicationName
-    if !user_signed_in? && request.host == "demarches.numerique.gouv.fr" && ENV.fetch("REDIRECT_GOUV_TO_DS", 'true') == 'true'
-      redirect_to "https://www.demarches-simplifiees.fr#{request.fullpath}", allow_other_host: true
-    end
-    # rubocop:enable DS/ApplicationName
   end
 
   def staging_authenticate
