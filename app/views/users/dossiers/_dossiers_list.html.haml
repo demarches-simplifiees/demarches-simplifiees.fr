@@ -13,6 +13,17 @@
             - else
               = dossier.procedure.libelle
 
+          .badge_info.fr-mb-1w.fr-hidden-md
+            %p.fr-mb-0.width-max-content
+              = t('views.users.dossiers.dossiers_list.n_dossier')
+              = number_with_html_delimiter(dossier.id)
+
+            = status_badge_user(dossier, 'fr-mb-1w')
+
+            - if dossier.pending_correction?
+              %br
+              = pending_correction_badge(:for_user)
+
           %p.fr-icon--sm.fr-icon-user-line
             = demandeur_dossier(dossier)
 
@@ -38,7 +49,7 @@
                 = t('views.users.dossiers.dossiers_list.shared_with', owner: dossier.user_email_for(:display))
                 = dossier.invites.map(&:email).join(', ')
 
-        .text-right
+        .badge_info.text-right.fr-hidden.unhidden-md
           %p.fr-mb-0.width-max-content
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = number_with_html_delimiter(dossier.id)
