@@ -49,7 +49,7 @@ class Instructeurs::CellComponent < ApplicationComponent
       else
         raw_value ? I18n.t('utils.yes') : I18n.t('utils.no')
       end
-    when :attachements
+    when :attachments
       raw_value.present? ? 'présent' : 'absent'
     when :enum
       format_enum(column: @column, raw_value:)
