@@ -246,6 +246,10 @@ module DossierChampsConcern
     with_stream(Champ::MAIN_STREAM, &block)
   end
 
+  def with_champ_stream(champ, &block)
+    with_stream(champ.stream, &block)
+  end
+
   def stream
     @stream || Champ::MAIN_STREAM
   end
@@ -337,6 +341,7 @@ module DossierChampsConcern
   end
 
   def champ_upsert_by!(type_de_champ, row_id)
+    check_valid_stream_on_write?(type_de_champ)
     check_valid_row_id_on_write?(type_de_champ, row_id)
 
     # FIXME: This is a temporary on-demand migration. It will be removed once the full migration is over.
@@ -377,6 +382,18 @@ module DossierChampsConcern
 
     champ.save!
     champ
+  end
+
+  def check_valid_stream_on_write?(type_de_champ)
+    if type_de_champ.private?
+      if stream != Champ::MAIN_STREAM
+        raise "Can not write a private champ to \"#{stream}\" stream"
+      end
+    elsif !with_editing_fork?
+      if stream == Champ::MAIN_STREAM && en_construction?
+        raise 'Can not write to "main" stream on a dossier "en construction"'
+      end
+    end
   end
 
   def check_valid_row_id_on_write?(type_de_champ, row_id)
