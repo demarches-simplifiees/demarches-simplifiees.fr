@@ -43,12 +43,6 @@
     }
   }
 
-  :not(.fr-downloads-group):not(.fr-pagination) > ul {
-    list-style-type: disc;
-    list-style-position: inside;
-    padding-left: $default-padding;
-  }
-
   ol {
     list-style-type: decimal;
     list-style-position: inside;

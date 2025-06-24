@@ -97,25 +97,32 @@
 
 
       - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
-        .flex.justify-end
+        .flex.justify-end.no-flex-xs
           = render partial: 'dossier_actions', locals: { dossier: dossier }
 
       - if @statut == "dossiers-supprimes"
-        .flex.justify-end
+        .flex.justify-end.no-flex-xs
           - if dossier.hidden_by_reason != 'expired'
-            = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
-              Restaurer
+            %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
+              %li
+                = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
+                  Restaurer
 
           - else
             - if dossier.expiration_can_be_extended?
-              = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
-                Restaurer et étendre la conservation (#{dossier.procedure.duree_conservation_dossiers_dans_ds} mois)
+              %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
+                %li
+                  = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
+                    Restaurer et étendre la conservation (#{dossier.procedure.duree_conservation_dossiers_dans_ds} mois)
 
 
             - else
-              .flex.justify-end.flex-gap-2.column.row-lg.align-end
-                = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
-                = render(partial: 'users/dossiers/show/download_attestation', locals: { dossier: dossier })
+              .flex.justify-end.no-flex-xs
+                %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
+                  %li
+                    = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
+                  %li
+                    = render(partial: 'users/dossiers/show/download_attestation', locals: { dossier: dossier })
 
   = paginate dossiers, views_prefix: 'shared'
 

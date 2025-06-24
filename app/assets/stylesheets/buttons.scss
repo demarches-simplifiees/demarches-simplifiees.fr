@@ -231,6 +231,9 @@
       color: $dark-grey;
     }
   }
+  @media (max-width: 48em) {
+    left: 0;
+  }
 }
 
 ul.dropdown-items {

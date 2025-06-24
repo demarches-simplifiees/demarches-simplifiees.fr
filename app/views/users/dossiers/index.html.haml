@@ -10,7 +10,7 @@
     - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2  || @procedures_for_select.size > 1
       .fr-grid-row.fr-grid-row--gutters
         - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
-          .fr-col
+          .fr-col-12.fr-col-md
             #search-2.fr-search-bar
               = form_tag dossiers_path, method: :get, :role => "search", class: "width-100" do
                 = hidden_field_tag :procedure_id, params[:procedure_id]
@@ -20,7 +20,7 @@
                   %button.fr-btn.fr-btn--sm
                     = t('views.users.dossiers.search.label')
         - if @procedures_for_select.size > 1
-          .fr-col
+          .fr-col-12.fr-col-md
             = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
 
     - if @search_terms.blank?
@@ -67,7 +67,7 @@
 
 .fr-container
   .fr-grid-row.fr-grid-row--center
-    .fr-col-xl-10
+    .fr-col-12.fr-col-xl-10
       - if @statut == "en-cours" && @search_terms.blank?
         - if @first_brouillon_recently_updated.present?
           = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
