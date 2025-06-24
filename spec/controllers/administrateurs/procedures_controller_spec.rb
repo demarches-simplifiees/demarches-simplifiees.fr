@@ -1848,4 +1848,30 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe 'GET #show' do
+    subject { get :show, params: { id: procedure.id } }
+
+    context 'when ProConnect is required' do
+      let(:procedure) { create(:procedure, pro_connect_restricted: true, administrateur: admin) }
+      it 'redirects to pro_connect_path and sets a flash message' do
+        subject
+
+        expect(response).to redirect_to(pro_connect_path)
+        expect(flash[:alert]).to eq("Vous devez vous connecter par ProConnect pour accéder à cette démarche")
+      end
+
+      context "and the cookie is set" do
+        before do
+          cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME] = { value: { user_id: admin.user.id }.to_json }
+        end
+
+        it "does not redirect to pro_connect_path" do
+          subject
+
+          expect(response).not_to redirect_to(pro_connect_path)
+        end
+      end
+    end
+  end
 end
