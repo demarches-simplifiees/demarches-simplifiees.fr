@@ -20,6 +20,8 @@ class API::V2::Schema < GraphQL::Schema
       object.is_a?(DeletedDossier) ? object.to_typed_id : GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', object.id)
     elsif object.is_a?(Hash)
       object[:id]
+    elsif object.is_a?(Column)
+      GraphQL::Schema::UniqueWithinType.encode('Column', object.h_id.fetch(:column_id))
     else
       object.to_typed_id
     end
@@ -124,7 +126,16 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::YesNoChampDescriptorType,
     Types::Champs::Descriptor::ReferentielChampDescriptorType,
     Types::Champs::Descriptor::FormattedChampDescriptorType,
-    Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType
+    Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType,
+    Types::Columns::AttachmentsColumnType,
+    Types::Columns::BooleanColumnType,
+    Types::Columns::DateColumnType,
+    Types::Columns::DateTimeColumnType,
+    Types::Columns::DecimalColumnType,
+    Types::Columns::EnumColumnType,
+    Types::Columns::EnumsColumnType,
+    Types::Columns::IntegerColumnType,
+    Types::Columns::TextColumnType
 
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:

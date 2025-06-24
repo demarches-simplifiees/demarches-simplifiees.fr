@@ -504,6 +504,9 @@ class API::V2::StoredQuery
     stringValue
     updatedAt
     prefilled
+    columns {
+      ...ColumnFragment
+    }
     ... on DateChamp {
       date
     }
@@ -721,6 +724,41 @@ class API::V2::StoredQuery
     hasNextPage
     startCursor
     endCursor
+  }
+
+  fragment ColumnFragment on Column {
+    __typename
+    id
+    label
+    ... on TextColumn {
+      value
+    }
+    ... on BooleanColumn {
+      value
+    }
+    ... on DateColumn {
+      value
+    }
+    ... on DateTimeColumn {
+      value
+    }
+    ... on IntegerColumn {
+      value
+    }
+    ... on DecimalColumn {
+      value
+    }
+    ... on EnumColumn {
+      value
+    }
+    ... on EnumsColumn {
+      value
+    }
+    ... on AttachmentsColumn {
+      value {
+        ...FileFragment
+      }
+    }
   }
   GRAPHQL
 

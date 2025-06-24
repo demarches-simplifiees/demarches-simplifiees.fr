@@ -9,7 +9,7 @@ class ExportedColumnFormatter
     case column.type
     when :boolean
       format_boolean(column:, raw_value:, format:)
-    when :attachements
+    when :attachments
       format_attachments(column:, raw_value:)
     when :enum
       format_enum(column:, raw_value:)
