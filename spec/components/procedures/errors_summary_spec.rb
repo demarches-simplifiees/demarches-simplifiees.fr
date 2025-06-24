@@ -25,7 +25,7 @@ describe Procedure::ErrorsSummary, type: :component do
       let(:validation_context) { :types_de_champ_public_editor }
 
       it 'shows errors and links for public only tdc' do
-        expect(page).to have_text("Erreur : Les champs formulaire contiennent des erreurs")
+        expect(page).to have_text("Erreur : Les champs du formulaire contiennent des erreurs")
         expect(page).to have_selector("a", text: "public")
         expect(page).to have_text("doit comporter au moins un champ répétable", count: 1)
         expect(page).not_to have_selector("a", text: "private")
