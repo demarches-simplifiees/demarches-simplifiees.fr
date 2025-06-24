@@ -89,7 +89,7 @@ class Users::SessionsController < Devise::SessionsController
 
       redirect_to root_path
     elsif trusted_device_token.token_valid?
-      trust_device(trusted_device_token.created_at)
+      trust_device(trusted_device_token.created_at, trusted_device_token)
 
       period = ((trusted_device_token.created_at + TRUSTED_DEVICE_PERIOD) - Time.zone.now).to_i / ActiveSupport::Duration::SECONDS_PER_DAY
 
