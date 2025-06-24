@@ -2,12 +2,6 @@
 
 describe TypeDeChamp do
   describe 'validation' do
-    context 'libelle' do
-      it { is_expected.not_to allow_value(nil).for(:libelle) }
-      it { is_expected.not_to allow_value('').for(:libelle) }
-      it { is_expected.to allow_value('Montant projet').for(:libelle) }
-    end
-
     context 'type' do
       it { is_expected.not_to allow_value(nil).for(:type_champ) }
       it { is_expected.not_to allow_value('').for(:type_champ) }
@@ -144,7 +138,7 @@ describe TypeDeChamp do
       type_de_champ.libelle = ''
       expect(type_de_champ.validate).to be_falsey
       messages = type_de_champ.errors.full_messages
-      expect(messages.size).to eq(2)
+      expect(messages.size).to eq(1)
       expect(messages.last).to eq("Le champ « La liste » doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>")
     end
   end

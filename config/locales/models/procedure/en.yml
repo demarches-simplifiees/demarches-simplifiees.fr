@@ -88,6 +88,7 @@ en:
               empty_drop_down: 'requires at least one option'
               empty_csv: 'requires at least one csv file'
               inconsistent_header_section: "%{custom_message}"
+              missing_libelle: "field label in position %{position} must be filled"
               expression_reguliere_invalid: "is invalid"
               referentiel_not_ready: "is not configured"
             draft_types_de_champ_private:
@@ -97,6 +98,7 @@ en:
               empty_drop_down: 'requires at least one option'
               empty_csv: 'requires at least one csv file'
               inconsistent_header_section: "%{custom_message}"
+              missing_libelle: "field label in position %{position} must be filled"
               expression_reguliere_invalid: "is invalid"
             attestation_template:
               format: "%{attribute} %{message}"
