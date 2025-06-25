@@ -3,11 +3,10 @@
 class Dossiers::MessageComponent < ApplicationComponent
   include DossierHelper
 
-  def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false, groupe_gestionnaire: nil, heading_level: 'h2')
+  def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, groupe_gestionnaire: nil, heading_level: 'h2')
     @commentaire = commentaire
     @connected_user = connected_user
     @messagerie_seen_at = messagerie_seen_at
-    @show_reply_button = show_reply_button
     @groupe_gestionnaire = groupe_gestionnaire
     @heading_level = heading_level
   end
@@ -38,10 +37,6 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   def soft_deletable?
     commentaire.soft_deletable?(connected_user)
-  end
-
-  def show_reply_button?
-    @show_reply_button
   end
 
   def delete_button_text

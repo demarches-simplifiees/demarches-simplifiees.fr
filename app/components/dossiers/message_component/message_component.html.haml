@@ -30,10 +30,6 @@
       - commentaire.piece_jointe.each do |attachment|
         = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
 
-  - if show_reply_button?
-    = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-go-back-line fr-btn--icon-left', onclick: 'document.querySelector("#commentaire_body").focus()' do
-      = t('.reply')
-
 - if commentaire.sent_by?(connected_user)
   .icon-avatar{ class: commentaire_class(commentaire, connected_user) }
     = icon

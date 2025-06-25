@@ -6,7 +6,6 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       commentaire: commentaire,
       connected_user: connected_user,
       messagerie_seen_at: seen_at,
-      show_reply_button: show_reply_button,
       groupe_gestionnaire: groupe_gestionnaire
     )
   end
@@ -19,13 +18,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
   describe 'for dossier' do
     let(:connected_user) { dossier.user }
     let(:dossier) { create(:dossier, :en_construction) }
-    let(:show_reply_button) { true }
     let(:commentaire) { create(:commentaire, dossier: dossier) }
     let(:groupe_gestionnaire) { nil }
 
     subject { render_inline(component).to_html }
-
-    it { is_expected.to have_button("Répondre") }
 
     context 'escape <img> tag' do
       before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
@@ -212,13 +208,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
   end
 
   describe 'groupe_gestionnaire' do
-    let(:show_reply_button) { false }
     let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin)) }
     let(:groupe_gestionnaire) { commentaire.groupe_gestionnaire }
     let(:connected_user) { commentaire.sender }
     subject { render_inline(component).to_html }
-
-    it { is_expected.not_to have_button("Répondre") }
 
     context 'escape <img> tag' do
       before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
