@@ -7,7 +7,7 @@
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
+  = render Dsfr::InputComponent.new(form: f, attribute: :body, autoresize: false, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
 
   - if local_assigns.has_key?(:dossier)
     .fr-mt-3w.fr-input-group
