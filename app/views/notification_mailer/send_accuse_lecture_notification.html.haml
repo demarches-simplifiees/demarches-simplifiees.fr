@@ -24,3 +24,6 @@
   %br
     = t('layouts.mailers.signature.team')
     = APPLICATION_NAME
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', dossier: @dossier
