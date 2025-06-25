@@ -21,21 +21,18 @@
     - else
       = render SimpleFormatComponent.new(commentaire.body, allow_a: false, allow_autolink: groupe_gestionnaire.nil? && commentaire.sent_by_instructeur?)
 
+  - if soft_deletable?
+    = button_to delete_url, method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
+      = delete_button_text
 
-  .message-extras.flex.justify-start
-    - if soft_deletable?
-      = button_to delete_url, method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
-        = delete_button_text
+  - if groupe_gestionnaire.nil? && commentaire.piece_jointe.attached?
+    .fr-mt-2w
+      - commentaire.piece_jointe.each do |attachment|
+        = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
 
-    - if groupe_gestionnaire.nil? && commentaire.piece_jointe.attached?
-      .fr-ml-2w
-        - commentaire.piece_jointe.each do |attachment|
-          = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
-
-
-    - if show_reply_button?
-      = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-go-back-line fr-btn--icon-left', onclick: 'document.querySelector("#commentaire_body").focus()' do
-        = t('.reply')
+  - if show_reply_button?
+    = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-go-back-line fr-btn--icon-left', onclick: 'document.querySelector("#commentaire_body").focus()' do
+      = t('.reply')
 
 - if commentaire.sent_by?(connected_user)
   .icon-avatar{ class: commentaire_class(commentaire, connected_user) }
