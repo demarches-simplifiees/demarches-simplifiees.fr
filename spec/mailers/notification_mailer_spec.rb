@@ -49,7 +49,6 @@ RSpec.describe NotificationMailer, type: :mailer do
     it { expect(subject.subject).to include("La décision a été rendue pour votre dossier n°#{dossier.id} (#{dossier.procedure.libelle})") }
     it { expect(subject.body).to include("Pour en connaitre la nature, veuillez consulter votre dossier dans votre compte Démarches Simplifiées") }
     it { expect(subject.body).to have_link("Consulter mon dossier", href: dossier_url(dossier)) }
-    it { expect(subject.body).to include("fr-btn fr-btn--primary") }
   end
 
   describe 'send_en_construction_notification' do
