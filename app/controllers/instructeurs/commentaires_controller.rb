@@ -10,7 +10,7 @@ module Instructeurs
       retrieve_procedure_presentation if current_instructeur
       if commentaire.sent_by?(current_instructeur) || commentaire.sent_by?(current_expert)
         commentaire.soft_delete!
-        set_notifications_dossier
+        set_notifications
 
         flash.notice = t('.notice')
       else
