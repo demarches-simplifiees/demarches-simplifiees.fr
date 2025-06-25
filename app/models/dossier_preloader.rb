@@ -40,7 +40,7 @@ class DossierPreloader
   private
 
   def revisions(pj_template: false)
-    @revisions ||= ProcedureRevision.where(id: @dossiers.pluck(:revision_id).uniq)
+    @revisions ||= ProcedureRevision.where(id: @dossiers.pluck(:revision_id, :submitted_revision_id).flatten.compact.uniq)
       .includes(procedure: [], revision_types_de_champ: { parent_type_de_champ: [], types_de_champ: [] }, types_de_champ_public: [], types_de_champ_private: [], types_de_champ: pj_template ? { piece_justificative_template_attachment: :blob } : [])
       .index_by(&:id)
   end
@@ -81,6 +81,10 @@ class DossierPreloader
     revision = revisions(pj_template:)[dossier.revision_id]
     if revision.present?
       dossier.association(:revision).target = revision
+    end
+    submitted_revision = revisions[dossier.submitted_revision_id]
+    if submitted_revision.present?
+      dossier.association(:submitted_revision).target = submitted_revision
     end
     dossier.association(:champs).target = champs
 

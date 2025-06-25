@@ -178,6 +178,7 @@ FactoryBot.define do
 
         processed_at = DossierWithReferenceDate.assign(dossier)
         dossier.traitements.passer_en_construction(processed_at:)
+        dossier.submitted_revision_id = dossier.revision_id
 
         dossier.save!
       end
@@ -190,6 +191,7 @@ FactoryBot.define do
 
         processed_at = DossierWithReferenceDate.assign(dossier)
         dossier.traitements.passer_en_instruction(processed_at:)
+        dossier.submitted_revision_id = dossier.revision_id
 
         dossier.save!
       end
@@ -206,6 +208,7 @@ FactoryBot.define do
 
         processed_at = DossierWithReferenceDate.assign(dossier)
         dossier.traitements.accepter(motivation: evaluator.motivation, processed_at:)
+        dossier.submitted_revision_id = dossier.revision_id
 
         dossier.save!
       end
@@ -222,6 +225,7 @@ FactoryBot.define do
 
         processed_at = DossierWithReferenceDate.assign(dossier)
         dossier.traitements.refuser(motivation: evaluator.motivation, processed_at:)
+        dossier.submitted_revision_id = dossier.revision_id
 
         dossier.save!
       end
@@ -238,6 +242,7 @@ FactoryBot.define do
 
         processed_at = DossierWithReferenceDate.assign(dossier)
         dossier.traitements.classer_sans_suite(motivation: evaluator.motivation, processed_at:)
+        dossier.submitted_revision_id = dossier.revision_id
 
         dossier.save!
       end

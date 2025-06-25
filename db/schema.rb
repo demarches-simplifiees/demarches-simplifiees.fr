@@ -533,6 +533,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
     t.bigint "revision_id"
     t.string "search_terms"
     t.string "state"
+    t.bigint "submitted_revision_id"
     t.date "sva_svr_decision_on"
     t.datetime "sva_svr_decision_triggered_at"
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: nil
