@@ -14,7 +14,10 @@
   = t("layouts.mailers.accuse_lecture.second_part")
 %p
   = t("layouts.mailers.accuse_lecture.third_part")
-  = link_to APPLICATION_NAME, dossier_url(@dossier)
+
+%p{ style: "text-align: center; margin: 20px 0;" }
+  = link_to t("layouts.mailers.accuse_lecture.button_text"), dossier_url(@dossier),
+            class: "fr-btn fr-btn--primary"
 
 %p
   = t(:best_regards, scope: [:views, :shared, :greetings])
