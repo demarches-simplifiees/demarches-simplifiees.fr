@@ -149,6 +149,14 @@ describe RdvService do
       expect(subject).to eq([rdv])
     end
 
+    context "when the array is empty" do
+      let(:rdv_ids) { [] }
+
+      it "returns an empty array" do
+        expect(subject).to eq([])
+      end
+    end
+
     context "when the request fails" do
       before do
         stub_request(:get, described_class.list_rdvs_url(rdv_ids))
