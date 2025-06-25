@@ -15,7 +15,6 @@ module Maintenance
       Traitement.joins(dossier: :procedure)
         .where(state: Dossier.states.fetch(:en_construction), revision_id: nil)
         .where('traitements.processed_at = dossiers.depose_at')
-        .order(:id)
     end
 
     def process(traitement)
