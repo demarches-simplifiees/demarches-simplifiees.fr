@@ -5,6 +5,7 @@ describe Instructeurs::CommentairesController, type: :controller do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur]) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+
   render_views
 
   context 'as instructeur' do
