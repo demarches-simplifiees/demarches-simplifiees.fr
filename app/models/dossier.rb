@@ -129,6 +129,7 @@ class Dossier < ApplicationRecord
 
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
+  belongs_to :submitted_revision, class_name: 'ProcedureRevision', optional: true, inverse_of: false
   belongs_to :user, optional: true
   belongs_to :batch_operation, optional: true
   has_many :dossier_batch_operations, dependent: :destroy
@@ -1056,6 +1057,10 @@ class Dossier < ApplicationRecord
   end
 
   def update_expired_at = update_column(:expired_at, expiration_date)
+
+  def revision_changed_since_submitted?
+    submitted_revision_id.present? && submitted_revision_id != revision_id
+  end
 
   private
 

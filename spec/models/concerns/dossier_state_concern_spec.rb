@@ -53,6 +53,7 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(0)
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(0)
       expect(dossier.champs.filter { _1.stable_id.in?([90, 92, 93, 97, 961, 951]) }.size).to eq(0)
+      expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
   end
 
@@ -74,6 +75,7 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(0)
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(0)
       expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) }.size).to eq(0)
+      expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
   end
 
