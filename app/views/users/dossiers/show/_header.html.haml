@@ -5,7 +5,7 @@
         = t('views.users.dossiers.show.header.dossier_number_html', dossier_id: dossier.id)
         - if dossier.depose_at.present?
           = t('views.users.dossiers.show.header.submit_date', date_du_dossier: I18n.l(dossier.depose_at))
-      %span
+      %span.fr-text--lg
         = dossier.procedure.libelle
         = status_badge_user(dossier, 'super')
         = pending_correction_badge(:for_user) if dossier.pending_correction?
