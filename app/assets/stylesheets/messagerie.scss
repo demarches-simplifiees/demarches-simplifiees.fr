@@ -6,6 +6,10 @@
   .message {
     width: 80%;
 
+    @media (max-width: 48em) {
+      width: 100%;
+    }
+
     &.from-me {
       margin-left: auto;
     }
@@ -20,6 +24,18 @@ ol.messages-list > li::marker {
   padding: 2 * $default-spacer;
   border-radius: 100%;
   margin-right: 2 * $default-spacer;
+  @media (max-width: 48em) {
+    padding: 0.5 * $default-spacer $default-spacer;
+    margin-right: $default-spacer;
+  }
+}
+
+.from-me .icon-avatar {
+  margin-right: 0;
+  margin-left: 2 * $default-spacer;
+  @media (max-width: 48em) {
+    margin-left: $default-spacer;
+  }
 }
 
 .message {
@@ -54,4 +70,10 @@ ol.messages-list > li::marker {
   height: 1px;
   background: var(--border-default-grey);
   margin: 0;
+}
+
+.icon-sm-for-xs::before {
+  @media (max-width: 48em) {
+    --icon-size: 1rem;
+  }
 }

@@ -66,11 +66,11 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   def icon
     if commentaire.sent_by_system?
-      dsfr_icon('fr-icon-mail-fill')
+      dsfr_icon('fr-icon-mail-fill icon-sm-for-xs')
     elsif commentaire.sent_by_usager?
-      dsfr_icon('fr-icon-folder-user-fill')
+      dsfr_icon('fr-icon-folder-user-fill icon-sm-for-xs')
     else
-      dsfr_icon('fr-icon-user-fill')
+      dsfr_icon('fr-icon-user-fill icon-sm-for-xs')
     end
   end
 

@@ -1,5 +1,6 @@
-.icon-avatar{ class: commentaire_class(commentaire, connected_user) }
-  = icon
+- if !commentaire.sent_by?(connected_user)
+  .icon-avatar{ class: commentaire_class(commentaire, connected_user) }
+    = icon
 
 .width-100.fr-p-2w{ class: commentaire_class(commentaire, connected_user) }
   = tag.send(heading_level, class: 'fr-h6') do
@@ -35,3 +36,7 @@
     - if show_reply_button?
       = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-go-back-line fr-btn--icon-left', onclick: 'document.querySelector("#commentaire_body").focus()' do
         = t('.reply')
+
+- if commentaire.sent_by?(connected_user)
+  .icon-avatar{ class: commentaire_class(commentaire, connected_user) }
+    = icon
