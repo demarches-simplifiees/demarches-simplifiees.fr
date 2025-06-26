@@ -129,7 +129,9 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       expect(page).to have_text("L’attestation a été publiée")
 
       fill_in "Intitulé de la direction", with: "plop"
-      click_on "Publier les modifications"
+      accept_alert do
+        click_on "Publier les modifications"
+      end
       expect(procedure.reload.attestation_template.label_direction).to eq("plop")
       expect(page).to have_text(/La nouvelle version de l’attestation/)
     end

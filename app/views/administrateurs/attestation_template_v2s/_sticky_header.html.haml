@@ -10,11 +10,11 @@
 
       %span.no-wrap
         - if @procedure.attestation_templates.many?
-          = link_to reset_admin_procedure_attestation_template_v2_path(@procedure), class: "fr-btn fr-btn--secondary fr-ml-2w", method: :post do
+          = link_to reset_admin_procedure_attestation_template_v2_path(@procedure), class: "fr-btn fr-btn--secondary fr-ml-2w", data: { confirm: 'Êtes-vous sûr de vouloir réinitialiser les modifications ?' }, method: :post do
             Réinitialiser les modifications
 
         %button.fr-btn.fr-ml-2w{ form: "attestation-template", name: field_name(:attestation_template, :state), value: "published",
-          data: { 'disable-with': "Publication en cours…", controller: 'autosave-submit' } }
+          data: { 'disable-with': "Publication en cours…", confirm: ('Êtes-vous sûr de vouloir publier les modifications ?' if @procedure.attestation_templates.many?), controller: 'autosave-submit' } }
           - if @procedure.attestation_templates.many?
             Publier les modifications
           - else
