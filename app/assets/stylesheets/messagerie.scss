@@ -5,6 +5,7 @@
 
   .message {
     width: 80%;
+    overflow-wrap: anywhere;
 
     @media (max-width: 48em) {
       width: 100%;

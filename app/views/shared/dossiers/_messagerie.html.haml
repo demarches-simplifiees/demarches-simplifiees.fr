@@ -16,7 +16,7 @@
         .fr-col-12
           - if dossier.messagerie_available?
             %div{ data: { controller: 'hide-target' } }
-              %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mb-2w{ type: 'button', data: { 'hide-target_target': 'source', 'hide-target-hide-source': 'true' } } Nouveau message
+              %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mb-2w.width-100-for-xs{ type: 'button', data: { 'hide-target_target': 'source', 'hide-target-hide-source': 'true' } } Nouveau message
               .fr-mt-2w.fr-hidden{ data: { hide_target_target: 'toHide' } }
                 .fr-grid-row
                   .fr-col-12.fr-col-offset-md-2.fr-col-md-8
