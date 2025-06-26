@@ -5,13 +5,13 @@
       class: 'fr-input',
       disabled: true
   - elsif as_radio_button?
-    %fieldset.fr-fieldset
-      %legend.fr-fieldset__legend
+    %fieldset.fr-fieldset{ "aria-labelledby": "column-filter-legend" }
+      %legend#column-filter-legend.fr-fieldset__legend
         = t('.value')
       - column.options_for_select.each do |label, value|
         .fr-fieldset__element.fr-fieldset__element--inline
           .fr-radio-group
-            = radio_button_tag("filters[][filter]", value, class: "fr-radio")
+            = radio_button_tag("filters[][filter]", value, class: "fr-radio", required: true)
             = label_tag("filters[][filter]_#{value}", label, class: "fr-label")
 
   - elsif column.type.in?([:enum, :enums, :boolean])
