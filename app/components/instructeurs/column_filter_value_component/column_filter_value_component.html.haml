@@ -1,0 +1,33 @@
+#column_filter_value_component
+  - if column.nil?
+    = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
+    = tag.input id: 'value',
+      class: 'fr-input',
+      disabled: true
+  - elsif as_radio_button?
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend
+        = t('.value')
+      - column.options_for_select.each do |label, value|
+        .fr-fieldset__element.fr-fieldset__element--inline
+          .fr-radio-group
+            = radio_button_tag("filters[][filter]", value, class: "fr-radio")
+            = label_tag("filters[][filter]_#{value}", label, class: "fr-label")
+
+  - elsif column.type.in?([:enum, :enums, :boolean])
+    = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
+    = select_tag 'filters[][filter]',
+      options_for_select(column.options_for_select),
+      id: 'value',
+      class: 'fr-select',
+      data: { no_autosubmit: true },
+      required: true
+  - else
+    = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
+    = tag.input name: "filters[][filter]",
+      id: 'value',
+      class: 'fr-input',
+      type: type,
+      maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
+      data: { no_autosubmit: true },
+      required: true

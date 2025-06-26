@@ -25,7 +25,7 @@ module Instructeurs
 
       component = Instructeurs::ColumnFilterValueComponent.new(column:)
 
-      render turbo_stream: turbo_stream.replace('value', component)
+      render turbo_stream: turbo_stream.replace('column_filter_value_component', component)
     end
 
     private

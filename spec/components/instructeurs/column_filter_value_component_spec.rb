@@ -23,4 +23,10 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
     it { expect(page).to have_selector('input[disabled]') }
   end
+
+  describe 'the radio button case' do
+    let(:column) { double("Column", tdc_type: "yes_no", options_for_select: Champs::YesNoChamp.options) }
+
+    it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]') }
+  end
 end
