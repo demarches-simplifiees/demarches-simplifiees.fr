@@ -1,7 +1,8 @@
-= form_with model: [:instructeur, @procedure_presentation],
+= form_with url: instructeur_procedure_presentation_path(@procedure_presentation),
   class: 'dropdown-form large',
   id: 'filter-component',
-  data: { turbo: true, controller: 'autosubmit' } do
+  method: :patch,
+  data: { turbo: true, controller: 'autosubmit' } do |form|
   = current_filter_tags
 
   .fr-select-group
@@ -11,13 +12,12 @@
 
     %input.hidden{
       type: 'submit',
-      formmethod: 'get',
       formaction: url_for([:refresh_column_filter, :instructeur, @procedure_presentation]),
       formnovalidate: 'true',
       data: { autosubmit_target: 'submitter' }
     }
 
-  = render Instructeurs::ColumnFilterValueComponent.new(column:)
+  = render Instructeurs::ColumnFilterValueComponent.new(column:, form:)
 
-  = hidden_field_tag :statut, statut
-  = submit_tag t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'
+  = form.hidden_field :statut, value: statut
+  = form.submit t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'

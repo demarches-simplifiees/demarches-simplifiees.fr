@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
-  attr_reader :column
+  attr_reader :column, :form
 
-  def initialize(column:)
+  def initialize(column:, form:)
     @column = column
-  end
-
-  def as_radio_button?
-    column.respond_to?(:tdc_type) && column.tdc_type.in?(["yes_no"])
+    @form = form
   end
 
   private
