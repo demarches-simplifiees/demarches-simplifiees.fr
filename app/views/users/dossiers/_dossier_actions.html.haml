@@ -5,44 +5,47 @@
 - has_actions = has_edit_action || has_delete_action || has_new_dossier_action || has_transfer_action
 
 
+%ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
+  - if has_actions
+    - if has_edit_action
+      - if dossier.brouillon?
+        %li
+          = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
 
-- if has_actions
-  - if has_edit_action
-    - if dossier.brouillon?
-      = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
-
-    - else
-      = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
-
-  - if has_new_dossier_action
-    = link_to (commencer_url(dossier.procedure.path)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w fr-icon-file-fill fr-btn--icon-left' do
-      = t('views.users.dossiers.dossier_action.start_other_dossier')
-
-  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--tertiary'}) do |menu|
-    - menu.with_button_inner_html do
-      - if has_edit_action
-        = t('views.users.dossiers.dossier_action.other_actions')
       - else
-        = t('views.users.dossiers.dossier_action.actions')
-
-    - if has_transfer_action
-      - menu.with_item do
-        = link_to(transferer_dossier_path(dossier), role: 'menuitem') do
-          = dsfr_icon('fr-icon-user-add-fill', :sm)
-          .dropdown-description
-            = t('views.users.dossiers.dossier_action.transfer_dossier')
+        %li
+          = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
 
     - if has_new_dossier_action
-      - menu.with_item do
-        = link_to(clone_dossier_path(dossier), method: :post, role: 'menuitem') do
-          = dsfr_icon('fr-icon-file-copy-line', :sm)
-          .dropdown-description
-            = t('views.users.dossiers.dossier_action.clone')
+      %li
+        = link_to (commencer_url(dossier.procedure.path)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w fr-icon-file-fill fr-btn--icon-left' do
+          = t('views.users.dossiers.dossier_action.start_other_dossier')
 
-    - if has_delete_action
-      - menu.with_item(class: 'danger') do
-        - confirm = dossier.transfer.present? ? t("views.users.dossiers.dossier_action.delete_dossier_with_transfer_confirm", email: dossier.transfer.email) : t("views.users.dossiers.dossier_action.delete_dossier_confirm")
-        = link_to(dossier_path(dossier), role: 'menuitem', method: :delete, data: { disable: true, confirm: }) do
-          = dsfr_icon('fr-icon-delete-fill', :sm)
-          .dropdown-description
-            = t('views.users.dossiers.dossier_action.delete_dossier')
+    = render Dropdown::MenuComponent.new(wrapper: :li, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--tertiary'}) do |menu|
+      - menu.with_button_inner_html do
+        - if has_edit_action
+          = t('views.users.dossiers.dossier_action.other_actions')
+        - else
+          = t('views.users.dossiers.dossier_action.actions')
+
+      - if has_transfer_action
+        - menu.with_item do
+          = link_to(transferer_dossier_path(dossier), role: 'menuitem') do
+            = dsfr_icon('fr-icon-user-add-fill', :sm)
+            .dropdown-description
+              = t('views.users.dossiers.dossier_action.transfer_dossier')
+
+      - if has_new_dossier_action
+        - menu.with_item do
+          = link_to(clone_dossier_path(dossier), method: :post, role: 'menuitem') do
+            = dsfr_icon('fr-icon-file-copy-line', :sm)
+            .dropdown-description
+              = t('views.users.dossiers.dossier_action.clone')
+
+      - if has_delete_action
+        - menu.with_item(class: 'danger') do
+          - confirm = dossier.transfer.present? ? t("views.users.dossiers.dossier_action.delete_dossier_with_transfer_confirm", email: dossier.transfer.email) : t("views.users.dossiers.dossier_action.delete_dossier_confirm")
+          = link_to(dossier_path(dossier), role: 'menuitem', method: :delete, data: { disable: true, confirm: }) do
+            = dsfr_icon('fr-icon-delete-fill', :sm)
+            .dropdown-description
+              = t('views.users.dossiers.dossier_action.delete_dossier')

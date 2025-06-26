@@ -245,3 +245,10 @@ input[type='radio'] {
     1px calc(100% - 1px),
     0 1px;
 }
+
+// la classe fr-unhidden-md a un display inherit, qui fait hériter une valeur qui ne convient pas
+.unhidden-md {
+  @media (min-width: 48em) {
+    display: initial !important;
+  }
+}
