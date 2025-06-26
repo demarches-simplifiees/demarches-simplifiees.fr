@@ -17,7 +17,6 @@
       data: { autosubmit_target: 'submitter' }
     }
 
-  = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
   = render Instructeurs::ColumnFilterValueComponent.new(column:)
 
   = hidden_field_tag :statut, statut
