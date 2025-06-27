@@ -27,6 +27,7 @@ en:
             mandataire_last_name: "Tier last name"
             mandataire_first_name: "Tier first name"
             accuse_lecture_agreement_at: 'Read receipt'
+            expired_at: 'Expired since'
           user:
             id: User Id
             email: Requester
