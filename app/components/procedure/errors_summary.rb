@@ -13,7 +13,7 @@ class Procedure::ErrorsSummary < ApplicationComponent
     when :types_de_champ_private_editor
       "Les annotations privées contiennent des erreurs"
     when :types_de_champ_public_editor
-      "Les champs formulaire contiennent des erreurs"
+      "Les champs du formulaire contiennent des erreurs"
     when :publication
       if @procedure.publiee?
         "Des problèmes empêchent la publication des modifications"

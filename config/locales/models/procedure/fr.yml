@@ -93,6 +93,7 @@ fr:
               empty_drop_down: 'doit comporter au moins un choix sélectionnable'
               empty_csv: 'doit comporter au moins un fichier csv'
               inconsistent_header_section: "%{custom_message}"
+              missing_libelle:  "Le libellé du champ en position %{position} doit être rempli"
               expression_reguliere_invalid: "est invalide, veuillez la corriger"
               referentiel_not_ready: "n'est pas configuré"
             draft_types_de_champ_private:
@@ -102,6 +103,7 @@ fr:
               empty_drop_down: 'doit comporter au moins un choix sélectionnable'
               empty_csv: 'doit comporter au moins un fichier csv'
               inconsistent_header_section: "%{custom_message}"
+              missing_libelle:  "Le libellé du champ en position %{position} doit être rempli"
               expression_reguliere_invalid: "est invalide, veuillez la corriger"
             attestation_template:
               format: "%{attribute} %{message}"

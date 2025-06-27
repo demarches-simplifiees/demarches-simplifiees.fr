@@ -214,7 +214,6 @@ class TypeDeChamp < ApplicationRecord
     "text/plain"
   ], size: { less_than: 20.megabytes }, on: :update
 
-  validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
   validates :character_limit, numericality: {
     greater_than_or_equal_to: MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH,
