@@ -54,18 +54,20 @@ describe Instructeur, type: :model do
       let!(:commentaire) { create(:commentaire, dossier: dossier_with_notifications) }
       let!(:avis_with_answer) { create(:avis, :with_answer, dossier: dossier_with_notifications) }
       let!(:avis_without_answer) { create(:avis, dossier: dossier_with_notifications) }
-      let!(:commentaire_correction) { create(:commentaire, dossier: dossier_with_notifications) }
+      let!(:commentaire_correction) { create(:commentaire, dossier: dossier_with_notifications, instructeur:) }
       let!(:correction) { create(:dossier_correction, dossier: dossier_with_notifications, commentaire: commentaire_correction) }
 
-      before { instructeur.follow(dossier_with_notifications) }
+      subject { instructeur.follow(dossier_with_notifications) }
 
       it "creates all previous notifications for the instructeur" do
+        subject
+
         expect(DossierNotification.count).to eq(6)
         expect(
           DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :annotation_instructeur)
         ).to be_truthy
         expect(
-          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :message_usager)
+          DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :message)
         ).to be_truthy
         expect(
           DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :dossier_modifie)
@@ -79,6 +81,20 @@ describe Instructeur, type: :model do
         expect(
           DossierNotification.exists?(instructeur:, dossier: dossier_with_notifications, notification_type: :attente_correction)
         ).to be_truthy
+      end
+
+      context "when there are only commentaires from the instructeur who starts to follow" do
+        before do
+          commentaire.update!(instructeur:)
+        end
+
+        it "does not create message notification" do
+          subject
+
+          expect(DossierNotification.count).to eq(5)
+
+          expect(DossierNotification.pluck(:notification_type)).not_to include('message')
+        end
       end
     end
   end
