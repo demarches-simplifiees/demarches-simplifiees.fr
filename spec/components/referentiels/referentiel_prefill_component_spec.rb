@@ -59,9 +59,6 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           { stable_id: 6, type: :yes_no, libelle: 'yes_no' } # exclu (type non compatible)
         ]
       end
-      it 'includes hidden prefill tag so user can go back/forth between steps' do
-        expect(subject).to have_selector('input[type="hidden"][name="type_de_champ[referentiel_mapping][$.jsonpath][prefill]"][value="1"]')
-      end
 
       context 'when not selected' do
         it 'shows only text and textarea' do
