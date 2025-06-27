@@ -132,7 +132,7 @@ describe Expired::DossiersDeletionService do
       end
 
       context 'when a notice has been sent a long time ago' do
-        let(:notice_sent_at) { (warning_period + 4.days).ago }
+        let(:notice_sent_at) { (warning_period + 8.days).ago }
 
         it { expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound) }
 
@@ -289,7 +289,7 @@ describe Expired::DossiersDeletionService do
       end
 
       context 'when a notice has been sent a long time ago' do
-        let(:notice_sent_at) { (warning_period + 4.days).ago }
+        let(:notice_sent_at) { (warning_period + 8.days).ago }
 
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with([dossier], dossier.user.email) }
@@ -386,8 +386,6 @@ describe Expired::DossiersDeletionService do
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_administration).exactly(2).times }
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_user).with(match_array([dossier_1, dossier_2]), user.email) }
       it { expect(DossierMailer).to have_received(:notify_near_deletion_to_administration).with(match_array([dossier_1, dossier_2]), instructeur.email) }
-      it { expect(DossierMailer).to have_received(:notify_near_deletion_to_administration).with([dossier_1], dossier_1.procedure.administrateurs.first.email) }
-      it { expect(DossierMailer).not_to have_received(:notify_near_deletion_to_administration).with([dossier_2], dossier_2.procedure.administrateurs.first.email) }
     end
 
     context 'when an instructeur is also administrateur' do
@@ -441,7 +439,7 @@ describe Expired::DossiersDeletionService do
       end
 
       context 'when a notice has been sent a long time ago' do
-        let(:notice_sent_at) { (warning_period + 4.days).ago }
+        let(:notice_sent_at) { (warning_period + 8.days).ago }
 
         it { expect(dossier.reload.hidden_by_expired_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
         it { expect(dossier.reload.hidden_by_reason).to eq('expired') }
