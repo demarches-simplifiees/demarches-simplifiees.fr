@@ -17,6 +17,7 @@ en:
         faq_link: Consult the online help
         contact_link: Consult the administration contact page
         other_contact_info: "Other contact informations :"
+        fake_usager_email: 'user.adress@mail.com'
       signature:
         team: "The team"
       for_tiers:
