@@ -10,9 +10,18 @@ module Types
     field :string_value, String, "La valeur du champ sous forme texte.", null: true
     field :updated_at, GraphQL::Types::ISO8601DateTime, "Date de dernière modification du champ.", null: false
     field :prefilled, Boolean, null: false, method: :prefilled?
+    field :columns, [Types::ColumnType], null: false
 
     def string_value
       object.type_de_champ.champ_value_for_api(object)
+    end
+
+    def columns
+      if object.repetition? || object.titre_identite?
+        []
+      else
+        object.type_de_champ.columns(procedure: object.procedure)
+      end
     end
 
     definition_methods do

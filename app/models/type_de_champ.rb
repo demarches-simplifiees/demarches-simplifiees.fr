@@ -549,7 +549,7 @@ class TypeDeChamp < ApplicationRecord
     when type_champs.fetch(:checkbox), type_champs.fetch(:yes_no)
       :boolean
     when type_champs.fetch(:titre_identite), type_champs.fetch(:piece_justificative)
-      :attachements
+      :attachments
     else
       :text
     end

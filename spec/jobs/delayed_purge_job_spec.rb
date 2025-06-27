@@ -34,7 +34,7 @@ describe DelayedPurgeJob, type: :job do
       perform_enqueued_jobs
     end
 
-    it 'without attachements' do
+    it 'without attachments' do
       dossier.champs.first.piece_justificative_file.first.delete
       expect(client).to receive(:copy_object)
         .with(container, blob.key, container, blob.key, { 'X-Delete-At' => anything, "Content-Type" => blob.content_type })
