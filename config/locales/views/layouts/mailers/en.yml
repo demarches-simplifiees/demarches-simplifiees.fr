@@ -9,10 +9,14 @@ en:
         ask_question: "Ask a question about your file:"
         email_sent_to: "This email has been sent to :"
         by_messagerie: "Messaging :"
+        by_messagerie_link: send a message directly to the instructor
         by_contact_link: "Contact page :"
         by_email: "Email :"
         by_phone: "Phone :"
         schedule: "Schedule :"
+        faq_link: Consult the online help
+        contact_link: Consult the administration contact page
+        other_contact_info: "Other contact informations :"
       signature:
         team: "The team"
       for_tiers:

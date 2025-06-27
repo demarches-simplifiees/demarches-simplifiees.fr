@@ -62,6 +62,13 @@ RSpec.describe NotificationMailer, type: :mailer do
         expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
         expect(body).to include("Votre dossier nº&nbsp;#{dossier.id}")
         expect(body).to include(procedure.service.nom)
+        expect(body).to include(procedure.service.adresse)
+        expect(body).to include(procedure.service.faq_link)
+        expect(body).to include(procedure.service.contact_link)
+        expect(body).to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+        expect(body).to include(procedure.service.telephone)
+        expect(body).to include(procedure.service.horaires)
+        expect(body).to include(procedure.service.other_contact_info)
         expect(mail.attachments.first.filename).to eq("attestation-depot_dossier-#{dossier.id}.pdf")
       end
     end

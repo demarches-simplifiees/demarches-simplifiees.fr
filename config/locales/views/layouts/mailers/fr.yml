@@ -7,13 +7,17 @@ fr:
         contact_admin: Pour vous adresser à votre administration, passez directement par la
         file_messagerie: messagerie du dossier
         procedure_management: "Cette démarche est gérée par :"
-        ask_question: "Poser une question sur votre dossier :"
-        email_sent_to: "Cet email a été envoyé à l'adresse :"
-        by_messagerie: "Messagerie :"
+        ask_question: "Une question sur votre dossier ?"
+        email_sent_to: "Cet email a été envoyé à l'adresse :"
+        by_messagerie: "Messagerie du dossier :"
+        by_messagerie_link: envoyez directement un message à l’instructeur
         by_contact_link: "Page de contact :"
         by_email: "Adresse électronique :"
         by_phone: "Téléphone :"
         schedule: "Horaires :"
+        faq_link: Consultez l’aide en ligne
+        contact_link: Consultez la page de contact de l’administration
+        other_contact_info: "Précisions :"
       signature:
         team: "L’équipe"
       for_tiers:

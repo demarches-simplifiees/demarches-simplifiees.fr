@@ -13,6 +13,9 @@ FactoryBot.define do
     etablissement_infos { { adresse: "75 rue du Louvre\n75002\nPARIS\nFRANCE" } }
     etablissement_lat { 48.87 }
     etablissement_lng { 2.34 }
+    faq_link { 'https://faq.en-ligne.fr' }
+    contact_link { 'https://contact.en-ligne.fr' }
+    other_contact_info { 'Merci de contacter en priorité votre antenne locale' }
 
     association :administrateur
   end

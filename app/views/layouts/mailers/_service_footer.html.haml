@@ -9,29 +9,38 @@
 - if service_or_contact_information.present?
   %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0", style: "cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;" }
     %tr
-      %td{ width: "50%", valign: "top" }
+      %td{ valign: "top" }
         %p
           %strong
             = t('.procedure_management')
           = service_or_contact_information.nom
           = service_or_contact_information.adresse
+        %strong= t('.ask_question')
+        %ul{ style: "padding: 0 0 0 10px; margin: 0" }
+          - if service_or_contact_information.faq_link.present?
+            %li= link_to t('.faq_link'), service_or_contact_information.faq_link, target: '_blank', rel: 'noopener'
+          - if service_or_contact_information.contact_link.present?
+            %li= link_to t('.contact_link'), service_or_contact_information.contact_link, target: '_blank', rel: 'noopener'
+          - if dossier.present? && dossier.messagerie_available?
+            %li
+              %span= t('.by_messagerie')
+              %span= link_to t('.by_messagerie_link'), messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
+          - elsif service_or_contact_information.email.present?
+            %li
+              %span= t('.by_email')
+              %span= link_to service_or_contact_information.email, "mailto:#{service_or_contact_information.email}"
+          - elsif service_or_contact_information.respond_to?(:contact_link) && service_or_contact_information.contact_link.present?
+            %li= link_to t('.by_contact_link'), service_or_contact_information.contact_link, target: '_blank', rel: 'noopener'
+          - if service_or_contact_information.telephone_url.present?
+            %li
+              %span= t('.by_phone')
+              %span= link_to service_or_contact_information.telephone, service_or_contact_information.telephone_url
+          %li= "#{t('.schedule')} #{ formatted_horaires(service_or_contact_information.horaires) }"
+          - if service_or_contact_information.other_contact_info.present?
+            %li
+              %span= t('.other_contact_info')
+              %span= service_or_contact_information.other_contact_info
         %p
           = t('.email_sent_to')
           %br
-          = dossier.user_email_for(:notification)
-      %td{ width: "50%", valign: "top", style: "padding-left:10px;" }
-        %p
-          %strong
-            = t('.ask_question')
-          %br
-          - if dossier.present? && dossier.messagerie_available?
-            = link_to t('.by_messagerie'), messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
-          - elsif service_or_contact_information.email.present?
-            = t('.by_email')
-            = link_to service_or_contact_information.email, "mailto:#{service_or_contact_information.email}"
-          - elsif service_or_contact_information.respond_to?(:contact_link) && service_or_contact_information.contact_link.present?
-            = link_to t('.by_contact_link'), service_or_contact_information.contact_link, target: '_blank', rel: 'noopener'
-          - if service_or_contact_information.telephone_url.present?
-            %br= t('.by_phone')
-            = link_to service_or_contact_information.telephone, service_or_contact_information.telephone_url
-          %br= "#{t('.schedule')} #{ formatted_horaires(service_or_contact_information.horaires) }"
+          = link_to dossier.user_email_for(:notification), "mailto: #{dossier.user_email_for(:notification)}"
