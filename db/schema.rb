@@ -652,6 +652,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_12_115833) do
     t.string "kind", null: false
     t.string "name", null: false
     t.jsonb "pjs", default: [], null: false, array: true
+    t.boolean "shared", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["groupe_instructeur_id"], name: "index_export_templates_on_groupe_instructeur_id"
   end

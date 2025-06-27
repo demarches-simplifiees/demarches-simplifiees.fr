@@ -1,14 +1,14 @@
 #export_template-edit.fr-my-4w
   .fr-mb-6w
-    = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur de modèle d'export", heading_level: 'h3') do |c|
+    = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur de modèle d’export", heading_level: 'h3') do |c|
       - c.with_body do
-        = t('.info_html', mailto: mail_to(CONTACT_EMAIL, subject: 'Editeur de modèle d\'export'))
+        = t('.info_html', mailto: mail_to(CONTACT_EMAIL, subject: 'Editeur de modèle d’export'))
 
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
-    = form_with model: [:instructeur, @procedure, export_template], local: true do |f|
+    = form_with model: [:instructeur, procedure, export_template], local: true do |f|
 
-      %h2 Paramètres de l'export
+      %h2 Paramètres de l’export
       = f.hidden_field "[dossier_folder][template]", value: export_template.dossier_folder.template_json
       = f.hidden_field "[export_pdf][template]", value: export_template.export_pdf.template_json
 
@@ -17,11 +17,15 @@
       - if groupe_instructeurs.many?
         .fr-input-group
           = f.label :groupe_instructeur_id, class: 'fr-label' do
-            = f.object.class.human_attribute_name(:groupe_instructeur_id)
+            Groupe instructeur éditeur du modèle
             = render EditableChamp::AsteriskMandatoryComponent.new
             %span.fr-hint-text
-              Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+              Le groupe propriétaire qui pourra modifier le modèle le cas échéant
           = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+
+        .fr-checkbox-group.fr-input-group
+          = f.check_box :shared
+          = f.label :shared, "Partager avec tous les autres groupes instructeurs", class: 'fr-label'
       - else
         = f.hidden_field :groupe_instructeur_id
 
@@ -40,18 +44,16 @@
             = f.radio_button :kind, "csv", id: "csv"
             %label.fr-label{ for: "csv" } csv
 
-      %h2 Contenu de l'export
+      %h2 Contenu de l’export
       %p Sélectionnez les colonnes que vous souhaitez voir affichées dans le tableau de votre export.
 
-      = render partial: 'checkbox_group', locals: { title: 'Informations usager', all_columns: @export_template.procedure.usager_columns_for_export, export_template: @export_template }
-      = render partial: 'checkbox_group', locals: { title: 'Informations dossier', all_columns: @export_template.procedure.dossier_columns_for_export, export_template: @export_template }
-      = render ExportTemplate::ChampsComponent.new("Formulaire usager", @export_template, @types_de_champ_public)
-      = render ExportTemplate::ChampsComponent.new("Annotations privées", @export_template, @types_de_champ_private) if @types_de_champ_private.any?
+      = render partial: 'checkbox_group', locals: { title: 'Informations usager', all_columns: procedure.usager_columns_for_export, export_template: }
+      = render partial: 'checkbox_group', locals: { title: 'Informations dossier', all_columns: procedure.dossier_columns_for_export, export_template: }
+      = render ExportTemplate::ChampsComponent.new("Formulaire usager", export_template, @types_de_champ_public)
+      = render ExportTemplate::ChampsComponent.new("Annotations privées", export_template, @types_de_champ_private) if @types_de_champ_private.any?
 
       .fixed-footer
         .fr-container
           %ul.fr-btns-group.fr-btns-group--inline-md
-            %li
-              = link_to "Annuler", instructeur_procedure_path(@procedure), class: "fr-btn fr-btn--secondary"
-            %li
-              = f.submit "Enregistrer", class: "fr-btn", data: @export_template.persisted? ? { confirm: t('.warning') } : {}
+            %li= link_to "Annuler", [:export_templates, :instructeur, procedure], class: "fr-btn fr-btn--secondary"
+            %li= f.button "Enregistrer", class: "fr-btn", data: export_template.persisted? ? { confirm: t('.warning') } : {}
