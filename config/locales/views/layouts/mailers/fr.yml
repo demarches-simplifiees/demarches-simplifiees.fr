@@ -18,6 +18,7 @@ fr:
         faq_link: Consultez l’aide en ligne
         contact_link: Consultez la page de contact de l’administration
         other_contact_info: "Précisions :"
+        fake_usager_email: 'adresse.usager@mail.com'
       signature:
         team: "L’équipe"
       for_tiers:
