@@ -30,5 +30,6 @@ en:
         good_morning: Hello,
         first_part: We inform you that a decision on file no. %{dossier_id} of the procedure
         second_part: has been rendered.
-        third_part: To find out its nature, please log in to your account
+        third_part: To find out its nature, please consult your file in your Démarches Simplifiées account.
+        button_text: View my file
         commentaire_html: <p>Hello,</p><p>We inform you that a decision on your file has been rendered.</p>Sincerely,<br>%{service}
