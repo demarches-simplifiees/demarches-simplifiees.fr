@@ -13,12 +13,6 @@ class FranceConnectController < ApplicationController
   def login
     return redirect_to new_user_session_path if !FranceConnectService.enabled?
 
-    if ENV['REDIRECT_FC_GOUV'].present?
-      # rubocop:disable DS/ApplicationName
-      return redirect_to 'https://www.demarches-simplifiees.fr/france_connect', allow_other_host: true if Current.host.starts_with?('demarches.numerique.gouv.fr')
-      # rubocop:enable DS/ApplicationName
-    end
-
     uri, state, nonce = FranceConnectService.authorization_uri
 
     cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
