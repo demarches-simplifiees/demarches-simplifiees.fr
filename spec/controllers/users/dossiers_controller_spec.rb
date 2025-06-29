@@ -205,12 +205,12 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with incorrect individual and dossier params' do
-      let(:dossier_params) { { individual_attributes: { gender: '', nom: '', prenom: '' } } }
+      let(:dossier_params) { { individual_attributes: { nom: '', prenom: '' } } }
       before { subject }
 
       it do
         expect(response).not_to have_http_status(:redirect)
-        expect(flash[:alert]).to include("Le champ « Civilité » doit être rempli", "Le champ « Nom » doit être rempli", "Le champ « Prénom » doit être rempli")
+        expect(flash[:alert]).to include("Le champ « Nom » doit être rempli", "Le champ « Prénom » doit être rempli")
       end
     end
 
