@@ -1,0 +1,23 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['ProConnect']] }
+
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      %h1.fr-h2 ProConnect
+
+      %ul.fr-toggle__list
+        %li
+          = form_for(@procedure,
+            method: :patch,
+            url: pro_connect_restricted_admin_procedure_path(@procedure),
+            data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+
+            = render Dsfr::ToggleComponent.new(form: f,
+              target: :pro_connect_restricted,
+              title: "Restreindre l'accès instructeur et administrateurs par ProConnect",
+              opt: { "checked" => @procedure.pro_connect_restricted? })
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8' )

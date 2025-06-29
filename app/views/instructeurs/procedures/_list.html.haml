@@ -85,6 +85,7 @@
 
           = render Dsfr::CopyButtonComponent.new(text: commencer_url(p.path), title: t('instructeurs.dossiers.header.banner.copy_link_button'))
           = procedure_badge(p, 'align-middle')
+          = render Procedure::ProConnectRestrictedBadgeComponent.new(procedure: p)
 
     .fr-hidden-lg.fr-mb-2w
       %h3.card-title.fr-mb-0.fr-ml-1w
