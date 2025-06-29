@@ -12,7 +12,7 @@
         - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
           .fr-col-12.fr-col-md
             #search-2.fr-search-bar
-              = form_tag dossiers_path, method: :get, :role => "search", class: "width-100" do
+              = form_tag dossiers_path, method: :get, :role => "search", class: "width-100 fr-mb-5w" do
                 = hidden_field_tag :procedure_id, params[:procedure_id]
                 = label_tag "q", t('views.users.dossiers.search.label'), class: 'fr-label fr-mb-1w'
                 .flex

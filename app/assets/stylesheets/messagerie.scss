@@ -1,16 +1,15 @@
-@import 'colors';
 @import 'constants';
 
 .messages-list {
-  max-height: 350px;
-  overflow-y: scroll;
-  border: 1px solid $border-grey;
-  padding: 2 * $default-spacer;
-  margin-bottom: $default-spacer;
-  border-radius: 4px;
+  padding: 0;
 
   .message {
     width: 80%;
+    overflow-wrap: anywhere;
+
+    @media (max-width: 48em) {
+      width: 100%;
+    }
 
     &.from-me {
       margin-left: auto;
@@ -18,12 +17,64 @@
   }
 }
 
-.messagerie {
-  .message-textarea {
+ol.messages-list > li::marker {
+  content: none;
+}
+
+.icon-avatar {
+  padding: 2 * $default-spacer;
+  border-radius: 100%;
+  margin-right: 2 * $default-spacer;
+  @media (max-width: 48em) {
+    padding: 0.5 * $default-spacer $default-spacer;
+    margin-right: $default-spacer;
+  }
+}
+
+.from-me .icon-avatar {
+  margin-right: 0;
+  margin-left: 2 * $default-spacer;
+  @media (max-width: 48em) {
+    margin-left: $default-spacer;
+  }
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: $default-padding;
+
+  h2 {
     margin-bottom: $default-spacer;
   }
 
-  .form input[type='file'] {
-    margin-bottom: 0;
+  .date {
+    float: right;
+  }
+}
+
+.date-header {
+  display: flex;
+  align-items: center;
+  color: var(--text-mention-grey);
+  font-weight: bold;
+  font-size: 1rem;
+  user-select: none;
+  margin: 1em 0;
+  gap: 1em;
+}
+
+.date-header::before,
+.date-header::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background: var(--border-default-grey);
+  margin: 0;
+}
+
+.icon-sm-for-xs::before {
+  @media (max-width: 48em) {
+    --icon-size: 1rem;
   }
 }

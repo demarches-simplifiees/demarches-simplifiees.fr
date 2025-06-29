@@ -1,10 +1,44 @@
-.messagerie.container
+.messagerie.fr-container
   %ol.messages-list{ data: { controller: 'scroll-to' } }
-    - dossier.preloaded_commentaires.each do |commentaire|
-      %li.message.fr-background-alt--grey{ class: commentaire_is_from_me_class(commentaire, connected_user), id: dom_id(commentaire) }
-        = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, show_reply_button: show_reply_button(commentaire, connected_user), heading_level: 'h2')
+    - grouped_commentaires_by_date(dossier.preloaded_commentaires).each do |date, commentaires_of_the_day|
+      %li
+        .date-header
+          = human_date(date)
 
-  - if dossier.messagerie_available?
-    = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier }
-  - else
-    = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service, dossier: dossier }
+      - commentaires_of_the_day.each do |commentaire|
+        %li.message{ class: commentaire_is_from_me_class(commentaire, connected_user), id: dom_id(commentaire) }
+          = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, heading_level: 'h2')
+
+.padded-fixed-footer
+  .fixed-footer
+    .fr-container
+      .fr-grid-row
+        .fr-col-12
+          - if dossier.messagerie_available?
+            %div{ data: { controller: 'hide-target' } }
+              %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mb-2w.width-100-for-xs{ type: 'button', data: { 'hide-target_target': 'source', 'hide-target-hide-source': 'true' } } Nouveau message
+              .fr-mt-2w.fr-hidden{ data: { hide_target_target: 'toHide' } }
+                .fr-grid-row
+                  .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+                    = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier }
+          - else
+            = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service, dossier: dossier }
+
+
+- if dossier.procedure&.service.present? && !dossier.messagerie_available?
+  %dialog#messagerie-close-explanations.fr-modal{ "aria-labelledby" => "fr-modal-title-modal-1", role: "dialog" }
+    .fr-container.fr-container--fluid.fr-container-md
+      .fr-grid-row.fr-grid-row--center
+        .fr-col-12.fr-col-md-10.fr-col-lg-8
+          .fr-modal__body
+            .fr-modal__header
+              %button.fr-btn--close.fr-btn{ aria: { controls: 'messagerie-close-explanations' }, title: t('utils.modal_close_alt') }= t('utils.modal_close')
+            .fr-modal__content
+              %h1#fr-modal-title-modal-1.fr-modal__title
+                %span.fr-icon-arrow-right-line.fr-icon--lg>
+                La messagerie est désactivée.
+
+              %p
+                Pour poser une question, contactez le service ci-dessous, en précisant que votre demande concerne le <b>dossier Nº #{dossier.id}</b> :
+              %ul.list-style-type-none
+                = render Procedure::ServiceListContactComponent.new(service_or_contact_information: dossier.procedure.service, dossier: dossier)

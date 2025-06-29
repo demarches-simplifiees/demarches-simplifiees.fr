@@ -72,7 +72,7 @@ describe 'user access to the list of their dossiers', js: true do
     let(:individual) { dossier_for_tiers.individual }
 
     it 'displays the name of the mandataire' do
-      expect(page).to have_content("#{individual.prenom} #{individual.nom}, dossier rempli par #{dossier_for_tiers.mandataire_full_name}")
+      expect(page).to have_content("#{dossier_for_tiers.mandataire_full_name} (pour #{individual.prenom} #{individual.nom})")
     end
   end
 

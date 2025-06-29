@@ -135,6 +135,12 @@
   }
 }
 
+.width-100-for-xs {
+  @media (max-width: 48em) {
+    width: 100%;
+  }
+}
+
 .width-33 {
   width: 33.33%;
 
