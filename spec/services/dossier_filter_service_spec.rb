@@ -648,6 +648,18 @@ describe DossierFilterService do
         end
       end
 
+      context "when searching by postal_code with characters that need to be escaped" do
+        let(:value) { "60580*+" }
+        let(:filter) { ["rna – Code postal (5 chiffres)", value] }
+
+        before do
+          kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => value })
+          create(:dossier, procedure:).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => "unknown" })
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
       context "when searching by departement_code (enum)" do
         let(:value) { "99" }
         let(:filter) { ["rna – Département", value] }

@@ -19,7 +19,8 @@ class Columns::JSONPathColumn < Columns::ChampColumn
   end
 
   def filtered_ids(dossiers, search_terms)
-    value = quote_string(search_terms.join('|'))
+    escaped_terms = search_terms.map { |term| Regexp.escape(term).gsub("\\", "\\\\\\\\") }
+    value = escaped_terms.join('|')
 
     condition = %{champs.value_json @? '#{jsonpath} ? (@ like_regex "#{value}" flag "i")'}
 
