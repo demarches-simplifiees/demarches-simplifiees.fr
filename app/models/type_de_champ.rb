@@ -623,8 +623,7 @@ class TypeDeChamp < ApplicationRecord
     # We should refresh all champs after update except for champs using react or custom refresh
     # logic (RNA, SIRET, etc.)
     case type_champ
-    when type_champs.fetch(:carte),
-      type_champs.fetch(:titre_identite),
+    when type_champs.fetch(:titre_identite),
       type_champs.fetch(:rna)
       false
     else

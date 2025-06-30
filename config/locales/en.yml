@@ -52,6 +52,7 @@ en:
     date: Date
     datetime: Date and time
     array: List of simple elements
+    geojson: Coordinates (GeoJSON)
 
     email_suggest:
       wanna_say: 'Do you mean to say ?'

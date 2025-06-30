@@ -12,7 +12,8 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     Referentiels::MappingFormComponent::TYPES[:boolean] => %w[checkbox yes_no],
     Referentiels::MappingFormComponent::TYPES[:date] => %w[date],
     Referentiels::MappingFormComponent::TYPES[:datetime] => %w[datetime],
-    Referentiels::MappingFormComponent::TYPES[:array] => %w[multiple_drop_down_list]
+    Referentiels::MappingFormComponent::TYPES[:array] => %w[multiple_drop_down_list],
+    Referentiels::MappingFormComponent::TYPES[:geojson] => %w[carte]
   }.freeze
 
   def source_tdcs

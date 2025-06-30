@@ -388,6 +388,52 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
+      context 'when data is mapped to map (geojson)' do
+        let(:prefilled_type_de_champ_type) { :carte }
+
+        describe 'cast and update map with various geojson shapes' do
+          [
+            { trait: :polygon, type: "Polygon" },
+            { trait: :line_string, type: "LineString" },
+            { trait: :point_with_z, type: "Point", z: true },
+            { trait: :multi_polygon, type: "MultiPolygon" },
+            { trait: :multi_line_string, type: "MultiLineString" },
+            { trait: :multi_point, type: "MultiPoint" }
+          ].each do |shape|
+            it "casts and updates the map with a #{shape[:type]} geojson" do
+              data = { ok: build(:geo_area, shape[:trait]).geometry.deep_stringify_keys }
+              expect { referentiel_champ.update_with_external_data!(data: data) }
+                .to change { dossier.reload.project_champs.find(&:carte?).geo_areas.count }.from(0).to(1)
+              geo_area = dossier.reload.project_champs.find(&:carte?).geo_areas.first
+              expect(geo_area.geometry["type"]).to eq(shape[:type])
+              if shape[:z]
+                expect(geo_area.geometry["coordinates"].length).to eq(3)
+              end
+              dossier.project_champs.find(&:carte?).geo_areas.destroy_all
+            end
+          end
+        end
+
+        describe 'invalid geojson shapes' do
+          [
+            { trait: :invalid_point, type: "Point" },
+            { trait: :point_invalid, type: "Point" },
+            { trait: :linestring_invalid, type: "LineString" },
+            { trait: :multipoint_invalid, type: "MultiPoint" },
+            { trait: :polygon_invalid, type: "Polygon" },
+            { trait: :multilinestring_invalid, type: "MultiLineString" },
+            { trait: :multipolygon_invalid, type: "MultiPolygon" },
+            { trait: :geometrycollection_invalid, type: "GeometryCollection" }
+          ].each do |shape|
+            it "does not import invalid #{shape[:trait]} geojson" do
+              data = { ok: build(:geo_area, shape[:trait]).geometry.deep_stringify_keys }
+              expect { referentiel_champ.update_with_external_data!(data: data) }
+                .not_to change { dossier.reload.project_champs.find(&:carte?).geo_areas.count }
+            end
+          end
+        end
+      end
+
       context 'when data is mapped to child' do
         let(:types_de_champ_public) do
           [
