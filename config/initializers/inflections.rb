@@ -22,6 +22,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'SVR'
   inflect.acronym 'FAQ'
   inflect.acronym 'FAQs'
+  inflect.acronym 'OCR'
   inflect.irregular 'type_de_champ', 'types_de_champ'
   inflect.irregular 'type_de_champ_private', 'types_de_champ_private'
   inflect.irregular 'procedure_revision_type_de_champ', 'procedure_revision_types_de_champ'
