@@ -145,6 +145,8 @@ describe 'instructeurs/dossiers/show', type: :view do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6, procedure_expires_when_termine_enabled: true) }
     let!(:dossier) { create(:dossier, state: :accepte, procedure: procedure, processed_at: 175.days.ago) }
 
+    before { dossier.update_expired_at }
+
     it 'displays the correct actions' do
       expect(subject).to have_text('Conserver un mois de plus')
       within("form[action=\"#{repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do

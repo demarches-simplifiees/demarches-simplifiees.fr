@@ -87,7 +87,7 @@ module Types
 
     def date_expiration
       if !object.en_instruction?
-        object.expiration_date
+        object.expired_at
       end
     end
 

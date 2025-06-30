@@ -13,6 +13,7 @@ describe 'users/dossiers/expiration_banner', type: :view do
   end
   let(:i18n_key_state) { state }
   subject do
+    dossier.update_expired_at unless dossier.en_instruction?
     render('users/dossiers/expiration_banner',
            dossier: dossier,
            current_user: build(:user))

@@ -31,6 +31,7 @@ fr:
             last_champ_updated_at: Date de dernière modification (usager)
             motivation: 'Motivation de la décision'
             accuse_lecture_agreement_at: 'Accusé de lecture'
+            expired_at: 'Date d’expiration'
           user:
             id: Identifiant du demandeur
             email: Demandeur
