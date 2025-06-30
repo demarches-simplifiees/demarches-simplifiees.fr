@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Dossiers::InvalidIneligibiliteRulesComponent < ApplicationComponent
+  include ChampHelper
   delegate :can_passer_en_construction?, to: :dossier
 
   def initialize(dossier:, wrapped: true)
