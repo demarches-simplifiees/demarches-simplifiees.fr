@@ -2,12 +2,19 @@
 
 module Types
   class DeletedDossierType < Types::BaseObject
+    class DeletedDossierReasonType < Types::BaseEnum
+      DeletedDossier.reasons.keys.each do |reason|
+        value(reason, value: reason)
+      end
+    end
+
     description "Un dossier supprimé"
 
     global_id_field :id
     field :number, Int, "Le numéro du dossier qui a été supprimé.", null: false
+
     field :state, Types::DossierType::DossierState, "L’état du dossier supprimé.", null: false
-    field :reason, String, "La raison de la suppression du dossier.", null: false
+    field :reason, DeletedDossierReasonType, "La raison de la suppression du dossier.", null: false
 
     field :date_supression, GraphQL::Types::ISO8601DateTime, "Date de suppression.", null: false
 
