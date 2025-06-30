@@ -388,6 +388,15 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
+      context 'when data is mapped to map (geojson)' do
+        let(:prefilled_type_de_champ_type) { :carte }
+        let(:data) { { ok: { "type" => "Point", "coordinates" => [1, 2] } } }
+        it 'casts and updates the map with the jsonpath value as geojson' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.find(&:carte?).geo_areas.count }.from(0).to(1)
+        end
+      end
+
       context 'when data is mapped to child' do
         let(:types_de_champ_public) do
           [
