@@ -42,6 +42,7 @@ class ImageProcessorJob < ApplicationJob
     uninterlace(blob) if blob.content_type == "image/png"
     create_representations(blob) if blob.representation_required?
     add_watermark(blob) if blob.watermark_pending?
+    add_ocr_data(blob)
   end
 
   private
@@ -94,6 +95,20 @@ class ImageProcessorJob < ApplicationJob
         blob.save!
       end
     end
+  end
+
+  def add_ocr_data(blob)
+    return if !rib?(blob)
+    return if !Flipper.enabled?(:ocr, blob)
+
+    blob.update!(ocr: OCRService.analyze(blob))
+  end
+
+  def rib?(blob)
+    record = blob&.attachments&.first&.record
+    return false if !record.is_a?(Champs::PieceJustificativeChamp)
+
+    record.libelle&.include?("RIB") || false
   end
 
   def retry_or_discard
