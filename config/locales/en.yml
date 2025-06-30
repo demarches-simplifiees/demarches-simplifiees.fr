@@ -518,7 +518,7 @@ en:
           latest_message:
             latest_message: "Latest message"
         messagerie:
-          mailbox: "The mailbox allows you to contact the instructor in charge of your file."
+          mailbox: "The mailbox allows you to contact the administration in charge of your file."
         rendez_vous:
           title: "Your next appointment"
           navigate_to_rdv_sp: "See my appointment on RDV Service Public"
@@ -805,6 +805,12 @@ en:
   time:
     formats:
       default: "%B %d %Y %R"
+  dates:
+    today: "Today"
+    yesterday: "Yesterday"
+    days_ago:
+      one: "1 day ago"
+      other: "%{count} days ago"
   pluralize:
     case:
       one: file

@@ -5,6 +5,17 @@ describe Dossier, type: :model do
 
   let(:user) { create(:user) }
 
+  describe 'has_many preloaded_commentaires' do
+    let(:dossier) { create(:dossier) }
+    let!(:commentaire) { create :commentaire, created_at: '2016-03-14', dossier: }
+    let!(:commentaire_2) { create :commentaire, created_at: '2016-03-15', dossier: }
+    let!(:commentaire_3) { create :commentaire, created_at: '2016-03-16', dossier: }
+
+    it 'returns commentaires in desc order' do
+      expect(dossier.preloaded_commentaires).to eq([commentaire_3, commentaire_2, commentaire])
+    end
+  end
+
   describe 'scopes' do
     describe '.default_scope' do
       let!(:dossier) { create(:dossier) }

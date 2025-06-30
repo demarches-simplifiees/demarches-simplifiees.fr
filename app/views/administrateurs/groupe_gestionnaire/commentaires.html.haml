@@ -10,4 +10,12 @@
         - current_administrateur.commentaire_groupe_gestionnaires.where(groupe_gestionnaire: @groupe_gestionnaire).each do |commentaire|
           %li.message{ class: commentaire_is_from_me_class(commentaire, current_administrateur), id: dom_id(commentaire) }
             = render(Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_administrateur, messagerie_seen_at: @commentaire_seen_at, groupe_gestionnaire: @groupe_gestionnaire))
-    = render partial: "shared/dossiers/messages/form", locals: { commentaire: @commentaire, form_url: admin_groupe_gestionnaire_create_commentaire_path }
+
+    .padded-fixed-footer
+      .fixed-footer
+        .fr-container
+          .fr-grid-row
+            %div{ data: { controller: 'hide-target' } }
+              %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mb-2w{ type: 'button', data: { 'hide-target_target': 'source', 'hide-target-hide-source': 'true' } } Nouveau message
+              .fr-mt-2w.fr-hidden{ data: { hide_target_target: 'toHide' } }
+                = render partial: "shared/dossiers/messages/form", locals: { commentaire: @commentaire, form_url: admin_groupe_gestionnaire_create_commentaire_path }

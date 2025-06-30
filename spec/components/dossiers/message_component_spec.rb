@@ -6,7 +6,6 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       commentaire: commentaire,
       connected_user: connected_user,
       messagerie_seen_at: seen_at,
-      show_reply_button: show_reply_button,
       groupe_gestionnaire: groupe_gestionnaire
     )
   end
@@ -19,13 +18,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
   describe 'for dossier' do
     let(:connected_user) { dossier.user }
     let(:dossier) { create(:dossier, :en_construction) }
-    let(:show_reply_button) { true }
     let(:commentaire) { create(:commentaire, dossier: dossier) }
     let(:groupe_gestionnaire) { nil }
 
     subject { render_inline(component).to_html }
-
-    it { is_expected.to have_button("Répondre") }
 
     context 'escape <img> tag' do
       before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
@@ -62,9 +58,12 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         let(:procedure) { create(:procedure, hide_instructeurs_email: false) }
 
         context 'redacts the instructeur email but keeps the name' do
-          it { is_expected.to have_text(commentaire.body) }
-          it { is_expected.to have_text(instructeur.email.split('@').first) }
-          it { is_expected.not_to have_text(instructeur.email) }
+          it do
+            is_expected.to have_text(commentaire.body)
+            is_expected.to have_text(instructeur.email.split('@').first)
+            is_expected.not_to have_text("[Vous]")
+            is_expected.not_to have_text(instructeur.email)
+          end
         end
       end
 
@@ -81,6 +80,8 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
           it do
             is_expected.to have_selector("form[action=\"#{form_url}\"]")
             is_expected.to have_button(component.t('.delete_button'))
+            is_expected.to have_selector(".fr-background-alt--blue-cumulus")
+            is_expected.to have_text("[Vous]")
           end
         end
 
@@ -93,14 +94,22 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
         context 'on a procedure where commentaire had been written by connected an user' do
           let(:commentaire) { create(:commentaire, email: create(:user).email, body: 'Second message') }
+          let(:email) { create(:commentaire, email:, body: 'Second message') }
 
-          it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+          it do
+            is_expected.not_to have_selector("form[action=\"#{form_url}\"]")
+            is_expected.to have_selector(".fr-background-alt--brown-cafe-creme")
+            is_expected.not_to have_text("[Vous]")
+          end
         end
 
         context 'on a procedure where commentaire had been written by connected an expert' do
           let(:commentaire) { create(:commentaire, expert: create(:expert), body: 'Second message') }
 
-          it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+          it do
+            is_expected.not_to have_selector("form[action=\"#{form_url}\"]")
+            is_expected.to have_selector(".fr-background-alt--blue-cumulus")
+          end
         end
 
         context 'on a procedure where commentaire had been written another instructeur' do
@@ -199,13 +208,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
   end
 
   describe 'groupe_gestionnaire' do
-    let(:show_reply_button) { false }
     let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin)) }
     let(:groupe_gestionnaire) { commentaire.groupe_gestionnaire }
     let(:connected_user) { commentaire.sender }
     subject { render_inline(component).to_html }
-
-    it { is_expected.not_to have_button("Répondre") }
 
     context 'escape <img> tag' do
       before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
