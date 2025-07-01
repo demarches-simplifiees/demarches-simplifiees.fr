@@ -40,7 +40,7 @@ describe 'Inviting an expert:', js: true do
       check 'avis_invite_linked_dossiers'
       choose 'confidentiel_true', allow_label_click: true
 
-      within('form#new_avis') { click_on "Envoyer la demande d'avis" }
+      within('form#new_avis') { click_on "Envoyer la demande d’avis" }
       perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
@@ -81,7 +81,7 @@ describe 'Inviting an expert:', js: true do
       check 'avis_invite_linked_dossiers'
       choose 'confidentiel_true', allow_label_click: true
 
-      within('form#new_avis') { click_on "Envoyer la demande d'avis" }
+      within('form#new_avis') { click_on "Envoyer la demande d’avis" }
       perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
@@ -118,7 +118,7 @@ describe 'Inviting an expert:', js: true do
         check 'avis_invite_linked_dossiers'
         choose 'confidentiel_true', allow_label_click: true
 
-        within('form#new_avis') { click_on "Envoyer la demande d'avis" }
+        within('form#new_avis') { click_on "Envoyer la demande d’avis" }
         perform_enqueued_jobs
 
         expect(page).to have_content('Une demande d’avis a été envoyée')

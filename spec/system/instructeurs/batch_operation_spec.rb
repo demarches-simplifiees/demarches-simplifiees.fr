@@ -202,16 +202,16 @@ describe 'BatchOperation a dossier:', js: true do
       click_on "Demander un avis externe"
       expect(page).to have_selector("#modal-avis-batch", visible: true)
 
-      click_on "Envoyer la demande d'avis"
+      click_on "Envoyer la demande d’avis"
 
       expect(page).to have_content("Le champ « Email » doit être rempli")
 
       fill_in('avis_emails', with: 'mljkzmljz')
-      click_on "Envoyer la demande d'avis"
+      click_on "Envoyer la demande d’avis"
       expect(page).to have_content("Le champ « Email » est invalide : mljkzmljz")
 
       fill_in('avis_emails', with: 'test@test.com')
-      click_on "Envoyer la demande d'avis"
+      click_on "Envoyer la demande d’avis"
       # ensure batched dossier is disabled
       expect(page).to have_selector("##{checkbox_id}[disabled]")
       # ensure Batch is created
