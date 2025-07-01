@@ -3,14 +3,14 @@
 module CsvParsingConcern
   extend ActiveSupport::Concern
 
-  included do
-    CSV_MAX_SIZE = 1.megabyte
-    CSV_MAX_LINES = 5_000
-    CSV_ACCEPTED_CONTENT_TYPES = [
-      "text/csv",
-      "application/vnd.ms-excel"
-    ]
+  CSV_MAX_SIZE = 1.megabyte
+  CSV_MAX_LINES = 5_000
+  CSV_ACCEPTED_CONTENT_TYPES = [
+    "text/csv",
+    "application/vnd.ms-excel"
+  ]
 
+  included do
     private
 
     def csv_file?

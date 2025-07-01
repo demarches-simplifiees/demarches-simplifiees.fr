@@ -22,7 +22,7 @@ class Procedure::ImportComponent < ApplicationComponent
   end
 
   def csv_max_size
-    Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
+    CsvParsingConcern::CSV_MAX_SIZE
   end
 
   private

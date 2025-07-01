@@ -6,11 +6,11 @@ class TypesDeChampEditor::ChampDropDownAdvancedComponent < TypesDeChampEditor::B
   end
 
   def referentiel_max_size
-    Administrateurs::TypesDeChampController::CSV_MAX_SIZE
+    CsvParsingConcern::CSV_MAX_SIZE
   end
 
   def referentiel_max_lines
-    Administrateurs::TypesDeChampController::CSV_MAX_LINES
+    CsvParsingConcern::CSV_MAX_LINES
   end
 
   def template_detail
