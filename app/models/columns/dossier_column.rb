@@ -74,6 +74,9 @@ class Columns::DossierColumn < Column
         .joins(:groupe_instructeur)
         .where(groupe_instructeur_id: values)
     when 'dossier_notifications'
+      values << 'message_usager' if values.include?('message')
+      values << 'message' if values.include?('message_usager')
+
       dossiers
         .joins(:dossier_notifications)
         .where(dossier_notifications: { notification_type: values })

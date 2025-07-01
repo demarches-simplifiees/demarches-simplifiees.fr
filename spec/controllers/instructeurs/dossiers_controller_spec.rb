@@ -727,18 +727,18 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "when the usager had sent a message" do
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :message_usager) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :message) }
 
-      it "destroy message_usager notification only for the current_instructeur" do
+      it "destroy message notification only for the current_instructeur" do
         subject
 
         expect(
-          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :message_usager)
+          DossierNotification.exists?(instructeur:, dossier: dossier, notification_type: :message)
         ).to be_falsey
 
         expect(
-          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :message_usager)
+          DossierNotification.exists?(instructeur: other_instructeur, dossier: dossier, notification_type: :message)
         ).to be_truthy
       end
     end
@@ -801,6 +801,27 @@ describe Instructeurs::DossiersController, type: :controller do
       it "does not create a commentaire" do
         expect { subject }.to change(Commentaire, :count).by(0)
         expect(flash.alert).to be_present
+      end
+    end
+
+    context "when there are others instructeurs followers" do
+      let(:another_instructeur) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
+
+      before do
+        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        instructeur.followed_dossiers << dossier
+        another_instructeur.followed_dossiers << dossier
+        subject
+      end
+
+      it "create message notification only for others instructeurs follower" do
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.last
+        expect(notification.dossier_id).to eq(dossier.id)
+        expect(notification.instructeur_id).to eq(another_instructeur.id)
+        expect(notification.notification_type).to eq("message")
       end
     end
   end

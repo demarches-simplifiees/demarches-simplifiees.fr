@@ -15,8 +15,7 @@ module Instructeurs
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous]
     before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
-    before_action :set_notifications_dossier, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :pending_correction, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :create_avis, :create_commentaire]
-    before_action :set_notifications_sticker, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :pending_correction, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :create_avis, :create_commentaire]
+    before_action :set_notifications, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :dossier_labels, :repasser_en_construction, :repasser_en_instruction, :terminer, :create_avis, :create_commentaire]
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
@@ -24,6 +23,7 @@ module Instructeurs
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
     after_action :mark_pieces_jointes_as_read, only: [:pieces_jointes]
     after_action -> { destroy_notification(:dossier_modifie) }, only: [:show], if: -> { @notifications.any?(&:dossier_modifie?) }
+    after_action -> { destroy_notification(:message) }, only: [:messagerie], if: -> { @notifications.any?(&:message?) }
     after_action -> { destroy_notification(:message_usager) }, only: [:messagerie], if: -> { @notifications.any?(&:message_usager?) }
     after_action -> { destroy_notification(:annotation_instructeur) }, only: [:annotations_privees], if: -> { @notifications.any?(&:annotation_instructeur?) }
     after_action -> { destroy_notification(:avis_externe) }, only: [:avis], if: -> { @notifications.any?(&:avis_externe?) }
@@ -180,6 +180,7 @@ module Instructeurs
       @dossier = dossier
       respond_to do |format|
         format.turbo_stream do
+          set_notifications
           render :change_state
         end
 
@@ -282,7 +283,7 @@ module Instructeurs
       respond_to do |format|
         format.turbo_stream do
           @dossier = dossier
-          @notifications = DossierNotification.notifications_for_instructeur_dossier(current_instructeur, dossier)
+          set_notifications
           render :change_state
         end
 
@@ -298,6 +299,7 @@ module Instructeurs
       if @commentaire.errors.empty?
         @commentaire.dossier.touch(:last_commentaire_updated_at)
         current_instructeur.follow(dossier)
+        DossierNotification.create_notification(dossier, :message, except_instructeur: current_instructeur)
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier, statut: statut)
       else

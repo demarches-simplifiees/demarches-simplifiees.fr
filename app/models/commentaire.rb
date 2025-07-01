@@ -23,9 +23,10 @@ class Commentaire < ApplicationRecord
     size: { less_than: FILE_MAX_SIZE }
 
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
-  scope :sent_by_user, -> {
-    where(instructeur_id: nil, expert_id: nil)
-      .where.not(email: SYSTEM_EMAILS)
+  scope :to_notify, -> (instructeur) {
+    where.not(email: SYSTEM_EMAILS)
+      .where(discarded_at: nil)
+      .where("instructeur_id IS NULL OR instructeur_id != ?", instructeur.id)
   }
 
   after_create :notify

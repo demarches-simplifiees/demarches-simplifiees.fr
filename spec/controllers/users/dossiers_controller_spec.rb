@@ -1760,12 +1760,12 @@ describe Users::DossiersController, type: :controller do
         dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
       end
 
-      it "create message_usager notification only for instructeur follower" do
+      it "create message notification only for instructeur follower" do
         expect { subject }.to change(DossierNotification, :count).by(2)
 
         notifications = DossierNotification.where(
           dossier_id: dossier.id,
-          notification_type: :message_usager
+          notification_type: :message
         )
 
         expect(notifications.pluck(:instructeur_id)).to match_array([

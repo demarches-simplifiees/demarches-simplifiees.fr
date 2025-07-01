@@ -11,7 +11,7 @@
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.private_annotations'),
         annotations_privees_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]),
-        notification: notifications_sticker[:annotations_instructeur])
+        notification: notifications_sticker[:annotations_privees])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.external_opinion'),
         [avis_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]),

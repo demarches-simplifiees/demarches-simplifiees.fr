@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Maintenance
-  class T20250522backfillDossierNotificationForMessageUsagerTask < MaintenanceTasks::Task
+  class T20250522backfillDossierNotificationForMessageTask < MaintenanceTasks::Task
     # Documentation: cette tâche permet de créer les DossierNotification manquantes
-    # de type 'MESSAGE USAGER'
+    # de type 'MESSAGE'
 
     include RunnableOnDeployConcern
     include StatementsHelpersConcern
@@ -24,9 +24,15 @@ module Maintenance
     def process(follow)
       return if follow.instructeur.nil? # we have follow without instructeur !
 
+      return if DossierNotification.exists?(
+          dossier_id: follow.dossier_id,
+          instructeur_id: follow.instructeur_id,
+          notification_type: :message_usager
+        )
+
       DossierNotification.find_or_create_by!(
         dossier_id: follow.dossier_id,
-        notification_type: :message_usager,
+        notification_type: :message,
         instructeur_id: follow.instructeur_id
       ) do |notification|
         notification.display_at = Time.zone.now

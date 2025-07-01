@@ -20,7 +20,7 @@ module DossierCorrectableConcern
 
       corrections.create!(commentaire:, reason:)
 
-      create_attente_correction_notification
+      create_dossier_notifications(commentaire.instructeur)
 
       log_pending_correction_operation(commentaire, reason) if procedure.sva_svr_enabled?
 
@@ -79,8 +79,9 @@ module DossierCorrectableConcern
       log_dossier_operation(commentaire.instructeur, operation, commentaire)
     end
 
-    def create_attente_correction_notification
+    def create_dossier_notifications(except_instructeur)
       DossierNotification.create_notification(self, :attente_correction)
+      DossierNotification.create_notification(self, :message, except_instructeur:)
     end
   end
 end
