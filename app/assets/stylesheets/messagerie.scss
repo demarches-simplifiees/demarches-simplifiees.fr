@@ -19,6 +19,7 @@
 
 ol.messages-list > li::marker {
   content: none;
+  font-size: 0; // Some browsers support only font-size on ::marker
 }
 
 .icon-avatar {
