@@ -87,6 +87,25 @@ RSpec.describe NotificationMailer, type: :mailer do
         expect(mail.attachments.first.filename).to eq("attestation-depot_dossier-#{dossier.id}.pdf")
       end
     end
+
+    context "with contact information" do
+      let(:procedure) { create(:simple_procedure, :routee) }
+
+      let!(:contact_information) {
+        create(:contact_information, groupe_instructeur: procedure.groupe_instructeurs.first)
+      }
+
+      before do
+        dossier.update!(groupe_instructeur: procedure.groupe_instructeurs.first)
+      end
+
+      it 'renders default template' do
+        expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
+        expect(body).to include("Votre dossier nº&nbsp;#{dossier.id}")
+        expect(body).to include(contact_information.telephone_url)
+        expect(body).to include(contact_information.adresse)
+      end
+    end
   end
 
   describe 'send_en_instruction_notification' do
