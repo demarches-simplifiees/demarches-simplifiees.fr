@@ -177,6 +177,10 @@ class Champs::AddressChamp < Champs::TextChamp
     end.merge(postal_code:)
   end
 
+  def not_in_ban_input_id
+    "#{input_id}-not-in-ban"
+  end
+
   def street_input_id
     "#{input_id}-street"
   end

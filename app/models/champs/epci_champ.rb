@@ -69,8 +69,16 @@ class Champs::EpciChamp < Champs::TextChamp
     "#{input_id}-code_departement"
   end
 
+  def code_departement_input_label_id
+    "#{code_departement_input_id}-label"
+  end
+
   def epci_input_id
     "#{input_id}-epci"
+  end
+
+  def epci_input_label_id
+    "#{epci_input_id}-label"
   end
 
   def focusable_input_id

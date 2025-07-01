@@ -14,7 +14,7 @@ import {
   Virtualizer,
   ListLayout
 } from 'react-aria-components';
-import { useMemo, useRef, createContext, useContext } from 'react';
+import { useMemo, useRef, createContext, useContext, useId } from 'react';
 import type { RefObject } from 'react';
 import * as s from 'superstruct';
 
@@ -37,6 +37,8 @@ import {
 export function ComboBox({
   children,
   label,
+  labelId,
+  ariaLabelledbyPrefix,
   description,
   className,
   inputRef,
@@ -49,6 +51,14 @@ export function ComboBox({
   isOpen?: boolean;
   placeholder?: string;
 }) {
+  const generatedId = useId();
+  // if label is passed, we need to generate an id for the input, otherwise we use the labelId passed in the props
+  const idToUse = label ? generatedId : labelId;
+
+  const inputAriaLabelledby = ariaLabelledbyPrefix
+    ? `${ariaLabelledbyPrefix} ${idToUse}`
+    : idToUse;
+
   return (
     <AriaComboBox
       {...props}
@@ -56,7 +66,7 @@ export function ComboBox({
       shouldFocusWrap={true}
     >
       {label ? (
-        <Label className="fr-label">
+        <Label className="fr-label" id={labelId}>
           {label}
           {description ? (
             <Text slot="description" className="fr-hint-text fr-mb-1w">
@@ -70,6 +80,7 @@ export function ComboBox({
           className="fr-select fr-autocomplete"
           ref={inputRef}
           aria-busy={isLoading}
+          aria-labelledby={inputAriaLabelledby}
           placeholder={placeholder || undefined}
           translate="no"
         />
