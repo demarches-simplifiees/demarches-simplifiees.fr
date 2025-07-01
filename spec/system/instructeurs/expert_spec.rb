@@ -121,6 +121,8 @@ describe 'Inviting an expert:', js: true do
         within('form#new_avis') { click_on "Envoyer la demande d’avis" }
         perform_enqueued_jobs
 
+        wait_until { expert_procedure.reload.avis.present? }
+
         expect(page).to have_content('Une demande d’avis a été envoyée')
         expect(page).to have_content('Avis des invités')
         within('section') do
