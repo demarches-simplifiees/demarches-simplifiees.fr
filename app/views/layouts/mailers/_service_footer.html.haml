@@ -17,9 +17,9 @@
           = service_or_contact_information.adresse
         %strong= t('.ask_question')
         %ul{ style: "padding: 0 0 0 10px; margin: 0" }
-          - if service_or_contact_information.faq_link.present?
+          - if service_or_contact_information.respond_to?(:faq_link) && service_or_contact_information.faq_link.present?
             %li= link_to t('.faq_link'), service_or_contact_information.faq_link, target: '_blank', rel: 'noopener'
-          - if service_or_contact_information.contact_link.present?
+          - if service_or_contact_information.respond_to?(:contact_link) && service_or_contact_information.contact_link.present?
             %li= link_to t('.contact_link'), service_or_contact_information.contact_link, target: '_blank', rel: 'noopener'
           - if dossier.present? && dossier.messagerie_available?
             %li
@@ -36,7 +36,7 @@
               %span= t('.by_phone')
               %span= link_to service_or_contact_information.telephone, service_or_contact_information.telephone_url
           %li= "#{t('.schedule')} #{ formatted_horaires(service_or_contact_information.horaires) }"
-          - if service_or_contact_information.other_contact_info.present?
+          - if service_or_contact_information.respond_to?(:other_contact_info) && service_or_contact_information.other_contact_info.present?
             %li
               %span= t('.other_contact_info')
               %span= service_or_contact_information.other_contact_info
