@@ -388,6 +388,37 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
+      context 'when data is mapped to map (geojson)' do
+        let(:prefilled_type_de_champ_type) { :carte }
+        let(:data) { { ok: { "type" => "Point", "coordinates" => [1, 2] } } }
+        it 'casts and updates the map with the jsonpath value as geojson' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.find(&:carte?).geo_areas.count }.from(0).to(1)
+        end
+
+        # TODO: test with all types of geojson objects
+        # polygon
+        # hourglass_polygon
+        # invalid_right_hand_rule_polygon
+        # polygon_with_extra_coordinate
+        # line_string
+        # point
+        # point_with_z
+        # invalid_point
+        # multi_polygon
+        # point_invalid
+        # linestring_invalid
+        # multipoint_invalid
+        # polygon_invalid
+        # multilinestring_invalid
+        # multipolygon_invalid
+        # geometrycollection_invalid
+        #
+        # TODO add factory
+        # MultiLineString
+        # MultiPoint
+      end
+
       context 'when data is mapped to child' do
         let(:types_de_champ_public) do
           [

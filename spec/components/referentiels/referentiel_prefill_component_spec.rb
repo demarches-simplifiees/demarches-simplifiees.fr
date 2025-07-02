@@ -59,9 +59,6 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           { stable_id: 6, type: :yes_no, libelle: 'yes_no' } # exclu (type non compatible)
         ]
       end
-      it 'includes hidden prefill tag so user can go back/forth between steps' do
-        expect(subject).to have_selector('input[type="hidden"][name="type_de_champ[referentiel_mapping][$.jsonpath][prefill]"][value="1"]')
-      end
 
       context 'when not selected' do
         it 'shows only text and textarea' do
@@ -158,6 +155,20 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       end
       it 'shows only multiple_drop_down_list' do
         expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['multiple'])
+      end
+    end
+
+    context 'with mapping type :geojson' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:geojson] }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 11, type: :carte, libelle: 'carte' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only map' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['carte'])
       end
     end
   end

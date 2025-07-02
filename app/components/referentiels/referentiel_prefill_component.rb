@@ -12,7 +12,8 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     Referentiels::MappingFormComponent::TYPES[:boolean] => %w[checkbox yes_no],
     Referentiels::MappingFormComponent::TYPES[:date] => %w[date],
     Referentiels::MappingFormComponent::TYPES[:datetime] => %w[datetime],
-    Referentiels::MappingFormComponent::TYPES[:array] => %w[multiple_drop_down_list]
+    Referentiels::MappingFormComponent::TYPES[:array] => %w[multiple_drop_down_list],
+    Referentiels::MappingFormComponent::TYPES[:geojson] => %w[carte]
   }.freeze
 
   def source_tdcs
@@ -25,10 +26,6 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
       options_for_select(tdc_targets(mapping_opts), lookup_existing_value(jsonpath, "prefill_stable_id")),
       class: "fr-select"
     )
-  end
-
-  def prefill_hidden_tag(jsonpath)
-    hidden_field_tag(attribute_name(jsonpath, "prefill"), lookup_existing_value(jsonpath, "prefill"))
   end
 
   private

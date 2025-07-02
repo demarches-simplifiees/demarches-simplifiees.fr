@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
-  TYPES = [:string, :decimal_number, :integer_number, :boolean, :date, :datetime, :array].index_by(&:itself).freeze
+  TYPES = [:string, :decimal_number, :integer_number, :boolean, :date, :datetime, :array, :geojson].index_by(&:itself).freeze
 
   def last_request_keys
     JSONPath.hash_to_jsonpath(referentiel.last_response_body)
@@ -26,7 +26,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   def prefill_tag(jsonpath)
     tag.div(class: "fr-checkbox-group") do
       safe_join([
-        check_box_tag(attribute_name(jsonpath, "prefill"), "1", lookup_existing_value(jsonpath, "prefill") || false, class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }, aria: { labelledby: label_check_prefill(jsonpath) }),
+        hidden_field_tag(attribute_name(jsonpath, "prefill"), "0"),
+        check_box_tag(attribute_name(jsonpath, "prefill"), "1", lookup_existing_value(jsonpath, "prefill") == "1", class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }, aria: { labelledby: label_check_prefill(jsonpath) }),
         tag.label(for: jsonpath.parameterize, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") }
       ])
     end
@@ -58,7 +59,9 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def value_to_type(value)
-    if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
+    if ReferentielMappingUtils.geojson_object?(value)
+      self.class::TYPES[:geojson]
+    elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
       self.class::TYPES[:datetime]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
       self.class::TYPES[:date]

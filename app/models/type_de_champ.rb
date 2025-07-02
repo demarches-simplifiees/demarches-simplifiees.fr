@@ -289,6 +289,18 @@ class TypeDeChamp < ApplicationRecord
     referentiel_mapping_prefillable_with_stable_id.map { |_jsonpath, mapping_opts| mapping_opts[:prefill_stable_id] }
   end
 
+  def referentiel_mapping_displayable
+    safe_referentiel_mapping.filter { |_jsonpath, mapping_opts| mapping_opts[:prefill] != "1" }
+  end
+
+  def referentiel_mapping_displayable_for_instructeur
+    referentiel_mapping_displayable.filter { |_jsonpath, mapping| mapping[:display_instructeur] == "1" }
+  end
+
+  def referentiel_mapping_displayable_for_usager
+    referentiel_mapping_displayable.filter { |_jsonpath, mapping| mapping[:display_usager] == "1" }
+  end
+
   def params_for_champ
     {
       private: private?,
@@ -609,8 +621,7 @@ class TypeDeChamp < ApplicationRecord
     # We should refresh all champs after update except for champs using react or custom refresh
     # logic (RNA, SIRET, etc.)
     case type_champ
-    when type_champs.fetch(:carte),
-      type_champs.fetch(:piece_justificative),
+    when type_champs.fetch(:piece_justificative),
       type_champs.fetch(:titre_identite),
       type_champs.fetch(:rna)
       false

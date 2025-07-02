@@ -60,5 +60,9 @@
             %p= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
             %p= helpers.number_with_html_delimiter(champ.to_s)
+          - when TypeDeChamp.type_champs.fetch(:referentiel)
+            = champ.to_s
+            = render ViewableChamp::ReferentielDisplayComponent.new(champ: champ, profile: @profile)
+
           - else
             = helpers.format_text_value(champ.to_s.strip) # format already wrap in p
