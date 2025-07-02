@@ -17,7 +17,7 @@
           - if dossier.messagerie_available?
             %div{ data: { controller: 'hide-target' } }
               %button.fr-btn.fr-icon-add-line.fr-btn--icon-left.fr-mb-2w.width-100-for-xs{ type: 'button', data: { 'hide-target_target': 'source', 'hide-target-hide-source': 'true' } } Nouveau message
-              .fr-mt-2w.fr-hidden{ data: { hide_target_target: 'toHide' } }
+              .fr-hidden{ data: { hide_target_target: 'toHide' } }
                 .fr-grid-row
                   .fr-col-12.fr-col-offset-md-2.fr-col-md-8
                     = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier }

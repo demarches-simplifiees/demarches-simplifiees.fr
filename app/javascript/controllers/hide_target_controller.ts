@@ -26,6 +26,12 @@ export class HideTargetController extends Controller {
     if (shouldHideSource) {
       source.classList.add('fr-hidden');
     }
+
+    const footer = document.querySelector('.fixed-footer') as HTMLElement;
+    if (footer) {
+      const height = footer.offsetHeight;
+      document.body.style.paddingBottom = `${height}px`;
+    }
   }
 
   handleReveal() {
@@ -36,5 +42,7 @@ export class HideTargetController extends Controller {
     this.sourceTargets.forEach((source) => {
       source.classList.remove('fr-hidden');
     });
+
+    document.body.style.paddingBottom = '';
   }
 }
