@@ -550,6 +550,7 @@ fr:
         dossier_menu: "Dossier numéro %{id}"
         index:
           dossiers: "Mes dossiers"
+          see_deleted_dossiers_history: Historique des dossiers supprimés
         dossiers_list:
           n_dossier: "dossier n°"
           no_result_title: Aucun dossier
@@ -578,14 +579,14 @@ fr:
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
           shared_with: Dossier partagé par %{owner} avec
-          deleted_by_user: Supprimé le %{date} par l’usager
-          deleted_by_automatic: Supprimé le %{date} automatiquement du à la date d’expiration
+          deleted_by_user: Mis à la corbeille le %{date} par l’usager
+          deleted_by_automatic: Mis à la corbeille automatiquement le %{date}car le délai maximal de conservation a été atteint
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"
           clone: "Dupliquer le dossier"
           delete_dossier: "Mettre à la corbeille"
-          delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
+          delete_dossier_confirm: "Voulez-vous vraiment mettre à la corbeille ce dossier ?"
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
           edit_draft: "Continuer à remplir"
@@ -903,7 +904,7 @@ fr:
       cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."
       ask_deletion:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
-        soft_deleted_dossier: "Votre dossier a bien été supprimé de votre interface"
+        soft_deleted_dossier: "Votre dossier a bien été mis à la corbeille"
       restore: "Votre dossier a bien été restauré"
       etablissement:
         no_establishment: "Aucun établissement n’est associé à ce dossier"
@@ -929,6 +930,20 @@ fr:
         papertrail:
           get_papertrail: "Obtenir une attestation de dépôt de dossier"
           filename: "attestation-depot_dossier-%{dossier_id}.pdf"
+      show_in_trash:
+        page_title: "Dossier nº %{numero} - En corbeille"
+        title: "Le dossier n° %{numero} a été mis à la corbeille"
+        explanation_html: "Vous pouvez retrouver ce dossier depuis l'onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n'est pas consultable actuellement."
+        consult_trash: "Consulter la corbeille"
+        user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
+        automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu'il ne soit supprimé définitivement."
+      show_deleted:
+        page_title: "Dossier nº %{numero} - Supprimé définitivement"
+        title: "Le dossier n° %{numero} a été supprimé"
+        explanation: "Vous ne pouvez plus récupérer ce dossier pour une des raisons suivantes :"
+        reason_user_request: "Il a été mis à la corbeille à votre demande, puis automatiquement supprimé."
+        reason_automatic: "Il a été supprimé car son délai maximal de conservation a été atteint."
+        history_link_html: "Vous pouvez retrouver l'ensemble des dossiers supprimés de votre compte sur la page <a href=\"%{history_link}\" class=\"fr-link\">Historique des dossiers supprimés</a>."
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
