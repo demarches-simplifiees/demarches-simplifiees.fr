@@ -1,0 +1,15 @@
+%p
+  Bonjour
+
+%p
+  Votre connexion sécurisée à #{Current.application_name} expirera dans une semaine.
+  Vous pouvez la renouveler dès maintenant en cliquant sur le lien suivant :
+  = link_to(sign_in_by_link_url(@instructeur.id, jeton: @renewal_token), sign_in_by_link_url(@instructeur.id, jeton: @renewal_token))
+
+%p
+  Ce lien est
+  %b valable pendant une semaine
+  et peut-être réutilisé
+  %b plusieurs fois.
+
+= render partial: "layouts/mailers/signature"

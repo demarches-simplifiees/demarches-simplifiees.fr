@@ -36,11 +36,20 @@ class InstructeurMailer < ApplicationMailer
   end
 
   def send_login_token(instructeur, login_token)
-    @instructeur_id = instructeur.id
+    @instructeur = instructeur
     @login_token = login_token
     subject = "Connexion sécurisée à #{Current.application_name}"
 
     bypass_unverified_mail_protection!
+
+    configure_defaults_for_user(instructeur.user)
+    mail(to: instructeur.email, subject: subject)
+  end
+
+  def trusted_device_token_renewal(instructeur, renewal_token)
+    @instructeur = instructeur
+    @renewal_token = renewal_token
+    subject = "Renouvellement de la connexion sécurisée à #{Current.application_name}"
 
     configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
@@ -55,7 +64,7 @@ class InstructeurMailer < ApplicationMailer
   end
 
   def self.critical_email?(action_name)
-    action_name == "send_login_token"
+    action_name.in?(["send_login_token", "trusted_device_token_renewal"])
   end
 
   def confirm_and_notify_added_instructeur(instructeur, group, current_instructeur_email)

@@ -42,6 +42,30 @@ RSpec.describe InstructeurMailer, type: :mailer do
     end
   end
 
+  describe '#trusted_device_token_renewal' do
+    let(:user) { create(:instructeur) }
+    let(:token) { SecureRandom.hex }
+    subject { described_class.trusted_device_token_renewal(user, token, 1.week.from_now) }
+
+    it { expect(subject[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION]).not_to be_present }
+
+    context 'without SafeMailer configured' do
+      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
+    end
+
+    context 'with SafeMailer configured' do
+      let(:forced_delivery_method) { :kikoo }
+      before { allow(SafeMailer).to receive(:forced_delivery_method).and_return(forced_delivery_method) }
+      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(forced_delivery_method.to_s) }
+    end
+
+    context 'when perform_later is called' do
+      it 'enqueues email in default queue for high priority delivery' do
+        expect { subject.deliver_later }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name)
+      end
+    end
+  end
+
   describe '#last_week_overview' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
