@@ -551,6 +551,7 @@ fr:
         index:
           dossiers: "Mes dossiers"
           see_deleted_dossiers_history: Historique des dossiers supprimés
+          administration_no_longer_processes: "L’administration ne traitera plus votre demande."
         dossiers_list:
           n_dossier: "dossier n°"
           no_result_title: Aucun dossier
@@ -580,7 +581,7 @@ fr:
           updated_at: modifié le %{date}
           shared_with: Dossier partagé par %{owner} avec
           deleted_by_user: Mis à la corbeille le %{date} par l’usager
-          deleted_by_automatic: Mis à la corbeille automatiquement le %{date}car le délai maximal de conservation a été atteint
+          deleted_by_automatic: Mis à la corbeille automatiquement le %{date} car le délai maximal de conservation a été atteint
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"

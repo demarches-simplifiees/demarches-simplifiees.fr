@@ -542,6 +542,7 @@ en:
         index:
           dossiers: "My files"
           see_deleted_dossiers_history: Deleted files history
+          administration_no_longer_processes: "The administration will no longer process your request."
         dossiers_list:
           n_dossier: "File no."
           no_result_title: No files
