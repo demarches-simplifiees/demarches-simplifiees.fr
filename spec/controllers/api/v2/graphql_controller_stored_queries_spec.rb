@@ -146,6 +146,41 @@ describe API::V2::GraphqlController do
           }
         end
       end
+
+      context 'columns' do
+        let(:types_de_champ_public) do
+          [
+            { libelle: 'label text' },
+            { type: :integer_number, libelle: 'label integer_number' },
+            { type: :decimal_number, libelle: 'label decimal_number' },
+            { type: :checkbox, libelle: 'label checkbox' },
+            { type: :piece_justificative, libelle: 'label piece_justificative' },
+            { type: :multiple_drop_down_list, libelle: 'label multiple_drop_down_list' },
+            { type: :siret, libelle: 'label entreprise' }
+          ]
+        end
+        let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, procedure:) }
+        let(:columns) { gql_data[:dossier][:champs].flat_map { _1[:columns] } }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossier][:champs].size).to eq(7)
+          expect(columns.size).to eq(17)
+
+          expect(columns[0]).to include(label: "label text", value: 'text')
+          expect(columns[1]).to include(label: "label integer_number", value: 42)
+          expect(columns[2]).to include(label: "label decimal_number", value: 42.1)
+          expect(columns[3]).to include(label: "label checkbox", value: true)
+          expect(columns[4][:value].first).to include(__typename: "File", filename: "toto.txt", contentType: "text/plain")
+          expect(columns[5]).to include(label: "label multiple_drop_down_list", value: ["val1", "val2"])
+
+          expect(columns[6]).to include(label: "label entreprise – SIRET", value: '44011762001530')
+          expect(columns[7]).to include(label: "label entreprise – Entreprise raison sociale", value: 'GRTGAZ')
+          expect(columns[15]).to include(label: "label entreprise – SIRET – Département", value: '92')
+          expect(columns[16]).to include(label: "label entreprise – SIRET – Région", value: 'Île-de-France')
+        }
+      end
     end
 
     context 'getDemarche' do
