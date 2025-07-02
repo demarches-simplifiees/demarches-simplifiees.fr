@@ -1285,10 +1285,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
   end
 
   create_table "trusted_device_tokens", force: :cascade do |t|
+    t.datetime "activated_at"
     t.datetime "created_at", precision: nil, null: false
     t.bigint "instructeur_id"
+    t.datetime "renewal_notified_at"
     t.string "token", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["activated_at", "renewal_notified_at"], name: "idx_on_activated_at_renewal_notified_at_ca000bc08e"
     t.index ["instructeur_id"], name: "index_trusted_device_tokens_on_instructeur_id"
     t.index ["token"], name: "index_trusted_device_tokens_on_token", unique: true
   end
