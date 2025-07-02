@@ -12,7 +12,8 @@ module Users
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore, :champ]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
+    before_action :ensure_ownership_or_invitation_with_fallback!, only: [:show]
+    before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE - [:show]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
@@ -644,6 +645,14 @@ module Users
       end
     end
 
+    def ensure_ownership_or_invitation_with_fallback!
+      begin
+        ensure_ownership_or_invitation!
+      rescue ActiveRecord::RecordNotFound
+        handle_missing_dossier
+      end
+    end
+
     def forbid_closed_submission!
       if !dossier.can_transition_to_en_construction?
         forbidden!
@@ -671,5 +680,30 @@ module Users
     def commentaire_params
       params.require(:commentaire).permit(:body, piece_jointe: [])
     end
+
+    def handle_missing_dossier
+      dossier_id = params[:id]
+      hidden_dossier = current_user.dossiers
+        .unscope(where: :hidden_by_user_at)
+        .where(id: dossier_id)
+        .where.not(hidden_by_user_at: nil)
+        .first
+
+      if hidden_dossier
+        @hidden_dossier = hidden_dossier
+        render :show_in_trash
+        return
+      end
+
+      deleted_dossier = DeletedDossier.find_by(dossier_id:, user_id: current_user.id)
+
+      if deleted_dossier
+        @deleted_dossier = deleted_dossier
+        render :show_deleted
+        return
+      end
+
+      raise ActiveRecord::RecordNotFound
+end
   end
 end
