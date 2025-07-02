@@ -22,6 +22,7 @@ class Commentaire < ApplicationRecord
     content_type: AUTHORIZED_CONTENT_TYPES,
     size: { less_than: FILE_MAX_SIZE }
 
+  scope :chronological, -> { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
   scope :to_notify, -> (instructeur) {
     where.not(email: SYSTEM_EMAILS)
