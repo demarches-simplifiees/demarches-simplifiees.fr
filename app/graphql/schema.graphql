@@ -1015,7 +1015,7 @@ type DeletedDossier {
   """
   La raison de la suppression du dossier.
   """
-  reason: String!
+  reason: DeletedDossierReason!
 
   """
   L’état du dossier supprimé.
@@ -1056,6 +1056,16 @@ type DeletedDossierEdge {
   The item at the end of the edge.
   """
   node: DeletedDossier
+}
+
+enum DeletedDossierReason {
+  expired
+  instructeur_request
+  manager_request
+  procedure_removed
+  user_expired
+  user_removed
+  user_request
 }
 
 interface Demandeur {
