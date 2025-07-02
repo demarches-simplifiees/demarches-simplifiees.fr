@@ -5,6 +5,7 @@ module DossierStateConcern
 
   def submit_en_construction!
     self.traitements.submit_en_construction
+    self.submitted_revision_id = revision_id
     save!
 
     RoutingEngine.compute(self)
@@ -20,6 +21,7 @@ module DossierStateConcern
       .passer_en_construction
       .processed_at
     self.expired_at = expiration_date
+    self.submitted_revision_id = revision_id
 
     save!
 
