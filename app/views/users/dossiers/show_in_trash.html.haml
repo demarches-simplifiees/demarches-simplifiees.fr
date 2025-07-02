@@ -1,0 +1,21 @@
+- content_for :title, t('users.dossiers.show_in_trash.page_title', numero: @hidden_dossier.id)
+
+.container
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12
+      .fr-card.fr-card--no-border
+        .fr-card__body
+          .fr-card__content
+            %h1.fr-h2= t('users.dossiers.show_in_trash.title', numero: @hidden_dossier.id)
+
+            %p.fr-mb-4w= raw t('users.dossiers.show_in_trash.explanation_html', trash_link: dossiers_path(statut: 'dossiers-supprimes'))
+
+            .card
+              %ul.fr-mb-0
+                %li= raw t('users.dossiers.show_in_trash.user_request_info')
+                %li= raw t('users.dossiers.show_in_trash.automatic_info')
+
+            .fr-mt-4w
+              = link_to t('users.dossiers.show_in_trash.consult_trash'),
+                        dossiers_path(statut: 'dossiers-supprimes'),
+                        class: 'fr-btn'
