@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update]
+    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter]
 
     def update
       if !@procedure_presentation.update(procedure_presentation_params)
@@ -16,16 +16,12 @@ module Instructeurs
 
     def refresh_column_filter
       # According to the html, the selected filters is the last one
-      column = ColumnType.new.cast(params['filters'].last['id'])
-      procedure = current_instructeur.procedures.find(column.h_id[:procedure_id])
+      @column = ColumnType.new.cast(params['filters'].last['id'])
+      procedure = current_instructeur.procedures.find(@column.h_id[:procedure_id])
 
-      if column.groupe_instructeur?
-        column.options_for_select = current_instructeur.groupe_instructeur_options_for(procedure)
+      if @column.groupe_instructeur?
+        @column.options_for_select = current_instructeur.groupe_instructeur_options_for(procedure)
       end
-
-      component = Instructeurs::ColumnFilterValueComponent.new(column:)
-
-      render turbo_stream: turbo_stream.replace('value', component)
     end
 
     private

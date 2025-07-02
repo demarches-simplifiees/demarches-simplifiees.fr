@@ -481,7 +481,7 @@ Rails.application.routes.draw do
 
     resources :procedure_presentation, only: [:update] do
       member do
-        get 'refresh_column_filter'
+        patch 'refresh_column_filter'
       end
     end
 

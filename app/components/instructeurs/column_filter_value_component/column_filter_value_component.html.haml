@@ -1,0 +1,30 @@
+#column_filter_value_component
+  - if column.nil?
+    = form.label :value, t('.value'), class: 'fr-label'
+    = form.text_field :value,
+      id: 'value',
+      class: 'fr-input',
+      disabled: true
+  - elsif column.type.in?([:boolean])
+    = render Dsfr::RadioButtonListComponent.new(form:,
+      target: "filters[][filter]",
+      buttons: column.options_for_select.map { |label, value| { label:, value: } }) do
+      = t('.value')
+  - elsif column.type.in?([:enum, :enums])
+    = form.label :value, t('.value'), class: 'fr-label'
+    = form.select "filters[][filter]",
+      options_for_select(column.options_for_select),
+      {},
+      id: 'value',
+      class: 'fr-select',
+      data: { no_autosubmit: true },
+      required: true
+  - else
+    = form.label :value, t('.value'), class: 'fr-label'
+    = form.text_field "filters[][filter]",
+      id: 'value',
+      class: 'fr-input',
+      type: type,
+      maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
+      data: { no_autosubmit: true },
+      required: true
