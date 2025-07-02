@@ -7,6 +7,13 @@ class TrustedDeviceToken < ApplicationRecord
   belongs_to :instructeur, optional: false
   has_secure_token
 
+  scope :expiring_in_one_week, -> do
+    window_start = TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD.ago
+    window_end = (TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 1.week).ago
+    where(activated_at: window_start..window_end,
+          renewal_notified_at: nil)
+  end
+
   def token_valid?
     LOGIN_TOKEN_VALIDITY.ago < created_at
   end
