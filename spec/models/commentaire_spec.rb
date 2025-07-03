@@ -43,8 +43,8 @@ describe Commentaire do
       it { is_expected.to be_truthy }
     end
 
-    context 'with demarches.numerique.gouv.fr' do
-      let(:email) { "contact@demarches.numerique.gouv.fr" }
+    context 'with demarche.numerique.gouv.fr' do
+      let(:email) { "contact@demarche.numerique.gouv.fr" }
 
       it { is_expected.to be_truthy }
     end
