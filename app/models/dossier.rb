@@ -48,7 +48,7 @@ class Dossier < ApplicationRecord
 
   has_many :champs, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
-  has_many :commentaires_chronological, -> { chronological }, class_name: 'Commentaire', inverse_of: :dossier
+  has_many :commentaires_chronological, -> { chronological }, class_name: 'Commentaire', inverse_of: false
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob).order(created_at: :desc) }, class_name: 'Commentaire', inverse_of: :dossier
 
   has_many :invites, dependent: :destroy
