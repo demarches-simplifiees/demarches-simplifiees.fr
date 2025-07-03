@@ -68,6 +68,7 @@ en:
           phone: Phone number
           rna: RNA number
           rnf: RNF number
+        not_provided: Not provided
     errors:
       type_de_champ:
         attributes:

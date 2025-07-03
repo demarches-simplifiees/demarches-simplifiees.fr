@@ -37,7 +37,8 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
           type: :enum,
           jsonpath: "$.referentiel.data.row.#{path}",
           displayable:,
-          options_for_select: referentiel.options_for_path(path)
+          options_for_select: referentiel.options_for_path(path),
+          mandatory: mandatory?
         )
       end
     else

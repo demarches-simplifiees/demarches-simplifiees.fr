@@ -37,7 +37,8 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
           label: "#{libelle_with_prefix(prefix)} - code postal (5 chiffres)",
           jsonpath: '$.code_postal',
           displayable:,
-          type: :text
+          type: :text,
+          mandatory: mandatory?
         ),
         Columns::JSONPathColumn.new(
           procedure_id: procedure.id,
@@ -46,7 +47,8 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
           label: "#{libelle_with_prefix(prefix)} - département",
           jsonpath: '$.code_departement',
           displayable:,
-          type: :number
+          type: :number,
+          mandatory: mandatory?
         )
       ]
     )

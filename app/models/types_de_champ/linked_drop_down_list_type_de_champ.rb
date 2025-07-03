@@ -79,7 +79,8 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         tdc_type: type_champ,
         type: :text,
         path: :value,
-        displayable:
+        displayable:,
+        mandatory: mandatory?
       ),
       Columns::LinkedDropDownColumn.new(
         procedure_id: procedure.id,
@@ -89,7 +90,8 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         type: :enum,
         path: :primary,
         displayable: false,
-        options_for_select: primary_options
+        options_for_select: primary_options,
+        mandatory: mandatory?
       ),
       Columns::LinkedDropDownColumn.new(
         procedure_id: procedure.id,
@@ -99,7 +101,8 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         type: :enum,
         path: :secondary,
         displayable: false,
-        options_for_select: secondary_options.values.flatten.uniq.sort
+        options_for_select: secondary_options.values.flatten.uniq.sort,
+        mandatory: mandatory?
       )
     ]
   end

@@ -105,7 +105,8 @@ class TypesDeChamp::TypeDeChampBase
           label: libelle_with_prefix(prefix),
           type: TypeDeChamp.column_type(type_champ),
           displayable:,
-          options_for_select:
+          options_for_select:,
+          mandatory: mandatory?
         )
       ]
     else

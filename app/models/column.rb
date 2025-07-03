@@ -7,11 +7,12 @@ class Column
   include ActiveModel::Validations
 
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
+  NOT_PROVIDED_VALUE = 'nil'
 
-  attr_reader :table, :column, :label, :type, :filterable, :displayable
+  attr_reader :table, :column, :label, :type, :filterable, :displayable, :mandatory
   attr_accessor :options_for_select
 
-  def initialize(procedure_id:, table:, column:, label: nil, type: :text, filterable: true, displayable: true, options_for_select: [])
+  def initialize(procedure_id:, table:, column:, label: nil, type: :text, filterable: true, displayable: true, options_for_select: [], mandatory: true)
     @procedure_id = procedure_id
     @table = table
     @column = column
@@ -20,6 +21,7 @@ class Column
     @filterable = filterable
     @displayable = displayable
     @options_for_select = options_for_select
+    @mandatory = mandatory
   end
 
   # the id is a String to be used in forms
@@ -55,7 +57,9 @@ class Column
   def filterable? = filterable
 
   def label_for_value(value)
-    if options_for_select.present?
+    if value == NOT_PROVIDED_VALUE
+      I18n.t('activerecord.attributes.type_de_champ.not_provided')
+    elsif options_for_select.present?
       # options for select store ["trad", :enum_value]
       options_for_select.to_h { |(label, value)| [value.to_s, label] }
         .fetch(value.to_s, value.to_s)
@@ -63,6 +67,8 @@ class Column
       value
     end
   end
+
+  def self.not_provided_option = [I18n.t('activerecord.attributes.type_de_champ.not_provided'), NOT_PROVIDED_VALUE]
 
   private
 

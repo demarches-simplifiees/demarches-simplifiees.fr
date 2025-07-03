@@ -29,7 +29,8 @@ class TypesDeChamp::SiretTypeDeChamp < TypesDeChamp::TypeDeChampBase
         type: attributes[:type],
         jsonpath: "$.#{column}",
         displayable: true,
-        filterable: attributes.fetch(:filterable, true)
+        filterable: attributes.fetch(:filterable, true),
+        mandatory: mandatory?
       )
     end
   end

@@ -19,7 +19,8 @@ module AddressableColumnConcern
           jsonpath:,
           displayable:,
           options_for_select:,
-          type:
+          type:,
+          mandatory: mandatory?
         )
       end
     end
