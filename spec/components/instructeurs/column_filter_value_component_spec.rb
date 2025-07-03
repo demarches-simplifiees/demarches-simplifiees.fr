@@ -12,14 +12,14 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   end
 
   describe 'the select case' do
-    let(:column) { double("Column", type: :enum, options_for_select:) }
+    let(:column) { double("Column", type: :enum, options_for_select:, mandatory: true) }
     let(:options_for_select) { ['option1', 'option2'] }
 
     it { expect(page).to have_select('filters[][filter]', options: ['', 'option1', 'option2']) } # empty option is added by form helper but field is required
   end
 
   describe 'the input case' do
-    let(:column) { double("Column", type: :datetime) }
+    let(:column) { double("Column", type: :datetime, mandatory: true) }
 
     it { expect(page).to have_selector('input[name="filters[][filter]"][type="date"]') }
   end
@@ -31,7 +31,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   end
 
   describe 'the radio button case' do
-    let(:column) { double("Column", type: :boolean, options_for_select: Champs::YesNoChamp.options) }
+    let(:column) { double("Column", type: :boolean, options_for_select: Champs::YesNoChamp.options, mandatory: true) }
 
     it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]') }
   end

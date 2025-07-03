@@ -8,6 +8,16 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     @form = form
   end
 
+  def column_filter_options
+    options = column.options_for_select
+
+    if !@column.mandatory
+      options << Column.not_provided_option
+    end
+
+    options
+  end
+
   private
 
   def type

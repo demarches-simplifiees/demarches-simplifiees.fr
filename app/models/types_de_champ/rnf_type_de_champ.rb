@@ -46,7 +46,8 @@ class TypesDeChamp::RNFTypeDeChamp < TypesDeChamp::TextTypeDeChamp
           label: "#{libelle_with_prefix(prefix)} – Titre au répertoire national des fondations ",
           type: :text,
           jsonpath: '$.title',
-          displayable:
+          displayable:,
+          mandatory: mandatory?
         )
       ])
   end

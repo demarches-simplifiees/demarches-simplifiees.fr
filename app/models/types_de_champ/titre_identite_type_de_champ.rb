@@ -33,7 +33,8 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
         label: libelle_with_prefix(prefix),
         type: TypeDeChamp.column_type(type_champ),
         displayable: false,
-        filterable: false
+        filterable: false,
+        mandatory: mandatory?
       )
     ]
   end
