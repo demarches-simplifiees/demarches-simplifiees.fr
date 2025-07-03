@@ -26,6 +26,14 @@ class Columns::JSONPathColumn < Columns::ChampColumn
     dossiers.with_type_de_champ(stable_id)
       .where(condition)
       .ids
+
+  rescue ActiveRecord::StatementInvalid => e
+    if e.cause.is_a?(PG::InvalidRegularExpression)
+      Rails.logger.warn("filtered_ids fallback: Invalid regex — #{e.message}")
+      []
+    else
+      raise
+    end
   end
 
   private
