@@ -319,6 +319,42 @@ RSpec.describe DossierChampsConcern do
           expect(project_champ.is_a?(Champs::CheckboxChamp)).to be_truthy
         }
       end
+
+      context "champ carte" do
+        let(:types_de_champ_public) { [{ type: :carte, libelle: "Un champ carte", stable_id: 996 }] }
+        let(:type_de_champ_public) { dossier.find_type_de_champ_by_stable_id(996) }
+
+        it {
+          expect(subject.persisted?).to be_truthy
+          expect(subject.is_a?(Champs::CarteChamp)).to be_truthy
+          expect(subject.stream).to eq(Champ::MAIN_STREAM)
+          expect(subject.geo_areas.size).to eq(0)
+        }
+
+        context 'user:buffer' do
+          let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+
+          before do
+            Flipper.enable(:user_buffer_stream, procedure)
+            dossier.with_update_stream(dossier.user)
+          end
+
+          let(:main_champ) do
+            dossier.with_main_stream do
+              dossier.project_champ(type_de_champ_public)
+            end
+          end
+
+          it {
+            expect(subject.persisted?).to be_truthy
+            expect(subject.is_a?(Champs::CarteChamp)).to be_truthy
+            expect(subject.stream).to eq(Champ::USER_BUFFER_STREAM)
+            expect(subject.geo_areas.size).to eq(2)
+            expect(subject.geo_areas.size).to eq(main_champ.geo_areas.size)
+            expect(subject.geo_areas.first.id).not_to eq(main_champ.geo_areas.first.id)
+          }
+        end
+      end
     end
 
     context "private champ" do

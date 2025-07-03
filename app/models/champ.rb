@@ -331,7 +331,7 @@ class Champ < ApplicationRecord
     self.value_json = champ.value_json
     self.data = champ.data
 
-    self.geo_areas = champ.geo_areas.dup
+    self.geo_areas = champ.geo_areas.map(&:dup)
 
     ClonePiecesJustificativesService.clone_attachments(champ, self)
 
