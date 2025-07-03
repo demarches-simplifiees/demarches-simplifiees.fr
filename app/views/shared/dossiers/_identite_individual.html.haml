@@ -1,6 +1,7 @@
-= render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.civility')) do |c|
-  - c.with_value do
-    = dossier.individual.gender
+- if dossier.individual.gender.present?
+  = render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.civility')) do |c|
+    - c.with_value do
+      = dossier.individual.gender
 
 = render Dossiers::RowComponent.new(label: t('views.users.dossiers.identite.first_name')) do |c|
   - c.with_value do

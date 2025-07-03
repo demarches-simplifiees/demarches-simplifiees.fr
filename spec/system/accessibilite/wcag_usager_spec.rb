@@ -127,7 +127,6 @@ describe 'wcag rules for usager', chrome: true do
     scenario "dépot d'un dossier" do
       click_on 'Commencer la démarche'
 
-      find('label', text: 'Monsieur')
       within('.individual-infos') do
         fill_in('Prénom', with: 'prenom')
         fill_in('Nom', with: 'nom')

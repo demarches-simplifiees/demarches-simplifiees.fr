@@ -13,7 +13,7 @@ class PrefillIdentity
       {
         prenom: params["identite_prenom"],
         nom: params["identite_nom"],
-        gender: ["M.", "Mme"].include?(params["identite_genre"]) ? params["identite_genre"] : nil
+        gender: dossier.procedure.no_gender? ? nil : ["M.", "Mme"].include?(params["identite_genre"]) ? params["identite_genre"] : nil
       }
     else
       {}

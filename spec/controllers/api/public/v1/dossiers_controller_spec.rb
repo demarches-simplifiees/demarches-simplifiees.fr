@@ -50,15 +50,13 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
             let(:value_2) { "another value" }
 
             let(:prenom_value) { "John" }
-            let(:genre_value) { "M." }
 
             let(:params) {
               {
                 id: procedure.id,
                 "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
                 "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2,
-                "identite_prenom" => prenom_value,
-                "identite_genre" => genre_value
+                "identite_prenom" => prenom_value
               }
             }
 
@@ -69,7 +67,6 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
               expect(find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).value).to eq(value_1)
               expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq(value_2)
               expect(dossier.individual.prenom).to eq(prenom_value)
-              expect(dossier.individual.gender).to eq(genre_value)
             end
           end
 

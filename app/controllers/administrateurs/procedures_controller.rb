@@ -37,7 +37,7 @@ module Administrateurs
     end
 
     def new
-      @procedure ||= Procedure.new(for_individual: true)
+      @procedure ||= Procedure.new(for_individual: true, no_gender: true)
     end
 
     SIGNIFICANT_DOSSIERS_THRESHOLD = 30
@@ -100,7 +100,7 @@ module Administrateurs
     end
 
     def create
-      new_procedure_params = { max_duree_conservation_dossiers_dans_ds: Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH }
+      new_procedure_params = { max_duree_conservation_dossiers_dans_ds: Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH, no_gender: true }
         .merge(procedure_params)
         .merge(administrateurs: [current_administrateur])
 
