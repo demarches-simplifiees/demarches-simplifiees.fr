@@ -39,7 +39,7 @@ RSpec.describe SwitchDomainBannerComponent, type: :component do
     end
 
     context "when user has already set preferred domain" do
-      let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
+      let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
       it "does not render the banner" do
         expect(rendered.to_html).to be_empty

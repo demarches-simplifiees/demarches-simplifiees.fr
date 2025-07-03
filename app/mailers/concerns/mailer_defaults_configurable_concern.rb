@@ -30,10 +30,10 @@ module MailerDefaultsConfigurableConcern
     def configure_defaults_for_user(user, forced_domain = nil)
       return if !user.is_a?(User) # not for super-admins
 
-      if user.preferred_domain_demarches_numerique_gouv_fr?
-        set_currents_for_demarches_numerique_gouv_fr
+      if user.preferred_domain_demarche_numerique_gouv_fr?
+        set_currents_for_demarche_numerique_gouv_fr
       elsif forced_domain == ApplicationHelper::APP_HOST
-        set_currents_for_demarches_numerique_gouv_fr
+        set_currents_for_demarche_numerique_gouv_fr
       elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
         set_currents_for_legacy
       else
@@ -57,7 +57,7 @@ module MailerDefaultsConfigurableConcern
 
     private
 
-    def set_currents_for_demarches_numerique_gouv_fr
+    def set_currents_for_demarche_numerique_gouv_fr
       Current.application_name = "demarches.numerique.gouv.fr"
       Current.host = "demarches.numerique.gouv.fr"
       Current.contact_email = "contact@demarches.numerique.gouv.fr"

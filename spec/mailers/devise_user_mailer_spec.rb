@@ -57,7 +57,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
       end
 
       context "new domain" do
-        let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
+        let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
         it "respect preferred domain" do
           expect(header_value("From", subject.message)).to eq("Démarches Simplifiées <ne-pas-repondre@demarches.numerique.gouv.fr>")
@@ -80,7 +80,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
       end
 
       context "new domain" do
-        let(:user) { create(:user, preferred_domain: :demarches_numerique_gouv_fr) }
+        let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
         it "respect preferred domain" do
           expect(header_value("From", subject.message)).to include("@demarches.numerique.gouv.fr")
