@@ -12,6 +12,7 @@ class ExpertMailer < ApplicationMailer
     @decision = decision_dossier(@dossier)
     subject = "Dossier n° #{@dossier.id} a été #{@decision} - #{@dossier.procedure.libelle}"
 
+    configure_defaults_for_user(@avis.expert.user)
     mail(to: email, subject: subject)
   end
 
@@ -22,6 +23,7 @@ class ExpertMailer < ApplicationMailer
     @decision = decision_dossier(@dossier)
     subject = "Dossier n° #{@dossier.id} a été #{@decision} - #{@dossier.procedure.libelle}"
 
+    configure_defaults_for_user(@avis.expert.user)
     mail(template_name: 'send_dossier_decision', to: email, subject: subject)
   end
 

@@ -13,6 +13,7 @@ class GroupeInstructeurMailer < ApplicationMailer
       "Vous avez été désaffecté(e) de la démarche \"#{group.procedure.libelle}\""
     end
 
+    configure_defaults_for_user(removed_instructeur.user)
     mail(to: removed_instructeur.email, subject: subject)
   end
 
@@ -27,6 +28,7 @@ class GroupeInstructeurMailer < ApplicationMailer
       "Vous avez été affecté(e) à la démarche « #{group.procedure.libelle} »"
     end
 
+    configure_defaults_for_email(added_instructeur_emails.first)
     mail(bcc: added_instructeur_emails, subject: subject)
   end
 

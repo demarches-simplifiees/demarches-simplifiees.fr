@@ -10,6 +10,8 @@ class InstructeurMailer < ApplicationMailer
     @email = email
     subject = "Vous avez été nommé instructeur"
 
+    configure_defaults_for_email(@email)
+
     mail(to: @email, subject: subject)
   end
 
@@ -19,6 +21,7 @@ class InstructeurMailer < ApplicationMailer
     @overview = instructeur.last_week_overview
 
     if @overview.present?
+      configure_defaults_for_user(instructeur.user)
       mail(to: email, subject: @subject)
     end
   end
@@ -28,6 +31,7 @@ class InstructeurMailer < ApplicationMailer
     @dossier = dossier
     subject = "#{sender.email} vous a envoyé le dossier nº #{dossier.id}"
 
+    configure_defaults_for_email(recipient.email)
     mail(to: recipient.email, subject: subject)
   end
 
@@ -38,6 +42,7 @@ class InstructeurMailer < ApplicationMailer
 
     bypass_unverified_mail_protection!
 
+    configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
   end
 
@@ -45,6 +50,7 @@ class InstructeurMailer < ApplicationMailer
     @data = data
     subject = "Vous avez du nouveau sur vos démarches"
 
+    configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
   end
 
@@ -66,6 +72,7 @@ class InstructeurMailer < ApplicationMailer
 
     bypass_unverified_mail_protection!
 
+    configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
   end
 end
