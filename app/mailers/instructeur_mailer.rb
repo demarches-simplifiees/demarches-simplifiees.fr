@@ -41,6 +41,14 @@ class InstructeurMailer < ApplicationMailer
     mail(to: instructeur.email, subject: subject)
   end
 
+  def trusted_device_token_renewal(instructeur, renewal_token)
+    @instructeur_id = instructeur.id
+    @renewal_token = renewal_token
+    subject = "Renouvellement de la connexion sécurisée à #{Current.application_name}"
+
+    mail(to: instructeur.email, subject: subject)
+  end
+
   def send_notifications(instructeur, data)
     @data = data
     subject = "Vous avez du nouveau sur vos démarches"
@@ -49,7 +57,7 @@ class InstructeurMailer < ApplicationMailer
   end
 
   def self.critical_email?(action_name)
-    action_name == "send_login_token"
+    action_name.in?(["send_login_token", "trusted_device_token_renewal"])
   end
 
   def confirm_and_notify_added_instructeur(instructeur, group, current_instructeur_email)

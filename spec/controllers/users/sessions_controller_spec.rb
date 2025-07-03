@@ -217,7 +217,7 @@ describe Users::SessionsController, type: :controller do
         if logged
           sign_in(instructeur.user)
         end
-        allow(controller).to receive(:trust_device)
+        allow(controller).to receive(:trust_device).and_call_original
         allow(controller).to receive(:send_login_token_or_bufferize)
         allow_any_instance_of(TrustedDeviceToken).to receive(:token_valid?).and_return(valid_token)
         post :sign_in_by_link, params: { id: instructeur.id, jeton: jeton }
@@ -228,6 +228,7 @@ describe Users::SessionsController, type: :controller do
           it { is_expected.to redirect_to new_user_session_path }
           it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).to have_received(:trust_device) }
+          it { expect(TrustedDeviceToken.find_by(token: jeton).activated_at).to be_present }
         end
 
         context 'when the token is invalid' do
