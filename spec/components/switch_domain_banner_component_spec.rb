@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe SwitchDomainBannerComponent, type: :component do
   let(:app_host_legacy) { "demarches-simplifiees.fr" }
-  let(:app_host) { "demarches.numerique.gouv.fr" }
+  let(:app_host) { "demarche.numerique.gouv.fr" }
 
   let(:user) { create(:user) }
   let(:request_host) { app_host_legacy }
@@ -51,7 +51,7 @@ RSpec.describe SwitchDomainBannerComponent, type: :component do
     let(:path) { "/admin/procedures" }
 
     it "generate an url to the new domain" do
-      expect(rendered.to_html).to have_link("demarches.numerique.gouv.fr", href: "http://demarches.numerique.gouv.fr/admin/procedures")
+      expect(rendered.to_html).to have_link("demarche.numerique.gouv.fr", href: "http://demarche.numerique.gouv.fr/admin/procedures")
       expect(rendered.to_html).not_to include("window.location")
       expect(rendered.to_html).to include("Suivez ce lien")
     end
