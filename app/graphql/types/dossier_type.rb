@@ -142,7 +142,7 @@ module Types
     end
 
     def messages(id: nil)
-      Loaders::Association.for(object.class, commentaires: [:instructeur, :expert])
+      Loaders::Association.for(object.class, commentaires_chronological: [:instructeur, :expert])
         .load(object)
         .then do |records|
           if id.present?
