@@ -2,7 +2,13 @@
 
 class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_value(champ)
-    selected_options(champ).join(', ')
+    if drop_down_advanced? && champ.respond_to?(:referentiels) && champ.referentiels.present?
+      champ.referentiels_items_column_values
+        .map { |referentiel| referentiel.first.second }
+        .join(', ')
+    else
+      selected_options(champ).join(', ')
+    end
   end
 
   def champ_value_for_tag(champ, path = :value)

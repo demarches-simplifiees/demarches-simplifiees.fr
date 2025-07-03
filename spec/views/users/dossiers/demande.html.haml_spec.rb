@@ -104,6 +104,33 @@ describe 'users/dossiers/demande', type: :view do
         expect(rendered).not_to have_text('dessert')
       end
     end
+  end
+
+  context 'when there is a multiple dropdown list from a referentiel' do
+    let!(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :multiple_drop_down_list, drop_down_mode: 'advanced', referentiel: }
+      ]
+    end
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
+    let(:referentiel) { create(:csv_referentiel, :with_items) }
+    let(:value) { [referentiel.items.first.id.to_s, referentiel.items.second.id.to_s] }
+
+    context 'user chooses two options in the list' do
+      before do
+        dossier.champs.first.update!(value: value.to_json)
+        dossier.champs.first.send(:referentiels_from, value.to_json)
+        render
+      end
+
+      it 'displays two options to the user' do
+        expect(rendered).to have_text('fromage, dessert')
+        expect(rendered).not_to have_text('fruit')
+        # TO DO expect ne pas voir les autres colonnes
+      end
+    end
 
     context 'user choose other option' do
       before do
