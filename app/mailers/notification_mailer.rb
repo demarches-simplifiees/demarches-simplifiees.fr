@@ -52,6 +52,8 @@ class NotificationMailer < ApplicationMailer
 
     @logo_url = procedure_logo_url(@dossier.procedure)
 
+    configure_defaults_for_email(@email)
+
     mail(subject: @subject, to: @email, template_name: 'send_accuse_lecture_notification')
   end
 

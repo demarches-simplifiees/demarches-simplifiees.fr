@@ -11,6 +11,7 @@ class AdministrationMailer < ApplicationMailer
     subject = "Activez votre compte administrateur"
 
     bypass_unverified_mail_protection!
+    configure_defaults_for_user(user)
 
     mail(to: user.email,
       subject: subject,
@@ -21,6 +22,7 @@ class AdministrationMailer < ApplicationMailer
     subject = "Votre demande de compte a été refusée"
 
     bypass_unverified_mail_protection!
+    configure_defaults_for_email(admin_email)
 
     mail(to: admin_email,
       subject: subject,
