@@ -5,6 +5,7 @@ class Users::SessionsController < Devise::SessionsController
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
   include FranceConnectConcern
+  include ProConnectSessionConcern
 
   layout 'login', only: [:new, :create]
 
@@ -17,6 +18,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if user&.valid_password?(params[:user][:password])
       delete_france_connect_cookies
+      delete_pro_connect_session_info_cookie
       user.update(loged_in_with_france_connect: nil)
       user.update_preferred_domain(Current.host) if helpers.switch_domain_enabled?(request)
     end
@@ -55,6 +57,8 @@ class Users::SessionsController < Devise::SessionsController
       current_user&.instructeur&.update(pro_connect_id_token: nil)
 
       sign_out :user
+
+      delete_pro_connect_session_info_cookie
 
       if logged_in_with_france_connect?
         return redirect_to france_connect_logout_url(callback: root_url), allow_other_host: true

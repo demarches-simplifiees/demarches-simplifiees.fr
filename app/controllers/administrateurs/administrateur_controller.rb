@@ -2,6 +2,8 @@
 
 module Administrateurs
   class AdministrateurController < ApplicationController
+    include ProConnectSessionConcern
+
     before_action :authenticate_administrateur!
     before_action :alert_for_missing_siret_service
     before_action :alert_for_missing_service
@@ -19,6 +21,8 @@ module Administrateurs
       Sentry.configure_scope do |scope|
         scope.set_tags(procedure: @procedure.id)
       end
+
+      ensure_pro_connect_if_required!
     rescue ActiveRecord::RecordNotFound
       flash.alert = 'Démarche inexistante'
       redirect_to admin_procedures_path, status: 404
@@ -36,6 +40,13 @@ module Administrateurs
     def ensure_not_super_admin!
       if administrateur_as_manager?
         redirect_back fallback_location: root_url, alert: "Interdit aux super admins", status: 403
+      end
+    end
+
+    def ensure_pro_connect_if_required!
+      if @procedure.pro_connect_restricted? && !logged_in_with_pro_connect?
+        flash.alert = "Vous devez vous connecter par ProConnect pour accéder à cette démarche"
+        redirect_to pro_connect_path
       end
     end
 
