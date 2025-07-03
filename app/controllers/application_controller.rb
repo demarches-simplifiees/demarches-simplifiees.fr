@@ -38,9 +38,9 @@ class ApplicationController < ActionController::Base
     Current.host = request.host_with_port
 
     if Current.host.include?(".gouv.fr")
-      Current.application_name = "demarches.numerique.gouv.fr"
-      Current.contact_email = "contact@demarches.numerique.gouv.fr"
-      Current.application_base_url = "https://demarches.numerique.gouv.fr"
+      Current.application_name = "demarche.numerique.gouv.fr"
+      Current.contact_email = "contact@demarche.numerique.gouv.fr"
+      Current.application_base_url = "https://demarche.numerique.gouv.fr"
     else
       Current.application_name = APPLICATION_NAME
       Current.contact_email = CONTACT_EMAIL
@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_legacy
     # rubocop:disable DS/ApplicationName
-    if !user_signed_in? && request.host == "demarches.numerique.gouv.fr" && ENV.fetch("REDIRECT_GOUV_TO_DS", 'true') == 'true'
+    if !user_signed_in? && request.host == "demarche.numerique.gouv.fr" && ENV.fetch("REDIRECT_GOUV_TO_DS", 'true') == 'true'
       redirect_to "https://www.demarches-simplifiees.fr#{request.fullpath}", allow_other_host: true
     end
     # rubocop:enable DS/ApplicationName

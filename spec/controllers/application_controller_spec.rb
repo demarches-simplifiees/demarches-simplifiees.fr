@@ -237,8 +237,8 @@ describe ApplicationController, type: :controller do
         end
       end
 
-      context 'when the host is demarches.numerique.gouv.fr' do
-        let(:host) { 'demarches.numerique.gouv.fr' }
+      context 'when the host is demarche.numerique.gouv.fr' do
+        let(:host) { 'demarche.numerique.gouv.fr' }
 
         it 'does not redirect' do
           expect(@controller).not_to have_received(:redirect_to)
@@ -257,8 +257,8 @@ describe ApplicationController, type: :controller do
         end
       end
 
-      context 'when the host is demarches.numerique.gouv.fr' do
-        let(:host) { 'demarches.numerique.gouv.fr' }
+      context 'when the host is demarche.numerique.gouv.fr' do
+        let(:host) { 'demarche.numerique.gouv.fr' }
 
         it 'does redirect' do
           expect(@controller).to have_received(:redirect_to).with('https://www.demarches-simplifiees.fr/commencer/une_demarche', allow_other_host: true)
@@ -273,8 +273,8 @@ describe ApplicationController, type: :controller do
         end
       end
 
-      context 'when the host is dev.demarches.numerique.gouv.fr' do
-        let(:host) { 'dev.demarches.numerique.gouv.fr' }
+      context 'when the host is dev.demarche.numerique.gouv.fr' do
+        let(:host) { 'dev.demarche.numerique.gouv.fr' }
 
         it 'does not redirect' do
           expect(@controller).not_to have_received(:redirect_to)
