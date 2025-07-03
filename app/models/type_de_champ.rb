@@ -427,11 +427,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def drop_down_simple?
-    drop_down_list? && drop_down_mode != 'advanced'
+    (drop_down_list? || multiple_drop_down_list?) && drop_down_mode != 'advanced'
   end
 
   def drop_down_advanced?
-    drop_down_list? && drop_down_mode == 'advanced'
+    (drop_down_list? || multiple_drop_down_list?) && drop_down_mode == 'advanced'
   end
 
   def drop_down_options

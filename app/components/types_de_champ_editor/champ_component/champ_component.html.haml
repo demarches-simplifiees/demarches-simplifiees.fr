@@ -138,7 +138,7 @@
                           = form.date_field :end_date, class: "fr-input", value: type_de_champ.end_date, id: dom_id(type_de_champ, :end_date)
 
         .flex.justify-start.fr-mt-1w.flex-gap
-          - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
+          - if type_de_champ.linked_drop_down_list?
             .flex.column.justify-start.width-33
               .cell
                 = form.label :drop_down_options_from_text, "Options de la liste", for: dom_id(type_de_champ, :drop_down_options_from_text)
@@ -147,7 +147,7 @@
                   class: 'fr-input small-margin small width-100',
                   rows: 7,
                   id: dom_id(type_de_champ, :drop_down_options_from_text)
-          - elsif type_de_champ.drop_down_list?
+          - elsif type_de_champ.drop_down_list? || type_de_champ.multiple_drop_down_list?
             .flex.justify-start.column.width-33.fr-mt-1w
               .cell
                 %fieldset.fr-segmented.fr-segmented
@@ -165,10 +165,11 @@
               = render TypesDeChampEditor::ChampDropDownSimpleComponent.new(type_de_champ:, form:, procedure:)
               = render TypesDeChampEditor::ChampDropDownAdvancedComponent.new(type_de_champ:, form:, procedure:)
 
-              .cell.flex.align-center
-                = form.check_box :drop_down_other, class: "small-margin small", id: dom_id(type_de_champ, :drop_down_other)
-                = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
-                  Proposer une option « autre » avec un texte libre
+              - if type_de_champ.drop_down_list?
+                .cell.flex.align-center
+                  = form.check_box :drop_down_other, class: "small-margin small", id: dom_id(type_de_champ, :drop_down_other)
+                  = form.label :drop_down_other, for: dom_id(type_de_champ, :drop_down_other) do
+                    Proposer une option « autre » avec un texte libre
 
           - if type_de_champ.linked_drop_down_list?
             .flex.column.justify-start.flex-grow
