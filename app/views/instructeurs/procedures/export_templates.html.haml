@@ -29,20 +29,28 @@
                 %th{ scope: 'col' }= t('.template_format')
                 %th{ scope: 'col' }= t('.template_creation_date')
                 - if @procedure.groupe_instructeurs.many?
-                  %th{ scope: 'col' }= t('.template_shared_with')
+                  %th.fr-cell--multiline{ scope: 'col' }= t('.template_owned_by')
+                  %th.fr-cell--multiline{ scope: 'col' }= t('.template_shared_with')
                 %th{ scope: 'col' }= t('.actions')
 
             %tbody
               - @export_templates.each do |export_template|
                 %tr
-                  %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
+                  %td.fr-cell--multiline= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
                   %td= pretty_kind(export_template.kind)
-                  %td= l(export_template.created_at)
+                  %td= l(export_template.created_at.to_date)
                   - if @procedure.groupe_instructeurs.many?
                     %td= export_template.groupe_instructeur.label
+                    %td
+                      - if export_template.shared
+                        %span.fr-badge.fr-badge--sm.fr-badge--success
+                          partagé
+                      - else
+                        %span.fr-badge.fr-badge--sm
+                          non partagé
                   %td
                     = link_to t('.modify_template'), [:edit, :instructeur, @procedure, export_template], class: "fr-btn fr-btn--icon-left fr-icon-edit-line fr-mr-1w"
-                    = link_to t('.delete_template'), [:instructeur, @procedure, export_template], method: :delete, data: { confirm: t('.delete_template_alert')}, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line"
+                    = link_to t('.delete_template'), [:instructeur, @procedure, export_template], method: :delete, data: { confirm: t('.delete_template_alert')}, class: "fr-btn fr-btn--secondary fr-icon-delete-line danger"
   - else
     .fr-alert.fr-alert--info.fr-mt-4w
       .fr-alert__body
