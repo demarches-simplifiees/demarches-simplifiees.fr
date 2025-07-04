@@ -6,6 +6,8 @@ describe Champs::PieceJustificativeController, type: :controller do
   let(:dossier) { create(:dossier, user: user, procedure: procedure) }
   let(:champ) { dossier.project_champs_public.first }
 
+  before { Flipper.enable(:user_buffer_stream, procedure) }
+
   describe '#update' do
     render_views
     before { sign_in user }
