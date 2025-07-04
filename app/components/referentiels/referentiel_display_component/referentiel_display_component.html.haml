@@ -1,0 +1,23 @@
+.fr-table.fr-table--bordered
+  .fr-table__wrapper
+    .fr-table__container
+      .fr-table__content
+        %table
+          %caption.fr-text--regular.fr-text--sm Indiquez les données issues du référentiel que vous sohaitez voir affichées pour l'usager et/ou l'instructeur
+          %thead
+            %tr
+              %th.fr-cell--fixed{ role: "columnheader" } Propriété
+              %th Exemple de donnée
+              %th Type de donnée
+              %th Libellé de la donnée récupérée
+              %th Afficher à l’usager
+              %th Afficher à l’instructeur
+          %tbody
+            - display_mapping.sort.each do |jsonpath, mapping_opts|
+              %tr
+              %td.fr-cell--fixed= jsonpath
+              %td.fr-cell--multiline= mapping_opts[:example_value] || mapping_opts["example_value"]
+              %td= mapping_opts[:type] || mapping_opts["type"]
+              %td= mapping_opts[:libelle] || mapping_opts["libelle"]
+              %td.text-center= display_tag_for(jsonpath, "display_usager")
+              %td.text-center= display_tag_for(jsonpath, "display_instructeur")
