@@ -204,7 +204,6 @@ Rails.application.routes.draw do
     get 'confirm_email/:token' => :confirm_email, as: :confirm_email
 
     # to be migrated
-    get 'particulier/callback' => :callback
     get 'particulier/merge_using_email_link/:email_merge_token' => :merge_using_email_link
 
     get 'redirect_uris'
