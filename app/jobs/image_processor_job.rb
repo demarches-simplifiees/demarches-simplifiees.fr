@@ -108,7 +108,7 @@ class ImageProcessorJob < ApplicationJob
     record = blob&.attachments&.first&.record
     return false if !record.is_a?(Champs::PieceJustificativeChamp)
 
-    record.libelle&.include?("RIB") || false
+    record.RIB?
   end
 
   def retry_or_discard
