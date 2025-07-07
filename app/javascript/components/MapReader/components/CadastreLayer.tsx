@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useCallback } from 'react';
 import type { FeatureCollection } from 'geojson';
 
 import { useMapLibre } from '../../shared/maplibre/MapLibre';
@@ -11,22 +11,25 @@ export function CadastreLayer({
   featureCollection: FeatureCollection;
 }) {
   const map = useMapLibre();
-  const selectedCadastresRef = useRef<Set<string>>(null);
 
-  useMapEvent('styledata', () => {
-    selectedCadastresRef.current = new Set(
+  const render = useCallback(() => {
+    const selectedCadastreIds = new Set(
       filterFeatureCollection(featureCollection, 'cadastre').features.map(
         ({ properties }) => properties?.cid
       )
     );
-    if (selectedCadastresRef.current.size > 0) {
+
+    if (selectedCadastreIds.size > 0) {
       map.setFilter('parcelle-highlighted', [
         'in',
         'id',
-        ...selectedCadastresRef.current
+        ...selectedCadastreIds
       ]);
     }
-  });
+  }, [map, featureCollection]);
+
+  useEffect(render, [render]);
+  useMapEvent('styledata', render);
 
   return null;
 }
