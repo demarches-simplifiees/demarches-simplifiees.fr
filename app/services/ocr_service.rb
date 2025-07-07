@@ -21,6 +21,10 @@ class OCRService
       { error: { code:, message: reason.message } }
     end
   rescue StandardError => e
-    Sentry.capture_exception(e, extra: { blob_url: blob_url })
+    if Rails.env.development?
+      raise e # In development, raise the error to see it in the console
+    else
+      Sentry.capture_exception(e, extra: { blob_url: blob_url })
+    end
   end
 end
