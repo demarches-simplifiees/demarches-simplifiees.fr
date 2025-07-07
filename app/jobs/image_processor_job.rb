@@ -38,11 +38,11 @@ class ImageProcessorJob < ApplicationJob
     raise FileNotScannedYetError if blob.virus_scanner.pending?
     return if ActiveStorage::Attachment.find_by(blob_id: blob.id)&.record_type == "ActiveStorage::VariantRecord"
 
+    add_ocr_data(blob)
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
     uninterlace(blob) if blob.content_type == "image/png"
     create_representations(blob) if blob.representation_required?
     add_watermark(blob) if blob.watermark_pending?
-    add_ocr_data(blob)
   end
 
   private
