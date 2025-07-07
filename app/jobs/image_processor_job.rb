@@ -35,7 +35,7 @@ class ImageProcessorJob < ApplicationJob
 
   def perform(blob)
     return if blob.nil?
-    raise FileNotScannedYetError if blob.virus_scanner.pending?
+    # raise FileNotScannedYetError if blob.virus_scanner.pending?
     return if ActiveStorage::Attachment.find_by(blob_id: blob.id)&.record_type == "ActiveStorage::VariantRecord"
 
     add_ocr_data(blob)

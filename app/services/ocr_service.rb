@@ -4,6 +4,8 @@ class OCRService
   include Dry::Monads[:result]
 
   def self.analyze(blob)
+    ActiveStorage::Current.url_options = { host: ENV.fetch("HOST", "localhost:3000") }
+
     url = ENV.fetch("OCR_SERVICE_URL", nil)
 
     return if url.nil? # Service is not enabled
