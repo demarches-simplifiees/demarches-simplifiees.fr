@@ -61,6 +61,8 @@
           = render Dsfr::InputComponent.new(form:, attribute: "authentication_data[header]", **authentication_data_header_opts)
           = render Dsfr::InputComponent.new(form:, attribute: "authentication_data[value]", **authentication_data_header_value_opts)
 
+          %button{ type: 'button', class: 'fr-btn fr-btn--secondary', data: { action: 'click->referentiel-new-form#changeHeaderValue' } }
+            Changer la valeur de l'en-tête
 
   %ul.fr-btns-group.fr-btns-group--inline-sm.flex.justify-center.fr-mt-5w
     %li= link_to "Annuler", back_url, class: 'fr-btn fr-btn--secondary'
