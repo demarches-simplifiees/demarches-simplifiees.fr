@@ -33,7 +33,7 @@ class Columns::ChampColumn < Column
   end
 
   def filtered_ids(dossiers, search_terms)
-    return dossiers.without_type_de_champ(stable_id).ids if search_terms == [Column::NOT_PROVIDED_VALUE]
+    return dossiers.without_type_de_champ(stable_id).ids if search_terms == [Column::NOT_FILLED_VALUE]
 
     relation = dossiers.with_type_de_champ(stable_id)
 

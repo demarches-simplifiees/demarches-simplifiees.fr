@@ -17,7 +17,7 @@ class Champs::YesNoChamp < Champs::BooleanChamp
     "#{input_id}-no"
   end
 
-  def not_provided_input_id
+  def not_filled_input_id
     "#{input_id}-not-provided"
   end
 

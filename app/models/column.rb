@@ -7,7 +7,7 @@ class Column
   include ActiveModel::Validations
 
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
-  NOT_PROVIDED_VALUE = 'nil'
+  NOT_FILLED_VALUE = 'nil'
 
   attr_reader :table, :column, :label, :type, :filterable, :displayable, :mandatory
   attr_accessor :options_for_select
@@ -57,8 +57,8 @@ class Column
   def filterable? = filterable
 
   def label_for_value(value)
-    if value == NOT_PROVIDED_VALUE
-      I18n.t('activerecord.attributes.type_de_champ.not_provided')
+    if value == NOT_FILLED_VALUE
+      I18n.t('activerecord.attributes.type_de_champ.not_filled')
     elsif options_for_select.present?
       # options for select store ["trad", :enum_value]
       options_for_select.to_h { |(label, value)| [value.to_s, label] }
@@ -68,7 +68,7 @@ class Column
     end
   end
 
-  def self.not_provided_option = [I18n.t('activerecord.attributes.type_de_champ.not_provided'), NOT_PROVIDED_VALUE]
+  def self.not_filled_option = [I18n.t('activerecord.attributes.type_de_champ.not_filled'), NOT_FILLED_VALUE]
 
   private
 

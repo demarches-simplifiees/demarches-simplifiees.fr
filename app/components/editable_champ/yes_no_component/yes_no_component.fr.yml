@@ -1,5 +1,5 @@
 fr:
   "yes": "Oui"
   "no": "Non"
-  "not_provided": "Non renseigné"
+  "not_filled": "Non renseigné"
   legend: "Oui/Non"

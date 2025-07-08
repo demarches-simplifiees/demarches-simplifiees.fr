@@ -71,7 +71,7 @@ fr:
           phone: Numéro de téléphone
           rna: Numéro RNA
           rnf: Numéro RNF
-        not_provided: Non renseigné
+        not_filled: Non renseigné
     errors:
       type_de_champ:
         attributes:
