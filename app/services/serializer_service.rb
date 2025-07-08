@@ -3,7 +3,7 @@
 class SerializerService
   def self.dossier(dossier)
     Sentry.with_scope do |scope|
-      scope.set_tags(dossier_id: dossier.id)
+      scope.set_tags(dossier: dossier.id)
 
       data = execute_query('serializeDossier', { number: dossier.id })
       data && data['dossier']
@@ -31,7 +31,7 @@ class SerializerService
 
   def self.champ(champ)
     Sentry.with_scope do |scope|
-      scope.set_tags(champ_id: champ.id)
+      scope.set_tags(champ: champ.id)
 
       if champ.private?
         data = execute_query('serializeAnnotation', { number: champ.dossier_id, id: champ.to_typed_id })
@@ -45,7 +45,7 @@ class SerializerService
 
   def self.message(commentaire)
     Sentry.with_scope do |scope|
-      scope.set_tags(dossier_id: commentaire.dossier_id)
+      scope.set_tags(dossier: commentaire.dossier_id)
 
       data = execute_query('serializeMessage', { number: commentaire.dossier_id, id: commentaire.to_typed_id })
       data && data['dossier']["messages"].first
