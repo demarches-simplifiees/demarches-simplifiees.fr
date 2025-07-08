@@ -12,7 +12,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     options = column.options_for_select
 
     if !@column.mandatory
-      options << Column.not_provided_option
+      options.unshift(Column.not_provided_option)
     end
 
     options
