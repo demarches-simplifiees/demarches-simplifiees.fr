@@ -4,9 +4,10 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
   include Dsfr::InputErrorable
 
   attr_reader :attribute
+  attr_reader :aria_labelledby_prefix
 
-  def initialize(form:, champ:, seen_at: nil, opts: {})
-    @form, @champ, @seen_at, @opts = form, champ, seen_at, opts
+  def initialize(form:, champ:, seen_at: nil, opts: {}, aria_labelledby_prefix: nil)
+    @form, @champ, @seen_at, @opts, @aria_labelledby_prefix = form, champ, seen_at, opts, aria_labelledby_prefix
     @attribute = :value
   end
 
@@ -20,6 +21,19 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
 
   def describedby_id
     @champ.describedby_id
+  end
+
+  def labelledby_id(label_id = nil)
+    labelledby = []
+    labelledby << @aria_labelledby_prefix if @aria_labelledby_prefix.present?
+    labelledby << fieldset_legend_id if dsfr_champ_container == :fieldset
+    labelledby << (label_id.presence || @champ.labelledby_id)
+
+    labelledby.join(' ')
+  end
+
+  def fieldset_legend_id
+    @champ.labelledby_id
   end
 
   def fieldset_aria_opts

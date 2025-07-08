@@ -18,6 +18,10 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     primary_options
   end
 
+  def primary_input_label_id
+    "#{input_id}-primary-label"
+  end
+
   def secondary_options
     secondary_options = unpack_options.to_h
     if secondary_options.present?
