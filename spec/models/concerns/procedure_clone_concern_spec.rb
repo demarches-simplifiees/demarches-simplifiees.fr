@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureCloneConcern, type: :model do
   describe 'clone' do
     let(:service) { create(:service) }
@@ -10,13 +12,15 @@ describe ProcedureCloneConcern, type: :model do
         duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         max_duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         attestation_template: build(:attestation_template, logo: logo, signature: signature),
-        types_de_champ_public: [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }],
-        types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
+        types_de_champ_public:,
+        types_de_champ_private:,
         api_particulier_token: '123456789012345',
         api_particulier_scopes: ['cnaf_famille'],
         estimated_dossiers_count: 4,
         template: true)
     end
+    let(:types_de_champ_public) { [{}, {}, { type: :drop_down_list }, { type: :piece_justificative }, { type: :repetition, children: [{}] }] }
+    let(:types_de_champ_private) { [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }] }
     let(:type_de_champ_repetition) { procedure.draft_revision.types_de_champ_public.last }
     let(:type_de_champ_private_repetition) { procedure.draft_revision.types_de_champ_private.last }
     let(:received_mail) { build(:received_mail) }
