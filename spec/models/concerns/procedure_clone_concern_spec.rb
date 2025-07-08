@@ -131,6 +131,37 @@ describe ProcedureCloneConcern, type: :model do
       ])
     end
 
+    context 'when types_de_champ_public contains a referentiel' do
+      let(:referentiel) { create(:api_referentiel, :ready, :configured, :with_authentication_data) }
+      let(:stable_id) { 1337 }
+      let(:types_de_champ_public) { [{ type: :referentiel, referentiel: referentiel, stable_id: }] }
+
+      context 'when cloned by the same administrateur' do
+        let(:administrateur) { procedure.administrateurs.first }
+
+        it 'clones referentiel, does not reuse it' do
+          expect { subject }.to change { Referentiel.count }.by(1)
+        end
+
+        it 'keeps API keys' do
+          expect(subject.draft_revision.types_de_champ_public.first.referentiel.authentication_method).to eq(referentiel.authentication_method)
+          expect(subject.draft_revision.types_de_champ_public.first.referentiel.authentication_data).to eq(referentiel.authentication_data)
+        end
+      end
+
+      context 'when cloned by another administrateur' do
+        let(:administrateur) { create(:administrateur) }
+
+        it 'clones referentiel, does not reuse it' do
+          expect { subject }.to change { Referentiel.count }.by(1)
+        end
+
+        it 'discards API keys' do
+          expect(subject.draft_revision.types_de_champ_public.first.referentiel.authentication_data).to eq(nil)
+        end
+      end
+    end
+
     context 'which is opendata' do
       let(:opendata) { false }
       it 'should keep opendata for same admin' do
