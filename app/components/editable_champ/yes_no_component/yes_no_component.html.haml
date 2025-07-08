@@ -1,4 +1,3 @@
-
 .fr-fieldset__element.fr-fieldset__element--inline
   .fr-radio-group
     = @form.radio_button :value, true, id: @champ.yes_input_id
@@ -9,3 +8,9 @@
     = @form.radio_button :value, false, id: @champ.no_input_id
     %label.fr-label{ for: @champ.no_input_id }
       = t(".no")
+- if !@champ.mandatory?
+  .fr-fieldset__element.fr-fieldset__element--inline
+    .fr-radio-group
+      = @form.radio_button :value, "", id: @champ.not_provided_input_id
+      %label.fr-label{ for: @champ.not_provided_input_id }
+        = t(".not_provided")
