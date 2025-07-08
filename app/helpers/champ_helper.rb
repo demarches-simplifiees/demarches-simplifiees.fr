@@ -2,7 +2,7 @@
 
 module ChampHelper
   def format_text_value(text)
-    sanitized_text = sanitize(text)
+    sanitized_text = html_escape(text)
     auto_linked_text = Anchored::Linker.auto_link(sanitized_text, target: '_blank', rel: 'noopener') do |link_href|
       truncate(link_href, length: 60)
     end
