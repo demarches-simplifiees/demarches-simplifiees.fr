@@ -37,21 +37,21 @@ module SystemHelpers
 
   def click_confirmation_link_for(email, in_another_browser: false)
     confirmation_email = open_email(email)
-    confirmation_link = confirmation_email.body.match(/href="[^"]*(\/users\/confirmation[^"]*)"/)[1]
+    confirmation_link = confirmation_email.text.match(%r{\s+(\S+\/users\/confirmation\S+)\s+})[1]
 
     if in_another_browser
       # Simulate the user opening the link in another browser, thus loosing the session cookie
       Capybara.reset_session!
     end
 
-    visit confirmation_link
+    visit URI.parse(confirmation_link).request_uri
   end
 
   def click_procedure_sign_in_link_for(email)
     confirmation_email = open_email(email)
     procedure_sign_in_link = confirmation_email.body.match(/href="([^"]*\/commencer\/[^"]*)"/)[1]
 
-    visit URI.parse(procedure_sign_in_link).path
+    visit URI.parse(procedure_sign_in_link).request_uri
   end
 
   def click_reset_password_link_for(email)
