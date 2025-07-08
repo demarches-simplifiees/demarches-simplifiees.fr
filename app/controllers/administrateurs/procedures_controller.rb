@@ -477,23 +477,12 @@ module Administrateurs
     end
 
     def api_champ_columns
-      _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
-      regex_prefix = /^#{Regexp.escape(@type_de_champ.libelle)}([^\p{L}]+SIRET)?[^\p{L}]+/
-
-      @column_labels = @type_de_champ
-        .columns(procedure: @procedure)
-        .filter_map do |column|
-          # Remove tdc libelle prefix added in columns:
-          # Numéro SIRET - Entreprise SIREN => Entreprise SIREN
-          column.label.sub(regex_prefix, '')
-        end
-
-      if @type_de_champ.type_champ == "siret"
-        @column_labels.concat Etablissement::EXPORTABLE_COLUMNS.keys.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
-
-        # Hardcode non columns data
-        @column_labels << "Bilans BDF"
+      if params[:stable_id].present?
+        _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
+      else
+        @type_de_champ = @procedure.draft_revision.types_de_champ.build(type_champ: 'siret', libelle: 'Numéro SIRET')
       end
+      @column_labels = @type_de_champ.info_columns(procedure: @procedure)
     end
 
     def select_procedure

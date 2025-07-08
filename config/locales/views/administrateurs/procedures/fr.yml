@@ -142,3 +142,8 @@ fr:
           clone: Cloner la démarche
           cancel: Annuler
           disable_with: Clonage en cours
+      champs:
+        callout_personne_physique_html: "Les informations suivantes concernant le demandeur sont déjà renseignées dans la première étape <i>Identité</i> du formulaire :"
+        callout_personne_physique_list_html: <li><b>Civilité</b> (Madame / Monsieur)</li><li><b>Prénom</b></li><li><b>Nom</b></li>
+        callout_personne_morale_html: Le <b>Numéro SIRET</b> concernant le demandeur est déjà renseigné dans la première étape Identification du formulaire.
+        callout_no_ask_twice: Il est donc inutile de les redemander dans d’autres champs du formulaire.
