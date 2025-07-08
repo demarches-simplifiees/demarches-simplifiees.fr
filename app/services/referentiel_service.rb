@@ -14,8 +14,20 @@ class ReferentielService
   end
 
   def call(query_params)
-    result = API::Client.new.call(url: referentiel.url.gsub('{id}', query_params), timeout: API_TIMEOUT, headers:)
+    result = API::Client.new.call(url: url(query_params), timeout: API_TIMEOUT, headers:)
     handle_api_result(result)
+  end
+
+  def url(query_params)
+    referentiel.url.gsub('{id}', query_params)
+  end
+
+  def test_url
+    url(@referentiel.test_data)
+  end
+
+  def test_headers
+    headers.transform_values { "[FILTERED]" }.map { |h, v| "#{h}: #{v}" }.join("\n")
   end
 
   def validate_referentiel

@@ -5,7 +5,11 @@
     = render Dsfr::AlertComponent.new(title: error_title, state: :error, extra_class_names: 'fr-mb-3w') do |c|
       - c.with_body do
         %p L'API n'a pas retournée une réponse valide, veuillez vérifier les paramètres du referentiel :
-        %pre Endpoint: #{@referentiel.url}
+        %pre Endpoint: #{test_url}
+
+        - if test_headers.present?
+          %pre Headers: #{test_headers}
+
         %pre Status: #{JSON.pretty_generate(@referentiel.last_response_status)}
         %pre Body: #{JSON.pretty_generate(@referentiel.last_response_body)}
 
@@ -23,8 +27,11 @@
           %button.fr-accordion__btn{ type: :button, "aria-controls" => "last_response", "aria-expanded" => "false" } Afficher la réponse récupérée à partir de la requête configurée
 
       .fr-collapse#last_response
-        %pre= @referentiel.url
-        %pre= JSON.pretty_generate(@referentiel.last_response_body)
+        %pre Endpoint: #{test_url}
+        - if test_headers.present?
+          %pre Headers: #{test_headers}
+        %pre Status: #{JSON.pretty_generate(@referentiel.last_response_status)}
+        %pre Body: #{JSON.pretty_generate(@referentiel.last_response_body)}
 
       %section
         .fr-table.fr-table--bordered
