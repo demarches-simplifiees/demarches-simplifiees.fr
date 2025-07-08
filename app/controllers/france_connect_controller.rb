@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FranceConnectController < ApplicationController
+  include ProConnectSessionConcern
+
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :securely_retrieve_fci, only: [:merge_using_fc_email, :merge_using_password, :send_email_merge_request]
   before_action :securely_retrieve_fci_from_email_merge_token, only: [:merge_using_email_link]
@@ -48,6 +50,7 @@ class FranceConnectController < ApplicationController
       if @fci.user.can_france_connect?
         @fci.update(updated_at: Time.zone.now)
         connect_france_connect(@fci.user)
+        delete_pro_connect_session_info_cookie
       else
         destroy_fci_and_redirect_to_login(@fci)
       end
@@ -93,6 +96,7 @@ class FranceConnectController < ApplicationController
 
       flash.notice = t('france_connect.flash.connection_done', application_name: Current.application_name)
       connect_france_connect(user)
+      delete_pro_connect_session_info_cookie
     else
       flash.alert = t('france_connect.flash.invalid_password')
     end
@@ -115,6 +119,7 @@ class FranceConnectController < ApplicationController
 
     flash.notice = t('france_connect.flash.connection_done', application_name: Current.application_name)
     connect_france_connect(@fci.user)
+    delete_pro_connect_session_info_cookie
   end
 
   # TODO mutualiser avec le controller Users::ActivateController

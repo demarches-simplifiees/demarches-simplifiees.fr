@@ -108,6 +108,12 @@ describe ProConnectController, type: :controller do
           it "sets email_verified_at" do
             expect { subject }.to change { instructeur.user.reload.email_verified_at }.from(nil)
           end
+
+          it "sets the pro_connect_session_info cookie" do
+            subject
+
+            expect(cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to eq({ user_id: instructeur.user.id }.to_json)
+          end
         end
       end
 

@@ -139,6 +139,8 @@ describe Users::SessionsController, type: :controller do
         cookies.encrypted[FranceConnectController::STATE_COOKIE_NAME] = 'state'
       end
 
+      cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME] = { value: { user_id: user.id }.to_json }
+
       delete :destroy
     end
 
@@ -182,6 +184,11 @@ describe Users::SessionsController, type: :controller do
       it 'redirect to pro connect logout page' do
         expect(response.location).to include(pro_connect_id_token)
         expect(instructeur.reload.pro_connect_id_token).to be_nil
+      end
+
+      it "deletes the pro_connect_session_info cookie" do
+        expect(response.cookies.keys).to include(ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME.to_s)
+        expect(response.cookies[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to be_nil
       end
     end
   end

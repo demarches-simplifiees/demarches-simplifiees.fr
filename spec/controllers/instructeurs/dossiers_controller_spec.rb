@@ -1057,6 +1057,17 @@ describe Instructeurs::DossiersController, type: :controller do
         ).to be_truthy
       end
     end
+
+    context "when procedure has pro_connect restriction" do
+      before do
+        procedure.update!(pro_connect_restricted: true)
+      end
+
+      it "redirects to pro_connect_restricted page" do
+        get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
+        expect(response).to redirect_to(pro_connect_path)
+      end
+    end
   end
 
   describe 'navigation accross next/prev dossiers' do
