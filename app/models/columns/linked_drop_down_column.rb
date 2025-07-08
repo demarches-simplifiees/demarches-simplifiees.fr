@@ -3,7 +3,7 @@
 class Columns::LinkedDropDownColumn < Columns::ChampColumn
   attr_reader :path
 
-  def initialize(procedure_id:, label:, stable_id:, tdc_type:, path:, options_for_select: [], displayable:, type: :text)
+  def initialize(procedure_id:, label:, stable_id:, tdc_type:, path:, options_for_select: [], displayable:, type: :text, mandatory:)
     @path = path
 
     super(
@@ -13,7 +13,8 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
       tdc_type:,
       displayable:,
       type:,
-      options_for_select:
+      options_for_select:,
+      mandatory:
     )
   end
 

@@ -22,7 +22,8 @@ class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
           label: "#{libelle_with_prefix(prefix)} – Titre au répertoire national des associations",
           type: :text,
           jsonpath: '$.title',
-          displayable:
+          displayable:,
+          mandatory: mandatory?
         )
       ])
   end
