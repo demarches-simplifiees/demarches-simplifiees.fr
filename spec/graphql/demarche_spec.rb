@@ -2,8 +2,9 @@
 
 RSpec.describe Types::DemarcheType, type: :graphql do
   let(:admin) { administrateurs(:default_admin) }
+  let(:admin_2) { create(:administrateur) }
   let(:query) { '' }
-  let(:context) { { procedure_ids: admin.procedure_ids } }
+  let(:context) { { administrateur_id: admin.id, procedure_ids: admin.procedure_ids, write_access: true, remote_ip: '192.168.1.23' } }
   let(:variables) { {} }
 
   subject { API::V2::Schema.execute(query, variables: variables, context: context) }
@@ -42,6 +43,110 @@ RSpec.describe Types::DemarcheType, type: :graphql do
       expect(procedure.draft_revision.types_de_champ_public.first.stable_id).to eq(procedure_clone.draft_revision.types_de_champ_public.first.stable_id)
     }
   end
+
+  describe 'add administrateur' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { ADD_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: admin_2.email } }
+
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheAjouterAdministrateur][:errors]).to eq(nil)
+      procedure.reload
+      expect(procedure.administrateurs.count).to eq(2)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(procedure.administrateurs[1]).to eq(admin_2)
+    end
+  end
+
+  describe 'add administrateur missing right' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { ADD_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: admin_2.email } }
+    let(:context) { { administrateur_id: admin_2.id, procedure_ids: admin_2.procedure_ids, write_access: true } }
+
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheAjouterAdministrateur][:errors]).to eq([{ message: "Vous n'avez pas le droit d'ajouter un administrateur sur la démarche" }])
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+    end
+  end
+
+  describe 'add new administrateur without right ip' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { ADD_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: "no-admin@admin.com" } }
+
+    before do
+      allow(ENV).to receive(:fetch).with('CREATE_ADMINISTRATEUR_BY_API_AUTHORIZED_NETWORKS', '').and_return('203.0.113.0/24')
+    end
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheAjouterAdministrateur][:warnings]).to eq([{ message: "no-admin@admin.com n'est pas associé à un compte administrateur" }])
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+    end
+  end
+
+  describe 'add new administrateur with right ip' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { ADD_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: "no-admin@admin.com" } }
+
+    before do
+      allow(ENV).to receive(:fetch).with('CREATE_ADMINISTRATEUR_BY_API_AUTHORIZED_NETWORKS', '').and_return('192.0.0.0/8')
+    end
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheAjouterAdministrateur][:warnings].count).to eq(0)
+      procedure.reload
+      expect(procedure.administrateurs.count).to eq(2)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(procedure.administrateurs[1].email).to eq("no-admin@admin.com")
+    end
+  end
+
+  describe 'remove administrateur' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+
+    let(:query) { REMOVE_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: admin_2.email } }
+
+    before do
+      procedure.administrateurs_procedures.create(administrateur: admin_2)
+    end
+
+    it do
+      expect(procedure.administrateurs.count).to eq(2)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(procedure.administrateurs[1]).to eq(admin_2)
+      expect(data[:demarcheSupprimerAdministrateur][:errors]).to eq(nil)
+      procedure.reload
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+    end
+  end
+
+  describe 'remove administrateur missing right' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }], administrateurs: [admin]) }
+    let(:query) { REMOVE_ADMINISTRATEUR_DEMARCHE_QUERY }
+    let(:variables) { { demarcheNumber: procedure.id, email: admin_2.email } }
+    let(:context) { { administrateur_id: admin_2.id, procedure_ids: admin_2.procedure_ids, write_access: true } }
+
+    it do
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+      expect(data[:demarcheSupprimerAdministrateur][:errors]).to eq([{ message: "Vous n'avez pas le droit de retirer un administrateur sur la démarche" }])
+      expect(procedure.administrateurs.count).to eq(1)
+      expect(procedure.administrateurs[0]).to eq(admin)
+    end
+  end
+
   DEMARCHE_QUERY = <<-GRAPHQL
   query($number: Int!) {
     demarche(number: $number) {
@@ -63,6 +168,41 @@ RSpec.describe Types::DemarcheType, type: :graphql do
           id
           label
         }
+      }
+    }
+  }
+  GRAPHQL
+
+  ADD_ADMINISTRATEUR_DEMARCHE_QUERY = <<-GRAPHQL
+  mutation AjouterAdmin($demarcheNumber: Int!, $email: String!) {
+    demarcheAjouterAdministrateur(
+      input: {demarche: {number: $demarcheNumber}, administrateurs: [{ email: $email }] }
+    ) {
+      clientMutationId
+      demarche {
+        id
+      }
+      warnings {
+        message
+      }
+      errors {
+        message
+      }
+    }
+  }
+  GRAPHQL
+
+  REMOVE_ADMINISTRATEUR_DEMARCHE_QUERY = <<-GRAPHQL
+  mutation SupprimerAdmin($demarcheNumber: Int!, $email: String!) {
+    demarcheSupprimerAdministrateur(
+      input: {demarche: {number: $demarcheNumber}, administrateurs: [{ email: $email }] }
+    ) {
+      clientMutationId
+      demarche {
+        id
+      }
+      errors {
+        message
       }
     }
   }
