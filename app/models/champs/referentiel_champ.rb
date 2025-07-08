@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Champs::ReferentielChamp < Champ
-  delegate :referentiel, to: :type_de_champ
-
+  delegate :referentiel,
+           :referentiel_mapping_displayable,
+           :referentiel_mapping_prefillable_with_stable_id,
+           to: :type_de_champ
   before_save :clear_previous_result, if: -> { external_id_changed? }
 
   validates_with ReferentielChampValidator, if: :validate_champ_value?
@@ -16,15 +18,11 @@ class Champs::ReferentielChamp < Champ
       update!(
         value: external_id,                # now that we have the data, we can set the value
         data:,                             # keep raw API response
-        value_json: todo_map_stuff(data:), # columnize the data
+        value_json: cast_displayable_values(data.with_indifferent_access), # columnize the data
         fetch_external_data_exceptions: [] # void previous errors
       )
       propagate_prefill(data)
     end
-  end
-
-  def todo_map_stuff(data:)
-    data
   end
 
   def fetch_external_data?
@@ -36,8 +34,7 @@ class Champs::ReferentielChamp < Champ
   end
 
   def prefillable_stable_ids
-    type_de_champ
-      .referentiel_mapping_prefillable_with_stable_id
+    referentiel_mapping_prefillable_with_stable_id
       .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
   end
 
@@ -87,6 +84,13 @@ class Champs::ReferentielChamp < Champ
       bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
     in [:text | :textarea | :engagement_juridique| :dossier_link | :email| :phone| :iban| :siret | :formatted, v]
       v.to_s
+    # case of type from mapping, used to store for display
+    in [:boolean, v]
+      ActiveModel::Type::Boolean.new.cast(v)
+    in [:array, Array => arr] if ReferentielMappingUtils.array_of_supported_simple_types?(arr)
+      Array(arr)
+    in [:string, v]
+      v.to_s
     else
       nil
     end
@@ -96,13 +100,20 @@ class Champs::ReferentielChamp < Champ
     { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }.merge(prefilled: true)
   end
 
+  def cast_displayable_values(data)
+    referentiel_mapping_displayable.reduce({}) do |accu, (jsonpath, mapping)|
+      casted_value = call_caster(mapping[:type], JSONPath.value(data, jsonpath))
+      accu[jsonpath] = casted_value if !casted_value.nil?
+      accu
+    end
+  end
+
   def propagate_prefill(data)
     # the champ is on the right stream, but the dossier might not be. We set dossier stream from the champ
     dossier.with_champ_stream(self)
 
     types_de_champ_by_stable_id = dossier.revision.types_de_champ.index_by(&:stable_id)
-    type_de_champ
-      .referentiel_mapping_prefillable_with_stable_id
+    referentiel_mapping_prefillable_with_stable_id
       .transform_values do |mapping|
         types_de_champ_by_stable_id.fetch(mapping[:prefill_stable_id].to_i)
       end.group_by do |_, type_de_champ|

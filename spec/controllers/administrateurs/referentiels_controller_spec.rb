@@ -2,13 +2,11 @@
 
 describe Administrateurs::ReferentielsController, type: :controller do
   let(:allowed_domains) { ENV['ALLOWED_API_DOMAINS_FROM_FRONTEND'].split(',') }
-  before do
-    sign_in(procedure.administrateurs.first.user)
-  end
-
   let(:stable_id) { 123 }
   let(:types_de_champ_public) { [{ type: :referentiel, stable_id: }] }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
+
+  before { sign_in(procedure.administrateurs.first.user) }
 
   describe '#new' do
     it 'renders successifully' do
@@ -186,52 +184,55 @@ describe Administrateurs::ReferentielsController, type: :controller do
   end
 
   describe '#update_mapping_type_de_champ' do
-    let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+    let(:initial_mapping) do
+      {
+        "$.jsonpath" => {
+          type: "type",
+          prefill: "1",
+          display_usager: "1",
+          display_instructeur: "1"
+        }
+      }
+    end
+    let(:types_de_champ_public) { [{ type: :referentiel, stable_id:, referentiel_mapping: initial_mapping }] }
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.find_by(stable_id:) }
     let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
     subject do
       patch :update_mapping_type_de_champ, params: {
         procedure_id: procedure.id,
             stable_id: stable_id,
             id: referentiel.id,
-            type_de_champ: { referentiel_mapping: referentiel_mapping }
+            type_de_champ: { referentiel_mapping: payload_referentiel_mapping }
       }
     end
-    let(:referentiel_mapping) do
-      {
-        "$.jsonpath" => {
-          type: "type",
-          prefill: "prefill",
-          libelle: "libelle"
-        }
-      }
-    end
+
     context 'when prefill is not in payload due to checkbox' do
-      let(:referentiel_mapping) do
-        {
-          "$.jsonpath" => {
-            type: "type",
-            libelle: "libelle"
-          }
-        }
-      end
-      it 'ensure presence of prefills' do
+      let(:payload_referentiel_mapping) { { "$.jsonpath" => { type: "type", libelle: "libelle" } } }
+      it 'deep_merge payload so we do not have to resend all config always' do
         subject
-        expect(type_de_champ.reload.referentiel_mapping["$.jsonpath"]["prefill"]).to eq("0")
+        expect(type_de_champ.reload.referentiel_mapping["$.jsonpath"]["prefill"]).to eq("1")
+        expect(type_de_champ.reload.referentiel_mapping["$.jsonpath"]["display_usager"]).to eq("1")
+        expect(type_de_champ.reload.referentiel_mapping["$.jsonpath"]["display_instructeur"]).to eq("1")
       end
     end
-    context 'when update succeeds' do
-      it 'updates type_de_champ referentiel_mapping and redirects to prefill_and_display' do
+
+    context 'when send partial payload' do
+      let(:payload_referentiel_mapping) { { "$.jsonpath" => { type: "type", prefill: "prefill", libelle: "libelle" } } }
+      it 'updates type_de_champ referentiel_mapping by deep_merging and redirects to prefill_and_display' do
         expect { subject }
           .to change { type_de_champ.reload.referentiel_mapping }
-          .from(nil)
-          .to(referentiel_mapping.with_indifferent_access)
+          .from(initial_mapping)
+          .to(initial_mapping.deep_merge(payload_referentiel_mapping))
         expect(response).to redirect_to(prefill_and_display_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
         expect(flash[:notice]).to eq("La configuration du mapping a bien été enregistrée")
       end
     end
 
     context 'when update fails' do
+      let(:payload_referentiel_mapping) { { "$.jsonpath" => { type: "type" } } }
+
       before { allow_any_instance_of(TypeDeChamp).to receive(:update).and_return(false) }
+
       it 'redirects to mapping_type_de_champ_admin_procedure_referentiel_path with alert' do
         subject
         expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
@@ -241,6 +242,15 @@ describe Administrateurs::ReferentielsController, type: :controller do
   end
 
   describe '#prefill_and_display' do
+    let(:payload_referentiel_mapping) do
+      {
+        "$.jsonpath" => {
+          type: "type",
+          prefill: "prefill",
+          libelle: "libelle"
+        }
+      }
+    end
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
     let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
 
@@ -260,7 +270,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     end
   end
 
-  describe '#update_prefill_type_de_champ' do
+  describe '#update_prefill_and_display_type_de_champ' do
     let(:types_de_champ_public) do
       [
         { type: :referentiel, stable_id: stable_id, referentiel_mapping: },
@@ -293,7 +303,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
       end
 
       it 'updates prefill_stable_id for each mapping element and redirects to prefill_and_display' do
-        patch :update_prefill_type_de_champ, params: {
+        patch :update_prefill_and_display_type_de_champ, params: {
           procedure_id: procedure.id,
           stable_id: type_de_champ.stable_id,
           id: referentiel.id,
@@ -323,7 +333,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
         referentiel
         allow_any_instance_of(TypeDeChamp).to receive(:save).and_return(false)
 
-        patch :update_prefill_type_de_champ, params: {
+        patch :update_prefill_and_display_type_de_champ, params: {
           procedure_id: procedure.id,
           stable_id: type_de_champ.stable_id,
           id: referentiel.id,
