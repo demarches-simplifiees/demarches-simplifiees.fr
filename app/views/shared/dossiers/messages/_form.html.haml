@@ -5,9 +5,11 @@
     = f.hidden_field :last_commentaire, value: last_commentaire.id, name: :id
   - elsif local_assigns.has_key?(:dossier) &&  instructeur_signed_in? || administrateur_signed_in? || expert_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
-  %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w= t('asterisk_html', scope: [:utils])
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :body, autoresize: false, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
+  = f.label :body, class: "fr-label" do
+    = t('views.shared.dossiers.messages.form.message_label_mandatory')
+    = render EditableChamp::AsteriskMandatoryComponent.new
+  = f.text_area :body, rows: '5', placeholder: placeholder, title: placeholder, required: true, class: 'fr-input message-textarea'
 
   - if local_assigns.has_key?(:dossier)
     .fr-mt-3w.fr-input-group

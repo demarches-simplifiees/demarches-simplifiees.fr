@@ -388,6 +388,7 @@ fr:
         messages:
           form:
             send_message: "Envoyer le message"
+            message_label_mandatory: "Votre message (obligatoire)"
             write_message_placeholder: "Écrivez votre message ici"
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
