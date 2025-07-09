@@ -12,7 +12,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   end
 
   describe 'the select case' do
-    let(:column) { double("Column", type: :enum, options_for_select:, mandatory: true) }
+    let(:column) { double("Column", type: :enum, tdc_type: "drop_down_list", options_for_select:, mandatory: true) }
     let(:options_for_select) { ['option1', 'option2'] }
 
     it { expect(page).to have_select('filters[][filter]', options: ['', 'option1', 'option2']) } # empty option is added by form helper but field is required
@@ -21,18 +21,55 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   describe 'the input case' do
     let(:column) { double("Column", type: :datetime, mandatory: true) }
 
-    it { expect(page).to have_selector('input[name="filters[][filter]"][type="date"]') }
+    it { expect(page).to have_selector('input[name="filters[][filter]"][type="date"]', count: 1) }
   end
 
   describe 'the column empty case' do
     let(:column) { nil }
 
-    it { expect(page).to have_selector('input[disabled]') }
+    it { expect(page).to have_selector('input[disabled]', count: 1) }
   end
 
-  describe 'the radio button case' do
-    let(:column) { double("Column", type: :boolean, options_for_select: Champs::YesNoChamp.options, mandatory: true) }
+  describe 'the yes no case' do
+    let(:column) { double("Column", type: :boolean, tdc_type: "yes_no", options_for_select: Champs::YesNoChamp.options, mandatory:) }
 
-    it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]') }
+    context 'when the column is mandatory' do
+      let(:mandatory) { true }
+      it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]', count: 2) }
+      it { expect(page).to have_selector('label[for="filters[][filter]_true"]', text: 'oui') }
+      it { expect(page).to have_selector('label[for="filters[][filter]_false"]', text: 'non') }
+    end
+
+    context 'when the column is not mandatory' do
+      let(:mandatory) { false }
+
+      it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]', count: 3) }
+      it { expect(page).to have_selector('label[for="filters[][filter]_true"]', text: 'oui') }
+      it { expect(page).to have_selector('label[for="filters[][filter]_false"]', text: 'non') }
+
+      it { expect(page).to have_selector('label[for="filters[][filter]_nil"]', text: 'Non renseigné') }
+    end
+  end
+
+  describe 'the checkbox case' do
+    let(:column) { double("Column", type: :boolean, tdc_type: "checkbox", options_for_select: Champs::CheckboxChamp.options, mandatory:) }
+
+    context 'when the column is mandatory' do
+      let(:mandatory) { true }
+
+      it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]', count: 2) }
+      it { expect(page).to have_selector('label[for="filters[][filter]_true"]', text: 'coché') }
+      it { expect(page).to have_selector('label[for="filters[][filter]_false"]', text: 'non coché') }
+
+      # it { expect(page).to have_selector('input[name="filters[][filter]"][type="checkbox"]') }
+    end
+
+    context 'when the column is not mandatory' do
+      let(:mandatory) { false }
+
+      it { expect(page).to have_selector('input[name="filters[][filter]"][type="radio"]', count: 2) }
+      it { expect(page).to have_selector('label[for="filters[][filter]_true"]', text: 'coché') }
+      it { expect(page).to have_selector('label[for="filters[][filter]_false"]', text: 'non coché') }
+    end
   end
 end
