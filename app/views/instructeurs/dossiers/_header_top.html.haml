@@ -31,7 +31,7 @@
               Ajouter un label
 
           - menu.with_form do
-            = form_with(url: dossier_labels_instructeur_dossier_path(dossier_id: dossier.id, procedure_id: dossier.procedure.id), method: :post, class: 'fr-p-3w', data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+            = form_with(url: dossier_labels_instructeur_dossier_path(dossier_id: dossier.id, procedure_id: dossier.procedure.id, statut: params[:statut]), method: :post, class: 'fr-p-3w', data: { controller: 'autosubmit', turbo: 'true' }) do |f|
               %fieldset.fr-fieldset.fr-mt-2w.fr-mb-0
                 = f.collection_check_boxes :label_id, dossier.procedure.labels, :id, :name, include_hidden: false do |b|
                   .fr-fieldset__element
