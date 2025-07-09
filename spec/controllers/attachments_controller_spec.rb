@@ -6,7 +6,10 @@ describe AttachmentsController, type: :controller do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
   let(:dossier) { create(:dossier, :with_populated_champs, user:, procedure:) }
   let(:champ) { dossier.champs.first }
+  let(:user_buffer_champ) { dossier.champs.reload.find(&:user_buffer_stream?) }
   let(:signed_id) { attachment.blob.signed_id }
+
+  before { Flipper.enable(:user_buffer_stream, procedure) }
 
   describe '#show' do
     render_views
@@ -64,6 +67,16 @@ describe AttachmentsController, type: :controller do
         it 'removes the attachment' do
           subject
           expect(champ.reload.piece_justificative_file.attached?).to be(false)
+        end
+      end
+
+      context 'and dossier en_construction is owned by user' do
+        let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, user:, procedure:) }
+        it { is_expected.to have_http_status(200) }
+
+        it 'removes the attachment' do
+          subject
+          expect(user_buffer_champ.piece_justificative_file.attached?).to be(false)
         end
       end
 
