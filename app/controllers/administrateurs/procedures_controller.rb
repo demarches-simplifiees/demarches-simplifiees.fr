@@ -479,8 +479,10 @@ module Administrateurs
     def api_champ_columns
       if params[:stable_id].present?
         _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
+      elsif params[:stub_type_champ].present?
+        @type_de_champ = @procedure.draft_revision.types_de_champ.build(type_champ: params[:stub_type_champ], libelle: 'Numéro SIRET')
       else
-        @type_de_champ = @procedure.draft_revision.types_de_champ.build(type_champ: 'siret', libelle: 'Numéro SIRET')
+        raise ArgumentError.new "either a stable_id or a stub_type_champ, but we should know which one to build"
       end
       @column_labels = @type_de_champ.info_columns(procedure: @procedure)
     end
