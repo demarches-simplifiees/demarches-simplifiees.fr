@@ -7,7 +7,7 @@ class DeviseUserMailerPreview < ActionMailer::Preview
 
   def confirmation_instructions___with_procedure
     CurrentConfirmation.procedure_after_confirmation = procedure
-    DeviseUserMailer.confirmation_instructions(user, "faketoken", {})
+    DeviseUserMailer.confirmation_instructions(user, "faketoken", procedure_after_confirmation: procedure)
   end
 
   def confirmation_instructions___with_procedure_and_prefill_token
@@ -25,6 +25,6 @@ class DeviseUserMailerPreview < ActionMailer::Preview
   end
 
   def procedure
-    Procedure.new(id: 20, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', path: 'dotation-etr')
+    Procedure.new(id: 20, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019')
   end
 end
