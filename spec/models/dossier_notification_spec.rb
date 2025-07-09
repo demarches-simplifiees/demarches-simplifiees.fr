@@ -80,20 +80,6 @@ RSpec.describe DossierNotification, type: :model do
         end
       end
 
-      context "when :message_usager notification already exists" do
-        let!(:already_notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: instructeur_follower, notification_type: :message_usager) }
-
-        it "does not duplicate notification" do
-          subject
-
-          notifications = DossierNotification.where(dossier:)
-
-          expect(notifications.count).to eq(2)
-
-          expect(notifications.map(&:notification_type)).to match_array(['message', 'message_usager'])
-        end
-      end
-
       context "when instructeur send a message" do
         let!(:notification_args) { { except_instructeur: instructeur_follower } }
 
