@@ -19,15 +19,14 @@
 
   - if @bulk_messages.present?
     %section.list-avis.mt-8
-      %h1.tab-title
+      %h2.tab-title
         Messages envoyés précédemment
         %span.fr-badge= @bulk_messages.count
 
       %ul
         - @bulk_messages.each do |message|
-          %li.one-avis.flex.align-start
-            .width-100
-              %h2.claimant
-                %span.email= message.instructeur.email
-                %span.date a envoyé ce message à #{message.dossier_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
-              %p= message.body
+          %li
+            %b
+              = message.instructeur.email
+              a envoyé ce message à #{message.dossier_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
+            %p= message.body
