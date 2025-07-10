@@ -17,6 +17,26 @@
   .fr-grid-row
     = render TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: false)
     .fr-col{ data: { controller: "lazy-modal" } }
+      = render Dsfr::CalloutComponent.new(title: nil) do |c|
+        - c.with_html_body do
+          - if @procedure.for_individual
+            %p.fr-callout__text
+              = t('administrateurs.procedures.champs.callout_personne_physique_html')
+            %ul
+              = t('administrateurs.procedures.champs.callout_personne_physique_list_html')
+            %p.fr-callout__text.fr-text--bold
+              = t('administrateurs.procedures.champs.callout_no_ask_twice')
+
+          - else
+            %p.fr-callout__text
+              = t('administrateurs.procedures.champs.callout_personne_morale_html')
+            %p.fr-callout__text.fr-text--bold
+              = t('administrateurs.procedures.champs.callout_no_ask_twice')
+
+            = button_tag("Liste des informations remontées", type: :button, class: "fr-btn fr-icon-info-line fr-btn--icon-left fr-btn--tertiary-no-outline fr-btn--sm",
+                    data: { "fr-opened" => "false", "turbo-frame" => "api-champ-columns", action: "lazy-modal#load" }, src: api_champ_columns_admin_procedure_path(id: @procedure.id, stub_type_champ: 'siret'),
+                    "aria-controls" => "api-champ-columns-modal")
+
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: false)
 
       %dialog#api-champ-columns-modal.fr-modal{ "aria-labelledby" => 'fr-modal-api-champ-columns-h1', role: "dialog" }

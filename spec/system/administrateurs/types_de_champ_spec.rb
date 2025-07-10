@@ -12,6 +12,31 @@ describe 'As an administrateur I can edit types de champ', js: true do
     visit champs_admin_procedure_path(procedure)
   end
 
+  context "procedure is for individual" do
+    let(:procedure) { create(:procedure, for_individual: true) }
+
+    scenario "warn about fields already present in identity steps" do
+      expect(page).to have_content("Les informations suivantes concernant le demandeur sont déjà renseignées dans la première étape Identité du formulaire :")
+      expect(page).to have_content("Il est donc inutile de les redemander dans d’autres champs du formulaire.")
+      expect(page).not_to have_content("Le Numéro SIRET concernant le demandeur est déjà renseigné dans la première étape Identification du formulaire.")
+    end
+  end
+
+  context "procedure is not for individual" do
+    scenario "warn about fields already present in identity steps" do
+      expect(page).to have_content("Le Numéro SIRET concernant le demandeur est déjà renseigné dans la première étape Identification du formulaire.")
+      expect(page).to have_content("Il est donc inutile de les redemander dans d’autres champs du formulaire.")
+      expect(page).not_to have_content("Les informations suivantes concernant le demandeur sont déjà renseignées dans la première étape Identité du formulaire :")
+
+      expect(page).to have_content("Il est donc inutile de les redemander dans d’autres champs du formulaire. ")
+      within '.fr-callout' do
+        click_button "Liste des informations remontées"
+      end
+      expect(page).to have_content("Informations complémentaires au champ Numéro Siret")
+      expect(page).to have_content("Entreprise raison sociale")
+    end
+  end
+
   scenario "adding a new champ" do
     add_champ
 
@@ -421,8 +446,9 @@ describe 'As an administrateur I can edit types de champ', js: true do
       visit champs_admin_procedure_path(procedure)
 
       expect(page).not_to have_content("Informations complémentaires au champ Numéro Siret")
-
-      click_button "Liste des informations remontées"
+      within '.type-de-champ' do
+        click_button "Liste des informations remontées"
+      end
 
       within "#api-champ-columns-modal" do
         expect(page).to have_content("Informations complémentaires au champ Numéro Siret")
@@ -433,8 +459,9 @@ describe 'As an administrateur I can edit types de champ', js: true do
       end
 
       expect(page).not_to have_selector("#api-champ-columns-modal[open]")
-
-      click_button "Liste des informations remontées"
+      within '.type-de-champ' do
+        click_button "Liste des informations remontées"
+      end
       expect(page).to have_content("Informations complémentaires au champ Numéro Siret")
     end
   end

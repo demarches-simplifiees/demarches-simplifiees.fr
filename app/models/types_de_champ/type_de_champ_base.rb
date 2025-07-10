@@ -114,6 +114,10 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
+  def info_columns(procedure:)
+    columns(procedure:)
+  end
+
   private
 
   def libelle_with_prefix(prefix)
