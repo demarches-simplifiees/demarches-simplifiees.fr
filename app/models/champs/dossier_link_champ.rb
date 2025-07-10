@@ -3,7 +3,9 @@
 class Champs::DossierLinkChamp < Champ
   validate :value_integerable, if: -> { value.present? }, on: :prefill
   validate :dossier_exists, if: -> { validate_champ_value? && value.present? }
-
+  def selected
+    value.present? ? value.to_s : nil
+  end
   private
 
   def dossier_exists

@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_08_154734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "postgis"
-  disable_extension "postgis_tiger_geocoder"
   enable_extension "sslinfo"
   enable_extension "unaccent"
 
@@ -271,6 +270,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
     t.text "updated_by"
     t.string "value"
     t.jsonb "value_json"
+    t.index ["dossier_id", "stream", "stable_id", "row_id"], name: "index_champs_on_dossier_id_and_stream_and_stable_id_and_row_id", unique: true
     t.index ["dossier_id", "stream", "stable_id", "row_id"], name: "index_champs_on_stream_and_public_id", unique: true, nulls_not_distinct: true
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
@@ -936,10 +936,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
     t.integer "assign_to_id"
     t.datetime "created_at", precision: nil
     t.jsonb "displayed_columns", default: [], null: false, array: true
-    t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
+    t.jsonb "displayed_fields", default: [{"label" => "Demandeur", "table" => "user", "column" => "email"}], null: false
     t.jsonb "expirant_filters", default: [], null: false, array: true
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
-    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "filters", default: {"tous" => [], "suivis" => [], "traites" => [], "a-suivre" => [], "archives" => [], "expirant" => [], "supprimes" => []}, null: false
+    t.jsonb "sort", default: {"order" => "desc", "table" => "notifications", "column" => "notifications"}, null: false
     t.jsonb "sorted_column"
     t.jsonb "suivis_filters", default: [], null: false, array: true
     t.jsonb "supprimes_filters", default: [], null: false, array: true
@@ -1078,6 +1078,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
     t.index ["service_id"], name: "index_procedures_on_service_id"
     t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
+  end
+
+  create_table "procedures_types_de_champ", id: false, force: :cascade do |t|
+    t.bigint "procedure_id", null: false
+    t.bigint "type_de_champ_id", null: false
   end
 
   create_table "procedures_zones", id: false, force: :cascade do |t|

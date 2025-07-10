@@ -12,7 +12,9 @@ import {
   TagList,
   Tag,
   Virtualizer,
-  ListLayout
+  ListLayout,
+  Header,
+  ListBoxSection
 } from 'react-aria-components';
 import { useMemo, useRef, createContext, useContext } from 'react';
 import type { RefObject } from 'react';
@@ -23,6 +25,7 @@ import {
   useMultiList,
   useSingleList,
   useRemoteList,
+  useMultiGroupList,
   useOnFormReset,
   createLoader,
   type ComboBoxProps
@@ -31,6 +34,7 @@ import {
   type Item,
   SingleComboBoxProps,
   MultiComboBoxProps,
+  MultiGroupComboBoxProps,
   RemoteComboBoxProps
 } from './react-aria/props';
 
@@ -123,6 +127,7 @@ export function SingleComboBox({
     formValue,
     form,
     data,
+    className,
     ...props
   } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
@@ -135,6 +140,7 @@ export function SingleComboBox({
     onChange: dispatch
   });
 
+
   return (
     <>
       <ComboBox
@@ -143,7 +149,21 @@ export function SingleComboBox({
         {...comboBoxProps}
         {...props}
       >
-        {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
+
+        {(item) =>
+          typeof item.value === 'string' && item.value.startsWith('separator_') || typeof item.value === 'string' && item.value.startsWith('no_dossier_') ? (
+            <ComboBoxItem key={item.value} id={item.value} isDisabled style={{ color: '#888' }}>
+              {item.label}
+            </ComboBoxItem>
+          ) : (
+            <ComboBoxItem key={item.value} id={item.value}>
+              {item.label}
+            </ComboBoxItem>
+          )
+        }
+
+
+
       </ComboBox>
       {children || name ? (
         <span ref={ref}>
@@ -234,6 +254,120 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
       >
         {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
       </ComboBox>
+      {name ? (
+        <span ref={ref}>
+          {hiddenInputValues.length == 0 ? (
+            <input
+              type="hidden"
+              value=""
+              name={name}
+              form={form}
+              ref={formResetRef}
+            />
+          ) : (
+            hiddenInputValues.map((value, i) => (
+              <input
+                type="hidden"
+                value={value}
+                name={name}
+                form={form}
+                ref={i == 0 ? formResetRef : undefined}
+                key={value}
+              />
+            ))
+          )}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+export function MultiGroupComboBox(maybeProps: MultiGroupComboBoxProps) {
+  const {
+    items: defaultItems,
+    selectedKeys: defaultSelectedKeys,
+    name,
+    form,
+    formValue,
+    className,
+    maxItemsDisplay,
+    maxItemsAlert,
+    focusOnSelect,
+    secondaryLabel,
+    noItemsLabel,
+    ...props
+  } = useMemo(() => s.create(maybeProps, MultiGroupComboBoxProps), [maybeProps]);
+
+  const { ref, dispatch } = useDispatchChangeEvent();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    selectedItems,
+    hiddenInputValues,
+    onRemove,
+    onReset,
+    items,
+    ...comboBoxProps
+  } = useMultiGroupList({
+    defaultItems,
+    defaultSelectedKeys,
+    formValue,
+    maxItemsDisplay,
+    maxItemsAlert,
+    focusInput: () => {
+      inputRef.current?.focus();
+    },
+    onChange: () => {
+      dispatch();
+      if (focusOnSelect) {
+        document.getElementById(focusOnSelect)?.focus();
+      }
+    }
+  });
+  const formResetRef = useOnFormReset(onReset);
+
+  return (
+    <div className={`fr-ds-combobox__multiple ${className ? className : ''}`}>
+      <ComboBox
+        inputRef={inputRef}
+        menuTrigger="focus"
+        {...comboBoxProps}
+        {...props}
+      >
+        {Object.keys(items).map((key) => (
+          <ListBoxSection key={key}>
+            <Header>{key}</Header>
+            {items[key].map((item) => (
+              <ComboBoxItem id={item.value} key={item.value}>
+                      {item.label}
+              </ComboBoxItem>
+            ))}
+            </ListBoxSection>
+        ))}
+      </ComboBox>
+      {secondaryLabel ? (
+        <Label className="fr-label">{secondaryLabel}</Label>
+      ) : null
+      }
+      {selectedItems.length > 0 ? (
+        <TagGroup onRemove={onRemove} aria-label={props['aria-label']}>
+          <TagList items={selectedItems} className="fr-tag-list">
+            {selectedItems.map((item) => (
+              <Tag
+                key={item.value}
+                id={item.value}
+                textValue={`Retirer ${item.label}`}
+                className="fr-tag fr-tag--sm fr-tag--dismiss"
+              >
+                {item.label}
+                <Button slot="remove" className="fr-tag--dismiss"></Button>
+              </Tag>
+            ))}
+          </TagList>
+        </TagGroup>
+      ) : noItemsLabel ? (
+          <p><i>{noItemsLabel}</i></p>
+        ) : null}
       {name ? (
         <span ref={ref}>
           {hiddenInputValues.length == 0 ? (

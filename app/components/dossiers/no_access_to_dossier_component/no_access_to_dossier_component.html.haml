@@ -1,0 +1,16 @@
+= render Dsfr::ModalComponent.new("no-access-to-dossier", t(".modal.title"), "#{t(".link.title")} #{dossier.id}", trigger_using_link: true) do |modal|
+  - modal.with_body do
+    = render Dsfr::AlertComponent.new(state: :warning, heading_level: 'p') do |c|
+      - c.with_body do
+        %p.fr-text<
+          = t(".modal.content.consulter")
+          %b<
+            = t(".modal.content.contacter") 
+          = "#{t(".modal.content.de_la_demarche")} \"#{procedure_name}\" #{t(".modal.content.demander")}" 
+          %b<
+            = "#{t(".modal.content.ajouter")} :"
+          %ul
+            - administrateurs_emails.each do |email|
+              %li
+                = mail_to(email, email, target: 'blank', rel: 'noopener', class: 'fr-link fr-icon-external-link-line fr-btn--icon-right')
+

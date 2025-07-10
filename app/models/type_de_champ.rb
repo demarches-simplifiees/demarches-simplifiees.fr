@@ -155,13 +155,17 @@ class TypeDeChamp < ApplicationRecord
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
                  :header_section_level,
-                 :referentiel_mapping
+                 :referentiel_mapping,
+                 :procedures_limit
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
 
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
 
   belongs_to :referentiel, optional: true, inverse_of: :types_de_champ
+
+  # procédures pour le type de champ dossier_link
+  has_and_belongs_to_many :procedures
 
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
 
@@ -356,6 +360,10 @@ class TypeDeChamp < ApplicationRecord
 
   def collapsible_explanation_enabled?
     collapsible_explanation_enabled == "1"
+  end
+
+  def procedures_limit?
+    procedures_limit == "1"
   end
 
   def prefillable?
@@ -703,7 +711,8 @@ class TypeDeChamp < ApplicationRecord
       :min_character_length, :max_character_length,
       :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
     ],
-    type_champs.fetch(:referentiel) => [:referentiel_mapping]
+    type_champs.fetch(:referentiel) => [:referentiel_mapping],
+    type_champs.fetch(:dossier_link) => [:procedures_limit]
   }
 
   def clean_options
