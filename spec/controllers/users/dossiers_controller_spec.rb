@@ -2158,6 +2158,102 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#show with missing dossier handling' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
+
+    before { sign_in(user) }
+
+    context 'when dossier exists and is visible' do
+      it 'renders the show template' do
+        get :show, params: { id: dossier.id }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when dossier is hidden by user (in trash)' do
+      before do
+        dossier.hide_and_keep_track!(user, :user_request)
+      end
+
+      it 'renders the show_in_trash template' do
+        get :show, params: { id: dossier.id }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:show_in_trash)
+        expect(assigns(:hidden_dossier)).to eq(dossier)
+      end
+    end
+
+    context 'when dossier is deleted permanently' do
+      let!(:deleted_dossier) do
+        DeletedDossier.create!(
+          dossier_id: dossier.id,
+          user_id: user.id,
+          procedure_id: procedure.id,
+          state: dossier.state,
+          reason: 'user_request',
+          deleted_at: Time.current,
+          depose_at: dossier.depose_at,
+          groupe_instructeur_id: dossier.groupe_instructeur_id,
+          revision_id: dossier.revision_id
+        )
+      end
+
+      before do
+        dossier.destroy
+      end
+
+      it 'renders the show_deleted template' do
+        get :show, params: { id: deleted_dossier.dossier_id }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:show_deleted)
+        expect(assigns(:deleted_dossier)).to eq(deleted_dossier)
+      end
+    end
+
+    context 'when dossier does not exist and was never owned by user' do
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect {
+          get :show, params: { id: 999999 }
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'when dossier belongs to another user' do
+      let(:other_user) { create(:user) }
+      let(:other_dossier) { create(:dossier, :en_construction, user: other_user) }
+
+      it 'redirects to root with forbidden message' do
+        get :show, params: { id: other_dossier.id }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to be_present
+      end
+    end
+
+    context 'when deleted dossier belongs to another user' do
+      let(:other_user) { create(:user) }
+      let!(:other_deleted_dossier) do
+        DeletedDossier.create!(
+          dossier_id: 123456,
+          user_id: other_user.id,
+          procedure_id: procedure.id,
+          state: 'en_construction',
+          reason: 'user_request',
+          deleted_at: Time.current,
+          depose_at: Date.current,
+          groupe_instructeur_id: 1,
+          revision_id: 1
+        )
+      end
+
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect {
+          get :show, params: { id: other_deleted_dossier.dossier_id }
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
