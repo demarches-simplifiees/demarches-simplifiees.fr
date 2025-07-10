@@ -109,6 +109,8 @@ class TypeDeChamp < ApplicationRecord
     referentiel: 'referentiel'
   }
 
+  enum :nature, { RIB: 'RIB' }
+
   SIMPLE_ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
     type_champs.fetch(:communes),
