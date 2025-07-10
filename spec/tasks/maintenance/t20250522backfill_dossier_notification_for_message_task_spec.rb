@@ -46,7 +46,10 @@ module Maintenance
       end
 
       context "when a notification :message_usager already exists" do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
+        let!(:notification) do
+          notification = DossierNotification.create!(dossier: dossier, instructeur: instructeur, notification_type: :message)
+          notification.update_column(:notification_type, 'message_usager')
+        end
 
         it "does not create duplicate notification" do
           expect {
