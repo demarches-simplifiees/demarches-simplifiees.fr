@@ -13,9 +13,9 @@ describe Column do
   let(:column) { Column.new(procedure_id:, table:, column: column_name, label:, type:, filterable:, displayable:, options_for_select:) }
 
   describe '#label_for_value' do
-    context 'when value is NOT_PROVIDED_VALUE' do
+    context 'when value is NOT_FILLED_VALUE' do
       it 'returns the not provided translation' do
-        expect(column.label_for_value(Column::NOT_PROVIDED_VALUE)).to eq(I18n.t('activerecord.attributes.type_de_champ.not_provided'))
+        expect(column.label_for_value(Column::NOT_FILLED_VALUE)).to eq(I18n.t('activerecord.attributes.type_de_champ.not_filled'))
       end
     end
 

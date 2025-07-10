@@ -160,7 +160,7 @@ describe Columns::ChampColumn do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no, mandatory: false, libelle: "oui/non" }]) }
       let(:dossier_with_yes) { create(:dossier, :en_instruction, procedure:) }
       let(:dossier_with_no) { create(:dossier, :en_instruction, procedure:) }
-      let(:dossier_not_provided) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier_not_filled) { create(:dossier, :en_instruction, procedure:) }
 
       let(:column) { procedure.find_column(label: "oui/non") }
       let(:dossiers) { procedure.dossiers }
@@ -168,7 +168,7 @@ describe Columns::ChampColumn do
       before do
         dossier_with_yes.champs.first.update!(value: "true")
         dossier_with_no.champs.first.update!(value: "false")
-        dossier_not_provided.champs.first.destroy!
+        dossier_not_filled.champs.first.destroy!
       end
 
       context "when searching for a yes" do
@@ -188,10 +188,10 @@ describe Columns::ChampColumn do
       end
 
       context "when searching for a nil" do
-        let(:search_terms) { [Column::NOT_PROVIDED_VALUE] }
+        let(:search_terms) { [Column::NOT_FILLED_VALUE] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_not_provided.id])
+          expect(subject).to eq([dossier_not_filled.id])
         end
       end
     end
