@@ -32,6 +32,7 @@ fr:
     update_drop_down_secondary_description: La description secondaire du champ « %{label} » a été modifiée. La nouvelle description est « %{to} ».
     update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} ».
     update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié.
+    update_nature: La nature de pièce justificative « %{label} » a été modifiée en « %{to} ».
     update_notice_explicative: La notice explicative du champ « %{label} » a été modifiée.
     update_drop_down_options: "Les options de sélection du champ « %{label} » ont été modifiées :"
     update_drop_down_options_alert: "Le champ « %{label} » est utilisé pour le routage des dossiers. Veuillez mettre à jour la configuration des groupes d'instructeurs après avoir publié les modifications."
