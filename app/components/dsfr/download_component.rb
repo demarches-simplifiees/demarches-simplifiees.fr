@@ -24,6 +24,6 @@ class Dsfr::DownloadComponent < ApplicationComponent
   def url
     return @url if @url.present?
 
-    helpers.url_for(@attachment.blob)
+    Rails.application.routes.url_helpers.rails_blob_url(@attachment.blob, disposition: 'attachment')
   end
 end
