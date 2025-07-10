@@ -10,10 +10,10 @@ en:
           format: '%{message}'
           attributes:
             street_address:
-              required: Fill in a number or a street, or a place name
+              required: Fill in a street name and number or, place name
             commune_name:
               required: Fill in a city or municipality
             city_name:
-              required: Fill in a city name
+              required: Fill in a city
             postal_code:
-              required: Fill in a zip code
+              required: Fill in a postal code

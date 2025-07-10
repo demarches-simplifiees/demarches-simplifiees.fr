@@ -10,10 +10,10 @@ fr:
           format: '%{message}'
           attributes:
             street_address:
-              required: Renseigner un numéro, une voie, ou un lieu-dit
+              required: Renseigner un numéro et nom de voie, ou lieu-dit
             commune_name:
-              required: Renseigner la commune
+              required: Renseigner la ville ou commune
             city_name:
-              required: Renseigner un nom de ville
+              required: Renseigner la ville
             postal_code:
-              required: Renseigner un code postal ou zip code
+              required: Renseigner un code postal
