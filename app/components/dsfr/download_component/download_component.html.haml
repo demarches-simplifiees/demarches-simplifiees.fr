@@ -1,5 +1,5 @@
 .fr-download
-  = link_to url, {class: "fr-download__link"}.merge(new_tab ? { target: '_blank' }   : { download: '' }) do
+  = link_to url, {class: "fr-download__link", download: name} do
     - if !has_name
       %span.sr-only= t('.action')
     = truncate ? name.truncate(20) : name
