@@ -54,6 +54,15 @@
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
+            - if type_de_champ.piece_justificative?
+              .cell.fr-mt-1w
+                = form.label :nature, "Nature de la pièce", for: dom_id(type_de_champ, :nature)
+                = form.select :nature,
+                  TypeDeChamp.natures.keys.map { [it, it] } + [["Générique", nil]],
+                  { },
+                  class: 'fr-select small-margin small inline width-100',
+                  id: dom_id(type_de_champ, :nature)
+
             - if type_de_champ.piece_justificative_or_titre_identite?
               .cell.fr-mt-1w
                 = form.label :piece_justificative_template, "Modèle", for: dom_id(type_de_champ, :piece_justificative_template)
