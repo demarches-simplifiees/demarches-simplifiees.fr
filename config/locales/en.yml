@@ -383,6 +383,7 @@ en:
         messages:
           form:
             send_message: "Send message"
+            message_label_mandatory: "Your message (mandatory)"
             write_message_placeholder: "Write your message here"
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
