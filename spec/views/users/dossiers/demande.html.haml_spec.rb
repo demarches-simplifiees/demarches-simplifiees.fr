@@ -116,4 +116,22 @@ describe 'users/dossiers/demande', type: :view do
       end
     end
   end
+
+  context 'when value contains html values' do
+    let(:types_de_champ_public) { [{ type: :textarea }] }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:champ) { dossier.project_champs_public.first }
+
+    before do
+      champ.update(value: '<strong>important</strong>')
+      assign(:dossier, dossier)
+      render
+    end
+
+    it 'renders the value escaped in the view' do
+      # The raw HTML tags should not be interpreted as tags but escaped
+      expect(rendered).to include('&lt;strong&gt;important&lt;/strong&gt;')
+    end
+  end
 end

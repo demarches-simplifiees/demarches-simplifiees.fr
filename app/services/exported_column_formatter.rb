@@ -34,7 +34,7 @@ class ExportedColumnFormatter
 
   def self.format_text(column:, raw_value:, format:)
     if [:xlsx, :ods].include?(format)
-      Sanitizers::Xml.sanitize(ActionView::Base.full_sanitizer.sanitize(raw_value))
+      Sanitizers::Xml.sanitize(raw_value)
     else # nothing prevent csv to have weird characters, might break column alignment when read with some software, but it's still valid usecase
       raw_value
     end

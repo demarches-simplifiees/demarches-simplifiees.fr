@@ -43,6 +43,22 @@ describe 'shared/dossiers/edit', type: :view do
     end
   end
 
+  context 'with a public text champ containing HTML in value' do
+    let(:types_de_champ_public) { [{ type: :textarea }] }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:champ) { dossier.project_champs_public.first }
+
+    before do
+      champ.update(value: 'This <strong>should be escaped</strong>')
+    end
+
+    it 'renders the value escaped in the input' do
+      expect(subject).not_to include('<strong>should be escaped</strong>'.html_safe)
+      expect(subject).to include('This &lt;strong&gt;should be escaped&lt;/strong&gt;')
+    end
+  end
+
   context 'with a single-value list' do
     let(:types_de_champ_public) { [{ type: :drop_down_list, options:, mandatory: }] }
     let(:champ) { dossier.project_champs_public.first }
