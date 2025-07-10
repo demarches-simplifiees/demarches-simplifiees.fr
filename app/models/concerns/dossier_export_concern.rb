@@ -31,7 +31,10 @@ module DossierExportConcern
   end
 
   def spreadsheet_columns(types_de_champ:, with_etablissement: false, export_template: nil, format: nil)
-    dossier_values_for_export(with_etablissement:, export_template:, format:) + champ_values_for_export(types_de_champ, export_template:, format:)
+    Sentry.with_scope do |scope|
+      scope.set_tags(dossier: id)
+      dossier_values_for_export(with_etablissement:, export_template:, format:) + champ_values_for_export(types_de_champ, export_template:, format:)
+    end
   end
 
   private
