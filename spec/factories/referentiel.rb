@@ -36,4 +36,9 @@ FactoryBot.define do
   trait :ready do
     last_response { { "status" => 200 } }
   end
+
+  trait :with_authentication_data do
+    authentication_method { 'header' }
+    authentication_data { { header: 'Authorization', value: 'Bearer token' } }
+  end
 end

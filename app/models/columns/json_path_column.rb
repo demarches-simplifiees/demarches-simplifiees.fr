@@ -42,7 +42,7 @@ class Columns::JSONPathColumn < Columns::ChampColumn
   def column_id = "type_de_champ/#{stable_id}-#{jsonpath}"
 
   def typed_value(champ)
-    JSONPath.value(champ.value_json, jsonpath)
+    JsonPath.on(champ.value_json, jsonpath).first
   end
 
   def quote_string(string) = ActiveRecord::Base.connection.quote_string(string)

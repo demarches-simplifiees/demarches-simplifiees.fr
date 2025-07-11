@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class JSONPath
+# Extension de la classe JsonPath de la gem
+class JSONPathUtil
   def self.hash_to_jsonpath(hash, parent_path = '$')
     hash.each_with_object({}) do |(key, value), result|
       current_path = "#{parent_path}.#{key}"
@@ -23,15 +24,5 @@ class JSONPath
 
   def self.extract_key_after_array(str)
     str[/\[(.*?)\](.*)/, 2]
-  end
-
-  # getters
-  def self.value(hash, jsonpath)
-    hash&.dig(*jsonpath.split('.')[1..])
-  end
-
-  def self.get_array(hash, array_path)
-    root_path = extract_array_name(array_path)
-    value(hash, root_path)
   end
 end

@@ -57,6 +57,7 @@ gem 'i18n-tasks', require: false
 gem 'iban-tools'
 gem 'image_processing'
 gem 'invisible_captcha'
+gem 'jsonpath'
 gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari'

@@ -38,7 +38,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 323,
+          "line": 327,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -97,7 +97,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/tasks/maintenance/concerns/statements_helpers_concern.rb",
-      "line": 19,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ApplicationRecord.connection.execute(\"SET LOCAL statement_timeout = '#{timeout}'\")",
       "render_path": null,
@@ -120,7 +120,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/columns/json_path_column.rb",
-      "line": 27,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath} ? (@ like_regex \\\"#{quote_string(search_terms.join(\"|\"))}\\\" flag \\\"i\\\")'\")",
       "render_path": null,
@@ -134,7 +134,7 @@
       "cwe_id": [
         89
       ],
-      "note": "escaped by hand"
+      "note": ""
     },
     {
       "warning_type": "Remote Code Execution",
@@ -248,25 +248,6 @@
         79
       ],
       "note": "Current is not a model"
-    },
-    {
-      "warning_type": "Unmaintained Dependency",
-      "warning_code": 120,
-      "fingerprint": "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
-      "check_name": "EOLRails",
-      "message": "Support for Rails 7.0.8.7 ended on 2025-04-01",
-      "file": "Gemfile.lock",
-      "line": 608,
-      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
-      "code": null,
-      "render_path": null,
-      "location": null,
-      "user_input": null,
-      "confidence": "High",
-      "cwe_id": [
-        1104
-      ],
-      "note": ""
     },
     {
       "warning_type": "Cross-Site Scripting",

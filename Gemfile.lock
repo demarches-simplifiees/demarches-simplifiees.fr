@@ -415,6 +415,8 @@ GEM
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
     jsonapi-renderer (0.2.2)
+    jsonpath (1.1.5)
+      multi_json
     jwt (2.10.1)
       base64
     kaminari (1.2.2)
@@ -963,7 +965,6 @@ PLATFORMS
   arm-linux-gnu
   arm-linux-musl
   arm64-darwin
-  ruby
   x86-linux-gnu
   x86-linux-musl
   x86_64-darwin
@@ -1036,6 +1037,7 @@ DEPENDENCIES
   invisible_captcha
   irb
   json_schemer
+  jsonpath
   jwt
   kaminari
   kredis
