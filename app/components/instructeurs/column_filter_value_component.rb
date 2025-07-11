@@ -11,11 +11,15 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   def column_filter_options
     options = column.options_for_select
 
-    if !@column.mandatory
+    if tdc_type == "yes_no" && !column.mandatory
       options.unshift(Column.not_filled_option)
     end
 
     options
+  end
+
+  def tdc_type
+    column.tdc_type if column.respond_to?(:tdc_type)
   end
 
   private
