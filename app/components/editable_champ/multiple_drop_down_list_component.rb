@@ -13,7 +13,7 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
 
   def react_props
     react_input_opts(
-      id: @champ.input_id,
+      id: @champ.focusable_input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value, multiple: true),
       placeholder: t('views.components.multiple_combobox'),

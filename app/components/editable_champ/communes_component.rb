@@ -14,7 +14,7 @@ class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseCompone
   end
 
   def react_props
-    react_input_opts(id: @champ.input_id,
+    react_input_opts(id: @champ.focusable_input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:code),
       placeholder: t('views.components.remote_combobox'),

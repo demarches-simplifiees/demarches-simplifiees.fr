@@ -191,7 +191,7 @@ class Attachment::EditComponent < ApplicationComponent
   def input_id
     if champ.present?
       # There is always a single input by champ, its id must match the label "for" attribute.
-      champ.input_id
+      champ.focusable_input_id
     else
       dom_id(@attached_file.record, attribute_name)
     end

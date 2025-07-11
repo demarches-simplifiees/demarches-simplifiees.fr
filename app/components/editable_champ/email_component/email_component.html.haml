@@ -1,1 +1,1 @@
-= @form.email_field(:value, input_opts(id: @champ.input_id, autocomplete: @champ.dossier.for_tiers? ? "off" : "email", aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, required: @champ.required?))
+= @form.email_field(:value, input_opts(id: @champ.focusable_input_id, autocomplete: @champ.dossier.for_tiers? ? "off" : "email", aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, required: @champ.required?))

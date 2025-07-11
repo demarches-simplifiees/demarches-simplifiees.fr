@@ -35,7 +35,7 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
 
   def react_props
     react_input_opts(
-      id: @champ.input_id,
+      id: @champ.focusable_input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value),
       placeholder: t('views.components.single_combobox'),

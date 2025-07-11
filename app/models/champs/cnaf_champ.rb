@@ -37,7 +37,7 @@ class Champs::CnafChamp < Champs::TextChamp
     "#{input_id}-code_postal"
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     numero_allocataire_input_id
   end
 end
