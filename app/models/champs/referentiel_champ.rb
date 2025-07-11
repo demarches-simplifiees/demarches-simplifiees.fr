@@ -102,7 +102,7 @@ class Champs::ReferentielChamp < Champ
 
   def cast_displayable_values(data)
     referentiel_mapping_displayable.reduce({}) do |accu, (jsonpath, mapping)|
-      casted_value = call_caster(mapping[:type], JSONPath.value(data, jsonpath))
+      casted_value = call_caster(mapping[:type], JsonPath.on(data, jsonpath).first)
       accu[jsonpath] = casted_value if !casted_value.nil?
       accu
     end
@@ -129,13 +129,13 @@ class Champs::ReferentielChamp < Champ
 
   def update_repetition_prefillable_champs(data, repetition_type_de_champ, mappings)
     group_mappings_by_json_array(mappings).each do |array_key, array_mappings|
-      json_array = JSONPath.get_array(data.with_indifferent_access, array_key) || []
+      json_array = JsonPath.on(data.with_indifferent_access, array_key).first || []
       next unless json_array.is_a?(Array)
       json_array.each do |json_value|
         next if json_value.blank?
         row_id = dossier.repetition_add_row(repetition_type_de_champ, updated_by: :api)
         array_mappings.each do |jsonpath, type_de_champ|
-          raw_value = JSONPath.value(json_value, JSONPath.extract_key_after_array(jsonpath))
+          raw_value = JsonPath.on(json_value, JSONPathUtil.extract_key_after_array(jsonpath)).first
           update_prefillable_champ(type_de_champ:, raw_value:, row_id:)
         end
       end
@@ -143,12 +143,12 @@ class Champs::ReferentielChamp < Champ
   end
 
   def group_mappings_by_json_array(mappings)
-    mappings.group_by { |jsonpath, _| JSONPath.extract_array_name(jsonpath) }
+    mappings.group_by { |jsonpath, _| JSONPathUtil.extract_array_name(jsonpath) }
   end
 
   def update_simple_prefillable_champs(data, mappings)
     mappings.each do |jsonpath, type_de_champ|
-      raw_value = JSONPath.value(data.with_indifferent_access, jsonpath)
+      raw_value = JsonPath.on(data.with_indifferent_access, jsonpath).first
       update_prefillable_champ(type_de_champ:, raw_value:)
     end
   end

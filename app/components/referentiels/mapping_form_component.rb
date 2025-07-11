@@ -10,7 +10,7 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def last_request_keys
-    JSONPath.hash_to_jsonpath(referentiel.last_response_body)
+    JSONPathUtil.hash_to_jsonpath(referentiel.last_response_body)
   end
 
   def error_title
