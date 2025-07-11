@@ -177,22 +177,6 @@ class Champs::AddressChamp < Champs::TextChamp
     end.merge(postal_code:)
   end
 
-  def street_input_id
-    "#{input_id}-street"
-  end
-
-  def city_input_id
-    "#{input_id}-city"
-  end
-
-  def country_input_id
-    "#{input_id}-country"
-  end
-
-  def postal_code_input_id
-    "#{input_id}-postal-code"
-  end
-
   # We know that not ban address where just fulled input without choosing an element from the autocomplete
   def legacy_not_ban?
     value.present? && value_json.blank?
