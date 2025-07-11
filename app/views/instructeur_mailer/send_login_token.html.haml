@@ -3,7 +3,7 @@
 
 %p
   Veuillez cliquer sur le lien sécurisé suivant pour vous connecter à  #{Current.application_name} : 
-  = link_to(sign_in_by_link_url(@instructeur_id, jeton: @login_token), sign_in_by_link_url(@instructeur_id, jeton: @login_token))
+  = link_to(sign_in_by_link_url(@instructeur.id, jeton: @login_token), sign_in_by_link_url(@instructeur.id, jeton: @login_token))
 
 %p
   Ce lien est
