@@ -22,22 +22,19 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   end
 
   def filter_form(filter)
-    form_with(model: [:instructeur, @procedure_presentation], class: 'inline') do
-      safe_join([
-        hidden_field_tag('filters[]', ''),    # to ensure the filters is not empty
-        *other_hidden_fields(filter),         # other filters to keep
-        hidden_field_tag('statut', @statut),  # collection to set
-        button_tag(button_content(filter), class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm')
-      ])
-    end
-  end
-
-  def other_hidden_fields(filter)
-    @filters.reject { _1 == filter }.flat_map do |f|
-      [
-        hidden_field_tag("filters[][id]", f.column.id),
-        hidden_field_tag("filters[][filter]", f.filter)
-      ]
+    button_to(
+      remove_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+      method: :delete,
+      class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm',
+      params: {
+        column_id: filter.column.id,
+        filter: filter.filter,
+        or_filter: filter.or_filter,
+        statut: @statut
+      }.compact,
+      form_class: 'inline'
+    ) do
+      button_content(filter)
     end
   end
 

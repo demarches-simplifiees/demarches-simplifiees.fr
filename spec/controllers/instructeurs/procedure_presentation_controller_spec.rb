@@ -109,4 +109,61 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
       end
     end
   end
+
+  describe '#add_filter' do
+    subject { post :add_filter, params: }
+
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }]) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure_presentation) do
+      groupe_instructeur = procedure.defaut_groupe_instructeur
+      assign_to = create(:assign_to, instructeur:, groupe_instructeur:)
+      assign_to.procedure_presentation_or_default_and_errors.first
+    end
+    let(:column) { procedure.find_column(label: 'Votre ville') }
+
+    before { sign_in(instructeur.user) }
+
+    context 'nominal case' do
+      let(:params) { { id: procedure_presentation.id, column_id: column.id, statut: 'tous', filter: { operator: 'in', value: ['Paris', 'Lyon'] } } }
+
+      it 'adds the filter' do
+        subject
+
+        expect(response).to redirect_to(instructeur_procedure_url(procedure))
+
+        expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'in', value: ['Paris', 'Lyon'] })])
+      end
+    end
+  end
+
+  describe '#remove_filter' do
+    subject { delete :remove_filter, params: }
+
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }]) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure_presentation) do
+      groupe_instructeur = procedure.defaut_groupe_instructeur
+      assign_to = create(:assign_to, instructeur:, groupe_instructeur:)
+      assign_to.procedure_presentation_or_default_and_errors.first
+    end
+    let(:column) { procedure.find_column(label: 'Votre ville') }
+
+    before do
+      sign_in(instructeur.user)
+      procedure_presentation.update!(tous_filters: [FilteredColumn.new(column:, filter: { operator: 'in', value: ['Paris', 'Lyon'] })])
+    end
+
+    context 'nominal case' do
+      let(:params) { { id: procedure_presentation.id, column_id: column.id, statut: 'tous', filter: { operator: 'in', value: ['Paris', 'Lyon'] } } }
+
+      it 'removes the filter' do
+        subject
+
+        expect(response).to redirect_to(instructeur_procedure_url(procedure))
+
+        expect(procedure_presentation.reload.tous_filters).to eq([])
+      end
+    end
+  end
 end
