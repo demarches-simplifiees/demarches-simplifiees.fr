@@ -36,7 +36,7 @@ class Champs::DgfipChamp < Champs::TextChamp
     "#{input_id}-reference_avis"
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     numero_fiscal_input_id
   end
 end

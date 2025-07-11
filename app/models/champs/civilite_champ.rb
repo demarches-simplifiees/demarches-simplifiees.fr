@@ -19,7 +19,7 @@ class Champs::CiviliteChamp < Champ
     "#{input_id}-male"
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     female_input_id
   end
 end

@@ -73,7 +73,7 @@ class Champs::EpciChamp < Champs::TextChamp
     "#{input_id}-epci"
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     code_departement_input_id
   end
 

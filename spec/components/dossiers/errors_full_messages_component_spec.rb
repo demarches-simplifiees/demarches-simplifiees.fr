@@ -54,14 +54,14 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
       context 'when champ is drop_down_list as radio' do
         let(:types_de_champ_public) { [{ type: :drop_down_list, options: %w[first_option other ones] }] }
         it 'focuses on focusable_input_id (first option)' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.input_id}-#{Digest::MD5.hexdigest("first_option")}")
+          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}")
         end
       end
 
       context 'when champ is drop_down_list as combobox' do
         let(:types_de_champ_public) { [{ type: :drop_down_list, options: %w[a b c d e f] }] }
         it 'focuses on focusable_input_id (first option)' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.input_id}")
+          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}")
         end
       end
 

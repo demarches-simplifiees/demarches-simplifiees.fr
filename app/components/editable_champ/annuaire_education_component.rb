@@ -6,7 +6,7 @@ class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBa
   end
 
   def react_props
-    react_input_opts(id: @champ.input_id,
+    react_input_opts(id: @champ.focusable_input_id,
       class: "fr-mt-1w",
       name: @form.field_name(:external_id),
       selected_key: @champ.external_id,
