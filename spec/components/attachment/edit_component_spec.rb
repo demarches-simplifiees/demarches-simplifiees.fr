@@ -43,9 +43,9 @@ RSpec.describe Attachment::EditComponent, type: :component do
         subject
 
         hint_element = page.find('.fr-hint-text')
-        expect(hint_element['id']).to eq("#{champ.input_id}-pj-hint")
+        expect(hint_element['id']).to eq("#{champ.focusable_input_id}-pj-hint")
 
-        expect(describedby_attribute).to eq([champ.describedby_id, "#{champ.input_id}-pj-hint"])
+        expect(describedby_attribute).to eq([champ.describedby_id, "#{champ.focusable_input_id}-pj-hint"])
       end
 
       context 'when there is an error' do
@@ -54,7 +54,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
         it 'targets error_id' do
           subject
 
-          expect(describedby_attribute).to eq([champ.describedby_id, "#{champ.input_id}-pj-hint", champ.error_id])
+          expect(describedby_attribute).to eq([champ.describedby_id, "#{champ.focusable_input_id}-pj-hint", champ.error_id])
         end
       end
     end

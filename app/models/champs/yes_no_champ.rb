@@ -21,7 +21,7 @@ class Champs::YesNoChamp < Champs::BooleanChamp
     "#{input_id}-not-provided"
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     yes_input_id
   end
 

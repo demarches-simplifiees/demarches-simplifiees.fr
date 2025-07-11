@@ -20,9 +20,9 @@ class Dossiers::ErrorsFullMessagesComponent < ApplicationComponent
 
   def to_error_descriptor(error)
     model = error.is_a?(ActiveModel::NestedError) ? error.inner_error.base : error.base
-
     if model.respond_to?(:libelle) # a Champ or something acting as a Champ
-      ErrorDescriptor.new("##{model.focusable_input_id}", model.libelle.truncate(200), error.message)
+      unested_attribute_name = error.attribute.to_s.split('.').last
+      ErrorDescriptor.new("##{model.focusable_input_id(unested_attribute_name)}", model.libelle.truncate(200), error.message)
     else
       ErrorDescriptor.new("##{model.model_name.singular}_#{error.attribute}", model.class.human_attribute_name(error.attribute), error.message)
     end
