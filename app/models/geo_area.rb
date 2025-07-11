@@ -107,15 +107,15 @@ class GeoArea < ApplicationRecord
   end
 
   def line?
-    geometry['type'] == 'LineString'
+    geometry['type'] == 'LineString' || geometry['type'] == 'MultiLineString'
   end
 
   def polygon?
-    geometry['type'] == 'Polygon'
+    geometry['type'] == 'Polygon' || geometry['type'] == 'MultiPolygon'
   end
 
   def point?
-    geometry['type'] == 'Point'
+    geometry['type'] == 'Point' || geometry['type'] == 'MultiPoint'
   end
 
   def legacy_cadastre?

@@ -82,6 +82,10 @@ class Champs::ReferentielChamp < Champ
     in [:checkbox | :yes_no, v]
       bool = ActiveModel::Type::Boolean.new.cast(v)
       bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
+    in [:carte, v] if ReferentielMappingUtils.geojson_object?(v)
+      flatten_geojson(v)
+        .filter { GeojsonService.valid_wgs84_coordinates?(it) }
+        .map { GeoArea.build(geometry: it['geometry'], properties: it['properties'], source: 'selection_utilisateur') }
     in [:text | :textarea | :engagement_juridique| :dossier_link | :email| :phone| :iban| :siret | :formatted, v]
       v.to_s
     # case of type from mapping, used to store for display
@@ -97,7 +101,13 @@ class Champs::ReferentielChamp < Champ
   end
 
   def cast_value_for_type_de_champ(value, type_de_champ)
-    { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }.merge(prefilled: true)
+    value = call_caster(type_de_champ.type_champ, value, type_de_champ)
+    case type_de_champ.type_champ.to_sym
+    when :carte
+      { geo_areas: value }.merge(prefilled: true)
+    else
+      { value: }.merge(prefilled: true)
+    end
   end
 
   def cast_displayable_values(data)
@@ -156,5 +166,16 @@ class Champs::ReferentielChamp < Champ
   def update_prefillable_champ(type_de_champ:, raw_value:, row_id: nil)
     prefill_champ = dossier.champ_for_update(type_de_champ, row_id:, updated_by: :api)
     prefill_champ.update(cast_value_for_type_de_champ(raw_value, type_de_champ))
+  end
+
+  def flatten_geojson(geojson)
+    case geojson["type"] || geojson[:type]
+    when "FeatureCollection"
+      geojson["features"]
+    when "Feature"
+      [geojson]
+    else
+      [{ "geometry" => geojson, "properties" => {} }]
+    end
   end
 end

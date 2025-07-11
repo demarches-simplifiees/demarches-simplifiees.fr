@@ -157,5 +157,19 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['multiple'])
       end
     end
+
+    context 'with mapping type :geojson' do
+      let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:geojson] }
+      let(:types_de_champ_public) do
+        [
+          { type: :referentiel, referentiel: }, # exclu (champ courant)
+          { stable_id: 11, type: :carte, libelle: 'carte' },
+          { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+        ]
+      end
+      it 'shows only map' do
+        expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['carte'])
+      end
+    end
   end
 end

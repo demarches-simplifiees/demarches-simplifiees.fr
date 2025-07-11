@@ -107,6 +107,25 @@ FactoryBot.define do
         }
       end
     end
+    trait :multi_line_string do
+      geometry do
+        {
+          "type": "MultiLineString",
+          "coordinates": [
+            [
+              [2.428439855575562, 46.538476837725796],
+              [2.4284291267395024, 46.53842148758162],
+              [2.4282521009445195, 46.53841410755813]
+            ],
+            [
+              [2.42824137210846, 46.53847314771794],
+              [2.428284287452698, 46.53847314771794],
+              [2.428364753723145, 46.538487907747864]
+            ]
+          ]
+        }
+      end
+    end
 
     trait :point do
       geometry do
@@ -131,6 +150,19 @@ FactoryBot.define do
         {
           "type": "Point",
           "coordinates": [46.538476837725796]
+        }
+      end
+    end
+
+    trait :multi_point do
+      geometry do
+        {
+          "type": "MultiPoint",
+          "coordinates": [
+            [2.428439855575562, 46.538476837725796],
+            [2.4284291267395024, 46.53842148758162],
+            [2.4282521009445195, 46.53841410755813]
+          ]
         }
       end
     end

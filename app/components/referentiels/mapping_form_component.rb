@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
-  TYPES = [:string, :decimal_number, :integer_number, :boolean, :date, :datetime, :array].index_by(&:itself).freeze
+  TYPES = [:string, :decimal_number, :integer_number, :boolean, :date, :datetime, :array, :geojson].index_by(&:itself).freeze
+
   attr_reader :referentiel_service
+
   delegate :test_url, :test_headers, to: :referentiel_service
+
   def initialize(**args)
     super
     @referentiel_service = ReferentielService.new(referentiel: referentiel)
@@ -65,7 +68,9 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def value_to_type(value)
-    if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
+    if ReferentielMappingUtils.geojson_object?(value)
+      self.class::TYPES[:geojson]
+    elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
       self.class::TYPES[:datetime]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
       self.class::TYPES[:date]
