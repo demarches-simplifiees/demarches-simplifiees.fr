@@ -14,6 +14,12 @@ class EditableChamp::PieceJustificativeComponent < EditableChamp::EditableChampB
   end
 
   def max
-    [true, nil].include?(@champ.procedure&.piece_justificative_multiple?) ? Attachment::MultipleComponent::DEFAULT_MAX_ATTACHMENTS : 1
+    if @champ.RIB?
+      1
+    elsif [true, nil].include?(@champ.procedure&.piece_justificative_multiple?)
+      Attachment::MultipleComponent::DEFAULT_MAX_ATTACHMENTS
+    else
+      1
+    end
   end
 end

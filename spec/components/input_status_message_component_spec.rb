@@ -29,7 +29,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
           allow(champ).to receive(:title).and_return("Title")
           allow(champ).to receive(:address).and_return("123 Street")
 
-          expect(subject).to have_css(".fr-info-text") # , text: I18n.t(".rna.data_fetched", title: "Title", address: "123 Street"))
+          expect(subject).to have_css(".fr-message--info") # , text: I18n.t(".rna.data_fetched", title: "Title", address: "123 Street"))
         end
       end
     end
@@ -44,7 +44,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
         end
 
         it "renders the pending message" do
-          expect(subject).to have_css(".fr-info-text", text: "Recherche en cours.")
+          expect(subject).to have_css(".fr-message--info", text: "Recherche en cours.")
         end
       end
 
@@ -55,7 +55,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
         end
 
         it "renders the error message 'KC'" do
-          expect(subject).to have_css(".fr-info-text", text: "Aucun élément trouvé pour la référence : ")
+          expect(subject).to have_css(".fr-message--info", text: "Aucun élément trouvé pour la référence : ")
         end
       end
 
@@ -66,7 +66,46 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
           allow(champ).to receive(:value).and_return('value')
         end
         it "renders the OK message" do
-          expect(subject).to have_css(".fr-info-text", text: 'value')
+          expect(subject).to have_css(".fr-message--valid", text: 'value')
+        end
+      end
+    end
+
+    context 'with piece_justificative champs (RIB)' do
+      let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'RIB' }] }
+
+      context "when OCR is nil" do
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return(nil)
+        end
+
+        it "renders the info message" do
+          expect(subject).to have_css(".fr-message--info")
+        end
+      end
+
+      context "when OCR exists but IBAN is nil" do
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return({ 'rib' => {} })
+        end
+
+        it "renders the warning message" do
+          expect(subject).to have_css(".fr-message--warning")
+        end
+      end
+
+      context "when IBAN is present" do
+        let(:iban) { "FRjesuisuniban" }
+
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return({ 'rib' => { 'iban' => iban } })
+        end
+
+        it "renders the valid message with IBAN" do
+          expect(subject).to have_css(".fr-message--valid", text: iban)
         end
       end
     end
