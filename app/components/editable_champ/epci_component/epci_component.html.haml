@@ -1,11 +1,11 @@
 .fr-fieldset__element
-  = @form.label :code_departement, for: @champ.code_departement_input_id, class: 'fr-label' do
+  = @form.label :code_departement, for: focusable_departement_input_id, class: 'fr-label' do
     - "Le département de l’EPCI"
-  = @form.select :code_departement, departement_options, departement_select_options, required: @champ.required?, id: @champ.code_departement_input_id, class: "width-33-desktop width-100-mobile fr-select"
+  = @form.select :code_departement, departement_options, departement_select_options, required: @champ.required?, id: focusable_departement_input_id, class: "width-33-desktop width-100-mobile fr-select"
 
 - if @champ.departement?
   .fr-fieldset__element
     .fr-select-group
-      = @form.label :value, for: @champ.epci_input_id, class: 'fr-label' do
+      = @form.label :value, for: focusable_epci_input_id, class: 'fr-label' do
         - "EPCI"
-      = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: @champ.epci_input_id, class: "width-33-desktop width-100-mobile fr-select"
+      = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: focusable_epci_input_id, class: "width-33-desktop width-100-mobile fr-select"

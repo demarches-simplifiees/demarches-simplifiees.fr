@@ -45,11 +45,32 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
       end
 
       context 'when champ is epci' do
-        let(:types_de_champ_public) { [{ type: :epci }] }
-        it 'focuses on focusable_input_id' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}")
-        end
-      end
+       let(:types_de_champ_public) { [{ type: :epci, mandatory: true }] }
+       before { champ.update(attributes) }
+
+       context 'when nothing is filled' do
+         let(:attributes) { { value: nil, value_json: nil } }
+         it 'focuses on focusable_input_id' do
+           expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:value)}", count: 1)
+         end
+       end
+
+       context 'when departement is not selected' do
+         let(:attributes) { { value: nil, value_json: { code_departement: nil, name: nil } } }
+
+         it 'focuses on focusable_input_id' do
+           expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:value)}", count: 1)
+         end
+       end
+
+       context 'when name is not selected' do
+         let(:attributes) { { value: nil, value_json: { code_departement: '95', name: nil } } }
+
+         it 'focuses on focusable_input_id' do
+           expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:value)}", count: 1)
+         end
+       end
+     end
 
       context 'when champ is drop_down_list as radio' do
         let(:types_de_champ_public) { [{ type: :drop_down_list, options: %w[first_option other ones] }] }
