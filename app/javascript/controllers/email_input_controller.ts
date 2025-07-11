@@ -33,7 +33,7 @@ export class EmailInputController extends ApplicationController {
     const url = new URL(this.urlValue, document.baseURI);
     url.searchParams.append('email', this.inputTarget.value);
 
-    const data = await httpRequest(url.toString())
+    const data = await httpRequest(url.toString(), { method: 'POST' })
       .json<CheckEmailResponse>()
       .catch(() => null);
 
