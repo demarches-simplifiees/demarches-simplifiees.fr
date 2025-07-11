@@ -33,7 +33,7 @@ class Columns::ChampColumn < Column
   end
 
   def filtered_ids(dossiers, search_terms)
-    return dossiers.without_type_de_champ(stable_id).ids if search_terms == [Column::NOT_FILLED_VALUE]
+    return dossiers.without_type_de_champ(stable_id).ids if should_exclude_empty_values?(search_terms)
 
     relation = dossiers.with_type_de_champ(stable_id)
 
@@ -46,6 +46,13 @@ class Columns::ChampColumn < Column
     else
       relation.filter_ilike(:champs, column, search_terms).ids
     end
+  end
+
+  def should_exclude_empty_values?(search_terms)
+    return true if tdc_type == "yes_no" && search_terms == [Column::NOT_FILLED_VALUE]
+    return true if tdc_type == "checkbox" && search_terms == ["false"]
+
+    false
   end
 
   def champ_column? = true
