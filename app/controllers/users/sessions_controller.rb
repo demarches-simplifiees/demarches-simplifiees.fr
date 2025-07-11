@@ -109,7 +109,8 @@ class Users::SessionsController < Devise::SessionsController
       flash[:alert] = 'Votre lien est expiré, un nouveau vient de vous être envoyé.'
 
       send_login_token_or_bufferize(instructeur)
-      redirect_to link_sent_path(email: instructeur.email)
+      signed_email = message_encryptor_service.encrypt_and_sign(instructeur.email, purpose: :reset_link, expires_in: 1.hour)
+      redirect_to link_sent_path(email: signed_email)
     end
   end
 

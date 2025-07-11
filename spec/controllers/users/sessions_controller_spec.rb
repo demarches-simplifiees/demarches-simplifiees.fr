@@ -226,6 +226,8 @@ describe Users::SessionsController, type: :controller do
         end
         allow(controller).to receive(:trust_device)
         allow(controller).to receive(:send_login_token_or_bufferize)
+        allow(controller).to receive_message_chain(:message_encryptor_service, :encrypt_and_sign).with(instructeur.user.email, purpose: :reset_link, expires_in: 1.hour).and_return('panpan')
+
         allow_any_instance_of(TrustedDeviceToken).to receive(:token_valid?).and_return(valid_token)
         post :sign_in_by_link, params: { id: instructeur.id, jeton: jeton }
       end
@@ -239,8 +241,9 @@ describe Users::SessionsController, type: :controller do
 
         context 'when the token is invalid' do
           let(:valid_token) { false }
-
-          it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
+          it 'redirects to link_sent_path with encrypted email' do
+            expect(response).to redirect_to link_sent_path(email: 'panpan')
+          end
           it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).not_to have_received(:trust_device) }
           it { expect(controller).to have_received(:send_login_token_or_bufferize) }
@@ -271,7 +274,7 @@ describe Users::SessionsController, type: :controller do
         context 'when the token is invalid' do
           let(:valid_token) { false }
 
-          it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
+          it { is_expected.to redirect_to link_sent_path(email: 'panpan') }
           it { expect(controller.current_instructeur).to eq(instructeur) }
           it { expect(controller).not_to have_received(:trust_device) }
           it { expect(controller).to have_received(:send_login_token_or_bufferize) }
