@@ -54,7 +54,7 @@
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
-            - if type_de_champ.piece_justificative?
+            - if type_de_champ.piece_justificative? && procedure.feature_enabled?(:ocr)
               .cell.fr-mt-1w
                 = form.label :nature, "Nature de la pièce", for: dom_id(type_de_champ, :nature)
                 = form.select :nature,

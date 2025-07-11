@@ -99,7 +99,6 @@ class ImageProcessorJob < ApplicationJob
 
   def add_ocr_data(blob)
     return if !rib?(blob)
-    return if !Flipper.enabled?(:ocr, blob)
 
     blob.update!(ocr: OCRService.analyze(blob))
   end

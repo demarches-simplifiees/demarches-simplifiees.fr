@@ -167,7 +167,6 @@ describe ImageProcessorJob, type: :job do
     end
 
     before do
-      allow(Flipper).to receive(:enabled?).with(:ocr, blob).and_return(true)
       allow(OCRService).to receive(:analyze).and_return(analysis)
 
       described_class.perform_now(blob)
