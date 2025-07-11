@@ -17,7 +17,7 @@ class Champs::DropDownListChamp < Champ
     drop_down_options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     render_as_radios? ? radio_id(drop_down_options.first) : input_id
   end
 

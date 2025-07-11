@@ -10,7 +10,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
   end
 
   def react_props
-    react_input_opts(id: @champ.input_id,
+    react_input_opts(id: @champ.focusable_input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value),
       selected_key: @champ.selected_key,
@@ -22,7 +22,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
 
   def commune_react_props
     {
-      id: @champ.city_input_id,
+      id: @champ.focusable_input_id(:commune_name),
       class: 'fr-mt-1w fr-mb-0',
       name: @form.field_name(:commune_code),
       selected_key: @champ.commune_selected_key,

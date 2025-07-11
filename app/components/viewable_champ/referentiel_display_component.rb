@@ -24,6 +24,6 @@ class ViewableChamp::ReferentielDisplayComponent < Referentiels::ReferentielDisp
   end
 
   def tooltip_id(jsonpath)
-    "#{@champ.input_id}_#{jsonpath.parameterize}_tooltip"
+    "#{@champ.focusable_input_id}_#{jsonpath.parameterize}_tooltip"
   end
 end

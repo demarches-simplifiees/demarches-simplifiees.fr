@@ -713,7 +713,7 @@ describe 'The user', js: true do
   end
 
   def champ_id_for(libelle)
-    champ_for(libelle).input_id
+    champ_for(libelle).focusable_input_id
   end
 
   def champ_past_value_for(libelle, value)
