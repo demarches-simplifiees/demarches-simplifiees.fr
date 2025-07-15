@@ -273,6 +273,7 @@ export function RemoteComboBox({
   const {
     items: defaultItems,
     selectedKey: defaultSelectedKey,
+    placeholder,
     minimumInputLength,
     limit,
     debounce,
@@ -308,6 +309,7 @@ export function RemoteComboBox({
   return (
     <>
       <ComboBox
+        placeholder={placeholder}
         allowsEmptyCollection={
           comboBoxProps.inputValue.length >= (minimumInputLength ?? 0)
         }

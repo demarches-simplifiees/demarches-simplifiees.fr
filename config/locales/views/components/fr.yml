@@ -4,3 +4,4 @@ fr:
       select_list: 'Sélectionnez'
       single_combobox: 'Sélectionnez ou commencez à saisir'
       multiple_combobox: 'Sélectionnez ou commencez à saisir'
+      remote_combobox: 'Commencez à saisir'
