@@ -80,6 +80,7 @@
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
     "@types/sortablejs": "^1.15.8",
+    "@ungap/with-resolvers": "^0.1.0",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
     "del-cli": "^6.0.0",
