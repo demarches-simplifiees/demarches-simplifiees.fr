@@ -351,7 +351,7 @@ module Instructeurs
     end
 
     def annotation
-      @dossier = dossier_with_champs(pj_template: false)
+      @dossier = dossier_with_champs
       type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
       annotation = @dossier.project_champ(type_de_champ, row_id: params[:row_id])
 
