@@ -153,9 +153,9 @@ describe ImageProcessorJob, type: :job do
     let(:ocr_service) { instance_double("OcrService") }
     let(:procedure) do
       create(:procedure,
-             types_de_champ_public: [{ type: :piece_justificative, nature: }])
+             types_de_champ_public: [{ type: :piece_justificative, libelle: }])
     end
-    let(:nature) { "RIB" }
+    let(:libelle) { "votre RIB" }
 
     let (:dossier) { create(:dossier, procedure:) }
     let(:analysis) { { "some" => "data" } }
@@ -167,6 +167,7 @@ describe ImageProcessorJob, type: :job do
     end
 
     before do
+      allow(Flipper).to receive(:enabled?).with(:ocr, blob).and_return(true)
       allow(OCRService).to receive(:analyze).and_return(analysis)
 
       described_class.perform_now(blob)
@@ -179,7 +180,7 @@ describe ImageProcessorJob, type: :job do
     end
 
     context "when the blob does not contain a RIB" do
-      let(:nature) { nil }
+      let(:libelle) { "votre facture" }
 
       it "does not call OcrService.analyze nor set ocr data" do
         expect(OCRService).not_to have_received(:analyze)

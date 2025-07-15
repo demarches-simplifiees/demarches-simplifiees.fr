@@ -5,4 +5,4 @@
 
       = @error_full_messages.to_sentence
   - elsif statutable?
-    %p.fr-message{ class: "fr-message--#{statut_message[:state]}" }= sanitize(statut_message[:text])
+    %p.fr-info-text= statut_message
