@@ -3,13 +3,6 @@
 - else
   - content_for(:title, t(".title", scope: :metas))
 
-- if locale == :fr && APPLICATION_NAME == "demarches-simplifiees.fr" && ENV.fetch("USERS_SURVEY", "enabled") == "enabled"
-  = render Dsfr::NoticeComponent.new do |c|
-    - c.with_title do
-      Espace usager en cours d’amélioration - votre avis compte !
-    - c.with_link do
-      = link_to "Donnez votre avis sur le design de la page « Mes dossiers »", "https://grist.numerique.gouv.fr/o/docs/forms/b6wt2UG9w39ZWLnvEbB4yH/4", class: "fr-notice__link", **external_link_attributes
-
 .dossiers-headers.sub-header
   .fr-container
     %h1.fr-h3= t('views.users.dossiers.index.dossiers')
