@@ -229,24 +229,30 @@ class Champ < ApplicationRecord
     false
   end
 
+  def external_data_requested?
+    external_id.present?
+  end
+
+  def external_data_filled?
+    data.present?
+  end
+
   def fetch_external_data_error?
     fetch_external_data_exceptions.present? && self.external_id.present?
   end
 
   def fetch_external_data_pending?
-    is_empty_response = data.nil? && !fetch_external_data_error?
     fetch_external_data? &&
       poll_external_data? &&
-      external_id.present? &&
-      is_empty_response
+      external_data_requested? &&
+      (!external_data_filled? && !fetch_external_data_error?)
   end
 
   def external_data_fetched?
-    is_response_present = data.present? || fetch_external_data_error?
     fetch_external_data? &&
       poll_external_data? &&
-      external_id.present? &&
-      is_response_present
+      external_data_requested? &&
+      (external_data_filled? || fetch_external_data_error?)
   end
 
   def fetch_external_data
