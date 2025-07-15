@@ -437,6 +437,12 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.filename_for_attachement(:piece_justificative_template),
           to_type_de_champ.filename_for_attachement(:piece_justificative_template))
       end
+      if from_type_de_champ.nature != to_type_de_champ.nature
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :nature,
+          from_type_de_champ.nature,
+          to_type_de_champ.nature)
+      end
     elsif to_type_de_champ.explication?
       if from_type_de_champ.checksum_for_attachment(:notice_explicative) != to_type_de_champ.checksum_for_attachment(:notice_explicative)
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
