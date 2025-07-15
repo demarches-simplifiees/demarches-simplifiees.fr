@@ -559,29 +559,56 @@ describe Champ do
     end
   end
 
-  describe "fetch_external_data" do
+  context "external_data" do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rnf }]) }
     let(:dossier) { create(:dossier, procedure:) }
-    let(:champ) { dossier.champs.first.tap { _1.update_column(:data, 'some data') } }
+    let(:champ) { dossier.champs.first }
 
-    context "cleanup_if_empty" do
-      it "remove data if external_id changes" do
-        expect(champ.data).to_not be_nil
-        champ.update(external_id: 'external_id')
-        expect(champ.data).to be_nil
+    describe "fetch_external_data_pending?" do
+      context "pending" do
+        before { champ.update(external_id: 'external_id') }
+        it { expect(champ.fetch_external_data_pending?).to be_truthy }
+      end
+
+      context "done" do
+        before { champ.update_columns(external_id: 'external_id', data: 'some data') }
+        it { expect(champ.fetch_external_data_pending?).to be_falsey }
       end
     end
 
-    context "fetch_external_data_later" do
-      let(:data) { { address: { city: "some external data" } }.with_indifferent_access }
+    describe "external_data_fetched?" do
+      context "pending" do
+        it { expect(champ.external_data_fetched?).to be_falsey }
+      end
 
-      it "fill data from external source" do
-        expect_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data) { data }
+      context "done" do
+        before { champ.update_columns(external_id: 'external_id', data: 'some data') }
+        it { expect(champ.external_data_fetched?).to be_truthy }
+      end
+    end
 
-        perform_enqueued_jobs do
+    describe "fetch_external_data" do
+      context "cleanup_if_empty" do
+        before { champ.update_columns(data: 'some data') }
+
+        it "remove data if external_id changes" do
+          expect(champ.data).to_not be_nil
           champ.update(external_id: 'external_id')
+          expect(champ.data).to be_nil
         end
-        expect(champ.reload.data).to eq data
+      end
+
+      context "fetch_external_data_later" do
+        let(:data) { { address: { city: "some external data" } }.with_indifferent_access }
+
+        it "fill data from external source" do
+          expect_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data) { data }
+
+          perform_enqueued_jobs do
+            champ.update(external_id: 'external_id')
+          end
+          expect(champ.reload.data).to eq data
+        end
       end
     end
   end

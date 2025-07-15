@@ -29,15 +29,11 @@ class Champs::PieceJustificativeChamp < Champ
     true
   end
 
-  def fetch_external_data_pending?
-    return false if piece_justificative_file.blobs.count == 0
-
-    piece_justificative_file.blobs.first.ocr.nil?
+  def external_data_requested?
+    piece_justificative_file.blobs.present?
   end
 
-  def external_data_fetched?
-    return true if piece_justificative_file.blobs.count == 0
-
+  def external_data_filled?
     piece_justificative_file.blobs.first.ocr.present?
   end
 
