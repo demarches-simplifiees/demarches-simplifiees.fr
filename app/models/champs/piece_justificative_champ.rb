@@ -20,32 +20,4 @@ class Champs::PieceJustificativeChamp < Champ
   def search_terms
     # We don’t know how to search inside documents yet
   end
-
-  def fetch_external_data?
-    RIB?
-  end
-
-  def poll_external_data?
-    true
-  end
-
-  def fetch_external_data_pending?
-    return false if piece_justificative_file.blobs.count == 0
-
-    piece_justificative_file.blobs.first.ocr.nil?
-  end
-
-  def external_data_fetched?
-    return true if piece_justificative_file.blobs.count == 0
-
-    piece_justificative_file.blobs.first.ocr.present?
-  end
-
-  def fetch_external_data
-    nil # the ocr information is added by the ImageProcessorJob when the blob is attached
-  end
-
-  def fetch_external_data_later
-    nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
-  end
 end

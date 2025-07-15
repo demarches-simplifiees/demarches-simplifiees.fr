@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_10_085322) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_26_085657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1299,7 +1299,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_10_085322) do
     t.text "description"
     t.string "libelle"
     t.boolean "mandatory", default: true
-    t.text "nature"
     t.jsonb "options"
     t.boolean "private", default: false, null: false
     t.bigint "referentiel_id"

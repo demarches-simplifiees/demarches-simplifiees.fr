@@ -14,8 +14,7 @@ module Dsfr
     def statutable?
       rna_support_statut? ||
       referentiel_support_statut? ||
-      prefilled? ||
-      pjs_statut?
+      prefilled?
     end
 
     def rna_support_statut?
@@ -30,37 +29,19 @@ module Dsfr
       )
     end
 
-    def pjs_statut?
-      @champ.RIB? && @champ.piece_justificative_file.blobs.any?
-    end
-
     def statut_message
-      return { state: :info, text: t('.prefilled') } if prefilled?
+      return t('.prefilled') if prefilled?
       case @champ.type_de_champ.type_champ
       when TypeDeChamp.type_champs[:rna]
-        { state: :info, text: t(".rna.data_fetched", title: @champ.title, address: @champ.full_address) }
+        t(".rna.data_fetched", title: @champ.title, address: @champ.full_address)
       when TypeDeChamp.type_champs[:referentiel]
         if @champ.fetch_external_data_pending?
-          { state: :info, text: t(".referentiel.fetching") }
+          t(".referentiel.fetching")
         elsif @champ.fetch_external_data_error?
-          { state: :info, text: t(".referentiel.error", value: @champ.external_id) }
+          t(".referentiel.error", value: @champ.external_id)
         elsif @champ.value.present?
-          { state: :valid, text: t(".referentiel.success", value: @champ.value) }
+          t(".referentiel.success", value: @champ.value)
         end
-      when TypeDeChamp.type_champs[:piece_justificative]
-        ocr = @champ.piece_justificative_file&.blobs&.first&.ocr
-        iban = ocr&.dig('rib', 'iban')
-        bank_name = ocr&.dig('rib', 'bank_name')
-
-        if ocr.nil?
-          { state: :info, text: t('.pj.info') }
-        elsif iban.nil?
-          { state: :warning, text: t('.pj.warning') }
-        else
-          text = bank_name.present? ? t('.pj.valid_with_bank', iban:, bank_name:) : t('.pj.valid', iban:)
-          { state: :valid, text: }
-        end
-
       end
     end
   end
