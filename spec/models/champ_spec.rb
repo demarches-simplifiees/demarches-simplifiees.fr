@@ -194,9 +194,9 @@ describe Champ do
       let(:champ) { Champs::TextareaChamp.new(value:, dossier: build(:dossier)) }
       before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_textarea)) }
 
-      let(:value) { '<b>gras<b>' }
+      let(:value) { '<b>gras</b>' }
 
-      it { expect(value_for_export).to eq('gras') }
+      it { expect(value_for_export).to eq('<b>gras</b>') }
     end
 
     context 'when type_de_champ is yes_no' do

@@ -1,4 +1,4 @@
-~ @form.text_area(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, rows: 6, required: @champ.required?, value: html_to_string(@champ.value), data: { controller: 'autoresize' }))
+~ @form.text_area(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, rows: 6, required: @champ.required?, value: html_escape(@champ.value), data: { controller: 'autoresize' }))
 
 %div{ role: 'status' }
   - if @champ.character_limit_info?
