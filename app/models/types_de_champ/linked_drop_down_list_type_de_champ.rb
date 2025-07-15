@@ -11,19 +11,11 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
   end
 
   def primary_options
-    primary_options = unpack_options.map(&:first)
-    if primary_options.present?
-      primary_options = add_blank_option_when_not_mandatory(primary_options)
-    end
-    primary_options
+    unpack_options.map(&:first)
   end
 
   def secondary_options
-    secondary_options = unpack_options.to_h
-    if secondary_options.present?
-      secondary_options[''] = []
-    end
-    secondary_options
+    unpack_options.to_h
   end
 
   def champ_value(champ)
@@ -109,11 +101,6 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
 
   private
 
-  def add_blank_option_when_not_mandatory(options)
-    return options if mandatory
-    options.unshift('')
-  end
-
   def primary_value(champ) = unpack_value(champ.value, 0, primary_options)
   def secondary_value(champ) = unpack_value(champ.value, 1, secondary_options.values.flatten)
 
@@ -152,7 +139,6 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
 
     chunked.map do |chunk|
       primary, *secondary = chunk
-      secondary = add_blank_option_when_not_mandatory(secondary)
       [PRIMARY_PATTERN.match(primary)&.[](1), secondary]
     end
   end

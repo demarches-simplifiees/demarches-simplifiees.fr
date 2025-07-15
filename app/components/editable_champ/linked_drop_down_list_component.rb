@@ -9,6 +9,10 @@ class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampB
     @champ.drop_down_options.any?
   end
 
+  def select_options
+    @champ.mandatory? ? { prompt: t('views.components.select_list') } : { include_blank: t('views.components.select_list') }
+  end
+
   private
 
   def secondary_label

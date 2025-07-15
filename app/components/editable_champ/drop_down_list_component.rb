@@ -47,4 +47,8 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
   def items
     @champ.options_for_select_with_other
   end
+
+  def select_options
+    { selected: @champ.selected }.merge(@champ.mandatory? ? { prompt: t('views.components.select_list') } : { include_blank: t('views.components.select_list') })
+  end
 end
