@@ -6,7 +6,11 @@ module Maintenance
   RSpec.describe T20250625updateDossierNotificationMessageUsagerToMessageTask do
     let(:dossier) { create(:dossier) }
     let(:instructeur) { create(:instructeur) }
-    let!(:notification_message_usager) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message_usager) }
+    let!(:notification_message_usager) do
+      notification = DossierNotification.create!(dossier: dossier, instructeur: instructeur, notification_type: :message)
+      notification.update_column(:notification_type, 'message_usager')
+      notification
+    end
 
     describe "#collection" do
       subject(:collection) { described_class.collection }
