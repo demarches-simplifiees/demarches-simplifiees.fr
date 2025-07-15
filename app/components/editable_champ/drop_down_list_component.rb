@@ -38,6 +38,7 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
       id: @champ.input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value),
+      placeholder: t('views.components.single_combobox'),
       selected_key: @champ.selected,
       items:,
       empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil

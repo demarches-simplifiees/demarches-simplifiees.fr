@@ -169,6 +169,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   const {
     items: defaultItems,
     selectedKeys: defaultSelectedKeys,
+    placeholder,
     name,
     form,
     formValue,
@@ -229,6 +230,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
         allowsCustomValue={allowsCustomValue}
         inputRef={inputRef}
         menuTrigger="focus"
+        placeholder={placeholder}
         {...comboBoxProps}
         {...props}
       >
