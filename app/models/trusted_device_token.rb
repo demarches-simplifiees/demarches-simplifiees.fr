@@ -18,6 +18,10 @@ class TrustedDeviceToken < ApplicationRecord
     LOGIN_TOKEN_VALIDITY.ago < created_at
   end
 
+  def token_valid_until
+    created_at + LOGIN_TOKEN_VALIDITY
+  end
+
   def token_young?
     LOGIN_TOKEN_YOUTH.ago < created_at
   end

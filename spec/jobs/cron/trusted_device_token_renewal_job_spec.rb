@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe Cron::TrustedDeviceTokenRenewalJob do
+  let(:now) { Time.zone.local(2023, 10, 1, 12, 0, 0) }
+  before { travel_to now }
   let!(:token_to_notify) do
     create(:trusted_device_token,
       activated_at: (TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 5.days).ago,
@@ -19,7 +21,11 @@ describe Cron::TrustedDeviceTokenRenewalJob do
   it 'if recalled, does not resend mail' do
     expect(InstructeurMailer)
       .to receive(:trusted_device_token_renewal)
-      .with(token_to_notify.instructeur, an_instance_of(String))
+      .with(
+        token_to_notify.instructeur,
+        an_instance_of(String),
+        now + 1.week
+      )
       .and_return(double(deliver_later: true))
       .once
     described_class.new.perform_now

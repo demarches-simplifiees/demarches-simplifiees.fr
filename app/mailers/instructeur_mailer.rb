@@ -46,9 +46,10 @@ class InstructeurMailer < ApplicationMailer
     mail(to: instructeur.email, subject: subject)
   end
 
-  def trusted_device_token_renewal(instructeur, renewal_token)
+  def trusted_device_token_renewal(instructeur, renewal_token, valid_until)
     @instructeur = instructeur
     @renewal_token = renewal_token
+    @valid_until = valid_until
     subject = "Renouvellement de la connexion sécurisée à #{Current.application_name}"
 
     configure_defaults_for_user(instructeur.user)

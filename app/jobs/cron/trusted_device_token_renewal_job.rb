@@ -9,7 +9,7 @@ class Cron::TrustedDeviceTokenRenewalJob < Cron::CronJob
         ActiveRecord::Base.transaction do
           token.touch(:renewal_notified_at)
           renewal_token = token.instructeur.create_trusted_device_token
-          InstructeurMailer.trusted_device_token_renewal(token.instructeur, renewal_token).deliver_later
+          InstructeurMailer.trusted_device_token_renewal(token.instructeur, renewal_token, token.instructeur.trusted_device_tokens.last.token_valid_until).deliver_later
         end
       rescue StandardError => e
         Sentry.capture_exception(e)
