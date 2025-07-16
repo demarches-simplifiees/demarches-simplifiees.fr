@@ -43,7 +43,7 @@ class APIEntreprise::Job < ApplicationJob
       if etablissement.dossier.present?
         etablissement.dossier.log_api_entreprise_job_exception(exception)
       elsif etablissement.champ.present?
-        etablissement.champ.log_fetch_external_data_exception(exception, :unkonwn)
+        etablissement.champ.save_external_exception(exception, :unkonwn)
       end
     end
   end
