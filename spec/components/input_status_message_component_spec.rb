@@ -38,9 +38,9 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       let(:referentiel) { create(:api_referentiel, :configured) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
 
-      context "when the field is a referentiel and fetch_external_data_pending? is true" do
+      context "when the field is a referentiel and waiting_for_external_data? is true" do
         before do
-          allow(champ).to receive(:fetch_external_data_pending?).and_return(true)
+          allow(champ).to receive(:waiting_for_external_data?).and_return(true)
         end
 
         it "renders the pending message" do
@@ -50,7 +50,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
 
       context "when the field is a referentiel and fetch_external_data_error? is true" do
         before do
-          allow(champ).to receive(:fetch_external_data_pending?).and_return(false)
+          allow(champ).to receive(:waiting_for_external_data?).and_return(false)
           allow(champ).to receive(:fetch_external_data_error?).and_return(true)
         end
 
@@ -61,7 +61,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
 
       context "when the field is a referentiel and value is present" do
         before do
-          allow(champ).to receive(:fetch_external_data_pending?).and_return(false)
+          allow(champ).to receive(:waiting_for_external_data?).and_return(false)
           allow(champ).to receive(:fetch_external_data_error?).and_return(false)
           allow(champ).to receive(:value).and_return('value')
         end

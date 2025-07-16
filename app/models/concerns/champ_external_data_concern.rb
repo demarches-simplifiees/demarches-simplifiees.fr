@@ -28,7 +28,7 @@ module ChampExternalDataConcern
       fetch_external_data_exceptions.present? && self.external_id.present?
     end
 
-    def fetch_external_data_pending?
+    def waiting_for_external_data?
       uses_external_data? &&
         should_ui_auto_refresh? &&
         ready_for_external_call? &&

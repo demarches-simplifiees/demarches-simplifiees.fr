@@ -68,24 +68,24 @@ describe Champs::PieceJustificativeChamp do
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     let(:champ) { dossier.champs.first }
 
-    describe "fetch_external_data_pending?" do
+    describe "waiting_for_external_data?" do
       context "not RIB" do
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
-        it { expect(champ.fetch_external_data_pending?).to be_falsey }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
       end
 
       context "empty" do
         before { champ.piece_justificative_file.purge }
-        it { expect(champ.fetch_external_data_pending?).to be_falsey }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
       end
 
       context "pending" do
-        it { expect(champ.fetch_external_data_pending?).to be_truthy }
+        it { expect(champ.waiting_for_external_data?).to be_truthy }
       end
 
       context "done" do
         before { champ.piece_justificative_file.blobs.first.update(ocr: 'yolo') }
-        it { expect(champ.fetch_external_data_pending?).to be_falsey }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
       end
     end
 

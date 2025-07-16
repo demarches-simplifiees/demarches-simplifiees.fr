@@ -75,8 +75,8 @@ describe Champs::ReferentielChamp, type: :model do
       referentiel_champ.update!(values)
     end
 
-    it 'propagate fetch_external_data_pending? changes and reset for values, data, value_json and fetch_external_data_exceptions' do
-      expect { referentiel_champ.update(external_id: 'newid') }.to change { referentiel_champ.fetch_external_data_pending? }.from(false).to(true)
+    it 'propagate waiting_for_external_data? changes and reset for values, data, value_json and fetch_external_data_exceptions' do
+      expect { referentiel_champ.update(external_id: 'newid') }.to change { referentiel_champ.waiting_for_external_data? }.from(false).to(true)
 
       expect(referentiel_champ.external_id).to eq('newid')
       expect(referentiel_champ.data).to eq(nil)

@@ -6,15 +6,15 @@ RSpec.describe ChampValidateConcern do
     let(:dossier) { create(:dossier, procedure:) }
     let(:champ) { dossier.champs.first }
 
-    describe "fetch_external_data_pending?" do
+    describe "waiting_for_external_data?" do
       context "pending" do
         before { champ.update(external_id: 'external_id') }
-        it { expect(champ.fetch_external_data_pending?).to be_truthy }
+        it { expect(champ.waiting_for_external_data?).to be_truthy }
       end
 
       context "done" do
         before { champ.update_columns(external_id: 'external_id', data: 'some data') }
-        it { expect(champ.fetch_external_data_pending?).to be_falsey }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
       end
     end
 
