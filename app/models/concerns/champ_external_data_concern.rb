@@ -3,6 +3,13 @@
 module ChampExternalDataConcern
   extend ActiveSupport::Concern
 
+  # A champ is updated
+  # before_save cleanup_if_empty : back to initial state if external_id
+  # after_update_commit fetch_external_data_later : start ChampFetchExternalDataJob
+  # the job call fetch_external_data which return data or exception
+  # if data, the job call update_external_data!
+  # if exception, the job call save_external_exception
+
   included do
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
     before_save :cleanup_if_empty
