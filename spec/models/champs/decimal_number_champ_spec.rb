@@ -74,6 +74,16 @@ describe Champs::DecimalNumberChamp do
           expect(champ.errors[:value]).to eq(["doit être un nombre positif"])
         end
       end
+
+      context 'zero values are not accepted' do
+        before { champ.type_de_champ.update(options: { positive_number: '1' }) }
+        let(:value) { 0 }
+
+        it 'is not valid and contains errors' do
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être un nombre positif"])
+        end
+      end
     end
 
     context 'when there is a range' do

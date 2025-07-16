@@ -12,7 +12,7 @@ class NumberLimitValidator < ActiveModel::Validator
   def positive_value(record)
     value = convert_to_number(record, 'value')
 
-    if record.type_de_champ.positive_number? && value.negative?
+    if record.type_de_champ.positive_number? && !value.positive?
       # i18n-tasks-use t('errors.messages.not_positive')
       record.errors.add(:value, :not_positive)
     end
