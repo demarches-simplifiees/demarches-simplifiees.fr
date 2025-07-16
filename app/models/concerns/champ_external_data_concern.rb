@@ -3,6 +3,8 @@
 module ChampExternalDataConcern
   extend ActiveSupport::Concern
 
+  include Dry::Monads[:result]
+
   # A champ is updated
   # before_save cleanup_if_empty : back to initial state if external_id
   # after_update_commit fetch_external_data_later : start ChampFetchExternalDataJob
@@ -71,6 +73,23 @@ module ChampExternalDataConcern
       if uses_external_data? && external_id.present? && data.nil?
         update_column(:fetch_external_data_exceptions, [])
         ChampFetchExternalDataJob.perform_later(self, external_id)
+      end
+    end
+
+    def handle_result(result, champ)
+      if result.is_a?(Dry::Monads::Result)
+        case result
+        in Success(data)
+          champ.update_external_data!(data:)
+        in Failure(retryable: true, reason:, code:)
+          champ.save_external_exception(reason, code)
+          raise reason
+        in Failure(retryable: false, reason:, code:)
+          champ.save_external_exception(reason, code)
+          Sentry.capture_exception(reason)
+        end
+      elsif result.present?
+        champ.update_external_data!(data: result)
       end
     end
   end
