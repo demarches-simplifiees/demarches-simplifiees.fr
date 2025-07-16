@@ -77,7 +77,7 @@ describe 'shared/dossiers/edit', type: :view do
       before { champ.update(value:) }
 
       it 'renders the list as a dropdown' do
-        expect(subject).to have_select(type_de_champ.libelle, options: enabled_options + [''])
+        expect(subject).to have_select(type_de_champ.libelle, options: enabled_options)
       end
     end
   end

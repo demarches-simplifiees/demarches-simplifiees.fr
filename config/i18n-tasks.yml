@@ -118,6 +118,7 @@ ignore_unused:
 - 'combo_search_component.screen_reader_instructions'
 - 'links.common.*'
 - 'views.instructeurs.dossiers.acts_on_behalf'
+- 'views.components.*'
 - 'utils.array'
 - 'utils.boolean'
 - 'utils.date'
