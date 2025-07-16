@@ -26,7 +26,7 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def should_ui_auto_refresh?
-    true
+    RIB?
   end
 
   def ready_for_external_call?
