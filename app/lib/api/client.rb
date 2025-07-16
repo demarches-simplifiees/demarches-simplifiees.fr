@@ -5,19 +5,26 @@ class API::Client
 
   TIMEOUT = 10
 
-  def call(url:, params: nil, body: nil, json: nil, headers: nil, method: :get, authorization_token: nil, schema: nil, timeout: TIMEOUT, typhoeus_options: {})
+  def call(url:, params: nil, body: nil, json: nil, headers: nil, method: :get, authorization_token: nil, schema: nil, timeout: TIMEOUT, **typhoeus_options)
     response = case method
     when :get
       Typhoeus.get(url,
-        headers: headers_with_authorization(headers, false, authorization_token),
+        headers: headers_with_authorization(headers, false, authorization_token:),
         params:,
         timeout:,
         **typhoeus_options)
     when :post
       Typhoeus.post(url,
-        headers: headers_with_authorization(headers, json, authorization_token),
+        headers: headers_with_authorization(headers, json, authorization_token:),
         body: json.nil? ? body : json.to_json,
-        timeout:)
+        timeout:,
+        **typhoeus_options)
+    when :patch
+      Typhoeus.patch(url,
+        headers: headers_with_authorization(headers, json, authorization_token:),
+        body: json.nil? ? body : json.to_json,
+        timeout:,
+        **typhoeus_options)
     end
     handle_response(response, schema:)
   rescue StandardError => reason
@@ -30,9 +37,13 @@ class API::Client
 
   private
 
-  def headers_with_authorization(headers, json, authorization_token)
-    headers = headers || {}
-    headers['authorization'] = "Bearer #{authorization_token}" if authorization_token.present?
+  def headers_with_authorization(headers, json, authorization_token:)
+    headers ||= {}
+
+    if authorization_token.present?
+      headers['authorization'] = "Bearer #{authorization_token}"
+    end
+
     headers['content-type'] = 'application/json' if json.present?
     headers
   end
