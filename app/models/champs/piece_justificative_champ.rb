@@ -33,7 +33,7 @@ class Champs::PieceJustificativeChamp < Champ
     piece_justificative_file.blobs.present?
   end
 
-  def external_data_filled?
+  def external_data_present?
     piece_justificative_file.blobs.first.ocr.present?
   end
 

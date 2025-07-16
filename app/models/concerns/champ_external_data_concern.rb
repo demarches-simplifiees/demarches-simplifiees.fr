@@ -20,7 +20,7 @@ module ChampExternalDataConcern
       external_id.present?
     end
 
-    def external_data_filled?
+    def external_data_present?
       data.present?
     end
 
@@ -32,14 +32,14 @@ module ChampExternalDataConcern
       uses_external_data? &&
         should_ui_auto_refresh? &&
         ready_for_external_call? &&
-        (!external_data_filled? && !fetch_external_data_error?)
+        (!external_data_present? && !fetch_external_data_error?)
     end
 
     def external_data_fetched?
       uses_external_data? &&
         should_ui_auto_refresh? &&
         ready_for_external_call? &&
-        (external_data_filled? || fetch_external_data_error?)
+        (external_data_present? || fetch_external_data_error?)
     end
 
     def fetch_external_data
