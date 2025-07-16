@@ -4,7 +4,7 @@ class RNFService
   include Dry::Monads[:result]
 
   def call(rnf_id:)
-    result = API::Client.new.(url: "#{url}/#{rnf_id}", schema:, headers:, typhoeus_options:)
+    result = API::Client.new.(url: "#{url}/#{rnf_id}", schema:, headers:, ssl_verifypeer: false)
     case result
     in Success(body:)
       Success(body)
@@ -23,10 +23,6 @@ class RNFService
 
   def headers
     { Token: ENV['RNF_TOKEN'] }
-  end
-
-  def typhoeus_options
-    { ssl_verifypeer: false }
   end
 
   def schema
