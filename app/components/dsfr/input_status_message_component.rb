@@ -48,14 +48,13 @@ module Dsfr
           { state: :valid, text: t(".referentiel.success", value: @champ.value) }
         end
       when TypeDeChamp.type_champs[:piece_justificative]
-        ocr = @champ.piece_justificative_file&.blobs&.first&.ocr
-        iban = ocr&.dig('rib', 'iban')
-        bank_name = ocr&.dig('rib', 'bank_name')
-        pj_error = ocr&.dig('error').present?
+        data = @champ.data
+        iban = data&.dig('rib', 'iban')
+        bank_name = data&.dig('rib', 'bank_name')
 
-        if ocr.nil?
+        if @champ.waiting_for_external_data?
           { state: :info, text: t('.pj.info') }
-        elsif pj_error
+        elsif @champ.external_error_present?
           { state: :warning, text: t('.pj.error') }
         elsif iban.nil?
           { state: :warning, text: t('.pj.warning') }

@@ -25,6 +25,10 @@ module ChampExternalDataConcern
       false
     end
 
+    def external_identifier_changed?
+      external_id_changed?
+    end
+
     def ready_for_external_call?
       external_id.present?
     end
@@ -64,7 +68,7 @@ module ChampExternalDataConcern
     end
 
     def cleanup_if_empty
-      if uses_external_data? && persisted? && external_id_changed?
+      if uses_external_data? && persisted? && external_identifier_changed?
         self.data = nil
       end
     end

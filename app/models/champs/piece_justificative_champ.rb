@@ -29,19 +29,18 @@ class Champs::PieceJustificativeChamp < Champ
     RIB?
   end
 
+  # Does not detect file removal
+  def external_identifier_changed?
+    piece_justificative_file.attached? && piece_justificative_file.blobs.first.changed?
+  end
+
   def ready_for_external_call?
     piece_justificative_file.blobs.present?
   end
 
-  # should also define external_error_present
-  # but the implem is linked to external_id which is not used here.
-  # As ocr error are also store in ocr field, waiting_for_external_data? works
-  def external_data_present?
-    piece_justificative_file.blobs.first.ocr.present?
-  end
-
   def fetch_external_data
-    nil # the ocr information is added by the ImageProcessorJob when the blob is attached
+    blob = piece_justificative_file.blobs.first
+    OCRService.analyze(blob)
   end
 
   def fetch_external_data_later

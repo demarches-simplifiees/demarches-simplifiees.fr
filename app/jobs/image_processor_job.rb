@@ -98,16 +98,16 @@ class ImageProcessorJob < ApplicationJob
   end
 
   def add_ocr_data(blob)
-    return if !rib?(blob)
+    champ = blob&.attachments&.first&.record
+    return if !rib?(champ)
 
-    blob.update!(ocr: OCRService.analyze(blob))
+    champ.fetch_and_handle_result
   end
 
-  def rib?(blob)
-    record = blob&.attachments&.first&.record
-    return false if !record.is_a?(Champs::PieceJustificativeChamp)
+  def rib?(champ)
+    return false if !champ.is_a?(Champs::PieceJustificativeChamp)
 
-    record.RIB?
+    champ.RIB?
   end
 
   def retry_or_discard

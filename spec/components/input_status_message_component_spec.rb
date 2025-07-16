@@ -77,7 +77,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       context "when OCR is nil" do
         before do
           allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return(nil)
+          allow(champ).to receive(:data).and_return(nil)
         end
 
         it "renders the info message" do
@@ -88,7 +88,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       context "when OCR exists but IBAN is nil" do
         before do
           allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return({ 'rib' => {} })
+          allow(champ).to receive(:data).and_return({ 'rib' => {} })
         end
 
         it "renders the warning message" do
@@ -101,7 +101,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
 
         before do
           allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return({ 'rib' => { 'iban' => iban } })
+          allow(champ).to receive(:data).and_return({ 'rib' => { 'iban' => iban } })
         end
 
         it "renders the valid message with IBAN" do
@@ -112,7 +112,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       context "when OCR has an error" do
         before do
           allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return({ 'error' => true })
+          allow(champ).to receive(:external_error_present?).and_return(true)
         end
 
         it "renders the warning message" do
