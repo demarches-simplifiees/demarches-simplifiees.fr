@@ -24,7 +24,7 @@ class Champs::COJOChamp < Champ
     true
   end
 
-  def poll_external_data?
+  def should_ui_auto_refresh?
     true
   end
 

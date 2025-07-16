@@ -12,7 +12,7 @@ module ChampExternalDataConcern
       false
     end
 
-    def poll_external_data?
+    def should_ui_auto_refresh?
       false
     end
 
@@ -30,14 +30,14 @@ module ChampExternalDataConcern
 
     def fetch_external_data_pending?
       fetch_external_data? &&
-        poll_external_data? &&
+        should_ui_auto_refresh? &&
         external_data_requested? &&
         (!external_data_filled? && !fetch_external_data_error?)
     end
 
     def external_data_fetched?
       fetch_external_data? &&
-        poll_external_data? &&
+        should_ui_auto_refresh? &&
         external_data_requested? &&
         (external_data_filled? || fetch_external_data_error?)
     end
