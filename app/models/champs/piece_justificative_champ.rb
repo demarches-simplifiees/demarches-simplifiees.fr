@@ -29,7 +29,7 @@ class Champs::PieceJustificativeChamp < Champ
     true
   end
 
-  def external_data_requested?
+  def ready_for_external_call?
     piece_justificative_file.blobs.present?
   end
 

@@ -16,7 +16,7 @@ module ChampExternalDataConcern
       false
     end
 
-    def external_data_requested?
+    def ready_for_external_call?
       external_id.present?
     end
 
@@ -31,14 +31,14 @@ module ChampExternalDataConcern
     def fetch_external_data_pending?
       uses_external_data? &&
         should_ui_auto_refresh? &&
-        external_data_requested? &&
+        ready_for_external_call? &&
         (!external_data_filled? && !fetch_external_data_error?)
     end
 
     def external_data_fetched?
       uses_external_data? &&
         should_ui_auto_refresh? &&
-        external_data_requested? &&
+        ready_for_external_call? &&
         (external_data_filled? || fetch_external_data_error?)
     end
 
