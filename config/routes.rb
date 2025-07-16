@@ -173,8 +173,6 @@ Rails.application.routes.draw do
 
   post 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
   post 'check_email' => 'email_checker#show', as: 'show_email_suggestions'
-  # TODO remove in next release
-  get 'check_email' => 'email_checker#show'
 
   resources :targeted_user_links, only: [:show]
 
