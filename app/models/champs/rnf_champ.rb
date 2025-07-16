@@ -19,7 +19,7 @@ class Champs::RNFChamp < Champ
     update!(data:, value_json: extract_value_json(data:), fetch_external_data_exceptions: [])
   end
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 

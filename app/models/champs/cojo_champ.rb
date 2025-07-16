@@ -20,7 +20,7 @@ class Champs::COJOChamp < Champ
     accreditation_success == false
   end
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 

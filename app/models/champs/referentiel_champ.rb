@@ -25,7 +25,7 @@ class Champs::ReferentielChamp < Champ
     end
   end
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 

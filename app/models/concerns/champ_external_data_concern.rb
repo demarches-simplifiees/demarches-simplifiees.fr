@@ -8,7 +8,7 @@ module ChampExternalDataConcern
     before_save :cleanup_if_empty
     after_update_commit :fetch_external_data_later
 
-    def fetch_external_data?
+    def uses_external_data?
       false
     end
 
@@ -29,14 +29,14 @@ module ChampExternalDataConcern
     end
 
     def fetch_external_data_pending?
-      fetch_external_data? &&
+      uses_external_data? &&
         should_ui_auto_refresh? &&
         external_data_requested? &&
         (!external_data_filled? && !fetch_external_data_error?)
     end
 
     def external_data_fetched?
-      fetch_external_data? &&
+      uses_external_data? &&
         should_ui_auto_refresh? &&
         external_data_requested? &&
         (external_data_filled? || fetch_external_data_error?)
@@ -55,13 +55,13 @@ module ChampExternalDataConcern
     end
 
     def cleanup_if_empty
-      if fetch_external_data? && persisted? && external_id_changed?
+      if uses_external_data? && persisted? && external_id_changed?
         self.data = nil
       end
     end
 
     def fetch_external_data_later
-      if fetch_external_data? && external_id.present? && data.nil?
+      if uses_external_data? && external_id.present? && data.nil?
         update_column(:fetch_external_data_exceptions, [])
         ChampFetchExternalDataJob.perform_later(self, external_id)
       end
