@@ -51,9 +51,12 @@ module Dsfr
         ocr = @champ.piece_justificative_file&.blobs&.first&.ocr
         iban = ocr&.dig('rib', 'iban')
         bank_name = ocr&.dig('rib', 'bank_name')
+        pj_error = ocr&.dig('error').present?
 
         if ocr.nil?
           { state: :info, text: t('.pj.info') }
+        elsif pj_error
+          { state: :warning, text: t('.pj.error') }
         elsif iban.nil?
           { state: :warning, text: t('.pj.warning') }
         else

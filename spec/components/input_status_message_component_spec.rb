@@ -108,6 +108,17 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
           expect(subject).to have_css(".fr-message--valid", text: iban)
         end
       end
+
+      context "when OCR has an error" do
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ.piece_justificative_file.blobs.first).to receive(:ocr).and_return({ 'error' => true })
+        end
+
+        it "renders the warning message" do
+          expect(subject).to have_css(".fr-message--warning", text: 'Une erreur')
+        end
+      end
     end
   end
 end
