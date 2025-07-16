@@ -10,7 +10,7 @@ describe Champs::ReferentielChamp, type: :model do
   let(:referentiel_champ) { dossier.champs.find(&:referentiel?) }
 
   describe '#cast_value_for_type_de_champ' do
-    subject { referentiel_champ.update_with_external_data!(data:) }
+    subject { referentiel_champ.update_external_data!(data:) }
 
     context 'when prefill/mapping is configured' do
       let(:prefillable_stable_id) { 2 }

@@ -46,7 +46,7 @@ module ChampExternalDataConcern
       raise NotImplemented.new(:fetch_external_data)
     end
 
-    def update_with_external_data!(data:)
+    def update_external_data!(data:)
       update!(data: data, fetch_external_data_exceptions: [])
     end
 

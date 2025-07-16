@@ -23,7 +23,7 @@ class ChampFetchExternalDataJob < ApplicationJob
     if result.is_a?(Dry::Monads::Result)
       case result
       in Success(data)
-        champ.update_with_external_data!(data:)
+        champ.update_external_data!(data:)
       in Failure(retryable: true, reason:, code:)
         champ.log_fetch_external_data_exception(reason, code)
         raise reason
@@ -32,7 +32,7 @@ class ChampFetchExternalDataJob < ApplicationJob
         Sentry.capture_exception(reason)
       end
     elsif result.present?
-      champ.update_with_external_data!(data: result)
+      champ.update_external_data!(data: result)
     end
   end
 end

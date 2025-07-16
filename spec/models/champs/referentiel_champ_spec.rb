@@ -86,7 +86,7 @@ describe Champs::ReferentielChamp, type: :model do
   end
 
   describe '#fetch_external_data' do
-    subject { referentiel_champ.update_with_external_data!(data:) }
+    subject { referentiel_champ.update_external_data!(data:) }
 
     context 'when referentiel had not prefill' do
       let(:data) { {} }
