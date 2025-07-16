@@ -8,7 +8,7 @@ module ChampExternalDataConcern
   # A champ is updated
   # before_save cleanup_if_empty : back to initial state if external_id
   # after_update_commit fetch_external_data_later : start ChampFetchExternalDataJob
-  # the job call fetch_external_data which return data or exception
+  # the job call fetch_and_handle_result which return data or exception
   # if data, the job call update_external_data!
   # if exception, the job call save_external_exception
 
@@ -76,20 +76,27 @@ module ChampExternalDataConcern
       end
     end
 
-    def handle_result(result, champ)
+    def fetch_and_handle_result
+      result = fetch_external_data
+      handle_result(result)
+    end
+
+    private
+
+    def handle_result(result)
       if result.is_a?(Dry::Monads::Result)
         case result
         in Success(data)
-          champ.update_external_data!(data:)
+          update_external_data!(data:)
         in Failure(retryable: true, reason:, code:)
-          champ.save_external_exception(reason, code)
+          save_external_exception(reason, code)
           raise reason
         in Failure(retryable: false, reason:, code:)
-          champ.save_external_exception(reason, code)
+          save_external_exception(reason, code)
           Sentry.capture_exception(reason)
         end
       elsif result.present?
-        champ.update_external_data!(data: result)
+        update_external_data!(data: result)
       end
     end
   end

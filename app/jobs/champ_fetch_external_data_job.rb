@@ -11,7 +11,6 @@ class ChampFetchExternalDataJob < ApplicationJob
     Sentry.set_tags(champ: champ.id)
     Sentry.set_extras(external_id:)
 
-    result = champ.fetch_external_data
-    champ.handle_result(result, champ)
+    champ.fetch_and_handle_result
   end
 end
