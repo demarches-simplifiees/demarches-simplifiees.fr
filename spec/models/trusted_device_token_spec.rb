@@ -17,6 +17,11 @@ RSpec.describe TrustedDeviceToken, type: :model do
         activated_at: 2.weeks.ago,
         renewal_notified_at: nil)
     end
+    let!(:token_never_activated) do
+      create(:trusted_device_token,
+        activated_at: nil,
+        renewal_notified_at: nil)
+    end
 
     it 'returns only tokens expiring in one week and not yet notified' do
       expect(described_class.expiring_in_one_week).to contain_exactly(token_to_notify)
