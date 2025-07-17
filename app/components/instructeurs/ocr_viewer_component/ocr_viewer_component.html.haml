@@ -1,0 +1,7 @@
+.fr-mt-2v.fr-background-alt--grey.fr-p-2w.flex-grow
+  %p.fr-text-mention--grey.fr-mb-2w Données récupérées depuis la pièce jointe
+
+  %dl.fr-pl-0
+    - formated_data.each do |key, value|
+      %dt.champ-label.fr-text-mention--grey= t(".#{key}")
+      %dd.champ-content.fr-mb-2w= sanitize(value)

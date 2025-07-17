@@ -1,0 +1,7 @@
+---
+en:
+  titulaire: Account Holder
+  iban: IBAN
+  bic: BIC Code
+  bank_name: Bank Name
+  processing_error: This data could not be automatically retrieved from the attached file

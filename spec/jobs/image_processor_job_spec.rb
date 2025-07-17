@@ -175,7 +175,7 @@ describe ImageProcessorJob, type: :job do
 
     context "when the blob contains a RIB" do
       it "calls OcrService.analyze with the blob" do
-        expect(champ_pj.reload.data).to eq(analysis)
+        expect(champ_pj.reload.value_json).to eq(analysis)
       end
     end
 
@@ -184,7 +184,7 @@ describe ImageProcessorJob, type: :job do
 
       it "does not call OcrService.analyze nor set ocr data" do
         expect(OCRService).not_to have_received(:analyze)
-        expect(champ_pj.reload.data).to be_nil
+        expect(champ_pj.reload.value_json).to be_nil
       end
     end
 
@@ -196,7 +196,7 @@ describe ImageProcessorJob, type: :job do
 
       it "does not call OcrService.analyze nor set ocr data" do
         expect(OCRService).not_to have_received(:analyze)
-        expect(champ_pj.reload.data).to be_nil
+        expect(champ_pj.reload.value_json).to be_nil
       end
     end
   end

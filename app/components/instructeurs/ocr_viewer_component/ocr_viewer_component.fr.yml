@@ -1,0 +1,7 @@
+---
+fr:
+  titulaire: Titulaire
+  iban: IBAN
+  bic: Code BIC
+  bank_name: Nom de la banque
+  processing_error: Cette donnée n’a pas pu être récupérée automatiquement dans le fichier joint

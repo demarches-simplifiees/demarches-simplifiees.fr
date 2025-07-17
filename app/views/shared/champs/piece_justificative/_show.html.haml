@@ -2,7 +2,10 @@
   - if profile == 'instructeur'
     .gallery-items-list
       - champ.piece_justificative_file.attachments.with_all_variant_records.each do |attachment|
-        = render Attachment::GalleryItemComponent.new(attachment:, gallery_demande: true)
+        .flex.width-100
+          = render Attachment::GalleryItemComponent.new(attachment:, gallery_demande: true)
+          = render Instructeurs::OCRViewerComponent.new(champ:)
+
   - else
     %ul
       - champ.piece_justificative_file.attachments.each do |attachment|
