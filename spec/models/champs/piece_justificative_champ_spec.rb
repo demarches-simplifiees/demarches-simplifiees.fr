@@ -62,4 +62,52 @@ describe Champs::PieceJustificativeChamp do
       it { is_expected.to be_nil }
     end
   end
+
+  context "external_data" do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, nature: 'RIB' }]) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:champ) { dossier.champs.first }
+
+    describe "waiting_for_external_data?" do
+      context "not RIB" do
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
+      end
+
+      context "empty" do
+        before { champ.piece_justificative_file.purge }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
+      end
+
+      context "pending" do
+        it { expect(champ.waiting_for_external_data?).to be_truthy }
+      end
+
+      context "done" do
+        before { champ.update(data: 'yolo') }
+        it { expect(champ.waiting_for_external_data?).to be_falsey }
+      end
+    end
+
+    describe "external_data_fetched?" do
+      context "not RIB" do
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
+        it { expect(champ.external_data_fetched?).to be_falsey }
+      end
+
+      context "empty" do
+        before { champ.piece_justificative_file.purge }
+        it { expect(champ.external_data_fetched?).to be_falsey }
+      end
+
+      context "pending" do
+        it { expect(champ.external_data_fetched?).to be_falsey }
+      end
+
+      context "done" do
+        before { champ.update(data: 'yolo') }
+        it { expect(champ.external_data_fetched?).to be_truthy }
+      end
+    end
+  end
 end

@@ -21,15 +21,15 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
   before do
     champ.update_columns(external_id: champ_external_id, data:)
     allow(champ).to receive(:fetch_external_data).and_return(fetched_data)
-    allow(champ).to receive(:update_with_external_data!)
-    allow(champ).to receive(:log_fetch_external_data_exception)
+    allow(champ).to receive(:update_external_data!)
+    allow(champ).to receive(:save_external_exception)
     allow(champ).to receive(:clear_external_data_exception!)
   end
 
   shared_examples "a champ non-updater" do
     it 'does not update the champ' do
       perform_job
-      expect(champ).not_to have_received(:update_with_external_data!)
+      expect(champ).not_to have_received(:update_external_data!)
     end
   end
 
@@ -44,7 +44,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
 
       it 'updates the champ' do
         perform_job
-        expect(champ).to have_received(:update_with_external_data!).with(data: fetched_data)
+        expect(champ).to have_received(:update_external_data!).with(data: fetched_data)
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
 
         it 'updates the champ' do
           perform_job
-          expect(champ).to have_received(:update_with_external_data!).with(data: fetched_data.value!)
+          expect(champ).to have_received(:update_external_data!).with(data: fetched_data.value!)
         end
       end
 
@@ -63,7 +63,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
 
         it 'saves exception and raise' do
           expect { perform_job }.to raise_error StandardError
-          expect(champ).to have_received(:log_fetch_external_data_exception).with(reason, 400)
+          expect(champ).to have_received(:save_external_exception).with(reason, 400)
         end
       end
 
@@ -72,7 +72,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
 
         it 'saves exception' do
           perform_job
-          expect(champ).to have_received(:log_fetch_external_data_exception).with(reason, 404)
+          expect(champ).to have_received(:save_external_exception).with(reason, 404)
         end
       end
     end

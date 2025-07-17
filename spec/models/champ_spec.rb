@@ -547,45 +547,6 @@ describe Champ do
     end
   end
 
-  describe '#log_fetch_external_data_exception' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rnf }]) }
-    let(:dossier) { create(:dossier, procedure:) }
-    let(:champ) { dossier.champs.first }
-    context "add execption to the log" do
-      it do
-        champ.log_fetch_external_data_exception(double(inspect: 'PAN'), 404)
-        expect { champ.reload }.not_to raise_error
-      end
-    end
-  end
-
-  describe "fetch_external_data" do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rnf }]) }
-    let(:dossier) { create(:dossier, procedure:) }
-    let(:champ) { dossier.champs.first.tap { _1.update_column(:data, 'some data') } }
-
-    context "cleanup_if_empty" do
-      it "remove data if external_id changes" do
-        expect(champ.data).to_not be_nil
-        champ.update(external_id: 'external_id')
-        expect(champ.data).to be_nil
-      end
-    end
-
-    context "fetch_external_data_later" do
-      let(:data) { { address: { city: "some external data" } }.with_indifferent_access }
-
-      it "fill data from external source" do
-        expect_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data) { data }
-
-        perform_enqueued_jobs do
-          champ.update(external_id: 'external_id')
-        end
-        expect(champ.reload.data).to eq data
-      end
-    end
-  end
-
   describe "#input_name" do
     let(:champ) { Champs::TextChamp.new }
     it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }

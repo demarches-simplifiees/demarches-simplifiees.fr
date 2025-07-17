@@ -19,13 +19,13 @@ module Maintenance
       case result
       in Success(data)
         begin
-          champ.update_with_external_data!(data:)
+          champ.update_external_data!(data:)
         rescue ActiveRecord::RecordInvalid
           # some champ might have dossier nil
         end
       else # fondation was removed, but we kept API data in data:, use it to restore stuff
 
-        champ.update_with_external_data!(data: champ.data.with_indifferent_access)
+        champ.update_external_data!(data: champ.data.with_indifferent_access)
       end
     end
 

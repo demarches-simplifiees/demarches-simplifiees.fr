@@ -17,7 +17,7 @@ class Champs::RNAChamp < Champ
     data&.dig("association_titre")
   end
 
-  def update_with_external_data!(value:, data:)
+  def update_external_data!(value:, data:)
     value_json = data.blank? ? nil : extract_value_json(data:)
     data = (data.presence)
     update_columns(data:, value_json:, value:, fetch_external_data_exceptions: [])

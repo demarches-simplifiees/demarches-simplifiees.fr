@@ -13,7 +13,7 @@ class Champs::ReferentielChamp < Champ
     ReferentielService.new(referentiel:).call(external_id)
   end
 
-  def update_with_external_data!(data:)
+  def update_external_data!(data:)
     transaction do
       update!(
         value: external_id,                # now that we have the data, we can set the value
@@ -25,11 +25,11 @@ class Champs::ReferentielChamp < Champ
     end
   end
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 
-  def poll_external_data?
+  def should_ui_auto_refresh?
     true
   end
 

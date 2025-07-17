@@ -15,15 +15,15 @@ class Champs::RNFChamp < Champ
     RNFService.new.(rnf_id:)
   end
 
-  def update_with_external_data!(data:)
+  def update_external_data!(data:)
     update!(data:, value_json: extract_value_json(data:), fetch_external_data_exceptions: [])
   end
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 
-  def poll_external_data?
+  def should_ui_auto_refresh?
     true
   end
 

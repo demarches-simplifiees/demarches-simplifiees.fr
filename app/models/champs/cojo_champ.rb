@@ -20,11 +20,11 @@ class Champs::COJOChamp < Champ
     accreditation_success == false
   end
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 
-  def poll_external_data?
+  def should_ui_auto_refresh?
     true
   end
 

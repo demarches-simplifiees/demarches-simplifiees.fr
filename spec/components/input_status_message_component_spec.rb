@@ -29,7 +29,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
           allow(champ).to receive(:title).and_return("Title")
           allow(champ).to receive(:address).and_return("123 Street")
 
-          expect(subject).to have_css(".fr-info-text") # , text: I18n.t(".rna.data_fetched", title: "Title", address: "123 Street"))
+          expect(subject).to have_css(".fr-message--info") # , text: I18n.t(".rna.data_fetched", title: "Title", address: "123 Street"))
         end
       end
     end
@@ -38,35 +38,85 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       let(:referentiel) { create(:api_referentiel, :configured) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
 
-      context "when the field is a referentiel and fetch_external_data_pending? is true" do
+      context "when the field is a referentiel and waiting_for_external_data? is true" do
         before do
-          allow(champ).to receive(:fetch_external_data_pending?).and_return(true)
+          allow(champ).to receive(:waiting_for_external_data?).and_return(true)
         end
 
         it "renders the pending message" do
-          expect(subject).to have_css(".fr-info-text", text: "Recherche en cours.")
+          expect(subject).to have_css(".fr-message--info", text: "Recherche en cours.")
         end
       end
 
-      context "when the field is a referentiel and fetch_external_data_error? is true" do
+      context "when the field is a referentiel and external_error_present? is true" do
         before do
-          allow(champ).to receive(:fetch_external_data_pending?).and_return(false)
-          allow(champ).to receive(:fetch_external_data_error?).and_return(true)
+          allow(champ).to receive(:waiting_for_external_data?).and_return(false)
+          allow(champ).to receive(:external_error_present?).and_return(true)
         end
 
         it "renders the error message 'KC'" do
-          expect(subject).to have_css(".fr-info-text", text: "Aucun élément trouvé pour la référence : ")
+          expect(subject).to have_css(".fr-message--info", text: "Aucun élément trouvé pour la référence : ")
         end
       end
 
       context "when the field is a referentiel and value is present" do
         before do
-          allow(champ).to receive(:fetch_external_data_pending?).and_return(false)
-          allow(champ).to receive(:fetch_external_data_error?).and_return(false)
+          allow(champ).to receive(:waiting_for_external_data?).and_return(false)
+          allow(champ).to receive(:external_error_present?).and_return(false)
           allow(champ).to receive(:value).and_return('value')
         end
         it "renders the OK message" do
-          expect(subject).to have_css(".fr-info-text", text: 'value')
+          expect(subject).to have_css(".fr-message--valid", text: 'value')
+        end
+      end
+    end
+
+    context 'with piece_justificative champs (RIB)' do
+      let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'RIB' }] }
+
+      context "when OCR is nil" do
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ).to receive(:data).and_return(nil)
+        end
+
+        it "renders the info message" do
+          expect(subject).to have_css(".fr-message--info")
+        end
+      end
+
+      context "when OCR exists but IBAN is nil" do
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ).to receive(:data).and_return({ 'rib' => {} })
+        end
+
+        it "renders the warning message" do
+          expect(subject).to have_css(".fr-message--warning")
+        end
+      end
+
+      context "when IBAN is present" do
+        let(:iban) { "FRjesuisuniban" }
+
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ).to receive(:data).and_return({ 'rib' => { 'iban' => iban } })
+        end
+
+        it "renders the valid message with IBAN" do
+          expect(subject).to have_css(".fr-message--valid", text: iban)
+        end
+      end
+
+      context "when OCR has an error" do
+        before do
+          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+          allow(champ).to receive(:external_error_present?).and_return(true)
+        end
+
+        it "renders the warning message" do
+          expect(subject).to have_css(".fr-message--warning", text: 'Une erreur')
         end
       end
     end

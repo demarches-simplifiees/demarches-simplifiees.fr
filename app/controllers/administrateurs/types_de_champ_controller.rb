@@ -226,6 +226,7 @@ module Administrateurs
         :expression_reguliere_indications,
         :expression_reguliere_exemple_text,
         :expression_reguliere_error_message,
+        :nature,
         editable_options: [
           :cadastres,
           :unesco,

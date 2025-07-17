@@ -2135,7 +2135,7 @@ describe Users::DossiersController, type: :controller do
           end
 
           it 'inclut le champ principal et les champs pré-remplis dans @to_update' do
-            dossier.champs.find(&:referentiel?).update_with_external_data!(data: { ok: 'valeur préremplie', repetition: [{ nom: 'Jeanne' }, { nom: "Bob" }, {}] })
+            dossier.champs.find(&:referentiel?).update_external_data!(data: { ok: 'valeur préremplie', repetition: [{ nom: 'Jeanne' }, { nom: "Bob" }, {}] })
 
             get :champ, params: { id: dossier.id, stable_id: referentiel_stable_id }, format: :turbo_stream
 

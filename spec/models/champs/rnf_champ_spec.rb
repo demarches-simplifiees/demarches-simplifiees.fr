@@ -108,7 +108,7 @@ describe Champs::RNFChamp, type: :model do
       }
     end
 
-    describe 'update_with_external_data!' do
+    describe 'update_external_data!' do
       it 'works' do
         value_json = {
           street_number: "16",
@@ -128,7 +128,7 @@ describe Champs::RNFChamp, type: :model do
           country_name: "France"
         }
         expect(champ).to receive(:update!).with(data: anything, value_json:, fetch_external_data_exceptions: [])
-        champ.update_with_external_data!(data: subject.value!)
+        champ.update_external_data!(data: subject.value!)
       end
     end
   end

@@ -44,6 +44,9 @@
       - when :piece_justificative_template
         - list.with_item do
           = t(".#{prefix}.update_piece_justificative_template", label: change.label)
+      - when :nature
+        - list.with_item do
+          = t(".#{prefix}.update_nature", label: change.label, to: change.to)
       - when :notice_explicative
         - list.with_item do
           = t(".#{prefix}.update_notice_explicative", label: change.label)

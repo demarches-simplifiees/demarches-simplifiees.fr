@@ -38,11 +38,11 @@ class ImageProcessorJob < ApplicationJob
     raise FileNotScannedYetError if blob.virus_scanner.pending?
     return if ActiveStorage::Attachment.find_by(blob_id: blob.id)&.record_type == "ActiveStorage::VariantRecord"
 
+    add_ocr_data(blob)
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
     uninterlace(blob) if blob.content_type == "image/png"
     create_representations(blob) if blob.representation_required?
     add_watermark(blob) if blob.watermark_pending?
-    add_ocr_data(blob)
   end
 
   private
@@ -98,17 +98,16 @@ class ImageProcessorJob < ApplicationJob
   end
 
   def add_ocr_data(blob)
-    return if !rib?(blob)
-    return if !Flipper.enabled?(:ocr, blob)
+    champ = blob&.attachments&.first&.record
+    return if !rib?(champ)
 
-    blob.update!(ocr: OCRService.analyze(blob))
+    champ.fetch_and_handle_result
   end
 
-  def rib?(blob)
-    record = blob&.attachments&.first&.record
-    return false if !record.is_a?(Champs::PieceJustificativeChamp)
+  def rib?(champ)
+    return false if !champ.is_a?(Champs::PieceJustificativeChamp)
 
-    record.libelle&.include?("RIB") || false
+    champ.RIB?
   end
 
   def retry_or_discard

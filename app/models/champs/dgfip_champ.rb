@@ -7,7 +7,7 @@ class Champs::DgfipChamp < Champs::TextChamp
 
   store_accessor :value_json, :numero_fiscal, :reference_avis
 
-  def fetch_external_data?
+  def uses_external_data?
     true
   end
 

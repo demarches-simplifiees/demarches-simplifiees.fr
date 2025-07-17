@@ -4,6 +4,7 @@ class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampValidateConcern
   include ChampRevisionConcern
+  include ChampExternalDataConcern
 
   self.ignored_columns += [:type_de_champ_id, :parent_id]
 
@@ -19,8 +20,6 @@ class Champ < ApplicationRecord
 
   delegate :procedure, to: :dossier
   normalizes :value, with: NORMALIZES_NON_PRINTABLE_PROC
-
-  attribute :fetch_external_data_exceptions, :external_data_exception, array: true
 
   def type_de_champ
     @type_de_champ ||= dossier.revision
@@ -73,6 +72,7 @@ class Champ < ApplicationRecord
     :expression_reguliere,
     :expression_reguliere_exemple_text,
     :expression_reguliere_error_message,
+    :RIB?,
     to: :type_de_champ
 
   delegate(*TypeDeChamp.type_champs.values.map { "#{_1}?".to_sym }, to: :type_de_champ)
@@ -86,10 +86,6 @@ class Champ < ApplicationRecord
   scope :prefilled, -> { where(prefilled: true) }
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
-
-  before_save :cleanup_if_empty
-
-  after_update_commit :fetch_external_data_later
 
   def public?
     !private?
@@ -216,46 +212,6 @@ class Champ < ApplicationRecord
     "#{html_id}-error_id"
   end
 
-  def log_fetch_external_data_exception(exception, code)
-    update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
-  end
-
-  def fetch_external_data?
-    false
-  end
-
-  def poll_external_data?
-    false
-  end
-
-  def fetch_external_data_error?
-    fetch_external_data_exceptions.present? && self.external_id.present?
-  end
-
-  def fetch_external_data_pending?
-    is_empty_response = data.nil? && !fetch_external_data_error?
-    fetch_external_data? &&
-      poll_external_data? &&
-      external_id.present? &&
-      is_empty_response
-  end
-
-  def external_data_fetched?
-    is_response_present = data.present? || fetch_external_data_error?
-    fetch_external_data? &&
-      poll_external_data? &&
-      external_id.present? &&
-      is_response_present
-  end
-
-  def fetch_external_data
-    raise NotImplemented.new(:fetch_external_data)
-  end
-
-  def update_with_external_data!(data:)
-    update!(data: data, fetch_external_data_exceptions: [])
-  end
-
   def prefillable_champs
     []
   end
@@ -294,19 +250,6 @@ class Champ < ApplicationRecord
 
   def html_id
     type_de_champ.html_id(row_id)
-  end
-
-  def cleanup_if_empty
-    if fetch_external_data? && persisted? && external_id_changed?
-      self.data = nil
-    end
-  end
-
-  def fetch_external_data_later
-    if fetch_external_data? && external_id.present? && data.nil?
-      update_column(:fetch_external_data_exceptions, [])
-      ChampFetchExternalDataJob.perform_later(self, external_id)
-    end
   end
 
   MAIN_STREAM = 'main'
