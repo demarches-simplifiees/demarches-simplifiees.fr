@@ -17,14 +17,6 @@ module ChampExternalDataConcern
     before_save :cleanup_if_empty
     after_update_commit :fetch_external_data_later
 
-    def uses_external_data?
-      false
-    end
-
-    def should_ui_auto_refresh?
-      false
-    end
-
     def external_identifier_changed?
       external_id_changed?
     end
@@ -86,6 +78,14 @@ module ChampExternalDataConcern
     end
 
     private
+
+    def uses_external_data?
+      false
+    end
+
+    def should_ui_auto_refresh?
+      false
+    end
 
     def handle_result(result)
       if result.is_a?(Dry::Monads::Result)
