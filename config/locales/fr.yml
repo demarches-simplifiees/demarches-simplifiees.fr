@@ -547,7 +547,7 @@ fr:
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
-          n_dossier: "dossier Nº "
+          n_dossier_html: "dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>Nº</span> "
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
           no_result_text_with_search: ne correspond aux termes recherchés

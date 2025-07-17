@@ -488,7 +488,7 @@ en:
             request: "Your file"
             mailbox_html: '<span class="fr-hidden fr-unhidden-sm">Administration </span> messaging'
             rendez_vous: "Appointment"
-            dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
+            dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>no.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
             download: "file-%{dossier_id}.pdf"
@@ -538,7 +538,7 @@ en:
         index:
           dossiers: "My files"
         dossiers_list:
-          n_dossier: "File n."
+          n_dossier_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>no.</span> "
           no_result_title: No files
           no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
           no_result_text_with_search: found with search terms
