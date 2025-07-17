@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 class Instructeurs::OCRViewerComponent < ApplicationComponent
-  attr_reader :champ, :data
+  attr_reader :champ, :value_json
 
   def initialize(champ:)
-    @champ, @data = champ, champ.data
+    @champ, @value_json = champ, champ.value_json
   end
 
   def formated_data
     {
-      titulaire: data.dig('rib', 'titulaire')&.join('<br>'),
-      iban: data.dig('rib', 'iban'),
-      bic: data.dig('rib', 'bic'),
-      bank_name: data.dig('rib', 'bank_name')
+      titulaire: value_json.dig('rib', 'titulaire')&.join('<br>'),
+      iban: value_json.dig('rib', 'iban'),
+      bic: value_json.dig('rib', 'bic'),
+      bank_name: value_json.dig('rib', 'bank_name')
     }
       .transform_values! { (it.presence || processing_error) }
   end

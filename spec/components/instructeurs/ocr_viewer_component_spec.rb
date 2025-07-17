@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
-  let(:champ) { double('champ', data:, RIB?: rib, external_data_fetched?: external_data_fetched, external_error_present?: external_error_present) }
+  let(:champ) { double('champ', value_json:, RIB?: rib, external_data_fetched?: external_data_fetched, external_error_present?: external_error_present) }
   let(:component) { described_class.new(champ:) }
 
-  let(:data) { nil }
+  let(:value_json) { nil }
   let(:rib) { true }
   let(:external_data_fetched) { true }
   let(:external_error_present) { false }
@@ -48,7 +48,7 @@ RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
     end
 
     context 'when data is complete' do
-      let(:data) { full_data }
+      let(:value_json) { full_data }
 
       it 'returns formatted data' do
         expect(subject).to have_css('.champ-content', text: 'John Doe')
@@ -59,7 +59,7 @@ RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
     end
 
     context 'when data is incomplete' do
-      let(:data) do
+      let(:value_json) do
         copy = full_data.dup
         copy['rib']['titulaire'] = nil
         copy

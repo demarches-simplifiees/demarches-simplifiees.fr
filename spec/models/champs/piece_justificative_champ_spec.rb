@@ -84,7 +84,7 @@ describe Champs::PieceJustificativeChamp do
       end
 
       context "done" do
-        before { champ.update(data: 'yolo') }
+        before { champ.update(value_json: 'yolo') }
         it { expect(champ.waiting_for_external_data?).to be_falsey }
       end
     end
@@ -105,7 +105,7 @@ describe Champs::PieceJustificativeChamp do
       end
 
       context "done" do
-        before { champ.update(data: 'yolo') }
+        before { champ.update(value_json: 'yolo') }
         it { expect(champ.external_data_fetched?).to be_truthy }
       end
     end

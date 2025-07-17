@@ -74,11 +74,12 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
     context 'with piece_justificative champs (RIB)' do
       let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'RIB' }] }
 
+      before do
+        allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
+      end
+
       context "when OCR is nil" do
-        before do
-          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ).to receive(:data).and_return(nil)
-        end
+        before { allow(champ).to receive(:value_json).and_return(nil) }
 
         it "renders the info message" do
           expect(subject).to have_css(".fr-message--info")
@@ -86,10 +87,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when OCR exists but IBAN is nil" do
-        before do
-          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ).to receive(:data).and_return({ 'rib' => {} })
-        end
+        before { allow(champ).to receive(:value_json).and_return({ 'rib' => {} }) }
 
         it "renders the warning message" do
           expect(subject).to have_css(".fr-message--warning")
@@ -99,10 +97,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       context "when IBAN is present" do
         let(:iban) { "FRjesuisuniban" }
 
-        before do
-          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ).to receive(:data).and_return({ 'rib' => { 'iban' => iban } })
-        end
+        before { allow(champ).to receive(:value_json).and_return({ 'rib' => { 'iban' => iban } }) }
 
         it "renders the valid message with IBAN" do
           expect(subject).to have_css(".fr-message--valid", text: iban)
@@ -110,10 +105,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when OCR has an error" do
-        before do
-          allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-          allow(champ).to receive(:external_error_present?).and_return(true)
-        end
+        before { allow(champ).to receive(:external_error_present?).and_return(true) }
 
         it "renders the warning message" do
           expect(subject).to have_css(".fr-message--warning", text: 'Une erreur')

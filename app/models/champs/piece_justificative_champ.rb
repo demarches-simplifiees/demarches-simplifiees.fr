@@ -35,6 +35,16 @@ class Champs::PieceJustificativeChamp < Champ
     RIB?
   end
 
+  # store directly the data in value_json
+  # as there is no transformation to do
+  def update_external_data!(data:)
+    update!(value_json: data, fetch_external_data_exceptions: [])
+  end
+
+  def external_data_present?
+    value_json.present?
+  end
+
   # Does not detect file removal
   def external_identifier_changed?
     piece_justificative_file.attached? && piece_justificative_file.blobs.first.changed?

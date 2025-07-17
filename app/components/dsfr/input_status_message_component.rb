@@ -48,9 +48,9 @@ module Dsfr
           { state: :valid, text: t(".referentiel.success", value: @champ.value) }
         end
       when TypeDeChamp.type_champs[:piece_justificative]
-        data = @champ.data
-        iban = data&.dig('rib', 'iban')
-        bank_name = data&.dig('rib', 'bank_name')
+        value_json = @champ.value_json
+        iban = value_json&.dig('rib', 'iban')
+        bank_name = value_json&.dig('rib', 'bank_name')
 
         if @champ.waiting_for_external_data?
           { state: :info, text: t('.pj.info') }
