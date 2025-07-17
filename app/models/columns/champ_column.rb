@@ -130,31 +130,94 @@ class Columns::ChampColumn < Column
 
     return if value.blank?
 
-    case [champ.last_write_type_champ, @tdc_type]
-    when ['integer_number', 'decimal_number'] # recast numbers automatically
-      value.to_f
-    when ['decimal_number', 'integer_number'] # may lose some data, but who cares ?
-      value.to_i
-    when ['integer_number', 'text'], ['decimal_number', 'text'] # number to text
-      value
-    when ['drop_down_list', 'multiple_drop_down_list'] # single list can become multi
-      [value]
-    when ['drop_down_list', 'text'] # single list can become text
-      value
-    when ['multiple_drop_down_list', 'drop_down_list'] # multi list can become single
-      parse_enums(value).first
-    when ['multiple_drop_down_list', 'text'] # multi list can become text
-      parse_enums(value).join(', ')
-    when ['date', 'datetime'] # date <=> datetime
-      parse_datetime(value)&.to_datetime
-    when ['datetime', 'date'] # may lose some data, but who cares ?
-      parse_datetime(value)&.to_date
-    when ['formatted', 'text'], ['text', 'formatted'], ['text', 'textarea'], ['formatted', 'textarea']
-      value
+    from_type = champ.last_write_type_champ.to_sym
+    to_type = @tdc_type.to_sym
+
+    value = case from_type
+    when :date, :datetime
+      parse_datetime(value)
+    when :multiple_drop_down_list
+      parse_enums(value)
+    when :checkbox, :yes_no
+      parse_boolean(value)
     else
-      nil
+      value
     end
+
+    return if value.blank?
+
+    CAST[[from_type, to_type]]&.call(value)
   end
+
+  CAST = {
+    # text
+    [:text, :textarea] => -> (v) { v },
+    [:text, :formatted] => -> (v) { v },
+    [:text, :email] => -> (v) { v },
+    [:text, :phone] => -> (v) { v },
+    [:text, :decimal_number] => -> (v) { v.to_f },
+    [:text, :integer_number] => -> (v) { v.to_i },
+    # textarea
+    [:textarea, :text] => -> (v) { v },
+    [:textarea, :formatted] => -> (v) { v },
+    # formatted
+    [:formatted, :textarea] => -> (v) { v },
+    [:formatted, :text] => -> (v) { v },
+    [:formatted, :email] => -> (v) { v },
+    [:formatted, :phone] => -> (v) { v },
+    # civilite
+    [:civilite, :text] => -> (v) { v },
+    [:civilite, :textarea] => -> (v) { v },
+    [:civilite, :formatted] => -> (v) { v },
+    # email
+    [:email, :text] => -> (v) { v },
+    [:email, :textarea] => -> (v) { v },
+    [:email, :formatted] => -> (v) { v },
+    # phone
+    [:phone, :text] => -> (v) { v },
+    [:phone, :textarea] => -> (v) { v },
+    [:phone, :formatted] => -> (v) { v },
+    # integer_number
+    [:integer_number, :decimal_number] => -> (v) { v.to_f },
+    [:integer_number, :text] => -> (v) { v.to_s },
+    [:integer_number, :textarea] => -> (v) { v.to_s },
+    [:integer_number, :formatted] => -> (v) { v.to_s },
+    # decimal_number
+    [:decimal_number, :integer_number] => -> (v) { v.to_i },
+    [:decimal_number, :text] => -> (v) { v.to_s },
+    [:decimal_number, :textarea] => -> (v) { v.to_s },
+    [:decimal_number, :formatted] => -> (v) { v.to_s },
+    # date
+    [:date, :datetime] => -> (v) { v.to_datetime },
+    [:date, :text] => -> (v) { I18n.l(v, format: '%d %B %Y') },
+    [:date, :textarea] => -> (v) { I18n.l(v, format: '%d %B %Y') },
+    [:date, :formatted] => -> (v) { I18n.l(v, format: '%d %B %Y') },
+    # datetime
+    [:datetime, :date] => -> (v) { v.to_date },
+    [:datetime, :text] => -> (v) { I18n.l(v) },
+    [:datetime, :textarea] => -> (v) { I18n.l(v) },
+    [:datetime, :formatted] => -> (v) { I18n.l(v) },
+    # checkbox
+    [:checkbox, :yes_no] => -> (v) { v },
+    [:checkbox, :text] => -> (v) { v ? 'Oui' : 'Non' },
+    [:checkbox, :textarea] => -> (v) { v ? 'Oui' : 'Non' },
+    [:checkbox, :formatted] => -> (v) { v ? 'Oui' : 'Non' },
+    # yes_no
+    [:yes_no, :checkbox] => -> (v) { v },
+    [:yes_no, :text] => -> (v) { v ? 'Oui' : 'Non' },
+    [:yes_no, :textarea] => -> (v) { v ? 'Oui' : 'Non' },
+    [:yes_no, :formatted] => -> (v) { v ? 'Oui' : 'Non' },
+    # drop_down_list
+    [:drop_down_list, :multiple_drop_down_list] => -> (v) { [v] },
+    [:drop_down_list, :text] => -> (v) { v },
+    [:drop_down_list, :textarea] => -> (v) { v },
+    [:drop_down_list, :formatted] => -> (v) { v },
+    # multiple_drop_down_list
+    [:multiple_drop_down_list, :drop_down_list] => -> (v) { v.first },
+    [:multiple_drop_down_list, :text] => -> (v) { v.join(', ') },
+    [:multiple_drop_down_list, :textarea] => -> (v) { v.join(', ') },
+    [:multiple_drop_down_list, :formatted] => -> (v) { v.join(', ') }
+  }
 
   def parse_boolean(value)
     case value

@@ -235,17 +235,18 @@ describe Champ do
 
     context 'when type_de_champ and champ.type mismatch' do
       let(:value) { :noop }
-      let(:champ_yes_no) { Champs::YesNoChamp.new(value: 'true') }
+      let(:champ_iban) { Champs::IbanChamp.new(value: 'FR1234') }
       let(:champ_text) { Champs::TextChamp.new(value: 'hello') }
-      let(:type_de_champ_yes_no) { build(:type_de_champ_yes_no) }
+      let(:type_de_champ_iban) { build(:type_de_champ_iban) }
       let(:type_de_champ_text) { build(:type_de_champ_text) }
       before do
-        allow(champ_yes_no).to receive(:type_de_champ).and_return(type_de_champ_yes_no)
+        allow(champ_iban).to receive(:type_de_champ).and_return(type_de_champ_iban)
         allow(champ_text).to receive(:type_de_champ).and_return(type_de_champ_text)
       end
+
       it do
-        expect(type_de_champ_text.champ_value_for_export(champ_yes_no)).to eq(nil)
-        expect(type_de_champ_yes_no.champ_value_for_export(champ_text)).to eq('')
+        expect(type_de_champ_text.champ_value_for_export(champ_iban)).to eq(nil)
+        expect(type_de_champ_iban.champ_value_for_export(champ_text)).to eq(nil)
       end
     end
   end

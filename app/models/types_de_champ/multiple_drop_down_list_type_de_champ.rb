@@ -32,15 +32,9 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
     end
   end
 
-  def champ_value_for_export(champ, path = :value)
-    champ_value(champ)
-  end
-
   def champ_blank?(champ) = selected_options(champ).blank?
 
-  private
-
-  def selected_options(champ)
+  def self.parse_selected_options(champ)
     return [] if champ.value.blank?
 
     if champ.is_type?(TypeDeChamp.type_champs.fetch(:drop_down_list))
@@ -54,5 +48,11 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
 
   def referentiel_path_to_get_user_value
     referentiel.headers_with_path.first.second
+  end
+
+  private
+
+  def selected_options(champ)
+    self.class.parse_selected_options(champ)
   end
 end
