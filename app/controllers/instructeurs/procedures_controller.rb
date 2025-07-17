@@ -29,7 +29,7 @@ module Instructeurs
 
       @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
       publiees_or_closes_with_dossiers_en_cours = all_procedures_for_listing.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
-      current_instructeur.ensure_instructeur_procedures_for(publiees_or_closes_with_dossiers_en_cours)
+      ensure_instructeur_procedures_for(publiees_or_closes_with_dossiers_en_cours)
       @all_procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur)
       @procedures_en_cours = @all_procedures_en_cours.page(params[:page]).per(ITEMS_PER_PAGE)
       closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
@@ -76,7 +76,7 @@ module Instructeurs
     end
 
     def update_order_positions
-      current_instructeur.update_instructeur_procedures_positions(ordered_procedure_ids_params)
+      InstructeursProcedure.update_instructeur_procedures_positions(current_instructeur, ordered_procedure_ids_params)
       redirect_to instructeur_procedures_path, notice: "L'ordre des démarches a été mis à jour."
     end
 
