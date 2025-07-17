@@ -1,1 +1,1 @@
-= @form.text_field(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, required: @champ.required?, pattern: "-?[0-9]*", inputmode: :decimal))
+= @form.text_field(:value, input_opts(id: @champ.focusable_input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, required: @champ.required?, pattern: "-?[0-9]*", inputmode: :decimal))

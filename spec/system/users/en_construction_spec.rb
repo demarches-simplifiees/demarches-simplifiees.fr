@@ -58,7 +58,7 @@ describe "Dossier en_construction", js: true do
       click_on "Supprimer le fichier toto.png"
       expect(page).to have_text("La pièce jointe (toto.png) a bien été supprimée. Vous pouvez en ajouter une autre.")
 
-      input_selector = "##{champ.input_id}"
+      input_selector = "##{champ.focusable_input_id}"
       expect(page).to have_selector(input_selector)
       find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
 

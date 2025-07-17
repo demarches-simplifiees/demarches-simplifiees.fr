@@ -50,6 +50,16 @@ class Dsfr::InputComponent < ApplicationComponent
     )
   end
 
+  def label_opts
+    {
+      class: class_names(
+        'fr-label': true,
+        'fr-password__label': password?,
+        @label_opts[:class] => @label_opts[:class].present?
+      )
+    }.merge(@opts[:id].present? ? { for: @opts[:id] } : {})
+  end
+
   # errors helpers
   def error_messages
     errors.full_messages_for(attribute_or_rich_body)

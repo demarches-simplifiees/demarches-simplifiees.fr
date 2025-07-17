@@ -1,8 +1,8 @@
 .mesri-inputs
   %div
-    = @form.label :ine, t('.ine_label'), for: @champ.input_id
+    = @form.label :ine, t('.ine_label'), for: @champ.focusable_input_id
     %p.notice= t('.ine_notice')
     = @form.text_field :ine,
       required: @champ.required?,
       aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
-      class: "width-33-desktop", id: @champ.input_id
+      class: "width-33-desktop", id: @champ.focusable_input_id
