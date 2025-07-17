@@ -21,6 +21,12 @@ class Champs::PieceJustificativeChamp < Champ
     # We don’t know how to search inside documents yet
   end
 
+  def fetch_external_data_later
+    nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
+  end
+
+  private
+
   def uses_external_data?
     RIB?
   end
@@ -41,9 +47,5 @@ class Champs::PieceJustificativeChamp < Champ
   def fetch_external_data
     blob = piece_justificative_file.blobs.first
     OCRService.analyze(blob)
-  end
-
-  def fetch_external_data_later
-    nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
   end
 end

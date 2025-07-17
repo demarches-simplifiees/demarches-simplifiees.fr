@@ -7,7 +7,7 @@ RSpec.describe Champs::AnnuaireEducationChamp do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :annuaire_education }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     let(:champ) { dossier.champs.first.tap { _1.update_column(:data, 'any data') } }
-    subject { champ.update_external_data!(data: data) }
+    subject { champ.send(:update_external_data!, data: data) }
 
     shared_examples "a data updater (without updating the value)" do |data|
       it { expect { subject }.to change { champ.reload.data }.to(data) }

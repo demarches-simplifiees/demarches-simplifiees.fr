@@ -61,7 +61,7 @@ RSpec.describe ChampValidateConcern do
     let(:champ) { dossier.champs.first }
     context "add execption to the log" do
       it do
-        champ.save_external_exception(double(inspect: 'PAN'), 404)
+        champ.send(:save_external_exception, double(inspect: 'PAN'), 404)
         expect { champ.reload }.not_to raise_error
       end
     end
