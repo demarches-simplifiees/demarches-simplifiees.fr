@@ -1,6 +1,6 @@
 import { getConfig } from '@utils';
 const {
-  crisp: { key, enabled, administrateur },
+  crisp: { websiteId, enabled, administrateur },
   locale
 } = getConfig();
 
@@ -18,7 +18,7 @@ declare const window: Window &
 
 if (enabled) {
   window.$crisp = [];
-  window.CRISP_WEBSITE_ID = key;
+  window.CRISP_WEBSITE_ID = websiteId;
   window.CRISP_RUNTIME_CONFIG = {
     locale: locale
   };
