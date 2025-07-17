@@ -335,9 +335,9 @@ fr:
         resent: 'Renvoyer un email de confirmation'
     invites:
       create:
-        success: 'Une invitation a été envoyée à %{email}. Vous pouvez en <a href="#invite-content_button">créer une autre</a>.'
+        success: "Une invitation a été envoyée à %{email}. Vous pouvez en <button type=\"button\" class=\"fr-link\" aria-controls=\"modal-invite\" data-fr-opened=\"true\">inviter une autre personne</button>."
       destroy:
-        success: 'L’autorisation de %{email} vient d’être révoquée. Vous pouvez en <a href="#invite-content_button">créer une autre</a>.'
+        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez en <button type=\"button\" class=\"fr-link\" aria-controls=\"modal-invite\" data-fr-opened=\"true\">inviter une autre personne</button>."
         error: "Vous ne pouvez pas révoquer cette autorisation"
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -345,6 +345,8 @@ fr:
         invite_to_view: "Inviter une personne à consulter ce dossier"
       form:
         modal_title: "Gestion des invités"
+        close_button: Fermer
+        cancel: Annuler
         modal_highlight: Les invités ont le droit de voir et modifier votre dossier.
         title: Ajouter un invité
         email: Adresse électronique
