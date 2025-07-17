@@ -21,7 +21,7 @@ describe 'instructeurs/dossiers/show', type: :view do
   subject { render }
 
   it 'renders the header' do
-    expect(subject).to have_text("Dossier nº #{dossier.id}")
+    expect(subject).to have_text("Dossier n° #{dossier.id}")
   end
 
   context 'when procedure statut / page was saved in session' do

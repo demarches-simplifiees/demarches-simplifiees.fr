@@ -123,7 +123,7 @@ en:
         headquarters_value: "2 rue Kellermann - 59100 Roubaix - France"
     accessibility_statement:
       title: "Accessibility statement"
-      line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
+      line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law no. 2005-102 of 11 February 2005</a>."
       line_two_html: "This accessibility statement applies to <a href=\"https://%{host}\">%{app_name}</a> website."
       compliance:
         title: "Compliance status"
@@ -448,8 +448,8 @@ en:
       avis:
         introduction_file_explaination: "File attached to the request for advice"
       search:
-        dossier_not_in_instructor_group: "File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it is attached to the “%{groupe_instructeur_label}” instructor group."
-        deleted_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}}” matches your search but it was deleted on %{deleted_at}."
+        dossier_not_in_instructor_group: "File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it is attached to the “%{groupe_instructeur_label}” instructor group."
+        deleted_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}}” matches your search but it was deleted on %{deleted_at}."
     users:
       dossiers:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
@@ -488,7 +488,7 @@ en:
             request: "Your file"
             mailbox_html: '<span class="fr-hidden fr-unhidden-sm">Administration </span> messaging'
             rendez_vous: "Appointment"
-            dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
+            dossier_number: "File no. %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
             download: "file-%{dossier_id}.pdf"
@@ -538,7 +538,7 @@ en:
         index:
           dossiers: "My files"
         dossiers_list:
-          n_dossier: "File n."
+          n_dossier: "File no."
           no_result_title: No files
           no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
           no_result_text_with_search: found with search terms

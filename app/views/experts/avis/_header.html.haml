@@ -7,7 +7,7 @@
           %li= link_to('Avis', expert_all_avis_path, class: 'fr-breadcrumb__link')
           %li
             = link_to(dossier.procedure.libelle.truncate_words(10), procedure_expert_avis_index_path(dossier.procedure), class: "fr-breadcrumb__link")
-          %li= content_tag("a","Dossier nº #{dossier.id}", class: 'fr-breadcrumb__link', 'aria-current': 'page')
+          %li= content_tag("a","Dossier n° #{dossier.id}", class: 'fr-breadcrumb__link', 'aria-current': 'page')
 
 
     .flex

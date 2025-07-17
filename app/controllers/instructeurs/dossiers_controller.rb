@@ -153,7 +153,7 @@ module Instructeurs
     def unfollow
       current_instructeur.unfollow(dossier)
 
-      flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
+      flash.notice = "Vous ne suivez plus le dossier n° #{dossier.id}"
 
       redirect_back(fallback_location: instructeur_procedure_path(procedure))
     end

@@ -1,4 +1,4 @@
 fr:
   dossier_mailer:
     notify_brouillon_not_submitted:
-      subject: "Attention : votre dossier nº %{dossier_id} n’est pas déposé"
+      subject: "Attention : votre dossier n° %{dossier_id} n’est pas déposé"

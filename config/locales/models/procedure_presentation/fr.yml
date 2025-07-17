@@ -4,7 +4,7 @@ fr:
       procedure_presentation:
         fields:
           self:
-            id: Nº dossier
+            id: N° dossier
             user_email_for_display: Adresse électronique
             state: État du dossier
             created_at: Date de création

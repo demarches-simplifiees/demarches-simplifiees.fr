@@ -20,7 +20,7 @@ en:
       cnaf:
         show:
           not_filled: not filled
-          fetching_data: "Fetching data for recipient No. %{numero_allocataire} with postal code %{code_postal}."
+          fetching_data: "Fetching data for recipient no. %{numero_allocataire} with postal code %{code_postal}."
           data_fetched: "Data concerning %{sources} linked to the account Nº %{numero_allocataire} with the postal code %{code_postal} has been received from the CAF."
           data_fetched_title: "Data received from la Caisse nationale d’allocations familiales"
       rnf:
@@ -29,7 +29,7 @@ en:
       dgfip:
         show:
           not_filled: not filled
-          fetching_data: "Fetching data for declarant No. %{numero_fiscal} with tax notice reference %{reference_avis}."
+          fetching_data: "Fetching data for declarant no. %{numero_fiscal} with tax notice reference %{reference_avis}."
           data_fetched: "Data concerning %{sources} linked to the declarant Nº %{numero_fiscal} with tax notice reference %{reference_avis} has been received from the DGFiP."
           data_fetched_title: "Data received from la Direction générale des Finances publiques"
       pole_emploi:

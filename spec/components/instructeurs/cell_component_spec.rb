@@ -73,7 +73,7 @@ describe Instructeurs::CellComponent do
     end
 
     context 'for a integer column' do
-      let(:column) { dossier.procedure.find_column(label: 'Nº dossier') }
+      let(:column) { dossier.procedure.find_column(label: 'N° dossier') }
 
       it { is_expected.to eq(dossier.id) }
     end

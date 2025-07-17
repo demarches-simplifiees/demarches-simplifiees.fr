@@ -201,7 +201,7 @@ describe ColumnsConcern do
 
         it "returns all usager columns" do
           expected = [
-            procedure.find_column(label: "Nº dossier"),
+            procedure.find_column(label: "N° dossier"),
             procedure.find_column(label: "Adresse électronique"),
             procedure.find_column(label: "France connecté ?"),
             procedure.find_column(label: "Civilité"),
@@ -223,7 +223,7 @@ describe ColumnsConcern do
 
         it "returns all usager columns" do
           expected = [
-            procedure.find_column(label: "Nº dossier"),
+            procedure.find_column(label: "N° dossier"),
             procedure.find_column(label: "Adresse électronique"),
             procedure.find_column(label: "France connecté ?"),
             procedure.find_column(label: "Établissement SIRET"),

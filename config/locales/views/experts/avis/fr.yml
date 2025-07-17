@@ -9,7 +9,7 @@ fr:
           other: "avis donnés"
         tabs_aria_label: "Avis"
         th:
-          dossier_number: "Nº dossier"
+          dossier_number: "N° dossier"
           applicant: "Demandeur"
           procedure: "Démarche"
         empty: "Aucun avis"

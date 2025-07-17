@@ -31,7 +31,7 @@
                 \:
                 :ruby
                   old_dossiers_en_construction = procedure_overview.old_dossiers_en_construction.map do |old_dossier|
-                    link_to "nº #{old_dossier.id}", instructeur_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #0069CC;'
+                    link_to "n° #{old_dossier.id}", instructeur_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #0069CC;'
                   end.join(', ')
                 = sanitize(old_dossiers_en_construction, attributes: %w(href style))
 
@@ -46,7 +46,7 @@
                 \:
                 :ruby
                   old_dossiers_en_instruction = procedure_overview.old_dossiers_en_instruction.map do |old_dossier|
-                    link_to "nº #{old_dossier.id}", instructeur_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #0069CC;'
+                    link_to "n° #{old_dossier.id}", instructeur_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #0069CC;'
                   end.join(', ')
                 = sanitize(old_dossiers_en_instruction, attributes: %w(href style))
 

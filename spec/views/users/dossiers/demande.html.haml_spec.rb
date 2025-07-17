@@ -12,7 +12,7 @@ describe 'users/dossiers/demande', type: :view do
   subject! { render }
 
   it 'renders the header' do
-    expect(rendered).to have_text("Dossier numéro nº #{dossier.id}")
+    expect(rendered).to have_text("Dossier n° #{dossier.id}")
   end
 
   it 'renders the dossier infos' do

@@ -12,7 +12,7 @@ describe 'users/dossiers/show/header', type: :view do
 
   it 'affiche les informations du dossier' do
     expect(rendered).to have_text(dossier.procedure.libelle)
-    expect(rendered).to have_text("Dossier numéro nº #{dossier.id}")
+    expect(rendered).to have_text("Dossier n° #{dossier.id}")
     expect(rendered).to have_text("en construction")
 
     expect(rendered).to have_selector("nav.fr-tabs")
@@ -25,7 +25,7 @@ describe 'users/dossiers/show/header', type: :view do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     it "affiche les informations du dossier" do
-      expect(rendered).to have_text("Dossier numéro nº #{dossier.id}")
+      expect(rendered).to have_text("Dossier n° #{dossier.id}")
       expect(rendered).to have_text("en construction")
     end
   end
@@ -35,7 +35,7 @@ describe 'users/dossiers/show/header', type: :view do
     let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
     it "n'affiche pas les informations de décision" do
-      expect(rendered).to have_text("Dossier numéro nº #{dossier.id}")
+      expect(rendered).to have_text("Dossier n° #{dossier.id}")
       expect(rendered).to have_text("traité")
     end
   end

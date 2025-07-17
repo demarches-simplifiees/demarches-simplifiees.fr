@@ -113,13 +113,13 @@ fr:
         RCS_value: "Roubaix – Tourcoing 424 761 419 00045"
         APE_term: "Code APE"
         APE_value: "6202A"
-        TVA_term_html: "<abbr title='Numéro'>N°</abbr> TVA"
+        TVA_term_html: "N° TVA"
         TVA_value: "FR 22 424 761 419"
         headquarters_term: "Siège social"
         headquarters_value: "2 rue Kellermann - 59100 Roubaix - France"
     accessibility_statement:
       title: "Déclaration d’accessibilité"
-      line_one_html: "La DINUM s’engage à rendre son service accessible, conformément à l’<a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\">article 47 de la loi n° 2005-102 du 11 février 2005</a>."
+      line_one_html: "La DINUM s’engage à rendre son service accessible, conformément à l’<a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\">article 47 de la loi n° 2005-102 du 11 février 2005</a>."
       line_two_html: "Cette déclaration d’accessibilité s’applique au site <a href=\"https://%{host}\">%{app_name}</a>."
       compliance:
         title: "État de conformité"
@@ -457,8 +457,8 @@ fr:
       avis:
         introduction_file_explaination: "Fichier joint à la demande d’avis"
       search:
-        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
-        deleted_dossier: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été supprimé le %{deleted_at}."
+        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
+        deleted_dossier: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été supprimé le %{deleted_at}."
     users:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
@@ -497,7 +497,7 @@ fr:
             request: "Votre dossier"
             mailbox_html: 'Messagerie<span class="fr-hidden fr-unhidden-sm"> administration</span>'
             rendez_vous: "Rendez-vous"
-            dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
+            dossier_number: "Dossier n° %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
             download: "dossier-%{dossier_id}.pdf"
@@ -536,8 +536,8 @@ fr:
           edit_dossier: Modifier le dossier
           edit_dossier_title: "Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
-          search_file: Rechercher un dossier (N° de dossier, mots-clés)
-          prompt: (N° de dossier, nom / prénom, mots-clés)
+          search_file: Rechercher un dossier (n° de dossier, mots-clés)
+          prompt: (n° de dossier, nom / prénom, mots-clés)
           label: Rechercher un dossier
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
@@ -547,7 +547,7 @@ fr:
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
-          n_dossier: "dossier Nº "
+          n_dossier: "dossier n°"
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
           no_result_text_with_search: ne correspond aux termes recherchés
@@ -589,10 +589,10 @@ fr:
           other_actions: "Autres actions"
         transfers:
           sender_from_support: Le support technique
-          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier Nº %{id} pour %{email}"
-          sender_demande_en_cours_from_support: "Une demande de transfert par le support technique est en cours sur le dossier Nº %{id} pour %{email}"
-          receiver_demande_en_cours: "Demande de transfert pour le dossier Nº %{id} envoyé par %{email}"
-          receiver_demande_en_cours_from_support: "Demande de transfert par le support technique pour le dossier Nº %{id} de %{email}"
+          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier n° %{id} pour %{email}"
+          sender_demande_en_cours_from_support: "Une demande de transfert par le support technique est en cours sur le dossier n° %{id} pour %{email}"
+          receiver_demande_en_cours: "Demande de transfert pour le dossier n° %{id} envoyé par %{email}"
+          receiver_demande_en_cours_from_support: "Demande de transfert par le support technique pour le dossier n° %{id} de %{email}"
           revoke: Révoquer cette demande
           accept: Accepter
           reject: Rejeter
@@ -928,7 +928,7 @@ fr:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
       restore: "Le dossier a bien été restauré"
-      reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+      reaffectation: "Le dossier n° %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
       existing_groupe:
         one: "%{count} groupe existe"
         other: "%{count} groupes existent"

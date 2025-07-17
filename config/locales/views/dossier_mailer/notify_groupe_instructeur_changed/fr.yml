@@ -1,4 +1,4 @@
 fr:
   dossier_mailer:
     notify_groupe_instructeur_changed:
-      subject: Le dossier nº %{dossier_id} a changé de groupe d’instructeurs
+      subject: Le dossier n° %{dossier_id} a changé de groupe d’instructeurs

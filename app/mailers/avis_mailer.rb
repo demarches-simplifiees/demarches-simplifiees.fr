@@ -16,7 +16,7 @@ class AvisMailer < ApplicationMailer
       @avis = avis
       email = @avis.expert&.email
       @url = targeted_user_link_url(targeted_user_link)
-      subject = "Donnez votre avis sur le dossier nº #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
+      subject = "Donnez votre avis sur le dossier n° #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
 
       configure_defaults_for_email(email)
       mail(to: email, subject: subject)
@@ -34,7 +34,7 @@ class AvisMailer < ApplicationMailer
       @token = token
       @avis = avis
       @url = targeted_user_link_url(targeted_user_link)
-      subject = "Donnez votre avis sur le dossier nº #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
+      subject = "Donnez votre avis sur le dossier n° #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
 
       bypass_unverified_mail_protection!
 

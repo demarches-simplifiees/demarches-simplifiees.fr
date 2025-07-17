@@ -6,7 +6,7 @@ fr:
       mes_dossiers: 'Mes dossiers'
     dossiers:
       depositaite: "Dépositaire"
-      numéro: 'Dossier nº '
+      numéro: 'Dossier n° '
       invites:
         title: "Personnes invitées à voir ce dossier"
         empty: "Aucune personne invitée"

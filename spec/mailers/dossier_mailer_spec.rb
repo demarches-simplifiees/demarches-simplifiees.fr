@@ -112,7 +112,7 @@ RSpec.describe DossierMailer, type: :mailer do
     subject { described_class.notify_deletion_to_administration(hidden_dossier, to_email) }
 
     it 'verifies subject and body content for deletion notification' do
-      expect(subject.subject).to eq("Le dossier nº #{hidden_dossier.id} a été supprimé à la demande de l’usager")
+      expect(subject.subject).to eq("Le dossier n° #{hidden_dossier.id} a été supprimé à la demande de l’usager")
       expect(subject.body).to include("À la demande de l’usager")
       expect(subject.body).to include(hidden_dossier.id)
       expect(subject.body).to include(hidden_dossier.procedure.libelle)
@@ -263,7 +263,7 @@ RSpec.describe DossierMailer, type: :mailer do
     subject { described_class.notify_groupe_instructeur_changed(instructeur, dossier) }
 
     it 'verifies subject and body content for groupe instructeur change notification' do
-      expect(subject.subject).to eq("Le dossier nº #{dossier.id} a changé de groupe d’instructeurs")
+      expect(subject.subject).to eq("Le dossier n° #{dossier.id} a changé de groupe d’instructeurs")
       expect(subject.body).to include("n° #{dossier.id}")
       expect(subject.body).to include(dossier.procedure.libelle)
       expect(subject.body).to include("Suite à cette modification, vous ne suivez plus ce dossier.")
@@ -284,7 +284,7 @@ RSpec.describe DossierMailer, type: :mailer do
 
     context 'reason is incorrect' do
       it 'checks email subject and body for corrections without Silence Vaut Accord' do
-        expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »")
+        expect(subject.subject).to eq("Vous devez corriger votre dossier n° #{dossier.id} « #{dossier.procedure.libelle} »")
         expect(subject.body).to include("apporter des corrections")
         expect(subject.body).not_to include("Silence")
       end
@@ -295,7 +295,7 @@ RSpec.describe DossierMailer, type: :mailer do
       let(:procedure) { create(:procedure, :sva) }
 
       it 'includes Silence Vaut Accord and mentions suspension for incorrect reason' do
-        expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »")
+        expect(subject.subject).to eq("Vous devez corriger votre dossier n° #{dossier.id} « #{dossier.procedure.libelle} »")
         expect(subject.body).to include("apporter des corrections")
         expect(subject.body).to include("Silence Vaut Accord")
         expect(subject.body).to include("suspendu")

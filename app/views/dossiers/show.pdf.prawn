@@ -331,7 +331,7 @@ prawn_document(page_size: "A4") do |pdf|
     add_pdf_draft_warning(pdf, @dossier)
   end
 
-  format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
+  format_in_2_columns(pdf, 'Dossier n°', @dossier.id.to_s)
   format_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
   format_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
 
