@@ -2,6 +2,7 @@
 
 class WebhookController < ActionController::Base
   before_action :verify_helpscout_signature!, only: [:helpscout, :helpscout_support_dev]
+  before_action :verify_crisp_signature!, only: [:crisp]
   skip_before_action :verify_authenticity_token
 
   def sendinblue
@@ -71,6 +72,60 @@ class WebhookController < ActionController::Base
     end
   end
 
+  def crisp
+    # Note: always respond with 200 or webhooks will be suspended.
+    if params[:event] != "message:send"
+      head :ok and return
+    end
+
+    email = params.dig(:data, :user, :user_id).downcase
+    user = User.find_by(email: email)
+
+    if user.nil?
+      head :ok and return
+    end
+
+    head :ok and return
+
+    # instructeur = user.instructeur
+    # administrateur = user.administrateur
+
+    # url = manager_user_url(user)
+    # markdown = []
+    # # markdown = [link_to_manager_markdown(user, url)]
+
+    # if instructeur
+    #   url = manager_instructeur_url(instructeur)
+    #   # markdown << link_to_manager_markdown(instructeur, url)
+
+    #   disabled_notifications = instructeur.assign_to
+    #     .group_by { |assign_to| assign_to.groupe_instructeur.procedure_id }
+    #     .filter_map do |procedure_id, assign_tos|
+    #       first_assign_to = assign_tos.first
+    #       if !first_assign_to.instant_email_dossier_notifications_enabled ||
+    #          !first_assign_to.instant_email_message_notifications_enabled ||
+    #          !first_assign_to.instant_expert_avis_email_notifications_enabled
+    #         [procedure_id, first_assign_to]
+    #       end
+    #     end
+
+    #   markdown << "Activées" if disabled_notifications.empty?
+    #   disabled_notifications.each do |procedure_id, assign_to|
+    #     markdown << "Désactivées Procedure##{procedure_id}" if markdown.join.size < 190
+    #   end
+
+    # end
+
+    # if administrateur
+    #   url = manager_administrateur_url(administrateur)
+    #   # markdown << link_to_manager_markdown(administrateur, url)
+    # end
+
+    # # markdown << email_link_to_manager_markdown(user)
+
+    # render json: { html: markdown.join("\n").truncate(200) }
+  end
+
   private
 
   def send_mattermost_notification(url, text)
@@ -119,15 +174,38 @@ les composant suivants sont affectés : #{params["components"].map { _1['name'] 
     "<a target='_blank' href='#{url}' rel='noopener'>Emails##{user.id}</a>"
   end
 
+  def link_to_manager_markdown(model, url)
+    "[#{model.model_name.human}##{model.id}](#{url})"
+  end
+
+  def email_link_to_manager_markdown(user)
+    url = emails_manager_user_url(user)
+    "[Emails##{user.id}](#{url})"
+  end
+
   def verify_helpscout_signature!
-    if generate_body_signature(request.body.read) != request.headers['X-Helpscout-Signature']
+    expected_signature =  Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
+      Rails.application.secrets.helpscout[:webhook_secret],
+      request.body.read))
+
+    if expected_signature != request.headers['X-Helpscout-Signature']
       request_http_token_authentication
     end
   end
 
-  def generate_body_signature(body)
-    Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
-      Rails.application.secrets.helpscout[:webhook_secret],
-      body))
+  def verify_crisp_signature!
+    timestamp = request.headers['X-Crisp-Request-Timestamp']
+    signature = request.headers['X-Crisp-Signature']
+
+    body = request.body.read
+    concatenated_string = "[#{timestamp};#{body}]"
+
+    expected_signature = OpenSSL::HMAC.hexdigest('sha256',
+      ENV.fetch("CRISP_WEBHOOK_SECRET"),
+      concatenated_string)
+
+    Rails.logger.info { "DebugCrisp timestamp=#{timestamp}, signature=#{signature}, expected=#{expected_signature}, body=#{body}" }
+
+    signature == expected_signature # abort action if signatures mismatch
   end
 end
