@@ -24,8 +24,12 @@ class Referentiels::APIReferentiel < Referentiel
     false
   end
 
-  def self.autocomplete_available?
-    false
+  def tiptap_template=(value)
+    self.json_template = JSON.parse(value)
+  end
+
+  def tiptap_template
+    json_template&.to_json
   end
 
   def last_response_body
