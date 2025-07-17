@@ -50,7 +50,7 @@ const Gon = s.defaulted(
     ),
     crisp: s.defaulted(
       s.type({
-        key: nullish(s.string()),
+        websiteId: nullish(s.string()),
         enabled: s.defaulted(s.boolean(), false),
         administrateur: s.defaulted(
           s.type({
