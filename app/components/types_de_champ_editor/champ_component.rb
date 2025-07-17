@@ -56,6 +56,35 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def types_of_type_de_champ
+    published_type_champ = procedure.published_revision&.types_de_champ&.find { _1.stable_id == type_de_champ.stable_id }&.type_champ
+    if published_type_champ.present?
+      types_of_type_de_champ_published(published_type_champ)
+    else
+      types_of_type_de_champ_brouillon
+    end
+  end
+
+  def types_of_type_de_champ_published(published_type_champ)
+    accepted_type_champs = ([published_type_champ] + TypeDeChamp::TYPE_DE_CHAMP_CAST_MAP.fetch(published_type_champ.to_sym, [])).to_set(&:to_s)
+    cat_scope = "activerecord.attributes.type_de_champ.categorie"
+    tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
+    TypeDeChamp.type_champs.keys
+      .filter { accepted_type_champs.member?(_1) }
+      .filter(&method(:filter_type_champ))
+      .filter(&method(:filter_featured_type_champ))
+      .filter(&method(:filter_block_type_champ))
+      .filter(&method(:filter_public_or_private_only_type_champ))
+      .group_by { TypeDeChamp::TYPE_DE_CHAMP_TO_CATEGORIE.fetch(_1.to_sym) }
+      .sort_by { |k, _v| TypeDeChamp::CATEGORIES.find_index(k) }
+      .to_h do |cat, tdc|
+        [
+          t(cat, scope: cat_scope),
+          tdc.map { [t(_1, scope: tdc_scope), _1] }
+        ]
+      end
+  end
+
+  def types_of_type_de_champ_brouillon
     cat_scope = "activerecord.attributes.type_de_champ.categorie"
     tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
     TypeDeChamp.type_champs
