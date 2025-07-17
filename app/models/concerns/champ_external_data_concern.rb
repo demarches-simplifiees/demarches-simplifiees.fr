@@ -18,7 +18,7 @@ module ChampExternalDataConcern
     after_update_commit :fetch_external_data_later
 
     def fetch_external_data_later
-      if uses_external_data? && external_id.present? && data.nil?
+      if uses_external_data? && ready_for_external_call? && data.nil?
         ChampFetchExternalDataJob.perform_later(self, external_id)
       end
     end
@@ -47,7 +47,7 @@ module ChampExternalDataConcern
 
     # should not be overridden
     def external_error_present?
-      fetch_external_data_exceptions.present? && self.external_id.present?
+      fetch_external_data_exceptions.present? && ready_for_external_call?
     end
 
     # should not be overridden
