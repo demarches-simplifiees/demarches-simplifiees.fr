@@ -10,7 +10,7 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new,  :deleted_dossiers]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore, :champ]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore, :champ, :check_completude]
     TRASH_ACTIONS = [:show_in_trash, :show_deleted]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + TRASH_ACTIONS
@@ -23,7 +23,7 @@ module Users
     before_action :ensure_editing_brouillon, only: [:brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :ensure_dossier_has_changes, only: [:submit_en_construction], if: :update_with_stream?
-    before_action :set_dossier_stream, only: [:modifier, :update, :submit_en_construction, :champ], if: :update_with_stream?
+    before_action :set_dossier_stream, only: [:modifier, :update, :submit_en_construction, :check_completude, :champ], if: :update_with_stream?
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
 
@@ -307,6 +307,27 @@ module Users
         redirect_to dossier_path(dossier)
       else
         render :modifier
+      end
+    end
+
+    def check_completude
+      @dossier = dossier_with_champs
+      submit_dossier_and_compute_errors
+
+      if @dossier.errors.blank? && @dossier.can_passer_en_construction?
+        flash.notice = t('.success')
+        if dossier.brouillon?
+          redirect_to brouillon_dossier_path(@dossier)
+        else
+          redirect_to modifier_dossier_path(@dossier)
+        end
+      else
+        flash.alert = t('.error')
+        if dossier.brouillon?
+          render :brouillon
+        else
+          render :modifier
+        end
       end
     end
 

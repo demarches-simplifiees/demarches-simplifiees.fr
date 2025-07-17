@@ -931,6 +931,9 @@ en:
       ask_deletion:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
         soft_deleted_dossier: "Your file has been successfully moved to the trash"
+      check_completude:
+        success: The file is complete and correctly filled out.
+        error: The file is not correctly filled out.
       restore: "Your file has been successfully restored"
       etablissement:
         no_establishment: "There is no establishment tied to this file"

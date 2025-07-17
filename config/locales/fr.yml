@@ -932,6 +932,9 @@ fr:
       ask_deletion:
         undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         soft_deleted_dossier: "Votre dossier a bien été mis à la corbeille"
+      check_completude:
+        success: Le dossier est complet et correctement rempli.
+        error: Le dossier n'est pas correctement rempli.
       restore: "Votre dossier a bien été restauré"
       etablissement:
         no_establishment: "Aucun établissement n’est associé à ce dossier"
