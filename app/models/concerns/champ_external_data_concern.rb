@@ -23,11 +23,13 @@ module ChampExternalDataConcern
       end
     end
 
+    # should not be overridden
     def fetch_and_handle_result
       result = fetch_external_data
       handle_result(result)
     end
 
+    # should not be overridden
     def waiting_for_external_data?
       uses_external_data? &&
         should_ui_auto_refresh? &&
@@ -35,6 +37,7 @@ module ChampExternalDataConcern
         (!external_data_present? && !external_error_present?)
     end
 
+    # should not be overridden
     def external_data_fetched?
       uses_external_data? &&
         should_ui_auto_refresh? &&
@@ -42,10 +45,12 @@ module ChampExternalDataConcern
         (external_data_present? || external_error_present?)
     end
 
+    # should not be overridden
     def external_error_present?
       fetch_external_data_exceptions.present? && self.external_id.present?
     end
 
+    # should not be overridden
     def save_external_exception(exception, code)
       update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
     end
@@ -80,6 +85,7 @@ module ChampExternalDataConcern
       update!(data: data, fetch_external_data_exceptions: [])
     end
 
+    # should not be overridden
     def cleanup_if_empty
       # persisted? to keep data when cloning
       if uses_external_data? && persisted? && external_identifier_changed?
@@ -89,6 +95,7 @@ module ChampExternalDataConcern
       end
     end
 
+    # should not be overridden
     def handle_result(result)
       if result.is_a?(Dry::Monads::Result)
         case result
