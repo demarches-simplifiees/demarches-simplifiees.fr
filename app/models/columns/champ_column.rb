@@ -130,29 +130,38 @@ class Columns::ChampColumn < Column
 
     return if value.blank?
 
-    case [champ.last_write_type_champ, @tdc_type]
-    when ['integer_number', 'decimal_number'] # recast numbers automatically
+    from_type = champ.last_write_type_champ.to_sym
+    to_type = @tdc_type.to_sym
+
+    case [from_type, to_type]
+    when [:integer_number, :decimal_number], [:text, :decimal_number] # recast numbers automatically
       value.to_f
-    when ['decimal_number', 'integer_number'] # may lose some data, but who cares ?
+    when [:decimal_number, :integer_number], [:text, :integer_number] # may lose some data, but who cares ?
       value.to_i
-    when ['integer_number', 'text'], ['decimal_number', 'text'] # number to text
-      value
-    when ['drop_down_list', 'multiple_drop_down_list'] # single list can become multi
+    when [:drop_down_list, :multiple_drop_down_list] # single list can become multi
       [value]
-    when ['drop_down_list', 'text'] # single list can become text
-      value
-    when ['multiple_drop_down_list', 'drop_down_list'] # multi list can become single
+    when [:multiple_drop_down_list, :drop_down_list] # multi list can become single
       parse_enums(value).first
-    when ['multiple_drop_down_list', 'text'] # multi list can become text
+    when [:multiple_drop_down_list, :text], [:multiple_drop_down_list, :textarea], [:multiple_drop_down_list, :formatted] # multi list can become text
       parse_enums(value).join(', ')
-    when ['date', 'datetime'] # date <=> datetime
+    when [:date, :datetime] # date <=> datetime
       parse_datetime(value)&.to_datetime
-    when ['datetime', 'date'] # may lose some data, but who cares ?
+    when [:datetime, :date] # may lose some data, but who cares ?
       parse_datetime(value)&.to_date
-    when ['formatted', 'text'], ['text', 'formatted'], ['text', 'textarea'], ['formatted', 'textarea']
-      value
+    when [:date, :text], [:date, :textarea], [:date, :formatted] # date to text
+      datetime = parse_datetime(value)
+      datetime.presence || I18n.l(datetime, format: '%d %B %Y')
+    when [:datetime, :text], [:datetime, :textarea], [:datetime, :formatted] # datetime to text
+      datetime = parse_datetime(value)
+      datetime.presence || I18n.l(datetime)
+    when [:checkbox, :text], [:checkbox, :textarea], [:checkbox, :formatted], [:yes_no, :text], [:yes_no, :textarea], [:yes_no, :formatted] # yes_no to text
+      value.present? ? value == 'true' ? 'Oui' : 'Non' : ''
     else
-      nil
+      if TypeDeChamp.castable_on_change?(from_type, to_type)
+        value
+      else
+        nil
+      end
     end
   end
 
