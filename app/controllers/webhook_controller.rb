@@ -2,6 +2,7 @@
 
 class WebhookController < ActionController::Base
   before_action :verify_helpscout_signature!, only: [:helpscout, :helpscout_support_dev]
+  before_action :verify_crisp_signature!, only: [:crisp]
   skip_before_action :verify_authenticity_token
 
   def sendinblue
@@ -71,6 +72,12 @@ class WebhookController < ActionController::Base
     end
   end
 
+  def crisp
+    # Note: always respond with 200 or webhooks will be suspended.
+    Crisp::WebhookProcessor.new(params).process
+    head :ok
+  end
+
   private
 
   def send_mattermost_notification(url, text)
@@ -120,14 +127,26 @@ les composant suivants sont affectés : #{params["components"].map { _1['name'] 
   end
 
   def verify_helpscout_signature!
-    if generate_body_signature(request.body.read) != request.headers['X-Helpscout-Signature']
+    expected_signature =  Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
+      Rails.application.secrets.helpscout[:webhook_secret],
+      request.body.read))
+
+    if expected_signature != request.headers['X-Helpscout-Signature']
       request_http_token_authentication
     end
   end
 
-  def generate_body_signature(body)
-    Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
-      Rails.application.secrets.helpscout[:webhook_secret],
-      body))
+  def verify_crisp_signature!
+    timestamp = request.headers['X-Crisp-Request-Timestamp']
+    signature = request.headers['X-Crisp-Signature']
+
+    body = request.body.read
+    concatenated_string = "[#{timestamp};#{body}]"
+
+    expected_signature = OpenSSL::HMAC.hexdigest('sha256',
+      ENV.fetch("CRISP_WEBHOOK_SECRET"),
+      concatenated_string)
+
+    head :bad_request unless signature == expected_signature
   end
 end
