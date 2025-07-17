@@ -1,6 +1,4 @@
 #invites-form.fr-p-2w
-  %h2.fr-h5= t('views.invites.form.modal_title')
-  %p.fr-highlight.fr-mb-3w= t('views.invites.form.modal_highlight')
 
   = t('views.invites.form.edit_dossier_html', count: invites.size)
   - if invites.present?
@@ -9,8 +7,8 @@
         - invites.each_with_index do |invite, index|
           %li
             %span{ :id => "invite_#{index}" }= invite.email
-            %small{ 'data-turbo': 'true' }
-              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission', email: invite.email) }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline", id: "link_#{index}", "aria-labelledby": "link_#{index} invite_#{index}"
+            %small
+              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_confirm: t('views.invites.form.want_to_withdraw_permission', email: invite.email), turbo: false }, method: :delete, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline", id: "link_#{index}", "aria-labelledby": "link_#{index} invite_#{index}"
 
     - if dossier.brouillon?
       .fr-alert.fr-alert--info.fr-mb-4w
@@ -18,7 +16,7 @@
 
   %hr.fr-hr
 
-  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post do
+  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post, id: "invite-form" do
     %fieldset.fr-fieldset
       %legend.fr-fieldset__legend
         %h3.fr-h5= t('views.invites.form.title')
@@ -37,5 +35,3 @@
         .fr-input-group
           = label_tag :invite_message, t('views.invites.form.invite_message'), class: "fr-label"
           = text_area_tag :invite_message, '', class: "fr-input"
-
-    = submit_tag t('views.invites.form.send_invitation'), class: 'fr-btn fr-btn--secondary'
