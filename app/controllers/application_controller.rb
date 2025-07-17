@@ -369,17 +369,17 @@ class ApplicationController < ActionController::Base
   end
 
   def crisp_config
-    crisp = Rails.application.secrets.crisp
-
     nb_demarches_by_state = if current_administrateur.present?
       current_administrateur.procedures.group(:aasm_state).count
     else
       {}
     end
 
+    enabled = ENV.fetch("CRISP_ENABLED", "no") == "enabled"
+
     {
-      key: crisp[:client_key],
-      enabled: crisp[:enabled],
+      enabled:,
+      websiteId: enabled ? ENV.fetch("CRISP_WEBSITE_ID") : nil,
       administrateur: {
         email: current_user&.email,
         DS_SIGN_IN_COUNT: current_user&.sign_in_count,
