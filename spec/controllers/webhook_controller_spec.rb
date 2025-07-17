@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 describe WebhookController, type: :controller do
-  before do
-    allow(controller).to receive(:verify_helpscout_signature!).and_return(true)
-    allow(controller).to receive(:verify_authenticity_token)
-  end
-
   describe '#helpscout_support_dev' do
+    before do
+      allow(controller).to receive(:verify_helpscout_signature!).and_return(true)
+      allow(controller).to receive(:verify_authenticity_token)
+    end
+
     subject(:response) { post :helpscout_support_dev, params: payload }
     let(:payload) { JSON.parse(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json').read) }
     let(:webhook_url) { "https://notification_url" }
@@ -18,6 +18,11 @@ describe WebhookController, type: :controller do
   end
 
   describe '#helpscout' do
+    before do
+      allow(controller).to receive(:verify_helpscout_signature!).and_return(true)
+      allow(controller).to receive(:verify_authenticity_token)
+    end
+
     subject(:response) { get :helpscout, params: { customer: { email: customer_email } } }
 
     let(:payload) { JSON.parse(subject.body) }
@@ -91,6 +96,44 @@ describe WebhookController, type: :controller do
       allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :send_in_blue_outage_webhook_url).and_return(notification_url)
       expect(controller).to receive(:send_mattermost_notification).with(notification_url, "Incident sur SIB : Database Issues.\nEtat de SIB: Degraded Performance\nL'Incident a commencé à 2015-04-03T18:27:15+00:00 et est p-e terminé a \nles composant suivants sont affectés : Chat Service, Voice Services, Admin Dashboard")
       subject
+    end
+  end
+
+  describe '#crisp' do
+    let(:payload) { { "event" => "message:send" } }
+    let(:body) { payload }
+    let(:timestamp) { Time.current }
+
+    before do
+      stub_const('ENV', ENV.to_hash.merge('CRISP_WEBHOOK_SECRET' => 'testsecret'))
+    end
+
+    it 'processes the webhook when signature is valid' do
+      expected_signature = OpenSSL::HMAC.hexdigest('sha256',
+        'testsecret',
+        "[#{timestamp};#{body.to_json}]")
+
+      expect(Crisp::WebhookProcessor).to receive(:new).and_call_original
+
+      request.headers.merge!({
+        'X-Crisp-Request-Timestamp' => timestamp,
+        'X-Crisp-Signature' => expected_signature
+      })
+
+      post :crisp, params: body, as: :json
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "doesn't process the webhook when signature is invalid" do
+      expect(Crisp::WebhookProcessor).not_to receive(:new)
+
+      request.headers.merge!({
+        'X-Crisp-Request-Timestamp' => timestamp,
+        'X-Crisp-Signature' => 'bad_signature'
+      })
+
+      post :crisp, params: body, as: :json
+      expect(response).not_to have_http_status(:ok)
     end
   end
 end
