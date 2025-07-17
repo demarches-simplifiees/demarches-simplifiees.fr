@@ -19,7 +19,6 @@ module ChampExternalDataConcern
 
     def fetch_external_data_later
       if uses_external_data? && external_id.present? && data.nil?
-        update_column(:fetch_external_data_exceptions, [])
         ChampFetchExternalDataJob.perform_later(self, external_id)
       end
     end
@@ -82,8 +81,11 @@ module ChampExternalDataConcern
     end
 
     def cleanup_if_empty
+      # persisted? to keep data when cloning
       if uses_external_data? && persisted? && external_identifier_changed?
         self.data = nil
+        self.value_json = nil
+        self.fetch_external_data_exceptions = []
       end
     end
 
