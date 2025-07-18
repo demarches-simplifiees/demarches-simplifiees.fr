@@ -162,27 +162,47 @@ describe Administrateurs::ReferentielsController, type: :controller do
     end
   end
 
+  describe "configuration_error" do
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+
+    it 'works' do
+      get :configuration_error, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe '#mapping_type_de_champ' do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
     let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
 
-    before do
-      allow_any_instance_of(API::Client)
-        .to receive(:call).with(anything).and_return(stub_response)
+    context 'when referentiel not ready' do
+      it 'redirects to configuration error' do
+        allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(false)
+        get :mapping_type_de_champ, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
+        expect(response).to redirect_to(configuration_error_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+      end
     end
 
-    context 'test APIReferentiel return valid response' do
-      include Dry::Monads[:result]
-      OK = Data.define(:body, :response)
+    context "when referentiel is ready" do
+      before do
+        allow_any_instance_of(API::Client)
+          .to receive(:call).with(anything).and_return(stub_response)
+      end
 
-      let(:body) { {} }
-      let(:http_response) { {} }
-      let(:stub_response) { Success(OK[body, http_response]) }
+      context 'test APIReferentiel return valid response' do
+        include Dry::Monads[:result]
+        OK = Data.define(:body, :response)
 
-      it 'renders' do
-        expect { get :mapping_type_de_champ, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id } }
-          .to change { referentiel.reload.last_response }.from(nil).to({ "body" => {}, "status" => 200 })
-        expect(response).to have_http_status(200)
+        let(:body) { {} }
+        let(:http_response) { {} }
+        let(:stub_response) { Success(OK[body, http_response]) }
+
+        it 'renders' do
+          expect { get :mapping_type_de_champ, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id } }
+            .to change { referentiel.reload.last_response }.from(nil).to({ "body" => {}, "status" => 200 })
+          expect(response).to have_http_status(200)
+        end
       end
     end
   end

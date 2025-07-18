@@ -15,7 +15,7 @@ class Referentiels::StepperComponent < ViewComponent::Base
   end
 
   def step_title
-    if step_component == Referentiels::NewFormComponent
+    if step_component.in?([Referentiels::NewFormComponent, Referentiels::ConfigurationErrorComponent])
       "Requête"
     elsif step_component == Referentiels::MappingFormComponent
       "Réponse et mapping"
@@ -35,7 +35,7 @@ class Referentiels::StepperComponent < ViewComponent::Base
   end
 
   def current_step
-    return 1 if step_component == Referentiels::NewFormComponent
+    return 1 if step_component.in?([Referentiels::NewFormComponent, Referentiels::ConfigurationErrorComponent])
 
     case [step_component, referentiel.mode]
     when [Referentiels::MappingFormComponent, 'exact_match']

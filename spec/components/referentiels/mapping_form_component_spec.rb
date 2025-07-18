@@ -17,13 +17,6 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
       render_inline(component)
     end
 
-    context 'when referentiel is not ready' do
-      it 'render error' do
-        expect(page).to have_text(component.error_title)
-        expect(page).to have_selector("button.fr-btn[disabled]")
-      end
-    end
-
     context 'when referentiel is properly configured' do
       let(:referentiel) { create(:api_referentiel, :with_last_response, :configured, :exact_match) }
 
