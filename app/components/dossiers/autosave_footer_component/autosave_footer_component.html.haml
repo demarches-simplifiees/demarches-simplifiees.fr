@@ -5,7 +5,7 @@
         = t('.annotations.explanation')
       - elsif dossier.en_construction_for_editor?
         = t('.en_construction.explanation')
-        - if dossier.can_passer_en_construction?
+        - if dossier.can_passer_en_construction? && owner?
           = t('.en_construction.submit_them')
       - else
         = t('.brouillon.explanation')
