@@ -217,6 +217,26 @@
       - when :referentiel_url, :referentiel_mode, :referentiel_hint, :referentiel_test_data, :referentiel_mapping
         - list.with_item do
           = t(".update_referentiel.#{change.attribute}", label: change.label, to: change.to)
+      - when :procedures_limit
+        - if change.to == "0"
+          - list.with_item do
+            = t(".#{prefix}.remove_procedures_limit", label: change.label)
+        - else 
+          - list.with_item do
+            = t(".#{prefix}.add_procedures_limit", label: change.label)
+      - when :procedures
+        - added = change.to.sort - change.from.sort
+        - removed = change.from.sort - change.to.sort
+        - list.with_item do
+          = t(".#{prefix}.update_procedures", label: change.label)
+          = render Dsfr::ListComponent.new do |list|
+            - if added.present?
+              - list.with_item do
+                = t('.add_option', items: added.map{ |procedure | "« N° #{procedure.id} - #{procedure.libelle} »"}.join(", "))
+            - if removed.present?
+              - list.with_item do
+                = t('.remove_option', items: removed.map{ |procedure | "« N° #{procedure.id} - #{procedure.libelle} »" }.join(", "))
+
   - if @public_move_changes.present?
     - list.with_item do
       = t(".public.move", count: @public_move_changes.size)

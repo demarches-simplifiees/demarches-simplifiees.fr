@@ -137,6 +137,19 @@
                             date de fin
                           = form.date_field :end_date, class: "fr-input", value: type_de_champ.end_date, id: dom_id(type_de_champ, :end_date)
 
+            - if type_de_champ.dossier_link? && current_administrateur.procedures.count > 1
+              .cell.fr-mt-2w
+                .fr-toggle
+                  = form.check_box :procedures_limit, id: dom_id(type_de_champ, :procedures_limit), class: 'fr-toggle__input'
+                  = form.label :procedures_limit, "Limiter à certaines démarches", for: dom_id(type_de_champ, :procedures_limit), class: 'fr-toggle__label fr-label'
+               
+                - if form.object.procedures_limit?
+                  .fr-badge.fr-badge--info.fr-badge--no-text-transform
+                    Seuls les dossiers déposés par l'usager lui-même seront proposés (ses dossiers "brouillon" et "supprimés" ne lui seront pas proposés)
+
+                  .cell.border-left-dark.fr-mt-1w  
+                    = render TypesDeChampEditor::DossierLinkChampComponent.new(procedures: current_administrateur.procedures, type_de_champ: type_de_champ, form: form, procedure: procedure)
+
         .flex.justify-start.fr-mt-1w.flex-gap
           - if type_de_champ.any_drop_down_list? && !type_de_champ.drop_down_list?
             .flex.column.justify-start.width-33
@@ -219,7 +232,7 @@
             = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)
 
     = render(Conditions::ChampsConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
-
+    
     .flex.justify-between.section.footer
       .position.flex.align-center= (@coordinate.position + 1).to_s
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }

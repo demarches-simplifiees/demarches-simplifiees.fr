@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_10_085322) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_18_085322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1078,6 +1078,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_10_085322) do
     t.index ["service_id"], name: "index_procedures_on_service_id"
     t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
+  end
+
+  create_table "procedures_types_de_champ", id: false, force: :cascade do |t|
+    t.bigint "procedure_id", null: false
+    t.bigint "type_de_champ_id", null: false
   end
 
   create_table "procedures_zones", id: false, force: :cascade do |t|
