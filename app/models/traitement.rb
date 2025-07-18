@@ -49,14 +49,14 @@ class Traitement < ApplicationRecord
     if state == Dossier.states.fetch(:en_construction)
       if previous_state.nil?
         :depose
-      elsif previous_state == Dossier.states.fetch(:en_instruction)
-        :repasse_en_construction
       elsif previous_state == Dossier.states.fetch(:en_construction)
         if instructeur?
           :depose_correction_instructeur
         else
           :depose_correction_usager
         end
+      else
+        :repasse_en_construction
       end
     elsif state == Dossier.states.fetch(:en_instruction)
       if previous_state != Dossier.states.fetch(:en_construction) && instructeur?
