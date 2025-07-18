@@ -356,7 +356,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
     describe '#autocomplete_configuration' do
       let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-      let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+      let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
 
       context 'GET autocomplete_configuration' do
         context 'when referentiel not ready' do
