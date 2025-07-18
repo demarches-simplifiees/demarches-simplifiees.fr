@@ -41,8 +41,20 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
         # navigation
         expect(page).to have_selector("form[action=\"#{url_helpers.update_mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel)}\"]")
         expect(page).to have_selector('input[type=submit][value="Étape suivante"]')
-        expect(page).to have_link("Étape précédente", href: url_helpers.edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
         expect(page).to have_selector("input[type=submit]")
+      end
+
+      context 'when referentiel is autocomplete' do
+        let(:referentiel) { create(:api_referentiel, :with_autocomplete_response, :autocomplete) }
+
+        it 'rendrs the back to edit link' do
+          expect(page).to have_link("Étape précédente", href: url_helpers.autocomplete_configuration_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
+        end
+      end
+      context 'when referentiel is exact match' do
+        it 'renders the autocomplete configuration link' do
+          expect(page).to have_link("Étape précédente", href: url_helpers.edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
+        end
       end
     end
   end
