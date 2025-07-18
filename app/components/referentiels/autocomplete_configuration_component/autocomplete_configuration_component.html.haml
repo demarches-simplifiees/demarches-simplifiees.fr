@@ -1,0 +1,26 @@
+= form_with model: @referentiel, scope: :referentiel, url: form_url, **form_options do |f| 
+  %div{ class: bordered_container_class_names }
+    = render Referentiels::ResponseRendererComponent.new(referentiel:)
+
+    .fr-table.fr-table--bordered.fr-mb-6w
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            %table
+              %caption Sélectionnez la source de données à exploiter pour l'autocomplete
+              %thead
+                %tr
+                  %th.fr-cell--fixed Propriété
+                  %th Exemple de donnée
+                  %th Choisir
+              %tbody
+                - last_request_arrays.each do |jsonpath, value|
+                  %tr
+                    %td.fr-cell--fixed= jsonpath
+                    %td.fr-cell--multiline= value.inspect
+                    %td.text-center= radio_button_tag 'autocomplete_jsonpath', jsonpath, false
+
+  %ul.fr-btns-group.fr-btns-group--inline-sm.flex.justify-center.fr-mt-5w
+    %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-3w'
+    %li= link_to "Étape précédente", back_url, class: 'fr-btn fr-btn--secondary'
+    %li= f.submit "Étape suivante", class: "fr-btn"
