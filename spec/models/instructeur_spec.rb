@@ -722,69 +722,6 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe '.ensure_instructeur_procedures_for' do
-    let(:instructeur) { create(:instructeur) }
-    let!(:procedures) { create_list(:procedure, 5, published_at: Time.current) }
-
-    context 'when some procedures are missing for the instructeur' do
-      before do
-        create(:instructeurs_procedure, instructeur: instructeur, procedure: procedures.first, position: 0)
-      end
-
-      it 'creates missing instructeurs_procedures with correct positions' do
-        expect {
-          instructeur.ensure_instructeur_procedures_for(procedures)
-        }.to change { InstructeursProcedure.count }.by(4)
-
-        instructeur_procedures = InstructeursProcedure.where(instructeur: instructeur)
-        expect(instructeur_procedures.pluck(:procedure_id)).to match_array(procedures.map(&:id))
-        expect(instructeur_procedures.pluck(:position)).to eq([0, 1, 2, 3, 4])
-      end
-    end
-
-    context 'when all procedures already exist for the instructeur' do
-      before do
-        procedures.each_with_index do |procedure, index|
-          create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure, position: index + 1)
-        end
-      end
-
-      it 'does not create any new instructeurs_procedures' do
-        expect {
-          instructeur.ensure_instructeur_procedures_for(procedures)
-        }.not_to change { InstructeursProcedure.count }
-      end
-    end
-  end
-
-  describe '.update_instructeur_procedures_positions' do
-    let(:instructeur) { create(:instructeur) }
-    let!(:procedures) { create_list(:procedure, 5, published_at: Time.current) }
-
-    before do
-      procedures.each_with_index do |procedure, index|
-        create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure, position: index + 1)
-      end
-    end
-
-    it 'updates the positions of the specified instructeurs_procedures' do
-      instructeur.update_instructeur_procedures_positions(procedures.map(&:id))
-
-      updated_positions = InstructeursProcedure
-        .where(instructeur:)
-        .order(:procedure_id)
-        .pluck(:procedure_id, :position)
-
-      expect(updated_positions).to match_array([
-        [procedures[0].id, 4],
-        [procedures[1].id, 3],
-        [procedures[2].id, 2],
-        [procedures[3].id, 1],
-        [procedures[4].id, 0]
-      ])
-    end
-  end
-
   private
 
   def assign(procedure_to_assign, instructeur_assigne: instructeur)
