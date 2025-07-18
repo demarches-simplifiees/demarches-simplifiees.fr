@@ -109,5 +109,34 @@ describe Champs::PieceJustificativeChamp do
         it { expect(champ.external_data_fetched?).to be_truthy }
       end
     end
+
+    describe "cleaning up" do
+      let(:dossier) { create(:dossier, procedure:) }
+
+      describe 'when there already is a file' do
+        before do
+          champ.piece_justificative_file.attach(io: StringIO.new('test'), filename: 'test.txt')
+          champ.update_columns(value_json: "stuff")
+        end
+
+        it "cleans up the value_json when the file is purged and the champ is saved" do
+          expect do
+            champ.piece_justificative_file.purge
+            champ.save
+          end.to change { champ.value_json }.from("stuff").to(nil)
+        end
+      end
+
+      describe 'when there is no previous file but some old data' do
+        before { champ.update_columns(value_json: "stuff") }
+
+        it "cleans up the value_json when the file is attached again" do
+          expect do
+            champ.piece_justificative_file.attach(io: StringIO.new('new content'), filename: 'new.txt')
+            champ.save
+          end.to change { champ.value_json }.from("stuff").to(nil)
+        end
+      end
+    end
   end
 end
