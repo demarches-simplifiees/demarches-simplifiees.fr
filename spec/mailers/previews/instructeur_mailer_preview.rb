@@ -17,6 +17,10 @@ class InstructeurMailerPreview < ActionMailer::Preview
     InstructeurMailer.user_to_instructeur(instructeur.email)
   end
 
+  def trusted_device_token_renewal
+    InstructeurMailer.trusted_device_token_renewal(instructeur, "renewal_token", 1.week.from_now)
+  end
+
   def send_notifications
     data = [
       {
