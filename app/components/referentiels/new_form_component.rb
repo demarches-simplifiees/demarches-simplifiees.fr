@@ -29,12 +29,18 @@ class Referentiels::NewFormComponent < Referentiels::MappingFormBase
   end
 
   def authentication_data_header_opts
-    {
+    options = {
       opts: {
         name: "referentiel[authentication_data][header]",
-        value: authentication_data_header
+        value: authentication_data_header,
+        data: {
+          'referentiel-new-form-target' => 'header'
+        }
       }
     }
+
+    options[:opts][:disabled] = true if authentication_by_header_token?
+    options
   end
 
   def authentication_data_header_value_opts
@@ -44,7 +50,7 @@ class Referentiels::NewFormComponent < Referentiels::MappingFormBase
         input_type: authentication_by_header_token? ? :password : :text,
         value: authentication_by_header_token? ? "C'est un secret" : '',
         data: {
-          'referentiel-new-form-target' => 'input'
+          'referentiel-new-form-target' => 'value'
         }
       }
     }

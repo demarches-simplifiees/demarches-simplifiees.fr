@@ -1,14 +1,15 @@
 import { ApplicationController } from './application_controller';
 
 export class ReferentielNewFormController extends ApplicationController {
-  static targets = ['input'];
+  static targets = ['header', 'value'];
 
-  declare readonly inputTarget: HTMLInputElement;
+  declare readonly valueTarget: HTMLInputElement;
+  declare readonly headerTarget: HTMLInputElement;
 
   changeHeaderValue(event: Event) {
     event.preventDefault();
-    this.inputTarget.value = '';
-    this.inputTarget.disabled = false;
-    this.inputTarget.focus();
+    this.valueTarget.value = '';
+    this.valueTarget.disabled = this.headerTarget.disabled = false;
+    this.valueTarget.focus();
   }
 }
