@@ -79,30 +79,57 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
     context 'with commit params (submit save)' do
       subject { post :create, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
+      context 'when referentiel is exact_match' do
+        let(:referentiel_params) do
+          {
+            type: 'Referentiels::APIReferentiel',
+            mode: 'exact_match',
+            url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+            hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
+            test_data: 'PG46YY6YWCX8'
+          }
+        end
 
-      let(:referentiel_params) do
-        {
-          type: 'Referentiels::APIReferentiel',
-          mode: 'exact_match',
-          url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
-          hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
-          test_data: 'PG46YY6YWCX8'
-        }
+        it 'creates referentiel and continue redirect' do
+          expect { subject }.to change { Referentiel.count }.by(1)
+
+          referentiel = Referentiel.first
+
+          expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+
+          expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
+          expect(referentiel.type).to eq(referentiel_params[:type])
+          expect(referentiel.mode).to eq(referentiel_params[:mode])
+          expect(referentiel.url).to eq(referentiel_params[:url])
+          expect(referentiel.hint).to eq(referentiel_params[:hint])
+          expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+        end
       end
+      context 'when referentiel is autocomplete' do
+        let(:referentiel_params) do
+          {
+            type: 'Referentiels::APIReferentiel',
+            mode: 'autocomplete',
+            url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+            hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
+            test_data: 'PG46YY6YWCX8'
+          }
+        end
 
-      it 'creates referentiel and continue redirect' do
-        expect { subject }.to change { Referentiel.count }.by(1)
+        it 'creates referentiel and continue redirect' do
+          expect { subject }.to change { Referentiel.count }.by(1)
 
-        referentiel = Referentiel.first
+          referentiel = Referentiel.first
 
-        expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+          expect(response).to redirect_to(autocomplete_configuration_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
 
-        expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
-        expect(referentiel.type).to eq(referentiel_params[:type])
-        expect(referentiel.mode).to eq(referentiel_params[:mode])
-        expect(referentiel.url).to eq(referentiel_params[:url])
-        expect(referentiel.hint).to eq(referentiel_params[:hint])
-        expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+          expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
+          expect(referentiel.type).to eq(referentiel_params[:type])
+          expect(referentiel.mode).to eq(referentiel_params[:mode])
+          expect(referentiel.url).to eq(referentiel_params[:url])
+          expect(referentiel.hint).to eq(referentiel_params[:hint])
+          expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+        end
       end
     end
   end
