@@ -63,7 +63,39 @@ describe JSONPathUtil do
       ])
     end
   end
+  describe '.array_paths_with_examples' do
+    let(:hash) do
+      {
+        "foo" => [
+          { "bar" => 1 },
+          { "bar" => 2 }
+        ],
+        "baz" => {
+          "qux" => [
+            { "a" => "x" },
+            { "a" => "y" }
+          ]
+        },
+        "simple" => "value"
+      }
+    end
 
+    it 'extract all arrays' do
+      result = described_class.array_paths_with_examples(hash)
+      expect(result.keys).to contain_exactly('$.foo', '$.baz.qux')
+      expect(result['$.foo']).to eq(
+        { "bar" => 1 }
+      )
+      expect(result['$.baz.qux']).to eq(
+        { "a" => "x" }
+      )
+    end
+
+    it 'ignore les propriétés non-tableau' do
+      result = described_class.array_paths_with_examples(hash)
+      expect(result).not_to have_key('$.simple')
+    end
+  end
   describe '.extract_key_after_array' do
     it 'returns the string after the first bracket' do
       expect(JSONPathUtil.extract_key_after_array('foo[123].baz')).to eq('.baz')
