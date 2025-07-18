@@ -783,6 +783,8 @@ Rails.application.routes.draw do
 
       resources :referentiels, only: [:new, :create, :edit, :update], path: ':stable_id', constraints: { stable_id: /\d+/ } do
         member do
+          get :autocomplete_configuration
+          patch :update_autocomplete_configuration
           get :mapping_type_de_champ
           patch :update_mapping_type_de_champ
           patch :update_prefill_and_display_type_de_champ
