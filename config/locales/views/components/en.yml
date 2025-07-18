@@ -1,0 +1,7 @@
+en:
+  views:
+    components:
+      select_list: "Select"
+      single_combobox: 'Select or start typing'
+      multiple_combobox: 'Select or start typing'
+      remote_combobox: 'Start typing'

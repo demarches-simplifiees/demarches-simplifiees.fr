@@ -38,6 +38,7 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
       id: @champ.input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value),
+      placeholder: t('views.components.single_combobox'),
       selected_key: @champ.selected,
       items:,
       empty_filter_key: @champ.drop_down_other? ? Champs::DropDownListChamp::OTHER : nil
@@ -46,5 +47,9 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
 
   def items
     @champ.options_for_select_with_other
+  end
+
+  def select_options
+    { selected: @champ.selected }.merge(@champ.mandatory? ? { prompt: t('views.components.select_list') } : { include_blank: t('views.components.select_list') })
   end
 end

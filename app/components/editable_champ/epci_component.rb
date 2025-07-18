@@ -22,11 +22,11 @@ class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def departement_select_options
-    { selected: @champ.code_departement }.merge(@champ.mandatory? ? { prompt: '' } : { include_blank: '' })
+    { selected: @champ.code_departement }.merge(@champ.mandatory? ? { prompt: t('views.components.select_list') } : { include_blank: t('views.components.select_list') })
   end
 
   def epci_select_options
-    { selected: @champ.code }.merge(@champ.mandatory? ? { prompt: '' } : { include_blank: '' })
+    { selected: @champ.code }.merge(@champ.mandatory? ? { prompt: t('views.components.select_list') } : { include_blank: t('views.components.select_list') })
   end
 
   def departement_with_epci?(departement)

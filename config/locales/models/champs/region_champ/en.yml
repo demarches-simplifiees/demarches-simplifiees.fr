@@ -1,6 +1,0 @@
-en:
-  activerecord:
-    attributes:
-      champs/region_champ:
-        hints:
-          value: "Select region"

@@ -1,6 +1,0 @@
-fr:
-  activerecord:
-    attributes:
-      champs/departement_champ:
-        hints:
-          value: "Sélectionnez le département"

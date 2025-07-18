@@ -18,7 +18,7 @@
 - else
   = @form.select :value,
     items,
-    { selected: @champ.selected, include_blank: true },
+    select_options,
     { required: @champ.required?,
     id: @champ.input_id,
     class: select_class_names,

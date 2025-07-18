@@ -1,6 +1,0 @@
-fr:
-  activerecord:
-    attributes:
-      champs/pays_champ:
-        hints:
-          value: "Sélectionnez le pays"

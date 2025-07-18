@@ -56,7 +56,8 @@ export const MultiComboBoxProps = s.assign(
       selectedKeys: s.array(s.string()),
       allowsCustomValue: s.boolean(),
       valueSeparator: s.union([s.string(), s.literal(false)]),
-      focusOnSelect: s.string()
+      focusOnSelect: s.string(),
+      placeholder: s.string()
     })
   )
 );
@@ -68,7 +69,8 @@ export const RemoteComboBoxProps = s.assign(
       minimumInputLength: s.number(),
       limit: s.number(),
       debounce: s.number(),
-      coerce: s.enums(['Default', 'AnnuaireEducation'])
+      coerce: s.enums(['Default', 'AnnuaireEducation']),
+      placeholder: s.string()
     })
   )
 );

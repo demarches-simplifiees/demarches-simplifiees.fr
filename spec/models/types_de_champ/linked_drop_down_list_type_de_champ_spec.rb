@@ -86,7 +86,6 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
         it do
           expect(subject.secondary_options).to eq(
             {
-              '' => [],
               'Primary 1' => ['secondary 1.1', 'secondary 1.2'],
               'Primary 2' => ['secondary 2.1', 'secondary 2.2', 'secondary 2.3']
             }
@@ -102,14 +101,13 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
         it do
           expect(subject.secondary_options).to eq(
             {
-              '' => [],
-              'Primary 1' => ['', 'secondary 1.1', 'secondary 1.2'],
-              'Primary 2' => ['', 'secondary 2.1', 'secondary 2.2', 'secondary 2.3']
+              'Primary 1' => ['secondary 1.1', 'secondary 1.2'],
+              'Primary 2' => ['secondary 2.1', 'secondary 2.2', 'secondary 2.3']
             }
           )
         end
 
-        it { expect(subject.primary_options).to eq(['', 'Primary 1', 'Primary 2']) }
+        it { expect(subject.primary_options).to eq(['Primary 1', 'Primary 2']) }
       end
     end
   end

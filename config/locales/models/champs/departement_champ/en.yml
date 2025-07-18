@@ -1,6 +1,0 @@
-en:
-  activerecord:
-    attributes:
-      champs/departement_champ:
-        hints:
-          value: "Select department"

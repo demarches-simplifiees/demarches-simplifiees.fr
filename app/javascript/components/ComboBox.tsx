@@ -169,6 +169,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   const {
     items: defaultItems,
     selectedKeys: defaultSelectedKeys,
+    placeholder,
     name,
     form,
     formValue,
@@ -229,6 +230,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
         allowsCustomValue={allowsCustomValue}
         inputRef={inputRef}
         menuTrigger="focus"
+        placeholder={placeholder}
         {...comboBoxProps}
         {...props}
       >
@@ -271,6 +273,7 @@ export function RemoteComboBox({
   const {
     items: defaultItems,
     selectedKey: defaultSelectedKey,
+    placeholder,
     minimumInputLength,
     limit,
     debounce,
@@ -306,6 +309,7 @@ export function RemoteComboBox({
   return (
     <>
       <ComboBox
+        placeholder={placeholder}
         allowsEmptyCollection={
           comboBoxProps.inputValue.length >= (minimumInputLength ?? 0)
         }
