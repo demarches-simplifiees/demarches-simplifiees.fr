@@ -7,7 +7,7 @@ RSpec.describe Referentiels::ReferentielDisplayComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ_public) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: referentiel, referentiel_mapping: }] }
   let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
-  let(:referentiel) { create(:api_referentiel, :configured) }
+  let(:referentiel) { create(:api_referentiel, :exact_match, :configured) }
 
   subject { render_inline(component) }
 

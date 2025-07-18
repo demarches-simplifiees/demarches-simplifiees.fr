@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe TypesDeChamp::ReferentielReadyValidator do
   let(:procedure) { create(:procedure, types_de_champ_public:) }
-  let(:referentiel) { create(:api_referentiel, :configured) }
+  let(:referentiel) { create(:api_referentiel, :exact_match, :configured) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
 
   subject { procedure.validate(:types_de_champ_public_editor) }

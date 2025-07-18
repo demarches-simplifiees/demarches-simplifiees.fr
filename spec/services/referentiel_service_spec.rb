@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReferentielService, type: :service do
-  let(:api_referentiel) { create(:api_referentiel, :configured, url:, test_data:) }
+  let(:api_referentiel) { create(:api_referentiel, :exact_match, :configured, url:, test_data:) }
   let(:url) { "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/" }
   let(:test_data) { "PG46YY6YWCX8" }
   let(:stub_api_call) do
@@ -102,7 +102,7 @@ RSpec.describe ReferentielService, type: :service do
     end
 
     context 'when referentiel has authentication' do
-      let(:api_referentiel) { create(:api_referentiel, :configured, url:, test_data:, authentication_method: 'header_token', authentication_data: { header: 'Authorization', value: 'Bearer kthxbye' }) }
+      let(:api_referentiel) { create(:api_referentiel, :exact_match, :configured, url:, test_data:, authentication_method: 'header_token', authentication_data: { header: 'Authorization', value: 'Bearer kthxbye' }) }
       let(:status) { 200 }
       let(:body) { { body: :ok } }
       let(:stub_api_call) do

@@ -26,9 +26,14 @@ FactoryBot.define do
       }
     end
   end
+  trait :autocomplete do
+    mode { 'autocomplete' }
+  end
 
-  trait :configured do
+  trait :exact_match do
     mode { 'exact_match' }
+  end
+  trait :configured do
     test_data { 'PG46YY6YWCX8' }
     url { ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND').split(',').first }
   end
