@@ -15,19 +15,21 @@ class Referentiels::StepperComponent < ViewComponent::Base
   end
 
   def step_title
-    if step_component.in?([Referentiels::NewFormComponent, Referentiels::ConfigurationErrorComponent])
+    if step_component == Referentiels::NewFormComponent || (step_component == Referentiels::ConfigurationErrorComponent && referentiel.exact_match?)
       "Requête"
     elsif step_component == Referentiels::MappingFormComponent
       "Réponse et mapping"
     elsif step_component == Referentiels::PrefillAndDisplayComponent
       "Pré remplissage des champs et/ou affichage des données récupérées"
+    elsif step_component == Referentiels::AutocompleteConfigurationComponent || (step_component == Referentiels::ConfigurationErrorComponent && referentiel.autocomplete?)
+      "Configuration de l'autocomplétion"
     end
   end
 
   def next_step_title
-    if step_component == Referentiels::NewFormComponent
+    if step_component == Referentiels::NewFormComponent && referentiel.mode == 'autocomplete'
       "Configuration de l'autocomplétion"
-    elsif step_component == Referentiels::NewFormComponent
+    elsif step_component == Referentiels::NewFormComponent && referentiel.mode == 'exact_match' || step_component == Referentiels::AutocompleteConfigurationComponent
       "Réponse et mapping"
     elsif step_component == Referentiels::MappingFormComponent
       "Pré remplissage des champs et/ou affichage des données récupérées"
@@ -42,10 +44,16 @@ class Referentiels::StepperComponent < ViewComponent::Base
       2
     when [Referentiels::PrefillAndDisplayComponent, 'exact_match']
       3
+    when [Referentiels::AutocompleteConfigurationComponent, 'autocomplete']
+      2
+    when [Referentiels::MappingFormComponent, 'autocomplete']
+      3
+    when [Referentiels::PrefillAndDisplayComponent, 'autocomplete']
+      4
     end
   end
 
   def step_count
-    3
+    referentiel.mode == 'exact_match' ? 3 : 4
   end
 end
