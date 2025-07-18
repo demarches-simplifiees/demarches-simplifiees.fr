@@ -354,6 +354,56 @@ describe Administrateurs::ReferentielsController, type: :controller do
       end
     end
 
+    describe '#autocomplete_configuration' do
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+      let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+
+      context 'GET autocomplete_configuration' do
+        context 'when referentiel not ready' do
+          it 'redirects to configuration error' do
+            allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(false)
+            get :autocomplete_configuration, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
+            expect(response).to redirect_to(configuration_error_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+          end
+        end
+
+        context 'when referentiel is ready' do
+          it 'renders successfully and returns the configuration' do
+            allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(true)
+            get :autocomplete_configuration, params: { procedure_id: procedure.id, stable_id: type_de_champ.stable_id, id: referentiel.id }
+            expect(response).to have_http_status(:success)
+          end
+        end
+      end
+
+      context 'PATCH autocomplete_configuration' do
+        let(:config_payload) { { "jsonpaths" => ["$.baz"] } }
+        subject do
+          patch :update_autocomplete_configuration, params: {
+            procedure_id: procedure.id,
+            stable_id: type_de_champ.stable_id,
+            id: referentiel.id,
+            referentiel: { autocomplete_configuration: config_payload }
+          }
+        end
+
+        it 'updates the autocomplete_configuration and redirects' do
+          expect { subject }.to change { referentiel.reload.autocomplete_configuration }.to(config_payload)
+          expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+          expect(flash[:notice]).to eq("La configuration de l'autocomplete a bien étee enregistrée")
+        end
+
+        context 'when update fails' do
+          before { allow_any_instance_of(Referentiel).to receive(:update).and_return(false) }
+          it 'redirects to edit with alert' do
+            subject
+            expect(response).to have_http_status(:success)
+            expect(flash[:alert]).to eq('Une erreur est survenue lors de la sauvegarde de la configuration autocomplete')
+          end
+        end
+      end
+    end
+
     context 'when update fails' do
       let(:update_params) do
         {

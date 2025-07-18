@@ -5,7 +5,7 @@ module Administrateurs
     before_action :retrieve_procedure
     before_action :retrieve_type_de_champ
     before_action :retrieve_referentiel, except: [:new, :create]
-    before_action :reachable_referentiel?, only: [:mapping_type_de_champ]
+    before_action :reachable_referentiel?, only: [:mapping_type_de_champ, :autocomplete_configuration]
     layout 'empty_layout'
 
     def new
@@ -26,6 +26,18 @@ module Administrateurs
     def update
       @referentiel.assign_attributes(referentiel_params)
       handle_referentiel_save(@referentiel)
+    end
+
+    def autocomplete_configuration
+    end
+
+    def update_autocomplete_configuration
+      if @referentiel.update(autocomplete_configuration_params)
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration de l'autocomplete a bien étee enregistrée" }
+      else
+        flash[:alert] = "Une erreur est survenue lors de la sauvegarde de la configuration autocomplete"
+        render :autocomplete_configuration
+      end
     end
 
     def mapping_type_de_champ
@@ -106,6 +118,13 @@ module Administrateurs
         params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?
         params
       end
+    end
+
+    def autocomplete_configuration_params
+      params.require(:referentiel)
+        .permit(autocomplete_configuration: { jsonpaths: [] })
+    rescue ActionController::ParameterMissing
+      {}
     end
   end
 end
