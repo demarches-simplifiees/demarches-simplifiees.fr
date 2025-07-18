@@ -61,7 +61,11 @@ module Administrateurs
 
     def handle_referentiel_save(referentiel)
       if referentiel.configured? && referentiel.save && params[:commit].present?
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        if referentiel.autocomplete?
+          redirect_to autocomplete_configuration_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        else
+          redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        end
       else
         referentiel.validate
         component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
