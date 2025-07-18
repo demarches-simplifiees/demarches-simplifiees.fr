@@ -50,7 +50,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
             {
               type: :referentiel,
               stable_id: 1,
-              referentiel: create(:api_referentiel, :configured, :ready),
+              referentiel: create(:api_referentiel, :exact_match, :configured, :ready),
               referentiel_mapping: {
                 '$.jsonpath' => {
                   'prefill' => '1',

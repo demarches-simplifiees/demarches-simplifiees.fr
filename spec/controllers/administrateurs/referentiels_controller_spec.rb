@@ -110,7 +110,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe "#edit" do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
 
     it 'works' do
       get :edit, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
@@ -120,7 +120,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe "#update" do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
 
     context 'partial update (updating hint only)' do
       subject { patch :update, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
@@ -164,7 +164,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe '#mapping_type_de_champ' do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
 
     before do
       allow_any_instance_of(API::Client)
@@ -200,7 +200,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     end
     let(:types_de_champ_public) { [{ type: :referentiel, stable_id:, referentiel_mapping: initial_mapping }] }
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.find_by(stable_id:) }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
     subject do
       patch :update_mapping_type_de_champ, params: {
         procedure_id: procedure.id,
@@ -256,7 +256,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
       }
     end
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
 
     context 'when admin not signed in' do
       before { sign_out(procedure.administrateurs.first.user) }
@@ -283,7 +283,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     end
     let(:prefillable_stable_id) { 2 }
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, :configured, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
     let(:referentiel_mapping) do
       {
         "$.jsonpath1" => {
