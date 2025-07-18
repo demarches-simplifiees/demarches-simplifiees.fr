@@ -2,23 +2,17 @@
 
 class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   TYPES = [:string, :decimal_number, :integer_number, :boolean, :date, :datetime, :array].index_by(&:itself).freeze
-  attr_reader :referentiel_service
-  delegate :test_url, :test_headers, to: :referentiel_service
-  def initialize(**args)
-    super
-    @referentiel_service = ReferentielService.new(referentiel: referentiel)
-  end
 
   def last_request_keys
     JSONPathUtil.hash_to_jsonpath(referentiel.last_response_body)
   end
 
-  def error_title
-    "¡Ay, caramba! 💣💥"
-  end
-
   def back_url
-    edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
+    if referentiel.autocomplete?
+      autocomplete_configuration_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
+    else
+      edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
+    end
   end
 
   def cast_tag(jsonpath, value)

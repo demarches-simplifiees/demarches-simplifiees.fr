@@ -5,7 +5,7 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
-  let(:referentiel) { create(:api_referentiel, :configured) }
+  let(:referentiel) { create(:api_referentiel, :exact_match, :configured) }
 
   describe 'render' do
     delegate :url_helpers, to: :routes
@@ -25,7 +25,7 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
     end
 
     context 'when referentiel is properly configured' do
-      let(:referentiel) { create(:api_referentiel, :with_last_response, :configured) }
+      let(:referentiel) { create(:api_referentiel, :with_last_response, :configured, :exact_match) }
 
       it 'table' do
         # thead
@@ -48,8 +48,20 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
         # navigation
         expect(page).to have_selector("form[action=\"#{url_helpers.update_mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel)}\"]")
         expect(page).to have_selector('input[type=submit][value="Étape suivante"]')
-        expect(page).to have_link("Étape précédente", href: url_helpers.edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
         expect(page).to have_selector("input[type=submit]")
+      end
+
+      context 'when referentiel is autocomplete' do
+        let(:referentiel) { create(:api_referentiel, :with_last_response, :configured, :autocomplete) }
+
+        it 'rendrs the back to edit link' do
+          expect(page).to have_link("Étape précédente", href: url_helpers.autocomplete_configuration_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
+        end
+      end
+      context 'when referentiel is exact matc' do
+        it 'renders the autocomplete configuration link' do
+          expect(page).to have_link("Étape précédente", href: url_helpers.edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
+        end
       end
     end
   end
