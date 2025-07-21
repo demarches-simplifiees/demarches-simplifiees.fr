@@ -66,11 +66,13 @@ describe 'Referentiel API:' do
     #
     custom_check("status")
     custom_check('is_active')
+    custom_check('point')
+    custom_check('shape')
     custom_check('addresses-0-street')
 
     ## fill a custom libelle to display to user
-    fill_in("type_de_champ_referentiel_mapping__.point.coordinates_libelle", with: "Coordonées du point")
-    fill_in("type_de_champ_referentiel_mapping__.point.type_libelle", with: "Type de point")
+    fill_in("type_de_champ_referentiel_mapping__.ext_ids_0_.id_libelle", with: "Exts ids id")
+    fill_in("type_de_champ_referentiel_mapping__.ext_ids_0_.source_libelle", with: "Ext ids source")
 
     # submit and check values
     click_on('Étape suivante')
@@ -95,12 +97,12 @@ describe 'Referentiel API:' do
     # choose display_usager display_instructeur
     ###
     # choose string value for usager and instructeur
-    custom_check('point-type-display_usager')
-    custom_check('point-type-display_instructeur')
+    custom_check('ext_ids-0-source_version-display_instructeur')
+    custom_check('ext_ids-0-source_version-display_usager')
     # choose array values only for usager
-    custom_check('point-coordinates-display_usager')
+    custom_check('ext_ids-0-id-display_usager')
     # choose string value only instructeur
-    custom_check('shape-type-display_instructeur')
+    custom_check('ext_ids-0-source-display_instructeur')
     click_on("Valider")
 
     wait_until { referentiel_tdc.reload .referentiel_mapping.dig("$.status", "prefill_stable_id").present? }
@@ -182,10 +184,11 @@ describe 'Referentiel API:' do
 
         # check display_usager populated web page too
         page.find("button[aria-controls=display_usager]").click
+        binding.irb
         within(".fr-collapse#display_usager") do
           # now we check that the filled libelle for the mapping and the value are in the webpage, with the accordion
-          expect(page).to have_content("Coordonées du point : -0.570505392116188, 44.841034137099996")
-          expect(page).to have_content("Type de point : Point")
+          expect(page).to have_content("Exts ids id : bdnb-bc-M72P-QAA4-C5NT")
+          expect(page).to have_content("$.ext_ids[0].source_version : 2023_01")
         end
 
         # check we can create a dossier
@@ -195,16 +198,16 @@ describe 'Referentiel API:' do
         created_dossier = Dossier.last
         # check data is also visible on demande page as an usager
         visit demande_dossier_path(created_dossier)
-        expect(page).to have_content("Coordonées du point : -0.570505392116188, 44.841034137099996")
-        expect(page).to have_content("Type de point : Point")
+        expect(page).to have_content("Exts ids id : bdnb-bc-M72P-QAA4-C5NT")
+        expect(page).to have_content("$.ext_ids[0].source_version : 2023_01")
         expect(page).not_to have_content("$.shape.type") # not displayed to usager
 
         # check data is also visible on demande page as an usager
         visit instructeur_dossier_path(procedure, created_dossier)
         expect(page).to have_content("Sections du formulaire")
         expect(page).not_to have_content("Coordonées du point")
-        expect(page).to have_content("Type de point")
-        expect(page).to have_content("$.shape.type")
+        expect(page).to have_content("Ext ids source")
+        expect(page).to have_content("bdnb")
       end
     end
   end

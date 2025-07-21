@@ -42,6 +42,7 @@ fr:
     date: Date
     datetime: Date et heure
     array: Liste à choix multiple
+    geojson: Géolocalisation (GeoJSON)
     email_suggest:
       wanna_say: 'Voulez-vous dire ?'
 

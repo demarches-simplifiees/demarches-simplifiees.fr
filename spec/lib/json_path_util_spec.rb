@@ -38,13 +38,23 @@ describe JSONPathUtil do
       })
     end
 
+    it 'jsonpathify detects and merges geojson' do
+      geojson = {
+        "type" => "FeatureCollection",
+        "features" => [
+          { "type" => "Feature", "geometry" => { "type" => "Point", "coordinates" => [1, 2] }, "properties" => {} }
+        ]
+      }
+      expect(described_class.hash_to_jsonpath({ shape: geojson })).to eq({
+        "$.shape" => geojson.transform_keys(&:to_sym)
+      })
+    end
+
     it 'jsonpathify real response' do
       rnb_json = JSON.parse(File.read('spec/fixtures/files/api_referentiel_rnb.json'))
       expect(described_class.hash_to_jsonpath(rnb_json).keys).to match_array([
-        "$.point.type",
-        "$.point.coordinates",
-        "$.shape.type",
-        "$.shape.coordinates",
+        "$.point",
+        "$.shape",
         "$.rnb_id",
         "$.status",
         "$.ext_ids[0].id",

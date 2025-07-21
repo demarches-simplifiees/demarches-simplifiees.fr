@@ -126,6 +126,7 @@ ignore_unused:
 - 'utils.decimal_number'
 - 'utils.integer_entier'
 - 'utils.string'
+- 'utils.geojson'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'

@@ -100,5 +100,16 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
       expect(convert_json_value_to_type(value: [{ a: 1 }, { b: 2 }])).to eq(:string)
       expect(convert_json_value_to_type(value: [[1, 2], [3, 4]])).to eq(:string)
     end
+
+    it "detects geojson as :geojson" do
+      expect(convert_json_value_to_type(value: { "type" => "Point", "coordinates" => [1, 2] })).to eq(:geojson)
+      expect(convert_json_value_to_type(value: { type: "Polygon", coordinates: [[[1, 2], [3, 4], [5, 6], [1, 2]]] })).to eq(:geojson)
+      expect(convert_json_value_to_type(value: { "type" => "FeatureCollection", "features" => [] })).to eq(:geojson)
+    end
+
+    it "does not detect non-geojson hash as :geojson" do
+      expect(convert_json_value_to_type(value: { foo: "bar" })).to eq(:string)
+      expect(convert_json_value_to_type(value: { "type" => "NotGeoJson" })).to eq(:string)
+    end
   end
 end
