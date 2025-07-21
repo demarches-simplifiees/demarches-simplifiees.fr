@@ -1,9 +1,9 @@
 %dialog.fr-modal#modal-invite{
   aria: { labelledby: "modal-invite-title" }
 }
-  .fr-container
+  .fr-container--fluid.fr-container-md
     .fr-grid-row.fr-grid-row--center
-      .fr-col-12.fr-col-md-8.fr-col-lg-6
+      .fr-col-12.fr-col-md-10.fr-col-lg-8
         .fr-modal__body
           .fr-modal__header
             %button.fr-btn.fr-btn--close{
@@ -11,9 +11,11 @@
               aria: { controls: "modal-invite" },
               title: "Fermer"
             }
-              = t('views.invites.form.close_button')
+              = t('utils.modal_close')
           .fr-modal__content
-            %h2.fr-modal__title#modal-invite-title= t('views.invites.form.modal_title')
+            %h1#fr-modal-title-invite.fr-modal__title.fr-mb-4v
+              %span.fr-icon-arrow-right-line.fr-icon--lg>
+                = t('views.invites.form.modal_title')
             .fr-notice.fr-notice--info
               .fr-notice__body.fr-ml-3v
                 %p
@@ -22,7 +24,7 @@
             = render partial: "invites/form", locals: { dossier: dossier, invites: invites, morphing: morphing }
 
           .fr-modal__footer
-            .fr-btns-group.fr-btns-group--right.fr-btns-group--inline-reverse.fr-btns-group--inline-lg
+            .fr-btns-group.fr-btns-group--right.fr-btns-group--inline-lg
               %button.fr-btn.fr-btn--secondary{
                 type: "button",
                 aria: { controls: "modal-invite" }
