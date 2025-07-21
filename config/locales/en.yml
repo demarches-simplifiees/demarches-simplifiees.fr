@@ -345,7 +345,6 @@ en:
         invite_to_view: "Invite someone to view this file"
       form:
         modal_title: Invite someone
-        close_button: Close
         cancel: Cancel
         modal_highlight: "Invited people can view and edit your file"
         title: Invite someone
