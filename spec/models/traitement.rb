@@ -66,6 +66,13 @@ describe Traitement, type: :model do
       # again passer_en_instruction: simulate a bug for some dossiers having multiple consecutive "en instruction" automatic traitements
       dossier.traitements.passer_en_instruction
       expect(dossier.traitements.last.event).to eq(:passe_en_instruction_automatiquement)
+
+      dossier.traitements.accepter(instructeur:)
+      expect(dossier.traitements.last.event).to eq(:accepte)
+
+      # passer_en_construction from accepte: simulate a bug for some dossiers
+      dossier.traitements.passer_en_construction(instructeur:)
+      expect(dossier.traitements.last.event).to eq(:repasse_en_construction)
     end
   end
 end
