@@ -65,6 +65,31 @@ class TypeDeChamp < ApplicationRecord
     cojo: REFERENTIEL_EXTERNE
   }
 
+  CAST_TO_TEXT = [:text, :textarea, :formatted]
+
+  TYPE_DE_CHAMP_CAST_MAP = {
+    text: [:textarea, :formatted],
+    textarea: [:text, :formatted],
+    formatted: [:text, :textarea],
+    civilite: CAST_TO_TEXT,
+    email: CAST_TO_TEXT,
+    phone: CAST_TO_TEXT,
+    # address: CAST_TO_TEXT + [:departements, :pays],
+    # communes: CAST_TO_TEXT + [:departements, :regions, :pays],
+    # departements: CAST_TO_TEXT + [:regions, :pays],
+    # regions: CAST_TO_TEXT + [:pays],
+    # pays: CAST_TO_TEXT,
+    # epci: CAST_TO_TEXT + [:departements, :regions, :pays],
+    decimal_number: CAST_TO_TEXT + [:integer_number],
+    integer_number: CAST_TO_TEXT + [:decimal_number],
+    date: CAST_TO_TEXT + [:datetime],
+    datetime: CAST_TO_TEXT + [:date],
+    checkbox: CAST_TO_TEXT + [:yes_no],
+    drop_down_list: CAST_TO_TEXT + [:multiple_drop_down_list],
+    multiple_drop_down_list: CAST_TO_TEXT + [:drop_down_list],
+    yes_no: CAST_TO_TEXT + [:checkbox]
+  }
+
   enum :type_champ, {
     engagement_juridique: 'engagement_juridique',
     header_section: 'header_section',
@@ -748,7 +773,7 @@ class TypeDeChamp < ApplicationRecord
     # no champ
     return true if champ.nil?
     # type de champ on the revision changed
-    if champ.is_type?(type_champ) || castable_on_change?(champ.last_write_type_champ, type_champ)
+    if champ.is_type?(type_champ) || self.class.castable_on_change?(champ.last_write_type_champ, type_champ)
       dynamic_type.champ_blank?(champ)
     else
       true
@@ -759,7 +784,7 @@ class TypeDeChamp < ApplicationRecord
     # no champ
     return true if champ.nil?
     # type de champ on the revision changed
-    if champ.is_type?(type_champ) || castable_on_change?(champ.last_write_type_champ, type_champ)
+    if champ.is_type?(type_champ) || self.class.castable_on_change?(champ.last_write_type_champ, type_champ)
       mandatory? && dynamic_type.champ_blank_or_invalid?(champ)
     else
       true
@@ -805,24 +830,11 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
-  private
-
-  def castable_on_change?(from_type, to_type)
-    case [from_type, to_type]
-    when ['integer_number', 'decimal_number'], # recast numbers automatically
-      ['decimal_number', 'integer_number'], # may lose some data, but who cares ?
-      ['text', 'textarea'], # allow short text to long text
-      ['text', 'formatted'], # plain text can become formatted text
-      ['formatted', 'text'], # formatted text can become plain text
-      ['formatted', 'textarea'], # formatted text can become long text
-      ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
-      ['date', 'datetime'], # date <=> datetime
-      ['datetime', 'date'] # may lose some data, but who cares ?
-      true
-    else
-      false
-    end
+  def self.castable_on_change?(from_type, to_type)
+    TYPE_DE_CHAMP_CAST_MAP.fetch(from_type.to_sym, []).include?(to_type.to_sym)
   end
+
+  private
 
   def populate_stable_id
     if !stable_id
