@@ -54,7 +54,8 @@
                 target: :experts_require_administrateur_invitation,
                 title: t('.titles.manage_procedure_experts'),
                 hint: t('.descriptions.manage_procedure_experts'),
-                disabled: false)
+                disabled: false,
+                extra_class_names: 'fr-toggle--border-bottom')
 
 
   - if @procedure.experts_require_administrateur_invitation?
