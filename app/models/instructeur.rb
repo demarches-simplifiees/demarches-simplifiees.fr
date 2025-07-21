@@ -17,8 +17,8 @@ class Instructeur < ApplicationRecord
   has_many :export_templates, through: :groupe_instructeurs
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
-  has_many :follows, -> { active }, inverse_of: :instructeur
-  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
+  has_many :follows, -> { active }, inverse_of: :instructeur, dependent: :destroy
+  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur, dependent: :destroy
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :trusted_device_tokens, dependent: :destroy

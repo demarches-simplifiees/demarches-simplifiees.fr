@@ -52,8 +52,8 @@ class Dossier < ApplicationRecord
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob).order(created_at: :desc) }, class_name: 'Commentaire', inverse_of: :dossier
 
   has_many :invites, dependent: :destroy
-  has_many :follows, -> { active }, inverse_of: :dossier
-  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
+  has_many :follows, -> { active }, inverse_of: :dossier, dependent: :destroy
+  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier, dependent: :destroy
   has_many :followers_instructeurs, through: :follows, source: :instructeur
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, -> { order(:created_at) }, inverse_of: :dossier, dependent: :destroy
