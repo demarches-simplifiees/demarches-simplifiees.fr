@@ -10,7 +10,6 @@ module Instructeurs
 
     def index
       @average_dossier_weight = @procedure.average_dossier_weight
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @count_dossiers_termines_by_month = @procedure.dossiers.processed_by_month(groupe_instructeurs).count
       @archives = Archive.for_groupe_instructeur(groupe_instructeurs).to_a
     end

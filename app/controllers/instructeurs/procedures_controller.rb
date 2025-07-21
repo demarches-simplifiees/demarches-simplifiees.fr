@@ -105,8 +105,6 @@ module Instructeurs
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
 
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
-
       @current_filters = procedure_presentation.filters_for(statut)
       @current_filters.each do |filter|
         if filter.column.groupe_instructeur?
@@ -173,13 +171,13 @@ module Instructeurs
       @statut_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
       @notifications = DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @filtered_sorted_paginated_ids)
       @has_export_notification = notify_exports?
+      @has_unseen_revision_notification = notify_unseen_revisions?
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
 
     def deleted_dossiers
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @deleted_dossiers = @procedure
         .deleted_dossiers
         .order(:dossier_id)
@@ -246,7 +244,6 @@ module Instructeurs
 
     def email_notifications
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @assign_to = assign_tos.first
     end
 
@@ -260,7 +257,6 @@ module Instructeurs
 
     def stats
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @usual_traitement_time = @procedure.stats_usual_traitement_time
       @dossiers_funnel = @procedure.stats_dossiers_funnel
       @termines_states = @procedure.stats_termines_states
@@ -270,7 +266,6 @@ module Instructeurs
 
     def exports
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @exports = Export.for_groupe_instructeurs(groupe_instructeur_ids).ante_chronological
       cookies.encrypted[cookies_export_key] = {
         value: DateTime.current,
@@ -287,13 +282,11 @@ module Instructeurs
 
     def export_templates
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @export_templates = current_instructeur.export_templates.includes(:groupe_instructeur).order(:name)
     end
 
     def email_usagers
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @bulk_messages = BulkMessage.where(procedure: procedure)
       @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.visible_by_user.group(:groupe_instructeur_id).count
     end
@@ -334,14 +327,12 @@ module Instructeurs
 
     def administrateurs
       @procedure = procedure
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       @administrateurs = procedure.administrateurs
     end
 
     def apercu
       @procedure = procedure
       @dossier = procedure.active_revision.dossier_for_preview(current_user)
-      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
       DossierPreloader.load_one(@dossier)
     end
 
@@ -480,6 +471,16 @@ module Instructeurs
       scope = scope.where(updated_at: last_seen_at...) if last_seen_at
 
       scope.exists?
+    end
+
+    def notify_unseen_revisions?
+      return false if procedure.published_revision_id.blank?
+
+      instructeur_procedure = find_or_create_instructeur_procedure(procedure)
+
+      return false if instructeur_procedure.last_revision_seen_id.blank?
+
+      instructeur_procedure.last_revision_seen_id < procedure.published_revision_id
     end
 
     def last_export_for(statut)
