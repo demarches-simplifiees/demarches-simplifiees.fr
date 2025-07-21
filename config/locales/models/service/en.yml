@@ -16,8 +16,8 @@ en:
           attributes:
             siret:
               format: 'SIRET number %{message}'
-              length: 'must contain exactly 14 digits'
-              checksum: 'is invalid'
+              wrong_siret_format: 'must contain exactly 14 digits'
+              invalid: 'is invalid'
               not_prefillable: 'Unable to pre-fill information for this SIRET, please fill it manually'
             contact_link:
               format: ""

@@ -9,6 +9,6 @@ en:
         champs/siret_champ:
           attributes:
             value:
-              length: 'must contain exactly 14 numbers. Example: 500 0012 345 6789'
-              checksum: 'is invalid. Check for input errors.'
+              wrong_siret_format: 'must contain exactly 14 numbers. Example: 500 0012 345 6789'
+              invalid: 'is invalid. Check for input errors.'
               not_found: 'no establishment is linked to this number.'
