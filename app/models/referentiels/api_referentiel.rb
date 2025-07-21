@@ -71,6 +71,9 @@ class Referentiels::APIReferentiel < Referentiel
     ].all?
   end
 
+  def autocomplete_datasource
+  end
+
   private
 
   def name_as_uuid # should be uniq, using the url was an idea but not unique

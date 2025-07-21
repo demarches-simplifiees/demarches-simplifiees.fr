@@ -76,7 +76,6 @@ module Administrateurs
           referentiel.update!(last_response: nil)
         end
 
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
         if referentiel.autocomplete?
           redirect_to autocomplete_configuration_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
         else
@@ -127,7 +126,7 @@ module Administrateurs
 
     def autocomplete_configuration_params
       params.require(:referentiel)
-        .permit(autocomplete_configuration: { jsonpaths: [] })
+        .permit(autocomplete_configuration: [:datasource])
     rescue ActionController::ParameterMissing
       {}
     end
