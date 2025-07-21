@@ -288,7 +288,7 @@ module Instructeurs
     def export_templates
       @procedure = procedure
       @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
-      @export_templates = current_instructeur.export_templates_for(@procedure).includes(:groupe_instructeur)
+      @export_templates = current_instructeur.export_templates.includes(:groupe_instructeur).order(:name)
     end
 
     def email_usagers

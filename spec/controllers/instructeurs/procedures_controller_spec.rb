@@ -661,7 +661,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           end
 
           it { expect(assigns(:last_export)).to eq(export) }
-          it { expect(response.body).to include("Votre dernier export au format csv n&#39;a pas fonctionné") }
+          it { expect(response.body).to include("Votre dernier export au format csv n’a pas fonctionné") }
         end
 
         context 'with export more than hour ago' do

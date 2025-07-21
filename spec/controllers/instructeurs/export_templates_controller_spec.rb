@@ -44,7 +44,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       it 'redirect to some page' do
         subject
         expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
-        expect(flash.notice).to eq "Le modèle d'export coucou a bien été créé"
+        expect(flash.notice).to eq "Le modèle d’export coucou a bien été créé"
       end
     end
 
@@ -83,7 +83,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       it 'works' do
         subject
 
-        expect(flash.notice).to eq "Le modèle d'export coucou a bien été créé"
+        expect(flash.notice).to eq "Le modèle d’export coucou a bien été créé"
         expect(ExportTemplate.last.pjs).to match_array([])
       end
     end
@@ -119,7 +119,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         it 'redirect to some page' do
           subject
           expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
-          expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été créé"
+          expect(flash.notice).to eq "Le modèle d’export ExportODS a bien été créé"
           expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Date du dernier évènement']
         end
       end
@@ -154,8 +154,8 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     context 'with valid params' do
       it 'redirect to some page' do
         subject
-        expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
-        expect(flash.notice).to eq "Le modèle d'export coucou a bien été modifié"
+        expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
+        expect(flash.notice).to eq "Le modèle d’export coucou a bien été modifié"
 
         export_template.reload
 
@@ -208,8 +208,8 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       context 'with valid params' do
         it 'redirect to some page' do
           subject
-          expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
-          expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été modifié"
+          expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
+          expect(flash.notice).to eq "Le modèle d’export ExportODS a bien été modifié"
           expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Date du dernier évènement']
         end
       end
@@ -223,8 +223,8 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     context 'with valid params' do
       it 'redirect to some page' do
         subject
-        expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
-        expect(flash.notice).to eq "Le modèle d'export Mon export a bien été supprimé"
+        expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
+        expect(flash.notice).to eq "Le modèle d’export Mon export a bien été supprimé"
       end
     end
   end
