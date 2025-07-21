@@ -19,6 +19,7 @@ class Referentiels::APIReferentiel < Referentiel
   validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
   validate :url_allowed?
 
+  store_accessor :autocomplete_configuration, :datasource, :json_template
   before_save :name_as_uuid
   def self.csv_available?
     false
@@ -69,9 +70,6 @@ class Referentiels::APIReferentiel < Referentiel
       authentication_data_header.present?,
       authentication_header_token.present?
     ].all?
-  end
-
-  def autocomplete_datasource
   end
 
   private

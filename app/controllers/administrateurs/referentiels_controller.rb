@@ -126,7 +126,7 @@ module Administrateurs
 
     def autocomplete_configuration_params
       params.require(:referentiel)
-        .permit(autocomplete_configuration: [:datasource])
+        .permit(:datasource, :tiptap_template)
     rescue ActionController::ParameterMissing
       {}
     end

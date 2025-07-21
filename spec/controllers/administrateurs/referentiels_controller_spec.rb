@@ -404,18 +404,24 @@ describe Administrateurs::ReferentielsController, type: :controller do
       end
 
       context 'PATCH autocomplete_configuration' do
-        let(:config_payload) { { "jsonpaths" => ["$.baz"] } }
+        let(:config_payload) do
+          {
+            "datasource" => "$.baz",
+            tiptap_template: { type: "OK" }.to_json
+          }
+        end
         subject do
           patch :update_autocomplete_configuration, params: {
             procedure_id: procedure.id,
             stable_id: type_de_champ.stable_id,
             id: referentiel.id,
-            referentiel: { autocomplete_configuration: config_payload }
+            referentiel: config_payload
           }
         end
 
-        it 'updates the autocomplete_configuration and redirects' do
-          expect { subject }.to change { referentiel.reload.autocomplete_configuration }.to(config_payload)
+        it 'updates the autocomplete_configuration (and serialize tiptap template) and redirects' do
+          expect { subject }.to change { referentiel.reload.datasource }.to("$.baz")
+          expect(referentiel.json_template).to eq({ "type" => "OK" })
           expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
           expect(flash[:notice]).to eq("La configuration de l'autocomplete a bien étee enregistrée")
         end

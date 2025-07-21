@@ -10,10 +10,13 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
   end
 
   def autocomplete_datasource
-    jsonpath = Hash(referentiel.autocomplete_configuration).fetch("datasource", nil)
-    return nil unless jsonpath
+    return nil unless referentiel.datasource
 
-    JsonPath.on(referentiel.last_response_body, jsonpath).first.first
+    JsonPath.on(referentiel.last_response_body, referentiel.datasource).first.first
+  end
+
+  def autocomplete_template
+    referentiel.template
   end
 
   def select_datasource_radio_tag(jsonpath)
@@ -60,7 +63,7 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
 
   def tags
     {
-      all: autocomplete_datasource.keys.map do |jsonpath|
+      properties: autocomplete_datasource.keys.map do |jsonpath|
         {
           libelle: jsonpath,
           id: jsonpath
