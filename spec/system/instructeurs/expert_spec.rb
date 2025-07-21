@@ -44,7 +44,7 @@ describe 'Inviting an expert:', js: true do
       perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d’avis a été envoyée')
-      expect(page).to have_content('Avis des invités')
+      expect(page).to have_content('Avis des experts')
       within('section') do
         expect(page).to have_content(expert.email.to_s)
         expect(page).to have_content(expert2.email.to_s)
@@ -124,7 +124,7 @@ describe 'Inviting an expert:', js: true do
         wait_until { expert_procedure.reload.avis.present? }
 
         expect(page).to have_content('Une demande d’avis a été envoyée')
-        expect(page).to have_content('Avis des invités')
+        expect(page).to have_content('Avis des experts')
         within('section') do
           expect(page).to have_content(expert.email)
           expect(page).not_to have_content(expert2.email)
