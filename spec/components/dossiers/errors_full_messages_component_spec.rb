@@ -86,7 +86,7 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
       end
 
       context 'when champ is referentiel required and not filled' do
-        let(:referentiel) { create(:api_referentiel, :configured) }
+        let(:referentiel) { create(:api_referentiel, :exact_match, :configured) }
         let(:types_de_champ_public) { [{ type: :referentiel, referentiel:, mandatory: true }] }
         before { champ.update(external_id: 'kthxbye') }
 

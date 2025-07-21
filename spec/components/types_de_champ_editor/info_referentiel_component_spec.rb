@@ -16,7 +16,7 @@ describe TypesDeChampEditor::InfoReferentielComponent, type: :component do
     context "draft_procedure" do
       let(:procedure) { create(:procedure, types_de_champ_public:) }
       context 'having referentiel' do
-        let(:referentiel) { create(:api_referentiel, types_de_champ: [type_de_champ]) }
+        let(:referentiel) { create(:api_referentiel, :exact_match, types_de_champ: [type_de_champ]) }
 
         it "allows to edit referentiel" do
           expect(page).to have_link("Configurer le champ", href: Rails.application.routes.url_helpers.edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id))
@@ -35,7 +35,7 @@ describe TypesDeChampEditor::InfoReferentielComponent, type: :component do
       let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
 
       context "having referentiel" do
-        let(:referentiel) { create(:api_referentiel, types_de_champ: [type_de_champ]) }
+        let(:referentiel) { create(:api_referentiel, :exact_match, types_de_champ: [type_de_champ]) }
 
         it "does not allow to edit existing referentiel" do
           expect(page).to have_link("Configurer le champ", href: Rails.application.routes.url_helpers.new_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel_id: referentiel.id))
