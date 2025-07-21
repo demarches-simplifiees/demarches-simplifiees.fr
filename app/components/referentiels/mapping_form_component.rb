@@ -13,10 +13,6 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
     JSONPathUtil.hash_to_jsonpath(referentiel.last_response_body)
   end
 
-  def error_title
-    "¡Ay, caramba! 💣💥"
-  end
-
   def back_url
     edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
   end
