@@ -139,6 +139,10 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
     context 'full update (updating all attributes) without autosave' do
       subject { patch :update, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
+      let(:referentiel) { create(:api_referentiel, :exact_match, :configured, :with_last_response, types_de_champ: [type_de_champ]) }
+      before do
+        type_de_champ.update(referentiel_mapping: { "old" => { type: "string" } })
+      end
 
       let(:referentiel_params) do
         {
@@ -150,14 +154,22 @@ describe Administrateurs::ReferentielsController, type: :controller do
       end
 
       it 'updates the referentiel and redirects' do
-        expect { subject }.to change { referentiel.reload.attributes.slice(*referentiel_params.keys.map(&:to_s)) }
+        expect { subject }
+          .to change { referentiel.reload.attributes.slice(*referentiel_params.keys.map(&:to_s)) }
           .to(referentiel_params.stringify_keys)
+
+        # redirect is ok
         expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
-        referentiel.reload
+
+        # ensure data is save
         expect(referentiel.mode).to eq(referentiel_params[:mode])
         expect(referentiel.url).to eq(referentiel_params[:url])
         expect(referentiel.hint).to eq(referentiel_params[:hint])
         expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+
+        # also reset last_response/referentiel_mapping when url changed
+        expect(referentiel.reload.last_response).to be_nil
+        expect(type_de_champ.reload.referentiel_mapping).to eq({})
       end
     end
   end
