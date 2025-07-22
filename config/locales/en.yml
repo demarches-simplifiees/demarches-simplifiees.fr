@@ -575,7 +575,7 @@ en:
           sender_demande_en_cours_from_support: "A transfer request from technical support is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
           receiver_demande_en_cours_from_support: "Transfer request from technical support on file Nº %{id} of %{email}"
-          revoke: Revoke this request
+          revoke_html: "Revoke this <span class='visually-hidden'>transfer</span> request"
           accept: Accept
           reject: Reject
         dossier_action:

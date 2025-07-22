@@ -106,8 +106,8 @@
                   = t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email)
                 - else
                   = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
-              %p
-                = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
+                %br
+                = link_to t('views.users.dossiers.transfers.revoke_html'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
 
 
       - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
