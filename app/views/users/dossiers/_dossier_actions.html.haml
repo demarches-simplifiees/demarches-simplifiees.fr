@@ -66,3 +66,7 @@
             = dsfr_icon('fr-icon-delete-fill', :sm)
             .dropdown-description
               = t('views.users.dossiers.dossier_action.delete_dossier')
+              %span.visually-hidden
+                = t('utils.file')
+                = t('utils.number')
+                = number_with_html_delimiter(dossier.id)
