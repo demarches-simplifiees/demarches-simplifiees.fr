@@ -4,10 +4,14 @@ describe FilteredColumnType do
   let(:type) { FilteredColumnType.new }
 
   describe 'cast' do
-    it 'from FilteredColumn' do
-      column = Column.new(procedure_id: 1, table: 'table', column: 'column')
-      filtered_column = FilteredColumn.new(column:, filter: 'filter')
-      expect(type.cast(filtered_column)).to eq(filtered_column)
+    context 'from FilteredColumn' do
+      context 'with filter' do
+        it 'works' do
+          column = Column.new(procedure_id: 1, table: 'table', column: 'column')
+          filtered_column = FilteredColumn.new(column:, filter: 'filter')
+          expect(type.cast(filtered_column)).to eq(filtered_column)
+        end
+      end
     end
 
     it 'from nil' do
@@ -15,12 +19,20 @@ describe FilteredColumnType do
     end
 
     describe 'from form' do
-      it 'with valid column id' do
-        column = Column.new(procedure_id: 1, table: 'table', column: 'column')
-        h = { filter: 'filter', id: column.id }
+      context 'with valid column id' do
+        let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column') }
 
-        expect(Column).to receive(:find).with(column.h_id).and_return(column)
-        expect(type.cast(h)).to eq(FilteredColumn.new(column:, filter: 'filter'))
+        before do
+          allow(Column).to receive(:find).with(column.h_id).and_return(column)
+        end
+
+        context 'with filter' do
+          it 'works' do
+            h = { filter: 'filter', id: column.id }
+
+            expect(type.cast(h)).to eq(FilteredColumn.new(column:, filter: 'filter'))
+          end
+        end
       end
 
       it 'with invalid column id' do

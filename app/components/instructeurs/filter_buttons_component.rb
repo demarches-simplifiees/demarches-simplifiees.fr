@@ -29,7 +29,6 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
       params: {
         column_id: filter.column.id,
         filter: filter.filter,
-        or_filter: filter.or_filter,
         statut: @statut
       }.compact,
       form_class: 'inline'
@@ -43,12 +42,14 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   end
 
   def human_value(filter_column)
-    column, filter = filter_column.column, filter_column.filter
+    column_type, filter = filter_column.column.type, filter_column.filter
 
-    if column.type == :date || column.type == :datetime
-      helpers.try_parse_format_date(filter)
+    filter_value = filter[:value].is_a?(Array) ? filter[:value] : [filter[:value]]
+
+    if column_type == :date || column_type == :datetime
+      filter_value.map { helpers.try_parse_format_date(it) }.join(' ou ')
     else
-      column.label_for_value(filter)
+      filter_value.map { filter_column.column.label_for_value(it) }.join(' ou ')
     end
   end
 end

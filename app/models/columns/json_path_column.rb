@@ -19,7 +19,17 @@ class Columns::JSONPathColumn < Columns::ChampColumn
     )
   end
 
-  def filtered_ids(dossiers, search_terms)
+  def filtered_ids(dossiers, filter)
+    case filter
+    in { operator: 'match', value: Array }
+      filtered_ids_for_values(dossiers, filter[:value])
+    else
+      Sentry.capture_message("Unknown filter: #{filter}")
+      dossiers.ids
+    end
+  end
+
+  def filtered_ids_for_values(dossiers, search_terms)
     value = quote_string(search_terms.join('|'))
 
     condition = %{champs.value_json @? '#{jsonpath} ? (@ like_regex "#{value}" flag "i")'}
