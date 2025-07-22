@@ -43,8 +43,6 @@ class Champ < ApplicationRecord
     :collapsible_explanation_text,
     :header_section_level_value,
     :current_section_level,
-    :exclude_from_export?,
-    :exclude_from_view?,
     :non_fillable?,
     :fillable?,
     :mandatory?,

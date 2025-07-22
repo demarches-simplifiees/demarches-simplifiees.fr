@@ -31,7 +31,18 @@ class Dossiers::ChampsRowsShowComponent < ApplicationComponent
     key
   end
 
+  def visible?(champ)
+    return false if champ.header_section? || champ.explication?
+    return true if champ.visible?
+
+    if profile == 'instructeur' && champ.public?
+      champ.submitted_filled?
+    else
+      false
+    end
+  end
+
   def each_champ(&block)
-    @champs.filter { _1.visible? && !_1.exclude_from_view? && !_1.header_section? }.each(&block)
+    @champs.filter { visible?(_1) }.each(&block)
   end
 end

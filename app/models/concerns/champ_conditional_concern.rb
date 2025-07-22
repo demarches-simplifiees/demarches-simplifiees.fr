@@ -25,6 +25,13 @@ module ChampConditionalConcern
       end
     end
 
+    def submitted_filled?
+      return false if dossier.submitted_revision_id.blank?
+      return false if dossier.submitted_revision_id == dossier.revision_id
+
+      !type_de_champ.champ_blank?(self)
+    end
+
     def reset_visible # recompute after a dossier update
       remove_instance_variable :@visible if instance_variable_defined? :@visible
     end

@@ -4,7 +4,7 @@ describe ChampConditionalConcern do
   include Logic
 
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :decimal_number, stable_id: 99 }, { type: :decimal_number, stable_id: 999, condition: }]) }
-  let(:dossier) { create(:dossier, :with_populated_champs, revision: procedure.active_revision) }
+  let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
   let(:champ) { dossier.champs.find { _1.stable_id == 99 }.tap { _1.update_column(:value, '1.1234') } }
   let(:last_champ) { dossier.champs.find { _1.stable_id == 999 }.tap { _1.update_column(:value, '1.1234') } }
   let(:condition) { nil }
@@ -75,6 +75,27 @@ describe ChampConditionalConcern do
           expect(first_repet.visible?).to be false
           expect(first_yes_no.visible?).to be false
         end
+      end
+    end
+  end
+
+  describe '#submitted_filled?' do
+    context 'when dossier on submitted revision' do
+      it { expect(champ.submitted_filled?).to be_falsey }
+    end
+
+    context 'when dossier not on submitted revision' do
+      before {
+        procedure.publish_revision!
+        dossier.rebase!
+        dossier.reload
+      }
+
+      it { expect(champ.submitted_filled?).to be_truthy }
+
+      context 'when champ is empty' do
+        before { champ.update(value: nil) }
+        it { expect(champ.submitted_filled?).to be_falsey }
       end
     end
   end
