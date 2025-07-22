@@ -1,15 +1,6 @@
 = form_with(model: @type_de_champ, url: update_mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel)) do |f|
   %div{ class: bordered_container_class_names }
-    %section.fr-accordion.fr-mb-3w
-      %h3.fr-accordion__title
-        %button.fr-accordion__btn{ type: :button, "aria-controls" => "last_response", "aria-expanded" => "false" } Afficher la réponse récupérée à partir de la requête configurée
-
-    .fr-collapse#last_response
-      %pre Endpoint: #{test_url}
-      - if test_headers.present?
-        %pre Headers: #{test_headers}
-      %pre Status: #{JSON.pretty_generate(@referentiel.last_response_status)}
-      %pre Body: #{JSON.pretty_generate(@referentiel.last_response_body)}
+    = render Referentiels::ResponseRendererComponent.new(referentiel:)
 
     %section
       .fr-table.fr-table--bordered
