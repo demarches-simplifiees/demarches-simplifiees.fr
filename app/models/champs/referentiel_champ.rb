@@ -53,6 +53,18 @@ class Champs::ReferentielChamp < Champ
     end
   end
 
+  def selected_key
+    value
+  end
+
+  def selected_items
+    if selected_key.present?
+      [{ label: selected_key, value: selected_key, data: value_json }]
+    else
+      []
+    end
+  end
+
   private
 
   def clear_previous_result
