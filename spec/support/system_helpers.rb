@@ -157,6 +157,12 @@ module SystemHelpers
     expect(page).to have_css('.debounced-empty') # no more debounce
     expect(page).to have_css('.autosave-state-idle') # no more in flight promise
   end
+
+  # find input (radio), center it in the screen, then click on label (otherwise element out of scope)
+  def custom_check(field_id)
+    scroll_to(find_field(field_id), align: :center)
+    find("label[for=#{field_id}]").click
+  end
 end
 
 RSpec.configure do |config|

@@ -208,10 +208,4 @@ describe 'Referentiel API:' do
       end
     end
   end
-
-  # find input, center it in the screen, then click on label (otherwise element out of scope)
-  def custom_check(field_id)
-    scroll_to(find_field(field_id), align: :center)
-    find("label[for=#{field_id}]").click
-  end
 end
