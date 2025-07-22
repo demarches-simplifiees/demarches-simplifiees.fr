@@ -56,7 +56,14 @@ module Administrateurs
     end
 
     def handle_referentiel_save(referentiel)
+      cache_bust_last_response_and_mapping = referentiel.url_changed?
+
       if referentiel.configured? && referentiel.save && params[:commit].present?
+        if cache_bust_last_response_and_mapping
+          @type_de_champ.update!(referentiel_mapping: {})
+          referentiel.update!(last_response: nil)
+        end
+
         redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
       else
         referentiel.validate
