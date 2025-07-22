@@ -154,7 +154,7 @@ describe Columns::ChampColumn do
   end
 
   describe '#filtered_ids' do
-    subject { column.filtered_ids(dossiers, search_terms) }
+    subject { column.filtered_ids(dossiers, { operator: 'match', value: search_terms }) }
 
     context "with a yes no champ not mandatory" do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no, mandatory: false, libelle: "oui/non" }]) }
@@ -252,6 +252,38 @@ describe Columns::ChampColumn do
 
         it "returns the correct ids" do
           expect(subject).to eq([dossier_not_checked.id])
+        end
+      end
+    end
+
+    context "with a drop_down_list champ" do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: "drop_down_list", options: ["Fromage", "Dessert", "Chocolat"] }]) }
+      let(:dossier_with_fromage) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier_with_dessert) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier_with_chocolat) { create(:dossier, :en_instruction, procedure:) }
+
+      before do
+        dossier_with_fromage.champs.first.update!(value: "Fromage")
+        dossier_with_dessert.champs.first.update!(value: "Dessert")
+        dossier_with_chocolat.champs.first.update!(value: "Chocolat")
+      end
+
+      let(:column) { procedure.find_column(label: "drop_down_list") }
+      let(:dossiers) { procedure.dossiers }
+
+      context "when searching for fromage" do
+        let(:search_terms) { ["Fromage"] }
+
+        it "returns the correct ids" do
+          expect(subject).to eq([dossier_with_fromage.id])
+        end
+      end
+
+      context "when searching for fromage OR dessert" do
+        let(:search_terms) { ["Fromage", "Dessert"] }
+
+        it "returns the correct ids" do
+          expect(subject).to eq([dossier_with_fromage.id, dossier_with_dessert.id])
         end
       end
     end

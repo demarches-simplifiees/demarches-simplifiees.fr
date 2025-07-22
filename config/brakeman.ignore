@@ -70,6 +70,29 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "2a921e7bd4cf2de55bf58db10d05d316c4355c639c72c2cd4d7488cbc78a39d8",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/columns/json_path_column.rb",
+      "line": 38,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath} ? (@ like_regex \\\"#{quote_string(search_terms.join(\"|\"))}\\\" flag \\\"i\\\")'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Columns::JSONPathColumn",
+        "method": "filtered_ids_for_values"
+      },
+      "user_input": "jsonpath",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "737aa4f7931ece068cce98d7cc66057a1ec81b9be43e469c3569ff1be91bbf09",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -108,29 +131,6 @@
       },
       "user_input": "timeout",
       "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "83b5a474065af330c47603d1f60fc31edaab55be162825385d53b77c1c98a6d7",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/columns/json_path_column.rb",
-      "line": 28,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath} ? (@ like_regex \\\"#{quote_string(search_terms.join(\"|\"))}\\\" flag \\\"i\\\")'\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Columns::JSONPathColumn",
-        "method": "filtered_ids"
-      },
-      "user_input": "jsonpath",
-      "confidence": "Weak",
       "cwe_id": [
         89
       ],

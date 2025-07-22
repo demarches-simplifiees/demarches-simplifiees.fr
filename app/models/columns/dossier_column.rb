@@ -22,7 +22,17 @@ class Columns::DossierColumn < Column
 
   def dossier_column? = true
 
-  def filtered_ids(dossiers, values)
+  def filtered_ids(dossiers, filter)
+    case filter
+    in { operator: 'match', value: Array }
+      filtered_ids_for_values(dossiers, filter[:value])
+    else
+      Rails.logger.error("Unknown filter: #{filter.inspect}")
+      dossiers.ids
+    end
+  end
+
+  def filtered_ids_for_values(dossiers, values)
     case table
     when 'self'
       if type == :date || type == :datetime
