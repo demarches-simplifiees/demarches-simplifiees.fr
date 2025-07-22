@@ -231,7 +231,7 @@ describe 'user access to the list of their dossiers', js: true do
       scenario 'the dossier is restored' do
         within('.fr-tabs__list') { click_on "corbeille" }
         expect(page).to have_content(dossier_en_construction_supprime.procedure.libelle)
-        click_on 'Restaurer'
+        click_on 'Restaurer le dossier'
 
         expect(page).to have_content('Votre dossier a bien été restauré')
       end

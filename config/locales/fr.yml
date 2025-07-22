@@ -42,6 +42,8 @@ fr:
     date: Date
     datetime: Date et heure
     array: Liste à choix multiple
+    number: numéro
+    file: le dossier
     email_suggest:
       wanna_say: 'Voulez-vous dire ?'
 
@@ -579,12 +581,14 @@ fr:
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"
-          clone: "Dupliquer ce dossier"
+          clone: "Dupliquer le dossier"
           delete_dossier: "Mettre à la corbeille"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
           edit_draft: "Continuer à remplir"
+          restore: "Restaurer"
+          restore_and_extend_conservation_html: 'Restaurer et étendre la conservation <span class="visually-hidden">du dossier numéro %{id}</span> (%{duree_conservation_dossiers_dans_ds} mois)'
           actions: "Actions"
           other_actions: "Autres actions"
         transfers:

@@ -52,6 +52,8 @@ en:
     date: Date
     datetime: Date and time
     array: List of simple elements
+    number: number
+    file: file
 
     email_suggest:
       wanna_say: 'Do you mean to say ?'
@@ -585,6 +587,8 @@ en:
           delete_dossier_with_transfer_confirm: "If you continue, you will delete this file, the information it contains and its transfer request to %{email}. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
           transfer_dossier: "Transfer the file"
           edit_draft: "Keep filling"
+          restore: "Restore"
+          restore_and_extend_conservation_html: 'Restore and extend conservation <span class="visually-hidden">of file number %{id}</span> (%{duree_conservation_dossiers_dans_ds} month)'
           actions: "Actions"
           other_actions: "Other actions"
       sessions:
