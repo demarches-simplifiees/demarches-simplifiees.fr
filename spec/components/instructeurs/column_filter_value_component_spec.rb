@@ -15,7 +15,14 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
     let(:column) { double("Column", type: :enum, tdc_type: "drop_down_list", options_for_select:, mandatory: true) }
     let(:options_for_select) { ['option1', 'option2'] }
 
-    it { expect(page).to have_select('filter_value', options: ['', 'option1', 'option2']) } # empty option is added by form helper but field is required
+    let(:react_component) { page.find('react-component') }
+    let(:react_props_items) { JSON.parse(react_component['props']) }
+
+    it {
+      expect(react_props_items["items"]).to eq([
+        "option1", "option2"
+      ])
+    }
   end
 
   describe 'the input case' do

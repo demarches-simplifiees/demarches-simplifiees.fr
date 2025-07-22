@@ -13,6 +13,8 @@ class FilteredColumnType < ActiveRecord::Type::Value
     # from form (id is a string) or from db (id is a hash)
     in { id: String|Hash, filter: String } => h
       FilteredColumn.new(column: ColumnType.new.cast(h[:id]), filter: h[:filter])
+    in { id: String|Hash, or_filter: Array } => h
+      FilteredColumn.new(column: ColumnType.new.cast(h[:id]), or_filter: h[:or_filter])
     end
   end
 
@@ -27,7 +29,8 @@ class FilteredColumnType < ActiveRecord::Type::Value
     in FilteredColumn
       JSON.generate({
         id: value.column.h_id,
-        filter: value.filter
+        filter: value.filter,
+        or_filter: value.or_filter
       })
     else
       raise ArgumentError, "Invalid value for FilteredColumn serialization: #{value}"

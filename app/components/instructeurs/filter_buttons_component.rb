@@ -43,12 +43,12 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   end
 
   def human_value(filter_column)
-    column, filter = filter_column.column, filter_column.filter
+    column, filter, or_filter = filter_column.column, filter_column.filter, filter_column.or_filter
 
     if column.type == :date || column.type == :datetime
-      helpers.try_parse_format_date(filter)
+      filter ? helpers.try_parse_format_date(filter) : or_filter.map { helpers.try_parse_format_date(it) }.join(' ou ')
     else
-      column.label_for_value(filter)
+      filter ? column.label_for_value(filter) : or_filter.map { column.label_for_value(it) }.join(' ou ')
     end
   end
 end

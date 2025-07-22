@@ -12,13 +12,8 @@
       = t('.value')
   - elsif column.type.in?([:enum, :enums])
     = form.label :value, t('.value'), class: 'fr-label'
-    = form.select "filter_value",
-      options_for_select(column_filter_options),
-      {},
-      id: 'value',
-      class: 'fr-select',
-      data: { no_autosubmit: true },
-      required: true
+    %react-fragment
+      = render ReactComponent.new "ComboBox/MultiComboBox", **multi_combo_box_react_props
   - else
     = form.label :value, t('.value'), class: 'fr-label'
     = form.text_field "filter_value",
