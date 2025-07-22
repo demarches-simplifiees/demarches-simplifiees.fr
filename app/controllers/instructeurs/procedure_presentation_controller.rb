@@ -5,12 +5,9 @@ module Instructeurs
     before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter]
 
     def add_filter
-      column = ColumnType.new.cast(filter_params[:column_id])
-      filter_value = filter_params[:filter_value]
-      or_filter_value = filter_params[:or_filter_value]
       statut = filter_params[:statut]
 
-      new_filter = FilteredColumn.new(column: column, filter: filter_value, or_filter: or_filter_value)
+      new_filter = filtered_column_from_params
 
       if new_filter.valid?
         filters_attr = @procedure_presentation.filters_name_for(statut)
@@ -56,13 +53,13 @@ module Instructeurs
     private
 
     def filtered_column_from_params
-      @filtered_column_from_params ||= FilteredColumn.new(column: ColumnType.new.cast(params[:column_id]), filter: params[:filter], or_filter: params[:or_filter])
+      FilteredColumn.new(column: ColumnType.new.cast(params[:column_id]), filter: filter_params[:filter].to_h.symbolize_keys)
     end
 
     def procedure = @procedure_presentation.procedure
 
     def procedure_presentation_params
-      h = params.permit(displayed_columns: [], sorted_column: [:order, :id], filters: [:id, :filter, or_filter: []]).to_h
+      h = params.permit(displayed_columns: [], sorted_column: [:order, :id], filters: [:id, :filter]).to_h
 
       if params[:statut].present?
         filter_name = @procedure_presentation.filters_name_for(params[:statut])
@@ -79,7 +76,7 @@ module Instructeurs
     end
 
     def filter_params
-      params.permit(:column_id, :filter_value, :statut, or_filter_value: [])
+      params.permit(:column_id, :statut, filter: [:operator, value: []])
     end
 
     def set_procedure_presentation
