@@ -72,9 +72,11 @@
         - if @first_brouillon_recently_updated.present?
           = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
             - c.with_body do
-              %p
-                = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
-              = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
+              = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
+              %br
+              = link_to url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn' do
+                = t('users.dossiers.header.callout.first_brouillon_recently_updated_button')
+                %span.visually-hidden= t('utils.file')
 
       - if @search_terms.present?
         %h2.page-title

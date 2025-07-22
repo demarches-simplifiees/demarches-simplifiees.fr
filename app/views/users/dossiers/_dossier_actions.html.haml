@@ -10,11 +10,20 @@
     - if has_edit_action
       - if dossier.brouillon?
         %li
-          = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
+          = link_to (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left' do
+            = t('views.users.dossiers.dossier_action.edit_draft')
+            %span.visually-hidden
+              = t('utils.file')
+              = t('utils.number')
+              = number_with_html_delimiter(dossier.id)
 
       - else
         %li
-          = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
+          = link_to modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left' do
+            = t('views.users.dossiers.dossier_action.edit_dossier')
+            %span.visually-hidden
+              = t('utils.number')
+              = number_with_html_delimiter(dossier.id)
 
     - if has_new_dossier_action
       %li
