@@ -211,7 +211,7 @@ describe 'user access to the list of their dossiers', js: true do
       scenario 'the dossier is cloned' do
         within(:css, ".card", match: :first) do
           click_on 'Autres actions'
-          expect { click_on 'Dupliquer ce dossier' }.to change { dossier_brouillon.user.dossiers.count }.by(1)
+          expect { click_on 'Dupliquer le dossier' }.to change { dossier_brouillon.user.dossiers.count }.by(1)
         end
 
         expect(page).to have_content("Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer.")

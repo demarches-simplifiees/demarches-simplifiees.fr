@@ -55,6 +55,9 @@
             = dsfr_icon('fr-icon-file-copy-line', :sm)
             .dropdown-description
               = t('views.users.dossiers.dossier_action.clone')
+              %span.visually-hidden
+                = t('utils.number')
+                = number_with_html_delimiter(dossier.id)
 
       - if has_delete_action
         - menu.with_item(class: 'danger') do
