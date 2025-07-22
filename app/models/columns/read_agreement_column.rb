@@ -15,7 +15,17 @@ class Columns::ReadAgreementColumn < Columns::DossierColumn
 
   def value(dossier) = dossier.accuse_lecture_agreement_at
 
-  def filtered_ids(dossiers, values)
+  def filtered_ids(dossiers, filter)
+    case filter
+    in { operator: 'match', value: Array }
+      filtered_ids_for_values(dossiers, filter[:value])
+    else
+      Sentry.capture_message("Unknown filter: #{filter}")
+      dossiers.ids
+    end
+  end
+
+  def filtered_ids_for_values(dossiers, values)
     return dossiers.ids if values.include?("true") && values.include?("false")
     if values == ["true"]
       dossiers.where.not(accuse_lecture_agreement_at: nil).ids

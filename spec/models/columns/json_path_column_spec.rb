@@ -28,7 +28,7 @@ describe Columns::JSONPathColumn do
     context 'with regular search' do
       let(:jsonpath) { '$.city_name' }
 
-      subject { column.filtered_ids(Dossier.all, ['reno', 'Lyon']) }
+      subject { column.filtered_ids(Dossier.all, { operator: 'match', value: ['reno', 'Lyon'] }) }
 
       context 'when champ has value_json' do
         before { champ.update(value_json: { city_name: 'Grenoble' }) }
@@ -44,7 +44,7 @@ describe Columns::JSONPathColumn do
     context 'with avanced search using special characters' do
       let(:jsonpath) { '$.city_name' }
 
-      subject { column.filtered_ids(Dossier.all, ['*reno*', 'Lyon']) }
+      subject { column.filtered_ids(Dossier.all, { operator: 'match', value: ['*reno*', 'Lyon'] }) }
 
       context 'when champ has value_json we catch Invalid Regex error and return []' do
         before { champ.update(value_json: { city_name: 'Grenoble' }) }

@@ -85,7 +85,7 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
   end
 
   describe '#refresh_column_filter' do
-    subject { patch :refresh_column_filter, params: { id: procedure_presentation.id, filters: [{ id: column.id }] }, format: :turbo_stream }
+    subject { post :refresh_column_filter, params: { id: procedure_presentation.id, column_id: column.id, format: :turbo_stream } }
 
     render_views
 
