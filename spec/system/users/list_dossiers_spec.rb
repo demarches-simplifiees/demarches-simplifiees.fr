@@ -169,7 +169,7 @@ describe 'user access to the list of their dossiers', js: true do
 
   context 'when user clicks on a projet in list' do
     before do
-      page.click_on(dossier_en_construction.procedure.libelle)
+      page.click_on(dossier_en_construction.procedure.libelle, match: :first)
     end
 
     scenario 'user is redirected to dossier page' do

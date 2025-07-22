@@ -10,6 +10,9 @@
             - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
               = link_to(url_for_dossier(dossier)) do
                 = dossier.procedure.libelle
+                %span.visually-hidden
+                  = t('views.users.dossiers.dossiers_list.n_dossier')
+                  = number_with_html_delimiter(dossier.id)
             - else
               = dossier.procedure.libelle
 

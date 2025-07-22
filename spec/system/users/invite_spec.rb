@@ -192,13 +192,13 @@ describe 'Invitations' do
 
   def navigate_to_brouillon(dossier)
     expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.procedure.libelle)
+    click_on(dossier.procedure.libelle, match: :first)
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
   end
 
   def navigate_to_dossier(dossier)
     expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.procedure.libelle)
+    click_on(dossier.procedure.libelle, match: :first)
     expect(page).to have_current_path(dossier_path(dossier))
   end
 
