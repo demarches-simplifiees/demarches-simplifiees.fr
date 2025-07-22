@@ -29,6 +29,8 @@
       %li
         = link_to (commencer_url(dossier.procedure.path)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w fr-icon-file-fill fr-btn--icon-left' do
           = t('views.users.dossiers.dossier_action.start_other_dossier')
+          %span.visually-hidden
+            = dossier.procedure.libelle
 
     = render Dropdown::MenuComponent.new(wrapper: :li, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--tertiary'}) do |menu|
       - menu.with_button_inner_html do
