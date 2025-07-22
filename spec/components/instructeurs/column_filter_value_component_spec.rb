@@ -12,7 +12,11 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   end
 
   describe 'the select case' do
-    let(:column) { double("Column", type: :enum, tdc_type: "drop_down_list", options_for_select:, mandatory: true) }
+    let!(:column) do
+      column = double("Column", type: :enum, tdc_type: "drop_down_list", options_for_select:, mandatory: true)
+      allow(column).to receive(:is_a?).with(Columns::ChampColumn).and_return(true)
+      column
+    end
     let(:options_for_select) { ['option1', 'option2'] }
 
     let(:react_component) { page.find('react-component') }
