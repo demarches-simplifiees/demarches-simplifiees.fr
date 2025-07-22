@@ -22,6 +22,7 @@ export function AddressInput({
         loader={source}
         label={translations.address_input_label}
         description={translations.address_input_description}
+        placeholder={translations.address_placeholder}
         onChange={(item) => {
           if (item && item.data) {
             fire(document, 'map:zoom', {

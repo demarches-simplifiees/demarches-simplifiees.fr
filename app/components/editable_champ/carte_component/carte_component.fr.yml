@@ -1,7 +1,8 @@
 ---
 fr:
-  address_input_label: "Rechercher une adresse"
-  address_input_description: "Saisissez au moins 2 caractères"
+  address_input_label: "Centrer la carte en recherchant une adresse"
+  address_input_description: "Saisissez une adresse, une voie, un lieu-dit ou une commune. Exemple : 11 rue Réaumur, Paris"
+  address_placeholder: "Commencez à saisir"
   pin_input_label: "Ajouter un point sur la carte"
   pin_input_description: "Exemple : "
   show_pin: "Afficher votre position sur la carte"
