@@ -13,6 +13,25 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
     ChampPresentations::MultipleDropDownListPresentation.new(selected_options(champ))
   end
 
+  def columns(procedure:, displayable: true, prefix: nil)
+    if drop_down_advanced?
+      path = referentiel.present? ? referentiel.headers_with_path.first.second : nil
+      path.present? ? Columns::MultipleDropDownColumn.new(
+        procedure_id: procedure.id,
+        stable_id:,
+        tdc_type: type_champ,
+        label: libelle,
+        type: :enum,
+        jsonpath: "$.referentiels.*.data.row.#{path}",
+        displayable:,
+        options_for_select: referentiel.options_for_path(path),
+        mandatory: mandatory?
+      ) : []
+    else
+      super
+    end
+  end
+
   def champ_value_for_export(champ, path = :value)
     champ_value(champ)
   end
