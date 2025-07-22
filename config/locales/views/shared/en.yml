@@ -21,6 +21,8 @@ en:
         already_user: "I already have an account"
         create: 'Create an account'
         signin: 'Sign in'
+        email_unverified: "Your email address is not verified, so you will not receive email notifications from %{application_name}. Please check your inbox and click the verification link. Didn't receive the email?"
+        cta_email_unverified: "Resend verification email"
       messages:
         remove_file: 'Remove file'
       piece_justificative:

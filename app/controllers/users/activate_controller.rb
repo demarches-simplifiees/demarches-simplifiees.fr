@@ -2,7 +2,7 @@
 
 class Users::ActivateController < ApplicationController
   include TrustedDeviceConcern
-
+  before_action :authenticate_user!, only: [:resend_verification_email]
   def new
     @user = User.with_reset_password_token(params[:token])
 
@@ -46,6 +46,19 @@ class Users::ActivateController < ApplicationController
       else
         flash[:alert] = "Un problème est survenu, vous pouvez nous contacter sur #{Current.contact_email}"
       end
+    end
+    redirect_to root_path(user)
+  end
+
+  def resend_verification_email
+    user = current_user
+    if user && !user.email_verified_at?
+      token = SecureRandom.hex(10)
+      user.update!(confirmation_token: token, confirmation_sent_at: Time.zone.now)
+      user.resend_confirmation_email!
+      flash[:notice] = "Un nouvel email de vérification a été envoyé à l'adresse #{user.email}."
+    else
+      flash[:alert] = "Votre email est déjà vérifié ou vous n'êtes pas connecté."
     end
     redirect_to root_path(user)
   end

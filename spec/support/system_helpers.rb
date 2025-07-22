@@ -35,6 +35,13 @@ module SystemHelpers
     end
   end
 
+  def click_verification_link_for(email)
+    verification_email = open_email(user.email)
+    verification_link = verification_email.text.match(%r{\s+(\S+\/users\/confirm_email/\S+)\s+})[1]
+
+    visit URI.parse(verification_link).request_uri
+  end
+
   def click_confirmation_link_for(email, in_another_browser: false)
     confirmation_email = open_email(email)
     confirmation_link = confirmation_email.text.match(%r{\s+(\S+\/users\/confirmation\S+)\s+})[1]
@@ -106,9 +113,12 @@ module SystemHelpers
   end
 
   def log_out
+    within(".fr-notice__body") { click_on("Masquer le message") } if page.has_selector?('.fr-notice__body')
     within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
+      scroll_to(find('button[title="Mon profil"]'), align: :center)
       click_button(title: 'Mon profil')
       expect(page).to have_selector('#account.fr-collapse--expanded', visible: true)
+      scroll_to(find('button[title="Mon profil"]'), align: :center)
       click_on 'Se déconnecter'
     end
     expect(page).to have_current_path(root_path, wait: 30)
