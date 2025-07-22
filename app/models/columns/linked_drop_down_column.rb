@@ -18,7 +18,17 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
     )
   end
 
-  def filtered_ids(dossiers, search_terms)
+  def filtered_ids(dossiers, filter)
+    case filter
+    in { operator: 'match', value: Array }
+      filtered_ids_for_values(dossiers, filter[:value])
+    else
+      Sentry.capture_message("Unknown filter: #{filter}")
+      dossiers.ids
+    end
+  end
+
+  def filtered_ids_for_values(dossiers, search_terms)
     relation = dossiers.with_type_de_champ(@stable_id)
 
     case path

@@ -17,7 +17,7 @@ class FilteredColumn
     message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" }
   }
 
-  def initialize(column:, filter:)
+  def initialize(column:, filter: nil)
     @column = column
     @filter = filter
   end
@@ -33,7 +33,7 @@ class FilteredColumn
   private
 
   def check_filter_max_length
-    if @filter.present? && @filter.length > FILTERS_VALUE_MAX_LENGTH
+    if @filter.present? && @filter.is_a?(String) && @filter.length > FILTERS_VALUE_MAX_LENGTH
       errors.add(
         :base,
         "Le filtre « #{label} » est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)"
@@ -42,8 +42,15 @@ class FilteredColumn
   end
 
   def check_filter_max_integer
-    if @column.column == 'id' && @filter.to_i > PG_INTEGER_MAX_VALUE
-      errors.add(:base, "Le filtre « #{label} » n'est pas un numéro de dossier possible")
+    if @column.column == 'id'
+      # legacy filter format
+      if @filter.is_a?(String) && @filter.to_i > PG_INTEGER_MAX_VALUE
+        errors.add(:base, "Le filtre « #{label} » n'est pas un numéro de dossier possible")
+      end
+
+      if @filter.is_a?(Hash) && @filter[:value].any? { |value| value.to_i > PG_INTEGER_MAX_VALUE }
+        errors.add(:base, "Le filtre « #{label} » n'est pas un numéro de dossier possible")
+      end
     end
   end
 end

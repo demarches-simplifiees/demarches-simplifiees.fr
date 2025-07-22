@@ -110,7 +110,7 @@ describe "procedure filters" do
       add_filter('État du dossier', 'En construction', type: :enum)
 
       # use choice dropdown filter
-      add_filter('Choix unique', 'val1', type: :enum)
+      add_filter('Choix unique', 'val1', type: :multi_select)
     end
   end
 
@@ -131,7 +131,7 @@ describe "procedure filters" do
         departement_champ.reload
         champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
 
-        add_filter(departement_champ.libelle, champ_select_value, type: :enum)
+        add_filter(departement_champ.libelle, champ_select_value, type: :multi_select)
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end
@@ -158,7 +158,7 @@ describe "procedure filters" do
         rna_champ.reload
         champ_select_value = "37 – Indre-et-Loire"
 
-        add_filter("#{rna_champ.libelle} – Département", champ_select_value, type: :enum)
+        add_filter("#{rna_champ.libelle} – Département", champ_select_value, type: :multi_select)
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end
@@ -170,7 +170,7 @@ describe "procedure filters" do
         region_champ.update!(value: 'Bretagne', external_id: '53')
         region_champ.reload
 
-        add_filter(region_champ.libelle, region_champ.value, type: :enum)
+        add_filter(region_champ.libelle, region_champ.value, type: :multi_select)
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end
@@ -223,6 +223,7 @@ describe "procedure filters" do
     wait_until { all("#search-filter").size == 1 }
     fill_in 'search-filter', with: column_name
     select_combobox('Colonne', column_name)
+
     case type
     when :text
       fill_in "Valeur", with: filter_value
@@ -232,6 +233,13 @@ describe "procedure filters" do
     when :enum
       find("select#value", visible: false)
       select filter_value, from: "Valeur"
+    when :multi_select
+      # Wait for React component to be ready
+      find('.dom-ready') if page.has_css?('.dom-ready')
+
+      fill_in "Valeur", with: filter_value
+
+      find("input#value", visible: true).send_keys(:down, :enter, :escape)
     end
     click_button "Ajouter le filtre"
     expect(page).to have_no_css("#search-filter", visible: true)

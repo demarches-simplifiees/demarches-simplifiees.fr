@@ -32,7 +32,17 @@ class Columns::ChampColumn < Column
     end
   end
 
-  def filtered_ids(dossiers, search_terms)
+  def filtered_ids(dossiers, filter)
+    case filter
+    in { operator: 'match'|'in', value: Array }
+      filtered_ids_for_values(dossiers, filter[:value])
+    else
+      Sentry.capture_message("Unknown filter: #{filter}")
+      dossiers.ids
+    end
+  end
+
+  def filtered_ids_for_values(dossiers, search_terms)
     return dossiers.without_type_de_champ(stable_id).ids if should_exclude_empty_values?(search_terms)
 
     relation = dossiers.with_type_de_champ(stable_id)

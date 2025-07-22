@@ -100,16 +100,33 @@ describe Columns::DossierColumn do
     end
   end
 
-  describe 'filtered_ids' do
+  describe '#filtered_ids' do
     context 'for an integer etablissement column' do
       let(:procedure) { create(:procedure, for_individual: false) }
       let!(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
       let(:capital) { dossier.etablissement.entreprise_capital_social }
       let(:integer_column) { procedure.find_column(label: "Entreprise capital social") }
 
-      subject { integer_column.filtered_ids(procedure.dossiers, [capital.to_s]) }
+      subject { integer_column.filtered_ids(procedure.dossiers, { operator: 'match', value: [capital.to_s] }) }
 
       it { is_expected.to eq([dossier.id]) }
+    end
+
+    context 'for a dossier state column' do
+      let(:procedure) { create(:procedure, for_individual: false) }
+      let!(:dossier_en_instruction) { create(:dossier, :en_instruction, procedure:) }
+      let!(:dossier_en_construction) { create(:dossier, :en_construction, procedure:) }
+      let!(:dossier_accepte) { create(:dossier, :accepte, procedure:) }
+
+      let(:state_column) { procedure.find_column(label: "État du dossier") }
+
+      subject { state_column.filtered_ids(procedure.dossiers, search_terms) }
+
+      context 'when searching for en_construction' do
+        let(:search_terms) { { operator: 'match', value: ["en_construction"] } }
+
+        it { is_expected.to contain_exactly(dossier_en_construction.id) }
+      end
     end
   end
 end
