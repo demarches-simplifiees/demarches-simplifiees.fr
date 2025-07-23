@@ -1,6 +1,31 @@
 # frozen_string_literal: true
 
 describe Users::ActivateController, type: :controller do
+  describe '#resend_verification_email' do
+    let(:user) { create(:user, email_verified_at: nil) }
+
+    before { sign_in user }
+
+    context 'when the user has not verified their email' do
+      it 'generates a new token and sends the mail' do
+        expect {
+          post :resend_verification_email
+        }.to change { user.reload.confirmation_token }
+        expect(flash[:notice]).to eq("Un nouvel email de vérification a été envoyé à l'adresse #{user.email}.")
+        expect(response).to redirect_to(root_path(user))
+      end
+    end
+
+    context 'when the user has already verified their email' do
+      before { user.update!(email_verified_at: Time.zone.now) }
+
+      it 'does not send mail and shows an alert' do
+        post :resend_verification_email
+        expect(flash[:alert]).to eq("Votre email est déjà vérifié ou vous n'êtes pas connecté.")
+        expect(response).to redirect_to(root_path(user))
+      end
+    end
+  end
   describe '#new' do
     let(:user) { create(:user) }
     let(:token) { user.send(:set_reset_password_token) }
