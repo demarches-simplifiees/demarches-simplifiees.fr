@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_10_085322) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_23_082753) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -849,6 +849,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_10_085322) do
 
   create_table "instructeurs_procedures", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "display_annotation_instructeur_notifications", default: "followed", null: false
+    t.string "display_attente_avis_notifications", default: "followed", null: false
+    t.string "display_attente_correction_notifications", default: "followed", null: false
+    t.string "display_avis_externe_notifications", default: "followed", null: false
+    t.string "display_dossier_depose_notifications", default: "all", null: false
+    t.string "display_dossier_modifie_notifications", default: "followed", null: false
+    t.string "display_message_notifications", default: "followed", null: false
     t.bigint "instructeur_id", null: false
     t.bigint "last_revision_seen_id"
     t.integer "position", default: 99
