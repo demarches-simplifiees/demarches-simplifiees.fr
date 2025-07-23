@@ -6,6 +6,25 @@ fr:
         libelle:
           mail: Notifications par email
           badge: Badges de notification sur les dossiers
+        buttons:
+          cancel: Annuler
+          save: Enregistrer
+      badge_preferences:
+        subtitle: Configurez sur cette page <strong>les événements que vous souhaitez voir signalés</strong> sur les dossiers de cette démarche.
+        legend_content:
+          dossier_depose: Être averti lorsqu'un dossier déposé depuis au moins %{days} jours n'est suivi par aucun instructeur
+          dossier_modifie: Être informé lorsque l'usager a modifié son dossier
+          message: Être informé lorsqu'il y a un nouveau message dans la messagerie du dossier
+          annotation_instructeur: Être informé lorsqu'un instructeur a renseigné une ou plusieurs annotations privées sur le dossier
+          avis_externe: Être informé lorsqu'un avis externe a été rendu sur le dossier
+          attente_correction: Être informé lorsqu'une demande de correction a été envoyée à l'usager
+          attente_avis: Être informé lorsqu'un avis externe a été demandé sur le dossier
+        label:
+          positive: Oui
+          negative: Non
+          all: Oui, sur tous les dossiers
+          followed: Oui, uniquement sur mes dossiers suivis
+          never: Non, jamais
       email_preferences:
         utils:
           positive: Oui
@@ -31,9 +50,6 @@ fr:
           title: Recevoir une notification pour chaque avis rendu par un expert
           notice_1: Cet email vous signale un nouvel avis posté par un expert que vous avez sollicité sur un dossier.
           notice_2: Il est envoyé à chaque fois qu’un expert rend un avis.
-        buttons:
-          back_to_procedure: Revenir à la procédure
-          save: Enregistrer
       apercu:
         title_with_libelle: Prévisualisation de « %{libelle} »
         title: Prévisualisation de la démarche
