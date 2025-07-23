@@ -1,34 +1,39 @@
 = form_with model: @referentiel, scope: :referentiel, url: form_url, **form_options do |f| 
   %div{ class: bordered_container_class_names }
     = render Referentiels::ResponseRendererComponent.new(referentiel:)
-
-    .fr-table.fr-table--bordered.fr-mb-6w
-      .fr-table__wrapper
-        .fr-table__container
-          .fr-table__content
-            %table
-              %caption Sélectionnez la source de données à exploiter pour l'autocomplete
-              %thead
-                %tr
-                  %th.fr-cell--fixed Propriété
-                  %th Exemple de donnée
-                  %th Choisir
-              %tbody
-                - last_request_arrays.each do |jsonpath, value|
+    - if maybe_datasources.size.zero?
+      = render Dsfr::AlertComponent.new(title: "Votre source de donnée ne semble pas compatible", state: :error) do |c|
+        - c.with_body do
+          %p
+            Votre source de données ne contient pas de tableau. Veuillez vérifier la configuration de votre référentiel.
+    - else
+      .fr-table.fr-table--bordered.fr-mb-6w
+        .fr-table__wrapper
+          .fr-table__container
+            .fr-table__content
+              %table
+                %caption Sélectionnez la source de données à exploiter pour l'autocomplete
+                %thead
                   %tr
-                    %td.fr-cell--fixed= jsonpath
-                    %td.fr-cell--multiline
-                      %pre #{JSON.pretty_generate(value)}
-                    %td.text-center= select_datasource_radio_tag(jsonpath)
+                    %th.fr-cell--fixed Propriété
+                    %th Exemple de donnée
+                    %th Choisir
+                %tbody
+                  - maybe_datasources.each do |jsonpath, value|
+                    %tr
+                      %td.fr-cell--fixed= jsonpath
+                      %td.fr-cell--multiline
+                        %pre #{JSON.pretty_generate(value)}
+                      %td.text-center= select_datasource_radio_tag(jsonpath)
 
-    - if autocomplete_datasource
+    - if datasource
       .fr-fieldset__element.fr-mt-3w
         #autocomplete.fr-my-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
           .fr-input-group{ class: class_names("fr-input-group--error" => f.object.errors.include?(:json_body)) }
             %label.fr-label
               Choisir les propriété qui seront affichées dans les options de l'autocomplete
               %span.fr-hint-text Vous pouvez utiliser les balises pour construire les éléments suggérés
-          
+
             #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: "attestation-template-json-body-messages"} }
             = hidden_field_tag "referentiel[tiptap_template]", @referentiel.tiptap_template, data: { tiptap_target: 'input' }
 

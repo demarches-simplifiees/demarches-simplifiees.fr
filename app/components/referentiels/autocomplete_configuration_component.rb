@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFormBase
+  def id
+    :autocomplete_configuration
+  end
+
   def back_url
     edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
   end
@@ -9,10 +13,11 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
     update_autocomplete_configuration_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
   end
 
-  def autocomplete_datasource
-    return nil unless referentiel.datasource
-
-    JsonPath.on(referentiel.last_response_body, referentiel.datasource).first.first
+  def datasource
+    datasource_jsonpath = referentiel.datasource
+    datasource_jsonpath ||= default_datasource
+    return nil if datasource_jsonpath.nil?
+    JsonPath.on(referentiel.last_response_body, datasource_jsonpath).first.first
   end
 
   def autocomplete_template
@@ -20,70 +25,44 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
   end
 
   def select_datasource_radio_tag(jsonpath)
-    attribute_name = "referentiel[autocomplete_configuration][datasource]"
-
-    tag.div(class: "fr-radio-group") do
-      safe_join([
-        radio_button_tag(
-          attribute_name,
-          jsonpath,
-          referentiel.autocomplete_configuration.fetch("datasource", nil) == jsonpath,
-          class: "fr-radio"
-        ),
-        label_tag(attribute_name, class: "fr-label", aria: { hidden: true }) do
-          safe_join([
-            sanitize("&nbsp;"),
-            tag.span("Utiliser ce champ pour l'autocomplétion", class: "hidden")
-          ])
-        end
-      ])
-    end
-  end
-
-  def select_datasource_property_tag(jsonpath)
-    attribute_name = "referentiel[autocomplete_configuration][property]"
-
-    tag.div(class: "fr-radio-group") do
-      safe_join([
-        radio_button_tag(
-          attribute_name,
-          jsonpath,
-          referentiel.autocomplete_configuration.fetch("datasource_properties", nil) == jsonpath,
-          class: "fr-radio"
-        ),
-        label_tag(attribute_name, class: "fr-label", aria: { hidden: true }) do
-          safe_join([
-            sanitize("&nbsp;"),
-            tag.span("Propriété du champ pour l'autocomplétion", class: "hidden")
-          ])
-        end
-      ])
-    end
+    radio_button_tag(
+      "referentiel[autocomplete_configuration][datasource]",
+      jsonpath,
+      maybe_datasources.size == 1 ? true : referentiel.autocomplete_configuration.fetch("datasource", nil) == jsonpath
+    )
   end
 
   def tags
-    {
-      properties: autocomplete_datasource.keys.map do |jsonpath|
-        {
-          libelle: jsonpath,
-          id: jsonpath
-        }
-      end
-    }
+    jsonpaths = JSONPathUtil.hash_to_jsonpath(datasource)
+    properties = jsonpaths.map do |jsonpath, value|
+      {
+        libelle: "#{jsonpath} (#{value})",
+        id: jsonpath
+      }
+    end
+    { properties: }
   end
 
   def form_options
     {
       method: :patch,
       data: {
-        # controller: "autosubmit",
-        # turbo: true
-      }
+        controller: "autosubmit",
+        turbo: true
+      },
+      html: { novalidate: 'novalidate', id: }
     }
   end
 
-  def last_request_arrays
-    # raise referentiel.last_response_body.inspect
+  def maybe_datasources
     JSONPathUtil.array_paths_with_examples(referentiel.last_response_body)
+  end
+
+  def only_one_datasource?
+    maybe_datasources.size == 1
+  end
+
+  def default_datasource
+    maybe_datasources&.keys&.first
   end
 end
