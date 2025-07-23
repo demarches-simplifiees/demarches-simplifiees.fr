@@ -6,6 +6,25 @@ en:
         libelle:
           mail: Email notifications
           badge: File notification badges
+        buttons:
+          cancel: Cancel
+          save: Save
+      badge_preferences:
+        subtitle: On this page, configure <strong>the events you want to be reported</strong> on the files for this procedure.
+        legend_content:
+          dossier_depose: Be notified when a file has been submitted for at least %{days} days and is not being followed up by an instructor
+          dossier_modifie: Be informed when a user's file has been modified
+          message: Be informed when there is a new message in the file's messaging
+          annotation_instructeur: Be informed when an instructor has entered one or more private annotations on the file
+          avis_externe: Be informed when an external opinion has been given on the file
+          attente_correction: Be informed when a correction request has been sent to the user
+          attente_avis: Be informed when an external opinion has been sent on the file
+        label:
+          positive: Yes
+          negative: No
+          all: Yes, on all files
+          followed: Yes, only on my followed files
+          never: No, never
       email_preferences:
         utils:
           positive: "Yes"
@@ -27,9 +46,6 @@ en:
           title: Receive a weekly recap
           notice_1: This email summarizes the activity of the week on all of your procedures.
           notice_2: It is sent weekly on Monday morning.
-        buttons:
-          back_to_procedure: Back to procedure
-          save: Save
       apercu:
         title_with_libelle: Preview of « %{libelle} »
         title: Procedure preview
