@@ -590,6 +590,7 @@ Rails.application.routes.draw do
         get 'administrateurs'
         get 'history', as: :procedure_history
         patch 'update_email_notifications'
+        patch 'update_badge_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'
         post 'create_multiple_commentaire_for_brouillons'
