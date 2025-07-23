@@ -1,0 +1,46 @@
+- content_for(:title, "Notifications pour #{@procedure.libelle}")
+
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb], libelle: @procedure.libelle.truncate(22)), instructeur_procedure_path(@procedure)],
+                        [t('instructeurs.dossiers.header.banner.notification_management')]] }
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
+
+.fr-container
+  %h1.fr-h4
+    = t('.title')
+
+  .fr-tabs
+    %ul.fr-tabs__list{ role: "tablist", "aria-label": t('.title') }
+      %li{ role: "presentation" }
+        %button#tab-mail.fr-tabs__tab{
+          type: "button",
+          tabindex: "0",
+          role: "tab",
+          "aria-selected": "true",
+          "aria-controls": "tab-mail-panel"
+        }= t('.libelle.mail')
+      %li{ role: "presentation" }
+        %button#tab-badge.fr-tabs__tab{
+          type: "button",
+          tabindex: "-1",
+          role: "tab",
+          "aria-selected": "false",
+          "aria-controls": "tab-badge-panel"
+        }= t('.libelle.badge')
+
+    #tab-mail-panel.fr-tabs__panel.fr-tabs__panel--selected{
+      role: "tabpanel",
+      "aria-labelledby": "tab-mail",
+      tabindex: "0"
+    }
+      = render partial: 'instructeurs/procedures/email_preferences', locals: { procedure: @procedure, assign_to: @assign_to }
+
+    #tab-badge-panel.fr-tabs__panel{
+      role: "tabpanel",
+      "aria-labelledby": "tab-badge",
+      tabindex: "0"
+    }
+      = render partial: 'instructeurs/procedures/badge_preferences', locals: { procedure: @procedure, instructeur_procedure: @instructeur_procedure }

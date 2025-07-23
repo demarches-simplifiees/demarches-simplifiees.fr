@@ -244,16 +244,17 @@ module Instructeurs
       render turbo_stream: turbo_stream.refresh
     end
 
-    def email_notifications
+    def notification_preferences
       @procedure = procedure
       @assign_to = assign_tos.first
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
     end
 
     def update_email_notifications
       assign_tos.each do |assign_to|
         assign_to.update!(assign_to_params)
       end
-      flash.notice = 'Vos notifications sont enregistrées.'
+      flash.notice = 'Vos préfrences pour les notifications mail sont enregistrées.'
       redirect_to instructeur_procedure_path(procedure)
     end
 
