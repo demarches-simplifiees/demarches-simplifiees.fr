@@ -1,11 +1,15 @@
 en:
   instructeurs:
     procedures:
-      email_notifications:
+      notification_preferences:
+        title: Notification settings
+        libelle:
+          mail: Email notifications
+          badge: File notification badges
+      email_preferences:
         utils:
           positive: "Yes"
           negative: "No"
-        title: Email notifications
         subtitle: On this page, configure the notifications you wish to receive by email for this procedure.
         for_each_file_submitted:
           title: Receive a notification for each file submitted
