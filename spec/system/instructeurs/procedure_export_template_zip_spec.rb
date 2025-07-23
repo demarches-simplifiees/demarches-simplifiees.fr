@@ -23,5 +23,6 @@ describe "procedure exports zip" do
     click_on "Enregistrer"
 
     expect(page).to have_content("Modèles d’export")
+    expect(page).not_to have_content("Vous n’avez pas le droit de créer un modèle d’export pour ce groupe")
   end
 end
