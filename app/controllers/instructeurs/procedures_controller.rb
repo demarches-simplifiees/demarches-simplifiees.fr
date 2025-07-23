@@ -254,7 +254,13 @@ module Instructeurs
       assign_tos.each do |assign_to|
         assign_to.update!(assign_to_params)
       end
-      flash.notice = 'Vos préfrences pour les notifications mail sont enregistrées.'
+      flash.notice = 'Vos préférences pour les notifications mail sont enregistrées.'
+      redirect_to instructeur_procedure_path(procedure)
+    end
+
+    def update_badge_notifications
+      raise
+      flash.notice = 'Vos préférences pour les badges de notification sont enregistrées.'
       redirect_to instructeur_procedure_path(procedure)
     end
 
