@@ -54,7 +54,8 @@
                 target: :experts_require_administrateur_invitation,
                 title: t('.titles.manage_procedure_experts'),
                 hint: t('.descriptions.manage_procedure_experts'),
-                disabled: false)
+                disabled: false,
+                extra_class_names: 'fr-toggle--border-bottom')
 
 
   - if @procedure.experts_require_administrateur_invitation?
@@ -113,7 +114,7 @@
                   class: 'fr-btn fr-btn--secondary'
   - else
     .blank-tab
-      %h2.empty-text Aucun expert invité pour le moment.
+      %h2.empty-text Aucun expert sollicité pour le moment.
       %p.empty-text-details Les instructeurs de cette démarche n’ont pas encore fait appel aux experts.
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)
