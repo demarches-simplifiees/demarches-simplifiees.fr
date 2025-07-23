@@ -12,6 +12,7 @@ module Recovery
                  :invites,
                  :traitements,
                  :transfer_logs,
+                 :follows,
                  commentaires: { piece_jointe_attachments: :blob },
                  avis: { introduction_file_attachment: :blob, piece_justificative_file_attachment: :blob },
                  dossier_operation_logs: { serialized_attachment: :blob },

@@ -130,5 +130,22 @@ describe 'Dossier::Recovery::LifeCycle' do
 
       expect(Dossier.count).to eq(1)
     end
+
+    it 'does not insert follow when instructeur does not exists any more' do
+      expect(Dossier.count).to eq(1)
+
+      @dossier_ids = Dossier.ids
+
+      Recovery::Exporter.new(dossier_ids: @dossier_ids, file_path: fp).dump
+      Dossier.where(id: @dossier_ids).destroy_all
+      instructeur.destroy
+      Recovery::Importer.new(file_path: fp).load
+
+      expect(Dossier.count).to eq(1)
+
+      reloaded_dossier = Dossier.first
+
+      expect(reloaded_dossier.followers_instructeurs).to match_array([])
+    end
   end
 end

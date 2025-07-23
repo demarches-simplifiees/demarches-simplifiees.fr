@@ -48,6 +48,12 @@ module Recovery
           Traitement.insert(traitement.attributes)
         end
 
+        dossier.follows.each do |follow|
+          if Instructeur.exists?(follow.instructeur_id)
+            Follow.insert(follow.attributes)
+          end
+        end
+
         dossier.transfer_logs.each do |transfer|
           DossierTransferLog.insert(transfer.attributes)
         end
