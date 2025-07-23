@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module DateDetectionUtils
+  TIMESTAMP_STRING_REGEXP = /^[-+]?\d{10,13}(\.\d+)?$/
   TIMESTAMP_MIN = -2_208_988_800 # 1900-01-01 00:00:00 UTC
   TIMESTAMP_MAX = 4_102_444_800  # 2100-01-01 00:00:00 UTC
   TIMESTAMP_PROPERTY_REGEX = /(_at|date|datetime|timestamp|created|updated|expires)/i
@@ -10,7 +11,13 @@ module DateDetectionUtils
   end
 
   def self.likely_unix_timestamp?(value)
-    value.is_a?(Integer) && value.between?(TIMESTAMP_MIN, TIMESTAMP_MAX)
+    if value.is_a?(String)
+      return false unless value.strip.match?(TIMESTAMP_STRING_REGEXP)
+      value = value.to_i
+    end
+    Integer(value).between?(TIMESTAMP_MIN, TIMESTAMP_MAX)
+  rescue
+    false
   end
 
   def self.parsable_iso8601_date?(value)
