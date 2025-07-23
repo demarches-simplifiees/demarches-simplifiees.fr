@@ -1,11 +1,15 @@
 fr:
   instructeurs:
     procedures:
-      email_notifications:
+      notification_preferences:
+        title: Gestion des notifications
+        libelle:
+          mail: Notifications par email
+          badge: Badges de notification sur les dossiers
+      email_preferences:
         utils:
           positive: Oui
           negative: Non
-        title: Gestion des notifications par email
         subtitle: Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
         for_each_file_submitted:
           title: Recevoir une notification à chaque dossier déposé
