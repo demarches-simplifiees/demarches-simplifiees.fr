@@ -2,8 +2,13 @@
 
 module DateDetectionUtils
   def self.parsable_iso8601_date?(value)
-    Date.parse(value)
-    true
+    begin
+      Date.iso8601(value)
+      true
+    rescue Date::Error
+      Date.strptime(value, "%Y/%m/%d") # Try parsing with a specific format
+      true
+    end
   rescue ArgumentError, TypeError
     false
   end

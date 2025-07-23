@@ -54,8 +54,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
     lookup_existing_value(jsonpath, "prefill") == "1"
   end
 
-  def value_to_type(value)
     if value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
+  def value_to_type(value, jsonpath)
       self.class::TYPES[:datetime]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
       self.class::TYPES[:date]
