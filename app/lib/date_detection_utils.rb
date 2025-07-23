@@ -6,18 +6,22 @@ module DateDetectionUtils
   TIMESTAMP_MAX = 4_102_444_800  # 2100-01-01 00:00:00 UTC
   TIMESTAMP_PROPERTY_REGEX = /(_at|date|datetime|timestamp|created|updated|expires)/i
 
-  def self.likely_date_property?(property_name)
-    property_name.to_s.match?(TIMESTAMP_PROPERTY_REGEX)
-  end
+  def self.should_suggest_timestamp_mapping?(value, property_name)
+    return false unless property_name.to_s.match?(TIMESTAMP_PROPERTY_REGEX)
 
-  def self.likely_unix_timestamp?(value)
-    if value.is_a?(String)
-      return false unless value.strip.match?(TIMESTAMP_STRING_REGEXP)
-      value = value.to_i
-    end
+    value = convert_unix_timestamp(value)
     Integer(value).between?(TIMESTAMP_MIN, TIMESTAMP_MAX)
   rescue
     false
+  end
+
+  def self.likely_string_timestamp?(value)
+    value.to_s.strip.match?(TIMESTAMP_STRING_REGEXP)
+  end
+
+  def self.convert_unix_timestamp(value)
+    return nil if !likely_string_timestamp?(value)
+    value.to_s.to_i
   end
 
   def self.parsable_iso8601_date?(value)

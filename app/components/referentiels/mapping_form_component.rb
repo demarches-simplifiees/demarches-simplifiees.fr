@@ -55,7 +55,7 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   end
 
   def value_to_type(value, jsonpath)
-    if DateDetectionUtils.likely_unix_timestamp?(value) && DateDetectionUtils.likely_date_property?(jsonpath)
+    if DateDetectionUtils.should_suggest_timestamp_mapping?(value, jsonpath)
       self.class::TYPES[:datetime]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
       self.class::TYPES[:datetime]
