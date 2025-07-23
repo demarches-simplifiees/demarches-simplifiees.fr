@@ -94,5 +94,17 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
       expect(convert_json_value_to_type(value: [{ a: 1 }, { b: 2 }])).to eq(:string)
       expect(convert_json_value_to_type(value: [[1, 2], [3, 4]])).to eq(:string)
     end
+
+    it "detects integer timestamp as :datetime if property name is date-like" do
+      expect(convert_json_value_to_type(value: 1_600_000_000, property_name: "created_at")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: 2_000_000_000, property_name: "timestamp")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: DateDetectionUtils::TIMESTAMP_MIN, property_name: "updated_at")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: DateDetectionUtils::TIMESTAMP_MAX, property_name: "end_date")).to eq(:datetime)
+    end
+
+    it "does not detect integer timestamp as :datetime if property name is not date-like" do
+      expect(convert_json_value_to_type(value: 1, property_name: "count")).to eq(:integer_number)
+      expect(convert_json_value_to_type(value: 2, property_name: "total")).to eq(:integer_number)
+    end
   end
 end

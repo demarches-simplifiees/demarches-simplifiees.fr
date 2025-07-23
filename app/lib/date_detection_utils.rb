@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 module DateDetectionUtils
+  TIMESTAMP_MIN = -2_208_988_800 # 1900-01-01 00:00:00 UTC
+  TIMESTAMP_MAX = 4_102_444_800  # 2100-01-01 00:00:00 UTC
+  TIMESTAMP_PROPERTY_REGEX = /(_at|date|datetime|timestamp|created|updated|expires)/i
+
+  def self.likely_date_property?(property_name)
+    property_name.to_s.match?(TIMESTAMP_PROPERTY_REGEX)
+  end
+
+  def self.likely_unix_timestamp?(value)
+    value.is_a?(Integer) && value.between?(TIMESTAMP_MIN, TIMESTAMP_MAX)
+  end
+
   def self.parsable_iso8601_date?(value)
     begin
       Date.iso8601(value)
