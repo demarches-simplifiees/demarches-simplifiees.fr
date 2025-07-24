@@ -12,7 +12,7 @@ fr:
       one: "1 filtre actif"
       other: "%{count} filtres actifs"
     active_filters_link_title:
-      one: Retirer le filtre actif
-      other: "Retirer les %{count} filtres actifs"
+      one: Supprimer 1 filtre actif
+      other: "Supprimer les %{count} filtres actifs"
   states:
     prompt: Sélectionner un statut

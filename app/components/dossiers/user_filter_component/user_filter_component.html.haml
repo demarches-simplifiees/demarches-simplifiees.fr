@@ -29,4 +29,4 @@
 
   - if @filter.filter_params.present?
     .fr-col-12.text-right
-      = link_to t('.tag.active_filters', count: @filter.filter_params_count), dossiers_path(statut: @statut), title: t('.tag.active_filters_link_title', count: @filter.filter_params_count), class: 'fr-tag fr-tag--sm fr-tag--dismiss'
+      = link_to t('.tag.active_filters', count: @filter.filter_params_count), dossiers_path(statut: @statut),"aria-label": t('.tag.active_filters_link_title', count: @filter.filter_params_count), title: t('.tag.active_filters_link_title', count: @filter.filter_params_count), class: 'fr-tag fr-tag--sm fr-tag--dismiss'
