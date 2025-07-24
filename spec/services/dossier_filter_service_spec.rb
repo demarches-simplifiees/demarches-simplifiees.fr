@@ -885,5 +885,22 @@ describe DossierFilterService do
 
       it { is_expected.to be_empty }
     end
+
+    context 'with a json structured filter' do
+      context 'with a single value' do
+        let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'yes_no' }] }
+        let(:filter) { ['yes_no', { value: 'true' }] }
+
+        let(:kept_dossier) { create(:dossier, procedure:) }
+        let(:discarded_dossier) { create(:dossier, procedure:) }
+
+        before do
+          kept_dossier.champs.first.update!(value: true)
+          discarded_dossier.champs.first.update!(value: false)
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+    end
   end
 end

@@ -34,7 +34,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     {
       id: 'value',
       class: 'fr-mt-1w',
-      name: 'or_filter_value[]',
+      name: 'filter[values][]',
       items: column.options_for_select,
       value_separator: false
     }

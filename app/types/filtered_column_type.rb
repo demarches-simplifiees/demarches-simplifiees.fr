@@ -11,7 +11,7 @@ class FilteredColumnType < ActiveRecord::Type::Value
     in NilClass # default value
       nil
     # from form (id is a string) or from db (id is a hash)
-    in { id: String|Hash, filter: String } => h
+    in { id: String|Hash, filter: String|Hash } => h
       FilteredColumn.new(column: ColumnType.new.cast(h[:id]), filter: h[:filter])
     in { id: String|Hash, or_filter: Array } => h
       FilteredColumn.new(column: ColumnType.new.cast(h[:id]), or_filter: h[:or_filter])
