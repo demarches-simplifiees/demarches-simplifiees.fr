@@ -1,7 +1,7 @@
 en:
   dossier_mailer:
     notify_new_answer:
-      subject: New message on your file nº %{dossier_id} « %{libelle_demarche} »
+      subject: New message on your file no. %{dossier_id} « %{libelle_demarche} »
       body_html: |
         You received <b>a new message</b> from the service in charge of reviewing your file on « %{libelle_demarche} ».
       link: |

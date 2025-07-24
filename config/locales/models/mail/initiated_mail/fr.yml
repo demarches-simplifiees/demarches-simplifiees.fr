@@ -3,5 +3,5 @@ fr:
     models:
       mail:
         initiated_mail:
-          default_subject: Votre dossier nº %{dossier_number} a bien été déposé (%{procedure_libelle})
+          default_subject: Votre dossier n° %{dossier_number} a bien été déposé (%{procedure_libelle})
           proof_of_receipt: Accusé de réception

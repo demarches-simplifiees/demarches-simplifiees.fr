@@ -14,7 +14,7 @@ describe 'instructeurs/dossiers/print', type: :view do
       render
     end
 
-    it { expect(rendered).to include("Dossier nº #{dossier.id}") }
+    it { expect(rendered).to include("Dossier n° #{dossier.id}") }
     it { expect(rendered).to include(dossier.procedure.libelle) }
   end
 end

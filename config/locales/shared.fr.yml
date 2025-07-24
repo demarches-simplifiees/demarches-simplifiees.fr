@@ -22,8 +22,8 @@ fr:
       cnaf:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour l’allocataire Nº %{numero_allocataire} avec le code postal %{code_postal} est en cours."
-          data_fetched: "Des données concernant %{sources} liées au compte Nº %{numero_allocataire} avec le code postal %{code_postal} ont été reçues depuis la CAF."
+          fetching_data: "La récupération automatique des données pour l’allocataire n° %{numero_allocataire} avec le code postal %{code_postal} est en cours."
+          data_fetched: "Des données concernant %{sources} liées au compte n° %{numero_allocataire} avec le code postal %{code_postal} ont été reçues depuis la CAF."
           data_fetched_title: "Données obtenues de la Caisse nationale d’allocations familiales"
       rna:
         show:
@@ -38,8 +38,8 @@ fr:
       dgfip:
         show:
           not_filled: non renseigné
-          fetching_data: "La récupération automatique des données pour le déclarant Nº %{numero_fiscal} avec la référence d’avis %{reference_avis} est en cours."
-          data_fetched: "Des données concernant %{sources} liées au déclarant Nº %{numero_fiscal} avec la référence d’avis %{reference_avis} ont été reçues depuis la DGFiP."
+          fetching_data: "La récupération automatique des données pour le déclarant n° %{numero_fiscal} avec la référence d’avis %{reference_avis} est en cours."
+          data_fetched: "Des données concernant %{sources} liées au déclarant n° %{numero_fiscal} avec la référence d’avis %{reference_avis} ont été reçues depuis la DGFiP."
           data_fetched_title: "Données obtenues de la Direction générale des Finances publiques"
       pole_emploi:
         show:

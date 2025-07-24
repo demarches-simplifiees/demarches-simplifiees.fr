@@ -1,13 +1,13 @@
-- content_for(:title, "Réaffectation · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+- content_for(:title, "Réaffectation · Dossier n° #{@dossier.id} (#{@dossier.owner_name})")
 
 = render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications, notifications_sticker: @notifications_sticker }
 
 .container.groupe-instructeur
 
   .card
-    .card-title Réaffectation du dossier nº #{@dossier.id} du groupe « #{@groupe_instructeur.label} »
+    .card-title Réaffectation du dossier n° #{@dossier.id} du groupe « #{@groupe_instructeur.label} »
     %p
-      Vous pouvez réaffecter le dossier nº #{@dossier.id} à l’un des groupes d’instructeurs suivants.
+      Vous pouvez réaffecter le dossier n° #{@dossier.id} à l’un des groupes d’instructeurs suivants.
     %table.table.mt-2
       %thead
         %tr
@@ -19,6 +19,6 @@
             = button_to 'Réaffecter le dossier à ce groupe',
               reaffecter_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, groupe_instructeur_id: group.id),
               { class: 'fr-btn fr-btn--secondary fr-btn--sm',
-                data: { confirm: "Êtes-vous sûr de vouloir réaffecter le dossier nº #{@dossier.id} du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
+                data: { confirm: "Êtes-vous sûr de vouloir réaffecter le dossier n° #{@dossier.id} du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
 
     = paginate @groupes_instructeurs, views_prefix: 'shared'

@@ -11,7 +11,7 @@ describe 'users/dossiers/show', type: :view do
   subject! { render }
 
   it 'renders a summary of the dossier state' do
-    expect(rendered).to have_text("Dossier numéro nº #{dossier.id}")
+    expect(rendered).to have_text("Dossier n° #{dossier.id}")
     expect(rendered).to have_text('dossier est en construction')
   end
 

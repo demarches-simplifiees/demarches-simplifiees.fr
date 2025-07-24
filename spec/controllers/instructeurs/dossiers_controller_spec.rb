@@ -105,7 +105,7 @@ describe Instructeurs::DossiersController, type: :controller do
     it do
       subject
       expect(instructeur.followed_dossiers).to match([])
-      expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}")
+      expect(flash.notice).to eq("Vous ne suivez plus le dossier n° #{dossier.id}")
       expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
     end
 
@@ -1688,7 +1688,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it do
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Vous pouvez réaffecter le dossier nº #{dossier.id} à l’un des groupes d’instructeurs suivants.")
+      expect(response.body).to include("Vous pouvez réaffecter le dossier n° #{dossier.id} à l’un des groupes d’instructeurs suivants.")
       expect(response.body).to include('2 groupes existent')
     end
   end
@@ -1723,7 +1723,7 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(dossier.dossier_assignment.mode).to eq('manual')
       expect(dossier.dossier_assignment.assigned_by).to eq(instructeur.email)
       expect(response).to redirect_to(instructeur_procedure_path(procedure))
-      expect(flash.notice).to eq("Le dossier nº #{dossier.id} a été réaffecté au groupe d’instructeurs « deuxième groupe ».")
+      expect(flash.notice).to eq("Le dossier n° #{dossier.id} a été réaffecté au groupe d’instructeurs « deuxième groupe ».")
     end
   end
 

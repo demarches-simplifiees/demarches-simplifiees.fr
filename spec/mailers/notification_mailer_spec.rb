@@ -62,8 +62,8 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     context "without custom template" do
       it 'renders default template' do
-        expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
-        expect(body).to include("Votre dossier nº&nbsp;#{dossier.id}")
+        expect(mail.subject).to eq("Votre dossier n° #{dossier.id} a bien été déposé (#{procedure.libelle})")
+        expect(body).to include("Votre dossier n°&nbsp;#{dossier.id}")
         expect(body).to include(procedure.service.nom)
         expect(body).to include(procedure.service.adresse)
         expect(body).to include(procedure.service.faq_link)
@@ -102,8 +102,8 @@ RSpec.describe NotificationMailer, type: :mailer do
       end
 
       it 'renders default template' do
-        expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
-        expect(body).to include("Votre dossier nº&nbsp;#{dossier.id}")
+        expect(mail.subject).to eq("Votre dossier n° #{dossier.id} a bien été déposé (#{procedure.libelle})")
+        expect(body).to include("Votre dossier n°&nbsp;#{dossier.id}")
         expect(body).to include(contact_information.telephone_url)
         expect(body).to include(contact_information.adresse)
       end

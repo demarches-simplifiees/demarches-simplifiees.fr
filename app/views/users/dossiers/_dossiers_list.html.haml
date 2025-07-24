@@ -14,7 +14,7 @@
               = dossier.procedure.libelle
 
           .badge_info.fr-mb-1w.fr-hidden-md
-            %p.fr-mb-0.width-max-content
+            %p.fr-mb-0
               = t('views.users.dossiers.dossiers_list.n_dossier')
               = number_with_html_delimiter(dossier.id)
 
@@ -50,7 +50,7 @@
                 = dossier.invites.map(&:email).join(', ')
 
         .badge_info.text-right.fr-hidden.unhidden-md
-          %p.fr-mb-0.width-max-content
+          %p.fr-mb-0
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = number_with_html_delimiter(dossier.id)
 

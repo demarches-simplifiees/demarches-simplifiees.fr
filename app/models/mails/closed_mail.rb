@@ -23,7 +23,7 @@ module Mails
 
     SLUG = "closed_mail"
     DISPLAYED_NAME = "Accusé d’acceptation"
-    DEFAULT_SUBJECT = 'Votre dossier nº --numéro du dossier-- a été accepté (--libellé démarche--)'
+    DEFAULT_SUBJECT = 'Votre dossier n° --numéro du dossier-- a été accepté (--libellé démarche--)'
     DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
     def self.default_template_name_for_procedure(procedure)

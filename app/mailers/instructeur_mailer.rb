@@ -29,7 +29,7 @@ class InstructeurMailer < ApplicationMailer
   def send_dossier(sender, dossier, recipient)
     @sender = sender
     @dossier = dossier
-    subject = "#{sender.email} vous a envoyé le dossier nº #{dossier.id}"
+    subject = "#{sender.email} vous a envoyé le dossier n° #{dossier.id}"
 
     configure_defaults_for_email(recipient.email)
     mail(to: recipient.email, subject: subject)

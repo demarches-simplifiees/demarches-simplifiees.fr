@@ -1,5 +1,5 @@
 fr:
   dossier_mailer:
     notify_deletion_to_administration:
-      subject: Le dossier nº %{dossier_id} a été supprimé à la demande de l’usager
+      subject: Le dossier n° %{dossier_id} a été supprimé à la demande de l’usager
       body: À la demande de l’usager, le dossier n° %{dossier_id} (%{procedure}) a été supprimé.

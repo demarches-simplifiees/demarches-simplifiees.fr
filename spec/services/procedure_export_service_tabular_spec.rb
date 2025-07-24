@@ -194,7 +194,7 @@ describe ProcedureExportService do
       let(:types_de_champ_public) { [{ type: :siret, libelle: 'siret', stable_id: 40 }] }
       let(:exported_columns) do
         [
-          ExportedColumn.new(libelle: "Nº dossier", column: procedure.find_column(label: "Nº dossier")),
+          ExportedColumn.new(libelle: "N° dossier", column: procedure.find_column(label: "N° dossier")),
           ExportedColumn.new(libelle: "Demandeur", column: procedure.find_column(label: "Demandeur")),
           ExportedColumn.new(libelle: "siret", column: procedure.find_column(label: "siret"))
         ]

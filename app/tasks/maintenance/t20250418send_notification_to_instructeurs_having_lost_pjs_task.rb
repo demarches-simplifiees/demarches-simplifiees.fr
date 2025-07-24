@@ -88,7 +88,7 @@ module Maintenance
           Rails.application.routes.url_helpers.instructeur_dossier_url(dossier.procedure.id, dossier)
         end
 
-        dossier_link = tag.a("dossier Nº #{number_with_delimiter(dossier.id)}", href: url)
+        dossier_link = tag.a("dossier n° #{number_with_delimiter(dossier.id)}", href: url)
         "#{safe_champs_libelles(champs).join(', ')} du #{dossier_link} sur la démarche #{dossier.procedure.libelle}"
       end
     end

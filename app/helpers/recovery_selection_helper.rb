@@ -10,7 +10,7 @@ module RecoverySelectionHelper
 
   def nice_libelle(recoverable)
     sanitize(
-      "Nº #{number_with_html_delimiter(recoverable[:procedure_id])}" \
+      "N° #{number_with_html_delimiter(recoverable[:procedure_id])}" \
       " - #{recoverable[:libelle]} " \
       "#{tag.span(pluralize(recoverable[:count], 'dossier'), class: 'fr-tag fr-tag--sm')}"
     )

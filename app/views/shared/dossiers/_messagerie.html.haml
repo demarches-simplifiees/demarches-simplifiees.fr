@@ -39,6 +39,6 @@
                 La messagerie est désactivée.
 
               %p
-                Pour poser une question, contactez le service ci-dessous, en précisant que votre demande concerne le <b>dossier Nº #{dossier.id}</b> :
+                Pour poser une question, contactez le service ci-dessous, en précisant que votre demande concerne le <b>dossier n° #{dossier.id}</b> :
               %ul.list-style-type-none
                 = render Procedure::ServiceListContactComponent.new(service_or_contact_information: dossier.procedure.service, dossier: dossier)

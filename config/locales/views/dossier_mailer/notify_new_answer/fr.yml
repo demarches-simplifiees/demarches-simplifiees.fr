@@ -1,7 +1,7 @@
 fr:
   dossier_mailer:
     notify_new_answer:
-      subject: Nouveau message pour votre dossier nº %{dossier_id} « %{libelle_demarche} »
+      subject: Nouveau message pour votre dossier n° %{dossier_id} « %{libelle_demarche} »
       body_html: |
         Vous avez reçu un <b>nouveau message</b> de la part de l’administration en charge de votre dossier sur la démarche « %{libelle_demarche} ».
       link: |
