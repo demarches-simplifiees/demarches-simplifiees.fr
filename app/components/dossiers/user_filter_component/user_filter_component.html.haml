@@ -25,7 +25,7 @@
 
               .fr-my-2w
                 = f.submit t('.button.apply_filters'), class: 'fr-btn fr-btn--sm'
-                = link_to t('.button.cancel_filters'), dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
+                = link_to t('.button.cancel_filters_html'), dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
 
   - if @filter.filter_params.present?
     .fr-col-12.text-right
