@@ -3,11 +3,13 @@
 class Dsfr::RadioButtonListComponent < ApplicationComponent
   attr_reader :error
 
-  def initialize(form:, target:, buttons:, error: nil)
+  def initialize(form:, target:, buttons:, error: nil, inline: false, regular_legend: true)
     @form = form
     @target = target
     @buttons = buttons
     @error = error
+    @inline = inline
+    @regular_legend = regular_legend
   end
 
   def error?

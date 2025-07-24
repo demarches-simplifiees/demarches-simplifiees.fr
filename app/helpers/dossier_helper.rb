@@ -191,7 +191,14 @@ module DossierHelper
       if generic[:generic]
         t("activerecord.attributes.notification.#{type}.generic")
       else
-        t("activerecord.attributes.notification.#{type}.specific", days: (Time.current.to_date - (notification.display_at - DossierNotification::DELAY_DOSSIER_DEPOSE).to_date).to_i)
+        days =
+          if notification.respond_to?(:display_at) && notification.display_at.present?
+            (Time.current.to_date - (notification.display_at - DossierNotification::DELAY_DOSSIER_DEPOSE).to_date).to_i
+          else
+            'X'
+          end
+
+        t("activerecord.attributes.notification.#{type}.specific", days: days)
       end
     else
       t("activerecord.attributes.notification.#{type}")
