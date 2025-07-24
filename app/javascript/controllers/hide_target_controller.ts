@@ -27,6 +27,15 @@ export class HideTargetController extends Controller {
       source.classList.add('fr-hidden');
     }
 
+    if (this.revealTargets.length > 0) {
+      const elementToFocus = this.revealTargets[0];
+      const shouldFocus = elementToFocus.dataset.focusOnShow === 'true';
+
+      if (shouldFocus && typeof elementToFocus.focus === 'function') {
+        setTimeout(() => elementToFocus.focus(), 0);
+      }
+    }
+
     const footer = document.querySelector('.fixed-footer') as HTMLElement;
     if (footer) {
       const height = footer.offsetHeight;
