@@ -1,9 +1,9 @@
-= form_for assign_to, url: update_email_notifications_instructeur_procedure_path(procedure), html: { class: 'form' } do |form|
-  = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-3w') do |c|
-    - c.with_body do
-      %p
-        = t('.subtitle')
+= render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-3w') do |c|
+  - c.with_body do
+    %p
+      = t('.subtitle')
 
+= form_for assign_to, url: update_email_notifications_instructeur_procedure_path(procedure), html: { class: 'form', data: { controller: 'notification-form-changes', action: 'change->notification-form-changes#onFormChange' } } do |form|
   %fieldset.fr-fieldset
     %legend.fr-fieldset__legend
       = t(".for_each_file_submitted.title")
@@ -90,4 +90,4 @@
 
   %ul.fr-btns-group.fr-btns-group--inline
     %li= link_to t('instructeurs.procedures.notification_preferences.buttons.cancel'), instructeur_procedure_path(procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w'
-    %li= form.submit t('instructeurs.procedures.notification_preferences.buttons.save'), class: "fr-btn"
+    %li= form.submit t('instructeurs.procedures.notification_preferences.buttons.save'), class: "fr-btn", data: { 'notification-form-changes-target': 'submitButton' }, disabled: true

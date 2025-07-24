@@ -254,7 +254,7 @@ module Instructeurs
       assign_tos.each do |assign_to|
         assign_to.update!(assign_to_params)
       end
-      flash.notice = 'Vos préférences pour les notifications mail sont enregistrées.'
+      flash.notice = t('instructeurs.procedures.email_preferences.flash_notice')
       redirect_to instructeur_procedure_path(procedure)
     end
 

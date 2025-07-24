@@ -30,6 +30,7 @@ en:
         utils:
           positive: "Yes"
           negative: "No"
+        flash_notice: Your notification email preferences have been saved.
         subtitle: On this page, configure the notifications you wish to receive by email for this procedure.
         for_each_file_submitted:
           title: Receive a notification for each file submitted
