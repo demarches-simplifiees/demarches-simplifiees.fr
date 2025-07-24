@@ -68,8 +68,16 @@ class Champs::ReferentielChamp < Champ
       v.to_i
     in [:decimal_number, v] if v.present?
       v.to_f
+    in [:datetime, v] if DateDetectionUtils.likely_string_timestamp?(v)
+      timestamp = DateDetectionUtils.convert_unix_timestamp(v)
+      return nil if timestamp.nil?
+      Time.zone.at(timestamp).iso8601 # (0) # 2 digits of precision, meaning we keep the seconds and 2 digits of milliseconds
     in [:datetime, v]
       DateDetectionUtils.convert_to_iso8601_datetime(v)
+    in [:date, v] if DateDetectionUtils.likely_string_timestamp?(v)
+      timestamp = DateDetectionUtils.convert_unix_timestamp(v)
+      return nil if timestamp.nil?
+      Time.zone.at(timestamp).to_date.iso8601
     in [:date, v]
       DateDetectionUtils.convert_to_iso8601_date(v)
     # cases of type from tdc, used to store in a champ

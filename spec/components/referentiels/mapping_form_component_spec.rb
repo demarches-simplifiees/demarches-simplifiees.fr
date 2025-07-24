@@ -48,8 +48,8 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
   end
 
   describe "value_to_type" do
-    def convert_json_value_to_type(value:)
-      component.send(:value_to_type, JSON.parse({ value: }.to_json)["value"])
+    def convert_json_value_to_type(value:, property_name: "noop")
+      component.send(:value_to_type, JSON.parse({ value: }.to_json)["value"], property_name)
     end
 
     it "simple json value to type symbol" do
@@ -65,12 +65,13 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
     end
 
     it "does not detect invalid date as :date" do
+      expect(convert_json_value_to_type(value: "martin", property_name: "$.records[0].fields.prenom")).to eq(:string)
       expect(convert_json_value_to_type(value: "2024-13-14")).to eq(:string)
       expect(convert_json_value_to_type(value: "2024-06-31")).to eq(:string)
     end
 
     it "does not detect embedded date in string as :date" do
-      expect(convert_json_value_to_type(value: "RDV le 2024-06-14 à 10h")).to eq(:date)
+      expect(convert_json_value_to_type(value: "RDV le 2024-06-14 à 10h")).to eq(:string)
     end
 
     it "detects ISO8601 datetime as :datetime" do
@@ -92,6 +93,19 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
     it "does not detect array of objects as :string" do
       expect(convert_json_value_to_type(value: [{ a: 1 }, { b: 2 }])).to eq(:string)
       expect(convert_json_value_to_type(value: [[1, 2], [3, 4]])).to eq(:string)
+    end
+
+    it "detects integer timestamp as :datetime if property name is date-like" do
+      expect(convert_json_value_to_type(value: 1_600_000_000, property_name: "created_at")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: 2_000_000_000, property_name: "timestamp")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: 1_760_054_400, property_name: "timestamp")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: DateDetectionUtils::TIMESTAMP_MIN, property_name: "updated_at")).to eq(:datetime)
+      expect(convert_json_value_to_type(value: DateDetectionUtils::TIMESTAMP_MAX, property_name: "end_date")).to eq(:datetime)
+    end
+
+    it "does not detect integer timestamp as :datetime if property name is not date-like" do
+      expect(convert_json_value_to_type(value: 1, property_name: "count")).to eq(:integer_number)
+      expect(convert_json_value_to_type(value: 2, property_name: "total")).to eq(:integer_number)
     end
   end
 end

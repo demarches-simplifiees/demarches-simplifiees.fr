@@ -1,9 +1,37 @@
 # frozen_string_literal: true
 
 module DateDetectionUtils
+  TIMESTAMP_STRING_REGEXP = /^[-+]?\d{10,13}(\.\d+)?$/
+  TIMESTAMP_MIN = -2_208_988_800 # 1900-01-01 00:00:00 UTC
+  TIMESTAMP_MAX = 4_102_444_800  # 2100-01-01 00:00:00 UTC
+  TIMESTAMP_PROPERTY_REGEX = /(_at|date|datetime|timestamp|created|updated|expires)/i
+
+  def self.should_suggest_timestamp_mapping?(value, property_name)
+    return false unless property_name.to_s.match?(TIMESTAMP_PROPERTY_REGEX)
+
+    value = convert_unix_timestamp(value)
+    Integer(value).between?(TIMESTAMP_MIN, TIMESTAMP_MAX)
+  rescue
+    false
+  end
+
+  def self.likely_string_timestamp?(value)
+    value.to_s.strip.match?(TIMESTAMP_STRING_REGEXP)
+  end
+
+  def self.convert_unix_timestamp(value)
+    return nil if !likely_string_timestamp?(value)
+    value.to_s.to_i
+  end
+
   def self.parsable_iso8601_date?(value)
-    Date.parse(value)
-    true
+    begin
+      Date.iso8601(value)
+      true
+    rescue Date::Error
+      Date.strptime(value, "%Y/%m/%d") # Try parsing with a specific format
+      true
+    end
   rescue ArgumentError, TypeError
     false
   end
