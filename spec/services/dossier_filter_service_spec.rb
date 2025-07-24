@@ -2,6 +2,7 @@
 
 describe DossierFilterService do
   def to_filter((label, filter)) = FilteredColumn.new(column: procedure.find_column(label:), filter:)
+  def to_or_filter((label, or_filter)) = FilteredColumn.new(column: procedure.find_column(label:), or_filter:)
 
   describe '.filtered_sorted_ids' do
     let(:procedure) { create(:procedure) }
@@ -607,6 +608,29 @@ describe DossierFilterService do
 
           it { is_expected.to be_empty }
         end
+      end
+
+      context "with OR filter" do
+        let(:filtered_columns) { filters.map { to_or_filter(_1) } }
+        let(:filters) { [['drop_down_list', ['Dessert', 'Fromage']]] }
+
+        let(:types_de_champ_public) do
+          [
+            { type: :drop_down_list, libelle: 'drop_down_list', options: ['Fromage', 'Dessert', 'Chocolat'] }
+          ]
+        end
+
+        let(:kept_dossier) { create(:dossier, procedure:) }
+        let(:kept_dossier_2) { create(:dossier, procedure:) }
+        let(:discarded_dossier) { create(:dossier, procedure:) }
+
+        before do
+          kept_dossier.champs.first.update!(value: 'Fromage')
+          kept_dossier_2.champs.first.update!(value: 'Dessert')
+          discarded_dossier.champs.first.update!(value: 'Chocolat')
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id, kept_dossier_2.id) }
       end
     end
 

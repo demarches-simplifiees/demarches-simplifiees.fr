@@ -78,10 +78,16 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
         expect(page.all('form').count).to eq(2)
 
         del_en_construction = page.all('form').first
+
         expect(del_en_construction).to have_text('En construction')
-        expect(del_en_construction).to have_field('filters[]', with: '', type: 'hidden')
-        expect(del_en_construction).to have_field('filters[][id]', with: column_id, type: 'hidden')
-        expect(del_en_construction).to have_field('filters[][filter]', with: 'en_instruction', type: 'hidden')
+        expect(del_en_construction).to have_field('column_id', with: column_id, type: 'hidden')
+        expect(del_en_construction).to have_field('filter', with: 'en_construction', type: 'hidden')
+
+        del_en_instruction = page.all('form').last
+
+        expect(del_en_instruction).to have_text('En instruction')
+        expect(del_en_instruction).to have_field('column_id', with: column_id, type: 'hidden')
+        expect(del_en_instruction).to have_field('filter', with: 'en_instruction', type: 'hidden')
       end
     end
   end

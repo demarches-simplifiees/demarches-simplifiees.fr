@@ -66,7 +66,7 @@ class DossierFilterService
   end
 
   def self.filtered_ids(dossiers, filtered_columns)
-    values_by_column = filtered_columns.group_by(&:column).transform_values { _1.map(&:filter) }
+    values_by_column = filtered_columns.group_by(&:column).transform_values { it.flat_map { it.filter || it.or_filter } }
 
     values_by_column.map { |column, values| column.filtered_ids(dossiers, values) }.reduce(:intersection)
   end
