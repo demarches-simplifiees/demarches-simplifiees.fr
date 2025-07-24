@@ -19,7 +19,7 @@ export class NotificationFormChangesController extends ApplicationController {
   private formData(): string {
     const form = this.element as HTMLFormElement;
     const inputs = form.querySelectorAll<HTMLInputElement>(
-      'input[type="radio"][name^="instructeurs_procedure["]:checked'
+      'input[type="radio"]:checked'
     );
     const entries = Array.from(inputs)
       .map((input) => [input.name, input.value])
