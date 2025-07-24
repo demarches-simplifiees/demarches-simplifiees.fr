@@ -836,6 +836,8 @@ GEM
       rack-protection (= 4.1.1)
       rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
+    siret_validator (0.1.0)
+      activemodel (~> 7.0)
     skylight (6.0.4)
       activesupport (>= 5.2.0)
     smarter_csv (1.13.1)
@@ -1107,6 +1109,7 @@ DEPENDENCIES
   simple_xlsx_reader
   simplecov
   simplecov-cobertura
+  siret_validator
   skylight
   smarter_csv
   spreadsheet_architect

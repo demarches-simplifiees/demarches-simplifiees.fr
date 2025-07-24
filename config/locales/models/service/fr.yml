@@ -46,8 +46,8 @@ fr:
           attributes:
             siret:
               format: 'Le numéro SIRET %{message}'
-              length: 'doit comporter exactement 14 chiffres. Exemple : 500 001 234 56789'
-              checksum: 'comporte une erreur de saisie. Corrigez-la.'
+              wrong_siret_format: 'doit comporter exactement 14 chiffres. Exemple : 500 001 234 56789'
+              invalid: 'comporte une erreur de saisie. Corrigez-la.'
               not_prefillable: 'Impossible de préremplir les informations pour ce SIRET, veuillez les saisir manuellement'
             contact_link:
               format: ""
