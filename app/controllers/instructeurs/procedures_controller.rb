@@ -259,8 +259,9 @@ module Instructeurs
     end
 
     def update_badge_notifications
-      raise
-      flash.notice = 'Vos préférences pour les badges de notification sont enregistrées.'
+      InstructeursProcedure.find_by!(procedure_id:, instructeur: current_instructeur).update!(badge_notification_params)
+
+      flash.notice = t('instructeurs.procedures.badge_preferences.flash_notice')
       redirect_to instructeur_procedure_path(procedure)
     end
 
@@ -509,6 +510,18 @@ module Instructeurs
       cache = Cache::ProcedureDossierPagination.new(procedure_presentation:, statut:)
 
       cache.save_context(ids: @filtered_sorted_paginated_ids, incoming_page: params[:page])
+    end
+
+    def badge_notification_params
+      params.require(:instructeurs_procedure).permit(
+        :display_dossier_depose_notifications,
+        :display_dossier_modifie_notifications,
+        :display_message_notifications,
+        :display_annotation_instructeur_notifications,
+        :display_avis_externe_notifications,
+        :display_attente_correction_notifications,
+        :display_attente_avis_notifications
+      )
     end
   end
 end

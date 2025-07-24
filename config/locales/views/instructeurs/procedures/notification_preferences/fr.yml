@@ -10,6 +10,7 @@ fr:
           cancel: Annuler
           save: Enregistrer
       badge_preferences:
+        flash_notice: "Vos préférences pour les badges de notification sont enregistrées. Ceux-ci sont en cours d'ajustement."
         subtitle: Configurez sur cette page <strong>les événements que vous souhaitez voir signalés</strong> sur les dossiers de cette démarche.
         legend_content:
           dossier_depose: Être averti lorsqu'un dossier déposé depuis au moins %{days} jours n'est suivi par aucun instructeur

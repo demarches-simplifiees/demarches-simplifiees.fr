@@ -10,6 +10,7 @@ en:
           cancel: Cancel
           save: Save
       badge_preferences:
+        flash_notice: "Your notification badge preferences have been saved. They are currently being adjusted."
         subtitle: On this page, configure <strong>the events you want to be reported</strong> on the files for this procedure.
         legend_content:
           dossier_depose: Be notified when a file has been submitted for at least %{days} days and is not being followed up by an instructor
