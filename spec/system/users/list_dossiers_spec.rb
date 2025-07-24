@@ -112,7 +112,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_select 'Statut', selected: 'Refusé', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
 
       click_on('Sélectionner un filtre')
-      click_on('Annuler')
+      click_on('Réinitialiser')
 
       click_on('Sélectionner un filtre')
       expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
@@ -123,7 +123,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_select 'Statut', selected: 'Accepté', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
 
       click_on('Sélectionner un filtre')
-      click_on('Annuler')
+      click_on('Réinitialiser')
       expect(page).to have_text('3 dossiers')
       expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
     end
