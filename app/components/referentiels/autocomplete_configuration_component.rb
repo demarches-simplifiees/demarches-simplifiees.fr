@@ -48,7 +48,9 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
       method: :patch,
       data: {
         controller: "autosubmit",
+        autosubmit_debounce_delay_value: 1000,
         turbo: true
+
       },
       html: { novalidate: 'novalidate', id: }
     }
