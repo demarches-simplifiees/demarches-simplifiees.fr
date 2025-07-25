@@ -17,7 +17,7 @@ class Champs::PieceJustificativeController < Champs::ChampController
   end
 
   def template
-    redirect_to @champ.type_de_champ.piece_justificative_template.blob
+    redirect_to rails_blob_url(@champ.type_de_champ.piece_justificative_template.blob, disposition: 'attachment')
   end
 
   private
