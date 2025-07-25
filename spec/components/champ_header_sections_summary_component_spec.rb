@@ -16,7 +16,7 @@ RSpec.describe ViewableChamp::HeaderSectionsSummaryComponent, type: :component d
   end
   let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ) }
   let(:dossier) { create(:dossier, procedure:) }
-  let(:component) { described_class.new(dossier:, is_private:) }
+  let(:component) { described_class.new(dossier:, is_private:, profile: 'instructeur') }
   let(:types_de_champ_public) { dossier.revision.types_de_champ_public.filter(&:header_section?) }
   let(:types_de_champ_private) { dossier.revision.types_de_champ_private.filter(&:header_section?) }
 
