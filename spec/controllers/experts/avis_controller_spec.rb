@@ -6,12 +6,13 @@ describe Experts::AvisController, type: :controller do
 
     let(:now) { Time.zone.parse('01/02/2345') }
     let(:instructeur) { create(:instructeur) }
+    let(:instructeur_without_instant_avis_notification) { create(:instructeur) }
     let!(:instructeur_with_instant_avis_notification) { create(:instructeur) }
     let(:another_instructeur) { create(:instructeur) }
     let(:claimant) { create(:expert) }
     let(:expert) { create(:expert) }
     let(:types_de_champ_public) { [] }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification], types_de_champ_public:) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification, instructeur_without_instant_avis_notification], types_de_champ_public:) }
     let(:procedure_id) { procedure.id }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
@@ -278,14 +279,21 @@ describe Experts::AvisController, type: :controller do
 
       context 'without attachment with an instructeur wants to be notified' do
         before do
-          allow(DossierMailer).to receive(:notify_new_avis_to_instructeur).and_return(double(deliver_later: nil))
           AssignTo.find_by(instructeur: instructeur_with_instant_avis_notification).update!(instant_expert_avis_email_notifications_enabled: true)
           instructeur_with_instant_avis_notification.follow(avis_without_answer.dossier)
-          subject
+
+          instructeur_without_instant_avis_notification.follow(avis_without_answer.dossier)
+
+          another_procedure = create(:procedure, instructeurs: [instructeur_without_instant_avis_notification])
+          another_dossier = create(:dossier, :en_construction, procedure: another_procedure)
+          instructeur_without_instant_avis_notification.follow(another_dossier)
+          AssignTo.find_by(instructeur: instructeur_without_instant_avis_notification, groupe_instructeur: another_dossier.groupe_instructeur)
+            .update!(instant_expert_avis_email_notifications_enabled: true)
         end
 
         it 'The instructeur should be notified of the new avis' do
-          expect(DossierMailer).to have_received(:notify_new_avis_to_instructeur).once.with(avis_without_answer, instructeur_with_instant_avis_notification.email)
+          expect(DossierMailer).to receive(:notify_new_avis_to_instructeur).once.with(avis_without_answer, instructeur_with_instant_avis_notification.email).and_return(double(deliver_later: true))
+          subject
         end
       end
 
