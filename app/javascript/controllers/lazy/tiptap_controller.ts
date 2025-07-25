@@ -25,6 +25,7 @@ export class TiptapController extends ApplicationController {
   #editor?: Editor;
 
   connect(): void {
+    console.log('connect tiptap')
     this.#editor = createEditor({
       editorElement: this.editorTarget,
       content: this.content,
@@ -53,6 +54,7 @@ export class TiptapController extends ApplicationController {
   }
 
   disconnect(): void {
+    console.log('disconnect tiptap')
     this.#editor?.destroy();
   }
 

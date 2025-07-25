@@ -5,6 +5,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
 
   def last_request_keys
     JSONPathUtil.hash_to_jsonpath(referentiel.last_response_body)
+      .sort
+      .to_h
   end
 
   def back_url

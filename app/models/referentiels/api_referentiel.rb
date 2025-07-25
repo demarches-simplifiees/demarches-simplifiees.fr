@@ -21,12 +21,20 @@ class Referentiels::APIReferentiel < Referentiel
 
   store_accessor :autocomplete_configuration, :datasource, :json_template
   before_save :name_as_uuid
+  before_save :resets_tiptap_template
+
   def self.csv_available?
     false
   end
 
   def self.autocomplete_available?
     true
+  end
+
+  def resets_tiptap_template
+    if datasource_changed? && !datasource_was.nil?
+      self.json_template = {}
+    end
   end
 
   def tiptap_template=(value)

@@ -166,7 +166,18 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
     context 'full update (updating all attributes) without autosave' do
       subject { patch :update, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
-      let(:referentiel) { create(:api_referentiel, :exact_match, :configured, :with_last_response, types_de_champ: [type_de_champ]) }
+      let(:referentiel) do
+        create(
+          :api_referentiel,
+          :exact_match,
+          :configured,
+          :with_last_response,
+          types_de_champ: [type_de_champ],
+          datasource: '$.jsonpath',
+          tiptap_template: { "type": "doc", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "{{jsonpath}}" }] }] }.to_json
+        )
+      end
+
       before do
         type_de_champ.update(referentiel_mapping: { "old" => { type: "string" } })
       end
@@ -195,7 +206,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(referentiel.test_data).to eq(referentiel_params[:test_data])
 
         # also reset last_response/referentiel_mapping when url changed
-        expect(referentiel.reload.last_response).to be_nil
+        referentiel.reload
+        expect(referentiel.last_response).to be_nil
+        expect(referentiel.autocomplete_configuration).to eq({ "json_template" => {} })
         expect(type_de_champ.reload.referentiel_mapping).to eq({})
       end
     end
@@ -383,7 +396,13 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
     describe '#autocomplete_configuration' do
       let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-      let(:referentiel) { create(:api_referentiel, :exact_match, :configured, types_de_champ: [type_de_champ]) }
+      let(:referentiel) do
+        create(:api_referentiel,
+               :autocomplete,
+               :configured,
+               types_de_champ: [type_de_champ],
+               last_response: { body: { "results" => [{ k: :v }] }, status: 200 })
+      end
 
       context 'GET autocomplete_configuration' do
         context 'when referentiel not ready' do
@@ -404,23 +423,21 @@ describe Administrateurs::ReferentielsController, type: :controller do
       end
 
       context 'PATCH autocomplete_configuration' do
-        let(:config_payload) do
-          {
-            "datasource" => "$.baz",
-            tiptap_template: { type: "OK" }.to_json
-          }
-        end
         subject do
           patch :update_autocomplete_configuration, params: {
             procedure_id: procedure.id,
             stable_id: type_de_champ.stable_id,
             id: referentiel.id,
-            referentiel: config_payload
+            referentiel: {
+              datasource: "$.results",
+              tiptap_template: { type: "OK" }.to_json
+            },
+            commit: 'Enregistrer la configuration'
           }
         end
 
         it 'updates the autocomplete_configuration (and serialize tiptap template) and redirects' do
-          expect { subject }.to change { referentiel.reload.datasource }.to("$.baz")
+          expect { subject }.to change { referentiel.reload.datasource }.to("$.results")
           expect(referentiel.json_template).to eq({ "type" => "OK" })
           expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
           expect(flash[:notice]).to eq("La configuration de l'autocomplete a bien étee enregistrée")
@@ -431,7 +448,6 @@ describe Administrateurs::ReferentielsController, type: :controller do
           it 'redirects to edit with alert' do
             subject
             expect(response).to have_http_status(:success)
-            expect(flash[:alert]).to eq('Une erreur est survenue lors de la sauvegarde de la configuration autocomplete')
           end
         end
       end

@@ -16,6 +16,7 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
   def datasource
     datasource_jsonpath = referentiel.datasource
     datasource_jsonpath ||= default_datasource
+
     return nil if datasource_jsonpath.nil?
     JsonPath.on(referentiel.last_response_body, datasource_jsonpath).first.first
   end
@@ -26,7 +27,7 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
 
   def select_datasource_radio_tag(jsonpath)
     radio_button_tag(
-      "referentiel[autocomplete_configuration][datasource]",
+      "referentiel[datasource]",
       jsonpath,
       maybe_datasources.size == 1 ? true : referentiel.autocomplete_configuration.fetch("datasource", nil) == jsonpath
     )
@@ -58,6 +59,8 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
 
   def maybe_datasources
     JSONPathUtil.array_paths_with_examples(referentiel.last_response_body)
+      .sort
+      .to_h
   end
 
   def only_one_datasource?
@@ -65,6 +68,7 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
   end
 
   def default_datasource
+    return nil if maybe_datasources.empty?
     maybe_datasources&.keys&.first
   end
 end

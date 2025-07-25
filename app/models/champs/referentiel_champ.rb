@@ -5,6 +5,9 @@ class Champs::ReferentielChamp < Champ
            :referentiel_mapping_displayable,
            :referentiel_mapping_prefillable_with_stable_id,
            to: :type_de_champ
+
+  delegate :exact_match?, to: :referentiel
+
   before_save :clear_previous_result, if: -> { external_id_changed? }
 
   validates_with ReferentielChampValidator, if: :validate_champ_value?
@@ -26,7 +29,7 @@ class Champs::ReferentielChamp < Champ
   end
 
   def uses_external_data?
-    true
+    exact_match?
   end
 
   def should_ui_auto_refresh?
