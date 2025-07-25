@@ -10,6 +10,9 @@
             - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
               = link_to(url_for_dossier(dossier)) do
                 = dossier.procedure.libelle
+                %span.visually-hidden
+                  = t('views.users.dossiers.dossiers_list.n_dossier')
+                  = number_with_html_delimiter(dossier.id)
             - else
               = dossier.procedure.libelle
 
@@ -81,7 +84,7 @@
         = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
             %p
-              = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier))
+              = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id)
 
       - if dossier.transfer.present?
         - if @statut == "dossiers-transferes"
@@ -103,8 +106,8 @@
                   = t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email)
                 - else
                   = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
-              %p
-                = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
+                %br
+                = link_to t('views.users.dossiers.transfers.revoke_html'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
 
 
       - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
@@ -117,15 +120,18 @@
             %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
               %li
                 = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
-                  Restaurer
+                  = t("views.users.dossiers.dossier_action.restore")
+                  %span.visually-hidden
+                    = t('utils.file')
+                    = t('utils.number')
+                    = number_with_html_delimiter(dossier.id)
 
           - else
             - if dossier.expiration_can_be_extended?
               %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
                 %li
                   = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
-                    Restaurer et étendre la conservation (#{dossier.procedure.duree_conservation_dossiers_dans_ds} mois)
-
+                    = t("views.users.dossiers.dossier_action.restore_and_extend_conservation_html", id: dossier.id, duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
 
             - else
               .flex.justify-end.no-flex-xs

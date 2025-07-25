@@ -193,7 +193,7 @@ describe 'The routing with rules', js: true do
     visit new_user_session_path
     sign_in_with litteraire_user.email, password
 
-    click_on litteraire_user.dossiers.first.procedure.libelle
+    click_on litteraire_user.dossiers.first.procedure.libelle, match: :first
     click_on 'Modifier le dossier'
 
     fill_in litteraire_user.dossiers.first.project_champs_public.first.libelle, with: 'some value'
@@ -302,7 +302,7 @@ describe 'The routing with rules', js: true do
   def user_update_group(user, new_group)
     login_as user, scope: :user
     visit dossiers_path
-    click_on user.dossiers.first.procedure.libelle
+    click_on user.dossiers.first.procedure.libelle, match: :first
     click_on "Modifier le dossier"
 
     choose(new_group, allow_label_click: true)

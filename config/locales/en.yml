@@ -52,6 +52,8 @@ en:
     date: Date
     datetime: Date and time
     array: List of simple elements
+    number: number
+    file: file
 
     email_suggest:
       wanna_say: 'Do you mean to say ?'
@@ -545,7 +547,7 @@ en:
           no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
-          pending_correction_html: "This file is waiting for your corrections. Consult the changes to be made in the <a href=\"%{link}\">messaging system</a>."
+          pending_correction_html: "This file is waiting for your corrections. Consult the changes to be made in the <a href=\"%{link}\">messaging system <span class='visually-hidden'>of file number %{id}</span></a>."
           depose_at: First submission on %{date}
           created_at: Created at %{date}
           updated_at: updated at %{date}
@@ -573,7 +575,7 @@ en:
           sender_demande_en_cours_from_support: "A transfer request from technical support is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
           receiver_demande_en_cours_from_support: "Transfer request from technical support on file Nº %{id} of %{email}"
-          revoke: Revoke this request
+          revoke_html: "Revoke this <span class='visually-hidden'>transfer</span> request"
           accept: Accept
           reject: Reject
         dossier_action:
@@ -585,6 +587,8 @@ en:
           delete_dossier_with_transfer_confirm: "If you continue, you will delete this file, the information it contains and its transfer request to %{email}. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
           transfer_dossier: "Transfer the file"
           edit_draft: "Keep filling"
+          restore: "Restore"
+          restore_and_extend_conservation_html: 'Restore and extend conservation <span class="visually-hidden">of file number %{id}</span> (%{duree_conservation_dossiers_dans_ds} month)'
           actions: "Actions"
           other_actions: "Other actions"
       sessions:

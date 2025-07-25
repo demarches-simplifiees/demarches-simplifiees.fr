@@ -41,7 +41,7 @@ as well as a link to its edit page.
       <p>
         <%= t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email) %>
         <br>
-        <%= link_to t('views.users.dossiers.transfers.revoke'), transfer_destroy_manager_dossier_path(dossier), class: 'fr-link', method: :delete %>
+        <%= link_to t('views.users.dossiers.transfers.revoke_html'), transfer_destroy_manager_dossier_path(dossier), class: 'fr-link', method: :delete %>
       </p>
     <% end %>
   </div>

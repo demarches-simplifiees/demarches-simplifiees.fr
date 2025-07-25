@@ -10,16 +10,27 @@
     - if has_edit_action
       - if dossier.brouillon?
         %li
-          = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
+          = link_to (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left' do
+            = t('views.users.dossiers.dossier_action.edit_draft')
+            %span.visually-hidden
+              = t('utils.file')
+              = t('utils.number')
+              = number_with_html_delimiter(dossier.id)
 
       - else
         %li
-          = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
+          = link_to modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left' do
+            = t('views.users.dossiers.dossier_action.edit_dossier')
+            %span.visually-hidden
+              = t('utils.number')
+              = number_with_html_delimiter(dossier.id)
 
     - if has_new_dossier_action
       %li
         = link_to (commencer_url(dossier.procedure.path)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w fr-icon-file-fill fr-btn--icon-left' do
           = t('views.users.dossiers.dossier_action.start_other_dossier')
+          %span.visually-hidden
+            = dossier.procedure.libelle
 
     = render Dropdown::MenuComponent.new(wrapper: :li, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--tertiary'}) do |menu|
       - menu.with_button_inner_html do
@@ -34,6 +45,9 @@
             = dsfr_icon('fr-icon-user-add-fill', :sm)
             .dropdown-description
               = t('views.users.dossiers.dossier_action.transfer_dossier')
+              %span.visually-hidden
+                = t('utils.number')
+                = number_with_html_delimiter(dossier.id)
 
       - if has_new_dossier_action
         - menu.with_item do
@@ -41,6 +55,9 @@
             = dsfr_icon('fr-icon-file-copy-line', :sm)
             .dropdown-description
               = t('views.users.dossiers.dossier_action.clone')
+              %span.visually-hidden
+                = t('utils.number')
+                = number_with_html_delimiter(dossier.id)
 
       - if has_delete_action
         - menu.with_item(class: 'danger') do
@@ -49,3 +66,7 @@
             = dsfr_icon('fr-icon-delete-fill', :sm)
             .dropdown-description
               = t('views.users.dossiers.dossier_action.delete_dossier')
+              %span.visually-hidden
+                = t('utils.file')
+                = t('utils.number')
+                = number_with_html_delimiter(dossier.id)

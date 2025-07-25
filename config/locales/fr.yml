@@ -42,6 +42,8 @@ fr:
     date: Date
     datetime: Date et heure
     array: Liste à choix multiple
+    number: numéro
+    file: le dossier
     email_suggest:
       wanna_say: 'Voulez-vous dire ?'
 
@@ -569,7 +571,7 @@ fr:
             more_details: Plus d’informations
             procedure: démarche
             this_procedure: cette démarche
-          pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie</a>."
+          pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie <span class='visually-hidden'>du dossier numéro %{id}</span></a>."
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
@@ -579,12 +581,14 @@ fr:
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"
-          clone: "Dupliquer ce dossier"
+          clone: "Dupliquer le dossier"
           delete_dossier: "Mettre à la corbeille"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
           edit_draft: "Continuer à remplir"
+          restore: "Restaurer"
+          restore_and_extend_conservation_html: 'Restaurer et étendre la conservation <span class="visually-hidden">du dossier numéro %{id}</span> (%{duree_conservation_dossiers_dans_ds} mois)'
           actions: "Actions"
           other_actions: "Autres actions"
         transfers:
@@ -593,7 +597,7 @@ fr:
           sender_demande_en_cours_from_support: "Une demande de transfert par le support technique est en cours sur le dossier n° %{id} pour %{email}"
           receiver_demande_en_cours: "Demande de transfert pour le dossier n° %{id} envoyé par %{email}"
           receiver_demande_en_cours_from_support: "Demande de transfert par le support technique pour le dossier n° %{id} de %{email}"
-          revoke: Révoquer cette demande
+          revoke_html: "Révoquer cette demande <span class='visually-hidden'>de transfert</span>"
           accept: Accepter
           reject: Rejeter
       sessions:
