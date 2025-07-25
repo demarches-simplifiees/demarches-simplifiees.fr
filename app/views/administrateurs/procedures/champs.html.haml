@@ -15,7 +15,7 @@
 
   = render NestedForms::FormOwnerComponent.new
   .fr-grid-row
-    = render TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: false)
+    = render DossierTree::SectionsSummaryComponent.new(tree: @procedure.draft_public_tree)
     .fr-col{ data: { controller: "lazy-modal" } }
       = render Dsfr::CalloutComponent.new(title: nil) do |c|
         - c.with_html_body do
