@@ -118,7 +118,7 @@ module Experts
 
         if !updated_recently
           @avis.dossier.followers_instructeurs
-            .with_instant_expert_avis_email_notifications_enabled
+            .with_instant_expert_avis_email_notifications_enabled(@avis.dossier.groupe_instructeur)
             .each do |instructeur|
             DossierMailer.notify_new_avis_to_instructeur(@avis, instructeur.email).deliver_later
           end

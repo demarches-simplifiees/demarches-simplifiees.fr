@@ -42,12 +42,15 @@ class Instructeur < ApplicationRecord
       })
   }
 
-  scope :with_instant_email_dossier_notifications, -> {
-    includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
+  scope :with_instant_expert_avis_email_notifications_enabled, -> (groupe_instructeur) {
+    includes(:assign_to).where(assign_tos: {
+      groupe_instructeur_id: groupe_instructeur.id,
+      instant_expert_avis_email_notifications_enabled: true
+    })
   }
 
-  scope :with_instant_expert_avis_email_notifications_enabled, -> {
-    includes(:assign_to).where(assign_tos: { instant_expert_avis_email_notifications_enabled: true })
+  scope :with_instant_email_dossier_notifications, -> {
+    includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
   }
 
   default_scope { eager_load(:user) }
