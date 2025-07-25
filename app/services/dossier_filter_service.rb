@@ -66,9 +66,40 @@ class DossierFilterService
   end
 
   def self.filtered_ids(dossiers, filtered_columns)
-    values_by_column = filtered_columns.group_by(&:column).transform_values { it.flat_map { it.filter || it.or_filter } }
+    values_by_column = group_filters(filtered_columns)
 
-    values_by_column.map { |column, values| column.filtered_ids(dossiers, values) }.reduce(:intersection)
+    values_by_column.map do |column, values|
+      # values can be:
+      # ["true"]
+      # ["Fromage", "Dessert"] (multiple filters grouped by (line above))
+      # [{ operator: "match", value: "Dessert" }, { operator: "match", value: "Fromage" }] (multiple json filters grouped by (line above))
+      # [{ operator: "in", values: ["Fromage", "Dessert"] }] (multiple select json filter)
+      # [{ operator: "before", value: "2025-01-01" }] (date json filter)
+      # ["2025-01-02", { operator: "before", value: "2025-01-01" }] (old date filter, and json filter, grouped by (line above))
+      column.filtered_ids(dossiers, values)
+    end.reduce(:intersection)
+  end
+
+  def self.group_filters(filtered_columns)
+    normalized_filters = filtered_columns.map { |fc| { column: fc.column, filter: normalize_filter(fc.filter) } }
+
+    grouped_filters = normalized_filters.group_by { [it[:column], it[:filter][:operator]] }.transform_values { merge_match_filters(it.map { it[:filter] }) }
+
+    grouped_filters
+  end
+
+  def self.merge_match_filters(filters)
+    # [{ operator: "match", value: "Dessert" }, { operator: "match", value: "Fromage" }] => { operator: "match", value: ["Dessert", "Fromage"] }
+    # [{ operator: "before", value: "2025-02-01" }, { operator: "before", value: "2025-01-01" }] => do not group
+
+    # we assume that all filters have the same operator (grouped by column and operator)
+    return filters if filters.first[:operator] != 'match' || filters.size == 1
+
+    [{ operator: 'match', value: filters.map { it[:value] } }]
+  end
+
+  def self.normalize_filter(filter)
+    filter.is_a?(String) ? { operator: 'match', value: filter } : filter
   end
 
   def self.sanitized_column(association, column)

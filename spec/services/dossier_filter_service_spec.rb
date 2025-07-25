@@ -903,4 +903,146 @@ describe DossierFilterService do
       end
     end
   end
+
+  describe '.normalize_filter' do
+    subject { described_class.send(:normalize_filter, filter) }
+
+    context 'when filter is a string (old filter)' do
+      let(:filter) { 'test_value' }
+
+      it 'wraps the string in a hash with value key' do
+        expect(subject).to eq({ value: 'test_value' })
+      end
+    end
+
+    context 'when filter is a hash with only value key' do
+      let(:filter) { { value: 'test_value' } }
+
+      it 'returns the filter as is' do
+        expect(subject).to eq({ value: 'test_value' })
+      end
+    end
+
+    context 'when filter has operator and values' do
+      let(:filter) { { operator: 'in', values: ['a', 'b'] } }
+
+      it 'returns the filter as is' do
+        expect(subject).to eq({ operator: 'in', values: ['a', 'b'] })
+      end
+    end
+  end
+
+  describe '.group_filters' do
+    let(:procedure) { create(:procedure) }
+    let(:column1) { procedure.find_column(label: 'État du dossier') }
+    let(:column2) { procedure.find_column(label: 'Date de création') }
+
+    subject { described_class.send(:group_filters, filtered_columns) }
+
+    context 'with single filter per column' do
+      let(:filtered_columns) do
+        [
+          FilteredColumn.new(column: column1, filter: 'en_construction'),
+          FilteredColumn.new(column: column2, filter: '2025-01-01')
+        ]
+      end
+
+      it 'groups filters by column and operator and normalizes them' do
+        expected = {
+          [column1, "match"] => [{ operator: 'match', value: 'en_construction' }],
+          [column2, "match"] => [{ operator: 'match', value: '2025-01-01' }]
+        }
+        expect(subject).to eq(expected)
+      end
+    end
+
+    context 'with multiple filters for the same column' do
+      let(:filtered_columns) do
+        [
+          FilteredColumn.new(column: column1, filter: 'en_construction'),
+          FilteredColumn.new(column: column1, filter: 'en_instruction')
+        ]
+      end
+
+      it 'groups multiple filters by column and normalizes them' do
+        expected = {
+          [column1, "match"] => [
+            { operator: 'match', value: ['en_construction', 'en_instruction'] }
+          ]
+        }
+        expect(subject).to eq(expected)
+      end
+    end
+
+    context 'with hash filters' do
+      let(:filtered_columns) do
+        [
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: 'en_construction' }),
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: 'en_instruction' }),
+          FilteredColumn.new(column: column1, filter: { operator: 'in', values: ['a', 'b'] })
+        ]
+      end
+
+      it 'groups filters by column and operator' do
+        expected = {
+          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }],
+          [column1, "in"] => [{ operator: 'in', values: ['a', 'b'] }]
+        }
+        expect(subject).to eq(expected)
+      end
+    end
+
+    context 'with not mergeable filters' do
+      let(:filtered_columns) do
+        [
+          FilteredColumn.new(column: column1, filter: { operator: 'in', values: ['a', 'b'] }),
+          FilteredColumn.new(column: column1, filter: { operator: 'before', value: '2025-01-01' })
+        ]
+      end
+
+      it 'groups filters by column and operator' do
+        expected = {
+          [column1, "in"] => [{ operator: 'in', values: ['a', 'b'] }],
+          [column1, "before"] => [{ operator: 'before', value: '2025-01-01' }]
+        }
+        expect(subject).to eq(expected)
+      end
+    end
+  end
+
+  describe '.merge_match_filters' do
+    subject { described_class.send(:merge_match_filters, filters) }
+
+    context 'when match filters' do
+      let(:filters) do
+        [
+          { operator: 'match', value: 'Dessert' },
+          { operator: 'match', value: 'Fromage' }
+        ]
+      end
+
+      it 'groups values by operator' do
+        expected = [
+          {
+            operator: 'match',
+            value: ['Dessert', 'Fromage']
+          }
+        ]
+        expect(subject).to eq(expected)
+      end
+    end
+
+    context 'when not match filters' do
+      let(:filters) do
+        [
+          { operator: 'before', value: '2025-01-01' },
+          { operator: 'before', value: '2025-01-02' }
+        ]
+      end
+
+      it 'does not merge values' do
+        expect(subject).to eq(filters)
+      end
+    end
+  end
 end

@@ -32,7 +32,20 @@ class Columns::ChampColumn < Column
     end
   end
 
-  def filtered_ids(dossiers, search_terms)
+  def filtered_ids(dossiers, filter)
+    case filter
+    in String | Array
+      filtered_ids_for_values(dossiers, filter)
+    in { operator: 'match', **nil }
+      filtered_ids_for_values(dossiers, filter[:value])
+    in { operator: 'in', values: Array }
+      raise "Not implemented"
+    else
+      raise "Unknown filter: #{filter.inspect}"
+    end
+  end
+
+  def filtered_ids_for_values(dossiers, search_terms)
     return dossiers.without_type_de_champ(stable_id).ids if should_exclude_empty_values?(search_terms)
 
     relation = dossiers.with_type_de_champ(stable_id)
