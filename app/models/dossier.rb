@@ -13,6 +13,7 @@ class Dossier < ApplicationRecord
   include DossierStateConcern
   include DossierChampsConcern
   include DossierExportConcern
+  include DossierTreeConcern
 
   enum :state, {
     brouillon:       'brouillon',
