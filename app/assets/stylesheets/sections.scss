@@ -43,6 +43,10 @@
     .fr-fieldset__element,
     .fr-fieldset__legend {
       padding-left: 0;
+    }
+    // Remove padding right on .fr-fieldset__element that are not inline
+    .fr-fieldset__element:not(.fr-fieldset__element--inline),
+    .fr-fieldset__legend {
       padding-right: 0;
     }
     .fr-fieldset__legend {
