@@ -5,10 +5,16 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
 
   def last_request_keys
     JSONPathUtil.hash_to_jsonpath(referentiel.last_response_body)
+      .sort
+      .to_h
   end
 
   def back_url
-    edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
+    if referentiel.autocomplete?
+      autocomplete_configuration_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
+    else
+      edit_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel.id)
+    end
   end
 
   def cast_tag(jsonpath, value)

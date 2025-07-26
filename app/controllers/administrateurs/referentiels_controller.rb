@@ -5,7 +5,7 @@ module Administrateurs
     before_action :retrieve_procedure
     before_action :retrieve_type_de_champ
     before_action :retrieve_referentiel, except: [:new, :create]
-    before_action :reachable_referentiel?, only: [:mapping_type_de_champ]
+    before_action :reachable_referentiel?, only: [:mapping_type_de_champ, :autocomplete_configuration]
     layout 'empty_layout'
 
     def new
@@ -26,6 +26,19 @@ module Administrateurs
     def update
       @referentiel.assign_attributes(referentiel_params)
       handle_referentiel_save(@referentiel)
+    end
+
+    def autocomplete_configuration
+    end
+
+    def update_autocomplete_configuration
+      if @referentiel.update(autocomplete_configuration_params) && params[:commit].present?
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration de l'autocomplete a bien étee enregistrée" }
+      else
+        @referentiel.validate
+        component = Referentiels::AutocompleteConfigurationComponent.new(referentiel: @referentiel, type_de_champ: @type_de_champ, procedure: @procedure)
+        render turbo_stream: turbo_stream.update(component.id, component)
+      end
     end
 
     def mapping_type_de_champ
@@ -58,13 +71,19 @@ module Administrateurs
     def handle_referentiel_save(referentiel)
       cache_bust_last_response_and_mapping = referentiel.url_changed?
 
-      if referentiel.configured? && referentiel.save && params[:commit].present?
+      if referentiel.configured? && referentiel.save
         if cache_bust_last_response_and_mapping
           @type_de_champ.update!(referentiel_mapping: {})
-          referentiel.update!(last_response: nil)
+          referentiel.update!(last_response: nil, autocomplete_configuration: {})
         end
+      end
 
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+      if params[:commit].present?
+        if referentiel.autocomplete? # maybe wrap in a method
+          redirect_to autocomplete_configuration_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        else
+          redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        end
       else
         referentiel.validate
         component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
@@ -104,9 +123,15 @@ module Administrateurs
       else
         params = referentiel_params.to_h
         params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?
-        params = params.merge(mode: Referentiels::APIReferentiel.modes.fetch(:exact_match)) if !Referentiels::APIReferentiel.autocomplete_available?
         params
       end
+    end
+
+    def autocomplete_configuration_params
+      params.require(:referentiel)
+        .permit(:datasource, :tiptap_template)
+    rescue ActionController::ParameterMissing
+      {}
     end
   end
 end

@@ -36,13 +36,10 @@
       %hr.fr-hr.fr-my-5w
 
     %div
-      - if Referentiels::APIReferentiel.autocomplete_available?
-        = render Dsfr::RadioButtonListComponent.new(form:, target: :mode,
-          buttons: [ { label: 'Correspondance exacte', value: 'exact_match', hint: 'Vérification de l’existence de la donnée saisie dans la BDD du référentiel (exemple : plaque d’immatriculation, SIREN...)' } ,
-            { label: 'Autosuggestion au fur et à mesure de la saisie de l’usager', value: 'autocomplete', hint: 'Affichage de données issues de la BDD du référentiel correspondant en partie ou en totalité à la donnée saisie par l’usager (exemple : BDD de médicaments, modèles de véhicules...)', disabled: true }]) do
-          Mode de remplissage du champ par l’usager
-      - else
-        = form.hidden_field :mode
+      = render Dsfr::RadioButtonListComponent.new(form:, target: :mode,
+        buttons: [ { label: 'Correspondance exacte', value: 'exact_match', hint: 'Vérification de l’existence de la donnée saisie dans la BDD du référentiel (exemple : plaque d’immatriculation, SIREN...)' } ,
+          { label: 'Autosuggestion au fur et à mesure de la saisie de l’usager', value: 'autocomplete', hint: 'Affichage de données issues de la BDD du référentiel correspondant en partie ou en totalité à la donnée saisie par l’usager (exemple : BDD de médicaments, modèles de véhicules...)' }]) do
+        Mode de remplissage du champ par l’usager
 
       = render Dsfr::InputComponent.new(form:, attribute: :hint)
       = render Dsfr::InputComponent.new(form:, attribute: :test_data)
