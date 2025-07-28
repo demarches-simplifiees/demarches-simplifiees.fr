@@ -20,6 +20,9 @@ describe "procedure exports zip" do
 
     fill_in "Nom du modèle", with: "Mon modèle"
     expect(page).to have_content("Sélectionnez les fichiers que vous souhaitez exporter")
+    check 'Pièces jointes à la messagerie'
+    check 'Pièces jointes aux avis externes'
+    check 'Justificatif de décision'
     click_on "Enregistrer"
 
     expect(page).to have_content("Modèles d’export")

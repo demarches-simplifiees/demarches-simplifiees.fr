@@ -53,7 +53,7 @@
               prefix: 'export_template[attestation]' }
 
         - if procedure.exportables_pieces_jointes_for_all_versions.any?
-          %h3 Pièces justificatives
+          %h3 Pièces jointes au dossier
 
           - procedure.exportables_pieces_jointes.each do |tdc|
             - item = export_template.pj(tdc)
@@ -79,6 +79,18 @@
                     locals: { item:,
                       libelle: tdc.libelle,
                       prefix: 'export_template[pjs][]'}
+
+        %h3 Autres fichiers
+        .card.no-list
+          .fr-checkbox-group.fr-mb-3w
+            = f.check_box :commentaires_attachments
+            = f.label :commentaires_attachments, 'Pièces jointes à la messagerie' , class: 'fr-label'
+          .fr-checkbox-group.fr-mb-3w
+            = f.check_box :avis_attachments
+            = f.label :avis_attachments, 'Pièces jointes dans les avis externes' , class: 'fr-label'
+          .fr-checkbox-group
+            = f.check_box :justificatif_motivation
+            = f.label :justificatif_motivation, 'Justificatif de décision' , class: 'fr-label'
 
         .fixed-footer
           .fr-container

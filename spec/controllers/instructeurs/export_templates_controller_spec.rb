@@ -41,10 +41,14 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     subject { post :create, params: { procedure_id: procedure.id, export_template: create_params } }
 
     context 'with valid params' do
-      it 'redirect to some page' do
+      it 'works' do
         subject
         expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
         expect(flash.notice).to eq "Le modèle d’export coucou a bien été créé"
+        expect(ExportTemplate.last.pjs).not_to be_blank
+        expect(ExportTemplate.last.commentaires_attachments).to be_falsey
+        expect(ExportTemplate.last.avis_attachments).to be_falsey
+        expect(ExportTemplate.last.justificatif_motivation).to be_falsey
       end
     end
 
@@ -56,6 +60,17 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present
+      end
+    end
+
+    context 'with attachments checked' do
+      let(:create_params) { export_template_params.merge({ commentaires_attachments: 1, avis_attachments: 1, justificatif_motivation: 1 }) }
+
+      it 'works' do
+        subject
+        expect(ExportTemplate.last.commentaires_attachments).to be_truthy
+        expect(ExportTemplate.last.avis_attachments).to be_truthy
+        expect(ExportTemplate.last.justificatif_motivation).to be_truthy
       end
     end
 
