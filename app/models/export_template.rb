@@ -65,6 +65,8 @@ class ExportTemplate < ApplicationRecord
       attestation.path(dossier, attachment:)
     elsif attachment.record_type == 'Champ' && pj(champ.type_de_champ).enabled?
       pj(champ.type_de_champ).path(dossier, attachment:, index:, row_index:)
+    elsif (attachment.record_type == 'Avis' && self.avis_attachments) || (attachment.record_type == 'Commentaire' && self.commentaires_attachments) || (attachment.name == 'justificatif_motivation' && self.justificatif_motivation)
+      ActiveStorage::DownloadableFile.timestamped_filename(attachment)
     else
       nil
     end
