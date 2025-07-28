@@ -29,21 +29,21 @@ class DossierNotification < ApplicationRecord
   scope :type_news, -> { where(notification_type: [:dossier_modifie, :message, :annotation_instructeur, :avis_externe]) }
 
   def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
+    groupe_instructeur = dossier.groupe_instructeur
+
     case notification_type
     when :dossier_depose
       if !dossier.procedure.declarative? && !dossier.procedure.sva_svr_enabled?
-        groupe_instructeur_id = dossier.groupe_instructeur_id
         display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
 
-        find_or_create_notification(dossier, notification_type, groupe_instructeur_id:, display_at:)
+        find_or_create_notification(dossier, notification_type, groupe_instructeur_id: groupe_instructeur.id, display_at:)
       end
 
     when :dossier_modifie, :message, :attente_correction, :attente_avis, :annotation_instructeur, :avis_externe
       if instructeur.present?
         find_or_create_notification(dossier, notification_type, instructeur_id: instructeur.id)
       else
-        instructeur_ids = dossier.followers_instructeur_ids
-        instructeur_ids -= [except_instructeur.id] if except_instructeur.present?
+        instructeur_ids = instructeur_to_notify_ids(dossier, notification_type, groupe_instructeur, except_instructeur)
 
         instructeur_ids.each do |instructeur_id|
           find_or_create_notification(dossier, notification_type, instructeur_id:)
@@ -275,6 +275,29 @@ def instructeur_preferences(instructeur, procedure)
   else
     notification_types.keys.index_with do |notification_type|
       InstructeursProcedure::DEFAULT_NOTIFICATIONS_PREFERENCES[notification_type.to_sym]
+    end
+  end
+end
+
+def instructeur_to_notify_ids(dossier, notification_type, groupe_instructeur, except_instructeur)
+  instructeur_ids = groupe_instructeur.instructeur_ids
+  instructeur_ids -= [except_instructeur.id] if except_instructeur.present?
+
+  followers_instructeur_ids = dossier.followers_instructeur_ids
+
+  preference_by_instructeur_id = InstructeursProcedure
+    .where(instructeur_id: instructeur_ids, procedure_id: groupe_instructeur.procedure_id)
+    .pluck(:instructeur_id, "display_#{notification_type}_notifications")
+    .to_h
+
+  instructeur_ids.filter do |instructeur_id|
+    preference = preference_by_instructeur_id[instructeur_id]
+
+    if followers_instructeur_ids.include?(instructeur_id)
+      next true if preference.nil?
+      ['followed', 'all'].include?(preference)
+    else
+      preference == "all"
     end
   end
 end
