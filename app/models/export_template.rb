@@ -65,7 +65,7 @@ class ExportTemplate < ApplicationRecord
       attestation.path(dossier, attachment:)
     elsif attachment.record_type == 'Champ' && pj(champ.type_de_champ).enabled?
       pj(champ.type_de_champ).path(dossier, attachment:, index:, row_index:)
-    elsif (attachment.record_type == 'Avis' && self.avis_attachments) || (attachment.record_type == 'Commentaire' && self.commentaires_attachments) || (attachment.name == 'justificatif_motivation' && self.justificatif_motivation)
+    elsif not_from_champ?(attachment)
       ActiveStorage::DownloadableFile.timestamped_filename(attachment)
     else
       nil
@@ -100,5 +100,9 @@ class ExportTemplate < ApplicationRecord
     legitimate_pj_stable_ids = procedure.exportables_pieces_jointes_for_all_versions.map(&:stable_id)
 
     self.pjs = pjs.filter { _1.stable_id.in?(legitimate_pj_stable_ids) }
+  end
+
+  def not_from_champ?(attachment)
+    (attachment.record_type == 'Avis' && avis_attachments) || (attachment.record_type == 'Commentaire' && commentaires_attachments) || (attachment.name == 'justificatif_motivation' && justificatif_motivation)
   end
 end
