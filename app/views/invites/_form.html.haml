@@ -1,5 +1,4 @@
-#invites-form.fr-p-2w
-
+#invites-form
   = t('views.invites.form.edit_dossier_html', count: invites.size)
   - if invites.present?
     #invite-list
@@ -19,9 +18,9 @@
   = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post, id: "invite-form" do
     %fieldset.fr-fieldset
       %legend.fr-fieldset__legend
-        %h3.fr-h5= t('views.invites.form.title')
+        %h3.fr-h6= t('views.invites.form.title')
 
-      %p.fr-highlight.fr-mb-3w= t('asterisk_html', scope: [:utils])
+      %p.fr-highlight.fr-text--sm= t('asterisk_html', scope: [:utils])
 
       .fr-fieldset__element
         .fr-input-group
