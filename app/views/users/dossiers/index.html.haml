@@ -54,7 +54,7 @@
                   badge: number_with_html_delimiter(@dossiers_close_to_expiration.count))
 
               - if @dossiers_supprimes.present?
-                = tab_item(t('pluralize.dossiers_supprimes', count: @dossiers_supprimes.count),
+                = tab_item(t('pluralize.dossiers_supprimes_html', count: @dossiers_supprimes.count),
                 dossiers_path(statut: 'dossiers-supprimes', procedure_id: params[:procedure_id]),
                 active: @statut == 'dossiers-supprimes',
                 badge: number_with_html_delimiter(@dossiers_supprimes.count))

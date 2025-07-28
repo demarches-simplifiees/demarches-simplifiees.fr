@@ -838,9 +838,9 @@ en:
     dossiers_invites:
       one: guest file
       other: guest files
-    dossiers_supprimes:
-      one: trash
-      other: trash
+    dossiers_supprimes_html:
+      one: '<span class="visually-hidden">in the </span>trash'
+      other: '<span class="visually-hidden">in the </span>trash'
     dossiers_transferes:
       one: transfer request
       other: transfer requests
