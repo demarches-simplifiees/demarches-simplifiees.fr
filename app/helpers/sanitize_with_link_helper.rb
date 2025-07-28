@@ -2,10 +2,9 @@
 
 module SanitizeWithLinkHelper
   def sanitize_with_link(value)
-    allowed_tags = Rails.configuration.action_view.sanitized_allowed_tags || []
-    tags = allowed_tags + ['a']
+    tags = Rails.configuration.action_view.sanitized_allowed_tags + ['a']
 
-    allowed_attributes = Rails.configuration.action_view.sanitized_allowed_attributes || []
+    allowed_attributes = Rails.configuration.action_view.sanitized_allowed_attributes || Set.new
     attributes = allowed_attributes + [
       'aria-controls', 'data-fr-opened', 'data-fr-js-modal-button', 'href', 'class'
     ]
