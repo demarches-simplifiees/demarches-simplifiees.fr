@@ -1,7 +1,20 @@
 - if @search_terms.present?
   - content_for(:title, t(".title_search", scope: :metas, terms: @search_terms))
 - else
-  - content_for(:title, t(".title", scope: :metas))
+  - if @statut == 'en-cours'
+    - content_for(:title, t(".title_statut_in_progress", scope: :metas))
+  - elsif @statut == 'traites'
+    - content_for(:title, t(".title_statut_finished", scope: :metas))
+  - elsif @statut == 'dossiers-invites'
+    - content_for(:title, t(".title_statut_invited", scope: :metas))
+  - elsif @statut == 'dossiers-expirant'
+    - content_for(:title, t(".title_statut_expiring", scope: :metas))
+  - elsif @statut == 'dossiers-supprimes'
+    - content_for(:title, t(".title_statut_trash", scope: :metas))
+  - elsif @statut == 'dossiers-transferes'
+    - content_for(:title, t(".title_statut_transfered", scope: :metas))
+  - else
+    - content_for(:title, t(".title", scope: :metas))
 
 .dossiers-headers.sub-header
   .fr-container
