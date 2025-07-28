@@ -101,6 +101,7 @@ gem 'sentry-sidekiq'
 gem 'sib-api-v3-sdk'
 gem 'sidekiq', '< 7.3' # 7.3 needs to migrate to sidekiq-cron 2.0
 gem 'sidekiq-cron', '< 2.0' # wait for a release without "keys command"
+gem 'siret_validator'
 gem 'skylight'
 gem 'smarter_csv'
 gem 'spreadsheet_architect'

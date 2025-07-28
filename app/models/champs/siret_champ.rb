@@ -19,7 +19,7 @@ class Champs::SiretChamp < Champ
     return if value.blank?
     return if etablissement.present?
 
-    validator = SiretFormatValidator.new(attributes: { value: true })
+    validator = ActiveModel::Validations::SiretValidator.new(attributes: { value: true })
 
     # siret may have been formatted with spaces
     validator.validate_each(self, :value, value.gsub(/[[:space:]]/, ""))
