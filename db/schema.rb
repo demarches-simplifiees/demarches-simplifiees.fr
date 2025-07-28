@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_21_071536) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_25_140753) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -645,12 +645,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_21_071536) do
 
   create_table "export_templates", force: :cascade do |t|
     t.jsonb "attestation"
+    t.boolean "avis_attachments", default: false, null: false
+    t.boolean "commentaires_attachments", default: false, null: false
     t.jsonb "content", default: {}
     t.datetime "created_at", null: false
     t.jsonb "dossier_folder", null: false
     t.jsonb "export_pdf", null: false
     t.jsonb "exported_columns", default: [], null: false, array: true
     t.bigint "groupe_instructeur_id", null: false
+    t.boolean "justificatif_motivation", default: false, null: false
     t.string "kind", null: false
     t.string "name", null: false
     t.jsonb "pjs", default: [], null: false, array: true
