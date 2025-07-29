@@ -27,5 +27,5 @@
               = link_to t('.button.cancel_filters_html'), dossiers_path(statut: @statut), class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline'
 
   - if @filter.filter_params.present?
-    .fr-col-12.text-right
+    .fr-col-12.text-right.fr-mt-1w
       = link_to t('.tag.active_filters', count: @filter.filter_params_count), dossiers_path(statut: @statut),"aria-label": t('.tag.active_filters_link_title', count: @filter.filter_params_count), title: t('.tag.active_filters_link_title', count: @filter.filter_params_count), class: 'fr-tag fr-tag--sm fr-tag--dismiss'
