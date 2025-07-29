@@ -1,17 +1,22 @@
 fr:
   activerecord:
     models:
-      export_template: "Modèle d'export"
+      export_template: Modèle d’export
     attributes:
       export_template:
         hints:
-          name: "Le nom sera visible par vous et les autres instructeurs pour générer un export"
-          dossier_folder: "Comment souhaitez-vous nommer le répertoire contenant les documents d'un dossier ?"
-          export_pdf: "Comment souhaitez-vous nommer le fichier pdf qui contient toutes les réponses de l'usager ?"
-        name: "Nom du modèle"
+          name: Le nom sera visible par vous et les autres instructeurs pour générer un export
+          dossier_folder: Comment souhaitez-vous nommer le répertoire contenant les documents d’un dossier ?
+          export_pdf: Comment souhaitez-vous nommer le fichier pdf qui contient toutes les réponses de l’usager ?
+        name: Nom du modèle
         dossier_folder: Nom du répertoire
-        export_pdf: "Dossier au format pdf"
-        attestation: "Attestation d'acceptation"
+        export_pdf: Export PDF du dossier
+        attestation: Attestation d’acceptation au format PDF
+        attachments: Pièces jointes au dossier
+        other_files: Autres fichiers
+        commentaires_attachments: Pièces jointes à la messagerie
+        avis_attachments: Pièces jointes aux avis externes
+        justificatif_motivation: Justificatif de décision
     errors:
       models:
         export_template:
@@ -19,12 +24,12 @@ fr:
           different_templates: Les fichiers doivent avoir des noms différents
           invalid_template: Un nom de fichier est invalide
           base:
-            invalid: "est invalide"
+            invalid: est invalide
   instructeurs:
     export_templates:
       form_tabular:
         info_html: |
-          Cette page permet d'éditer un modèle d'export tabulaire et ainsi sélectionner les champs que vous souhaitez exporter.
+          Cette page permet d’éditer un modèle d’export tabulaire et ainsi sélectionner les champs que vous souhaitez exporter.
           Essayez-le et donnez-nous votre avis
           en nous envoyant un email à %{mailto}.
         warning: Si vous modifiez ce modèle, il sera également modifié pour tous les instructeurs qui ont accès à ce modèle.

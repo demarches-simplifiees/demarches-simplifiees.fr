@@ -5,21 +5,26 @@ en:
     attributes:
       export_template:
         hints:
-          name: "The name will be visible by you and the other instructors"
-          dossier_folder: "How would you like to name the directory containing the documents of a folder?"
-          export_pdf: "How would you like to name the pdf file containing all the user's answers?"
-        name: "Template's name"
-        dossier_folder: "Directory's name for pdf format"
-        export_pdf: "File in pdf format"
-        attestation: "Attestation of acceptance"
+          name: The name will be visible by you and the other instructors
+          dossier_folder: How would you like to name the directory containing the documents of a folder?
+          export_pdf: How would you like to name the pdf file containing all the user's answers?
+        name: Template's name
+        dossier_folder: Directory's name for pdf format
+        export_pdf: File in pdf format
+        attestation: Attestation of acceptance
+        attachments: Attachments in the folder
+        other_files: Other files
+        commentaires_attachments: Attachments to messaging
+        avis_attachments: Attachments to external advices
+        justificatif_motivation: Justification of motivation
     errors:
       models:
         export_template:
-          dossier_number_required: "must contain dossier's number"
-          different_templates: "Files must have different names"
-          invalid_template: "A file name is invalid"
+          dossier_number_required: must contain dossier's number
+          different_templates: Files must have different names
+          invalid_template: A file name is invalid
           base:
-            invalid: "is invalid"
+            invalid: is invalid
   instructeurs:
     export_templates:
       form_tabular:
