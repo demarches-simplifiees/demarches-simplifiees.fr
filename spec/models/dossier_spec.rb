@@ -470,6 +470,26 @@ describe Dossier, type: :model do
       it { expect(dossier.avis_for_expert(expert_2)).to match([avis_2]) }
     end
 
+    context 'when there are private avis asked from one expert to another expert' do
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: true) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_2, experts_procedure: experts_procedure, confidentiel: true) }
+
+      it 'experts can see both asked and received avis' do
+        expect(dossier.avis_for_expert(expert_1)).to match([avis_1, avis_2])
+        expect(dossier.avis_for_expert(expert_2)).to match([avis_1, avis_2])
+      end
+    end
+
+    context 'when there are public avis asked from one expert to another expert' do
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_2, experts_procedure: experts_procedure, confidentiel: false) }
+
+      it 'experts can see both asked and received avis' do
+        expect(dossier.avis_for_expert(expert_1)).to match([avis_1, avis_2])
+        expect(dossier.avis_for_expert(expert_2)).to match([avis_1, avis_2])
+      end
+    end
+
     context 'when they are a lot of advice' do
       let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
       let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
