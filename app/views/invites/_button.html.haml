@@ -1,8 +1,8 @@
-#invite-dialog-wrapper{ data: { controller: "lazy-modal" } }
+#dossier-invites-button-wrapper{ data: { controller: "lazy-modal" } }
   - invites = dossier.invites.count
   %button.fr-btn.fr-btn--secondary{
     type: "button",
-    aria: { controls: "modal-invite" },
+    aria: { controls: "dossier-invites-modal-dialog" },
     data: { "fr-opened" => "false", "turbo-frame" => "dossier-invites-modal", action: "lazy-modal#load" },
     src: dossier_index_invites_path(dossier_id: dossier.id),
   }
@@ -16,4 +16,5 @@
       - else
         = t('views.invites.dropdown.invite_to_edit')
 
-  = turbo_frame_tag "dossier-invites-modal", data: { "lazy-modal-target": "frame" }
+  = turbo_frame_tag "dossier-invites-modal", data: { "lazy-modal-target": "frame" } do
+    %dialog.fr-modal#dossier-invites-modal-dialog

@@ -335,9 +335,9 @@ fr:
         resent: 'Renvoyer un email de confirmation'
     invites:
       create:
-        success: "Une invitation a été envoyée à %{email}. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"modal-invite\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
+        success: "Une invitation a été envoyée à %{email}. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
       destroy:
-        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez en <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"modal-invite\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
+        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez en <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
         error: "Vous ne pouvez pas révoquer cette autorisation"
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -352,8 +352,8 @@ fr:
         email_hint: 'Exemple : adresse@mail.com'
         invite_message: Message optionnel pour la personne invitée
         send_invitation: Envoyer une invitation
-        withdraw_permission: "Révoquer l’autorisation"
-        want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation de %{email} ?"
+        withdraw_permission: "Révoquer l’accès"
+        want_to_withdraw_permission: "Souhaitez-vous supprimer l’accès invité de %{email} ?"
         edit_dossier_html:
           zero: '<p class="fr-my-2w"><em>Aucun invité ne peut voir et modifier ce dossier actuellement.</em></p>'
           one: '<h3 class="fr-h6 fr-mt-2w fr-mb-1w">1 personne invitée</h3>'
