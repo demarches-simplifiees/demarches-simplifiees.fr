@@ -9,7 +9,7 @@
   = f.label :body, class: "fr-label" do
     = t('views.shared.dossiers.messages.form.message_label_mandatory')
     = render EditableChamp::AsteriskMandatoryComponent.new
-  = f.text_area :body, rows: '5', placeholder: placeholder, title: placeholder, required: true, class: 'fr-input message-textarea'
+  = f.text_area :body, rows: '5', placeholder: placeholder, title: placeholder, required: true, class: 'fr-input message-textarea', data: { hide_target_target: 'reveal', focus_on_show: 'true'}
 
   - if local_assigns.has_key?(:dossier)
     .fr-mt-3w.fr-input-group
