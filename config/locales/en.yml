@@ -392,7 +392,7 @@ en:
           history: "File history"
           en_construction_notice: "Unless otherwise indicated, fields were entered on the date the file was submitted."
           requester_identity: "Identity of the requester"
-          mandataire_identity: "Identity of toe mandatary"
+          mandataire_identity: "Identity of the mandatary"
           requester_identity_updated_at: "updated on %{date}"
           individual_identity: "Your identity"
           form: "Form"
@@ -838,9 +838,9 @@ en:
     dossiers_invites:
       one: guest file
       other: guest files
-    dossiers_supprimes:
-      one: trash
-      other: trash
+    dossiers_supprimes_html:
+      one: '<span class="visually-hidden">in the </span>trash'
+      other: '<span class="visually-hidden">in the </span>trash'
     dossiers_transferes:
       one: transfer request
       other: transfer requests

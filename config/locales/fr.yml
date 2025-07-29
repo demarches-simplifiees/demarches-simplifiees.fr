@@ -857,9 +857,9 @@ fr:
     dossiers_invites:
       one: dossier invité
       other: dossiers invités
-    dossiers_supprimes:
-      one: corbeille
-      other: corbeille
+    dossiers_supprimes_html:
+      one: '<span class="visually-hidden">dans la </span>corbeille'
+      other: '<span class="visually-hidden">dans la </span>corbeille'
     dossiers_historique:
       one:  supprimé définitivement
       other: supprimés définitivement

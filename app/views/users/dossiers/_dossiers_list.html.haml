@@ -28,6 +28,7 @@
               = pending_correction_badge(:for_user)
 
           %p.fr-icon--sm.fr-icon-user-line
+            %span.visually-hidden= t('views.shared.dossiers.demande.requester_identity')
             = demandeur_dossier(dossier)
 
           - if dossier.hidden_by_expired?
