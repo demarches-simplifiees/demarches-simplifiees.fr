@@ -14,7 +14,7 @@ describe InvitesController, type: :controller do
       sign_in signed_in_profile
     end
 
-    subject { post :create, params: { dossier_id: dossier.id, invite_email: email } }
+    subject { post :create, params: { dossier_id: dossier.id, invite_email: email }, format: :turbo_stream }
 
     context "when instructeur is signed_in" do
       let(:signed_in_profile) { create(:instructeur).user }
@@ -71,6 +71,8 @@ describe InvitesController, type: :controller do
       end
 
       context 'when user has access to dossier' do
+        render_views
+
         before do
           request.env["HTTP_REFERER"] = "/dossiers/#{dossier.id}/brouillon"
           dossier.update(user: signed_in_profile)
@@ -78,8 +80,10 @@ describe InvitesController, type: :controller do
 
         it { expect { subject }.to change(Invite, :count).by(1) }
 
-        it "redirects to the previous URL" do
-          expect(subject).to redirect_to("/dossiers/#{dossier.id}/brouillon")
+        it "update the modal" do
+          expect(subject.body).to include("a été envoyée à plop@octo.com")
+          expect(subject.body).to match(/Voir les personnes invitées\s+<span[^>]+>1/)
+          expect(subject.body).to include("modal.conceal()")
         end
 
         context 'when email is assign to an user' do
@@ -98,8 +102,10 @@ describe InvitesController, type: :controller do
             end
           end
 
-          it { expect(invite.user).to eq user_invite }
-          it { expect(flash[:notice]).to be_present }
+          it "updates the modal" do
+            expect(invite.user).to eq user_invite
+            expect(subject.body).to include("Une invitation a été envoyée à #{email}")
+          end
         end
 
         context 'when email is not assign to an user' do
@@ -107,8 +113,10 @@ describe InvitesController, type: :controller do
             subject
           end
 
-          it { expect(invite.user).to be_nil }
-          it { expect(flash[:notice]).to be_present }
+          it "update the modal" do
+            expect(invite.user).to be_nil
+            expect(subject.body).to include("Une invitation a été envoyée à #{email}")
+          end
         end
 
         describe 'not an email' do
@@ -119,17 +127,22 @@ describe InvitesController, type: :controller do
               subject
             end
 
-            it { expect { subject }.not_to change(Invite, :count) }
-            it { expect(flash[:alert]).to be_present }
+            it "renders an error" do
+              expect { subject }.not_to change(Invite, :count)
+              expect(subject.body).to include("est invalide")
+            end
           end
 
           context "when user does'nt give any email" do
-            subject { post :create, params: { dossier_id: dossier.id } }
+            subject { post :create, params: { dossier_id: dossier.id }, format: :turbo_stream }
             before do
               subject
             end
-            it { expect { subject }.not_to change(Invite, :count) }
-            it { expect(flash[:alert]).to be_present }
+
+            it "renders an error" do
+              expect { subject }.not_to change(Invite, :count)
+              expect(subject.body).to include("doit être rempli")
+            end
           end
 
           context 'when email is already used' do
@@ -139,8 +152,10 @@ describe InvitesController, type: :controller do
               subject
             end
 
-            it { expect { subject }.not_to change(Invite, :count) }
-            it { expect(flash[:alert]).to be_present }
+            it "handle it gracefully" do
+              expect { subject }.not_to change(Invite, :count)
+              expect(subject.body).to include("Invitation déjà envoyée")
+            end
           end
         end
 
@@ -278,7 +293,8 @@ describe InvitesController, type: :controller do
     context 'when user is signed in' do
       it "destroy invites" do
         expect { subject }.to change { Invite.count }.from(1).to(0)
-        expect(response.body).to include(".invite-user-action")
+        expect(response.body).to include("dossier-invites-button-wrapper")
+        expect(response.body).to include("L'autorisation de plop@octo.com vient d'être révoquée")
       end
     end
 

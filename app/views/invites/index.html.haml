@@ -1,0 +1,10 @@
+= turbo_frame_tag("dossier-invites-modal") do
+  %dialog.fr-modal#modal-invite{
+    aria: { labelledby: "modal-invite-title" }
+  }
+    .fr-container--fluid.fr-container-md
+      .fr-grid-row.fr-grid-row--center
+        .fr-col-12.fr-col-md-10.fr-col-lg-8
+          .fr-modal__body
+            %turbo-frame{ id: "modal-invite-content" }
+              = render partial: "invites/form_wrapper", locals: { dossier: @dossier, invite: @dossier.invites.build, invites: @dossier.invites.filter(&:persisted?) }

@@ -1,30 +1,38 @@
 # frozen_string_literal: true
 
 class InvitesController < ApplicationController
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!, except: [:show]
   before_action :store_user_location!, only: [:show]
+
+  def index
+    @dossier = current_user.dossiers.visible_by_user.find(params[:dossier_id])
+  end
 
   def create
     email = params[:invite_email]&.downcase
     @dossier = current_user.dossiers.visible_by_user.find(params[:dossier_id])
-    invite = Invite.create(
+    @invite = Invite.create(
       dossier: @dossier,
       user: User.find_by(email: email),
       email: email,
       message: params[:invite_message],
       email_sender: current_user.email
     )
-
-    if invite.valid?
+    if @invite.valid?
       # The notification is sent through an after commit hook in order to avoir concurrency issues
-      flash.notice = t('views.invites.create.success', email: invite.email)
-    else
-      flash.alert = invite.errors.full_messages
+      flash.notice = t('views.invites.create.success', email: @invite.email)
     end
 
     respond_to do |format|
-      format.html { redirect_back(fallback_location: helpers.url_for_dossier(@dossier)) }
-      format.turbo_stream
+      format.html do
+        if @invite.invalid? # in turbo, errors are shown in the modal
+          flash.alert = @invite.errors.full_messages
+        end
+
+        redirect_back(fallback_location: helpers.url_for_dossier(@dossier))
+      end
+
+      format.turbo_stream { render layout: 'application' }
     end
   end
 
@@ -58,7 +66,7 @@ class InvitesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_back(fallback_location: @dossier.present? ? helpers.url_for_dossier(@dossier) : root_url) }
-      format.turbo_stream
+      format.turbo_stream { render layout: 'application' }
     end
   end
 

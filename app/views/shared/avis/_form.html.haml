@@ -16,7 +16,7 @@
 
   = form_for avis, url: url, html: { multipart: true, data: form_data } do |f|
     - if avis.errors.any?
-      .fr-alert.fr-alert--error.fr-mb-3w
+      .fr-alert.fr-alert--error.fr-mb-3w{ role: 'alert' }
         %ul
           - avis.errors.full_messages.each do |msg|
             %li= msg

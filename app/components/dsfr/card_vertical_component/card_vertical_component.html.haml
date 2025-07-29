@@ -15,7 +15,7 @@
                 %p.fr-tag= tag
       .fr-card__end
         - if error
-          .fr-card__detail.fr-alert.fr-alert--error
+          .fr-card__detail.fr-alert.fr-alert--error{ role: 'alert' }
             %p= error
 
     - if footer_buttons?

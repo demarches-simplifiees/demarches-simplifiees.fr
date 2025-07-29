@@ -27,7 +27,7 @@ describe 'Invitations' do
     context 'when inviting someone without an existing account' do
       let(:invite) { create(:invite, dossier: dossier, user: nil) }
 
-      scenario 'an invited user can register using the targeted_user_link sent in the invitation email thru the ' do
+      scenario 'an invited user can register using the targeted_user_link sent in the invitation email', js: true do
         log_in(owner)
         navigate_to_brouillon(dossier)
 
@@ -42,7 +42,9 @@ describe 'Invitations' do
         invitation_email = open_email("user_invite@exemple.fr")
         targeted_user_link = TargetedUserLink.last
         expect(invitation_email).to have_link(targeted_user_link_url(targeted_user_link))
-        invitation_email.click_on targeted_user_link_url(targeted_user_link)
+
+        page.reset_session!
+        visit URI.parse(targeted_user_link_url(targeted_user_link)).request_uri
         expect(page).to have_current_path("/users/sign_up?user%5Bemail%5D=user_invite%40exemple.fr")
       end
     end
@@ -50,7 +52,7 @@ describe 'Invitations' do
     context 'when inviting someone with an existing account' do
       let(:user) { create(:user) }
 
-      scenario 'an invited user can sign in using the targeted_user_link link sent in the invitation email' do
+      scenario 'an invited user can sign in using the targeted_user_link link sent in the invitation email', js: true do
         log_in(owner)
         navigate_to_brouillon(dossier)
 
@@ -65,7 +67,9 @@ describe 'Invitations' do
         targeted_user_link = TargetedUserLink.last
         expect(targeted_user_link.user.email).to eq(user.email)
         expect(invitation_email).to have_link(targeted_user_link_url(targeted_user_link))
-        invitation_email.click_on targeted_user_link_url(targeted_user_link)
+
+        page.reset_session!
+        visit URI.parse(targeted_user_link_url(targeted_user_link)).request_uri
         expect(page).to have_current_path("/users/sign_in")
       end
     end
@@ -214,5 +218,7 @@ describe 'Invitations' do
 
     fill_in 'invite_email', with: invited_email
     click_on "Envoyer une invitation"
+    expect(page).to have_text("Une invitation a été envoyée à #{invited_email}")
+    expect(page).to have_button("Voir les personnes invitées 1", visible: true)
   end
 end

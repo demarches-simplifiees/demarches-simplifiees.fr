@@ -5,33 +5,5 @@
     .fr-grid-row.fr-grid-row--center
       .fr-col-12.fr-col-md-10.fr-col-lg-8
         .fr-modal__body
-          .fr-modal__header
-            %button.fr-btn.fr-btn--close{
-              type: "button",
-              aria: { controls: "modal-invite" },
-              title: "Fermer"
-            }
-              = t('utils.modal_close')
-          .fr-modal__content
-            %h1#fr-modal-title-invite.fr-modal__title.fr-mb-4v
-              %span.fr-icon-arrow-right-line.fr-icon--lg>
-                = t('views.invites.form.modal_title')
-            .fr-notice.fr-notice--info
-              .fr-notice__body.fr-ml-3v
-                %p
-                  %span.fr-notice__title= t('views.invites.form.modal_highlight')
-
-            = render partial: "invites/form", locals: { dossier: dossier, invites: invites, morphing: morphing }
-
-          .fr-modal__footer
-            .fr-btns-group.fr-btns-group--left.fr-btns-group--inline-lg
-              %button.fr-btn.fr-btn--secondary{
-                type: "button",
-                aria: { controls: "modal-invite" }
-              }
-                = t('views.invites.form.cancel')
-              %button.fr-btn{
-                type: "submit",
-                form: "invite-form"
-              }
-                = t('views.invites.form.send_invitation')
+          %turbo-frame{ id: "modal-invite-content" }
+            = render partial: "invites/form_wrapper", locals: { dossier:, invite:, invites: }
