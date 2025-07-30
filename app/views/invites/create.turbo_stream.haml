@@ -1,2 +1,12 @@
-= turbo_stream.replace_all '.invite-user-action', partial: 'invites/dropdown', locals: { dossier: @dossier, morphing: true }
-= turbo_stream.focus 'invite-list'
+- if @invite.valid?
+  = turbo_stream.append "dossier-invites-button-wrapper" do
+    :javascript
+      const element = document.getElementById("dossier-invites-modal-dialog");
+      if (element && dsfr) {
+        dsfr(element).modal.conceal();
+      }
+  = turbo_stream.update 'dossier-invites-button-wrapper', partial: 'invites/button', locals: { dossier: @dossier }
+
+- else
+  - invites = @dossier.invites.load
+  = turbo_stream.replace "dossier-invites-form-content", partial: "invites/form", locals: { dossier: @dossier, invite: @invite, invites: }
