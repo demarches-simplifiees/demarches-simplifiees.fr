@@ -68,6 +68,41 @@ describe ExportTemplate do
         expect(export_template.attachment_path(dossier, attachment)).to eq("dossier-#{dossier.id}/attestation-#{dossier.id}.pdf")
       end
     end
+
+    context 'for commentaire attachment' do
+      let(:commentaire) { create(:commentaire, :with_file, dossier: dossier) }
+      let(:attachment) { commentaire.piece_jointe.first }
+      let(:export_template) { build(:export_template, groupe_instructeur:, commentaires_attachments: true) }
+
+      it 'returns commentaire attachment and its custom name' do
+        expect(export_template.attachment_path(dossier, attachment)).to start_with("dossier-#{dossier.id}/messagerie/")
+        expect(export_template.attachment_path(dossier, attachment)).to eq("dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(attachment)}")
+      end
+    end
+
+    context 'for avis attachment' do
+      let(:avis) { create(:avis, :with_introduction, dossier: dossier) }
+      let(:attachment) { avis.introduction_file.attachment }
+      let(:export_template) { build(:export_template, groupe_instructeur:, avis_attachments: true) }
+
+      it 'returns avis attachment and its custom name' do
+        expect(export_template.attachment_path(dossier, attachment)).to start_with("dossier-#{dossier.id}/avis/")
+        expect(export_template.attachment_path(dossier, attachment)).to eq("dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(attachment)}")
+      end
+    end
+
+    context 'for justificatif motivation' do
+      let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+      let(:attachment) { dossier.justificatif_motivation.attachment }
+      let(:export_template) { build(:export_template, groupe_instructeur:, justificatif_motivation: true) }
+
+      before { dossier.update!(justificatif_motivation: fake_justificatif) }
+
+      it 'returns justificatif motivation and its custom name' do
+        expect(export_template.attachment_path(dossier, attachment)).to start_with("dossier-#{dossier.id}/dossier/")
+        expect(export_template.attachment_path(dossier, attachment)).to eq("dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(attachment)}")
+      end
+    end
   end
 
   describe '#tags and #pj_tags' do

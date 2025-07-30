@@ -38,14 +38,14 @@
           - c.with_title do
             Sélectionnez les fichiers que vous souhaitez exporter
 
-        %h3 Dossier au format PDF
+        %h3= ExportTemplate.human_attribute_name(:export_pdf)
         = render partial: 'export_item',
           locals: { item: export_template.export_pdf,
             libelle: ExportTemplate.human_attribute_name(:export_pdf),
             prefix: 'export_template[export_pdf]' }
 
         - if procedure.attestation_template&.activated?
-          %h3 Attestation d'acceptation au format PDF
+          %h3= ExportTemplate.human_attribute_name(:attestation)
 
           = render partial: 'export_item',
             locals: { item: export_template.attestation || ExportItem.default(prefix: 'attestation'),
@@ -53,7 +53,7 @@
               prefix: 'export_template[attestation]' }
 
         - if procedure.exportables_pieces_jointes_for_all_versions.any?
-          %h3 Pièces justificatives
+          %h3= ExportTemplate.human_attribute_name(:attachments)
 
           - procedure.exportables_pieces_jointes.each do |tdc|
             - item = export_template.pj(tdc)
@@ -79,6 +79,18 @@
                     locals: { item:,
                       libelle: tdc.libelle,
                       prefix: 'export_template[pjs][]'}
+
+        %h3= ExportTemplate.human_attribute_name(:export_pdf)
+        .card.no-list
+          .fr-checkbox-group.fr-mb-3w
+            = f.check_box :commentaires_attachments
+            = f.label :commentaires_attachments, ExportTemplate.human_attribute_name(:commentaires_attachments), class: 'fr-label'
+          .fr-checkbox-group.fr-mb-3w
+            = f.check_box :avis_attachments
+            = f.label :avis_attachments, ExportTemplate.human_attribute_name(:avis_attachments) , class: 'fr-label'
+          .fr-checkbox-group
+            = f.check_box :justificatif_motivation
+            = f.label :justificatif_motivation, ExportTemplate.human_attribute_name(:justificatif_motivation), class: 'fr-label'
 
         .fixed-footer
           .fr-container
