@@ -1,7 +1,7 @@
 ministeres:
   - MAA:
     labels:
-      - '2022-05-20': "Ministère de l'Agriculture et de la Souveraineté alimentaire"
+      - '2022-05-20': "Ministère de l’Agriculture et de la Souveraineté alimentaire"
       - '2020-07-06': "Ministère de l'Agriculture et de l'Alimentation"
     tchap_hs:
       - agent.agriculture.tchap.gouv.fr
@@ -10,8 +10,6 @@ ministeres:
       - '2020-07-06': "Ministère de la Culture"
     tchap_hs:
       - agent.culture.tchap.gouv.fr
-
-
   - MAS:
     labels:
       - '2024-03-12': "Non attribué"
@@ -28,6 +26,7 @@ ministeres:
       - agent.social.tchap.gouv.fr
   - MTEI:
     labels:
+      - '2025-07-30': "Ministère du Travail, de la Santé, des Solidarités et des Familles"
       - '2024-03-12': "Ministère du Travail, de la Santé et des Solidarités"
       - '2022-05-20': "Ministère du Travail, du Plein emploi et de l'Insertion"
       - '2020-07-06': "Ministère du Travail"
@@ -35,12 +34,12 @@ ministeres:
       - agent.social.tchap.gouv.fr
   - MEAE:
     labels:
-      - '2020-07-06': "Ministère de l'Europe et des Affaires étrangères"
+      - '2020-07-06': "Ministère de l’Europe et des Affaires étrangères"
     tchap_hs:
       - agent.diplomatie.tchap.gouv.fr
   - MEF:
     labels:
-      - '2022-05-20': "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique"
+      - '2022-05-20': "Ministère de l’Économie, des Finances et de la Souveraineté industrielle et numérique"
       - '2020-07-06': "Ministère de l'Économie, des Finances et de la Relance"
     tchap_hs:
       - agent.finances.tchap.gouv.fr
@@ -52,24 +51,28 @@ ministeres:
       - agent.social.tchap.gouv.fr
   - MSJO:
     labels:
+      - '2025-07-30': "Ministère des Sports, de la Jeunesse et de la Vie associative"
       - '2022-05-20': "Ministère des Sports et des Jeux olympiques et paralympiques"
       - '2020-07-06': "Non attribué"
     tchap_hs:
       - agent.social.tchap.gouv.fr
   - MEN:
     labels:
+      - '2025-07-30': "Ministère de l’Éducation nationale, de l’Enseignement supérieur et de la Recherche"
       - '2022-05-20': "Ministère de l'Éducation nationale et de la Jeunesse"
       - '2020-07-06': "Ministère de l'Éducation nationale, de la Jeunesse et des Sports"
     tchap_hs:
       - agent.education.tchap.gouv.fr
   - ESR:
     labels:
+      - '2025-07-30': "Non attribué"
       - '2022-05-20': "Ministère de l'Enseignement supérieur et de la Recherche"
       - '2020-07-06': "Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation"
     tchap_hs:
       - agent.education.tchap.gouv.fr
   - MI:
     labels:
+      - '2025-07-30': "Ministère de l’Intérieur"
       - '2022-05-20': "Ministère de l'Intérieur et des Outre-mer"
       - '2020-07-06': "Ministère de l'Intérieur"
     tchap_hs:
@@ -86,6 +89,7 @@ ministeres:
       - agent.justice.tchap.gouv.fr
   - MTES:
     labels:
+      - '2025-07-30': "Ministère de la Transition écologique, de la Biodiversité, de la Forêt, de la Mer et de la Pêche"
       - '2022-05-20': "Ministère de la Transition écologique et de la Cohésion des territoires"
       - '2020-07-06': "Ministère de la Transition écologique"
     tchap_hs:
@@ -99,6 +103,7 @@ ministeres:
       - agent.dev-durable.tchap.gouv.fr
   - MCTRCT:
     labels:
+      - '2025-07-30': "Ministère de l’Aménagement du Territoire et de la Décentralisation"
       - '2022-05-20': "Non attribué"
       - '2020-07-06': "Ministère de la Cohésion des territoires et des Relations avec les collectivités territoriales"
     tchap_hs:
@@ -115,12 +120,14 @@ ministeres:
       - '2020-07-06': "Ministère de la Mer"
   - MTFP:
     labels:
+      - '2025-07-30': "Ministère de l’Action publique, de la Fonction publique et de la Simplification"
       - '2020-07-06': "Ministère de la Transformation et de la Fonction publiques"
     tchap_hs:
       - agent.pm.tchap.gouv.fr
       - agent.dinum.tchap.gouv.fr
   - OM:
     labels:
+      - '2025-07-30': "Ministère des Outre-mer"
       - '2022-05-20': "Non attribué"
       - '2020-07-06': "Ministère des Outre-mer"
   - AI:
