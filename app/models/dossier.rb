@@ -478,6 +478,10 @@ class Dossier < ApplicationRecord
     user_email_for(:display)
   end
 
+  def last_booked_rdv
+    rdvs.booked.by_starts_at.last
+  end
+
   def expiration_started?
     [
       brouillon_close_to_expiration_notice_sent_at,

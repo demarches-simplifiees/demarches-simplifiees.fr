@@ -108,7 +108,7 @@ module Users
 
     def rendez_vous
       @dossier = dossier
-      @rdv = @dossier.rdvs.booked.by_starts_at.last
+      @rdv = @dossier.last_booked_rdv
     end
 
     def attestation

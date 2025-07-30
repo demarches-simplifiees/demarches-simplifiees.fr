@@ -21,14 +21,10 @@ class Instructeurs::ScheduleRdvButtonComponent < ApplicationComponent
   private
 
   def button_text
-    if has_existing_rdv?
+    if @dossier.last_booked_rdv.present?
       t('.schedule_another_rdv')
     else
       t('.schedule_rdv')
     end
-  end
-
-  def has_existing_rdv?
-    @dossier.rdvs.booked.any?
   end
 end
