@@ -381,6 +381,27 @@ describe Dossier, type: :model do
         end
       end
     end
+
+    describe '#last_booked_rdv' do
+      let(:dossier) { create(:dossier) }
+      let(:instructeur) { create(:instructeur) }
+
+      context 'when there are no booked RDVs' do
+        it 'returns nil' do
+          expect(dossier.last_booked_rdv).to be_nil
+        end
+      end
+
+      context 'when there are RDVs' do
+        let!(:booked1) { create(:rdv, :booked, dossier: dossier, instructeur: instructeur, starts_at: 1.day.from_now) }
+        let!(:booked2) { create(:rdv, :booked, dossier: dossier, instructeur: instructeur, starts_at: 2.days.from_now) }
+        let!(:not_booked) { create(:rdv, dossier: dossier, instructeur: instructeur, starts_at: 3.days.from_now) }
+
+        it 'returns the RDV with the latest starts_at' do
+          expect(dossier.last_booked_rdv).to eq(booked2)
+        end
+      end
+    end
   end
 
   context 'when dossier is followed' do

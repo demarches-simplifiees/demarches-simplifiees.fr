@@ -7,8 +7,8 @@ FactoryBot.define do
     dossier { create(:dossier) }
     instructeur { dossier.groupe_instructeur.instructeurs.first }
 
-    trait :with_rdv_id do
-      rdv_id { "2345678901" }
+    trait :booked do
+      rdv_external_id { "2345678901" }
     end
   end
 end
