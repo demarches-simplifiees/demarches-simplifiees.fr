@@ -77,13 +77,4 @@ module ProcedureHelper
     !procedure.replaced_by_procedure.discarded? &&
     procedure.replaced_by_procedure.path.present? # TODO: to remove when all path are added, cf: https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/11453
   end
-
-  def procedure_has_unseen_revisions?(instructeur_procedure)
-    return false if instructeur_procedure.procedure.published_revision_id.blank?
-
-    last_seen_id = instructeur_procedure.last_revision_seen_id
-    return false if last_seen_id.blank?
-
-    last_seen_id < instructeur_procedure.procedure.published_revision_id
-  end
 end
