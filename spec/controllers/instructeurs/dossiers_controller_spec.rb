@@ -1851,4 +1851,28 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
   end
+
+  describe '#rendez_vous' do
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    render_views
+
+    subject do
+      get :rendez_vous, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    context 'when current_instructeur has no rdv_connection' do
+      before do
+        allow(instructeur).to receive(:rdv_connection).and_return(nil)
+      end
+
+      it 'should not crash' do
+        expect { subject }.not_to raise_error
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end
