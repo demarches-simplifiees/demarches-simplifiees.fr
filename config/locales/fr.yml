@@ -337,7 +337,7 @@ fr:
       create:
         success: "Une invitation a été envoyée à %{email}. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
       destroy:
-        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez en <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
+        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
         error: "Vous ne pouvez pas révoquer cette autorisation"
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
