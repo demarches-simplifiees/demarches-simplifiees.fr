@@ -22,7 +22,7 @@ class InstructeurMailer < ApplicationMailer
 
     if @overview.present?
       configure_defaults_for_user(instructeur.user)
-      mail(to: email, subject: @subject)
+      mail(to: email, subject: @subject, from: Current.no_reply_email, reply_to: Current.no_reply_email)
     end
   end
 
