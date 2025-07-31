@@ -24,10 +24,10 @@ class Commentaire < ApplicationRecord
 
   scope :chronological, -> { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
-  scope :to_notify, -> (instructeur) {
+  scope :to_notify, -> (instructeur_id) {
     where.not(email: SYSTEM_EMAILS)
       .where(discarded_at: nil)
-      .where("instructeur_id IS NULL OR instructeur_id != ?", instructeur.id)
+      .where("instructeur_id IS NULL OR instructeur_id != ?", instructeur_id)
   }
 
   after_create :notify
