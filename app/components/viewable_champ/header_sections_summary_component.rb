@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
 class ViewableChamp::HeaderSectionsSummaryComponent < ApplicationComponent
-  attr_reader :header_sections
+  attr_reader :sections
 
-  def initialize(dossier:, is_private:)
+  def initialize(dossier:, is_private:, profile:)
     @dossier = dossier
     @is_private = is_private
 
-    @header_sections = if is_private
-      dossier.revision.types_de_champ_private
+    @sections = if is_private
+      dossier.private_tree(profile:).sections
     else
-      dossier.revision.types_de_champ_public
-    end.filter(&:header_section?)
+      dossier.public_tree(profile:).sections
+    end.filter(&:visible?)
   end
 
-  def render? = header_sections.any?
+  def render? = sections.any?
 
-  def href(header_section) # used by viewable champs to anchor elements
-    "##{header_section.html_id}"
+  def href(section) # used by viewable champs to anchor elements
+    "##{dom_id(section).gsub('section_', 'champ-')}"
   end
 end
