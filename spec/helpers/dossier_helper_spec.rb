@@ -56,7 +56,7 @@ RSpec.describe DossierHelper, type: :helper do
       end
 
       context "when the individual has name information" do
-        it { is_expected.to eq "#{individual.nom} #{individual.prenom}" }
+        it { is_expected.to eq "#{individual.prenom} #{individual.nom}" }
       end
     end
 

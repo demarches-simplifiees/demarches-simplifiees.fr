@@ -204,7 +204,7 @@ module DossierHelper
     end
 
     if dossier.procedure.for_individual?
-      return "#{dossier&.individual&.nom} #{dossier&.individual&.prenom}"
+      return "#{dossier&.individual&.prenom} #{dossier&.individual&.nom}"
     end
 
     return "" if dossier.etablissement.blank?
