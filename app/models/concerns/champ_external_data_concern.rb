@@ -47,6 +47,10 @@ module ChampExternalDataConcern
       fetch_external_data_exceptions.present? && self.external_id.present?
     end
 
+    def save_external_exception(exception, code)
+      update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
+    end
+
     private
 
     def uses_external_data?
@@ -75,10 +79,6 @@ module ChampExternalDataConcern
 
     def update_external_data!(data:)
       update!(data: data, fetch_external_data_exceptions: [])
-    end
-
-    def save_external_exception(exception, code)
-      update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
     end
 
     def cleanup_if_empty

@@ -17,11 +17,29 @@ RSpec.describe APIEntreprise::Job, type: :job do
     end
 
     context 'when a retriable error is raised' do
-      let(:errors) { [:service_unavaible, :bad_gateway, :timed_out] }
+      let(:errors) { [:service_unavailable, :bad_gateway, :timed_out] }
 
       it 'retries 5 times' do
         ensure_errors_force_n_retry(errors, 5)
         expect(dossier.reload.api_entreprise_job_exceptions.first).to match('APIEntreprise::API::Error::ServiceUnavailable')
+      end
+    end
+
+    context 'when error with an etablissement on a champ' do
+      let(:types_de_champ_public) do
+        [{ type: :siret }]
+      end
+
+      let(:procedure) { create(:procedure, types_de_champ_public:) }
+      let(:dossier) { create(:dossier, procedure:) }
+
+      it "retries 5 times" do
+        champ = dossier.champs.first
+        etablissement = create(:etablissement, champ:)
+
+        assert_performed_jobs(5) do
+          ErrorJob.perform_later(:service_unavailable, etablissement)
+        end
       end
     end
 
@@ -51,7 +69,7 @@ RSpec.describe APIEntreprise::Job, type: :job do
       )
 
       case error
-      when :service_unavaible
+      when :service_unavailable
         raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
       when :bad_gateway
         raise APIEntreprise::API::Error::BadGateway.new(response)
