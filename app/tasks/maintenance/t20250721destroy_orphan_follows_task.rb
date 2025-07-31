@@ -16,15 +16,18 @@ module Maintenance
       Follow
         .left_joins(:instructeur, :dossier)
         .where('instructeurs.id IS NULL OR dossiers.id IS NULL')
+        .in_batches
     end
 
-    def process(follow)
-      follow.destroy!
+    def process(batch_of_follows)
+      batch_of_follows.delete_all
     end
 
     def count
       with_statement_timeout("5min") do
-        collection.count(:id)
+        Follow
+          .left_joins(:instructeur, :dossier)
+          .where('instructeurs.id IS NULL OR dossiers.id IS NULL').count(:id) / 1000
       end
     end
   end
