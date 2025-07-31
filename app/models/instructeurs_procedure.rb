@@ -13,6 +13,16 @@ class InstructeursProcedure < ApplicationRecord
     attente_avis: 'followed'
   }.freeze
 
+  NOTIFICATION_COLUMNS = {
+    dossier_depose: 'display_dossier_depose_notifications',
+    dossier_modifie: 'display_dossier_modifie_notifications',
+    message: 'display_message_notifications',
+    annotation_instructeur: 'display_annotation_instructeur_notifications',
+    avis_externe: 'display_avis_externe_notifications',
+    attente_correction: 'display_attente_correction_notifications',
+    attente_avis: 'display_attente_avis_notifications'
+  }.freeze
+
   belongs_to :instructeur
   belongs_to :procedure
 
@@ -35,5 +45,33 @@ class InstructeursProcedure < ApplicationRecord
 
   def notification_preference_for(notification_type)
     self.send("display_#{notification_type}_notifications")
+  end
+
+  def notification_preferences
+    NOTIFICATION_COLUMNS.transform_values do |column|
+      self.send(column)
+    end
+  end
+
+  def refresh_notifications(groupe_instructeur_ids, old_preferences, new_preferences)
+    return if old_preferences == new_preferences
+
+    all_dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+    followed_dossiers = all_dossiers.joins(:follows).where(follows: { instructeur_id: }).distinct
+    non_followed_dossiers = all_dossiers.where.not(id: followed_dossiers)
+
+    old_preferences.keys.each do |notification_type|
+      if old_preferences[notification_type] != new_preferences[notification_type]
+        DossierNotification.refresh_notifications_instructeur_for_dossiers(
+          all_dossiers,
+          followed_dossiers,
+          non_followed_dossiers,
+          self.instructeur_id,
+          notification_type,
+          old_preferences[notification_type],
+          new_preferences[notification_type]
+        )
+      end
+    end
   end
 end
