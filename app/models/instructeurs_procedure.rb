@@ -3,6 +3,16 @@
 class InstructeursProcedure < ApplicationRecord
   NOTIFICATION_PREFERENCES = ['all', 'followed', 'none'].freeze
 
+  DEFAULT_NOTIFICATIONS_PREFERENCES = {
+    dossier_depose: 'all',
+    dossier_modifie: 'followed',
+    message: 'followed',
+    annotation_instructeur: 'followed',
+    avis_externe: 'followed',
+    attente_correction: 'followed',
+    attente_avis: 'followed'
+  }.freeze
+
   belongs_to :instructeur
   belongs_to :procedure
 
@@ -21,5 +31,9 @@ class InstructeursProcedure < ApplicationRecord
         InstructeursProcedure.where(procedure_id:, instructeur:).update(position:)
       end
     end
+  end
+
+  def notification_preference_for(notification_type)
+    self.send("display_#{notification_type}_notifications")
   end
 end
