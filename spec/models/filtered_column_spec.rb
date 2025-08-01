@@ -32,7 +32,7 @@ describe FilteredColumn do
       before { filtered_column.valid? }
 
       context 'when the filter is too high' do
-        let(:filter) { (FilteredColumn::PG_INTEGER_MAX_VALUE + 1).to_s }
+        let(:filter) { { operator: 'match', value: [(FilteredColumn::PG_INTEGER_MAX_VALUE + 1).to_s] } }
 
         it 'adds an error' do
           expect(filtered_column.errors.map(&:message)).to include(/Le filtre « label » n'est pas un numéro de dossier possible/)
@@ -40,7 +40,7 @@ describe FilteredColumn do
       end
 
       context 'when the filter is not too high' do
-        let(:filter) { FilteredColumn::PG_INTEGER_MAX_VALUE.to_s }
+        let(:filter) { { operator: 'match', value: [FilteredColumn::PG_INTEGER_MAX_VALUE.to_s] } }
 
         it 'does not add an error' do
           expect(filtered_column.errors).to be_empty

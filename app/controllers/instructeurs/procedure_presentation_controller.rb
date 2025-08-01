@@ -2,7 +2,36 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter]
+    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter]
+
+    def add_filter
+      column = ColumnType.new.cast(filter_params[:column_id])
+      filter = filter_params[:filter]
+      statut = filter_params[:statut]
+
+      new_filter = FilteredColumn.new(column:, filter:)
+
+      if new_filter.valid?
+        filters_attr = @procedure_presentation.filters_name_for(statut)
+        current_filters = @procedure_presentation.send(filters_attr) || []
+        @procedure_presentation.update!(filters_attr => current_filters + [new_filter])
+        flash.notice = "Filtre ajouté avec succès"
+      else
+        flash.alert = new_filter.errors.full_messages.join(', ')
+      end
+
+      redirect_back_or_to([:instructeur, procedure])
+    end
+
+    def remove_filter
+      filter_name = @procedure_presentation.filters_name_for(params[:statut])
+
+      @procedure_presentation.update!(filter_name => @procedure_presentation.filters_for(params[:statut]).reject do |filter|
+        filtered_column_from_params == filter
+      end)
+
+      redirect_back_or_to([:instructeur, procedure])
+    end
 
     def update
       if !@procedure_presentation.update(procedure_presentation_params)
@@ -15,8 +44,7 @@ module Instructeurs
     end
 
     def refresh_column_filter
-      # According to the html, the selected filters is the last one
-      @column = ColumnType.new.cast(params['filters'].last['id'])
+      @column = ColumnType.new.cast(params['column_id'])
       procedure = current_instructeur.procedures.find(@column.h_id[:procedure_id])
 
       if @column.groupe_instructeur?
@@ -25,6 +53,10 @@ module Instructeurs
     end
 
     private
+
+    def filtered_column_from_params
+      @filtered_column_from_params ||= FilteredColumn.new(column: ColumnType.new.cast(params[:column_id]), filter: filter_params[:filter].to_h.symbolize_keys)
+    end
 
     def procedure = @procedure_presentation.procedure
 
@@ -43,6 +75,10 @@ module Instructeurs
       end
 
       h
+    end
+
+    def filter_params
+      params.permit(:column_id, :statut, filter: [:operator, value: []])
     end
 
     def set_procedure_presentation
