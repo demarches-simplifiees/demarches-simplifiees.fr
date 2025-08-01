@@ -184,7 +184,7 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text(instructeur2.email)
   end
 
-  scenario 'A instructeur can send a dossier to several instructeurs' do
+  scenario 'A instructeur can send a dossier to several instructeurs', chrome: true do
     instructeur_2 = create(:instructeur)
     instructeur_3 = create(:instructeur)
     procedure.defaut_groupe_instructeur.instructeurs << [instructeur_2, instructeur_3]
