@@ -46,10 +46,18 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
 
     filter_value = Array(filter[:value])
 
+    operator = if filter[:operator] == 'before'
+      "avant"
+    elsif filter[:operator] == 'after'
+      "après"
+    end
+
     if column_type == :date || column_type == :datetime
       filter_value.map { helpers.try_parse_format_date(it) }.join(' ou ')
     else
       filter_value.map { filter_column.column.label_for_value(it) }.join(' ou ')
     end
+
+    [operator, filter_value].compact.join(' ')
   end
 end
