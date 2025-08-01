@@ -22,8 +22,20 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     options
   end
 
+  def date_filter_options
+    [
+      ["Le", 'match'],
+      ["Avant", 'before'],
+      ["Après", 'after']
+    ]
+  end
+
   def tdc_type
     column.tdc_type if column.respond_to?(:tdc_type)
+  end
+
+  def is_date?
+    column&.type&.in?([:datetime, :date])
   end
 
   def selectable?
