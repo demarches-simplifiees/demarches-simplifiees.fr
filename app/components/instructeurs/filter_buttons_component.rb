@@ -44,6 +44,12 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   def human_value(filter_column)
     column_type, filter = filter_column.column.type, filter_column.filter
 
+    operator = if filter[:operator] == 'before'
+      "avant"
+    elsif filter[:operator] == 'after'
+      "après"
+    end
+
     filter_value = filter[:value].is_a?(Array) ? filter[:value] : [filter[:value]]
 
     if column_type == :date || column_type == :datetime
@@ -51,5 +57,7 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
     else
       filter_value.map { filter_column.column.label_for_value(it) }.join(' ou ')
     end
+
+    [operator, filter_value].compact.join(' ')
   end
 end
