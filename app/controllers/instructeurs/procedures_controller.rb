@@ -282,7 +282,7 @@ module Instructeurs
 
     def export_templates
       @procedure = procedure
-      @export_templates = current_instructeur.export_templates.includes(:groupe_instructeur).order(:name)
+      @export_templates = current_instructeur.export_templates_for(procedure)
     end
 
     def email_usagers
