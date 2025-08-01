@@ -71,13 +71,22 @@ RSpec.describe PriorityDeliveryConcern do
   end
 
   before do
+    ExampleMailer.delivery_method = :balancer
+    ImportantEmail.delivery_method = :balancer
+  end
+
+  around do |example|
+    original_delivery_methods = ActionMailer::Base.delivery_methods.dup
+
     ActionMailer::Base.add_delivery_method :mock_smtp, MockSmtp
     ActionMailer::Base.add_delivery_method :mock_sendmail, MockSendmail
     ActionMailer::Base.add_delivery_method :dolist_api, MockDoList
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
 
-    ExampleMailer.delivery_method = :balancer
-    ImportantEmail.delivery_method = :balancer
+    example.run
+
+    ActionMailer::Base.delivery_methods = original_delivery_methods
+    ActionMailer::Base.balancer_settings = nil
   end
 
   context 'when a single delivery method is provided' do
