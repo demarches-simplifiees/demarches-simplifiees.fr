@@ -13,7 +13,7 @@
               %h1#fr-modal-title-modal-1.fr-modal__title
                 %span.fr-icon-arrow-right-line.fr-icon--lg>
                 = t('.modal.title')
-              .fr-text--wrap= format_text_value(error_message.strip)
+              .fr-text--wrap= format_text_value(error_message&.strip)
 
 - if wrapped?
   #ineligibilite_rules_modal
