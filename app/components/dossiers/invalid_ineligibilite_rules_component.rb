@@ -21,7 +21,7 @@ class Dossiers::InvalidIneligibiliteRulesComponent < ApplicationComponent
   end
 
   def error_message
-    dossier.revision.ineligibilite_message
+    dossier.revision.ineligibilite_message&.strip
   end
 
   def opened? = @opened
