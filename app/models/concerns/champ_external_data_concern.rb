@@ -13,9 +13,34 @@ module ChampExternalDataConcern
   # if exception, the job call save_external_exception
 
   included do
+    include AASM
+
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
     before_save :cleanup_if_empty
     after_update_commit :fetch_external_data_later
+
+    aasm column: :external_state do
+      state :idle, initial: true
+      state :fetching
+      state :fetched
+      state :error
+
+      event :fetch, after_commit: :fetch_external_data_later do
+        transitions from: :idle, to: :fetching, guard: :ready_for_external_call?
+      end
+
+      event :external_data_fetched do
+        transitions from: :fetching, to: :fetched
+      end
+
+      event :external_data_error do
+        transitions from: :fetching, to: :error
+      end
+
+      event :reset_external_data, after: :after_reset_external_data do
+        transitions from: [:fetching, :fetched, :error], to: :idle
+      end
+    end
 
     def fetch_external_data_later
       if uses_external_data? && ready_for_external_call? && data.nil?
@@ -86,6 +111,11 @@ module ChampExternalDataConcern
     end
 
     # should not be overridden
+    def after_reset_external_data
+      update(data: nil, value_json: nil, fetch_external_data_exceptions: [])
+    end
+
+    # should not be overridden
     def cleanup_if_empty
       # persisted? to keep data when cloning
       if uses_external_data? && persisted? && external_identifier_changed?
@@ -101,15 +131,18 @@ module ChampExternalDataConcern
         case result
         in Success(data)
           update_external_data!(data:)
+          external_data_fetched!
         in Failure(retryable: true, reason:, code:)
           save_external_exception(reason, code)
           raise reason
         in Failure(retryable: false, reason:, code:)
           save_external_exception(reason, code)
           Sentry.capture_exception(reason)
+          external_data_error!
         end
       elsif result.present?
         update_external_data!(data: result)
+        external_data_fetched!
       end
     end
   end
