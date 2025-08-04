@@ -83,8 +83,7 @@
       - if dossier.pending_correction?
         = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
-            %p
-              = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id)
+            = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id)
 
       - if dossier.transfer.present?
         - if @statut == "dossiers-transferes"
