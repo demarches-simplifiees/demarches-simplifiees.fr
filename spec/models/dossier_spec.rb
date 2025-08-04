@@ -732,7 +732,8 @@ describe Dossier, type: :model do
   describe "#assign_to_groupe_instructeur" do
     let(:procedure) { create(:procedure) }
     let(:new_groupe_instructeur_new_procedure) { create(:groupe_instructeur) }
-    let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+    let(:new_instructeur) { create(:instructeur) }
+    let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure, instructeurs: [new_instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     it "can change groupe instructeur" do
@@ -746,16 +747,19 @@ describe Dossier, type: :model do
     end
 
     context "when the groupe instructeur change" do
-      let!(:previous_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
-      let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, dossier:, groupe_instructeur: previous_groupe_instructeur) }
+      context "when the dossier has never been followed" do
+        let(:previous_instructeur) { create(:instructeur) }
+        let!(:previous_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure, instructeurs: [previous_instructeur]) }
+        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: previous_instructeur) }
 
-      before do
-        dossier.assign_to_groupe_instructeur(previous_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-      end
+        before do
+          dossier.assign_to_groupe_instructeur(previous_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        end
 
-      it "update notifications for groupe instructeur" do
-        dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-        expect(notification.reload.groupe_instructeur_id).to eq(new_groupe_instructeur.id)
+        it "destroy dossier_depose notifications of instructeurs of old groupe" do
+          dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+          expect(DossierNotification.count).to eq(0)
+        end
       end
     end
   end
