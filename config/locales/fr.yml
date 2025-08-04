@@ -594,11 +594,11 @@ fr:
           other_actions: "Autres actions"
         transfers:
           sender_from_support: Le support technique
-          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier n° %{id} pour %{email}"
-          sender_demande_en_cours_from_support: "Une demande de transfert par le support technique est en cours sur le dossier n° %{id} pour %{email}"
-          receiver_demande_en_cours: "Demande de transfert pour le dossier n° %{id} envoyé par %{email}"
-          receiver_demande_en_cours_from_support: "Demande de transfert par le support technique pour le dossier n° %{id} de %{email}"
-          revoke_html: "Révoquer cette demande <span class='visually-hidden'>de transfert</span>"
+          sender_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Une demande de transfert est en cours sur le dossier n° %{id} pour %{email}</h4>'
+          sender_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">Une demande de transfert par le support technique est en cours sur le dossier n° %{id} pour %{email}</h4>'
+          receiver_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Demande de transfert pour le dossier n° %{id} envoyé par %{email}</h4>'
+          receiver_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">Demande de transfert par le support technique pour le dossier n° %{id} de %{email}</h4>'
+          revoke_html: 'Révoquer cette demande <span class="visually-hidden">de transfert</span>'
           accept: Accepter
           reject: Rejeter
       sessions:

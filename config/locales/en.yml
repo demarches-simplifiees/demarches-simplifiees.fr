@@ -572,11 +572,11 @@ en:
             this_procedure: this procedure
         transfers:
           sender_from_support: Technical support
-          sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
-          sender_demande_en_cours_from_support: "A transfer request from technical support is pending on file Nº %{id} to %{email}"
-          receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
-          receiver_demande_en_cours_from_support: "Transfer request from technical support on file Nº %{id} of %{email}"
-          revoke_html: "Revoke this <span class='visually-hidden'>transfer</span> request"
+          sender_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">A transfer request is pending on file Nº %{id} to %{email}</h4>'
+          sender_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">A transfer request from technical support is pending on file Nº %{id} to %{email}</h4>'
+          receiver_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Transfer request on file Nº %{id} sent by %{email}</h4>'
+          receiver_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">Transfer request from technical support on file Nº %{id} of %{email}</h4>'
+          revoke_html: 'Revoke this <span class="visually-hidden">transfer</span> request'
           accept: Accept
           reject: Reject
         dossier_action:

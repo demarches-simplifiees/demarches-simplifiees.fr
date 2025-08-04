@@ -38,11 +38,8 @@ as well as a link to its edit page.
 <section class="main-content__body">
   <div>
     <% if dossier.transfer&.from_support %>
-      <p>
-        <%= t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email) %>
-        <br>
-        <%= link_to t('views.users.dossiers.transfers.revoke_html'), transfer_destroy_manager_dossier_path(dossier), class: 'fr-link', method: :delete %>
-      </p>
+      <%= t('views.users.dossiers.transfers.sender_demande_en_cours_from_support_html', id: dossier.id, email: dossier.transfer.email) %>
+      <%= link_to t('views.users.dossiers.transfers.revoke_html'), transfer_destroy_manager_dossier_path(dossier), class: 'fr-link', method: :delete %>
     <% end %>
   </div>
 
