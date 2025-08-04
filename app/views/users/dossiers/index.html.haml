@@ -29,9 +29,9 @@
                 = hidden_field_tag :procedure_id, params[:procedure_id]
                 = label_tag "q", t('views.users.dossiers.search.label'), class: 'fr-label fr-mb-1w'
                 .flex
-                  = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.prompt'), class: "fr-input"
+                  = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.placeholder'), class: "fr-input"
                   %button.fr-btn.fr-btn--sm
-                    = t('views.users.dossiers.search.label')
+                    = t('views.users.dossiers.search.button')
         - if @procedures_for_select.size > 1
           .fr-col-12.fr-col-md
             = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
