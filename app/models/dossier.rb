@@ -705,10 +705,8 @@ class Dossier < ApplicationRecord
 
     if !brouillon?
       unfollow_stale_instructeurs
-      if previous_groupe_instructeur.present?
-        DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, groupe_instructeur)
-        DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_depose)
-      end
+      update_notifications(self, previous_groupe_instructeur, groupe_instructeur) if previous_groupe_instructeur.present?
+
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
       end
@@ -1220,5 +1218,11 @@ class Dossier < ApplicationRecord
         dossier_id: self.id
       }
     )
+  end
+
+  def update_notifications(dossier, previous_groupe_instructeur, new_groupe_instructeur)
+    DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, new_groupe_instructeur)
+    DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
+    DossierNotification.create_notification(dossier, :dossier_depose) if dossier.en_construction? && dossier.follows.empty?
   end
 end
