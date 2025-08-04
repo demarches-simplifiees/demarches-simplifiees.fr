@@ -32,7 +32,7 @@ class DossierNotification < ApplicationRecord
     case notification_type
     when :dossier_depose
       if !dossier.procedure.declarative? && !dossier.procedure.sva_svr_enabled?
-        instructeur_ids = dossier.groupe_instructeur.instructeur_ids
+        instructeur_ids = Array(instructeur&.id.presence || dossier.groupe_instructeur.instructeur_ids)
         display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
 
         instructeur_ids.each do |instructeur_id|

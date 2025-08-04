@@ -68,6 +68,20 @@ describe GroupeInstructeur, type: :model do
         expect(instructeur.assign_to.last.daily_email_notifications_enabled).to be_truthy
       end
     end
+
+    context "when there are dossiers en construction not followed" do
+      let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: another_groupe_instructeur) }
+
+      it "create dossier_depose notification for the added instructeur" do
+        subject
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.first
+        expect(notification.dossier_id).to eq(dossier.id)
+        expect(notification.instructeur_id).to eq(instructeur.id)
+        expect(notification.notification_type).to eq('dossier_depose')
+      end
+    end
   end
 
   describe "#remove" do
