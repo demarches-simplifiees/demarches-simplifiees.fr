@@ -93,11 +93,13 @@
                 = t('views.users.dossiers.transfers.receiver_demande_en_cours_from_support_html', id: dossier.id, email: dossier.user_email_for(:notification))
               - else
                 = t('views.users.dossiers.transfers.receiver_demande_en_cours_html', id: dossier.id, email: dossier.user_email_for(:notification))
-              %p
-                = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link fr-mr-1w", method: :put
-                = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete
+              %ul.fr-links-group.fr-links-group--inline
+                %li
+                  = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link", method: :put
+                %li
+                  = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete
         - else
-          = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+          = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-pb-1w fr-mb-2w") do |c|
             - c.with_body do
               - if dossier.transfer.from_support?
                 = t('views.users.dossiers.transfers.sender_demande_en_cours_from_support_html', id: dossier.id, email: dossier.transfer.email)
