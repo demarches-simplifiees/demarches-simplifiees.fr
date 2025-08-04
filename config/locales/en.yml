@@ -557,14 +557,14 @@ en:
           deleted_by_automatic: Deleted on %{date} automatically due to expiration date
           procedure_closed:
             brouillon:
-              internal_procedure_html: This procedure is closed. You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.
-              other_html: This process is closed. You cannot submit this file, nor submit a new one for this procedure. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.</p>
+              other_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>You cannot submit this file, nor submit a new one for this procedure. %{link}</p>
             en_cours:
-              internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration. If necessary, you can submit a new file on the %{link} that replaces it.
-              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. You cannot submit a new file for this procedure. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been submitted and can be investigated by the administration. If necessary, you can submit a new file on the %{link} that replaces it.</p>
+              other_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been submitted and can be processed by the administration. You cannot submit a new file for this procedure. %{link}</p>
             termine:
-              internal_procedure_html: This procedure is closed. Your file has been processed by the administration. If necessary, you can submit a new file on the %{link} that replaces it.
-              other_html: This process is closed. Your file has been processed by the administration. You cannot submit a new file for this procedure. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been processed by the administration. If necessary, you can submit a new file on the %{link} that replaces it.</p>
+              other_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been processed by the administration. You cannot submit a new file for this procedure. %{link}</p>
             title_new_procedure: New procedure available
             title_closing_details: More information on the closing procedure
             more_details: More information

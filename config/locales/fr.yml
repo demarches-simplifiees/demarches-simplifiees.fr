@@ -559,14 +559,14 @@ fr:
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed:
             brouillon:
-              internal_procedure_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace.
-              other_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier, ni en déposer un nouveau pour cette démarche. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace.</p>
+              other_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Vous ne pouvez pas déposer ce dossier, ni en déposer un nouveau pour cette démarche. %{link}</p>
             en_cours:
-              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
-              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier est bien déposé et peut être instruit par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.</p>
+              other_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier est bien déposé et peut être instruit par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}</p>
             termine:
-              internal_procedure_html: Cette démarche est close. Votre dossier a bien été traité par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
-              other_html: Cette démarche est close. Votre dossier a bien été traité par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier a bien été traité par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.</p>
+              other_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier a bien été traité par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}</p>
             title_new_procedure: Nouvelle démarche disponible
             title_closing_details: Plus d’informations sur la clôture de la démarche
             more_details: Plus d’informations
