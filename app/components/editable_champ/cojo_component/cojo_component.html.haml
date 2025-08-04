@@ -11,7 +11,7 @@
 
   - if @champ.accreditation_error?
     %p.fr-error-text{ id: dom_id(@champ, :accreditation_number_error) }= t('.accreditation_number_error')
-  - elsif @champ.waiting_for_external_data?
+  - elsif @champ.fetching?
     %p.fr-info-text= t('.accreditation_number_verification_pending')
 
 .fr-input-group{ class: input_group_class }
