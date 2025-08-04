@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class OCRService
-  include Dry::Monads[:result]
-
   def self.analyze(blob)
     ActiveStorage::Current.url_options = { host: ENV.fetch("HOST", "localhost:3000") }
 
@@ -14,19 +12,19 @@ class OCRService
     json = { "url": blob_url, "hint": { "type": "rib" } }
     headers = { 'X-Remote-File': blob_url } # needed for logging
 
-    result = API::Client.new.call(url:, method: :post, headers:, json:)
+    handle_api_result(API::Client.new.call(url:, method: :post, headers:, json:))
+  end
 
+  private
+
+  def self.handle_api_result(result)
     case result
-    in Success(body:)
-      body
-    in Failure(code:, reason:)
-      { error: { code:, message: reason.message } }
-    end
-  rescue StandardError => e
-    if Rails.env.development?
-      raise e # In development, raise the error to see it in the console
+    in Dry::Monads::Success(body:)
+      Dry::Monads::Success(body)
+    in Dry::Monads::Failure(code:, reason:)
+      Dry::Monads::Failure(retryable: false, reason:, code:)
     else
-      Sentry.capture_exception(e, extra: { blob_url: blob_url })
+      Dry::Monads::Failure(retryable: false, reason: StandardError.new('Unknown error'))
     end
   end
 end
