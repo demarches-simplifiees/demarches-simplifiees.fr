@@ -55,7 +55,7 @@ module ChampExternalDataConcern
     # should not be overridden
     def waiting_for_external_data?
       uses_external_data? &&
-        should_ui_auto_refresh? &&
+        can_ui_auto_refresh? &&
         ready_for_external_call? &&
         (!external_data_present? && !external_error_present?)
     end
@@ -63,7 +63,7 @@ module ChampExternalDataConcern
     # should not be overridden
     def external_data_fetched?
       uses_external_data? &&
-        should_ui_auto_refresh? &&
+        can_ui_auto_refresh? &&
         ready_for_external_call? &&
         (external_data_present? || external_error_present?)
     end
@@ -84,7 +84,7 @@ module ChampExternalDataConcern
 
     private
 
-    def should_ui_auto_refresh?
+    def can_ui_auto_refresh?
       false
     end
 

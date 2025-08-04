@@ -31,7 +31,7 @@ class Champs::PieceJustificativeChamp < Champ
 
   private
 
-  def should_ui_auto_refresh?
+  def can_ui_auto_refresh?
     RIB?
   end
 
