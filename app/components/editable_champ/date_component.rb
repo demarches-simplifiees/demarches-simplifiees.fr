@@ -6,7 +6,9 @@ class EditableChamp::DateComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def min_date
-    if @champ.range_date? && @champ.start_date.present?
+    if @champ.date_in_future?
+      Date.today
+    elsif @champ.range_date? && @champ.start_date.present?
       @champ.start_date
     end
   end

@@ -4,6 +4,7 @@ class DateLimitValidator < ActiveModel::Validator
   def validate(record)
     return if record.value.blank?
     in_past_value(record)
+    in_future_value(record)
     range_value(record)
   end
 
@@ -15,6 +16,15 @@ class DateLimitValidator < ActiveModel::Validator
     if record.type_de_champ.date_in_past? && value >= Date.today
       # i18n-tasks-use t('errors.messages.date_in_past')
       record.errors.add(:value, :date_in_past)
+    end
+  end
+
+  def in_future_value(record)
+    value = convert_to_date(record, 'value')
+
+    if record.type_de_champ.date_in_future? && value < Date.today
+      # i18n-tasks-use t('errors.messages.date_in_future')
+      record.errors.add(:value, :date_in_future)
     end
   end
 
