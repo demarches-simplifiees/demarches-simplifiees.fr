@@ -78,11 +78,11 @@ module ChampExternalDataConcern
       update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
     end
 
-    private
-
     def uses_external_data?
       false
     end
+
+    private
 
     def should_ui_auto_refresh?
       false
