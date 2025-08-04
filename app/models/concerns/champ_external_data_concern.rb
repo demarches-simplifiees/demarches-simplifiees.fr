@@ -16,8 +16,6 @@ module ChampExternalDataConcern
     include AASM
 
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
-    before_save :cleanup_if_empty
-    after_update_commit :fetch_external_data_later
 
     aasm column: :external_state do
       state :idle, initial: true
@@ -113,16 +111,6 @@ module ChampExternalDataConcern
     # should not be overridden
     def after_reset_external_data
       update(data: nil, value_json: nil, fetch_external_data_exceptions: [])
-    end
-
-    # should not be overridden
-    def cleanup_if_empty
-      # persisted? to keep data when cloning
-      if uses_external_data? && persisted? && external_identifier_changed?
-        self.data = nil
-        self.value_json = nil
-        self.fetch_external_data_exceptions = []
-      end
     end
 
     # should not be overridden
