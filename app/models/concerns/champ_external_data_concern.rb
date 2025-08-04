@@ -82,6 +82,11 @@ module ChampExternalDataConcern
       false
     end
 
+    # should not be overridden
+    def should_ui_auto_refresh?
+      can_ui_auto_refresh? && fetching?
+    end
+
     private
 
     def can_ui_auto_refresh?
