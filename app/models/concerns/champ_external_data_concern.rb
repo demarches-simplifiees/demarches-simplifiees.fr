@@ -13,51 +13,62 @@ module ChampExternalDataConcern
   # if exception, the job call save_external_exception
 
   included do
+    include AASM
+
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
-    before_save :cleanup_if_empty
-    after_update_commit :fetch_external_data_later
+
+    aasm column: :external_state do
+      state :idle, initial: true
+      state :fetching
+      state :fetched
+      state :external_error
+
+      event :fetch, after_commit: :fetch_external_data_later do
+        transitions from: :idle, to: :fetching, guard: :ready_for_external_call?
+      end
+
+      event :external_data_fetched do
+        transitions from: :fetching, to: :fetched
+      end
+
+      event :external_data_error do
+        transitions from: :fetching, to: :external_error
+      end
+
+      event :reset_external_data, after: :after_reset_external_data do
+        transitions from: [:fetching, :fetched, :external_error], to: :idle
+      end
+    end
 
     def fetch_external_data_later
-      if uses_external_data? && external_id.present? && data.nil?
-        update_column(:fetch_external_data_exceptions, [])
+      if uses_external_data? && ready_for_external_call? && data.nil?
         ChampFetchExternalDataJob.perform_later(self, external_id)
       end
     end
 
+    # should not be overridden
     def fetch_and_handle_result
       result = fetch_external_data
       handle_result(result)
     end
 
-    def waiting_for_external_data?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (!external_data_present? && !external_error_present?)
-    end
-
-    def external_data_fetched?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (external_data_present? || external_error_present?)
-    end
-
-    def external_error_present?
-      fetch_external_data_exceptions.present? && self.external_id.present?
-    end
-
+    # should not be overridden
     def save_external_exception(exception, code)
       update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
     end
-
-    private
 
     def uses_external_data?
       false
     end
 
+    # should not be overridden
     def should_ui_auto_refresh?
+      can_ui_auto_refresh? && fetching?
+    end
+
+    private
+
+    def can_ui_auto_refresh?
       false
     end
 
@@ -69,10 +80,6 @@ module ChampExternalDataConcern
       external_id.present?
     end
 
-    def external_data_present?
-      data.present?
-    end
-
     def fetch_external_data
       raise NotImplemented.new(:fetch_external_data)
     end
@@ -81,26 +88,29 @@ module ChampExternalDataConcern
       update!(data: data, fetch_external_data_exceptions: [])
     end
 
-    def cleanup_if_empty
-      if uses_external_data? && persisted? && external_identifier_changed?
-        self.data = nil
-      end
+    # should not be overridden
+    def after_reset_external_data
+      update(data: nil, value_json: nil, fetch_external_data_exceptions: [])
     end
 
+    # should not be overridden
     def handle_result(result)
       if result.is_a?(Dry::Monads::Result)
         case result
         in Success(data)
           update_external_data!(data:)
+          external_data_fetched!
         in Failure(retryable: true, reason:, code:)
           save_external_exception(reason, code)
           raise reason
         in Failure(retryable: false, reason:, code:)
           save_external_exception(reason, code)
           Sentry.capture_exception(reason)
+          external_data_error!
         end
       elsif result.present?
         update_external_data!(data: result)
+        external_data_fetched!
       end
     end
   end

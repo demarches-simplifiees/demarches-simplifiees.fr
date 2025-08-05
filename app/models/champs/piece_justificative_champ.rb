@@ -25,13 +25,13 @@ class Champs::PieceJustificativeChamp < Champ
     nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
   end
 
-  private
-
   def uses_external_data?
     RIB?
   end
 
-  def should_ui_auto_refresh?
+  private
+
+  def can_ui_auto_refresh?
     RIB?
   end
 
@@ -47,10 +47,6 @@ class Champs::PieceJustificativeChamp < Champ
       self.value_json = nil
       self.fetch_external_data_exceptions = []
     end
-  end
-
-  def external_data_present?
-    value_json.present?
   end
 
   # Does not detect file removal

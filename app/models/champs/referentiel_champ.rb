@@ -29,7 +29,7 @@ class Champs::ReferentielChamp < Champ
     true
   end
 
-  def should_ui_auto_refresh?
+  def can_ui_auto_refresh?
     true
   end
 

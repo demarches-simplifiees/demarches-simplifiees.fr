@@ -18,7 +18,7 @@ class Instructeurs::OCRViewerComponent < ApplicationComponent
   end
 
   def render?
-    champ.RIB? && champ.external_data_fetched? && !champ.external_error_present?
+    champ.RIB? && champ.fetched?
   end
 
   private
