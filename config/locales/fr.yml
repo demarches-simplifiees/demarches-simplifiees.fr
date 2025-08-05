@@ -520,7 +520,7 @@ fr:
             motivation: "Motivation :"
             attestation: "Attestation :"
             justificatif: "Justificatif de décision :"
-            acceptee_html: "Votre dossier a été <strong>accepté</strong>."
+            acceptee: "Votre dossier a été accepté"
             accepte_motivation: "Motif de l’acceptation"
             accepte_attestation: "Télécharger l’attestation"
             refuse_html: "Votre dossier a été <strong>refusé</strong>."
