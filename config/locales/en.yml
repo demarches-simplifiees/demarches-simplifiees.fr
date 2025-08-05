@@ -514,7 +514,7 @@ en:
             acceptee: "Your file had been accepted"
             accepte_motivation: "Reason"
             accepte_attestation: "Download the attestation"
-            refuse_html: "Your file had been <strong>rejected</strong>."
+            refuse: "Your file had been rejected"
             refuse_motivation: "Reason"
             refuse_reply: "Send a message to the administration"
             sans_suite_html: "Your file had been <strong>closed, no further action</strong>."

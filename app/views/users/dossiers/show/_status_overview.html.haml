@@ -78,12 +78,12 @@
 
         - elsif dossier.refuse?
           .refuse
-            %p.fr-my-6w.fr-text--lead{ role: 'status' }
+            %h2.fr-h6.fr-my-6w
               = dsfr_icon('fr-icon-close-circle-fill fr-text-default--error')
-              = t('views.users.dossiers.show.status_overview.refuse_html')
+              = t('views.users.dossiers.show.status_overview.refuse')
 
             - if dossier.motivation.present?
-              %h2.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.refuse_motivation')
+              %p.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.refuse_motivation')
               %blockquote.fr-mx-0.fr-mt-0.fr-mb-2w= format_text_value(dossier.motivation)
 
             = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
