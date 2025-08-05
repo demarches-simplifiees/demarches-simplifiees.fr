@@ -21,7 +21,7 @@ module ChampExternalDataConcern
       state :idle, initial: true
       state :fetching
       state :fetched
-      state :error
+      state :external_error
 
       event :fetch, after_commit: :fetch_external_data_later do
         transitions from: :idle, to: :fetching, guard: :ready_for_external_call?
@@ -32,11 +32,11 @@ module ChampExternalDataConcern
       end
 
       event :external_data_error do
-        transitions from: :fetching, to: :error
+        transitions from: :fetching, to: :external_error
       end
 
       event :reset_external_data, after: :after_reset_external_data do
-        transitions from: [:fetching, :fetched, :error], to: :idle
+        transitions from: [:fetching, :fetched, :external_error], to: :idle
       end
     end
 
