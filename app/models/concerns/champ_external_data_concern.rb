@@ -53,11 +53,6 @@ module ChampExternalDataConcern
     end
 
     # should not be overridden
-    def external_error_present?
-      fetch_external_data_exceptions.present? && ready_for_external_call?
-    end
-
-    # should not be overridden
     def save_external_exception(exception, code)
       update_columns(fetch_external_data_exceptions: [ExternalDataException.new(reason: exception.inspect, code:)], data: nil, value_json: nil, value: nil)
     end

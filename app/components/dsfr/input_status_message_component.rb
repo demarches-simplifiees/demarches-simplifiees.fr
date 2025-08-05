@@ -38,7 +38,7 @@ module Dsfr
       when TypeDeChamp.type_champs[:referentiel]
         if @champ.fetching?
           { state: :info, text: t(".referentiel.fetching") }
-        elsif @champ.external_error_present?
+        elsif @champ.external_error?
           { state: :info, text: t(".referentiel.error", value: @champ.external_id) }
         elsif @champ.value.present?
           { state: :valid, text: t(".referentiel.success", value: @champ.value) }
@@ -50,7 +50,7 @@ module Dsfr
 
         if @champ.fetching?
           { state: :info, text: t('.pj.info') }
-        elsif @champ.external_error_present?
+        elsif @champ.external_error?
           { state: :warning, text: t('.pj.error') }
         elsif iban.nil?
           { state: :warning, text: t('.pj.warning') }

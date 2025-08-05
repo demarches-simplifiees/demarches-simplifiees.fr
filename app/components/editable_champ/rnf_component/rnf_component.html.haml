@@ -1,7 +1,7 @@
 = @form.text_field :external_id, input_opts(id: @champ.input_id, required: @champ.required?, class: "width-33-desktop fr-input", aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" })
 
 .rnf-info{ id: dom_id(@champ, :rnf_info), role: 'status' }
-  - if @champ.external_error_present?
+  - if @champ.external_error?
     %p.fr-error-text= t('.rnf_info_error')
   - elsif @champ.fetching?
     %p.fr-info-text= t('.rnf_info_pending')
