@@ -526,7 +526,7 @@ fr:
             refuse: "Votre dossier a été refusé"
             refuse_motivation: "Motif du refus"
             refuse_reply: "Envoyer un message à l’administration"
-            sans_suite_html: "Votre dossier a été classé <strong>sans suite</strong>."
+            sans_suite: "Votre dossier a été classé sans suite"
             sans_suite_motivation: "Motif du classement sans suite"
           latest_message:
             latest_message: "Dernier message"

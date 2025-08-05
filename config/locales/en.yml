@@ -517,7 +517,7 @@ en:
             refuse: "Your file had been rejected"
             refuse_motivation: "Reason"
             refuse_reply: "Send a message to the administration"
-            sans_suite_html: "Your file had been <strong>closed, no further action</strong>."
+            sans_suite: "Your file had been closed, no further action"
             sans_suite_motivation: "Reason"
           latest_message:
             latest_message: "Latest message"
