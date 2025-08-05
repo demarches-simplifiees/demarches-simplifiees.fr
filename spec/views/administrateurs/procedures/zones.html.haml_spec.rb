@@ -40,9 +40,7 @@ RSpec.describe 'administrateurs/procedures/zones', type: :view do
   end
 
   context 'quand le zonage est désactivé' do
-    before do
-      Rails.application.config.ds_zonage_enabled = false
-    end
+    before { allow(Rails.application.config).to receive(:ds_zonage_enabled).and_return(false) }
 
     it 'n’affiche pas les zones' do
       render
