@@ -154,8 +154,10 @@ class DossierNotification < ApplicationRecord
       .where(dossier: dossiers, groupe_instructeur_id: groupe_instructeur_ids)
       .or(DossierNotification.where(dossier: dossiers, instructeur:))
       .to_display
-      .order_by_importance
       .group_by(&:dossier_id)
+
+    # Remove when all dossier_depose notification are linked to the instructeur
+    notifications_by_dossier_id.transform_values! { |notifications| unify_dossier_depose_notification(notifications) }
 
     dossier_ids_by_procedure.transform_values do |dossier_ids|
       notifications = dossier_ids
@@ -179,8 +181,10 @@ class DossierNotification < ApplicationRecord
       .where(dossier: dossiers, groupe_instructeur_id: groupe_instructeur_ids)
       .or(DossierNotification.where(dossier: dossiers, instructeur:))
       .to_display
-      .order_by_importance
       .group_by(&:dossier_id)
+
+    # Remove when all dossier_depose notification are linked to the instructeur
+    notifications_by_dossier_id.transform_values! { |notifications| unify_dossier_depose_notification(notifications) }
 
     dossiers_by_statut.filter_map do |statut, dossiers|
       notifications = dossiers
@@ -196,23 +200,30 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_for_instructeur_dossiers(instructeur, dossier_ids)
-    DossierNotification
+    notifications_by_dossier_id = DossierNotification
       .joins(:dossier)
       .merge(Dossier.not_archived)
       .where(dossier_id: dossier_ids, instructeur_id: [instructeur.id, nil])
       .to_display
       .order_by_importance
       .group_by(&:dossier_id)
+
+    # Remove when all dossier_depose notification are linked to the instructeur
+    notifications_by_dossier_id.transform_values { |notifications| unify_dossier_depose_notification(notifications) }
   end
 
   def self.notifications_for_instructeur_dossier(instructeur, dossier)
     return [] if dossier.archived
 
-    DossierNotification
+    notifications = DossierNotification
       .where(dossier:, groupe_instructeur_id: dossier.groupe_instructeur_id)
       .or(DossierNotification.where(dossier:, instructeur:))
       .to_display
       .order_by_importance
+
+    # Remove when all dossier_depose notification are linked to the instructeur
+    notifications = unify_dossier_depose_notification(notifications)
+    notifications.sort_by { |notif| notification_types.keys.index(notif.notification_type) }
   end
 
   def self.notifications_count_for_email_data(groupe_instructeur_ids, instructeur)
@@ -238,5 +249,15 @@ def find_or_create_notification(dossier, notification_type, groupe_instructeur_i
     instructeur_id:
   ) do |notification|
     notification.display_at = display_at
+  end
+end
+
+def unify_dossier_depose_notification(notifications)
+  dossier_depose_notifications = notifications.filter { |n| n.notification_type == "dossier_depose" }
+  if dossier_depose_notifications.size > 1
+    notifications -= dossier_depose_notifications
+    notifications << dossier_depose_notifications.first
+  else
+    notifications
   end
 end
