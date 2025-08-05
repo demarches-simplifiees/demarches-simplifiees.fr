@@ -80,10 +80,6 @@ module ChampExternalDataConcern
       external_id.present?
     end
 
-    def external_data_present?
-      data.present?
-    end
-
     def fetch_external_data
       raise NotImplemented.new(:fetch_external_data)
     end

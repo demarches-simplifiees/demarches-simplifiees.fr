@@ -49,10 +49,6 @@ class Champs::PieceJustificativeChamp < Champ
     end
   end
 
-  def external_data_present?
-    value_json.present?
-  end
-
   # Does not detect file removal
   def external_identifier_changed?
     piece_justificative_file.attached? && piece_justificative_file.blobs.first.changed?
