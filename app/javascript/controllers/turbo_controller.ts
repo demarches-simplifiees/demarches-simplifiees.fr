@@ -67,6 +67,18 @@ export class TurboController extends ApplicationController {
       document.body.classList.add('dom-ready');
     });
 
+    const originalFocus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (options?: FocusOptions) {
+      if (
+        this.closest('.attachment') ||
+        this.classList.contains('attachment-upload-error-retry') ||
+        this.id === 'flash_messages'
+      ) {
+        return originalFocus.call(this, { ...options, preventScroll: true });
+      }
+      return originalFocus.call(this, options);
+    };
+
     // setup spinner events
     this.onGlobal('turbo:submit-start', () => this.startSpinner());
     this.onGlobal('turbo:submit-end', () => this.stopSpinner());
