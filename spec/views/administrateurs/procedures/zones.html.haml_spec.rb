@@ -7,7 +7,6 @@ RSpec.describe 'administrateurs/procedures/zones', type: :view do
   let!(:zone2) { create(:zone, acronym: 'MEP', labels: [{ designated_on: '2022-05-18', name: "Ministère des vacances" }]) }
 
   before do
-    Rails.application.config.ds_zonage_enabled = true
     allow(view).to receive(:current_administrateur).and_return(administrateur)
     assign(:procedure, procedure)
     assign(:zones, Zone.available_at(procedure.published_or_created_at, administrateur.default_zones))
@@ -41,9 +40,7 @@ RSpec.describe 'administrateurs/procedures/zones', type: :view do
   end
 
   context 'quand le zonage est désactivé' do
-    before do
-      Rails.application.config.ds_zonage_enabled = false
-    end
+    before { allow(Rails.application.config).to receive(:ds_zonage_enabled).and_return(false) }
 
     it 'n’affiche pas les zones' do
       render
