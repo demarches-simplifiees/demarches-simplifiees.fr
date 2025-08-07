@@ -67,48 +67,45 @@
       - if dossier.procedure.close?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
-            %p
-              - if dossier.brouillon? && can_recreate_a_dossier_from_a_procedure?(dossier.procedure)
-                = t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.internal_procedure_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.procedure'), commencer_path(dossier.procedure.replaced_by_procedure.path), **external_link_attributes, title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_new_procedure'))).html_safe)
-              - elsif dossier.brouillon?
-                = t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.other_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.more_details'), closing_details_path(dossier.procedure.path), **external_link_attributes, title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_closing_details'))).html_safe)
-              - elsif dossier.en_construction_ou_instruction? && can_recreate_a_dossier_from_a_procedure?(dossier.procedure)
-                = t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.internal_procedure_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.procedure'), commencer_path(dossier.procedure.replaced_by_procedure.path), **external_link_attributes, title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_new_procedure'))).html_safe)
-              - elsif dossier.en_construction_ou_instruction? && !dossier.procedure.replaced_by_procedure.present?
-                = t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.other_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.more_details'), closing_details_path(dossier.procedure.path), **external_link_attributes, title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_closing_details'))).html_safe)
-              - elsif dossier.termine? && can_recreate_a_dossier_from_a_procedure?(dossier.procedure)
-                = t('views.users.dossiers.dossiers_list.procedure_closed.termine.internal_procedure_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.this_procedure'), commencer_path(dossier.procedure.replaced_by_procedure.path), **external_link_attributes, title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_new_procedure'))).html_safe)
-              - elsif dossier.termine?
-                = t('views.users.dossiers.dossiers_list.procedure_closed.termine.other_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.more_details'), closing_details_path(dossier.procedure.path), **external_link_attributes, title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_closing_details'))).html_safe)
+            - if dossier.brouillon? && can_recreate_a_dossier_from_a_procedure?(dossier.procedure)
+              = t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.internal_procedure_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.procedure'), commencer_path(dossier.procedure.replaced_by_procedure.path), **external_link_attributes, class: 'fr-link', title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_new_procedure'))).html_safe)
+            - elsif dossier.brouillon?
+              = t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.other_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.more_details'), closing_details_path(dossier.procedure.path), **external_link_attributes, class: 'fr-link', title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_closing_details'))).html_safe)
+            - elsif dossier.en_construction_ou_instruction? && can_recreate_a_dossier_from_a_procedure?(dossier.procedure)
+              = t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.internal_procedure_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.procedure'), commencer_path(dossier.procedure.replaced_by_procedure.path), **external_link_attributes, class: 'fr-link', title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_new_procedure'))).html_safe)
+            - elsif dossier.en_construction_ou_instruction? && !dossier.procedure.replaced_by_procedure.present?
+              = t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.other_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.more_details'), closing_details_path(dossier.procedure.path), **external_link_attributes, class: 'fr-link', title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_closing_details'))).html_safe)
+            - elsif dossier.termine? && can_recreate_a_dossier_from_a_procedure?(dossier.procedure)
+              = t('views.users.dossiers.dossiers_list.procedure_closed.termine.internal_procedure_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.this_procedure'), commencer_path(dossier.procedure.replaced_by_procedure.path), **external_link_attributes, class: 'fr-link', title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_new_procedure'))).html_safe)
+            - elsif dossier.termine?
+              = t('views.users.dossiers.dossiers_list.procedure_closed.termine.other_html', link: link_to(t('views.users.dossiers.dossiers_list.procedure_closed.more_details'), closing_details_path(dossier.procedure.path), **external_link_attributes, class: 'fr-link', title: new_tab_suffix(t('views.users.dossiers.dossiers_list.procedure_closed.title_closing_details'))).html_safe)
 
       - if dossier.pending_correction?
         = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
-            %p
-              = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id)
+            = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id, class: 'fr-link')
 
       - if dossier.transfer.present?
         - if @statut == "dossiers-transferes"
           = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
             - c.with_body do
-              %p
-                - if dossier.transfer.from_support?
-                  = t('views.users.dossiers.transfers.receiver_demande_en_cours_from_support', id: dossier.id, email: dossier.user_email_for(:notification))
-                - else
-                  = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: dossier.user_email_for(:notification))
-              %p
-                = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link fr-mr-1w", method: :put
-                = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete
+              - if dossier.transfer.from_support?
+                = t('views.users.dossiers.transfers.receiver_demande_en_cours_from_support_html', id: dossier.id, email: dossier.user_email_for(:notification))
+              - else
+                = t('views.users.dossiers.transfers.receiver_demande_en_cours_html', id: dossier.id, email: dossier.user_email_for(:notification))
+              %ul.fr-links-group.fr-links-group--inline
+                %li
+                  = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link", method: :put
+                %li
+                  = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete
         - else
-          = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+          = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-pb-1w fr-mb-2w") do |c|
             - c.with_body do
-              %p
-                - if dossier.transfer.from_support?
-                  = t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email)
-                - else
-                  = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
-                %br
-                = link_to t('views.users.dossiers.transfers.revoke_html'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
+              - if dossier.transfer.from_support?
+                = t('views.users.dossiers.transfers.sender_demande_en_cours_from_support_html', id: dossier.id, email: dossier.transfer.email)
+              - else
+                = t('views.users.dossiers.transfers.sender_demande_en_cours_html', id: dossier.id, email: dossier.transfer.email)
+              = link_to t('views.users.dossiers.transfers.revoke_html'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
 
 
       - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)

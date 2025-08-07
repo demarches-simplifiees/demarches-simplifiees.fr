@@ -549,7 +549,7 @@ en:
           no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
-          pending_correction_html: "This file is waiting for your corrections. Consult the changes to be made in the <a href=\"%{link}\">messaging system <span class='visually-hidden'>of file number %{id}</span></a>."
+          pending_correction_html: '<h4 class="card-title fr-mb-1v">This file is waiting for your corrections</h4><p>Consult the changes to be made in the <a href=\"%{link}\" class="fr-link">messaging system <span class="visually-hidden">of file number %{id}</span></a>.</p>'
           depose_at: First submission on %{date}
           created_at: Created at %{date}
           updated_at: updated at %{date}
@@ -558,14 +558,14 @@ en:
           deleted_by_automatic: Deleted on %{date} automatically due to expiration date
           procedure_closed:
             brouillon:
-              internal_procedure_html: This procedure is closed. You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.
-              other_html: This process is closed. You cannot submit this file, nor submit a new one for this procedure. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.</p>
+              other_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>You cannot submit this file, nor submit a new one for this procedure. %{link}</p>
             en_cours:
-              internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration. If necessary, you can submit a new file on the %{link} that replaces it.
-              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. You cannot submit a new file for this procedure. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been submitted and can be investigated by the administration. If necessary, you can submit a new file on the %{link} that replaces it.</p>
+              other_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been submitted and can be processed by the administration. You cannot submit a new file for this procedure. %{link}</p>
             termine:
-              internal_procedure_html: This procedure is closed. Your file has been processed by the administration. If necessary, you can submit a new file on the %{link} that replaces it.
-              other_html: This process is closed. Your file has been processed by the administration. You cannot submit a new file for this procedure. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been processed by the administration. If necessary, you can submit a new file on the %{link} that replaces it.</p>
+              other_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>Your file has been processed by the administration. You cannot submit a new file for this procedure. %{link}</p>
             title_new_procedure: New procedure available
             title_closing_details: More information on the closing procedure
             more_details: More information
@@ -573,11 +573,11 @@ en:
             this_procedure: this procedure
         transfers:
           sender_from_support: Technical support
-          sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
-          sender_demande_en_cours_from_support: "A transfer request from technical support is pending on file Nº %{id} to %{email}"
-          receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
-          receiver_demande_en_cours_from_support: "Transfer request from technical support on file Nº %{id} of %{email}"
-          revoke_html: "Revoke this <span class='visually-hidden'>transfer</span> request"
+          sender_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">A transfer request is pending on file Nº %{id} to %{email}</h4>'
+          sender_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">A transfer request from technical support is pending on file Nº %{id} to %{email}</h4>'
+          receiver_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Transfer request on file Nº %{id} sent by %{email}</h4>'
+          receiver_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">Transfer request from technical support on file Nº %{id} of %{email}</h4>'
+          revoke_html: 'Revoke this <span class="visually-hidden">transfer</span> request'
           accept: Accept
           reject: Reject
         dossier_action:

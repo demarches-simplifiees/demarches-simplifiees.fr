@@ -560,20 +560,20 @@ fr:
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed:
             brouillon:
-              internal_procedure_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace.
-              other_html: Cette démarche est close. Vous ne pouvez pas déposer ce dossier, ni en déposer un nouveau pour cette démarche. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace.</p>
+              other_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Vous ne pouvez pas déposer ce dossier, ni en déposer un nouveau pour cette démarche. %{link}</p>
             en_cours:
-              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
-              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier est bien déposé et peut être instruit par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.</p>
+              other_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier est bien déposé et peut être instruit par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}</p>
             termine:
-              internal_procedure_html: Cette démarche est close. Votre dossier a bien été traité par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.
-              other_html: Cette démarche est close. Votre dossier a bien été traité par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}
+              internal_procedure_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier a bien été traité par l’administration. Au besoin, vous pouvez déposer un nouveau dossier sur la %{link} qui la remplace.</p>
+              other_html: <h4 class="card-title fr-mb-1v">Cette démarche est close</h4><p>Votre dossier a bien été traité par l’administration. Vous ne pouvez pas déposer de nouveau dossier pour cette démarche. %{link}</p>
             title_new_procedure: Nouvelle démarche disponible
             title_closing_details: Plus d’informations sur la clôture de la démarche
             more_details: Plus d’informations
             procedure: démarche
             this_procedure: cette démarche
-          pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie <span class='visually-hidden'>du dossier numéro %{id}</span></a>."
+          pending_correction_html: '<h4 class="card-title fr-mb-1v">Ce dossier attend vos corrections</h4><p>Consultez les modifications à apporter dans la <a href=\"%{link}\" class="fr-link">messagerie <span class="visually-hidden">du dossier numéro %{id}</span></a>.</p>'
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
@@ -595,11 +595,11 @@ fr:
           other_actions: "Autres actions"
         transfers:
           sender_from_support: Le support technique
-          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier n° %{id} pour %{email}"
-          sender_demande_en_cours_from_support: "Une demande de transfert par le support technique est en cours sur le dossier n° %{id} pour %{email}"
-          receiver_demande_en_cours: "Demande de transfert pour le dossier n° %{id} envoyé par %{email}"
-          receiver_demande_en_cours_from_support: "Demande de transfert par le support technique pour le dossier n° %{id} de %{email}"
-          revoke_html: "Révoquer cette demande <span class='visually-hidden'>de transfert</span>"
+          sender_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Une demande de transfert est en cours sur le dossier n° %{id} pour %{email}</h4>'
+          sender_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">Une demande de transfert par le support technique est en cours sur le dossier n° %{id} pour %{email}</h4>'
+          receiver_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Demande de transfert pour le dossier n° %{id} envoyé par %{email}</h4>'
+          receiver_demande_en_cours_from_support_html: '<h4 class="card-title fr-mb-1v">Demande de transfert par le support technique pour le dossier n° %{id} de %{email}</h4>'
+          revoke_html: 'Révoquer cette demande <span class="visually-hidden">de transfert</span>'
           accept: Accepter
           reject: Rejeter
       sessions:
