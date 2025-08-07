@@ -106,19 +106,15 @@ RSpec.describe DossierNotification, type: :model do
     let!(:other_groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, :accepte, groupe_instructeur:) }
     let!(:other_dossier) { create(:dossier, :en_construction, groupe_instructeur: other_groupe_instructeur) }
-    let!(:notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:) }
-    let!(:notification_grp_instructeur) { create(:dossier_notification, :for_groupe_instructeur, dossier:, groupe_instructeur:) }
-    let!(:other_notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:) }
-    let!(:other_notification_grp_instructeur) { create(:dossier_notification, :for_groupe_instructeur, dossier: other_dossier, groupe_instructeur: other_groupe_instructeur) }
+    let!(:notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
+    let!(:other_notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:, notification_type: :dossier_modifie) }
 
     context 'a given instructeur and one dossier' do
       subject { DossierNotification.notifications_for_instructeur_dossier(instructeur, dossier) }
 
       it 'includes correct notifications and excludes the others' do
         is_expected.to include(notification_instructeur)
-        is_expected.to include(notification_grp_instructeur)
         is_expected.not_to include(other_notification_instructeur)
-        is_expected.not_to include(other_notification_grp_instructeur)
       end
     end
 
@@ -129,9 +125,7 @@ RSpec.describe DossierNotification, type: :model do
 
       it 'includes correct notifications and excludes the others' do
         expect(subject[dossier.id]).to include(notification_instructeur)
-        expect(subject[dossier.id]).to include(notification_grp_instructeur)
         expect(subject[other_dossier.id]).to include(other_notification_instructeur)
-        expect(subject[other_dossier.id]).to include(other_notification_grp_instructeur)
       end
     end
 
@@ -141,10 +135,8 @@ RSpec.describe DossierNotification, type: :model do
       subject { DossierNotification.notifications_for_instructeur_procedure(groupe_instructeur_ids, instructeur) }
 
       it 'includes correct notifications and excludes the others' do
-        expect(subject['traites']['dossier_depose']).to include(notification_instructeur)
-        expect(subject['traites']['dossier_depose']).to include(notification_grp_instructeur)
-        expect(subject['a-suivre']['dossier_depose']).to include(other_notification_instructeur)
-        expect(subject['a-suivre']['dossier_depose']).to include(other_notification_grp_instructeur)
+        expect(subject['traites']['dossier_modifie']).to include(notification_instructeur)
+        expect(subject['a-suivre']['dossier_modifie']).to include(other_notification_instructeur)
       end
     end
   end

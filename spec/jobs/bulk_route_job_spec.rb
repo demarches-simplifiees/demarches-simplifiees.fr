@@ -14,9 +14,9 @@ describe BulkRouteJob, type: :job do
     end
 
     let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
-    let!(:dossier1) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
-    let!(:dossier2) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
-    let!(:dossier3) { create(:dossier, :with_populated_champs, procedure: procedure, state: :accepte) }
+    let!(:dossier1) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let!(:dossier2) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let!(:dossier3) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let!(:groupe_instructeur_paris) { create(:groupe_instructeur, procedure: procedure, label: 'Paris', routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id), constant('Paris'))) }
     let!(:groupe_instructeur_lyon) { create(:groupe_instructeur, procedure: procedure, label: 'Lyon', routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon'))) }
     let!(:groupe_instructeur_marseille) { create(:groupe_instructeur, procedure: procedure, label: 'Marseille', routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id), constant('Marseille'))) }
