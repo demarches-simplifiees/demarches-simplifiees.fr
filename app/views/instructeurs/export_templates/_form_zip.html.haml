@@ -21,7 +21,7 @@
             = f.check_box :shared
             = f.label :shared, "Partager avec tous les autres groupes instructeurs", class: 'fr-label'
         - else
-          = f.hidden_field :groupe_instructeur_id, value: procedure.defaut_groupe_instructeur.id
+          = f.hidden_field :groupe_instructeur_id
 
         .fr-input-group{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
           = f.label '[dossier_folder][template]', class: "fr-label" do
