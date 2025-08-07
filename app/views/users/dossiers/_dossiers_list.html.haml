@@ -112,6 +112,11 @@
         .flex.justify-end.no-flex-xs
           = render partial: 'dossier_actions', locals: { dossier: dossier }
 
+      - if @statut == "dossiers-supprimes" && dossier.en_construction?
+        = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+          - c.with_body do
+            %p= t('views.users.dossiers.index.administration_no_longer_processes')
+
       - if @statut == "dossiers-supprimes"
         .flex.justify-end.no-flex-xs
           - if dossier.hidden_by_reason != 'expired'
