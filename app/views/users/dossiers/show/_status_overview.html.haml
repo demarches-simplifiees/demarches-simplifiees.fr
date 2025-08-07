@@ -60,12 +60,12 @@
 
         - elsif dossier.accepte?
           .accepte
-            %p.fr-my-6w.fr-text--lead{ role: 'status' }
+            %h2.fr-h6.fr-my-6w
               = dsfr_icon('fr-icon-checkbox-circle-fill fr-text-default--success')
-              = t('views.users.dossiers.show.status_overview.acceptee_html')
+              = t('views.users.dossiers.show.status_overview.acceptee')
 
             - if dossier.motivation.present?
-              %h2.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.accepte_motivation')
+              %p.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.accepte_motivation')
               %blockquote.fr-mx-0.fr-mt-0.fr-mb-2w= format_text_value(dossier.motivation)
 
             = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
@@ -78,12 +78,12 @@
 
         - elsif dossier.refuse?
           .refuse
-            %p.fr-my-6w.fr-text--lead{ role: 'status' }
+            %h2.fr-h6.fr-my-6w
               = dsfr_icon('fr-icon-close-circle-fill fr-text-default--error')
-              = t('views.users.dossiers.show.status_overview.refuse_html')
+              = t('views.users.dossiers.show.status_overview.refuse')
 
             - if dossier.motivation.present?
-              %h2.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.refuse_motivation')
+              %p.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.refuse_motivation')
               %blockquote.fr-mx-0.fr-mt-0.fr-mb-2w= format_text_value(dossier.motivation)
 
             = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
@@ -92,12 +92,12 @@
 
         - elsif dossier.sans_suite?
           .sans-suite
-            %p.fr-my-6w.fr-text--lead{ role: 'status' }
+            %h2.fr-h6.fr-my-6w
               = dsfr_icon('fr-icon-intermediate-circle-fill')
-              = t('views.users.dossiers.show.status_overview.sans_suite_html')
+              = t('views.users.dossiers.show.status_overview.sans_suite')
 
             - if dossier.motivation.present?
-              %h2.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.sans_suite_motivation')
+              %p.fr-h6.fr-mb-1w= t('views.users.dossiers.show.status_overview.sans_suite_motivation')
               %blockquote.fr-mx-0.fr-mt-0.fr-mb-2w= format_text_value(dossier.motivation)
 
             = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
