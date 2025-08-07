@@ -539,9 +539,10 @@ fr:
           edit_dossier: Modifier le dossier
           edit_dossier_title: "Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
-          search_file: Rechercher un dossier (n° de dossier, mots-clés)
-          prompt: (n° de dossier, nom / prénom, mots-clés)
-          label: Rechercher un dossier
+          search_file: Rechercher un dossier (par n° de dossier, mots-clés)
+          label: Rechercher un dossier (par n° de dossier, nom / prénom, mots-clés…)
+          placeholder: Saisissez votre recherche
+          button: Rechercher un dossier
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »

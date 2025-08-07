@@ -346,7 +346,7 @@ describe 'user access to the list of their dossiers', js: true do
       it "can filter by procedure" do
         expect(page).to have_text('7 en cours')
         expect(page).to have_text('3 traités')
-        expect(page).to have_select('procedure_id', selected: 'Sélectionner une démarche')
+        expect(page).to have_select('procedure_id', selected: 'Sélectionnez une démarche')
         select dossier_brouillon.procedure.libelle, from: 'procedure_id'
         click_on 'Afficher'
         expect(page).to have_text('1 en cours')
