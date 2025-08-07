@@ -777,8 +777,8 @@ describe Dossier, type: :model do
       instructeur2.follow(dossier)
       dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto), procedure.administrateurs.first)
 
-      expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
-      expect(dossier.reload.followers_instructeurs).to include(instructeur2)
+      expect(dossier.followers_instructeurs).not_to include(instructeur)
+      expect(dossier.followers_instructeurs).to include(instructeur2)
 
       expect(DossierMailer).to have_received(:notify_groupe_instructeur_changed).with(instructeur, dossier)
       expect(DossierMailer).not_to have_received(:notify_groupe_instructeur_changed).with(instructeur2, dossier)
@@ -786,6 +786,16 @@ describe Dossier, type: :model do
       expect(last_operation.operation).to eq("changer_groupe_instructeur")
       expect(last_operation.dossier).to eq(dossier)
       expect(last_operation.automatic_operation?).to be_falsey
+    end
+
+    it "resets the followers_instructeurs association cache" do
+      instructeur.follow(dossier)
+      instructeur2.follow(dossier)
+
+      dossier.send(:unfollow_stale_instructeurs)
+
+      expect(dossier.followers_instructeurs).not_to include(instructeur)
+      expect(dossier.followers_instructeurs).to include(instructeur2)
     end
   end
 

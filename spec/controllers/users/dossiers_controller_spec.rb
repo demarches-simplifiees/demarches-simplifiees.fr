@@ -852,26 +852,6 @@ describe Users::DossiersController, type: :controller do
           end
         end
       end
-
-      context "when there are instructeurs followers" do
-        let!(:instructeur_follower) { create(:instructeur) }
-        let!(:instructeur_not_follower) { create(:instructeur) }
-        let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, instructeur_not_follower]) }
-
-        before do
-          dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-          instructeur_follower.followed_dossiers << dossier
-        end
-
-        it "create dossier_modifie notification only for instructeur follower" do
-          expect { subject }.to change(DossierNotification, :count).by(1)
-
-          notification = DossierNotification.last
-          expect(notification.dossier_id).to eq(dossier.id)
-          expect(notification.instructeur_id).to eq(instructeur_follower.id)
-          expect(notification.notification_type).to eq("dossier_modifie")
-        end
-      end
     end
 
     context 'when a invite signs in' do

@@ -13,6 +13,7 @@ module DossierStateConcern
     resolve_pending_correction!
     process_sva_svr!
     clean_champs_after_submit!
+    DossierNotification.create_notification(self, :dossier_modifie)
   end
 
   def after_passer_en_construction
