@@ -118,21 +118,17 @@
       - if @statut == "dossiers-supprimes"
         .flex.justify-end.no-flex-xs
           - if dossier.hidden_by_reason != 'expired'
-            %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
-              %li
-                = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
-                  = t("views.users.dossiers.dossier_action.restore")
-                  %span.visually-hidden
-                    = t('utils.file')
-                    = t('utils.number')
-                    = number_with_html_delimiter(dossier.id)
+            = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
+              = t("views.users.dossiers.dossier_action.restore")
+              %span.visually-hidden
+                = t('utils.file')
+                = t('utils.number')
+                = number_with_html_delimiter(dossier.id)
 
           - else
             - if dossier.expiration_can_be_extended?
-              %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-btns-group--sm
-                %li
-                  = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
-                    = t("views.users.dossiers.dossier_action.restore_and_extend_conservation_html", id: dossier.id, duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
+              = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
+                = t("views.users.dossiers.dossier_action.restore_and_extend_conservation_html", id: dossier.id, duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
 
             - else
               .flex.justify-end.no-flex-xs
