@@ -757,6 +757,7 @@ describe Dossier, type: :model do
         dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
         expect(notification.reload.groupe_instructeur_id).to eq(new_groupe_instructeur.id)
       end
+      # TODO: test destroy notifs for old instructeurs and create notifs for new instructeurs
     end
   end
 
