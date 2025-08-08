@@ -1230,4 +1230,10 @@ def update_notifications_dossier(dossier, previous_groupe_instructeur, new_group
       DossierNotification.destroy_notifications_instructeur_of_dossier(instructeur, dossier)
     end
   end
+
+  new_groupe_instructeur.instructeurs.each do |instructeur|
+    if instructeur.groupe_instructeurs.exclude?(previous_groupe_instructeur)
+      DossierNotification.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, 'all')
+    end
+  end
 end
