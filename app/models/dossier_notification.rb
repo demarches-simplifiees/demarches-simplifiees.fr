@@ -68,20 +68,23 @@ class DossierNotification < ApplicationRecord
       .update_all(groupe_instructeur_id: new_groupe_instructeur.id)
   end
 
-  def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
-    destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
-
+  def self.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, choice)
     instructeur_preferences = instructeur_preferences(instructeur, dossier.procedure)
 
-    notification_types_followed = notification_types.keys.filter do |notification_type|
-      instructeur_preferences[notification_type] == "followed"
+    notification_types_to_refresh = notification_types.keys.filter do |notification_type|
+      instructeur_preferences[notification_type] == choice
     end
 
-    return if notification_types_followed.empty?
+    return if notification_types_to_refresh.empty?
 
-    notification_types_followed.each do |notification_type|
+    notification_types_to_refresh.each do |notification_type|
       create_notification(dossier, notification_type.to_sym, instructeur:) if REFRESH_CONDITIONS_BY_TYPE[notification_type.to_sym].call(dossier, instructeur.id)
     end
+  end
+
+  def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
+    destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
+    refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, 'followed')
   end
 
   def self.refresh_notifications_instructeur_for_dossiers(all_dossiers, followed_dossiers, non_followed_dossiers, instructeur_id, notification_type, old_preference, new_preference)
