@@ -172,24 +172,31 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context "when there are instructeurs followers" do
+    context "when at least one instructeur wants dossier_modifie notification" do
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
-      let(:instructeur_follower) { create(:instructeur) }
-      let(:instructeur_not_follower) { create(:instructeur) }
-      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, instructeur_not_follower]) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure:) }
+      let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_dossier_modifie_notifications: 'all') }
 
-      before do
-        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-        instructeur_follower.followed_dossiers << dossier
+      context "when the dossier is en_construction" do
+        let(:dossier) { create(:dossier, :en_construction, user:, groupe_instructeur:, procedure:) }
+
+        it "creates dossier_modifie notification" do
+          expect { subject }.to change(DossierNotification, :count).by(1)
+
+          notification = DossierNotification.last
+          expect(notification.dossier_id).to eq(dossier.id)
+          expect(notification.instructeur_id).to eq(instructeur.id)
+          expect(notification.notification_type).to eq("dossier_modifie")
+        end
       end
 
-      it "create dossier_modifie notification only for instructeur follower" do
-        expect { subject }.to change(DossierNotification, :count).by(1)
+      context "when the dossier is in brouillon" do
+        let(:dossier) { create(:dossier, :brouillon, user:, groupe_instructeur:, procedure:) }
 
-        notification = DossierNotification.last
-        expect(notification.dossier_id).to eq(dossier.id)
-        expect(notification.instructeur_id).to eq(instructeur_follower.id)
-        expect(notification.notification_type).to eq("dossier_modifie")
+        it "does not create dossier_modifie notification" do
+          expect { subject }.not_to change(DossierNotification, :count)
+        end
       end
     end
 
