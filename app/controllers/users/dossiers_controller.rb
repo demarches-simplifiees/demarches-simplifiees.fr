@@ -169,11 +169,11 @@ module Users
         end
 
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
-        DossierNotification.create_notification(dossier, :dossier_modifie)
 
         flash.notice = t('.identity_saved')
 
         if dossier.en_construction?
+          DossierNotification.create_notification(dossier, :dossier_modifie)
           redirect_to demande_dossier_path(@dossier)
         else
           redirect_to brouillon_dossier_path(@dossier)
