@@ -257,6 +257,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_22_200515) do
     t.integer "dossier_id"
     t.integer "etablissement_id"
     t.string "external_id"
+    t.string "external_state"
     t.string "fetch_external_data_exceptions", array: true
     t.bigint "parent_id"
     t.boolean "prefilled"
