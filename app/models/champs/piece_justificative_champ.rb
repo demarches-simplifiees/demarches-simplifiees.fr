@@ -29,11 +29,11 @@ class Champs::PieceJustificativeChamp < Champ
     fetch_external_data_exceptions.present? && piece_justificative_file.attached?
   end
 
-  private
-
   def uses_external_data?
     RIB?
   end
+
+  private
 
   def should_ui_auto_refresh?
     RIB?
