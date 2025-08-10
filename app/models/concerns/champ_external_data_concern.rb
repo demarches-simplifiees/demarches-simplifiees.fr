@@ -13,9 +13,49 @@ module ChampExternalDataConcern
   # if exception, the job call save_external_exception
 
   included do
+    include AASM
+
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
     before_save :cleanup_if_empty
-    after_update_commit :fetch_external_data_later
+
+    aasm column: :external_state do
+      state :idle, initial: true
+      state :waiting_for_job
+      state :fetching
+      state :fetched
+      state :external_error
+
+      event :fetch_later, after_commit: :fetch_external_data_later do
+        transitions from: :idle, to: :waiting_for_job, guard: :ready_for_external_call?
+      end
+
+      # TODO: remove idle after first MEP
+      event :fetch, after_commit: :fetch_and_handle_result do
+        transitions from: [:idle, :waiting_for_job], to: :fetching
+      end
+
+      # TODO: remove idle after first MEP
+      event :external_data_fetched do
+        transitions from: [:idle, :fetching], to: :fetched
+      end
+
+      # TODO: remove idle after first MEP
+      event :external_data_error do
+        transitions from: [:idle, :fetching], to: :external_error
+      end
+
+      # TODO: remove idle after first MEP
+      event :retry do
+        transitions from: [:idle, :fetching], to: :waiting_for_job
+      end
+
+      # TODO: remove idle after first MEP
+      event :reset_external_data, after: :after_reset_external_data do
+        transitions from: [:waiting_for_job, :fetching, :fetched, :external_error], to: :idle
+      end
+    end
+
+    def pending? = waiting_for_job? || fetching?
 
     def fetch_external_data_later
       if uses_external_data? && external_id.present? && data.nil?
@@ -92,16 +132,24 @@ module ChampExternalDataConcern
         case result
         in Success(data)
           update_external_data!(data:)
+          external_data_fetched!
         in Failure(retryable: true, reason:, code:)
           save_external_exception(reason, code)
+          retry!
           raise reason
         in Failure(retryable: false, reason:, code:)
           save_external_exception(reason, code)
           Sentry.capture_exception(reason)
+          external_data_error!
         end
       elsif result.present?
         update_external_data!(data: result)
+        external_data_fetched!
       end
+    end
+
+    def after_reset_external_data
+      update(data: nil, value_json: nil, fetch_external_data_exceptions: [])
     end
   end
 end
