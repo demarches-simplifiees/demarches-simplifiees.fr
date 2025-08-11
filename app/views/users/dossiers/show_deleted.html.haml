@@ -10,9 +10,9 @@
 
             %p.fr-mb-4w= t('users.dossiers.show_deleted.explanation')
 
-            .card
-              %ul.fr-mb-0
+            .card.fr-mb-4w
+              %ul
                 %li= t('users.dossiers.show_deleted.reason_user_request')
                 %li= t('users.dossiers.show_deleted.reason_automatic')
 
-            %p.fr-mt-4w= raw t('users.dossiers.show_deleted.history_link_html', history_link: deleted_dossiers_path)
+            %p= raw t('users.dossiers.show_deleted.history_link_html', history_link: deleted_dossiers_path)

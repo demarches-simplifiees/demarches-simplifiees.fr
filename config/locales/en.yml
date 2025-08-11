@@ -916,6 +916,7 @@ en:
         title: "File n° %{numero} has been moved to trash"
         explanation_html: "You can find this file from the <a href=\"%{trash_link}\" class=\"fr-link\">trash</a> tab of your account.<br>It is not currently viewable."
         consult_trash: "View trash"
+        user_request_info_without_if: "This file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
         user_request_info: "If this file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
         automatic_info: "If this file was moved to trash automatically because its maximum retention period has been reached:<br>We recommend <strong>downloading</strong> it as soon as possible before it is permanently deleted."
       show_deleted:
@@ -924,7 +925,7 @@ en:
         explanation: "You can no longer recover this file for one of the following reasons:"
         reason_user_request: "It was moved to trash at your request, then automatically deleted."
         reason_automatic: "It was deleted because its maximum retention period has been reached."
-        history_link_html: "You can find all deleted files from your account on the <a href=\"%{history_link}\" class=\"fr-link\">Deleted files history</a> page."
+        history_link_html: "You can find all deleted files from your account (except \"DRAFT\") on the <a href=\"%{history_link}\" class=\"fr-link\">Deleted files history</a> page."
       papertrail:
         receipt: "Deposit receipt"
         description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."

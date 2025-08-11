@@ -2146,10 +2146,9 @@ describe Users::DossiersController, type: :controller do
     context 'when dossier is in trash' do
       before { dossier.hide_and_keep_track!(user, :user_request) }
 
-      it 'shows trash page' do
+      it 'redirects to trash page' do
         get :show, params: { id: dossier.id }
-        expect(response).to render_template(:show_in_trash)
-        expect(assigns(:hidden_dossier)).to eq(dossier)
+        expect(response).to redirect_to(corbeille_dossier_path(dossier.id))
       end
     end
 
@@ -2159,8 +2158,13 @@ describe Users::DossiersController, type: :controller do
         create(:deleted_dossier, dossier_id: dossier.id, user_id: user.id)
       end
 
-      it 'shows deleted page' do
+      it 'redirects to deleted page' do
         get :show, params: { id: dossier.id }
+        expect(response).to redirect_to(supprime_dossier_path(dossier.id))
+      end
+
+      it 'renders show_deleted' do
+        get :show_deleted, params: { id: dossier.id }
         expect(response).to render_template(:show_deleted)
       end
     end

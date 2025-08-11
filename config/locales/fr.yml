@@ -936,6 +936,7 @@ fr:
         title: "Le dossier n° %{numero} a été mis à la corbeille"
         explanation_html: "Vous pouvez retrouver ce dossier depuis l'onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n'est pas consultable actuellement."
         consult_trash: "Consulter la corbeille"
+        user_request_info_without_if: "Ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
         user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
         automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu'il ne soit supprimé définitivement."
       show_deleted:
@@ -944,7 +945,7 @@ fr:
         explanation: "Vous ne pouvez plus récupérer ce dossier pour une des raisons suivantes :"
         reason_user_request: "Il a été mis à la corbeille à votre demande, puis automatiquement supprimé."
         reason_automatic: "Il a été supprimé car son délai maximal de conservation a été atteint."
-        history_link_html: "Vous pouvez retrouver l'ensemble des dossiers supprimés de votre compte sur la page <a href=\"%{history_link}\" class=\"fr-link\">Historique des dossiers supprimés</a>."
+        history_link_html: "Vous pouvez retrouver l'ensemble des dossiers supprimés de votre compte (hors \"BROUILLON\") sur la page <a href=\"%{history_link}\" class=\"fr-link\">Historique des dossiers supprimés</a>."
   instructeurs:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
