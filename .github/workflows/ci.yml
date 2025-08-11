@@ -137,6 +137,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: launch redis
+        run: sudo apt-get install -y redis-server
+
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
