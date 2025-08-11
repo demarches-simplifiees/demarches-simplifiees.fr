@@ -248,7 +248,7 @@ ul.dropdown-items {
   content: none;
 }
 
-.help-content.fr-menu ul.fr-menu__list {
+.help-content.fr-menu .fr-menu__list {
   --text-decoration: underline;
   text-align: left;
   font-size: 1rem;
@@ -264,18 +264,19 @@ ul.dropdown-items {
   padding: 0.75rem 1rem;
 
   @media (min-width: 62em) {
-    padding-right: 2.5rem;
+    padding-right: 1rem;
     padding-left: 1rem;
   }
 }
 
-.help-content.fr-menu ul.fr-menu__list > li:not(:last-child) {
+.help-content.fr-menu .fr-menu__list > div:last-child,
+.help-content.fr-menu .fr-menu__list > li:last-child {
   @media (min-width: 62em) {
-    border-bottom: 1px solid $border-grey;
+    border-top: 1px solid $border-grey;
   }
 }
 
-.help-content.fr-menu ul.fr-menu__list {
+.help-content.fr-menu .fr-menu__list {
   h1,
   p {
     font-size: inherit;
