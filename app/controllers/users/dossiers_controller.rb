@@ -296,8 +296,6 @@ module Users
 
         dossier_en_construction.submit_en_construction!
 
-        DossierNotification.create_notification(dossier_en_construction, :dossier_modifie)
-
         redirect_to dossier_path(dossier_en_construction)
       else
         @dossier_for_editing = dossier
