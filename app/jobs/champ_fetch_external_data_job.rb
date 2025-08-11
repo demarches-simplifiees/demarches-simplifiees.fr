@@ -6,11 +6,10 @@ class ChampFetchExternalDataJob < ApplicationJob
 
   def perform(champ, external_id)
     return if champ.external_id != external_id
-    return if champ.data.present?
 
     Sentry.set_tags(champ: champ.id)
     Sentry.set_extras(external_id:)
 
-    champ.fetch_and_handle_result
+    champ.fetch!
   end
 end
