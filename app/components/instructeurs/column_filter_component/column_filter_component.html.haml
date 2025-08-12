@@ -1,9 +1,8 @@
-= form_with url: instructeur_procedure_presentation_path(@procedure_presentation),
+= form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation),
   class: 'dropdown-form large',
   id: 'filter-component',
-  method: :patch,
+  method: :post,
   data: { turbo: true, controller: 'autosubmit' } do |form|
-  = current_filter_tags
 
   .fr-select-group
     = label_tag :column,  t('.column'), class: 'fr-label fr-mb-1w', id: 'instructeur-filter-combo-label', for: 'search-filter'
