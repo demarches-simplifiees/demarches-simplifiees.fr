@@ -83,7 +83,7 @@ describe Champs::PieceJustificativeController, type: :controller do
 
       it 'redirects to the template' do
         subject
-        expect(response).to redirect_to(champ.type_de_champ.piece_justificative_template.blob)
+        expect(response).to redirect_to(rails_blob_url(champ.type_de_champ.piece_justificative_template.blob, disposition: 'attachment'))
       end
     end
 
