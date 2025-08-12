@@ -52,6 +52,26 @@ ol.messages-list > li::marker {
   .date {
     float: right;
   }
+
+  blockquote {
+    quotes: '« ' ' »' '“' '”';
+    font-style: italic;
+  }
+
+  blockquote::before {
+    content: open-quote;
+    float: left;
+  }
+
+  blockquote::after {
+    content: close-quote;
+    display: inline;
+  }
+}
+
+.messages-list .message .rich-text blockquote p {
+  display: inline;
+  margin-bottom: 0;
 }
 
 .date-header {
