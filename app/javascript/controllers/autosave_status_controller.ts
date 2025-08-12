@@ -27,6 +27,7 @@ export class AutosaveStatusController extends ApplicationController {
   connect(): void {
     this.onGlobal('autosave:enqueue', () => this.didEnqueue());
     this.onGlobal('autosave:end', () => this.didSucceed());
+    this.onGlobal('autosave:retry', () => this.didRetry());
     this.onGlobal<CustomEvent>('autosave:error', (event) =>
       this.didFail(event)
     );
@@ -55,6 +56,14 @@ export class AutosaveStatusController extends ApplicationController {
     disable(this.retryButtonTarget);
   }
 
+  private didRetry() {
+    const autosave = this.element as HTMLDivElement;
+    // We move focus to the success (or error) message of automatic saving
+    setTimeout(() => {
+      autosave.focus();
+    }, 2000);
+  }
+
   private didSucceed() {
     enable(this.retryButtonTarget);
     this.setState('succeeded');
@@ -73,6 +82,12 @@ export class AutosaveStatusController extends ApplicationController {
 
     enable(this.retryButtonTarget);
     this.setState('failed');
+
+    const autosave = this.element as HTMLDivElement;
+    // We move focus to the error message of automatic saving
+    setTimeout(() => {
+      autosave.focus();
+    }, 2000);
 
     const shouldLogError = !error.response || error.response.status != 0; // ignore timeout errors
     if (shouldLogError) {
