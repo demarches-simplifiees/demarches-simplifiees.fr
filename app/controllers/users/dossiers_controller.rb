@@ -14,7 +14,6 @@ module Users
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + [:show_in_trash, :show_deleted]
     before_action :redirect_if_hidden_or_deleted_dossier, only: [:show]
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE - [:show]
-    skip_before_action :ensure_ownership_or_invitation!, only: [:show_in_trash, :show_deleted]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
@@ -123,15 +122,9 @@ module Users
     end
 
     def show_in_trash
-      dossier_id = params[:id]
-      hidden_dossier = current_user.dossiers
-        .unscope(where: :hidden_by_user_at)
-        .where(id: dossier_id)
-        .where.not(hidden_by_user_at: nil)
-        .first
+      @hidden_dossier = hidden_dossier_for(params[:id])
 
-      if hidden_dossier
-        @hidden_dossier = hidden_dossier
+      if @hidden_dossier
         render :show_in_trash
       else
         raise ActiveRecord::RecordNotFound
@@ -139,11 +132,9 @@ module Users
     end
 
     def show_deleted
-      dossier_id = params[:id]
-      deleted_dossier = DeletedDossier.find_by(dossier_id:, user_id: current_user.id)
+      @deleted_dossier = deleted_dossier_for(params[:id])
 
-      if deleted_dossier
-        @deleted_dossier = deleted_dossier
+      if @deleted_dossier
         render :show_deleted
       else
         raise ActiveRecord::RecordNotFound
@@ -674,14 +665,6 @@ module Users
       end
     end
 
-    def ensure_ownership_or_invitation_with_fallback!
-      begin
-        ensure_ownership_or_invitation!
-      rescue ActiveRecord::RecordNotFound
-        redirect_if_hidden_or_deleted_dossier
-      end
-    end
-
     def forbid_closed_submission!
       if !dossier.can_transition_to_en_construction?
         forbidden!
@@ -712,23 +695,28 @@ module Users
 
     def redirect_if_hidden_or_deleted_dossier
       dossier_id = params[:id]
-      hidden_dossier = current_user.dossiers
-        .unscope(where: :hidden_by_user_at)
-        .where(id: dossier_id)
-        .where.not(hidden_by_user_at: nil)
-        .first
+      hidden_dossier = hidden_dossier_for(dossier_id)
 
       if hidden_dossier
-        redirect_to corbeille_dossier_path(dossier_id)
-        return
+        return redirect_to corbeille_dossier_path(dossier_id)
       end
 
-      deleted_dossier = DeletedDossier.find_by(dossier_id:, user_id: current_user.id)
+      deleted_dossier = deleted_dossier_for(dossier_id)
 
       if deleted_dossier
         redirect_to supprime_dossier_path(dossier_id)
         return
       end
+    end
+
+    def hidden_dossier_for(dossier_id)
+      current_user.dossiers
+        .hidden_by_user
+        .find_by(id: dossier_id)
+    end
+
+    def deleted_dossier_for(dossier_id)
+      DeletedDossier.find_by(dossier_id:, user_id: current_user.id)
     end
   end
 end
