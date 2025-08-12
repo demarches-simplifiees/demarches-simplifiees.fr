@@ -62,11 +62,16 @@ describe AttachmentsController, type: :controller do
       before { sign_in(user) }
 
       context 'and dossier is owned by user' do
-        it { is_expected.to have_http_status(200) }
+        before { champ.update_columns(external_state: 'fetched', value_json: 'some value') }
 
-        it 'removes the attachment' do
-          subject
-          expect(champ.reload.piece_justificative_file.attached?).to be(false)
+        it 'removes the attachment, and resets the ocr data' do
+          is_expected.to have_http_status(200)
+
+          champ.reload
+
+          expect(champ.piece_justificative_file.attached?).to be(false)
+          expect(champ.external_state).to eq('idle')
+          expect(champ.value_json).to be_nil
         end
       end
 
