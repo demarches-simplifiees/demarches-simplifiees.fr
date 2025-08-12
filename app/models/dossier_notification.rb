@@ -125,6 +125,7 @@ class DossierNotification < ApplicationRecord
       .distinct
 
     dossiers_with_news_notification_by_statut = {
+      a_suivre: dossiers_with_news_notification.by_statut('a-suivre'),
       suivis: dossiers_with_news_notification.by_statut('suivis', instructeur:),
       traites: dossiers_with_news_notification.by_statut('traites')
     }
@@ -143,6 +144,7 @@ class DossierNotification < ApplicationRecord
       .distinct
 
     {
+      a_suivre: dossiers_with_news_notification.by_statut('a-suivre').exists?,
       suivis: dossiers_with_news_notification.by_statut('suivis', instructeur:).exists?,
       traites: dossiers_with_news_notification.by_statut('traites').exists?
     }

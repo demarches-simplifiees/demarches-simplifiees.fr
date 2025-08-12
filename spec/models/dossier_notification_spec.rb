@@ -315,6 +315,7 @@ RSpec.describe DossierNotification, type: :model do
 
       it do
         is_expected.to eq({
+          a_suivre: false,
           suivis: true,
           traites: true
         })
@@ -332,6 +333,7 @@ RSpec.describe DossierNotification, type: :model do
 
       it do
         is_expected.to eq({
+          a_suivre: [],
           suivis: [procedure.id],
           traites: [procedure.id]
         })

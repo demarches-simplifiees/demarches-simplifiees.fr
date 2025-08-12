@@ -3,7 +3,8 @@
     = tab_item(i18n_tab_from_status('a-suivre'),
       instructeur_procedure_path(procedure, statut: 'a-suivre'),
       active: statut == 'a-suivre',
-      badge: number_with_html_delimiter(a_suivre_count))
+      badge: number_with_html_delimiter(a_suivre_count),
+      notification: statut_with_notifications[:a_suivre])
 
     = tab_item(i18n_tab_from_status('suivis'),
       instructeur_procedure_path(procedure, statut: 'suivis'),
