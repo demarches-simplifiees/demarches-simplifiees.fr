@@ -25,11 +25,11 @@ class Champs::PieceJustificativeChamp < Champ
     nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
   end
 
-  private
-
   def uses_external_data?
     RIB?
   end
+
+  private
 
   def should_ui_auto_refresh?
     RIB?
