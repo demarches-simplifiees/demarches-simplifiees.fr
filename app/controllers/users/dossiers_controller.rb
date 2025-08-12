@@ -623,6 +623,12 @@ module Users
       if Dossier.no_touching { champ.save }
         if dossier.brouillon? && champ_changed
           champ.update_timestamps
+
+          if champ.uses_external_data?
+            champ.reset_external_data! if champ.may_reset_external_data?
+            champ.fetch_later! if champ.may_fetch_later?
+          end
+
           if champ.used_by_routing_rules?
             @update_contact_information = true
             RoutingEngine.compute(dossier)
