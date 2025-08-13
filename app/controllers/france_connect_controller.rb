@@ -16,7 +16,7 @@ class FranceConnectController < ApplicationController
   def login
     return redirect_to new_user_session_path if !FranceConnectService.enabled?
 
-    uri, state, nonce = FranceConnectService.authorization_uri
+    uri, state, nonce = FranceConnectService.authorization_uri(conf_id)
 
     cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
     cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
@@ -29,7 +29,7 @@ class FranceConnectController < ApplicationController
       return redirect_to(new_user_session_path, alert: t('errors.messages.france_connect.connexion'))
     end
 
-    @fci, id_token = FranceConnectService.find_or_retrieve_france_connect_information(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    @fci, id_token = FranceConnectService.find_or_retrieve_france_connect_information(params[:code], cookies.encrypted[NONCE_COOKIE_NAME], conf_id)
 
     cookies.delete(NONCE_COOKIE_NAME)
 
@@ -187,6 +187,10 @@ class FranceConnectController < ApplicationController
   end
 
   private
+
+  def conf_id
+    cookies.encrypted[CONF_ID_COOKIE_NAME]
+  end
 
   def set_user_by_confirmation_token
     @user = User.find_by(confirmation_token: params[:token])
