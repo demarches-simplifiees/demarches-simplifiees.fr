@@ -11,6 +11,7 @@ class FranceConnectController < ApplicationController
   STATE_COOKIE_NAME = :france_connect_state
   NONCE_COOKIE_NAME = :france_connect_nonce
   ID_TOKEN_COOKIE_NAME = :france_connect_id_token
+  CONF_ID_COOKIE_NAME = :france_connect_conf_id
 
   def login
     return redirect_to new_user_session_path if !FranceConnectService.enabled?
