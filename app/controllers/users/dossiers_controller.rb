@@ -10,10 +10,11 @@ module Users
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new,  :deleted_dossiers]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore, :champ]
+    TRASH_ACTIONS = [:show_in_trash, :show_deleted]
 
-    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + [:show_in_trash, :show_deleted]
+    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + TRASH_ACTIONS
     before_action :redirect_if_hidden_or_deleted_dossier, only: [:show]
-    before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE - [:show]
+    before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
@@ -704,8 +705,7 @@ module Users
       deleted_dossier = deleted_dossier_for(dossier_id)
 
       if deleted_dossier
-        redirect_to supprime_dossier_path(dossier_id)
-        return
+        return redirect_to supprime_dossier_path(dossier_id)
       end
     end
 
