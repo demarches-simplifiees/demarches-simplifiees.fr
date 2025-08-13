@@ -6,7 +6,14 @@
 
     %h1.fr-h2= t('views.users.sessions.new.sign_in', application_name: Current.application_name)
 
-    = render partial: 'shared/france_connect_login', locals: { url: france_connect_path }
+    = render Dsfr::AlertComponent.new(title: nil, state: :warning, extra_class_names: 'fr-my-2w') do |c|
+      - c.with_body do
+        %p
+          Pas de FRANCE CONNECT !
+          %br
+          %br
+          quel jeton prendre ?
+    -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_path }
 
     %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
       %legend.fr-fieldset__legend#new-account-legend
