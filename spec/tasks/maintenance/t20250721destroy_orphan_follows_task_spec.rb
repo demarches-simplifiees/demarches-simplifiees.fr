@@ -7,18 +7,35 @@ module Maintenance
     describe "#collection" do
       subject(:collection) { described_class.collection }
 
-      let(:orphan_instructeur_follow) { create(:follow) }
-      let(:orphan_dossier_follow) { create(:follow) }
-      let(:valid_follow) { create(:follow) }
+      let(:dossier) { create(:dossier) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:valid_follow) { create(:follow, dossier:, instructeur:) }
 
+      # Following the insertion of constraints into the database by #11970,
+      # these must be bypassed in order to create orphan follows.
       before do
-        orphan_instructeur_follow.update_column(:instructeur_id, 9999)
-        orphan_dossier_follow.update_column(:dossier_id, 9999)
+        Follow.connection.execute("ALTER TABLE follows DISABLE TRIGGER ALL")
+
+        Follow.connection.execute <<~SQL.squish
+          INSERT INTO follows (instructeur_id, dossier_id, annotations_privees_seen_at, avis_seen_at, demande_seen_at, messagerie_seen_at, created_at, updated_at)
+          VALUES (9999, #{valid_follow.dossier_id}, NOW(), NOW(), NOW(), NOW(), NOW(), NOW())
+        SQL
+
+        Follow.connection.execute <<~SQL.squish
+          INSERT INTO follows (instructeur_id, dossier_id, annotations_privees_seen_at, avis_seen_at, demande_seen_at, messagerie_seen_at, created_at, updated_at)
+          VALUES (#{valid_follow.instructeur_id}, 9999, NOW(), NOW(), NOW(), NOW(), NOW(), NOW())
+        SQL
+
+        Follow.connection.execute("ALTER TABLE follows ENABLE TRIGGER ALL")
       end
 
       it "includes follows with missing instructeur or dossier" do
-        expect(collection.flat_map(&:to_a)).to include(orphan_instructeur_follow, orphan_dossier_follow)
-        expect(collection.flat_map(&:to_a)).not_to include(valid_follow)
+        result = collection.flat_map(&:to_a)
+
+        expect(result.count).to eq(2)
+        expect(result).not_to include(valid_follow)
+        expect(result.map(&:instructeur_id)).to include(9999)
+        expect(result.map(&:dossier_id)).to include(9999)
       end
     end
 
