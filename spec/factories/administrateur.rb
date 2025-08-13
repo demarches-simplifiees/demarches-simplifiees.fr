@@ -13,7 +13,7 @@ FactoryBot.define do
 
     after(:build) do |administrateur, evaluator|
       if administrateur.user
-        administrateur.user.instructeur = evaluator.instructeur
+        administrateur.user.instructeur ||= evaluator.instructeur
       end
     end
   end
