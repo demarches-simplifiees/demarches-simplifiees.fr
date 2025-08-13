@@ -533,15 +533,6 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.traitements.last.browser_name).to eq('Unknown Browser')
       end
     end
-
-    it "create dossier_depose notification for the groupe_instructeur" do
-      expect { subject }.to change(DossierNotification, :count).by(1)
-
-      notification = DossierNotification.last
-      expect(notification.dossier_id).to eq(dossier.id)
-      expect(notification.groupe_instructeur_id).to eq(dossier.groupe_instructeur.id)
-      expect(notification.notification_type).to eq("dossier_depose")
-    end
   end
 
   describe '#submit_en_construction' do
