@@ -90,9 +90,6 @@ jobs:
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
-      - name: Pre-compile assets
-        uses: ./.github/actions/ci-setup-assets
-
       - name: Setup split tests
         uses: ./.github/actions/ci-setup-split-tests
         with:
@@ -136,6 +133,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: launch redis
+        run: sudo apt-get install -y redis-server
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
