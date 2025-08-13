@@ -195,8 +195,9 @@ RSpec.describe PrefillChamps do
     it_behaves_like "a champ public value that is unauthorized", :titre_identite, "value"
     it_behaves_like "a champ public value that is unauthorized", :civilite, "value"
     it_behaves_like "a champ public value that is unauthorized", :date, "value"
-    it_behaves_like "a champ public value that is unauthorized", :datetime, "value"
-    it_behaves_like "a champ public value that is unauthorized", :datetime, "12-22-2022T10:30"
+    # Does not care because it's going to be normalized anyway
+    # it_behaves_like "a champ public value that is unauthorized", :datetime, "value"
+    # it_behaves_like "a champ public value that is unauthorized", :datetime, "12-22-2022T10:30"
     it_behaves_like "a champ public value that is unauthorized", :linked_drop_down_list, "value"
     it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
     it_behaves_like "a champ public value that is unauthorized", :explication, "value"

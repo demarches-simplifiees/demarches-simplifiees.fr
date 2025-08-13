@@ -8,8 +8,13 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   let(:mandatory) { true }
 
   before do
-    datetime_champ.update_column(:value, value)
-    datetime_champ.save(validate: false)
+    if value.nil?
+      sql = "UPDATE champs SET value = NULL WHERE id = #{datetime_champ.id}"
+    else
+      sql = "UPDATE champs SET value = '#{value}' WHERE id = #{datetime_champ.id}"
+    end
+    ActiveRecord::Base.connection.execute(sql)
+    datetime_champ.reload
   end
 
   context "when the value is a valid ISO8601 date" do
