@@ -10,9 +10,10 @@ class DateLimitValidator < ActiveModel::Validator
   private
 
   def in_past_value(record)
-    value = date_or_datetime(record, 'value')
+    # value has a timezone, it has to be converted to a date before the comparison
+    date = date_or_datetime(record, 'value').to_date
 
-    if record.type_de_champ.date_in_past? && value >= Date.today
+    if record.type_de_champ.date_in_past? && date >= Date.today
       # i18n-tasks-use t('errors.messages.date_in_past')
       record.errors.add(:value, :date_in_past)
     end
