@@ -90,6 +90,10 @@
                 = t('users.dossiers.header.callout.first_brouillon_recently_updated_button')
                 %span.visually-hidden= t('utils.file')
 
+      - if @statut == "dossiers-supprimes" && @search_terms.blank?
+        .fr-mb-3w.text-right
+          = link_to t('views.users.dossiers.index.see_deleted_dossiers_history'), deleted_dossiers_path, class: "fr-link"
+
       - if @search_terms.present?
         %h2.page-title
           = t('views.users.dossiers.search.result_term_title', search_terms: @search_terms)

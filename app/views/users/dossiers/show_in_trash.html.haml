@@ -1,0 +1,24 @@
+- content_for :title, t('users.dossiers.show_in_trash.page_title', numero: @hidden_dossier.id)
+
+.container
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12
+      .fr-card.fr-card--no-border
+        .fr-card__body
+          .fr-card__content
+            %h1.fr-h2= t('users.dossiers.show_in_trash.title', numero: @hidden_dossier.id)
+
+            - is_manual_brouillon = @hidden_dossier.brouillon? && @hidden_dossier.hidden_by_reason == 'user_request'
+            %p.fr-mb-4w= raw t('users.dossiers.show_in_trash.explanation_html', trash_link: dossiers_path(statut: 'dossiers-supprimes'))
+            .card.fr-mb-4w
+              %ul
+                - if is_manual_brouillon
+                  %li= raw t('users.dossiers.show_in_trash.user_request_info_without_if')
+                - else
+                  %ul
+                    %li= raw t('users.dossiers.show_in_trash.user_request_info')
+                    %li= raw t('users.dossiers.show_in_trash.automatic_info')
+
+            = link_to t('users.dossiers.show_in_trash.consult_trash'),
+                      dossiers_path(statut: 'dossiers-supprimes'),
+                      class: 'fr-btn'
