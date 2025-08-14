@@ -10,7 +10,7 @@ class DateLimitValidator < ActiveModel::Validator
   private
 
   def in_past_value(record)
-    value = convert_to_date(record, 'value')
+    value = date_or_datetime(record, 'value')
 
     if record.type_de_champ.date_in_past? && value >= Date.today
       # i18n-tasks-use t('errors.messages.date_in_past')
@@ -19,9 +19,9 @@ class DateLimitValidator < ActiveModel::Validator
   end
 
   def range_value(record)
-    value = convert_to_date(record, 'value')
-    start_date = convert_to_date(record, 'start_date')
-    end_date = convert_to_date(record, 'end_date')
+    value = date_or_datetime(record, 'value')
+    start_date = date_or_datetime(record, 'start_date')
+    end_date = date_or_datetime(record, 'end_date')
 
     if record.type_de_champ.range_date?
       if start_date.present? && end_date.present? && not_in_range(start_date, end_date, value)
@@ -37,7 +37,7 @@ class DateLimitValidator < ActiveModel::Validator
     end
   end
 
-  def convert_to_date(record, attribute)
+  def date_or_datetime(record, attribute)
     return '' if record.method(attribute).call.blank?
     record.date? ? record.method(attribute).call.to_date : record.method(attribute).call.to_datetime
   rescue Date::Error
