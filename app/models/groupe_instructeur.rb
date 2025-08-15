@@ -34,12 +34,14 @@ class GroupeInstructeur < ApplicationRecord
   scope :active, -> { where(closed: false) }
   scope :closed, -> { where(closed: true) }
   scope :for_dossiers, -> (dossiers) { joins(:dossiers).where(dossiers: dossiers).distinct(:id) }
+
   def add(instructeur)
     return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
 
     default_notification_settings = instructeur.notification_settings(procedure_id)
     instructeur.assign_to.create(groupe_instructeur: self, **default_notification_settings)
+    create_notifications_instructeur(self, instructeur)
   end
 
   def remove(instructeur)
@@ -134,4 +136,12 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   serialize :routing_rule, coder: LogicSerializer
+end
+
+def create_notifications_instructeur(groupe_instructeur, instructeur)
+  @dossiers ||= groupe_instructeur.dossiers
+
+  @dossiers.each do |dossier|
+    DossierNotification.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, 'all')
+  end
 end
