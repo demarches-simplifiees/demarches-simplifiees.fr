@@ -11,7 +11,7 @@ class DateLimitValidator < ActiveModel::Validator
 
   def validate_in_past(champ)
     # value has a timezone, it has to be converted to a date before the comparison
-    date = date_or_datetime(champ, 'value').to_date
+    date = date_or_datetime(champ, champ.value).to_date
 
     if date >= Date.today
       # i18n-tasks-use t('errors.messages.date_in_past')
@@ -20,9 +20,9 @@ class DateLimitValidator < ActiveModel::Validator
   end
 
   def validate_in_range(champ)
-    value = date_or_datetime(champ, 'value')
-    start_date = date_or_datetime(champ, 'start_date')
-    end_date = date_or_datetime(champ, 'end_date')
+    value = date_or_datetime(champ, champ.value)
+    start_date = date_or_datetime(champ, champ.start_date)
+    end_date = date_or_datetime(champ, champ.end_date)
 
     if start_date.present? && end_date.present? && not_in_range(start_date, end_date, value)
       # i18n-tasks-use t('errors.messages.not_in_range_date')
@@ -36,9 +36,9 @@ class DateLimitValidator < ActiveModel::Validator
     end
   end
 
-  def date_or_datetime(champ, attribute)
-    return '' if champ.method(attribute).call.blank?
-    champ.date? ? champ.method(attribute).call.to_date : champ.method(attribute).call.to_datetime
+  def date_or_datetime(champ, value)
+    return '' if value.blank?
+    champ.date? ? value.to_date : value.to_datetime
   rescue Date::Error
     nil
   end
