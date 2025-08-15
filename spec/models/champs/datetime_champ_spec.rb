@@ -48,9 +48,11 @@ describe Champs::DatetimeChamp do
       sql = "UPDATE champs SET value = 'invalid' WHERE id = #{datetime_champ.id}"
       ActiveRecord::Base.connection.execute(sql)
       datetime_champ.reload
+      expect(datetime_champ.value).to eq("invalid")
 
       expect(datetime_champ.valid?).to be_falsey
-      expect(datetime_champ.value).to eq("invalid")
+      error = datetime_champ.errors.first
+      expect(error.attribute).to eq(:value)
     end
   end
 
