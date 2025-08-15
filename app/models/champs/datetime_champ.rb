@@ -15,6 +15,6 @@ class Champs::DatetimeChamp < Champ
     return if DateDetectionUtils.parsable_iso8601_datetime?(value) || value.blank?
 
     # i18n-tasks-use t('errors.messages.not_a_datetime')
-    errors.add :datetime, :not_a_datetime
+    errors.add :value, :not_a_datetime
   end
 end
