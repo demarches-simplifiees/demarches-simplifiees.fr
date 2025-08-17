@@ -140,6 +140,7 @@ class TypeDeChamp < ApplicationRecord
                  :max_number,
                  :range_number,
                  :date_in_past,
+                 :date_in_future,
                  :range_date,
                  :start_date,
                  :end_date,
@@ -180,6 +181,8 @@ class TypeDeChamp < ApplicationRecord
   serialize :options, coder: WithIndifferentAccess
 
   serialize :condition, coder: LogicSerializer
+
+  validate :date_options_are_mutually_exclusive
 
   attr_reader :dynamic_type
 
@@ -346,6 +349,10 @@ class TypeDeChamp < ApplicationRecord
 
   def date_in_past?
     date_in_past == "1"
+  end
+
+  def date_in_future?
+    date_in_future == "1"
   end
 
   def range_date?
@@ -679,8 +686,8 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:textarea) => [:character_limit],
     type_champs.fetch(:integer_number) => [:positive_number, :min_number, :max_number, :range_number],
     type_champs.fetch(:decimal_number) => [:positive_number, :min_number, :max_number, :range_number],
-    type_champs.fetch(:date) => [:date_in_past, :start_date, :end_date, :range_date],
-    type_champs.fetch(:datetime) => [:date_in_past, :start_date, :end_date, :range_date],
+    type_champs.fetch(:date) => [:date_in_past, :date_in_future, :start_date, :end_date, :range_date],
+    type_champs.fetch(:datetime) => [:date_in_past, :date_in_future, :start_date, :end_date, :range_date],
     type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
     type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],
@@ -836,5 +843,11 @@ class TypeDeChamp < ApplicationRecord
 
   def normalize_libelle
     self.libelle&.strip!
+  end
+
+  def date_options_are_mutually_exclusive
+    if date_in_past? && date_in_future?
+      errors.add(:date_in_future, "ne peut pas être sélectionnée en même temps que 'date dans le passé'")
+    end
   end
 end
