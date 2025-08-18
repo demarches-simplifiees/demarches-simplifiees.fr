@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe OCRService do
+  include Dry::Monads[:result]
+
   describe '#analyze' do
     context 'when the service is enabled' do
       let(:ocr_service_url) { 'http://an_ocr_service/analyze' }
@@ -33,7 +35,7 @@ describe OCRService do
 
         it 'returns a StringIO object with the PDF data' do
           analysis = described_class.analyze(blob)
-          expect(analysis).to eq(body)
+          expect(analysis).to eq(Success(body))
         end
       end
 
@@ -46,8 +48,9 @@ describe OCRService do
 
         it 'handles the error gracefully' do
           analysis = described_class.analyze(blob)
-          expect(analysis[:error][:code]).to eq(422)
-          expect(analysis[:error][:message]).to include('Invalid')
+          expect(analysis.failure?).to be true
+          expect(analysis.failure[:code]).to eq(422)
+          expect(analysis.failure[:reason].to_s).to include('Invalid')
         end
       end
     end
