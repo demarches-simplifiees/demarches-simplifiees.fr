@@ -67,7 +67,10 @@ RSpec.describe Referentiels::MappingFormComponent, type: :component do
     it "does not detect invalid date as :date" do
       expect(convert_json_value_to_type(value: "martin", property_name: "$.records[0].fields.prenom")).to eq(:string)
       expect(convert_json_value_to_type(value: "2024-13-14")).to eq(:string)
-      expect(convert_json_value_to_type(value: "2024-06-31")).to eq(:string)
+      # do not take 31 juin example as the ruby parser allow
+      # Time.new(2024, 6, 31) # => 2024-07-01
+      # expect(convert_json_value_to_type(value: "2024-06-31")).to eq(:string)
+      expect(convert_json_value_to_type(value: "2024-06-32")).to eq(:string)
     end
 
     it "does not detect embedded date in string as :date" do
