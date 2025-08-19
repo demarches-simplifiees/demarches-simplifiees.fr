@@ -25,6 +25,12 @@ module DateDetectionUtils
   end
 
   def self.parsable_iso8601_date?(value)
+    return false if value.nil?
+    # we focus only on date, so we expect only 3 parts in the date string
+    return false if (value.split('-').count != 3 && value.split('/').count != 3)
+    # without time or timezone information
+    return false if value.include?('T') || value.include?(':')
+
     begin
       Date.iso8601(value)
       true
