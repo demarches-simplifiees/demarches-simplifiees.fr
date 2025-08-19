@@ -60,12 +60,8 @@ module DateDetectionUtils
       end
     elsif /^\d{2}\/\d{2}\/\d{4}\s\d{2}:\d{2}$/.match?(value) # old browsers can send with dd/mm/yyyy hh:mm format
       Time.zone.strptime(value, "%d/%m/%Y %H:%M").iso8601
-    elsif /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/.match?(value)
-      Time.zone.strptime(value, "%Y-%m-%d %H:%M").iso8601
-    elsif /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}[\+\-]\d{2}:\d{2})?$/.match?(value) # a correct iso8601 datetime
-      Time.zone.strptime(value, "%Y-%m-%dT%H:%M").iso8601
     else
-      nil
+      Time.zone.iso8601(value).iso8601 # ensure it is a valid ISO8601 datetime
     end
   rescue
     nil
