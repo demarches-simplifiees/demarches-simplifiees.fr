@@ -144,5 +144,26 @@ describe Columns::DossierColumn do
         it { is_expected.to contain_exactly(dossier_en_construction.id, dossier_accepte.id) }
       end
     end
+
+    context 'for a date column' do
+      let(:procedure) { create(:procedure, for_individual: false) }
+      let!(:dossier) { travel_to(DateTime.parse("12/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+      let!(:dossier2) { travel_to(DateTime.parse("15/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+      let(:date_column) { procedure.find_column(label: "Date de création") }
+
+      subject { date_column.filtered_ids(procedure.dossiers, search_terms) }
+
+      context 'when searching with before operator' do
+        let(:search_terms) { { operator: 'before', value: ["2025-02-13"] } }
+
+        it { is_expected.to contain_exactly(dossier.id) }
+      end
+
+      context 'when searching with after operator' do
+        let(:search_terms) { { operator: 'after', value: ["2025-02-13"] } }
+
+        it { is_expected.to contain_exactly(dossier2.id) }
+      end
+    end
   end
 end

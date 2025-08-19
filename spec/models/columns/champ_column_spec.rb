@@ -287,6 +287,71 @@ describe Columns::ChampColumn do
         end
       end
     end
+
+    context "with a date champ" do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :date, libelle: "date" }]) }
+      let(:dossier) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier2) { create(:dossier, :en_instruction, procedure:) }
+
+      subject { column.filtered_ids(dossiers, filter) }
+
+      before do
+        dossier.champs.first.update!(value: "2025-02-13")
+        dossier2.champs.first.update!(value: "2025-02-15")
+      end
+
+      let(:column) { procedure.find_column(label: "date") }
+      let(:dossiers) { procedure.dossiers }
+
+      context "when searching with before operator" do
+        let(:filter) { { operator: 'before', value: ["2025-02-14"] } }
+
+        it "returns the correct ids" do
+          expect(subject).to eq([dossier.id])
+        end
+      end
+
+      context "when searching with after operator" do
+        let(:filter) { { operator: 'after', value: ["2025-02-14"] } }
+
+        it "returns the correct ids" do
+          expect(subject).to eq([dossier2.id])
+        end
+      end
+    end
+
+    context "with a datetime champ" do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :datetime, libelle: "datetime" }]) }
+      let(:dossier) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier2) { create(:dossier, :en_instruction, procedure:) }
+
+      subject { column.filtered_ids(dossiers, filter) }
+
+      before do
+        dossier.champs.first.update!(value: "2025-02-13T12:00:00+01:00")
+        dossier2.champs.first.update!(value: "2025-02-15T12:00:00+01:00")
+      end
+
+      let(:column) { procedure.find_column(label: "datetime") }
+      let(:dossiers) { procedure.dossiers }
+
+      context "when searching with before operator" do
+        let(:filter) { { operator: 'before', value: ["2025-02-14"] } }
+
+        it "returns the correct ids" do
+          puts dossier.champs.first.value
+          expect(subject).to eq([dossier.id])
+        end
+      end
+
+      context "when searching with after operator" do
+        let(:filter) { { operator: 'after', value: ["2025-02-14"] } }
+
+        it "returns the correct ids" do
+          expect(subject).to eq([dossier2.id])
+        end
+      end
+    end
   end
 
   private

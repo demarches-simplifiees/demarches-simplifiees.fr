@@ -1,8 +1,8 @@
 ---
 fr:
   operators:
-    before: 'avant'
-    after: 'après'
+    before: 'avant le'
+    after: 'après le'
   conjunctions:
     and: ' et '
     or: ' ou '
