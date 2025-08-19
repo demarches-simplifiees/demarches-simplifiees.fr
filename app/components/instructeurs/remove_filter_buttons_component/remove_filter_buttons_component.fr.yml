@@ -1,0 +1,8 @@
+---
+fr:
+  operators:
+    before: 'avant'
+    after: 'après'
+  conjunctions:
+    and: ' et '
+    or: ' ou '

@@ -8,7 +8,7 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
   end
 
   def call
-    safe_join(filters_by_family, ' et ')
+    safe_join(filters_by_family, t('.conjunctions.and'))
   end
 
   private
@@ -18,7 +18,7 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
       .group_by { _1.column.id }
       .values
       .map { |group| group.map { |f| filter_form(f) } }
-      .map { |group| safe_join(group, ' ou ') }
+      .map { |group| safe_join(group, t('.conjunctions.or')) }
   end
 
   def filter_form(filter)
@@ -46,17 +46,17 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
     filter_value = Array(filter.is_a?(String) ? filter : filter[:value])
 
     operator = if filter[:operator] == 'before'
-      "avant"
+      t('.operators.before')
     elsif filter[:operator] == 'after'
-      "après"
+      t('.operators.after')
     end
 
-    if column_type == :date || column_type == :datetime
-      filter_value.map { helpers.try_parse_format_date(it) }.join(' ou ')
+    processed_value = if column_type == :date || column_type == :datetime
+      filter_value.map { helpers.try_parse_format_date(it) }.join(t('.conjunctions.or'))
     else
-      filter_value.map { filter_column.column.label_for_value(it) }.join(' ou ')
+      filter_value.map { filter_column.column.label_for_value(it) }.join(t('.conjunctions.or'))
     end
 
-    [operator, filter_value].compact.join(' ')
+    [operator, processed_value].compact.join(' ')
   end
 end
