@@ -27,9 +27,14 @@ describe Champs::DatetimeChamp do
       expect(champ.value).to be_nil
     end
 
-    it 'preserves if ISO8601' do
+    it 'preserves with current timezone if ISO8601 without timezone' do
       champ = champ_with_value("2023-12-21T03:20")
       expect(champ.value).to eq(Time.zone.parse("2023-12-21T03:20:00").iso8601)
+    end
+
+    it 'preserves timezone if ISO8601' do
+      champ = champ_with_value("2023-12-21T03:20:07+01:00")
+      expect(champ.value).to eq(Time.zone.parse("2023-12-21T03:20:07+01:00").iso8601)
     end
 
     it 'converts to ISO8601 if form format' do
