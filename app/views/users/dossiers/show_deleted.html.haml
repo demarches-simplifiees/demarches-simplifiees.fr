@@ -1,0 +1,18 @@
+- content_for :title, t('users.dossiers.show_deleted.page_title', numero: @deleted_dossier.dossier_id)
+
+.container
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12
+      .fr-card.fr-card--no-border
+        .fr-card__body
+          .fr-card__content
+            %h1.fr-h2= t('users.dossiers.show_deleted.title', numero: @deleted_dossier.dossier_id)
+
+            %p.fr-mb-4w= t('users.dossiers.show_deleted.explanation')
+
+            .card.fr-mb-4w
+              %ul
+                %li= t('users.dossiers.show_deleted.reason_user_request')
+                %li= t('users.dossiers.show_deleted.reason_automatic')
+
+            %p= raw t('users.dossiers.show_deleted.history_link_html', history_link: deleted_dossiers_path)

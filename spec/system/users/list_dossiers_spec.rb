@@ -189,12 +189,12 @@ describe 'user access to the list of their dossiers', js: true do
         expect(page).to have_content(dossier_en_construction.procedure.libelle)
         within(:css, "#dossier_#{dossier_en_construction.id}", match: :first) do
           click_on 'Autres actions'
-          accept_alert('Confirmer la suppression ?') do
+          accept_alert('Voulez-vous vraiment mettre à la corbeille ce dossier') do
             click_on 'Mettre à la corbeille'
           end
         end
 
-        expect(page).to have_content('Votre dossier a bien été supprimé')
+        expect(page).to have_content('Votre dossier a bien été mis à la corbeille')
         expect(page).not_to have_content(dossier_en_construction.procedure.libelle)
       end
     end

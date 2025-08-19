@@ -541,6 +541,8 @@ en:
         dossier_menu: "File number %{id}"
         index:
           dossiers: "My files"
+          see_deleted_dossiers_history: Deleted files history
+          administration_no_longer_processes: "The administration will no longer process your request."
         dossiers_list:
           n_dossier: "File no."
           no_result_title: No files
@@ -554,8 +556,8 @@ en:
           created_at: Created at %{date}
           updated_at: updated at %{date}
           shared_with: File shared by %{owner} with
-          deleted_by_user: Deleted on %{date} by user
-          deleted_by_automatic: Deleted on %{date} automatically due to expiration date
+          deleted_by_user: Moved to trash on %{date} by user
+          deleted_by_automatic: Moved to trash on %{date} because of expiration date
           procedure_closed:
             brouillon:
               internal_procedure_html: <h4 class="card-title fr-mb-1v">This procedure is closed</h4><p>You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.</p>
@@ -585,7 +587,7 @@ en:
           start_other_dossier: "Start another empty file"
           clone: "Duplicate the file"
           delete_dossier: "Move file to trash"
-          delete_dossier_confirm: "If you continue, you will delete this file and the information it contains. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
+          delete_dossier_confirm: "Do you really want to move this file to the trash?"
           delete_dossier_with_transfer_confirm: "If you continue, you will delete this file, the information it contains and its transfer request to %{email}. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
           transfer_dossier: "Transfer the file"
           edit_draft: "Keep filling"
@@ -897,7 +899,7 @@ en:
       cloned_success: "Your file has been duplicated. Please review it then you can submit it"
       ask_deletion:
         undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
-        soft_deleted_dossier: "Your file has been successfully deleted from your interface"
+        soft_deleted_dossier: "Your file has been successfully moved to the trash"
       restore: "Your file has been successfully restored"
       etablissement:
         no_establishment: "There is no establishment tied to this file"
@@ -909,6 +911,21 @@ en:
         papertrail:
           get_papertrail: "Get a deposit receipt"
           filename: "deposit-receipt_file-%{dossier_id}.pdf"
+      show_in_trash:
+        page_title: "File nº %{numero} - In trash"
+        title: "File n° %{numero} has been moved to trash"
+        explanation_html: "You can find this file from the <a href=\"%{trash_link}\" class=\"fr-link\">trash</a> tab of your account.<br>It is not currently viewable."
+        consult_trash: "View trash"
+        user_request_info_without_if: "This file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
+        user_request_info: "If this file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
+        automatic_info: "If this file was moved to trash automatically because its maximum retention period has been reached:<br>We recommend <strong>downloading</strong> it as soon as possible before it is permanently deleted."
+      show_deleted:
+        page_title: "File nº %{numero} - Permanently deleted"
+        title: "File n° %{numero} has been deleted"
+        explanation: "You can no longer recover this file for one of the following reasons:"
+        reason_user_request: "It was moved to trash at your request, then automatically deleted."
+        reason_automatic: "It was deleted because its maximum retention period has been reached."
+        history_link_html: "You can find all deleted files from your account (except \"DRAFT\") on the <a href=\"%{history_link}\" class=\"fr-link\">Deleted files history</a> page."
       papertrail:
         receipt: "Deposit receipt"
         description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."

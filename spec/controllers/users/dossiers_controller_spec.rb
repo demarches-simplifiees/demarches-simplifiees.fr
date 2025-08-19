@@ -2138,6 +2138,39 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#show' do
+    let(:dossier) { create(:dossier, :en_construction, user: user) }
+
+    before { sign_in(user) }
+
+    context 'when dossier is in trash' do
+      before { dossier.hide_and_keep_track!(user, :user_request) }
+
+      it 'redirects to trash page' do
+        get :show, params: { id: dossier.id }
+        expect(response).to redirect_to(corbeille_dossier_path(dossier.id))
+      end
+    end
+
+    context 'when dossier is deleted' do
+      before do
+        dossier.destroy
+        create(:deleted_dossier, dossier_id: dossier.id, user_id: user.id)
+      end
+
+      it 'redirects to deleted page' do
+        get :show, params: { id: dossier.id }
+        expect(response).to redirect_to(supprime_dossier_path(dossier.id))
+      end
+    end
+
+    context 'when dossier not found' do
+      it 'raises not found' do
+        expect { get :show, params: { id: 42 } }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
