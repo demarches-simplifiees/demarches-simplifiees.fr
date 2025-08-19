@@ -57,10 +57,10 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   def value_to_type(value, jsonpath)
     if DateDetectionUtils.should_suggest_timestamp_mapping?(value, jsonpath)
       self.class::TYPES[:datetime]
-    elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
-      self.class::TYPES[:datetime]
     elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_date?(value)
       self.class::TYPES[:date]
+    elsif value.is_a?(String) && DateDetectionUtils.parsable_iso8601_datetime?(value)
+      self.class::TYPES[:datetime]
     elsif ReferentielMappingUtils.array_of_supported_simple_types?(value)
       self.class::TYPES[:array]
     elsif value.is_a?(Float)
