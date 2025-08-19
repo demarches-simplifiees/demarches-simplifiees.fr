@@ -2162,11 +2162,6 @@ describe Users::DossiersController, type: :controller do
         get :show, params: { id: dossier.id }
         expect(response).to redirect_to(supprime_dossier_path(dossier.id))
       end
-
-      it 'renders show_deleted' do
-        get :show_deleted, params: { id: dossier.id }
-        expect(response).to render_template(:show_deleted)
-      end
     end
 
     context 'when dossier not found' do

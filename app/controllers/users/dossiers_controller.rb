@@ -124,22 +124,12 @@ module Users
 
     def show_in_trash
       @hidden_dossier = hidden_dossier_for(params[:id])
-
-      if @hidden_dossier
-        render :show_in_trash
-      else
-        raise ActiveRecord::RecordNotFound
-      end
+      raise ActiveRecord::RecordNotFound if @hidden_dossier.nil?
     end
 
     def show_deleted
       @deleted_dossier = deleted_dossier_for(params[:id])
-
-      if @deleted_dossier
-        render :show_deleted
-      else
-        raise ActiveRecord::RecordNotFound
-      end
+      raise ActiveRecord::RecordNotFound if @deleted_dossier.nil?
     end
 
     def papertrail
@@ -696,15 +686,10 @@ module Users
 
     def redirect_if_hidden_or_deleted_dossier
       dossier_id = params[:id]
-      hidden_dossier = hidden_dossier_for(dossier_id)
 
-      if hidden_dossier
+      if hidden_dossier_for(dossier_id)
         return redirect_to corbeille_dossier_path(dossier_id)
-      end
-
-      deleted_dossier = deleted_dossier_for(dossier_id)
-
-      if deleted_dossier
+      elsif deleted_dossier_for(dossier_id)
         return redirect_to supprime_dossier_path(dossier_id)
       end
     end
