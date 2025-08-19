@@ -280,6 +280,7 @@ describe Users::DossiersController, type: :controller do
         stub_request(:get, "https://entreprise.api.gouv.fr/ping/insee/sirene")
           .to_return(body: api_insee_status_response)
       end
+      travel_to(2.minutes.ago)
     end
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
@@ -292,7 +293,7 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.etablissement).to be_present
         expect(dossier.autorisation_donnees).to be(true)
         expect(user.siret).to eq(siret)
-
+        expect(dossier.last_champ_updated_at).to be_between(2.seconds.ago, Time.current.to_i)
         expect(response).to redirect_to(etablissement_dossier_path)
       end
     end
