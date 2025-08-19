@@ -188,7 +188,7 @@ describe Expired::DossiersDeletionService do
 
     context 'when admin is also instructor of the procedure' do
       let!(:admin) { procedure.administrateurs.first }
-      let!(:instructeur) { create(:instructeur, user: admin.user) }
+      let!(:instructeur) { admin.instructeur }
       let(:en_construction_at) { (conservation_par_defaut - 2.weeks + 1.day).ago }
       let!(:dossier) { create(:dossier, :en_construction, :followed, procedure: procedure, en_construction_at: en_construction_at) }
       let(:service) { Expired::DossiersDeletionService.new }

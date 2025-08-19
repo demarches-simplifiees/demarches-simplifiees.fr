@@ -4,7 +4,7 @@ describe 'Referentiel API:' do
   let(:zone) { create(:zone) }
   let(:user) { create(:user) }
   let(:administrateur) { create(:administrateur, user:) }
-  let(:instructeur) { create(:instructeur, user:) }
+  let(:instructeur) { administrateur.instructeur }
   let(:service) { create(:service, administrateur:) }
   let!(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, zones: [zone], service:, administrateurs: [administrateur], instructeurs: [instructeur]) }
   let(:types_de_champ_public) do
