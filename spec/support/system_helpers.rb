@@ -107,8 +107,11 @@ module SystemHelpers
 
   def select_combobox(libelle, value, custom_value: false)
     fill_in libelle, with: custom_value ? "#{value}," : value
+
     if !custom_value
-      find_field(libelle).send_keys(:down, :enter)
+      option = find('[role="option"]', text: value)
+      expect(option).to be_visible
+      option.click
     end
   end
 
