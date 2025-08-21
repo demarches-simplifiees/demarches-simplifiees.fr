@@ -24,9 +24,6 @@ class Referentiels::APIReferentiel < Referentiel
     false
   end
 
-  def self.autocomplete_available?
-    false
-  end
 
   def last_response_body
     (last_response || {}).fetch("body") { {} }

@@ -48,9 +48,7 @@ describe 'Referentiel API:' do
       find("#referentiel_url").fill_in(with: 'https://google.com')
       expect(page).to have_content("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
       find("#referentiel_url").fill_in(with: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/')
-      if Referentiels::APIReferentiel.autocomplete_available?
-        find('label[for="referentiel_mode_exact_match"]').click
-      end
+      find('label[for="referentiel_mode_exact_match"]').click
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "Saisir votre numero de bâtiment")
       fill_in("Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)", with: "PG46YY6YWCX8")
       click_on('Étape suivante')
