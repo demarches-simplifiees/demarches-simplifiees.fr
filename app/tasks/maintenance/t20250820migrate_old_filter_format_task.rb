@@ -37,19 +37,8 @@ module Maintenance
     def normalize_filtered_column(filtered_column)
       FilteredColumn.new(
         column: filtered_column.column,
-        filter: normalize_filter(filtered_column.filter)
+        filter: DossierFilterService.normalize_filter(filtered_column.filter)
       )
-    end
-
-    def normalize_filter(filter)
-      case filter
-      in String|Array
-        { operator: 'match', value: Array(filter) }
-      in { operator: String => operator, value: String|Array => value }
-        { operator:, value: Array(value) }
-      else
-        { operator: 'match', value: Array(filter[:value]) }
-      end
     end
 
     def count
