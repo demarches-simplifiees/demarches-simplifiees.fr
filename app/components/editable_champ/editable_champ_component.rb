@@ -7,7 +7,37 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   end
 
   def champ_component
-    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
+    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at, aria_labelledby_prefix: aria_labelledby_prefix)
+  end
+
+  def parent_fieldset_legend_id
+    "#{@champ.parent.html_id}-legend"
+  end
+
+  def fieldset_legend_id
+    "#{@champ.parent.html_id(@champ.row_id)}-legend"
+  end
+
+  def aria_labelledby_prefix
+    return "" if !number_of_siblings_if_in_repetition
+
+    number_of_siblings_if_in_repetition > 1 ? fieldset_legend_id : parent_fieldset_legend_id
+  end
+
+  def number_of_siblings_if_in_repetition
+    return if !@champ.child?
+
+    @number_of_siblings_if_in_repetition ||= @champ.dossier.revision.children_of(@champ.parent).count
+  end
+
+  def row_number_if_in_repetition
+    return if !@champ.child? || number_of_siblings_if_in_repetition > 1
+
+    @row_number_if_in_repetition ||= begin
+      parent = @champ.parent
+      row_ids = @champ.dossier.repetition_row_ids(parent)
+      row_ids.find_index(@champ.row_id)&.+ 1
+    end
   end
 
   private
