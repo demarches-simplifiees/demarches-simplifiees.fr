@@ -78,11 +78,9 @@ class DossierFilterService
   end
 
   def self.group_filters(filtered_columns)
-    normalized_filters = filtered_columns.map { |fc| { column: fc.column, filter: normalize_filter(fc.filter) } }
-
-    grouped_filters = normalized_filters.group_by { [it[:column], it[:filter][:operator]] }.transform_values { merge_match_filters(it.map { it[:filter] }) }
-
-    grouped_filters
+    filtered_columns
+      .group_by { [it[:column], it[:filter][:operator]] }
+      .transform_values { merge_match_filters(it.map { it[:filter] }) }
   end
 
   def self.merge_match_filters(filters)
@@ -93,21 +91,6 @@ class DossierFilterService
     return filters if filters.first[:operator] != 'match' || filters.size == 1
 
     [{ operator: 'match', value: filters.map { it[:value] }.flatten }]
-  end
-
-  def self.normalize_filter(filter)
-    case filter
-    in String|Array
-      { operator: 'match', value: normalize_filter_value(filter) }
-    in { operator: String => operator, value: String|Array => value }
-      return { operator:, value: normalize_filter_value(value) }
-    else
-      { operator: 'match', value: normalize_filter_value(filter[:value]) }
-    end
-  end
-
-  def self.normalize_filter_value(filter)
-    filter.is_a?(Array) ? filter : [filter]
   end
 
   def self.sanitized_column(association, column)
