@@ -451,7 +451,7 @@ describe TypeDeChamp do
     context 'Champ referentiel' do
       let(:procedure) { create(:procedure, types_de_champ_public:) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
-      let(:referentiel) { create(:api_referentiel, :exact_match, :configured, :ready) }
+      let(:referentiel) { create(:api_referentiel, :exact_match, :with_exact_match_response) }
       let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
 
       before do

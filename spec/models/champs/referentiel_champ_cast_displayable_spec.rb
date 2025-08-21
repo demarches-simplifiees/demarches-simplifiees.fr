@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe Champs::ReferentielChamp, type: :model do
-  let(:referentiel) { create(:api_referentiel, :exact_match, :configured) }
+  let(:referentiel) { create(:api_referentiel, :exact_match) }
   let(:types) { Referentiels::MappingFormComponent::TYPES }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
