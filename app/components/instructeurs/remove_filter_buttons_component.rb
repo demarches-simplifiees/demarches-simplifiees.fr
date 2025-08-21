@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Instructeurs::FilterButtonsComponent < ApplicationComponent
+class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
   def initialize(filters:, procedure_presentation:, statut:)
     @filters = filters
     @procedure_presentation = procedure_presentation
