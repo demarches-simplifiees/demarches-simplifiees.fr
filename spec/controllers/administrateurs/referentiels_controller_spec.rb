@@ -139,6 +139,16 @@ describe Administrateurs::ReferentielsController, type: :controller do
     context 'full update (updating all attributes) without autosave' do
       subject { patch :update, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
       let(:referentiel) { create(:api_referentiel, :exact_match, :with_exact_match_response, types_de_champ: [type_de_champ]) }
+      let(:referentiel) do
+        create(
+          :api_referentiel,
+          :exact_match,
+          :with_exact_match_response,
+          types_de_champ: [type_de_champ],
+          datasource: '$.jsonpath',
+          tiptap_template: { "type": "doc", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "{{jsonpath}}" }] }] }.to_json
+        )
+      end
       before do
         type_de_champ.update(referentiel_mapping: { "old" => { type: "string" } })
       end
@@ -167,7 +177,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(referentiel.test_data).to eq(referentiel_params[:test_data])
 
         # also reset last_response/referentiel_mapping when url changed
-        expect(referentiel.reload.last_response).to be_nil
+        referentiel.reload
+        expect(referentiel.last_response).to be_nil
+        expect(referentiel.autocomplete_configuration).to eq({ "json_template" => {} })
         expect(type_de_champ.reload.referentiel_mapping).to eq({})
       end
     end
@@ -354,6 +366,41 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(updated_mapping.dig('$.jsonpath1', "type")).to eq("Chaine de caractères")
         expect(updated_mapping.dig('$.jsonpath1', "prefill")).to eq("1")
         expect(updated_mapping.dig('$.jsonpath1', "prefill_stable_id")).to eq(prefillable_stable_id.to_s)
+      end
+    end
+
+    describe '#autocomplete_configuration' do
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+      let(:referentiel) { create(:api_referentiel, :autocomplete, :with_autocomplete_response, types_de_champ: [type_de_champ]) }
+
+      context 'PATCH autocomplete_configuration' do
+        subject do
+          patch :update_autocomplete_configuration, params: {
+            procedure_id: procedure.id,
+            stable_id: type_de_champ.stable_id,
+            id: referentiel.id,
+            referentiel: {
+              datasource: "$.results",
+              tiptap_template: { type: "OK" }.to_json
+            },
+            commit: 'Enregistrer la configuration'
+          }
+        end
+
+        it 'updates the autocomplete_configuration (and serialize tiptap template) and redirects' do
+          expect { subject }.to change { referentiel.reload.datasource }.to("$.results")
+          expect(referentiel.json_template).to eq({ "type" => "OK" })
+          expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+          expect(flash[:notice]).to eq("La configuration de l'autocomplete a bien été enregistrée")
+        end
+
+        context 'when update fails' do
+          before { allow_any_instance_of(Referentiel).to receive(:update).and_return(false) }
+          it 'redirects to edit with alert' do
+            subject
+            expect(response).to have_http_status(:success)
+          end
+        end
       end
     end
 
