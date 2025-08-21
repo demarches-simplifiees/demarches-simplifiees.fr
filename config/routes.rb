@@ -789,6 +789,7 @@ Rails.application.routes.draw do
         member do
           get :configuration_error
           patch :update_autocomplete_configuration
+          get :autocomplete_configuration
           get :mapping_type_de_champ
           patch :update_mapping_type_de_champ
           patch :update_prefill_and_display_type_de_champ
