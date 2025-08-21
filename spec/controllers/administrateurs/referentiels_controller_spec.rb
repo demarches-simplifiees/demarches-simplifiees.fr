@@ -402,6 +402,24 @@ describe Administrateurs::ReferentielsController, type: :controller do
           end
         end
       end
+
+      context 'GET autocomplete_configuration' do
+        context 'when referentiel not ready' do
+          it 'redirects to configuration error' do
+            allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(false)
+            get :autocomplete_configuration, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
+            expect(response).to redirect_to(configuration_error_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+          end
+        end
+
+        context 'when referentiel is ready' do
+          it 'renders successfully and returns the configuration' do
+            allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(true)
+            get :autocomplete_configuration, params: { procedure_id: procedure.id, stable_id: type_de_champ.stable_id, id: referentiel.id }
+            expect(response).to have_http_status(:success)
+          end
+        end
+      end
     end
 
     context 'when update fails' do
