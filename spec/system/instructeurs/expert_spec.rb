@@ -113,7 +113,7 @@ describe 'Inviting an expert:', js: true do
         within('.fr-sidemenu') { click_on 'Demander un avis' }
         expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
 
-        select_combobox 'Emails', expert.email
+        select_combobox :avis_emails, expert.email
         fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
         check 'avis_invite_linked_dossiers'
         choose 'confidentiel_true', allow_label_click: true
