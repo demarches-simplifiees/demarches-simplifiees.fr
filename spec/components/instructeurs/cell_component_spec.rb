@@ -91,7 +91,7 @@ describe Instructeurs::CellComponent do
       let(:types_de_champ_public) { [{ type: :datetime, libelle: 'datetime' }] }
       let(:column) { dossier.procedure.find_column(label: 'datetime') }
 
-      before { dossier.champs.first.update(value: Time.zone.parse("12/02/2025 09:19")) }
+      before { dossier.champs.first.update(value: Time.zone.parse("12/02/2025 09:19").iso8601) }
 
       it { is_expected.to eq('12 février 2025 09:19') }
     end
