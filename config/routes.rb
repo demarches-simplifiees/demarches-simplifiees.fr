@@ -267,6 +267,7 @@ Rails.application.routes.draw do
   end
 
   namespace :data_sources do
+    get :referentiel, to: 'referentiel#search', as: :data_source_referentiel
     get :adresse, to: 'adresse#search', as: :data_source_adresse
     get :commune, to: 'commune#search', as: :data_source_commune
     get :education, to: 'education#search', as: :data_source_education

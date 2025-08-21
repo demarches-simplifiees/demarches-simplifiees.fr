@@ -17,7 +17,8 @@ class EditableChamp::ReferentielComponent < EditableChamp::EditableChampBaseComp
       selected_key: @champ.selected_key,
       items: @champ.selected_items,
       loader: data_sources_data_source_referentiel_path(referentiel_id: referentiel.id),
-      minimum_input_length: 2,
+      minimum_input_length: DataSources::ReferentielController::MIN_QUERY_LENGTH,
+      use_post: true,
       is_disabled: false)
   end
 end
