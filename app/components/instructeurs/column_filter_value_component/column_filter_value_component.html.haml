@@ -1,38 +1,20 @@
 #column_filter_value_component
-  - if column.nil?
-    = form.label :value, t('.value'), class: 'fr-label'
-    = form.text_field :value,
-      id: 'value',
-      class: 'fr-input',
-      disabled: true
-  - elsif column.type.in?([:boolean])
-    = form.hidden_field "filter[operator]", value: 'match'
+  = operator_hidden_field
+  - if boolean?
     = render Dsfr::RadioButtonListComponent.new(form:,
       target: "filter[value][]",
       buttons: column_filter_options.map { |label, value| { label:, value: } }) do
       = t('.value')
-  - elsif has_multi_select?
+  - elsif selectable?
     = form.label :value, t('.value'), class: 'fr-label'
-    = form.hidden_field "filter[operator]", value: 'in'
     %react-fragment
-      = render ReactComponent.new "ComboBox/MultiComboBox", **multi_combo_box_react_props
-  - elsif has_select?
-    = form.label :value, t('.value'), class: 'fr-label'
-    = form.hidden_field "filter[operator]", value: 'match'
-    = form.select "filter[value][]",
-      options_for_select(column_filter_options),
-      {},
-      id: 'value',
-      class: 'fr-select',
-      data: { no_autosubmit: true },
-      required: true
+      = render ReactComponent.new "ComboBox/MultiComboBox", **react_props
   - else
-    = form.hidden_field "filter[operator]", value: 'match'
     = form.label :value, t('.value'), class: 'fr-label'
     = form.text_field "filter[value][]",
       id: 'value',
       class: 'fr-input',
-      type: type,
+      type:,
       maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
       data: { no_autosubmit: true },
       required: true
