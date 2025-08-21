@@ -71,7 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_13_143947) do
     t.datetime "updated_at", precision: nil
     t.bigint "user_id", null: false
     t.index ["groupe_gestionnaire_id"], name: "index_administrateurs_on_groupe_gestionnaire_id"
-    t.index ["user_id"], name: "index_administrateurs_on_user_id"
+    t.index ["user_id"], name: "index_administrateurs_on_user_id", unique: true
   end
 
   create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
