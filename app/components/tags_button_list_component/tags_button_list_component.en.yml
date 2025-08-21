@@ -6,3 +6,4 @@ en:
     dossier: File
     champ_public: Form data
     champ_private: Private annotations
+    properties: JSON properties

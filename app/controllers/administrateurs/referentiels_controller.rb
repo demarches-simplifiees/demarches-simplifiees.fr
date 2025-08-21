@@ -5,7 +5,7 @@ module Administrateurs
     before_action :retrieve_procedure
     before_action :retrieve_type_de_champ
     before_action :retrieve_referentiel, except: [:new, :create]
-    before_action :reachable_referentiel?, only: [:mapping_type_de_champ]
+    before_action :reachable_referentiel?, only: [:mapping_type_de_champ, :autocomplete_configuration]
     layout 'empty_layout'
 
     def new
@@ -34,8 +34,11 @@ module Administrateurs
       else
         @referentiel.validate
         component = Referentiels::AutocompleteConfigurationComponent.new(referentiel: @referentiel, type_de_champ: @type_de_champ, procedure: @procedure)
-        render turbo_stream: turbo_stream.update(component.id, component)
+        render turbo_stream: turbo_stream.replace(component.id, component)
       end
+    end
+
+    def autocomplete_configuration
     end
 
     def mapping_type_de_champ
