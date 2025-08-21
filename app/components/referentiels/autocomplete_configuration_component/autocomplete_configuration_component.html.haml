@@ -1,0 +1,51 @@
+%div{ id: }
+  = form_with model: @referentiel, scope: :referentiel, url: form_url, **form_datasource_options do |f|
+    %div{ class: bordered_container_class_names }
+      = render Referentiels::ResponseRendererComponent.new(referentiel:)
+      - if maybe_datasources.size.zero?
+        = render Dsfr::AlertComponent.new(title: "Votre source de données ne semble pas compatible", state: :error) do |c|
+          - c.with_body do
+            %p
+              Votre source de données ne contient pas de tableau. Veuillez vérifier la configuration de votre référentiel.
+      - else
+        .fr-table.fr-table--bordered.fr-mb-6w
+          .fr-table__wrapper
+            .fr-table__container
+              .fr-table__content
+                %table
+                  %caption Sélectionnez la source de données à exploiter pour l'autocomplete
+                  %thead
+                    %tr
+                      %th.fr-cell--fixed Propriété
+                      %th Exemple de donnée
+                      %th Choisir
+                  %tbody
+                    - maybe_datasources.each do |jsonpath, value|
+                      %tr
+                        %td.fr-cell--fixed= jsonpath
+                        %td.fr-cell--multiline
+                          %pre= JSON.pretty_generate(value)
+                        %td.text-center= select_datasource_radio_tag(jsonpath)
+
+  - if datasource.present?
+    = form_with model: @referentiel, scope: :referentiel, url: form_url, **form_template_options do |f|
+      %div{ class: "#{bordered_container_class_names} fr-mt-5w" }
+        #autocomplete.fr-my-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
+          .fr-input-group{ class: class_names("fr-input-group--error" => f.object.errors.include?(:tiptap_template)) }
+            %label.fr-label
+              Choisir les propriétés qui seront affichées dans les options de l'autocomplete
+              %span.fr-hint-text Vous pouvez utiliser les balises pour construire les éléments suggérés
+
+            #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: "autocomplete_configuration-json-body-message"} }
+            = hidden_field_tag "referentiel[tiptap_template]", @referentiel.tiptap_template, data: { tiptap_target: 'input' }
+
+            .fr-error-text{ id: "autocomplete_configuration-json-body-message", class: class_names("hidden" => !f.object.errors.include?(:tiptap_template)) }
+              - if f.object.errors.include?(:tiptap_template)
+                = render partial: "shared/errors_list", locals: { object: f.object, attribute: :tiptap_template }
+
+          = render TagsButtonListComponent.new(tags:)
+
+      %ul.fr-btns-group.fr-btns-group--inline-sm.flex.justify-center.fr-mt-5w
+        %li= link_to "Annuler", champs_admin_procedure_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-3w'
+        %li= link_to "Étape précédente", back_url, class: 'fr-btn fr-btn--secondary'
+        %li= f.submit "Étape suivante", class: "fr-btn"
