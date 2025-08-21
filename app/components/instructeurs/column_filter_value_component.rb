@@ -8,6 +8,16 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     @form = form
   end
 
+  def label
+    return nil if !boolean?
+
+    @form.label :value, t('.value'), class: 'fr-label'
+  end
+
+  def operator_hidden_field
+    @form.hidden_field "filter[operator]", value: selectable? ? 'in' : 'match'
+  end
+
   def column_filter_options
     options = column.options_for_select
 
@@ -22,20 +32,20 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     column.tdc_type if column.respond_to?(:tdc_type)
   end
 
-  def has_multi_select?
-    has_select? && column.is_a?(Columns::ChampColumn)
+  def selectable?
+    column&.type&.in?([:enum, :enums])
   end
 
-  def has_select?
-    column.type.in?([:enum, :enums])
+  def boolean?
+    column&.type&.in?([:boolean])
   end
 
-  def multi_combo_box_react_props
+  def react_props
     {
       id: 'value',
       class: 'fr-mt-1w',
       name: 'filter[value][]',
-      items: column.options_for_select,
+      items: column_filter_options,
       value_separator: false
     }
   end
@@ -43,7 +53,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   private
 
   def type
-    case column.type
+    case column&.type
     when :datetime, :date
       'date'
     when :integer, :decimal
