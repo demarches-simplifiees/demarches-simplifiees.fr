@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Instructeurs::FilterButtonsComponent, type: :component do
+describe Instructeurs::RemoveFilterButtonsComponent, type: :component do
   let(:component) { described_class.new(filters:, procedure_presentation:, statut:) }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure:, instructeur:) }
