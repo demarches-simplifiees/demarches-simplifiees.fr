@@ -30,7 +30,6 @@ RSpec.describe Referentiels::NewFormComponent, type: :component do
             hint: 1,
             url: 0
           }
-          input[:mode] = 2 if Referentiels::APIReferentiel.autocomplete_available?
           input[:type] = 2 if Referentiels::APIReferentiel.csv_available?
 
           expect(page).to have_css('form[method=post]')
