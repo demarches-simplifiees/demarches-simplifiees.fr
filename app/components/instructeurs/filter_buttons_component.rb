@@ -44,7 +44,7 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   def human_value(filter_column)
     column_type, filter = filter_column.column.type, filter_column.filter
 
-    filter_value = filter[:value].is_a?(Array) ? filter[:value] : [filter[:value]]
+    filter_value = Array(filter[:value])
 
     if column_type == :date || column_type == :datetime
       filter_value.map { helpers.try_parse_format_date(it) }.join(' ou ')
