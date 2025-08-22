@@ -15,6 +15,7 @@
       id: 'value',
       class: 'fr-input',
       type:,
+      disabled: column.nil?,
       maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
       data: { no_autosubmit: true },
       required: true

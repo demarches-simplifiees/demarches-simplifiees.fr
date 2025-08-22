@@ -107,7 +107,7 @@ describe "procedure filters" do
       add_filter("Date de passage en construction", "10/10/2010", type: :date)
 
       # use statut dropdown filter
-      add_filter('État du dossier', 'En construction', type: :enum)
+      add_filter('État du dossier', 'En construction', type: :multi_select)
 
       # use choice dropdown filter
       add_filter('Choix unique', 'val1', type: :multi_select)
@@ -171,6 +171,7 @@ describe "procedure filters" do
         region_champ.reload
 
         add_filter(region_champ.libelle, region_champ.value, type: :multi_select)
+
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end
@@ -179,7 +180,7 @@ describe "procedure filters" do
   describe 'dossier labels' do
     scenario "should be able to filter by dossier labels", js: true do
       DossierLabel.create!(dossier_id: new_unfollow_dossier.id, label_id: procedure.labels.first.id)
-      add_filter('Labels', procedure.labels.first.name, type: :enum)
+      add_filter('Labels', procedure.labels.first.name, type: :multi_select)
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
       expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
     end
@@ -188,7 +189,7 @@ describe "procedure filters" do
   scenario "should be able to add and remove two filters for the same field", js: true do
     add_filter(type_de_champ.libelle, champ.value)
     add_filter(type_de_champ.libelle, champ_2.value)
-    add_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label, type: :enum)
+    add_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label, type: :multi_select)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -230,9 +231,6 @@ describe "procedure filters" do
     when :date
       find("input#value[type=date]", visible: true)
       fill_in "Valeur", with: Date.parse(filter_value)
-    when :enum
-      find("select#value", visible: false)
-      select filter_value, from: "Valeur"
     when :multi_select
       # Wait for React component to be ready
       find('.dom-ready') if page.has_css?('.dom-ready')
