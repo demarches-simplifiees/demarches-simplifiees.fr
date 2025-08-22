@@ -32,6 +32,10 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     column.tdc_type if column.respond_to?(:tdc_type)
   end
 
+  def column_not_selected?
+    column.nil?
+  end
+
   def selectable?
     column&.type&.in?([:enum, :enums])
   end
