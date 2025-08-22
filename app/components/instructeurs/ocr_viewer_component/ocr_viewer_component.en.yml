@@ -1,6 +1,6 @@
 ---
 en:
-  titulaire: Account Holder
+  account_holder: Account Holder
   iban: IBAN
   bic: BIC Code
   bank_name: Bank Name

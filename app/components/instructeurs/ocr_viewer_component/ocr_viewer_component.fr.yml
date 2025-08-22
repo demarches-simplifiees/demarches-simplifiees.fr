@@ -1,6 +1,6 @@
 ---
 fr:
-  titulaire: Titulaire
+  account_holder: Titulaire
   iban: IBAN
   bic: Code BIC
   bank_name: Nom de la banque
