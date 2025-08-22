@@ -132,7 +132,7 @@ describe ProcedureCloneConcern, type: :model do
     end
 
     context 'when types_de_champ_public contains a referentiel' do
-      let(:referentiel) { create(:api_referentiel, :exact_match, :configured, :ready, :with_authentication_data) }
+      let(:referentiel) { create(:api_referentiel, :exact_match, :with_exact_match_response, :with_authentication_data) }
       let(:stable_id) { 1337 }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: referentiel, stable_id: }] }
 

@@ -35,7 +35,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
     end
 
     context 'with referentiel champs' do
-      let(:referentiel) { create(:api_referentiel, :exact_match, :configured) }
+      let(:referentiel) { create(:api_referentiel, :exact_match) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
 
       context "when the field is a referentiel and waiting_for_external_data? is true" do

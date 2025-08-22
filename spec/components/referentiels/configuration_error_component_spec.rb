@@ -5,7 +5,7 @@ RSpec.describe Referentiels::ConfigurationErrorComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
-  let(:referentiel) { create(:api_referentiel, :configured) }
+  let(:referentiel) { create(:api_referentiel, :exact_match) }
   before do
     render_inline(component)
   end
