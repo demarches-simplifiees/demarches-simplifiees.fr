@@ -175,6 +175,11 @@ class RdvService
       refresh_token: new_token.refresh_token,
       expires_at: Time.zone.at(new_token.expires_at)
     )
+  rescue OAuth2::Error => e
+    # Destroy the connection so the user needs to re-authorize
+    @rdv_connection.destroy!
+
+    raise e
   end
 
   def headers

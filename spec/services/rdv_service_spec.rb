@@ -227,4 +227,36 @@ describe RdvService do
       expect(described_class.list_rdvs_url(rdv_ids)).to eq(expected_url)
     end
   end
+
+  describe '#refresh_token_if_expired!' do
+    context 'when token is expired' do
+      before do
+        rdv_connection.update!(expires_at: 1.day.ago)
+      end
+
+      context 'when refresh fails with OAuth2::Error' do
+        let(:oauth_error) do
+          OAuth2::Error.new(
+            'invalid_grant'
+          )
+        end
+
+        before do
+          allow(OAuth2::Client).to receive(:new).and_return(
+            instance_double(OAuth2::Client)
+          )
+
+          mock_token = instance_double(OAuth2::AccessToken)
+          allow(mock_token).to receive(:refresh!).and_raise(oauth_error)
+          allow(OAuth2::AccessToken).to receive(:new).and_return(mock_token)
+        end
+
+        it 'destroys the rdv connection and re-raises the error' do
+          expect { rdv_service.refresh_token_if_expired! }.to raise_error(OAuth2::Error)
+
+          expect { rdv_connection.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+  end
 end
