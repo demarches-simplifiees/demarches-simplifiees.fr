@@ -9,7 +9,7 @@ class Instructeurs::OCRViewerComponent < ApplicationComponent
 
   def formated_data
     {
-      account_holder: value_json.dig('rib', 'account_holder')&.join('<br>'),
+      account_holder: value_json.dig('rib', 'account_holder')&.split("\n")&.join('<br>'),
       iban: value_json.dig('rib', 'iban'),
       bic: value_json.dig('rib', 'bic'),
       bank_name: value_json.dig('rib', 'bank_name')

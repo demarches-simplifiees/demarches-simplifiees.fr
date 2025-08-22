@@ -20,7 +20,7 @@ describe OCRService do
           {
             "2ddoc": nil,
             "rib": {
-              "account_holder": ["Mme Titulaire", "58 BD ROBERT", "13284 MARSEILLE CEDEX 07"],
+              "account_holder": "Mme Titulaire\n58 BD ROBERT\n13284 MARSEILLE CEDEX 07",
               "iban": "FR76 6666 6666 6666 6666 6666 780",
               "bic": "BICUFRP1"
             }
