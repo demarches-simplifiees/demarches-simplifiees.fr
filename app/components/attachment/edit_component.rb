@@ -38,6 +38,10 @@ class Attachment::EditComponent < ApplicationComponent
     verify_initialization!(kwargs)
   end
 
+  def explication?
+    @attached_file.record.is_a?(TypeDeChamp) && @attached_file.record.explication?
+  end
+
   def first?
     @index.zero?
   end

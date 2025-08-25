@@ -23,7 +23,17 @@ RARE_IMAGE_TYPES = [
 
 PROCESSABLE_TYPES = AUTHORIZED_IMAGE_TYPES + AUTHORIZED_PDF_TYPES
 
-AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + [
+AUTHORIZED_SPREADSHEET_TYPES = [
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.oasis.opendocument.spreadsheet',
+  'application/vnd.ms-excel.sheet.macroenabled.12',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+  'application/vnd.ms-excel.sheet.binary.macroenabled.12',
+  'application/vnd.oasis.opendocument.spreadsheet-template'
+]
+
+AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + AUTHORIZED_SPREADSHEET_TYPES + [
   # multimedia
   'video/mp4', # multimedia x 2075
   'video/quicktime', # multimedia x 486
@@ -61,17 +71,11 @@ AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + [
   'applicaton/octet-stream', # program x 17
   'application/vnd.google-earth.kml+xml', # autre x 10 transfert de point google
   'text/xml', # program x 10
-
-  # text / sheet / presentation
-  'application/vnd.ms-excel', # text x 166674
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document', # text x 103879
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', # text x 86336
   'application/vnd.oasis.opendocument.text', # text x 46229
   'application/msword', # text x 30167
   'text/plain', # text x 24477
-  'application/vnd.oasis.opendocument.spreadsheet', # text x 15218
   'application/vnd.openxmlformats-officedocument.presentationml.presentation', # text x 3231
-  'application/vnd.ms-excel.sheet.macroenabled.12', # text x 1487
   'application/rtf', # text x 1438
   'application/vnd.apple.pages', # text x 609
   'application/vnd.oasis.opendocument.graphics', # text x 535
@@ -84,16 +88,13 @@ AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + [
   'application/vnd.oasis.opendocument.text-template', # text x 100
   'application/vnd.openxmlformats-officedocument.wordprocessingml.template', # text x 75
   'application/vnd.ms-word.document.macroenabled.12', # text x 61
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.template', # text x 59
   'application/vnd.openxmlformats-officedocument.presentationml.slideshow', # text x 32
   'application/kswps', # inconnu x 26 , text ?
   'application/x-iwork-numbers-sffnumbers', # text x 25
   'text/rtf', # text x 25
   'application/vnd.ms-xpsdocument', # text x 23
-  'application/vnd.ms-excel.sheet.binary.macroenabled.12', # text x 21
   'application/vnd.ms-powerpoint.presentation.macroenabled.12', # text x 15
   'application/x-msword', # text x 15
-  'application/vnd.oasis.opendocument.spreadsheet-template', # text x 14
   'application/vnd.oasis.opendocument.text-master', # text x 12
   'application/x-abiword', # text x 11
   'application/x-iwork-keynote-sffnumbers', # text x 11

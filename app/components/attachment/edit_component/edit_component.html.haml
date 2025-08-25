@@ -45,6 +45,9 @@
         = t('.allowed_formats', formats: allowed_formats.join(', '))
       - if as_multiple?
         = t('.multiple_files')
+    - if explication?
+      .fr-mt-1w.fr-message.fr-message--info
+        = t('.prefer_pdf')
 
   - if !persisted? || champ.present? && champ.titre_identite?
     = file_field(champ, field_name, **file_field_options)
