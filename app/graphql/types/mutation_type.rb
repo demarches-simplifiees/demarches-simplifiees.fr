@@ -2,6 +2,7 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :dossier_follow, mutation: Mutations::DossierFollow
     field :create_direct_upload, mutation: Mutations::CreateDirectUpload
 
     field :dossier_envoyer_message, mutation: Mutations::DossierEnvoyerMessage
