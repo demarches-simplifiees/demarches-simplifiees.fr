@@ -38,6 +38,12 @@ class Columns::ChampColumn < Column
       filtered_ids_before_value(dossiers, filter[:value])
     in { operator: 'after', value: Array }
       filtered_ids_after_value(dossiers, filter[:value])
+    in { operator: 'this_week', value: Array }
+      filtered_ids_this_week(dossiers)
+    in { operator: 'this_month', value: Array }
+      filtered_ids_this_month(dossiers)
+    in { operator: 'this_year', value: Array }
+      filtered_ids_this_year(dossiers)
     else
       filtered_ids_for_values(dossiers, filter[:value])
     end
@@ -55,6 +61,30 @@ class Columns::ChampColumn < Column
 
     date_range = range_for_query((Time.zone.parse(values.first).end_of_day..))
     relation.where(champs: { column => date_range }).ids
+  end
+
+  def filtered_ids_this_week(dossiers)
+    relation = dossiers.with_type_de_champ(stable_id)
+    start_of_week = Time.current.beginning_of_week
+    end_of_week = Time.current.end_of_week
+
+    relation.where(champs: { column => start_of_week..end_of_week }).ids
+  end
+
+  def filtered_ids_this_month(dossiers)
+    relation = dossiers.with_type_de_champ(stable_id)
+    start_of_month = Time.current.beginning_of_month
+    end_of_month = Time.current.end_of_month
+
+    relation.where(champs: { column => start_of_month..end_of_month }).ids
+  end
+
+  def filtered_ids_this_year(dossiers)
+    relation = dossiers.with_type_de_champ(stable_id)
+    start_of_year = Time.current.beginning_of_year
+    end_of_year = Time.current.end_of_year
+
+    relation.where(champs: { column => start_of_year..end_of_year }).ids
   end
 
   def filtered_ids_for_values(dossiers, search_terms)
