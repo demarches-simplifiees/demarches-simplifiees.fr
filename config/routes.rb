@@ -590,7 +590,7 @@ Rails.application.routes.draw do
         patch 'update_email_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'
-        post 'create_multiple_commentaire'
+        post 'create_multiple_commentaire_for_brouillons'
       end
     end
   end
