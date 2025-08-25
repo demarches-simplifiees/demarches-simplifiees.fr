@@ -1684,6 +1684,9 @@ describe Users::DossiersController, type: :controller do
       instructeur_without_instant_message.follow(dossier)
       create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true)
       create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false)
+      another_procedure = create(:procedure, instructeurs: [instructeur_without_instant_message])
+      instructeur_without_instant_message.follow(create(:dossier, :en_construction, user: user, procedure: another_procedure))
+      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: create(:procedure), instant_email_message_notifications_enabled: true)
     end
 
     context 'commentaire creation' do

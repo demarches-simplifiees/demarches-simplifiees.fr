@@ -121,7 +121,7 @@ class Commentaire < ApplicationRecord
 
   def notify_administration
     dossier.followers_instructeurs
-      .with_instant_email_message_notifications
+      .with_instant_email_message_notifications(dossier.groupe_instructeur)
       .find_each do |instructeur|
       DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
     end
