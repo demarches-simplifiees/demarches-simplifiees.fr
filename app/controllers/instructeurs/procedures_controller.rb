@@ -294,7 +294,7 @@ module Instructeurs
       @dossiers_count_per_groupe_instructeur = procedure.dossiers.state_brouillon.visible_by_user.group(:groupe_instructeur_id).count
     end
 
-    def create_multiple_commentaire
+    def create_multiple_commentaire_for_brouillons
       @procedure = procedure
       errors = []
       bulk_message = current_instructeur.bulk_messages.build(bulk_message_params)
