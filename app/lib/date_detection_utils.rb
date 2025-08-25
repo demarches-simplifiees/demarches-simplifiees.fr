@@ -25,6 +25,12 @@ module DateDetectionUtils
   end
 
   def self.parsable_iso8601_date?(value)
+    return false if value.nil?
+    # we focus only on date, so we expect only 3 parts in the date string
+    return false if (value.split('-').count != 3 && value.split('/').count != 3)
+    # without time or timezone information
+    return false if value.include?('T') || value.include?(':')
+
     begin
       Date.iso8601(value)
       true
@@ -62,10 +68,8 @@ module DateDetectionUtils
       Time.zone.strptime(value, "%d/%m/%Y %H:%M").iso8601
     elsif /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/.match?(value)
       Time.zone.strptime(value, "%Y-%m-%d %H:%M").iso8601
-    elsif /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}[\+\-]\d{2}:\d{2})?$/.match?(value) # a correct iso8601 datetime
-      Time.zone.strptime(value, "%Y-%m-%dT%H:%M").iso8601
     else
-      nil
+      Time.zone.iso8601(value).iso8601 # ensure it is a valid ISO8601 datetime
     end
   rescue
     nil
