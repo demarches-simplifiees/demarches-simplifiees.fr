@@ -9,6 +9,7 @@ en:
   replace: Replace
   replace_file: Replace file %{filename}
   open_file: Open file %{filename}
+  prefer_pdf: The .PDF format is generally the most convenient, as it is easily readable on all devices.
   errors:
     uploading: "An error occurred while sending the file."
     virus_infected: "Virus detected, please send another file."
