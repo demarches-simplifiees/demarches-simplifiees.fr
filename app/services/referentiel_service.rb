@@ -27,7 +27,7 @@ class ReferentielService
   end
 
   def url(query_params)
-    referentiel.url.gsub('{id}', query_params)
+    referentiel.url.gsub('{id}', URI.encode_www_form_component(query_params.to_s))
   end
 
   def test_url
