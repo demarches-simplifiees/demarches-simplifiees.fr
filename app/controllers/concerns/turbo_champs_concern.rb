@@ -8,7 +8,7 @@ module TurboChampsConcern
   def champs_to_turbo_update(params, champs)
     to_update = champs.filter { _1.public_id.in?(params.keys) }
       .filter { _1.refresh_after_update? || _1.user_buffer_changes? }
-
+    to_update += champs.map(&:prefillable_champs).flatten.uniq
     to_show, to_hide = champs.filter { it.conditional? || it.child? }
       .partition(&:visible?)
       .map { champs_to_one_selector(_1 - to_update) }
