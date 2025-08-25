@@ -19,13 +19,26 @@ class Referentiels::APIReferentiel < Referentiel
   validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
   validate :url_allowed?
 
+  store_accessor :autocomplete_configuration, :datasource, :json_template
   before_save :name_as_uuid
+  before_save :resets_tiptap_template
+
   def self.csv_available?
     false
   end
 
-  def self.autocomplete_available?
-    false
+  def resets_tiptap_template
+    if datasource_changed? && !datasource_was.nil?
+      self.json_template = {}
+    end
+  end
+
+  def tiptap_template=(value)
+    self.json_template = JSON.parse(value)
+  end
+
+  def tiptap_template
+    json_template&.to_json
   end
 
   def last_response_body
