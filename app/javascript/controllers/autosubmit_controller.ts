@@ -13,8 +13,7 @@ export class AutosubmitController extends ApplicationController {
 
   declare readonly submitterTarget: HTMLButtonElement | HTMLInputElement;
   declare readonly hasSubmitterTarget: boolean;
-  declare readonly inputTarget: HTMLInputElement;
-  declare readonly hasInputTarget: boolean;
+  declare readonly inputTargets: HTMLInputElement[];
   declare readonly debounceDelayValue: number;
 
   #dateTimeChangedInputs = new WeakSet<HTMLElement>();
@@ -88,7 +87,10 @@ export class AutosubmitController extends ApplicationController {
     if (target.disabled) {
       return true;
     }
-    if (this.hasInputTarget && this.inputTarget != target) {
+    if (
+      this.inputTargets.length > 0 &&
+      !this.inputTargets.includes(target as HTMLInputElement)
+    ) {
       return true;
     }
     if (
