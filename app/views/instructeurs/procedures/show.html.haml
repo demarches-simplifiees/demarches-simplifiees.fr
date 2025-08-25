@@ -46,7 +46,7 @@
 
           .fr-ml-auto
             %ul.fr-btns-group.fr-btns-group--right.fr-btns-group--sm.fr-btns-group--inline-md.fr-btns-group--icon-left
-              = render Dossiers::ExportDropdownComponent.new(wrapper: :li, procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, archived_count: @archived_dossiers_count,
+              = render Dossiers::ExportDropdownComponent.new(wrapper: :li, procedure: @procedure, export_templates: current_instructeur.export_template_options_for(@procedure), statut: @statut, count: @dossiers_count, archived_count: @archived_dossiers_count,
                 class_btn: 'fr-btn--secondary fr-icon-download-line', export_url: method(:download_export_instructeur_procedure_path))
 
               = render Dropdown::MenuComponent.new(wrapper: :li, button_options: { class: ['fr-btn--tertiary', 'fr-icon-settings-5-line'] }, menu_options: { id: 'custom-menu' }) do |menu|
