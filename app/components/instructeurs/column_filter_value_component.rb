@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
-  attr_reader :column, :form
+  attr_reader :filtered_column, :form
 
-  def initialize(column:, form:)
-    @column = column
+  def initialize(filtered_column:, form:)
+    @filtered_column = filtered_column
     @form = form
   end
 
   def operator_hidden_field
     @form.hidden_field "filter[filter][operator]", value: selectable? ? 'in' : 'match'
+  end
+
+  def column
+    filtered_column&.column
   end
 
   def column_filter_options
@@ -39,6 +43,12 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
 
   def is_date?
     column&.type&.in?([:datetime, :date])
+  end
+
+  def is_operator_with_value?
+    return true if !is_date?
+
+    filtered_column.filter_operator.in?(["before", "after", "match"])
   end
 
   def selectable?
