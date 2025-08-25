@@ -949,7 +949,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
 
       let!(:drop_down_tdc) { procedure3.draft_revision.types_de_champ.first }
-      let!(:dossier) { create(:dossier, procedure: procedure3, state: :en_construction) }
+      let!(:dossier) { create(:dossier, :en_construction, procedure: procedure3) }
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: drop_down_tdc.stable_id } } }
 
@@ -1137,9 +1137,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
-    let!(:dossier1) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
-    let!(:dossier2) { create(:dossier, :with_populated_champs, procedure: procedure, state: :en_construction) }
-    let!(:dossier3) { create(:dossier, :with_populated_champs, procedure: procedure, state: :accepte) }
+    let!(:dossier1) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let!(:dossier2) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let!(:dossier3) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
 
     before do
       dossier1.champs.first.update(value: 'Paris')

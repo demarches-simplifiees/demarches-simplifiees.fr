@@ -43,6 +43,7 @@ module DossierStateConcern
     groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
       DossierMailer.notify_new_dossier_depose_to_instructeur(self, instructeur.email).deliver_later
     end
+    DossierNotification.create_notification(self, :dossier_depose)
 
     clean_champs_after_submit!
   end

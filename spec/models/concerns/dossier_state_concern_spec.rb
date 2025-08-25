@@ -55,6 +55,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.stable_id.in?([90, 92, 93, 97, 961, 951]) }.size).to eq(0)
       expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
+
+    it "create dossier_depose notification for all instructeurs" do
+      procedure.defaut_groupe_instructeur.add_instructeurs(ids: create_list(:instructeur, 2).map(&:id))
+      dossier.passer_en_construction!
+
+      expect(DossierNotification.count).to eq(2)
+
+      notification = DossierNotification.first
+      expect(notification.dossier_id).to eq(dossier.id)
+      expect(notification.notification_type).to eq("dossier_depose")
+    end
   end
 
   describe 'submit en construction' do
