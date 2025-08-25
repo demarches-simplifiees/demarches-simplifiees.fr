@@ -11,18 +11,19 @@ describe 'Referentiel API:' do
   let(:prefill_text_stable_id) { 42 }
 
   before do
-    Instructeur.where(user:).where.not(id: instructeur.id).destroy_all # remove other instructeurs
     login_as instructeur.user, scope: :user
   end
 
-  context 'safely select url' do
+  context 'edges cases' do
     let(:types_de_champ_public) do
       [
         { type: :referentiel, libelle: "qu'importe" }
       ]
     end
+
+    before { visit champs_admin_procedure_path(procedure) }
+
     scenario 'Setup as admin, fails with invalid url', js: true do
-      visit champs_admin_procedure_path(procedure)
       click_on('Configurer le champ')
 
       find("#referentiel_url").fill_in(with: 'google.com')
@@ -31,6 +32,15 @@ describe 'Referentiel API:' do
       expect(page).to have_content("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
       find("#referentiel_url").fill_in(with: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/')
       expect(page).to have_content("Attention si vous appelez une API qui renvoie de la donnée personnelle, vous devez en informer votre DPO.")
+    end
+
+    scenario 'Setup as admin, back/forth auth does not changes preselected option', js: true do
+      visit champs_admin_procedure_path(procedure)
+      click_on('Configurer le champ')
+      expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
+      find("#referentiel_url").fill_in(with: 'google.com')
+      expect(page).to have_content("Le champ « URL de l'API » n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
+      expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
     end
   end
 
@@ -121,29 +131,11 @@ describe 'Referentiel API:' do
       # check referentiel deep option exists
       expect(referentiel_tdc.referentiel_mapping.dig("$.status", "prefill_stable_id").to_s).to eq(prefill_text_stable_id.to_s)
       expect(referentiel_tdc.referentiel_mapping.dig("$.is_active", "prefill_stable_id").to_s).to eq(prefill_boolean_stable_id.to_s)
-      # now procedure should be publishable
-      visit admin_procedure_path(procedure)
-      click_on("Publier")
 
-      # publish
-      find("#procedure_path").fill_in(with: "htxbye")
-      find("#lien_site_web").fill_in(with: "google.fr")
-      within(".form") do
-        click_on("Publier")
-      end
-      wait_until { procedure.reload.published_revision.present? }
+      publish(procedure)
 
       # start a dossier
-      visit commencer_path(procedure.path)
-      click_on("Commencer la démarche")
-      expect(page).to have_content("Votre identité")
-      fill_in("Prénom", with: "Jeanne")
-      fill_in("Nom", with: "Dupont")
-      within "#identite-form" do
-        click_on 'Continuer'
-      end
-
-      expect(page).to have_content("Identité enregistrée")
+      commencer(procedure)
 
       # fill in champ
       fill_in("Numero de bâtiment", with: "okokok")
@@ -223,13 +215,12 @@ describe 'Referentiel API:' do
 
   context 'autocomplete' do
     let(:types_de_champ_public) do
-        [
-          { type: :referentiel, libelle: 'Numéro FINESS', stable_id: referentiel_stable_id },
-          { type: :textarea, libelle: 'un autre champ' },
-          { type: :text, libelle: 'prefill with $.source', stable_id: prefill_text_stable_id },
-          { type: :checkbox, libelle: 'prefill with $.date_extract_finess', stable_id: prefill_date_stable_id }
-        ]
-      end
+      [
+        { type: :referentiel, libelle: 'Numéro FINESS', stable_id: referentiel_stable_id },
+        { type: :text, libelle: 'prefill with $.finess', stable_id: prefill_text_stable_id },
+        { type: :date, libelle: 'prefill with $.date_extract_finess', stable_id: prefill_date_stable_id }
+      ]
+    end
     let(:prefill_date_stable_id) { 84 }
 
     scenario 'Setup as admin, fill in as user, view it as instructeur', js: true, vcr: true do
@@ -246,15 +237,93 @@ describe 'Referentiel API:' do
         wait_until { Referentiel.count == 1 }
         expect(page).to have_content("Configuration de l'autocomplétion ")
       end
+
+      # configure datasource
+      expect(page).not_to have_content("Choisir les propriété qui seront affichées dans les options de l'autocomplete")
+      find("input[type=radio][name='referentiel[datasource]']").click
+      expect(page).to have_content("Choisir les propriété qui seront affichées dans les options de l'autocomplete")
+
+      # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
+      page.find('button[title="$.finess (010002699)"]').click
+      page.find('button[title="$.ej_rs (CENTRE MEDICAL REGINA)"]').click
+
+      click_on('Étape suivante')
+      expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+
+      # ensure tiptap template
+      referentiel = Referentiel.last
+      expect(referentiel.datasource).to eq("$.data")
+
+      # referentiel.json_template['content'][0]['content']
+      tiptap_template = referentiel.json_template['content'][0]['content']
+      expect(tiptap_template.filter { it['type'] == "mention" }.map { it["attrs"]["id"] }).to match_array(%w[$.finess $.ej_rs])
+
+      #
+      # map prefilled champs
+      #
+      custom_check("data-0-finess")
+      custom_check('data-0-date_extract_finess')
+
+      click_on('Étape suivante')
+      click_on("Valider")
+
+      publish(procedure)
+      commencer(procedure)
+
+      # fill in autocomplete and select an option
+      VCR.use_cassette('referentiel/datagouv-finess-partial-search') do
+        referentiel_input = find("##{find(:label, text: 'Numéro FINESS')['for']}")
+        referentiel_input.send_keys("01000269")
+
+        # search and click on combobox
+        expect(page).to have_content("010002699 CENTRE MEDICAL REGINA")
+        find('.fr-ds-combobox__menu .fr-menu__list .fr-menu__item', text: "010002699 CENTRE MEDICAL REGINA").click
+
+        expect(referentiel_input.value.strip).to match("010002699 CENTRE MEDICAL REGINA")
+
+        dossier = Dossier.last
+
+        # wait until selected key had been submitted to backend
+        wait_until { dossier.reload.project_champs.find(&:referentiel).value&.match?(/010002699 CENTRE MEDICAL REGINA/) }
+
+        # wait until refreshed with prefilled values
+        expect(page).to have_content("Donnée remplie automatiquement.", count: 2)
+
+        dossier.reload
+
+        expect(dossier.project_champs.find { _1.stable_id.to_s == prefill_text_stable_id.to_s }.value).to eq("010002699")
+        expect(dossier.project_champs.find { _1.stable_id.to_s == prefill_date_stable_id.to_s }.value).to eq("2004-12-31")
+      end
     end
   end
 
-  scenario 'setup back/forth auth', js: true do
-    visit champs_admin_procedure_path(procedure)
-    click_on('Configurer le champ')
-    expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
-    find("#referentiel_url").fill_in(with: 'google.com')
-    expect(page).to have_content("Le champ « URL de l'API » n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
-    expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
+  private
+
+  def publish(procedure)
+    # now procedure should be publishable
+    visit admin_procedure_path(procedure)
+    expect(page).to have_content("Publier")
+    click_on("Publier")
+
+    # publish
+    find("#procedure_path").fill_in(with: "htxbye")
+    find("#lien_site_web").fill_in(with: "google.fr")
+    within(".form") do
+      click_on("Publier")
+    end
+    wait_until { procedure.reload.published_revision.present? }
+  end
+
+  def commencer(procedure)
+    # start a dossier
+    visit commencer_path(procedure.path)
+    click_on("Commencer la démarche")
+    expect(page).to have_content("Votre identité")
+    fill_in("Prénom", with: "Jeanne")
+    fill_in("Nom", with: "Dupont")
+    within "#identite-form" do
+      click_on 'Continuer'
+    end
+    expect(page).to have_content("Identité enregistrée")
   end
 end

@@ -23,6 +23,12 @@ class Referentiels::APIReferentiel < Referentiel
   before_save :name_as_uuid
   before_save :resets_tiptap_template
 
+  def self.stub_url
+    ENV.fetch('ALLOWED_API_DOMAINS_FROM_FRONTEND')
+      .split(',')
+      .last
+  end
+
   def self.csv_available?
     false
   end
