@@ -18,7 +18,11 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
     )
   end
 
-  def filtered_ids(dossiers, search_terms)
+  def filtered_ids(dossiers, filter)
+    filtered_ids_for_values(dossiers, filter[:value])
+  end
+
+  def filtered_ids_for_values(dossiers, search_terms)
     relation = dossiers.with_type_de_champ(@stable_id)
 
     case path
