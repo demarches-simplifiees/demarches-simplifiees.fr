@@ -24,9 +24,9 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
 
   def date_filter_options
     [
-      ["Le", 'match'],
-      ["Avant", 'before'],
-      ["Après", 'after']
+      [t('.operator_le'), 'match'],
+      [t('.operator_before'), 'before'],
+      [t('.operator_after'), 'after']
     ]
   end
 
