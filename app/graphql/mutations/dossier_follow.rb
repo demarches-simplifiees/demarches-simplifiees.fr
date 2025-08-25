@@ -9,7 +9,7 @@ module Mutations
     argument :follow, Boolean, "Foolow ou non", default_value: true
 
     field :dossier, Types::DossierType, null: true
-    field :instructeur, Types::ProfileType, null: false
+    field :instructeur, Types::ProfileType, null: true
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, follow:)
@@ -19,7 +19,7 @@ module Mutations
         instructeur.unfollow(dossier)
       end
 
-      { dossier:, instructeur: }
+      { dossier:, instructeur:, errors: nil }
     end
 
     def authorized?(dossier:, instructeur:, **args)
