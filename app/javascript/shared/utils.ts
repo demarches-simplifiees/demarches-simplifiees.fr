@@ -50,24 +50,14 @@ const Gon = s.defaulted(
     ),
     crisp: s.defaulted(
       s.type({
-        key: nullish(s.string()),
+        websiteId: nullish(s.string()),
         enabled: s.defaulted(s.boolean(), false),
         administrateur: s.defaulted(
           s.type({
-            email: s.string(),
-            DS_SIGN_IN_COUNT: s.number(),
-            DS_NB_DEMARCHES_BROUILLONS: s.number(),
-            DS_NB_DEMARCHES_ACTIVES: s.number(),
-            DS_NB_DEMARCHES_ARCHIVES: s.number(),
-            DS_ID: s.number()
+            email: s.string()
           }),
           {
-            email: '',
-            DS_SIGN_IN_COUNT: 0,
-            DS_NB_DEMARCHES_BROUILLONS: 0,
-            DS_NB_DEMARCHES_ACTIVES: 0,
-            DS_NB_DEMARCHES_ARCHIVES: 0,
-            DS_ID: 0
+            email: ''
           }
         )
       }),
