@@ -52,7 +52,7 @@
         - if @api_token.full_access?
           %p Votre jeton d'API a accès à toutes vos démarches.
           = hidden_field_tag :procedure_to_add, '[]'
-          %button.fr-btn.fr-btn--secondary.fr-btn--sm Restreindre l'accès à certaines les démarches
+          %button.fr-btn.fr-btn--secondary.fr-btn--sm Restreindre l'accès à certaines démarches
         - else
           .fr-select-group
             %label.fr-label{ for: 'procedure_to_add' } Ajouter des démarches autorisées
