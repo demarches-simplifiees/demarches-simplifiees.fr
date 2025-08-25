@@ -18,7 +18,17 @@ module ChampExternalDataConcern
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
     before_save :cleanup_if_empty
 
-    aasm column: :external_state do
+    # useful to serialize idle as nil
+    # otherwise, all the champ are mark as dirty and saved on first dossier.save
+    enum :external_state, {
+      idle: nil, # initial state
+      waiting_for_job: 'waiting_for_job',
+      fetching: 'fetching',
+      fetched: 'fetched',
+      external_error: 'external_error'
+    }
+
+    aasm column: :external_state, enum: true do
       state :idle, initial: true
       state :waiting_for_job
       state :fetching
