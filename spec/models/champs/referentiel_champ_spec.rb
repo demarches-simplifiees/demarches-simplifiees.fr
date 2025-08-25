@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe Champs::ReferentielChamp, type: :model do
-  let(:referentiel) { create(:api_referentiel, :exact_match) }
+  let(:referentiel) { create(:api_referentiel, :exact_matc) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, procedure:) }
@@ -118,6 +118,40 @@ describe Champs::ReferentielChamp, type: :model do
 
         it 'does not raise an error' do
           expect { subject }.to raise_error(StandardError)
+        end
+      end
+    end
+  end
+
+  describe 'data=' do
+    subject { referentiel_champ.update(data:) }
+    context 'when exact_match' do
+      let(:data) { { ok: :ko } }
+      it 'supers' do
+        expect { subject }.to change { referentiel_champ.reload.data }.to(eq({ ok: :ko }))
+      end
+    end
+
+    context 'when autocomplete' do
+      let(:datasource) { '$.deep.nested' }
+      let(:referentiel) { create(:api_referentiel, :autocomplete, datasource: datasource) }
+      let(:raw_data) { { "ok" => "ko" } }
+      let(:message_encryptor_service) { MessageEncryptorService.new }
+      let(:data) { message_encryptor_service.encrypt_and_sign(raw_data, purpose: :storage, expires_in: 1.hour) }
+
+      context 'when data is present' do
+        it 'decrypts data and rewrap object in <datasource> as payload' do
+          expect { subject }
+            .to change { referentiel_champ.reload.data }
+            .from(nil)
+            .to(referentiel_champ.send(:rewrap_selected_object_in_datasource, raw_data))
+        end
+      end
+
+      context 'when data is not present' do
+        let(:data) { nil }
+        it 'void data' do
+          expect { subject }.not_to change { referentiel_champ.reload.data }
         end
       end
     end
