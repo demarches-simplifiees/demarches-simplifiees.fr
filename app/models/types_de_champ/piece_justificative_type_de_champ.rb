@@ -26,7 +26,7 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
   def champ_blank?(champ) = champ.piece_justificative_file.blank?
 
   def columns(procedure:, displayable: true, prefix: nil)
-    [
+    cs = [
       Columns::AttachedManyColumn.new(
         procedure_id: procedure.id,
         stable_id:,
@@ -38,5 +38,27 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
         mandatory: mandatory?
       )
     ]
+
+    if RIB?
+      cs += [
+        ['Titulaire', '$.rib.account_holder'],
+        ['IBAN', '$.rib.iban'],
+        ['BIC', '$.rib.bic'],
+        ['Nom de la Banque', '$.rib.bank_name']
+      ].map do |label, jsonpath|
+        Columns::JSONPathColumn.new(
+         procedure_id: procedure.id,
+         stable_id:,
+         tdc_type: type_champ,
+         label: "#{libelle_with_prefix(prefix)} – #{label}",
+         type: :text,
+         jsonpath:,
+         displayable: true,
+         mandatory: mandatory?
+       )
+      end
+    end
+
+    cs
   end
 end

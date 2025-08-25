@@ -39,7 +39,7 @@ RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
     let(:full_data) do
       {
         'rib' => {
-          'titulaire' => ['John Doe'],
+          'account_holder' => ['John Doe'],
           'iban' => 'FR7612345678901234567890123',
           'bic' => 'ABCD1234',
           'bank_name' => 'Banque de Test'
@@ -61,7 +61,7 @@ RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
     context 'when data is incomplete' do
       let(:value_json) do
         copy = full_data.dup
-        copy['rib']['titulaire'] = nil
+        copy['rib']['account_holder'] = nil
         copy
       end
 
