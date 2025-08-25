@@ -28,6 +28,20 @@ class Champs::ReferentielChamp < Champ
     end
   end
 
+  def data=(data)
+    if exact_match? || data.blank?
+      super(data)
+    else
+      message_encryptor_service = MessageEncryptorService.new
+      data = message_encryptor_service.decrypt_and_verify(data, purpose: :storage)
+      data = rewrap_selected_object_in_datasource(data)
+
+      super(data)
+      cast_displayable_values(data.with_indifferent_access)
+      propagate_prefill(data)
+    end
+  end
+
   def uses_external_data?
     exact_match?
   end
@@ -179,5 +193,16 @@ class Champs::ReferentielChamp < Champ
   def update_prefillable_champ(type_de_champ:, raw_value:, row_id: nil)
     prefill_champ = dossier.champ_for_update(type_de_champ, row_id:, updated_by: :api)
     prefill_champ.update(cast_value_for_type_de_champ(raw_value, type_de_champ))
+  end
+
+  def rewrap_selected_object_in_datasource(data)
+    full_jsonpath = type_de_champ.referentiel.datasource
+    path_keys_separated_with_dot = full_jsonpath.split("$.")[1]
+    path_keys = path_keys_separated_with_dot.split('.')
+    reversed_keys_to_rebuild_datasource = path_keys.reverse
+
+    reversed_keys_to_rebuild_datasource.reduce([data]) do |accumulator, key|
+      { key => accumulator }
+    end
   end
 end
