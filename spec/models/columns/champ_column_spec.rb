@@ -318,6 +318,50 @@ describe Columns::ChampColumn do
           expect(subject).to eq([dossier2.id])
         end
       end
+
+      context "when searching with this_week operator" do
+        let(:filter) { { operator: 'this_week', value: [] } }
+        let(:dossier_week_before) { create(:dossier, :en_instruction, procedure:) }
+
+        before do
+          dossier_week_before.champs.first.update!(value: "2025-02-06")
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        it "returns dossiers from this week" do
+          expect(subject).to eq([dossier.id, dossier2.id])
+        end
+      end
+
+      context "when searching with this_month operator" do
+        let(:filter) { { operator: 'this_month', value: [] } }
+
+        let(:dossier_month_before) { create(:dossier, :en_instruction, procedure:) }
+
+        before do
+          dossier_month_before.champs.first.update!(value: "2025-01-13")
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        it "returns dossiers from this month" do
+          expect(subject).to eq([dossier.id, dossier2.id])
+        end
+      end
+
+      context "when searching with this_year operator" do
+        let(:filter) { { operator: 'this_year', value: [] } }
+
+        let(:dossier_year_before) { create(:dossier, :en_instruction, procedure:) }
+
+        before do
+          dossier_year_before.champs.first.update!(value: "2024-02-13")
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        it "returns dossiers from this year" do
+          expect(subject).to eq([dossier.id, dossier2.id])
+        end
+      end
     end
 
     context "with a datetime champ" do
@@ -348,6 +392,51 @@ describe Columns::ChampColumn do
 
         it "returns the correct ids" do
           expect(subject).to eq([dossier2.id])
+        end
+      end
+
+      context "when searching with this_week operator" do
+        let(:filter) { { operator: 'this_week', value: [] } }
+
+        before do
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        after do
+        end
+
+        it "returns dossiers from this week" do
+          expect(subject).to eq([dossier.id, dossier2.id])
+        end
+      end
+
+      context "when searching with this_month operator" do
+        let(:filter) { { operator: 'this_month', value: [] } }
+
+        before do
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        after do
+        end
+
+        it "returns dossiers from this month" do
+          expect(subject).to eq([dossier.id, dossier2.id])
+        end
+      end
+
+      context "when searching with this_year operator" do
+        let(:filter) { { operator: 'this_year', value: [] } }
+
+        before do
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        after do
+        end
+
+        it "returns dossiers from this year" do
+          expect(subject).to eq([dossier.id, dossier2.id])
         end
       end
     end
