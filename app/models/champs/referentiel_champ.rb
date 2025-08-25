@@ -6,7 +6,7 @@ class Champs::ReferentielChamp < Champ
            :referentiel_mapping_prefillable_with_stable_id,
            to: :type_de_champ
 
-  delegate :exact_match?, to: :referentiel
+  delegate :exact_match?, :autocomplete?, to: :referentiel, allow_nil: true
 
   before_save :clear_previous_result, if: -> { external_id_changed? }
 
