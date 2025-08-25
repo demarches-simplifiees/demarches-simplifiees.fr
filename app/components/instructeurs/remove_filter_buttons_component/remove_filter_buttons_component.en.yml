@@ -3,6 +3,9 @@ en:
   operators:
     before: 'before'
     after: 'after'
+    this_week: 'this week'
+    this_month: 'this month'
+    this_year: 'this year'
   conjunctions:
     and: ' and '
     or: ' or '

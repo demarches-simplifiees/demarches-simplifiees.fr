@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnFilterComponent < ApplicationComponent
-  attr_reader :procedure, :procedure_presentation, :statut, :column
+  attr_reader :procedure, :procedure_presentation, :statut, :filtered_column
 
-  def initialize(procedure_presentation:, statut:, column: nil)
+  def initialize(procedure_presentation:, statut:, filtered_column: nil)
     @procedure_presentation = procedure_presentation
     @procedure = procedure_presentation.procedure
     @statut = statut
-    @column = column
+    @filtered_column = filtered_column
   end
 
   def filter_react_props
     {
-      selected_key: column.present? ? column.id : '',
+      selected_key: filtered_column&.column ? filtered_column.column.id : '',
       items: filterable_columns_options,
       name: "column_id",
       id: 'search-filter',
