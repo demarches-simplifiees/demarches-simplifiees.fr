@@ -26,7 +26,10 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     [
       [t('.operator_le'), 'match'],
       [t('.operator_before'), 'before'],
-      [t('.operator_after'), 'after']
+      [t('.operator_after'), 'after'],
+      [t('.operator_this_week'), 'this_week'],
+      [t('.operator_this_month'), 'this_month'],
+      [t('.operator_this_year'), 'this_year']
     ]
   end
 
