@@ -5,6 +5,8 @@ class APIEntrepriseToken
 
   SOON_TO_EXPIRE_DELAY = 1.month
 
+  attr_reader :token
+
   def initialize(token)
     @token = token
   end

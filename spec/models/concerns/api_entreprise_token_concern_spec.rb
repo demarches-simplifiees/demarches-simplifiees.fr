@@ -45,6 +45,11 @@ describe APIEntrepriseTokenConcern do
       context 'when the api_entreprise_token is set to nil' do
         let(:api_entreprise_token) { nil }
 
+        before do
+          allow(ENV).to receive(:[]).and_call_original
+          allow(ENV).to receive(:[]).with('API_ENTREPRISE_KEY').and_return(nil)
+        end
+
         it do
           expect { subject }.to change { procedure.api_entreprise_token_expires_at }.to(nil)
         end
