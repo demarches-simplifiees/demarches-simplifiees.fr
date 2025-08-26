@@ -98,8 +98,8 @@ class DossierFilterService
     case filter
     in String|Array
       { operator: 'match', value: Array(filter) }
-    in { operator: String => operator, value: String|Array => value }
-      return { operator:, value: Array(value) }
+    in { operator: String => operator, ** }
+      { operator:, value: Array(filter[:value]) }
     else
       { operator: 'match', value: Array(filter[:value]) }
     end
