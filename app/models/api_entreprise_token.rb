@@ -21,10 +21,6 @@ class APIEntrepriseToken
     decoded_token.key?("exp") && Time.zone.at(decoded_token["exp"])
   end
 
-  def role?(role)
-    roles.include?(role)
-  end
-
   def can_fetch_attestation_sociale?
     # https://github.com/etalab/admin_api_entreprise/blob/6f5c7ecbe94af8d5403dbff320af56e8797f3fc6/app/policies/download_attestations_policy.rb#L16
     ['attestation_sociale', 'attestation_sociale_urssaf']
