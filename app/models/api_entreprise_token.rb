@@ -3,6 +3,8 @@
 class APIEntrepriseToken
   TokenError = Class.new(StandardError)
 
+  SOON_TO_EXPIRE_DELAY = 1.month
+
   def initialize(token)
     @token = token
   end
@@ -17,6 +19,10 @@ class APIEntrepriseToken
     return nil if @token.blank?
 
     decoded_token.key?("exp") && Time.zone.at(decoded_token["exp"])
+  end
+
+  def expired_or_expires_soon?
+    expires_at && expires_at <= SOON_TO_EXPIRE_DELAY.from_now
   end
 
   def can_fetch_attestation_sociale?
