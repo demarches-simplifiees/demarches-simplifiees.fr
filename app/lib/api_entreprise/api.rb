@@ -63,19 +63,19 @@ class APIEntreprise::API
   end
 
   def attestation_sociale(siren)
-    return if !procedure.can_fetch_attestation_sociale?
+    return if !api_token.can_fetch_attestation_sociale?
 
     call_with_siret(ATTESTATION_SOCIALE_RESOURCE_NAME, siren)
   end
 
   def attestation_fiscale(siren, user_id)
-    return if !procedure.can_fetch_attestation_fiscale?
+    return if !api_token.can_fetch_attestation_fiscale?
 
     call_with_siret(ATTESTATION_FISCALE_RESOURCE_NAME, siren, user_id: user_id)
   end
 
   def bilans_bdf(siren)
-    return if !procedure.can_fetch_bilans_bdf?
+    return if !api_token.can_fetch_bilans_bdf?
 
     call_with_siret(BILANS_BDF_RESOURCE_NAME, siren)
   end

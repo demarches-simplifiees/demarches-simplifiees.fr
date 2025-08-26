@@ -11,7 +11,7 @@ describe APIEntreprise::AttestationFiscaleAdapter do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
       .to_return(body: body, status: status)
-    allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
+    allow_any_instance_of(APIEntrepriseToken).to receive(:can_fetch_attestation_fiscale?).and_return(true)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
