@@ -28,6 +28,12 @@ class Columns::DossierColumn < Column
       filtered_ids_before_value(dossiers, filter[:value])
     in { operator: 'after', value: Array }
       filtered_ids_after_value(dossiers, filter[:value])
+    in { operator: 'this_week'}
+      filtered_ids_for_date_range(dossiers, Time.current.all_week)
+    in { operator: 'this_month'}
+      filtered_ids_for_date_range(dossiers, Time.current.all_month)
+    in { operator: 'this_year'}
+      filtered_ids_for_date_range(dossiers, Time.current.all_year)
     else
       filtered_ids_for_values(dossiers, filter[:value])
     end
@@ -41,6 +47,10 @@ class Columns::DossierColumn < Column
   def filtered_ids_after_value(dossiers, values)
     date_range = (Time.zone.parse(values.first).end_of_day..)
     dossiers.filter_by_datetimes_range(column, date_range).ids
+  end
+
+  def filtered_ids_for_date_range(dossiers, range)
+    dossiers.where(column => range).ids
   end
 
   def filtered_ids_for_values(dossiers, values)
