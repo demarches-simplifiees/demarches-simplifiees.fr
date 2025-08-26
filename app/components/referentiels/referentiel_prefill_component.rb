@@ -16,7 +16,11 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
   }.freeze
 
   def source_tdcs
-    @source_tdcs ||= procedure.draft_revision.types_de_champ_for(scope: :public)
+    if type_de_champ.public?
+      @source_tdcs ||= procedure.draft_revision.types_de_champ_for
+    else
+      @source_tdcs ||= procedure.draft_revision.types_de_champ_for(scope: :private)
+    end
   end
 
   def prefill_stable_id_tag(jsonpath, mapping_opts)
