@@ -22,8 +22,7 @@
 
   %p Les exercices comptables des trois dernières années pourront être joints à votre dossier.
 
-  - procedure = etablissement.dossier.procedure
-  - api_token = APIEntrepriseToken.new(procedure.api_entreprise_token)
+  - api_token = etablissement.dossier.procedure.api_entreprise_token
   - if api_token.can_fetch_attestation_sociale?
     %p Une attestation sociale sera jointe à votre dossier
   - if api_token.can_fetch_attestation_fiscale?

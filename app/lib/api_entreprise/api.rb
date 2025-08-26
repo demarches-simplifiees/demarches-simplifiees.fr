@@ -25,7 +25,7 @@ class APIEntreprise::API
     return if procedure_id.blank?
 
     @procedure = Procedure.find(procedure_id)
-    @api_token = APIEntrepriseToken.new(@procedure.api_entreprise_token)
+    @api_token = @procedure.api_entreprise_token
   end
 
   def entreprise(siren)
