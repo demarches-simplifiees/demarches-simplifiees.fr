@@ -369,7 +369,7 @@ class ApplicationController < ActionController::Base
   end
 
   def crisp_config
-    enabled = ENV.fetch("CRISP_ENABLED", "no") == "enabled"
+    enabled = ENV.enabled?("CRISP")
 
     {
       enabled:,

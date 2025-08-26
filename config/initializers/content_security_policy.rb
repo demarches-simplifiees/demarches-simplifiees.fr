@@ -41,7 +41,7 @@ Rails.application.configure do
     frame_whitelist << URI(MATOMO_IFRAME_URL).host if Rails.application.secrets.matomo[:enabled]
     # allow pdf iframes in the PJ gallery
     frame_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
-    frame_whitelist << "*.crisp.help" if ENV["CRISP_ENABLED"] == "enabled"
+    frame_whitelist << "*.crisp.help" if ENV.enabled?("CRISP")
     policy.frame_src(:self, *frame_whitelist)
 
     # Everything else: allow us
