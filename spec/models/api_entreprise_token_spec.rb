@@ -71,8 +71,8 @@ describe APIEntrepriseToken, type: :model do
     end
   end
 
-  describe "#expiration" do
-    subject { api_entreprise_token.expiration }
+  describe "#expires_at" do
+    subject { api_entreprise_token.expires_at }
 
     context "without token" do
       let(:token) { nil }

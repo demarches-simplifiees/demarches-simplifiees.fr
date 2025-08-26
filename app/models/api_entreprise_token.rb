@@ -13,7 +13,7 @@ class APIEntrepriseToken
     decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
   end
 
-  def expiration
+  def expires_at
     return nil if @token.blank?
 
     decoded_token.key?("exp") && Time.zone.at(decoded_token["exp"])
