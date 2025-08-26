@@ -13,3 +13,7 @@ if ENV['RAILS_ENV'] != 'test' && File.basename($0) != 'rake'
     end
   end
 end
+
+def ENV.enabled?(name)
+  ENV.fetch("#{name}_ENABLED", "").downcase.in?(["enabled", "yes", "true", "1"])
+end
