@@ -23,11 +23,11 @@
   %p Les exercices comptables des trois dernières années pourront être joints à votre dossier.
 
   - procedure = etablissement.dossier.procedure
-  - if procedure.api_entreprise_role?("attestations_sociales")
+  - if procedure.can_fetch_attestation_sociale?
     %p Une attestation sociale sera jointe à votre dossier
-  - if procedure.api_entreprise_role?("attestations_fiscales")
+  - if procedure.can_fetch_attestation_fiscale?
     %p Une attestation fiscale sera jointe à votre dossier
-  - if procedure.api_entreprise_role?("bilans_bdf")
+  - if procedure.can_fetch_bilans_bdf?
     %p Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 %p
   = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr »",
