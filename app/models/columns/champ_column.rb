@@ -39,11 +39,11 @@ class Columns::ChampColumn < Column
     in { operator: 'after', value: Array }
       filtered_ids_after_value(dossiers, filter[:value])
     in { operator: 'this_week'}
-      filtered_ids_this_week(dossiers)
+      filtered_ids_for_date_range(dossiers, Time.current.all_week)
     in { operator: 'this_month' }
-      filtered_ids_this_month(dossiers)
+      filtered_ids_for_date_range(dossiers, Time.current.all_month)
     in { operator: 'this_year' }
-      filtered_ids_this_year(dossiers)
+      filtered_ids_for_date_range(dossiers, Time.current.all_year)
     else
       filtered_ids_for_values(dossiers, filter[:value])
     end
@@ -63,28 +63,9 @@ class Columns::ChampColumn < Column
     relation.where(champs: { column => date_range }).ids
   end
 
-  def filtered_ids_this_week(dossiers)
+  def filtered_ids_for_date_range(dossiers, range)
     relation = dossiers.with_type_de_champ(stable_id)
-    start_of_week = Time.current.beginning_of_week.then { type == :datetime ? _1.iso8601 : _1.to_date }
-    end_of_week = Time.current.end_of_week.then { type == :datetime ? _1.iso8601 : _1.to_date }
-
-    relation.where(champs: { column => start_of_week..end_of_week }).ids
-  end
-
-  def filtered_ids_this_month(dossiers)
-    relation = dossiers.with_type_de_champ(stable_id)
-    start_of_month = Time.current.beginning_of_month.then { type == :datetime ? _1.iso8601 : _1.to_date }
-    end_of_month = Time.current.end_of_month.then { type == :datetime ? _1.iso8601 : _1.to_date }
-
-    relation.where(champs: { column => start_of_month..end_of_month }).ids
-  end
-
-  def filtered_ids_this_year(dossiers)
-    relation = dossiers.with_type_de_champ(stable_id)
-    start_of_year = Time.current.beginning_of_year.then { type == :datetime ? _1.iso8601 : _1.to_date }
-    end_of_year = Time.current.end_of_year.then { type == :datetime ? _1.iso8601 : _1.to_date }
-
-    relation.where(champs: { column => start_of_year..end_of_year }).ids
+    relation.where(champs: { column => range_for_query(range) }).ids
   end
 
   def filtered_ids_for_values(dossiers, search_terms)
