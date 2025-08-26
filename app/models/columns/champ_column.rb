@@ -38,11 +38,11 @@ class Columns::ChampColumn < Column
       filtered_ids_before_value(dossiers, filter[:value])
     in { operator: 'after', value: Array }
       filtered_ids_after_value(dossiers, filter[:value])
-    in { operator: 'this_week', value: Array }
+    in { operator: 'this_week'}
       filtered_ids_this_week(dossiers)
-    in { operator: 'this_month', value: Array }
+    in { operator: 'this_month' }
       filtered_ids_this_month(dossiers)
-    in { operator: 'this_year', value: Array }
+    in { operator: 'this_year' }
       filtered_ids_this_year(dossiers)
     else
       filtered_ids_for_values(dossiers, filter[:value])
@@ -65,24 +65,24 @@ class Columns::ChampColumn < Column
 
   def filtered_ids_this_week(dossiers)
     relation = dossiers.with_type_de_champ(stable_id)
-    start_of_week = Time.current.beginning_of_week
-    end_of_week = Time.current.end_of_week
+    start_of_week = Time.current.beginning_of_week.then { type == :datetime ? _1.iso8601 : _1.to_date }
+    end_of_week = Time.current.end_of_week.then { type == :datetime ? _1.iso8601 : _1.to_date }
 
     relation.where(champs: { column => start_of_week..end_of_week }).ids
   end
 
   def filtered_ids_this_month(dossiers)
     relation = dossiers.with_type_de_champ(stable_id)
-    start_of_month = Time.current.beginning_of_month
-    end_of_month = Time.current.end_of_month
+    start_of_month = Time.current.beginning_of_month.then { type == :datetime ? _1.iso8601 : _1.to_date }
+    end_of_month = Time.current.end_of_month.then { type == :datetime ? _1.iso8601 : _1.to_date }
 
     relation.where(champs: { column => start_of_month..end_of_month }).ids
   end
 
   def filtered_ids_this_year(dossiers)
     relation = dossiers.with_type_de_champ(stable_id)
-    start_of_year = Time.current.beginning_of_year
-    end_of_year = Time.current.end_of_year
+    start_of_year = Time.current.beginning_of_year.then { type == :datetime ? _1.iso8601 : _1.to_date }
+    end_of_year = Time.current.end_of_year.then { type == :datetime ? _1.iso8601 : _1.to_date }
 
     relation.where(champs: { column => start_of_year..end_of_year }).ids
   end
