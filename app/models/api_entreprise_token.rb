@@ -16,15 +16,18 @@ class APIEntrepriseToken
   end
 
   def expired?
-    return true if @jwt_token.blank?
+    return true if decoded_token.blank?
 
-    decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
+    # we have a decoded token but no exp claim, consider it as non-expiring
+    return false if expires_at.nil?
+
+    expires_at <= Time.zone.now
   end
 
   def expires_at
-    return nil if @jwt_token.blank?
+    exp = decoded_token["exp"]
 
-    decoded_token.key?("exp") && Time.zone.at(decoded_token["exp"])
+    Time.zone.at(exp) if exp.present?
   end
 
   def expired_or_expires_soon?
@@ -50,14 +53,13 @@ class APIEntrepriseToken
   private
 
   def roles
-    return [] if @jwt_token.blank?
-
     Array(decoded_token["roles"] || decoded_token["scopes"])
   end
 
   def decoded_token
-    @decoded_token ||= {}
-    @decoded_token[@jwt_token] ||= JWT.decode(@jwt_token, nil, false)[0]
+    return {} if @jwt_token.blank?
+
+    @decoded_token ||= JWT.decode(@jwt_token, nil, false)[0]
   rescue JWT::DecodeError => e
     raise TokenError, e.message
   end
