@@ -11,12 +11,7 @@ module Crisp
       return unless processable_event?
       return if user.blank?
 
-      user_data = UserDataBuilder.new(user).build_data
-
-      APIService.new.update_people_data(
-        email: email,
-        body: { data: user_data }
-      )
+      CrispUpdatePeopleDataJob.perform_later(user)
     end
 
     private
