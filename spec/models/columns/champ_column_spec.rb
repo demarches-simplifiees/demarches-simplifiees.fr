@@ -339,7 +339,6 @@ describe Columns::ChampColumn do
         let(:filter) { { operator: 'before', value: ["2025-02-14"] } }
 
         it "returns the correct ids" do
-          puts dossier.champs.first.value
           expect(subject).to eq([dossier.id])
         end
       end
