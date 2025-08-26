@@ -12,7 +12,7 @@ module APIEntrepriseTokenConcern
       APIEntrepriseToken.new(t)
     end
 
-    def has_api_entreprise_token?
+    def specific_api_entreprise_token?
       self[:api_entreprise_token].present?
     end
   end

@@ -112,7 +112,7 @@
                 .fr-hint-text
                   = t('administrateurs.procedures.clone.types_de_champ_count', count: @procedure.active_revision.types_de_champ_private.count)
 
-        - if @is_same_admin && @procedure.has_api_entreprise_token?
+        - if @is_same_admin && @procedure.specific_api_entreprise_token?
           .fr-fieldset__element
             .fr-checkbox-group
               = fco.check_box 'api_entreprise_token', checked: true
