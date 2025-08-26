@@ -276,7 +276,7 @@ describe APIEntreprise::API do
     let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/attestation_sociale.json').read }
 
     before do
-      allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(roles)
+      allow_any_instance_of(Procedure).to receive(:can_fetch_attestation_sociale?).and_return(can_fetch)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/urssaf\/unites_legales\/#{siren}\/attestation_vigilance/)
         .to_return(body: body, status: status)
@@ -285,13 +285,13 @@ describe APIEntreprise::API do
     subject { described_class.new(procedure.id).attestation_sociale(siren) }
 
     context 'when token not authorized' do
-      let(:roles) { ["entreprises"] }
+      let(:can_fetch) { false }
 
       it { expect(subject).to eq(nil) }
     end
 
     context 'when token is authorized' do
-      let(:roles) { ["attestations_sociales"] }
+      let(:can_fetch) { true }
 
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
@@ -305,7 +305,7 @@ describe APIEntreprise::API do
     let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/attestation_fiscale.json').read }
 
     before do
-      allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(roles)
+      allow_any_instance_of(Procedure).to receive(:can_fetch_attestation_fiscale?).and_return(can_fetch)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
         .to_return(body: body, status: status)
@@ -314,13 +314,13 @@ describe APIEntreprise::API do
     subject { described_class.new(procedure.id).attestation_fiscale(siren, user_id) }
 
     context 'when token not authorized' do
-      let(:roles) { ["entreprises"] }
+      let(:can_fetch) { false }
 
       it { expect(subject).to eq(nil) }
     end
 
     context 'when token is authorized' do
-      let(:roles) { ["attestations_fiscales"] }
+      let(:can_fetch) { true }
 
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
