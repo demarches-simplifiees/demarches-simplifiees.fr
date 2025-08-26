@@ -1,5 +1,4 @@
 fr:
   api_entreprise:
     errors:
-      missing_token: "le jeton API Entreprise ne peut être vide"
       token_expired: "Le jeton API Entreprise a expiré."

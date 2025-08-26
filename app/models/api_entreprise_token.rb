@@ -7,17 +7,15 @@ class APIEntrepriseToken
     @token = token
   end
 
-  def token
-    raise TokenError, I18n.t("api_entreprise.errors.missing_token") if @token.blank?
-
-    @token
-  end
-
   def expired?
+    return true if @token.blank?
+
     decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
   end
 
   def expiration
+    return nil if @token.blank?
+
     decoded_token.key?("exp") && Time.zone.at(decoded_token["exp"])
   end
 
@@ -40,12 +38,14 @@ class APIEntrepriseToken
   private
 
   def roles
+    return [] if @token.blank?
+
     Array(decoded_token["roles"] || decoded_token["scopes"])
   end
 
   def decoded_token
     @decoded_token ||= {}
-    @decoded_token[token] ||= JWT.decode(token, nil, false)[0]
+    @decoded_token[@token] ||= JWT.decode(@token, nil, false)[0]
   rescue JWT::DecodeError => e
     raise TokenError, e.message
   end
