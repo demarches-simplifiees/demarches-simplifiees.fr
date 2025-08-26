@@ -361,7 +361,7 @@ describe APIEntreprise::API do
     subject { api.privileges }
 
     before do
-      api.api_token = APIEntrepriseToken.new(token)
+      api.token = APIEntrepriseToken.new(token)
 
       stub_request(:get, "https://entreprise.api.gouv.fr/privileges")
         .to_return(body: body, status: status)

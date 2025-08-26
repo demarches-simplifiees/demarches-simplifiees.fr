@@ -3,26 +3,26 @@
 class APIEntrepriseToken
   include ActiveModel::Validations
 
-  validates :token, jwt_token: true, allow_blank: true
+  validates :jwt_token, jwt_token: true, allow_blank: true
 
   TokenError = Class.new(StandardError)
 
   SOON_TO_EXPIRE_DELAY = 1.month
 
-  attr_reader :token
+  attr_reader :jwt_token
 
-  def initialize(token)
-    @token = token
+  def initialize(jwt_token)
+    @jwt_token = jwt_token
   end
 
   def expired?
-    return true if @token.blank?
+    return true if @jwt_token.blank?
 
     decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
   end
 
   def expires_at
-    return nil if @token.blank?
+    return nil if @jwt_token.blank?
 
     decoded_token.key?("exp") && Time.zone.at(decoded_token["exp"])
   end
@@ -50,14 +50,14 @@ class APIEntrepriseToken
   private
 
   def roles
-    return [] if @token.blank?
+    return [] if @jwt_token.blank?
 
     Array(decoded_token["roles"] || decoded_token["scopes"])
   end
 
   def decoded_token
     @decoded_token ||= {}
-    @decoded_token[@token] ||= JWT.decode(@token, nil, false)[0]
+    @decoded_token[@jwt_token] ||= JWT.decode(@jwt_token, nil, false)[0]
   rescue JWT::DecodeError => e
     raise TokenError, e.message
   end

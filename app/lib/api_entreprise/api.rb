@@ -18,14 +18,14 @@ class APIEntreprise::API
   DEFAULT_API_ENTREPRISE_DELAY = 0.0
 
   attr_reader :procedure
-  attr_accessor :api_token
+  attr_accessor :token
   attr_accessor :api_object
 
   def initialize(procedure_id = nil)
     return if procedure_id.blank?
 
     @procedure = Procedure.find(procedure_id)
-    @api_token = @procedure.api_entreprise_token
+    @token = @procedure.api_entreprise_token
   end
 
   def entreprise(siren)
@@ -63,19 +63,19 @@ class APIEntreprise::API
   end
 
   def attestation_sociale(siren)
-    return if !api_token.can_fetch_attestation_sociale?
+    return if !token.can_fetch_attestation_sociale?
 
     call_with_siret(ATTESTATION_SOCIALE_RESOURCE_NAME, siren)
   end
 
   def attestation_fiscale(siren, user_id)
-    return if !api_token.can_fetch_attestation_fiscale?
+    return if !token.can_fetch_attestation_fiscale?
 
     call_with_siret(ATTESTATION_FISCALE_RESOURCE_NAME, siren, user_id: user_id)
   end
 
   def bilans_bdf(siren)
-    return if !api_token.can_fetch_bilans_bdf?
+    return if !token.can_fetch_bilans_bdf?
 
     call_with_siret(BILANS_BDF_RESOURCE_NAME, siren)
   end
@@ -113,7 +113,7 @@ class APIEntreprise::API
     end
 
     response = Typhoeus.get(url,
-      headers: { Authorization: "Bearer #{api_token.token}" },
+      headers: { Authorization: "Bearer #{token.jwt_token}" },
       params: params,
       timeout: TIMEOUT)
 
@@ -182,7 +182,7 @@ class APIEntreprise::API
   end
 
   def verify_token!
-    return unless api_token.expired?
+    return unless token.expired?
 
     raise APIEntrepriseToken::TokenError, I18n.t("api_entreprise.errors.token_expired")
   end

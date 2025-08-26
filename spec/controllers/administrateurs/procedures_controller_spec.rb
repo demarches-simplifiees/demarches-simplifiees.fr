@@ -1314,7 +1314,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       it do
         expect(flash.alert).to be_nil
         expect(flash.notice).to eq('Le jeton a bien été mis à jour')
-        expect(procedure.reload.api_entreprise_token).to eq(token)
+        expect(procedure.reload.api_entreprise_token.jwt_token).to eq(token)
       end
     end
 

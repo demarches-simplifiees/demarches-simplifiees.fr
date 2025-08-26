@@ -11,7 +11,7 @@ class APIEntreprise::ServiceAdapter < APIEntreprise::EtablissementAdapter
   def get_resource
     api_instance = api
     # TODO: reuse instead a token from an administrateur's procedure?
-    api_instance.api_token = APIEntrepriseToken.new(ENV['API_ENTREPRISE_KEY'])
+    api_instance.token = APIEntrepriseToken.new(ENV['API_ENTREPRISE_KEY'])
     api_instance.api_object = "service_id: #{@service_id}"
     api_instance.etablissement(@siret)
   end
