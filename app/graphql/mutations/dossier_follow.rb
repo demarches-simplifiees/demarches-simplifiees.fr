@@ -6,7 +6,7 @@ module Mutations
 
     argument :dossier_id, ID, "Dossier ID", required: true, loads: Types::DossierType
     argument :instructeur_id, ID, "Instructeur ID", required: true, loads: Types::ProfileType
-    argument :follow, Boolean, "Foolow ou non", default_value: true
+    argument :follow, Boolean, "Indique s’il faut suivre (true) ou ne plus suivre (false) le dossier.", default_value: true
 
     field :dossier, Types::DossierType, null: true
     field :instructeur, Types::ProfileType, null: true
