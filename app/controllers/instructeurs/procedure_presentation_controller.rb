@@ -10,9 +10,7 @@ module Instructeurs
       new_filter = filtered_column_from_params
 
       if new_filter.valid?
-        filters_attr = @procedure_presentation.filters_name_for(statut)
-        current_filters = @procedure_presentation.send(filters_attr) || []
-        @procedure_presentation.update!(filters_attr => current_filters + [new_filter])
+        @procedure_presentation.add_filter_for_statut!(statut, new_filter)
         flash.notice = "Filtre ajouté avec succès"
       else
         flash.alert = new_filter.errors.full_messages.join(', ')
@@ -22,11 +20,7 @@ module Instructeurs
     end
 
     def remove_filter
-      filter_name = @procedure_presentation.filters_name_for(params[:statut])
-
-      @procedure_presentation.update!(filter_name => @procedure_presentation.filters_for(params[:statut]).reject do |filter|
-        filtered_column_from_params == filter
-      end)
+      @procedure_presentation.remove_filter_for_statut!(params[:statut], filtered_column_from_params)
 
       redirect_back_or_to([:instructeur, procedure])
     end
