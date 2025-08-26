@@ -28,11 +28,9 @@ class AttachmentsController < ApplicationController
         champ.update_timestamps
       end
       champ.piece_justificative_file.reload
-      flash.notice = t("activerecord.models.attachment.successfully_deleted_with_anchor", attachment: @attachment.blob.filename, champ: @champ.input_id)
     else
       @attachment.purge_later
       @attachment_options = attachment_options
-      flash.notice = t("activerecord.models.attachment.successfully_deleted_without_anchor", attachment: @attachment.blob.filename)
     end
 
     respond_to do |format|
