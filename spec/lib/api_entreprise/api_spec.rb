@@ -3,7 +3,7 @@
 describe APIEntreprise::API do
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
-  let(:token) { ENV['API_ENTREPRISE_KEY'] }
+  let(:token) { nil }
 
   describe '.entreprise' do
     subject { described_class.new(procedure_id).entreprise(siren) }
@@ -363,11 +363,31 @@ describe APIEntreprise::API do
     before do
       api.token = APIEntrepriseToken.new(token)
 
+      allow(api.token).to receive(:jwt_token).and_return(double(blank?: blank))
+      allow(api.token).to receive(:expired?).and_return(expired)
+
       stub_request(:get, "https://entreprise.api.gouv.fr/privileges")
         .to_return(body: body, status: status)
     end
 
-    context 'when token is authorized' do
+    context 'with a blank token' do
+      let(:blank) { true }
+      let(:expired) { false }
+
+      it { expect { subject }.to raise_error(APIEntrepriseToken::TokenError) }
+    end
+
+    context 'with a expired token' do
+      let(:blank) { false }
+      let(:expired) { true }
+
+      it { expect { subject }.to raise_error(APIEntrepriseToken::TokenError) }
+    end
+
+    context 'with a valid token' do
+      let(:blank) { false }
+      let(:expired) { false }
+
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
   end

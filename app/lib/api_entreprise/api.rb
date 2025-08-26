@@ -181,9 +181,10 @@ class APIEntreprise::API
     ENV.fetch("API_ENTREPRISE_DELAY", DEFAULT_API_ENTREPRISE_DELAY).to_f
   end
 
-  def verify_token!
-    return unless token.expired?
+  TokenError = APIEntrepriseToken::TokenError
 
-    raise APIEntrepriseToken::TokenError, I18n.t("api_entreprise.errors.token_expired")
+  def verify_token!
+    raise TokenError, I18n.t("api_entreprise.errors.missing_token") if token.jwt_token.blank?
+    raise TokenError, I18n.t("api_entreprise.errors.token_expired") if token.expired?
   end
 end
