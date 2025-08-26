@@ -44,6 +44,125 @@ describe ProcedurePresentation do
     end
   end
 
+  describe '#add_filter_for_statut!' do
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
+    let(:column) { procedure.find_column(label: 'Demandeur') }
+    let(:new_filter) { FilteredColumn.new(column:, filter: 'new_filter_value') }
+
+    subject { procedure_presentation.add_filter_for_statut!(statut, new_filter) }
+
+    context 'when adding a filter to an empty statut' do
+      let(:statut) { 'a-suivre' }
+
+      it 'adds the filter to the statut' do
+        expect(procedure_presentation.a_suivre_filters).to eq([])
+
+        subject
+
+        expect(procedure_presentation.a_suivre_filters).to eq([new_filter])
+      end
+    end
+
+    context 'when adding a filter to a statut with existing filters' do
+      let(:existing_filter) { FilteredColumn.new(column:, filter: 'existing_filter_value') }
+
+      let(:statut) { 'a-suivre' }
+
+      before do
+        procedure_presentation.update(a_suivre_filters: [existing_filter])
+      end
+
+      it 'adds the new filter to the existing filters' do
+        expect(procedure_presentation.a_suivre_filters).to eq([existing_filter])
+
+        subject
+
+        expect(procedure_presentation.a_suivre_filters).to eq([existing_filter, new_filter])
+      end
+    end
+
+    context 'when adding a filter to a different statut' do
+      let(:statut) { 'suivis' }
+      it 'adds the filter to the correct statut' do
+        expect(procedure_presentation.suivis_filters).to eq([])
+
+        subject
+
+        expect(procedure_presentation.suivis_filters).to eq([new_filter])
+        expect(procedure_presentation.a_suivre_filters).to eq([])
+      end
+    end
+  end
+
+  describe '#remove_filter_for_statut!' do
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
+    let(:column) { procedure.find_column(label: 'Demandeur') }
+    let(:filter_to_remove) { FilteredColumn.new(column:, filter: 'filter_to_remove') }
+    let(:other_filter) { FilteredColumn.new(column:, filter: 'other_filter') }
+
+    subject { procedure_presentation.remove_filter_for_statut!(statut, filter_to_remove) }
+
+    context 'when removing a filter from a statut with multiple filters' do
+      let(:statut) { 'a-suivre' }
+
+      before do
+        procedure_presentation.update(a_suivre_filters: [filter_to_remove, other_filter])
+      end
+
+      it 'removes only the specified filter' do
+        expect(procedure_presentation.a_suivre_filters).to eq([filter_to_remove, other_filter])
+
+        subject
+
+        expect(procedure_presentation.a_suivre_filters).to eq([other_filter])
+      end
+    end
+
+    context 'when removing the only filter from a statut' do
+      let(:statut) { 'suivis' }
+
+      before do
+        procedure_presentation.update(suivis_filters: [filter_to_remove])
+      end
+
+      it 'removes the filter and leaves an empty array' do
+        expect(procedure_presentation.suivis_filters).to eq([filter_to_remove])
+
+        subject
+
+        expect(procedure_presentation.suivis_filters).to eq([])
+      end
+    end
+
+    context 'when removing a filter that does not exist' do
+      let(:statut) { 'traites' }
+
+      before do
+        procedure_presentation.update(traites_filters: [other_filter])
+      end
+
+      it 'does not change the filters' do
+        expect(procedure_presentation.traites_filters).to eq([other_filter])
+
+        subject
+
+        expect(procedure_presentation.traites_filters).to eq([other_filter])
+      end
+    end
+
+    context 'when removing a filter from an empty statut' do
+      let(:statut) { 'archives' }
+
+      it 'does not change the filters' do
+        expect(procedure_presentation.archives_filters).to eq([])
+
+        subject
+
+        expect(procedure_presentation.archives_filters).to eq([])
+      end
+    end
+  end
+
   describe '#update_displayed_fields' do
     let(:en_construction_column) { procedure.find_column(label: 'Date de passage en construction') }
     let(:mise_a_jour_column) { procedure.find_column(label: 'Date du dernier évènement') }
