@@ -25,7 +25,7 @@ module APIEntrepriseTokenConcern
     end
 
     def set_api_entreprise_token_expires_at
-      self.api_entreprise_token_expires_at = has_api_entreprise_token? ? api_entreprise_token.expiration : nil
+      self.api_entreprise_token_expires_at = api_entreprise_token.expiration
     end
 
     private
