@@ -4,7 +4,7 @@ module APIEntrepriseTokenConcern
   extend ActiveSupport::Concern
 
   included do
-    validates :raw_api_entreprise_token, jwt_token: true, allow_blank: true
+    validates_associated :api_entreprise_token
 
     before_save :set_api_entreprise_token_expires_at, if: :will_save_change_to_api_entreprise_token?
 
@@ -21,9 +21,5 @@ module APIEntrepriseTokenConcern
     def set_api_entreprise_token_expires_at
       self.api_entreprise_token_expires_at = api_entreprise_token.expires_at
     end
-
-    private
-
-    def raw_api_entreprise_token = api_entreprise_token.token
   end
 end

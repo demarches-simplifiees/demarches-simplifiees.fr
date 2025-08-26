@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class APIEntrepriseToken
+  include ActiveModel::Validations
+
+  validates :token, jwt_token: true, allow_blank: true
+
   TokenError = Class.new(StandardError)
 
   SOON_TO_EXPIRE_DELAY = 1.month
