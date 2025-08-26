@@ -11,8 +11,7 @@ module APIEntrepriseTokenConcern
     before_save :set_api_entreprise_token_expires_at, if: :will_save_change_to_api_entreprise_token?
 
     def api_entreprise_token
-      t = self[:api_entreprise_token].presence ||
-        Rails.application.secrets.api_entreprise[:key]
+      t = self[:api_entreprise_token].presence || ENV['API_ENTREPRISE_KEY']
 
       APIEntrepriseToken.new(t)
     end

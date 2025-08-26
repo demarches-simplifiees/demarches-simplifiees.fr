@@ -3,7 +3,7 @@
 describe APIEntreprise::API do
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
-  let(:token) { Rails.application.secrets.api_entreprise[:key] }
+  let(:token) { ENV['API_ENTREPRISE_KEY'] }
 
   describe '.entreprise' do
     subject { described_class.new(procedure_id).entreprise(siren) }
