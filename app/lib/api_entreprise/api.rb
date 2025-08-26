@@ -18,14 +18,14 @@ class APIEntreprise::API
   DEFAULT_API_ENTREPRISE_DELAY = 0.0
 
   attr_reader :procedure
-  attr_accessor :token
+  attr_accessor :api_token
   attr_accessor :api_object
 
   def initialize(procedure_id = nil)
     return if procedure_id.blank?
 
     @procedure = Procedure.find(procedure_id)
-    @token = @procedure.api_entreprise_token
+    @api_token = APIEntrepriseToken.new(@procedure.api_entreprise_token)
   end
 
   def entreprise(siren)
@@ -113,7 +113,7 @@ class APIEntreprise::API
     end
 
     response = Typhoeus.get(url,
-      headers: { Authorization: "Bearer #{token}" },
+      headers: { Authorization: "Bearer #{api_token.token}" },
       params: params,
       timeout: TIMEOUT)
 
@@ -182,7 +182,7 @@ class APIEntreprise::API
   end
 
   def verify_token!
-    return unless APIEntrepriseToken.new(token).expired?
+    return unless api_token.expired?
 
     raise APIEntrepriseToken::TokenError, I18n.t("api_entreprise.errors.token_expired")
   end
