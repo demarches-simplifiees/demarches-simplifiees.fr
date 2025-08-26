@@ -21,24 +21,9 @@ RSpec.describe Crisp::WebhookProcessor do
   subject { processor.process }
 
   describe '#process' do
-    let(:url_regex) do
-      %r{\Ahttps://api\.crisp\.chat/v1/website/#{ENV['CRISP_WEBSITE_ID']}/people/data/.*\z}
-    end
-
-    context 'with event message:send' do
-      before do
-        stub_request(:patch, url_regex).and_return(body: {
-          error: false, reason: "updated", data: {}
-        }.to_json)
-      end
-
-      it 'updates people data by calling Crisp API with expected body and headers' do
-        expect(subject).to be_success
-
-        expect(a_request(:patch, url_regex).with(headers: {
-          'X-Crisp-Tier' => 'Plugin',
-          'Authorization' => /Basic /
-        }, body: /Liens/)).to have_been_made.once
+    context 'with message:send event' do
+      it 'enqueue a job which will update people data' do
+        expect { subject }.to have_enqueued_job(CrispUpdatePeopleDataJob).with(user)
       end
     end
 
@@ -46,9 +31,7 @@ RSpec.describe Crisp::WebhookProcessor do
       let(:event) { "other:event" }
 
       it 'does not handle webhook' do
-        subject
-
-        expect(a_request(:patch, url_regex)).not_to have_been_made
+        expect { subject }.not_to have_enqueued_job
       end
     end
 
@@ -56,9 +39,7 @@ RSpec.describe Crisp::WebhookProcessor do
       let(:email) { 'nonexistent@example.com' }
 
       it 'ignores webhook' do
-        subject
-
-        expect(a_request(:patch, url_regex)).not_to have_been_made
+        expect { subject }.not_to have_enqueued_job
       end
     end
   end
