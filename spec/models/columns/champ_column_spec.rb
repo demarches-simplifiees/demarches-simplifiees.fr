@@ -283,7 +283,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["Fromage", "Dessert"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_fromage.id, dossier_with_dessert.id])
+          expect(subject).to contain_exactly(dossier_with_fromage.id, dossier_with_dessert.id)
         end
       end
     end
@@ -339,7 +339,6 @@ describe Columns::ChampColumn do
         let(:filter) { { operator: 'before', value: ["2025-02-14"] } }
 
         it "returns the correct ids" do
-          puts dossier.champs.first.value
           expect(subject).to eq([dossier.id])
         end
       end
