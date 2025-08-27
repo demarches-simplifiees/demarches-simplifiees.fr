@@ -3,21 +3,21 @@
 describe APIEntreprise::API do
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
-  let(:token) { nil }
+  let(:siren) { '111111111' }
+
+  def fixture_file(filename) = Rails.root.join('spec/fixtures/files/api_entreprise', filename).read
 
   describe '.entreprise' do
     subject { described_class.new(procedure_id).entreprise(siren) }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
-        .to_return(body: body, status: status)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
+        .to_return(body:, status:)
     end
 
     context 'when the service throws a bad gateaway exception' do
-      let(:siren) { '111111111' }
       let(:status) { 502 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/entreprises_unavailable.json').read }
+      let(:body) { fixture_file('entreprises_unavailable.json') }
 
       it 'raises APIEntreprise::API::Error::BadGateway' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::BadGateway)
@@ -25,9 +25,8 @@ describe APIEntreprise::API do
     end
 
     context 'when the service reponds with 01000 code' do
-      let(:siren) { '111111111' }
       let(:status) { 502 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_01000.json').read }
+      let(:body) { fixture_file('error_code_01000.json') }
 
       it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
@@ -35,9 +34,8 @@ describe APIEntreprise::API do
     end
 
     context 'when the service reponds with 01001 code' do
-      let(:siren) { '111111111' }
       let(:status) { 502 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_01001.json').read }
+      let(:body) { fixture_file('error_code_01001.json') }
 
       it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
@@ -45,9 +43,8 @@ describe APIEntreprise::API do
     end
 
     context 'when the service reponds with 01002 code' do
-      let(:siren) { '111111111' }
       let(:status) { 504 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_01002.json').read }
+      let(:body) { fixture_file('error_code_01002.json') }
 
       it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
@@ -55,9 +52,8 @@ describe APIEntreprise::API do
     end
 
     context 'when the service reponds with 02002 code' do
-      let(:siren) { '111111111' }
       let(:status) { 504 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_02002.json').read }
+      let(:body) { fixture_file('error_code_02002.json') }
 
       it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
@@ -65,9 +61,8 @@ describe APIEntreprise::API do
     end
 
     context 'when the service reponds with 03002 code' do
-      let(:siren) { '111111111' }
       let(:status) { 504 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_03002.json').read }
+      let(:body) { fixture_file('error_code_03002.json') }
 
       it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
@@ -75,9 +70,8 @@ describe APIEntreprise::API do
     end
 
     context 'when the service reponds with 03020 code' do
-      let(:siren) { '111111111' }
       let(:status) { 503 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_03020.json').read }
+      let(:body) { fixture_file('error_code_03020.json') }
 
       it 'raises APIEntreprise::API::Error::ServiceUnavailable' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
@@ -85,9 +79,8 @@ describe APIEntreprise::API do
     end
 
     context 'when siren does not exist' do
-      let(:siren) { '111111111' }
       let(:status) { 404 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/entreprises_not_found.json').read }
+      let(:body) { fixture_file('entreprises_not_found.json') }
 
       it 'raises APIEntreprise::API::Error::ResourceNotFound' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ResourceNotFound)
@@ -95,9 +88,8 @@ describe APIEntreprise::API do
     end
 
     context 'when request has bad format' do
-      let(:siren) { '111111111' }
       let(:status) { 400 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/entreprises_not_found.json').read }
+      let(:body) { fixture_file('entreprises_not_found.json') }
 
       it 'raises APIEntreprise::API::Error::BadFormatRequest' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::BadFormatRequest)
@@ -105,9 +97,8 @@ describe APIEntreprise::API do
     end
 
     context 'when siren infos are private' do
-      let(:siren) { '111111111' }
       let(:status) { 403 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/entreprises_private.json').read }
+      let(:body) { fixture_file('entreprises_private.json') }
 
       it 'raises APIEntreprise::API::Error::ResourceNotFound' do
         expect { subject }.to raise_error(APIEntreprise::API::Error::ResourceNotFound)
@@ -117,31 +108,10 @@ describe APIEntreprise::API do
     context 'when siren exist' do
       let(:siren) { '418166096' }
       let(:status) { 200 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/entreprises.json').read }
+      let(:body) { fixture_file('entreprises.json') }
 
       it 'returns response body' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
-      end
-
-      context 'with specific token for procedure' do
-        let(:token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
-        let(:procedure) { create(:procedure, api_entreprise_token: token) }
-        let(:procedure_id) { procedure.id }
-
-        it 'call api-entreprise with specfic token' do
-          subject
-          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
-        end
-      end
-
-      context 'without specific token for procedure' do
-        let(:procedure) { create(:procedure, api_entreprise_token: nil) }
-        let(:procedure_id) { procedure.id }
-
-        it 'call api-entreprise with specfic token' do
-          subject
-          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
-        end
       end
 
       context 'with a service without siret' do
@@ -201,7 +171,7 @@ describe APIEntreprise::API do
     context 'when siret exists' do
       let(:siret) { '41816609600051' }
       let(:status) { 200 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/etablissements.json').read }
+      let(:body) { fixture_file('etablissements.json') }
 
       it 'returns body' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
@@ -213,7 +183,6 @@ describe APIEntreprise::API do
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/dgfip\/etablissements\/#{siret}\/chiffres_affaires/)
         .to_return(status: status, body: body)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
     context 'when siret does not exist' do
@@ -233,7 +202,7 @@ describe APIEntreprise::API do
 
       let(:siret) { '41816609600051' }
       let(:status) { 200 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/exercices.json').read }
+      let(:body) { fixture_file('exercices.json') }
 
       it 'success' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
@@ -245,7 +214,6 @@ describe APIEntreprise::API do
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{siren}/)
         .to_return(status: status, body: body)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
     subject { described_class.new(procedure_id).rna(siren) }
@@ -263,21 +231,19 @@ describe APIEntreprise::API do
     context 'when siren exists' do
       let(:siren) { '418166096' }
       let(:status) { 200 }
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/associations.json').read }
+      let(:body) { fixture_file('associations.json') }
 
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
   end
 
   describe '.attestation_sociale' do
-    let(:procedure) { create(:procedure, api_entreprise_token: token) }
     let(:siren) { '418166096' }
     let(:status) { 200 }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/attestation_sociale.json').read }
+    let(:body) { fixture_file('attestation_sociale.json') }
 
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:can_fetch_attestation_sociale?).and_return(can_fetch)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/urssaf\/unites_legales\/#{siren}\/attestation_vigilance/)
         .to_return(body: body, status: status)
     end
@@ -298,17 +264,15 @@ describe APIEntreprise::API do
   end
 
   describe '.attestation_fiscale' do
-    let(:procedure) { create(:procedure, api_entreprise_token: token) }
     let(:siren) { '418166096' }
     let(:user_id) { 1 }
     let(:status) { 200 }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/attestation_fiscale.json').read }
+    let(:body) { fixture_file('attestation_fiscale.json') }
 
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:can_fetch_attestation_fiscale?).and_return(can_fetch)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
-        .to_return(body: body, status: status)
+        .to_return(body:, status:)
     end
 
     subject { described_class.new(procedure.id).attestation_fiscale(siren, user_id) }
@@ -327,14 +291,12 @@ describe APIEntreprise::API do
   end
 
   describe '.bilans_bdf' do
-    let(:procedure) { create(:procedure, api_entreprise_token: token) }
     let(:siren) { '418166096' }
     let(:status) { 200 }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json').read }
+    let(:body) { fixture_file('bilans_entreprise_bdf.json') }
 
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:can_fetch_bilans_bdf?).and_return(can_fetch)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/banque_de_france\/unites_legales\/#{siren}\/bilans/)
         .to_return(body: body, status: status)
     end
@@ -357,11 +319,11 @@ describe APIEntreprise::API do
   describe '.privileges' do
     let(:api) { described_class.new }
     let(:status) { 200 }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/privileges.json').read }
+    let(:body) { fixture_file('privileges.json') }
     subject { api.privileges }
 
     before do
-      api.token = APIEntrepriseToken.new(token)
+      api.token = APIEntrepriseToken.new(nil)
 
       allow(api.token).to receive(:jwt_token).and_return(double(blank?: blank))
       allow(api.token).to receive(:expired?).and_return(expired)

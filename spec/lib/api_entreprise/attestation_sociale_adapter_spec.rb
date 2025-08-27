@@ -11,7 +11,6 @@ describe APIEntreprise::AttestationSocialeAdapter do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/urssaf\/unites_legales\/#{siren}\/attestation_vigilance/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:can_fetch_attestation_sociale?).and_return(true)
-    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context "when the SIREN is valid" do
