@@ -828,8 +828,8 @@ class API::V2::StoredQuery
     }
   }
 
-  mutation dossierFollow($input: DossierFollowInput!) {
-    dossierFollow(input: $input) {
+  mutation dossierBasculeSuivi($input: DossierBasculeSuiviInput!) {
+    dossierBasculeSuivi(input: $input) {
       dossier {
         id
         instructeurs {

@@ -1112,18 +1112,18 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context 'dossierFollow' do
+    context 'dossierBasculeSuivi' do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
       let(:follow) { true }
       let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, follow: follow } } }
 
-      let(:operation_name) { 'dossierFollow' }
+      let(:operation_name) { 'dossierBasculeSuivi' }
 
       it {
         expect(gql_errors).to be_nil
-        expect(gql_data[:dossierFollow][:errors]).to be_nil
-        expect(gql_data[:dossierFollow][:dossier][:id]).to eq(dossier.to_typed_id)
-        expect(gql_data[:dossierFollow][:instructeur][:id]).to eq(instructeur.to_typed_id)
+        expect(gql_data[:dossierBasculeSuivi][:errors]).to be_nil
+        expect(gql_data[:dossierBasculeSuivi][:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossierBasculeSuivi][:instructeur][:id]).to eq(instructeur.to_typed_id)
         expect(instructeur.followed_dossiers).to include(dossier)
       }
 
@@ -1145,7 +1145,7 @@ describe API::V2::GraphqlController do
         before { api_token.update(write_access: false) }
 
         it {
-          expect(gql_data[:dossierFollow][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+          expect(gql_data[:dossierBasculeSuivi][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
         }
       end
     end

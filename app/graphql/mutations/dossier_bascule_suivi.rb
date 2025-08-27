@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mutations
-  class DossierFollow < BaseMutation
+  class DossierBasculeSuivi < BaseMutation
     include DossierHelper
 
     argument :dossier_id, ID, "Dossier ID", required: true, loads: Types::DossierType
