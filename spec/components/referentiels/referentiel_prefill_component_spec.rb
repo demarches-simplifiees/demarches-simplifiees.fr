@@ -7,7 +7,6 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
   let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
   let(:referentiel) { create(:api_referentiel, :exact_match) }
 
-  before { Flipper.enable_actor(:referentiel_type_de_champ, procedure) }
   subject { render_inline(component) }
   describe 'render' do
     context 'when mapping is blank' do

@@ -9,7 +9,6 @@ describe TypesDeChampEditor::InfoReferentielComponent, type: :component do
     before do
       referentiel
       type_de_champ
-      Flipper.enable_actor(:referentiel_type_de_champ, procedure)
       render_inline(component)
     end
 

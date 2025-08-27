@@ -34,7 +34,6 @@ describe 'Referentiel API:' do
   end
 
   scenario 'Setup as admin, fill in as user, view it as instructeur', js: true, vcr: true do
-    Flipper.enable(:referentiel_type_de_champ, procedure)
     visit champs_admin_procedure_path(procedure)
     click_on('Configurer le champ')
 
