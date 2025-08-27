@@ -25,16 +25,17 @@ features = [
   :cojo_type_de_champ,
   :dossier_pdf_vide,
   :engagement_juridique_type_de_champ,
+  :export_avec_horodatage,
   :export_order_by_revision,
   :export_template,
-  :referentiel_type_de_champ,
   :groupe_instructeur_api_hack,
-  :rdv,
+  :notification,
+  :ocr,
   :pro_connect_restricted,
+  :rdv,
+  :referentiel_type_de_champ,
   :sva,
-  :switch_domain,
-  :export_avec_horodatage,
-  :notification
+  :switch_domain
 ]
 
 def database_exists?
