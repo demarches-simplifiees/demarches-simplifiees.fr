@@ -11,13 +11,13 @@ class API::Client
       Typhoeus.get(url,
         headers: headers_with_authorization(headers, false, authorization_token),
         params:,
-        timeout: TIMEOUT,
+        timeout:,
         **typhoeus_options)
     when :post
       Typhoeus.post(url,
         headers: headers_with_authorization(headers, json, authorization_token),
         body: json.nil? ? body : json.to_json,
-        timeout: TIMEOUT)
+        timeout:)
     end
     handle_response(response, schema:)
   rescue StandardError => reason
