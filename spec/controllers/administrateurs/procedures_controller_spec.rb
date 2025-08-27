@@ -686,7 +686,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
   describe 'GET #clone_settings' do
     render_views
-    let(:procedure) { create(:procedure, :with_service, administrateur: admin, instructeurs: [admin.instructeur]) }
+    let(:procedure) { create(:procedure, :with_service, administrateur: admin, instructeurs: [admin.instructeur], api_entreprise_token: nil) }
     let(:params) { { procedure_id: procedure.id } }
 
     subject do
