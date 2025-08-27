@@ -190,8 +190,21 @@ export class BatchOperationController extends ApplicationController {
   injectSelectedIdsIntoModal(event: Event) {
     event.preventDefault();
 
-    if (!this.hasModalFormTarget) return;
-    const modalForm = this.modalFormTarget;
+    const trigger = event.currentTarget as HTMLElement | null;
+
+    // Récupération du formulaire cible
+    const formSelector = trigger?.getAttribute('data-operation') || null;
+    let modalForm: HTMLFormElement | null = null;
+
+    if (formSelector) {
+      modalForm = document.querySelector<HTMLFormElement>(
+        `[data-form-selector="${formSelector}"]`
+      );
+    } else if (this.hasModalFormTarget) {
+      modalForm = this.modalFormTarget;
+    }
+
+    if (!modalForm) return;
 
     // Supprimer les inputs précédemment injectés
     modalForm
