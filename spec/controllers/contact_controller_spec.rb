@@ -5,7 +5,12 @@ describe ContactController, question_type: :controller do
 
   context 'signed in' do
     before do
+      Flipper.enable(:contact_crisp)
       sign_in user
+    end
+
+    after do
+      Flipper.disable(:contact_crisp)
     end
 
     let(:user) { create(:user) }
@@ -66,7 +71,7 @@ describe ContactController, question_type: :controller do
             change(ContactForm, :count).by(1)
 
           contact_form = ContactForm.last
-          expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+          expect(CrispCreateConversationJob).to have_been_enqueued.with(contact_form)
 
           expect(contact_form.subject).to eq("bonjour")
           expect(contact_form.text).to eq("un message")
@@ -95,7 +100,7 @@ describe ContactController, question_type: :controller do
               change(ContactForm, :count).by(1)
 
             contact_form = ContactForm.last
-            expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+            expect(CrispCreateConversationJob).to have_been_enqueued.with(contact_form)
             expect(contact_form.dossier_id).to eq(dossier.id)
 
             expect(flash[:notice]).to match('Votre message a été envoyé.')
@@ -118,7 +123,7 @@ describe ContactController, question_type: :controller do
 
           it 'posts the message to the dossier messagerie' do
             expect { subject }.to change(Commentaire, :count).by(1)
-            assert_no_enqueued_jobs(only: HelpscoutCreateConversationJob)
+            assert_no_enqueued_jobs(only: CrispCreateConversationJob)
 
             expect(Commentaire.last.email).to eq(user.email)
             expect(Commentaire.last.dossier).to eq(dossier)
@@ -139,7 +144,7 @@ describe ContactController, question_type: :controller do
           }
         end
 
-        it 'does not create a conversation on HelpScout' do
+        it 'does not create a conversation on Crisp' do
           expect { subject }.not_to change(Commentaire, :count)
           expect(flash[:alert]).to eq(I18n.t('invisible_captcha.sentence_for_humans'))
         end
@@ -212,6 +217,14 @@ describe ContactController, question_type: :controller do
   end
 
   context 'contact admin' do
+    before do
+      Flipper.enable(:contact_crisp)
+    end
+
+    after do
+      Flipper.disable(:contact_crisp)
+    end
+
     context 'index' do
       it 'should have professionnal email field' do
         get :admin
@@ -259,7 +272,7 @@ describe ContactController, question_type: :controller do
           post :create, params: { contact_form: params, InvisibleCaptcha.honeypots.sample => 'boom' }
         end
 
-        it 'does not create a conversation on HelpScout' do
+        it 'does not create a conversation on Crisp' do
           subject
           expect(flash[:alert]).to eq(I18n.t('invisible_captcha.sentence_for_humans'))
         end
