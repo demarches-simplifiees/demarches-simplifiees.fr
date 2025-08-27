@@ -3,18 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe Crisp::APIService do
+  let(:website_id) { 'test-website-id' }
   let(:service) { described_class.new }
   let(:email) { 'user@example.com' }
-  let(:body) { { "key" => "value" } }
+
+  before do
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with("CRISP_WEBSITE_ID").and_return(website_id)
+    allow(ENV).to receive(:fetch).with("CRISP_CLIENT_IDENTIFIER").and_return('client-id')
+    allow(ENV).to receive(:fetch).with("CRISP_CLIENT_KEY").and_return('client-key')
+  end
 
   describe '#update_people_data' do
     let(:api_client) { instance_double(API::Client) }
-    let(:website_id) { 'test-website-id' }
+    let(:body) { { "key" => "value" } }
 
     before do
-      allow(ENV).to receive(:fetch).with("CRISP_WEBSITE_ID").and_return(website_id)
-      allow(ENV).to receive(:fetch).with("CRISP_CLIENT_IDENTIFIER").and_return('client-id')
-      allow(ENV).to receive(:fetch).with("CRISP_CLIENT_KEY").and_return('client-key')
       allow(API::Client).to receive(:new).and_return(api_client)
     end
 
@@ -51,6 +55,27 @@ RSpec.describe Crisp::APIService do
         result = service.update_people_data(email:, body:)
 
         expect(result).to be_failure
+      end
+    end
+  end
+
+  describe '#create_conversation' do
+    context 'when API call succeeds' do
+      let(:session_id) { 'session_700c65e1-85e2-465a-b9ac-ecb5ec2c9881' }
+
+      before do
+        stub_request(:post, "https://api.crisp.chat/v1/website/#{website_id}/conversation")
+          .with(headers: { 'X-Crisp-Tier' => 'plugin', 'Authorization': /Basic /, 'content_type': 'application/json' })
+          .and_return(
+            body: { "error" => false, "reason" => "added", "data" => { "session_id" => session_id } }.to_json
+          )
+      end
+
+      it 'calls API with correct parameters' do
+        result = service.create_conversation
+
+        expect(result).to be_success
+        expect(result.success.dig(:data, :session_id)).to eq(session_id)
       end
     end
   end
