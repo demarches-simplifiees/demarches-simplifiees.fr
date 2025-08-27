@@ -43,7 +43,8 @@ describe ProcedureCloneConcern, type: :model do
         clone_instructeurs: true,
         clone_mail_templates: true,
         clone_champs: true,
-        clone_annotations: true
+        clone_annotations: true,
+        clone_api_entreprise_token: true
       }
     end
 
