@@ -24,9 +24,12 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
   end
 
   def prefill_stable_id_tag(jsonpath, mapping_opts)
+    tdcs = tdc_targets(mapping_opts)
+    selected = lookup_existing_value(jsonpath, "prefill_stable_id")
+    options = type_de_champ.public? ? grouped_options_for_select(tdcs, selected) : options_for_select(tdcs, selected)
     select_tag(
       attribute_name(jsonpath, "prefill_stable_id"),
-      options_for_select(tdc_targets(mapping_opts), lookup_existing_value(jsonpath, "prefill_stable_id")),
+      options,
       class: "fr-select"
     )
   end
@@ -36,11 +39,14 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
   def tdc_targets(referentiel_mapping_element)
     mapping_type = referentiel_mapping_element[:type]
     allowed_types = MAPPING_TYPE_TO_TYPE_DE_CHAMP[mapping_type.to_sym] || []
-
     source_tdcs
-      .reject { |it| it.stable_id == @type_de_champ.stable_id }
-      .filter { |it| allowed_types.include?(it.type_champ) }
-      .map { |it| [it.libelle_with_parent(@procedure.draft_revision), it.stable_id] }
+      .each_with_object({ "Champs" => [], "Annotations privées" => [] }) do |tdc, grouped_tdcs|
+        next if tdc.stable_id == @type_de_champ.stable_id
+        next unless allowed_types.include?(tdc.type_champ)
+
+        grouped_tdcs[tdc.public? ? "Champs" : "Annotations privées"] << [tdc.libelle_with_parent(@procedure.draft_revision), tdc.stable_id]
+      end
+      .then { type_de_champ.public? ? it : it["Annotations privées"] }
   end
 
   def render?

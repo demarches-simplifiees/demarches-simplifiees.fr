@@ -5,7 +5,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
   let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
   let(:types_de_champ_private) { [{ type: :text, libelle: "private text" }] }
-  let(:type_de_champ) { procedure.draft_revision.types_de_champ_public.first }
+  let(:type_de_champ) { procedure.draft_revision.types_de_champ.find(&:referentiel?) }
   let(:referentiel) { create(:api_referentiel, :exact_match) }
 
   subject { render_inline(component) }
@@ -62,8 +62,10 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         end
 
         context 'when not selected' do
-          it 'shows only public text and textarea as well as private text' do
+          it 'shows public text and textarea as well as private text' do
             expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['text', 'textarea', 'private text'])
+            expect(subject).to have_selector('optgroup[label="Champs"]')
+            expect(subject).to have_selector('optgroup[label="Annotations privées"]')
           end
         end
 
@@ -170,6 +172,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
       context 'when not selected' do
           it 'shows only private text' do
             expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['private text'])
+            expect(subject).not_to have_selector('optgroup[label="Champs"]')
+            expect(subject).not_to have_selector('optgroup[label="Annotations privées"]')
           end
         end
     end
