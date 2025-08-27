@@ -78,5 +78,64 @@ RSpec.describe Crisp::APIService do
         expect(result.success.dig(:data, :session_id)).to eq(session_id)
       end
     end
+
+    describe '#send_message' do
+      let(:session_id) { 'session_310b13c9-f115-42f5-bd83-f5e22b8e50dd' }
+      let(:body) do
+        {
+          type: 'text',
+          from: 'user',
+          origin: 'email',
+          content: 'Hey there! Need help?',
+          fingerprint: 12345,
+          user: { type: 'participant' }
+        }
+      end
+
+      context 'when API call succeeds' do
+        before do
+          stub_request(:post, "https://api.crisp.chat/v1/website/#{website_id}/conversation/#{session_id}/message")
+            .with(headers: { 'X-Crisp-Tier' => 'plugin', 'Authorization': /Basic / })
+            .and_return(
+              body: { "error" => false, "reason" => "dispatched", "data" => { "fingerprint" => 12345 } }.to_json
+            )
+        end
+
+        it 'calls API with correct parameters' do
+          result = service.send_message(session_id: session_id, body: body)
+
+          expect(result).to be_success
+          expect(result.success.dig(:data, :fingerprint)).to eq(12345)
+        end
+      end
+    end
+
+    describe '#update_conversation_meta' do
+      let(:session_id) { 'session_310b13c9-f115-42f5-bd83-f5e22b8e50dd' }
+      let(:body) do
+        {
+          email: 'test@example.com',
+          segments: ['lost'],
+          ip: '82.12.34.45',
+          subject: 'the subject'
+        }
+      end
+
+      context 'when API call succeeds' do
+        before do
+          stub_request(:patch, "https://api.crisp.chat/v1/website/#{website_id}/conversation/#{session_id}/meta")
+            .with(headers: { 'X-Crisp-Tier' => 'plugin', 'Authorization': /Basic / })
+            .and_return(
+              body: { "error" => false, "reason" => "updated", "data" => {} }.to_json
+            )
+        end
+
+        it 'calls API with correct parameters' do
+          result = service.update_conversation_meta(session_id: session_id, body: body)
+
+          expect(result).to be_success
+        end
+      end
+    end
   end
 end
