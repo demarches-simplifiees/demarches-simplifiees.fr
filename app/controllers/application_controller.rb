@@ -369,25 +369,13 @@ class ApplicationController < ActionController::Base
   end
 
   def crisp_config
-    crisp = Rails.application.secrets.crisp
-
-    nb_demarches_by_state = if current_administrateur.present?
-      current_administrateur.procedures.group(:aasm_state).count
-    else
-      {}
-    end
+    enabled = ENV.enabled?("CRISP")
 
     {
-      key: crisp[:client_key],
-      enabled: crisp[:enabled],
+      enabled:,
+      websiteId: enabled ? ENV.fetch("CRISP_WEBSITE_ID") : nil,
       administrateur: {
-        email: current_user&.email,
-        DS_SIGN_IN_COUNT: current_user&.sign_in_count,
-        DS_CREATED_AT: current_administrateur&.created_at,
-        DS_ID: current_administrateur&.id,
-        DS_NB_DEMARCHES_BROUILLONS: nb_demarches_by_state['brouillon'] || 0,
-        DS_NB_DEMARCHES_ACTIVES: nb_demarches_by_state['publiee'] || 0,
-        DS_NB_DEMARCHES_ARCHIVES: nb_demarches_by_state['close'] || 0
+        email: current_user&.email
       }
     }
   end
