@@ -122,4 +122,38 @@ describe Champs::ReferentielChamp, type: :model do
       end
     end
   end
+
+  describe 'data=' do
+    subject { referentiel_champ.update(data:) }
+    context 'when exact_match' do
+      let(:data) { { "ok" => "ko" } }
+      it 'supers' do
+        expect { subject }.to change { referentiel_champ.reload.data }.to(eq(data))
+      end
+    end
+
+    context 'when autocomplete' do
+      let(:datasource) { '$.deep.nested' }
+      let(:referentiel) { create(:api_referentiel, :autocomplete, datasource: datasource) }
+      let(:raw_data) { { "ok" => "ko" } }
+      let(:message_encryptor_service) { MessageEncryptorService.new }
+      let(:data) { message_encryptor_service.encrypt_and_sign(raw_data, purpose: :storage, expires_in: 1.hour) }
+
+      context 'when data is present' do
+        it 'decrypts data and rewrap object in <datasource> as payload' do
+          expect { subject }
+            .to change { referentiel_champ.reload.data }
+            .from(nil)
+            .to(referentiel_champ.send(:rewrap_selected_object_in_datasource, raw_data))
+        end
+      end
+
+      context 'when data is not present' do
+        let(:data) { nil }
+        it 'void data' do
+          expect { subject }.not_to change { referentiel_champ.reload.data }
+        end
+      end
+    end
+  end
 end

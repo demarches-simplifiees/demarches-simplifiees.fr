@@ -71,6 +71,9 @@ class RootController < ApplicationController
                 "option C"
               ]
             type_de_champ.save
+          elsif type_de_champ.referentiel?
+            type_de_champ.referentiel = Referentiels::APIReferentiel.new(url: ENV['ALLOWED_API_DOMAINS_FROM_FRONTEND'].split(',').last, mode: :autocomplete, name: SecureRandom.uuid)
+            type_de_champ.save
           end
         end
       end

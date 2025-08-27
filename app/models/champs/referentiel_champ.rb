@@ -5,6 +5,9 @@ class Champs::ReferentielChamp < Champ
            :referentiel_mapping_displayable,
            :referentiel_mapping_prefillable_with_stable_id,
            to: :type_de_champ
+
+  delegate :exact_match?, :autocomplete?, to: :referentiel, allow_nil: true
+
   before_save :clear_previous_result, if: -> { external_id_changed? }
 
   validates_with ReferentielChampValidator, if: :validate_champ_value?
@@ -25,8 +28,22 @@ class Champs::ReferentielChamp < Champ
     end
   end
 
+  def data=(data)
+    if exact_match? || data.blank?
+      super(data)
+    else
+      message_encryptor_service = MessageEncryptorService.new
+      data = message_encryptor_service.decrypt_and_verify(data, purpose: :storage)
+      data = rewrap_selected_object_in_datasource(data)
+
+      super(data)
+      cast_displayable_values(data.with_indifferent_access)
+      propagate_prefill(data)
+    end
+  end
+
   def uses_external_data?
-    true
+    exact_match?
   end
 
   def should_ui_auto_refresh?
@@ -50,6 +67,18 @@ class Champs::ReferentielChamp < Champ
       else
         champ.stable_id.in?(elligible_stable_ids)
       end
+    end
+  end
+
+  def selected_key
+    value
+  end
+
+  def selected_items
+    if selected_key.present?
+      [{ label: selected_key, value: selected_key, data: value_json }]
+    else
+      []
     end
   end
 
@@ -164,5 +193,17 @@ class Champs::ReferentielChamp < Champ
   def update_prefillable_champ(type_de_champ:, raw_value:, row_id: nil)
     prefill_champ = dossier.champ_for_update(type_de_champ, row_id:, updated_by: :api)
     prefill_champ.update(cast_value_for_type_de_champ(raw_value, type_de_champ))
+  end
+
+  def rewrap_selected_object_in_datasource(data)
+    full_jsonpath = type_de_champ.referentiel.datasource
+    path_keys_separated_with_dot = full_jsonpath.split("$.")[1]
+    path_keys = path_keys_separated_with_dot.split('.')
+    reversed_keys_to_rebuild_datasource = path_keys.reverse
+
+    # using reversed keys + reduce allows us to rebuild the original JSON structure
+    reversed_keys_to_rebuild_datasource.reduce([data]) do |accumulator, key|
+      { key => accumulator }
+    end
   end
 end
