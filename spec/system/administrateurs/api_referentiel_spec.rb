@@ -306,6 +306,76 @@ describe 'Referentiel API:' do
     end
   end
 
+  context "annotation" do
+    let!(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, types_de_champ_private:, zones: [zone], service:, administrateurs: [administrateur], instructeurs: [instructeur]) }
+    let(:public_referentiel_stable_id) { 2 }
+    let(:private_referentiel_stable_id) { 4 }
+    let(:types_de_champ_public) do
+      [
+        {
+          type: :referentiel,
+          libelle: 'Numero de bâtiment public',
+          stable_id: public_referentiel_stable_id,
+          referentiel: create(:api_referentiel, :exact_match, :with_exact_match_response, url: "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/")
+        }
+      ]
+    end
+    let(:types_de_champ_private) do
+      [
+        { type: :text, libelle: 'prefilled by referentiel.public (with $.statut)', stable_id: prefill_by_public_referentiel_stable_id }
+      ]
+    end
+    let(:prefill_by_public_referentiel_stable_id) { 8 }
+
+    scenario 'prefill annotation : Setup as admin, fill in as user, view it as instructeur', js: true, vcr: true do
+      visit champs_admin_procedure_path(procedure)
+      click_on('Configurer le champ')
+
+      # configure connection
+      VCR.use_cassette('referentiel/rnb_as_admin') do
+        click_on('Étape suivante')
+        expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+      end
+
+      custom_check("status")
+      ## fill a custom libelle to display to instructeur
+      fill_in("type_de_champ_referentiel_mapping__.point.coordinates_libelle", with: "Coordonées du point")
+
+      # submit and check values
+      click_on('Étape suivante')
+      expect(page).to have_content("La configuration du mapping a bien été enregistrée")
+      referentiel_tdc = Referentiel.first.types_de_champ.first
+      expect(referentiel_tdc.referentiel_mapping.dig("$.status", "prefill")).to eq("1")
+      expect(page).to have_content("$.status")
+
+      # prefill an annotation
+      page.find("select[name='type_de_champ[referentiel_mapping][$.status][prefill_stable_id]']")
+        .select('prefilled by referentiel.public (with $.statut)')
+      ##
+      # choose display_usager display_instructeur
+      ###
+      # choose string value for instructeur
+      custom_check('point-type-display_instructeur')
+      click_on("Valider")
+
+      publish(procedure)
+      commencer(procedure)
+
+      dossier = Dossier.last
+      # success search
+      VCR.use_cassette('referentiel/rnb_as_user') do
+        fill_in("Numero de bâtiment", with: "PG46YY6YWCX8")
+        perform_enqueued_jobs do
+          expect(page).to have_content("Référence trouvée : PG46YY6YWCX8")
+          dossier.reload
+          # check prefill values in db
+          expect(dossier.project_champs_private_all.find { it.stable_id.to_s == prefill_by_public_referentiel_stable_id.to_s }.value).to eq("constructed")
+        end
+        click_on("Déposer le dossier")
+      end
+    end
+  end
+
   private
 
   def publish(procedure)
