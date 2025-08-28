@@ -3,7 +3,6 @@
 class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
-    referentiel: :referentiel_type_de_champ,
     engagement_juridique: :engagement_juridique_type_de_champ,
     cojo: :cojo_type_de_champ
   }
