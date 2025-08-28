@@ -111,3 +111,17 @@ Exemple d'une série de commits :
 - un commit pour du renommage,
 - un commit pour un ajout de méthode + test,
 - un commit pour l'interface utilisateur
+
+### Signatures de commits
+
+Des considérations de sécurité impliquent que les commits doivent être [(co-)signés](https://docs.github.com/fr/authentication/managing-commit-signature-verification/signing-commits) afin d’être incorporés dans `main`.
+
+Pour les développeurs de la core-team:
+
+- *tous* les commits doivent être signés
+- la signature doit être faite avec une clé GPG exclusivement
+
+Pour les contributeurs externes, une co-signature par un(e) membre de l’équipe lors de la relecture est suffisante.
+
+> [!NOTE]
+> Pour des raisons pratiques, la branche sera éventuellement amendée / push-forcée sur le fork du contributeur, ce qui implique d’accorder un droit en écriture sur ce fork au relecteur, ou de recréer une branche avec les commits signés, puis une nouvelle PR sur cette branche.
