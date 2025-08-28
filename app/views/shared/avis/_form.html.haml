@@ -79,7 +79,7 @@
     - if batch_action
       %ul.fr-btns-group.fr-btns-group--inline-md
         %li
-          %button.fr-btn.fr-btn--secondary{ aria: { controls: 'modal-avis-batch' }, "data-fr-js-modal-button" => "true" }
+          %button.fr-btn.fr-btn--secondary{ aria: { controls: 'modal-avis-batch' }, "data-fr-js-modal-button" => "true", type: 'button' }
             Annuler
         %li
           = f.submit "Envoyer la demande d’avis", class: 'fr-btn'

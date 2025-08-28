@@ -211,6 +211,14 @@ describe 'BatchOperation a dossier:', js: true do
       expect(page).to have_content("Le champ « Email » est invalide : mljkzmljz")
 
       fill_in('avis_emails', with: 'test@test.com')
+      within('form#new_avis') { click_on "Annuler" }
+
+      expect(page).not_to have_content("Information : Une action de masse est en cours")
+
+      click_on "Autres actions multiples"
+      click_on "Demander un avis externe"
+
+      fill_in('avis_emails', with: 'test@test.com')
       click_on "Envoyer la demande d’avis"
       # ensure batched dossier is disabled
       expect(page).to have_selector("##{checkbox_id}[disabled]")
