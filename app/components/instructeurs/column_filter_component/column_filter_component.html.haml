@@ -17,7 +17,7 @@
       data: { autosubmit_target: 'submitter' }
     }
 
-  = render Instructeurs::ColumnFilterValueComponent.new(column:, form:)
+  = render Instructeurs::ColumnFilterValueComponent.new(column:, form:, instructeur_procedure: @instructeur_procedure)
 
   = form.hidden_field :statut, value: statut
   = form.submit t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'

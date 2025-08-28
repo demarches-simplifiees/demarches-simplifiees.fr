@@ -68,6 +68,8 @@ describe GroupeInstructeur, type: :model do
         expect(instructeur.assign_to.last.daily_email_notifications_enabled).to be_truthy
       end
     end
+
+    # TODO: test d'actualisation des notifs 'all' sur les dossiers du nouvel instructeur
   end
 
   describe "#remove" do

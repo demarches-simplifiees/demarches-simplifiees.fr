@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnFilterComponent < ApplicationComponent
-  attr_reader :procedure, :procedure_presentation, :statut, :column
+  attr_reader :procedure, :procedure_presentation, :instructeur_procedure, :statut, :column
 
-  def initialize(procedure_presentation:, statut:, column: nil)
+  def initialize(procedure_presentation:, statut:, instructeur_procedure:, column: nil)
     @procedure_presentation = procedure_presentation
+    @instructeur_procedure = instructeur_procedure
     @procedure = procedure_presentation.procedure
     @statut = statut
     @column = column
