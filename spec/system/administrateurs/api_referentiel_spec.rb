@@ -208,4 +208,13 @@ describe 'Referentiel API:' do
       end
     end
   end
+
+  scenario 'setup back/forth auth', js: true do
+    visit champs_admin_procedure_path(procedure)
+    click_on('Configurer le champ')
+    expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
+    find("#referentiel_url").fill_in(with: 'google.com')
+    expect(page).to have_content("Le champ « URL de l'API » n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
+    expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
+  end
 end
