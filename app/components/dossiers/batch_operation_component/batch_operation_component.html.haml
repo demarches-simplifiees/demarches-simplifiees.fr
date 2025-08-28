@@ -52,7 +52,14 @@
                   %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-multiple-commentaire-batch' }, title: t('utils.modal_close_alt') }= t('utils.modal_close')
                 .fr-modal__content
                   %h1#modal-multiple-commentaire-batch.fr-modal__title
-                    %span.fr-icon-arrow-right-line.fr-icon--lg>
-                    Envoyer un message aux usagers
+                    %span#modal-multiple-commentaire-batch-title.fr-icon-arrow-right-line.fr-icon--lg>
 
-                  = render partial: "instructeurs/dossiers/multiple_commentaire_form", locals: {url: create_multiple_commentaire_instructeur_batch_operations_path(procedure_id: procedure.id), commentaire: Commentaire.new, procedure: procedure, dossier_ids: @ids }
+                  #modal-multiple-commentaire-batch-form
+                    = render partial: "instructeurs/dossiers/multiple_commentaire_form", locals: {url: create_multiple_commentaire_instructeur_batch_operations_path(procedure_id: procedure.id), commentaire: Commentaire.new, procedure: procedure, dossier_ids: @ids }
+
+                  #modal-multiple-commentaire-batch-warning.hidden
+                    .fr-alert.fr-alert--warning
+                      %strong.fr-alert__text
+                        L'envoi d'un message groupé est limité à 500 usagers.
+                      %br
+                        Veuillez restreindre le nombre d'usagers sélectionnés.

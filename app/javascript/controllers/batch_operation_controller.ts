@@ -239,6 +239,30 @@ export class BatchOperationController extends ApplicationController {
       modalForm.appendChild(input);
     });
 
+    // Injecter le nombre de dossiers dans le titre de la modale d'envoi de message en masse
+    if (formSelector == 'create_multiple_commentaire') {
+      const dossiersCount = ids.length;
+      const title = document.querySelector(
+        '#modal-multiple-commentaire-batch-title'
+      );
+      if (title) {
+        title.textContent = `Envoyer un message à ${dossiersCount} usager${dossiersCount > 1 ? 's' : ''}`;
+      }
+      // Afficher un avertissement si plus de 500 destinataires
+      if (dossiersCount > 500) {
+        const warning = document.querySelector(
+          '#modal-multiple-commentaire-batch-warning'
+        );
+        const multipleCommentaireBatchForm = document.querySelector(
+          '#modal-multiple-commentaire-batch-form'
+        );
+        if (warning && multipleCommentaireBatchForm) {
+          warning.classList.remove('hidden');
+          multipleCommentaireBatchForm.classList.add('hidden');
+        }
+      }
+    }
+
     // Optionnel : cocher not confidentiel par défaut
     const confidentialRadio = document.querySelector<HTMLInputElement>(
       '#confidentiel_false'

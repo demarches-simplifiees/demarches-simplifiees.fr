@@ -264,9 +264,12 @@ describe 'BatchOperation a dossier:', js: true do
 
       visit instructeur_procedure_path(procedure, statut: 'suivis')
 
-      checkbox_id = dom_id(BatchOperation.new, "checkbox_#{dossier_1.id}")
-      # batch one dossier
-      check(checkbox_id)
+      checkbox_id_1 = dom_id(BatchOperation.new, "checkbox_#{dossier_1.id}")
+      checkbox_id_2 = dom_id(BatchOperation.new, "checkbox_#{dossier_2.id}")
+
+      # batch two dossiers
+      check(checkbox_id_1)
+      check(checkbox_id_2)
       expect(page).to have_button("Autres actions multiples")
 
       click_on "Autres actions multiples"
@@ -284,11 +287,13 @@ describe 'BatchOperation a dossier:', js: true do
 
       click_on "Envoyer le message"
 
+      expect(page).to have_content("Envoyer un message à 2 usagers")
       fill_in('Votre message', with: "Bonjour,\r\nÊtes-vous disponible pour un rendez-vous en visio la semaine prochaine ?\r\nCordialement")
       click_on "Envoyer le message"
 
-      # ensure batched dossier is disabled
-      expect(page).to have_selector("##{checkbox_id}[disabled]")
+      # ensure batched dossiers are disabled
+      expect(page).to have_selector("##{checkbox_id_1}[disabled]")
+      expect(page).to have_selector("##{checkbox_id_2}[disabled]")
       # ensure Batch is created
       expect(BatchOperation.count).to eq(1)
       # check a11y with disabled checkbox
@@ -296,7 +301,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # ensure alert is present
       expect(page).to have_content("Information : Une action de masse est en cours")
-      expect(page).to have_content("Un message est en cours d’envoi pour 1 dossier")
+      expect(page).to have_content("Un message est en cours d’envoi pour 0/2 dossiers")
 
       # ensure data-controller="turbo-poll" is present
       expect(page).to have_selector('[data-controller~="turbo-poll"]')
@@ -309,7 +314,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # ensure alert updates when jobs are run
       expect(page).to have_content("L’action de masse est terminée")
-      expect(page).to have_content("Un message a été envoyé pour 1 dossier")
+      expect(page).to have_content("Un message a été envoyé pour 2/2 dossiers")
 
       # ensure data-controller="turbo-poll" is no longer present
       expect(page).not_to have_selector('[data-controller~="turbo-poll"]')
