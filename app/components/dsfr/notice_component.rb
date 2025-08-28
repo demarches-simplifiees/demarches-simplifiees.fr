@@ -15,7 +15,8 @@ class Dsfr::NoticeComponent < ApplicationComponent
   end
 
   def options
-    data_attributes.merge(class: "fr-notice fr-notice--#{@state}").merge(notice_data_attributes)
+    attrs = notice_data_attributes
+    attrs.merge(class: class_names(attrs[:class], "fr-notice", "fr-notice--#{@state}"))
   end
 
   def closable?
