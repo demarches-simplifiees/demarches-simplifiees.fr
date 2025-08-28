@@ -62,6 +62,17 @@ expect(Service).to receive(:do_stuff).and_return(true)
 expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
 ```
 
+### Utilisation de LLM
+
+Les LLM sont autorisés comme aide à la génération de code. Cependant, garder en tête que **le développeur qui commit le code en reste le responsable**. Il convient donc, comme pour tout code de respecter l’ensemble des bonnes pratiques implicites (inéhrentes au métier de développeur) et mentionnées dans ce documents, notamment de :
+
+- vous assurer que vous comprenez l’intégralité du code et ses implications ;
+- le code est pertinent (y compris pour les tests) ;
+- respecte les bonnes pratiques usuelles (ie. respecte les conventions de la codebase, pas de code ou duplication inutile…).
+- s’assurer que le code est compatible avec [notre licence AGPL](/LICENSE.txt)
+
+Autrement dit, le LLM n’est qu’un outil, et il convient d’être tout aussi fier et responsable du code généré que pour n’importe quel code que vous signez.
+
 ## Bonnes pratiques : sur les PR
 
 - Toujours mettre un message décrivant l'objet de la PR
