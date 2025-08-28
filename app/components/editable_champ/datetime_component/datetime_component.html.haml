@@ -1,5 +1,5 @@
 = @form.datetime_field :value,
-  input_opts(id: @champ.input_id,
+  input_opts(id: @champ.focusable_input_id,
   aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
   value: formatted_value_for_datetime_locale,
   min: min_date,

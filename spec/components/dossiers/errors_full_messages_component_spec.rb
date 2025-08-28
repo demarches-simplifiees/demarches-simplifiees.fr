@@ -45,23 +45,44 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
       end
 
       context 'when champ is epci' do
-        let(:types_de_champ_public) { [{ type: :epci }] }
-        it 'focuses on focusable_input_id' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}")
-        end
-      end
+       let(:types_de_champ_public) { [{ type: :epci, mandatory: true }] }
+       before { champ.update(attributes) }
+
+       context 'when nothing is filled' do
+         let(:attributes) { { value: nil, value_json: nil } }
+         it 'focuses on focusable_input_id' do
+           expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:value)}", count: 1)
+         end
+       end
+
+       context 'when departement is not selected' do
+         let(:attributes) { { value: nil, value_json: { code_departement: nil, name: nil } } }
+
+         it 'focuses on focusable_input_id' do
+           expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:value)}", count: 1)
+         end
+       end
+
+       context 'when name is not selected' do
+         let(:attributes) { { value: nil, value_json: { code_departement: '95', name: nil } } }
+
+         it 'focuses on focusable_input_id' do
+           expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:value)}", count: 1)
+         end
+       end
+     end
 
       context 'when champ is drop_down_list as radio' do
         let(:types_de_champ_public) { [{ type: :drop_down_list, options: %w[first_option other ones] }] }
         it 'focuses on focusable_input_id (first option)' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.input_id}-#{Digest::MD5.hexdigest("first_option")}")
+          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}")
         end
       end
 
       context 'when champ is drop_down_list as combobox' do
         let(:types_de_champ_public) { [{ type: :drop_down_list, options: %w[a b c d e f] }] }
         it 'focuses on focusable_input_id (first option)' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.input_id}")
+          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}")
         end
       end
 
@@ -88,10 +109,45 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
       context 'when champ is referentiel required and not filled' do
         let(:referentiel) { create(:api_referentiel, :exact_match) }
         let(:types_de_champ_public) { [{ type: :referentiel, referentiel:, mandatory: true }] }
-        before { champ.update(external_id: 'kthxbye') }
 
-        it 'focuses on focusable_input_id' do
-          expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}", count: 1)
+        context 'when champ is referentiel and not filled' do
+          before { champ.update(external_id: nil) }
+          it 'focuses on focusable_input_id' do
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}", count: 1)
+          end
+        end
+
+        context 'when champ is referentiel and filled' do
+          before { champ.update(external_id: 'kthxbye') }
+
+          it 'focuses on focusable_input_id' do
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id}", count: 1)
+          end
+        end
+      end
+
+      context 'when champ is address not in ban' do
+        let(:types_de_champ_public) { [{ type: :address, mandatory: true }] }
+        let(:not_in_ban) { 'true' }
+        before do
+          champ.update(value_json: { not_in_ban:, country_code: })
+        end
+
+        context 'when country_code is FR' do
+          let(:country_code) { 'FR' }
+          it 'focuses on focusable_input_id' do
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:street_address)}", count: 1)
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:commune_name)}", count: 1)
+          end
+        end
+        context 'when not in ban and country_code is not FR' do
+          let(:country_code) { 'ES' }
+
+          it 'focuses on focusable_input_id' do
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:street_address)}", count: 1)
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:city_name)}", count: 1)
+            expect(subject).to have_link(champ.libelle, href: "##{champ.focusable_input_id(:postal_code)}", count: 1)
+          end
         end
       end
     end

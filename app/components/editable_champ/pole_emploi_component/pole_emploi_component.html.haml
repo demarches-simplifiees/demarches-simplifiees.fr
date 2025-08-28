@@ -1,8 +1,8 @@
 .pole-emploi-inputs
   %div
-    = @form.label :identifiant, t('.identifiant_label'), for: @champ.input_id
+    = @form.label :identifiant, t('.identifiant_label'), for: @champ.focusable_input_id
     %p.notice= t('.identifiant_notice')
     = @form.text_field :identifiant,
       required: @champ.required?,
       aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
-      class: "width-33-desktop", id: @champ.input_id
+      class: "width-33-desktop", id: @champ.focusable_input_id

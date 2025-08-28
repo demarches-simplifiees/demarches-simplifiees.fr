@@ -2,9 +2,30 @@
 
 class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
-
+  delegate :departement?, to: :@champ
   def dsfr_champ_container
     :fieldset
+  end
+
+  # small trick here.
+  # EPCI champ is a compound input. one input for departement, one for epci.
+  # focusable error does not point to the same input.
+  # if no departement selected, focusable error points to departement input
+  # if a departement is selected, focusable error points to epci input
+  def focusable_departement_input_id
+    if !departement?
+      @champ.focusable_input_id(:value) # must be focusable when no departement is selected
+    else
+      @champ.focusable_input_id(:code_departement) # otherwise, use same as error name
+    end
+  end
+
+  def focusable_epci_input_id
+    if departement?
+      @champ.focusable_input_id(:value)
+    else
+      @champ.focusable_input_id(:not_visible_do_not_care)
+    end
   end
 
   private

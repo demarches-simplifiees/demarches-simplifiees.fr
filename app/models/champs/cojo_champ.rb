@@ -40,7 +40,7 @@ class Champs::COJOChamp < Champ
     "#{input_id}-accreditation_birthdate"
   end
 
-  def focusable_input_id
+  def focusable_input_id(attribute = :value)
     accreditation_number_input_id
   end
 

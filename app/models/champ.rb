@@ -177,10 +177,6 @@ class Champ < ApplicationRecord
     html_id
   end
 
-  def input_id
-    "#{html_id}-input"
-  end
-
   # A predictable string to use when generating an input name for this champ.
   #
   # Rail's FormBuilder can auto-generate input names, using the form "dossier[champs_public_attributes][5]",
@@ -234,8 +230,8 @@ class Champ < ApplicationRecord
     end
   end
 
-  def focusable_input_id
-    input_id
+  def focusable_input_id(attribute = :value)
+    [input_id, attribute].compact.join('-')
   end
 
   def user_buffer_changes?
@@ -309,5 +305,13 @@ class Champ < ApplicationRecord
     def initialize(method)
       super(":#{method} not implemented")
     end
+  end
+
+  private
+
+  # The input id is used to generate the HTML id of the input element.
+  # It is used to link the label to the input, and for ARIA attributes.
+  def input_id
+    "#{html_id}-input"
   end
 end

@@ -65,18 +65,6 @@ class Champs::EpciChamp < Champs::TextChamp
     end
   end
 
-  def code_departement_input_id
-    "#{input_id}-code_departement"
-  end
-
-  def epci_input_id
-    "#{input_id}-epci"
-  end
-
-  def focusable_input_id
-    code_departement_input_id
-  end
-
   private
 
   def on_departement_change
@@ -95,7 +83,6 @@ class Champs::EpciChamp < Champs::TextChamp
 
   def external_id_in_departement_epci_codes
     return if external_id.in?(APIGeoService.epcis(code_departement).pluck(:code))
-
     errors.add(:external_id, :not_in_departement_epci_codes)
   end
 

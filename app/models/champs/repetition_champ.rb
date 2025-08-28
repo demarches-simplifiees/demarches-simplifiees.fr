@@ -19,8 +19,8 @@ class Champs::RepetitionChamp < Champ
     dossier.repetition_remove_row(type_de_champ, row_id, updated_by:)
   end
 
-  def focusable_input_id
-    rows.last&.first&.focusable_input_id
+  def focusable_input_id(attribute = :value)
+    rows.last&.first&.focusable_input_id(attribute)
   end
 
   def discarded?
