@@ -34,12 +34,14 @@ class GroupeInstructeur < ApplicationRecord
   scope :active, -> { where(closed: false) }
   scope :closed, -> { where(closed: true) }
   scope :for_dossiers, -> (dossiers) { joins(:dossiers).where(dossiers: dossiers).distinct(:id) }
+
   def add(instructeur)
     return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
 
     default_notification_settings = instructeur.notification_settings(procedure_id)
     instructeur.assign_to.create(groupe_instructeur: self, **default_notification_settings)
+    create_dossier_depose_notifications(self, instructeur)
   end
 
   def remove(instructeur)
@@ -134,4 +136,12 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   serialize :routing_rule, coder: LogicSerializer
+
+  def create_dossier_depose_notifications(groupe_instructeur, instructeur)
+    @dossiers_en_construction_non_suivis ||= groupe_instructeur.dossiers.en_construction.by_statut('a-suivre')
+
+    @dossiers_en_construction_non_suivis.each do |dossier|
+      DossierNotification.create_notification(dossier, :dossier_depose, instructeur:)
+    end
+  end
 end

@@ -254,7 +254,6 @@ module Users
 
       if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         @dossier.passer_en_construction!
-        DossierNotification.create_notification(@dossier, :dossier_depose)
         redirect_to merci_dossier_path(@dossier)
       else
         render :brouillon
