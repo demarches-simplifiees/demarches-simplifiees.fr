@@ -10,6 +10,20 @@ class Referentiels::StepperComponent < ViewComponent::Base
     @step_component = step_component
   end
 
+  def back_link
+    opts = { class: 'fr-link fr-icon-arrow-left-line fr-link--icon--left fr-icon--sm' }
+
+    if type_de_champ.public?
+      link_to "Champs du formulaire", champs_admin_procedure_path(procedure), opts
+    else
+      link_to "Annotations privées", annotations_admin_procedure_path(procedure), opts
+    end
+  end
+
+  def title
+    "Configuration #{type_de_champ.public? ? 'du champ' : 'de l\'annotation privée'} « #{type_de_champ.libelle} »"
+  end
+
   def step_state
     "Étape #{current_step} sur #{step_count}"
   end
