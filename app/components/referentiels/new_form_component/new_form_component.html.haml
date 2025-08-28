@@ -53,11 +53,10 @@
 
       %div{ data: { controller: 'hide-target'} }
         .fr-checkbox-group.fr-mb-3w
-          = form.check_box :authentication_method, { checked: @referentiel.authentication_method.present?, class: 'fr-checkbox', data: { 'hide-target_target': 'source' } }
+          = form.check_box :authentication_method, { checked: @referentiel&.authentication_by_header_token?, class: 'fr-checkbox', data: { 'hide-target_target': 'source' } }, 'header_token', '0'
           = form.label :authentication_method, 'Ajouter une méthode d’authentification', class: 'fr-label'
 
-        %div{ data: { 'hide-target_target' => 'toHide' }, class: class_names('fr-hidden': !@referentiel.authentication_method.present?) }
-          = form.hidden_field :authentication_method, value: 'header_token'
+        %div{ data: { 'hide-target_target' => 'toHide' }, class: class_names('fr-hidden': !@referentiel&.authentication_by_header_token?) }
           = render Dsfr::InputComponent.new(form:, attribute: "authentication_data[header]", **authentication_data_header_opts)
           = render Dsfr::InputComponent.new(form:, attribute: "authentication_data[value]", **authentication_data_header_value_opts) do |c|
             - c.with_describedby do
