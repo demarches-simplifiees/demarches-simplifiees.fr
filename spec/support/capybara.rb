@@ -82,6 +82,12 @@ RSpec.configure do |config|
     }
 
     driven_by(:playwright, options:)
+
+    if ENV['LOG_WEB_CONSOLE'].present?
+      Capybara.current_session.driver.with_playwright_page do |page|
+        page.on("console", -> (msg) { puts msg.text })
+      end
+    end
   end
 
   config.before(:each, type: :system, chrome: true) do
