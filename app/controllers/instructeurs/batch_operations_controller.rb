@@ -62,6 +62,42 @@ module Instructeurs
       end
     end
 
+    def create_multiple_commentaire
+      batch = BatchOperation.safe_create!(batch_operation_multiple_commentaire_params)
+      commentaire = Commentaire.new(multiple_commentaire_params)
+
+      respond_to do |format|
+        format.turbo_stream do
+          if batch.blank? || commentaire.errors.any?
+            @ids = Array(params.dig(:batch_operation, :dossier_ids)).flat_map do |value|
+              value.is_a?(String) ? value.split(',') : value
+            end.compact_blank
+
+            render turbo_stream: turbo_stream.replace("modal-multiple-commentaire-batch-form", partial: "instructeurs/dossiers/multiple_commentaire_form",
+              locals: {
+                url:  create_batch_multiple_commentaire_instructeur_batch_operations_path(procedure_id: @procedure.id),
+                commentaire: commentaire,
+                procedure: @procedure,
+                dossier_ids: @ids
+              })
+          else
+            render turbo_stream: turbo_stream.append(
+              "contenu",
+              partial: "shared/avis/redirect_and_close_modal",
+              locals: {
+                redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis')
+              }
+            )
+          end
+        end
+
+        format.html do
+          flash[:alert] = "Le message n'a pas été envoyé aux usagers. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
+        end
+      end
+    end
+
     private
 
     def batch_operation_params
@@ -87,6 +123,21 @@ module Instructeurs
         :invite_linked_dossiers,
         :question_label,
         emails: []
+      )
+    end
+
+    def batch_operation_multiple_commentaire_params
+      params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
+        batch_params[:operation] = 'create_multiple_commentaire'
+        batch_params[:instructeur] = current_instructeur
+        batch_params.merge!(multiple_commentaire_params)
+      end
+    end
+
+    def multiple_commentaire_params
+      params.require(:commentaire).permit(
+        :body,
+        :piece_jointe
       )
     end
 
