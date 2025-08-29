@@ -2,7 +2,7 @@
 
 class Champs::PoleEmploiChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/pole-emploi-input-validation.middleware.ts
-  store_accessor :value_json, :identifiant
+  store :external_id, accessors: [:identifiant], coder: JSON
 
   def uses_external_data?
     true
@@ -16,9 +16,5 @@ class Champs::PoleEmploiChamp < Champs::TextChamp
       identifiant,
       procedure.api_particulier_sources
     ).to_params
-  end
-
-  def external_id
-    { identifiant: identifiant }.to_json if identifiant.present?
   end
 end

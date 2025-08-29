@@ -2,7 +2,7 @@
 
 class Champs::MesriChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/mesri-input-validation.middleware.ts
-  store_accessor :value_json, :ine
+  store :external_id, accessors: [:ine], coder: JSON
 
   def uses_external_data?
     true
@@ -16,9 +16,5 @@ class Champs::MesriChamp < Champs::TextChamp
       ine,
       procedure.api_particulier_sources
     ).to_params
-  end
-
-  def external_id
-    { ine: ine }.to_json if ine.present?
   end
 end
