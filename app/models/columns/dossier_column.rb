@@ -34,10 +34,8 @@ class Columns::DossierColumn < Column
           .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
         dossiers.filter_by_datetimes(column, dates)
-      elsif column == "state" && values.include?("pending_correction")
-        dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-      elsif column == "state" && values.include?("en_construction")
-        dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+      elsif column == "state"
+        return filtered_dossiers_ids_for_states(dossiers, values)
       elsif type == :integer
         dossiers.where("dossiers.#{column} IN (?)", values.filter_map { Integer(_1) rescue nil })
       else
@@ -82,5 +80,25 @@ class Columns::DossierColumn < Column
         .joins(:dossier_notifications)
         .where(dossier_notifications: { notification_type: values })
     end.ids
+  end
+
+  def filtered_dossiers_ids_for_states(dossiers, states)
+    filtered_dossiers_ids = []
+
+    # pending_correction and en_construction needs to be handled differently than other states
+    if states.include?("pending_correction")
+      filtered_dossiers_ids << dossiers.joins(:corrections).where(corrections: DossierCorrection.pending).ids
+    end
+    if states.include?("en_construction")
+      filtered_dossiers_ids << dossiers.en_construction.includes(:corrections).where.not(corrections: DossierCorrection.pending).ids
+    end
+
+    other_states = states - ["pending_correction", "en_construction"]
+
+    if other_states.any?
+      filtered_dossiers_ids << dossiers.where("dossiers.#{column} IN (?)", other_states).ids
+    end
+
+    filtered_dossiers_ids.flatten.uniq
   end
 end
