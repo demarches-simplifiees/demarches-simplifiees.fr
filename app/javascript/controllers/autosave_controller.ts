@@ -34,9 +34,11 @@ export class AutosaveController extends ApplicationController {
   #needsRetry = false;
   #pendingPromiseCount = 0;
   #spinnerTimeoutId?: ReturnType<typeof setTimeout>;
+  #lastSerializedPayload?: string;
 
   connect() {
     this.#latestPromise = Promise.resolve();
+    this.#lastSerializedPayload = undefined;
     this.onGlobal('autosave:retry', () => this.didRequestRetry());
     this.on('change', (event) => this.onChange(event));
     this.on('input', (event) => this.onInput(event));
@@ -45,6 +47,7 @@ export class AutosaveController extends ApplicationController {
   disconnect() {
     this.#abortController?.abort();
     this.#latestPromise = Promise.resolve();
+    this.#lastSerializedPayload = undefined;
   }
 
   onClickRetryButton(event: Event) {
@@ -167,6 +170,7 @@ export class AutosaveController extends ApplicationController {
     this.#needsRetry = true;
     this.#pendingPromiseCount -= 1;
     this.globalDispatch('autosave:error', { error });
+    this.#lastSerializedPayload = undefined;
   }
 
   private enqueueAutouploadRequest(target: HTMLInputElement, file: File) {
@@ -231,13 +235,23 @@ export class AutosaveController extends ApplicationController {
 
     this.#pendingPromiseCount++;
 
+    const overridedMethod = form.dataset.turboMethod?.toUpperCase() || 'PATCH';
+    const serializedPayload = this.serializePayload(
+      formData,
+      form.action,
+      overridedMethod
+    );
+
+    if (this.#lastSerializedPayload === serializedPayload) {
+      return Promise.resolve(); // do not send the same data twice
+    }
+
+    this.#lastSerializedPayload = serializedPayload;
+
     return httpRequest(form.action, {
       method: 'post',
       body: formData,
-      headers: {
-        'x-http-method-override':
-          form.dataset.turboMethod?.toUpperCase() || 'PATCH'
-      },
+      headers: { 'x-http-method-override': overridedMethod },
       signal: this.#abortController.signal,
       timeout: AUTOSAVE_TIMEOUT_DELAY
     }).turbo();
@@ -245,6 +259,19 @@ export class AutosaveController extends ApplicationController {
 
   private get form() {
     return this.element.closest('form');
+  }
+
+  private serializePayload(
+    formData: FormData,
+    action: string,
+    method: string
+  ): string {
+    const formDataObj: Record<string, FormDataEntryValue> = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+
+    return JSON.stringify(formDataObj) + action + method;
   }
 
   private get inputs() {
