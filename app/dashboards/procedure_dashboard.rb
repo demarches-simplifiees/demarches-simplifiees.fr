@@ -30,7 +30,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     for_individual: Field::Boolean,
     auto_archive_on: Field::DateTime,
-    api_entreprise_token: JwtField,
+    api_entreprise_token: APIEntrepriseTokenField,
     published_at: Field::DateTime,
     unpublished_at: Field::DateTime,
     hidden_at: Field::DateTime,

@@ -686,7 +686,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
   describe 'GET #clone_settings' do
     render_views
-    let(:procedure) { create(:procedure, :with_service, administrateur: admin, instructeurs: [admin.instructeur]) }
+    let(:procedure) { create(:procedure, :with_service, administrateur: admin, instructeurs: [admin.instructeur], api_entreprise_token: nil) }
     let(:params) { { procedure_id: procedure.id } }
 
     subject do
@@ -1314,7 +1314,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       it do
         expect(flash.alert).to be_nil
         expect(flash.notice).to eq('Le jeton a bien été mis à jour')
-        expect(procedure.reload.api_entreprise_token).to eq(token)
+        expect(procedure.reload.api_entreprise_token.jwt_token).to eq(token)
       end
     end
 

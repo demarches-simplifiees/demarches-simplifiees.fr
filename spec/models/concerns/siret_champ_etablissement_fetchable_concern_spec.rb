@@ -19,7 +19,6 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
         .to_return(body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'), status: 200)
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
 
     subject(:fetch_etablissement!) { champ.fetch_etablissement!(siret, build_stubbed(:user)) }

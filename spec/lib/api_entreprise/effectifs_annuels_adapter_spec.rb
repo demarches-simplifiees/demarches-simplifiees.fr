@@ -12,7 +12,6 @@ describe APIEntreprise::EffectifsAnnuelsAdapter do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/gip_mds\/unites_legales\/#{siren}\/effectifs_annuels\/#{annee}/)
       .to_return(body: body, status: status)
-    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context "when the SIREN is valid" do

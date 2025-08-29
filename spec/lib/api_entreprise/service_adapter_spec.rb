@@ -2,11 +2,13 @@
 
 describe APIEntreprise::ServiceAdapter do
   before do
-    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
+    allow(ENV).to receive(:[]).and_call_original
+    allow(ENV).to receive(:[]).with('API_ENTREPRISE_KEY').and_return(api_entreprise_token)
   end
 
   let(:siret) { '30613890001294' }
   let(:service) { create(:service, siret: siret) }
+  let(:api_entreprise_token) { JWT.encode({ exp: 2.months.from_now.to_i }, nil, 'none') }
 
   context 'SIRET valide avec infos diffusables' do
     let(:fixture) { 'spec/fixtures/files/api_entreprise/etablissements.json' }

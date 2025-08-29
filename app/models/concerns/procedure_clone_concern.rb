@@ -78,7 +78,6 @@ module ProcedureCloneConcern
     'accuse_lecture',
     'for_tiers_enabled',
     'hide_instructeurs_email',
-    'api_entreprise_token_expires_at',
     'rdv_enabled',
     'routing_alert',
     'api_particulier_token',

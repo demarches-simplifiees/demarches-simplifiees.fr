@@ -16,6 +16,8 @@ class Procedure < ApplicationRecord
   include Discard::Model
   self.discard_column = :hidden_at
 
+  self.ignored_columns += ["api_entreprise_token_expires_at"]
+
   default_scope -> { kept }
 
   OLD_MAX_DUREE_CONSERVATION = 36
