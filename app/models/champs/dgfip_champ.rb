@@ -5,7 +5,7 @@ class Champs::DgfipChamp < Champs::TextChamp
   validates :numero_fiscal, format: { with: /\A\w{13,14}\z/ }, if: -> { validate_champ_value? && reference_avis.present? }
   validates :reference_avis, format: { with: /\A\w{13,14}\z/ }, if: -> { validate_champ_value? && numero_fiscal.present? }
 
-  store_accessor :value_json, :numero_fiscal, :reference_avis
+  store :external_id, accessors: [:numero_fiscal, :reference_avis], coder: JSON
 
   def uses_external_data?
     true
@@ -22,10 +22,6 @@ class Champs::DgfipChamp < Champs::TextChamp
     ).to_params
   end
 
-  def external_id
-    if numero_fiscal.present? && reference_avis.present?
-      { reference_avis: reference_avis, numero_fiscal: numero_fiscal }.to_json
-    end
   end
 
   def numero_fiscal_input_id
