@@ -29,7 +29,7 @@
         = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation }
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-      = render Instructeurs::FilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
+      = render Instructeurs::RemoveFilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
 
     - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 
