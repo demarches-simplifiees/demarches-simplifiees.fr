@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 class DossierNotification < ApplicationRecord
+  self.ignored_columns += ["groupe_instructeur_id"]
+
   DELAY_DOSSIER_DEPOSE = 7.days
 
-  belongs_to :groupe_instructeur, optional: true
-  belongs_to :instructeur, optional: true
+  belongs_to :instructeur
   belongs_to :dossier
-
-  validates :groupe_instructeur_id, presence: true, if: -> { instructeur_id.nil? }
-  validates :instructeur_id, presence: true, if: -> { groupe_instructeur_id.nil? }
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
