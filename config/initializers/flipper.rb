@@ -23,6 +23,7 @@ features = [
   :api_particulier,
   :blocking_pending_correction,
   :cojo_type_de_champ,
+  :contact_crisp,
   :dossier_pdf_vide,
   :engagement_juridique_type_de_champ,
   :export_avec_horodatage,

@@ -44,7 +44,7 @@ class API::Client
       headers['authorization'] = "Bearer #{authorization_token}"
     end
 
-    headers['content-type'] = 'application/json' if json.present?
+    headers['content-type'] = 'application/json' if !json.nil?
     headers
   end
 

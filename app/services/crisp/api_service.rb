@@ -7,7 +7,13 @@ module Crisp
     HOST = 'https://api.crisp.chat'
     ENDPOINTS = {
       # https://docs.crisp.chat/references/rest-api/v1/#update-people-data
-      "people_data" => '/v1/website/%{website_id}/people/data/%{email}'
+      "people_data" => '/v1/website/%{website_id}/people/data/%{email}',
+      # https://docs.crisp.chat/references/rest-api/v1/#create-a-new-conversation
+      "create_conversation" => '/v1/website/%{website_id}/conversation',
+      # https://docs.crisp.chat/references/rest-api/v1/#send-a-message-in-conversation
+      "send_message" => '/v1/website/%{website_id}/conversation/%{session_id}/message',
+      # https://docs.crisp.chat/references/rest-api/v1/#update-conversation-metas
+      "update_conversation_meta" => '/v1/website/%{website_id}/conversation/%{session_id}/meta'
     }.freeze
 
     def update_people_data(email:, body:)
@@ -15,13 +21,31 @@ module Crisp
       url = build_url(endpoint)
 
       result = call(url:, json: body, method: :patch)
+      handle_result(result)
+    end
 
-      case result
-      in Success(body:)
-        Success(body)
-      in Failure(code:, reason:)
-        Failure(API::Client::Error[:api_error, code, false, reason])
-      end
+    def create_conversation
+      endpoint = format(ENDPOINTS['create_conversation'], website_id:)
+      url = build_url(endpoint)
+
+      result = call(url:, json: {}, method: :post)
+      handle_result(result)
+    end
+
+    def send_message(session_id:, body:)
+      endpoint = format(ENDPOINTS['send_message'], website_id:, session_id:)
+      url = build_url(endpoint)
+
+      result = call(url:, json: body, method: :post)
+      handle_result(result)
+    end
+
+    def update_conversation_meta(session_id:, body:)
+      endpoint = format(ENDPOINTS['update_conversation_meta'], website_id:, session_id:)
+      url = build_url(endpoint)
+
+      result = call(url:, json: body, method: :patch)
+      handle_result(result)
     end
 
     private
@@ -50,6 +74,15 @@ module Crisp
       uri = URI(HOST)
       uri.path = endpoint
       uri
+    end
+
+    def handle_result(result)
+      case result
+      in Success(body:)
+        Success(body)
+      in Failure(code:, reason:)
+        Failure(API::Client::Error[:api_error, code, false, reason])
+      end
     end
   end
 end
