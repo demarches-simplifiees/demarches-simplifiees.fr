@@ -127,6 +127,22 @@ describe Columns::DossierColumn do
 
         it { is_expected.to contain_exactly(dossier_en_construction.id) }
       end
+
+      context 'when searching for accepte' do
+        let(:search_terms) { { operator: 'match', value: ["accepte"] } }
+        it { is_expected.to contain_exactly(dossier_accepte.id) }
+      end
+
+      context 'when searching for en_instruction' do
+        let(:search_terms) { { operator: 'match', value: ["en_instruction"] } }
+        it { is_expected.to contain_exactly(dossier_en_instruction.id) }
+      end
+
+      context 'when searching for multiple states' do
+        let(:search_terms) { { operator: 'match', value: ["en_construction", "accepte"] } }
+
+        it { is_expected.to contain_exactly(dossier_en_construction.id, dossier_accepte.id) }
+      end
     end
   end
 end
