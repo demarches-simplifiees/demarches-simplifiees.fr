@@ -16,7 +16,7 @@ describe Instructeurs::AvisController, type: :controller do
     before { sign_in(instructeur.user) }
 
     describe "#revoker" do
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_avis) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
 
       before do
         patch :revoquer, params: { procedure_id: procedure.id, id: avis_without_answer.id, statut: 'a-suivre' }

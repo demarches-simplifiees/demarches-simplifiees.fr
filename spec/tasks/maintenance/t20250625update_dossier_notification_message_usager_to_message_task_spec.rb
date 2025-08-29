@@ -15,7 +15,7 @@ module Maintenance
     describe "#collection" do
       subject(:collection) { described_class.collection }
 
-      let!(:other_notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
+      let!(:other_notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
 
       it "includes only :message_usager notification" do
         expect(collection).to include(notification_message_usager)

@@ -325,7 +325,7 @@ describe Experts::AvisController, type: :controller do
       end
 
       context "when dossier had attente_avis notification" do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_avis) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
 
         it "destroy notification for all instructeurs" do
           subject

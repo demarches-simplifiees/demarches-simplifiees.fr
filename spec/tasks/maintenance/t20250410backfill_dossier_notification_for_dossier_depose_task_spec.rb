@@ -44,24 +44,28 @@ module Maintenance
     end
 
     describe "#process" do
-      subject(:process) { described_class.process(dossier) }
+      # Since PR#12013, we cannot call groupe_instructeur on an instance of DossierNotification,
+      # and since PR#11949 we create dossier_depose notification only on instructeur_id.
+      # See T20250804backfillDossierDeposeNotificationForInstructeurTask to backfill dossier_depose notification.
 
-      let!(:dossier) { create(:dossier, depose_at: 10.days.ago) }
-      let!(:groupe_instructeur) { dossier.groupe_instructeur }
+      # subject(:process) { described_class.process(dossier) }
 
-      context "when a notification already exists for an instructeur" do
-        let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, dossier:, groupe_instructeur:) }
+      # let!(:dossier) { create(:dossier, depose_at: 10.days.ago) }
+      # let!(:groupe_instructeur) { dossier.groupe_instructeur }
 
-        it "does not create duplicate notification" do
-          expect { process }.not_to change(DossierNotification, :count)
-        end
-      end
+      # context "when a notification already exists for an instructeur" do
+      #   let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, dossier:, groupe_instructeur:) }
 
-      context "when there are no existing notification" do
-        it "creates notification" do
-          expect { process }.to change(DossierNotification, :count).by(1)
-        end
-      end
+      #   it "does not create duplicate notification" do
+      #     expect { process }.not_to change(DossierNotification, :count)
+      #   end
+      # end
+
+      # context "when there are no existing notification" do
+      #   it "creates notification" do
+      #     expect { process }.to change(DossierNotification, :count).by(1)
+      #   end
+      # end
     end
   end
 end

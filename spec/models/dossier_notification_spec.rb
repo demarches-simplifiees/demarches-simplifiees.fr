@@ -2,8 +2,8 @@
 
 RSpec.describe DossierNotification, type: :model do
   describe '.to_display' do
-    let(:past_notification) { create(:dossier_notification, :for_groupe_instructeur) }
-    let(:future_notification) { create(:dossier_notification, :for_groupe_instructeur, display_at: 1.day.from_now) }
+    let(:past_notification) { create(:dossier_notification) }
+    let(:future_notification) { create(:dossier_notification, display_at: 1.day.from_now) }
 
     it 'includes notifications where display_at is in the past or now' do
       expect(DossierNotification.to_display).to include(past_notification)
@@ -33,7 +33,6 @@ RSpec.describe DossierNotification, type: :model do
         notification = DossierNotification.first
         expect(notification.dossier).to eq(dossier)
         expect(notification.instructeur).to eq(instructeur)
-        expect(notification.groupe_instructeur).to be_nil
         expect(notification.notification_type).to eq('dossier_depose')
         expect(notification.display_at.to_date).to eq(dossier.depose_at.to_date + DossierNotification::DELAY_DOSSIER_DEPOSE)
       end
@@ -91,7 +90,6 @@ RSpec.describe DossierNotification, type: :model do
 
           notification = DossierNotification.first
           expect(notification.dossier).to eq(dossier)
-          expect(notification.groupe_instructeur).to be_nil
           expect(notification.instructeur).to eq(other_instructeur_follower)
           expect(notification.notification_type).to eq('message')
           expect(DossierNotification.to_display).to include(notification)
@@ -106,8 +104,8 @@ RSpec.describe DossierNotification, type: :model do
     let!(:other_groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, :accepte, groupe_instructeur:) }
     let!(:other_dossier) { create(:dossier, :en_construction, groupe_instructeur: other_groupe_instructeur) }
-    let!(:notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
-    let!(:other_notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:, notification_type: :dossier_modifie) }
+    let!(:notification_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
+    let!(:other_notification_instructeur) { create(:dossier_notification, dossier: other_dossier, instructeur:, notification_type: :dossier_modifie) }
 
     context 'a given instructeur and one dossier' do
       subject { DossierNotification.notifications_for_instructeur_dossier(instructeur, dossier) }
@@ -148,10 +146,10 @@ RSpec.describe DossierNotification, type: :model do
     let(:other_groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :accepte, procedure:, groupe_instructeur:) }
     let(:other_dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur: other_groupe_instructeur) }
-    let!(:notification_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
-    let!(:notification_not_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:) }
-    let!(:other_notification_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:, notification_type: :annotation_instructeur) }
-    let!(:other_notification_not_news_instructeur) { create(:dossier_notification, :for_instructeur, dossier: other_dossier, instructeur:) }
+    let!(:notification_news_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
+    let!(:notification_not_news_instructeur) { create(:dossier_notification, dossier:, instructeur:) }
+    let!(:other_notification_news_instructeur) { create(:dossier_notification, dossier: other_dossier, instructeur:, notification_type: :annotation_instructeur) }
+    let!(:other_notification_not_news_instructeur) { create(:dossier_notification, dossier: other_dossier, instructeur:) }
 
     context 'a given instructeur on one dossier' do
       subject { DossierNotification.notifications_sticker_for_instructeur_dossier(instructeur, dossier) }

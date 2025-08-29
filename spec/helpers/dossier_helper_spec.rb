@@ -271,9 +271,9 @@ RSpec.describe DossierHelper, type: :helper do
     subject { tags_notification([notification]) }
 
     context "with dossier_depose notification" do
-      let(:groupe_instructeur) { create(:groupe_instructeur) }
-      let(:dossier) { create(:dossier, groupe_instructeur:, depose_at: 10.days.ago) }
-      let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur:, dossier:, notification_type: :dossier_depose, display_at: (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE)) }
+      let(:instructeur) { create(:instructeur) }
+      let(:dossier) { create(:dossier, depose_at: 10.days.ago) }
+      let!(:notification) { create(:dossier_notification, instructeur:, dossier:, notification_type: :dossier_depose, display_at: (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE)) }
 
       it {
         expect(subject).to have_text("Déposé depuis 10 J.")

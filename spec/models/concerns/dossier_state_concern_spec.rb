@@ -184,7 +184,8 @@ RSpec.describe DossierStateConcern do
     describe 'en_instruction' do
       context "when dossier has a dossier_depose notification" do
         let(:auto_archive_on) { 1.day.from_now }
-        let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur_id: dossier.groupe_instructeur_id, dossier:) }
+        let(:instructeur) { create(:instructeur) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur:) }
 
         it "destroy the notification" do
           travel_to(2.days.from_now)

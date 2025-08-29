@@ -176,7 +176,7 @@ describe DossierCorrectableConcern do
     context "when dossier has attente_correction notification" do
       let!(:correction) { create(:dossier_correction, dossier:) }
       let!(:instructeur) { create(:instructeur) }
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_correction) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_correction) }
 
       it "destroy notification for all instructeurs" do
         subject

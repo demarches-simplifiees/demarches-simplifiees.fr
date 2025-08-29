@@ -7,16 +7,18 @@ module Maintenance
     describe "#collection" do
       subject(:collection) { described_class.collection }
 
-      context 'dossier_depose notification is linked to a groupe_instructeur' do
-        let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur: create(:groupe_instructeur), dossier: create(:dossier)) }
+      # Since PR#12013, we cannot call groupe_instructeur on an instance of DossierNotification
+      #
+      # context 'dossier_depose notification is linked to a groupe_instructeur' do
+      #   let!(:notification) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur: create(:groupe_instructeur), dossier: create(:dossier)) }
 
-        it do
-          expect(collection.flat_map(&:to_a)).to include(notification)
-        end
-      end
+      #   it do
+      #     expect(collection.flat_map(&:to_a)).to include(notification)
+      #   end
+      # end
 
       context 'dossier_depose notification is linked to an instructeur' do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, instructeur: create(:instructeur), dossier: create(:dossier)) }
+        let!(:notification) { create(:dossier_notification, instructeur: create(:instructeur), dossier: create(:dossier)) }
 
         it do
           expect(collection.flat_map(&:to_a)).not_to include(notification)

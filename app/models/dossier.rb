@@ -1222,7 +1222,6 @@ class Dossier < ApplicationRecord
   end
 
   def update_notifications(dossier, previous_groupe_instructeur, new_groupe_instructeur)
-    DossierNotification.update_notifications_groupe_instructeur(previous_groupe_instructeur, new_groupe_instructeur)
     DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
     DossierNotification.create_notification(dossier, :dossier_depose) if dossier.en_construction? && dossier.follows.empty?
   end

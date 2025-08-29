@@ -118,8 +118,8 @@ describe GroupeInstructeur, type: :model do
       let(:groupe_instructeur) { procedure_to_remove.defaut_groupe_instructeur }
       let!(:dossier) { create(:dossier, groupe_instructeur:) }
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur) }
+      let!(:notification_instructeur) { create(:dossier_notification, dossier:, instructeur:) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur) }
 
       before { procedure_to_remove.defaut_groupe_instructeur.add(other_instructeur) }
 
