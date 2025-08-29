@@ -12,8 +12,6 @@ class Champs::DgfipChamp < Champs::TextChamp
   end
 
   def fetch_external_data
-    return unless valid_champ_value?
-
     APIParticulier::DgfipAdapter.new(
       procedure.api_particulier_token,
       numero_fiscal,
@@ -22,6 +20,8 @@ class Champs::DgfipChamp < Champs::TextChamp
     ).to_params
   end
 
+  def ready_for_external_call?
+    valid_champ_value?
   end
 
   def numero_fiscal_input_id
