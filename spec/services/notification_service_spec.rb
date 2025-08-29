@@ -91,7 +91,7 @@ describe NotificationService do
 
       context 'when there is a notification on this procedure' do
         let(:dossier) { create(:dossier, :en_construction, procedure:) }
-        let!(:notification) { create(:dossier_notification, :for_instructeur, instructeur: instructeur_with_email_notifications, dossier:, notification_type: :dossier_modifie) }
+        let!(:notification) { create(:dossier_notification, instructeur: instructeur_with_email_notifications, dossier:, notification_type: :dossier_modifie) }
 
         it do
           subject

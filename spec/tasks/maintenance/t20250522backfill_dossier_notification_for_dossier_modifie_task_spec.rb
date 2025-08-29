@@ -28,7 +28,7 @@ module Maintenance
       let!(:follow) { create(:follow, dossier:, instructeur:) }
 
       context "when a notification already exists for an instructeur" do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
 
         it "does not create duplicate notification" do
           expect {

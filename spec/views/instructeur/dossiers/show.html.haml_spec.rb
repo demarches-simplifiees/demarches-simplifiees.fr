@@ -55,7 +55,7 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
 
     context 'with pending correction' do
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: 'attente_correction') }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: 'attente_correction') }
 
       before do
         create(:dossier_correction, dossier:)
@@ -79,7 +79,7 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
 
     context 'with resolved correction' do
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: 'dossier_modifie') }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: 'dossier_modifie') }
 
       before { assign(:notifications, [notification]) }
 

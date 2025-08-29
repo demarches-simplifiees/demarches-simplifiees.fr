@@ -93,13 +93,12 @@ describe DossierFilterService do
         let(:order) { 'desc' }
 
         let!(:dossier_notif) { create(:dossier, :en_construction, procedure:) }
-        let!(:notif_instructeur) { create(:dossier_notification, :for_instructeur, instructeur:, dossier: dossier_notif, notification_type: :attente_avis) }
+        let!(:notif_instructeur_1) { create(:dossier_notification, instructeur:, dossier: dossier_notif, notification_type: :attente_avis) }
         let(:other_instructeur) { create(:instructeur) }
-        let!(:notif_other_instructeur) { create(:dossier_notification, :for_instructeur, instructeur: other_instructeur, dossier: recent_dossier) }
+        let!(:notif_other_instructeur) { create(:dossier_notification, instructeur: other_instructeur, dossier: recent_dossier) }
         let!(:dossier_2_notif) { create(:dossier, :en_construction, procedure:) }
-        let(:groupe_instructeur) { procedure.defaut_groupe_instructeur }
-        let!(:notif_groupe) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur:, dossier: dossier_2_notif) }
-        let!(:notif_not_display) { create(:dossier_notification, :for_groupe_instructeur, groupe_instructeur:, dossier: older_dossier, display_at: 1.day.from_now) }
+        let!(:notif_instructeur_2) { create(:dossier_notification, instructeur:, dossier: dossier_2_notif) }
+        let!(:notif_not_display) { create(:dossier_notification, instructeur:, dossier: older_dossier, display_at: 1.day.from_now) }
 
         it { is_expected.to eq([dossier_2_notif, dossier_notif, recent_dossier, older_dossier].map(&:id)) }
       end

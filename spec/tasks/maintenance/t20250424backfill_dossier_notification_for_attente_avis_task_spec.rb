@@ -37,7 +37,7 @@ module Maintenance
 
       context 'when dossier has avis without answer but not attente_avis notification' do
         let!(:avis) { create(:avis, dossier:) }
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur: follow_instructeur) }
 
         it do
           expect(collection).to eq([dossier])
@@ -58,7 +58,7 @@ module Maintenance
       end
 
       context "when a notification already exists for an instructeur" do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_avis) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
 
         it "does not create duplicate notification" do
           expect {

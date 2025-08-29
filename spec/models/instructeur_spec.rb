@@ -40,7 +40,7 @@ describe Instructeur, type: :model do
     end
 
     context "when a instructeur is the first to follow a dossier" do
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_depose) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_depose) }
 
       before { instructeur.follow(dossier) }
 
@@ -114,7 +114,7 @@ describe Instructeur, type: :model do
     end
 
     context "when a instructeur has notifications on the dossier" do
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier: already_followed_dossier, instructeur:) }
+      let!(:notification) { create(:dossier_notification, dossier: already_followed_dossier, instructeur:) }
 
       it "destroy all notifications of the instructeur/dossier" do
         instructeur.unfollow(already_followed_dossier)
@@ -308,8 +308,8 @@ describe Instructeur, type: :model do
 
     context 'when a notification exists' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
-      let!(:notification_to_count) { create(:dossier_notification, :for_instructeur, instructeur:, dossier:, notification_type: :dossier_modifie) }
-      let!(:notification_not_count) { create(:dossier_notification, :for_instructeur, instructeur:, dossier:) }
+      let!(:notification_to_count) { create(:dossier_notification, instructeur:, dossier:, notification_type: :dossier_modifie) }
+      let!(:notification_not_count) { create(:dossier_notification, instructeur:, dossier:) }
 
       it do
         expect(instructeur.email_notification_data).to eq([
