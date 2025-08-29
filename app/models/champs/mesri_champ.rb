@@ -9,8 +9,6 @@ class Champs::MesriChamp < Champs::TextChamp
   end
 
   def fetch_external_data
-    return unless valid_champ_value?
-
     APIParticulier::MesriAdapter.new(
       procedure.api_particulier_token,
       ine,
