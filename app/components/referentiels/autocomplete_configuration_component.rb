@@ -68,7 +68,8 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
   end
 
   def maybe_datasources
-    JSONPathUtil.array_paths_with_examples(referentiel.last_response_body)
+    JSONPathUtil.filter_selectable_datasources(referentiel.last_response_body)
+      .transform_values(&:first) # extract first option from all possible ones
       .sort
       .to_h
   end
