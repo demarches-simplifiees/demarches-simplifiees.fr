@@ -37,8 +37,8 @@
 
     %div
       = render Dsfr::RadioButtonListComponent.new(form:, target: :mode,
-        buttons: [ { label: 'Correspondance exacte', value: 'exact_match', hint: 'Vérification de l’existence de la donnée saisie dans la BDD du référentiel (exemple : plaque d’immatriculation, SIREN...)' } ,
-          { label: 'Autosuggestion au fur et à mesure de la saisie de l’usager', value: 'autocomplete', hint: 'Affichage de données issues de la BDD du référentiel correspondant en partie ou en totalité à la donnée saisie par l’usager (exemple : BDD de médicaments, modèles de véhicules...)' }]) do
+        buttons: [ { label: 'Correspondance exacte', value: 'exact_match', hint: 'Vérification de l’existence de la donnée saisie dans la base du référentiel (exemple : plaque d’immatriculation, SIREN...)' } ,
+          { label: 'Autosuggestion au fur et à mesure de la saisie de l’usager', value: 'autocomplete', hint: 'Affichage de données issues de la base du référentiel correspondant en partie ou en totalité à la donnée saisie par l’usager (exemple : base de médicaments, modèles de véhicules...)' }]) do
         Mode de remplissage du champ par l’usager
 
       = render Dsfr::InputComponent.new(form:, attribute: :hint)
