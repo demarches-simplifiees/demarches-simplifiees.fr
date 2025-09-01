@@ -16,8 +16,10 @@ class Referentiels::APIReferentiel < Referentiel
     autocomplete: 'autocomplete'
   }
 
-  validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
+  validates :mode, inclusion: { in: modes.values }
   validate :url_allowed?
+  validates :test_data, presence: true
+  validates :url, presence: true
 
   store_accessor :autocomplete_configuration, :datasource, :json_template
   before_save :name_as_uuid
@@ -86,12 +88,6 @@ class Referentiels::APIReferentiel < Referentiel
     ].all?
   end
 
-  private
-
-  def name_as_uuid # should be uniq, using the url was an idea but not unique
-    self.name = SecureRandom.uuid
-  end
-
   def url_allowed?
     return if url.blank?
 
@@ -103,5 +99,11 @@ class Referentiels::APIReferentiel < Referentiel
     end
   rescue URI::InvalidURIError, PublicSuffix::DomainInvalid
     errors.add(:url, :invalid_format)
+  end
+
+  private
+
+  def name_as_uuid # should be uniq, using the url was an idea but not unique
+    self.name = SecureRandom.uuid
   end
 end

@@ -35,8 +35,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe '#create' do
     context 'partial update (selecting type)' do
-      subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
-
+      subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params, commit:	"Étape+suivante" }, format: :turbo_stream }
       let(:referentiel_params) { { type: 'Referentiels::APIReferentiel' } }
       it 're-render form' do
         expect { subject }.not_to change { Referentiel.count }
@@ -105,6 +104,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
           expect(referentiel.test_data).to eq(referentiel_params[:test_data])
         end
       end
+
       context 'when referentiel is autocomplete' do
         let(:referentiel_params) do
           {
@@ -214,9 +214,10 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe "configuration_error" do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, types_de_champ: [type_de_champ]) }
 
     it 'works' do
+      allow_any_instance_of(Referentiels::APIReferentiel).to receive(:save).and_return(false)
       get :configuration_error, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
       expect(response).to have_http_status(:success)
     end

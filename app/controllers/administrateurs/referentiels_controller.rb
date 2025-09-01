@@ -69,23 +69,28 @@ module Administrateurs
     end
 
     def handle_referentiel_save(referentiel)
-      cache_bust_last_response_and_mapping = referentiel.url_changed?
+      url_changed = referentiel.url_changed?
+      auto_submitted = params[:commit].blank?
+      saved = referentiel.configured? && referentiel.save
 
-      if referentiel.configured? && referentiel.save
-        if cache_bust_last_response_and_mapping
-          @type_de_champ.update!(referentiel_mapping: {})
-          referentiel.update!(last_response: nil, autocomplete_configuration: {})
-        end
+      if saved && url_changed # cache bust
+        @type_de_champ.update!(referentiel_mapping: {})
+        referentiel.update!(last_response: nil, autocomplete_configuration: {})
       end
 
-      if params[:commit].present?
+      if !auto_submitted
+        referentiel.validate
+      elsif url_changed
+        referentiel.url_allowed?
+      end
+
+      if saved && !auto_submitted
         if referentiel.autocomplete?
           redirect_to autocomplete_configuration_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
         else
           redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
         end
       else
-        referentiel.validate
         component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
         render turbo_stream: turbo_stream.replace(component.id, component)
       end
