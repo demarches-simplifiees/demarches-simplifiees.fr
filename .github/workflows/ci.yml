@@ -114,7 +114,8 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: ubuntu-22.04
+
+    runs-on: warp-ubuntu-2204-x64-2x
     timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
