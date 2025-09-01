@@ -47,7 +47,7 @@ module Instructeurs
     private
 
     def filtered_column_from_params
-      FilteredColumn.new(column: ColumnType.new.cast(params[:column_id]), filter: filter_params[:filter].to_h.symbolize_keys)
+      FilteredColumnType.new.cast(filter_params.to_h)
     end
 
     def procedure = @procedure_presentation.procedure
@@ -70,10 +70,10 @@ module Instructeurs
     end
 
     def filter_params
-      if params[:filter].is_a?(String) # old format
-        params.permit(:column_id, :filter)
+      if params[:filter].present? && params[:filter][:filter].is_a?(String) # old format
+        params.require(:filter).permit(:id, :filter)
       else
-        params.permit(:column_id, filter: [:operator, value: []])
+        params.require(:filter).permit(:id, filter: [:operator, value: []])
       end
     end
 

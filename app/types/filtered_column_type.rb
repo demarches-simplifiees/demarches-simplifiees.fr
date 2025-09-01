@@ -14,6 +14,8 @@ class FilteredColumnType < ActiveRecord::Type::Value
     # TODO: after T20250820migrateOldFilterFormatTask, reject this String format
     in { id: String|Hash, filter: String|Hash } => h
       FilteredColumn.new(column: ColumnType.new.cast(h[:id]), filter: h[:filter])
+    in { id: String|Hash } => h # incomplete filter when column is set but filter is not set yet
+      FilteredColumn.new(column: ColumnType.new.cast(h[:id]), filter: nil)
     end
   end
 

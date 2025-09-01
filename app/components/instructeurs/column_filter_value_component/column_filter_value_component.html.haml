@@ -2,7 +2,7 @@
   = operator_hidden_field
   - if boolean?
     = render Dsfr::RadioButtonListComponent.new(form:,
-      target: "filter[value][]",
+      target: "filter[filter][value][]",
       buttons: column_filter_options.map { |label, value| { label:, value: } }) do
       = t('.value')
   - elsif selectable?
@@ -11,7 +11,7 @@
       = render ReactComponent.new "ComboBox/MultiComboBox", **react_props
   - else
     = form.label :value, t('.value'), class: 'fr-label'
-    = form.text_field "filter[value][]",
+    = form.text_field "filter[filter][value][]",
       id: 'value',
       class: 'fr-input',
       type:,
