@@ -8,7 +8,7 @@ en:
               must_be_different_from_mandataire: "must be different from the agent's email"
     attributes:
       individual:
-        gender: Gender
+        gender: Title
         nom: Last name
         prenom: First name
         birthdate: Date de naissance
