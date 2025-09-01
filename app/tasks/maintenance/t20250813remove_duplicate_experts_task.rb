@@ -12,20 +12,31 @@ module Maintenance
     run_on_first_deploy
 
     def collection
-      duplicate_user_ids = Expert
+      Expert
         .group(:user_id)
         .having('COUNT(*) > 1')
         .pluck(:user_id)
-
-      Expert
-        .where(user_id: duplicate_user_ids)
-        .order(:created_at)
-        .group_by(&:user_id)
-        .flat_map { |_, experts| experts.drop(1) }
+        .flat_map do |user_id|
+          experts = Expert.where(user_id: user_id).order(:created_at)
+          expert_to_keep = experts.first
+          experts.drop(1).map { |expert_to_destroy| [expert_to_destroy, expert_to_keep] }
+        end
     end
 
-    def process(expert)
-      expert.destroy!
+    def process((expert_to_destroy, expert_to_keep))
+      Expert.transaction do
+        Commentaire.where(expert: expert_to_destroy).update_all(expert_id: expert_to_keep.id)
+
+        ExpertsProcedure.where(expert: expert_to_destroy).find_each do |ep|
+          if ExpertsProcedure.exists?(expert: expert_to_keep, procedure_id: ep.procedure_id)
+            ep.destroy!
+          else
+            ep.update!(expert: expert_to_keep)
+          end
+        end
+
+        expert_to_destroy.destroy!
+      end
     end
   end
 end
