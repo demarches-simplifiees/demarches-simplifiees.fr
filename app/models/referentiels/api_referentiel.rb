@@ -16,8 +16,10 @@ class Referentiels::APIReferentiel < Referentiel
     autocomplete: 'autocomplete'
   }
 
-  validates :mode, inclusion: { in: modes.values }, allow_blank: true, allow_nil: true
+  validates :mode, inclusion: { in: modes.values }
   validate :url_allowed?
+  validates :test_data, presence: true
+  validates :url, presence: true
 
   store_accessor :autocomplete_configuration, :datasource, :json_template
   before_save :name_as_uuid

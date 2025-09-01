@@ -71,14 +71,15 @@ module Administrateurs
     def handle_referentiel_save(referentiel)
       cache_bust_last_response_and_mapping = referentiel.url_changed?
 
-      if referentiel.configured? && referentiel.save
+      saved = referentiel.configured? && referentiel.save
+      if saved
         if cache_bust_last_response_and_mapping
           @type_de_champ.update!(referentiel_mapping: {})
           referentiel.update!(last_response: nil, autocomplete_configuration: {})
         end
       end
 
-      if params[:commit].present?
+      if saved && params[:commit].present?
         if referentiel.autocomplete?
           redirect_to autocomplete_configuration_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
         else
