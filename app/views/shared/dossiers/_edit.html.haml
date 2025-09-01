@@ -15,7 +15,11 @@
           %strong
             = t('utils.asterisk_html')
           - if dossier.brouillon?
+            %br
             = t('views.shared.dossiers.edit.autosave')
+          - if dossier.en_construction?
+            %br
+            = t('views.shared.dossiers.edit.autosave_submit')
 
           = render Procedure::NoticeComponent.new(procedure: dossier.procedure)
 
