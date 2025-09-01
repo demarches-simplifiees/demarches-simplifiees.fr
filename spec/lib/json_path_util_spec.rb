@@ -63,7 +63,7 @@ describe JSONPathUtil do
       ])
     end
   end
-  describe '.array_paths_with_examples' do
+  describe '.filter_selectable_datasources' do
     let(:hash) do
       {
         "foo" => [
@@ -80,19 +80,19 @@ describe JSONPathUtil do
       }
     end
 
-    it 'extract all arrays' do
-      result = described_class.array_paths_with_examples(hash)
+    it 'extracts all arrays including all their possible suggestions' do
+      result = described_class.filter_selectable_datasources(hash)
       expect(result.keys).to contain_exactly('$.foo', '$.baz.qux')
       expect(result['$.foo']).to eq(
-        { "bar" => 1 }
+        [{ "bar" => 1 }, { "bar" => 2 }]
       )
       expect(result['$.baz.qux']).to eq(
-        { "a" => "x" }
+        [{ "a" => "x" }, { "a" => "y" }]
       )
     end
 
     it 'ignore les propriétés non-tableau' do
-      result = described_class.array_paths_with_examples(hash)
+      result = described_class.filter_selectable_datasources(hash)
       expect(result).not_to have_key('$.simple')
     end
   end
