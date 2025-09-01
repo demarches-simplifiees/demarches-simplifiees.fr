@@ -5,7 +5,7 @@ module Instructeurs
     before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter]
 
     def add_filter
-      statut = filter_params[:statut]
+      statut = params[:statut]
 
       new_filter = filtered_column_from_params
 
@@ -70,7 +70,11 @@ module Instructeurs
     end
 
     def filter_params
-      params.permit(:column_id, :statut, filter: [:operator, value: []])
+      if params[:filter].is_a?(String) # old format
+        params.permit(:column_id, :filter)
+      else
+        params.permit(:column_id, filter: [:operator, value: []])
+      end
     end
 
     def set_procedure_presentation
