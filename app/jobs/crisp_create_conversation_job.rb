@@ -1,0 +1,142 @@
+# frozen_string_literal: true
+
+class CrispCreateConversationJob < ApplicationJob
+  include Dry::Monads[:result]
+
+  queue_as :critical # user feedback is critical
+
+  def max_attempts = 15 # ~10h
+
+  class FileNotScannedYetError < StandardError
+  end
+
+  retry_on FileNotScannedYetError, wait: :polynomially_longer, attempts: 10
+
+  attr_reader :contact_form
+  attr_reader :session_id
+  attr_reader :api
+
+  def perform(contact_form)
+    @contact_form = contact_form
+
+    if contact_form.piece_jointe.attached?
+      raise FileNotScannedYetError if contact_form.piece_jointe.virus_scanner.pending?
+    end
+
+    @api = Crisp::APIService.new
+
+    @session_id = create_conversation
+    send_message
+    send_file
+    update_metas
+
+    contact_form.delete
+  rescue StandardError
+    contact_form.delete if executions >= max_attempts
+
+    raise
+  end
+
+  private
+
+  def create_conversation
+    response = api.create_conversation
+    body = handle_api_response(response)
+    body.dig(:data, :session_id)
+  end
+
+  def send_message
+    body = {
+      type: "text",
+      from: "user",
+      origin: "email",
+      content: contact_form.text,
+      fingerprint: contact_form.id, # must be a number
+      timestamp: original_timestamp_ms,
+      user: {
+        type: "participant"
+      }
+    }
+
+    response = api.send_message(session_id:, body:)
+    handle_api_response(response)
+  end
+
+  def send_file
+    return unless contact_form.piece_jointe.attached?
+
+    attachment = safe_blob
+
+    return if attachment.blank?
+
+    body = {
+      type: "file",
+      from: "user",
+      origin: "email",
+      content: {
+        name: attachment.attachable_filename,
+        url: attachment.url(expires_in: 1.week),
+        type: attachment.content_type
+      },
+      fingerprint: attachment.id,
+      timestamp: original_timestamp_ms,
+      user: {
+        type: "participant"
+      }
+    }
+
+    response = api.send_message(session_id:, body:)
+    handle_api_response(response)
+  end
+
+  def update_metas
+    email, nickname = email_and_nickname
+
+    body = {
+      email:,
+      nickname:,
+      subject: contact_form.subject,
+      segments: contact_form.tags
+      # TODO: ip & device ?
+    }
+
+    body[:data] = { "Dossier" => dossier_link } if contact_form.dossier_id.present?
+    body[:ip] = contact_form.user.current_sign_in_ip if contact_form&.user&.current_sign_in_ip.present?
+    body[:phone] = contact_form.phone if contact_form.phone.present?
+
+    response = api.update_conversation_meta(session_id:, body:)
+    handle_api_response(response)
+  end
+
+  def handle_api_response(response, &block)
+    case response
+    in Success(body)
+      body
+    in Failure(reason:)
+      fail reason
+    end
+  end
+
+  def email_and_nickname
+    email = contact_form.email.presence || contact_form.user.email
+
+    nickname = email.split("@").first.titleize
+
+    [email, nickname]
+  end
+
+  def safe_blob
+    return if !contact_form.piece_jointe.virus_scanner&.safe?
+    return if contact_form.piece_jointe.byte_size.zero?
+
+    contact_form.piece_jointe
+  end
+
+  def original_timestamp_ms
+    (contact_form.created_at.to_f * 1000).to_i
+  end
+
+  def dossier_link
+    "[Dossier ##{contact_form.dossier_id}](#{Rails.application.routes.url_helpers.manager_dossier_url(contact_form.dossier_id)})"
+  end
+end
