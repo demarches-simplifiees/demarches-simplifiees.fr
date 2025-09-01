@@ -14,7 +14,7 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
     {
       selected_key: column.present? ? column.id : '',
       items: filterable_columns_options,
-      name: "column_id",
+      name: "filter[id]",
       id: 'search-filter',
       'aria-describedby': 'instructeur-filter-combo-label',
       form: 'filter-component',

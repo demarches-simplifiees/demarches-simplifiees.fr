@@ -9,7 +9,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def operator_hidden_field
-    @form.hidden_field "filter[operator]", value: selectable? ? 'in' : 'match'
+    @form.hidden_field "filter[filter][operator]", value: selectable? ? 'in' : 'match'
   end
 
   def column_filter_options
@@ -38,7 +38,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     {
       id: 'value',
       class: 'fr-mt-1w',
-      name: 'filter[value][]',
+      name: 'filter[filter][value][]',
       items: column_filter_options,
       value_separator: false
     }

@@ -27,8 +27,7 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
       method: :delete,
       class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm',
       params: {
-        column_id: filter.column.id,
-        filter: filter.filter,
+        filter: { id: filter.column.id, filter: filter.filter },
         statut: @statut
       }.compact,
       form_class: 'inline'

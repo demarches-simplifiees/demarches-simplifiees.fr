@@ -80,16 +80,16 @@ describe Instructeurs::RemoveFilterButtonsComponent, type: :component do
         del_en_construction = page.all('form').first
 
         expect(del_en_construction).to have_text('En construction')
-        expect(del_en_construction).to have_field('column_id', with: column_id, type: 'hidden')
-        expect(del_en_construction).to have_field('filter[operator]', with: 'match', type: 'hidden')
-        expect(del_en_construction).to have_field('filter[value]', with: 'en_construction', type: 'hidden')
+        expect(del_en_construction).to have_field('filter[id]', with: column_id, type: 'hidden')
+        expect(del_en_construction).to have_field('filter[filter][operator]', with: 'match', type: 'hidden')
+        expect(del_en_construction).to have_field('filter[filter][value]', with: 'en_construction', type: 'hidden')
 
         del_en_instruction = page.all('form').last
 
         expect(del_en_instruction).to have_text('En instruction')
-        expect(del_en_instruction).to have_field('column_id', with: column_id, type: 'hidden')
-        expect(del_en_instruction).to have_field('filter[operator]', with: 'match', type: 'hidden')
-        expect(del_en_instruction).to have_field('filter[value]', with: 'en_instruction', type: 'hidden')
+        expect(del_en_instruction).to have_field('filter[id]', with: column_id, type: 'hidden')
+        expect(del_en_instruction).to have_field('filter[filter][operator]', with: 'match', type: 'hidden')
+        expect(del_en_instruction).to have_field('filter[filter][value]', with: 'en_instruction', type: 'hidden')
       end
     end
   end

@@ -85,7 +85,7 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
   end
 
   describe '#refresh_column_filter' do
-    subject { post :refresh_column_filter, params: { id: procedure_presentation.id, column_id: column.id, format: :turbo_stream } }
+    subject { post :refresh_column_filter, params: { id: procedure_presentation.id, format: :turbo_stream, filter: { id: column.id } } }
 
     render_views
 
@@ -125,7 +125,7 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
     before { sign_in(instructeur.user) }
 
     context 'nominal case' do
-      let(:params) { { id: procedure_presentation.id, column_id: column.id, statut: 'tous', filter: { operator: 'in', value: ['Paris', 'Lyon'] } } }
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'in', value: ['Paris', 'Lyon'] } } } }
 
       it 'adds the filter' do
         subject
@@ -155,7 +155,7 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
     end
 
     context 'nominal case' do
-      let(:params) { { id: procedure_presentation.id, column_id: column.id, statut: 'tous', filter: { operator: 'in', value: ['Paris', 'Lyon'] } } }
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'in', value: ['Paris', 'Lyon'] } } } }
 
       it 'removes the filter' do
         subject
