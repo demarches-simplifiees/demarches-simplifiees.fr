@@ -84,8 +84,8 @@ export class AutosaveController extends ApplicationController {
           this.showConditionnalSpinner(target);
         }, 0);
       },
-      inputable: (target) => {
-        this.enqueueOnInput(target);
+      inputable: () => {
+        // we already save on input for inputable elements
       },
       hidden: (target) => {
         // In comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
