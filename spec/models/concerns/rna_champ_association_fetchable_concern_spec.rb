@@ -13,7 +13,6 @@ RSpec.describe RNAChampAssociationFetchableConcern do
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{rna}/)
         .to_return(body: body, status: status)
-      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
     subject(:fetch_association!) { champ.fetch_association!(rna) }

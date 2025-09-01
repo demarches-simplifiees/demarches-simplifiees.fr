@@ -14,8 +14,7 @@ RSpec.describe APIEntreprise::AttestationFiscaleJob, type: :job do
       .to_return(body: body, status: status)
     stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569139162-b99824d9c764aae19a862a0af-attestation_fiscale_dgfip.pdf")
       .to_return(body: "body attestation", status: 200)
-    allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
-    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:can_fetch_attestation_fiscale?).and_return(true)
   end
 
   subject { APIEntreprise::AttestationFiscaleJob.new.perform(etablissement.id, procedure.id, user_id) }

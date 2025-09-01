@@ -32,7 +32,7 @@
 
           .flex.fr-mt-1w
 
-            - if @procedure.api_entreprise_token_expired_or_expires_soon?
+            - if @procedure.api_entreprise_token.expired_or_expires_soon?
               %span.fr-badge.fr-badge--error.fr-mr-1w
                 = t('to_modify', scope: [:layouts, :breadcrumb])
 

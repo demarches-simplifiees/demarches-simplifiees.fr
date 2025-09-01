@@ -12,7 +12,6 @@ describe APIEntreprise::BilansBdfAdapter do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/banque_de_france\/unites_legales\/#{siren}\/bilans/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["bilans_entreprise_bdf"])
-    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context "when the SIREN is valid" do

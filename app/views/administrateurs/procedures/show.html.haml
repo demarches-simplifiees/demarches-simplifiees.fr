@@ -41,7 +41,7 @@
         = link_to 'Clore', admin_procedure_close_path(procedure_id: @procedure.id), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-calendar-close-fill', id: "close-procedure-link"
 
 .fr-container
-  - if @procedure.api_entreprise_token_expired_or_expires_soon?
+  - if @procedure.api_entreprise_token.expired_or_expires_soon?
     = render Dsfr::AlertComponent.new(state: :error, title: t(:technical_issues, scope: [:administrateurs, :procedures]), extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do
         %ul.fr-mb-0

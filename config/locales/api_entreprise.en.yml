@@ -1,5 +1,5 @@
 en:
   api_entreprise:
     errors:
-      missing_token: "the API Entreprise token cannot be blank"
+      missing_token: "API Entreprise token is blank."
       token_expired: "API Entreprise token has expired."
