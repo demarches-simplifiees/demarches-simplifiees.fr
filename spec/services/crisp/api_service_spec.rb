@@ -137,5 +137,40 @@ RSpec.describe Crisp::APIService do
         end
       end
     end
+
+    describe '#get_conversation' do
+      let(:session_id) { 'session_310b13c9-f115-42f5-bd83-f5e22b8e50dd' }
+
+      context 'when API call succeeds' do
+        before do
+          stub_request(:get, "https://api.crisp.chat/v1/website/#{website_id}/conversation/#{session_id}")
+            .with(headers: { 'X-Crisp-Tier' => 'plugin', 'Authorization': /Basic / })
+            .and_return(
+              body: {
+                "error" => false,
+                "reason" => "resolved",
+                "data" => {
+                  "session_id" => session_id,
+                  "last_message" => "J'ai un pb avec l'attestation",
+                  "topic" => "Attestation issue",
+                  "meta" => {
+                    "email" => "test@example.com",
+                    "segments" => ["attestation"]
+                  }
+                }
+              }.to_json
+            )
+        end
+
+        it 'calls API with correct parameters' do
+          result = service.get_conversation(session_id: session_id)
+
+          expect(result).to be_success
+          expect(result.success.dig(:data, :topic)).to eq("Attestation issue")
+          expect(result.success.dig(:data, :last_message)).to eq("J'ai un pb avec l'attestation")
+          expect(result.success.dig(:data, :meta, :segments)).to eq(["attestation"])
+        end
+      end
+    end
   end
 end
