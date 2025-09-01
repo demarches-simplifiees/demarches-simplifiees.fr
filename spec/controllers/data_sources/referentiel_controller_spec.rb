@@ -5,6 +5,7 @@ require 'rails_helper'
 describe DataSources::ReferentielController, type: :controller do
   include Dry::Monads[:result]
   describe 'GET #search' do
+      let(:user) { create(:user) }
       let(:procedure) { create(:procedure, types_de_champ_public:) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
       let(:referentiel) do
@@ -14,7 +15,8 @@ describe DataSources::ReferentielController, type: :controller do
                datasource: '$.data',
                url: "https://tabular-api.data.gouv.fr/api/resources/796dfff7-cf54-493a-a0a7-ba3c2024c6f3/data/?finess__contains={id}")
       end
-      subject { get :search, params: { q: '010002699', referentiel_id: referentiel.id } }
+      before { sign_in(user) }
+      subject { post :search, params: { q: '010002699', referentiel_id: referentiel.id } }
 
       context 'when success params' do
         it 'returns formatted results', vcr: 'referentiel/datagouv-finess' do
@@ -31,7 +33,7 @@ describe DataSources::ReferentielController, type: :controller do
         let(:referentiel_service) { double(call: service_respone) }
 
         before do
-          expect(ReferentielService).to receive(:new).with(referentiel:, timeout: 2).and_return(referentiel_service)
+          expect(ReferentielService).to receive(:new).with(referentiel:, timeout: ReferentielService::API_TIMEOUT / 2).and_return(referentiel_service)
         end
 
         context 'when service fails' do
