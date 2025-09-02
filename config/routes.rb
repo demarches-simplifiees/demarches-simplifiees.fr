@@ -541,6 +541,7 @@ Rails.application.routes.draw do
           resources :batch_operations, only: [:create], path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
             collection do
               post 'create_batch_avis' => 'batch_operations#create_batch_avis'
+              post 'create_batch_commentaire' => 'batch_operations#create_batch_commentaire'
             end
           end
         end
