@@ -12,10 +12,9 @@ export class ModalRedirectController extends ApplicationController {
   connect(): void {
     if (this.hasModalTarget) {
       this.modalTarget.remove();
-    }
-
-    if (this.urlValue) {
-      Turbo.visit(this.urlValue);
+      if (this.urlValue) {
+        Turbo.visit(this.urlValue);
+      }
     }
   }
 }
