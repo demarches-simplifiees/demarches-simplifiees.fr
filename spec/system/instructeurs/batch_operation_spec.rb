@@ -139,7 +139,7 @@ describe 'BatchOperation a dossier:', js: true do
 
     scenario 'create a BatchOperation within the limit of selection' do
       stub_const "Instructeurs::ProceduresController::ITEMS_PER_PAGE", 2
-      stub_const "Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT", 3
+      stub_const "BatchOperation::BATCH_SELECTION_LIMIT", 3
       dossier_1 = create(:dossier, :en_instruction, procedure: procedure)
       dossier_2 = create(:dossier, :en_instruction, procedure: procedure)
       dossier_3 = create(:dossier, :en_instruction, procedure: procedure)

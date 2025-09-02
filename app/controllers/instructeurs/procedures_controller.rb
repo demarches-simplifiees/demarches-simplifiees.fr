@@ -10,7 +10,6 @@ module Instructeurs
     after_action :mark_latest_revision_as_seen, only: [:history]
 
     ITEMS_PER_PAGE = 100
-    BATCH_SELECTION_LIMIT = 500
 
     def index
       all_procedures = current_instructeur

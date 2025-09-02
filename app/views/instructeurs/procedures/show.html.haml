@@ -38,7 +38,7 @@
         = render Dossiers::BatchAlertComponent.new(batch: batch_operation, procedure: @procedure)
 
     - if @dossiers_count > 0
-      %div{ data: batch_operation_component.render? ? { controller: 'batch-operation' } : {} }
+      %div{ data: batch_operation_component.render? ? { controller: 'batch-operation', 'batch-operation-limit-value': BatchOperation::BATCH_SELECTION_LIMIT } : {} }
         .flex.align-center.fr-mt-2w
           %span.fr-h6.fr-mb-0.fr-mr-3w
             = page_entries_info @filtered_sorted_paginated_ids

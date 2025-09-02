@@ -3,7 +3,8 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  BATCH_MESSAGE_LIMIT = 500;
+  static values = { limit: Number };
+  declare readonly limitValue: number;
 
   static targets = [
     'menu',
@@ -269,7 +270,7 @@ export class BatchOperationController extends ApplicationController {
 
     // Gérer la limite
     if (this.commentaireWarningTarget && this.commentaireFormContainerTarget) {
-      if (dossiersCount > this.BATCH_MESSAGE_LIMIT) {
+      if (dossiersCount > this.limitValue) {
         this.commentaireWarningTarget.classList.remove('hidden');
         this.commentaireFormContainerTarget.classList.add('hidden');
       } else {
