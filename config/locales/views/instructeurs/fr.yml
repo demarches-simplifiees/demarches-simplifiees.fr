@@ -6,7 +6,6 @@ fr:
     dossiers:
       filterable_state:
         en_construction: "En construction"
-        pending_correction: "En attente"
         en_instruction: "En instruction"
         accepte: "Accepté"
         refuse: "Refusé"
