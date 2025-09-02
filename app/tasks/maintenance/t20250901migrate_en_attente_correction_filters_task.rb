@@ -46,6 +46,9 @@ module Maintenance
         end
 
         pp.send("#{state_filter}=", new_state_filters)
+      # a column can be not found for various reasons (deleted tdc, changed type, etc)
+      # in this case we just ignore the error and continue
+      rescue ActiveRecord::RecordNotFound
       end
 
       pp.save! if pp_changed
