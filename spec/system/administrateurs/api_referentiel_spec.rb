@@ -27,10 +27,16 @@ describe 'Referentiel API:' do
       click_on('Configurer le champ')
 
       find("#referentiel_url").fill_in(with: 'google.com')
+      fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
+
       expect(page).to have_content("n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
       find("#referentiel_url").fill_in(with: 'https://google.com')
+      fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
+
       expect(page).to have_content("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
       find("#referentiel_url").fill_in(with: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/')
+      fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
+
       expect(page).to have_content("Attention si vous appelez une API qui renvoie de la donnée personnelle, vous devez en informer votre DPO.")
     end
 
@@ -39,6 +45,7 @@ describe 'Referentiel API:' do
       click_on('Configurer le champ')
       expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
       find("#referentiel_url").fill_in(with: 'google.com')
+      fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
       expect(page).to have_content("Le champ « URL de l'API » n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
       expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
     end
@@ -239,9 +246,9 @@ describe 'Referentiel API:' do
       end
 
       # configure datasource
-      expect(page).not_to have_content("Choisir les propriétés qui seront affichées dans les options de l'autocomplete")
+      expect(page).not_to have_content("Propriétés qui seront affichées dans les autosuggestions")
       find("input[type=radio][name='referentiel[datasource]']").click
-      expect(page).to have_content("Choisir les propriétés qui seront affichées dans les options de l'autocomplete")
+      expect(page).to have_content("Propriétés qui seront affichées dans les autosuggestions")
 
       # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
       page.find('button[title="$.finess (010002699)"]').click

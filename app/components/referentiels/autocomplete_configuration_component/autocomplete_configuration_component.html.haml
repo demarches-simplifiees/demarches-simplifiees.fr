@@ -13,7 +13,7 @@
             .fr-table__container
               .fr-table__content
                 %table
-                  %caption Sélectionnez la source de données à exploiter pour l'autocomplete
+                  %caption Sélectionnez la source de données à exploiter pour les autosuggestions
                   %thead
                     %tr
                       %th.fr-cell--fixed Propriété
@@ -25,16 +25,17 @@
                         %td.fr-cell--fixed= jsonpath
                         %td.fr-cell--multiline
                           %pre= JSON.pretty_generate(value)
-                        %td.text-center= select_datasource_radio_tag(jsonpath)
+                        %td.fr-cell--center= select_datasource_radio_tag(jsonpath)
 
   - if datasource.present?
     = form_with model: @referentiel, scope: :referentiel, url: form_url, **form_template_options do |f|
       %div{ class: "#{bordered_container_class_names} fr-mt-5w" }
-        #autocomplete.fr-my-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
+        %h3.fr-h3.fr-mb-2w Propriétés des autosuggestions
+        #autocomplete.fr-mb-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
           .fr-input-group{ class: class_names("fr-input-group--error" => f.object.errors.include?(:tiptap_template)) }
             %label.fr-label
-              Choisir les propriétés qui seront affichées dans les options de l'autocomplete
-              %span.fr-hint-text Vous pouvez utiliser les balises pour construire les éléments suggérés
+              Propriétés qui seront affichées dans les autosuggestions
+              %span.fr-hint-text Vous pouvez utiliser les étiquettes ci dessous pour construire les autosuggestions
 
             #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: "autocomplete_configuration-json-body-message"} }
             = hidden_field_tag "referentiel[tiptap_template]", @referentiel.tiptap_template, data: { tiptap_target: 'input' }

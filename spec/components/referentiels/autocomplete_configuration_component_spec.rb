@@ -26,7 +26,7 @@ RSpec.describe Referentiels::AutocompleteConfigurationComponent, type: :componen
     context 'when datasource count is 1' do
       let(:last_response) { { body: { jsonpath: [{ id: 1, k1: :v1 }] } } }
       it 'renders datasource' do
-        expect(page).to have_content("Sélectionnez la source de données à exploiter pour l'autocomplete")
+        expect(page).to have_content("Sélectionnez la source de données à exploiter pour les autosuggestions")
         expect(page).to have_selector("input[type=radio]")
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe Referentiels::AutocompleteConfigurationComponent, type: :componen
       end
 
       it 'renders selectable datasources' do
-        expect(page).to have_content("Sélectionnez la source de données à exploiter pour l'autocomplete")
+        expect(page).to have_content("Sélectionnez la source de données à exploiter pour les autosuggestions")
         expect(page).not_to have_selector("input[type=radio][checked]", count: 2)
       end
     end
