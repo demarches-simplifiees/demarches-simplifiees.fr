@@ -107,11 +107,15 @@ module SystemHelpers
 
   def select_combobox(libelle, value, custom_value: false)
     fill_in libelle, with: custom_value ? "#{value}," : value
+    expect(page).to have_field(libelle, with: value) if !custom_value
 
     if !custom_value
-      option = find('[role="option"]', text: value)
-      expect(option).to be_visible
-      option.click
+      within '[role="listbox"]' do
+        option = find('[role="option"]', text: value)
+        expect(option).to be_visible
+        sleep 0.1 # wait for any animation to complete
+        option.click
+      end
     end
   end
 
