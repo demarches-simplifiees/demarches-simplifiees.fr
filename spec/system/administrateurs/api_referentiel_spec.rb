@@ -235,7 +235,7 @@ describe 'Referentiel API:' do
       click_on('Configurer le champ')
 
       # configure connection
-      VCR.use_cassette('referentiel/datagouv-finess') do
+      VCR.use_cassette('referentiel/datagouv-finess') do # referentiel is called at autocomplete setup
         find("#referentiel_url").fill_in(with: 'https://tabular-api.data.gouv.fr/api/resources/796dfff7-cf54-493a-a0a7-ba3c2024c6f3/data/?finess__contains={id}')
         find('label[for="referentiel_mode_autocomplete"]').click
         fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "Saisir votre finess")
@@ -245,17 +245,19 @@ describe 'Referentiel API:' do
         expect(page).to have_content("Configuration de l'autocomplétion ")
       end
 
-      # configure datasource
-      expect(page).not_to have_content("Propriétés qui seront affichées dans les autosuggestions")
-      find("input[type=radio][name='referentiel[datasource]']").click
-      expect(page).to have_content("Propriétés qui seront affichées dans les autosuggestions")
+      VCR.use_cassette('referentiel/datagouv-finess') do # referentiel is called at mapping setup
+        # configure datasource
+        expect(page).not_to have_content("Propriétés qui seront affichées dans les autosuggestions")
+        find("input[type=radio][name='referentiel[datasource]']").click
+        expect(page).to have_content("Propriétés qui seront affichées dans les autosuggestions")
 
-      # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
-      page.find('button[title="$.finess (010002699)"]').click
-      page.find('button[title="$.ej_rs (CENTRE MEDICAL REGINA)"]').click
-
-      click_on('Étape suivante')
-      expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+        # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
+        page.find('button[title="$.finess (010002699)"]').click
+        page.find('button[title="$.ej_rs (CENTRE MEDICAL REGINA)"]').click
+        # VCR.use_cassette('referentiel/datagouv-finess-2') do
+        click_on('Étape suivante')
+        expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+      end
 
       # ensure tiptap template
       referentiel = Referentiel.last
