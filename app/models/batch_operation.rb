@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BatchOperation < ApplicationRecord
+  BATCH_SELECTION_LIMIT = 500
+
   enum :operation, {
     accepter: 'accepter',
     refuser: 'refuser',

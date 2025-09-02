@@ -63,8 +63,10 @@ module Instructeurs
     end
 
     def create_batch_commentaire
-      if batch_operation_commentaire_params[:dossier_ids]&.size&. > 500
-        flash.now[:alert] = "L'envoi d'un message groupé est limité à 500 usagers. Veuillez restreindre le nombre de dossiers sélectionnés."
+      dossier_ids = batch_operation_commentaire_params[:dossier_ids]
+
+      if dossier_ids&.size&.> BatchOperation::BATCH_SELECTION_LIMIT
+        flash.now[:alert] = "L'envoi d'un message groupé est limité à #{BatchOperation::BATCH_SELECTION_LIMIT} usagers. Veuillez restreindre le nombre de dossiers sélectionnés."
         return render_redirect_and_close_modal
       end
 
