@@ -4,19 +4,21 @@ describe Instructeurs::BatchOperationsController, type: :controller do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }
   let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
-  let(:params) do
-    {
-      procedure_id: procedure.id,
-      batch_operation: {
-        operation: BatchOperation.operations.fetch(:archiver),
-        dossier_ids: [dossier.id]
-      },
-      statut: 'a-suivre'
-    }
-  end
 
   describe '#POST create' do
     before { sign_in(instructeur.user) }
+
+    let(:params) do
+      {
+        procedure_id: procedure.id,
+        batch_operation: {
+          operation: BatchOperation.operations.fetch(:archiver),
+          dossier_ids: [dossier.id]
+        },
+        statut: 'a-suivre'
+      }
+    end
+
     subject { post :create, params: params }
 
     context 'ACL' do
@@ -54,6 +56,44 @@ describe Instructeurs::BatchOperationsController, type: :controller do
       it 'does not create a batch operation if no dossiers' do
         expect { subject }.not_to change { instructeur.batch_operations.count }
         expect(flash.alert).to eq("Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés")
+      end
+    end
+  end
+
+  describe '#POST create_batch_commentaire' do
+    before { sign_in(instructeur.user) }
+
+    let(:params) do
+      {
+        procedure_id: procedure.id,
+        batch_operation: {
+          operation: BatchOperation.operations.fetch(:create_commentaire),
+          dossier_ids: [dossier.id]
+        },
+        commentaire: {
+          body: 'test',
+          piece_jointe: nil
+        }
+      }
+    end
+
+    subject { post :create_batch_commentaire, params: params }
+
+    context 'success with valid dossier_ids' do
+      it 'creates a batch operation for our signed in instructeur' do
+        expect { subject }.to change { instructeur.batch_operations.count }.by(1)
+      end
+
+      it 'created a batch operation that contains dossiers, instructeur, groupe_instructeur' do
+        subject
+        batch_operation = BatchOperation.first
+        expect(batch_operation.dossiers).to include(dossier)
+        expect(batch_operation.instructeur).to eq(instructeur)
+        expect(batch_operation.groupe_instructeurs.to_a).to eq(instructeur.groupe_instructeurs.to_a)
+      end
+
+      it 'enqueues a BatchOperationJob' do
+        expect { subject }.to have_enqueued_job(BatchOperationEnqueueAllJob).with(BatchOperation.last)
       end
     end
   end

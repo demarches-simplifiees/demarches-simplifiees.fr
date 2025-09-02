@@ -88,6 +88,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "envoyer un message aux usagers"' do
+      let(:batch_operation) do
+        create(:batch_operation, :create_commentaire,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'add a commentaire to the dossier' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.commentaires }
+          .from([])
+          .to(anything)
+      end
+    end
+
     context 'when operation is "follow"' do
       let(:batch_operation) do
         create(:batch_operation, :follow,

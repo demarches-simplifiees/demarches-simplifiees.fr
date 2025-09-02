@@ -62,6 +62,10 @@ module Instructeurs
       end
     end
 
+    def create_batch_commentaire
+      batch = BatchOperation.safe_create!(batch_operation_commentaire_params)
+    end
+
     private
 
     def batch_operation_params
@@ -87,6 +91,21 @@ module Instructeurs
         :invite_linked_dossiers,
         :question_label,
         emails: []
+      )
+    end
+
+    def batch_operation_commentaire_params
+      params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
+        batch_params[:operation] = 'create_commentaire'
+        batch_params[:instructeur] = current_instructeur
+        batch_params.merge!(commentaire_params)
+      end
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(
+        :body,
+        :piece_jointe
       )
     end
 
