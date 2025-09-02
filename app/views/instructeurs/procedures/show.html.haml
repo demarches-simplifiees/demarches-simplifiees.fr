@@ -114,8 +114,7 @@
                             - if dossier.hidden_by_administration_at.present?
                               %span
                                 = render Instructeurs::CellComponent.new(dossier:, column:)
-                                - if dossier.hidden_by_user_at.present?
-                                  = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}"
+                                = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}" if dossier.hidden_by_user_at.present?
                             - else
                               %a{ href: path }
                                 = render Instructeurs::CellComponent.new(dossier:, column:)

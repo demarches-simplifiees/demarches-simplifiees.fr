@@ -422,6 +422,10 @@ en:
           rendez_vous: Appointment
         archived_dossier: "This file will be kept for an additional month"
         delete_dossier: "Move file to trash"
+        deleted_reason:
+          user_request: File deleted by the user
+          expired: The file is expired
+          user_removed: The user has deleted his/her account
         acts_on_behalf: "acts for"
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
