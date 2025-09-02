@@ -4,24 +4,22 @@ module Crisp
   class WebhookProcessor
     include Dry::Monads[:result]
 
+    # IMPORTANT: Outgoing traffic is restricted in production: never call the Crisp API from a webhook request, use a job!
     def initialize(params)
       @params = params
       @email = extract_email_from_params
+      @session_id = params.dig(:data, :session_id)
     end
 
     def process
       return unless processable_event?
 
-      @email = fetch_email_from_session if email.blank?
-
-      return if user.blank?
-
-      CrispUpdatePeopleDataJob.perform_later(user)
+      CrispUpdatePeopleDataJob.perform_later(session_id, email)
     end
 
     private
 
-    attr_reader :params, :email
+    attr_reader :params, :session_id, :email
 
     def processable_event?
       params[:event] == "message:send" && params.dig(:data, :from) == "user"
@@ -31,22 +29,6 @@ module Crisp
       # conversations from chat does not use an email as user id
       maybe_email = params.dig(:data, :user, :user_id)
       maybe_email&.include?("@") ? maybe_email : nil
-    end
-
-    def user
-      @user ||= User.find_by(email:)
-    end
-
-    def fetch_email_from_session
-      session_id = params.dig(:data, :session_id)
-
-      result = Crisp::APIService.new.get_conversation_meta(session_id:)
-      case result
-      in Success(data: {email:})
-        email
-      in Failure(reason:)
-        fail reason
-      end
     end
   end
 end

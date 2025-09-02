@@ -26,7 +26,7 @@ RSpec.describe Crisp::WebhookProcessor do
   describe '#process' do
     context 'with message:send event' do
       it 'enqueue a job which will update people data' do
-        expect { subject }.to have_enqueued_job(CrispUpdatePeopleDataJob).with(user)
+        expect { subject }.to have_enqueued_job(CrispUpdatePeopleDataJob).with(session_id, email)
       end
     end
 
@@ -34,28 +34,6 @@ RSpec.describe Crisp::WebhookProcessor do
       let(:event) { "other:event" }
 
       it 'does not handle webhook' do
-        expect { subject }.not_to have_enqueued_job
-      end
-    end
-
-    context 'with a session id instead of email' do
-      let(:email) { session_id } # simulate real payload !
-      before do
-        stub_request(:get, %r{^https://api.crisp.chat/v1/website/.+/conversation/.+/meta$})
-          .and_return(
-            body: { "error" => false, "reason" => "resolved", "data" => { "email" => user.email } }.to_json
-          )
-      end
-
-      it 'fetch email from API' do
-        expect { subject }.to have_enqueued_job.with(user)
-      end
-    end
-
-    context 'with unknown user' do
-      let(:email) { 'nonexistent@example.com' }
-
-      it 'ignores webhook' do
         expect { subject }.not_to have_enqueued_job
       end
     end
