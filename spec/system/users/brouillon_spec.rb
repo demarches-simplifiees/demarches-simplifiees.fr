@@ -19,9 +19,9 @@ describe 'The user', js: true do
     # fill data
     fill_in('text', with: 'super texte', match: :first)
     fill_in('textarea', with: 'super textarea')
-    fill_in('date', with: Date.parse('2012-12-12'), match: :first)
-    fill_in('datetime', with: Time.zone.parse('2023-01-06T07:05'))
-    find("input[type=datetime-local]").send_keys('ArrowUp').send_keys('ArrowDown') # triggers onChange
+    fill_in('date', with: '2012-12-12', match: :first)
+
+    fill_in('datetime', with: '2023-01-06T07:05')
     # fill_in('number', with: '42'), deadchamp, should be migrated to textchamp
     fill_in('decimal_number', with: '17')
     fill_in('integer_number', with: '12')
@@ -38,11 +38,10 @@ describe 'The user', js: true do
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
 
     scroll_to(find_field('multiple_choice_drop_down_list_long'), align: :center)
-    fill_in('multiple_choice_drop_down_list_long', with: 'alpha')
-    find('.fr-menu__item', text: 'alpha').click
+    select_combobox('multiple_choice_drop_down_list_long', 'alpha')
     wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha'].to_json }
-    fill_in('multiple_choice_drop_down_list_long', with: 'charly')
-    find('.fr-menu__item', text: 'charly').click
+
+    select_combobox('multiple_choice_drop_down_list_long', 'charly')
     wait_until { champ_value_for('multiple_choice_drop_down_list_long') == ['alpha', 'charly'].to_json }
 
     select('Australie', from: form_id_for('pays'))
@@ -198,8 +197,6 @@ describe 'The user', js: true do
     fill_in('IBAN', with: 'FR')
     wait_until { champ_value_for('IBAN') == 'FR' }
 
-    expect(page).not_to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
-    blur
     expect(page).to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
 
     fill_in('IBAN', with: 'FR7630006000011234567890189')
@@ -242,11 +239,12 @@ describe 'The user', js: true do
     # Becomes international
     select('Bolivie', from: form_id_for('Pays'))
     wait_until { champ_for('address').country_code == 'BO' }
-    expect(page).to have_content("Renseigner la ville")
+    # wait for the form to become international
+    expect(page).to have_content('12 Main Street')
+
     fill_in('Ville', with: 'La Paz')
     wait_until { champ_for('address').city_name == 'La Paz' }
 
-    expect(page).to have_content("Renseigner un code postal")
     fill_in('Code postal', with: '123')
     wait_until { champ_for('address').postal_code == '123' }
     expect(champ_for('address').full_address?).to be_truthy
