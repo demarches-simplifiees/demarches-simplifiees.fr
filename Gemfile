@@ -18,7 +18,6 @@ gem 'anchored'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
-gem 'capybara-playwright-driver'
 gem 'charlock_holmes'
 gem 'chartkick'
 gem 'chunky_png'
@@ -125,6 +124,7 @@ group :test do
   gem 'axe-core-rspec' # accessibility rspec matchers
   gem 'capybara' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
+  gem 'capybara-playwright-driver'
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
   gem 'factory_bot'
   gem 'launchy'
