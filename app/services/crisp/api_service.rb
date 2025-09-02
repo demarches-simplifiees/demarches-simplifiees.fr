@@ -12,6 +12,8 @@ module Crisp
       "create_conversation" => '/v1/website/%{website_id}/conversation',
       # https://docs.crisp.chat/references/rest-api/v1/#send-a-message-in-conversation
       "send_message" => '/v1/website/%{website_id}/conversation/%{session_id}/message',
+      # https://docs.crisp.chat/references/rest-api/v1/#get-conversation-metas
+      "get_conversation_meta" => '/v1/website/%{website_id}/conversation/%{session_id}/meta',
       # https://docs.crisp.chat/references/rest-api/v1/#update-conversation-metas
       "update_conversation_meta" => '/v1/website/%{website_id}/conversation/%{session_id}/meta'
     }.freeze
@@ -37,6 +39,14 @@ module Crisp
       url = build_url(endpoint)
 
       result = call(url:, json: body, method: :post)
+      handle_result(result)
+    end
+
+    def get_conversation_meta(session_id:)
+      endpoint = format(ENDPOINTS['get_conversation_meta'], website_id:, session_id:)
+      url = build_url(endpoint)
+
+      result = call(url:, method: :get)
       handle_result(result)
     end
 

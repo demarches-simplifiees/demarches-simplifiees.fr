@@ -100,7 +100,16 @@ describe WebhookController, type: :controller do
   end
 
   describe '#crisp' do
-    let(:payload) { { "event" => "message:send" } }
+    let(:payload) do
+      {
+        "event" => "message:send",
+        "data" => {
+          "from" => "user",
+          "user" => { "user_id" => "default_user@user.com" }
+        }
+      }
+    end
+
     let(:body) { payload }
     let(:timestamp) { Time.current }
 
