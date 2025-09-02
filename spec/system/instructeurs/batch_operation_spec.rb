@@ -254,6 +254,75 @@ describe 'BatchOperation a dossier:', js: true do
       visit instructeur_procedure_path(procedure, statut: 'suivis')
       expect(page).not_to have_content("L’action de masse est terminée")
     end
+
+    scenario 'create a BatchOperation for create_commentaire with modal', chrome: true do
+      dossier_1 = create(:dossier, :en_construction, procedure: procedure)
+      dossier_2 = create(:dossier, :en_instruction, procedure: procedure)
+      instructeur.follow(dossier_1)
+      instructeur.follow(dossier_2)
+      log_in(instructeur.email, password)
+
+      visit instructeur_procedure_path(procedure, statut: 'suivis')
+
+      checkbox_id_1 = dom_id(BatchOperation.new, "checkbox_#{dossier_1.id}")
+      checkbox_id_2 = dom_id(BatchOperation.new, "checkbox_#{dossier_2.id}")
+
+      # batch two dossiers
+      check(checkbox_id_1)
+      check(checkbox_id_2)
+      expect(page).to have_button("Autres actions multiples")
+
+      click_on "Autres actions multiples"
+      click_on "Envoyer un message aux usagers"
+
+      # can close the modal
+      expect(page).to have_selector("#modal-commentaire-batch", visible: true)
+      click_on "Annuler", visible: true
+      expect(page).to have_selector("#modal-commentaire-batch", visible: false)
+
+      # reopen the modal
+      click_on "Autres actions multiples"
+      click_on "Envoyer un message aux usagers"
+      expect(page).to have_selector("#modal-commentaire-batch", visible: true)
+
+      click_on "Envoyer le message"
+
+      expect(page).to have_content("Envoyer un message à 2 usagers")
+      fill_in('Votre message', with: "Bonjour,\r\nÊtes-vous disponible pour un rendez-vous en visio la semaine prochaine ?\r\nCordialement")
+      click_on "Envoyer le message"
+
+      # ensure batched dossiers are disabled
+      expect(page).to have_selector("##{checkbox_id_1}[disabled]")
+      expect(page).to have_selector("##{checkbox_id_2}[disabled]")
+      # ensure Batch is created
+      expect(BatchOperation.count).to eq(1)
+      # check a11y with disabled checkbox
+      expect(page).to be_axe_clean
+
+      # ensure alert is present
+      expect(page).to have_content("Information : Une action de masse est en cours")
+      expect(page).to have_content("Un message est en cours d’envoi pour 0/2 dossiers")
+
+      # ensure data-controller="turbo-poll" is present
+      expect(page).to have_selector('[data-controller~="turbo-poll"]')
+
+      # ensure jobs are queued
+      perform_enqueued_jobs(only: [BatchOperationEnqueueAllJob])
+      expect { perform_enqueued_jobs(only: [BatchOperationProcessOneJob]) }
+        .to change { dossier_1.reload.commentaires }
+        .from([]).to(anything)
+
+      # ensure alert updates when jobs are run
+      expect(page).to have_content("L’action de masse est terminée")
+      expect(page).to have_content("Un message a été envoyé pour 2/2 dossiers")
+
+      # ensure data-controller="turbo-poll" is no longer present
+      expect(page).not_to have_selector('[data-controller~="turbo-poll"]')
+
+      # clean alert after reload
+      visit instructeur_procedure_path(procedure, statut: 'suivis')
+      expect(page).not_to have_content("L’action de masse est terminée")
+    end
   end
 
   def log_in(email, password)

@@ -37,6 +37,7 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
       is_expected.to have_button('Repasser les dossiers en construction', disabled: true)
       is_expected.to have_button('Ne plus suivre les dossiers', disabled: true)
       is_expected.to have_button('Demander un avis externe', disabled: true)
+      is_expected.to have_button('Envoyer un message aux usagers', disabled: true)
     end
 
     context 'with expert review disallowed procedure' do

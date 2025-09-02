@@ -19,6 +19,7 @@ fr:
     other: Other batch operations
     confirm: Do you confirm the batch operation for selected files ?
     create_avis: Ask for an opinion
+    create_commentaire: Send a message to users
   placeholders:
     accepter: "Explain to users why their file is accepted (optional)"
     refuser: "Explain to users why their file is refused (mandatory)"

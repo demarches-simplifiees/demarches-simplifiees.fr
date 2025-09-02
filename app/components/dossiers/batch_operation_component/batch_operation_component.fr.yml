@@ -19,6 +19,7 @@ fr:
     other: Autres actions multiples
     confirm: Confirmez-vous le traitement multiple des dossiers sélectionnés ?
     create_avis: Demander un avis externe
+    create_commentaire: Envoyer un message aux usagers
   placeholders:
     accepter: "Expliquez aux demandeurs pourquoi leur dossier est accepté (facultatif)"
     refuser: "Expliquez aux demandeurs pourquoi leur dossier est refusé (obligatoire)"
