@@ -116,6 +116,15 @@ en:
       text_success:
         one: "A review request is being sent for 1 file"
         other: "Review requests are being sent for %{success_count}/%{count} files"
+  create_commentaire:
+    finish:
+      text_success:
+        one: "A message has been sent for 1 file"
+        other: "A message has been sent for %{success_count}/%{count} files"
+    in_progress:
+      text_success:
+        one: "A message is being sent for 1 file"
+        other: "A message is being sent for %{success_count}/%{count} files"
   title:
     finish: The bulk action is finished
     in_progress:  A bulk action is processing

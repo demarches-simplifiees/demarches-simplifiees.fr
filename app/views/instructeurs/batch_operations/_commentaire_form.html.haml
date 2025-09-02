@@ -1,0 +1,31 @@
+%turbo-frame{ id: "modal-commentaire-batch-form" }
+  = render Dsfr::NoticeComponent.new(data_attributes: { class: 'fr-mb-2w' }) do |c|
+    - c.with_title do
+      Votre message s’ajoutera dans le fil de messagerie de chaque dossier
+  .fr-highlight
+    %p.fr-text--sm
+      %strong
+        = t('asterisk_html', scope: [:utils])
+
+  = render NestedForms::FormOwnerComponent.new
+
+  - form_data = { controller: 'persisted-form', persisted_form_key_value: 'create_commentaire_form', remote: true, 'batch-operation-target': 'commentaireForm'}
+
+  = form_for commentaire, url: url, html: { multipart: true, data: form_data } do |f|
+    .fr-input-group
+      = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area)
+
+    .fr-input-group
+      = f.label :piece_jointe, class: 'fr-label'
+      = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
+
+    - if dossier_ids.present?
+      - dossier_ids.each do |id|
+        = hidden_field_tag 'batch_operation[dossier_ids][]', id
+
+    %ul.fr-btns-group.fr-btns-group--inline-md
+      %li
+        %button.fr-btn.fr-btn--secondary{ aria: { controls: 'modal-commentaire-batch' }, "data-fr-js-modal-button" => "true" }
+          Annuler
+      %li
+        = f.submit "Envoyer le message", class: 'fr-btn'

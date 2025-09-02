@@ -3,14 +3,29 @@ import { disable, enable, show, hide } from '@utils';
 import invariant from 'tiny-invariant';
 
 export class BatchOperationController extends ApplicationController {
-  static targets = ['menu', 'input', 'dropdown', 'checkboxCount', 'modalForm'];
+  BATCH_MESSAGE_LIMIT = 500;
+
+  static targets = [
+    'menu',
+    'input',
+    'dropdown',
+    'checkboxCount',
+    'avisForm',
+    'commentaireForm',
+    'commentaireTitle',
+    'commentaireWarning',
+    'commentaireFormContainer'
+  ];
 
   declare readonly menuTargets: HTMLButtonElement[];
   declare readonly inputTargets: HTMLInputElement[];
   declare readonly dropdownTargets: HTMLButtonElement[];
   declare readonly checkboxCountTarget: HTMLElement;
-  declare readonly modalFormTarget: HTMLFormElement;
-  declare readonly hasModalFormTarget: boolean;
+  declare readonly avisFormTarget: HTMLFormElement;
+  declare readonly commentaireFormTarget: HTMLFormElement;
+  declare readonly commentaireTitleTarget: HTMLElement;
+  declare readonly commentaireWarningTarget: HTMLElement;
+  declare readonly commentaireFormContainerTarget: HTMLElement;
 
   onCheckOne() {
     this.toggleSubmitButtonWhenNeeded();
@@ -190,22 +205,32 @@ export class BatchOperationController extends ApplicationController {
   injectSelectedIdsIntoModal(event: Event) {
     event.preventDefault();
 
-    if (!this.hasModalFormTarget) return;
-    const modalForm = this.modalFormTarget;
+    const trigger = event.currentTarget as HTMLElement | null;
+    const modalType = trigger?.dataset?.modalType;
+    const modalForm =
+      modalType === 'avis' ? this.avisFormTarget : this.commentaireFormTarget;
 
-    // Supprimer les inputs précédemment injectés
-    modalForm
-      .querySelectorAll('input[name="batch_operation[dossier_ids][]"]')
-      .forEach((el) => el.remove());
+    if (!modalForm) return;
 
+    const ids = this.getSelectedIds();
+    this.clearPreviousInputs(modalForm);
+    this.injectHiddenInputs(modalForm, ids);
+    if (modalType === 'commentaire') {
+      this.updateCommentaireModal(ids);
+    }
+    if (modalType === 'avis') {
+      this.setDefaultConfidentialOption();
+    }
+  }
+
+  private getSelectedIds(): string[] {
     const hiddenInput = document.querySelector<HTMLInputElement>(
       '#input_multiple_ids_batch_operation'
     );
-    let ids: string[] = [];
 
     if (hiddenInput && hiddenInput.value.trim() !== '') {
       // Cas 1 : sélection étendue (select all + select more)
-      ids = hiddenInput.value
+      return hiddenInput.value
         .split(',')
         .map((id) => id.trim())
         .filter(Boolean);
@@ -214,10 +239,17 @@ export class BatchOperationController extends ApplicationController {
       const checkedInputs = document.querySelectorAll<HTMLInputElement>(
         'input[name="batch_operation[dossier_ids][]"]:checked:not(:disabled)'
       );
-      ids = Array.from(checkedInputs).map((input) => input.value);
+      return Array.from(checkedInputs).map((input) => input.value);
     }
+  }
 
-    // Injecter les ids en champs cachés dans le formulaire
+  private clearPreviousInputs(modalForm: HTMLFormElement): void {
+    modalForm
+      .querySelectorAll('input[name="batch_operation[dossier_ids][]"]')
+      .forEach((el) => el.remove());
+  }
+
+  private injectHiddenInputs(modalForm: HTMLFormElement, ids: string[]): void {
     ids.forEach((id) => {
       const input = document.createElement('input');
       input.type = 'hidden';
@@ -225,8 +257,29 @@ export class BatchOperationController extends ApplicationController {
       input.value = id;
       modalForm.appendChild(input);
     });
+  }
 
-    // Optionnel : cocher not confidentiel par défaut
+  private updateCommentaireModal(ids: string[]): void {
+    const dossiersCount = ids.length;
+    // Mettre à jour le titre
+    if (this.commentaireTitleTarget) {
+      const userText = dossiersCount > 1 ? 's' : '';
+      this.commentaireTitleTarget.textContent = `Envoyer un message à ${dossiersCount} usager${userText}`;
+    }
+
+    // Gérer la limite
+    if (this.commentaireWarningTarget && this.commentaireFormContainerTarget) {
+      if (dossiersCount > this.BATCH_MESSAGE_LIMIT) {
+        this.commentaireWarningTarget.classList.remove('hidden');
+        this.commentaireFormContainerTarget.classList.add('hidden');
+      } else {
+        this.commentaireWarningTarget.classList.add('hidden');
+        this.commentaireFormContainerTarget.classList.remove('hidden');
+      }
+    }
+  }
+
+  private setDefaultConfidentialOption(): void {
     const confidentialRadio = document.querySelector<HTMLInputElement>(
       '#confidentiel_false'
     );

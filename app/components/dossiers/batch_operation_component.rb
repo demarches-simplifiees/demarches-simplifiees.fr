@@ -28,7 +28,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       ]
     else
       []
-    end.append(BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow))
+    end.append(BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow), BatchOperation.operations.fetch(:create_commentaire))
   end
 
   private
@@ -147,8 +147,16 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.create_avis"),
               operation: BatchOperation.operations.fetch(:create_avis),
-              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false" },
+              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'avis' },
               aria:  'modal-avis-batch'
+
+            },
+
+            {
+              label: t(".operations.create_commentaire"),
+              operation: BatchOperation.operations.fetch(:create_commentaire),
+              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
+              aria:  'modal-commentaire-batch'
 
             }
           ]
@@ -171,7 +179,8 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       supprimer: 'fr-icon-delete-line',
       restaurer: 'fr-icon-refresh-line',
       unfollow: 'fr-icon-star-fill',
-      create_avis: 'fr-icon-questionnaire-line'
+      create_avis: 'fr-icon-questionnaire-line',
+      create_commentaire: 'fr-icon-mail-line'
     }
   end
 
