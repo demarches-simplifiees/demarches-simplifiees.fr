@@ -4,9 +4,19 @@ require "rails_helper"
 
 module Maintenance
   RSpec.describe T20250813removeDuplicateExpertsTask do
-    let(:user_with_duplicates) { create(:user) }
-    let!(:initial_expert) { create(:expert, user: user_with_duplicates, created_at: 3.days.ago) }
-    let!(:duplicate_expert) { create(:expert, user: user_with_duplicates, created_at: 1.day.ago) }
+    let!(:initial_expert) { create(:expert, created_at: 3.days.ago) }
+    let!(:duplicate_expert) { create(:expert, created_at: 1.day.ago) }
+
+    # Since PR#12027, we have an uniq index on user_id
+    before do
+      ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS index_experts_on_user_id")
+      duplicate_expert.update_column(:user_id, initial_expert.user_id)
+    end
+
+    after do
+      duplicate_expert.destroy!
+      ActiveRecord::Base.connection.execute("CREATE UNIQUE INDEX index_experts_on_user_id ON experts(user_id)")
+    end
 
     describe "#collection" do
       subject(:collection) { described_class.collection }
