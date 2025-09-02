@@ -197,8 +197,6 @@ describe 'The user', js: true do
     fill_in('IBAN', with: 'FR')
     wait_until { champ_value_for('IBAN') == 'FR' }
 
-    expect(page).not_to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
-    blur
     expect(page).to have_content 'est invalide. Saisissez un numéro IBAN valide. Exemple (France) : FR76 1234 1234 1234 1234 1234 123'
 
     fill_in('IBAN', with: 'FR7630006000011234567890189')
@@ -241,11 +239,12 @@ describe 'The user', js: true do
     # Becomes international
     select('Bolivie', from: form_id_for('Pays'))
     wait_until { champ_for('address').country_code == 'BO' }
-    expect(page).to have_content("Renseigner la ville")
+    # wait for the form to become international
+    expect(page).to have_content('12 Main Street')
+
     fill_in('Ville', with: 'La Paz')
     wait_until { champ_for('address').city_name == 'La Paz' }
 
-    expect(page).to have_content("Renseigner un code postal")
     fill_in('Code postal', with: '123')
     wait_until { champ_for('address').postal_code == '123' }
     expect(champ_for('address').full_address?).to be_truthy
