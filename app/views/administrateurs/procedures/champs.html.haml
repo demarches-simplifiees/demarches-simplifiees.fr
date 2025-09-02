@@ -23,7 +23,9 @@
             %p.fr-callout__text
               = t('administrateurs.procedures.champs.callout_personne_physique_html')
             %ul
-              = t('administrateurs.procedures.champs.callout_personne_physique_list_html')
+              - if !@procedure.no_gender?
+                = t('administrateurs.procedures.champs.callout_personne_physique_gender_html')
+              = t('administrateurs.procedures.champs.callout_personne_physique_names_html')
             %p.fr-callout__text.fr-text--bold
               = t('administrateurs.procedures.champs.callout_no_ask_twice')
 
