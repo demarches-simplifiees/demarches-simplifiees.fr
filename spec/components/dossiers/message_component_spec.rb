@@ -241,7 +241,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         context "when the dossier has been modified" do
           let!(:correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: nil) }
 
-          before { dossier.submit_en_construction! }
+          before { dossier.usager_submit_en_construction! }
 
           it 'returns a badge modifié' do
             correction.reload

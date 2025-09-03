@@ -89,7 +89,7 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(4)
       expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) }.size).to eq(7)
 
-      dossier.submit_en_construction!
+      dossier.usager_submit_en_construction!
       dossier.reload
 
       expect(dossier.champs.size).to eq(4)
@@ -110,7 +110,7 @@ RSpec.describe DossierStateConcern do
       end
 
       it "create dossier_modifie notification only for instructeur wish to be notified" do
-        dossier.submit_en_construction!
+        dossier.usager_submit_en_construction!
 
         expect(DossierNotification.count).to eq(2)
 
@@ -132,9 +132,9 @@ RSpec.describe DossierStateConcern do
       dossier.accepter!(motivation: 'test')
       dossier.reload
 
-      expect(dossier.champs.size).to eq(15)
+      expect(dossier.champs.size).to eq(17)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
-      expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+      expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) && _1.blank? }.size).to eq(2)
     end
 
     context "when dossier has attente_avis notification" do
@@ -160,9 +160,9 @@ RSpec.describe DossierStateConcern do
       dossier.refuser!(motivation: 'test')
       dossier.reload
 
-      expect(dossier.champs.size).to eq(15)
+      expect(dossier.champs.size).to eq(17)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
-      expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+      expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) && _1.blank? }.size).to eq(2)
     end
 
     context "when dossier has attente_avis notification" do
@@ -188,9 +188,9 @@ RSpec.describe DossierStateConcern do
       dossier.classer_sans_suite!(motivation: 'test')
       dossier.reload
 
-      expect(dossier.champs.size).to eq(15)
+      expect(dossier.champs.size).to eq(17)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
-      expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+      expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) && _1.blank? }.size).to eq(2)
     end
 
     context "when dossier has attente_avis notification" do
@@ -219,9 +219,9 @@ RSpec.describe DossierStateConcern do
         dossier.accepter_automatiquement!
         dossier.reload
 
-        expect(dossier.champs.size).to eq(15)
+        expect(dossier.champs.size).to eq(17)
         expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
-        expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+        expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) && _1.blank? }.size).to eq(2)
       end
     end
 

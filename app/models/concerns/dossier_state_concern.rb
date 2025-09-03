@@ -3,8 +3,8 @@
 module DossierStateConcern
   extend ActiveSupport::Concern
 
-  def submit_en_construction!
-    self.traitements.submit_en_construction
+  def usager_submit_en_construction!
+    self.traitements.usager_submit_en_construction
     self.submitted_revision_id = revision_id
     save!
 
@@ -14,6 +14,13 @@ module DossierStateConcern
     process_sva_svr!
     clean_champs_after_submit!
     DossierNotification.create_notification(self, :dossier_modifie)
+  end
+
+  def instructeur_submit_en_construction!(instructeur:)
+    self.traitements.instructeur_submit_en_construction(instructeur:)
+    save!
+
+    RoutingEngine.compute(self)
   end
 
   def after_passer_en_construction
@@ -408,10 +415,8 @@ module DossierStateConcern
   end
 
   def remove_titres_identite!
-    champ_to_remove_ids = filled_champs.filter(&:titre_identite?).map(&:id)
-
-    return if champ_to_remove_ids.empty?
-    champs.where(id: champ_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
+    champ_to_clear_ids = champs.filter { _1.class == Champs::TitreIdentiteChamp }.to_set(&:stable_id)
+    champs.where(stable_id: champ_to_clear_ids).find_each { _1.piece_justificative_file.purge_later }
   end
 
   def remove_attente_avis_notification
