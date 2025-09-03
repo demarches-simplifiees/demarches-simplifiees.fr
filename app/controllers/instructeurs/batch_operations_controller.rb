@@ -118,7 +118,7 @@ module Instructeurs
     end
 
     def batch_operation_commentaire_params
-      params.require(:batch_operation).permit(dossier_ids: []).tap do |batch_params|
+      params.require(:batch_operation).permit(:statut, dossier_ids: []).tap do |batch_params|
         batch_params[:operation] = 'create_commentaire'
         batch_params[:instructeur] = current_instructeur
         batch_params.merge!(commentaire_params)
@@ -147,7 +147,7 @@ module Instructeurs
       render turbo_stream: turbo_stream.append(
         "contenu",
         partial: "shared/redirect_and_close_modal",
-        locals: { redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis') }
+        locals: { redirect_url: instructeur_procedure_path(@procedure, statut: batch_operation_commentaire_params[:statut]) }
       )
     end
 
