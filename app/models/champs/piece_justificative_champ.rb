@@ -25,6 +25,10 @@ class Champs::PieceJustificativeChamp < Champ
     nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
   end
 
+  def external_error_present?
+    fetch_external_data_exceptions.present? && piece_justificative_file.attached?
+  end
+
   private
 
   def uses_external_data?
