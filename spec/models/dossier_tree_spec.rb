@@ -416,6 +416,141 @@ RSpec.describe DossierTree, type: :model do
     end
   end
 
+  describe 'visibility' do
+    include Logic
+
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:tree) { DossierTree.build(coordinates: procedure_coordinates, procedure:, dossier:) }
+    let(:derived_tree) { tree.with_coordinates(procedure_private_coordinates) }
+
+    let(:checkbox_0) { { type: :checkbox, libelle: 'Checkbox (0)', stable_id: 99 } }
+    let(:yes_no_0) { { type: :checkbox, libelle: 'YesNo (0)', stable_id: 199, condition: ds_eq(champ_value(99), constant(true)) } }
+    let(:text_0) { { libelle: 'Text (0)', condition: ds_eq(champ_value(99), constant(true)) } }
+    let(:header_1) { { type: :header_section, libelle: 'Header 1', condition: ds_eq(champ_value(199), constant(true)) } }
+    let(:checkbox_1) { { type: :checkbox, libelle: 'Checkbox (1)', stable_id: 299 } }
+    let(:text_1) { { libelle: 'Text (1)', condition: ds_eq(champ_value(299), constant(true)) } }
+    let(:repetition_1) { { type: :repetition, libelle: 'Repetition (1)', children: repetition_1_children, condition: ds_eq(champ_value(299), constant(true)) } }
+
+    let(:repetition_1_header_1) { { type: :header_section, level: 1, libelle: 'Repetition (1) - Header 1', condition: ds_eq(champ_value(399), constant(true)) } }
+    let(:repetition_1_children) do
+      [
+        { type: :checkbox, libelle: 'Repetition (1) - Checkbox (0)', stable_id: 399 },
+        { libelle: 'Repetition (1) - Text (0)', condition: ds_eq(champ_value(399), constant(true)) },
+        repetition_1_header_1,
+        { libelle: 'Repetition (1) - Text (1)' }
+      ]
+    end
+
+    let(:types_de_champ_public) do
+      [
+        checkbox_0,
+        yes_no_0,
+        text_0,
+        header_1,
+        checkbox_1,
+        text_1,
+        repetition_1
+      ]
+    end
+
+    context 'not visible' do
+      before {
+        dossier.champs.find { _1.stable_id == 99 }.update(value: 'false')
+      }
+
+      it 'should not be visible' do
+        expect(tree.children.map(&:visible?)).to eq [true, false, false, false]
+        expect(tree.children.fourth.children.map(&:visible?)).to eq [false, false, false]
+      end
+    end
+
+    context 'visible' do
+      it 'should be visible' do
+        expect(tree.children.map(&:visible?)).to eq [true, true, true, true]
+        expect(tree.children.fourth.children.map(&:visible?)).to eq [true, true, true]
+      end
+    end
+
+    context 'ancestor not visible' do
+      before {
+        dossier.champs.find { _1.stable_id == 199 }.update(value: 'false')
+      }
+
+      it 'with hidden ancestor should not be visible' do
+        expect(tree.children.map(&:visible?)).to eq [true, true, true, false]
+        expect(tree.children.fourth.children.map(&:visible?)).to eq [false, false, false]
+        expect(tree.children.fourth.children.third.rows.map(&:visible?)).to eq [false, false]
+        expect(tree.children.fourth.children.third.rows.first.children.map(&:visible?)).to eq [false, false, false]
+        expect(tree.children.fourth.children.third.rows.second.children.map(&:visible?)).to eq [false, false, false]
+      end
+    end
+
+    context 'nested not visible' do
+      before {
+        dossier.champs.find { _1.stable_id == 299 }.update(value: 'false')
+      }
+
+      it 'should not be visible' do
+        expect(tree.children.map(&:visible?)).to eq [true, true, true, true]
+        expect(tree.children.fourth.children.map(&:visible?)).to eq [true, false, false]
+        expect(tree.children.fourth.children.third.rows.map(&:visible?)).to eq [false, false]
+        expect(tree.children.fourth.children.third.rows.first.children.map(&:visible?)).to eq [false, false, false]
+        expect(tree.children.fourth.children.third.rows.second.children.map(&:visible?)).to eq [false, false, false]
+      end
+    end
+
+    context 'in row not visible' do
+      before {
+        dossier.champs.find { _1.stable_id == 399 }.update(value: 'false')
+      }
+
+      it 'should not be visible' do
+        expect(tree.children.map(&:visible?)).to eq [true, true, true, true]
+        expect(tree.children.fourth.children.map(&:visible?)).to eq [true, true, true]
+        expect(tree.children.fourth.children.third.rows.map(&:visible?)).to eq [true, true]
+        expect(tree.children.fourth.children.third.rows.first.children.map(&:visible?)).to eq [true, false, false]
+        expect(tree.children.fourth.children.third.rows.second.children.map(&:visible?)).to eq [true, true, true]
+        expect(tree.children.fourth.children.third.rows.first.children.last.children.map(&:visible?)).to eq [false]
+        expect(tree.children.fourth.children.third.rows.second.children.last.children.map(&:visible?)).to eq [true]
+      end
+    end
+
+    context 'private depending on public' do
+      let(:private_text_0) { { libelle: 'Private Text (0)', condition: ds_eq(champ_value(99), constant(true)) } }
+      let(:private_textarea_0) { { libelle: 'Private Textarea (0)', condition: ds_eq(champ_value(199), constant(true)) } }
+
+      let(:types_de_champ_private) do
+        [private_text_0, private_textarea_0]
+      end
+
+      context 'not visible' do
+        before {
+          dossier.champs.find { _1.stable_id == 99 }.update(value: 'false')
+        }
+
+        it 'should not be visible' do
+          expect(derived_tree.children.map(&:visible?)).to eq [false, false]
+        end
+      end
+
+      context 'ancestor not visible' do
+        before {
+          dossier.champs.find { _1.stable_id == 199 }.update(value: 'false')
+        }
+
+        it 'with hidden ancestor should not be visible' do
+          expect(derived_tree.children.map(&:visible?)).to eq [true, false]
+        end
+      end
+
+      context 'visible' do
+        it 'should be visible' do
+          expect(derived_tree.children.map(&:visible?)).to eq [true, true]
+        end
+      end
+    end
+  end
+
   describe 'validation' do
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     let(:tree) { DossierTree.build(coordinates: procedure_coordinates, procedure:, dossier:) }
