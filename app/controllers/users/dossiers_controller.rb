@@ -302,7 +302,7 @@ module Users
 
       if dossier.errors.blank? && dossier.can_passer_en_construction?
         dossier.merge_user_buffer_stream!
-        dossier.submit_en_construction!
+        dossier.usager_submit_en_construction!
 
         redirect_to dossier_path(dossier)
       else

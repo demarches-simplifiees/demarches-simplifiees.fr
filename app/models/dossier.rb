@@ -64,8 +64,16 @@ class Dossier < ApplicationRecord
         browser: Current.browser)
     end
 
-    def submit_en_construction(processed_at: Time.zone.now)
+    def usager_submit_en_construction(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_construction),
+        processed_at:,
+        revision_id: proxy_association.owner.revision_id,
+        browser: Current.browser)
+    end
+
+    def instructeur_submit_en_construction(instructeur:, processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_construction),
+        instructeur_email: instructeur.email,
         processed_at:,
         revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
