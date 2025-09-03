@@ -1796,9 +1796,16 @@ describe Users::DossiersController, type: :controller do
 
     context 'when dossier is owned by signed in user' do
       let(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
+      let(:common_user) { create(:user) }
+      let!(:admin_and_instructeur_admin) { create(:administrateur, user: common_user) }
+
+      before do
+        dossier.procedure.administrateurs << admin_and_instructeur_admin
+        dossier.procedure.defaut_groupe_instructeur.instructeurs << admin_and_instructeur_admin.user.instructeur
+      end
 
       it "notifies the user and the admin of the deletion" do
-        expect(DossierMailer).to receive(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), dossier.procedure.administrateurs.first.email).and_return(double(deliver_later: nil))
+        expect(DossierMailer).to receive(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), common_user.email).and_return(double(deliver_later: nil))
         subject
       end
 
