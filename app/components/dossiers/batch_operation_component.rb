@@ -8,10 +8,6 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     @procedure = procedure
   end
 
-  def render?
-    ['a-suivre', 'traites', 'suivis', 'archives', 'supprimes', 'expirant'].include?(@statut)
-  end
-
   def operations_for_dossier(dossier)
     case dossier.state
     when Dossier.states.fetch(:en_construction)
@@ -46,6 +42,12 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.follow"),
               operation: BatchOperation.operations.fetch(:follow)
+            },
+            {
+              label: t(".operations.create_commentaire"),
+              operation: BatchOperation.operations.fetch(:create_commentaire),
+              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
+              aria:  'modal-commentaire-batch'
             }
           ]
       }
@@ -70,6 +72,12 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.supprimer"),
               operation: BatchOperation.operations.fetch(:supprimer)
+            },
+            {
+              label: t(".operations.create_commentaire"),
+              operation: BatchOperation.operations.fetch(:create_commentaire),
+              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
+              aria:  'modal-commentaire-batch'
             }
           ]
       }
@@ -158,6 +166,18 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
               aria:  'modal-commentaire-batch'
 
+            }
+          ]
+      }
+    when 'tous' then
+      {
+        options:
+          [
+            {
+              label: t(".operations.create_commentaire"),
+              operation: BatchOperation.operations.fetch(:create_commentaire),
+              modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
+              aria:  'modal-commentaire-batch'
             }
           ]
       }

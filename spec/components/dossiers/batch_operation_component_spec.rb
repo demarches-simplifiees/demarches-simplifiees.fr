@@ -62,6 +62,8 @@ RSpec.describe Dossiers::BatchOperationComponent, type: :component do
 
   context 'statut tous' do
     let(:statut) { 'tous' }
-    it { is_expected.not_to have_selector('button') }
+    it do
+      is_expected.to have_button('Envoyer un message aux usagers', disabled: true)
+    end
   end
 end

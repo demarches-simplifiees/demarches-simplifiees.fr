@@ -14,4 +14,4 @@
         - menu.with_item(class: "hidden inactive form-inside fr-pt-1v") do
           = render partial: 'instructeurs/dossiers/instruction_button_motivation_batch', locals: { instruction_operation: opt[:instruction_operation], form:, opt: }
 - else
-  = form.button opt[:label], class: ['fr-btn fr-btn--sm fr-btn--icon-left fr-ml-1w', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] }
+  = form.button opt[:label], class: ['fr-btn fr-btn--sm fr-btn--icon-left fr-ml-1w', icons[opt[:operation].to_sym]], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] }.merge(opt[:modal_data]&.to_h || {}), aria: { controls: opt[:aria] }

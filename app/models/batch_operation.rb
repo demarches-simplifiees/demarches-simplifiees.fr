@@ -25,7 +25,7 @@ class BatchOperation < ApplicationRecord
   has_many :groupe_instructeurs, through: :dossier_operations
   belongs_to :instructeur
 
-  store_accessor :payload, :motivation, :justificatif_motivation, :emails, :introduction, :question_label, :introduction_file, :confidentiel, :body, :piece_jointe
+  store_accessor :payload, :motivation, :justificatif_motivation, :emails, :introduction, :question_label, :introduction_file, :confidentiel, :body, :piece_jointe, :statut
 
   validates :operation, presence: true
 
