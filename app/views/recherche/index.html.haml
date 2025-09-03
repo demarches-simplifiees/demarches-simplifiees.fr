@@ -5,11 +5,16 @@
   - if @dossier_not_in_instructor_group.present?
     .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
       = p t('views.instructeurs.search.dossier_not_in_instructor_group', dossier_id: @dossier_not_in_instructor_group.id, procedure_libelle: @dossier_not_in_instructor_group.procedure.libelle, groupe_instructeur_label: @dossier_not_in_instructor_group.groupe_instructeur.label)
-  - if @deleted_dossier.present?
+  - elsif @deleted_dossier.present?
     .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
       = p t('views.instructeurs.search.deleted_dossier', dossier_id: @deleted_dossier.dossier_id, procedure_libelle: @deleted_dossier.procedure.libelle, deleted_at: l(@deleted_dossier.deleted_at))
 
-  - if @projected_dossiers.present?
+  - elsif @hidden_dossier.present?
+    .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
+      = p t('views.instructeurs.search.hidden_dossier', dossier_id: @hidden_dossier.id, procedure_libelle: @hidden_dossier.procedure.libelle)
+      = link_to t('views.instructeurs.search.hidden_dossier_link'), instructeur_procedure_path(@hidden_dossier.procedure, statut: 'supprimes')
+
+  - elsif @projected_dossiers.present?
     .fr-table.fr-table--no-scroll.fr-table--bordered
       .fr-table__wrapper
         .fr-table__container
@@ -47,8 +52,6 @@
                     %td= dossier.user&.email
                     %td.flex.column= status_badge(dossier.state)
 
-                  - elsif hidden_by_administration
-                    = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: dossier.procedure.libelle, user_email: dossier.user&.email}
 
                   - else
                     %td.fr-cell--numeric

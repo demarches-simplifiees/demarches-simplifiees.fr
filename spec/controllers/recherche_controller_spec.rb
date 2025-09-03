@@ -88,7 +88,7 @@ describe RechercheController, type: :controller do
 
         it 'does not return the dossier' do
           subject
-          expect(assigns(:projected_dossiers).count).to eq(0)
+          expect(assigns(:projected_dossiers)).to eq(nil)
           expect(assigns(:dossier_not_in_instructor_group)).to eq(nil)
         end
       end
@@ -106,7 +106,7 @@ describe RechercheController, type: :controller do
 
         it 'does not return the dossier but it returns a message' do
           subject
-          expect(assigns(:projected_dossiers).count).to eq(0)
+          expect(assigns(:projected_dossiers)).to eq(nil)
           expect(assigns(:dossier_not_in_instructor_group)).to eq(dossier3)
         end
       end
@@ -121,8 +121,23 @@ describe RechercheController, type: :controller do
 
         it 'does not return the dossier but it returns a message' do
           subject
-          expect(assigns(:dossiers_count)).to eq(0)
+          expect(assigns(:projected_dossiers)).to eq(nil)
           expect(assigns(:deleted_dossier)).to eq(deleted_dossier)
+        end
+      end
+
+      context 'when dossier is hidden by administration' do
+        let!(:hidden_dossier) { create(:dossier, :accepte, :hidden_by_administration, :with_individual, procedure: procedure) }
+        let(:query) { hidden_dossier.id }
+
+        before { subject }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'does not return the dossier but it returns a message' do
+          subject
+          expect(assigns(:projected_dossiers)).to eq(nil)
+          expect(assigns(:hidden_dossier)).to eq(hidden_dossier)
         end
       end
 
