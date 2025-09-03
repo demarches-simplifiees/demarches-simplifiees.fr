@@ -1,13 +1,13 @@
 import { explorerPlugin } from '@graphiql/plugin-explorer';
 import { createGraphiQLFetcher } from '@graphiql/toolkit';
 import { GraphiQL } from 'graphiql';
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { csrfToken, getConfig } from '@utils';
 
 import '@graphiql/plugin-explorer/style.css';
-import 'graphiql/graphiql.css';
+import 'graphiql/style.css';
 
 const { defaultQuery, defaultVariables } = getConfig();
 const fetcher = createGraphiQLFetcher({
@@ -16,15 +16,13 @@ const fetcher = createGraphiQLFetcher({
 });
 
 function GraphiQLWithExplorer() {
-  const [query, setQuery] = useState(defaultQuery);
   const explorer = explorerPlugin({ showAttribution: false });
   return createElement(GraphiQL, {
     fetcher: fetcher,
     defaultEditorToolsVisibility: true,
     plugins: [explorer],
-    query: query,
-    variables: defaultVariables,
-    onEditQuery: setQuery
+    initialQuery: defaultQuery,
+    initialVariables: defaultVariables
   });
 }
 
