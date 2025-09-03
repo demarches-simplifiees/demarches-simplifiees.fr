@@ -269,7 +269,7 @@ module ProcedureCloneConcern
     end
 
     if options[:clone_avis] && same_admin?(admin)
-      associations[:experts_procedures] = :expert
+      associations[:experts_procedures] = []
     end
 
     if options[:clone_instructeurs] && same_admin?(admin)
