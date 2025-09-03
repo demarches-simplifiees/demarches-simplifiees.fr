@@ -861,8 +861,13 @@ class Dossier < ApplicationRecord
     end
 
     if en_construction? && !hidden_by_administration?
-      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
-      administration_emails.each do |email|
+      followers_emails = followers_instructeurs.map(&:email)
+      admin_emails = procedure.administrateurs.map(&:email)
+      instructeurs_emails = procedure.groupe_instructeurs.flat_map { |g| g.instructeurs.map(&:email) }
+      admin_instructeur_emails = admin_emails.filter { |email| instructeurs_emails.include?(email) }
+      emails = (followers_emails + admin_instructeur_emails).uniq
+
+      emails.each do |email|
         DossierMailer.notify_en_construction_deletion_to_administration(self, email).deliver_later
       end
     end
