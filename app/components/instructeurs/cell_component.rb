@@ -75,7 +75,7 @@ class Instructeurs::CellComponent < ApplicationComponent
   end
 
   def email_and_tiers(dossier)
-    email = dossier&.user&.email
+    email = dossier&.user&.email || dossier.user_email_for(:display)
 
     if dossier.for_tiers
       prenom, nom = dossier&.individual&.prenom, dossier&.individual&.nom

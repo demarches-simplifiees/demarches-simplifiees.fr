@@ -428,8 +428,9 @@ fr:
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Mettre à la corbeille"
         deleted_reason:
-          user_request: supprimé par l’usager
-          expired: a expiré
+          user_request: Dossier supprimé par l’usager
+          expired: Le dossier a expiré
+          user_removed: L’usager a supprimé son compte
         acts_on_behalf: "agit pour"
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
