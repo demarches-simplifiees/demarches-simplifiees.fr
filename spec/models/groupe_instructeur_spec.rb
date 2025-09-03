@@ -69,17 +69,17 @@ describe GroupeInstructeur, type: :model do
       end
     end
 
-    context "when there are dossiers en construction not followed" do
-      let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: another_groupe_instructeur) }
+    context "when the new instructeur has 'all' preferences for notifications" do
+      let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_dossier_modifie_notifications: 'all') }
+      let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: another_groupe_instructeur, procedure:, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
 
-      it "create dossier_depose notification for the added instructeur" do
+      it "creates notifications on dossiers of the new groupe" do
         subject
-        expect(DossierNotification.count).to eq(1)
+        expect(DossierNotification.count).to eq(2)
 
-        notification = DossierNotification.first
-        expect(notification.dossier_id).to eq(dossier.id)
-        expect(notification.instructeur_id).to eq(instructeur.id)
-        expect(notification.notification_type).to eq('dossier_depose')
+        expect(DossierNotification.all.map(&:dossier_id).uniq).to eq([dossier.id])
+        expect(DossierNotification.all.map(&:instructeur_id).uniq).to eq([instructeur.id])
+        expect(DossierNotification.all.map(&:notification_type)).to match_array(['dossier_depose', 'dossier_modifie'])
       end
     end
   end
