@@ -252,6 +252,7 @@ class Champ < ApplicationRecord
 
   MAIN_STREAM = 'main'
   USER_BUFFER_STREAM = 'user:buffer'
+  INSTRUCTEUR_BUFFER_STREAM = 'instructeur:buffer'
   HISTORY_STREAM = 'history:'
 
   def main_stream?
@@ -260,6 +261,10 @@ class Champ < ApplicationRecord
 
   def user_buffer_stream?
     stream == USER_BUFFER_STREAM
+  end
+
+  def instructeur_buffer_stream?
+    stream == INSTRUCTEUR_BUFFER_STREAM
   end
 
   def history_stream?
