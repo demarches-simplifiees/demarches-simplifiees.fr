@@ -73,6 +73,9 @@ jobs:
           POSTGRES_DB: tps_test
           POSTGRES_PASSWORD: tps_test
         ports: ["5432:5432"]
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
 
     strategy:
       matrix:
@@ -85,7 +88,7 @@ jobs:
         # - fonts pickable by ImageMagick
         # - rust for YJIT support
         # - poppler-utils for pdf previews
-        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server poppler-utils
+        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc poppler-utils
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
@@ -114,7 +117,8 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: ubuntu-22.04
+
+    runs-on: warp-ubuntu-2204-x64-2x
     timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
@@ -126,6 +130,9 @@ jobs:
           POSTGRES_DB: tps_test
           POSTGRES_PASSWORD: tps_test
         ports: ["5432:5432"]
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
 
     strategy:
       matrix:
@@ -134,8 +141,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: launch redis
-        run: sudo apt-get install -y redis-server
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
