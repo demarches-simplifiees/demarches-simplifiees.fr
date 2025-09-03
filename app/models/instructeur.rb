@@ -274,14 +274,22 @@ class Instructeur < ApplicationRecord
     user.last_pro_connect_information
   end
 
-  TemplateExportGroup = Data.define(:name, :templates)
   def export_templates_for(procedure)
+    procedure.export_templates
+      .where(groupe_instructeur: groupe_instructeurs)
+      .includes(:groupe_instructeur)
+      .order(:name)
+      .to_a
+  end
+
+  TemplateExportGroup = Data.define(:name, :templates)
+  def export_template_options_for(procedure)
     shareable_export_templates = procedure.export_templates
       .shareable
       .where.not(groupe_instructeur: groupe_instructeurs)
       .includes(:groupe_instructeur)
       .order(:name).to_a
-    my_export_templates = export_templates.includes(:groupe_instructeur).order(:name).to_a
+    my_export_templates = export_templates_for(procedure)
 
     if shareable_export_templates.present?
       [TemplateExportGroup['Mes modèles d’export', my_export_templates], TemplateExportGroup['Modèles d’export partagés', shareable_export_templates]]
