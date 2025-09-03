@@ -29,23 +29,7 @@ class RechercheController < ApplicationController
     @search_terms = search_terms
     @dossiers_count = 0
 
-    if instructeur_signed_in? && DossierSearchService.id_compatible?(@search_terms)
-      @deleted_dossier = current_instructeur.deleted_dossiers.find_by(dossier_id: @search_terms)
-      return if @deleted_dossier.present?
-
-      dossier_instructeur_searched_for = Dossier.state_not_brouillon.find_by(id: @search_terms)
-      return if dossier_instructeur_searched_for.nil?
-
-      if current_instructeur&.groupe_instructeur_ids&.include?(dossier_instructeur_searched_for.groupe_instructeur_id)
-        # if dossier is in the same groupe_instructeur, I check if the dossier is hidden
-        @hidden_dossier = dossier_instructeur_searched_for.hidden_by_administration? ? dossier_instructeur_searched_for : nil
-        return if @hidden_dossier.present?
-      else
-        # and if not I check if the dossier is in another group of the dossier procedure
-        @dossier_not_in_instructor_group = current_instructeur&.procedures&.include?(dossier_instructeur_searched_for.procedure) ? dossier_instructeur_searched_for : nil
-        return if @dossier_not_in_instructor_group.present?
-      end
-    end
+    return if handle_special_cases
 
     @instructeur_dossiers_ids = DossierSearchService
       .matching_dossiers(current_instructeur&.dossiers, @search_terms, with_annotation: true)
@@ -93,5 +77,25 @@ class RechercheController < ApplicationController
 
   def search_terms
     params[:q]
+  end
+
+  def handle_special_cases
+    return false unless instructeur_signed_in? && DossierSearchService.id_compatible?(@search_terms)
+
+    @deleted_dossier = current_instructeur.deleted_dossiers.find_by(dossier_id: @search_terms)
+    return true if @deleted_dossier.present?
+
+    dossier = Dossier.state_not_brouillon.find_by(id: @search_terms)
+    return true if dossier.nil?
+
+    if current_instructeur.groupe_instructeur_ids.include?(dossier.groupe_instructeur_id)
+      @hidden_dossier = dossier.hidden_by_administration? ? dossier : nil
+      return true if @hidden_dossier.present?
+    else
+      @dossier_not_in_instructor_group = current_instructeur.procedures.include?(dossier.procedure) ? dossier : nil
+      return true if @dossier_not_in_instructor_group.present?
+    end
+
+    false
   end
 end
