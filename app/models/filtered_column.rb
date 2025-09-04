@@ -33,7 +33,9 @@ class FilteredColumn
   private
 
   def check_filter_max_length
-    if @filter.present? && @filter.length > FILTERS_VALUE_MAX_LENGTH
+    if @filter.present? &&
+      (@filter.is_a?(String) && @filter.length > FILTERS_VALUE_MAX_LENGTH) ||
+        (@filter.is_a?(Hash) && @filter[:value].any? { |value| value.is_a?(String) && value.length > FILTERS_VALUE_MAX_LENGTH })
       errors.add(
         :base,
         "Le filtre « #{label} » est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)"
@@ -42,7 +44,9 @@ class FilteredColumn
   end
 
   def check_filter_max_integer
-    if @column.column == 'id' && @filter.to_i > PG_INTEGER_MAX_VALUE
+    if @column.column == 'id' &&
+      (@filter.is_a?(Hash) && @filter[:value].any? { |value| value.to_i > PG_INTEGER_MAX_VALUE }) ||
+      (@filter.is_a?(String) && @filter.to_i > PG_INTEGER_MAX_VALUE)
       errors.add(:base, "Le filtre « #{label} » n'est pas un numéro de dossier possible")
     end
   end

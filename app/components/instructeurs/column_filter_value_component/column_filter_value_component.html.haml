@@ -1,30 +1,21 @@
 #column_filter_value_component
-  - if column.nil?
-    = form.label :value, t('.value'), class: 'fr-label'
-    = form.text_field :value,
-      id: 'value',
-      class: 'fr-input',
-      disabled: true
-  - elsif column.type.in?([:boolean])
+  = operator_hidden_field
+  - if boolean?
     = render Dsfr::RadioButtonListComponent.new(form:,
-      target: "filters[][filter]",
+      target: "filter[filter][value][]",
       buttons: column_filter_options.map { |label, value| { label:, value: } }) do
       = t('.value')
-  - elsif column.type.in?([:enum, :enums])
+  - elsif selectable?
     = form.label :value, t('.value'), class: 'fr-label'
-    = form.select "filters[][filter]",
-      options_for_select(column_filter_options),
-      {},
-      id: 'value',
-      class: 'fr-select',
-      data: { no_autosubmit: true },
-      required: true
+    %react-fragment
+      = render ReactComponent.new "ComboBox/MultiComboBox", **react_props
   - else
     = form.label :value, t('.value'), class: 'fr-label'
-    = form.text_field "filters[][filter]",
+    = form.text_field "filter[filter][value][]",
       id: 'value',
       class: 'fr-input',
-      type: type,
+      type:,
+      disabled: column.nil?,
       maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
       data: { no_autosubmit: true },
       required: true

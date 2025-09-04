@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Instructeurs::FilterButtonsComponent, type: :component do
+describe Instructeurs::RemoveFilterButtonsComponent, type: :component do
   let(:component) { described_class.new(filters:, procedure_presentation:, statut:) }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure:, instructeur:) }
@@ -15,7 +15,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
   describe "visible text" do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }]) }
     let(:first_type_de_champ) { procedure.active_revision.types_de_champ_public.first }
-    let(:filter) { to_filter([first_type_de_champ.libelle, "true"]) }
+    let(:filter) { to_filter([first_type_de_champ.libelle, { operator: 'match', value: 'true' }]) }
 
     context 'when type_de_champ text' do
       it 'should passthrough value' do
@@ -32,7 +32,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
     end
 
     context 'when filter is state' do
-      let(:filter) { to_filter(['État du dossier', "en_construction"]) }
+      let(:filter) { to_filter(['État du dossier', { operator: 'match', value: 'en_construction' }]) }
 
       it 'should get i18n value' do
         expect(page).to have_text("En construction")
@@ -40,7 +40,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
     end
 
     context 'when filter is a date' do
-      let(:filter) { to_filter(['Date de création', "15/06/2023"]) }
+      let(:filter) { to_filter(['Date de création', { operator: 'match', value: '15/06/2023' }]) }
 
       it 'should get formatted value' do
         expect(page).to have_text("15 juin 2023")
@@ -50,9 +50,9 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
     context 'when there are multiple filters' do
       let(:filters) do
         [
-          to_filter(['État du dossier', "en_construction"]),
-          to_filter(['État du dossier', "en_instruction"]),
-          to_filter(['Date de création', "15/06/2023"])
+          to_filter(['État du dossier', { operator: 'match', value: 'en_construction' }]),
+          to_filter(['État du dossier', { operator: 'match', value: 'en_instruction' }]),
+          to_filter(['Date de création', { operator: 'match', value: '15/06/2023' }])
         ]
       end
 
@@ -67,8 +67,8 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
     let(:procedure) { create(:procedure) }
 
     context 'with 2 filters' do
-      let(:en_construction_filter) { to_filter(['État du dossier', "en_construction"]) }
-      let(:en_instruction_filter) { to_filter(['État du dossier', "en_instruction"]) }
+      let(:en_construction_filter) { to_filter(['État du dossier', { operator: 'match', value: 'en_construction' }]) }
+      let(:en_instruction_filter) { to_filter(['État du dossier', { operator: 'match', value: 'en_instruction' }]) }
       let(:column_id) { procedure.find_column(label: 'État du dossier').id }
       let(:filters) { [en_construction_filter, en_instruction_filter] }
 
@@ -78,10 +78,18 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
         expect(page.all('form').count).to eq(2)
 
         del_en_construction = page.all('form').first
+
         expect(del_en_construction).to have_text('En construction')
-        expect(del_en_construction).to have_field('filters[]', with: '', type: 'hidden')
-        expect(del_en_construction).to have_field('filters[][id]', with: column_id, type: 'hidden')
-        expect(del_en_construction).to have_field('filters[][filter]', with: 'en_instruction', type: 'hidden')
+        expect(del_en_construction).to have_field('filter[id]', with: column_id, type: 'hidden')
+        expect(del_en_construction).to have_field('filter[filter][operator]', with: 'match', type: 'hidden')
+        expect(del_en_construction).to have_field('filter[filter][value]', with: 'en_construction', type: 'hidden')
+
+        del_en_instruction = page.all('form').last
+
+        expect(del_en_instruction).to have_text('En instruction')
+        expect(del_en_instruction).to have_field('filter[id]', with: column_id, type: 'hidden')
+        expect(del_en_instruction).to have_field('filter[filter][operator]', with: 'match', type: 'hidden')
+        expect(del_en_instruction).to have_field('filter[filter][value]', with: 'en_instruction', type: 'hidden')
       end
     end
   end

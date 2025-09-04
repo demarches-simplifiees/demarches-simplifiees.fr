@@ -22,7 +22,11 @@ class Columns::DossierColumn < Column
 
   def dossier_column? = true
 
-  def filtered_ids(dossiers, values)
+  def filtered_ids(dossiers, filter)
+    filtered_ids_for_values(dossiers, filter[:value])
+  end
+
+  def filtered_ids_for_values(dossiers, values)
     case table
     when 'self'
       if type == :date || type == :datetime
@@ -30,10 +34,6 @@ class Columns::DossierColumn < Column
           .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
         dossiers.filter_by_datetimes(column, dates)
-      elsif column == "state" && values.include?("pending_correction")
-        dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-      elsif column == "state" && values.include?("en_construction")
-        dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
       elsif type == :integer
         dossiers.where("dossiers.#{column} IN (?)", values.filter_map { Integer(_1) rescue nil })
       else

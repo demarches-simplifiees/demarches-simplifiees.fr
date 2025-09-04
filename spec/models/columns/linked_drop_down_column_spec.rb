@@ -7,7 +7,7 @@ describe Columns::LinkedDropDownColumn do
     let(:kept_dossier) { create(:dossier, procedure: procedure) }
     let(:discarded_dossier) { create(:dossier, procedure: procedure) }
 
-    subject { column.filtered_ids(Dossier.all, search_terms) }
+    subject { column.filtered_ids(Dossier.all, { operator: 'match', value: search_terms }) }
 
     context 'when path is :value' do
       let(:column) { procedure.find_column(label: 'linked') }
