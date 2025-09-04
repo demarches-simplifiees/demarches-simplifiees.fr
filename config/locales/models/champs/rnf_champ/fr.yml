@@ -12,8 +12,6 @@ fr:
           dissolvedAt: Dissoute le
           address: Adresse
           status: Statut
-        paste: Copier le RNF dans le presse-papier
-        paste_success: Le RNF a été copié dans le presse-papier
   activerecord:
     attributes:
       champs/rnf_champ:

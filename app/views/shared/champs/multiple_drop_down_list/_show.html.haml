@@ -1,4 +1,4 @@
 - if !champ.blank?
-  %ul
+  %ul.copy-btn{ role: "button" }
     - champ.selected_options.each do |item|
       %li= item
