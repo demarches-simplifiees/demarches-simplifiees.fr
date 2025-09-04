@@ -80,7 +80,7 @@ class Instructeur < ApplicationRecord
     f = follows.find_by(dossier: dossier)
     if f.present?
       f.update(unfollowed_at: Time.zone.now)
-      DossierNotification.destroy_notifications_instructeur_of_dossier(self, dossier)
+      DossierNotification.destroy_notifications_instructeur_of_unfollowed_dossier(self, dossier)
     end
   end
 

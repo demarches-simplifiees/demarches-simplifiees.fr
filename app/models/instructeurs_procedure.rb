@@ -3,6 +3,26 @@
 class InstructeursProcedure < ApplicationRecord
   NOTIFICATION_PREFERENCES = ['all', 'followed', 'none'].freeze
 
+  DEFAULT_NOTIFICATIONS_PREFERENCES = {
+    dossier_depose: 'all',
+    dossier_modifie: 'followed',
+    message: 'followed',
+    annotation_instructeur: 'followed',
+    avis_externe: 'followed',
+    attente_correction: 'followed',
+    attente_avis: 'followed'
+  }.freeze
+
+  NOTIFICATION_COLUMNS = {
+    dossier_depose: 'display_dossier_depose_notifications',
+    dossier_modifie: 'display_dossier_modifie_notifications',
+    message: 'display_message_notifications',
+    annotation_instructeur: 'display_annotation_instructeur_notifications',
+    avis_externe: 'display_avis_externe_notifications',
+    attente_correction: 'display_attente_correction_notifications',
+    attente_avis: 'display_attente_avis_notifications'
+  }.freeze
+
   belongs_to :instructeur
   belongs_to :procedure
 
@@ -20,6 +40,12 @@ class InstructeursProcedure < ApplicationRecord
       procedure_id_position.each do |procedure_id, position|
         InstructeursProcedure.where(procedure_id:, instructeur:).update(position:)
       end
+    end
+  end
+
+  def notification_preferences
+    NOTIFICATION_COLUMNS.transform_values do |column|
+      self.public_send(column)
     end
   end
 end
