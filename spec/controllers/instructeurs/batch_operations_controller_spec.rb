@@ -55,7 +55,7 @@ describe Instructeurs::BatchOperationsController, type: :controller do
 
       it 'does not create a batch operation if no dossiers' do
         expect { subject }.not_to change { instructeur.batch_operations.count }
-        expect(flash.alert).to eq("Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés")
+        expect(flash.alert).to eq("Le traitement de masse n’a pas été lancé. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés")
       end
     end
   end

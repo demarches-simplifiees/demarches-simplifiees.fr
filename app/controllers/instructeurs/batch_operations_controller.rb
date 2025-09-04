@@ -7,7 +7,7 @@ module Instructeurs
 
     def create
       batch = BatchOperation.safe_create!(batch_operation_params)
-      flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+      flash[:alert] = "Le traitement de masse n’a pas été lancé. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés" if batch.blank?
       redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
     end
 
@@ -56,7 +56,7 @@ module Instructeurs
         end
 
         format.html do
-          flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          flash[:alert] = "Le traitement de masse n’a pas été lancé. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés" if batch.blank?
           redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
         end
       end
@@ -66,7 +66,7 @@ module Instructeurs
       dossier_ids = batch_operation_commentaire_params[:dossier_ids]
 
       if dossier_ids&.size&.> BatchOperation::BATCH_SELECTION_LIMIT
-        flash.now[:alert] = "L'envoi d'un message groupé est limité à #{BatchOperation::BATCH_SELECTION_LIMIT} usagers. Veuillez restreindre le nombre de dossiers sélectionnés."
+        flash.now[:alert] = "L’envoi d’un message groupé est limité à #{BatchOperation::BATCH_SELECTION_LIMIT} usagers. Veuillez restreindre le nombre de dossiers sélectionnés."
         return render_redirect_and_close_modal
       end
 
@@ -83,7 +83,7 @@ module Instructeurs
         end
 
         format.html do
-          flash[:alert] = "Le message n'a pas été envoyé aux usagers. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          flash[:alert] = "Le message n’a pas été envoyé aux usagers. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés" if batch.blank?
           redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
         end
       end
@@ -138,7 +138,7 @@ module Instructeurs
 
     def ensure_ownership!
       if !current_instructeur.procedures.exists?(@procedure.id)
-        flash[:alert] = "Vous n'avez pas accès à cette démarche"
+        flash[:alert] = "Vous n’avez pas accès à cette démarche"
         redirect_to root_path
       end
     end
