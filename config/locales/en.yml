@@ -32,6 +32,9 @@
 en:
   invisible_captcha:
     sentence_for_humans: 'If you are a human, ignore this field'
+  clipboard:
+    copy: 'Click to copy'
+    copied: 'Copied'
   help: 'Help'
   help_dropdown:
     procedure_title: "Do you have a question about this procedure?"

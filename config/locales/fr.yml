@@ -22,6 +22,9 @@
 fr:
   invisible_captcha:
     sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
+  clipboard:
+    copy: 'Cliquer pour copier'
+    copied: 'Copié'
   help: 'Aide'
   help_dropdown:
     procedure_title: "Une question sur cette démarche ?"
