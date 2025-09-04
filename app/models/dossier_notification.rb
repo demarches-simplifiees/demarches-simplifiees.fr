@@ -80,6 +80,12 @@ class DossierNotification < ApplicationRecord
       .destroy_all
   end
 
+  def self.destroy_notifications_instructeur_of_dossier(instructeur, dossier)
+    DossierNotification
+      .where(instructeur:, dossier:)
+      .destroy_all
+  end
+
   def self.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier)
     instructeur_preferences = instructeur_preferences(instructeur, dossier.procedure)
 
