@@ -38,14 +38,15 @@
   %h2.fr-h4.mt-2 #{pluralize(destroyeds.count, 'suppression')}
   
   =form_with url: [:accept_simplification, :admin, @procedure, :types_de_champ] do |form|
+    = hidden_field_tag :changes_json, @changes.to_json
     %ul
       - destroyed_by_justification.each do |justification, changes|
         %li.fr-my-2w
           %strong= justification
           - changes.map { _1[:stable_id] }.each do |stable_id|
             .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
-              = form.check_box stable_id, checked: true
-              = form.label stable_id, class: 'fr-label' do
+              = check_box_tag 'selected[destroy][]', stable_id, true, id: "selected_destroy_#{stable_id}"
+              = label_tag "selected_destroy_#{stable_id}", class: 'fr-label' do
                 = tdc_by_stable_id[stable_id].libelle
 
     %ul
@@ -53,8 +54,8 @@
         - if destroyeds.include?(tdc.stable_id)
           %li.fr-my-2w
             .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
-              = form.check_box tdc.stable_id, checked: true
-              = form.label tdc.stable_id, class: 'fr-label' do
+              = check_box_tag 'selected[destroy][]', tdc.stable_id, true, id: "selected_destroy_#{tdc.stable_id}"
+              = label_tag "selected_destroy_#{tdc.stable_id}", class: 'fr-label' do
                 = tdc.libelle
 
     %h2.fr-h4.mt-2 #{pluralize(updated_by_stable_id.keys.count, 'modification')}
@@ -68,8 +69,8 @@
             - type_has_changed = change[:type_champ].present? && change[:type_champ] != tdc_by_stable_id[change[:stable_id]].type_champ
 
             .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
-              = form.check_box change[:stable_id], checked: true
-              = form.label change[:stable_id], class: 'fr-label' do
+              = check_box_tag 'selected[update][]', change[:stable_id], true, id: "selected_update_#{change[:stable_id]}"
+              = label_tag "selected_update_#{change[:stable_id]}", class: 'fr-label' do
                 - if type_has_changed
                   #{tdc_by_stable_id[change[:stable_id]].libelle} (#{tdc_by_stable_id[change[:stable_id]].type_champ}) → #{change[:libelle]} (#{change[:type_champ]})
                 - else
@@ -89,8 +90,8 @@
 
           - changes.each do |change|
             .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
-              = form.check_box change[:stable_id], checked: true
-              = form.label change[:stable_id], class: 'fr-label' do
+              = check_box_tag 'selected[add][]', change[:stable_id], true, id: "selected_add_#{change[:stable_id]}"
+              = label_tag "selected_add_#{change[:stable_id]}", class: 'fr-label' do
                 = change[:libelle]
                 - if change[:children].present?
                   (bloc répétable)
