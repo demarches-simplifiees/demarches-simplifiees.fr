@@ -56,15 +56,26 @@ RSpec.describe DossierStateConcern do
       expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
 
-    it "create dossier_depose notification for all instructeurs" do
-      procedure.defaut_groupe_instructeur.add_instructeurs(ids: create_list(:instructeur, 2).map(&:id))
-      dossier.passer_en_construction!
+    context "when procedure is sva/svr or declarative" do
+      before do
+        procedure.defaut_groupe_instructeur.add_instructeurs(ids: create_list(:instructeur, 2).map(&:id))
+      end
 
-      expect(DossierNotification.count).to eq(2)
+      it 'does not create notification when procedure is sva/svr' do
+        procedure.update!(sva_svr: { 'decision' => 'sva' }, declarative_with_state: nil)
+        dossier.procedure.reload
+        dossier.passer_en_construction!
 
-      notification = DossierNotification.first
-      expect(notification.dossier_id).to eq(dossier.id)
-      expect(notification.notification_type).to eq("dossier_depose")
+        expect(DossierNotification.count).to eq(0)
+      end
+
+      it 'does not create notification when procedure is declarative' do
+        procedure.update!(declarative_with_state: "accepte", sva_svr: {})
+        dossier.procedure.reload
+        dossier.passer_en_construction!
+
+        expect(DossierNotification.count).to eq(0)
+      end
     end
   end
 
