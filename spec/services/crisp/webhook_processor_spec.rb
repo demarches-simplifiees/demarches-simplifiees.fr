@@ -37,5 +37,23 @@ RSpec.describe Crisp::WebhookProcessor do
         expect { subject }.not_to have_enqueued_job
       end
     end
+
+    context 'with session:set_inbox event' do
+      let(:event) { "session:set_inbox" }
+      let(:params) do
+        {
+          event:,
+          data: {
+            session_id:
+          }
+        }
+      end
+
+      context 'when conversation is moved to tech inbox' do
+        it 'enqueues CrispMattermostTechNotificationJob' do
+          expect { subject }.to have_enqueued_job(CrispMattermostTechNotificationJob).with(session_id)
+        end
+      end
+    end
   end
 end
