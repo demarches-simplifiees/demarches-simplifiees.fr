@@ -1,82 +1,141 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'langchain'
+require 'json_schemer'
+
 module LLM
   class RevisionImproverService
-    JSON_SCHEMA = Rails.root.join("config/llm/revision_improver_operations_json_schema.json").read
+    JSON_OPS_SCHEMA = JSON.parse(
+      Rails.root.join('config/llm/revision_improver_operations_json_schema.json').read
+    ).freeze
 
-    attr_reader :llm
-    attr_reader :assistant
-    attr_reader :procedure
+    attr_reader :llm, :procedure, :logger, :clock
     attr_accessor :now
 
-    def initialize(procedure)
-      @llm = OpenAIClient.instance
+    module Errors
+      class InvalidOutput < StandardError; end
+      class Unavailable < StandardError; end
+    end
+
+    def initialize(procedure, llm: OpenAIClient.instance, logger: Rails.logger, clock: -> { Time.zone.now.to_i })
       @procedure = procedure
-      @now = Time.zone.now.to_i
-    end
-    StubResponse = Data.define(:chat_completion)
-    def suggest(attempt = 0)
-      log_prompt
-
-      assistant = Langchain::Assistant.new(llm:) do |response_chunk|
-        print response_chunk.dig("delta", "content")
-      end
-
-      @assistant.add_message(role: "system", content: system_prompt)
+      @llm = llm
+      @logger = logger
+      @clock = clock
     end
 
-    def analyze(attempt = 0)
-      # log_prompt
-
-      llm.chat_parameters.update(temperature: { default: 1.0 }, max_tokens: { default: 8192 * 2 })
-      assistant.add_messages(messages: messages_analyze)
-      assistant.run!
-
-      backup_response(:analysis)
+    # Optional analysis phase. Returns raw assistant content (String).
+    def analyze!
+      llm.chat_parameters.update(temperature: { default: 1.0 }, max_tokens: { default: 4096 })
+      messages = [system_message, *messages_for_analyze]
+      content = run_chat(messages)
+      backup('analysis', content)
+      content
     end
 
-    def insert_analysis(analysis)
-      assistant.add_messages(messages: messages_analyze)
-      assistant.add_message(role: "assistant", content: analysis)
+    # Backward-compat shim
+    def analyze
+      analyze!
     end
 
-    def suggest(attempt = 0)
-      # log_prompt
-      #
+    # Main entry point returning normalized operations:
+    # { destroy: [], update: [], add: [], summary: "..." }
+    def suggest!(analysis: nil)
+      llm.chat_parameters.update(temperature: { default: 0.1 }, repetition_penalty: { default: 0 }, max_tokens: { default: 4096 })
+      messages = [system_message, *messages_for_suggest(analysis)]
+      content = run_chat(messages)
+      backup('suggest', content)
 
-      llm.chat_parameters.update(temperature: { default: 0.1 }, repetition_penalty: { default: 0 }, max_tokens: { default: 8192 * 2 })
-      assistant.add_messages(messages: messages_suggest)
-      assistant.run!
-
-      backup_response(:suggest)
-
-      parser.parse(assistant.messages.last.content).symbolize_keys
-    rescue Langchain::OutputParsers::OutputParserException, JSON::Schema::ValidationError => e
-      raise e # if attempt >= 2
-    # puts "Failure #{e.message}, retry ##{attempt}"
-    # Rails.logger.info { "Failure #{e.message}, retry ##{attempt}" }
-    # suggest(attempt + 1)
+      json = parse_json!(content)
+      validate_ops!(json)
+      normalize_ops(json)
+    rescue Errors::InvalidOutput
+      raise
     rescue => e
-      binding.irb
+      logger.warn("[LLM] suggest! failed: #{e.class}: #{e.message}")
+      raise
+    end
+
+    # Backward-compat wrapper for callers expecting {operations:, summary:}
+    def suggest
+      ops = suggest!(analysis: @injected_analysis)
+      { operations: { destroy: ops[:destroy], update: ops[:update], add: ops[:add] }, summary: ops[:summary] }
+    end
+
+    # Backward-compat: allow injecting a precomputed analysis
+    def insert_analysis(analysis)
+      @injected_analysis = analysis
     end
 
     private
 
-    def messages_analyze
+    def run_chat(messages)
+      assistant = Langchain::Assistant.new(llm:)
+      messages.each { |m| assistant.add_message(**m) }
+      assistant.run!
+      assistant.messages.last.content.to_s
+    end
+
+    def system_message
+      { role: 'system', content: system_prompt }
+    end
+
+    def messages_for_analyze
       [
-        { role: "user", content: current_schema_prompt },
-        { role: "user", content: analyze_prompt }
+        { role: 'user', content: current_schema_prompt },
+        { role: 'user', content: analyze_prompt },
       ]
     end
 
-    def messages_suggest
-      [
-        { role: "user", content: format(restructure_prompt, json_schema: parser.get_format_instructions) }
+    def messages_for_suggest(analysis)
+      msgs = [
+        { role: 'user', content: current_schema_prompt },
+        { role: 'user', content: format(restructure_prompt, json_schema: JSON.dump(JSON_OPS_SCHEMA)) },
       ]
+      analysis ? [{ role: 'assistant', content: analysis }] + msgs : msgs
     end
 
-    def parser
-      @parser ||= Langchain::OutputParsers::StructuredOutputParser.from_json_schema(JSON_SCHEMA)
+    def parse_json!(content)
+      JSON.parse(content)
+    rescue JSON::ParserError
+      raise Errors::InvalidOutput, 'Non JSON content from LLM'
+    end
+
+    def validate_ops!(json)
+      # Accept both shapes: {operations:{...}, summary:""} or flat keys {delete/update/add/summary}
+      candidate = if json.key?('operations')
+        json
+      else
+        { 'operations' => json.slice('delete', 'destroy', 'update', 'add'), 'summary' => json['summary'] }
+      end
+
+      schemer = JSONSchemer.schema(JSON_OPS_SCHEMA)
+      errors = schemer.validate(candidate).to_a
+      raise Errors::InvalidOutput, errors.first&.dig('details') if errors.any?
+    end
+
+    def normalize_ops(json)
+      ops = json['operations'] || json
+      {
+        destroy: Array(ops['destroy'] || ops['delete']).map { |h| deep_symbolize(h) },
+        update: Array(ops['update']).map { |h| deep_symbolize(h) },
+        add: Array(ops['add']).map { |h| deep_symbolize(h) },
+        summary: json['summary'].to_s,
+      }
+    end
+
+    def deep_symbolize(obj)
+      case obj
+      when Hash
+        obj.transform_keys { |k| k.to_sym rescue k }.transform_values do |v|
+          deep_symbolize(v)
+        end
+      when Array
+        obj.map { |v| deep_symbolize(v) }
+      else
+        obj
+      end
     end
 
     def current_schema_prompt
@@ -229,20 +288,11 @@ module LLM
       PROMPT
     end
 
-    # def log_prompt
-    #   File.write(
-    #     "tmp/procedure_#{procedure.id}_#{now}_prompt.json",
-    #     JSON.pretty_generate(messages)
-    #   )
-
-    #   Rails.logger.info { "Prompt written in tmp/llm/procedure_#{procedure.id}_prompt.json" }
-    # end
-
-    def backup_response(part)
-      File.write(
-        "tmp/llm/procedure_#{procedure.id}_#{now}_#{part}.txt",
-          assistant.messages.last.content
-      )
+    def backup(part, content)
+      ts = now || clock.call
+      path = Rails.root.join('tmp/llm', "procedure_#{procedure.id}_#{ts}_#{part}.txt")
+      FileUtils.mkdir_p(path.dirname)
+      File.write(path, content.to_s)
     end
   end
 end
