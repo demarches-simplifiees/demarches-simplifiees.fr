@@ -27,7 +27,12 @@ module LLM
 
     # Optional analysis phase. Returns raw assistant content (String).
     def analyze!
-      llm.chat_parameters.update(temperature: { default: 1.0 }, max_tokens: { default: 4096 })
+      llm.chat_parameters.update(
+        temperature: { default: 1.0 },
+        repetition_penalty: { default: 0 },
+        max_tokens: { default: 4096 },
+        response_format: { default: { type: 'json_object' } }
+      )
       messages = [system_message, *messages_for_analyze]
       content = run_chat(messages)
       backup('analysis', content)
@@ -97,7 +102,28 @@ module LLM
     end
 
     def parse_json!(content)
-      JSON.parse(content)
+      s = content.to_s.strip
+      # Strip Markdown code fences if present, optionally labeled as json
+      if s.start_with?("```")
+        s = s.sub(/\A```(?:json)?\s*/i, "").sub(/```+\s*\z/, "").strip
+      else
+        # Or extract the first fenced JSON block
+        if (m = s.match(/```(?:json)?\s*(\{.*\})\s*```/im))
+          s = m[1].strip
+        end
+      end
+
+      begin
+        JSON.parse(s)
+      rescue JSON::ParserError
+        # Fallback: try parsing the largest JSON-looking object in the text
+        if s.include?("{") && s.include?("}")
+          inner = s[s.index('{')..s.rindex('}')]
+          JSON.parse(inner)
+        else
+          raise Errors::InvalidOutput, 'Non JSON content from LLM'
+        end
+      end
     rescue JSON::ParserError
       raise Errors::InvalidOutput, 'Non JSON content from LLM'
     end
@@ -269,6 +295,10 @@ module LLM
         - Follow French administrative standards
         - Keep identified redundancy removals
         - Answer labels, descriptions, summary, justification in french.
+
+        Output requirements:
+        - Return ONLY raw JSON. No markdown, no code fences, no commentary.
+        - Do not wrap the JSON in ```json ... ``` blocks.
 
         Response structure:
         {

@@ -39,6 +39,18 @@ RSpec.describe LLM::RevisionImproverService do
     expect(result[:destroy]).to eq([{ stable_id: 2 }])
   end
 
+  it 'parses fenced JSON code blocks' do
+    payload = {
+      operations: { destroy: [{ stable_id: 42 }], update: [], add: [] },
+      summary: 'ok'
+    }.to_json
+    stub_run_chat("```json\n#{payload}\n```")
+
+    result = described_class.new(procedure).suggest!
+    expect(result[:destroy]).to eq([{ stable_id: 42 }])
+    expect(result[:summary]).to eq('ok')
+  end
+
   it 'raises InvalidOutput for non-JSON output' do
     stub_run_chat('not-json')
     service = described_class.new(procedure)
