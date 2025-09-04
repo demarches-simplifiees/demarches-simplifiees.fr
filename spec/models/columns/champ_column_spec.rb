@@ -175,7 +175,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["true"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_yes.id])
+          expect(subject).to match_array([dossier_with_yes.id])
         end
       end
 
@@ -183,7 +183,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["false"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_no.id])
+          expect(subject).to match_array([dossier_with_no.id])
         end
       end
 
@@ -191,7 +191,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { [Column::NOT_FILLED_VALUE] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_not_filled.id])
+          expect(subject).to match_array([dossier_not_filled.id])
         end
       end
     end
@@ -213,7 +213,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["true"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_checked.id])
+          expect(subject).to match_array([dossier_with_checked.id])
         end
       end
 
@@ -221,7 +221,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["false"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_not_checked.id])
+          expect(subject).to match_array([dossier_not_checked.id])
         end
       end
     end
@@ -243,7 +243,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["true"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_checked.id])
+          expect(subject).to match_array([dossier_with_checked.id])
         end
       end
 
@@ -251,7 +251,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["false"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_not_checked.id])
+          expect(subject).to match_array([dossier_not_checked.id])
         end
       end
     end
@@ -275,7 +275,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["Fromage"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_fromage.id])
+          expect(subject).to match_array([dossier_with_fromage.id])
         end
       end
 
@@ -283,7 +283,7 @@ describe Columns::ChampColumn do
         let(:search_terms) { ["Fromage", "Dessert"] }
 
         it "returns the correct ids" do
-          expect(subject).to eq([dossier_with_fromage.id, dossier_with_dessert.id])
+          expect(subject).to match_array([dossier_with_fromage.id, dossier_with_dessert.id])
         end
       end
     end
