@@ -98,6 +98,44 @@ RSpec.describe DossierNotification, type: :model do
     end
   end
 
+  describe '.destroy_notifications' do
+    context 'when instructeur unfollow a dossier' do
+      subject { DossierNotification.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier) }
+
+      let(:dossier) { create(:dossier) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:message_notification) { create(:dossier_notification, instructeur:, dossier:, notification_type: :message) }
+
+      context 'when the instructeur has default preferences for badge notification' do
+        it 'destroys notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+
+      context 'when the instructeur wants notifications even if he is not following the dossier' do
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier.procedure.id) }
+
+        before { instructeur_procedure.update!(display_message_notifications: 'all') }
+
+        it 'does not destroy notification' do
+          expect { subject }.not_to change { DossierNotification.count }
+        end
+      end
+
+      context 'when the instructeur wants notifications on followed dossiers' do
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier.procedure.id, display_message_notifications: 'followed') }
+
+        it 'destroys notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+    end
+  end
+
   describe '.notifications_for' do
     let!(:instructeur) { create(:instructeur) }
     let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }

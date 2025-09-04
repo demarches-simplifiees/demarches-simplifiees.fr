@@ -100,7 +100,7 @@ describe Instructeur, type: :model do
   end
 
   describe '#unfollow' do
-    let(:already_followed_dossier) { create(:dossier) }
+    let(:already_followed_dossier) { create(:dossier, procedure:) }
     before { instructeur.followed_dossiers << already_followed_dossier }
 
     context 'when a instructeur unfollow a dossier already followed' do
@@ -113,13 +113,16 @@ describe Instructeur, type: :model do
       it { expect(instructeur.previously_followed_dossiers).to include(already_followed_dossier) }
     end
 
-    context "when a instructeur has notifications on the dossier" do
-      let!(:notification) { create(:dossier_notification, dossier: already_followed_dossier, instructeur:) }
+    context "when the instructeur has notifications on the dossier" do
+      let!(:notification_with_followed_preference) { create(:dossier_notification, dossier: already_followed_dossier, instructeur:, notification_type: :dossier_modifie) }
+      let!(:notification_with_all_preference) { create(:dossier_notification, dossier: already_followed_dossier, instructeur:, notification_type: :message) }
+      let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_dossier_modifie_notifications: 'followed', display_message_notifications: 'all') }
 
-      it "destroy all notifications of the instructeur/dossier" do
+      it "destroys only notifications for which the instructeur has an 'followed' preference" do
         instructeur.unfollow(already_followed_dossier)
 
-        expect(DossierNotification.exists?(notification.id)).to be_falsey
+        expect(DossierNotification.exists?(notification_with_followed_preference.id)).to be_falsey
+        expect(DossierNotification.exists?(notification_with_all_preference.id)).to be_truthy
       end
     end
   end

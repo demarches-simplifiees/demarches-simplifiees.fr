@@ -62,9 +62,17 @@ class DossierNotification < ApplicationRecord
       .destroy_all
   end
 
-  def self.destroy_notifications_instructeur_of_dossier(instructeur, dossier)
+  def self.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier)
+    instructeur_preferences = instructeur_preferences(instructeur, dossier.procedure)
+
+    notification_types_to_destroy = notification_types.keys.map(&:to_sym).reject do |notification_type|
+      instructeur_preferences[notification_type] == "all"
+    end
+
+    return if notification_types_to_destroy.empty?
+
     DossierNotification
-      .where(instructeur:, dossier:)
+      .where(instructeur:, dossier:, notification_type: notification_types_to_destroy)
       .destroy_all
   end
 
@@ -211,16 +219,24 @@ class DossierNotification < ApplicationRecord
       .distinct
       .count
   end
-end
 
-private
+  private
 
-def find_or_create_notification(dossier, notification_type, instructeur_id, display_at: Time.current)
-  DossierNotification.find_or_create_by!(
-    dossier:,
-    notification_type:,
-    instructeur_id:
-  ) do |notification|
-    notification.display_at = display_at
+  def self.find_or_create_notification(dossier, notification_type, instructeur_id, display_at: Time.current)
+    DossierNotification.find_or_create_by!(
+      dossier:,
+      notification_type:,
+      instructeur_id:
+    ) do |notification|
+      notification.display_at = display_at
+    end
+  end
+
+  def self.instructeur_preferences(instructeur, procedure)
+    if (instructeur_procedure = InstructeursProcedure.find_by(instructeur:, procedure:))
+      instructeur_procedure.notification_preferences
+    else
+      InstructeursProcedure::DEFAULT_NOTIFICATIONS_PREFERENCES
+    end
   end
 end
