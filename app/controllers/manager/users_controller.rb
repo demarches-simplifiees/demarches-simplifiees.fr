@@ -105,7 +105,7 @@ module Manager
     private
 
     def targeted_email
-      params[:user][:email]
+      params.require(:user).permit(:email)[:email]
     end
 
     def paginate_resources(_resources)
