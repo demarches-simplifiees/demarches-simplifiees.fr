@@ -14,9 +14,9 @@ class Users::SessionsController < Devise::SessionsController
   skip_before_action :redirect_if_untrusted, only: [:reset_link_sent]
   # POST /resource/sign_in
   def create
-    user = User.find_by(email: params[:user][:email])
+    user = User.find_by(user_email_params)
 
-    if user&.valid_password?(params[:user][:password])
+    if user&.valid_password?(user_password_params[:password])
       delete_france_connect_cookies
       delete_pro_connect_session_info_cookie
       user.update(loged_in_with_france_connect: nil)
@@ -122,7 +122,7 @@ class Users::SessionsController < Devise::SessionsController
   def redirect_to_pro_connect_if_mandatory
     return if !ProConnectService.enabled?
 
-    return if !ProConnectService.email_domain_is_in_mandatory_list?(params[:user][:email])
+    return if !ProConnectService.email_domain_is_in_mandatory_list?(user_email_params[:email])
 
     flash[:alert] = "La connexion des agents passe à présent systématiquement par ProConnect"
     redirect_to pro_connect_path(force_pro_connect: true)
@@ -134,5 +134,15 @@ class Users::SessionsController < Devise::SessionsController
   # https://github.com/heartcombo/devise/issues/5602#issuecomment-1876164084
   def current_user
     super if warden.authenticated?(scope: :user)
+  end
+
+  private
+
+  def user_email_params
+    params.require(:user).permit(:email)
+  end
+
+  def user_password_params
+    params.require(:user).permit(:password)
   end
 end

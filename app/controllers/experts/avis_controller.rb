@@ -150,7 +150,7 @@ module Experts
         return redirect_to root_path, alert: "Vous n’avez pas accès à cet avis."
       end
 
-      password = params[:user][:password]
+      password = params.require(:user).permit(:password)[:password]
 
       user = User.create_or_promote_to_expert(email, password)
       user.reset_password(password, password)

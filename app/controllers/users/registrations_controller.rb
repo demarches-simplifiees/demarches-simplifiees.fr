@@ -31,7 +31,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     CurrentConfirmation.prefill_token = @prefill_token
 
     # Handle existing user trying to sign up again
-    existing_user = User.find_by(email: params[:user][:email])
+    existing_user = User.find_by(user_email_params)
     if existing_user.present?
       if existing_user.confirmed?
         UserMailer.new_account_warning(existing_user, @procedure).deliver_later
@@ -91,5 +91,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     flash.discard(:notice) # Remove devise's default message (as we have a custom page to explain it)
     new_confirmation_path(resource, :user => { email: resource.email })
+  end
+
+  private
+
+  def user_email_params
+    params.require(:user).permit(:email)
   end
 end
