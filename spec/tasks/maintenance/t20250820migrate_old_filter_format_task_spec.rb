@@ -42,6 +42,23 @@ module Maintenance
           expect(procedure_presentation.reload.suivis_filters.first.filter).to eq({ operator: 'match', value: ['plop'] })
         end
       end
+
+      context "when one filter is invalid" do
+        let(:invalid_filtered_column) { FilteredColumn.new(column: double("Column", h_id: "{\"procedure_id\":8,\"column_id\":\"self/plop\"}"), filter: 'plop') }
+        let(:valid_filtered_column) { FilteredColumn.new(column: procedure.find_column(label: 'Demandeur'), filter: 'plop') }
+
+        before do
+          procedure_presentation.update_columns(
+            suivis_filters: [invalid_filtered_column],
+            a_suivre_filters: [valid_filtered_column]
+          )
+        rescue ActiveRecord::RecordNotFound
+        end
+
+        it "does not crash" do
+          expect { subject }.not_to raise_error
+        end
+      end
     end
   end
 end

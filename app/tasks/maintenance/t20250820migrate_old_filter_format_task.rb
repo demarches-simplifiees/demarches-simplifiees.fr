@@ -31,6 +31,9 @@ module Maintenance
         end)
 
         element.save
+      rescue ActiveRecord::RecordNotFound
+        # a column can be not found for various reasons (deleted tdc, changed type, etc)
+        # in this case we just ignore the error and continue
       end
     end
 
