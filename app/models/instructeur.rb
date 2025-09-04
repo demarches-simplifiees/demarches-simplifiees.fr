@@ -63,8 +63,7 @@ class Instructeur < ApplicationRecord
     begin
       followed_dossiers << dossier
 
-      DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
-      DossierNotification.refresh_notifications_instructeur_for_dossier(self, dossier)
+      DossierNotification.refresh_notifications_instructeur_for_followed_dossier(self, dossier)
 
       # If the user tries to follow a dossier she already follows,
       # we just fail silently: it means the goal is already reached.

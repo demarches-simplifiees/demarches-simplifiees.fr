@@ -98,6 +98,49 @@ RSpec.describe DossierNotification, type: :model do
     end
   end
 
+  describe 'refresh_notifications_instructeur_for_followed_dossier' do
+    subject { DossierNotification.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier_to_notify) }
+
+    let(:dossier_to_notify) { create(:dossier, :en_construction, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+    let(:instructeur) { create(:instructeur) }
+
+    context 'when the instructeur has default preferences for badge notification' do
+      it "create notification" do
+        subject
+
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.first
+        expect(notification.notification_type).to eq('dossier_modifie')
+      end
+    end
+
+    context "when the instructeur never wants notifications" do
+      let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier_to_notify.procedure.id) }
+
+      before { instructeur_procedure.update!(display_dossier_modifie_notifications: 'none') }
+
+      it 'does not create notification' do
+        expect { subject }.not_to change { DossierNotification.count }
+      end
+    end
+
+    context "when the instructeur wants notifications on followed dossiers" do
+      let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier_to_notify.procedure.id) }
+
+      before { instructeur_procedure.update!(display_dossier_modifie_notifications: 'followed') }
+
+      it 'create notification' do
+        subject
+
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.first
+        expect(notification.notification_type).to eq('dossier_modifie')
+      end
+    end
+  end
+
   describe '.destroy_notifications' do
     context 'when instructeur unfollow a dossier' do
       subject { DossierNotification.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier) }

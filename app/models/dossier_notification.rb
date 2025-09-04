@@ -24,11 +24,11 @@ class DossierNotification < ApplicationRecord
 
   scope :type_news, -> { where(notification_type: [:dossier_modifie, :message, :annotation_instructeur, :avis_externe]) }
 
-  def self.create_notification(dossier, notification_type, instructeur: nil, except_instructeur: nil)
+  def self.create_notification(dossier, notification_type, except_instructeur: nil)
     case notification_type
     when :dossier_depose
       if !dossier.procedure.declarative? && !dossier.procedure.sva_svr_enabled?
-        instructeur_ids = Array(instructeur&.id.presence || dossier.groupe_instructeur.instructeur_ids)
+        instructeur_ids = dossier.groupe_instructeur.instructeur_ids
         display_at = dossier.depose_at + DELAY_DOSSIER_DEPOSE
 
         instructeur_ids.each do |instructeur_id|
@@ -37,7 +37,7 @@ class DossierNotification < ApplicationRecord
       end
 
     when :dossier_modifie, :message, :attente_correction, :attente_avis, :annotation_instructeur, :avis_externe
-      instructeur_ids = Array(instructeur&.id.presence || dossier.followers_instructeur_ids)
+      instructeur_ids = dossier.followers_instructeur_ids
       instructeur_ids -= [except_instructeur.id] if except_instructeur.present?
 
       instructeur_ids.each do |instructeur_id|
@@ -46,13 +46,29 @@ class DossierNotification < ApplicationRecord
     end
   end
 
-  def self.refresh_notifications_instructeur_for_dossier(instructeur, dossier)
-    create_notification(dossier, :dossier_modifie, instructeur:) if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
-    create_notification(dossier, :message, instructeur:) if dossier.commentaires.to_notify(instructeur).present?
-    create_notification(dossier, :annotation_instructeur, instructeur:) if dossier.last_champ_private_updated_at.present?
-    create_notification(dossier, :avis_externe, instructeur:) if dossier.avis.with_answer.present?
-    create_notification(dossier, :attente_correction, instructeur:) if dossier.pending_correction?
-    create_notification(dossier, :attente_avis, instructeur:) if dossier.avis.without_answer.present?
+  def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
+    destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
+
+    instructeur_preferences = instructeur_preferences(instructeur, dossier.procedure)
+
+    notification_types_followed = notification_types.keys.map(&:to_sym).filter do |notification_type|
+      instructeur_preferences[notification_type] == "followed"
+    end
+
+    return if notification_types_followed.empty?
+
+    conditions_by_type = {
+      dossier_modifie:         -> (dossier, _) { dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at },
+      message:                 -> (dossier, instructeur) { dossier.commentaires.to_notify(instructeur).present? },
+      annotation_instructeur:  -> (dossier, _) { dossier.last_champ_private_updated_at.present? },
+      avis_externe:            -> (dossier, _) { dossier.avis.with_answer.present? },
+      attente_correction:      -> (dossier, _) { dossier.pending_correction? },
+      attente_avis:            -> (dossier, _) { dossier.avis.without_answer.present? }
+    }
+
+    notification_types_followed.each do |notification_type|
+      find_or_create_notification(dossier, notification_type, instructeur.id) if conditions_by_type[notification_type].call(dossier, instructeur)
+    end
   end
 
   def self.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
