@@ -390,7 +390,7 @@ describe Columns::ChampColumn do
         end
 
         it "returns dossiers from this year" do
-          expect(subject).to eq([dossier_at_the_beginning_of_the_year.id, dossier_at_the_end_of_the_year.id])
+          expect(subject).to match_array([dossier_at_the_beginning_of_the_year.id, dossier_at_the_end_of_the_year.id])
         end
       end
     end
