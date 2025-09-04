@@ -534,7 +534,7 @@ en:
           edit_dossier: Edit my file
           edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
         search:
-          search_file: Search a file (by file number, keywords)
+          search_file: Search a file (by file number, keywords…)
           label: Search a file (by file number, last name / first name, keywords…)
           placeholder: Enter your search
           button: Search a file
