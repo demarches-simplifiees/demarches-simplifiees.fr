@@ -150,7 +150,7 @@ describe RechercheController, type: :controller do
       end
 
       context 'when dossier has notification' do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
 
         it 'assigns notification' do
           subject

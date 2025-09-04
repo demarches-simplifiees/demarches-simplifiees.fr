@@ -434,11 +434,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_02_123820) do
     t.datetime "display_at"
     t.bigint "dossier_id", null: false
     t.bigint "groupe_instructeur_id"
-    t.bigint "instructeur_id"
+    t.bigint "instructeur_id", null: false
     t.string "notification_type", null: false
     t.datetime "updated_at", null: false
-    t.index ["dossier_id", "notification_type", "groupe_instructeur_id"], name: "unique_dossier_groupe_instructeur_notification", unique: true, where: "((groupe_instructeur_id IS NOT NULL) AND (instructeur_id IS NULL))"
-    t.index ["dossier_id", "notification_type", "instructeur_id"], name: "unique_dossier_instructeur_notification", unique: true, where: "((instructeur_id IS NOT NULL) AND (groupe_instructeur_id IS NULL))"
+    t.index ["dossier_id", "notification_type", "instructeur_id"], name: "unique_dossier_instructeur_notification", unique: true
     t.index ["dossier_id"], name: "index_dossier_notifications_on_dossier_id"
     t.index ["groupe_instructeur_id"], name: "index_dossier_notifications_on_groupe_instructeur_id"
     t.index ["instructeur_id"], name: "index_dossier_notifications_on_instructeur_id"

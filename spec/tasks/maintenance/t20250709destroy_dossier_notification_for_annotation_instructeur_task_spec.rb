@@ -9,7 +9,7 @@ module Maintenance
 
       let(:dossier) { create(:dossier, last_champ_private_updated_at: last_champ_private_updated_at) }
       let(:instructeur) { create(:instructeur) }
-      let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :annotation_instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :annotation_instructeur) }
 
       context "when dossier has a private champ filled in" do
         let(:last_champ_private_updated_at) { 1.day.ago }

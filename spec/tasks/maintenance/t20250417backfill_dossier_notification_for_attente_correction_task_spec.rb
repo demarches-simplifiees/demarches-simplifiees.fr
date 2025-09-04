@@ -37,7 +37,7 @@ module Maintenance
 
       context 'when dossier has pending correction but not attente_correction notification' do
         let!(:dossier_correction) { create(:dossier_correction, dossier:) }
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: follow_instructeur) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur: follow_instructeur) }
 
         it do
           expect(collection).to eq([[dossier.id, []]])
@@ -58,7 +58,7 @@ module Maintenance
       end
 
       context "when a notification already exists for an instructeur" do
-        let!(:notification) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :attente_correction) }
+        let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_correction) }
 
         it "does not create duplicate notification" do
           expect {

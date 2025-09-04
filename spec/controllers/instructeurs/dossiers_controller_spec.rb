@@ -727,8 +727,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "when the usager had sent a message" do
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :message) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :message) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :message) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :message) }
 
       it "destroy message notification only for the current_instructeur" do
         subject
@@ -1042,8 +1042,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "when the dossier has been modified by the usager" do
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :dossier_modifie) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :dossier_modifie) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :dossier_modifie) }
 
       it "destroy dossier_modifie notification only for the current_instructeur" do
         get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
@@ -1386,8 +1386,8 @@ describe Instructeurs::DossiersController, type: :controller do
   describe "#annotations_privees" do
     context "when the dossier has an annotation_instructeur notification" do
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :annotation_instructeur) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :annotation_instructeur) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :annotation_instructeur) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :annotation_instructeur) }
 
       it "destroy annotation_instructeur notification only for the current_instructeur" do
         get :annotations_privees, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
@@ -1406,8 +1406,8 @@ describe Instructeurs::DossiersController, type: :controller do
   describe "#avis" do
     context "when the dossier has an avis_externe notification" do
       let!(:other_instructeur) { create(:instructeur) }
-      let!(:notification_current_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur:, notification_type: :avis_externe) }
-      let!(:notification_other_instructeur) { create(:dossier_notification, :for_instructeur, dossier:, instructeur: other_instructeur, notification_type: :avis_externe) }
+      let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :avis_externe) }
+      let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :avis_externe) }
 
       it "destroy avis_externe notification only for the current_instructeur" do
         get :avis, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
