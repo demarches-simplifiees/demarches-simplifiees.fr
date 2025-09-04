@@ -452,8 +452,8 @@ describe DossierFilterService do
         let!(:en_construction) { create(:dossier, :en_construction, procedure:) }
         let!(:en_construction_with_correction) { create(:dossier, :en_construction, procedure:) }
         let!(:correction) { create(:dossier_correction, dossier: en_construction_with_correction) }
-        it 'excludes dossier en construction with pending correction' do
-          is_expected.to contain_exactly(en_construction.id)
+        it 'returns only dossier en construction with and without pending correction' do
+          is_expected.to contain_exactly(en_construction.id, en_construction_with_correction.id)
         end
       end
     end
