@@ -7,19 +7,17 @@
     .fr-background-alt--grey.fr-p-3v
       = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rna_champ.value")) do |c|
         - c.with_value do
-          %p
-            = champ.value
-            = render Dsfr::CopyButtonComponent.new(text: champ.value, title: t("activemodel.attributes.rna_champ.paste"), success: t("activemodel.attributes.rna_champ.paste_success"))
+          %p.copy-btn{ role: "button" }= champ.value
 
       - ['association_titre', 'association_objet', ].each do |scope|
         - if champ.data[scope].present?
           = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rna_champ.data.#{scope}")) do |c|
             - c.with_value do
-              %p= champ.data[scope]
+              %p.copy-btn{ role: "button" }= champ.data[scope]
       - ['association_date_creation', 'association_date_declaration', 'association_date_publication'].each do |scope|
         - if champ.data[scope].present?
           = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rna_champ.data.#{scope}")) do |c|
             - c.with_value do
-              %p= l(champ.data[scope].to_date)
+              %p.copy-btn{ role: "button" }= l(champ.data[scope].to_date)
 
       = render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(champ) }

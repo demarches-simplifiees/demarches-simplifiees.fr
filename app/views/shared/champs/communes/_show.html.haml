@@ -1,9 +1,9 @@
-%p= champ.to_s
+%p.copy-btn{ role: "button" }= champ.to_s
 - if champ.code?
-  %p.fr-text--sm
+  %p.fr-text--sm.copy-btn{ role: "button" }
     Code INSEE :
-    = champ.code
+    %span{ data: { to_copy: true } }= champ.code
 - if champ.departement?
-  %p.fr-text--sm
+  %p.fr-text--sm.copy-btn{ role: "button" }
     Departement :
-    = champ.departement_code_and_name
+    %span{ data: { to_copy: true } }= champ.departement_code_and_name
