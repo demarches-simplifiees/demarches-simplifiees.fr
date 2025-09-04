@@ -57,14 +57,23 @@ class API::Client
       if scope.extra.key?(:external_id)
         scope.set_extras(raw_body: response.body.to_s)
       end
-      body = parse_body(response.body)
+
+      # Typhoeus normalize headers key names with [] method.
+      body = if response.headers && response.headers["content-type"] == "text/plain"
+        Success(response.body)
+      else
+        parse_body(response.body)
+      end
+
       case body
-      in Success(body)
-        if !schema || schema.valid?(body.deep_stringify_keys)
-          Success(OK[body, response])
+      in Success(Hash => hash_body)
+        if !schema || schema.valid?(hash_body.deep_stringify_keys)
+          Success(OK[hash_body, response])
         else
-          Failure(Error[:schema, response.code, false, SchemaError.new(schema.validate(body))])
+          Failure(Error[:schema, response.code, false, SchemaError.new(schema.validate(hash_body))])
         end
+      in Success(String => str_body)
+        Success(OK[str_body, response])
       in Failure(reason)
         Failure(Error[:json, response.code, false, reason])
       end
