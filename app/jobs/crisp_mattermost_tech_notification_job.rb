@@ -69,7 +69,7 @@ class CrispMattermostTechNotificationJob < ApplicationJob
       message_lines << "**Utilisateur :** #{email}"
 
       user = User.find_by(email:)
-      user_link = "[User ##{user.id}](#{Rails.application.routes.url_helpers.manager_user_url(user)})" if user
+      user_link = "[User ##{user.id}](#{Rails.application.routes.url_helpers.manager_user_url(user, host:)})" if user
       manager << user_link
     end
 
@@ -94,4 +94,6 @@ class CrispMattermostTechNotificationJob < ApplicationJob
   def crisp_url
     "https://app.crisp.chat/website/#{ENV.fetch("CRISP_WEBSITE_ID")}/inbox/#{session_id}/"
   end
+
+  def host = ENV["APP_HOST_LEGACY"] || ENV["APP_HOST"] # dont link to numerique.gouv yet
 end

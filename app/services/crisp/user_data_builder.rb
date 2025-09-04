@@ -105,23 +105,25 @@ module Crisp
     end
 
     def manager_user_url
-      Rails.application.routes.url_helpers.manager_user_url(user)
+      Rails.application.routes.url_helpers.manager_user_url(user, host:)
     end
 
     def manager_instructeur_url
-      Rails.application.routes.url_helpers.manager_instructeur_url(instructeur)
+      Rails.application.routes.url_helpers.manager_instructeur_url(instructeur, host:)
     end
 
     def manager_administrateur_url
-      Rails.application.routes.url_helpers.manager_administrateur_url(administrateur)
+      Rails.application.routes.url_helpers.manager_administrateur_url(administrateur, host:)
     end
 
     def emails_manager_user_url
-      Rails.application.routes.url_helpers.emails_manager_user_url(user)
+      Rails.application.routes.url_helpers.emails_manager_user_url(user, host:)
     end
 
     def truncate_values(data)
       data.transform_values { it.truncate(MAX_VALUE_LENGTH, omission: "…", separator: /\s+/) }
     end
+
+    def host = ENV["APP_HOST_LEGACY"] || ENV["APP_HOST"] # dont link to numerique.gouv yet
   end
 end
