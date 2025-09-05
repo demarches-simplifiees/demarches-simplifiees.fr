@@ -350,6 +350,8 @@ export function useMultiList({
   };
 }
 
+const DEFAULT_MAX_ITEMS_DISPLAY = 200;
+
 export function useMultiGroupList({
   defaultItems,
   defaultSelectedKeys,
