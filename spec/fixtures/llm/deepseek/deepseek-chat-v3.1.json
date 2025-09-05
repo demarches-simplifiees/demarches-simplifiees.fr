@@ -1,0 +1,285 @@
+{
+  "operations": {
+    "add": [
+      {
+        "after_stable_id": 4326479,
+        "type_champ": "repetition",
+        "libelle": "Enfant à rattacher",
+        "description": "Ajoutez chaque enfant mineur à rattacher. Pour les enfants déjà rattachés, vous n'avez pas à compléter ce formulaire.",
+        "mandatory": false,
+        "justification": "Création d'un bloc répétable structuré pour gérer plusieurs enfants",
+        "children": [
+          {
+            "type_champ": "text",
+            "libelle": "Nom de l'enfant",
+            "mandatory": true
+          },
+          {
+            "type_champ": "text",
+            "libelle": "Prénom(s) de l'enfant",
+            "mandatory": true
+          },
+          {
+            "type_champ": "date",
+            "libelle": "Date de naissance",
+            "mandatory": true
+          },
+          {
+            "type_champ": "text",
+            "libelle": "Numéro de sécurité sociale (13 caractères)",
+            "mandatory": false,
+            "description": "Si l'enfant possède déjà un numéro de sécurité sociale"
+          }
+        ]
+      }
+    ],
+    "destroy": [
+      {
+        "stable_id": 4328648,
+        "justification": "Remplacé par un bloc répétable dynamique"
+      },
+      {
+        "stable_id": 4328672,
+        "justification": "Remplacé par un bloc répétable dynamique"
+      },
+      {
+        "stable_id": 4328673,
+        "justification": "Remplacé par un bloc répétable dynamique"
+      },
+      {
+        "stable_id": 4341941,
+        "justification": "Intégré dans la description des pièces justificatives"
+      }
+    ],
+    "update": [
+      {
+        "stable_id": 4328679,
+        "type_champ": "drop_down_list",
+        "libelle": "Ma caisse MSA",
+        "mandatory": true,
+        "description": "Sélectionnez votre caisse MSA parmi la liste"
+      },
+      {
+        "stable_id": 4326069,
+        "type_champ": "header_section",
+        "libelle": "Parent demandant le rattachement",
+        "mandatory": false
+      },
+      {
+        "stable_id": 4328676,
+        "type_champ": "drop_down_list",
+        "libelle": "Lien de parenté",
+        "mandatory": true
+      },
+      {
+        "stable_id": 4327121,
+        "type_champ": "drop_down_list",
+        "libelle": "Type de rattachement souhaité",
+        "mandatory": true,
+        "description": "Sélectionnez le type de rattachement pour votre/vos enfant(s)"
+      },
+      {
+        "stable_id": 4338657,
+        "type_champ": "drop_down_list",
+        "libelle": "Rattachement à un deuxième parent ?",
+        "mandatory": true,
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4327121
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "principal (vous recevrez les courriers de l'assurance maladie de votre (vos) enfant(s) et effectuer les démarches administrative le(s) concernant)"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher ce champ que si le rattachement principal est sélectionné"
+      },
+      {
+        "stable_id": 4340866,
+        "type_champ": "header_section",
+        "libelle": "Deuxième parent demandant le rattachement",
+        "mandatory": false,
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4338657
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "Oui"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher cette section que si l'utilisateur souhaite ajouter un deuxième parent"
+      },
+      {
+        "stable_id": 4347011,
+        "type_champ": "explication",
+        "libelle": "Rattachement à titre secondaire",
+        "mandatory": false,
+        "description": "Le remboursement des soins pourra être effectué sur le compte de ce parent si c'est sa carte Vitale qui est présentée. En revanche, il ne sera pas destinataire des courriers de l'assurance maladie concernant l'enfant rattaché.",
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4327121
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "secondaire"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage contextuelle"
+      },
+      {
+        "stable_id": 4347111,
+        "type_champ": "explication",
+        "libelle": "Rattachement à titre principal",
+        "mandatory": false,
+        "description": "Le remboursement des soins pourra être effectué sur le compte des deux parents selon la carte Vitale présentée. Ce parent sera destinataire des courriers de l'assurance maladie concernant l'enfant rattaché.",
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4327121
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "principal (vous recevrez les courriers de l'assurance maladie de votre (vos) enfant(s) et effectuer les démarches administrative le(s) concernant)"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage contextuelle"
+      },
+      {
+        "stable_id": 4340865,
+        "type_champ": "text",
+        "libelle": "Nom du deuxième parent",
+        "mandatory": true,
+        "description": "Nom de famille (de naissance) suivi du nom d'usage (facultatif et s'il y a lieu)",
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4338657
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "Oui"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher ce champ que si l'utilisateur souhaite ajouter un deuxième parent"
+      },
+      {
+        "stable_id": 4341794,
+        "type_champ": "text",
+        "libelle": "Prénom(s) du deuxième parent",
+        "mandatory": true,
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4338657
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "Oui"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher ce champ que si l'utilisateur souhaite ajouter un deuxième parent"
+      },
+      {
+        "stable_id": 4341795,
+        "type_champ": "text",
+        "libelle": "Numéro de sécurité sociale du deuxième parent (13 caractères)",
+        "mandatory": true,
+        "description": "Le numéro de sécurité sociale comporte 13 caractères. Il est inscrit sur la carte vitale, l'attestation de droits maladie ou la carte de mutuelle.",
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4338657
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "Oui"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher ce champ que si l'utilisateur souhaite ajouter un deuxième parent"
+      },
+      {
+        "stable_id": 4341797,
+        "type_champ": "drop_down_list",
+        "libelle": "Caisse MSA du deuxième parent",
+        "mandatory": true,
+        "description": "Sélectionnez la caisse MSA du deuxième parent",
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4338657
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "Oui"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher ce champ que si l'utilisateur souhaite ajouter un deuxième parent"
+      },
+      {
+        "stable_id": 4346141,
+        "type_champ": "drop_down_list",
+        "libelle": "Lien de parenté du deuxième parent",
+        "mandatory": true,
+        "display_condition": {
+          "term": "Logic::Eq",
+          "left": {
+            "term": "Logic::ChampValue",
+            "stable_id": 4338657
+          },
+          "right": {
+            "term": "Logic::Constant",
+            "value": "Oui"
+          }
+        },
+        "justification": "Ajout d'une condition d'affichage pour n'afficher ce champ que si l'utilisateur souhaite ajouter un deuxième parent"
+      },
+      {
+        "stable_id": 4326477,
+        "type_champ": "header_section",
+        "libelle": "Enfants mineurs à rattacher",
+        "mandatory": false
+      },
+      {
+        "stable_id": 4326479,
+        "type_champ": "repetition",
+        "libelle": "Enfant à rattacher",
+        "mandatory": false,
+        "description": "Ajoutez chaque enfant mineur à rattacher. Pour les enfants déjà rattachés, vous n'avez pas à compléter ce formulaire."
+      },
+      {
+        "stable_id": 4341946,
+        "type_champ": "explication",
+        "libelle": "Pièces justificatives requises",
+        "mandatory": false,
+        "description": "Pour les enfants nés en France : copie du livret de famille à jour ou extrait d'acte de naissance. Pour les enfants nés à l'étranger : copie intégrale de l'acte de naissance avec filiation ET pièce d'identité de l'enfant. Les documents en langues étrangères doivent être accompagnés d'une traduction certifiée."
+      },
+      {
+        "stable_id": 4341860,
+        "type_champ": "header_section",
+        "libelle": "Engagement et signature",
+        "mandatory": false
+      },
+      {
+        "stable_id": 4341897,
+        "type_champ": "checkbox",
+        "libelle": "Je certifie l'exactitude des renseignements fournis",
+        "mandatory": true,
+        "description": "En cochant cette case, vous certifiez que toutes les informations fournies dans cette déclaration sont exactes et complètes.",
+        "justification": "Rendre ce champ obligatoire pour validation de la déclaration"
+      }
+    ]
+  },
+  "summary": "Optimisation du formulaire de rattachement d'enfants mineurs avec : création d'un bloc répétable pour gérer plusieurs enfants, ajout de logique conditionnelle pour afficher dynamiquement les sections du deuxième parent, amélioration des libellés et descriptions pour plus de clarté, suppression des redondances et intégration des informations dans des blocs structurés."
+}

@@ -171,7 +171,7 @@ module Administrateurs
         service = LLM::RevisionImproverService.new(@procedure)
         suggestion = service.suggest
       else
-        suggestion = JSON.parse(File.read("spec/fixtures/llm_procedure_improvements_stub.txt")).deep_symbolize_keys
+        suggestion = JSON.parse(File.read("spec/fixtures/llm/deepseek/deepseek-chat-v3.1.json")).deep_symbolize_keys
       end
       @changes = suggestion[:operations]
       @text = Array.wrap(suggestion[:summary].split('.').map(&:strip))
