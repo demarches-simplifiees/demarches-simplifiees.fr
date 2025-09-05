@@ -35,12 +35,12 @@ class Columns::DossierColumn < Column
 
   def filtered_ids_before_value(dossiers, values)
     date_range = ..Time.zone.parse(values.first).beginning_of_day
-    dossiers.where(column => date_range).ids
+    dossiers.filter_by_datetimes_range(column, date_range).ids
   end
 
   def filtered_ids_after_value(dossiers, values)
     date_range = (Time.zone.parse(values.first).end_of_day..)
-    dossiers.where(column => date_range).ids
+    dossiers.filter_by_datetimes_range(column, date_range).ids
   end
 
   def filtered_ids_for_values(dossiers, values)

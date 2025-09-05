@@ -164,6 +164,13 @@ describe Columns::DossierColumn do
 
         it { is_expected.to contain_exactly(dossier2.id) }
       end
+
+      context "for updated_since column (special case)" do
+        let(:date_column) { procedure.find_column(label: "Dernier évènement depuis") }
+        let(:search_terms) { { operator: 'after', value: ["2025-02-13"] } }
+
+        it { is_expected.to contain_exactly(dossier2.id) }
+      end
     end
   end
 end

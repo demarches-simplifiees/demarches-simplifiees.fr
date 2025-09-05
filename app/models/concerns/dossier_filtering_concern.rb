@@ -28,6 +28,17 @@ module DossierFilteringConcern
       end
     }
 
+    scope :filter_by_datetimes_range, lambda { |column, date_range|
+      case column
+      when 'sva_svr_decision_before'
+        state_not_termine.where("dossiers.sva_svr_decision_on": date_range)
+      when *DATE_SINCE_MAPPING.keys
+        where("dossiers.#{DATE_SINCE_MAPPING.fetch(column)}": date_range)
+      else
+        where(column => date_range)
+      end
+    }
+
     scope :filter_ilike, lambda { |table, column, search_terms|
       safe_quoted_terms = search_terms.map(&:strip).map { "%#{sanitize_sql_like(_1)}%" }
       table_column = DossierFilterService.sanitized_column(table, column)
