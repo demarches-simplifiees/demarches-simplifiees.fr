@@ -18,27 +18,6 @@ describe Champs::DgfipChamp, type: :model do
     end
   end
 
-  describe 'external_id' do
-    context 'when only one data is given' do
-      before do
-        champ.numero_fiscal = '1122299999092'
-        champ.save
-      end
-
-      it { expect(champ.external_id).to be_nil }
-    end
-
-    context 'when all data required for an external fetch are given' do
-      before do
-        champ.numero_fiscal = '1122299999092'
-        champ.reference_avis = 'FC22299999092'
-        champ.save
-      end
-
-      it { expect(JSON.parse(champ.external_id)).to eq({ "reference_avis" => "FC22299999092", "numero_fiscal" => "1122299999092" }) }
-    end
-  end
-
   describe '#validate' do
     let(:numero_fiscal) { '1122299999092' }
     let(:reference_avis) { 'FC22299999092' }

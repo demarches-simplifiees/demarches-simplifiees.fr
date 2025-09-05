@@ -396,7 +396,7 @@ describe 'fetch API Particulier Data', js: true do
       end
     end
 
-    context 'MESRI' do
+    context 'MESRI', vcr: { cassette_name: 'api_particulier/success/etudiants' } do
       let(:api_particulier_token) { 'c6d23f3900b8fb4b3586c4804c051af79062f54b' }
 
       scenario 'it can fill a MESRI field' do
@@ -411,25 +411,16 @@ describe 'fetch API Particulier Data', js: true do
           click_on 'Continuer'
         end
 
-        fill_in "INE", with: 'wrong code'
-
         dossier = Dossier.last
         mesri_champ = dossier.project_champs_public.find(&:mesri?)
 
-        wait_until { mesri_champ.reload.ine == 'wrong code' }
-        clear_enqueued_jobs
-        mesri_champ.update(external_id: nil, ine: nil)
-
-        VCR.use_cassette('api_particulier/success/etudiants') do
-          fill_in "INE", with: ine
-          wait_until { mesri_champ.reload.external_id.present? }
-          perform_enqueued_jobs
-          click_on 'Déposer le dossier'
+        fill_in "INE", with: ine
+        perform_enqueued_jobs do
+          wait_until { mesri_champ.reload.fetched? }
         end
-        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
+        click_on 'Déposer le dossier'
 
-        perform_enqueued_jobs
-        wait_until { mesri_champ.reload.data.present? }
+        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis le MESRI/)
