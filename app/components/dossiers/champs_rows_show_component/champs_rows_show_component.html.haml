@@ -41,7 +41,7 @@
           - when TypeDeChamp.type_champs.fetch(:address)
             = render Dossiers::AddressComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:communes)
-            = render partial: "shared/champs/communes/show", locals: { champ: champ }
+            = render Dossiers::CommuneComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:regions)
             = render partial: "shared/champs/regions/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:rna)
