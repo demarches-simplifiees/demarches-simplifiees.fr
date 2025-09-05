@@ -48,4 +48,26 @@ class InstructeursProcedure < ApplicationRecord
       self.public_send(column)
     end
   end
+
+  def refresh_notifications(groupe_instructeur_ids, old_preferences, new_preferences)
+    return if old_preferences == new_preferences
+
+    all_dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids).state_not_brouillon
+    followed_dossiers = all_dossiers.joins(:follows).where(follows: { instructeur_id: }).distinct
+    non_followed_dossiers = all_dossiers.where.not(id: followed_dossiers)
+
+    old_preferences.keys.each do |notification_type|
+      if old_preferences[notification_type] != new_preferences[notification_type]
+        DossierNotification.refresh_notifications_instructeur_for_dossiers(
+          all_dossiers,
+          followed_dossiers,
+          non_followed_dossiers,
+          instructeur_id,
+          notification_type,
+          old_preferences[notification_type],
+          new_preferences[notification_type]
+        )
+      end
+    end
+  end
 end
