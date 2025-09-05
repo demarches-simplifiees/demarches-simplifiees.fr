@@ -38,6 +38,7 @@ module Instructeurs
     def refresh_column_filter
       @column = filtered_column_from_params.column
       procedure = current_instructeur.procedures.find(@column.h_id[:procedure_id])
+      @instructeur_procedure = InstructeursProcedure.find_by!(procedure:, instructeur: current_instructeur)
 
       if @column.groupe_instructeur?
         @column.options_for_select = current_instructeur.groupe_instructeur_options_for(procedure)

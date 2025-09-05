@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
-  attr_reader :column, :form
+  attr_reader :column, :form, :instructeur_procedure
 
-  def initialize(column:, form:)
+  def initialize(column:, form:, instructeur_procedure:)
     @column = column
     @form = form
+    @instructeur_procedure = instructeur_procedure
   end
 
   def operator_hidden_field
@@ -17,6 +18,12 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
 
     if tdc_type == "yes_no" && !column.mandatory
       options.unshift(Column.not_filled_option)
+    end
+
+    if column.column == 'notification_type'
+      options.filter! do |_, type|
+        @instructeur_procedure.notification_preference_for(type) != 'none'
+      end
     end
 
     options
