@@ -57,8 +57,7 @@ class DossierSearchService
   end
 
   def self.id_compatible?(number)
-    ActiveRecord::Type::Integer.new.serialize(number)
-    true
+    ActiveRecord::Type::Integer.new.serialize(number).present?
   rescue ActiveModel::RangeError
     false
   end

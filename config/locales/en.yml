@@ -427,7 +427,6 @@ en:
           expired: The file is expired
           user_removed: The user has deleted his/her account
         acts_on_behalf: "acts for"
-        deleted_by_administration: "File deleted by administration"
         restore: "Restore"
         filters:
           title: Select a filter
@@ -456,7 +455,9 @@ en:
         introduction_file_explaination: "File attached to the request for advice"
       search:
         dossier_not_in_instructor_group: "File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it is attached to the “%{groupe_instructeur_label}” instructor group."
-        deleted_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}}” matches your search but it was deleted on %{deleted_at}."
+        deleted_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it was deleted on %{deleted_at}."
+        hidden_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it was move to the "
+        hidden_dossier_link: "bin"
     users:
       dossiers:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"

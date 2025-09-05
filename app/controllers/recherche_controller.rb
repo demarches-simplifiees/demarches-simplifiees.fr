@@ -29,11 +29,7 @@ class RechercheController < ApplicationController
     @search_terms = search_terms
     @dossiers_count = 0
 
-    if instructeur_signed_in? && DossierSearchService.id_compatible?(@search_terms)
-      @deleted_dossier = current_instructeur.deleted_dossiers.find_by(dossier_id: @search_terms)
-    end
-
-    return if @deleted_dossier.present?
+    return if handle_special_cases
 
     @instructeur_dossiers_ids = DossierSearchService
       .matching_dossiers(current_instructeur&.dossiers, @search_terms, with_annotation: true)
@@ -54,23 +50,6 @@ class RechercheController < ApplicationController
     @followed_dossiers_id = current_instructeur&.followed_dossiers&.where(id: @paginated_ids)&.ids || []
     @dossier_avis_ids_h = current_expert&.avis&.where(dossier_id: @paginated_ids)&.pluck(:dossier_id, :id).to_h || {}
     @notifications = instructeur_signed_in? ? DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @paginated_ids) : {}
-
-    # if an instructor search for a dossier which is in his procedures but not available to his intructor group
-    # we want to display an alert in view
-
-    # to make it simpler we only do it if the @search_terms is an id
-    return if !DossierSearchService.id_compatible?(@search_terms)
-
-    dossier_instructeur_searched_for = Dossier.state_not_brouillon.find_by(id: @search_terms)
-
-    return if dossier_instructeur_searched_for.nil?
-    return if current_instructeur&.groupe_instructeur_ids&.include?(dossier_instructeur_searched_for.groupe_instructeur_id)
-
-    if current_instructeur&.procedures&.include?(dossier_instructeur_searched_for.procedure)
-      @dossier_not_in_instructor_group = dossier_instructeur_searched_for
-    else
-      return
-    end
 
   rescue ActiveRecord::QueryCanceled => e
     Sentry.capture_exception(e)
@@ -98,5 +77,25 @@ class RechercheController < ApplicationController
 
   def search_terms
     params[:q]
+  end
+
+  def handle_special_cases
+    return false unless instructeur_signed_in? && DossierSearchService.id_compatible?(@search_terms)
+
+    @deleted_dossier = current_instructeur.deleted_dossiers.find_by(dossier_id: @search_terms)
+    return true if @deleted_dossier.present?
+
+    dossier = Dossier.state_not_brouillon.find_by(id: @search_terms)
+    return true if dossier.nil?
+
+    if current_instructeur.groupe_instructeur_ids.include?(dossier.groupe_instructeur_id)
+      @hidden_dossier = dossier.hidden_by_administration? ? dossier : nil
+      return true if @hidden_dossier.present?
+    else
+      @dossier_not_in_instructor_group = current_instructeur.procedures.include?(dossier.procedure) ? dossier : nil
+      return true if @dossier_not_in_instructor_group.present?
+    end
+
+    false
   end
 end

@@ -432,7 +432,6 @@ fr:
           expired: Le dossier a expiré
           user_removed: L’usager a supprimé son compte
         acts_on_behalf: "agit pour"
-        deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
         restore_and_extend: "Restaurer et étendre la conservation"
         filters:
@@ -463,6 +462,8 @@ fr:
       search:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
         deleted_dossier: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été supprimé le %{deleted_at}."
+        hidden_dossier: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été placé dans la "
+        hidden_dossier_link: "corbeille"
     users:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
