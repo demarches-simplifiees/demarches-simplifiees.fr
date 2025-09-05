@@ -338,4 +338,20 @@ RSpec.describe DossierNotification, type: :model do
       end
     end
   end
+
+  describe '.refresh_notifications_instructeur_for_dossiers_and_type' do
+    let(:dossier) { create(:dossier, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+    let(:dossier_with_notification) { create(:dossier, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+    let(:dossiers) { [dossier, dossier_with_notification] }
+    let(:instructeur) { create(:instructeur) }
+    let!(:notification) { create(:dossier_notification, dossier: dossier_with_notification, instructeur:, notification_type: :dossier_modifie) }
+
+    subject { DossierNotification.refresh_notifications_instructeur_for_dossiers_and_type(dossiers, :dossier_modifie, instructeur.id) }
+
+    it 'inserts notifications and ignore those already present in the database' do
+      subject
+
+      expect(DossierNotification.count).to eq(2)
+    end
+  end
 end

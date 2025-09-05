@@ -259,7 +259,13 @@ module Instructeurs
     end
 
     def update_badge_notifications
-      InstructeursProcedure.find_by!(procedure_id:, instructeur: current_instructeur).update!(badge_notification_params)
+      instructeur_procedure = InstructeursProcedure.find_by!(procedure_id:, instructeur: current_instructeur)
+
+      old_preferences = instructeur_procedure.notification_preferences
+      instructeur_procedure.update!(badge_notification_params)
+      new_preferences = instructeur_procedure.notification_preferences
+
+      instructeur_procedure.refresh_notifications(groupe_instructeur_ids, old_preferences, new_preferences)
 
       flash.notice = t('instructeurs.procedures.badge_preferences.flash_notice')
       redirect_to instructeur_procedure_path(procedure)
