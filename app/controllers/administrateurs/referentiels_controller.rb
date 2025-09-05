@@ -5,7 +5,7 @@ module Administrateurs
     before_action :retrieve_procedure
     before_action :retrieve_type_de_champ
     before_action :retrieve_referentiel, except: [:new, :create]
-    before_action :reachable_referentiel?, only: [:mapping_type_de_champ]
+    before_action :reachable_referentiel?, only: [:mapping_type_de_champ, :autocomplete_configuration]
     layout 'empty_layout'
 
     def new
@@ -26,6 +26,19 @@ module Administrateurs
     def update
       @referentiel.assign_attributes(referentiel_params)
       handle_referentiel_save(@referentiel)
+    end
+
+    def update_autocomplete_configuration
+      if @referentiel.update(autocomplete_configuration_params) && params[:commit].present?
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration de l'autocomplete a bien été enregistrée" }
+      else
+        @referentiel.validate
+        component = Referentiels::AutocompleteConfigurationComponent.new(referentiel: @referentiel, type_de_champ: @type_de_champ, procedure: @procedure)
+        render turbo_stream: turbo_stream.replace(component.id, component)
+      end
+    end
+
+    def autocomplete_configuration
     end
 
     def mapping_type_de_champ
@@ -56,17 +69,28 @@ module Administrateurs
     end
 
     def handle_referentiel_save(referentiel)
-      cache_bust_last_response_and_mapping = referentiel.url_changed?
+      url_changed = referentiel.url_changed?
+      auto_submitted = params[:commit].blank?
+      saved = referentiel.configured? && referentiel.save
 
-      if referentiel.configured? && referentiel.save && params[:commit].present?
-        if cache_bust_last_response_and_mapping
-          @type_de_champ.update!(referentiel_mapping: {})
-          referentiel.update!(last_response: nil)
-        end
+      if saved && url_changed # cache bust
+        @type_de_champ.update!(referentiel_mapping: {})
+        referentiel.update!(last_response: nil, autocomplete_configuration: {})
+      end
 
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
-      else
+      if !auto_submitted
         referentiel.validate
+      elsif url_changed
+        referentiel.url_allowed?
+      end
+
+      if saved && !auto_submitted
+        if referentiel.autocomplete?
+          redirect_to autocomplete_configuration_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        else
+          redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, referentiel)
+        end
+      else
         component = Referentiels::NewFormComponent.new(referentiel:, type_de_champ: @type_de_champ, procedure: @procedure)
         render turbo_stream: turbo_stream.replace(component.id, component)
       end
@@ -104,9 +128,15 @@ module Administrateurs
       else
         params = referentiel_params.to_h
         params = params.merge(type: Referentiels::APIReferentiel) if !Referentiels::APIReferentiel.csv_available?
-        params = params.merge(mode: Referentiels::APIReferentiel.modes.fetch(:exact_match)) if !Referentiels::APIReferentiel.autocomplete_available?
         params
       end
+    end
+
+    def autocomplete_configuration_params
+      params.require(:referentiel)
+        .permit(:datasource, :tiptap_template)
+    rescue ActionController::ParameterMissing
+      {}
     end
   end
 end

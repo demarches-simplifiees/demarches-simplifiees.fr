@@ -1093,6 +1093,72 @@ describe Users::DossiersController, type: :controller do
         end
       end
     end
+
+    context 'when the champ is an autocomplete with prefillable champs' do
+      render_views
+      let(:datasource) { '$.data' }
+      let(:referentiel) { create(:api_referentiel, :autocomplete, :with_autocomplete_response, datasource:) }
+      let(:referentiel_stable_id) { 1 }
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :referentiel,
+            referentiel: referentiel,
+            stable_id: referentiel_stable_id,
+            referentiel_mapping: {
+              "$.data[0].finess" => { prefill: "1", prefill_stable_id: 2 },
+              "$.data[0].ej_rs" => { prefill: "1", prefill_stable_id: 3 }
+            }
+          },
+          {
+            type: :text,
+            stable_id: 2
+          },
+          {
+            type: :text,
+            stable_id: 3
+          }
+        ]
+      end
+      let(:suggestion_value) { 'osf' }
+      let(:suggestion_data) { { finess: "123", ej_rs: "456" } }
+      let(:message_encryptor_service) { MessageEncryptorService.new }
+      let (:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            champs_public_attributes: {
+              first_champ.public_id => {
+                value: suggestion_value,
+                data: message_encryptor_service.encrypt_and_sign(suggestion_data, purpose: :storage, expires_in: 1.hour)
+              }
+            }
+          }
+        }
+      end
+
+      it 'includes the referentiel champ plus its prefillable champs within @to_update' do
+        subject
+
+        expect(assigns(:to_update).size).to eq(3)
+
+        dossier.reload
+
+        # check data persistence
+        champs = dossier.project_champs
+        champ_referentiel = champs.find(&:referentiel?)
+        expect(champ_referentiel.value).to eq(suggestion_value)
+        expect(champ_referentiel.data).to eq(champ_referentiel.send(:rewrap_selected_object_in_datasource, suggestion_data.with_indifferent_access))
+
+        expect(champs.find { it.stable_id == 2 }.reload.value).to eq(suggestion_data[:finess])
+        expect(champs.find { it.stable_id == 3 }.reload.value).to eq(suggestion_data[:ej_rs])
+
+        # check rendering
+        expect(response.body).to include(suggestion_value)
+        expect(response.body).to include(suggestion_data[:finess])
+        expect(response.body).to include(suggestion_data[:ej_rs])
+      end
+    end
   end
 
   describe '#update en_construction' do

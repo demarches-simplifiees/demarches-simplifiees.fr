@@ -282,6 +282,7 @@ export function RemoteComboBox({
     name,
     form,
     data,
+    usePost,
     ...props
   } = useMemo(() => s.create(maybeProps, RemoteComboBoxProps), [maybeProps]);
 
@@ -289,11 +290,17 @@ export function RemoteComboBox({
 
   const load = useMemo(
     () =>
-      typeof loader == 'string'
-        ? createLoader(loader, { minimumInputLength, limit, coerce })
+      typeof loader === 'string'
+        ? createLoader(loader, {
+            minimumInputLength,
+            limit,
+            coerce,
+            usePost
+          })
         : loader,
-    [loader, minimumInputLength, limit, coerce]
+    [loader, minimumInputLength, limit, coerce, usePost]
   );
+
   const { selectedItem, onReset, shouldShowPopover, ...comboBoxProps } =
     useRemoteList({
       defaultItems,

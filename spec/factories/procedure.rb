@@ -246,6 +246,10 @@ FactoryBot.define do
           end
           if type_champ == 'repetition'
             build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, libelle: libelle, position: index)
+          elsif type_champ == 'referentiel'
+            referentiel = build(:api_referentiel, :exact_match)
+
+            build(:type_de_champ_referentiel, procedure: procedure, mandatory: true, libelle: libelle, position: index, referentiel:)
           else
             build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, position: index)
           end

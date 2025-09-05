@@ -5141,7 +5141,7 @@ enum TypeDeChamp {
   pole_emploi
 
   """
-  Référentiel à configurer (avancé)
+  Référentiel configurable (avancé)
   """
   referentiel
 

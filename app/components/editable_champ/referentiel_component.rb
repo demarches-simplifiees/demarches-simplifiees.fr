@@ -8,4 +8,17 @@ class EditableChamp::ReferentielComponent < EditableChamp::EditableChampBaseComp
   def dsfr_input_classname
     exact_match? ? 'fr-input' : nil
   end
+
+  def react_autocomplete_props
+    react_input_opts(id: @champ.focusable_input_id,
+      class: 'fr-mt-1w',
+      name: @form.field_name(:value),
+      placeholder: t('views.components.remote_combobox'),
+      selected_key: @champ.selected_key,
+      items: @champ.selected_items,
+      loader: data_sources_data_source_referentiel_path(referentiel_id: referentiel.id),
+      minimum_input_length: DataSources::ReferentielController::MIN_QUERY_LENGTH,
+      use_post: true,
+      is_disabled: false)
+  end
 end

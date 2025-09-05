@@ -35,8 +35,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe '#create' do
     context 'partial update (selecting type)' do
-      subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
-
+      subject { post :create, params: { procedure_id: procedure.id, stable_id:, referentiel: referentiel_params, commit:	"Étape+suivante" }, format: :turbo_stream }
       let(:referentiel_params) { { type: 'Referentiels::APIReferentiel' } }
       it 're-render form' do
         expect { subject }.not_to change { Referentiel.count }
@@ -79,30 +78,58 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
     context 'with commit params (submit save)' do
       subject { post :create, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, referentiel: referentiel_params }, format: :turbo_stream }
+      context 'when referentiel is exact_match' do
+        let(:referentiel_params) do
+          {
+            type: 'Referentiels::APIReferentiel',
+            mode: 'exact_match',
+            url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+            hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
+            test_data: 'PG46YY6YWCX8'
+          }
+        end
 
-      let(:referentiel_params) do
-        {
-          type: 'Referentiels::APIReferentiel',
-          mode: 'exact_match',
-          url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
-          hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
-          test_data: 'PG46YY6YWCX8'
-        }
+        it 'creates referentiel and continue redirect' do
+          expect { subject }.to change { Referentiel.count }.by(1)
+
+          referentiel = Referentiel.first
+
+          expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+
+          expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
+          expect(referentiel.type).to eq(referentiel_params[:type])
+          expect(referentiel.mode).to eq(referentiel_params[:mode])
+          expect(referentiel.url).to eq(referentiel_params[:url])
+          expect(referentiel.hint).to eq(referentiel_params[:hint])
+          expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+        end
       end
 
-      it 'creates referentiel and continue redirect' do
-        expect { subject }.to change { Referentiel.count }.by(1)
+      context 'when referentiel is autocomplete' do
+        let(:referentiel_params) do
+          {
+            type: 'Referentiels::APIReferentiel',
+            mode: 'autocomplete',
+            url: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/',
+            hint: 'Identifiant unique du bâtiment dans le RNB, composé de 12 chiffre et lettre',
+            test_data: 'PG46YY6YWCX8'
+          }
+        end
 
-        referentiel = Referentiel.first
+        it 'creates referentiel and continue redirect' do
+          expect { subject }.to change { Referentiel.count }.by(1)
 
-        expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+          referentiel = Referentiel.first
 
-        expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
-        expect(referentiel.type).to eq(referentiel_params[:type])
-        expect(referentiel.mode).to eq(referentiel_params[:mode])
-        expect(referentiel.url).to eq(referentiel_params[:url])
-        expect(referentiel.hint).to eq(referentiel_params[:hint])
-        expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+          expect(response).to redirect_to(autocomplete_configuration_admin_procedure_referentiel_path(procedure, stable_id, referentiel))
+
+          expect(referentiel.types_de_champ).to include(TypeDeChamp.find_by(stable_id:))
+          expect(referentiel.type).to eq(referentiel_params[:type])
+          expect(referentiel.mode).to eq(referentiel_params[:mode])
+          expect(referentiel.url).to eq(referentiel_params[:url])
+          expect(referentiel.hint).to eq(referentiel_params[:hint])
+          expect(referentiel.test_data).to eq(referentiel_params[:test_data])
+        end
       end
     end
   end
@@ -139,6 +166,16 @@ describe Administrateurs::ReferentielsController, type: :controller do
     context 'full update (updating all attributes) without autosave' do
       subject { patch :update, params: { commit: 'Étape suivante', procedure_id: procedure.id, stable_id:, id: referentiel.id, referentiel: referentiel_params }, format: :turbo_stream }
       let(:referentiel) { create(:api_referentiel, :exact_match, :with_exact_match_response, types_de_champ: [type_de_champ]) }
+      let(:referentiel) do
+        create(
+          :api_referentiel,
+          :exact_match,
+          :with_exact_match_response,
+          types_de_champ: [type_de_champ],
+          datasource: '$.jsonpath',
+          tiptap_template: { "type": "doc", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "{{jsonpath}}" }] }] }.to_json
+        )
+      end
       before do
         type_de_champ.update(referentiel_mapping: { "old" => { type: "string" } })
       end
@@ -167,7 +204,9 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(referentiel.test_data).to eq(referentiel_params[:test_data])
 
         # also reset last_response/referentiel_mapping when url changed
-        expect(referentiel.reload.last_response).to be_nil
+        referentiel.reload
+        expect(referentiel.last_response).to be_nil
+        expect(referentiel.autocomplete_configuration).to eq({ "json_template" => {} })
         expect(type_de_champ.reload.referentiel_mapping).to eq({})
       end
     end
@@ -175,9 +214,10 @@ describe Administrateurs::ReferentielsController, type: :controller do
 
   describe "configuration_error" do
     let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-    let(:referentiel) { create(:api_referentiel, types_de_champ: [type_de_champ]) }
+    let(:referentiel) { create(:api_referentiel, :exact_match, types_de_champ: [type_de_champ]) }
 
     it 'works' do
+      allow_any_instance_of(Referentiels::APIReferentiel).to receive(:save).and_return(false)
       get :configuration_error, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
       expect(response).to have_http_status(:success)
     end
@@ -354,6 +394,59 @@ describe Administrateurs::ReferentielsController, type: :controller do
         expect(updated_mapping.dig('$.jsonpath1', "type")).to eq("Chaine de caractères")
         expect(updated_mapping.dig('$.jsonpath1', "prefill")).to eq("1")
         expect(updated_mapping.dig('$.jsonpath1', "prefill_stable_id")).to eq(prefillable_stable_id.to_s)
+      end
+    end
+
+    describe '#autocomplete_configuration' do
+      let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+      let(:referentiel) { create(:api_referentiel, :autocomplete, :with_autocomplete_response, types_de_champ: [type_de_champ]) }
+
+      context 'PATCH autocomplete_configuration' do
+        subject do
+          patch :update_autocomplete_configuration, params: {
+            procedure_id: procedure.id,
+            stable_id: type_de_champ.stable_id,
+            id: referentiel.id,
+            referentiel: {
+              datasource: "$.results",
+              tiptap_template: { type: "OK" }.to_json
+            },
+            commit: 'Enregistrer la configuration'
+          }
+        end
+
+        it 'updates the autocomplete_configuration (and serialize tiptap template) and redirects' do
+          expect { subject }.to change { referentiel.reload.datasource }.to("$.results")
+          expect(referentiel.json_template).to eq({ "type" => "OK" })
+          expect(response).to redirect_to(mapping_type_de_champ_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+          expect(flash[:notice]).to eq("La configuration de l'autocomplete a bien été enregistrée")
+        end
+
+        context 'when update fails' do
+          before { allow_any_instance_of(Referentiel).to receive(:update).and_return(false) }
+          it 'redirects to edit with alert' do
+            subject
+            expect(response).to have_http_status(:success)
+          end
+        end
+      end
+
+      context 'GET autocomplete_configuration' do
+        context 'when referentiel not ready' do
+          it 'redirects to configuration error' do
+            allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(false)
+            get :autocomplete_configuration, params: { procedure_id: procedure.id, stable_id:, id: referentiel.id }
+            expect(response).to redirect_to(configuration_error_admin_procedure_referentiel_path(procedure, type_de_champ.stable_id, referentiel))
+          end
+        end
+
+        context 'when referentiel is ready' do
+          it 'renders successfully and returns the configuration' do
+            allow_any_instance_of(ReferentielService).to receive(:validate_referentiel).and_return(true)
+            get :autocomplete_configuration, params: { procedure_id: procedure.id, stable_id: type_de_champ.stable_id, id: referentiel.id }
+            expect(response).to have_http_status(:success)
+          end
+        end
       end
     end
 

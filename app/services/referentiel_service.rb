@@ -5,21 +5,29 @@ class ReferentielService
 
   RETRYABLE_STATUS_CODES = [429, 500, 503, 408, 502].freeze
   NON_RETRYABLE_STATUS_CODES = [404, 400, 403, 401].freeze
-  API_TIMEOUT = 10
+
+  API_TIMEOUT = 4 # in seconds
+  MAX_FILE_SIZE = 1.megabyte
 
   attr_reader :referentiel, :service
 
-  def initialize(referentiel:)
+  def initialize(referentiel:, timeout: API_TIMEOUT)
     @referentiel = referentiel
+    @timeout = timeout
   end
 
   def call(query_params)
-    result = API::Client.new.call(url: url(query_params), timeout: API_TIMEOUT, headers:)
+    result = API::Client.new.call(
+      url: url(query_params),
+      timeout: @timeout,
+      headers:,
+      maxfilesize: MAX_FILE_SIZE
+    )
     handle_api_result(result)
   end
 
   def url(query_params)
-    referentiel.url.gsub('{id}', query_params)
+    referentiel.url.gsub('{id}', URI.encode_www_form_component(query_params.to_s))
   end
 
   def test_url
