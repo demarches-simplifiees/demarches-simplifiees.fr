@@ -9,7 +9,7 @@ class Dossiers::BatchSelectMoreComponent < ApplicationComponent
   def not_selected_button_data
     {
       action: "batch-operation#onSelectMore",
-      dossiers: @filtered_sorted_ids.first(Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT).join(',')
+      dossiers: @filtered_sorted_ids.first(BatchOperation::BATCH_SELECTION_LIMIT).join(',')
     }
   end
 
@@ -20,18 +20,18 @@ class Dossiers::BatchSelectMoreComponent < ApplicationComponent
   end
 
   def not_selected_text
-    if @dossiers_count <= Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT
+    if @dossiers_count <= BatchOperation::BATCH_SELECTION_LIMIT
       t(".select_all", dossiers_count: @dossiers_count)
     else
-      t(".select_all_limit", dossiers_count: @dossiers_count, limit: Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT)
+      t(".select_all_limit", dossiers_count: @dossiers_count, limit: BatchOperation::BATCH_SELECTION_LIMIT)
     end
   end
 
   def selected_text
-    if @dossiers_count <= Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT
+    if @dossiers_count <= BatchOperation::BATCH_SELECTION_LIMIT
       t(".selected_all", dossiers_count: @dossiers_count)
     else
-      t(".selected_all_limit", limit: Instructeurs::ProceduresController::BATCH_SELECTION_LIMIT)
+      t(".selected_all_limit", limit: BatchOperation::BATCH_SELECTION_LIMIT)
     end
   end
 end

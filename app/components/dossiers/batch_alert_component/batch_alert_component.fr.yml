@@ -116,6 +116,15 @@ fr:
       text_success:
         one: "Une demande d’avis est en cours d’envoi pour 1 dossier"
         other: "Des demandes d’avis sont en cours d’envoi pour %{success_count}/%{count} dossiers"
+  create_commentaire:
+    finish:
+      text_success:
+        one: "Un message a été envoyé pour 1 dossier"
+        other: "Un message a été envoyé pour %{success_count}/%{count} dossiers"
+    in_progress:
+      text_success:
+        one: "Un message est en cours d’envoi pour 1 dossier"
+        other: "Un message est en cours d’envoi pour %{success_count}/%{count} dossiers"
   title:
     finish: L’action de masse est terminée
     in_progress: Une action de masse est en cours
