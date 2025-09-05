@@ -181,7 +181,7 @@ module Administrateurs
     end
 
     def accept_simplification
-      changes = JSON.parse(params[:changes], symbolize_names: true)
+      changes = build_changes_from_selection
       draft.apply_changes(changes)
 
       redirect_to [:champs, :admin, @procedure]
@@ -277,6 +277,23 @@ module Administrateurs
 
     def marcel_content_type
       Marcel::MimeType.for(referentiel_file.read, name: referentiel_file.original_filename, declared_type: referentiel_file.content_type)
+    end
+
+    def build_changes_from_selection
+      all_changes = JSON.parse(params[:changes_json].presence || "{}", symbolize_names: true)
+      selected = (params[:selected] || {}).to_unsafe_h.symbolize_keys
+
+      destroy_ids = Array(selected[:destroy]).map { |v| v.to_i }
+      update_ids = Array(selected[:update]).map { |v| v.to_i }
+      add_ids = Array(selected[:add]).map { |v| v.to_i }
+
+      {
+        destroy: Array(all_changes[:destroy]).select { |c| destroy_ids.include?(c[:stable_id].to_i) },
+        update:  Array(all_changes[:update]).select  { |c| update_ids.include?(c[:stable_id].to_i) },
+        add:     Array(all_changes[:add]).select     { |c| add_ids.include?(c[:stable_id].to_i) }
+      }
+    rescue JSON::ParserError
+      { destroy: [], update: [], add: [] }
     end
   end
 end
