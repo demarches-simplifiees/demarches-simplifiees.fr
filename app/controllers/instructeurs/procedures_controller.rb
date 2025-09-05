@@ -129,6 +129,14 @@ module Instructeurs
 
       begin
         @filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, procedure_presentation.filters_for(statut), procedure_presentation.sorted_column, current_instructeur, count: dossiers_count)
+
+        @archived_dossiers_count = if statut == 'tous'
+          all_filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, procedure_presentation.filters_for(statut), procedure_presentation.sorted_column, current_instructeur, count: dossiers_count, include_archived: true)
+
+          all_filtered_sorted_ids.size - @filtered_sorted_ids.size
+        else
+          0
+        end
       rescue ActiveRecord::StatementInvalid => e
         raise e if !(e.message =~ /PG::UndefinedFunction/) # StatementInvalid is too generic, we'll add more cases if needed
 
@@ -149,11 +157,6 @@ module Instructeurs
       page = params[:page].presence || 1
 
       @dossiers_count = @filtered_sorted_ids.size
-      @archived_dossiers_count = if statut == 'tous'
-        @counts[:archives]
-      else
-        0
-      end
 
       @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(@filtered_sorted_ids)

@@ -758,6 +758,48 @@ describe Instructeurs::ProceduresController, type: :controller do
           .from({}).to(ids: [dossier.id], incoming_page: page)
       end
     end
+
+    describe 'archived dossiers count calculation' do
+      let(:statut) { 'tous' }
+      let!(:en_instruction_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+      let!(:archived_dossier_1) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
+      let!(:archived_dossier_2) { create(:dossier, :accepte, procedure: procedure, archived: true) }
+      let!(:archived_dossier_3) { create(:dossier, :en_instruction, procedure: procedure, archived: true, hidden_by_administration_at: 1.day.ago) }
+
+      before do
+        sign_in(instructeur.user)
+      end
+
+      it 'calculates archived dossiers count correctly when statut is tous' do
+        subject
+
+        expect(assigns(:archived_dossiers_count)).to eq(2)
+      end
+
+      context 'when there is a filter' do
+        let(:filter) { FilteredColumn.new(column: procedure.find_column(label: "État du dossier"), filter: 'en_instruction') }
+
+        let!(:procedure_presentation) do
+          create(:procedure_presentation, assign_to: instructeur.assign_to.first, tous_filters: [filter])
+        end
+
+        it 'counts only the archived dossiers that match the filter' do
+          subject
+
+          expect(assigns(:archived_dossiers_count)).to eq(1)
+        end
+      end
+
+      context 'when statut is not tous' do
+        let(:statut) { 'a-suivre' }
+
+        it 'sets archived dossiers count to 0' do
+          subject
+
+          expect(assigns(:archived_dossiers_count)).to eq(0)
+        end
+      end
+    end
   end
 
   describe '#deleted_dossiers' do
