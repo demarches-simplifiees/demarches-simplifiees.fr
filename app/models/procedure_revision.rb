@@ -2,6 +2,7 @@
 
 class ProcedureRevision < ApplicationRecord
   include Logic
+  include RevisionDescribableToLLMConcern
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
@@ -246,6 +247,42 @@ class ProcedureRevision < ApplicationRecord
 
   def conditionable_types_de_champ
     types_de_champ_for(scope: :public).filter(&:conditionable?)
+  end
+
+  def apply_changes(changes)
+    transaction do
+      changes.fetch(:destroy, []).each { |change| remove_type_de_champ(change[:stable_id]) }
+
+      changes.fetch(:update, []).each do |change|
+        stable_id, libelle, type_champ = change.values_at(:stable_id, :libelle, :type_champ)
+        tdc = find_and_ensure_exclusive_use(stable_id)
+        if type_champ.present?
+          tdc.update(libelle:, type_champ:)
+        else
+          tdc.update(libelle:)
+        end
+      end
+
+      changes.fetch(:add, []).each do |change|
+        after_stable_id, type_champ, libelle = change.values_at(:after_stable_id, :type_champ, :libelle)
+
+        tdc = add_type_de_champ(after_stable_id:, type_champ:, libelle:)
+
+        if type_champ == 'repetition'
+          parent_stable_id = tdc.stable_id
+          children = change[:children]
+
+          previous_child_stable_id = nil
+          children.each do |child|
+            type_champ, libelle = child.values_at(:type_champ, :libelle)
+            child = add_type_de_champ(parent_stable_id:, type_champ:, libelle:, after_stable_id: previous_child_stable_id)
+            previous_child_stable_id = child.stable_id
+          end
+        else
+
+        end
+      end
+    end
   end
 
   private

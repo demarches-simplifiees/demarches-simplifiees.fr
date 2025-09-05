@@ -1,0 +1,118 @@
+{
+  "type": "object",
+  "properties": {
+    "operations": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "after_stable_id": { "type": "integer" },
+              "type_champ": { "type": "string" },
+              "libelle": { "type": "string" },
+              "description": { "type": "string" },
+              "mandatory": { "type": "boolean" },
+              "justification": {
+                "type": "string",
+                "description": "1 sentence explaining why this field should be added"
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type_champ": { "type": "string" },
+                    "libelle": { "type": "string" },
+                    "mandatory": { "type": "boolean" }
+                  },
+                  "required": ["type_champ", "libelle"]
+                }
+              }
+            },
+            "required": ["after_stable_id", "type_champ", "libelle"]
+          }
+        },
+        "destroy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stable_id": {
+                "type": "integer",
+                "description": "stable id of field to remove"
+              },
+              "justification": {
+                "type": "string",
+                "description": "Short sentence explaining why this field should be deleted"
+              }
+            }
+          }
+        },
+        "update": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stable_id": { "type": "integer" },
+              "type_champ": { "type": "string" },
+              "libelle": { "type": "string" },
+              "description": { "type": "string" },
+              "mandatory": { "type": "boolean" },
+              "justification": {
+                "type": "string",
+                "description": "Short sentence explaining why this field should be updated"
+              },
+              "display_condition": {
+                "type": "object",
+                "description": "Conditional logic to show/hide this field",
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "enum": ["Logic::Eq"],
+                    "description": "Equality comparison operator"
+                  },
+                  "left": {
+                    "type": "object",
+                    "description": "Left operand - always refers to a field value",
+                    "properties": {
+                      "term": {
+                        "type": "string",
+                        "enum": ["Logic::ChampValue"]
+                      },
+                      "stable_id": {
+                        "type": "integer",
+                        "description": "ID of the field to compare"
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "object",
+                    "description": "Right operand - contains the comparison value",
+                    "properties": {
+                      "term": {
+                        "type": "string",
+                        "enum": ["Logic::Constant"]
+                      },
+                      "value": {
+                        "type": ["string", "number", "array"],
+                        "description": "Value to compare against"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": ["stable_id"]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "List of important modifications suggested and why, use bullets points"
+    }
+  },
+  "required": ["summary", "operations"]
+}
