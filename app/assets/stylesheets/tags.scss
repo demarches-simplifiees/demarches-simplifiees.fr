@@ -21,3 +21,14 @@ $colors:
     color: var(--text-action-high-#{$color});
   }
 }
+
+.copy-message {
+  background-color: var(--background-action-low-blue-france);
+  color: var(--text-active-blue-france);
+  font-weight: normal;
+  text-transform: none;
+
+  &.fr-icon-success-line {
+    color: $green;
+  }
+}

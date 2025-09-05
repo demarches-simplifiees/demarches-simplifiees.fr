@@ -12,8 +12,6 @@ en:
           dissolvedAt: Dissolved at
           address: Address
           status: Status
-        paste: Copy the RNF to the clipboard
-        paste_success: The RNF has been copied to the clipboard
   activerecord:
     attributes:
       champs/rnf_champ:
