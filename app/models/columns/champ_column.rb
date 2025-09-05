@@ -33,7 +33,28 @@ class Columns::ChampColumn < Column
   end
 
   def filtered_ids(dossiers, filter)
-    filtered_ids_for_values(dossiers, filter[:value])
+    case filter
+    in { operator: 'before', value: Array }
+      filtered_ids_before_value(dossiers, filter[:value])
+    in { operator: 'after', value: Array }
+      filtered_ids_after_value(dossiers, filter[:value])
+    else
+      filtered_ids_for_values(dossiers, filter[:value])
+    end
+  end
+
+  def filtered_ids_before_value(dossiers, values)
+    relation = dossiers.with_type_de_champ(stable_id)
+
+    date_range = range_for_query(..Time.zone.parse(values.first).beginning_of_day)
+    relation.where(champs: { column => date_range }).ids
+  end
+
+  def filtered_ids_after_value(dossiers, values)
+    relation = dossiers.with_type_de_champ(stable_id)
+
+    date_range = range_for_query((Time.zone.parse(values.first).end_of_day..))
+    relation.where(champs: { column => date_range }).ids
   end
 
   def filtered_ids_for_values(dossiers, search_terms)
@@ -62,6 +83,13 @@ class Columns::ChampColumn < Column
   def champ_column? = true
 
   private
+
+  def range_for_query(date_range)
+    start_date = date_range.begin&.then { type == :date ? _1.to_date : _1 }&.iso8601
+    end_date = date_range.end&.then { type == :date ? _1.to_date : _1 }&.iso8601
+
+    start_date..end_date
+  end
 
   def column_id = "type_de_champ/#{stable_id}"
 

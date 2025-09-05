@@ -337,10 +337,28 @@ describe DossierFilterService do
       context 'for created_at column' do
         let(:filter) { ['Date de création', '18/9/2018'] }
 
-        let!(:kept_dossier) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
-        let!(:discarded_dossier) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
+        let!(:dossier_18_sept) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
+        let!(:dossier_16_sept) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 16, 23, 59)) }
 
-        it { is_expected.to contain_exactly(kept_dossier.id) }
+        it { is_expected.to contain_exactly(dossier_18_sept.id) }
+
+        context 'with operator match' do
+          let(:filter) { ['Date de création', { operator: 'match', value: ['18/09/2018'] }] }
+
+          it { is_expected.to contain_exactly(dossier_18_sept.id) }
+        end
+
+        context 'with operator before' do
+          let(:filter) { ['Date de création', { operator: 'before', value: ['17/09/2018'] }] }
+
+          it { is_expected.to contain_exactly(dossier_16_sept.id) }
+        end
+
+        context 'with operator after' do
+          let(:filter) { ['Date de création', { operator: 'after', value: ['17/09/2018'] }] }
+
+          it { is_expected.to contain_exactly(dossier_18_sept.id) }
+        end
       end
 
       context 'for en_construction_at column' do
