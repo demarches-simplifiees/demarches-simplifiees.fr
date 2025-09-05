@@ -45,7 +45,7 @@
           %strong= justification
           - changes.map { _1[:stable_id] }.each do |stable_id|
             .fr-checkbox-group.fr-checkbox-group--sm.fr-my-1v
-              = check_box_tag 'selected[destroy][]', stable_id, true, id: "selected_destroy_#{stable_id}"
+              = check_box_tag 'selected[destroy][]', stable_id, true, id: "selected_destroy_#{stable_id}"
               = label_tag "selected_destroy_#{stable_id}", class: 'fr-label' do
                 = tdc_by_stable_id[stable_id].libelle
 
