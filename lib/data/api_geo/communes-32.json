@@ -2856,6 +2856,14 @@
     "postal_code": "32140"
   },
   {
+    "name": "Cap d’Astarac",
+    "code": "32365",
+    "epci_code": "200072320",
+    "departement_code": "32",
+    "region_code": "76",
+    "postal_code": "32420"
+  },
+  {
     "name": "Saint-Brès",
     "code": "32366",
     "epci_code": "200034726",

@@ -256,6 +256,14 @@
     "postal_code": "93210"
   },
   {
+    "name": "Saint-Denis",
+    "code": "93066",
+    "epci_code": "200054781",
+    "departement_code": "93",
+    "region_code": "11",
+    "postal_code": "93380"
+  },
+  {
     "name": "Saint-Ouen-sur-Seine",
     "code": "93070",
     "epci_code": "200054781",
