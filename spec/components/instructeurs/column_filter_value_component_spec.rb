@@ -5,11 +5,14 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
     component = nil
 
     ActionView::Base.empty.form_with(url: "/") do |form|
-      component = described_class.new(column:, form:)
+      component = described_class.new(filtered_column:, form:)
     end
 
     render_inline(component)
   end
+
+  let(:filtered_column) { FilteredColumn.new(column:, filter:) }
+  let(:filter) { { operator: 'match', value: ['value'] } }
 
   describe 'the select case' do
     let!(:column) do
@@ -32,6 +35,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   describe 'the input case' do
     let(:column) { double("Column", type: :datetime, mandatory: true) }
 
+    it { puts "page: #{page.text}" }
     it { expect(page).to have_selector('input[name="filter[filter][value][]"][type="date"]', count: 1) }
   end
 
