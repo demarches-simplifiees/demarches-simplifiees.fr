@@ -20,3 +20,11 @@ $blue-france-700: #00006d;
 $blue-france-500: #000091;
 $blue-france-400: #7f7fc8;
 $g700: #383838;
+
+:root {
+  --info-925: #dde5ff;
+
+  &[data-fr-theme="dark"] {
+    --info-925: #1d2437;
+  }
+}
