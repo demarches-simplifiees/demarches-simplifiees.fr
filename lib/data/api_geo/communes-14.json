@@ -2189,7 +2189,7 @@
     "epci_code": "200069532",
     "departement_code": "14",
     "region_code": "28",
-    "postal_code": "14140"
+    "postal_code": "14290"
   },
   {
     "name": "Livarot-Pays-d’Auge",
@@ -2197,7 +2197,7 @@
     "epci_code": "200069532",
     "departement_code": "14",
     "region_code": "28",
-    "postal_code": "14290"
+    "postal_code": "14140"
   },
   {
     "name": "Les Loges",
@@ -3358,6 +3358,14 @@
     "departement_code": "14",
     "region_code": "28",
     "postal_code": "14240"
+  },
+  {
+    "name": "Aurseulles",
+    "code": "14581",
+    "epci_code": "200069524",
+    "departement_code": "14",
+    "region_code": "28",
+    "postal_code": "14250"
   },
   {
     "name": "Saint-Germain-de-Livet",
