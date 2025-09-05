@@ -133,7 +133,7 @@ module LLM
       candidate = if json.key?('operations')
         json
       else
-        { 'operations' => json.slice('delete', 'destroy', 'update', 'add'), 'summary' => json['summary'] }
+        { 'operations' => json.slice('destroy', 'update', 'add'), 'summary' => json['summary'] }
       end
 
       schemer = JSONSchemer.schema(JSON_OPS_SCHEMA)
@@ -144,7 +144,7 @@ module LLM
     def normalize_ops(json)
       ops = json['operations'] || json
       {
-        destroy: Array(ops['destroy'] || ops['delete']).map { |h| deep_symbolize(h) },
+        destroy: Array(ops['destroy']).map { |h| deep_symbolize(h) },
         update: Array(ops['update']).map { |h| deep_symbolize(h) },
         add: Array(ops['add']).map { |h| deep_symbolize(h) },
         summary: json['summary'].to_s,
@@ -275,12 +275,12 @@ module LLM
 
         CRITICAL RULES for field processing:
         1. You MUST include ALL original fields in your response, distributed between:
-           - "delete" category
+           - "destroy" category
            - "update" category
 
         2. When a field is added to a repetition structure:
-           - You MUST delete ALL original standalone versions
-           - This deletion MUST be documented in the "delete" category
+           - You MUST destroy ALL original standalone versions
+           - This deletion MUST be documented in the "destroy" category
            - Use justification: "Remplacé par un bloc répétable dynamique"
 
         3. For each field in "update" category:
@@ -302,8 +302,11 @@ module LLM
 
         Response structure:
         {
-          "delete": [
-            - ALL deleted fields, including all those moved to repetition
+          "add": [
+            - ALL added fields
+          ],
+          "destroy": [
+            - ALL destroyed fields, including all those moved to repetition
             - Clear justification for each deletion
           ],
           "update": [
@@ -313,6 +316,7 @@ module LLM
           "summary": {
             - Brief French summary of implemented changes
             - Focus on structural improvements
+            - MUST be a string, not an object
           }
         }
       PROMPT

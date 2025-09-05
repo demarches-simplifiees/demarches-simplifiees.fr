@@ -400,14 +400,13 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#simplify' do
-    let(:procedure) { create(:simple_procedure) }
     let(:procedure) { create(:procedure, types_de_champ_public:) }
-    let(:type_de_champ_publics) { [{ type: :text, stable_id: 123 }] }
-
+    let(:types_de_champ_public) { [{ type: :text, stable_id: 123 }] }
+    render_views
     it 'renders suggestions from stubbed file' do
       stub_json = {
         operations: {
-          delete: [],
+          destroy: [],
           update: [],
           add: []
         },
@@ -415,11 +414,11 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       }.to_json
 
       allow(File).to receive(:read).and_call_original
-      allow(File).to receive(:read).with("spec/fixtures/llm_procedure_improvements_stub.txt").and_return(stub_json)
+      allow(File).to receive(:read).with("spec/fixtures/llm/deepseek/deepseek-chat-v3.1.json").and_return(stub_json)
 
       get :simplify, params: { procedure_id: procedure.id }
       expect(response).to have_http_status(:ok)
-      expect(assigns(:changes)).to eq({ delete: [], update: [], add: [] })
+      expect(assigns(:changes)).to eq({ destroy: [], update: [], add: [] })
       expect(response.body).to include("Suggestions de votre assistant IA")
     end
   end
