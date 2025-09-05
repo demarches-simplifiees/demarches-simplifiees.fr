@@ -69,6 +69,7 @@ describe GroupeInstructeur, type: :model do
       end
     end
 
+    # TODO: test d'actualisation des notifs 'all' sur les dossiers du nouvel instructeur
     context "when there are dossiers en construction not followed" do
       let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: another_groupe_instructeur) }
 
