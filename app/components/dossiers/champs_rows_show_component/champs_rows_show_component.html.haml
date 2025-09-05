@@ -29,7 +29,7 @@
           - when TypeDeChamp.type_champs.fetch(:iban)
             = render partial: "shared/champs/iban/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:annuaire_education)
-            = render partial: "shared/champs/annuaire_education/show", locals: { champ: champ }
+            = render Dossiers::AnnuaireEducationComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:cnaf)
             = render partial: "shared/champs/cnaf/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:dgfip)
