@@ -39,7 +39,7 @@
           - when TypeDeChamp.type_champs.fetch(:mesri)
             = render partial: "shared/champs/mesri/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:address)
-            = render partial: "shared/champs/address/show", locals: { champ: champ }
+            = render Dossiers::AddressComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:communes)
             = render partial: "shared/champs/communes/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:regions)
