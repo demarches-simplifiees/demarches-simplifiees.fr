@@ -128,7 +128,7 @@ les composant suivants sont affectés : #{params["components"].map { _1['name'] 
 
   def verify_helpscout_signature!
     expected_signature =  Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
-      Rails.application.secrets.helpscout[:webhook_secret],
+      ENV.fetch("HELPSCOUT_WEBHOOK_SECRET"),
       request.body.read))
 
     if expected_signature != request.headers['X-Helpscout-Signature']
