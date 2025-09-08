@@ -671,9 +671,11 @@ GEM
     rails-i18n (7.0.10)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
-    rails-pg-extras (5.5.1)
-      rails
-      ruby-pg-extras (= 5.5.1)
+    rails-pg-extras (5.6.13)
+      actionpack
+      activerecord
+      railties
+      ruby-pg-extras (= 5.6.13)
     railties (7.1.5.2)
       actionpack (= 7.1.5.2)
       activesupport (= 7.1.5.2)
@@ -765,7 +767,7 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-next-core (1.1.2)
-    ruby-pg-extras (5.5.1)
+    ruby-pg-extras (5.6.13)
       pg
       terminal-table
     ruby-progressbar (1.13.0)
@@ -944,7 +946,7 @@ GEM
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.9.1)
     websocket (1.2.11)
-    websocket-driver (0.7.7)
+    websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
