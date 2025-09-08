@@ -357,15 +357,13 @@ class ApplicationController < ActionController::Base
   end
 
   def matomo_config
-    matomo = Rails.application.secrets.matomo
-
     {
-      cookieDomain: matomo[:cookie_domain],
-      domain: matomo[:domain],
-      enabled: matomo[:enabled],
-      host: matomo[:host],
-      key: matomo[:client_key]
-    }
+      cookieDomain: ENV['MATOMO_COOKIE_DOMAIN'],
+      domain: ENV['MATOMO_DOMAIN'],
+      enabled: ENV.enabled?('MATOMO'),
+      host: ENV['MATOMO_HOST'],
+      key: ENV['MATOMO_ID']
+    }.compact
   end
 
   def crisp_config
