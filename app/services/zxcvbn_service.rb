@@ -8,6 +8,7 @@ class ZxcvbnService
   # The tester weights ~20 Mo, and we'd like to save some memory – so rather
   # that storing it in a per-thread accessor, we prefer to use a mutex
   # to cache it between threads.
+
   def self.tester
     @tester_mutex.synchronize do
       @tester ||= Zxcvbn::Tester.new

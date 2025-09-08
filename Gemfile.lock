@@ -983,7 +983,7 @@ GEM
       actionpack (>= 6.0, < 8.0)
       content_disposition (~> 1.0)
       zip_kit (~> 6, >= 6.2.0, < 7)
-    zxcvbn (0.1.13)
+    zxcvbn (1.0.0)
 
 PLATFORMS
   aarch64-linux-gnu
