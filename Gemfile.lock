@@ -978,7 +978,7 @@ GEM
       sidekiq
       yabeda (~> 0.6)
     zeitwerk (2.7.3)
-    zip_kit (6.3.1)
+    zip_kit (6.3.3)
     zipline (2.0.0)
       actionpack (>= 6.0, < 8.0)
       content_disposition (~> 1.0)
