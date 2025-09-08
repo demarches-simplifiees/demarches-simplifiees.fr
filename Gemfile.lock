@@ -597,7 +597,7 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     prettyprint (0.2.0)
     prism (1.4.0)
-    prometheus-client (4.2.3)
+    prometheus-client (4.2.5)
       base64
     promise.rb (0.7.4)
     psych (5.2.6)
