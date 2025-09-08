@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 Sentry.init do |config|
-  secrets = Rails.application.secrets.sentry
-
   if ENV['http_proxy'].present?
     config.transport.proxy = ENV['http_proxy']
   end
 
-  config.dsn = secrets[:enabled] ? secrets[:rails_client_key] : nil
+  config.dsn = ENV.enabled?("SENTRY") ? ENV["SENTRY_DSN_RAILS"] : nil
   config.send_default_pii = false
   config.release = ApplicationVersion.current
-  config.environment = secrets[:environment] || Rails.env
-  config.enabled_environments = ['production', secrets[:environment].presence].compact
+  config.environment = ENV['SENTRY_CURRENT_ENV'] || Rails.env
+  config.enabled_environments = ['production', ENV['SENTRY_CURRENT_ENV'].presence].compact
   config.breadcrumbs_logger = [:active_support_logger]
   config.traces_sampler = lambda do |sampling_context|
     # if this is the continuation of a trace, just use that decision (rate controlled by the caller)
