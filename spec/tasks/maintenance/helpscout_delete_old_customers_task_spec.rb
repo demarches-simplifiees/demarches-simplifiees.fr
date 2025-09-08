@@ -52,8 +52,9 @@ describe Maintenance::HelpscoutDeleteOldCustomersTask do
   end
 
   def mock_helpscout_secrets
-    Rails.application.secrets.helpscout[:mailbox_id] = '9999'
-    Rails.application.secrets.helpscout[:client_id] = '1234'
-    Rails.application.secrets.helpscout[:client_secret] = '5678'
+    ENV.stub(:fetch).and_call_original
+    ENV.stub(:fetch).with('HELPSCOUT_MAILBOX_ID').and_return('9999')
+    ENV.stub(:fetch).with('HELPSCOUT_CLIENT_ID').and_return('1234')
+    ENV.stub(:fetch).with('HELPSCOUT_CLIENT_SECRET').and_return('5678')
   end
 end
