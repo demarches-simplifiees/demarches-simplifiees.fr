@@ -7,13 +7,13 @@ class ProcedureRevision < ApplicationRecord
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
-
   has_many :revision_types_de_champ, -> { order(:position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :revision_types_de_champ_public, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
-  has_many :types_de_champ_public, through: :revision_types_de_champ_public, source: :type_de_champ
-  has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
+
+  def revision_types_de_champ_public = revision_types_de_champ.filter { _1.root? && _1.public? }.sort_by(&:position)
+  def revision_types_de_champ_private = revision_types_de_champ.filter { _1.root? && _1.private? }.sort_by(&:position)
+  def types_de_champ = revision_types_de_champ.map(&:type_de_champ)
+  def types_de_champ_public = revision_types_de_champ_public.map(&:type_de_champ)
+  def types_de_champ_private = revision_types_de_champ_private.map(&:type_de_champ)
 
   has_one :draft_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
