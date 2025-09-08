@@ -17,7 +17,7 @@ describe 'As an integrator:', js: true do
   scenario 'I can select champs to prefill and get prefill link and prefill query' do
     page.find_by_id("#{type_de_champ.id}_add_button", match: :first).click
     prefill_description = PrefillDescription.new(procedure)
-    prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id.to_s])
+    prefill_description.update(selected_type_de_champ_ids: [type_de_champ.id.to_s].join(' '))
     expect(page).to have_content(prefill_description.prefill_link)
     expect(page).to have_content(prefill_description.prefill_query.gsub("\n    ", "").delete("\n"))
   end

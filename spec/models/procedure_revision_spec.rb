@@ -87,7 +87,7 @@ describe ProcedureRevision do
         it do
           expect(draft.revision_types_de_champ_public.map(&:libelle)).to eq(['l1', 'l2'])
           subject
-          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'in the middle', 'l2'])
+          expect(draft.revision_types_de_champ_public.map(&:libelle)).to eq(['l1', 'in the middle', 'l2'])
           expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2])
         end
       end
@@ -98,7 +98,7 @@ describe ProcedureRevision do
 
         it do
           subject
-          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['in the middle', 'l1', 'l2'])
+          expect(draft.revision_types_de_champ_public.map(&:libelle)).to eq(['in the middle', 'l1', 'l2'])
         end
       end
     end
@@ -221,14 +221,13 @@ describe ProcedureRevision do
         end
 
         it 'reorders' do
-          children = draft.children_of(type_de_champ_repetition)
-          expect(children.pluck(:position)).to eq([0, 1, 2, 3])
+          children = draft.coordinate_for(type_de_champ_repetition).revision_types_de_champ
+          expect(children.map(&:position)).to eq([0, 1, 2, 3])
 
           draft.remove_type_de_champ(children[1].stable_id)
 
-          children.reload
-
-          expect(children.pluck(:position)).to eq([0, 1, 2])
+          children = draft.coordinate_for(type_de_champ_repetition).revision_types_de_champ
+          expect(children.map(&:position)).to eq([0, 1, 2])
         end
       end
     end
