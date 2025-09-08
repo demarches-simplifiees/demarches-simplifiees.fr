@@ -4,7 +4,6 @@ describe APIDatagouv::API do
   describe '#upload' do
     let(:dataset) { '62a0afdacffa4c3ea5cbd1b4' }
     let(:resource) { '666211e9-6226-4fad-8d2f-5a4135f40e47' }
-    let(:datagouv_secret) { Rails.application.secrets.datagouv }
     let(:subject) { APIDatagouv::API.upload(Tempfile.new, dataset, resource) }
 
     before do
