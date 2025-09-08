@@ -147,9 +147,9 @@ RSpec.describe PrefillDescription, type: :model do
         }
       ])
     end
-    let(:type_de_champ_text) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
-    let(:type_de_champ_epci) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:epci) } }
-    let(:type_de_champ_repetition) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:type_de_champ_text) { procedure.active_revision.types_de_champ_public.find(&:text?) }
+    let(:type_de_champ_epci) { procedure.active_revision.types_de_champ_public.find(&:epci?) }
+    let(:type_de_champ_repetition) { procedure.active_revision.types_de_champ_public.find(&:repetition?) }
 
     let(:prefill_type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision) }
     let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition, procedure.active_revision).send(:prefillable_subchamps) }

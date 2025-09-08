@@ -197,8 +197,8 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       let(:type_de_champ) { procedure.draft_revision.types_de_champ_public[0] }
       let(:removed_type_de_champ) { procedure.draft_revision.types_de_champ_public[1] }
       let(:removed_and_published_type_de_champ) { procedure.draft_revision.types_de_champ_public[2] }
-      let(:new_type_de_champ) { procedure.draft_revision.types_de_champ_public.find_by(libelle: 'new type de champ') }
-      let(:draft_type_de_champ) { procedure.draft_revision.types_de_champ_public.find_by(libelle: 'draft type de champ') }
+      let(:new_type_de_champ) { procedure.draft_revision.types_de_champ_public.find { _1.libelle == 'new type de champ' } }
+      let(:draft_type_de_champ) { procedure.draft_revision.types_de_champ_public.find { _1.libelle == 'draft type de champ' } }
       let(:title) { 'title --numéro du dossier--' }
       let(:body) { "body --#{type_de_champ.libelle}-- et --#{new_type_de_champ.libelle}--" }
 

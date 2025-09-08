@@ -5,7 +5,7 @@ describe ProcedureRevision do
   let(:type_de_champ_public) { draft.types_de_champ_public.first }
   let(:type_de_champ_private) { draft.types_de_champ_private.first }
   let(:type_de_champ_repetition) do
-    repetition = draft.types_de_champ_public.repetition.first
+    repetition = draft.types_de_champ_public.find(&:repetition?)
     repetition.update(stable_id: 3333)
     repetition
   end

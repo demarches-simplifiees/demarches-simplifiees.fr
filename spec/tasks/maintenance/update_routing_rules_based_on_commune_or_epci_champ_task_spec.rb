@@ -10,9 +10,9 @@ module Maintenance
 
       let(:procedure) { create(:procedure, :published, :routee, types_de_champ_public: [{ type: :communes }, { type: :epci }, { type: :drop_down_list, libelle: 'Votre choix', options: ['Choix 1', 'Choix 2', 'Choix 3'] }, { type: :text }]) }
 
-      let(:commune_tdc) { procedure.active_revision.types_de_champ_public.where(type_champ: 'communes').first }
-      let(:epci_tdc) { procedure.active_revision.types_de_champ_public.where(type_champ: 'epci').first }
-      let(:drop_down_list_tdc) { procedure.active_revision.types_de_champ_public.where(type_champ: 'drop_down_list').first }
+      let(:commune_tdc) { procedure.active_revision.types_de_champ_public.find(&:communes?) }
+      let(:epci_tdc) { procedure.active_revision.types_de_champ_public.find(&:epci?) }
+      let(:drop_down_list_tdc) { procedure.active_revision.types_de_champ_public.find(&:drop_down_list?) }
 
       let(:groupe_defaut) { procedure.defaut_groupe_instructeur }
 
