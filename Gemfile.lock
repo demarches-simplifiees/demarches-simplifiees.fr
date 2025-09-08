@@ -837,7 +837,7 @@ GEM
       globalid (>= 1.0.1)
       sidekiq (>= 6)
     simple_po_parser (1.1.6)
-    simple_xlsx_reader (5.0.0)
+    simple_xlsx_reader (5.1.0)
       nokogiri
       rubyzip
     simplecov (0.22.0)
