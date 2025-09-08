@@ -4,6 +4,8 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
+  self.inheritance_column = :_type_disabled
+
   belongs_to :procedure, inverse_of: :attestation_template
 
   has_one_attached :logo
@@ -12,6 +14,11 @@ class AttestationTemplate < ApplicationRecord
   enum :state, {
     draft: 'draft',
     published: 'published'
+  }
+
+  enum :type, {
+    acceptation: 'acceptation',
+    refus: 'refus'
   }
 
   validates :title, tags: true, if: -> { procedure.present? && version == 1 }
