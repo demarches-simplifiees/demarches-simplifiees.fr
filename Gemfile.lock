@@ -132,7 +132,7 @@ GEM
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
     anchored (1.1.0)
-    anyway_config (2.6.4)
+    anyway_config (2.7.2)
       ruby-next-core (~> 1.0)
     ast (2.4.2)
     attr_required (1.0.2)
@@ -752,7 +752,7 @@ GEM
       rubocop (~> 1.61)
     ruby-graphviz (1.2.5)
       rexml
-    ruby-next-core (1.0.3)
+    ruby-next-core (1.1.2)
     ruby-pg-extras (5.5.1)
       pg
       terminal-table
