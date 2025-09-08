@@ -42,6 +42,6 @@ class Certigna::API
   end
 
   def self.userpwd
-    Rails.application.secrets.certigna[:userpwd]
+    ENV["CERTIGNA_USERPWD"]
   end
 end
