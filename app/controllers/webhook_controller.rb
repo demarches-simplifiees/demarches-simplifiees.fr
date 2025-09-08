@@ -6,18 +6,19 @@ class WebhookController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def sendinblue
-    if Rails.application.secrets.dig(:mattermost, :send_in_blue_outage_webhook_url).present?
+    webhook_url = ENV["SEND_IN_BLUE_OUTAGE_WEBHOOK_URL"]
+    if webhook_url.present?
       send_mattermost_notification(
-        Rails.application.secrets.dig(:mattermost, :send_in_blue_outage_webhook_url),
+        webhook_url,
         message_to_mattermost_send_in_blue_channel
       )
     end
   end
 
   def helpscout_support_dev
-    if tagged_dev? && status_active? && Rails.application.secrets.dig(:mattermost, :support_webhook_url).present?
+    if tagged_dev? && status_active? && ENV.key?("SUPPORT_WEBHOOK_URL")
       send_mattermost_notification(
-        Rails.application.secrets.dig(:mattermost, :support_webhook_url),
+        ENV["SUPPORT_WEBHOOK_URL"],
         message_to_mattermost_support_channel
       )
     end
