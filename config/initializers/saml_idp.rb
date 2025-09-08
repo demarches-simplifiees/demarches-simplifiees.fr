@@ -22,13 +22,6 @@ if ENV['SAML_IDP_ENABLED'] == 'enabled'
     }
 
     service_providers = {}
-    if ENV['SAML_DOLIST_HOST'].present?
-      service_providers["https://#{ENV.fetch('SAML_DOLIST_HOST')}"] =
-        {
-          response_hosts: [ENV.fetch('SAML_DOLIST_HOST')],
-          cert: ENV.fetch("SAML_DOLIST_CERTIFICATE")
-        }
-    end
 
     config.service_provider.finder = -> (entity_id) do
       service_providers[entity_id]

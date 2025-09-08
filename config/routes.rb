@@ -96,9 +96,7 @@ Rails.application.routes.draw do
 
     resources :team_accounts, only: [:index, :show]
 
-    resources :email_events, only: [:index, :show] do
-      post :generate_dolist_report, on: :collection
-    end
+    resources :email_events, only: [:index, :show]
 
     resources :dubious_procedures, only: [:index]
     resources :published_procedures, only: [:index]

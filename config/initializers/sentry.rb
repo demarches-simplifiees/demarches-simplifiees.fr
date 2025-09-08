@@ -44,10 +44,6 @@ Sentry.init do |config|
     end
   end
 
-  config.excluded_exceptions += [
-    'Dolist::RateLimitError', # A fraction of theses are manually sent
-    'Dolist::RetryLaterError'
-  ]
-
+  # config.excluded_exceptions += []
   config.delayed_job.report_after_job_retries = false # don't wait for all attempts before reporting
 end

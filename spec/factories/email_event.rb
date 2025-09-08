@@ -6,9 +6,6 @@ FactoryBot.define do
     subject { "Thank you" }
     processed_at { Time.zone.now }
     status { "dispatched" }
-
-    trait :dolist do
-      add_attribute(:method) { "dolist_smtp" }
-    end
+    add_attribute(:method) { "sendinblue" }
   end
 end

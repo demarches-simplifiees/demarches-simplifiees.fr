@@ -1,7 +1,0 @@
-<footer class="main-content__body">
-  <% if @dolist_enabled %>
-    <%= form_tag(generate_dolist_report_manager_email_events_path, id: "dolist-report-form", data: { turbo: true }) do %>
-      <button>Recevoir un rapport Dolist</button>
-    <% end %>
-  <% end %>
-</footer>
