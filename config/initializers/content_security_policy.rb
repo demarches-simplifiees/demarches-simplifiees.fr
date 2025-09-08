@@ -32,13 +32,13 @@ Rails.application.configure do
     connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
     connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
     connect_whitelist << URI(API_GEO_URL).host if API_GEO_URL.present?
-    connect_whitelist << Rails.application.secrets.matomo[:host]
+    connect_whitelist << ENV.fetch("MATOMO_HOST") if ENV.enabled?("MATOMO")
     policy.connect_src(:self, *connect_whitelist.compact)
 
     # Frames: allow some iframes
     frame_whitelist = []
     # allow Matomo's iframe on the /suivi page
-    frame_whitelist << URI(MATOMO_IFRAME_URL).host if Rails.application.secrets.matomo[:enabled]
+    frame_whitelist << URI(MATOMO_IFRAME_URL).host if ENV.enabled?("MATOMO")
     # allow pdf iframes in the PJ gallery
     frame_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
     frame_whitelist << "*.crisp.help" if ENV.enabled?("CRISP")
