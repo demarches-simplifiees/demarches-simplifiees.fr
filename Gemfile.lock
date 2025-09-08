@@ -239,7 +239,7 @@ GEM
       devise (~> 4.0)
       railties (>= 7.0, < 8.1)
       rotp (~> 6.0)
-    diff-lcs (1.6.0)
+    diff-lcs (1.6.2)
     discard (1.4.0)
       activerecord (>= 4.2, < 9.0)
     docile (1.4.1)
