@@ -344,12 +344,10 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_config
-    sentry = Rails.application.secrets.sentry
-
     {
-      key: sentry[:js_client_key],
-      enabled: sentry[:enabled],
-      environment: sentry[:environment],
+      key: ENV["SENTRY_DSN_JS"],
+      enabled: ENV.enabled?("SENTRY"),
+      environment: ENV["SENTRY_CURRENT_ENV"],
       browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user,
       release: ApplicationVersion.current

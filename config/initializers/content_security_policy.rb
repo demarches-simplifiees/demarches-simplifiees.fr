@@ -27,7 +27,7 @@ Rails.application.configure do
     connect_whitelist << ENV.fetch('APP_HOST')
     connect_whitelist << ENV.fetch('APP_HOST_LEGACY') if ENV.key?('APP_HOST_LEGACY') && ENV['APP_HOST_LEGACY'] != ENV['APP_HOST']
     connect_whitelist << "*.amazonaws.com" if Rails.configuration.active_storage.service == :amazon
-    connect_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
+    connect_whitelist += ENV.values_at('SENTRY_DSN_JS', 'SENTRY_DSN_RAILS').compact_blank.map { URI(it).host }.uniq
     connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
     connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
     connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
@@ -47,7 +47,7 @@ Rails.application.configure do
     # Everything else: allow us
     # Add the error source in the violation notification
     default_whitelist = ["integration.lasuite.numerique.gouv.fr", "fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
-    default_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
+    default_whitelist += ENV.values_at('SENTRY_DSN_JS', 'SENTRY_DSN_RAILS').compact_blank.map { URI(it).host }.uniq
     default_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
     policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
 
