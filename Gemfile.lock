@@ -820,7 +820,7 @@ GEM
     sentry-sidekiq (5.27.0)
       sentry-ruby (~> 5.27.0)
       sidekiq (>= 3.0)
-    shoulda-matchers (6.4.0)
+    shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
     sib-api-v3-sdk (9.1.0)
       addressable (~> 2.3, >= 2.3.0)
