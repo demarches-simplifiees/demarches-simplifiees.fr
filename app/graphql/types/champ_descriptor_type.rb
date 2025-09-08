@@ -113,7 +113,7 @@ module Types
 
     def champ_descriptors
       if type_de_champ.repetition?
-        Loaders::Association.for(object.class, revision_types_de_champ: :type_de_champ).load(object)
+        object.revision_types_de_champ
       end
     end
 

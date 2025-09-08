@@ -187,14 +187,8 @@ class Procedure < ApplicationRecord
     includes(
       :administrateurs,
       :module_api_carto,
-      published_revision: [
-        :types_de_champ_private,
-        :types_de_champ_public
-      ],
-      draft_revision: [
-        :types_de_champ_private,
-        :types_de_champ_public
-      ]
+      published_revision: { revision_types_de_champ: { type_de_champ: [] } },
+      draft_revision: { revision_types_de_champ: { type_de_champ: [] } }
     )
   }
 

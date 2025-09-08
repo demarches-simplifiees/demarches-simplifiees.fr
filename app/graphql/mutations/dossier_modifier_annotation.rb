@@ -41,11 +41,9 @@ module Mutations
 
     def find_annotation(dossier, annotation_id)
       stable_id, row_id = Champ.decode_typed_id(annotation_id)
-      type_de_champ = dossier.revision.types_de_champ
-        .private_only
-        .find_by(type_champ: annotation_type_champ, stable_id:)
+      type_de_champ = dossier.find_type_de_champ_by_stable_id(stable_id, :private)
 
-      return nil if type_de_champ.nil?
+      return nil if type_de_champ.nil? || !type_de_champ.type_champ.in?(annotation_type_champ)
       dossier.champ_for_update(type_de_champ, row_id:, updated_by: current_administrateur.email)
     end
 

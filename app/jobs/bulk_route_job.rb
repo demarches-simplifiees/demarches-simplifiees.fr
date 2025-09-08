@@ -5,7 +5,7 @@ class BulkRouteJob < ApplicationJob
 
   def perform(procedure)
     dossiers = procedure.dossiers
-      .includes(:procedure, :groupe_instructeur, :champs, revision: [:types_de_champ])
+      .includes(:procedure, :groupe_instructeur, :champs, revision: { revision_types_de_champ: :type_de_champ })
       .state_not_termine
 
     dossiers.each do |dossier|

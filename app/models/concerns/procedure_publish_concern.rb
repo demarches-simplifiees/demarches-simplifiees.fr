@@ -85,10 +85,6 @@ module ProcedurePublishConcern
 
       move_new_children_to_new_parent_coordinate(new_revision)
 
-      # they are not aware of the new tdcs
-      new_revision.types_de_champ_public.reset
-      new_revision.types_de_champ_private.reset
-
       new_revision
     end
   end
