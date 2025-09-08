@@ -136,12 +136,12 @@ GEM
       ruby-next-core (~> 1.0)
     ast (2.4.3)
     attr_required (1.0.2)
-    axe-core-api (4.10.2)
+    axe-core-api (4.10.3)
       dumb_delegator
       ostruct
       virtus
-    axe-core-rspec (4.10.2)
-      axe-core-api (= 4.10.2)
+    axe-core-rspec (4.10.3)
+      axe-core-api (= 4.10.3)
       dumb_delegator
       ostruct
       virtus
@@ -555,7 +555,7 @@ GEM
       validate_url
       webfinger (~> 2.0)
     orm_adapter (0.5.0)
-    ostruct (0.6.1)
+    ostruct (0.6.3)
     parallel (1.26.3)
     parsby (1.1.1)
     parser (3.3.6.0)
