@@ -25,7 +25,7 @@ class AutoRotateService
   end
 
   def rotate_image(file, output, degree)
-    MiniMagick::Tool::Convert.new do |convert|
+    MiniMagick.convert do |convert|
       convert << file.to_path
       convert.rotate(degree)
       convert.auto_orient
