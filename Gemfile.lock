@@ -154,7 +154,7 @@ GEM
     benchmark (0.4.1)
     benchmark-ips (2.14.0)
     bigdecimal (3.2.2)
-    bindata (2.5.0)
+    bindata (2.5.1)
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
