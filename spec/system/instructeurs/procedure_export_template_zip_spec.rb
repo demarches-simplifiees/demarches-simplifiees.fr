@@ -29,7 +29,9 @@ describe "procedure exports zip" do
     click_on "Enregistrer"
 
     expect(page).to have_content("Modèles d’export")
+    expect(page).to have_content('a bien été créé')
     expect(page).not_to have_content("Vous n’avez pas le droit de créer un modèle d’export pour ce groupe")
+
     export_template = ExportTemplate.last
     dossier_folder_template = export_template.dossier_folder.template
     tiptap_tags = dossier_folder_template.dig(:content, 0, :content).filter { _1[:type] == "mention" }
