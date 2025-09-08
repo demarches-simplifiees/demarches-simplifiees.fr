@@ -375,7 +375,7 @@ GEM
     http_accept_language (2.1.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    i18n-tasks (1.0.14)
+    i18n-tasks (1.0.15)
       activesupport (>= 4.0.2)
       ast (>= 2.1.0)
       erubi
@@ -384,6 +384,7 @@ GEM
       parser (>= 3.2.2.1)
       rails-i18n
       rainbow (>= 2.2.2, < 4.0)
+      ruby-progressbar (~> 1.8, >= 1.8.1)
       terminal-table (>= 1.5.1)
     i18n_data (0.13.0)
     iban-tools (1.2.1)
@@ -880,7 +881,8 @@ GEM
       ffi (~> 1.1)
     sysexits (1.2.0)
     temple (0.10.4)
-    terminal-table (1.6.0)
+    terminal-table (4.0.0)
+      unicode-display_width (>= 1.1.1, < 4)
     test-prof (1.4.4)
     thor (1.4.0)
     thread_safe (0.3.6)
