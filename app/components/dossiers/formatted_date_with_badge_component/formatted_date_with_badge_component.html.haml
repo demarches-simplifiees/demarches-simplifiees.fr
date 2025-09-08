@@ -1,0 +1,5 @@
+%span{ 'data-to-copy': true }= date_creation
+- if etablissement.entreprise_etat_administratif.present?
+  %span.fr-badge.fr-badge--sm.fr-ml-1v{ class: badge_class }
+    = badge_content
+%span{ 'data-copy-message-placeholder': true }
