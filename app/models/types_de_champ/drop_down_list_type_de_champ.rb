@@ -28,7 +28,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
 
   def columns(procedure:, displayable: true, prefix: nil)
     if drop_down_advanced?
-      referentiel.headers_with_path.map do |(header, path)|
+      referentiel.present? ? referentiel.headers_with_path.map do |(header, path)|
         Columns::JSONPathColumn.new(
           procedure_id: procedure.id,
           stable_id:,
@@ -40,7 +40,7 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
           options_for_select: referentiel.options_for_path(path),
           mandatory: mandatory?
         )
-      end
+      end : []
     else
       super
     end
