@@ -58,8 +58,6 @@ RSpec.describe PriorityDeliveryConcern do
 
   class MockSendmail < TestMail; end
 
-  class MockDoList < TestMail; end
-
   class FixedSequence
     def initialize(sequence)
       @enumerator = sequence.each
@@ -80,7 +78,6 @@ RSpec.describe PriorityDeliveryConcern do
 
     ActionMailer::Base.add_delivery_method :mock_smtp, MockSmtp
     ActionMailer::Base.add_delivery_method :mock_sendmail, MockSendmail
-    ActionMailer::Base.add_delivery_method :dolist_api, MockDoList
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
 
     example.run
@@ -97,21 +94,6 @@ RSpec.describe PriorityDeliveryConcern do
     it 'sends emails to the selected delivery method' do
       mail = ExampleMailer.greet('Joshua').deliver_now
       expect(mail).to have_been_delivered_using(MockSmtp)
-    end
-  end
-
-  context 'when the delivery method raise a Dolist::ContactReadOnlyError' do
-    let(:mail) { ExampleMailer.greet(email, bypass_unverified_mail_protection: true) }
-    let(:email) { user.email }
-    let(:user) { create(:user, email: 'u@a.com') }
-
-    before do
-      ActionMailer::Base.balancer_settings = { mock_smtp: 10 }
-    end
-
-    it 'sends emails to the selected delivery method' do
-      allow_any_instance_of(Mail::Message).to receive(:send).with(:do_delivery).and_raise(Dolist::ContactReadOnlyError)
-      expect { mail.deliver_now }.to change { user.reload.email_unsubscribed }.from(false).to(true)
     end
   end
 
@@ -136,19 +118,6 @@ RSpec.describe PriorityDeliveryConcern do
 
       mail3 = ExampleMailer.greet('Rahwa').deliver_now
       expect(mail3).to have_been_delivered_using(MockSmtp)
-    end
-
-    context 'when we reroot all orange mail by dolist' do
-      before { ENV['DOLIST_FOR_ORANGE'] = 'true' }
-      after { ENV.delete('DOLIST_FOR_ORANGE') }
-
-      it do
-        mail1 = ExampleMailer.greet('someone@orange.fr').deliver_now
-        expect(mail1).to have_been_delivered_using(MockDoList)
-
-        mail1 = ExampleMailer.greet('someone@gmail.com').deliver_now
-        expect(mail1).not_to have_been_delivered_using(MockDoList)
-      end
     end
   end
 
