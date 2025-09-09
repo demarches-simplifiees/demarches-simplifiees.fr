@@ -31,7 +31,7 @@ class CrispUpdatePeopleDataJob < ApplicationJob
   def fetch_email_from_session(session_id)
     result = Crisp::APIService.new.get_conversation_meta(session_id:)
     case result
-    in Success(data: {email:})
+    in Success(data: { email: })
       email
     in Failure(reason:)
       fail reason

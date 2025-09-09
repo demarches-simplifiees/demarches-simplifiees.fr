@@ -38,7 +38,7 @@ class Columns::ChampColumn < Column
       filtered_ids_before_value(dossiers, filter[:value])
     in { operator: 'after', value: Array }
       filtered_ids_after_value(dossiers, filter[:value])
-    in { operator: 'this_week'}
+    in { operator: 'this_week' }
       filtered_ids_for_date_range(dossiers, Time.current.all_week)
     in { operator: 'this_month' }
       filtered_ids_for_date_range(dossiers, Time.current.all_month)
