@@ -777,6 +777,30 @@ describe Dossier, type: :model do
             expect(DossierNotification.all).to include(notification)
           end
         end
+
+        context "when this instructeur has already had a previous notification" do
+          let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_dossier_modifie_notifications: 'all') }
+
+          before { dossier.update!(last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+
+          it "does not refresh a previous notification" do
+            dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+            expect(DossierNotification.where(instructeur:, dossier:, notification_type: :dossier_modifie)).to be_empty
+          end
+        end
+      end
+
+      context "when an instructeur of the new groupe is not is the previous groupe" do
+        let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [new_instructeur]) }
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur: new_instructeur, procedure:, display_dossier_modifie_notifications: 'followed') }
+
+        before { dossier.update!(last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+
+        it "refreshes notifications for which the new instructeur has an 'all' preference" do
+          dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_modifie)).to be_empty
+          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_depose)).to be_present
+        end
       end
     end
   end
