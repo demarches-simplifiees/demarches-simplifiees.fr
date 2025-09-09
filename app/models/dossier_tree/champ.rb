@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class DossierTree::Champ
-  attr_reader :id, :ancestors, :columns
+  attr_reader :id, :ancestors, :columns, :html_id
 
   def initialize(type_de_champ, context, ancestors:)
     @id = context.public_id(type_de_champ)
+    @html_id = context.html_id(type_de_champ)
     @type_de_champ = type_de_champ
     @ancestors = ancestors
     @columns = context.columns(type_de_champ)

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class DossierTree::Repeater
-  attr_reader :id, :rows, :ancestors
+  attr_reader :id, :rows, :ancestors, :html_id
 
   def initialize(type_de_champ, context, ancestors:)
     @id = context.public_id(type_de_champ)
+    @html_id = context.html_id(type_de_champ)
     @type_de_champ = type_de_champ
     @ancestors = ancestors
     @visible = context.visible?(type_de_champ, ancestors)

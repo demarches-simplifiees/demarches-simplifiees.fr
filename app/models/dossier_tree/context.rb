@@ -35,6 +35,16 @@ class DossierTree::Context
     type_de_champ.public_id(row_id)
   end
 
+  # TODO: remove when we don't need legacy identifiers anymore
+  def html_id(type_de_champ)
+    if @data.nil?
+      coordinate = @procedure.draft_revision.coordinate_for(type_de_champ)
+      ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)
+    else
+      "champ-#{public_id(type_de_champ)}"
+    end
+  end
+
   def with_row(row)
     DossierTree::Context.new(procedure: @procedure,
       types_de_champ: @types_de_champ,
