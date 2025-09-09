@@ -78,9 +78,9 @@ module Administrateurs
       @created = champ_component_from(@coordinate)
       @morphed = @coordinate.siblings
       if from > to # case of moved up, update components from target (> plus one) to origin
-        @morphed = @morphed.where("position > ?", to).where(position: ..from)
+        @morphed = @morphed.filter { _1.position > to && _1.position <= from }
       else # case of moved down, update components from origin up to target (< minus one)
-        @morphed = @morphed.where(position: from..).where(position: ...to)
+        @morphed = @morphed.filter { _1.position >= from && _1.position < to }
       end
 
       @morphed = @morphed.map { |c| champ_component_from(c) }

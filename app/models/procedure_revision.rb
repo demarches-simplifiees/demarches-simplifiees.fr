@@ -7,13 +7,13 @@ class ProcedureRevision < ApplicationRecord
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
-
   has_many :revision_types_de_champ, -> { order(:position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :revision_types_de_champ_public, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
-  has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
-  has_many :types_de_champ_public, through: :revision_types_de_champ_public, source: :type_de_champ
-  has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
+
+  def revision_types_de_champ_public = revision_types_de_champ.filter { _1.root? && _1.public? }.sort_by(&:position)
+  def revision_types_de_champ_private = revision_types_de_champ.filter { _1.root? && _1.private? }.sort_by(&:position)
+  def types_de_champ = revision_types_de_champ.map(&:type_de_champ)
+  def types_de_champ_public = revision_types_de_champ_public.map(&:type_de_champ)
+  def types_de_champ_private = revision_types_de_champ_private.map(&:type_de_champ)
 
   has_one :draft_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
@@ -53,7 +53,7 @@ class ProcedureRevision < ApplicationRecord
 
       transaction do
         # moving all the impacted tdc down
-        siblings.where(position: position..).update_all("position = position + 1")
+        ProcedureRevisionTypeDeChamp.where(id: siblings, position: position..).update_all("position = position + 1")
 
         # insertion of the new tdc
         revision_types_de_champ.create!(type_de_champ:, parent_id:, position:)
@@ -83,9 +83,9 @@ class ProcedureRevision < ApplicationRecord
 
     transaction do
       if position > coordinate.position
-        siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+        ProcedureRevisionTypeDeChamp.where(id: siblings, position: coordinate.position..position).update_all("position = position - 1")
       else
-        siblings.where(position: position..coordinate.position).update_all("position = position + 1")
+        ProcedureRevisionTypeDeChamp.where(id: siblings, position: position..coordinate.position).update_all("position = position + 1")
       end
       coordinate.update_column(:position, position)
     end
@@ -101,10 +101,10 @@ class ProcedureRevision < ApplicationRecord
 
     transaction do
       if position > coordinate.position
-        siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+        ProcedureRevisionTypeDeChamp.where(id: siblings, position: coordinate.position..position).update_all("position = position - 1")
         coordinate.update_column(:position, position)
       else
-        siblings.where(position: (position + 1)...coordinate.position).update_all("position = position + 1")
+        ProcedureRevisionTypeDeChamp.where(id: siblings, position: (position + 1)...coordinate.position).update_all("position = position + 1")
         coordinate.update_column(:position, position + 1)
       end
     end
@@ -128,7 +128,7 @@ class ProcedureRevision < ApplicationRecord
       children.each(&:destroy_if_orphan)
       tdc.destroy_if_orphan
 
-      coordinate.siblings.where(position: coordinate.position..).update_all("position = position - 1")
+      ProcedureRevisionTypeDeChamp.where(id: coordinate.siblings, position: coordinate.position..).update_all("position = position - 1")
     end
 
     revision_types_de_champ.reset

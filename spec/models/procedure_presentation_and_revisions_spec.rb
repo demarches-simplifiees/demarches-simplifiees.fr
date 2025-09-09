@@ -45,7 +45,7 @@ describe ProcedurePresentation do
         it { is_expected.to match(['libelle 0', 'libelle 1']) }
 
         context 'and finally, when this tdc is removed' do
-          let!(:previous_tdc0) { procedure.published_revision.types_de_champ_public.find_by(libelle: 'libelle 0') }
+          let!(:previous_tdc0) { procedure.published_revision.types_de_champ_public.find { _1.libelle == 'libelle 0' } }
 
           before do
             procedure.draft_revision.remove_type_de_champ(previous_tdc0.stable_id)

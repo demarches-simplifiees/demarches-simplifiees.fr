@@ -11,10 +11,10 @@ module Maintenance
       let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :epci }, { type: :drop_down_list, libelle: 'Votre choix', options: ['Choix 1', 'Choix 2', 'Choix 3'] }, { type: :text }]) }
       let(:revision) { procedure.active_revision }
 
-      let(:text_tdc) { revision.types_de_champ_public.where(type_champ: 'text').first }
-      let(:commune_tdc) { revision.types_de_champ_public.where(type_champ: 'communes').first }
-      let(:epci_tdc) { revision.types_de_champ_public.where(type_champ: 'epci').first }
-      let(:drop_down_list_tdc) { revision.types_de_champ_public.where(type_champ: 'drop_down_list').first }
+      let(:text_tdc) { revision.types_de_champ_public.find(&:text?) }
+      let(:commune_tdc) { revision.types_de_champ_public.find(&:communes?) }
+      let(:epci_tdc) { revision.types_de_champ_public.find(&:epci?) }
+      let(:drop_down_list_tdc) { revision.types_de_champ_public.find(&:drop_down_list?) }
 
       context "with a condition based on commune and epci" do
         before { text_tdc.update(condition: ds_and([ds_eq(champ_value(commune_tdc.stable_id), constant('11')), ds_not_eq(champ_value(epci_tdc.stable_id), constant('84'))])) }

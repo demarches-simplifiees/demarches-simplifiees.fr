@@ -5,9 +5,8 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   belongs_to :type_de_champ
 
   belongs_to :parent, class_name: 'ProcedureRevisionTypeDeChamp', optional: true
-  has_one :parent_type_de_champ, through: :parent, source: :type_de_champ
-  has_many :revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
-  has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
+  # this relationship is necessary for cascade with dependent: :destroy
+  has_many :children_revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
   has_one :procedure, through: :revision
   scope :root, -> { where(parent: nil) }
   scope :ordered, -> { order(:position, :id) }
@@ -15,7 +14,15 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   scope :public_only, -> { joins(:type_de_champ).where(types_de_champ: { private: false }) }
   scope :private_only, -> { joins(:type_de_champ).where(types_de_champ: { private: true }) }
 
-  delegate :stable_id, :libelle, :description, :type_champ, :header_section?, :mandatory?, :private?, :to_typed_id, to: :type_de_champ
+  delegate :stable_id, :libelle, :description, :type_champ, :header_section?, :repetition?, :mandatory?, :public?, :private?, :to_typed_id, to: :type_de_champ
+  delegate :type_de_champ, to: :parent, prefix: true, allow_nil: true
+
+  def revision_types_de_champ = revision.revision_types_de_champ.filter { _1.persisted? ? _1.parent_id == id : _1.parent == self }.sort_by(&:position)
+  def types_de_champ = revision_types_de_champ.map(&:type_de_champ)
+
+  def root?
+    persisted? ? parent_id.nil? : parent.nil?
+  end
 
   def child?
     parent_id.present?

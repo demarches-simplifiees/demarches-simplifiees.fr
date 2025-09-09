@@ -92,12 +92,12 @@ module DossierChampsConcern
   def find_type_de_champ_by_stable_id(stable_id, scope = nil)
     case scope
     when :public
-      revision.types_de_champ.public_only
+      revision.types_de_champ.filter(&:public?)
     when :private
-      revision.types_de_champ.private_only
+      revision.types_de_champ.filter(&:private?)
     else
       revision.types_de_champ
-    end.find_by!(stable_id:)
+    end.find { _1.stable_id == stable_id.to_i }
   end
 
   def champs_for_prefill(stable_ids)

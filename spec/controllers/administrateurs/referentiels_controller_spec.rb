@@ -234,7 +234,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
       }
     end
     let(:types_de_champ_public) { [{ type: :referentiel, stable_id:, referentiel_mapping: initial_mapping }] }
-    let(:type_de_champ) { procedure.draft_revision.types_de_champ.find_by(stable_id:) }
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.find { _1.stable_id == stable_id } }
     let(:referentiel) { create(:api_referentiel, :exact_match, types_de_champ: [type_de_champ]) }
     subject do
       patch :update_mapping_type_de_champ, params: {

@@ -3,7 +3,7 @@
 class Procedure::Card::ChampsComponent < ApplicationComponent
   def initialize(procedure:)
     @procedure = procedure
-    @count = @procedure.draft_revision.types_de_champ.public_only.size
+    @count = @procedure.draft_revision.types_de_champ.count(&:public?)
   end
 
   private

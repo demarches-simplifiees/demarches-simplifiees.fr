@@ -101,7 +101,7 @@ describe ProcedureCloneConcern, type: :model do
       end
 
       public_repetition = type_de_champ_repetition
-      cloned_public_repetition = subject.draft_revision.types_de_champ_public.repetition.first
+      cloned_public_repetition = subject.draft_revision.types_de_champ_public.find(&:repetition?)
       procedure.draft_revision.children_of(public_repetition).zip(subject.draft_revision.children_of(cloned_public_repetition)).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revisions).to include(subject.draft_revision)
@@ -113,7 +113,7 @@ describe ProcedureCloneConcern, type: :model do
       end
 
       private_repetition = type_de_champ_private_repetition
-      cloned_private_repetition = subject.draft_revision.types_de_champ_private.repetition.first
+      cloned_private_repetition = subject.draft_revision.types_de_champ_private.find(&:repetition?)
       procedure.draft_revision.children_of(private_repetition).zip(subject.draft_revision.children_of(cloned_private_repetition)).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
         expect(stc.revisions).to include(subject.draft_revision)
@@ -326,7 +326,7 @@ describe ProcedureCloneConcern, type: :model do
     end
 
     it 'should duplicate piece_justificative_template on a type_de_champ' do
-      expect(subject.draft_revision.types_de_champ_public.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be_truthy
+      expect(subject.draft_revision.types_de_champ_public.find(&:piece_justificative?).piece_justificative_template.attached?).to be_truthy
     end
 
     context 'with a notice attached' do

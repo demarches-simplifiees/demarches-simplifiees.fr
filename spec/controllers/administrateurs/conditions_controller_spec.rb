@@ -134,10 +134,10 @@ describe Administrateurs::ConditionsController, type: :controller do
       ])
     end
     let(:tdcs) { procedure.draft_revision.types_de_champ }
-    let(:top) { tdcs.find_by(libelle: 'top_1') }
-    let(:repetition) { tdcs.find_by(libelle: 'repetition') }
-    let(:child_1) { tdcs.find_by(libelle: 'child_1') }
-    let(:child_2) { tdcs.find_by(libelle: 'child_2') }
+    let(:top) { tdcs.find { _1.libelle == 'top_1' } }
+    let(:repetition) { tdcs.find { _1.libelle == 'repetition' } }
+    let(:child_1) { tdcs.find { _1.libelle == 'child_1' } }
+    let(:child_2) { tdcs.find { _1.libelle == 'child_2' } }
 
     let(:default_params) do
       {

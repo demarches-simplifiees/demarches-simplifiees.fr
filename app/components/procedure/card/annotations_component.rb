@@ -3,7 +3,7 @@
 class Procedure::Card::AnnotationsComponent < ApplicationComponent
   def initialize(procedure:)
     @procedure = procedure
-    @count = @procedure.draft_revision.types_de_champ.private_only.size
+    @count = @procedure.draft_revision.types_de_champ.count(&:private?)
   end
 
   private
