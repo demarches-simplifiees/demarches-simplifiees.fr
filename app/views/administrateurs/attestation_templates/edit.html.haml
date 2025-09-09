@@ -10,7 +10,7 @@
     = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur d’attestation disponible", heading_level: 'h3') do |c|
       - c.with_body do
         Cette page concerne l’attestation actuellement délivrée aux usagers.
-        = link_to("Suivez ce lien pour passer au nouvel éditeur d’attestation", edit_admin_procedure_attestation_template_v2_path(@procedure))
+        = link_to("Suivez ce lien pour passer au nouvel éditeur d’attestation", edit_admin_procedure_attestation_template_v2_path(@procedure, attestation_type: :acceptation))
 
   .procedure-form#attestation-template-edit
     .procedure-form__columns

@@ -56,6 +56,7 @@ module Administrateurs
       ]
 
       @attestation_template.validate
+      @attestation_type = params[:attestation_type]&.to_sym || :acceptation
     end
 
     def update
@@ -128,7 +129,7 @@ module Administrateurs
     end
 
     def editor_params
-      params.required(:attestation_template).permit(:activated, :official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state)
+      params.required(:attestation_template).permit(:activated, :official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state, :type)
     end
   end
 end
