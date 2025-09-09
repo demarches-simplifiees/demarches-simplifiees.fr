@@ -814,6 +814,7 @@ fr:
       cadastres_empty:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
         other: "Aucune parcelle cadastrale sur les zones sélectionnées"
+      limit_max: "doit être inférieur à %{max}"
       not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
       not_positive: "doit être un nombre positif"
       not_in_range: "doit être un nombre compris entre %{min} et %{max}"
