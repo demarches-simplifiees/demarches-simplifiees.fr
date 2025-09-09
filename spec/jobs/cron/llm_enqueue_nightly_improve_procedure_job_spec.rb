@@ -5,16 +5,19 @@ describe Cron::LLMEnqueueNightlyImproveProcedureJob, type: :job do
 
   let!(:p1) { create(:procedure, :published) }
   let!(:p2) { create(:procedure, :published) }
-  let!(:p3) { create(:procedure, :published) }
 
-  before do
-    # Enable only for p1 and p3 at procedure scope
-    Flipper.enable_actor(:llm_nightly_improve_procedure, p1)
-    Flipper.enable_actor(:llm_nightly_improve_procedure, p3)
-  end
+  before { Flipper.enable_actor(:llm_nightly_improve_procedure, p1) }
+
   describe 'perform' do
     it 'enqueues jobs only for procedures with feature enabled' do
-      expect { subject }.to have_enqueued_job(LLM::GenerateImproveLabelJob).with(p1.id).with(p3.id)
+      expect { subject }.to have_enqueued_job(LLM::GenerateImproveLabelJob).with(p1.id)
+    end
+
+    context 'idempotence' do
+      it 'create once' do
+        expect { subject }.to change { LLMRuleSuggestion.count }.by(1)
+        expect { subject }.not_to change { LLMRuleSuggestion.count }
+      end
     end
   end
 end
