@@ -40,7 +40,7 @@ module Administrateurs
           # Actually remove the admin
           @procedure.administrateurs.delete(admin_to_delete)
           @administrateur = admin_to_delete
-          flash.notice = "L’administrateur \« #{admin_to_delete.email} » a été retiré de la démarche « #{@procedure.libelle} »."
+          flash.notice = "L’administrateur « #{admin_to_delete.email} » a été retiré de la démarche « #{@procedure.libelle} »."
 
           if current_administrateur == admin_to_delete
             redirect_to admin_procedures_path
