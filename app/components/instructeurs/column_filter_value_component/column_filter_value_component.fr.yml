@@ -1,2 +1,6 @@
 fr:
   value: Valeur
+  operator: Opérateur
+  operator_le: Le
+  operator_before: Avant le
+  operator_after: Après le
