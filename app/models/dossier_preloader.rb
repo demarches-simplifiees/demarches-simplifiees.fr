@@ -41,7 +41,7 @@ class DossierPreloader
 
   def revisions(pj_template: false)
     @revisions ||= ProcedureRevision.where(id: @dossiers.pluck(:revision_id, :submitted_revision_id).flatten.compact.uniq)
-      .includes(procedure: [], revision_types_de_champ: { parent: [], type_de_champ: pj_template ? { piece_justificative_template_attachment: :blob } : [] })
+      .includes(procedure: [], revision_types_de_champ: { type_de_champ: pj_template ? { piece_justificative_template_attachment: :blob } : [] })
       .index_by(&:id)
   end
 

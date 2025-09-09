@@ -17,11 +17,11 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   delegate :stable_id, :libelle, :description, :type_champ, :header_section?, :repetition?, :mandatory?, :public?, :private?, :to_typed_id, to: :type_de_champ
   delegate :type_de_champ, to: :parent, prefix: true, allow_nil: true
 
-  def revision_types_de_champ = revision.revision_types_de_champ.filter { _1.parent == self }.sort_by(&:position)
+  def revision_types_de_champ = revision.revision_types_de_champ.filter { _1.persisted? ? _1.parent_id == id : _1.parent == self }.sort_by(&:position)
   def types_de_champ = revision_types_de_champ.map(&:type_de_champ)
 
   def root?
-    parent.nil?
+    persisted? ? parent_id.nil? : parent.nil?
   end
 
   def child?
