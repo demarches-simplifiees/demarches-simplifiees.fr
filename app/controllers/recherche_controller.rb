@@ -86,7 +86,7 @@ class RechercheController < ApplicationController
     return true if @deleted_dossier.present?
 
     dossier = Dossier.state_not_brouillon.find_by(id: @search_terms)
-    return true if dossier.nil?
+    return false if dossier.nil?
 
     if current_instructeur.groupe_instructeur_ids.include?(dossier.groupe_instructeur_id)
       @hidden_dossier = dossier.hidden_by_administration? ? dossier : nil

@@ -19,13 +19,13 @@ describe RechercheController, type: :controller do
     instructeur.assign_to_procedure(dossier.procedure)
 
     dossier.project_champs_public[0].value = "Name of district A"
-    dossier.project_champs_public[1].value = "Name of city A"
+    dossier.project_champs_public[1].value = "75000"
     dossier.project_champs_private[0].value = "Dossier A is complete"
     dossier.project_champs_private[1].value = "Dossier A is valid"
     dossier.save!
 
     dossier_with_expert.project_champs_public[0].value = "Name of district B"
-    dossier_with_expert.project_champs_public[1].value = "name of city B"
+    dossier_with_expert.project_champs_public[1].value = "93100"
     dossier_with_expert.project_champs_private[0].value = "Dossier B is incomplete"
     dossier_with_expert.project_champs_private[1].value = "Dossier B is invalid"
     dossier_with_expert.save!
@@ -88,7 +88,7 @@ describe RechercheController, type: :controller do
 
         it 'does not return the dossier' do
           subject
-          expect(assigns(:projected_dossiers)).to eq(nil)
+          expect(assigns(:projected_dossiers)).to eq([])
           expect(assigns(:dossier_not_in_instructor_group)).to eq(nil)
         end
       end
@@ -154,17 +154,32 @@ describe RechercheController, type: :controller do
     end
 
     describe 'by champs' do
-      let(:query) { 'district A' }
+      context 'when search is a string' do
+        let(:query) { 'district A' }
 
-      it { is_expected.to have_http_status(200) }
+        it { is_expected.to have_http_status(200) }
 
-      it 'returns the expected dossier' do
-        subject
-        expect(assigns(:projected_dossiers).count).to eq(1)
-        expect(assigns(:projected_dossiers).first).to eq(dossier)
+        it 'returns the expected dossier' do
+          subject
+          expect(assigns(:projected_dossiers).count).to eq(1)
+          expect(assigns(:projected_dossiers).first).to eq(dossier)
+        end
+      end
+
+      context 'when search is a string of number' do
+        let(:query) { '75000  ' }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'returns the expected dossier' do
+          subject
+          expect(assigns(:projected_dossiers).count).to eq(1)
+          expect(assigns(:projected_dossiers).first).to eq(dossier)
+        end
       end
 
       context 'when dossier has notification' do
+        let(:query) { 'district A' }
         let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
 
         it 'assigns notification' do
