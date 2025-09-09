@@ -41,6 +41,12 @@ class ProcedurePresentation < ApplicationRecord
     update!(filters_attr => current_filters + [filter])
   end
 
+  def update_filter_for_statut!(statut, filter_key, filter)
+    filters_attr = filters_name_for(statut)
+    current_filters = send(filters_attr) || []
+    update!(filters_attr => current_filters.map { |f| f.id == filter_key ? filter : f })
+  end
+
   def remove_filter_for_statut!(statut, filter_to_remove)
     filters_attr = filters_name_for(statut)
 
