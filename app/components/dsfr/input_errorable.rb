@@ -119,7 +119,7 @@ module Dsfr
       end
 
       def map_array_to_hash_with_true(array_or_string_or_nil)
-        Array(array_or_string_or_nil).to_h { [_1, true] }
+        Array(array_or_string_or_nil).index_with { true }
       end
 
       def hint
