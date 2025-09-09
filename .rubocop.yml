@@ -1,9 +1,11 @@
-require:
+plugins:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
   - rubocop-capybara
   - rubocop-factory_bot
+
+require:
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
@@ -13,7 +15,7 @@ inherit_mode:
     - Include
 
 AllCops:
-  TargetRubyVersion: 3.3
+  TargetRubyVersion: 3.4
   DisabledByDefault: true
   SuggestExtensions: false
   NewCops: enable
@@ -593,7 +595,7 @@ Naming/MemoizedInstanceVariableName:
 Naming/MethodName:
   Enabled: false
 
-Naming/PredicateName:
+Naming/PredicatePrefix:
   Enabled: false
 
 Naming/BlockParameterName:
@@ -656,7 +658,7 @@ Performance/RedundantMerge:
   Enabled: true
 
 Style/HashTransformValues:
-    Enabled: true
+  Enabled: true
 
 Style/RedundantSortBy:
   Enabled: true
