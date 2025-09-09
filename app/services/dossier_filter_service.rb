@@ -96,7 +96,7 @@ class DossierFilterService
 
   def self.normalize_filter(filter)
     case filter
-    in String|Array
+    in String | Array
       { operator: 'match', value: Array(filter) }
     in { operator: String => operator, ** }
       { operator:, value: Array(filter[:value]) }

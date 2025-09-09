@@ -10,7 +10,7 @@ class ExternalDataExceptionType < ActiveRecord::Type::Value
       nil
     in ExternalDataException
       value
-    in { reason: String => reason, code: Integer => code}
+    in { reason: String => reason, code: Integer => code }
       ExternalDataException.new(reason:, code:)
     in String => json_string
       h = JSON.parse(json_string, symbolize_names: true) rescue { reason: json_string, code: nil }
