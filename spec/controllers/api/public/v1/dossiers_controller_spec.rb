@@ -85,7 +85,7 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
             let(:params) { prefilled_champs_as_params.merge(id: procedure.id) }
 
             it "updates the champs with the new values and mark them as prefilled" do
-              expect { create_request }.not_to raise_error(ActiveRecord::RecordNotFound)
+              expect { create_request }.not_to raise_error
               dossier = Dossier.last
 
               first_row = dossier.project_champs_public.first.rows.first
