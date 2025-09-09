@@ -162,7 +162,7 @@ describe Administrateurs::LabelsController, type: :controller do
         subject
         expect(flash.alert).to eq("Démarche inexistante")
         expect(response.status).to eq(404)
-        expect { label.reload }.not_to raise_error(ActiveRecord::RecordNotFound)
+        expect { label.reload }.not_to raise_error
       end
     end
   end

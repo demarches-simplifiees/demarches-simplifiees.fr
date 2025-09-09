@@ -109,7 +109,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
       let(:failure) { Failure(API::Client::Error[:http, 400, false, reason]) }
       let(:reason) { StandardError.new('non-retryable') }
       it 'does not retry the job by swallowing the error gracefully' do
-        expect { perform_job }.not_to raise_error(reason)
+        expect { perform_job }.not_to raise_error
       end
     end
 
@@ -117,7 +117,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
       let(:failure) { Failure(API::Client::Error[:unknown, 418, false, reason]) }
       let(:reason) { StandardError.new('Unknown') }
       it 'does not retry the job by swallowing the error gracefully' do
-        expect { perform_job }.not_to raise_error(reason)
+        expect { perform_job }.not_to raise_error
       end
     end
   end
