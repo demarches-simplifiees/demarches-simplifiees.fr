@@ -259,11 +259,11 @@ module DossierChampsConcern
   end
 
   def update_with_stream?
-    en_construction? && procedure.feature_enabled?(:user_buffer_stream) && !with_editing_fork?
+    en_construction? && !with_editing_fork?
   end
 
   def update_with_fork?
-    en_construction? && !procedure.feature_enabled?(:user_buffer_stream)
+    en_construction? && with_editing_fork?
   end
 
   private
