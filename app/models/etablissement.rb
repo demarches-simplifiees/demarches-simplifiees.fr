@@ -247,6 +247,13 @@ class Etablissement < ApplicationRecord
     end
   end
 
+  def dedicated_siret_siege_social
+    if entreprise.siret_siege_social.present? &&
+        siret != entreprise.siret_siege_social
+      pretty_siret(etablissement.entreprise.siret_siege_social)
+    end
+  end
+
   private
 
   def bilans_new_keys
