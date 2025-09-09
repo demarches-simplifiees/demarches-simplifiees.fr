@@ -35,7 +35,7 @@ class FilteredColumn
   end
 
   def filter_value
-    Array(filter.is_a?(String) ? filter : filter[:value])
+    Array(filter.is_a?(String) ? filter : filter&.dig(:value))
   end
 
   private
