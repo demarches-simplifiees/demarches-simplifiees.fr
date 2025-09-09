@@ -1,0 +1,17 @@
+- if filters.any?
+  .border-background-contrast-grey.fr-mt-2w
+    .fr-pt-2w.fr-px-2w
+      %p.mb-0.font-weight-bold= t('.search_filter_dossiers')
+
+    .fr-grid-row
+      - filters.each do |filter|
+        .fr-col.fr-p-2w
+        
+          = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+            method: :post,
+            data: { turbo: true, controller: 'autosubmit' } do |form|
+
+            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, edit_mode: true)
+
+            = form.hidden_field :statut, value: statut
+            = form.submit t('.ok'), class: 'fr-btn fr-btn--secondary fr-mt-2w'

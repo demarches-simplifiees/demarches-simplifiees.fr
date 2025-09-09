@@ -3,10 +3,16 @@
 class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   attr_reader :filtered_column, :form, :instructeur_procedure
 
-  def initialize(filtered_column:, form:, instructeur_procedure:)
+  def initialize(filtered_column:, form:, instructeur_procedure:, edit_mode: false)
     @filtered_column = filtered_column
     @form = form
     @instructeur_procedure = instructeur_procedure
+    @edit_mode = edit_mode
+  end
+
+  def id
+    # unique id to avoid turbo-frame reload
+    @edit_mode ? "#{filtered_column.id.parameterize}_column_filter_value_component" : "column_filter_value_component"
   end
 
   def operator_hidden_field
@@ -17,6 +23,14 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
 
   def column
     filtered_column&.column
+  end
+
+  def label
+    @edit_mode ? filtered_column&.label : t('.value')
+  end
+
+  def value
+    filtered_column&.filter_value
   end
 
   def column_filter_options
@@ -74,7 +88,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       class: 'fr-mt-1w',
       name: 'filter[filter][value][]',
       items: column_filter_options,
-      value_separator: false
+      value_separator: false,
+      selected_keys: filtered_column&.filter_value
     }
   end
 
