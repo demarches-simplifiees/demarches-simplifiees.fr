@@ -20,7 +20,7 @@ class Cron::LLMEnqueueNightlyImproveProcedureJob < Cron::CronJob
         if !LLMRuleSuggestion.exists?(procedure_revision_id: procedure_revision.id, schema_hash:)
           suggestion = LLMRuleSuggestion.create!(procedure:, procedure_revision:, schema_hash:, state: :queued)
 
-          LLM::GenerateImproveLabelJob.perform_later(suggestion.id)
+          LLM::GenerateImproveLabelJob.perform_later(suggestion)
         end
       end
   end
