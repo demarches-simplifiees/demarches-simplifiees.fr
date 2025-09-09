@@ -29,8 +29,7 @@ class InstructeursImportService
     target_groupes = procedure
       .groupe_instructeurs
       .where(label: target_labels)
-      .map { [_1, emails_in_groupe[_1.label]] }
-      .to_h
+      .index_with { emails_in_groupe[_1.label] }
 
     added_instructeurs_by_group = []
 

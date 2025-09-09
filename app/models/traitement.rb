@@ -43,7 +43,7 @@ class Traitement < ApplicationRecord
     :passe_en_instruction_automatiquement,
     :accepte_automatiquement,
     :refuse_automatiquement
-  ].to_h { [_1, _1.to_s.humanize] }
+  ].index_with { _1.to_s.humanize }
 
   def event
     if state == Dossier.states.fetch(:en_construction)
