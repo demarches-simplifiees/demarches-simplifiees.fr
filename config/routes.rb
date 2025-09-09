@@ -484,6 +484,7 @@ Rails.application.routes.draw do
       member do
         post 'refresh_column_filter'
         post 'add_filter'
+        post 'update_filter'
         delete 'remove_filter'
       end
     end
