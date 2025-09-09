@@ -10,7 +10,7 @@ describe Cron::LLMEnqueueNightlyImproveProcedureJob, type: :job do
 
   describe 'perform' do
     it 'enqueues jobs only for procedures with feature enabled' do
-      expect { subject }.to have_enqueued_job(LLM::GenerateImproveLabelJob).with(p1.id)
+      expect { subject }.to have_enqueued_job(LLM::GenerateImproveLabelJob).with(an_instance_of(LLMRuleSuggestion)).once
     end
 
     context 'idempotence' do
