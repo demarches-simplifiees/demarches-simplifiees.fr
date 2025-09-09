@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-class AttestationTemplate < ApplicationRecord
+class AttestationRefusTemplate < ApplicationRecord
   include AttestationTemplateConcern
 
-  belongs_to :procedure, inverse_of: :attestation_template
+  belongs_to :procedure, inverse_of: :attestation_refus_template
 
   validates :title, tags: true, if: -> { procedure.present? && version == 1 }
   validates :body, tags: true, if: -> { procedure.present? && version == 1 }
   validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
 
-  DOSSIER_STATE = Dossier.states.fetch(:accepte)
+  DOSSIER_STATE = Dossier.states.fetch(:refuse)
 
   TIPTAP_BODY_DEFAULT = {
     "type" => "doc",
@@ -42,28 +42,39 @@ class AttestationTemplate < ApplicationRecord
           }
         ]
       },
-      { "type" => "title", "attrs" => { "textAlign" => "center" }, "content" => [{ "text" => "Titre de l’attestation", "type" => "text" }] },
+      { "type" => "title", "attrs" => { "textAlign" => "center" }, "content" => [{ "text" => "Notification de refus", "type" => "text" }] },
       {
         "type" => "paragraph",
         "attrs" => { "textAlign" => "left" },
         "content" => [
           {
-            "text" => "Vous pouvez éditer ce texte pour personnaliser votre attestation. Pour ajouter du contenu issu du dossier, utilisez les balises situées sous cette zone de saisie.",
+            "text" => "Nous avons le regret de vous informer que votre demande n° ",
+            "type" => "text"
+          },
+          { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } },
+          {
+            "text" => " a été refusée pour le motif suivant :",
             "type" => "text"
           }
+        ]
+      },
+      {
+        "type" => "paragraph",
+        "attrs" => { "textAlign" => "left" },
+        "content" => [
+          { "type" => "mention", "attrs" => { "id" => "dossier_motivation", "label" => "motivation de la décision" } }
         ]
       }
     ]
   }.freeze
 
-
   private
 
   def template_path_v1
-    'administrateurs/attestation_templates/show'
+    'administrateurs/attestation_refus_templates/show'
   end
 
   def template_path_v2
-    '/administrateurs/attestation_template_v2s/show'
+    '/administrateurs/attestation_refus_template_v2s/show'
   end
 end

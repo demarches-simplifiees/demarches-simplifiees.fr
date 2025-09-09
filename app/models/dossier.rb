@@ -138,6 +138,7 @@ class Dossier < ApplicationRecord
 
   has_one :procedure, through: :revision
   has_one :attestation_template, through: :procedure
+  has_one :attestation_refus_template, through: :procedure
   has_many :types_de_champ, through: :revision, source: :types_de_champ_public
   has_many :types_de_champ_private, through: :revision
 
@@ -829,6 +830,12 @@ class Dossier < ApplicationRecord
   def build_attestation
     if attestation_template&.activated?
       attestation_template.attestation_for(self)
+    end
+  end
+
+  def build_attestation_refus
+    if attestation_refus_template&.activated?
+      attestation_refus_template.attestation_for(self)
     end
   end
 

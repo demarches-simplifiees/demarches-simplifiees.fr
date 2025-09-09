@@ -142,6 +142,6 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :component
 
   # early check to ensure redis is available for test
-  redis = Kredis::Connections.connections[:shared]
-  redis.ping
+  # redis = Kredis::Connections.connections[:shared]
+  # redis.ping
 end

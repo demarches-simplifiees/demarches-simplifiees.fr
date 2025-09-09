@@ -1,0 +1,44 @@
+= render Dsfr::InputComponent.new(form: f, attribute: :title, input_type: :text_field, opts: {})
+
+= render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: '6', placeholder: 'Texte de l\'attestation de refus, motifs, etc. '})
+
+#tags-table.clearfix.fr-mt-3w
+  %h2.fr-h3
+    Insérer une balise
+
+  = render Dsfr::AlertComponent.new(state: :info, title: "Balises sur le conditionnel", heading_level: 'h3') do |c|
+    - c.with_body do
+      Les balises pour les champs conditionnés ne sont pour le moment pas supportées.
+
+  %p.notice.fr-mt-3w
+    Copiez-collez les balises ci-dessous pour afficher automatiquement l'information souhaitée.
+  .head
+    .tag Balise
+    .description Description
+  .items
+    - @attestation_refus_template.tags.each do |tag|
+      .item
+        %code.tag{ style: "white-space: pre-wrap;" }
+          = "--#{tag[:libelle]}--"
+        .description
+          = tag[:description]
+
+%h3.fr-h5 Logo de l'attestation
+%p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+  Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
+= render Attachment::EditComponent.new(attached_file: @attestation_refus_template.logo, direct_upload: false)
+
+
+%h3.fr-h5.fr-mt-5w Tampon de l'attestation
+%p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+  Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
+= render Attachment::EditComponent.new(attached_file: @attestation_refus_template.signature, direct_upload: false)
+
+
+- if @attestation_refus_template.procedure.routing_enabled?
+  %p.fr-text--sm.fr-text-mention--grey
+    À noter : chaque groupe instructeur peut apposer son propre tampon à la place de celui-ci.
+
+
+.fr-mt-4w
+  = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_field, opts: { maxlength: 190, size: nil }, required: false)

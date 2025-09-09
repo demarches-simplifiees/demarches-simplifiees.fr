@@ -1,0 +1,57 @@
+- content_for(:root_class, 'scroll-margins-for-sticky-footer')
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Attestation de refus']] }
+
+.fr-container
+  .fr-mb-6w
+    = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur d'attestation de refus disponible", heading_level: 'h3') do |c|
+      - c.with_body do
+        Cette page concerne l'attestation de refus actuellement délivrée aux usagers.
+        = link_to("Suivez ce lien pour passer au nouvel éditeur d'attestation de refus", edit_admin_procedure_attestation_refus_template_v2_path(@procedure))
+
+  .procedure-form#attestation-refus-template-edit
+    .procedure-form__columns
+      = render NestedForms::FormOwnerComponent.new
+      = form_for @attestation_refus_template,
+        url: admin_procedure_attestation_refus_template_path(@procedure),
+        html: { multipart: true, class: 'form procedure-form__column--form fr-background-alt--blue-france' } do |f|
+
+        %h1.page-title
+          Délivrance d'attestation de refus
+          - if @attestation_refus_template.activated?
+            %span.text-active activée
+          - else
+            %span.text-inactive désactivée
+
+        %p.notice
+          L'attestation de refus, si elle est activée, est émise au moment où un dossier est refusé.
+          %br
+          L'email de notification de refus envoyé à l'usager comporte alors un lien vers l'attestation de refus ;
+          celle-ci est également disponible au téléchargement depuis l'espace personnel de l'usager.
+
+        = render partial: 'administrateurs/attestation_refus_templates/informations', locals: { f: f }
+
+        .procedure-form__actions.sticky--bottom
+          .actions-left
+            %label.toggle-switch
+              = f.check_box :activated, class: 'toggle-switch-checkbox'
+              %span.toggle-switch-control.round
+              %span.toggle-switch-label.on Attestation de refus activée
+              %span.toggle-switch-label.off Attestation de refus désactivée
+
+          .actions-right
+            = link_to 'Annuler', edit_admin_procedure_attestation_refus_template_path(id: @procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+            = f.button 'Enregistrer', class: 'fr-btn'
+
+      .procedure-form__column--preview
+        .procedure-form__preview.sticky--top
+          %h3
+            .procedure-form__preview-title
+              Aperçu
+              .notice
+                Cet aperçu est mis à jour après chaque sauvegarde.
+          .procedure-preview
+            = render partial: 'administrateurs/attestation_refus_templates/apercu', locals: { procedure: @procedure }

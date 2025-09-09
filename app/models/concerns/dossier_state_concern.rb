@@ -222,6 +222,11 @@ module DossierStateConcern
       self.justificatif_motivation.attach(justificatif)
     end
 
+    # Génération de l'attestation de refus
+    if attestation.nil?
+      self.attestation = build_attestation_refus
+    end
+
     save!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
@@ -254,6 +259,13 @@ module DossierStateConcern
     self.processed_at = traitements.refuser_automatiquement(motivation:).processed_at
     self.sva_svr_decision_triggered_at = self.processed_at
     self.expired_at = expiration_date
+
+    save!
+
+    # Génération de l'attestation de refus
+    if attestation.nil?
+      self.attestation = build_attestation_refus
+    end
 
     save!
 

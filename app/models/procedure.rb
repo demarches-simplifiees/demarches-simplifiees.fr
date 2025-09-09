@@ -54,6 +54,11 @@ class Procedure < ApplicationRecord
 
   has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 
+  has_many :attestation_refus_templates, dependent: :destroy
+  has_one :attestation_refus_template_v1, -> { AttestationRefusTemplate.v1 }, dependent: :destroy, class_name: "AttestationRefusTemplate", inverse_of: :procedure
+  has_many :attestation_refus_templates_v2, -> { AttestationRefusTemplate.v2 }, dependent: :destroy, class_name: "AttestationRefusTemplate", inverse_of: :procedure
+  has_one :attestation_refus_template, -> { published }, dependent: :destroy, inverse_of: :procedure
+
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :replaced_by_procedure, -> { with_discarded }, inverse_of: :replaced_procedures, class_name: "Procedure", optional: true
