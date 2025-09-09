@@ -7,11 +7,12 @@
       - filters.each do |filter|
         .fr-col.fr-p-2w
         
-          = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+          = form_with url: update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
             method: :post,
             data: { turbo: true, controller: 'autosubmit' } do |form|
 
-            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, edit_mode: true)
-
+            = form.hidden_field "filter_key", value: filter.id
+            = form.hidden_field "filter[id]", value: filter.column.id
             = form.hidden_field :statut, value: statut
-            = form.submit t('.ok'), class: 'fr-btn fr-btn--secondary fr-mt-2w'
+
+            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, edit_mode: true)

@@ -180,4 +180,38 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
       end
     end
   end
+
+  describe '#update_filter' do
+    subject { patch :update_filter, params: }
+
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }]) }
+    let(:instructeur) { create(:instructeur) }
+
+    let(:procedure_presentation) do
+      groupe_instructeur = procedure.defaut_groupe_instructeur
+      assign_to = create(:assign_to, instructeur:, groupe_instructeur:)
+      assign_to.procedure_presentation_or_default_and_errors.first
+    end
+
+    let(:column) { procedure.find_column(label: 'Votre ville') }
+
+    let(:existing_filter) { FilteredColumn.new(column:, filter: { operator: 'in', value: ['Paris', 'Lyon'] }) }
+
+    before do
+      sign_in(instructeur.user)
+      procedure_presentation.update!(tous_filters: [existing_filter])
+    end
+
+    context 'nominal case' do
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter_key: existing_filter.id, filter: { id: column.id, filter: { operator: 'in', value: ['Marseille'] } } } }
+      it 'updates the filter' do
+        subject
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('<turbo-stream action="refresh">')
+
+        expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'in', value: ['Marseille'] })])
+      end
+    end
+  end
 end
