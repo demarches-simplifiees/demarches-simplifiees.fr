@@ -1,0 +1,11 @@
+#editable-filters-component {
+  background-color: var(--background-alt-grey);
+
+  .fr-ds-combobox__multiple {
+    margin-bottom: 0 !important;
+  }
+
+  .editable-filter-form {
+    max-width: 350px;
+  }
+}
