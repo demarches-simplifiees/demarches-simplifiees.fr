@@ -13,21 +13,23 @@
     = t('.title')
 
   .fr-tabs
+    - active_tab = params[:tab] || 'mail'
+
     %ul.fr-tabs__list{ role: "tablist", "aria-label": t('.title') }
       %li{ role: "presentation" }
         %button#tab-mail.fr-tabs__tab{
           type: "button",
-          tabindex: "0",
+          tabindex: (active_tab == 'mail' ? "0" : "-1"),
           role: "tab",
-          "aria-selected": "true",
+          "aria-selected": (active_tab == 'mail').to_s,
           "aria-controls": "tab-mail-panel"
         }= t('.libelle.mail')
       %li{ role: "presentation" }
         %button#tab-badge.fr-tabs__tab{
           type: "button",
-          tabindex: "-1",
+          tabindex: (active_tab == 'badge' ? "0" : "-1"),
           role: "tab",
-          "aria-selected": "false",
+          "aria-selected": (active_tab == 'badge').to_s,
           "aria-controls": "tab-badge-panel"
         }= t('.libelle.badge')
 
