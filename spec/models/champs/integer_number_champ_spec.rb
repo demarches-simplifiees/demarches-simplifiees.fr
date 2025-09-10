@@ -124,22 +124,5 @@ describe Champs::IntegerNumberChamp do
         it { is_expected.to be_truthy }
       end
     end
-
-    context 'when the value exceeds the maximum limit' do
-      context 'the value is within the limit' do
-        let(:value) { 2147483647 }
-
-        it { is_expected.to be_truthy }
-      end
-
-      context 'the value exceeds the limit' do
-        let(:value) { 2147483648 }
-
-        it 'is not valid and contains errors' do
-          is_expected.to be_falsey
-          expect(champ.errors[:value]).to eq(["doit être un nombre inférieur ou égal à 2147483647"])
-        end
-      end
-    end
   end
 end

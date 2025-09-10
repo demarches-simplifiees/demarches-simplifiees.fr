@@ -1,28 +1,13 @@
 # frozen_string_literal: true
 
 class NumberLimitValidator < ActiveModel::Validator
-  # Validates numerical limits for a record's value attribute.
-  # The MAX_VALUE constant is set to 2**31 - 1 to ensure values fit within a 32-bit signed integer,
-  # preventing potential overflow issues in systems or databases that use this type.
-
-  MAX_VALUE = 2**31 - 1
-
   def validate(record)
     return if record.value.blank?
     positive_value(record)
     range_value(record)
-    max_value(record)
   end
 
   private
-
-  def max_value(record)
-    value = convert_to_number(record, 'value')
-
-    if value > MAX_VALUE
-      record.errors.add(:value, :limit_max, max: MAX_VALUE)
-    end
-  end
 
   def positive_value(record)
     value = convert_to_number(record, 'value')
