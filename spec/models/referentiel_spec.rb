@@ -14,7 +14,7 @@ describe Referentiel do
         it 'validates presentater as exact_match/autocomplete or nil' do
           expect(build(:api_referentiel, mode: 'exact_match').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
           expect(build(:api_referentiel, mode: 'autocomplete').tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
-          expect(build(:api_referentiel, mode: nil).tap(&:validate).errors.map(&:attribute)).not_to include(:mode)
+          expect(build(:api_referentiel, mode: nil).tap(&:validate).errors.map(&:attribute)).to include(:mode)
         end
 
         describe 'configured?' do
@@ -57,15 +57,6 @@ describe Referentiel do
             it 'adds an invalid URL error' do
               referentiel.validate
               expect(referentiel.errors[:url]).to include("n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
-            end
-          end
-
-          context 'when the URL is blank' do
-            let(:url) { nil }
-
-            it 'does not add an error' do
-              referentiel.validate
-              expect(referentiel.errors[:url]).to be_empty
             end
           end
 

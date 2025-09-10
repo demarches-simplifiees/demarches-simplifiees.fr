@@ -1,7 +1,22 @@
 # frozen_string_literal: true
 
-# Extension de la classe JsonPath de la gem
 class JSONPathUtil
+  def self.filter_selectable_datasources(hash, parent_path = '$')
+    hash.each_with_object({}) do |(key, value), result|
+      json_path = "#{parent_path}.#{key}"
+
+      case value
+      in [Hash => first, *] => suggestions
+        result.merge!(json_path => suggestions)
+      in Hash
+        nested = filter_selectable_datasources(value, json_path)
+        result.merge!(nested)
+      else
+        result
+      end
+    end
+  end
+
   def self.hash_to_jsonpath(hash, parent_path = '$')
     hash.each_with_object({}) do |(key, value), result|
       current_path = "#{parent_path}.#{key}"

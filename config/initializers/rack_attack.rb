@@ -34,6 +34,10 @@ class Rack::Attack
     end
   end
 
+  throttle('referentiel_search_per_ip', limit: 60, period: 1.minute) do |req|
+    req.remote_ip if req.post? && req.path.match?(/data_sources\/referentiel/) && rack_attack_enabled?
+  end
+
   Rack::Attack.safelist('allow trusted ips') do |req|
     IPService.ip_trusted?(req.remote_ip)
   end

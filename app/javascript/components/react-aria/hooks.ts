@@ -8,6 +8,7 @@ import type {
 import isEqual from 'react-fast-compare';
 import { useAsyncList, type AsyncListOptions } from 'react-stately';
 import { useEvent } from 'react-use-event-hook';
+import { httpRequest } from '../../shared/utils';
 import * as s from 'superstruct';
 import { useDebounceCallback } from 'usehooks-ts';
 
@@ -499,34 +500,50 @@ const Coerce = {
   )
 };
 
-export const createLoader: (
+export const createLoader = (
   source: string,
   options?: {
     minimumInputLength?: number;
     limit?: number;
     param?: string;
     coerce?: keyof typeof Coerce;
+    usePost?: boolean;
   }
-) => Loader =
-  (source, options) =>
-  async ({ signal, filterText }) => {
+): Loader => {
+  return async ({ signal, filterText }) => {
     const url = new URL(source, location.href);
     const minimumInputLength = options?.minimumInputLength ?? 2;
     const param = options?.param ?? 'q';
     const limit = options?.limit ?? 10;
+    const usePost = options?.usePost ?? false;
+    const coerceKey = options?.coerce ?? 'Default';
 
     if (!filterText || filterText.length < minimumInputLength) {
       return { items: [] };
     }
-    url.searchParams.set(param, filterText);
+
     try {
-      const response = await fetch(url.toString(), {
-        headers: { accept: 'application/json' },
-        signal
-      });
-      if (response.ok) {
-        const json = await response.json();
-        const struct = Coerce[options?.coerce ?? 'Default'];
+      const requestOptions: {
+        method: 'GET' | 'POST';
+        csrf: boolean;
+        signal: AbortSignal | undefined;
+        json?: unknown;
+      } = { method: 'GET', csrf: false, signal };
+
+      if (usePost) {
+        requestOptions.method = 'POST';
+        requestOptions.csrf = true;
+        requestOptions.json = { [param]: filterText };
+      } else {
+        url.searchParams.set(param, filterText);
+      }
+
+      const requestUrl = url.toString();
+
+      const json = await httpRequest(requestUrl, requestOptions).json();
+
+      if (json) {
+        const struct = Coerce[coerceKey];
         const [err, items] = s.validate(json, struct, { coerce: true });
         if (!err) {
           const filteredItems = matchSorter(items, filterText, {
@@ -548,6 +565,7 @@ export const createLoader: (
       return { items: [] };
     }
   };
+};
 
 export function useOnFormReset(onReset?: () => void) {
   const ref = useRef<HTMLInputElement>(null);

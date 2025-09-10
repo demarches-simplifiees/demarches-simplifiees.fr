@@ -1,0 +1,70 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://tabular-api.data.gouv.fr/api/resources/796dfff7-cf54-493a-a0a7-ba3c2024c6f3/data/?finess__contains=010002699
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.29.1
+      Date:
+      - Tue, 02 Sep 2025 09:15:15 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '2981'
+      Cache-Control:
+      - no-cache
+      - public
+    body:
+      encoding: ASCII-8BIT
+      string: '{"data": [{"__id": 2, "source": "DataSant\u00e9 (doc en ligne sur data.gouv.fr)",
+        "date_maj": "2025-07-07", "finess": "010002699", "finess8": "01000269", "etat":
+        "OBSOLETE", "date_extract_finess": "2004-12-31", "rs": "UNITE DIALYSE EN CENTRE
+        SITE BELLEY", "type": "ET", "ej_finess": "010000206", "ej_rs": "CENTRE MEDICAL
+        REGINA", "et_finess": "010002699", "et_rs": "UNITE DIALYSE EN CENTRE SITE
+        BELLEY", "siren": "546920075", "siret": "54692007500043", "date_autorisation":
+        "2003-05-14", "date_ouverture": "2004-01-23", "date_maj_finess": "2004-08-02",
+        "adresse_num_voie": "52", "adresse_comp_voie": null, "adresse_type_voie":
+        "R", "adresse_nom_voie": "GEORGES GIRERD", "adresse_lieuditbp": "BP 139",
+        "adresse_code_postal": "01300", "adresse_lib_routage": "BELLEY", "telephone":
+        null, "telecopie": null, "com_code": "01034", "statut_jur_code": "72", "statut_jur_lib":
+        "Soci\u00e9t\u00e9 A Responsabilit\u00e9 Limit\u00e9e (S.A.R.L.)", "statut_jur_etat":
+        null, "statut_jur_niv3_code": 2230, "statut_jur_niv3_lib": "Soci\u00e9t\u00e9
+        A Responsabilit\u00e9 Limit\u00e9e (S.A.R.L.)", "statut_jur_niv2_code": 2200,
+        "statut_jur_niv2_lib": "Organisme Priv\u00e9 \u00e0 Caract\u00e8re Commercial",
+        "statut_jur_niv1_code": 2000, "statut_jur_niv1_lib": "Organismes Priv\u00e9s",
+        "categ_code": 141, "categ_lib": "Centre de dialyse", "categ_lib_court": "Ctre.Dialyse",
+        "categ_etat": "O", "categ_niv3_code": 1203, "categ_niv3_lib": "Dialyse Ambulatoire",
+        "categ_niv2_code": 1200, "categ_niv2_lib": "Autres Etablissements Relevant
+        de la Loi Hospitali\u00e8re", "categ_niv1_code": 1000, "categ_niv1_lib": "Etablissements
+        Relevant de la Loi Hospitali\u00e8re", "categ_domaine": "Sanitaire", "esms":
+        null, "esms_capaTot_inst": ".", "esms_capaInternat_inst": ".", "esms_esh":
+        null, "esms_ash": null, "esms_pa": null, "san": null, "san_med": null, "san_chir":
+        null, "san_obs": null, "san_psy": null, "san_had": null, "san_sld": null,
+        "san_urg": null, "san_sc": null, "san_dialyse": null, "san_cancer": null,
+        "san_smr": null, "nb_scanners": ".", "nb_irm": ".", "gestion_ars": "X", "gestion_dreets":
+        null, "gestion_drihl": null, "version_nomenclature": "FINESS_Cat\u00e9gories
+        d''\u00e9tablissements_V2.6.xlsx (25/11/2024)", "tutelle": "ARS", "mft_code":
+        "07", "mft_lib": "ARH \u00e9tablissements de sant\u00e9 non financ\u00e9s
+        dotation globale", "sph_code": 0, "sph_lib": "non PSPH", "geoloc_source":
+        "BAN", "geoloc_precision": "1-Pr\u00e9cision parcelle, housenumber", "geoloc_legal_x":
+        "908642.187", "geoloc_legal_y": 6521545.083, "geoloc_legal_projection": "L93_METROPOLE",
+        "geoloc_3857_x": "632825.59", "geoloc_3857_y": 5742225.019, "geoloc_4326_long":
+        5.684769, "geoloc_4326_lat": 45.761585}], "links": {"profile": "https://tabular-api.data.gouv.fr/api/resources/796dfff7-cf54-493a-a0a7-ba3c2024c6f3/profile/",
+        "swagger": "https://tabular-api.data.gouv.fr/api/resources/796dfff7-cf54-493a-a0a7-ba3c2024c6f3/swagger/",
+        "next": null, "prev": null}, "meta": {"page": 1, "page_size": 20, "total":
+        1}}'
+  recorded_at: Tue, 02 Sep 2025 09:15:15 GMT
+recorded_with: VCR 6.3.1
