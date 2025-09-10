@@ -64,7 +64,8 @@ module Administrateurs
       # toggle activation
       if @attestation_template.persisted? && @attestation_template.activated? != cast_bool(attestation_params[:activated])
         @procedure.attestation_templates.v2.update_all(activated: attestation_params[:activated])
-        render :update && return
+        render :update
+        return
       end
 
       if @attestation_template.published? && should_edit_draft?
