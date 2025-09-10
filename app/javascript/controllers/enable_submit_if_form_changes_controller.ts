@@ -1,6 +1,6 @@
 import { ApplicationController } from './application_controller';
 
-export class NotificationFormChangesController extends ApplicationController {
+export class EnableSubmitIfFormChangesController extends ApplicationController {
   static targets = ['submitButton'];
 
   declare readonly submitButtonTarget: HTMLButtonElement;
@@ -18,12 +18,14 @@ export class NotificationFormChangesController extends ApplicationController {
 
   private formData(): string {
     const form = this.element as HTMLFormElement;
-    const inputs = form.querySelectorAll<HTMLInputElement>(
-      'input[type="radio"]:checked'
-    );
-    const entries = Array.from(inputs)
-      .map((input) => [input.name, input.value])
+    const formData = new FormData(form);
+
+    const ignoredKeys = ['authenticity_token', '_method'];
+
+    const entries = Array.from(formData.entries())
+      .filter(([key]) => !ignoredKeys.includes(key))
       .sort();
+
     return JSON.stringify(entries);
   }
 }
