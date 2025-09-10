@@ -66,16 +66,24 @@ class API::Client
       end
 
       case body
-      in Success(Hash => hash_body)
-        if !schema || schema.valid?(hash_body.deep_stringify_keys)
-          Success(OK[hash_body, response])
+      when Success
+        value = body.value!
+        case value
+        when Hash
+          if !schema || schema.valid?(value.deep_stringify_keys)
+            Success(OK[value, response])
+          else
+            Failure(Error[:schema, response.code, false, SchemaError.new(schema.validate(value))])
+          end
+        when String
+          Success(OK[value, response])
+        when Array
+          Success(OK[value, response])
         else
-          Failure(Error[:schema, response.code, false, SchemaError.new(schema.validate(hash_body))])
+          Failure(Error[:unexpected_type, response.code, false, "Unexpected body type: #{value.class}"])
         end
-      in Success(String => str_body)
-        Success(OK[str_body, response])
-      in Failure(reason)
-        Failure(Error[:json, response.code, false, reason])
+      when Failure
+        Failure(Error[:json, response.code, false, body.failure])
       end
     elsif response.timed_out?
       Failure(Error[:timeout, response.code, true, HTTPError.new(response)])
