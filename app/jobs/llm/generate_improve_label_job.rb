@@ -5,10 +5,27 @@ class LLM::GenerateImproveLabelJob < ApplicationJob
 
   def perform(suggestion)
     suggestion.update!(state: :running)
-    # TODO: integrate LLM::LabelImprover service (generate + verify + persist items)
-    # For now, mark as completed to avoid re-processing.
+    items = improve_label(suggestion.procedure_revision)
+    if items.any?
+      llm_rule_suggestion_items = items.map do |value|
+        value.merge({
+          llm_rule_suggestion_id: suggestion.id
+        })
+      end
+      LLMRuleSuggestionItem.transaction do
+        suggestion.llm_rule_suggestion_items.delete_all
+        LLMRuleSuggestionItem.insert_all!(llm_rule_suggestion_items)
+      end
+    end
     suggestion.update!(state: :completed)
-  rescue => e
-    suggestion&.update!(state: :failed, error: e.message)
+  end
+
+  def improve_label(revision)
+    service.generate_for(revision)
+  end
+
+  def service
+    @runner ||= LLM::Runner.new
+    @service ||= LLM::LabelImprover.new(runner: @runner)
   end
 end
