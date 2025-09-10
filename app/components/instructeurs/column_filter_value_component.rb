@@ -54,14 +54,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def date_filter_options
-    [
-      [t('.operators.match'), 'match'],
-      [t('.operators.before'), 'before'],
-      [t('.operators.after'), 'after'],
-      [t('.operators.this_week'), 'this_week'],
-      [t('.operators.this_month'), 'this_month'],
-      [t('.operators.this_year'), 'this_year']
-    ]
+    ['match', 'before', 'after', 'this_week', 'this_month', 'this_year']
+      .map { |operator| [t(".operators.#{operator}"), operator] }
   end
 
   def tdc_type
