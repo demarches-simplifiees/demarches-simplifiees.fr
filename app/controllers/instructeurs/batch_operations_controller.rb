@@ -66,8 +66,8 @@ module Instructeurs
       dossier_ids = batch_operation_commentaire_params[:dossier_ids]
 
       if dossier_ids&.size&.> BatchOperation::BATCH_SELECTION_LIMIT
-        flash.now[:alert] = "L’envoi d’un message groupé est limité à #{BatchOperation::BATCH_SELECTION_LIMIT} usagers. Veuillez restreindre le nombre de dossiers sélectionnés."
-        return render_redirect_and_close_modal
+        flash.alert = t('.batch_selection_limit_exceeded', limit: BatchOperation::BATCH_SELECTION_LIMIT)
+        render_redirect_and_close_modal and return
       end
 
       batch = BatchOperation.safe_create!(batch_operation_commentaire_params)
@@ -83,7 +83,7 @@ module Instructeurs
         end
 
         format.html do
-          flash[:alert] = "Le message n’a pas été envoyé aux usagers. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          flash[:alert] = t('.batch_creation_failed') if batch.blank?
           redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
         end
       end

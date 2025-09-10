@@ -1,0 +1,10 @@
+fr:
+  instructeurs:
+    batch_operations:
+      commentaire_form:
+        notice: Votre message s’ajoutera dans le fil de messagerie de chaque dossier
+        submit: Envoyer le message
+        cancel: Annuler
+      create_batch_commentaire:
+        batch_selection_limit_exceeded: L’envoi d’un message groupé est limité à %{limit} usagers. Veuillez restreindre le nombre de dossiers sélectionnés
+        batch_creation_failed: Le message n’a pas été envoyé aux usagers. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés

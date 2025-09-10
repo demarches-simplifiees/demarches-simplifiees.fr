@@ -1,4 +1,4 @@
-fr:
+en:
   operations:
     archiver: 'Archive selected files'
     desarchiver: 'Unarchive selected files'
@@ -24,3 +24,4 @@ fr:
     accepter: "Explain to users why their file is accepted (optional)"
     refuser: "Explain to users why their file is refused (mandatory)"
     classer_sans_suite: "Explain to users why their file is closed without continuation (mandatory)"
+  commentaire_warning_html: "<strong class='fr-alert__text'>Sending a group message is limited to %{limit} users.</strong><br>Please limit the number of selected users."

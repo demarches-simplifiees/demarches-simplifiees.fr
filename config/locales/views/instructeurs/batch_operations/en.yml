@@ -1,0 +1,10 @@
+en:
+  instructeurs:
+    batch_operations:
+      commentaire_form:
+        notice: Your message will be added to the message box of each folder
+        submit: Send the message
+        cancel: Cancel
+      create_batch_commentaire:
+        batch_selection_limit_exceeded: "Bulk message sending is limited to %{limit} users. Please reduce the number of selected files."
+        batch_creation_failed: "The message was not sent to users. Please verify that the requested action is possible for the selected files"

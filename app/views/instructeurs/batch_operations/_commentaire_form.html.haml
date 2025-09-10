@@ -1,7 +1,7 @@
 %turbo-frame{ id: "modal-commentaire-batch-form" }
   = render Dsfr::NoticeComponent.new(data_attributes: { class: 'fr-mb-2w' }) do |c|
     - c.with_title do
-      Votre message s’ajoutera dans le fil de messagerie de chaque dossier
+      = t('.notice')
   .fr-highlight
     %p.fr-text--sm
       %strong
@@ -28,6 +28,6 @@
     %ul.fr-btns-group.fr-btns-group--inline-md
       %li
         %button.fr-btn.fr-btn--secondary{ aria: { controls: 'modal-commentaire-batch' }, "data-fr-js-modal-button" => "true" }
-          Annuler
+          = t('.cancel')
       %li
-        = f.submit "Envoyer le message", class: 'fr-btn'
+        = f.submit t('.submit'), class: 'fr-btn'
