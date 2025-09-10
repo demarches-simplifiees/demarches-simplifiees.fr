@@ -40,10 +40,14 @@ class Columns::DossierColumn < Column
   end
 
   def filtered_ids_before_value(dossiers, values)
+    return dossiers.ids if values.first.blank?
+
     filtered_ids_for_date_range(dossiers, ..Time.zone.parse(values.first).beginning_of_day)
   end
 
   def filtered_ids_after_value(dossiers, values)
+    return dossiers.ids if values.first.blank?
+
     filtered_ids_for_date_range(dossiers, (Time.zone.parse(values.first).end_of_day..))
   end
 
