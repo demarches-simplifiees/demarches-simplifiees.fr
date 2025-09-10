@@ -200,7 +200,10 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def parent_of(tdc)
-    coordinate_for(tdc).parent_type_de_champ
+    coordinate = coordinate_for(tdc)
+    if coordinate&.child?
+      revision_types_de_champ.find { _1.id == coordinate.parent_id }&.type_de_champ
+    end
   end
 
   def dependent_conditions(tdc)
