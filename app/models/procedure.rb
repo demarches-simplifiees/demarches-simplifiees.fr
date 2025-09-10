@@ -193,7 +193,7 @@ class Procedure < ApplicationRecord
   }
 
   scope :for_api_v2, -> {
-    includes(:draft_revision, :published_revision, administrateurs: :user)
+    includes(draft_revision: { revision_types_de_champ: [:type_de_champ] }, published_revision: { revision_types_de_champ: [:type_de_champ] }, administrateurs: :user)
   }
 
   scope :order_by_position_for, -> (instructeur) {
