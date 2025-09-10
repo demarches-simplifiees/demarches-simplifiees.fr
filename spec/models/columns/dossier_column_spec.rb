@@ -145,31 +145,84 @@ describe Columns::DossierColumn do
       end
     end
 
-    context 'for a date column' do
+    context 'for a datetime column' do
       let(:procedure) { create(:procedure, for_individual: false) }
-      let!(:dossier) { travel_to(DateTime.parse("12/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
-      let!(:dossier2) { travel_to(DateTime.parse("15/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
       let(:date_column) { procedure.find_column(label: "Date de création") }
 
       subject { date_column.filtered_ids(procedure.dossiers, search_terms) }
 
       context 'when searching with before operator' do
+        let!(:dossier) { travel_to(DateTime.parse("12/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier2) { travel_to(DateTime.parse("15/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+
         let(:search_terms) { { operator: 'before', value: ["2025-02-13"] } }
 
         it { is_expected.to contain_exactly(dossier.id) }
       end
 
       context 'when searching with after operator' do
+        let!(:dossier) { travel_to(DateTime.parse("12/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier2) { travel_to(DateTime.parse("15/02/2025 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+
         let(:search_terms) { { operator: 'after', value: ["2025-02-13"] } }
 
         it { is_expected.to contain_exactly(dossier2.id) }
+
+        context "for updated_since column (special case)" do
+          let(:date_column) { procedure.find_column(label: "Dernier évènement depuis") }
+          it { is_expected.to contain_exactly(dossier2.id) }
+        end
       end
 
-      context "for updated_since column (special case)" do
-        let(:date_column) { procedure.find_column(label: "Dernier évènement depuis") }
-        let(:search_terms) { { operator: 'after', value: ["2025-02-13"] } }
+      context 'when searching with this_week operator' do
+        let(:search_terms) { { operator: 'this_week' } }
 
-        it { is_expected.to contain_exactly(dossier2.id) }
+        let!(:dossier_at_the_beginning_of_the_week) { travel_to(DateTime.parse("2025-02-03 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_at_the_end_of_the_week) { travel_to(DateTime.parse("2025-02-09 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_week_before) { travel_to(DateTime.parse("2025-02-02 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_week_after) { travel_to(DateTime.parse("2025-02-10 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+
+        before do
+          travel_to(Time.zone.parse("2025-02-08"))
+        end
+
+        it "returns dossiers from this week" do
+          expect(subject).to eq([dossier_at_the_beginning_of_the_week.id, dossier_at_the_end_of_the_week.id])
+        end
+      end
+
+      context 'when searching with this_month operator' do
+        let(:search_terms) { { operator: 'this_month' } }
+
+        let!(:dossier_at_the_beginning_of_the_month) { travel_to(DateTime.parse("2025-02-01 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_at_the_end_of_the_month) { travel_to(DateTime.parse("2025-02-28 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_month_before) { travel_to(DateTime.parse("2025-01-13 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_month_after) { travel_to(DateTime.parse("2025-03-13 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+
+        before do
+          travel_to(Time.zone.parse("2025-02-13"))
+        end
+
+        it "returns dossiers from this month" do
+          expect(subject).to eq([dossier_at_the_beginning_of_the_month.id, dossier_at_the_end_of_the_month.id])
+        end
+      end
+
+      context 'when searching with this_year operator' do
+        let(:search_terms) { { operator: 'this_year' } }
+
+        let!(:dossier_at_the_beginning_of_the_year) { travel_to(DateTime.parse("2024-01-01 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_at_the_end_of_the_year) { travel_to(DateTime.parse("2024-12-31 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_year_before) { travel_to(DateTime.parse("2023-12-31 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+        let!(:dossier_year_after) { travel_to(DateTime.parse("2025-01-01 09:19")) { create(:dossier, :en_instruction, procedure:) } }
+
+        before do
+          travel_to(Time.zone.parse("2024-02-13"))
+        end
+
+        it "returns dossiers from this year" do
+          expect(subject).to eq([dossier_at_the_beginning_of_the_year.id, dossier_at_the_end_of_the_year.id])
+        end
       end
     end
   end

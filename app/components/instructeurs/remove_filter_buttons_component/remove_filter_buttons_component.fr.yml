@@ -3,6 +3,9 @@ fr:
   operators:
     before: 'avant le'
     after: 'après le'
+    this_week: 'cette semaine'
+    this_month: 'ce mois'
+    this_year: 'cette année'
   conjunctions:
     and: ' et '
     or: ' ou '

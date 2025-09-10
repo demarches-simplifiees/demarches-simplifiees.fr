@@ -4,3 +4,6 @@ fr:
   operator_le: Le
   operator_before: Avant le
   operator_after: Après le
+  operator_this_week: Cette semaine
+  operator_this_month: Ce mois
+  operator_this_year: Cette année

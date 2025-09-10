@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Instructeurs::ColumnFilterComponent, type: :component do
-  let(:component) { described_class.new(procedure_presentation:, statut:, column:) }
+  let(:component) { described_class.new(procedure_presentation:, statut:) }
 
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
@@ -13,7 +13,6 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
   end
 
   let(:statut) { nil }
-  let(:column) { nil }
 
   before do
     allow(component).to receive(:current_instructeur).and_return(instructeur)

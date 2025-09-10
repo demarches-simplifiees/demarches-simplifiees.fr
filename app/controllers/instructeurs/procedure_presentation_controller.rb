@@ -36,7 +36,8 @@ module Instructeurs
     end
 
     def refresh_column_filter
-      @column = filtered_column_from_params.column
+      @filtered_column = filtered_column_from_params
+      @column = @filtered_column.column
       procedure = current_instructeur.procedures.find(@column.h_id[:procedure_id])
 
       if @column.groupe_instructeur?

@@ -11,15 +11,16 @@
       .fr-col-4
         = form.label "filter[filter][operator]", t('.operator'), class: 'fr-label'
         = form.select "filter[filter][operator]",
-          options_for_select(date_filter_options, selected: "le"), {}, { class: 'fr-select', data: { no_autosubmit: true } }
-      .fr-col-8
-        = form.label :value, t('.value'), class: 'fr-label'
-        = form.text_field "filter[filter][value][]",
-          id: 'value',
-          class: 'fr-input',
-          type: 'date',
-          data: { no_autosubmit: true },
-          required: true
+          options_for_select(date_filter_options, selected: "match"), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } }
+      - if is_operator_with_value?
+        .fr-col-8
+          = form.label :value, t('.value'), class: 'fr-label'
+          = form.text_field "filter[filter][value][]",
+            id: 'value',
+            class: 'fr-input',
+            type: 'date',
+            data: { no_autosubmit: true },
+            required: true
 
   - elsif selectable?
     = form.label :value, t('.value'), class: 'fr-label'
