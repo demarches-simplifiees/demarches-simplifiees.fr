@@ -7,21 +7,21 @@
       = label
 
   - elsif is_date?
-    .fr-grid-row.fr-grid-row--gutters
-      .fr-col-4
+    .flex.flex-gap-2
+      .flex.column
         
-        = form.label "filter[filter][operator]", t('.operator'), class: 'fr-label'
+        = form.label "filter[filter][operator]", edit_mode ? filtered_column&.label : t('.operator'), class: 'fr-label'
         = form.select "filter[filter][operator]",
-          options_for_select(date_filter_options, selected: filtered_column&.filter_operator || "match"), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } }
+          options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } }
       - if is_operator_with_value?
-        .fr-col-8
-          = form.label :value, t('.value'), class: 'fr-label'
+        .flex.column
+          = form.label :value, edit_mode ? t(".operators.#{operator}") : t('.value'), class: 'fr-label'
           = form.text_field "filter[filter][value][]",
             id: 'value',
             class: 'fr-input',
             type: 'date',
             value:,
-            data: { no_autosubmit: true },
+            data: { autosubmit_target: 'input' },
             required: true
 
   - elsif selectable?

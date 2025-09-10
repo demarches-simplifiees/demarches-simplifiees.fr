@@ -1,18 +1,18 @@
-- if filters.any?
-  .border-background-contrast-grey.fr-mt-2w
-    .fr-pt-2w.fr-px-2w
-      %p.mb-0.font-weight-bold= t('.search_filter_dossiers')
+#editable-filters-component.fr-mt-2w
+  .fr-pt-2w.fr-px-2w
+    %p.mb-0.font-weight-bold= t('.search_filter_dossiers')
 
-    .fr-grid-row
-      - filters.each do |filter|
-        .fr-col.fr-p-2w
-        
-          = form_with url: update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
-            method: :post,
-            data: { turbo: true, controller: 'autosubmit' } do |form|
+  .fr-grid-row
+    - filters.each do |filter|
+      .fr-col-auto.fr-p-2w.flex.column
+      
+        = form_with url: update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+          method: :post,
+          class: 'editable-filter-form flex flex-1',
+          data: { turbo: true, controller: 'autosubmit' } do |form|
 
-            = form.hidden_field "filter_key", value: filter.id
-            = form.hidden_field "filter[id]", value: filter.column.id
-            = form.hidden_field :statut, value: statut
+          = form.hidden_field "filter_key", value: filter.id
+          = form.hidden_field "filter[id]", value: filter.column.id
+          = form.hidden_field :statut, value: statut
 
-            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, edit_mode: true)
+          = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:,instructeur_procedure:, edit_mode: true)
