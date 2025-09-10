@@ -36,6 +36,10 @@ module LLM
       @logger = logger
     end
 
+    def tool_name
+      self.class::TOOL_NAME
+    end
+
     # Returns an array of hashes suitable for LlmRuleSuggestionItem creation
     # [{ rule:, op_kind:, stable_id:, payload:, safety:, justification:, confidence: }]
     def generate_for(revision)
