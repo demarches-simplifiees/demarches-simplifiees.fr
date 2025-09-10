@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class DossierNotification < ApplicationRecord
-  self.ignored_columns += ["groupe_instructeur_id"]
-
   DELAY_DOSSIER_DEPOSE = 7.days
 
   belongs_to :instructeur
