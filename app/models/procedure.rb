@@ -191,7 +191,7 @@ class Procedure < ApplicationRecord
     joins(:instructeurs_procedures)
       .select('procedures.*, instructeurs_procedures.position AS position')
       .where(instructeurs_procedures: { instructeur_id: instructeur.id })
-      .order('position DESC')
+      .order(position: :desc)
   }
 
   enum :declarative_with_state, {
@@ -650,7 +650,7 @@ class Procedure < ApplicationRecord
 
   def self.tags
     unnest = Arel::Nodes::NamedFunction.new('UNNEST', [self.arel_table[:tags]])
-    query = self.select(unnest.as('tags')).publiees.distinct.order('tags')
+    query = self.select(unnest.as('tags')).publiees.distinct.order('tags') # rubocop:disable Rails/OrderArguments
     self.connection.query(query.to_sql).flatten
   end
 
