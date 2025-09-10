@@ -551,4 +551,30 @@ RSpec.describe DossierTree, type: :model do
       end
     end
   end
+
+  describe 'sections' do
+    let(:tree) { DossierTree::Builder.procedure_tree(procedure_coordinates, procedure:) }
+
+    context 'with invalid sections order' do
+      let(:types_de_champ_public) do
+        [
+          { libelle: 'Text 0' },
+          { type: :header_section, level: 3, libelle: 'Header 1.1.1' },
+          { libelle: 'Text 1.1.1' },
+          { type: :header_section, level: 2, libelle: 'Header 1.1' },
+          { libelle: 'Text 1.1' },
+          { type: :header_section, level: 1, libelle: 'Header 1' },
+          { libelle: 'Text 1' }
+        ]
+      end
+
+      it 'should build tree' do
+        expect(tree.children.size).to eq 3
+        expect(tree.children.map(&:libelle)).to eq ["Text 0", "Header 1.1.1", "Header 1"]
+        expect(tree.children.second.children.map(&:libelle)).to eq ["Text 1.1.1", "Header 1.1"]
+        expect(tree.children.third.children.map(&:libelle)).to eq ["Text 1"]
+        expect(tree.children.second.children.second.children.map(&:libelle)).to eq ["Text 1.1"]
+      end
+    end
+  end
 end
