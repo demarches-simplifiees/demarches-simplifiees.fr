@@ -555,6 +555,42 @@ RSpec.describe DossierTree, type: :model do
   describe 'sections' do
     let(:tree) { DossierTree::Builder.procedure_tree(procedure_coordinates, procedure:) }
 
+    context 'sections in repeater' do
+      let(:types_de_champ_public) do
+        [
+          { type: :header_section, level: 1, libelle: 'Header 1' },
+          { libelle: 'Text 1' },
+          {
+            type: :repetition, libelle: 'Repetition 1', children: [
+              { type: :header_section, level: 1, libelle: 'Header R 1' },
+              { libelle: 'Text R 1' },
+              { type: :header_section, level: 2, libelle: 'Header R 1.1' },
+              { libelle: 'Text R 1.1' },
+              { type: :header_section, level: 3, libelle: 'Header R 1.1.1' },
+              { libelle: 'Text R 1.1.1' }
+            ]
+          }
+        ]
+      end
+
+      let(:repeater_children) { tree.children.first.children.second.rows.first.children }
+      let(:repeater_section_1_children) { repeater_children.first.children }
+      let(:repeater_section_1_1_children) { repeater_section_1_children.second.children }
+      let(:repeater_section_1_1_1_children) { repeater_section_1_1_children.second.children }
+
+      it 'should build tree' do
+        expect(tree.children.size).to eq 1
+        expect(tree.children.map(&:row?)).to eq [false]
+        expect(tree.children.first.children.map(&:row?)).to eq [false, false]
+        expect(repeater_section_1_children.map(&:libelle)).to eq ["Text R 1", "Header R 1.1"]
+        expect(repeater_section_1_children.map(&:row?)).to eq [true, true]
+        expect(repeater_section_1_1_children.map(&:libelle)).to eq ["Text R 1.1", "Header R 1.1.1"]
+        expect(repeater_section_1_1_children.map(&:row?)).to eq [true, true]
+        expect(repeater_section_1_1_1_children.map(&:libelle)).to eq ["Text R 1.1.1"]
+        expect(repeater_section_1_1_1_children.map(&:row?)).to eq [true]
+      end
+    end
+
     context 'with invalid sections order' do
       let(:types_de_champ_public) do
         [
