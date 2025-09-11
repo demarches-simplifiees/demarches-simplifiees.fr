@@ -161,7 +161,8 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
       it 'removes the filter' do
         subject
 
-        expect(response).to redirect_to(instructeur_procedure_url(procedure))
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('<turbo-stream action="refresh">')
 
         expect(procedure_presentation.reload.tous_filters).to eq([])
       end
