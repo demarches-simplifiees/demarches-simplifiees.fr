@@ -725,12 +725,12 @@ describe Instructeurs::DossiersController, type: :controller do
     subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
     it { expect(subject).to have_http_status(:ok) }
 
-    context "when the usager had sent a message" do
+    context "when message notifications exists" do
       let!(:other_instructeur) { create(:instructeur) }
       let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :message) }
       let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :message) }
 
-      it "destroy message notification only for the current_instructeur" do
+      it "destroys notification only for the current_instructeur" do
         subject
 
         expect(
@@ -804,24 +804,37 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
-    context "when there are others instructeurs followers" do
+    context "when there are others instructeurs" do
       let(:another_instructeur) { create(:instructeur) }
       let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
+      let(:dossier) { create(:dossier, :en_construction, groupe_instructeur:, procedure:) }
 
-      before do
-        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-        instructeur.followed_dossiers << dossier
-        another_instructeur.followed_dossiers << dossier
-        subject
+      context "when others instructeurs are followers" do
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur: another_instructeur, procedure:, display_message_notifications: 'none') }
+
+        before do
+          another_instructeur.followed_dossiers << dossier
+        end
+
+        it "creates message notification only for instructeurs who have a 'followed' or 'all' preference" do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
       end
 
-      it "create message notification only for others instructeurs follower" do
-        expect(DossierNotification.count).to eq(1)
+      context "when others instructeurs are not followers" do
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur: another_instructeur, procedure:, display_message_notifications: 'all') }
 
-        notification = DossierNotification.last
-        expect(notification.dossier_id).to eq(dossier.id)
-        expect(notification.instructeur_id).to eq(another_instructeur.id)
-        expect(notification.notification_type).to eq("message")
+        it "creates message notification only for instructeurs who have an 'all' preference" do
+          subject
+          expect(DossierNotification.count).to eq(1)
+
+          notification = DossierNotification.last
+          expect(notification.dossier_id).to eq(dossier.id)
+          expect(notification.instructeur_id).to eq(another_instructeur.id)
+          expect(notification.notification_type).to eq("message")
+        end
       end
     end
   end
@@ -1040,12 +1053,12 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
-    context "when the dossier has been modified by the usager" do
+    context "when dossier_modifie notifications exist" do
       let!(:other_instructeur) { create(:instructeur) }
       let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_modifie) }
       let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :dossier_modifie) }
 
-      it "destroy dossier_modifie notification only for the current_instructeur" do
+      it "destroys notification only for the current_instructeur" do
         get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
 
         expect(
@@ -1349,8 +1362,9 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
-    context "when there are others instructeurs followers" do
-      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
+    context "when there are others instructeurs" do
+      let(:instructeurs) { [instructeur, another_instructeur] }
+      let!(:other_instructeur_procedure) { create(:instructeurs_procedure, instructeur: another_instructeur, procedure:, display_annotation_instructeur_notifications: 'all') }
       let(:params) do
         {
           procedure_id: procedure.id,
@@ -1366,16 +1380,14 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       before do
-        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
         instructeur.followed_dossiers << dossier
-        another_instructeur.followed_dossiers << dossier
         patch :update_annotations, params: params, format: :turbo_stream
       end
 
-      it "create annotation_instructeur notification only for others instructeurs follower" do
+      it "create annotation_instructeur notification only for others instructeurs whish to be notified" do
         expect(DossierNotification.count).to eq(1)
 
-        notification = DossierNotification.last
+        notification = DossierNotification.first
         expect(notification.dossier_id).to eq(dossier.id)
         expect(notification.instructeur_id).to eq(another_instructeur.id)
         expect(notification.notification_type).to eq("annotation_instructeur")
@@ -1384,12 +1396,12 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe "#annotations_privees" do
-    context "when the dossier has an annotation_instructeur notification" do
+    context "when annotation_instructeur notifications exist" do
       let!(:other_instructeur) { create(:instructeur) }
       let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :annotation_instructeur) }
       let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :annotation_instructeur) }
 
-      it "destroy annotation_instructeur notification only for the current_instructeur" do
+      it "destroys notification only for the current_instructeur" do
         get :annotations_privees, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
 
         expect(
@@ -1404,12 +1416,12 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe "#avis" do
-    context "when the dossier has an avis_externe notification" do
+    context "when avis_externe notifications exist" do
       let!(:other_instructeur) { create(:instructeur) }
       let!(:notification_current_instructeur) { create(:dossier_notification, dossier:, instructeur:, notification_type: :avis_externe) }
       let!(:notification_other_instructeur) { create(:dossier_notification, dossier:, instructeur: other_instructeur, notification_type: :avis_externe) }
 
-      it "destroy avis_externe notification only for the current_instructeur" do
+      it "destroys notification only for the current_instructeur" do
         get :avis, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'suivis' }
 
         expect(

@@ -333,7 +333,7 @@ describe Experts::AvisController, type: :controller do
         end
       end
 
-      context "when there are instructeurs followers" do
+      context "when there are instructeurs wish to be notified" do
         let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, another_instructeur]) }
 
         before do
@@ -341,7 +341,7 @@ describe Experts::AvisController, type: :controller do
           instructeur.followed_dossiers << dossier
         end
 
-        it "create avis_externe notification only for instructeur follower" do
+        it "create avis_externe notification" do
           expect { subject }.to change(DossierNotification, :count).by(1)
 
           notification = DossierNotification.last
