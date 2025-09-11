@@ -129,6 +129,8 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def filter_type_champ(type_champ)
+    return false if type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
+
     case type_champ
     when TypeDeChamp.type_champs.fetch(:number)
       has_legacy_number?
@@ -142,6 +144,18 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       procedure.mesri_enabled?
     else
       true
+    end
+  end
+
+  def format_families_for_select
+    return [] if !defined?(FORMAT_FAMILIES)
+
+    FORMAT_FAMILIES.keys.map do |key|
+      [
+        key,
+        I18n.t("activerecord.attributes.type_de_champ.format_families.#{key}", default: key.to_s.humanize),
+        (defined?(FORMAT_FAMILY_EXAMPLES) && FORMAT_FAMILY_EXAMPLES[key])
+      ]
     end
   end
 

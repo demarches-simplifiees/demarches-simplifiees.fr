@@ -18,3 +18,24 @@ en:
     labels:
       simple: Simple mode
       advanced: Advanced mode
+  identity_notice:
+    title: "File analysis"
+    desc_html: "The file uploaded by the user will be automatically analyzed to extract and display to the instructor identity information, for example: <strong>Gender, First name(s), Birth name, Birth date, Birth place, Nationality, Issue date, Expiry date, Document number</strong>."
+  identity_formats:
+    title: "ACCEPTED FORMATS"
+    desc_html: "The user may upload an identity card (front side only), passport, residence permit or another identity document."
+    rule_html: "Accepted formats for this document are: <strong>image / scan</strong> (<strong>.jpg, .jpeg, .png</strong>) <strong>with a 20 MB maximum size.</strong>"
+  identity_deletion:
+    title: "ATTACHMENT DELETION"
+    desc_html: "As part of GDPR, the identity document will be <strong>watermarked</strong> and <strong>automatically deleted once the file is processed</strong> (accepted, refused or closed)."
+    note_html: "Note: the identity document will not be available in dossier ZIP exports nor downloadable via API."
+  rib_notice:
+    desc_html: "The file uploaded by the user will be automatically analyzed to extract and display to the instructor the following information: <strong>Account holder name, Account holder address</strong> (if present on the file), <strong>IBAN, BIC code, Bank name</strong>."
+  rib_formats:
+    title: "ACCEPTED FORMATS"
+    desc_html: "Accepted formats for this document are: <strong>text document</strong> (.pdf, .doc, .docx, .odt, .txt) and <strong>image / scan</strong> (.jpg, .jpeg, .png)."
+  limit_formats_label: "Limit to specific file formats"
+  auto_purge_label: "Automatically delete the file after dossier processing"
+  template_label: "Template file proposed to the user"
+  families_legend: "ACCEPTED FORMAT(S)"
+  tooltip_examples: "Examples: %{examples}"
