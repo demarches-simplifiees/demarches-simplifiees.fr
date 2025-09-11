@@ -36,7 +36,8 @@ const ComboBoxPropsSchema = s.partial(
     items: s.union([s.array(Item), ArrayOfStrings, ArrayOfTuples]),
     formValue: s.enums(['text', 'key']),
     form: s.string(),
-    data: s.record(s.string(), s.string())
+    data: s.record(s.string(), s.string()),
+    hasLabelClassFrLabel: s.boolean()
   })
 );
 export const SingleComboBoxProps = s.assign(

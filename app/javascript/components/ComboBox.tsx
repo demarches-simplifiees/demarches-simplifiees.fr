@@ -47,11 +47,13 @@ export function ComboBox({
   isLoading,
   isOpen,
   placeholder,
+  hasLabelClassFrLabel = true,
   ...props
 }: ComboBoxProps & {
   inputRef?: RefObject<HTMLInputElement | null>;
   isOpen?: boolean;
   placeholder?: string;
+  hasLabelClassFrLabel?: boolean;
 }) {
   return (
     <AriaComboBox
@@ -60,7 +62,7 @@ export function ComboBox({
       shouldFocusWrap={true}
     >
       {label ? (
-        <Label className="fr-label">
+        <Label className={hasLabelClassFrLabel ? 'fr-label' : ''}>
           {label}
           {description ? (
             <Text slot="description" className="fr-hint-text fr-mb-1w">
@@ -332,7 +334,7 @@ export function MultiGroupComboBox(maybeProps: MultiGroupComboBoxProps) {
         ))}
       </ComboBox>
       {secondaryLabel ? (
-        <Label className="fr-label">{secondaryLabel}</Label>
+        <Label className="fr-mt-2w">{secondaryLabel}</Label>
       ) : null
       }
       {selectedItems.length > 0 ? (
