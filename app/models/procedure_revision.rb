@@ -447,6 +447,27 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.nature,
           to_type_de_champ.nature)
       end
+
+      if !(to_type_de_champ.titre_identite_nature? || from_type_de_champ.titre_identite_nature? || to_type_de_champ.rib_nature? || from_type_de_champ.rib_nature?)
+        if from_type_de_champ.pj_limit_formats != to_type_de_champ.pj_limit_formats
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :pj_limit_formats,
+            from_type_de_champ.pj_limit_formats,
+            to_type_de_champ.pj_limit_formats)
+        end
+        if Array.wrap(from_type_de_champ.pj_format_families) != Array.wrap(to_type_de_champ.pj_format_families)
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :pj_format_families,
+            from_type_de_champ.pj_format_families,
+            to_type_de_champ.pj_format_families)
+        end
+        if from_type_de_champ.pj_auto_purge != to_type_de_champ.pj_auto_purge
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :pj_auto_purge,
+            from_type_de_champ.pj_auto_purge,
+            to_type_de_champ.pj_auto_purge)
+        end
+      end
     elsif to_type_de_champ.explication?
       if from_type_de_champ.checksum_for_attachment(:notice_explicative) != to_type_de_champ.checksum_for_attachment(:notice_explicative)
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,

@@ -46,7 +46,16 @@
           = t(".#{prefix}.update_piece_justificative_template", label: change.label)
       - when :nature
         - list.with_item do
-          = t(".#{prefix}.update_nature", label: change.label, to: change.to)
+          = t(".#{prefix}.update_nature", label: change.label, to: t("activerecord.attributes.type_de_champ.natures.#{change.to}", default: change.to))
+      - when :pj_limit_formats
+        - list.with_item do
+          = t(".#{prefix}.update_pj_limit_formats", label: change.label)
+      - when :pj_format_families
+        - list.with_item do
+          = t(".#{prefix}.update_pj_format_families", label: change.label)
+      - when :pj_auto_purge
+        - list.with_item do
+          = t(".#{prefix}.update_pj_auto_purge", label: change.label)
       - when :notice_explicative
         - list.with_item do
           = t(".#{prefix}.update_notice_explicative", label: change.label)
