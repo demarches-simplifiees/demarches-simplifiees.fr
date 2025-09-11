@@ -38,7 +38,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 327,
+          "line": 336,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -74,7 +74,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/columns/json_path_column.rb",
-      "line": 38,
+      "line": 32,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath} ? (@ like_regex \\\"#{quote_string(search_terms.join(\"|\"))}\\\" flag \\\"i\\\")'\")",
       "render_path": null,
@@ -166,7 +166,7 @@
       "check_name": "EOLRails",
       "message": "Support for Rails 7.1.5.2 ends on 2025-10-01",
       "file": "Gemfile.lock",
-      "line": 632,
+      "line": 642,
       "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
       "code": null,
       "render_path": null,
@@ -238,6 +238,40 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "b270328e93526e345fa8522a94482f0c8065f0126efa56c7a648c5db6aa1de7d",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/instructeurs/procedures/show.html.haml",
+      "line": 71,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "::Haml::AttributeBuilder.build_id(true, dom_id(BatchOperation.new, :checkbox_all))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Instructeurs::ProceduresController",
+          "method": "show",
+          "line": 180,
+          "file": "app/controllers/instructeurs/procedures_controller.rb",
+          "rendered": {
+            "name": "instructeurs/procedures/show",
+            "file": "app/views/instructeurs/procedures/show.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "instructeurs/procedures/show"
+      },
+      "user_input": "BatchOperation.new",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "c97049798ff05438dcca6f3ee1a714f2336041837411ab001a7e3caf1bfb75c8",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
@@ -297,7 +331,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 35,
+      "line": 46,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"unaccent(#{DossierFilterService.sanitized_column(table, column)}) ILIKE ANY (ARRAY((SELECT unaccent(unnest(ARRAY[?])))))\", search_terms.map(&:strip).map do\n \"%#{sanitize_sql_like(_1)}%\"\n end)",
       "render_path": null,
@@ -314,5 +348,5 @@
       "note": "The table and column are escaped, which should make this safe"
     }
   ],
-  "brakeman_version": "7.0.0"
+  "brakeman_version": "7.1.0"
 }
