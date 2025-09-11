@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe Instructeurs::ColumnFilterComponent, type: :component do
-  let(:component) { described_class.new(procedure_presentation:, statut:) }
-
+  let(:component) { described_class.new(procedure_presentation:, statut:, instructeur_procedure:) }
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
+  let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }
   let(:procedure_id) { procedure.id }
   let(:procedure_presentation) do
     groupe_instructeur = procedure.defaut_groupe_instructeur

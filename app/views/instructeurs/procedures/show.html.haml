@@ -1,3 +1,9 @@
+= render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-notice-name" => "instr-personnalisation-notifications" }) do |c|
+  - c.with_title do
+    NOUVEAUTÉ – Vous pouvez maintenant personnaliser l'affichage de vos badges de notifications.
+  - c.with_link do
+    = link_to "Personnaliser l'affichage dès maintenant !", notification_preferences_instructeur_procedure_path(@procedure, tab: :badge), class: "fr-notice__link"
+
 - content_for(:title, "#{@procedure.libelle}")
 
 #procedure-show
@@ -26,7 +32,7 @@
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
     .flex
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-        = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation }
+        = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure }
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       = render Instructeurs::RemoveFilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)

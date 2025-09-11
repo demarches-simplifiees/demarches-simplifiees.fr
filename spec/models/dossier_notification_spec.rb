@@ -20,7 +20,7 @@ RSpec.describe DossierNotification, type: :model do
     let(:notification_args) { {} }
 
     context 'dossier_depose notification' do
-      let(:procedure) { create(:procedure, sva_svr: {}, declarative_with_state: nil) }
+      let(:procedure) { create(:procedure) }
       let(:instructeur) { create(:instructeur) }
       let(:groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur]) }
       let!(:dossier) { create(:dossier, groupe_instructeur:, depose_at: Time.zone.now, procedure:) }
@@ -36,63 +36,193 @@ RSpec.describe DossierNotification, type: :model do
         expect(notification.notification_type).to eq('dossier_depose')
         expect(notification.display_at.to_date).to eq(dossier.depose_at.to_date + DossierNotification::DELAY_DOSSIER_DEPOSE)
       end
-
-      it 'does not create notification when procedure is sva/svr' do
-        procedure.update!(sva_svr: { 'decision' => 'sva' })
-        dossier.procedure.reload
-        subject
-
-        expect(DossierNotification.count).to eq(0)
-      end
-
-      it 'does not create notification when procedure is declarative' do
-        procedure.update!(declarative_with_state: "accepte")
-        dossier.procedure.reload
-        subject
-
-        expect(DossierNotification.count).to eq(0)
-      end
     end
 
     context "message notification" do
-      let!(:dossier) { create(:dossier) }
-      let(:instructeur_follower) { create(:instructeur) }
-      let(:other_instructeur_follower) { create(:instructeur) }
-      let(:instructeur_not_follower) { create(:instructeur) }
-      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, other_instructeur_follower, instructeur_not_follower]) }
-      let!(:notification_type) { :message }
-
-      before do
-        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-        instructeur_follower.followed_dossiers << dossier
-        other_instructeur_follower.followed_dossiers << dossier
-      end
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, groupe_instructeur:, procedure:) }
+      let(:instructeur) { create(:instructeur) }
+      let(:other_instructeur) { create(:instructeur) }
+      let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_message_notifications: 'all') }
+      let!(:other_instructeur_procedure) { create(:instructeurs_procedure, instructeur: other_instructeur, procedure:, display_message_notifications: 'all') }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur]) }
+      let(:notification_type) { :message }
 
       context "when user or expert send a message" do
-        it "create notification for instructeurs followers" do
+        it "create notification for instructeurs" do
           subject
 
           expect(DossierNotification.count).to eq(2)
 
           notifications = DossierNotification.where(dossier:, notification_type: :message)
 
-          expect(notifications.map(&:instructeur_id)).to match_array([instructeur_follower.id, other_instructeur_follower.id])
+          expect(notifications.map(&:instructeur_id)).to match_array([instructeur.id, other_instructeur.id])
         end
       end
 
       context "when instructeur send a message" do
-        let!(:notification_args) { { except_instructeur: instructeur_follower } }
+        let!(:notification_args) { { except_instructeur: instructeur } }
 
-        it "create notification for instructeurs followers, except instructeur sender" do
+        it "create notification for instructeurs, except instructeur sender" do
           subject
 
           expect(DossierNotification.count).to eq(1)
+          expect(DossierNotification.first.instructeur).to eq(other_instructeur)
+        end
+      end
+    end
 
-          notification = DossierNotification.first
-          expect(notification.dossier).to eq(dossier)
-          expect(notification.instructeur).to eq(other_instructeur_follower)
-          expect(notification.notification_type).to eq('message')
-          expect(DossierNotification.to_display).to include(notification)
+    context "when the instructeur has default notification preferences" do
+      let(:procedure) { create(:procedure) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure:) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:dossier) { create(:dossier, groupe_instructeur:) }
+      let!(:notification_type) { :dossier_modifie }
+
+      context "when the instructeur follow the dossier" do
+        it 'create notification' do
+          instructeur.followed_dossiers << dossier
+          subject
+
+          expect(DossierNotification.count).to eq(1)
+        end
+      end
+
+      context "when the instructeur does not follow the dossier" do
+        it 'does not create notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+    end
+
+    context "when the instructeur has notification preferences" do
+      let(:procedure) { create(:procedure) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure:) }
+      let(:instructeur) { create(:instructeur) }
+      let(:dossier) { create(:dossier, groupe_instructeur:, procedure:) }
+      let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }
+      let!(:notification_type) { :dossier_modifie }
+
+      context "when the instructeur never wants notifications" do
+        before do
+          instructeur.followed_dossiers << dossier
+          instructeur_procedure.update!(display_dossier_modifie_notifications: 'none')
+        end
+
+        it 'does not create notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+
+      context "when the instructeur wants notifications on followed dossiers" do
+        before { instructeur_procedure.update!(display_dossier_modifie_notifications: 'followed') }
+
+        it 'does not create notification if he is not following dossier' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
+
+        it 'create notification if he is following dossier' do
+          instructeur.followed_dossiers << dossier
+          subject
+
+          expect(DossierNotification.count).to eq(1)
+        end
+      end
+
+      context "when the instructeur wants notifications even if he is not following the dossier" do
+        before { instructeur_procedure.update!(display_dossier_modifie_notifications: 'all') }
+
+        it 'create notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(1)
+        end
+      end
+    end
+  end
+
+  describe 'refresh_notifications_instructeur_for_followed_dossier' do
+    subject { DossierNotification.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier_to_notify) }
+
+    let(:dossier_to_notify) { create(:dossier, :en_construction, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+    let(:instructeur) { create(:instructeur) }
+
+    context 'when the instructeur has default preferences for badge notification' do
+      it "create notification" do
+        subject
+
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.first
+        expect(notification.notification_type).to eq('dossier_modifie')
+      end
+    end
+
+    context "when the instructeur never wants notifications" do
+      let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier_to_notify.procedure.id) }
+
+      before { instructeur_procedure.update!(display_dossier_modifie_notifications: 'none') }
+
+      it 'does not create notification' do
+        expect { subject }.not_to change { DossierNotification.count }
+      end
+    end
+
+    context "when the instructeur wants notifications on followed dossiers" do
+      let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier_to_notify.procedure.id) }
+
+      before { instructeur_procedure.update!(display_dossier_modifie_notifications: 'followed') }
+
+      it 'create notification' do
+        subject
+
+        expect(DossierNotification.count).to eq(1)
+
+        notification = DossierNotification.first
+        expect(notification.notification_type).to eq('dossier_modifie')
+      end
+    end
+  end
+
+  describe '.destroy_notifications' do
+    context 'when instructeur unfollow a dossier' do
+      subject { DossierNotification.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier) }
+
+      let(:dossier) { create(:dossier) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:message_notification) { create(:dossier_notification, instructeur:, dossier:, notification_type: :message) }
+
+      context 'when the instructeur has default preferences for badge notification' do
+        it 'destroys notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+
+      context 'when the instructeur wants notifications even if he is not following the dossier' do
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier.procedure.id) }
+
+        before { instructeur_procedure.update!(display_message_notifications: 'all') }
+
+        it 'does not destroy notification' do
+          expect { subject }.not_to change { DossierNotification.count }
+        end
+      end
+
+      context 'when the instructeur wants notifications on followed dossiers' do
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure_id: dossier.procedure.id, display_message_notifications: 'followed') }
+
+        it 'destroys notification' do
+          subject
+
+          expect(DossierNotification.count).to eq(0)
         end
       end
     end
@@ -176,6 +306,7 @@ RSpec.describe DossierNotification, type: :model do
 
       it do
         is_expected.to eq({
+          a_suivre: false,
           suivis: true,
           traites: true
         })
@@ -193,10 +324,27 @@ RSpec.describe DossierNotification, type: :model do
 
       it do
         is_expected.to eq({
+          a_suivre: [],
           suivis: [procedure.id],
           traites: [procedure.id]
         })
       end
+    end
+  end
+
+  describe '.refresh_notifications_instructeur_for_dossiers_and_type' do
+    let(:dossier) { create(:dossier, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+    let(:dossier_with_notification) { create(:dossier, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+    let(:dossiers) { [dossier, dossier_with_notification] }
+    let(:instructeur) { create(:instructeur) }
+    let!(:notification) { create(:dossier_notification, dossier: dossier_with_notification, instructeur:, notification_type: :dossier_modifie) }
+
+    subject { DossierNotification.refresh_notifications_instructeur_for_dossiers_and_type(dossiers, :dossier_modifie, instructeur.id) }
+
+    it 'inserts notifications and ignore those already present in the database' do
+      subject
+
+      expect(DossierNotification.count).to eq(2)
     end
   end
 end

@@ -1,0 +1,36 @@
+= render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-3w') do |c|
+  - c.with_body do
+    %p
+      = t('.subtitle').html_safe
+
+= form_for instructeur_procedure, url: update_badge_notifications_instructeur_procedure_path(procedure), html: { class: 'form', data: { controller: 'enable-submit-if-form-changes', action: 'change->enable-submit-if-form-changes#onFormChange' } } do |form|
+  - DossierNotification.notification_types.values.each do |notification_type|
+    - if notification_type == DossierNotification.notification_types.fetch(:dossier_depose)
+      = render Dsfr::RadioButtonListComponent.new(form: form,
+        target: :display_dossier_depose_notifications,
+        buttons: [{ label: t('.label.positive'),
+          value: 'all'},
+          { label: t('.label.negative'),
+          value: 'none' }],
+        inline: true,
+        regular_legend: false) do
+        .fr-mb-1w= tag_notification('dossier_depose')
+        = t(".legend_content.dossier_depose", days: DossierNotification::DELAY_DOSSIER_DEPOSE.in_days.to_i)
+
+    - else
+      = render Dsfr::RadioButtonListComponent.new(form: form,
+        target: "display_#{notification_type}_notifications".to_sym,
+        buttons: [{ label: t('.label.all'),
+          value: 'all'},
+          { label: t('.label.followed'),
+          value: 'followed' },
+          { label: t('.label.never'),
+          value: 'none' }],
+        inline: true,
+        regular_legend: false) do
+        .fr-mb-1w= tag_notification(notification_type)
+        = t(".legend_content.#{notification_type}")
+
+  %ul.fr-btns-group.fr-btns-group--inline
+    %li= link_to t('instructeurs.procedures.notification_preferences.buttons.cancel'), instructeur_procedure_path(procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w'
+    %li= form.submit t('instructeurs.procedures.notification_preferences.buttons.save'), class: "fr-btn", data: { 'enable-submit-if-form-changes-target': 'submitButton' }, disabled: true

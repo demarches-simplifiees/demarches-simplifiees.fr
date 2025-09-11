@@ -747,37 +747,59 @@ describe Dossier, type: :model do
     end
 
     context "when the groupe instructeur change" do
-      let(:previous_instructeur) { create(:instructeur) }
-      let(:previous_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure, instructeurs: [previous_instructeur]) }
+      let(:procedure) { create(:procedure) }
+      let(:instructeur) { create(:instructeur) }
+      let(:new_instructeur) { create(:instructeur) }
+      let(:previous_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur]) }
+      let(:dossier) { create(:dossier, :en_construction, groupe_instructeur: previous_groupe_instructeur, procedure:) }
 
-      before do
-        dossier.assign_to_groupe_instructeur(previous_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-      end
+      context "when an instructeur of the previous groupe is not is the new groupe" do
+        let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [new_instructeur]) }
 
-      context "when the dossier has never been followed" do
-        it "destroy dossier_depose notifications of instructeurs of old groupe and creates new ones for instructeurs of the new groupe" do
-          previous_notification = DossierNotification.first
-          expect(previous_notification.instructeur_id).to eq(previous_instructeur.id)
+        context "when this instructeur has notifications on the dossier" do
+          let!(:notification) { create(:dossier_notification, dossier:, instructeur:) }
 
-          dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-
-          expect(DossierNotification.count).to eq(1)
-          expect(DossierNotification.all).not_to include(previous_notification)
-
-          notification = DossierNotification.first
-          expect(notification.notification_type).to eq('dossier_depose')
-          expect(notification.instructeur_id).to eq(new_instructeur.id)
+          it "destroys all of its notifications" do
+            dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+            expect(DossierNotification.all).not_to include(notification)
+          end
         end
       end
 
-      context "when the dossier is followed by an instructeur who is in the old and the new groupe" do
-        it "does not create dossier_depose notification for instructeurs of the new groupe" do
-          expect(DossierNotification.count).to eq(1)
-          previous_instructeur.follow(dossier)
-          expect(DossierNotification.count).to eq(0)
-          new_groupe_instructeur.add(previous_instructeur)
+      context "when an instructeur is in both the previous groupe and the new groupe" do
+        let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur, new_instructeur]) }
+
+        context "when this instructeur has notifications on the dossier" do
+          let!(:notification) { create(:dossier_notification, dossier:, instructeur:) }
+
+          it "does not destroy its notifications" do
+            dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+            expect(DossierNotification.all).to include(notification)
+          end
+        end
+
+        context "when this instructeur has already had a previous notification" do
+          let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_dossier_modifie_notifications: 'all') }
+
+          before { dossier.update!(last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+
+          it "does not refresh a previous notification" do
+            dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+            expect(DossierNotification.where(instructeur:, dossier:, notification_type: :dossier_modifie)).to be_empty
+          end
+        end
+      end
+
+      context "when an instructeur of the new groupe is not is the previous groupe" do
+        let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [new_instructeur]) }
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur: new_instructeur, procedure:, display_dossier_modifie_notifications: 'followed') }
+
+        before { dossier.update!(last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
+
+        it "refreshes notifications for which the new instructeur has an 'all' preference" do
           dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-          expect(DossierNotification.count).to eq(0)
+          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_modifie)).to be_empty
+          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_depose)).to be_present
         end
       end
     end

@@ -91,6 +91,7 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
 
     let(:procedure) { create(:procedure, :routee) }
     let(:instructeur) { create(:instructeur) }
+    let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }
     let(:column) { procedure.find_column(label: "Groupe instructeur") }
 
     let(:procedure_presentation) do
