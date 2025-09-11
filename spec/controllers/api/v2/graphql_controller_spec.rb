@@ -520,7 +520,7 @@ describe API::V2::GraphqlController do
             },
             revision: {
               id: dossier.revision.to_typed_id,
-              champDescriptors: dossier.types_de_champ_public.map do |tdc|
+              champDescriptors: dossier.types_de_champ.map do |tdc|
                 {
                   type: tdc.type_champ
                 }

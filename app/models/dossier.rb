@@ -138,8 +138,8 @@ class Dossier < ApplicationRecord
 
   has_one :procedure, through: :revision
   has_one :attestation_template, through: :procedure
-
-  delegate :types_de_champ_public, :types_de_champ_private, to: :revision
+  has_many :types_de_champ, through: :revision, source: :types_de_champ_public
+  has_many :types_de_champ_private, through: :revision
 
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
@@ -439,6 +439,10 @@ class Dossier < ApplicationRecord
   validates :mandataire_first_name, presence: true, if: :for_tiers?
   validates :mandataire_last_name, presence: true, if: :for_tiers?
   validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
+
+  def types_de_champ_public
+    types_de_champ
+  end
 
   def self.downloadable_sorted_batch
     DossierPreloader.new(includes(
