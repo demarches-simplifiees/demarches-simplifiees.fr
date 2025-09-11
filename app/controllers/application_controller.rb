@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   before_action :set_customizable_view_path
 
   around_action :switch_locale
+  around_action :count_db_queries
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
     :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale, :current_expert_not_instructeur?,
@@ -265,7 +266,8 @@ class ApplicationController < ActionController::Base
       user_id: current_user&.id,
       user_roles: current_user_roles,
       client_ip: request.headers['X-Forwarded-For'],
-      request_id: Current.request_id
+      request_id: Current.request_id,
+      db_queries_count: Current.db_queries_count || 0
     })
 
     if browser.known?
@@ -422,5 +424,12 @@ class ApplicationController < ActionController::Base
 
   def cast_bool(value)
     ActiveRecord::Type::Boolean.new.deserialize(value)
+  end
+
+  def count_db_queries
+    Current.db_queries_count = 0
+    ActiveSupport::Notifications.subscribed(-> (*_args) { Current.db_queries_count += 1 }, "sql.active_record") do
+      yield
+    end
   end
 end

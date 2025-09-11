@@ -137,6 +137,7 @@ describe API::V2::GraphqlController do
           gql_data
           expect(@rs[:user_id]).to eq(admin.user.id)
           expect(@rs[:user_roles]).to eq("User, Instructeur, Administrateur")
+          expect(@rs[:db_queries_count]).to be_between(1, 50)
         end
       end
 
