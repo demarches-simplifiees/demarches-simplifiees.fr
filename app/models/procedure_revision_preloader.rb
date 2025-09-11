@@ -24,7 +24,7 @@ class ProcedureRevisionPreloader
     revisions_by_id = revisions.index_by(&:id)
     coordinates_by_revision_id = ProcedureRevisionTypeDeChamp
       .where(revision_id: revisions.map(&:id))
-      .includes(type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob })
+      .includes(parent: [], type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob })
       .order(:position, :id)
       .to_a
       .group_by(&:revision_id)
