@@ -30,6 +30,7 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
         filter: { id: filter.column.id, filter: filter.filter },
         statut: @statut
       }.compact,
+      form: { data: { turbo: true } },
       form_class: 'inline'
     ) do
       button_content(filter)
