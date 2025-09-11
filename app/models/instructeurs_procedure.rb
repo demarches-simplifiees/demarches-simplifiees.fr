@@ -49,6 +49,10 @@ class InstructeursProcedure < ApplicationRecord
     end
   end
 
+  def notification_preference_for(notification_type)
+    self.public_send(NOTIFICATION_COLUMNS[notification_type])
+  end
+
   def refresh_notifications(groupe_instructeur_ids, old_preferences, new_preferences)
     return if old_preferences == new_preferences
 
