@@ -356,11 +356,12 @@ module DossierStateConcern
     remove_not_visible_or_empty_champs!
     # TODO remove when all forks are gone
     editing_forks.each(&:destroy_editing_fork!)
-  end
+ end
 
   def clean_champs_after_instruction!
     remove_discarded_rows!
     remove_titres_identite!
+    remove_auto_purged_piece_justificatives!
   end
 
   private
@@ -403,5 +404,17 @@ module DossierStateConcern
 
     return if champ_to_remove_ids.empty?
     champs.where(id: champ_to_remove_ids).destroy_all
+  end
+
+  def remove_auto_purged_piece_justificatives!
+    champs_to_purge = filled_champs.filter do |champ|
+      champ.piece_justificative? && champ.type_de_champ.pj_auto_purge?
+    end
+
+    return if champs_to_purge.empty?
+
+    champs_to_purge.each do |champ|
+      champ.piece_justificative_file.attachments.each(&:purge_later)
+    end
   end
 end
