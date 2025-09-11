@@ -35,7 +35,7 @@ fr:
           integer_number: 'Nombre entier'
           date: 'Date'
           datetime: 'Date et Heure'
-          piece_justificative: 'Pièce justificative'
+          piece_justificative: 'Pièce à joindre'
           titre_identite: 'Titre identité'
           checkbox: 'Case à cocher seule'
           checkbox_true: 'coché'
@@ -72,6 +72,26 @@ fr:
           rna: Numéro RNA
           rnf: Numéro RNF
         not_filled: Non renseigné
+        format_families:
+          document_texte: "Document texte"
+          tableur: "Tableur"
+          presentation: "Présentation"
+          donnees: "Données"
+          image_scan: "Image / scan"
+          audio: "Audio"
+          video: "Vidéo"
+          archive: "Archive compressée"
+        natures:
+          NON_SPECIFIE: "Non spécifié"
+          TITRE_IDENTITE: "Titre d’identité"
+          RIB: "Relevé d’identité bancaire (RIB)"
+          JUSTIFICATIF_DOMICILE: "Justificatif de domicile"
+          LIVRET_DE_FAMILLE: "Livret de famille"
+          ATTESTATION: "Attestation"
+          AVIS_IMPOSITION: "Avis d’imposition"
+          BUDGET: "Budget"
+          DEVIS: "Devis"
+          GENERIQUE: "Générique"
     errors:
       type_de_champ:
         attributes:
