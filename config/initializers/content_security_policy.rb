@@ -27,18 +27,18 @@ Rails.application.configure do
     connect_whitelist << ENV.fetch('APP_HOST')
     connect_whitelist << ENV.fetch('APP_HOST_LEGACY') if ENV.key?('APP_HOST_LEGACY') && ENV['APP_HOST_LEGACY'] != ENV['APP_HOST']
     connect_whitelist << "*.amazonaws.com" if Rails.configuration.active_storage.service == :amazon
-    connect_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
+    connect_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq if ENV.key?("SENTRY_DSN_JS")
     connect_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
     connect_whitelist << URI(API_ADRESSE_URL).host if API_ADRESSE_URL.present?
     connect_whitelist << URI(API_EDUCATION_URL).host if API_EDUCATION_URL.present?
     connect_whitelist << URI(API_GEO_URL).host if API_GEO_URL.present?
-    connect_whitelist << Rails.application.secrets.matomo[:host]
+    connect_whitelist << ENV.fetch("MATOMO_HOST") if ENV.enabled?("MATOMO")
     policy.connect_src(:self, *connect_whitelist.compact)
 
     # Frames: allow some iframes
     frame_whitelist = []
     # allow Matomo's iframe on the /suivi page
-    frame_whitelist << URI(MATOMO_IFRAME_URL).host if Rails.application.secrets.matomo[:enabled]
+    frame_whitelist << URI(MATOMO_IFRAME_URL).host if ENV.enabled?("MATOMO")
     # allow pdf iframes in the PJ gallery
     frame_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
     frame_whitelist << "*.crisp.help" if ENV.enabled?("CRISP")
@@ -47,7 +47,7 @@ Rails.application.configure do
     # Everything else: allow us
     # Add the error source in the violation notification
     default_whitelist = ["integration.lasuite.numerique.gouv.fr", "fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"]
-    default_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq
+    default_whitelist += [URI(ENV["SENTRY_DSN_JS"]).host, URI(ENV["SENTRY_DSN_RAILS"]).host].compact.uniq if ENV.key?("SENTRY_DSN_JS")
     default_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
     policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
 

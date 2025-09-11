@@ -40,7 +40,7 @@ module Maintenance
 
       champ_pjs = blob_champ_pjs.map(&:second).uniq.sort_by(&:id)
 
-      dossier_id_champs = champ_pjs.group_by { it.dossier_id }
+      dossier_id_champs = champ_pjs.group_by(&:dossier_id)
 
       en_instruction = Dossier.visible_by_administration.en_instruction.where(id: dossier_id_champs.keys)
 

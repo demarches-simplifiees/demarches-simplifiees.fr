@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if ENV.fetch('MAILCATCHER_ENABLED') == 'enabled'
+if ENV.enabled?('MAILCATCHER')
   ActiveSupport.on_load(:action_mailer) do
     module Mailcatcher
       class SMTP < ::Mail::SMTP; end

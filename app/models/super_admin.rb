@@ -5,7 +5,7 @@ class SuperAdmin < ApplicationRecord
 
   devise :rememberable, :trackable, :validatable, :lockable, :recoverable
   if SUPER_ADMIN_OTP_ENABLED
-    devise :two_factor_authenticatable, otp_secret_encryption_key: Rails.application.secrets.otp_secret_key, sign_in_after_reset_password: false
+    devise :two_factor_authenticatable, otp_secret_encryption_key: ENV.fetch("OTP_SECRET_KEY"), sign_in_after_reset_password: false
   else
     devise :database_authenticatable
   end

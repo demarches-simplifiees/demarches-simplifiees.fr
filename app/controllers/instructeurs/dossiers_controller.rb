@@ -525,7 +525,7 @@ module Instructeurs
       # Strong attributes do not support records (indexed hash); they only support hashes with
       # static keys. We create a static hash based on the available keys.
       public_ids = params.dig(:dossier, :champs_private_attributes)&.keys || []
-      champs_private_attributes = public_ids.map { [_1, champ_attributes] }.to_h
+      champs_private_attributes = public_ids.index_with { champ_attributes }
       params.require(:dossier).permit(champs_private_attributes:)
     end
 
