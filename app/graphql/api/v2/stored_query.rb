@@ -42,6 +42,7 @@ class API::V2::StoredQuery
     $includePendingDeletedDossiers: Boolean = false
     $includeDeletedDossiers: Boolean = false
     $includeRevision: Boolean = false
+    $includeRevisions: Boolean = false
     $includeService: Boolean = false
     $includeChamps: Boolean = true
     $includeAnotations: Boolean = true
@@ -66,6 +67,9 @@ class API::V2::StoredQuery
         referentielDeProgrammation
       }
       activeRevision @include(if: $includeRevision) {
+        ...RevisionFragment
+      }
+      revisions @include(if: $includeRevisions) {
         ...RevisionFragment
       }
       groupeInstructeurs @include(if: $includeGroupeInstructeurs) {
