@@ -63,6 +63,14 @@ FactoryBot.define do
       end
     end
 
+    before(:create) do |procedure, _evaluator|
+      procedure.revisions.each do |revision|
+        revision.association(:types_de_champ).reset
+        revision.association(:types_de_champ_public).reset
+        revision.association(:types_de_champ_private).reset
+      end
+    end
+
     after(:create) do |procedure, evaluator|
       procedure.claim_path!(evaluator.administrateur, evaluator.path)
       evaluator.instructeurs.each { |i| i.assign_to_procedure(procedure) }
@@ -353,19 +361,31 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
 
     revision.association(:revision_types_de_champ).target << coordinate
 
+    if parent.present?
+      parent.association(:revision_types_de_champ).target << coordinate
+    end
+
     if type_de_champ.repetition? && children.present?
       build_types_de_champ(children, revision: revision, scope: scope, parent: coordinate)
     end
   end
 
-  if parent.blank?
+  if parent.present?
+    parent.association(:revision_types_de_champ).target.sort_by!(&:position)
+  else
     revision_types_de_champ_private, revision_types_de_champ_public = revision.revision_types_de_champ.partition(&:private?)
-    root_revision_types_de_champ_public, child_revision_types_de_champ_public = revision_types_de_champ_public.partition(&:root?)
-    root_revision_types_de_champ_private, child_revision_types_de_champ_private = revision_types_de_champ_private.partition(&:root?)
 
-    revision.association(:revision_types_de_champ).target = root_revision_types_de_champ_public.sort_by(&:position) +
-      root_revision_types_de_champ_private.sort_by(&:position) +
+    root_revision_types_de_champ_public, child_revision_types_de_champ_public = revision_types_de_champ_public.partition { |coordinate| coordinate.parent.nil? }
+    root_revision_types_de_champ_private, child_revision_types_de_champ_private = revision_types_de_champ_private.partition { |coordinate| coordinate.parent.nil? }
+    revision.association(:revision_types_de_champ_public).target = root_revision_types_de_champ_public.sort_by(&:position)
+    revision.association(:revision_types_de_champ_private).target = root_revision_types_de_champ_private.sort_by(&:position)
+    revision.association(:revision_types_de_champ).target = revision.revision_types_de_champ_public +
+      revision.revision_types_de_champ_private +
       child_revision_types_de_champ_public.sort_by(&:parent).sort_by(&:position) +
       child_revision_types_de_champ_private.sort_by(&:parent).sort_by(&:position)
+
+    revision.association(:types_de_champ).target = revision.revision_types_de_champ.map(&:type_de_champ)
+    revision.association(:types_de_champ_public).target = revision.revision_types_de_champ_public.map(&:type_de_champ)
+    revision.association(:types_de_champ_private).target = revision.revision_types_de_champ_private.map(&:type_de_champ)
   end
 end
