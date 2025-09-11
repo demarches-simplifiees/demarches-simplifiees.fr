@@ -414,6 +414,43 @@ RSpec.describe DossierTree, type: :model do
         end
       end
     end
+
+    context 'champ.value' do
+      let(:dossier) { create(:dossier, procedure:) }
+      let(:tree) { DossierTree::Builder.dossier_trees(procedure_coordinates, [], dossier:).first }
+
+      let(:types_de_champ_public) do
+        [
+          {},
+          { type: :integer_number },
+          { type: :drop_down_list },
+          { type: :multiple_drop_down_list },
+          { type: :departements },
+          { type: :yes_no },
+          { type: :checkbox, libelle: 'Checkbox true' },
+          { type: :checkbox, libelle: 'Checkbox false' },
+          { type: :date },
+          { type: :datetime }
+        ]
+      end
+
+      it 'champs should be blank' do
+        expect(tree.children.map(&:value)).to eq [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
+        expect(tree.children.map(&:blank?)).to eq [true, true, true, true, true, true, true, true, true, true]
+      end
+
+      context 'with values' do
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+
+        before { dossier.champs.find { _1.libelle == 'Checkbox false' }.update(value: 'false') }
+
+        it 'champs should be present' do
+          expect(tree.children.map(&:value)).to eq ["text", 42, "val1", ["val1", "val2"], "01", true, true, false, Date.new(2019, 7, 10), Time.zone.local(1962, 9, 15, 15, 35, 0)]
+          expect(tree.children.map(&:to_s)).to eq ["text", "42", "val1", "val1, val2", "01", "Oui", "Oui", "Non", "10 juillet 2019", "15 septembre 1962 15:35"]
+          expect(tree.children.map(&:blank?)).to eq [false, false, false, false, false, false, false, false, false, false]
+        end
+      end
+    end
   end
 
   describe 'visibility' do
