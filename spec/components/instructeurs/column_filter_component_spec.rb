@@ -2,7 +2,6 @@
 
 describe Instructeurs::ColumnFilterComponent, type: :component do
   let(:component) { described_class.new(procedure_presentation:, statut:, instructeur_procedure:) }
-
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
   let(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }

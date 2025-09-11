@@ -26,8 +26,8 @@ describe Instructeurs::AvisController, type: :controller do
         expect(flash.notice).to eq("#{avis_without_answer.expert.email} ne peut plus donner son avis sur ce dossier.")
       end
 
-      context "when the avis has not been answered in the meantime" do
-        it "destroy attente_avis notification for all instructeurs" do
+      context "when attente_avis notifications exists" do
+        it "destroys all attente_avis notifications" do
           expect(DossierNotification.exists?(notification.id)).to be_falsey
         end
       end

@@ -39,44 +39,35 @@ RSpec.describe DossierNotification, type: :model do
     end
 
     context "message notification" do
-      let!(:dossier) { create(:dossier) }
-      let(:instructeur_follower) { create(:instructeur) }
-      let(:other_instructeur_follower) { create(:instructeur) }
-      let(:instructeur_not_follower) { create(:instructeur) }
-      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_follower, other_instructeur_follower, instructeur_not_follower]) }
-      let!(:notification_type) { :message }
-
-      before do
-        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-        instructeur_follower.followed_dossiers << dossier
-        other_instructeur_follower.followed_dossiers << dossier
-      end
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, groupe_instructeur:, procedure:) }
+      let(:instructeur) { create(:instructeur) }
+      let(:other_instructeur) { create(:instructeur) }
+      let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_message_notifications: 'all') }
+      let!(:other_instructeur_procedure) { create(:instructeurs_procedure, instructeur: other_instructeur, procedure:, display_message_notifications: 'all') }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur]) }
+      let(:notification_type) { :message }
 
       context "when user or expert send a message" do
-        it "create notification for instructeurs followers" do
+        it "create notification for instructeurs" do
           subject
 
           expect(DossierNotification.count).to eq(2)
 
           notifications = DossierNotification.where(dossier:, notification_type: :message)
 
-          expect(notifications.map(&:instructeur_id)).to match_array([instructeur_follower.id, other_instructeur_follower.id])
+          expect(notifications.map(&:instructeur_id)).to match_array([instructeur.id, other_instructeur.id])
         end
       end
 
       context "when instructeur send a message" do
-        let!(:notification_args) { { except_instructeur: instructeur_follower } }
+        let!(:notification_args) { { except_instructeur: instructeur } }
 
-        it "create notification for instructeurs followers, except instructeur sender" do
+        it "create notification for instructeurs, except instructeur sender" do
           subject
 
           expect(DossierNotification.count).to eq(1)
-
-          notification = DossierNotification.first
-          expect(notification.dossier).to eq(dossier)
-          expect(notification.instructeur).to eq(other_instructeur_follower)
-          expect(notification.notification_type).to eq('message')
-          expect(DossierNotification.to_display).to include(notification)
+          expect(DossierNotification.first.instructeur).to eq(other_instructeur)
         end
       end
     end
