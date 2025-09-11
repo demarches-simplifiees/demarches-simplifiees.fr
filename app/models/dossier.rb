@@ -734,9 +734,9 @@ class Dossier < ApplicationRecord
         " - déposé le ",
         depose_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
-        "'#{procedure.libelle}'",
+        "\"#{procedure.libelle}\"",
         " gérée par l'organisme ",
-        "'#{procedure.organisation_name}'"
+        "\"#{procedure.organisation_name}\""
       ]
     end
 

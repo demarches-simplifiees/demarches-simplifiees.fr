@@ -3,40 +3,50 @@
     = @form.text_field(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, inputmode: :numeric, min: 1, pattern: "[0-9]{1,12}", autocomplete: 'off', required: @champ.required?, class: "#{@champ.blank? ? '' : 'small-margin'}"))
     - if show_info_text?
       .fr-info-text.fr-mb-4w
-        - lien = link_to( " N° #{@champ.selected} ",dossier_url(@champ.selected), target: '_blank', rel: 'noopener' )
-        = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
-- else 
+        %span
+          - lien = link_to( "N° #{@champ.selected}",dossier_url(@champ.selected), target: '_blank', rel: 'noopener' )
+          = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
+- else
   - if render_as_radios?
-    .fr-fieldset__content
+    %fieldset.fr-fieldset.fr-mt-2w
       - dossier_options_for(@champ).each do |item|
         - if item[:value].start_with?('separator_')|| item[:value].start_with?('no_dossier_')
-          %p.fr-text--bold.fr-mt-2w= item[:label]
-        - else 
+          %legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-text--bold= item[:label]
+        - else
+          .fr-fieldset__element
+            .fr-radio-group
+              = @form.radio_button :value, item[:value], id: "#{@champ.input_id}_#{item[:value]}", translate: 'no'
+              %label.fr-label{ for: "#{@champ.input_id}_#{item[:value]}" }
+                = item[:label]
+      - if !@champ.mandatory?
+        .fr-fieldset__element
           .fr-radio-group
-            = @form.radio_button :value, item[:value], id: "#{@champ.input_id}_#{item[:value]}", translate: 'no'
-            %label.fr-label{ for: "#{@champ.input_id}_#{item[:value]}" }
-              = item[:label]
+            = @form.radio_button :value, '', checked: @champ.value.blank?, id: "#{@champ.input_id}_blank"
+            %label.fr-label{ for: "#{@champ.input_id}_blank" }
+              Non renseigné
       - if show_info_text?
         .fr-info-text.fr-mb-4w
-          - lien = link_to( " N° #{@champ.selected} ",dossier_url(@champ.selected), target: '_blank', rel: 'noopener' )
-          = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
+          %span
+            - lien = link_to( "N° #{@champ.selected}",dossier_url(@champ.selected), target: '_blank', rel: 'noopener' )
+            = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
   - elsif render_as_combobox?
-    %react-fragment.flex-1
-      = render ReactComponent.new "ComboBox/SingleComboBox", **react_props 
+    %react-fragment.flex-1.fr-mt-2w
+      = render ReactComponent.new "ComboBox/SingleComboBox", **react_props
       - if show_info_text?
         .fr-info-text.fr-mb-4w
-          - lien = link_to( " N° #{@champ.selected} ",dossier_url(@champ.selected), target: '_blank', rel: 'noopener' )
-          = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
+          %span
+            - lien = link_to( "N° #{@champ.selected}",dossier_url(@champ.selected), target: '_blank', rel: 'noopener external', class: 'fr-link')
+            = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
   - elsif render_no_dossier?
     - type_champ = @champ.type_de_champ
     - type_champ.procedures.each do |procedure|
       %p Vous n'avez déposé aucun dossier sur la démarche #{procedure.libelle}.
-  - else  
+  - else
     - select_options = dossier_options_for(@champ).map do |item|
       - if item[:value].start_with?('separator_') || item[:value].start_with?('no_dossier_')
         - [item[:label], item[:value], { disabled: true }]
       - else
-        - [item[:label], item[:value]]  
+        - [item[:label], item[:value]]
 
     = @form.select :value,
       select_options,
@@ -48,7 +58,7 @@
         translate: 'no' }
 
     - if show_info_text?
-      .fr-info-text.fr-mb-4w 
+      .fr-info-text.fr-mb-4w
         - lien = link_to( " N° #{@champ.selected} ",dossier_url(@champ.selected), target: '_blank', rel: 'noopener' )
         = sanitize(dossier.text_summary(lien),tags: %w(a), attributes: %w(href target rel))
 
