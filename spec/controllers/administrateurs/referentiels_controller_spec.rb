@@ -3,7 +3,8 @@
 describe Administrateurs::ReferentielsController, type: :controller do
   let(:stable_id) { 123 }
   let(:types_de_champ_public) { [{ type: :referentiel, stable_id: }] }
-  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
+  let(:types_de_champ_private) { [] }
 
   before { sign_in(procedure.administrateurs.first.user) }
 
@@ -356,9 +357,14 @@ describe Administrateurs::ReferentielsController, type: :controller do
         { type: :text, stable_id: prefillable_stable_id }
       ]
     end
+    let(:types_de_champ_private) { [] }
+
+    let(:stable_id) { 1 }
     let(:prefillable_stable_id) { 2 }
-    let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
+
+    let(:type_de_champ) { procedure.draft_revision.types_de_champ.find(&:referentiel?) }
     let(:referentiel) { create(:api_referentiel, :exact_match, types_de_champ: [type_de_champ]) }
+
     let(:referentiel_mapping) do
       {
         "$.jsonpath1" => {
@@ -380,20 +386,40 @@ describe Administrateurs::ReferentielsController, type: :controller do
           }
         }
       end
+      context 'when referentiel is public' do
+        it 'updates prefill_stable_id for each mapping element and redirects to prefill_and_display' do
+          patch :update_prefill_and_display_type_de_champ, params: {
+            procedure_id: procedure.id,
+            stable_id: type_de_champ.stable_id,
+            id: referentiel.id,
+            type_de_champ: update_params
+          }
+          expect(response).to redirect_to(champs_admin_procedure_path(procedure))
+          expect(flash[:notice]).to eq("La configuration du pré remplissage des champs et/ou affichage des données récupérées a bien été enregistrée")
+          updated_mapping = type_de_champ.reload.referentiel_mapping
+          expect(updated_mapping.dig('$.jsonpath1', "type")).to eq("Chaine de caractères")
+          expect(updated_mapping.dig('$.jsonpath1', "prefill")).to eq("1")
+          expect(updated_mapping.dig('$.jsonpath1', "prefill_stable_id")).to eq(prefillable_stable_id.to_s)
+        end
+      end
 
-      it 'updates prefill_stable_id for each mapping element and redirects to prefill_and_display' do
-        patch :update_prefill_and_display_type_de_champ, params: {
-          procedure_id: procedure.id,
-          stable_id: type_de_champ.stable_id,
-          id: referentiel.id,
-          type_de_champ: update_params
-        }
-        expect(response).to redirect_to(champs_admin_procedure_path(procedure))
-        expect(flash[:notice]).to eq("La configuration du pré remplissage des champs et/ou affichage des données récupérées a bien été enregistrée")
-        updated_mapping = type_de_champ.reload.referentiel_mapping
-        expect(updated_mapping.dig('$.jsonpath1', "type")).to eq("Chaine de caractères")
-        expect(updated_mapping.dig('$.jsonpath1', "prefill")).to eq("1")
-        expect(updated_mapping.dig('$.jsonpath1', "prefill_stable_id")).to eq(prefillable_stable_id.to_s)
+      context 'when referentiel is private' do
+        let(:types_de_champ_private) do
+          [
+            { type: :referentiel, stable_id: stable_id, referentiel_mapping: },
+            { type: :text, stable_id: prefillable_stable_id }
+          ]
+        end
+        let(:types_de_champ_public) { [] }
+        it 'updates prefill_stable_id for each mapping element and redirects to prefill_and_display' do
+          patch :update_prefill_and_display_type_de_champ, params: {
+            procedure_id: procedure.id,
+              stable_id: type_de_champ.stable_id,
+              id: referentiel.id,
+              type_de_champ: update_params
+          }
+          expect(response).to redirect_to(annotations_admin_procedure_path(procedure))
+        end
       end
     end
 
