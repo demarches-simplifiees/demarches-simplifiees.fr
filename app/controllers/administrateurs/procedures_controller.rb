@@ -70,9 +70,11 @@ module Administrateurs
         .procedures
         .includes(
           published_revision: {
+            types_de_champ: [],
             revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
           },
           draft_revision: {
+            types_de_champ: [],
             revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
           },
           attestation_template: [],
@@ -314,8 +316,8 @@ module Administrateurs
       @procedure = current_administrateur
         .procedures
         .includes(
-          published_revision: { revision_types_de_champ: :type_de_champ },
-          draft_revision: { revision_types_de_champ: :type_de_champ }
+          published_revision: :types_de_champ,
+          draft_revision: :types_de_champ
         ).find(params[:procedure_id])
 
       if @procedure.auto_archive_on && !@procedure.auto_archive_on.future?
@@ -486,7 +488,7 @@ module Administrateurs
       if params[:stable_id].present?
         _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
       elsif params[:stub_type_champ].present?
-        @type_de_champ = TypeDeChamp.new(type_champ: params[:stub_type_champ], libelle: 'Numéro SIRET')
+        @type_de_champ = @procedure.draft_revision.types_de_champ.build(type_champ: params[:stub_type_champ], libelle: 'Numéro SIRET')
       else
         raise ArgumentError.new "either a stable_id or a stub_type_champ, but we should know which one to build"
       end

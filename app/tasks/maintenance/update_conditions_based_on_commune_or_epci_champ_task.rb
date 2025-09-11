@@ -15,7 +15,7 @@ module Maintenance
     def process(revision)
       tdc_to_update_ids = []
 
-      tdcs = TypeDeChamp.where(id: revision.types_de_champ_public)
+      tdcs = revision.types_de_champ_public
 
       tdcs.where.not(condition: nil).pluck(:condition, :id).each do |condition, id|
         if tdcs.where(stable_id: condition.sources, type_champ: ["communes", "epci"]).present?

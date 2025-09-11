@@ -34,6 +34,9 @@ class TypesDeChampEditor::InfoReferentielComponent < ApplicationComponent
   end
 
   def referentiel_used_in_published_procedure?
-    @procedure.published_revision&.types_de_champ&.any? { _1.referentiel_id == referentiel.id }
+    Procedure
+      .joins(revisions: :types_de_champ)
+      .where.not(published_at: nil)
+      .exists?(types_de_champ: { referentiel_id: referentiel.id })
   end
 end

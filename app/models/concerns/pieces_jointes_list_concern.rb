@@ -32,7 +32,8 @@ module PiecesJointesListConcern
       wrap_with_parent: false,
       revision: active_revision
     )
-      coordinates = ProcedureRevisionTypeDeChamp.where(revision:).includes(:type_de_champ, :parent)
+      coordinates = ProcedureRevisionTypeDeChamp.where(revision:)
+        .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
 
       coordinates = coordinates.public_only if public_only
 

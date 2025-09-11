@@ -6,12 +6,11 @@
 .fr-container
   .fr-grid-row
     .fr-col-12.fr-col-offset-md-2.fr-col-md-8
-      - dubious = TypeDeChamp.where(id: @procedure.draft_revision.types_de_champ_public).dubious
-      - if dubious.present?
+      - if @procedure.draft_revision.types_de_champ_public.dubious.present?
         = render Dsfr::AlertComponent.new(state: :warning, title: t('.dubious_fields'), extra_class_names: 'fr-mb-2w') do |c|
           - c.with_body do
             %ul
-              - dubious.each do |dubious_champs|
+              - @procedure.draft_revision.types_de_champ_public.dubious.each do |dubious_champs|
                 %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
       .lien-demarche
         %h1
