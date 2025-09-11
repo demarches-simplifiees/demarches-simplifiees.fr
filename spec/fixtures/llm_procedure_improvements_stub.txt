@@ -1,0 +1,301 @@
+{
+   "operations":{
+      "add":[
+         {
+            "after_stable_id":335886,
+            "children":[
+               {
+                  "libelle":"Nom de l'enfant",
+                  "mandatory":true,
+                  "type_champ":"text"
+               },
+               {
+                  "libelle":"Prénom de l'enfant",
+                  "mandatory":true,
+                  "type_champ":"text"
+               },
+               {
+                  "libelle":"Date de naissance de l'enfant",
+                  "mandatory":true,
+                  "type_champ":"date"
+               }
+            ],
+            "description":"",
+            "justification":"Regroupement des champs relatifs aux enfants dans une structure répétable.",
+            "libelle":"Enfant concerné",
+            "mandatory":true,
+            "type_champ":"repetition"
+         }
+      ],
+      "destroy":[
+         {
+            "justification":"Regroupement de deux champs similaires",
+            "stable_id":585372
+         },
+         {
+            "justification":"La civilité est déjà connue par l'administration.",
+            "stable_id":335897
+         },
+         {
+            "justification":"Le nom est déjà connu par l'administration.",
+            "stable_id":335874
+         },
+         {
+            "justification":"Le prénom est déjà connu par l'administration.",
+            "stable_id":335867
+         },
+         {
+            "justification":"L'adresse email est déjà connue par l'administration.",
+            "stable_id":335898
+         },
+         {
+            "justification":"NOM DE L'ENFANT CONCERNE a été placé dans un bloc répétable",
+            "stable_id":335900
+         },
+         {
+            "justification":"PRENOM DE L'ENFANT CONCERNE a été placé dans un bloc répétable",
+            "stable_id":335901
+         },
+         {
+            "justification":"DATE DE NAISSANCE DE L'ENFANT a été placé dans un bloc répétable",
+            "stable_id":335895
+         },
+         {
+            "justification":"NOM DE L'ENFANT CONCERNE 2 a été placé dans un bloc répétable",
+            "stable_id":335892
+         },
+         {
+            "justification":"PRÉNOM DE L'ENFANT CONCERNE 2 a été placé dans un bloc répétable",
+            "stable_id":335890
+         },
+         {
+            "justification":"DATE DE NAISSANCE DE L'ENFANT a été placé dans un bloc répétable",
+            "stable_id":335887
+         },
+         {
+            "justification":"NOM DE L'ENFANT CONCERNE 3 a été placé dans un bloc répétable",
+            "stable_id":335888
+         },
+         {
+            "stable_id":335876,
+            "justification":"Le code postal est inclus dans le champ d'adresse."
+         },
+         {
+            "stable_id":335866,
+            "justification":"La ville est incluse dans le champ d'adresse."
+         },
+         {
+            "justification":"PRÉNOM DE L'ENFANT CONCERNE 3 a été placé dans un bloc répétable",
+            "stable_id":335894
+         }
+      ],
+      "update":[
+         {
+            "description":"Conformément à la règlementation relative à la protection des données à caractère personnel, les informations recueillies par la direction de l’action sociale du personnel et de la qualité de vie au travail (DASPQVT) sont nécessaires afin d’instruire votre demande. La CTM est responsable de ce traitement qui relève d’une obligation légale. Les données sont conservées 24 mois. Sont destinataires de tout ou partie des données : en interne : la direction des finances, le cabinet du PCE. En externe : la paierie territoriale. Vous disposez d'un droit d’information, droit d'accès, droit de rectification, droit à la limitation des données qui vous concernent. Vous pouvez les exercer auprès du service instructeur ou à l’adresse pascoctm972@collectivitedemartinique.mq. La déléguée à la protection des données (DPO) pourra vous apporter des informations sur la protection des données à caractère personnel et sur l’exercice de ces droits à l'adresse dpo@collectivitedemartinique.mq. L’autorité de contrôle pour l’introduction des réclamations relatives est la Commission Nationale Informatique et Libertés.",
+            "justification":"Mise à jour du libellé en casse appropriée.",
+            "libelle":"Mentions RGPD",
+            "mandatory":false,
+            "stable_id":3573130,
+            "type_champ":"explication"
+         },
+         {
+            "stable_id":335868,
+            "type_champ":"address",
+            "justification":"Le champ d'adresse inclut automatiquement le code postal et la ville."
+         },
+         {
+            "description":"J'accepte que mes données personnelles soient utilisées de façon anonyme par la Direction de l'action sociale du personnel et de la qualité de vie au travail, dans la limite de deux ans, pour effectuer des statistiques permettant la promotion d'actions innovantes liées à l’accompagnement social du personnel.",
+            "justification":"Mise à jour du libellé en casse appropriée et changement du type de champ en checkbox.",
+            "libelle":"Consentement utilisation des données personnelles",
+            "mandatory":false,
+            "stable_id":3573135,
+            "type_champ":"checkbox"
+         },
+         {
+            "stable_id":335872,
+            "libelle":"Date de naissance",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335891,
+            "libelle":"Nom de naissance",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335875,
+            "libelle":"Lieu de naissance",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335870,
+            "libelle":"Catégorie d'emploi",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335873,
+            "libelle":"Situation familiale",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":585336,
+            "libelle":"N° allocataire CAF",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335882,
+            "libelle":"Direction/service",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "description":"",
+            "justification":"Mise à jour du libellé en casse appropriée.",
+            "libelle":"Type de séjour",
+            "mandatory":false,
+            "stable_id":585367,
+            "type_champ":"multiple_drop_down_list"
+         },
+         {
+            "description":"Les champs concernant le conjoint doivent obligatoirement être remplis en cas de mariage, PACS ou vie maritale.",
+            "justification":"Mise à jour du libellé en casse appropriée.",
+            "libelle":"Attention",
+            "mandatory":false,
+            "stable_id":354937,
+            "type_champ":"explication"
+         },
+         {
+            "stable_id":335883,
+            "libelle":"Nom du conjoint",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335884,
+            "libelle":"Prénom du conjoint",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335878,
+            "libelle":"Date de naissance du conjoint",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":335886,
+            "libelle":"Employeur du conjoint",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "stable_id":585748,
+            "libelle":"Nom de l'organisme ayant organisé le séjour",
+            "justification":"Mise à jour du libellé en casse appropriée."
+         },
+         {
+            "description":"",
+            "justification":"Mise à jour du libellé en casse appropriée.",
+            "libelle":"Pièces jointes",
+            "mandatory":false,
+            "stable_id":585261,
+            "type_champ":"header_section"
+         },
+         {
+            "description":"Vos documents doivent être lisibles et de bonne qualité. Les photos de documents ne sont pas exploitables. Privilégiez le format PDF.",
+            "justification":"Mise à jour du libellé en casse appropriée.",
+            "libelle":"Attention",
+            "mandatory":false,
+            "stable_id":718475,
+            "type_champ":"explication"
+         },
+         {
+            "description":"En Martinique (précisez la commune) Hors Martinique (précisez le pays)",
+            "justification":"Mise à jour du libellé en casse appropriée.",
+            "libelle":"Lieu du séjour",
+            "mandatory":true,
+            "stable_id":585752,
+            "type_champ":"text"
+         },
+         {
+            "description":"Je certifie sur l'honneur n'avoir pas perçu de prestation de même nature en faveur du (des) jeune (s) concerné (s) et que les renseignements portés sur la présente demande sont exacts. Je m'engage à signaler immédiatement tout fait nouveau modifiant la présente demande.",
+            "justification":"Mise à jour du libellé en casse appropriée et changement du type de champ en checkbox.",
+            "libelle":"Attestation sur l'honneur",
+            "mandatory":true,
+            "stable_id":585404,
+            "type_champ":"checkbox"
+         },
+         {
+            "stable_id":335883,
+            "display_condition":{
+               "term":"Logic::Eq",
+               "left":{
+                  "term":"Logic::ChampValue",
+                  "stable_id":335873
+               },
+               "right":{
+                  "term":"Logic::Constant",
+                  "value":[
+                     "Marié(e)",
+                     "PACS",
+                     "Vie maritale"
+                  ]
+               }
+            },
+            "justification":"Le champ ne doit être affiché que si l'utilisateur est marié, en PACS ou en vie maritale."
+         },
+         {
+            "stable_id":335884,
+            "display_condition":{
+               "term":"Logic::Eq",
+               "left":{
+                  "term":"Logic::ChampValue",
+                  "stable_id":335873
+               },
+               "right":{
+                  "term":"Logic::Constant",
+                  "value":[
+                     "Marié(e)",
+                     "PACS",
+                     "Vie maritale"
+                  ]
+               }
+            },
+            "justification":"Le champ ne doit être affiché que si l'utilisateur est marié, en PACS ou en vie maritale."
+         },
+         {
+            "stable_id":335878,
+            "display_condition":{
+               "term":"Logic::Eq",
+               "left":{
+                  "term":"Logic::ChampValue",
+                  "stable_id":335873
+               },
+               "right":{
+                  "term":"Logic::Constant",
+                  "value":[
+                     "Marié(e)",
+                     "PACS",
+                     "Vie maritale"
+                  ]
+               }
+            },
+            "justification":"Le champ ne doit être affiché que si l'utilisateur est marié, en PACS ou en vie maritale."
+         },
+         {
+            "stable_id":335886,
+            "display_condition":{
+               "term":"Logic::Eq",
+               "left":{
+                  "term":"Logic::ChampValue",
+                  "stable_id":335873
+               },
+               "right":{
+                  "term":"Logic::Constant",
+                  "value":[
+                     "Marié(e)",
+                     "PACS",
+                     "Vie maritale"
+                  ]
+               }
+            },
+            "justification":"Le champ ne doit être affiché que si l'utilisateur est marié, en PACS ou en vie maritale."
+         }
+      ]
+   },
+   "summary":"Suppression des champs redondants (civilité, nom, prénom, adresse email) car déjà connus par l'administration. Mise à jour des libellés en casse appropriée. Regroupement des champs relatifs aux enfants dans une structure répétable. Ajout de sections d'en-tête pour une meilleure organisation du formulaire. Application de conditions de visibilité pour les champs liés à la situation familiale."
+}

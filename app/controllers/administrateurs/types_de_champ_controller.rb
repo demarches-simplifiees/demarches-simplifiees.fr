@@ -4,6 +4,7 @@ module Administrateurs
   class TypesDeChampController < AdministrateurController
     include ActiveSupport::NumberHelper
     include CsvParsingConcern
+    include ActionView::Helpers::TagHelper
 
     before_action :retrieve_procedure
     before_action :reload_procedure_with_includes, only: [:destroy]
@@ -161,9 +162,27 @@ module Administrateurs
 
         ReferentielItem.insert_all(items_to_insert)
       end
+    end
 
-      @coordinate = draft.coordinate_for(type_de_champ)
-      @morphed = [champ_component_from(@coordinate)]
+    def simplify
+      if params[:unstub]
+        service = LLM::RevisionImproverService.new(@procedure)
+        suggestion = service.suggest
+      else
+        suggestion = JSON.parse(File.read("spec/fixtures/llm/deepseek/deepseek-chat-v3.1.json")).deep_symbolize_keys
+      end
+      @changes = suggestion[:operations]
+      @text = Array.wrap(suggestion[:summary].split('.').map(&:strip))
+
+      @revision = @procedure.draft_revision
+      @procedure_linter = ProcedureLinter.new(@procedure, @revision)
+    end
+
+    def accept_simplification
+      changes = build_changes_from_selection
+      draft.apply_changes(changes)
+
+      redirect_to [:champs, :admin, @procedure]
     end
 
     private
@@ -255,6 +274,23 @@ module Administrateurs
 
     def marcel_content_type
       Marcel::MimeType.for(referentiel_file.read, name: referentiel_file.original_filename, declared_type: referentiel_file.content_type)
+    end
+
+    def build_changes_from_selection
+      all_changes = JSON.parse(params[:changes_json].presence || "{}", symbolize_names: true)
+      selected = (params[:selected] || {}).to_unsafe_h.symbolize_keys
+
+      destroy_ids = Array(selected[:destroy]).map { |v| v.to_i }
+      update_ids = Array(selected[:update]).map { |v| v.to_i }
+      add_ids = Array(selected[:add]).map { |v| v.to_i }
+
+      {
+        destroy: Array(all_changes[:destroy]).select { |c| destroy_ids.include?(c[:stable_id].to_i) },
+        update:  Array(all_changes[:update]).select  { |c| update_ids.include?(c[:stable_id].to_i) },
+        add:     Array(all_changes[:add]).select     { |c| add_ids.include?(c[:stable_id].to_i) }
+      }
+    rescue JSON::ParserError
+      { destroy: [], update: [], add: [] }
     end
   end
 end
