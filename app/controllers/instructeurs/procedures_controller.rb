@@ -103,6 +103,7 @@ module Instructeurs
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+      @instructeur_procedure = find_or_create_instructeur_procedure(procedure)
 
       @current_filters = procedure_presentation.filters_for(statut)
       @current_filters.each do |filter|
@@ -173,7 +174,7 @@ module Instructeurs
       @statut_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
       @notifications = DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @filtered_sorted_paginated_ids)
       @has_export_notification = notify_exports?
-      @has_unseen_revision_notification = notify_unseen_revisions?
+      @has_unseen_revision_notification = notify_unseen_revisions?(@instructeur_procedure)
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
@@ -490,10 +491,8 @@ module Instructeurs
       scope.exists?
     end
 
-    def notify_unseen_revisions?
+    def notify_unseen_revisions?(instructeur_procedure)
       return false if procedure.published_revision_id.blank?
-
-      instructeur_procedure = find_or_create_instructeur_procedure(procedure)
 
       return false if instructeur_procedure.last_revision_seen_id.blank?
 
