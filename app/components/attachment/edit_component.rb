@@ -224,14 +224,19 @@ class Attachment::EditComponent < ApplicationComponent
 
   def allowed_formats
     @allowed_formats ||= begin
-                           formats = content_type_validator.options[:in].filter_map do |content_type|
-                             MiniMime.lookup_by_content_type(content_type)&.extension
-                           end.uniq.sort_by { EXTENSIONS_ORDER.index(_1) || 999 }
+      raw = if champ&.respond_to?(:type_de_champ)
+        champ.type_de_champ.allowed_content_types
+      elsif has_content_type_validator?
+        content_type_validator.options[:in]
+      else
+        []
+      end
 
-                           # When too many formats are allowed, consider instead manually indicating
-                           # above the input a more comprehensive of formats allowed, like "any image", or a simplified list.
-                           formats.size > 5 ? [] : formats
-                         end
+      extensions = raw.filter_map { |ct| MiniMime.lookup_by_content_type(ct)&.extension }.uniq
+
+      sorted_extensions = extensions.sort_by { |e| EXTENSIONS_ORDER.index(e) || 999 }
+      sorted_extensions.size > 5 ? (sorted_extensions.first(5) + ['…']) : sorted_extensions
+    end
   end
 
   def has_content_type_validator?
