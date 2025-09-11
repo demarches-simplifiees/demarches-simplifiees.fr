@@ -56,6 +56,8 @@ class Columns::DossierColumn < Column
   end
 
   def filtered_ids_for_values(dossiers, values)
+    return dossiers.ids unless values.any? { it.present? }
+
     case table
     when 'self'
       if type == :date || type == :datetime
