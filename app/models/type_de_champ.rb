@@ -2,6 +2,7 @@
 
 class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
+  IDENTITY_FILE_MAX_SIZE = 20.megabytes
   FEATURE_FLAGS = {
     engagement_juridique: :engagement_juridique_type_de_champ,
     cojo: :cojo_type_de_champ,
@@ -46,7 +47,7 @@ class TypeDeChamp < ApplicationRecord
     formatted: STANDARD,
     date: STANDARD,
     datetime: STANDARD,
-    piece_justificative: PIECES_JOINTES,
+    piece_justificative: STANDARD,
     titre_identite: PIECES_JOINTES,
     checkbox: CHOICE,
     drop_down_list: CHOICE,
@@ -108,7 +109,25 @@ class TypeDeChamp < ApplicationRecord
     referentiel: 'referentiel',
   }
 
-  enum :nature, { RIB: 'RIB' }
+  enum :nature, {
+    NON_SPECIFIE: 'NON_SPECIFIE',
+    TITRE_IDENTITE: 'TITRE_IDENTITE',
+    RIB: 'RIB',
+    JUSTIFICATIF_DOMICILE: 'JUSTIFICATIF_DOMICILE',
+    LIVRET_DE_FAMILLE: 'LIVRET_DE_FAMILLE',
+    ATTESTATION: 'ATTESTATION',
+    AVIS_IMPOSITION: 'AVIS_IMPOSITION',
+    BUDGET: 'BUDGET',
+    DEVIS: 'DEVIS'
+  }
+
+  def titre_identite_nature?
+    TITRE_IDENTITE?
+  end
+
+  def rib_nature?
+    RIB?
+  end
 
   SIMPLE_ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
@@ -156,7 +175,10 @@ class TypeDeChamp < ApplicationRecord
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
                  :header_section_level,
-                 :referentiel_mapping
+                 :referentiel_mapping,
+                 :pj_limit_formats,
+                 :pj_format_families,
+                 :pj_auto_purge
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
 
@@ -217,6 +239,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :set_default_libelle, if: -> { type_champ_changed? }
   before_validation :normalize_libelle
   before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
+  before_validation :reset_pj_format_options_if_forced_nature
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
 
@@ -681,7 +704,14 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options, :drop_down_mode],
     type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options, :drop_down_mode],
     type_champs.fetch(:linked_drop_down_list) => [:drop_down_options, :drop_down_secondary_libelle, :drop_down_secondary_description],
-    type_champs.fetch(:piece_justificative) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
+    type_champs.fetch(:piece_justificative) => [
+      :old_pj,
+      :skip_pj_validation,
+      :skip_content_type_pj_validation,
+      :pj_limit_formats,
+      :pj_format_families,
+      :pj_auto_purge
+    ],
     type_champs.fetch(:titre_identite) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
     type_champs.fetch(:formatted) => [
       :formatted_mode, :numbers_accepted, :letters_accepted, :special_characters_accepted,
@@ -694,6 +724,38 @@ class TypeDeChamp < ApplicationRecord
   def clean_options
     kept_keys = OPTS_BY_TYPE.fetch(type_champ.to_s) { [] }
     options.slice(*kept_keys.map(&:to_s))
+  end
+
+  def pj_limit_formats?
+    options[:pj_limit_formats].present?
+  end
+
+  def pj_format_families
+    Array.wrap(options[:pj_format_families]).map(&:to_s)
+  end
+
+  def pj_auto_purge?
+    titre_identite_nature? || [true, '1'].include?(options[:pj_auto_purge])
+  end
+
+  def max_file_size_bytes
+    if titre_identite_nature?
+      IDENTITY_FILE_MAX_SIZE
+    else
+      FILE_MAX_SIZE
+    end
+  end
+
+  def allowed_content_types
+    if titre_identite_nature?
+      ['image/jpeg', 'image/png']
+    elsif rib_nature?
+      families_to_content_types(%w[document_texte image_scan])
+    elsif pj_limit_formats? && pj_format_families.present?
+      families_to_content_types(pj_format_families)
+    else
+      AUTHORIZED_CONTENT_TYPES
+    end
   end
 
   def champ_value(champ)
@@ -791,6 +853,21 @@ class TypeDeChamp < ApplicationRecord
 
   private
 
+  def allowed_extensions
+    allowed_content_types
+      .filter_map { |mime| MiniMime.lookup_by_content_type(mime)&.extension }
+      .uniq
+      .map { |ext| ".#{ext}" }
+  end
+
+  def families_to_content_types(families)
+    return AUTHORIZED_CONTENT_TYPES if families.blank?
+
+    families
+      .flat_map { |f| (defined?(FORMAT_FAMILIES) && FORMAT_FAMILIES[f.to_sym]) || [] }
+      .presence || AUTHORIZED_CONTENT_TYPES
+  end
+
   def castable_on_change?(from_type, to_type)
     Columns::ChampColumn::CAST.key?([from_type.to_sym, to_type.to_sym])
   end
@@ -819,5 +896,12 @@ class TypeDeChamp < ApplicationRecord
 
   def normalize_libelle
     self.libelle&.strip!
+  end
+
+  def reset_pj_format_options_if_forced_nature
+    if titre_identite_nature? || rib_nature?
+      self.pj_limit_formats = nil
+      self.pj_format_families = []
+    end
   end
 end
