@@ -1,9 +1,15 @@
-%p.copy-btn{ role: "button" }= champ.to_s
-- if champ.code?
-  %p.fr-text--sm.copy-btn{ role: "button" }
-    Code INSEE :
-    %span{ data: { to_copy: true } }= champ.code
-- if champ.departement?
-  %p.fr-text--sm.copy-btn{ role: "button" }
-    Departement :
-    %span{ data: { to_copy: true } }= champ.departement_code_and_name
+%p.fr-mb-1w.copy-btn{ role: "button" }= champ.to_s
+.fr-p-1w{ style: 'background-color: var(--info-975-75) !important;' }
+  .flex
+    .left.flex-1
+      - if champ.code?
+        .champ-row
+          %p.champ-label Code INSEE :
+          %p.champ-content.copy-btn{ role: "button" }= champ.code
+      - if champ.departement?
+        .champ-row
+          %p.champ-label Département :
+          %p.champ-content.copy-btn{ role: "button" }= champ.departement_code_and_name
+    .right
+      %span.fr-tag.fr-fi-information-line.fr-tag--icon-left.fr-tag--sm.font-weight-normal{ style: 'background-color: #dde5ff !important;' }
+        Source : 

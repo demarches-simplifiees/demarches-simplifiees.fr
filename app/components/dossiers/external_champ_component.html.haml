@@ -1,0 +1,29 @@
+%p.fr-mb-1w.copy-btn{ role: "button" }= title
+
+.fr-p-3v{ style: 'background-color: var(--info-975-75) !important;' }
+  - if source.present?
+    %span.pull-right.fr-tag.fr-fi-information-line.fr-tag--icon-left.fr-tag--sm.font-weight-normal{ style: 'background-color: var(--info-925) !important;' }
+      Source : #{source}
+
+  - if header.present?
+    .fr-mt-4w.fr-ml-4w= header
+
+  - if data.present?
+    %dl.fr-mt-n2v
+      - data.each do |label, value, opts = {}|
+        .champ-row
+          %dt.champ-label= label
+          %dd.champ-content{ class: class_names('copy-btn': opts.fetch(:copy, true)) }= value
+
+    - if details.present?
+      %details{ style: 'cursor: default;' }
+        %summary.fr-pl-4w{ style: 'color: var(--text-action-high-blue-france);' }
+          Plus d’informations sur l’établissement
+        %dl
+          - details.each do |label, value, opts = {}|
+            .champ-row
+              %dt.champ-label= label
+              %dd.champ-content{ class: class_names('copy-btn': opts.fetch(:copy, true)) }= value
+
+        - if details_footer.present?
+          %p.fr-ml-4w= render(details_footer)
