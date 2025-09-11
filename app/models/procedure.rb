@@ -183,18 +183,9 @@ class Procedure < ApplicationRecord
       .where(hidden_at: ...1.month.ago)
   end
 
-  scope :for_api, -> {
-    includes(
-      :administrateurs,
-      :module_api_carto,
-      published_revision: { revision_types_de_champ: { type_de_champ: [] } },
-      draft_revision: { revision_types_de_champ: { type_de_champ: [] } }
-    )
-  }
-
-  scope :for_api_v2, -> {
-    includes(draft_revision: { revision_types_de_champ: [:type_de_champ] }, published_revision: { revision_types_de_champ: [:type_de_champ] }, administrateurs: :user)
-  }
+  scope :for_api, -> { with_active_revision.includes(:administrateurs, :module_api_carto) }
+  scope :for_api_v2, -> { with_active_revision.includes(administrateurs: :user) }
+  scope :with_active_revision, -> { includes(draft_revision: [revision_types_de_champ: [:type_de_champ]], published_revision: [revision_types_de_champ: [:type_de_champ]]) }
 
   scope :order_by_position_for, -> (instructeur) {
     joins(:instructeurs_procedures)

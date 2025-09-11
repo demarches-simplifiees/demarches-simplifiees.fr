@@ -105,11 +105,11 @@ module Users
     end
 
     def retrieve_procedure
-      Procedure.publiees.or(Procedure.brouillons).find_with_path(params[:path]).first
+      Procedure.publiees.or(Procedure.brouillons).with_active_revision.find_with_path(params[:path]).first
     end
 
     def retrieve_procedure_with_closed
-      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_with_path(params[:path]).first
+      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).with_active_revision.order(published_at: :desc).find_with_path(params[:path]).first
     end
 
     def build_prefilled_dossier

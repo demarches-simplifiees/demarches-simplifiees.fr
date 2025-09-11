@@ -147,7 +147,7 @@ module Administrateurs
     end
 
     def clone
-      procedure = Procedure.find(params[:procedure_id])
+      procedure = Procedure.with_active_revision.find(params[:procedure_id])
 
       if procedure.hidden_as_template? && !current_administrateur.owns?(procedure)
         flash.alert = "Cette démarche n’est pas clonable"

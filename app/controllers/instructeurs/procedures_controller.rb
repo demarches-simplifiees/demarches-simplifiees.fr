@@ -416,6 +416,7 @@ module Instructeurs
     def procedure
       Procedure
         .with_attached_logo
+        .with_active_revision
         .find(procedure_id)
         .tap { Sentry.set_tags(procedure: _1.id) }
     end

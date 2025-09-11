@@ -15,7 +15,7 @@ class Attachment::MultipleComponent < ApplicationComponent
   attr_reader :user_can_destroy
   alias user_can_destroy? user_can_destroy
 
-  delegate :count, :empty?, to: :attachments, prefix: true
+  delegate :size, :empty?, to: :attachments, prefix: true
 
   def initialize(champ: nil, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, max: nil)
     @champ = champ

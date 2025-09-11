@@ -20,9 +20,9 @@
   .fr-container
     %h1.fr-h3= t('views.users.dossiers.index.dossiers')
 
-    - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2  || @procedures_for_select.size > 1
+    - if current_user.dossiers.size > 2 || current_user.dossiers_invites.size > 2  || @procedures_for_select.size > 1
       .fr-grid-row.fr-grid-row--gutters
-        - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
+        - if current_user.dossiers.size > 2 || current_user.dossiers_invites.size > 2
           #search-2.fr-search-bar.fr-col-12.fr-col-md
             = form_tag dossiers_path, method: :get, :role => "search", class: "width-100 fr-mb-5w", "aria-label": t('views.users.dossiers.dossiers_menu') do
               = hidden_field_tag :procedure_id, params[:procedure_id]
