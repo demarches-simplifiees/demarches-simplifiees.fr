@@ -27,13 +27,13 @@ module Instructeurs
     def update_filter
       @procedure_presentation.update_filter_for_statut!(params[:statut], params[:filter_key], filtered_column_from_params)
 
-      redirect_back_or_to([:instructeur, procedure])
+      render turbo_stream: turbo_stream.refresh
     end
 
     def remove_filter
       @procedure_presentation.remove_filter_for_statut!(params[:statut], filtered_column_from_params)
 
-      redirect_back_or_to([:instructeur, procedure])
+      render turbo_stream: turbo_stream.refresh
     end
 
     def update
