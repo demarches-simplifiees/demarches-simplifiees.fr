@@ -17,6 +17,7 @@ module DossierCloneConcern
 
   def find_editing_fork(user, rebase: true)
     fork = editing_forks.find_by(user:)
+    fork = DossierPreloader.load_one(fork) if fork
     fork.rebase! if rebase && fork
 
     fork
