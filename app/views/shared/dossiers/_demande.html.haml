@@ -2,7 +2,7 @@
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.user.france_connect_informations.first }
 
-.counter-start-header-section.dossier-show.gallery.gallery-demande{ class: class_names("dossier-show-instructeur" => profile =="instructeur"), "data-controller": "lightbox" }
+.counter-start-header-section.dossier-show.gallery.gallery-demande{ class: class_names("dossier-show-instructeur" => profile =="instructeur"), "data-controller": "lightbox clipboard2", "data-clipboard2-copy-text-value": t('clipboard.copy'), "data-clipboard2-copied-text-value": t('clipboard.copied') }
 
   - if profile == 'instructeur' && dossier.termine_and_accuse_lecture?
     = render Dsfr::CalloutComponent.new(title: nil) do |c|
