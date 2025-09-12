@@ -52,7 +52,11 @@
                 %button.fr-btn--close.fr-btn{ aria: { controls: 'modal-commentaire-batch' }, title: t('utils.modal_close_alt') }= t('utils.modal_close')
               .fr-modal__content
                 %h1#modal-commentaire-batch.fr-modal__title
-                  %span.fr-icon-arrow-right-line.fr-icon--lg{ "data-batch-operation-target" => "commentaireTitle" }>
+                  %span.fr-icon-arrow-right-line.fr-icon--lg>
+                  %span.hidden{ "data-batch-operation-target" => "commentaireTitleSingular" }
+                    = t('.commentaire_modal.title_singular')
+                  %span.hidden{ "data-batch-operation-target" => "commentaireTitlePlural" }
+                    = t('.commentaire_modal.title_plural', count: '__COUNT__')
 
                 %div{ "data-batch-operation-target" => "commentaireFormContainer" }
                   = render partial: "instructeurs/batch_operations/commentaire_form", locals: {url: create_batch_commentaire_instructeur_batch_operations_path(procedure_id: procedure.id), commentaire: Commentaire.new, procedure: procedure, dossier_ids: @ids }

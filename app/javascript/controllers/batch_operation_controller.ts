@@ -13,7 +13,8 @@ export class BatchOperationController extends ApplicationController {
     'checkboxCount',
     'avisForm',
     'commentaireForm',
-    'commentaireTitle',
+    'commentaireTitleSingular',
+    'commentaireTitlePlural',
     'commentaireWarning',
     'commentaireFormContainer'
   ];
@@ -24,7 +25,8 @@ export class BatchOperationController extends ApplicationController {
   declare readonly checkboxCountTarget: HTMLElement;
   declare readonly avisFormTarget: HTMLFormElement;
   declare readonly commentaireFormTarget: HTMLFormElement;
-  declare readonly commentaireTitleTarget: HTMLElement;
+  declare readonly commentaireTitleSingularTarget: HTMLElement;
+  declare readonly commentaireTitlePluralTarget: HTMLElement;
   declare readonly commentaireWarningTarget: HTMLElement;
   declare readonly commentaireFormContainerTarget: HTMLElement;
 
@@ -262,10 +264,20 @@ export class BatchOperationController extends ApplicationController {
 
   private updateCommentaireModal(ids: string[]): void {
     const dossiersCount = ids.length;
-    // Mettre à jour le titre
-    if (this.commentaireTitleTarget) {
-      const userText = dossiersCount > 1 ? 's' : '';
-      this.commentaireTitleTarget.textContent = `Envoyer un message à ${dossiersCount} usager${userText}`;
+
+    // Mettre à jour le titre avec les traductions pré-rendues
+    if (dossiersCount === 1) {
+      this.commentaireTitleSingularTarget.classList.remove('hidden');
+      this.commentaireTitlePluralTarget.classList.add('hidden');
+    } else {
+      this.commentaireTitleSingularTarget.classList.add('hidden');
+      this.commentaireTitlePluralTarget.classList.remove('hidden');
+      // Remplacer __COUNT__ par le nombre réel
+      this.commentaireTitlePluralTarget.textContent =
+        this.commentaireTitlePluralTarget.textContent?.replace(
+          '__COUNT__',
+          dossiersCount.toString()
+        ) || '';
     }
 
     // Gérer la limite

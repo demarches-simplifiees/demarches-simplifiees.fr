@@ -25,3 +25,6 @@ en:
     refuser: "Explain to users why their file is refused (mandatory)"
     classer_sans_suite: "Explain to users why their file is closed without continuation (mandatory)"
   commentaire_warning_html: "<strong class='fr-alert__text'>Sending a group message is limited to %{limit} users.</strong><br>Please limit the number of selected users."
+  commentaire_modal:
+    title_singular: Send a message to 1 user
+    title_plural: Send a message to %{count} users
