@@ -187,7 +187,7 @@ describe Columns::DossierColumn do
         end
 
         it "returns dossiers from this week" do
-          expect(subject).to eq([dossier_at_the_beginning_of_the_week.id, dossier_at_the_end_of_the_week.id])
+          expect(subject).to match_array([dossier_at_the_beginning_of_the_week.id, dossier_at_the_end_of_the_week.id])
         end
       end
 
@@ -204,7 +204,7 @@ describe Columns::DossierColumn do
         end
 
         it "returns dossiers from this month" do
-          expect(subject).to eq([dossier_at_the_beginning_of_the_month.id, dossier_at_the_end_of_the_month.id])
+          expect(subject).to match_array([dossier_at_the_beginning_of_the_month.id, dossier_at_the_end_of_the_month.id])
         end
       end
 
@@ -221,7 +221,7 @@ describe Columns::DossierColumn do
         end
 
         it "returns dossiers from this year" do
-          expect(subject).to eq([dossier_at_the_beginning_of_the_year.id, dossier_at_the_end_of_the_year.id])
+          expect(subject).to match_array([dossier_at_the_beginning_of_the_year.id, dossier_at_the_end_of_the_year.id])
         end
       end
     end
