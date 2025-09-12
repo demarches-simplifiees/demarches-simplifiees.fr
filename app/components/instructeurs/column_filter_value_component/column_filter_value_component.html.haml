@@ -7,22 +7,25 @@
       = label
 
   - elsif is_date?
-    .flex.flex-gap-2
-      .flex.column
+    .flex.flex-gap-2.flex-1
+      .flex.column.justify-between
         
         = form.label "filter[filter][operator]", edit_mode ? filtered_column&.label : t('.operator'), class: 'fr-label'
         = form.select "filter[filter][operator]",
           options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } }
       - if is_operator_with_value?
-        .flex.column
+        .flex.column.justify-between
           = form.label :value, edit_mode ? t(".operators.#{operator}") : t('.value'), class: 'fr-label'
-          = form.text_field "filter[filter][value][]",
-            id: 'value',
-            class: 'fr-input',
-            type: 'date',
-            value:,
-            data: { autosubmit_target: 'input' },
-            required: true
+          .flex
+            = form.text_field "filter[filter][value][]",
+              id: 'value',
+              class: 'fr-input',
+              type: 'date',
+              value:,
+              data: { no_autosubmit: true },
+              required: true
+            - if edit_mode
+              = form.button t('.update'), class: 'fr-btn fr-icon-search-line'
 
   - elsif selectable?
     = form.label :value, label, class: 'fr-label'
@@ -31,12 +34,15 @@
 
   - else
     = form.label :value, label, class: 'fr-label'
-    = form.text_field "filter[filter][value][]",
-      id: 'value',
-      class: 'fr-input',
-      type:,
-      value:,
-      disabled: column.nil?,
-      maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
-      data: { autosubmit_target: 'input' },
-      required: !edit_mode
+    .flex
+      = form.text_field "filter[filter][value][]",
+        id: 'value',
+        class: 'fr-input',
+        type:,
+        value:,
+        disabled: column.nil?,
+        maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
+        data: { no_autosubmit: true },
+        required: !edit_mode
+      - if edit_mode
+        = form.button t('.update'), class: 'fr-btn fr-icon-search-line'
