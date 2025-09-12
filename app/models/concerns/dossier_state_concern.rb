@@ -62,6 +62,8 @@ module DossierStateConcern
     save!
 
     reset_user_buffer_stream!
+    with_champs
+
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     resolve_pending_correction!
 

@@ -12,7 +12,7 @@ module Mutations
 
     def resolve(demarche:, title: nil)
       demarche_number = demarche.number.presence || ApplicationRecord.id_from_typed_id(demarche.id)
-      demarche = Procedure.find_by(id: demarche_number)
+      demarche = Procedure.with_active_revision.find_by(id: demarche_number)
 
       if demarche.present? && (demarche.opendata? || context.authorized_demarche?(demarche))
         cloned_demarche = demarche.clone(admin: context.current_administrateur)

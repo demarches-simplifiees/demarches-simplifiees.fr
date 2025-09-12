@@ -6,7 +6,7 @@ class API::V2::DossiersController < API::V2::BaseController
   skip_before_action :allow_only_persisted_queries
 
   def pdf
-    @dossier = DossierPreloader.load_one(dossier)
+    @dossier = dossier.with_champs
 
     @acls = PiecesJustificativesService.new(user_profile: Administrateur.new, export_template: nil).acl_for_dossier_export(dossier.procedure)
     render(template: 'dossiers/show', formats: [:pdf])

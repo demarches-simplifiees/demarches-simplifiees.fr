@@ -26,8 +26,7 @@ module Administrateurs
     end
 
     def apercu
-      @dossier = procedure_without_control.draft_revision.dossier_for_preview(current_user)
-      DossierPreloader.load_one(@dossier)
+      @dossier = procedure_without_control.draft_revision.dossier_for_preview(current_user).with_champs
       @tab = apercu_tab
       if @tab == 'dossier'
         @dossier.validate(:champs_public_value)

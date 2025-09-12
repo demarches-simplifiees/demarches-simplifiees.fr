@@ -335,7 +335,7 @@ module Instructeurs
     def apercu
       @procedure = procedure
       @dossier = procedure.active_revision.dossier_for_preview(current_user)
-      DossierPreloader.load_one(@dossier)
+      @dossier.with_champs
     end
 
     def history

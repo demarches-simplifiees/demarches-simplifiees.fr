@@ -41,7 +41,7 @@ module Types
       else
         Dossier.visible_by_administration.for_api_v2.find(number)
       end
-      DossierPreloader.load_one(dossier)
+      dossier.with_champs
     end
 
     def groupe_instructeur(number:)
