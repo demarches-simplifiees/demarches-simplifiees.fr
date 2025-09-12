@@ -86,7 +86,9 @@ fr:
     update_start_date: La date de début pour le champ « %{label} » a été modifiée. Le date est désormais %{to}.
     remove_end_date: La date de fin pour le champ « %{label} » a été supprimée.
     update_end_date: La date de fin pour le champ « %{label} » a été modifiée. La date est désormais %{to}.
-    <<: *update_referentiel
+    update_pj_limit_formats: "La limitation des formats du champ « %{label} » a été modifiée."
+    update_pj_format_families: "Les familles de formats acceptés du champ « %{label} » ont été modifiées."
+    update_pj_auto_purge: "La suppression automatique du champ « %{label} » a été modifiée."
 
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
