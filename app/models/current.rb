@@ -10,4 +10,5 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :request_id
   attribute :user
   attribute :procedure_columns
+  attribute :db_queries_count
 end
