@@ -7,7 +7,7 @@ module Instructeurs
 
     def create
       batch = BatchOperation.safe_create!(batch_operation_params)
-      flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+      flash[:alert] = "Le traitement de masse n’a pas été lancé. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés" if batch.blank?
       redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
     end
 
@@ -47,7 +47,7 @@ module Instructeurs
           else
             render turbo_stream: turbo_stream.append(
               "contenu",
-              partial: "shared/avis/redirect_and_close_modal",
+              partial: "shared/redirect_and_close_modal",
               locals: {
                 redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis')
               }
@@ -56,7 +56,34 @@ module Instructeurs
         end
 
         format.html do
-          flash[:alert] = "Le traitement de masse n'a pas été lancé. Vérifiez que l'action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          flash[:alert] = "Le traitement de masse n’a pas été lancé. Vérifiez que l’action demandée est possible pour les dossiers sélectionnés" if batch.blank?
+          redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
+        end
+      end
+    end
+
+    def create_batch_commentaire
+      dossier_ids = batch_operation_commentaire_params[:dossier_ids]
+
+      if dossier_ids&.size&.> BatchOperation::BATCH_SELECTION_LIMIT
+        flash.alert = t('.batch_selection_limit_exceeded', limit: BatchOperation::BATCH_SELECTION_LIMIT)
+        render_redirect_and_close_modal and return
+      end
+
+      batch = BatchOperation.safe_create!(batch_operation_commentaire_params)
+      commentaire = Commentaire.new(commentaire_params)
+
+      respond_to do |format|
+        format.turbo_stream do
+          if batch.blank? || commentaire.errors.any?
+            render_commentaire_form_with_errors(commentaire)
+          else
+            render_redirect_and_close_modal and return
+          end
+        end
+
+        format.html do
+          flash[:alert] = t('.batch_creation_failed') if batch.blank?
           redirect_back(fallback_location: instructeur_procedure_url(@procedure.id))
         end
       end
@@ -90,6 +117,21 @@ module Instructeurs
       )
     end
 
+    def batch_operation_commentaire_params
+      params.require(:batch_operation).permit(:statut, dossier_ids: []).tap do |batch_params|
+        batch_params[:operation] = 'create_commentaire'
+        batch_params[:instructeur] = current_instructeur
+        batch_params.merge!(commentaire_params)
+      end
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(
+        :body,
+        :piece_jointe
+      )
+    end
+
     def set_procedure
       @procedure = Procedure.find(params[:procedure_id])
     end
@@ -99,6 +141,29 @@ module Instructeurs
         flash[:alert] = "Vous n’avez pas accès à cette démarche"
         redirect_to root_path
       end
+    end
+
+    def render_redirect_and_close_modal
+      render turbo_stream: turbo_stream.append(
+        "contenu",
+        partial: "shared/redirect_and_close_modal",
+        locals: { redirect_url: instructeur_procedure_path(@procedure, statut: batch_operation_commentaire_params[:statut]) }
+      )
+    end
+
+    def render_commentaire_form_with_errors(commentaire)
+      @ids = Array(params.dig(:batch_operation, :dossier_ids)).flat_map do |value|
+        value.is_a?(String) ? value.split(',') : value
+      end.compact_blank
+
+      render turbo_stream: turbo_stream.replace("modal-commentaire-batch-form",
+        partial: "instructeurs/batch_operations/commentaire_form",
+        locals: {
+          url: create_batch_commentaire_instructeur_batch_operations_path(procedure_id: @procedure.id),
+          commentaire: commentaire,
+          procedure: @procedure,
+          dossier_ids: @ids
+        })
     end
   end
 end

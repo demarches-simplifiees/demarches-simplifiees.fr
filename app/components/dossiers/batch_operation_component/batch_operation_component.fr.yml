@@ -19,7 +19,12 @@ fr:
     other: Autres actions multiples
     confirm: Confirmez-vous le traitement multiple des dossiers sélectionnés ?
     create_avis: Demander un avis externe
+    create_commentaire: Envoyer un message aux usagers
   placeholders:
     accepter: "Expliquez aux demandeurs pourquoi leur dossier est accepté (facultatif)"
     refuser: "Expliquez aux demandeurs pourquoi leur dossier est refusé (obligatoire)"
     classer_sans_suite: "Expliquez aux demandeurs pourquoi leur dossier est classé sans suite (obligatoire)"
+  commentaire_warning_html: <strong class='fr-alert__text'>L’envoi d’un message groupé est limité à %{limit} usagers.</strong><br>Veuillez restreindre le nombre d’usagers sélectionnés.
+  commentaire_modal:
+    title_singular: Envoyer un message à 1 usager
+    title_plural: Envoyer un message à %{count} usagers

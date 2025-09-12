@@ -541,6 +541,7 @@ Rails.application.routes.draw do
           resources :batch_operations, only: [:create], path: "(:statut)/dossiers", defaults: { statut: 'a-suivre' } do
             collection do
               post 'create_batch_avis' => 'batch_operations#create_batch_avis'
+              post 'create_batch_commentaire' => 'batch_operations#create_batch_commentaire'
             end
           end
         end
@@ -591,7 +592,7 @@ Rails.application.routes.draw do
         patch 'update_email_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'
-        post 'create_multiple_commentaire'
+        post 'create_multiple_commentaire_for_brouillons'
       end
     end
   end

@@ -77,14 +77,30 @@ describe BatchOperationProcessOneJob, type: :job do
     context 'when operation is "demander un avis externe"' do
       let(:batch_operation) do
         create(:batch_operation, :create_avis,
-                                 options.merge(instructeur: create(:instructeur)))
+                                 options.merge(instructeur: create(:instructeur),
+                                              emails: ['expert@exemple.fr'],
+                                              introduction: 'Test avis'))
       end
 
       it 'add avis to the dossier' do
         expect { subject.perform_now }
-          .to change { dossier_job.reload.avis }
-          .from([])
-          .to(anything)
+          .to change { dossier_job.reload.avis.count }
+          .from(0)
+          .to(1)
+      end
+    end
+
+    context 'when operation is "envoyer un message aux usagers"' do
+      let(:batch_operation) do
+        create(:batch_operation, :create_commentaire,
+                                 options.merge(instructeur: create(:instructeur), body: 'Test message'))
+      end
+
+      it 'add a commentaire to the dossier' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.commentaires.count }
+          .from(0)
+          .to(1)
       end
     end
 
@@ -96,9 +112,9 @@ describe BatchOperationProcessOneJob, type: :job do
 
       it 'adds a follower to the dossier' do
         expect { subject.perform_now }
-          .to change { dossier_job.reload.follows }
-          .from([])
-          .to(anything)
+          .to change { dossier_job.reload.follows.count }
+          .from(0)
+          .to(1)
       end
     end
 

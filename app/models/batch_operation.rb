@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BatchOperation < ApplicationRecord
+  BATCH_SELECTION_LIMIT = 500
+
   enum :operation, {
     accepter: 'accepter',
     refuser: 'refuser',
@@ -14,7 +16,8 @@ class BatchOperation < ApplicationRecord
     restaurer: 'restaurer',
     unfollow: 'unfollow',
     supprimer: 'supprimer',
-    create_avis: 'create_avis'
+    create_avis: 'create_avis',
+    create_commentaire: 'create_commentaire'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -22,7 +25,7 @@ class BatchOperation < ApplicationRecord
   has_many :groupe_instructeurs, through: :dossier_operations
   belongs_to :instructeur
 
-  store_accessor :payload, :motivation, :justificatif_motivation, :emails, :introduction, :question_label, :introduction_file, :confidentiel
+  store_accessor :payload, :motivation, :justificatif_motivation, :emails, :introduction, :question_label, :introduction_file, :confidentiel, :body, :piece_jointe, :statut
 
   validates :operation, presence: true
 
@@ -72,6 +75,8 @@ class BatchOperation < ApplicationRecord
       query.hidden_by_administration
     when BatchOperation.operations.fetch(:create_avis) then
       query.visible_by_administration.state_not_termine
+    when BatchOperation.operations.fetch(:create_commentaire) then
+      query.visible_by_administration
     end
   end
 
@@ -119,6 +124,8 @@ class BatchOperation < ApplicationRecord
           question_label: question_label
         }.with_indifferent_access
       )
+    when BatchOperation.operations.fetch(:create_commentaire)
+      CommentaireService.create(instructeur, dossier, { email: dossier.user.email, body:, piece_jointe: })
     end
   end
 
