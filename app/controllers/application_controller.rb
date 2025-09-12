@@ -344,12 +344,10 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_config
-    sentry = Rails.application.secrets.sentry
-
     {
-      key: sentry[:js_client_key],
-      enabled: sentry[:enabled],
-      environment: sentry[:environment],
+      key: ENV["SENTRY_DSN_JS"],
+      enabled: ENV.enabled?("SENTRY"),
+      environment: ENV["SENTRY_CURRENT_ENV"],
       browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user,
       release: ApplicationVersion.current
@@ -357,15 +355,13 @@ class ApplicationController < ActionController::Base
   end
 
   def matomo_config
-    matomo = Rails.application.secrets.matomo
-
     {
-      cookieDomain: matomo[:cookie_domain],
-      domain: matomo[:domain],
-      enabled: matomo[:enabled],
-      host: matomo[:host],
-      key: matomo[:client_key]
-    }
+      cookieDomain: ENV['MATOMO_COOKIE_DOMAIN'],
+      domain: ENV['MATOMO_DOMAIN'],
+      enabled: ENV.enabled?('MATOMO'),
+      host: ENV['MATOMO_HOST'],
+      key: ENV['MATOMO_ID']
+    }.compact
   end
 
   def crisp_config

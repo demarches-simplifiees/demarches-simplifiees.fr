@@ -39,7 +39,7 @@ class APIDatagouv::API
         body: {
           file: io
         },
-        headers: { "X-Api-Key" => datagouv_secret[:api_key] }
+        headers: { "X-Api-Key" => datagouv_api_key }
       )
       io.close
 
@@ -58,7 +58,7 @@ class APIDatagouv::API
         response = Typhoeus.post(
           datagouv_upload_url(dataset, resource),
           body: { file: },
-          headers: { "X-Api-Key" => datagouv_secret[:api_key] }
+          headers: { "X-Api-Key" => datagouv_api_key }
         )
 
         if response.success?
@@ -89,9 +89,7 @@ class APIDatagouv::API
       ].join('/')
     end
 
-    def datagouv_secret
-      Rails.application.secrets.datagouv
-    end
+    def datagouv_api_key = ENV['DATAGOUV_API_KEY']
 
     def validate_url(url)
       uri = URI.parse(url)
