@@ -18,7 +18,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   delegate :type_de_champ, to: :parent, prefix: true, allow_nil: true
 
   def revision_types_de_champ = revision.revision_types_de_champ.filter { _1.persisted? ? _1.parent_id == id : _1.parent == self }.sort_by(&:position)
-  def types_de_champ = revision_types_de_champ.map(&:type_de_champ)
+  def types_de_champ = revision_types_de_champ.filter_map { |coordinate| revision.types_de_champ.find { _1.id == coordinate.type_de_champ_id } }
 
   def root?
     persisted? ? parent_id.nil? : parent.nil?
