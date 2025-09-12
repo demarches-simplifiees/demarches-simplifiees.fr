@@ -22,6 +22,7 @@ module Mutations
     end
 
     def authorized?(dossier:, instructeur:, **args)
+      dossier.with_revision
       dossier_authorized_for?(dossier, instructeur)
     end
 

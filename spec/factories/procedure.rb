@@ -40,19 +40,23 @@ FactoryBot.define do
       procedure.defaut_groupe_instructeur = procedure.groupe_instructeurs.first
       initial_revision = build(:procedure_revision, procedure: procedure, dossier_submitted_message: evaluator.dossier_submitted_message)
 
+      revision_types_de_champ = []
+
       if evaluator.types_de_champ_public.present?
         if !evaluator.types_de_champ_public.first.is_a?(Hash)
           raise "types_de_champ_public must be an array of hashes"
         end
-        build_types_de_champ(evaluator.types_de_champ_public, revision: initial_revision, scope: :public)
+        revision_types_de_champ += build_types_de_champ(evaluator.types_de_champ_public, revision: initial_revision, scope: :public)
       end
 
       if evaluator.types_de_champ_private.present?
         if !evaluator.types_de_champ_private.first.is_a?(Hash)
           raise "types_de_champ_private must be an array of hashes"
         end
-        build_types_de_champ(evaluator.types_de_champ_private, revision: initial_revision, scope: :private)
+        revision_types_de_champ += build_types_de_champ(evaluator.types_de_champ_private, revision: initial_revision, scope: :private)
       end
+
+      initial_revision.association(:revision_types_de_champ).target = revision_types_de_champ
 
       if procedure.brouillon?
         procedure.draft_revision = initial_revision
@@ -310,7 +314,7 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
       type_de_champ_attributes[:referentiel_id] = referentiel.id
     end
     type_de_champ_attributes
-  end.deep_dup.each.with_index do |type_de_champ_attributes, i|
+  end.deep_dup.flat_map.with_index do |type_de_champ_attributes, i|
     type = TypeDeChamp.type_champs.fetch(type_de_champ_attributes.delete(:type) || :text).to_sym
     position = type_de_champ_attributes.delete(:position) || i
     children = type_de_champ_attributes.delete(:children)
@@ -346,26 +350,15 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
       build(:"type_de_champ_#{type}", no_coordinate: true, **type_de_champ_attributes)
     end
     coordinate = build(:procedure_revision_type_de_champ,
-      revision: revision,
-      type_de_champ: type_de_champ,
-      position: position,
-      parent: parent)
-
-    revision.association(:revision_types_de_champ).target << coordinate
+      revision:,
+      type_de_champ:,
+      position:,
+      parent:)
 
     if type_de_champ.repetition? && children.present?
-      build_types_de_champ(children, revision: revision, scope: scope, parent: coordinate)
+      [coordinate] + build_types_de_champ(children, revision:, scope:, parent: coordinate)
+    else
+      coordinate
     end
-  end
-
-  if parent.blank?
-    revision_types_de_champ_private, revision_types_de_champ_public = revision.revision_types_de_champ.partition(&:private?)
-    root_revision_types_de_champ_public, child_revision_types_de_champ_public = revision_types_de_champ_public.partition(&:root?)
-    root_revision_types_de_champ_private, child_revision_types_de_champ_private = revision_types_de_champ_private.partition(&:root?)
-
-    revision.association(:revision_types_de_champ).target = root_revision_types_de_champ_public.sort_by(&:position) +
-      root_revision_types_de_champ_private.sort_by(&:position) +
-      child_revision_types_de_champ_public.sort_by(&:parent).sort_by(&:position) +
-      child_revision_types_de_champ_private.sort_by(&:parent).sort_by(&:position)
   end
 end

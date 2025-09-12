@@ -384,7 +384,11 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :for_api_v2, -> { includes(:attestation_template, revision: [revision_types_de_champ: [:type_de_champ], procedure: [:administrateurs]], etablissement: [], individual: [], traitement: [], procedure: [], user: [:france_connect_informations]) }
+  scope :with_revision, -> { includes(revision: [revision_types_de_champ: [:type_de_champ]]) }
+  scope :for_api_v2, -> {
+    with_revision
+      .includes(:attestation_template, :etablissement, :individual, :traitement, procedure: [:administrateurs], user: [:france_connect_informations])
+  }
 
   scope :with_notifications, -> (instructeur) {
     joins(:dossier_notifications)
@@ -427,6 +431,18 @@ class Dossier < ApplicationRecord
   end
 
   scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
+
+  def with_revision
+    ::ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: { revision: [revision_types_de_champ: [:type_de_champ]] }
+    ).call
+    self
+  end
+
+  def with_champs(blob: false)
+    DossierPreloader.load_one(self, pj_template: blob)
+  end
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connected_with_one_identity?, to: :user, allow_nil: true

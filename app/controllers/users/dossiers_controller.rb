@@ -279,15 +279,15 @@ module Users
         @dossier_for_editing = dossier
       else
         # TODO remove when all forks are gone
-        @dossier_for_editing = dossier.owner_editing_fork
-        DossierPreloader.load_one(@dossier_for_editing)
+        @dossier_for_editing = dossier.owner_editing_fork.with_champs
       end
     end
 
     def submit_en_construction
-      @dossier = dossier_with_champs(pj_template: false)
+      @dossier.with_champs
       editing_fork_origin = dossier.editing_fork_origin
       dossier_en_construction = editing_fork_origin || dossier
+      editing_fork_origin&.with_champs
 
       if cast_bool(params.dig(:dossier, :pending_correction))
         dossier_en_construction.resolve_pending_correction
@@ -300,7 +300,7 @@ module Users
           # TODO remove when all forks are gone
           editing_fork_origin.merge_fork(dossier)
           # merge_fork do a `reload`, the preloader is used to reload the whole tree
-          DossierPreloader.load_one(editing_fork_origin)
+          editing_fork_origin.with_champs
         else
           dossier.merge_user_buffer_stream!
         end
@@ -390,9 +390,9 @@ module Users
 
       begin
         procedure = if params[:brouillon]
-          Procedure.publiees.or(Procedure.brouillons).find(params[:procedure_id])
+          Procedure.publiees.or(Procedure.brouillons).with_active_revision.find(params[:procedure_id])
         else
-          Procedure.publiees.find(params[:procedure_id])
+          Procedure.publiees.with_active_revision.find(params[:procedure_id])
         end
       rescue ActiveRecord::RecordNotFound
         flash.alert = t('errors.messages.procedure_not_found')
@@ -589,7 +589,7 @@ module Users
     end
 
     def ensure_dossier_has_changes
-      return if dossier.user_buffer_changes?
+      return if dossier.with_champs.user_buffer_changes?
 
       flash[:alert] = t('users.dossiers.en_construction_submitted')
       redirect_to dossier_path(dossier)

@@ -14,7 +14,7 @@ FactoryBot.define do
         revision.dossier_submitted_message_id = from_revision.dossier_submitted_message_id
 
         coordinate_map = {}
-        revision.association(:revision_types_de_champ).target = from_revision.revision_types_de_champ.map do |from_coordinate|
+        revision_types_de_champ = from_revision.revision_types_de_champ.map do |from_coordinate|
           parent = from_coordinate.parent.present? ? coordinate_map[from_coordinate.parent] : nil
 
           coordinate = build(:procedure_revision_type_de_champ,
@@ -26,6 +26,8 @@ FactoryBot.define do
           coordinate_map[from_coordinate] = coordinate
           coordinate
         end
+
+        revision.association(:revision_types_de_champ).target = revision_types_de_champ
       end
     end
   end

@@ -17,14 +17,14 @@ module DossierCloneConcern
 
   def find_editing_fork(user, rebase: true)
     fork = editing_forks.find_by(user:)
-    fork = DossierPreloader.load_one(fork) if fork
+    fork = fork.with_champs if fork
     fork.rebase! if rebase && fork
 
     fork
   end
 
   def owner_editing_fork
-    find_or_create_editing_fork(user).tap { DossierPreloader.load_one(_1) }
+    find_or_create_editing_fork(user).tap(&:with_champs)
   end
 
   def destroy_editing_fork!
@@ -156,7 +156,7 @@ module DossierCloneConcern
   private
 
   def forked_diff
-    @forked_diff ||= editing_fork? ? editing_fork_origin.make_diff(self) : nil
+    @forked_diff ||= editing_fork? ? editing_fork_origin.with_champs.make_diff(self) : nil
   end
 
   def forked_groupe_instructeur_changed?

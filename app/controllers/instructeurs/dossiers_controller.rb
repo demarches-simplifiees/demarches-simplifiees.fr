@@ -394,7 +394,7 @@ module Instructeurs
     end
 
     def reaffectation
-      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id]).with_champs
 
       @groupe_instructeur = @dossier.groupe_instructeur
 
