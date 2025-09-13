@@ -788,6 +788,7 @@ class Procedure < ApplicationRecord
     # fetch the more recent procedure_revision_types_de_champ
     # which includes recents_ids
     recents_prtdc = ProcedureRevisionTypeDeChamp
+      .unscope(:eager_load)
       .where(type_de_champ_id: recent_ids)
       .where.not(revision_id: draft_revision_id)
       .group(:type_de_champ_id)
