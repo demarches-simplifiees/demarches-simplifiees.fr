@@ -88,7 +88,7 @@ module Types
     end
 
     def revisions
-      Loaders::Association.for(object.class, revisions: { revision_types_de_champ: [:type_de_champ] }).load(object)
+      Loaders::Association.for(object.class, revisions: :revision_types_de_champ).load(object)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:, lookahead:)

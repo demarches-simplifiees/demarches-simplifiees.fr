@@ -17,7 +17,7 @@ module Types
     field :revision, Types::RevisionType, null: true
 
     def revision
-      Loaders::Association.for(object.class, revision: { revision_types_de_champ: [:type_de_champ] }).load(object)
+      Loaders::Association.for(object.class, revision: :revision_types_de_champ).load(object)
     end
   end
 end

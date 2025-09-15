@@ -7,7 +7,7 @@ module Recovery
     attr_reader :revisions, :file_path
     def initialize(revision_ids:, file_path: FILE_PATH)
       @revisions = ProcedureRevision.where(id: revision_ids)
-        .preload(revision_types_de_champ: :type_de_champ)
+        .preload(:revision_types_de_champ)
         .to_a
       @file_path = file_path
     end

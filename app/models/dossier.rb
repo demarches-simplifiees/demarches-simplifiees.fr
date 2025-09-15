@@ -384,7 +384,7 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :with_revision, -> { includes(revision: [revision_types_de_champ: [:type_de_champ]]) }
+  scope :with_revision, -> { includes(revision: :revision_types_de_champ) }
   scope :for_api_v2, -> {
     with_revision
       .includes(:attestation_template, :etablissement, :individual, :traitement, procedure: [:administrateurs], user: [:france_connect_informations])
@@ -435,7 +435,7 @@ class Dossier < ApplicationRecord
   def with_revision
     ::ActiveRecord::Associations::Preloader.new(
       records: [self],
-      associations: { revision: [revision_types_de_champ: [:type_de_champ]] }
+      associations: { revision: :revision_types_de_champ }
     ).call
     self
   end
