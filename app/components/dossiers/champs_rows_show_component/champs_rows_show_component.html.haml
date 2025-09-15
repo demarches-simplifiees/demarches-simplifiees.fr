@@ -68,8 +68,7 @@
           - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
             %p.copy-zone= helpers.number_with_html_delimiter(champ.to_s)
           - when TypeDeChamp.type_champs.fetch(:referentiel)
-            %p.copy-zone= champ.to_s
-            = render ViewableChamp::ReferentielDisplayComponent.new(champ: champ, profile: @profile)
+            = render Dossiers::ReferentielComponent.new(champ:, profile: @profile)
 
           - else
             .copy-zone{ 'data-to-copy': champ.to_s.strip }
