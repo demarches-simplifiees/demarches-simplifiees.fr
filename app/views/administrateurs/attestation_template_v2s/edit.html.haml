@@ -4,25 +4,25 @@
                     ['Attestation']] }
 
 = render NestedForms::FormOwnerComponent.new
-= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure),
-  html: { multipart: true , id: "attestation-template" },
-  data: { turbo: 'true',
-    controller: 'autosubmit attestation',
-    autosubmit_debounce_delay_value: 1000,
-    attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
-    attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
+= form_for @attestation_template,
+  url: admin_procedure_attestation_template_v2_path(@procedure, kind: @attestation_kind),
+  html: { multipart: true, id: "attestation-template" },
+  data: { turbo: "true",
+  controller: "autosubmit attestation",
+  autosubmit_debounce_delay_value: 1000,
+  attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
+  attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
 
-  #attestation-edit.fr-container.fr-my-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
+  #attestation-edit.fr-container.fr-my-4w{ "data-controller" => "tiptap", "data-tiptap-insert-after-tag-value" => " " }
     - if @procedure.attestation_templates.v1.published.any?
       .fr-mb-6w
         = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur d’attestation", heading_level: 'h3') do |c|
           - c.with_body do
-            %p Cette page présente un nouvel éditeur d'attestations, plus flexible et conforme à la charte de l'État.
+            %p Cette page présente un nouvel éditeur d’attestation, plus flexible et conforme à la charte de l’État.
             %p
               %strong Pour modifier l’attestation existante (actuellement délivrée aux usagers),
-              = link_to("cliquez ici", edit_admin_procedure_attestation_template_path(@procedure)) + "."
+              = link_to("cliquez ici", edit_admin_procedure_attestation_template_path(@procedure, kind: @attestation_kind)) + "."
             %p Pour générer une attestation à la charte de l’État, créez-la ci-dessous puis publiez-la: elle remplacera alors l’attestation actuelle.
-
 
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-12.fr-col-lg-7
