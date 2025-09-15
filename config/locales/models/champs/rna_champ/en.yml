@@ -1,14 +1,4 @@
 en:
-  activemodel:
-    attributes:
-      rna_champ:
-        value: N° RNA
-        data:
-          association_titre: Association name
-          association_objet: Association purpose
-          association_date_creation: Creation date
-          association_date_declaration: Declaration date
-          association_date_publication: Publication date
   activerecord:
     errors:
       models:
@@ -16,9 +6,15 @@ en:
           attributes:
             value:
               invalid_rna: "must begin with a capital W followed by 9 digits or letters, fill in a valid RNA. Example: W503726238"
-              not_found: "the filled RNA number does not match any association, fill in a valid RNA"
+              not_found: "the filled RNA number %{value} does not match any association, fill in a valid RNA"
               network_error: "A network error has prevented the association associated with this RNA to be fetched, please retry later"
     attributes:
       champs/rna_champ:
-          hints:
-            value: "Expected format: A capital W followed by 9 digits or letters. Example: W503726238"
+        value: N° RNA
+        association_titre: Association name
+        association_objet: Association purpose
+        association_date_creation: Creation date
+        association_date_declaration: Declaration date
+        association_date_publication: Publication date
+        hints:
+          value: "Expected format: A capital W followed by 9 digits or letters. Example: W503726238"

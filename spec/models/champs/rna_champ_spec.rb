@@ -33,7 +33,7 @@ describe Champs::RNAChamp do
     it 'when valid format, but no data, it contains only error message for not found' do
       champ = with_value("W182736273", nil)
       champ.validate(:champs_public_value)
-      expect(champ.errors.full_messages).to eq(["le numéro RNA saisi ne correspond à aucun établissement, saisissez un numéro RNA valide"])
+      expect(champ.errors.full_messages).to eq(["le numéro RNA W182736273 saisi ne correspond à aucun établissement, saisissez un numéro RNA valide"])
     end
   end
 

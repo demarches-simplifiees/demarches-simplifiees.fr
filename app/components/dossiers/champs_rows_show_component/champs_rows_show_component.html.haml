@@ -52,7 +52,7 @@
           - when TypeDeChamp.type_champs.fetch(:regions)
             = render partial: "shared/champs/regions/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:rna)
-            = render partial: "shared/champs/rna/show", locals: { champ: champ, profile: @profile }
+            = render Dossiers::RNAComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:rnf)
             = render partial: "shared/champs/rnf/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:epci)
