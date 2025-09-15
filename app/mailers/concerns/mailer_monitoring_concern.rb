@@ -15,8 +15,6 @@ module MailerMonitoringConcern
       end
     end
 
-    rescue_from Dolist::IgnorableError, with: :log_delivery_error
-
     def log_delivery_error(exception)
       EmailEvent.create_from_message!(message, status: "dispatch_error")
     end

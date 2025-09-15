@@ -42,8 +42,6 @@ class BalancerDeliveryMethod
     #
     # See https://github.com/mikel/mail/blob/199a76bed3fc518508b46135691914a1cfd8bff8/lib/mail/message.rb#L250
     mail.delivery_handler.deliver_mail(mail) { mail.send :do_delivery }
-  rescue Dolist::ContactReadOnlyError
-    User.where(email: mail.to.first).update_all(email_unsubscribed: true) if mail&.to&.first
   end
 
   private
@@ -68,22 +66,10 @@ class BalancerDeliveryMethod
   end
 
   def delivery_method(mail)
-    if ENV['DOLIST_FOR_ORANGE'].present? && Dolist::API.sendable?(mail)
-      tos = Array.wrap(mail.to).compact
-
-      if tos.first&.downcase&.end_with?('@orange.fr', '@wanadoo.fr')
-        return :dolist_api
-      end
-    end
-
     return mail[FORCE_DELIVERY_METHOD_HEADER].value.to_sym if force_delivery_method?(mail)
 
-    compatible_delivery_methods_for(mail)
+    @delivery_methods
       .flat_map { |delivery_method, weight| [delivery_method] * weight }
       .sample(random: self.class.random)
-  end
-
-  def compatible_delivery_methods_for(mail)
-    @delivery_methods.reject { |delivery_method, _weight| delivery_method.to_s == 'dolist_api' && !Dolist::API.sendable?(mail) }
   end
 end

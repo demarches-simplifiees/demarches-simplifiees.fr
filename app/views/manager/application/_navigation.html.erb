@@ -33,7 +33,4 @@ as defined by the routes in the `admin/` namespace
   <% if Rails.application.secrets.sendinblue[:enabled] && ENV["SAML_IDP_ENABLED"] == "enabled" %>
     <%= link_to "Sendinblue", ENV.fetch("SENDINBLUE_LOGIN_URL"), class: "navigation__link", target: '_blank' %>
   <% end %>
-  <% if ENV.fetch("SAML_IDP_ENABLED") == "enabled" && ENV["DOLIST_LOGIN_URL"].present? %>
-    <%= link_to "Dolist", ENV.fetch("DOLIST_LOGIN_URL"), class: "navigation__link", target: '_blank' %>
-  <% end %>
 </nav>

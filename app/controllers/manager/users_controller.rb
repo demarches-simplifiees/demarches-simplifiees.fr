@@ -77,8 +77,7 @@ module Manager
       @user = User.find(params[:id])
 
       email_services = [
-        Sendinblue::API.new,
-        Dolist::API.new
+        Sendinblue::API.new
       ].filter(&:properly_configured?)
 
       @sent_mails = Concurrent::Array.new
