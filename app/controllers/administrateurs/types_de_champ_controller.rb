@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 module Administrateurs
   class TypesDeChampController < AdministrateurController
     include ActiveSupport::NumberHelper
@@ -173,6 +175,13 @@ module Administrateurs
     end
 
     def accept_simplification
+      rule = params[:rule].to_s
+      return head :not_found unless allowed_rule?(rule)
+
+      changes = build_changes_from_selection
+      draft.apply_changes(changes)
+
+      redirect_to [:champs, :admin, @procedure]
     end
 
     private
@@ -270,6 +279,43 @@ module Administrateurs
     def ensure_llm_calls_enabled
       return if @procedure.feature_enabled?(:llm_nightly_improve_procedure)
       redirect_to administrateur_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
+    end
+
+    def load_improve_label_suggestions
+      # Suggestions are computed on the latest published revision
+      published_revision = @procedure.published_revision
+      schema = published_revision.schema_to_llm.to_json
+      schema_hash = Digest::SHA256.hexdigest(schema)
+
+      suggestion = LLMRuleSuggestion
+        .where(procedure_revision_id: published_revision.id, rule: @rule, state: 'completed')
+        .order(created_at: :desc)
+        .first
+
+      items = if suggestion&.schema_hash == schema_hash
+        suggestion.llm_rule_suggestion_items
+      else
+        []
+      end
+
+      # Map LLM items to the simplify view contract
+      updates = items
+        .select { |i| i.op_kind == 'update' && i.stable_id.present? }
+        .map do |i|
+          {
+            stable_id: i.stable_id,
+            libelle: i.payload['libelle'],
+            justification: i.justification,
+            confidence: i.confidence,
+          }
+        end
+
+      @changes = { destroy: [], update: updates, add: [] }
+      @text = [] # Label improver has no summary; keep empty for MVP
+     end
+
+    def allowed_rule?(rule)
+      rule.in?([LLM::LabelImprover::TOOL_NAME])
     end
   end
 end

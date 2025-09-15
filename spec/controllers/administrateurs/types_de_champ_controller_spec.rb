@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 describe Administrateurs::TypesDeChampController, type: :controller do
   let(:procedure) do
     create(:procedure,
