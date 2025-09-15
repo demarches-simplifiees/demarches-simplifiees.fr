@@ -15,7 +15,9 @@
           %td= champ.data['siren_siret']
       %tr
         %th.libelle Commune :
-        %td= "#{champ.data['nom_commune']} (#{champ.data['code_commune']})"
+        %td
+          = "#{champ.data['nom_commune']}"
+          = " (#{champ.data['code_commune']})" if champ.data['code_commune'].present?
       %tr
         %th.libelle Academie :
         %td= "#{champ.data['libelle_academie']} (#{champ.data['code_academie']})"
