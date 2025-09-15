@@ -9,8 +9,6 @@ en:
           association_date_creation: Creation date
           association_date_declaration: Declaration date
           association_date_publication: Publication date
-        paste: Copy the RNA to the clipboard
-        paste_success: The RNA has been copied to the clipboard
   activerecord:
     errors:
       models:

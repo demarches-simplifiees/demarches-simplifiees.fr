@@ -4,4 +4,4 @@
   %dl.fr-pl-0
     - formated_data.each do |key, value|
       %dt.champ-label.fr-text-mention--grey= t(".#{key}")
-      %dd.champ-content.fr-mb-2w= sanitize(value)
+      %dd.champ-content.fr-mb-2w.copy-btn= sanitize(value)
