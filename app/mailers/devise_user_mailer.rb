@@ -6,7 +6,6 @@ class DeviseUserMailer < Devise::Mailer
   helper MailerHelper
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
   include MailerDefaultsConfigurableConcern
-  include MailerDolistConcern
   include MailerMonitoringConcern
   include PriorityDeliveryConcern
 
