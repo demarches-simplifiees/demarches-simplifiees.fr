@@ -20,6 +20,7 @@ class DubiousProcedure
 
   def self.all
     procedures_with_forbidden_tdcs_sql = ProcedureRevisionTypeDeChamp
+      .unscope(:eager_load)
       .joins(:procedure, :type_de_champ)
       .select("string_agg(types_de_champ.libelle, ' - ') as dubious_champs, procedures.id as procedure_id, procedures.libelle as procedure_libelle, procedures.aasm_state as procedure_aasm_state, procedures.hidden_at_as_template as procedure_hidden_at_as_template")
       .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
