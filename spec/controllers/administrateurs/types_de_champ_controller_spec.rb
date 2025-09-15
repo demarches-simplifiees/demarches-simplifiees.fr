@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 describe Administrateurs::TypesDeChampController, type: :controller do
   let(:procedure) do
     create(:procedure,
@@ -400,26 +402,35 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#simplify' do
-    let(:procedure) { create(:procedure, types_de_champ_public:) }
-    let(:types_de_champ_public) { [{ type: :text, stable_id: 123 }] }
     render_views
-    it 'renders suggestions from stubbed file' do
-      stub_json = {
-        operations: {
-          destroy: [],
-          update: [],
-          add: []
-        },
-        summary: "Aucune modification"
-      }.to_json
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text, libelle: 'Ancien', stable_id: 123 }] }
+    let(:rule) { LLM::LabelImprover::TOOL_NAME }
+    let(:procedure_revision) { procedure.published_revision }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
+    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
-      allow(File).to receive(:read).and_call_original
-      allow(File).to receive(:read).with("spec/fixtures/llm/deepseek/deepseek-chat-v3.1.json").and_return(stub_json)
+    it 'renders label suggestions from stored LLMRuleSuggestion items' do
+      create(:llm_rule_suggestion_item,
+        llm_rule_suggestion:,
+        op_kind: 'update',
+        stable_id: 123,
+        payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' },
+        safety: 'safe',
+        justification: 'clarity',
+        confidence: 0.9)
 
-      get :simplify, params: { procedure_id: procedure.id }
+      get :simplify, params: { procedure_id: procedure.id, rule: rule }
+
       expect(response).to have_http_status(:ok)
-      expect(assigns(:changes)).to eq({ destroy: [], update: [], add: [] })
-      expect(response.body).to include("Suggestions de votre assistant IA")
+      expect(assigns(:changes)).to eq({ destroy: [], update: [{ stable_id: 123, libelle: 'Nouveau', justification: 'clarity', confidence: 0.9 }], add: [] })
+      expect(response.body).to include('Suggestions de votre assistant IA')
+      expect(response.body).to include('Ancien → Nouveau')
+    end
+
+    it '404s on unknown rule' do
+      get :simplify, params: { procedure_id: procedure.id, rule: 'unknown_rule' }
+      expect(response).to have_http_status(:not_found)
     end
   end
 
@@ -438,6 +449,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
       post :accept_simplification, params: {
         procedure_id: procedure.id,
+        rule: LLM::LabelImprover::TOOL_NAME,
         changes_json: changes.to_json,
         selected: {
           destroy: [first_id],
