@@ -47,7 +47,25 @@ class DossierPreloader
 
   def load_dossiers(dossiers, pj_template: false)
     to_include = @includes_for_champ.dup
-    to_include << [piece_justificative_file_attachments: :blob]
+
+    blob_include = if pj_template
+      {
+        # avoid N+1 from BlobImageProcessorConcern:
+        attachments: :record,
+
+        # equivalent scope of with_all_variant_records
+        variant_records: { image_attachment: :blob },
+        preview_image_attachment: { blob: { variant_records: { image_attachment: :blob } } }
+      }
+    else
+      {}
+    end
+
+    to_include << [
+      piece_justificative_file_attachments: {
+        blob: blob_include
+      }
+    ]
 
     all_champs = Champ
       .includes(to_include)
