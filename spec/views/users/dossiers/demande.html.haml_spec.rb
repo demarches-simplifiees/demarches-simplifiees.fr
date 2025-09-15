@@ -117,6 +117,31 @@ describe 'users/dossiers/demande', type: :view do
     end
   end
 
+  context 'when there is a multiple dropdown list from a referentiel' do
+    let!(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :multiple_drop_down_list, drop_down_mode: 'advanced', referentiel: }
+      ]
+    end
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
+    let(:referentiel) { create(:csv_referentiel, :with_items) }
+    let(:value) { [referentiel.items.first.id.to_s, referentiel.items.second.id.to_s] }
+
+    context 'user chooses two options in the list' do
+      before do
+        champ.update!(value: value.to_json)
+        render
+      end
+
+      it 'displays two options to the user' do
+        expect(rendered).to have_text('fromage, dessert')
+        expect(rendered).not_to have_text('fruit')
+      end
+    end
+  end
+
   context 'when value contains html values' do
     let(:types_de_champ_public) { [{ type: :textarea }] }
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
