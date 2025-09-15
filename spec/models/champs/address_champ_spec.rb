@@ -115,6 +115,27 @@ describe Champs::AddressChamp do
       end
     end
 
+    context "when the address was filled with an international address" do
+      let(:value_json) do
+        {
+          "label" => "18 rue de la gruyere, Lausanne 1010 Suisse",
+          "city_name" => "Lausanne",
+          "not_in_ban" => "true",
+          "postal_code" => "1010",
+          "country_code" => "CH",
+          "street_address" => "18 rue de la gruyere",
+          "department_code" => "99",
+          "department_name" => "Etranger"
+        }
+      end
+
+      it "changes to in ban should reset other filled value, with FR country_code" do
+        champ.not_in_ban = ''
+        champ.save!
+        expect(champ.value_json).to eq("not_in_ban" => "", "country_code" => "FR")
+      end
+    end
+
     context 'legacy addresses' do
       let(:value_json) { nil }
 
