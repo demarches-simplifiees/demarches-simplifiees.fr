@@ -52,7 +52,7 @@
           - when TypeDeChamp.type_champs.fetch(:departements)
             = render Dossiers::DepartementComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:regions)
-            = render partial: "shared/champs/regions/show", locals: { champ: champ }
+            = render Dossiers::RegionComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:rna)
             = render Dossiers::RNAComponent.new(champ:)
           - when TypeDeChamp.type_champs.fetch(:rnf)
