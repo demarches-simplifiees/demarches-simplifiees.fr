@@ -61,6 +61,7 @@ module Administrateurs
       if @activated_attestation_params.nil?
         @activated_attestation_params = params.require(:attestation_template)
           .permit(:title, :body, :footer, :activated, :logo, :signature)
+          .merge(kind: :acceptation)
       end
 
       @activated_attestation_params
