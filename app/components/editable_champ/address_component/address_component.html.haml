@@ -5,11 +5,11 @@
 
 .fr-input-group
   .fr-checkbox-group
-    = @form.check_box :not_in_ban, { class: "fr-input", checked: !@champ.ban?, disabled: @champ.international? }, 'true', 'false'
+    = @form.check_box :not_in_ban, { class: "fr-input", checked: @champ.not_ban? }, 'true', 'false'
     = @form.label :not_in_ban, class: 'fr-label' do
       - t('.not_in_ban')
 
-- if !@champ.ban?
+- if @champ.not_ban?
   .fr-mt-3w
     .fr-input-group
       %span.fr-label
