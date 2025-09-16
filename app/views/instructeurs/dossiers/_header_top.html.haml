@@ -36,7 +36,7 @@
                 = f.collection_check_boxes :label_id, dossier.procedure.labels, :id, :name, include_hidden: false do |b|
                   .fr-fieldset__element
                     .fr-checkbox-group.fr-checkbox-group--sm.fr-mb-1w
-                      = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, label_id: b.value).present?  )
+                      = b.check_box(checked: dossier.labels.any? { _1.id == b.value })
                       = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.colors.fetch(b.object.color)}") { b.text }
 
               %hr.fr-pb-2w
