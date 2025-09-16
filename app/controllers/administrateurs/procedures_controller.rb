@@ -312,10 +312,8 @@ module Administrateurs
     def publication
       @procedure = current_administrateur
         .procedures
-        .includes(
-          published_revision: { revision_types_de_champ: :type_de_champ },
-          draft_revision: { revision_types_de_champ: :type_de_champ }
-        ).find(params[:procedure_id])
+        .with_active_revision
+        .find(params[:procedure_id])
 
       if @procedure.auto_archive_on && !@procedure.auto_archive_on.future?
         flash.alert = "La date limite de dépôt des dossiers doit être postérieure à la date du jour pour réactiver la procédure. #{view_context.link_to('Veuillez la modifier', edit_admin_procedure_path(@procedure))}"

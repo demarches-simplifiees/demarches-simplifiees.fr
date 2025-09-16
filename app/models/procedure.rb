@@ -121,7 +121,7 @@ class Procedure < ApplicationRecord
         .state_en_construction_ou_instruction
         .distinct(:revision_id)
         .pluck(:revision_id)
-      ProcedureRevision.includes(revision_types_de_champ: [:type_de_champ]).where(id: ids)
+      ProcedureRevision.includes(:revision_types_de_champ).where(id: ids)
     end
   end
 
@@ -185,7 +185,7 @@ class Procedure < ApplicationRecord
 
   scope :for_api, -> { with_active_revision.includes(:administrateurs, :module_api_carto) }
   scope :for_api_v2, -> { with_active_revision.includes(administrateurs: :user) }
-  scope :with_active_revision, -> { includes(draft_revision: [revision_types_de_champ: [:type_de_champ]], published_revision: [revision_types_de_champ: [:type_de_champ]]) }
+  scope :with_active_revision, -> { includes(draft_revision: :revision_types_de_champ, published_revision: :revision_types_de_champ) }
 
   scope :order_by_position_for, -> (instructeur) {
     joins(:instructeurs_procedures)
