@@ -53,6 +53,10 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     options
   end
 
+  def radio_button_options
+    column_filter_options.map { |opt_label, opt_value| { label: opt_label, value: opt_value, checked: opt_value.to_s.in?(value) } }
+  end
+
   def date_filter_options
     ['match', 'before', 'after', 'this_week', 'this_month', 'this_year']
       .map { |operator| [t(".operators.#{operator}"), operator] }
