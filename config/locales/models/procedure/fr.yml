@@ -44,6 +44,7 @@ fr:
         published_at: 'Date de publication'
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'
+        no_gender: 'Désactiver l’identité avec civilité'
         api_state:
           brouillon: Brouillon
           publiee: Publiée
