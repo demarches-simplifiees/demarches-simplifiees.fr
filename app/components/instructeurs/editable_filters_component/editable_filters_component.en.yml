@@ -1,3 +1,4 @@
 ---
 en:
-  hello: Hello
+  search_filter_dossiers: Search / filter files
+  toggle_filters: Show / hide filters
