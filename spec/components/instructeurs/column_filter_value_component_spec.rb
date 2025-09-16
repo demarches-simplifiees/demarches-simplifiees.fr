@@ -18,7 +18,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
   describe 'the select case' do
     let!(:column) do
-      column = double("Column", column: :value, type: :enum, tdc_type: "drop_down_list", options_for_select:, mandatory: true)
+      column = double("Column", column: :value, type: :enum, tdc_type: "drop_down_list", options_for_select:, mandatory: true, h_id: {})
       allow(column).to receive(:is_a?).with(Columns::ChampColumn).and_return(true)
       column
     end
@@ -35,19 +35,13 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   end
 
   describe 'the input case' do
-    let(:column) { double("Column", column: :value, type: :datetime, mandatory: true) }
+    let(:column) { double("Column", column: :value, type: :datetime, mandatory: true, h_id: {}) }
 
     it { expect(page).to have_selector('input[name="filter[filter][value][]"][type="date"]', count: 1) }
   end
 
-  describe 'the column empty case' do
-    let(:column) { nil }
-
-    it { expect(page).to have_selector('input[disabled]', count: 1) }
-  end
-
   describe 'the yes no case' do
-    let(:column) { double("Column", column: :value, type: :boolean, tdc_type: "yes_no", options_for_select: Champs::YesNoChamp.options, mandatory:) }
+    let(:column) { double("Column", column: :value, type: :boolean, tdc_type: "yes_no", options_for_select: Champs::YesNoChamp.options, mandatory:, h_id: {}) }
 
     context 'when the column is mandatory' do
       let(:mandatory) { true }

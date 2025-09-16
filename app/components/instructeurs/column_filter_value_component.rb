@@ -82,13 +82,17 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
 
   def react_props
     {
-      id: 'value',
+      id: input_id,
       class: 'fr-mt-1w',
       name: 'filter[filter][value][]',
       items: column_filter_options,
       value_separator: false,
       selected_keys: filtered_column&.filter_value
     }
+  end
+
+  def input_id
+    "value_#{filtered_column&.id&.parameterize}"
   end
 
   private
