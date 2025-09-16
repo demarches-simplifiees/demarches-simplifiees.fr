@@ -3,7 +3,7 @@
   - if boolean?
     = render Dsfr::RadioButtonListComponent.new(form:,
       target: "filter[filter][value][]",
-      buttons: column_filter_options.map { |label, value| { label:, value: } }) do
+      buttons: radio_button_options) do
       = label
 
   - elsif is_date?
