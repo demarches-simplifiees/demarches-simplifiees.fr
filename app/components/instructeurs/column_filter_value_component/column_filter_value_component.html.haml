@@ -1,4 +1,4 @@
-.flex.column.justify-between{id:}
+.flex.column.justify-between{ id: }
   = operator_hidden_field
   - if boolean?
     = render Dsfr::RadioButtonListComponent.new(form:,
@@ -9,7 +9,6 @@
   - elsif is_date?
     .flex.flex-gap-2.flex-1
       .flex.column.justify-between
-        
         = form.label "filter[filter][operator]", edit_mode ? filtered_column&.label : t('.operator'), class: 'fr-label'
         = form.select "filter[filter][operator]",
           options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } }
