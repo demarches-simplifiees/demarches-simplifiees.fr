@@ -56,7 +56,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     template: Field::Boolean,
     opendata: Field::Boolean,
     hide_instructeurs_email: Field::Boolean,
-    dossiers_count: Field::Number
+    dossiers_count: Field::Number,
+    no_gender: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -137,7 +138,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :piece_justificative_multiple,
     :for_tiers_enabled,
     :hide_instructeurs_email,
-    :replaced_by_procedure_id
+    :replaced_by_procedure_id,
+    :no_gender
   ].freeze
 
   # Overwrite this method to customize how procedures are displayed
