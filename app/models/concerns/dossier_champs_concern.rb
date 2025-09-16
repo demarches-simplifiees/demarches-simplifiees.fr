@@ -208,6 +208,16 @@ module DossierChampsConcern
       update_champs_timestamps(changed_champs)
     end
 
+    champs.where(id: changed_main_champ_ids, stream: history_stream)
+      .where(type: ['Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'])
+      .with_attached_piece_justificative_file.find_each do |champ|
+        files = champ.piece_justificative_file.map { _1.slice(:filename, :checksum) }
+        if files.present?
+          champ.update_column(:data, files)
+          champ.piece_justificative_file.purge_later
+        end
+      end
+
     # update loaded champ instances
     champs.each do |champ|
       if champ.id.in?(changed_main_champ_ids)

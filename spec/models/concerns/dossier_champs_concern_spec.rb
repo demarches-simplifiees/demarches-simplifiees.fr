@@ -694,6 +694,53 @@ RSpec.describe DossierChampsConcern do
           expect(dossier.history.size).to eq(0)
         }
       end
+
+      context "piece_justificative or titre_identite" do
+        let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+        let(:types_de_champ_public) do
+          [
+            { type: :piece_justificative, libelle: "Un champ pj", stable_id: 98 },
+            { type: :titre_identite, libelle: "Un champ titre identite", stable_id: 99 }
+          ]
+        end
+
+        subject do
+          dossier.with_update_stream(dossier.user) do
+            champ = dossier.public_champ_for_update('98', updated_by: dossier.user.email)
+            champ.piece_justificative_file.attach({ io: Rails.root.join('spec/fixtures/files/Contrat.pdf').open, filename: 'Contrat.pdf' })
+            champ.save!
+            champ = dossier.public_champ_for_update('99', updated_by: dossier.user.email)
+            champ.piece_justificative_file.purge
+          end
+        end
+
+        it {
+          subject
+
+          expect(dossier.history.size).to eq(0)
+          dossier.merge_user_buffer_stream!
+          perform_enqueued_jobs
+          dossier.reload
+          expect(dossier.history.size).to eq(2)
+          expect(dossier.history.map(&:piece_justificative_file).map(&:attached?)).to eq([false, false])
+          expect(dossier.history.map(&:data)).to eq([
+            [
+              { "checksum" => "6kFu0HWdRqjeWPY6WQd0mQ==", "filename" => "toto.txt" }
+            ], [
+              { "checksum" => "9x2+UmKKP4OnerSUgXUlxg==", "filename" => "toto.png" }
+            ]
+          ])
+
+          dossier.clean_champs_after_instruction!
+          dossier.reload
+
+          expect(dossier.history.size).to eq(2)
+
+          pj_champ = dossier.project_champ(dossier.find_type_de_champ_by_stable_id(98), row_id: nil)
+          expect(pj_champ.piece_justificative_file.size).to eq(2)
+          expect(pj_champ.piece_justificative_file.map(&:filename).map(&:to_s)).to eq(['toto.txt', 'Contrat.pdf'])
+        }
+      end
     end
 
     describe "#repetition_remove_row" do
