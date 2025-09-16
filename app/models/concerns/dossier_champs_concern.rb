@@ -181,23 +181,42 @@ module DossierChampsConcern
 
     return if buffer_champ_ids_h.empty?
 
+    discarded_row_ids = champs.where(stream: Champ::USER_BUFFER_STREAM, stable_id: revision_stable_ids)
+      .where.not(row_id: nil)
+      .where.not(discarded_at: nil)
+      .pluck(:row_id)
+
     changed_main_champ_ids_h = champs.where(stream: Champ::MAIN_STREAM, stable_id: revision_stable_ids)
       .pluck(:id, :stable_id, :row_id)
       .index_by { |(_, stable_id, row_id)| TypeDeChamp.public_id(stable_id, row_id) }
       .transform_values(&:first)
 
     buffer_champ_ids = buffer_champ_ids_h.values
-    changed_main_champ_ids = changed_main_champ_ids_h.filter_map { |public_id, id| id if buffer_champ_ids_h.key?(public_id) }
+    changed_main_champ_ids = changed_main_champ_ids_h.filter_map { |public_id, id| id if buffer_champ_ids_h.key?(public_id) }.to_set
 
     now = Time.zone.now
     history_stream = "#{Champ::HISTORY_STREAM}#{now}"
     changed_champs = champs.filter { _1.id.in?(buffer_champ_ids) }
+
+    if discarded_row_ids.present?
+      changed_main_champ_ids += champs.where(stream: Champ::MAIN_STREAM, row_id: discarded_row_ids).pluck(:id)
+    end
 
     transaction do
       champs.where(id: changed_main_champ_ids, stream: Champ::MAIN_STREAM).update_all(stream: history_stream)
       champs.where(id: buffer_champ_ids, stream: Champ::USER_BUFFER_STREAM).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
       update_champs_timestamps(changed_champs)
     end
+
+    champs.where(id: changed_main_champ_ids, stream: history_stream)
+      .where(type: ['Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'])
+      .with_attached_piece_justificative_file.find_each do |champ|
+        files = champ.piece_justificative_file.map { _1.slice(:filename, :checksum) }
+        if files.present?
+          champ.update_column(:data, files)
+          champ.piece_justificative_file.purge_later
+        end
+      end
 
     # update loaded champ instances
     champs.each do |champ|

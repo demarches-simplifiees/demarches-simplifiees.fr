@@ -694,6 +694,99 @@ RSpec.describe DossierChampsConcern do
           expect(dossier.history.size).to eq(0)
         }
       end
+
+      context "piece_justificative or titre_identite" do
+        let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+        let(:types_de_champ_public) do
+          [
+            { type: :piece_justificative, libelle: "Un champ pj", stable_id: 98 },
+            { type: :titre_identite, libelle: "Un champ titre identite", stable_id: 99 }
+          ]
+        end
+
+        subject do
+          dossier.with_update_stream(dossier.user) do
+            champ = dossier.public_champ_for_update('98', updated_by: dossier.user.email)
+            champ.piece_justificative_file.attach({ io: Rails.root.join('spec/fixtures/files/Contrat.pdf').open, filename: 'Contrat.pdf' })
+            champ.save!
+            champ = dossier.public_champ_for_update('99', updated_by: dossier.user.email)
+            champ.piece_justificative_file.purge
+          end
+        end
+
+        it {
+          subject
+
+          expect(dossier.history.size).to eq(0)
+          dossier.merge_user_buffer_stream!
+          perform_enqueued_jobs
+          dossier.reload
+          expect(dossier.history.size).to eq(2)
+          expect(dossier.history.map(&:piece_justificative_file).map(&:attached?)).to eq([false, false])
+          expect(dossier.history.map(&:data)).to eq([
+            [
+              { "checksum" => "6kFu0HWdRqjeWPY6WQd0mQ==", "filename" => "toto.txt" }
+            ], [
+              { "checksum" => "9x2+UmKKP4OnerSUgXUlxg==", "filename" => "toto.png" }
+            ]
+          ])
+
+          dossier.clean_champs_after_instruction!
+          dossier.reload
+
+          expect(dossier.history.size).to eq(2)
+
+          pj_champ = dossier.project_champ(dossier.find_type_de_champ_by_stable_id(98), row_id: nil)
+          expect(pj_champ.piece_justificative_file.size).to eq(2)
+          expect(pj_champ.piece_justificative_file.map(&:filename).map(&:to_s)).to eq(['toto.txt', 'Contrat.pdf'])
+        }
+      end
+    end
+
+    describe "#repetition_remove_row" do
+      before { Flipper.enable(:user_buffer_stream, procedure) }
+
+      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+      let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
+      let(:row_ids) { dossier.project_champ(type_de_champ_repetition).row_ids }
+      let(:row_id) { row_ids.first }
+
+      def main_row(stable_id, row_id)
+        dossier.with_main_stream do
+          dossier.send(:champs_on_stream).find { _1.stable_id == stable_id && _1.row_id == row_id }
+        end
+      end
+
+      def draft_row(stable_id, row_id)
+        dossier.with_update_stream(dossier.user) do
+          dossier.send(:champs_on_stream).find { _1.stable_id == stable_id && _1.row_id == row_id }
+        end
+      end
+
+      def main_champ_993 = main_row(993, row_id)
+      def draft_champ_993 = draft_row(993, row_id)
+
+      subject do
+        dossier.with_update_stream(dossier.user) { dossier.repetition_remove_row(type_de_champ_repetition, row_id, updated_by: 'test') }
+      end
+
+      it {
+        expect(main_champ_993.discarded_at).to be_nil
+        subject
+        expect(main_champ_993.discarded_at).to be_nil
+        expect(draft_champ_993.discarded_at).not_to be_nil
+
+        dossier.reload
+        dossier.merge_user_buffer_stream!
+        dossier.reload
+
+        expect(dossier.history.size).to eq(2)
+
+        dossier.clean_champs_after_submit!
+        dossier.reload
+
+        expect(dossier.history.map(&:public_id)).to match_array(["993-#{row_id}", "994-#{row_id}"])
+      }
     end
   end
 end
