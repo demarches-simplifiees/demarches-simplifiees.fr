@@ -1,11 +1,19 @@
-#editable-filters-component.fr-mt-2w
-  .fr-pt-2w.fr-px-2w
-    %p.mb-0.font-weight-bold= t('.search_filter_dossiers')
+%section#editable-filters-component.flex.column.fr-my-2w{ data: { controller: 'expand' } }
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
+    .fr-col
+      %h6.fr-mb-0.fr-p-2w= t('.search_filter_dossiers')
+    .fr-col-auto
+      %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{
+        type: 'button',
+        data: { action: 'click->expand#toggle' },
+        aria: { expanded: 'true' }
+      }
+        %span.fr-icon-arrow-down-s-line{ data: { 'expand-target': 'icon' } }
+        %span.fr-sr-only= t('.toggle_filters')
 
-  .fr-grid-row
+  .fr-grid-row{ data: { 'expand-target': 'content' } }
     - filters.each do |filter|
       .fr-col-auto.fr-p-2w.flex.column
-      
         = form_with url: update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
           method: :post,
           class: 'editable-filter-form flex flex-1',
