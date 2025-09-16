@@ -480,7 +480,7 @@ const AnnuaireEducationPayload = s.type({
       fields: s.type({
         identifiant_de_l_etablissement: s.string(),
         nom_etablissement: s.string(),
-        nom_commune: s.string()
+        nom_commune: s.optional(s.string())
       })
     })
   )
@@ -493,7 +493,7 @@ const Coerce = {
     AnnuaireEducationPayload,
     ({ records }) =>
       records.map((record) => ({
-        label: `${record.fields.nom_etablissement}, ${record.fields.nom_commune} (${record.fields.identifiant_de_l_etablissement})`,
+        label: `${record.fields.nom_etablissement}${record.fields.nom_commune ? `, ${record.fields.nom_commune}` : ''} (${record.fields.identifiant_de_l_etablissement})`,
         value: record.fields.identifiant_de_l_etablissement,
         data: record
       }))
