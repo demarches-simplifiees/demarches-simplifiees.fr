@@ -586,10 +586,11 @@ Rails.application.routes.draw do
         get 'stats'
         get 'exports'
         get 'export_templates'
-        get 'email_notifications'
+        get 'notification_preferences'
         get 'administrateurs'
         get 'history', as: :procedure_history
         patch 'update_email_notifications'
+        patch 'update_badge_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'
         post 'create_multiple_commentaire_for_brouillons'

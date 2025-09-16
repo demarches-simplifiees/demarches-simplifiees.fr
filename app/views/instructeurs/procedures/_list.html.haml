@@ -37,7 +37,7 @@
                               %li
                                 = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(p), class: 'fr-nav__link'
                             %li
-                              = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(p), class: 'fr-nav__link'
+                              = link_to t('instructeurs.dossiers.header.banner.notification_management'), notification_preferences_instructeur_procedure_path(p), class: 'fr-nav__link'
                             %li
                               = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(p), class: 'fr-nav__link'
                             %li
@@ -95,6 +95,8 @@
     %ul.procedure-stats.flex.fr-background-alt--grey.fr-p-1w.justify-around.wrap
       %li.fr-btn.fr-btn--tertiary-no-outline.flex.justify-center.fr-enlarge-link.fr-my-1w
         = link_to instructeur_procedure_path(p, statut: 'a-suivre') do
+          - if procedure_ids_with_notifications[:a_suivre].include?(p.id)
+            %span.notifications{ 'aria-label': "notifications" }
           - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
           .center.fr-text--bold
             = number_with_html_delimiter(a_suivre_count)

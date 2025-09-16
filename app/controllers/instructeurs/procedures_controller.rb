@@ -103,6 +103,7 @@ module Instructeurs
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+      @instructeur_procedure = find_or_create_instructeur_procedure(procedure)
 
       @current_filters = procedure_presentation.filters_for(statut)
       @current_filters.each do |filter|
@@ -173,7 +174,7 @@ module Instructeurs
       @statut_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedure(groupe_instructeur_ids, current_instructeur)
       @notifications = DossierNotification.notifications_for_instructeur_dossiers(current_instructeur, @filtered_sorted_paginated_ids)
       @has_export_notification = notify_exports?
-      @has_unseen_revision_notification = notify_unseen_revisions?
+      @has_unseen_revision_notification = notify_unseen_revisions?(@instructeur_procedure)
 
       cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
@@ -244,16 +245,30 @@ module Instructeurs
       render turbo_stream: turbo_stream.refresh
     end
 
-    def email_notifications
+    def notification_preferences
       @procedure = procedure
       @assign_to = assign_tos.first
+      @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
     end
 
     def update_email_notifications
       assign_tos.each do |assign_to|
         assign_to.update!(assign_to_params)
       end
-      flash.notice = 'Vos notifications sont enregistrées.'
+      flash.notice = t('instructeurs.procedures.email_preferences.flash_notice')
+      redirect_to instructeur_procedure_path(procedure)
+    end
+
+    def update_badge_notifications
+      instructeur_procedure = InstructeursProcedure.find_by!(procedure_id:, instructeur: current_instructeur)
+
+      old_preferences = instructeur_procedure.notification_preferences
+      instructeur_procedure.update!(badge_notification_params)
+      new_preferences = instructeur_procedure.notification_preferences
+
+      instructeur_procedure.refresh_notifications(groupe_instructeur_ids, old_preferences, new_preferences)
+
+      flash.notice = t('instructeurs.procedures.badge_preferences.flash_notice')
       redirect_to instructeur_procedure_path(procedure)
     end
 
@@ -476,10 +491,8 @@ module Instructeurs
       scope.exists?
     end
 
-    def notify_unseen_revisions?
+    def notify_unseen_revisions?(instructeur_procedure)
       return false if procedure.published_revision_id.blank?
-
-      instructeur_procedure = find_or_create_instructeur_procedure(procedure)
 
       return false if instructeur_procedure.last_revision_seen_id.blank?
 
@@ -502,6 +515,18 @@ module Instructeurs
       cache = Cache::ProcedureDossierPagination.new(procedure_presentation:, statut:)
 
       cache.save_context(ids: @filtered_sorted_paginated_ids, incoming_page: params[:page])
+    end
+
+    def badge_notification_params
+      params.require(:instructeurs_procedure).permit(
+        :display_dossier_depose_notifications,
+        :display_dossier_modifie_notifications,
+        :display_message_notifications,
+        :display_annotation_instructeur_notifications,
+        :display_avis_externe_notifications,
+        :display_attente_correction_notifications,
+        :display_attente_avis_notifications
+      )
     end
   end
 end

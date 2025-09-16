@@ -1,8 +1,8 @@
 %fieldset{ class: class_names("fr-fieldset": true, "fr-fieldset--error": error?), 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages', role: error? ? :group : nil }
-  %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+  %legend{ class: class_names("fr-fieldset__legend" => true, "fr-fieldset__legend--regular" => @regular_legend) }
     = content
   - each_button do |label, value, hint, tooltip, **button_options|
-    .fr-fieldset__element
+    .fr-fieldset__element{ class: ("fr-fieldset__element--inline" if @inline) }
       .fr-radio-group
         = @form.radio_button @target, value, **button_options.except(:index)
         = @form.label @target, value: value, class: 'fr-label' do
