@@ -19,6 +19,8 @@
         url: admin_procedure_attestation_template_path(@procedure),
         html: { multipart: true, class: 'form procedure-form__column--form fr-background-alt--blue-france' } do |f|
 
+        = f.hidden_field :kind, value: AttestationTemplate.kinds.fetch(:acceptation)
+
         %h1.page-title
           Délivrance d’attestation
           - if @attestation_template.activated?
