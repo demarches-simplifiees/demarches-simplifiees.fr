@@ -63,8 +63,10 @@ describe Champs::COJOChamp, type: :model do
   describe 'fill champ' do
     before do
       champ.update(accreditation_number:, accreditation_birthdate:, data: nil)
-      perform_enqueued_jobs;
+      champ.fetch_later!
+      champ.fetch!
     end
+
     subject { champ.reload }
 
     it 'success (yes)' do

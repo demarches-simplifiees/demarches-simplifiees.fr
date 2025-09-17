@@ -994,6 +994,27 @@ describe Users::DossiersController, type: :controller do
           expect(dossier.last_champ_updated_at).to eq(now)
         end
       end
+
+      context 'when the champ is an external champ in fetched state' do
+        let(:types_de_champ_public) { [{ type: :rnf }] }
+        let(:champs_public_attributes) do
+          {
+            first_champ.public_id => { external_id: 'external_id' }
+          }
+        end
+
+        before do
+          expect_any_instance_of(Champ).to receive(:fetch_external_data_later)
+          first_champ.update_columns(external_state: 'fetched', value_json: 'a value')
+        end
+
+        it 'resets its data and launches the fetching process' do
+          subject
+          first_champ.reload
+          expect(first_champ.external_state).to eq('waiting_for_job')
+          expect(first_champ.value_json).to be_nil
+        end
+      end
     end
 
     context 'when the user has an invitation but is not the owner' do

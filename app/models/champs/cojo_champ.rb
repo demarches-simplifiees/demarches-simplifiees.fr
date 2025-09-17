@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Champs::COJOChamp < Champ
-  store_accessor :value_json, :accreditation_number, :accreditation_birthdate
+  store :external_id, accessors: [:accreditation_number, :accreditation_birthdate], coder: JSON
   store_accessor :data, :accreditation_success, :accreditation_first_name, :accreditation_last_name
-
-  after_validation :update_external_id
 
   def accreditation_birthdate
     Date.parse(super)
@@ -42,17 +40,5 @@ class Champs::COJOChamp < Champ
 
   def focusable_input_id(attribute = :value)
     accreditation_number_input_id
-  end
-
-  private
-
-  def update_external_id
-    if accreditation_number_changed? || accreditation_birthdate_changed?
-      if accreditation_number.present? && accreditation_birthdate.present? && /\A[\d-]+\z/.match?(accreditation_number)
-        self.external_id = { accreditation_number:, accreditation_birthdate: }.to_json
-      else
-        self.external_id = nil
-      end
-    end
   end
 end
