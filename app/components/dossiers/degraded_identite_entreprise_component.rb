@@ -23,7 +23,7 @@ class Dossiers::DegradedIdentiteEntrepriseComponent < ApplicationComponent
   end
 
   def insee_down
-    texts = [t('.insee_down')]
+    texts = [t('insee_down')]
     texts << t('.dossier_blocked') if profile == 'instructeur'
 
     Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-mb-2w pull-left width-100').tap do

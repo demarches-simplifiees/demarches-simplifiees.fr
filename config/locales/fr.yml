@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 fr:
+  insee_down: LʼINSEE est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
   invisible_captcha:
     sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
   clipboard:
