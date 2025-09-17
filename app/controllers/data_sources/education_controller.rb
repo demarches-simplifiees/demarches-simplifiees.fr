@@ -30,8 +30,11 @@ class DataSources::EducationController < ApplicationController
     results[:records].map do |record|
       fields = record.fetch(:fields)
       value = fields.fetch(:identifiant_de_l_etablissement)
+
+      commune = fields[:nom_commune].present? ? ", #{fields[:nom_commune]}" : ""
+
       {
-        label: "#{fields.fetch(:nom_etablissement)}, #{fields.fetch(:nom_commune)} (#{value})",
+        label: "#{fields.fetch(:nom_etablissement)}#{commune} (#{value})",
         value:,
         data: record
       }

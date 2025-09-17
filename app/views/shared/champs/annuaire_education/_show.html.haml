@@ -16,7 +16,11 @@
       %tr
         %th.libelle Commune :
         %td.copy-btn{ role: "button" }
-          = "#{champ.data['nom_commune']}"
+          - if champ.data['nom_commune'].present?
+            = champ.data['nom_commune']
+          - else
+            %span.font-weight-normal= "(#{I18n.t('activerecord.attributes.type_de_champ.not_filled')})"
+
           = " (#{champ.data['code_commune']})" if champ.data['code_commune'].present?
       %tr
         %th.libelle Academie :
