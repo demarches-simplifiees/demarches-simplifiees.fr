@@ -62,38 +62,72 @@ describe JSONPathUtil do
         "$.is_active"
       ])
     end
+
+    it 'handles an array of hashes' do
+      array = [
+        { 'key1' => 'value1' },
+        { 'key2' => 'value2' }
+      ]
+      result = described_class.hash_to_jsonpath(array)
+      expect(result).to eq({
+        '$.[0].key1' => 'value1'
+      })
+    end
+
+    it 'handles an empty array' do
+      array = []
+      result = described_class.hash_to_jsonpath(array)
+      expect(result).to eq({})
+    end
+
+    it 'ignores arrays of primitive values' do
+      array = [1, 2, 3]
+      result = described_class.hash_to_jsonpath(array)
+      expect(result).to eq({})
+    end
   end
   describe '.filter_selectable_datasources' do
-    let(:hash) do
-      {
-        "foo" => [
-          { "bar" => 1 },
-          { "bar" => 2 }
-        ],
-        "baz" => {
-          "qux" => [
-            { "a" => "x" },
-            { "a" => "y" }
-          ]
-        },
-        "simple" => "value"
-      }
+    context 'when given an Hash' do
+      let(:hash) do
+        {
+          "foo" => [
+            { "bar" => 1 },
+            { "bar" => 2 }
+          ],
+          "baz" => {
+            "qux" => [
+              { "a" => "x" },
+              { "a" => "y" }
+            ]
+          },
+          "simple" => "value"
+        }
+      end
+
+      it 'extracts all arrays including all their possible suggestions' do
+        result = described_class.filter_selectable_datasources(hash)
+        expect(result.keys).to contain_exactly('$.foo', '$.baz.qux')
+        expect(result['$.foo']).to eq(
+          [{ "bar" => 1 }, { "bar" => 2 }]
+        )
+        expect(result['$.baz.qux']).to eq(
+          [{ "a" => "x" }, { "a" => "y" }]
+        )
+      end
     end
 
-    it 'extracts all arrays including all their possible suggestions' do
-      result = described_class.filter_selectable_datasources(hash)
-      expect(result.keys).to contain_exactly('$.foo', '$.baz.qux')
-      expect(result['$.foo']).to eq(
-        [{ "bar" => 1 }, { "bar" => 2 }]
-      )
-      expect(result['$.baz.qux']).to eq(
-        [{ "a" => "x" }, { "a" => "y" }]
-      )
-    end
+    context 'when given an Array' do
+      let(:array) do
+        [
+          { "key1" => "value1" },
+          { "key2" => "value2" }
+        ]
+      end
 
-    it 'ignore les propriétés non-tableau' do
-      result = described_class.filter_selectable_datasources(hash)
-      expect(result).not_to have_key('$.simple')
+      it 'returns an hash with $. root' do
+        result = described_class.filter_selectable_datasources(array)
+        expect(result['$.']).to eq(array)
+      end
     end
   end
   describe '.extract_key_after_array' do
