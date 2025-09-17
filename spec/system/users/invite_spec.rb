@@ -100,23 +100,25 @@ describe 'Invitations' do
       end
     end
 
-    scenario 'an invited user can see and edit the draft', js: true do
+    scenario 'an invited user can edit and check for errors', js: true do
       navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
-      expect(page).to have_no_selector('.button.invite-user-action')
-
-      fill_in 'Texte obligatoire', with: 'Some edited value'
-      blur
-      expect(page).to have_field('Texte obligatoire', with: 'Some edited value')
-    end
-
-    scenario 'an invited user cannot submit the draft' do
-      navigate_to_invited_dossier(invite)
-      expect(page).to have_current_path(brouillon_dossier_path(dossier))
-
-      expect(page).to have_button('Déposer le dossier', disabled: true)
+      expect(page).not_to have_button('Déposer le dossier')
       expect(page).to have_selector('.invite-cannot-submit')
+
+      fill_in 'Texte obligatoire', with: ''
+      click_on 'Vérifier la complétude'
+
+      expect(page).to have_text('Votre dossier contient 1 champ en erreur')
+      expect(page).to have_text('Texte obligatoire doit être rempli')
+
+      fill_in 'Texte obligatoire', with: 'Du texte'
+      blur
+      expect(page).to have_field('Texte obligatoire', with: 'Du texte')
+      click_on 'Vérifier la complétude'
+
+      expect(page).to have_text('Le dossier est complet et correctement rempli')
     end
   end
 
@@ -138,6 +140,27 @@ describe 'Invitations' do
       before do
         navigate_to_invited_dossier(invite)
         expect(page).to have_current_path(dossier_path(invite.dossier))
+      end
+
+      scenario 'an invited user can edit and check for errors' do
+        click_on 'Votre dossier'
+        click_on 'Modifier le dossier'
+
+        expect(page).not_to have_button('Déposer le dossier')
+        expect(page).to have_selector('.invite-cannot-submit')
+
+        fill_in 'Texte obligatoire', with: ''
+        click_on 'Vérifier la complétude'
+
+        expect(page).to have_text('Votre dossier contient 1 champ en erreur')
+        expect(page).to have_text('Texte obligatoire doit être rempli')
+
+        fill_in 'Texte obligatoire', with: 'Du texte'
+        blur
+        expect(page).to have_field('Texte obligatoire', with: 'Du texte')
+        click_on 'Vérifier la complétude'
+
+        expect(page).to have_text('Le dossier est complet et correctement rempli')
       end
 
       it_behaves_like 'the user can send messages to the instructeur'

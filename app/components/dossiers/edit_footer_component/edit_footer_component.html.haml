@@ -1,15 +1,19 @@
 .dossier-edit-sticky-footer
   .send-dossier-actions-bar
-    = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?)
+    = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?, owner: owner?)
 
-    - if can_submit?
+    - if can_submit? && owner?
       - if !can_passer_en_construction?
         = link_to t('.submit_disabled'), "#", disabled_submit_button_options
       = button_to submit_button_label, submit_button_path, submit_button_options
 
+    - if !owner?
+      = button_to 'Vérifier la complétude', submit_button_path, class: "fr-btn", method: :post
+
+
   - if @dossier.brouillon? && !owner?
     .fr-pb-2w.invite-cannot-submit
-      = render ::Dsfr::AlertComponent.new(state: :info, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
+      = render ::Dsfr::AlertComponent.new(state: :info, title: nil, size: :sm, heading_level: :p, extra_class_names:' fr-mt-1w') do |c|
         - c.with_body do
           %p.fr-pb-0= t('.invite_notice').html_safe
 

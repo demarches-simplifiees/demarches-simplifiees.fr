@@ -9,7 +9,7 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new,  :deleted_dossiers]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore, :champ]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore, :champ, :submit_brouillon, :submit_en_construction]
     TRASH_ACTIONS = [:show_in_trash, :show_deleted]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + TRASH_ACTIONS
@@ -253,6 +253,8 @@ module Users
       submit_dossier_and_compute_errors
 
       if @dossier.errors.blank? && @dossier.can_passer_en_construction?
+        return check_completude(@dossier) unless current_user.owns?(dossier)
+
         @dossier.passer_en_construction!
         redirect_to merci_dossier_path(@dossier)
       else
@@ -296,6 +298,8 @@ module Users
       submit_dossier_and_compute_errors
 
       if dossier.errors.blank? && dossier.can_passer_en_construction?
+        return check_completude(dossier_en_construction) unless current_user.owns?(dossier)
+
         if editing_fork_origin.present?
           # TODO remove when all forks are gone
           editing_fork_origin.merge_fork(dossier)
@@ -315,6 +319,15 @@ module Users
         end
 
         render :modifier
+      end
+    end
+
+    def check_completude(dossier)
+      flash.notice = "Le dossier est complet et correctement rempli"
+      if dossier.brouillon?
+        redirect_to brouillon_dossier_path(dossier)
+      else
+        redirect_to modifier_dossier_path(dossier)
       end
     end
 
@@ -556,7 +569,7 @@ module Users
     end
 
     def dossier_scope
-      if action_name == 'update' || action_name == 'champ'
+      if action_name == 'update' || action_name == 'champ' || action_name == 'submit_en_construction' || action_name == 'submit_brouillon'
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user.or(Dossier.hidden_by_not_modified_for_a_long_time)
