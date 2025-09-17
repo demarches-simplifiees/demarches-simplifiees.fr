@@ -34,10 +34,11 @@ class Champs::ReferentielChamp < Champ
     else
       message_encryptor_service = MessageEncryptorService.new
       data = message_encryptor_service.decrypt_and_verify(data, purpose: :storage)
+      data = data.with_indifferent_access if data.is_a?(Hash)
       data = rewrap_selected_object_in_datasource(data)
 
       super(data)
-      cast_displayable_values(data.with_indifferent_access)
+      cast_displayable_values(data)
       propagate_prefill(data)
     end
   end
@@ -185,7 +186,7 @@ class Champs::ReferentielChamp < Champ
 
   def update_simple_prefillable_champs(data, mappings)
     mappings.each do |jsonpath, type_de_champ|
-      raw_value = JsonPath.on(data.with_indifferent_access, jsonpath).first
+      raw_value = JsonPath.on(data.is_a?(Hash) ? data.with_indifferent_access : data, jsonpath).first
       update_prefillable_champ(type_de_champ:, raw_value:)
     end
   end
@@ -198,12 +199,24 @@ class Champs::ReferentielChamp < Champ
   def rewrap_selected_object_in_datasource(data)
     full_jsonpath = type_de_champ.referentiel.datasource
     path_keys_separated_with_dot = full_jsonpath.split("$.")[1]
+    if path_keys_separated_with_dot
+      rewrap_to_hash(data, path_keys_separated_with_dot)
+    else
+      [data]
+    end
+  end
+
+  def rewrap_to_hash(data, path_keys_separated_with_dot)
     path_keys = path_keys_separated_with_dot.split('.')
     reversed_keys_to_rebuild_datasource = path_keys.reverse
 
     # using reversed keys + reduce allows us to rebuild the original JSON structure
     reversed_keys_to_rebuild_datasource.reduce([data]) do |accumulator, key|
       { key => accumulator }
-    end
+    end.with_indifferent_access
+  end
+
+  def rewrap_to_array(data)
+    [data.with_indifferent_access]
   end
 end
