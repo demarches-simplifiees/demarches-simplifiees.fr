@@ -6,18 +6,20 @@ class WebhookController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def sendinblue
-    if Rails.application.secrets.dig(:mattermost, :send_in_blue_outage_webhook_url).present?
+    webhook_url = ENV["SEND_IN_BLUE_OUTAGE_WEBHOOK_URL"]
+    if webhook_url.present?
       send_mattermost_notification(
-        Rails.application.secrets.dig(:mattermost, :send_in_blue_outage_webhook_url),
+        webhook_url,
         message_to_mattermost_send_in_blue_channel
       )
     end
   end
 
   def helpscout_support_dev
-    if tagged_dev? && status_active? && Rails.application.secrets.dig(:mattermost, :support_webhook_url).present?
+    webhook_url = ENV["SUPPORT_WEBHOOK_URL"]
+    if webhook_url.present? && tagged_dev? && status_active?
       send_mattermost_notification(
-        Rails.application.secrets.dig(:mattermost, :support_webhook_url),
+        webhook_url,
         message_to_mattermost_support_channel
       )
     end
@@ -128,7 +130,7 @@ les composant suivants sont affectés : #{params["components"].map { _1['name'] 
 
   def verify_helpscout_signature!
     expected_signature =  Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
-      Rails.application.secrets.helpscout[:webhook_secret],
+      ENV.fetch("HELPSCOUT_WEBHOOK_SECRET"),
       request.body.read))
 
     if expected_signature != request.headers['X-Helpscout-Signature']

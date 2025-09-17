@@ -10,8 +10,8 @@ if ENV.key?('SENDINBLUE_BALANCING_VALUE')
 
     ActionMailer::Base.add_delivery_method :sendinblue, Sendinblue::SMTP
     ActionMailer::Base.sendinblue_settings = {
-      user_name: Rails.application.secrets.sendinblue[:username],
-      password: Rails.application.secrets.sendinblue[:smtp_key],
+      user_name: ENV.fetch("SENDINBLUE_USER_NAME"),
+      password: ENV.fetch("SENDINBLUE_SMTP_KEY"),
       address: ENV.fetch("SENDINBLUE_SMTP_ADDRESS", "smtp-relay.brevo.com"),
       domain: 'smtp-relay.brevo.com',
       port: ENV.fetch("SENDINBLUE_SMTP_PORT", "587"),
@@ -20,6 +20,6 @@ if ENV.key?('SENDINBLUE_BALANCING_VALUE')
   end
 
   SibApiV3Sdk.configure do |config|
-    config.api_key['api-key'] = Rails.application.secrets.sendinblue[:api_v3_key]
+    config.api_key['api-key'] = ENV["SENDINBLUE_API_V3_KEY"]
   end
 end

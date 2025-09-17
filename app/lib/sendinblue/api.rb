@@ -124,7 +124,7 @@ class Sendinblue::API
   end
 
   def client_key
-    Rails.application.secrets.sendinblue[:api_v3_key]
+    ENV.fetch("SENDINBLUE_API_V3_KEY")
   end
 
   def parse_date(date)

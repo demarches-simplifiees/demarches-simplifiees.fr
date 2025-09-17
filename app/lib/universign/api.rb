@@ -37,6 +37,6 @@ class Universign::API
   end
 
   def self.userpwd
-    Rails.application.secrets.universign[:userpwd]
+    ENV['UNIVERSIGN_USERPWD']
   end
 end

@@ -13,15 +13,6 @@ class Helpscout::API
 
   class RateLimitError < StandardError; end;
 
-  def ready?
-    required_secrets = [
-      Rails.application.secrets.helpscout[:mailbox_id],
-      Rails.application.secrets.helpscout[:client_id],
-      Rails.application.secrets.helpscout[:client_secret]
-    ]
-    required_secrets.all?(&:present?)
-  end
-
   def add_tags(conversation_id, tags)
     call_api(:put, "#{CONVERSATIONS}/#{conversation_id}/#{TAGS}", {
       tags: tags
@@ -201,7 +192,7 @@ class Helpscout::API
   end
 
   def user_support_mailbox_id
-    Rails.application.secrets.helpscout[:mailbox_id]
+    ENV.fetch("HELPSCOUT_MAILBOX_ID")
   end
 
   def headers
@@ -222,8 +213,8 @@ class Helpscout::API
   def fetch_access_token
     Typhoeus.post("#{HELPSCOUT_API_URL}/#{OAUTH2_TOKEN}", body: {
       grant_type: 'client_credentials',
-      client_id: Rails.application.secrets.helpscout[:client_id],
-      client_secret: Rails.application.secrets.helpscout[:client_secret]
+      client_id: ENV.fetch("HELPSCOUT_CLIENT_ID"),
+      client_secret: ENV.fetch("HELPSCOUT_CLIENT_SECRET")
     })
   end
 end

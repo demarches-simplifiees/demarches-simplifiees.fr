@@ -11,7 +11,7 @@ describe WebhookController, type: :controller do
     let(:payload) { JSON.parse(Rails.root.join('spec', 'fixtures', 'files', 'helpscout', 'tagged-dev.json').read) }
     let(:webhook_url) { "https://notification_url" }
     it 'works' do
-      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :support_webhook_url).and_return(webhook_url)
+      stub_const("ENV", ENV.to_hash.merge("SUPPORT_WEBHOOK_URL" => webhook_url))
       expect(controller).to receive(:send_mattermost_notification).with(webhook_url, "\nNouveau bug taggué #dev : https://secure.helpscout.net/conversation/123456789/123456789?folderId=123456789\n\n> Bonjour,    Je voudrais faire une demande de changement d'adresse et la plateforme m'indique que j'ai plusieurs comptes et que je dois d'abord les fusionner.    Cela fait 3 jours que j'essaie de fusio\n\n**personnes impliquées** : anonymous@anon.fr\n**utilisateur en attente depuis** : 11 min ago")
       subject
     end
@@ -93,7 +93,7 @@ describe WebhookController, type: :controller do
 
     it 'sends notification to mattermost' do
       notification_url = "https://notification_url"
-      allow(Rails.application.secrets).to receive(:dig).with(:mattermost, :send_in_blue_outage_webhook_url).and_return(notification_url)
+      stub_const('ENV', ENV.to_hash.merge('SEND_IN_BLUE_OUTAGE_WEBHOOK_URL' => notification_url))
       expect(controller).to receive(:send_mattermost_notification).with(notification_url, "Incident sur SIB : Database Issues.\nEtat de SIB: Degraded Performance\nL'Incident a commencé à 2015-04-03T18:27:15+00:00 et est p-e terminé a \nles composant suivants sont affectés : Chat Service, Voice Services, Admin Dashboard")
       subject
     end
