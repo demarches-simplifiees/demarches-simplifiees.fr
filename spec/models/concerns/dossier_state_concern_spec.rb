@@ -136,6 +136,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
     end
+
+    context "when dossier has attente_avis notification" do
+      let(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
+
+      it "destroy the notification" do
+        dossier.accepter!(motivation: 'test')
+
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
   end
 
   describe 'refuser' do
@@ -153,6 +164,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
     end
+
+    context "when dossier has attente_avis notification" do
+      let(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
+
+      it "destroy the notification" do
+        dossier.refuser!(motivation: 'test')
+
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
   end
 
   describe 'classer_sans_suite' do
@@ -169,6 +191,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.size).to eq(15)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+    end
+
+    context "when dossier has attente_avis notification" do
+      let(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
+
+      it "destroy the notification" do
+        dossier.classer_sans_suite!(motivation: 'test')
+
+        expect(DossierNotification.count).to eq(0)
+      end
     end
   end
 

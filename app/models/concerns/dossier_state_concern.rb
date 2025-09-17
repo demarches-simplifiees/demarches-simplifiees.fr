@@ -170,6 +170,7 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     clean_champs_after_instruction!
+    remove_attente_avis_notification
   end
 
   def after_accepter_automatiquement
@@ -245,6 +246,7 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     clean_champs_after_instruction!
+    remove_attente_avis_notification
   end
 
   def after_refuser_automatiquement
@@ -313,6 +315,7 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     clean_champs_after_instruction!
+    remove_attente_avis_notification
   end
 
   def after_repasser_en_instruction(h)
@@ -405,5 +408,9 @@ module DossierStateConcern
 
     return if champ_to_remove_ids.empty?
     champs.where(id: champ_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
+  end
+
+  def remove_attente_avis_notification
+    DossierNotification.destroy_notifications_by_dossier_and_type(self, :attente_avis)
   end
 end
