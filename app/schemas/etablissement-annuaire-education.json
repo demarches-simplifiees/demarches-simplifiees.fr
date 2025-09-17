@@ -167,7 +167,6 @@
   "required": [
     "identifiant_de_l_etablissement",
     "nom_etablissement",
-    "nom_commune",
     "libelle_academie",
     "code_academie",
     "libelle_nature",
