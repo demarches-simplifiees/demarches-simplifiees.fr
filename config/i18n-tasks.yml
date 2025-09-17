@@ -55,13 +55,18 @@ search:
   # paths:
   #  - app/
 
-  ## Root directories for relative keys resolution.
-  # relative_roots:
-  #   - app/controllers
-  #   - app/helpers
-  #   - app/mailers
-  #   - app/presenters
-  #   - app/views
+  # Root directories for relative keys resolution.
+  relative_roots:
+    - app/controllers
+    - app/helpers
+    - app/mailers
+    - app/presenters
+    - app/views
+    - app/components
+
+  relative_exclude_method_name_paths:
+    - app/components
+
 
   ## Files or `File.fnmatch` patterns to exclude from search. Some files are always excluded regardless of this setting:
   ##   %w(*.jpg *.png *.gif *.svg *.ico *.eot *.otf *.ttf *.woff *.woff2 *.pdf *.css *.sass *.scss *.less *.yml *.json)
@@ -69,7 +74,6 @@ search:
     - app/assets/images
     - app/assets/fonts
     - app/assets/videos
-    - app/components
 
   ## Alternatively, the only files or `File.fnmatch patterns` to search in `paths`:
   ## If specified, this settings takes priority over `exclude`, but `exclude` still applies.
