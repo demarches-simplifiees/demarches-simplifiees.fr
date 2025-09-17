@@ -19,13 +19,54 @@ describe DataSources::ReferentielController, type: :controller do
       subject { post :search, params: { q: '010002699', referentiel_id: referentiel.id } }
 
       context 'when success params' do
-        it 'returns formatted results', vcr: 'referentiel/datagouv-finess' do
-          expect(subject).to have_http_status(:ok)
-          expect(response.parsed_body).to be_an(Array)
-          expect(response.parsed_body.size).to eq(1)
-          expect(response.parsed_body.first["label"]).to eq("010002699 (CENTRE MEDICAL REGINA)")
-          expect(response.parsed_body.first["value"]).to eq("010002699 (CENTRE MEDICAL REGINA)")
-          expect(response.parsed_body.first["data"]).to be_an_instance_of(String)
+        context 'when referentiel/datagouv-finess' do
+          it 'returns formatted results', vcr: 'referentiel/datagouv-finess' do
+            expect(subject).to have_http_status(:ok)
+            expect(response.parsed_body).to be_an(Array)
+            expect(response.parsed_body.size).to eq(1)
+            expect(response.parsed_body.first["label"]).to eq("010002699 (CENTRE MEDICAL REGINA)")
+            expect(response.parsed_body.first["value"]).to eq("010002699 (CENTRE MEDICAL REGINA)")
+            expect(response.parsed_body.first["data"]).to be_an_instance_of(String)
+          end
+        end
+
+        context 'when referentiel/api.apprentissage.beta.gouv.fr' do
+          subject { post :search, params: { q: '50022137', referentiel_id: referentiel.id } }
+          let(:referentiel) do
+            create(:api_referentiel,
+                  :autocomplete,
+                  :with_autocomplete_response,
+                  datasource: '$.',
+                  json_template: {
+                    "type" => "doc",
+                      "content" => [
+                        {
+                          "type" => "paragraph",
+                          "content" => [
+                            { "type" => "mention", "attrs" => { "id" => "$.type.nature.cfd.libelle", "label" => "$.type.nature.cfd.libelle (DIPLOME NATIONAL / DIPLOME D'ETAT)" } },
+                            { "text" => " – ", "type" => "text" },
+                            { "type" => "mention", "attrs" => { "id" => "$.domaines.nsf.cfd.intitule", "label" => "$.domaines.nsf.cfd.intitule (AGRO-ALIMENTAIRE, ALIMENTATION, CUISINE)" } },
+                            { "text" => " ", "type" => "text" }
+                          ]
+                        }
+                      ]
+                  },
+                  url: "https://api.apprentissage.beta.gouv.fr/api/certification/v1?identifiant.cfd={id}",
+                  authentication_method: 'header_token',
+                  authentication_data: {
+                    header: "Authorization",
+                    value: "Bearer kthxbye"
+                  })
+          end
+
+          it 'returns formatted results', vcr: 'referentiel/api.apprentissage.beta.gouv.fr' do
+            expect(subject).to have_http_status(:ok)
+            expect(response.parsed_body).to be_an(Array)
+            expect(response.parsed_body.size).to eq(4)
+            expect(response.parsed_body.first["label"]).to eq("DIPLOME NATIONAL / DIPLOME D'ETAT – AGRO-ALIMENTAIRE, ALIMENTATION, CUISINE ")
+            expect(response.parsed_body.first["value"]).to eq("DIPLOME NATIONAL / DIPLOME D'ETAT – AGRO-ALIMENTAIRE, ALIMENTATION, CUISINE ")
+            expect(response.parsed_body.first["data"]).to be_an_instance_of(String)
+          end
         end
       end
 

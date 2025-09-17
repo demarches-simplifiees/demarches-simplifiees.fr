@@ -43,7 +43,8 @@ class ReferentielService
     when Referentiels::APIReferentiel
       result = call(referentiel.test_data)
       case result
-      in Success(body)
+      in Success
+        body = result.value!
         referentiel.update_column(:last_response, { status: 200, body: })
         true
       in Failure(data)

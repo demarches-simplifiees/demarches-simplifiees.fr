@@ -5,7 +5,7 @@ class ReferentielAutocompleteRenderService
   MAX_RENDERED_OBJECTS = 1000
 
   def initialize(api_response, referentiel)
-    @api_response = api_response.with_indifferent_access
+    @api_response = api_response.is_a?(Hash) ? api_response.with_indifferent_access : api_response
     @referentiel = referentiel
     @json_template = referentiel.json_template
   end
@@ -13,7 +13,7 @@ class ReferentielAutocompleteRenderService
   def format_response
     objects = JsonPath.on(api_response, referentiel.datasource).first
     objects.take(MAX_RENDERED_OBJECTS).map do |data|
-      label = render_template(json_template, data).join("")
+      label = render_template(json_template, data.with_indifferent_access).join("")
       {
         label:,
         value: label,

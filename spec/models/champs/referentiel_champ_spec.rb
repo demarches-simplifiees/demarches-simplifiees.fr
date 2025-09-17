@@ -135,11 +135,23 @@ describe Champs::ReferentielChamp, type: :model do
     context 'when autocomplete' do
       let(:datasource) { '$.deep.nested' }
       let(:referentiel) { create(:api_referentiel, :autocomplete, datasource: datasource) }
-      let(:raw_data) { { "ok" => "ko" } }
+
       let(:message_encryptor_service) { MessageEncryptorService.new }
       let(:data) { message_encryptor_service.encrypt_and_sign(raw_data, purpose: :storage, expires_in: 1.hour) }
 
-      context 'when data is present' do
+      context 'when data is Hash' do
+        let(:raw_data) { { "ok" => "ko" } }
+        it 'decrypts data and rewrap object in <datasource> as payload' do
+          expect { subject }
+            .to change { referentiel_champ.reload.data }
+            .from(nil)
+            .to(referentiel_champ.send(:rewrap_selected_object_in_datasource, raw_data))
+        end
+      end
+
+      context 'when data is Array' do
+        let(:raw_data) { [{ "ok" => "ko" }] }
+
         it 'decrypts data and rewrap object in <datasource> as payload' do
           expect { subject }
             .to change { referentiel_champ.reload.data }

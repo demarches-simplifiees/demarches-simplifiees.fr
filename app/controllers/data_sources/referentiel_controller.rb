@@ -14,8 +14,8 @@ class DataSources::ReferentielController < ApplicationController
         result = referentiel_service.call(query)
 
         case result
-        in Dry::Monads::Success(body)
-          formatted = ReferentielAutocompleteRenderService.new(body, referentiel).format_response
+        in Dry::Monads::Success
+          formatted = ReferentielAutocompleteRenderService.new(result.value!, referentiel).format_response
           return render json: formatted
         in Dry::Monads::Failure(data) if data[:retryable]
           raise RetryableError if @retryable
