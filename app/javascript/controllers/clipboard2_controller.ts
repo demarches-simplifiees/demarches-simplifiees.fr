@@ -3,7 +3,8 @@
  * 1. Add `{ "data-controller": "clipboard2" }` to a parent container
  * 2. Mark copyable elements with `.copy-btn`
  * 3. Optionally use `data-to-copy` attribute to specify exact text to copy
- * 4. Optionally use `data-copy-message-placeholder` to control message placement
+ * 4. Optionally use `.copy-btn{ 'data-to-copy': 'coucou' }` to copy specific text
+ * 5. Optionally use `data-copy-message-placeholder` to control message placement
  */
 import { Controller } from '@hotwired/stimulus';
 
@@ -63,6 +64,7 @@ export class Clipboard2Controller extends Controller {
     this.#copySpan.remove();
 
     const textToCopy = (
+      wrapper.dataset['toCopy'] ||
       wrapper.querySelector<HTMLElement>('[data-to-copy]')?.innerText ||
       wrapper.innerText ||
       ''
