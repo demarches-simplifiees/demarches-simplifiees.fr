@@ -32,7 +32,7 @@ export class Clipboard2Controller extends Controller {
       'fr-icon-clipboard-line'
     ]);
     this.#copiedSpan = this.createSpan(this.copiedTextValue, [
-      'fr-icon-success-line'
+      'fr-icon-check-line'
     ]);
 
     this.setupChampHoverListeners();
