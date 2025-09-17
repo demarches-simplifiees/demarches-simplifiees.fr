@@ -33,7 +33,6 @@ if (enabled) {
 
   window.$crisp.push(['set', 'user:email', [administrateur.email]]);
   window.$crisp.push(['set', 'session:segments', [['administrateur']]]);
-  window.$crisp.push(['set', 'session:data']);
 
   // Prevent Crisp to log warnings about Sentry overriding document.addEventListener
   window.$crisp.push(['safe', true]);
