@@ -1,11 +1,10 @@
 - dossier = Dossier.includes(:procedure).find_by(id: champ.to_s)
 - if dossier
-  .copy-btn{ role: "button" }
-    - path = dossier_linked_path(current_instructeur || current_user, dossier)
-    - if path.present?
-      %p= link_to("Dossier n° #{dossier.id}", path, target: '_blank', rel: 'noopener')
-    - else
-      %p Dossier n° #{dossier.id}
+  - path = dossier_linked_path(current_instructeur || current_user, dossier)
+  - if path.present?
+    %p= link_to("Dossier n° #{dossier.id}", path, target: '_blank', rel: 'noopener')
+  - else
+    %p Dossier n° #{dossier.id}
   %br
   .copy-btn{ role: "button" }
     %p= sanitize(dossier.text_summary)
