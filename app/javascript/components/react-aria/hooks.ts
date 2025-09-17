@@ -8,7 +8,7 @@ import type {
 import isEqual from 'react-fast-compare';
 import { useAsyncList, type AsyncListOptions } from 'react-stately';
 import { useEvent } from 'react-use-event-hook';
-import { httpRequest } from '../../shared/utils';
+import { fire, httpRequest } from '@utils';
 import * as s from 'superstruct';
 import { useDebounceCallback } from 'usehooks-ts';
 
@@ -480,7 +480,7 @@ const AnnuaireEducationPayload = s.type({
       fields: s.type({
         identifiant_de_l_etablissement: s.string(),
         nom_etablissement: s.string(),
-        nom_commune: s.string()
+        nom_commune: s.optional(s.string())
       })
     })
   )
@@ -493,7 +493,7 @@ const Coerce = {
     AnnuaireEducationPayload,
     ({ records }) =>
       records.map((record) => ({
-        label: `${record.fields.nom_etablissement}, ${record.fields.nom_commune} (${record.fields.identifiant_de_l_etablissement})`,
+        label: `${record.fields.nom_etablissement}${record.fields.nom_commune ? `, ${record.fields.nom_commune}` : ''} (${record.fields.identifiant_de_l_etablissement})`,
         value: record.fields.identifiant_de_l_etablissement,
         data: record
       }))
@@ -544,8 +544,12 @@ export const createLoader = (
 
       if (json) {
         const struct = Coerce[coerceKey];
-        const [err, items] = s.validate(json, struct, { coerce: true });
-        if (!err) {
+        const [err, items] = s.validate(json, struct, {
+          coerce: true
+        });
+        if (err) {
+          fire(document, 'sentry:capture-exception', err);
+        } else {
           const filteredItems = matchSorter(items, filterText, {
             keys: [
               (item) => item.label.replace(/[_ -]/g, ' '), // accept filter to match saint martin => "Saint-Martin"
