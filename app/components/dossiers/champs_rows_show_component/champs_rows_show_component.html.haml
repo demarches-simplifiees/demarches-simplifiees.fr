@@ -66,5 +66,5 @@
             = render ViewableChamp::ReferentielDisplayComponent.new(champ: champ, profile: @profile)
 
           - else
-            .copy-btn{ role: "button" }
+            .copy-btn{ role: "button", 'data-to-copy': champ.to_s.strip }
               = helpers.format_text_value(champ.to_s.strip)
