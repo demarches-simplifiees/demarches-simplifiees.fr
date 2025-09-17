@@ -28,9 +28,6 @@
             = render partial: "shared/champs/siret/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:iban)
             = render partial: "shared/champs/iban/show", locals: { champ: champ }
-          - when TypeDeChamp.type_champs.fetch(:textarea)
-            .copy-btn{ role: "button" }
-              = render partial: "shared/champs/textarea/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:annuaire_education)
             = render partial: "shared/champs/annuaire_education/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:cnaf)
