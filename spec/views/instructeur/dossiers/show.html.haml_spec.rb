@@ -233,7 +233,8 @@ describe 'instructeurs/dossiers/show', type: :view do
     let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:types_de_champ_public) do
       [
-        { type: :header_section, level: 1, libelle: 'l1' }
+        { type: :header_section, level: 1, libelle: 'l1' },
+        {}
       ]
     end
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
