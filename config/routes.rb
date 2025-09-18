@@ -487,6 +487,7 @@ Rails.application.routes.draw do
         post 'add_filter'
         post 'update_filter'
         delete 'remove_filter'
+        post 'toggle_filters_expanded'
       end
     end
 
