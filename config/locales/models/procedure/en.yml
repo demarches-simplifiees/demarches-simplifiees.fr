@@ -100,6 +100,7 @@ en:
               inconsistent_header_section: "%{custom_message}"
               missing_libelle: "field label in position %{position} must be filled"
               expression_reguliere_invalid: "is invalid"
+              referentiel_not_ready: "is not configured"
             attestation_template:
               format: "%{attribute} %{message}"
             initiated_mail:

@@ -28,8 +28,12 @@
         %ul
           - type_de_champ.referentiel_mapping_prefillable_with_stable_id.sort.each do |jsonpath, mapping|
             - champ = procedure.draft_revision.types_de_champ.find { _1.stable_id.to_s == mapping[:prefill_stable_id].to_s }
-            %li
-              = "#{jsonpath.to_s} -> « #{champ&.libelle || mapping[:prefill_stable_id]} »"
+            - if champ.present?
+              %li
+                = "#{jsonpath.to_s} -> #{champ.public? ? "champ" : "annotation privée"} « #{champ.libelle || mapping[:prefill_stable_id]} »"
+            - else
+              %li
+                = "Le pré-remplissage de #{jsonpath.to_s} ne pourra être effectué, car le champ ou l'annotation privée n'existe plus"
 
   %p.flex.column.align-end
     = link_to "Configurer le champ", edit_referentiel_on_draft_or_clone_url, class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-equalizer-fill', data: { turbo: false }
