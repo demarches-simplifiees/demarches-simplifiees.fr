@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter, :update_filter]
+    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter, :update_filter, :toggle_filters_expanded]
 
     def add_filter
       statut = params[:statut]
@@ -29,6 +29,14 @@ module Instructeurs
       @procedure_presentation.remove_filter_for_statut!(params[:statut], filtered_column_from_params)
 
       render turbo_stream: turbo_stream.refresh
+    end
+
+    def toggle_filters_expanded
+      @procedure_presentation.update!(filters_expanded: params[:filters_expanded])
+
+      editable_filters_component = Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: params[:statut])
+
+      render turbo_stream: turbo_stream.replace(editable_filters_component.id, editable_filters_component)
     end
 
     def update
