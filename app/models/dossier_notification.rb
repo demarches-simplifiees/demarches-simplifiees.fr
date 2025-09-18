@@ -80,13 +80,13 @@ class DossierNotification < ApplicationRecord
     DossierNotification
       .where(instructeur:)
       .where(dossier_id: groupe_instructeur.dossier_ids)
-      .destroy_all
+      .delete_all
   end
 
   def self.destroy_notifications_instructeur_of_dossier(instructeur, dossier)
     DossierNotification
       .where(instructeur:, dossier:)
-      .destroy_all
+      .delete_all
   end
 
   def self.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier)
@@ -100,13 +100,13 @@ class DossierNotification < ApplicationRecord
 
     DossierNotification
       .where(instructeur:, dossier:, notification_type: notification_types_to_destroy)
-      .destroy_all
+      .delete_all
   end
 
   def self.destroy_notifications_by_dossier_and_type(dossier, notification_type)
     DossierNotification
       .where(dossier:, notification_type:)
-      .destroy_all
+      .delete_all
   end
 
   def self.destroy_notification_by_dossier_and_type_and_instructeur(dossier, notification_type, instructeur)
@@ -296,7 +296,7 @@ class DossierNotification < ApplicationRecord
   def self.destroy_notifications_by_dossiers_and_type_and_instructeur(dossiers, notification_type, instructeur_id)
     DossierNotification
       .where(dossier_id: dossiers, notification_type:, instructeur_id:)
-      .destroy_all
+      .delete_all
   end
 
   def self.refresh_notifications_instructeur_for_dossiers_and_type(dossiers, notification_type, instructeur_id)
