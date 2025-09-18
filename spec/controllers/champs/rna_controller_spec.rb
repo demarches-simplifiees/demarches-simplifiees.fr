@@ -90,7 +90,7 @@ describe Champs::RNAController, type: :controller do
         end
 
         it 'displays a “RNA is invalid” error message' do
-          expect(response.body).to include("le numéro RNA saisi ne correspond à aucun établissement, saisissez un numéro RNA valide")
+          expect(response.body).to include("le numéro RNA W111111111 saisi ne correspond à aucun établissement, saisissez un numéro RNA valide")
         end
       end
 

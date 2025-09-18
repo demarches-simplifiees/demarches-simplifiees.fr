@@ -30,6 +30,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  insee_down: INSEE is unavailable, company information will arrive within a few hours.
   invisible_captcha:
     sentence_for_humans: 'If you are a human, ignore this field'
   clipboard:
