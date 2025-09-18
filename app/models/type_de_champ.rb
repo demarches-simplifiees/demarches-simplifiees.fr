@@ -763,7 +763,7 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  CHAMP_TYPE_TO_TYPE_CHAMP = type_champs.values.map { [type_champ_to_champ_class_name(_1), _1] }.to_h
+  CHAMP_TYPE_TO_TYPE_CHAMP = type_champs.values.index_by { type_champ_to_champ_class_name(_1) }
 
   def piece_justificative_or_titre_identite?
     type_champ.in?([

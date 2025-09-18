@@ -12,10 +12,6 @@ class Gestionnaire < ApplicationRecord
 
   default_scope { eager_load(:user) }
 
-  def email
-    user&.email
-  end
-
   def active?
     user&.active?
   end

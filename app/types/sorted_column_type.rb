@@ -11,7 +11,7 @@ class SortedColumnType < ActiveRecord::Type::Value
     in NilClass # default value
       nil
     # from form (id is a string) or from db (id is a hash)
-    in { order: 'asc'|'desc', id: String|Hash } => h
+    in { order: 'asc' | 'desc', id: String | Hash } => h
       SortedColumn.new(column: ColumnType.new.cast(h[:id]), order: h[:order])
     end
   end
