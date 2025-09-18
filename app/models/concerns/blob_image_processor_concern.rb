@@ -39,7 +39,7 @@ module BlobImageProcessorConcern
     attachments.any? do |attachment|
       record = attachment.record
       record.is_a?(Champs::TitreIdentiteChamp) ||
-        (record.is_a?(Champs::PieceJustificativeChamp) && record.type_de_champ.titre_identite_nature?)
+        (record.is_a?(Champs::PieceJustificativeChamp) && record.titre_identite_nature?)
     end
   end
 
