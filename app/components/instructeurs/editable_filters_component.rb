@@ -9,6 +9,10 @@ class Instructeurs::EditableFiltersComponent < ApplicationComponent
     @statut = statut
   end
 
+  def id
+    "editable-filters-component"
+  end
+
   def render?
     filters.any?
   end
