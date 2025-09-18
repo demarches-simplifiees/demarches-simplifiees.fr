@@ -18,9 +18,12 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   def correction_badge
     return if groupe_gestionnaire || commentaire.dossier_correction.nil?
-    return helpers.correction_resolved_badge if commentaire.dossier_correction.resolved?
 
-    helpers.pending_correction_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
+    if commentaire.dossier_correction.resolved?
+      helpers.correction_resolved_badge(commentaire.dossier_correction.resolved_by_modification? ? :modified : :not_modified)
+    else
+      helpers.pending_correction_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
+    end
   end
 
   def commentaire_class(commentaire, connected_user)

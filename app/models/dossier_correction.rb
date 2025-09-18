@@ -29,6 +29,15 @@ class DossierCorrection < ApplicationRecord
   end
 
   def pending? = !resolved?
+
+  def resolved_by_modification?
+    return false if !resolved?
+
+    dossier
+      .traitements
+      .en_construction
+      .exists?(processed_at: self.created_at..self.resolved_at)
+  end
 end
 
 private

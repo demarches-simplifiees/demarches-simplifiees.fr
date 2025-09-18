@@ -25,7 +25,8 @@ en:
       pending_correction:
         for_instructeur: "pending"
         for_user: "to be corrected"
-        resolved: corrected
+        modified: "Modified file"
+        not_modified: "File not modified"
       traitement:
         state: "State"
       traitement/state:
