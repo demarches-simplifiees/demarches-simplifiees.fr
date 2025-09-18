@@ -19,6 +19,44 @@ RSpec.describe Attachment::EditComponent, type: :component do
     )
   end
 
+  context 'piece justificative nature titre_identite' do
+    let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'TITRE_IDENTITE' }] }
+    let(:attachment) { nil }
+
+    it 'sets accept to jpg/jpeg/png only' do
+      expect(subject).to have_selector("input[accept*='.jpg']")
+      expect(subject).to have_selector("input[accept*='.jpeg']")
+      expect(subject).to have_selector("input[accept*='.png']")
+      expect(subject).not_to have_selector("input[accept*='.pdf']")
+    end
+
+    it 'sets max size to 20MB in data attribute' do
+      subject
+      expect(page.find('input')['data-max-file-size'].to_i).to eq(20.megabytes)
+    end
+  end
+
+  context 'piece justificative limited to document_texte' do
+    let(:types_de_champ_public) { [{ type: :piece_justificative, pj_limit_formats: '1', pj_format_families: ['document_texte'] }] }
+    let(:attachment) { nil }
+
+    it 'shows 200 Mo and accept includes .pdf but not .zip' do
+      expect(subject).to have_content(/Taille maximale autorisée\s*:\s*200 Mo/)
+      expect(subject).to have_selector("input[accept*='.pdf']")
+      expect(subject).not_to have_selector("input[accept*='.zip']")
+    end
+  end
+
+  context 'piece justificative standard' do
+    let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+    let(:attachment) { nil }
+
+    it 'shows 200 Mo and has a non empty accept' do
+      expect(subject).to have_content(/Taille maximale autorisée\s*:\s*200 Mo/)
+      expect(page.find('input')['accept']).to be_present
+    end
+  end
+
   subject { render_inline(component).to_html }
 
   context 'when there is no attachment yet' do

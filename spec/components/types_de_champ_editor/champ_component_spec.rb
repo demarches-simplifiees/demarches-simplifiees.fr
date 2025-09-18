@@ -128,4 +128,15 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
       )
     end
   end
+
+  describe 'hide old titre_identite in creation list' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }]) }
+    let(:coordinate) { procedure.draft_revision.revision_types_de_champ_public.first }
+    let(:component) { described_class.new(coordinate:, upper_coordinates: []) }
+
+    it 'does not list Titre identité' do
+      render_inline(component)
+      expect(page).not_to have_css('option', text: 'Titre identité')
+    end
+  end
 end
