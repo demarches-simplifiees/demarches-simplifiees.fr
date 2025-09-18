@@ -39,7 +39,11 @@ module BlobImageProcessorConcern
     end
 
     def watermark_required?
-      attachments.any? { _1.record.class == Champs::TitreIdentiteChamp }
+      attachments.any? do |attachment|
+        record = attachment.record
+        record.is_a?(Champs::TitreIdentiteChamp) ||
+          (record.is_a?(Champs::PieceJustificativeChamp) && record.type_de_champ.titre_identite_nature?)
+      end
     end
 
     def from_justificatif_motivation?
