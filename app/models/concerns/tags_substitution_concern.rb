@@ -356,8 +356,18 @@ module TagsSubstitutionConcern
 
   def contextual_dossier_tags
     tags = []
-    tags << DOSSIER_SVA_SVR_DECISION_DATE_TAG if respond_to?(:procedure) && procedure.sva_svr_enabled?
-    tags << CONTACT_INFORMATION_NAME_TAG if respond_to?(:procedure) && procedure.routing_enabled? && procedure.groupe_instructeurs.any? { _1.contact_information.present? }
+
+    return tags unless respond_to?(:procedure)
+
+    tags << DOSSIER_SVA_SVR_DECISION_DATE_TAG if procedure.sva_svr_enabled?
+
+    if procedure.routing_enabled?
+      has_contact_info = procedure.groupe_instructeurs
+        .includes(:contact_information)
+        .any? { |gi| gi.contact_information.present? }
+      tags << CONTACT_INFORMATION_NAME_TAG if has_contact_info
+    end
+
     tags
   end
 
