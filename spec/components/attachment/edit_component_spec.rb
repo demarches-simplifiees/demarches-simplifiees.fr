@@ -41,7 +41,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     let(:attachment) { nil }
 
     it 'shows 200 Mo and accept includes .pdf but not .zip' do
-      expect(subject).to have_content(/Taille maximale autorisée\s*:\s*200 Mo/)
+      expect(subject).to have_content(/Taille maximale autorisée(?:\u00A0| ):\s*200 Mo/)
       expect(subject).to have_selector("input[accept*='.pdf']")
       expect(subject).not_to have_selector("input[accept*='.zip']")
     end
@@ -52,7 +52,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     let(:attachment) { nil }
 
     it 'shows 200 Mo and has a non empty accept' do
-      expect(subject).to have_content(/Taille maximale autorisée\s*:\s*200 Mo/)
+      expect(subject).to have_content(/Taille maximale autorisée(?:\u00A0| ):\s*200 Mo/)
       expect(page.find('input')['accept']).to be_present
     end
   end
@@ -67,11 +67,11 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     it 'renders max size' do
-      expect(subject).to have_content(/Taille maximale autorisée :\s+20 Mo/)
+      expect(subject).to have_content(/Taille maximale autorisée(?:\u00A0| ):\s*20 Mo/)
     end
 
     it 'renders allowed formats' do
-      expect(subject).to have_content(/Formats supportés : jpeg, png/)
+      expect(subject).to have_content(/Formats acceptés(?:\u00A0| ):\s*jpeg, png/)
     end
 
     describe 'aria describedby' do
@@ -137,7 +137,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     it 'renders max size for first index' do
-      expect(subject).to have_content(/Taille maximale autorisée :\s+20 Mo/)
+      expect(subject).to have_content(/Taille maximale autorisée(?:\u00A0| ):\s*20 Mo/)
     end
 
     context 'when index is not 0' do
