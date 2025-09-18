@@ -54,8 +54,13 @@ describe Champs::PieceJustificativeChamp do
 
       it 'rejects file bigger than 20MB' do
         champ.piece_justificative_file.purge
-        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'id.jpg', content_type: 'image/jpeg')
-        champ.piece_justificative_file.first.blob.update(byte_size: 21.megabytes)
+        blob = ActiveStorage::Blob.create_and_upload!(
+          io: StringIO.new('fichier_x'),
+          filename: 'id.jpg',
+          content_type: 'image/jpeg'
+        )
+        blob.update_column(:byte_size, 21.megabytes)
+        champ.piece_justificative_file.attach(blob)
         expect(champ.valid?(:champs_public_value)).to be false
         expect(champ.errors[:piece_justificative_file]).to be_present
       end

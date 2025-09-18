@@ -46,7 +46,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   scenario "adding a piece justificative template" do
     add_champ
-    select('Pièce justificative', from: 'Type de champ')
+    select('Pièce à joindre', from: 'Type de champ')
 
     find('.attachment input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
@@ -203,7 +203,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       # It displays the estimate when adding a new champ
       add_champ
-      select('Pièce justificative', from: 'Type de champ')
+      select('Pièce à joindre', from: 'Type de champ')
       expect(page).to have_content('Durée de remplissage estimée : 3 min')
 
       # It updates the estimate when updating the champ
@@ -227,7 +227,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       # It displays the estimate when adding a new champ
       add_champ
-      select('Pièce justificative', from: 'Type de champ')
+      select('Pièce à joindre', from: 'Type de champ')
       expect(page).not_to have_content('Durée de remplissage estimée')
     end
   end
