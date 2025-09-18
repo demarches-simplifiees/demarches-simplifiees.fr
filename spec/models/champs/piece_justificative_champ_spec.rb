@@ -33,6 +33,72 @@ describe Champs::PieceJustificativeChamp do
     end
   end
 
+  describe 'dynamic validations' do
+    context 'titre_identite nature' do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, nature: 'TITRE_IDENTITE' }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ) { dossier.champs.first }
+
+      it 'accepts jpeg under 20MB' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x' * 1024), filename: 'id.jpg', content_type: 'image/jpeg')
+        expect(champ.valid?(:champs_public_value)).to be true
+      end
+
+      it 'rejects pdf' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'id.pdf', content_type: 'application/pdf')
+        expect(champ.valid?(:champs_public_value)).to be false
+        expect(champ.errors[:piece_justificative_file]).to be_present
+      end
+
+      it 'rejects file bigger than 20MB' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'id.jpg', content_type: 'image/jpeg')
+        champ.piece_justificative_file.first.blob.update(byte_size: 21.megabytes)
+        expect(champ.valid?(:champs_public_value)).to be false
+        expect(champ.errors[:piece_justificative_file]).to be_present
+      end
+    end
+
+    context 'pj_limit_formats with document_texte' do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, pj_limit_formats: '1', pj_format_families: ['document_texte'] }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ) { dossier.champs.first }
+
+      it 'accepts pdf' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'doc.pdf', content_type: 'application/pdf')
+        expect(champ.valid?(:champs_public_value)).to be true
+      end
+
+      it 'rejects zip' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'arc.zip', content_type: 'application/zip')
+        expect(champ.valid?(:champs_public_value)).to be false
+        expect(champ.errors[:piece_justificative_file]).to be_present
+      end
+    end
+
+    context 'pj_limit_formats enabled with empty families' do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, pj_limit_formats: '1', pj_format_families: [] }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ) { dossier.champs.first }
+
+      it 'accepts pdf' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'doc.pdf', content_type: 'application/pdf')
+        expect(champ.valid?(:champs_public_value)).to be true
+      end
+
+      it 'accepts zip' do
+        champ.piece_justificative_file.purge
+        champ.piece_justificative_file.attach(io: StringIO.new('x'), filename: 'arc.zip', content_type: 'application/zip')
+        expect(champ.valid?(:champs_public_value)).to be true
+      end
+    end
+  end
+
   describe "#for_export" do
     subject { champ.type_de_champ.champ_value_for_export(champ) }
 
