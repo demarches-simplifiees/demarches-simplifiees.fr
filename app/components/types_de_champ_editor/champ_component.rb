@@ -73,7 +73,9 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       end
   end
 
-  ACCEPTED_TYPES = Columns::ChampColumn::CAST.keys.group_by { |(from)| from.to_s }.transform_values { |(_, to)| to.map(&:to_s) }
+  ACCEPTED_TYPES = Columns::ChampColumn::CAST.keys
+    .group_by { |(from)| from.to_s }
+    .transform_values { |pairs| pairs.map { |(_, to)| to.to_s } }
 
   def accepted_type_champs
     published_type_champ = procedure.published_revision&.types_de_champ&.find { _1.stable_id == type_de_champ.stable_id }&.type_champ
@@ -124,7 +126,9 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def filter_type_champ(type_champ)
-    return false if type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
+    if type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
+      return type_de_champ.titre_identite?
+    end
 
     case type_champ
     when TypeDeChamp.type_champs.fetch(:number)
