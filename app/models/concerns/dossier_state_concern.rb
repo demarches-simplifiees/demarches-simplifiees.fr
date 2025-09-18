@@ -410,13 +410,13 @@ module DossierStateConcern
 
   def remove_auto_purged_piece_justificatives!
     champs_to_purge = filled_champs.filter do |champ|
-      champ.piece_justificative? && champ.type_de_champ.pj_auto_purge?
+      champ.piece_justificative? && champ.pj_auto_purge?
     end
 
     return if champs_to_purge.empty?
 
     champs_to_purge.each do |champ|
-      champ.piece_justificative_file.attachments.each(&:purge_later)
+      champ.piece_justificative_file.purge_later
     end
   end
 end

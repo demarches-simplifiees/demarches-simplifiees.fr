@@ -47,7 +47,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def max_file_size
-    return champ.type_de_champ.max_file_size_bytes if champ&.respond_to?(:type_de_champ)
+    return champ.max_file_size_bytes if champ.present?
     return if file_size_validator.nil?
 
     file_size_validator.options[:less_than]
@@ -225,16 +225,13 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def accept_from_type_de_champ
-    if !champ&.respond_to?(:type_de_champ)
-      return nil
-    end
+    return nil if champ.blank?
 
-    tdc = champ.type_de_champ
-    if tdc.titre_identite_nature?
+    if champ.titre_identite_nature?
       return ['.jpg', '.jpeg', '.png'].join(', ')
     end
 
-    extensions = tdc.send(:allowed_extensions)
+    extensions = champ.type_de_champ.send(:allowed_extensions)
     return nil if extensions.blank?
 
     extensions.join(', ')
@@ -242,8 +239,8 @@ class Attachment::EditComponent < ApplicationComponent
 
   def allowed_formats
     @allowed_formats ||= begin
-      raw = if champ&.respond_to?(:type_de_champ)
-        champ.type_de_champ.allowed_content_types
+      raw = if champ.present?
+        champ.allowed_content_types
       elsif has_content_type_validator?
         content_type_validator.options[:in]
       else
