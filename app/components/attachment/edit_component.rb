@@ -47,7 +47,10 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def max_file_size
-    return champ.max_file_size_bytes if champ.present?
+    if champ.present?
+      return TypeDeChamp::IDENTITY_FILE_MAX_SIZE if champ.titre_identite? || champ.titre_identite_nature?
+      return champ.max_file_size_bytes
+    end
     return if file_size_validator.nil?
 
     file_size_validator.options[:less_than]
@@ -239,8 +242,12 @@ class Attachment::EditComponent < ApplicationComponent
 
   def allowed_formats
     @allowed_formats ||= begin
+      if champ.present? && (champ.titre_identite? || champ.titre_identite_nature?)
+        return ['jpeg', 'png']
+      end
+
       raw = if champ.present?
-        champ.allowed_content_types
+        champ.piece_justificative? ? champ.allowed_content_types : (has_content_type_validator? ? content_type_validator.options[:in] : [])
       elsif has_content_type_validator?
         content_type_validator.options[:in]
       else
