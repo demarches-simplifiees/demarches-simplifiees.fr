@@ -21,9 +21,9 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
   def source_tdcs
     @source_tdcs ||= begin
       if type_de_champ.public?
-        procedure.draft_revision.types_de_champ_for
+        tdcs_after_current(procedure.draft_revision.types_de_champ.filter(&:public?)) + procedure.draft_revision.types_de_champ.filter(&:private?)
       else
-        procedure.draft_revision.types_de_champ_for(scope: :private)
+        tdcs_after_current(procedure.draft_revision.types_de_champ.filter(&:private?))
       end
     end
   end
@@ -97,10 +97,15 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
 
   def select_grouped_tdcs(grouped_tdcs)
     if type_de_champ.public?
-      grouped_tdcs
+      grouped_tdcs.compact_blank
     else
       grouped_tdcs[PRIVATE_ANNOTATIONS_GROUP]
     end
+  end
+
+  def tdcs_after_current(tdcs)
+    current_index = tdcs.find_index(type_de_champ)
+    tdcs.filter.with_index { |_tdc, index| index > current_index }
   end
 
   def render?

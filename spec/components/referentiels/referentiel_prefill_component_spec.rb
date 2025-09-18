@@ -54,6 +54,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:string] }
         let(:types_de_champ_public) do
           [
+            { stable_id: 1, type: :text, libelle: 'before, not selectable' },
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 1, type: :text, libelle: 'text' },
             { stable_id: 2, type: :textarea, libelle: 'textarea' },
