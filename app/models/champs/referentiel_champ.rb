@@ -202,7 +202,7 @@ class Champs::ReferentielChamp < Champ
     if path_keys_separated_with_dot
       rewrap_to_hash(data, path_keys_separated_with_dot)
     else
-      [data]
+      rewrap_to_array(data)
     end
   end
 
