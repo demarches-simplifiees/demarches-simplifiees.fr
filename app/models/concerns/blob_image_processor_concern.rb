@@ -38,11 +38,15 @@ module BlobImageProcessorConcern
       attachments.any? { _1.record.class == Avis }
     end
 
+    def from_justificatif_motivation?
+      attachments.any? { _1.name == 'justificatif_motivation' }
+    end
+
     def watermark_required?
       attachments.any? do |attachment|
         record = attachment.record
         record.is_a?(Champs::TitreIdentiteChamp) ||
-          (record.is_a?(Champs::PieceJustificativeChamp) && record.type_de_champ.titre_identite_nature?)
+          (record.is_a?(Champs::PieceJustificativeChamp) && record.titre_identite_nature?)
       end
     end
 

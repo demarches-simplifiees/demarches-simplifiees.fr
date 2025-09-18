@@ -1,7 +1,8 @@
 ---
 fr:
   max_file_size: "Taille maximale autorisée : %{max_file_size}."
-  allowed_formats: "Formats supportés : %{formats}"
+  allowed_formats: "Formats acceptés : %{formats}"
+  identity_expected: "Pièce attendue : Carte nationale d’identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité."
   retry: Réessayer
   delete: Supprimer
   delete_file: Supprimer le fichier %{filename}
@@ -14,4 +15,3 @@ fr:
     uploading: "Une erreur s’est produite pendant l’envoi du fichier."
     virus_infected: "Virus détecté, merci d’envoyer un autre fichier."
     corrupted_file: "Le fichier est corrompu, merci d’envoyer un autre fichier."
-

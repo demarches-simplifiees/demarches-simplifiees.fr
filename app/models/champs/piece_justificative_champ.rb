@@ -64,12 +64,12 @@ class Champs::PieceJustificativeChamp < Champ
 
     return if allowed_types.nil? && max_size.nil?
 
-    piece_justificative_file.blobs.each do |blob|
-      if allowed_types.present? && !allowed_types.include?(blob.content_type)
+    piece_justificative_file.attachments.each do |attachment|
+      if allowed_types.present? && !allowed_types.include?(attachment.content_type)
         errors.add(:piece_justificative_file, :content_type_invalid)
       end
 
-      if max_size.present? && blob.byte_size > max_size
+      if max_size.present? && attachment.byte_size > max_size
         errors.add(:piece_justificative_file, :file_size_out_of_range, max_size: ActiveSupport::NumberHelper.number_to_human_size(max_size))
       end
     end

@@ -416,20 +416,19 @@ module DossierStateConcern
     champs.where(id: champ_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
   end
 
-
   def remove_attente_avis_notification
     DossierNotification.destroy_notifications_by_dossier_and_type(self, :attente_avis)
   end
 
   def remove_auto_purged_piece_justificatives!
     champs_to_purge = filled_champs.filter do |champ|
-      champ.piece_justificative? && champ.type_de_champ.pj_auto_purge?
+      champ.piece_justificative? && champ.pj_auto_purge?
     end
 
     return if champs_to_purge.empty?
 
     champs_to_purge.each do |champ|
-      champ.piece_justificative_file.attachments.each(&:purge_later)
+      champ.piece_justificative_file.purge_later
     end
   end
 end

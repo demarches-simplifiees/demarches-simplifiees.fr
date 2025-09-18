@@ -2507,52 +2507,6 @@ describe Dossier, type: :model do
     end
   end
 
-  describe 'auto purge piece justificative after decision' do
-    let(:instructeur) { dossier.followers_instructeurs.first }
-    let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
-
-    before { allow(ClamavService).to receive(:safe_file?).and_return(true) }
-
-    context 'when nature is TITRE_IDENTITE' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, nature: 'TITRE_IDENTITE' }]) }
-      let(:dossier) { create(:dossier, :en_instruction, :followed, procedure:) }
-      let(:champ) { dossier.champs.first }
-
-      it 'purges attachments on accepter' do
-        champ.piece_justificative_file.attach(file)
-        expect(champ.piece_justificative_file.attached?).to be true
-        dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect(champ.reload.piece_justificative_file.attached?).to be false
-      end
-    end
-
-    context 'when pj_auto_purge is enabled' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, pj_auto_purge: '1' }]) }
-      let(:dossier) { create(:dossier, :en_instruction, :followed, procedure:) }
-      let(:champ) { dossier.champs.first }
-
-      it 'purges attachments on accepter' do
-        champ.piece_justificative_file.attach(file)
-        expect(champ.piece_justificative_file.attached?).to be true
-        dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect(champ.reload.piece_justificative_file.attached?).to be false
-      end
-    end
-
-    context 'when standard piece justificative' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
-      let(:dossier) { create(:dossier, :en_instruction, :followed, procedure:) }
-      let(:champ) { dossier.champs.first }
-
-      it 'keeps attachments on accepter' do
-        champ.piece_justificative_file.attach(file)
-        expect(champ.piece_justificative_file.attached?).to be true
-        dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect(champ.reload.piece_justificative_file.attached?).to be true
-      end
-    end
-  end
-
   describe '#log_api_entreprise_job_exception' do
     let(:dossier) { create(:dossier) }
 

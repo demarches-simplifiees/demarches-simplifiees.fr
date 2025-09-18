@@ -60,6 +60,7 @@
 
             - if type_de_champ.piece_justificative?
               .cell.fr-mt-1w
+                .fr-hr.fr-mt-1w
                 = form.label :nature, "Nature de la pièce", for: dom_id(type_de_champ, :nature)
                 - natures = TypeDeChamp.natures.keys.map { |k| [t("activerecord.attributes.type_de_champ.natures.#{k}", default: k.to_s.humanize), k] }
                 = form.select :nature,
@@ -97,10 +98,10 @@
                 .cell
                   = form.label :formats_accepted, t('.rib_formats.title'), for: nature_dom_id, class: 'fake-label'
                   %p.fr-mb-0= t('.rib_formats.desc_html')
-                .fr-hr.fr-mt-2w
               - else
-                .cell.fr-mt-2w{ data: { controller: 'hide-target' } }
-                  .fr-toggle
+                .fr-hr.fr-mt-2w
+                .cell{ data: { controller: 'hide-target' } }
+                  .fr-toggle{ class: class_names('fr-mb-2w': form.object.pj_limit_formats?) }
                     = form.check_box :pj_limit_formats,
                       id: dom_id(type_de_champ, :pj_limit_formats),
                       class: 'fr-toggle__input',
@@ -110,27 +111,27 @@
 
                   - families = format_families_for_select
                   - grid_hidden_class = form.object.pj_limit_formats? ? nil : 'fr-hidden'
-                  .cell.fr-mt-1w{ class: grid_hidden_class, data: { 'hide-target-target': 'toHide' } }
-                    %fieldset.fr-fieldset
-                      %legend.fake-label
+                  .cell{ class: grid_hidden_class, data: { 'hide-target-target': 'toHide' } }
+                    %fieldset.fr-fieldset.fr-mx-0.fr-px-0
+                      %legend.fr-fieldset__legend.fr-fieldset__legend--regular.fr-mx-0.fr-pl-0.fr-mb-1w
                         = t('.families_legend')
-                      .fr-fieldset__content
-                        .fr-grid-row.fr-grid-row--gutters
-                          - prechecked = Array.wrap(form.object.pj_format_families).map(&:to_s)
-                          - families.each do |(value, label, examples)|
-                            .fr-col-12.fr-col-sm-6.fr-col-md-3
-                              .fr-checkbox-group
-                                - checked_opt = prechecked.include?(value.to_s)
-                                = form.check_box :pj_format_families, { multiple: true, id: dom_id(type_de_champ, "pj_format_#{value}"), checked: checked_opt }, value, nil
-                                - if examples.present?
-                                  - tip_id = "#{dom_id(type_de_champ, "pj_format_#{value}")}-tip"
-                                  = form.label "pj_format_families_#{value}", label, for: dom_id(type_de_champ, "pj_format_#{value}"), class: 'fr-label', tabindex: 0, 'aria-describedby': tip_id
-                                  %span.fr-tooltip.fr-placement{ id: tip_id, role: 'tooltip', 'aria-hidden': 'true' }= t('.tooltip_examples', examples: examples)
-                                - else
-                                  = form.label "pj_format_families_#{value}", label, for: dom_id(type_de_champ, "pj_format_#{value}"), class: 'fr-label'
+
+                      - prechecked = Array.wrap(form.object.pj_format_families).map(&:to_s)
+                      - families.each do |(value, label, examples)|
+                        .fr-fieldset__element.fr-fieldset__element--inline.fr-pl-0
+                          .fr-checkbox-group
+                            - checked_opt = prechecked.include?(value.to_s)
+                            = form.check_box :pj_format_families, { multiple: true, id: dom_id(type_de_champ, "pj_format_#{value}"), checked: checked_opt }, value, nil
+                            - if examples.present?
+                              - tip_id = "#{dom_id(type_de_champ, "pj_format_#{value}")}-tip"
+                              = form.label "pj_format_families_#{value}", label, for: dom_id(type_de_champ, "pj_format_#{value}"), class: 'fr-label', tabindex: 0, 'aria-describedby': tip_id
+                              %span.fr-tooltip.fr-placement{ id: tip_id, role: 'tooltip', 'aria-hidden': 'true' }= t('.tooltip_examples', examples: examples)
+                            - else
+                              = form.label "pj_format_families_#{value}", label, for: dom_id(type_de_champ, "pj_format_#{value}"), class: 'fr-label'
 
               - if !type_de_champ.titre_identite_nature?
-                .cell.fr-mt-2w
+                .fr-hr.fr-mt-1w
+                .cell
                   .fr-toggle
                     = form.check_box :pj_auto_purge, id: dom_id(type_de_champ, :pj_auto_purge), class: 'fr-toggle__input'
                     = form.label :pj_auto_purge, t('.auto_purge_label'), for: dom_id(type_de_champ, :pj_auto_purge), class: 'fr-toggle__label fr-label'

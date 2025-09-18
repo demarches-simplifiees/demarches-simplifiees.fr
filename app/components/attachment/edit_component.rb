@@ -47,7 +47,11 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def max_file_size
-    return champ.type_de_champ.max_file_size_bytes if champ&.respond_to?(:type_de_champ)
+    return TypeDeChamp::IDENTITY_FILE_MAX_SIZE if identity_context?
+
+    if champ.present?
+      return champ.max_file_size_bytes
+    end
     return if file_size_validator.nil?
 
     file_size_validator.options[:less_than]
@@ -98,7 +102,7 @@ class Attachment::EditComponent < ApplicationComponent
 
     options[:aria] = { describedby: describedby.join(' ') }
 
-    accept = accept_from_type_de_champ || (has_content_type_validator? ? accept_content_type : nil)
+    accept = accept_from_type_de_champ || accept_from_attached_type_de_champ || (has_content_type_validator? ? accept_content_type : nil)
     options.merge!(accept.present? ? { accept: accept } : {})
     options[:multiple] = true if as_multiple?
     options[:disabled] = true if (@max && @index >= @max) || persisted?
@@ -225,25 +229,54 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def accept_from_type_de_champ
-    if !champ&.respond_to?(:type_de_champ)
-      return nil
-    end
+    return nil if champ.blank?
 
-    tdc = champ.type_de_champ
-    if tdc.titre_identite_nature?
+    if champ.titre_identite_nature?
       return ['.jpg', '.jpeg', '.png'].join(', ')
     end
 
-    extensions = tdc.send(:allowed_extensions)
+    extensions = champ.type_de_champ.send(:allowed_extensions)
     return nil if extensions.blank?
 
     extensions.join(', ')
   end
 
+  def accept_from_attached_type_de_champ
+    record = @attached_file.record
+    return nil if champ.present?
+
+    tdc = if record.is_a?(TypeDeChamp)
+      record
+    elsif record.respond_to?(:type_de_champ)
+      record.type_de_champ
+    end
+
+    extensions = tdc&.send(:allowed_extensions).presence
+    extensions&.join(', ')
+  end
+
   def allowed_formats
     @allowed_formats ||= begin
-      raw = if champ&.respond_to?(:type_de_champ)
-        champ.type_de_champ.allowed_content_types
+      if identity_context?
+        tdc = champ.present? ? champ.type_de_champ : @attached_file.record
+        return tdc.send(:allowed_extensions).map { _1.delete_prefix('.') }
+      end
+
+      if champ.blank?
+        record = @attached_file.record
+        tdc = record.is_a?(TypeDeChamp) ? record : (record.respond_to?(:type_de_champ) ? record.type_de_champ : nil)
+        if tdc.is_a?(TypeDeChamp)
+          return tdc.send(:allowed_extensions).map { _1.delete_prefix('.') } if tdc.rib_nature?
+
+          # Pour les pièces jointes avec des formats limités, on affiche les formats autorisés
+          if tdc.piece_justificative? && tdc.pj_limit_formats? && tdc.pj_format_families.present?
+            return tdc.send(:allowed_extensions).map { _1.delete_prefix('.') }
+          end
+        end
+      end
+
+      raw = if champ.present?
+        champ.allowed_content_types
       elsif has_content_type_validator?
         content_type_validator.options[:in]
       else
@@ -255,6 +288,42 @@ class Attachment::EditComponent < ApplicationComponent
       sorted_extensions = extensions.sort_by { |e| EXTENSIONS_ORDER.index(e) || 999 }
       sorted_extensions.size > 5 ? (sorted_extensions.first(5) + ['…']) : sorted_extensions
     end
+  end
+
+  def allowed_families_with_examples
+    tdc = if champ.present?
+      champ.type_de_champ
+    else
+      record = @attached_file.record
+      record.is_a?(TypeDeChamp) ? record : (record.respond_to?(:type_de_champ) ? record.type_de_champ : nil)
+    end
+    return nil unless tdc
+
+    families =
+      if tdc.titre_identite_nature?
+        [:image_scan]
+      elsif tdc.rib_nature?
+        [:document_texte, :image_scan]
+      elsif tdc.piece_justificative? && tdc.pj_limit_formats? && tdc.pj_format_families.present?
+        Array.wrap(tdc.pj_format_families).map(&:to_sym)
+      else
+        nil
+      end
+
+    return nil if families.blank?
+
+    families.map do |family|
+      label = I18n.t("activerecord.attributes.type_de_champ.format_families.#{family}", default: family.to_s.humanize)
+      examples = FORMAT_FAMILY_EXAMPLES[family]
+      examples.present? ? "#{label} (#{examples})" : label
+    end
+  end
+
+  def identity_context?
+    return false if champ.blank? && !@attached_file.record.is_a?(TypeDeChamp)
+
+    tdc = champ || @attached_file.record
+    tdc.titre_identite? || tdc.titre_identite_nature?
   end
 
   def has_content_type_validator?

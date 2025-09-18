@@ -122,7 +122,7 @@ FORMAT_FAMILIES = {
     'application/vnd.google-earth.kml+xml', 'application/gpx+xml',
     'text/tab-separated-values', 'text/csv', 'application/x-dbf'
   ],
-  image_scan: AUTHORIZED_IMAGE_TYPES + RARE_IMAGE_TYPES,
+  image_scan: ['image/jpeg', 'image/png'],
   audio: ['audio/mpeg', 'audio/mp4', 'audio/x-m4a', 'audio/aac', 'audio/x-wav'],
   video: ['video/mp4', 'video/quicktime', 'video/3gpp', 'video/x-ms-wm'],
   archive: ['application/zip', 'application/x-zip-compressed', 'application/x-7z-compressed', 'application/vnd.rar', 'application/x-rar', 'application/gzip']
@@ -133,7 +133,7 @@ FORMAT_FAMILY_EXAMPLES = {
   tableur: '.xls, .xlsx, .ods, .csv',
   presentation: '.ppt, .pptx, .odp',
   donnees: '.xml, .json, .kml, .sql, .csv',
-  image_scan: '.jpg, .jpeg, .png, .tif, .bmp',
+  image_scan: '.jpg, .jpeg, .png',
   audio: '.mp3, .wav, .aac, .m4a',
   video: '.mp4, .mov, .avi, .wmv',
   archive: '.zip, .rar, .7z, .gz'

@@ -112,13 +112,7 @@ class TypeDeChamp < ApplicationRecord
   enum :nature, {
     NON_SPECIFIE: 'NON_SPECIFIE',
     TITRE_IDENTITE: 'TITRE_IDENTITE',
-    RIB: 'RIB',
-    JUSTIFICATIF_DOMICILE: 'JUSTIFICATIF_DOMICILE',
-    LIVRET_DE_FAMILLE: 'LIVRET_DE_FAMILLE',
-    ATTESTATION: 'ATTESTATION',
-    AVIS_IMPOSITION: 'AVIS_IMPOSITION',
-    BUDGET: 'BUDGET',
-    DEVIS: 'DEVIS'
+    RIB: 'RIB'
   }
 
   def titre_identite_nature?
@@ -748,7 +742,7 @@ class TypeDeChamp < ApplicationRecord
 
   def allowed_content_types
     if titre_identite_nature?
-      ['image/jpeg', 'image/png']
+      families_to_content_types(%w[image_scan])
     elsif rib_nature?
       families_to_content_types(%w[document_texte image_scan])
     elsif pj_limit_formats? && pj_format_families.present?
@@ -864,7 +858,7 @@ class TypeDeChamp < ApplicationRecord
     return AUTHORIZED_CONTENT_TYPES if families.blank?
 
     families
-      .flat_map { |f| (defined?(FORMAT_FAMILIES) && FORMAT_FAMILIES[f.to_sym]) || [] }
+      .flat_map { |f| FORMAT_FAMILIES[f.to_sym] || [] }
       .presence || AUTHORIZED_CONTENT_TYPES
   end
 
