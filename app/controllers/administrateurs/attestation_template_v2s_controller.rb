@@ -60,11 +60,18 @@ module Administrateurs
     end
 
     def update
-      attestation_params = editor_params.merge(kind: params[:kind]) # TODO : remove the merge in the next PR
+      attestation_params = editor_params
 
+      @kind = @attestation_template.kind || params[:kind]
       # toggle activation
       if @attestation_template.persisted? && @attestation_template.activated? != cast_bool(attestation_params[:activated])
-        @procedure.attestation_templates.v2.update_all(activated: attestation_params[:activated])
+        if @kind == 'acceptation'
+          @procedure.attestation_acceptation_templates_v2.update_all(activated: attestation_params[:activated])
+        elsif @kind == 'refus'
+          @procedure.attestation_refus_templates_v2.update_all(activated: attestation_params[:activated])
+        else
+          raise ArgumentError, 'attestation template kind should be present'
+        end
         render :update && return
       end
 
@@ -81,7 +88,7 @@ module Administrateurs
       else
         # - draft just published
         if @attestation_template.published? && should_edit_draft?
-          published = @procedure.attestation_templates.published
+          published = @procedure.attestation_templates_for(@kind).published
 
           @attestation_template.transaction do
             were_published = published.destroy_all
@@ -89,7 +96,7 @@ module Administrateurs
             flash.notice = were_published.any? ? "La nouvelle version de l’attestation a été publiée." : "L’attestation a été publiée."
           end
 
-          redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure)
+          redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure, kind: @attestation_template.kind)
         else
           # - draft updated
           # - or, attestation already published, without need for publication (draft procedure)
@@ -102,22 +109,37 @@ module Administrateurs
     def create = update
 
     def reset
-      @procedure.attestation_templates_v2.draft&.destroy_all
+      kind = params[:kind]
+      if kind == 'acceptation'
+        @procedure.attestation_acceptation_templates_v2.draft&.destroy_all
+      elsif kind == 'refus'
+        @procedure.attestation_refus_templates_v2.draft&.destroy_all
+      else
+        raise ArgumentError, 'kind param should be present'
+      end
 
       flash.notice = "Les modifications ont été réinitialisées."
-      redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure)
+      redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure, kind: @attestation_template.kind)
     end
 
     private
 
     def retrieve_attestation_template
-      v2s = @procedure.attestation_templates_v2
-      @attestation_template = v2s.find(&:draft?) || v2s.find(&:published?) || build_default_attestation
+      kind = params[:kind]
+      if kind == 'acceptation'
+        acceptations = @procedure.attestation_acceptation_templates_v2
+        @attestation_template = acceptations.find(&:draft?) || acceptations.find(&:published?) || build_default_attestation(kind)
+      elsif kind == 'refus'
+        refus = @procedure.attestation_refus_templates_v2
+        @attestation_template = refus.find(&:draft?) || refus.find(&:published?) || build_default_attestation(kind)
+      else
+        raise ArgumentError, 'kind param should be present'
+      end
     end
 
-    def build_default_attestation
+    def build_default_attestation(kind)
       state = should_edit_draft? ? :draft : :published
-      @procedure.attestation_templates.build(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, activated: true, state:)
+      @procedure.attestation_templates.build(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, activated: true, state:, kind:)
     end
 
     def should_edit_draft?

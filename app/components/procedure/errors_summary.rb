@@ -46,7 +46,7 @@ class Procedure::ErrorsSummary < ApplicationComponent
       if error.detail[:value].version == 1
         edit_admin_procedure_attestation_template_path(@procedure)
       else
-        edit_admin_procedure_attestation_template_v2_path(@procedure)
+        edit_admin_procedure_attestation_template_v2_path(@procedure, kind: error.detail[:value].kind)
       end
     when :initiated_mail, :received_mail, :closed_mail, :refused_mail, :without_continuation_mail, :re_instructed_mail
       klass = "Mails::#{error.attribute.to_s.classify}".constantize

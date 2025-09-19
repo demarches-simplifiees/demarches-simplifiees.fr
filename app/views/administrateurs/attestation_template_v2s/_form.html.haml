@@ -22,7 +22,7 @@
       .fr-col-12.fr-col-lg-7
         %fieldset.fr-fieldset{ aria: { labelledby: 'edit-attestation' } }
           %legend.fr-fieldset__legend#edit-attestation
-            %h1.fr-h2 Attestation
+            %h1.fr-h2 Attestation #{attestation_kind.to_s.humanize}
             %p.fr-text--regular
               L'attestation est émise au moment où un dossier est accepté, elle est jointe à l'email d'accusé d'acceptation.
               Elle est également disponible au téléchargement depuis l'espace personnel de l'usager.
@@ -114,8 +114,8 @@
         .sticky--top.fr-px-1w{ data: { controller: "sticky-top" } }
           .flex.justify-between.align-center
             %h2.fr-h4 Aperçu
-            %p= link_to 'Prévisualiser en taille réelle', admin_procedure_attestation_template_v2_path(procedure, format: :pdf), class: 'fr-link', target: '_blank', rel: 'noopener'
-          %iframe.attestation-preview{ title: "Aperçu", src: admin_procedure_attestation_template_v2_path(procedure, format: :pdf), data: { attestation_target: 'preview' } }
+            %p= link_to 'Prévisualiser en taille réelle', admin_procedure_attestation_template_v2_path(procedure, format: :pdf, kind: attestation_kind), class: 'fr-link', target: '_blank', rel: 'noopener'
+          %iframe.attestation-preview{ title: "Aperçu", src: admin_procedure_attestation_template_v2_path(procedure, format: :pdf, kind: attestation_kind), data: { attestation_target: 'preview' } }
           %p.fr-hint-text
             L'aperçu est mis à jour automatiquement après chaque modification.
             Pour générer un aperçu fidèle avec champs et dates,
@@ -124,7 +124,7 @@
 
   - if attestation_template.draft?
     - content_for(:sticky_header) do
-      = render partial: "sticky_header"
+      = render partial: "sticky_header", locals: { procedure: procedure, kind: attestation_kind, attestation_templates_for_kind: procedure.attestation_templates_for(attestation_kind) }
 
   .padded-fixed-footer
     .fixed-footer#fixed_footer
