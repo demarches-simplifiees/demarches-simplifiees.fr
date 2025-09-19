@@ -50,9 +50,16 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
-  has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
   has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
+
+  has_many :attestation_acceptation_templates_v2, -> { AttestationTemplate.v2.where(kind: "acceptation") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+
+  has_one :attestation_acceptation_template,
+          -> { published.where(kind: "acceptation") },
+          class_name: "AttestationTemplate",
+          dependent: :destroy,
+          inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -757,6 +764,10 @@ class Procedure < ApplicationRecord
 
   def disallow_expert_review?
     !allow_expert_review?
+  end
+
+  def attestation_templates_for(kind)
+    public_send("attestation_#{kind}_templates_v2")
   end
 
   private
