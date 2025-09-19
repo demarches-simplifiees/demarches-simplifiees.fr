@@ -81,6 +81,23 @@ class DossierNotification < ApplicationRecord
     end
   end
 
+  def self.refresh_notifications_new_instructeur_for_dossiers(groupe_instructeur, instructeur)
+    instructeur_preferences = instructeur_preferences(instructeur, groupe_instructeur.procedure)
+
+    notification_types_to_refresh = notification_types.keys.map(&:to_sym).filter do |notification_type|
+      instructeur_preferences[notification_type] == 'all'
+    end
+
+    return if notification_types_to_refresh.empty?
+
+    dossiers = groupe_instructeur.dossiers.state_not_brouillon
+
+    notification_types_to_refresh.each do |notification_type|
+      dossiers_to_notify = dossiers_to_notify(dossiers, notification_type, instructeur.id)
+      create_notifications_by_type_for_instructeur_dossiers(dossiers_to_notify, notification_type, instructeur.id) if dossiers_to_notify.any?
+    end
+  end
+
   def self.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
     DossierNotification
       .where(instructeur:)
