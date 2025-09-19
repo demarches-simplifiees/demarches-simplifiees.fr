@@ -37,9 +37,7 @@ class DossierNotification < ApplicationRecord
   def self.create_notification(dossier, notification_type, except_instructeur: nil)
     instructeur_ids = instructeur_to_notify_ids(dossier, notification_type, except_instructeur)
 
-    instructeur_ids.each do |instructeur_id|
-      find_or_create_notification(dossier, notification_type, instructeur_id)
-    end
+    create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids) if instructeur_ids.any?
   end
 
   def self.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, choice)
@@ -268,6 +266,16 @@ class DossierNotification < ApplicationRecord
     ) do |notification|
       notification.display_at = display_at
     end
+  end
+
+  def self.create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids)
+    display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
+
+    missing_notifications = instructeur_ids.map do |instructeur_id|
+      { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
+    end
+
+    DossierNotification.insert_all(missing_notifications)
   end
 
   def self.instructeur_preferences(instructeur, procedure)
