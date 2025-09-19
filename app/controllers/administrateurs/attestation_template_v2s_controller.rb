@@ -56,10 +56,11 @@ module Administrateurs
       ]
 
       @attestation_template.validate
+      @attestation_kind = params[:kind]&.to_sym || :acceptation
     end
 
     def update
-      attestation_params = editor_params
+      attestation_params = editor_params.merge(kind: params[:kind]) # TODO : remove the merge in the next PR
 
       # toggle activation
       if @attestation_template.persisted? && @attestation_template.activated? != cast_bool(attestation_params[:activated])
