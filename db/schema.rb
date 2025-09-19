@@ -183,7 +183,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_23_100000) do
     t.text "title"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "version", default: 1, null: false
-    t.index ["procedure_id", "version", "state"], name: "index_attestation_templates_on_procedure_version_state", unique: true
+    t.index ["procedure_id", "version", "state", "kind"], name: "index_attestation_templates_on_procedure_version_state_kind", unique: true
   end
 
   create_table "attestations", id: :serial, force: :cascade do |t|
