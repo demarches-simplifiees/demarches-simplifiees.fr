@@ -32,7 +32,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
   describe 'GET #show' do
     subject do
-      get :show, params: { procedure_id: procedure.id, format: }
+      get :show, params: { procedure_id: procedure.id, format:, attestation_kind: :acceptation }
       response.body
     end
 
@@ -120,7 +120,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
     let(:attestation_template) { nil }
 
     subject do
-      get :edit, params: { procedure_id: procedure.id }
+      get :edit, params: params
       response.body
     end
 
@@ -134,69 +134,84 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
     end
 
-    context 'if an attestation template already exist on v1' do
-      let(:attestation_template) { build(:attestation_template, version: 1) }
-
-      it 'build new v2 attestation template' do
-        subject
-        expect(assigns(:attestation_template).version).to eq(2)
-        expect(assigns(:attestation_template)).to be_draft
-        expect(attestation_template.reload).to be_present
+    context 'acceptation kind' do
+      let(:params) { { procedure_id: procedure.id, attestation_kind: :acceptation } }
+      context 'if an attestation template does not exists yet on the procedure' do
+        it 'creates new v2 acceptation attestation template' do
+          subject
+          expect(assigns(:attestation_template).version).to eq(2)
+          expect(assigns(:attestation_template)).to be_draft
+          expect(assigns(:attestation_kind)).to eq(:acceptation)
+          expect(assigns(:attestation_template).kind).to eq('acceptation')
+          expect(response.body).to have_button("Publier")
+          expect(response.body).not_to have_link("Réinitialiser les modifications")
+        end
       end
 
-      context 'on a draft procedure' do
-        let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+      context 'if an attestation template already exist on v1' do
+        let(:attestation_template) { build(:attestation_template, version: 1) }
 
-        it 'build v2 as draft' do
+        it 'build new v2 attestation template' do
           subject
           expect(assigns(:attestation_template).version).to eq(2)
           expect(assigns(:attestation_template)).to be_draft
           expect(attestation_template.reload).to be_present
         end
-      end
-    end
 
-    context 'attestation template published exist without draft' do
-      let(:attestation_template) { build(:attestation_template, :v2, :published) }
+        context 'on a draft procedure' do
+          let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
 
-      it 'mention publication' do
-        subject
-        expect(assigns(:attestation_template)).to eq(attestation_template)
-        expect(response.body).not_to have_link("Réinitialiser les modifications")
-        expect(response.body).not_to have_button("Publier les modifications")
-      end
-    end
-
-    context 'attestation template draft already exist on v2' do
-      let(:attestation_template) { build(:attestation_template, :v2, :draft) }
-
-      it 'assigns this draft' do
-        subject
-        expect(assigns(:attestation_template)).to eq(attestation_template)
-        expect(response.body).not_to have_link("Réinitialiser les modifications")
-        expect(response.body).to have_button("Publier")
+          it 'build v2 as draft' do
+            subject
+            expect(assigns(:attestation_template).version).to eq(2)
+            expect(assigns(:attestation_template)).to be_draft
+            expect(attestation_template.reload).to be_present
+          end
+        end
       end
 
-      context 'and a published template also exists' do
-        before { create(:attestation_template, :v2, :published, procedure:) }
+      context 'attestation template published exist without draft' do
+        let(:attestation_template) { build(:attestation_template, :v2, :published) }
 
         it 'mention publication' do
           subject
           expect(assigns(:attestation_template)).to eq(attestation_template)
-          expect(response.body).to have_link("Réinitialiser les modifications")
-          expect(response.body).to have_button("Publier les modifications")
+          expect(response.body).not_to have_link("Réinitialiser les modifications")
+          expect(response.body).not_to have_button("Publier les modifications")
         end
       end
-    end
 
-    context 'when procedure is draft' do
-      let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+      context 'attestation template draft already exist on v2' do
+        let(:attestation_template) { build(:attestation_template, :v2, :draft) }
 
-      it 'built template is already live (published)' do
-        subject
-        expect(assigns(:attestation_template).version).to eq(2)
-        expect(assigns(:attestation_template)).to be_published
-        expect(response.body).not_to have_button(/Publier/)
+        it 'assigns this draft' do
+          subject
+          expect(assigns(:attestation_template)).to eq(attestation_template)
+          expect(response.body).not_to have_link("Réinitialiser les modifications")
+          expect(response.body).to have_button("Publier")
+        end
+
+        context 'and a published template also exists' do
+          before { create(:attestation_template, :v2, :published, procedure:) }
+
+          it 'mention publication' do
+            subject
+            expect(assigns(:attestation_template)).to eq(attestation_template)
+            expect(response.body).to have_link("Réinitialiser les modifications")
+            expect(response.body).to have_button("Publier les modifications")
+          end
+        end
+      end
+
+      context 'when procedure is draft' do
+        let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+
+        it 'built template is already live (published)' do
+          subject
+          expect(assigns(:attestation_template).version).to eq(2)
+          expect(assigns(:attestation_template)).to be_published
+          expect(response.body).not_to have_button(/Publier/)
+        end
       end
     end
   end
@@ -205,38 +220,48 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
     let(:attestation_template) { nil }
 
     subject do
-      post :create, params: { procedure_id: procedure.id, attestation_template: update_params, attestation_kind: :acceptation }, format: :turbo_stream
+      post :create, params: { procedure_id: procedure.id, attestation_template: update_params, attestation_kind: }, format: :turbo_stream
       response.body
     end
 
-    context 'when attestation template is valid' do
-      render_views
+    context 'acceptation kind' do
+      let(:attestation_kind) { :acceptation }
+      context 'when attestation template is valid' do
+        render_views
 
-      it "create template" do
-        subject
-        attestation_template = procedure.reload.attestation_templates.first
-
-        expect(attestation_template).to be_draft
-        expect(attestation_template.official_layout).to eq(true)
-        expect(attestation_template.label_logo).to eq("Ministère des specs")
-        expect(attestation_template.label_direction).to eq("RSPEC")
-        expect(attestation_template.footer).to eq("en bas")
-        expect(attestation_template.activated).to eq(true)
-        expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
-        expect(attestation_template.kind).to eq('acceptation')
-
-        expect(response.body).to include("Attestation enregistrée")
-      end
-
-      context "with files" do
-        let(:update_params) { super().merge(logo:, signature:) }
-
-        it "upload files" do
+        it "create template" do
           subject
           attestation_template = procedure.reload.attestation_templates.first
 
-          expect(attestation_template.logo.download).to eq(logo.read)
-          expect(attestation_template.signature.download).to eq(signature.read)
+          expect(attestation_template).to be_draft
+          expect(attestation_template.official_layout).to eq(true)
+          expect(attestation_template.label_logo).to eq("Ministère des specs")
+          expect(attestation_template.label_direction).to eq("RSPEC")
+          expect(attestation_template.footer).to eq("en bas")
+          expect(attestation_template.activated).to eq(true)
+          expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
+          expect(attestation_template.kind).to eq('acceptation')
+
+          expect(response.body).to include("Attestation enregistrée")
+        end
+
+        context "with files" do
+          let(:update_params) { super().merge(logo:, signature:) }
+
+          it "upload files" do
+            subject
+            attestation_template = procedure.reload.attestation_templates.first
+
+            expect(attestation_template.logo.download).to eq(logo.read)
+            expect(attestation_template.signature.download).to eq(signature.read)
+          end
+        end
+      end
+
+      context 'when there is already an acceptation template' do
+        let!(:draft_acceptation_template) { create(:attestation_template, :v2, :draft, procedure:) }
+        it 'does not create a second acceptation template' do
+          expect { subject }.not_to change { procedure.attestation_acceptation_templates_v2.count }
         end
       end
     end
@@ -245,7 +270,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   describe 'PATCH update' do
     render_views
     subject do
-      patch :update, params: { procedure_id: procedure.id, attestation_template: update_params }, format: :turbo_stream
+      patch :update, params: { procedure_id: procedure.id, attestation_template: update_params, attestation_kind: :acceptation }, format: :turbo_stream
       response.body
     end
 
@@ -313,8 +338,9 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
       it 'toggle attribute of current published attestation' do
         subject
-        expect(procedure.attestation_templates.v2.count).to eq(1)
-        expect(procedure.attestation_templates.v2.first.activated?).to eq(false)
+        expect(procedure.attestation_acceptation_templates_v2.count).to eq(1)
+        expect(procedure.attestation_acceptation_templates_v2.first.published?).to eq(true)
+        expect(procedure.attestation_acceptation_templates_v2.first.activated?).to eq(false)
         expect(flash.notice).to be_nil
       end
 
@@ -325,8 +351,8 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
         it 'toggle attribute of both draft & published v2 attestations' do
           subject
-          expect(procedure.attestation_templates.v2.count).to eq(2)
-          expect(procedure.attestation_templates.v2.all?(&:activated?)).to eq(false)
+          expect(procedure.attestation_acceptation_templates_v2.count).to eq(2)
+          expect(procedure.attestation_acceptation_templates_v2.all?(&:activated?)).to eq(false)
         end
       end
     end
@@ -340,13 +366,13 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
     }
 
     subject do
-      patch :reset, params: { procedure_id: procedure.id }
+      patch :reset, params: { procedure_id: procedure.id, attestation_kind: :acceptation }
       response.body
     end
 
     it "delete draft, keep published" do
       expect(procedure.attestation_templates.count).to eq(2)
-      expect(subject).to redirect_to(edit_admin_procedure_attestation_template_v2_path(procedure))
+      expect(subject).to redirect_to(edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :acceptation))
       expect(flash.notice).to include("réinitialisées")
       expect(procedure.attestation_templates.count).to eq(1)
       expect(procedure.attestation_templates.first).to eq(attestation_template)
