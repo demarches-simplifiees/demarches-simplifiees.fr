@@ -65,7 +65,13 @@ module Administrateurs
       @kind = @attestation_template.kind || params[:kind]
       # toggle activation
       if @attestation_template.persisted? && @attestation_template.activated? != cast_bool(attestation_params[:activated])
-        @procedure.attestation_acceptation_templates_v2.update_all(activated: attestation_params[:activated])
+        if @kind == 'acceptation'
+          @procedure.attestation_acceptation_templates_v2.update_all(activated: attestation_params[:activated])
+        elsif @kind == 'refus'
+          @procedure.attestation_refus_templates_v2.update_all(activated: attestation_params[:activated])
+        else
+          raise ArgumentError, 'attestation template kind should be present'
+        end
         render :update && return
       end
 
@@ -103,7 +109,14 @@ module Administrateurs
     def create = update
 
     def reset
-      @procedure.attestation_acceptation_templates_v2.draft&.destroy_all
+      kind = params[:kind]
+      if kind == 'acceptation'
+        @procedure.attestation_acceptation_templates_v2.draft&.destroy_all
+      elsif kind == 'refus'
+        @procedure.attestation_refus_templates_v2.draft&.destroy_all
+      else
+        raise ArgumentError, 'kind param should be present'
+      end
 
       flash.notice = "Les modifications ont été réinitialisées."
       redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure, kind: @attestation_template.kind)
@@ -113,8 +126,15 @@ module Administrateurs
 
     def retrieve_attestation_template
       kind = params[:kind]
-      acceptations = @procedure.attestation_acceptation_templates_v2
-      @attestation_template = acceptations.find(&:draft?) || acceptations.find(&:published?) || build_default_attestation(kind)
+      if kind == 'acceptation'
+        acceptations = @procedure.attestation_acceptation_templates_v2
+        @attestation_template = acceptations.find(&:draft?) || acceptations.find(&:published?) || build_default_attestation(kind)
+      elsif kind == 'refus'
+        refus = @procedure.attestation_refus_templates_v2
+        @attestation_template = refus.find(&:draft?) || refus.find(&:published?) || build_default_attestation(kind)
+      else
+        raise ArgumentError, 'kind param should be present'
+      end
     end
 
     def build_default_attestation(kind)
