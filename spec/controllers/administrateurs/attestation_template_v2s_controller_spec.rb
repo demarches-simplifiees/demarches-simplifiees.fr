@@ -124,13 +124,17 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       response.body
     end
 
-    context 'if an attestation template does not exists yet on the procedure' do
-      it 'creates new v2 attestation template' do
-        subject
-        expect(assigns(:attestation_template).version).to eq(2)
-        expect(assigns(:attestation_template)).to be_draft
-        expect(response.body).to have_button("Publier")
-        expect(response.body).not_to have_link("Réinitialiser les modifications")
+    context 'refus kind' do
+      let(:params) { { procedure_id: procedure.id, attestation_kind: :refus } }
+      context 'if an attestation template does not exists yet on the procedure' do
+        it 'creates new v2 refus attestation template' do
+          subject
+          expect(assigns(:attestation_template).version).to eq(2)
+          expect(assigns(:attestation_template)).to be_draft
+          expect(assigns(:attestation_template).kind).to eq('refus')
+          expect(response.body).to have_button("Publier")
+          expect(response.body).not_to have_link("Réinitialiser les modifications")
+        end
       end
     end
 
@@ -141,8 +145,6 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           subject
           expect(assigns(:attestation_template).version).to eq(2)
           expect(assigns(:attestation_template)).to be_draft
-          expect(assigns(:attestation_kind)).to eq(:acceptation)
-          expect(assigns(:attestation_template).kind).to eq('acceptation')
           expect(response.body).to have_button("Publier")
           expect(response.body).not_to have_link("Réinitialiser les modifications")
         end
@@ -265,6 +267,50 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         end
       end
     end
+
+    context 'refus kind' do
+      let(:attestation_kind) { :refus }
+      context 'when attestation template is valid' do
+        render_views
+
+        it "create template" do
+          subject
+          attestation_template = procedure.reload.attestation_refus_templates_v2.first
+
+          expect(attestation_template).to be_draft
+          expect(attestation_template.official_layout).to eq(true)
+          expect(attestation_template.label_logo).to eq("Ministère des specs")
+          expect(attestation_template.label_direction).to eq("RSPEC")
+          expect(attestation_template.footer).to eq("en bas")
+          expect(attestation_template.activated).to eq(true)
+          expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
+          expect(attestation_template.kind).to eq('refus')
+
+          expect(response.body).to include("Attestation enregistrée")
+        end
+
+        context "with files" do
+          let(:update_params) { super().merge(logo:, signature:) }
+
+          it "upload files" do
+            subject
+            attestation_template = procedure.reload.attestation_templates.first
+
+            expect(attestation_template.logo.download).to eq(logo.read)
+            expect(attestation_template.signature.download).to eq(signature.read)
+          end
+        end
+
+        context 'when there is already an acceptation template' do
+          let!(:draft_acceptation_template) { create(:attestation_template, :v2, :draft, procedure:, kind: :acceptation) }
+          it 'creates a refus template' do
+              subject
+              expect(procedure.attestation_refus_templates_v2.count).to eq(1)
+              expect(procedure.attestation_acceptation_templates_v2.count).to eq(1)
+            end
+        end
+      end
+    end
   end
 
   describe 'PATCH update' do
@@ -355,6 +401,21 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           expect(procedure.attestation_acceptation_templates_v2.all?(&:activated?)).to eq(false)
         end
       end
+
+      context 'when there is a draft of another kind' do
+        before {
+          create(:attestation_template, :v2, :draft, procedure:, kind: :refus)
+          create(:attestation_template, :v2, :draft, procedure:)
+        }
+
+        it 'toggle attribute of both draft & published v2 attestations of the accurate kind' do
+          subject
+          expect(procedure.attestation_acceptation_templates_v2.count).to eq(2)
+          expect(procedure.attestation_refus_templates_v2.count).to eq(1)
+          expect(procedure.attestation_refus_templates_v2.first.activated?).to eq(true)
+          expect(procedure.attestation_acceptation_templates_v2.all?(&:activated?)).to eq(false)
+        end
+      end
     end
   end
 
@@ -363,19 +424,40 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
     before {
       create(:attestation_template, :v2, :draft, procedure:)
+      create(:attestation_template, :v2, :published, procedure:, kind: :refus)
+      create(:attestation_template, :v2, :draft, procedure:, kind: :refus)
     }
 
     subject do
-      patch :reset, params: { procedure_id: procedure.id, attestation_kind: :acceptation }
+      patch :reset, params: { procedure_id: procedure.id, attestation_kind: }
       response.body
     end
 
-    it "delete draft, keep published" do
-      expect(procedure.attestation_templates.count).to eq(2)
-      expect(subject).to redirect_to(edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :acceptation))
-      expect(flash.notice).to include("réinitialisées")
-      expect(procedure.attestation_templates.count).to eq(1)
-      expect(procedure.attestation_templates.first).to eq(attestation_template)
+    context 'when kind is acceptation' do
+      let(:attestation_kind) { :acceptation }
+      it "delete draft of accurate kind and keep published" do
+        expect(procedure.attestation_templates.count).to eq(4)
+        expect(procedure.attestation_acceptation_templates_v2.count).to eq(2)
+        expect(subject).to redirect_to(edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :acceptation))
+        expect(flash.notice).to include("réinitialisées")
+        expect(procedure.attestation_templates.count).to eq(3)
+        expect(procedure.attestation_acceptation_templates_v2.count).to eq(1)
+        expect(procedure.attestation_templates.first).to eq(attestation_template)
+      end
+    end
+
+    context 'when kind is refus' do
+      let(:attestation_kind) { :refus }
+
+      it "delete draft of accurate kind and keep published" do
+        expect(procedure.attestation_templates.count).to eq(4)
+        expect(procedure.attestation_refus_templates_v2.count).to eq(2)
+        expect(subject).to redirect_to(edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :refus))
+        expect(flash.notice).to include("réinitialisées")
+        expect(procedure.attestation_templates.count).to eq(3)
+        expect(procedure.attestation_refus_templates_v2.count).to eq(1)
+        expect(procedure.attestation_templates.first).to eq(attestation_template)
+      end
     end
   end
 end

@@ -54,9 +54,16 @@ class Procedure < ApplicationRecord
   has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 
   has_many :attestation_acceptation_templates_v2, -> { AttestationTemplate.v2.where(kind: "acceptation") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_many :attestation_refus_templates_v2, -> { AttestationTemplate.v2.where(kind: "refus") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
   has_one :attestation_acceptation_template,
           -> { published.where(kind: "acceptation") },
+          class_name: "AttestationTemplate",
+          dependent: :destroy,
+          inverse_of: :procedure
+
+  has_one :attestation_refus_template,
+          -> { published.where(kind: "refus") },
           class_name: "AttestationTemplate",
           dependent: :destroy,
           inverse_of: :procedure
