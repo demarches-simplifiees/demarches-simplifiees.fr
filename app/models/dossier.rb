@@ -1239,11 +1239,11 @@ class Dossier < ApplicationRecord
   end
 
   def update_notifications(previous_groupe_instructeur, new_groupe_instructeur)
-    previous_groupe_instructeur.instructeurs.each do |instructeur|
-      if instructeur.groupe_instructeurs.exclude?(new_groupe_instructeur)
-        DossierNotification.destroy_notifications_instructeur_of_dossier(instructeur, self)
-      end
-    end
+    previous_instructeurs = previous_groupe_instructeur.instructeurs
+    new_instructeurs = new_groupe_instructeur.instructeurs
+    instructeurs_removed = previous_instructeurs.where.not(id: new_instructeurs.select(:id))
+
+    DossierNotification.destroy_notifications_for_dossier_instructeurs(instructeurs_removed, self) if instructeurs_removed.any?
 
     new_groupe_instructeur.instructeurs.each do |instructeur|
       if instructeur.groupe_instructeurs.exclude?(previous_groupe_instructeur)
