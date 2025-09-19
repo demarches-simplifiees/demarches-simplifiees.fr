@@ -3,19 +3,19 @@
     %p.flex.justify-between.align-center.fr-text-default--warning
       %span
         = dsfr_icon("fr-icon-warning-fill fr-mr-1v")
-        - if @procedure.attestation_templates.many?
+        - if attestation_templates_for_kind.many?
           Les modifications effectuées ne seront appliquées qu’à la prochaine publication.
         - else
           L’attestation ne sera délivrée qu’après sa publication.
 
       %span.no-wrap
-        - if @procedure.attestation_templates.many?
-          = link_to reset_admin_procedure_attestation_template_v2_path(@procedure), class: "fr-btn fr-btn--secondary fr-ml-2w", data: { confirm: 'Êtes-vous sûr de vouloir réinitialiser les modifications ?' }, method: :post do
+        - if attestation_templates_for_kind.many?
+          = link_to reset_admin_procedure_attestation_template_v2_path(procedure, kind: kind), class: "fr-btn fr-btn--secondary fr-ml-2w", data: { confirm: 'Êtes-vous sûr de vouloir réinitialiser les modifications ?' }, method: :post do
             Réinitialiser les modifications
 
         %button.fr-btn.fr-ml-2w{ form: "attestation-template", name: field_name(:attestation_template, :state), value: "published",
-          data: { 'disable-with': "Publication en cours…", confirm: ('Êtes-vous sûr de vouloir publier les modifications ?' if @procedure.attestation_templates.many?), controller: 'autosave-submit' } }
-          - if @procedure.attestation_templates.many?
+          data: { 'disable-with': "Publication en cours…", confirm: ('Êtes-vous sûr de vouloir publier les modifications ?' if attestation_templates_for_kind.many?), controller: 'autosave-submit' } }
+          - if attestation_templates_for_kind.many?
             Publier les modifications
           - else
             Publier
