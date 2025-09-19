@@ -105,9 +105,9 @@ class DossierNotification < ApplicationRecord
       .delete_all
   end
 
-  def self.destroy_notifications_instructeur_of_dossier(instructeur, dossier)
+  def self.destroy_notifications_instructeurs_of_old_dossier(instructeur_ids, dossier)
     DossierNotification
-      .where(instructeur:, dossier:)
+      .where(instructeur_id: instructeur_ids, dossier:)
       .delete_all
   end
 
