@@ -34,4 +34,13 @@ describe EditableChamp::PieceJustificativeComponent, type: :component do
       end
     end
   end
+
+  context 'RIB nature' do
+    let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'RIB' }] }
+    before { allow_any_instance_of(ApplicationController).to receive(:administrateur_signed_in?).and_return(false) }
+
+    it 'limits to a single file' do
+      expect(subject).to have_no_selector('input[multiple]')
+    end
+  end
 end
