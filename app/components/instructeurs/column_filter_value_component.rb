@@ -54,7 +54,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def radio_button_options
-    column_filter_options.map { |opt_label, opt_value| { label: opt_label, value: opt_value, checked: opt_value.to_s.in?(value) } }
+    column_filter_options.map { |opt_label, opt_value| { label: opt_label, value: opt_value, checked: opt_value.to_s.in?(value), data: { turbo_force: :server } } }
   end
 
   def date_filter_options
