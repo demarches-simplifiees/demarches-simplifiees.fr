@@ -40,7 +40,7 @@ class GroupeInstructeur < ApplicationRecord
 
     default_notification_settings = instructeur.notification_settings(procedure_id)
     instructeur.assign_to.create(groupe_instructeur: self, **default_notification_settings)
-    create_notifications_instructeur(self, instructeur)
+    DossierNotification.refresh_notifications_new_instructeur_for_dossiers(self, instructeur)
   end
 
   def remove(instructeur)
@@ -135,10 +135,4 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   serialize :routing_rule, coder: LogicSerializer
-
-  def create_notifications_instructeur(groupe_instructeur, instructeur)
-    groupe_instructeur.dossiers.each do |dossier|
-      DossierNotification.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, 'all')
-    end
-  end
 end
