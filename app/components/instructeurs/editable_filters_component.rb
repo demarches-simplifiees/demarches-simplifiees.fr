@@ -18,6 +18,6 @@ class Instructeurs::EditableFiltersComponent < ApplicationComponent
   end
 
   def filters
-    @procedure_presentation.filters_for(statut)
+    procedure_presentation.filters_for(statut)
   end
 end
