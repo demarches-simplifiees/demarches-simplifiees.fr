@@ -358,4 +358,59 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
     end
   end
+
+  describe '#simplify' do
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text, stable_id: 123 }] }
+    render_views
+    it 'renders suggestions from stubbed file' do
+      stub_json = {
+        operations: {
+          destroy: [],
+          update: [],
+          add: []
+        },
+        summary: "Aucune modification"
+      }.to_json
+
+      allow(File).to receive(:read).and_call_original
+      allow(File).to receive(:read).with("spec/fixtures/llm/deepseek/deepseek-chat-v3.1.json").and_return(stub_json)
+
+      get :simplify, params: { procedure_id: procedure.id }
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:changes)).to eq({ destroy: [], update: [], add: [] })
+      expect(response.body).to include("Suggestions de votre assistant IA")
+    end
+  end
+
+  describe '#accept_simplification' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'A' }, { type: :text, libelle: 'B' }]) }
+
+    it 'applies only selected operations from posted changes_json' do
+      rev = procedure.draft_revision
+      first_id, second_id = rev.types_de_champ_public.map(&:stable_id)
+
+      changes = {
+        destroy: [{ stable_id: first_id, justification: 'Redondant' }],
+        update:  [{ stable_id: second_id, libelle: 'B modifié' }],
+        add:     [{ stable_id: 999_001, after_stable_id: second_id, type_champ: 'text', libelle: 'Nouveau' }]
+      }
+
+      post :accept_simplification, params: {
+        procedure_id: procedure.id,
+        changes_json: changes.to_json,
+        selected: {
+          destroy: [first_id],
+          update: [second_id],
+          add: [999_001]
+        }
+      }
+
+      expect(response).to redirect_to([:champs, :admin, procedure])
+
+      labels = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
+      expect(labels).to include('B modifié', 'Nouveau')
+      expect(labels).not_to include('A')
+    end
+  end
 end
