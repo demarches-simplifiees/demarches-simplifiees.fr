@@ -1,0 +1,14 @@
+fr:
+  administrateurs:
+    attestation_template_v2s:
+      form:
+        attestation_acceptation_title: Attestation d’acceptation
+        attestation_refus_title: Attestation de refus
+        attestation_acceptation_description: L’attestation est émise au moment où un dossier est accepté, elle est jointe à l’email d’accusé d’acceptation.
+              Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
+        attestation_refus_description: L’attestation est émise au moment où un dossier est refusé, elle est jointe à l’email d’accusé de refus.
+              Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
+        attestation_acceptation_activation_html: Activer cette option permet la délivrance automatique de l’attestation dès l’acceptation du dossier.
+                    <br>Désactiver cette option arrête immédiatement l’émission de nouvelles attestations.
+        attestation_refus_activation_html: Activer cette option permet la délivrance automatique de l’attestation dès le refus du dossier.
+                    <br>Désactiver cette option arrête immédiatement l’émission de nouvelles attestations.
