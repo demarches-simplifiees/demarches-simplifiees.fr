@@ -4,6 +4,7 @@ describe ProcedureRevisionPreloader do
   let(:procedure) do
     create(:procedure, :published,
            types_de_champ_public: [
+             { type: :piece_justificative },
              { type: :integer_number },
              { type: :decimal_number }
            ],
@@ -21,9 +22,19 @@ describe ProcedureRevisionPreloader do
       # check it changes loaded from false to true
       expect { subject }.to change { procedure.draft_revision.association(:revision_types_de_champ).loaded? }.from(false).to(true)
 
+      pj_coordinate = revision.revision_types_de_champ.first
+
       # check nested relationship
-      expect(revision.revision_types_de_champ.first.association(:revision).loaded?).to eq(true)
-      expect(revision.revision_types_de_champ.first.association(:procedure).loaded?).to eq(true)
+      expect(pj_coordinate.association(:revision).loaded?).to eq(true)
+      expect(pj_coordinate.association(:procedure).loaded?).to eq(true)
+
+      query_count = 0
+      ActiveSupport::Notifications.subscribed(lambda { |*_args| query_count += 1 }, "sql.active_record") do
+        expect(pj_coordinate.type_de_champ.piece_justificative_template.blob).not_to be_nil
+        expect(pj_coordinate.type_de_champ.notice_explicative.blob).to be_nil
+      end
+
+      expect(query_count).to eq(0)
 
       # check order
       original = Procedure.find(procedure.id)

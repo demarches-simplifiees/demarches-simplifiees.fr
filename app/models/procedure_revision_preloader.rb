@@ -7,7 +7,7 @@ class ProcedureRevisionPreloader
 
   def all
     revisions = @revisions.to_a
-    load_revisions(revisions)
+    load_procedure_revision_types_de_champ(revisions)
   end
 
   def self.load_one(revision)
@@ -16,15 +16,12 @@ class ProcedureRevisionPreloader
 
   private
 
-  def load_revisions(revisions)
-    load_procedure_revision_types_de_champ(revisions)
-  end
-
   def load_procedure_revision_types_de_champ(revisions)
     revisions_by_id = revisions.index_by(&:id)
+
     coordinates_by_revision_id = ProcedureRevisionTypeDeChamp
       .where(revision_id: revisions.map(&:id))
-      .includes(type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob })
+      .preload(type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob })
       .order(:position, :id)
       .to_a
       .group_by(&:revision_id)
