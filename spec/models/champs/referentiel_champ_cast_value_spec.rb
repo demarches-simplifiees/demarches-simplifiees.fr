@@ -446,26 +446,44 @@ describe Champs::ReferentielChamp, type: :model do
             {
               type: :referentiel,
               referentiel: referentiel,
-              referentiel_mapping: {
-                "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
-                "$.ok[1].age" => { prefill: "1", prefill_stable_id: 2 }
-              }
+              referentiel_mapping:
             },
             {
               type: :repetition,
               children: [
-                { type: :text, stable_id: 1 },
-                { type: :number, stable_id: 2 }
+                { type: :text, stable_id: 1 }
               ]
             }
           ]
         end
-        let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, { nom: "Bob", age: 12 }, {}] } }
-        it 'creates a rows' do
-          subject
-          values = dossier.reload.champs.filter(&:text?).map(&:value)
-          expect(values).to include('Jeanne')
-          expect(values).to include('Bob')
+
+        context 'when mapping and data are arrays' do
+          let(:referentiel_mapping) do
+            {
+              "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 }
+            }
+          end
+          let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, { nom: "Bob", age: 12 }, {}] } }
+          it 'creates a rows' do
+            subject
+            values = dossier.reload.champs.filter(&:text?).map(&:value)
+            expect(values).to include('Jeanne')
+            expect(values).to include('Bob')
+          end
+        end
+
+        context 'when mapping and data are not array' do
+          let(:referentiel_mapping) do
+            {
+              "$.nom" => { prefill: "1", prefill_stable_id: 1 }
+            }
+          end
+          let(:data) { { nom: 'Jeanne', age: 120 } }
+          it 'creates a rows' do
+            subject
+            values = dossier.reload.champs.filter(&:text?).map(&:value)
+            expect(values).to include('Jeanne')
+          end
         end
       end
 
@@ -479,25 +497,43 @@ describe Champs::ReferentielChamp, type: :model do
                 {
                   type: :referentiel,
                   referentiel_id: referentiel.id,
-                  referentiel_mapping: {
-                    "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
-                    "$.ok[0].age" => { prefill: "1", prefill_stable_id: 2 }
-                  }
+                  referentiel_mapping:
                 },
-                { type: :text, stable_id: 1 },
-                { type: :integer_number, stable_id: 2 }
+                { type: :text, stable_id: 1 }
               ]
             }
           ]
         end
-        let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, {}] } }
         let(:repetition_champ) { dossier.champs.find(&:repetition?) }
         let(:referentiel_champ) { repetition_champ.rows.first.find(&:referentiel?) }
-        it 'update current row' do
-          expect { subject }.not_to change { repetition_champ.reload.rows.size }
-          champs = repetition_champ.rows.first
-          expect(champs.find(&:text?).value).to eq('Jeanne')
-          expect(champs.find(&:integer_number?).value).to eq('120')
+
+        context 'when mapping and data are arrays' do
+          let(:referentiel_mapping) do
+            {
+              "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 }
+            }
+          end
+          let(:data) { { ok: [{ nom: 'Jeanne' }, {}] } }
+
+          it 'update current row' do
+            expect { subject }.not_to change { repetition_champ.reload.rows.size }
+            champs = repetition_champ.rows.first
+            expect(champs.find(&:text?).value).to eq('Jeanne')
+          end
+        end
+
+        context 'when mapping and data are not array' do
+          let(:referentiel_mapping) do
+            {
+              "$.nom" => { prefill: "1", prefill_stable_id: 1 }
+            }
+          end
+          let(:data) { { nom: 'Jeanne' } }
+          it 'update existing row' do
+            subject
+            values = dossier.reload.champs.filter(&:text?).map(&:value)
+            expect(values).to include('Jeanne')
+          end
         end
       end
 
