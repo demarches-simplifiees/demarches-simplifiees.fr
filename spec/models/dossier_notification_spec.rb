@@ -277,6 +277,23 @@ RSpec.describe DossierNotification, type: :model do
     end
   end
 
+  describe '.instructeur_ids_to_notify_by_notification_type' do
+    subject { DossierNotification.instructeur_ids_to_notify_by_notification_type(dossier, notification_type, instructeur_ids) }
+
+    context "when notification_type is message" do
+      let(:notification_type) { :message }
+      let(:dossier) { create(:dossier) }
+      let(:instructeur_to_notify) { create(:instructeur) }
+      let(:instructeur_not_to_notify) { create(:instructeur) }
+      let!(:commentaire_not_to_notify) { create(:commentaire, dossier:, instructeur: instructeur_not_to_notify) }
+      let(:instructeur_ids) { [instructeur_to_notify, instructeur_not_to_notify].map(&:id) }
+
+      it "returns instructeur_ids to notify" do
+        expect(subject).to eq([instructeur_to_notify.id])
+      end
+    end
+  end
+
   describe '.destroy_notifications' do
     context 'when instructeur unfollow a dossier' do
       subject { DossierNotification.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier) }

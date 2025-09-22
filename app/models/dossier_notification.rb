@@ -98,6 +98,27 @@ class DossierNotification < ApplicationRecord
     end
   end
 
+  def self.refresh_notifications_new_instructeurs_for_dossier(instructeur_ids, dossier)
+    all_preferences_by_instructeur_id = InstructeursProcedure
+      .where(instructeur_id: instructeur_ids, procedure_id: dossier.procedure.id)
+      .pluck(:instructeur_id, *InstructeursProcedure::NOTIFICATION_COLUMNS.values)
+      .to_h { |instructeur_id, *prefs| [instructeur_id, prefs] }
+
+    instructeur_ids_requesting_notifications_by_type = InstructeursProcedure::NOTIFICATION_COLUMNS.each_with_index.to_h do |(notification_type, _), index|
+      instructeur_ids_requesting_notifications = instructeur_ids.filter do |instructeur_id|
+        preference = all_preferences_by_instructeur_id.dig(instructeur_id, index) || InstructeursProcedure::DEFAULT_NOTIFICATIONS_PREFERENCES[notification_type]
+        preference == 'all'
+      end
+      [notification_type, instructeur_ids_requesting_notifications]
+    end.compact_blank!
+
+    instructeur_ids_requesting_notifications_by_type.each do |notification_type, instructeur_ids|
+      instructeur_ids_to_notify = instructeur_ids_to_notify_by_notification_type(dossier, notification_type, instructeur_ids)
+
+      create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids_to_notify) if instructeur_ids_to_notify.any?
+    end
+  end
+
   def self.destroy_notifications_instructeur_of_groupe_instructeur(groupe_instructeur, instructeur)
     DossierNotification
       .where(instructeur:)
@@ -377,6 +398,33 @@ class DossierNotification < ApplicationRecord
         .joins(:avis)
         .merge(Avis.without_answer)
         .distinct
+    end
+  end
+
+  def self.instructeur_ids_to_notify_by_notification_type(dossier, notification_type, instructeur_ids)
+    case notification_type
+    when :dossier_depose
+      dossier.en_construction? && dossier.follows.empty? ? instructeur_ids : []
+    when :dossier_modifie
+      dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at ? instructeur_ids : []
+    when :message
+      commentaires = dossier
+        .commentaires
+        .where.not(email: Commentaire::SYSTEM_EMAILS)
+        .where(discarded_at: nil)
+        .select(:instructeur_id)
+
+      instructeur_ids.filter do |instructeur_id|
+        commentaires.any? { |c| c.instructeur_id != instructeur_id || c.instructeur_id == nil }
+      end
+    when :annotation_instructeur
+      dossier.last_champ_private_updated_at.present? ? instructeur_ids : []
+    when :avis_externe
+      dossier.avis.with_answer.exists? ? instructeur_ids : []
+    when :attente_correction
+      dossier.pending_correction? ? instructeur_ids : []
+    when :attente_avis
+      dossier.avis.without_answer.exists? ? instructeur_ids : []
     end
   end
 end

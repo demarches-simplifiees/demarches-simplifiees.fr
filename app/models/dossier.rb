@@ -1242,13 +1242,9 @@ class Dossier < ApplicationRecord
     previous_instructeur_ids = previous_groupe_instructeur.instructeurs.ids
     new_instructeur_ids = new_groupe_instructeur.instructeurs.ids
     instructeur_removed_ids = previous_instructeur_ids - new_instructeur_ids
+    instructeur_added_ids = new_instructeur_ids - previous_instructeur_ids
 
     DossierNotification.destroy_notifications_instructeurs_of_old_dossier(instructeur_removed_ids, self) if instructeur_removed_ids.any?
-
-    new_groupe_instructeur.instructeurs.each do |instructeur|
-      if instructeur.groupe_instructeurs.exclude?(previous_groupe_instructeur)
-        DossierNotification.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, self, 'all')
-      end
-    end
+    DossierNotification.refresh_notifications_new_instructeurs_for_dossier(instructeur_added_ids, self) if instructeur_added_ids.any?
   end
 end
