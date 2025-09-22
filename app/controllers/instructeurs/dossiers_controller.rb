@@ -326,16 +326,19 @@ module Instructeurs
     def update_annotations
       public_id, annotation_attributes = champs_private_attributes_params.to_h.first
       annotation = dossier.private_champ_for_update(public_id, updated_by: current_user.email)
+      if annotation.referentiel? && annotation.autocomplete?
+        annotation_attributes = annotation_attributes.merge(params.require(:dossier).require(:champs_private_attributes).require(public_id).permit(:data).to_h)
+      end
       annotation.assign_attributes(annotation_attributes)
       annotation_changed = annotation.changed_for_autosave?
 
-      if annotation.save(context: :champs_private_value) && annotation_changed
+      if annotation_changed && annotation.save
         annotation.update_timestamps
         dossier.index_search_terms_later
         DossierNotification.create_notification(dossier, :annotation_instructeur, except_instructeur: current_instructeur)
       end
 
-      dossier.validate(context: :champs_private_value)
+      dossier.validate(:champs_private_value) if !annotation.waiting_for_external_data?
 
       respond_to do |format|
         format.turbo_stream do
@@ -353,11 +356,12 @@ module Instructeurs
       @dossier = dossier_with_champs
       type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
       annotation = @dossier.project_champ(type_de_champ, row_id: params[:row_id])
+      annotation.validate(:champs_public_value) if annotation.external_data_fetched?
 
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide = []
-          @to_update = [annotation]
+          @to_update = [annotation].concat(annotation.prefillable_champs)
 
           render :update_annotations
         end
