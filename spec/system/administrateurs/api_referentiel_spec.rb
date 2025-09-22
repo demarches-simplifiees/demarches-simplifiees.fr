@@ -379,6 +379,74 @@ describe 'Referentiel API:' do
 
   context 'when instructeur fill in types_de_champ_private' do
     context 'when referentiel is exact match' do
+      let(:private_referentiel_stable_id) { 4 }
+      let(:prefill_by_private_referentiel_stable_id) { 8 }
+      let(:types_de_champ_private) do
+        [
+          {
+            libelle: 'repetition',
+            type: :repetition,
+            mandatory: true,
+            children: [
+              {
+                type: :referentiel,
+                referentiel_id: create(:api_referentiel, :exact_match, :with_exact_match_response, url: "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/").id,
+                libelle: 'Numero de bâtiment private inside repetition',
+                stable_id: private_referentiel_stable_id
+              },
+              {
+                type: :text,
+                libelle: '$.statut',
+                stable_id: prefill_by_private_referentiel_stable_id
+              }
+            ]
+          }
+        ]
+      end
+
+      scenario 'Setup as admin, fill in annotations', js: true, vcr: true do
+        visit annotations_admin_procedure_path(procedure)
+        click_on('Configurer le champ')
+
+        # configure connection
+        VCR.use_cassette('referentiel/rnb_as_admin') do
+          click_on('Étape suivante')
+          expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+        end
+
+        ##
+        # choose prefill stable ids
+        ###
+        expect(page).to have_content("$.status")
+        custom_check("status")
+        click_on('Étape suivante')
+
+        # bind it to the expected champs
+        expect(page).to have_content("La configuration du mapping a bien été enregistrée")
+
+        # prefill an annotation
+        page.find("select[name='type_de_champ[referentiel_mapping][$.status][prefill_stable_id]']")
+          .select('repetition - $.statut')
+
+        click_on("Valider")
+
+        publish(procedure)
+
+        dossier = create(:dossier, :en_construction, procedure:)
+
+        visit annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)
+
+        expect(page).to have_content("en construction")
+        VCR.use_cassette('referentiel/rnb_as_user') do
+          fill_in("Numero de bâtiment private inside repetition", with: "PG46YY6YWCX8")
+          perform_enqueued_jobs do
+            expect(page).to have_content("Référence trouvée : PG46YY6YWCX8")
+            dossier.reload
+            # check prefill values in db
+            expect(dossier.project_champs_private_all.find { it.stable_id.to_s == prefill_by_private_referentiel_stable_id.to_s }.value).to eq("constructed")
+          end
+        end
+      end
     end
 
     context 'when referentiel is autocomplete' do
