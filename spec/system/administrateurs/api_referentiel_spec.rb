@@ -450,6 +450,87 @@ describe 'Referentiel API:' do
     end
 
     context 'when referentiel is autocomplete' do
+      let(:types_de_champ_private) do
+        [
+          {
+            type: :repetition,
+            libelle: 'repetition',
+            mandatory: true,
+            children: [
+              { type: :referentiel, libelle: 'Numéro FINESS' },
+              { type: :text, libelle: 'prefill with $.finess' },
+              { type: :date, libelle: 'prefill with $.date_extract_finess' }
+            ]
+          }
+        ]
+      end
+
+      scenario "Setup as admin, fill in annotations as instructeur", js: true, vcr: true do
+        visit annotations_admin_procedure_path(procedure)
+        click_on('Configurer le champ')
+
+        # configure connection
+        VCR.use_cassette('referentiel/datagouv-finess') do # referentiel is called at autocomplete setup
+          find("#referentiel_url").fill_in(with: 'https://tabular-api.data.gouv.fr/api/resources/796dfff7-cf54-493a-a0a7-ba3c2024c6f3/data/?finess__contains={id}')
+          find('label[for="referentiel_mode_autocomplete"]').click
+          fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "Saisir votre finess")
+          fill_in("Exemple de saisie valide (affiché à l'usager et utilisé pour tester la requête)", with: "010002699")
+          click_on('Étape suivante')
+          wait_until { Referentiel.count == 1 }
+          expect(page).to have_content("Configuration de l'autocomplétion ")
+        end
+
+        # configuration autocomplete
+        VCR.use_cassette('referentiel/datagouv-finess') do # referentiel is called at mapping setup
+          # configure datasource
+          expect(page).not_to have_content("Propriétés qui seront affichées dans les autosuggestions")
+          find("input[type=radio][name='referentiel[datasource]']").click
+          expect(page).to have_content("Propriétés qui seront affichées dans les autosuggestions")
+
+          # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
+          page.find('button[title="$.finess (010002699)"]').click
+          page.find('button[title="$.ej_rs (CENTRE MEDICAL REGINA)"]').click
+          # VCR.use_cassette('referentiel/datagouv-finess-2') do
+          click_on('Étape suivante')
+          expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+        end
+
+        #
+        # map prefilled champs
+        #
+        custom_check("data-0-finess")
+        custom_check('data-0-date_extract_finess')
+
+        click_on('Étape suivante')
+        click_on("Valider")
+
+        publish(procedure)
+
+        # fill in autocomplete and select an option
+        dossier = create(:dossier, :en_construction, procedure:)
+
+        visit annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)
+
+        VCR.use_cassette('referentiel/datagouv-finess-partial-search') do
+          referentiel_input = find("##{find(:label, text: 'Numéro FINESS')['for']}")
+          referentiel_input.send_keys("01000269")
+
+          # search and click on combobox
+          expect(page).to have_content("010002699 CENTRE MEDICAL REGINA")
+          find('.fr-ds-combobox__menu .fr-menu__list .fr-menu__item', text: "010002699 CENTRE MEDICAL REGINA").click
+
+          expect(referentiel_input.value.strip).to match("010002699 CENTRE MEDICAL REGINA")
+
+          dossier = Dossier.last
+
+          # wait until selected key had been submitted to backend
+          wait_until { dossier.reload.project_champs_private_all.find(&:repetition?).rows.first.find(&:referentiel?).value&.match?(/010002699 CENTRE MEDICAL REGINA/) }
+
+          # wait until refreshed with prefilled values
+          expect(page).to have_content("Donnée remplie automatiquement.", count: 2)
+          expect(dossier.reload.project_champs_private_all.find(&:repetition?).rows.first.map(&:value)).to include("010002699")
+        end
+      end
     end
   end
 
