@@ -440,7 +440,7 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
-      context 'when data is mapped to child' do
+      context 'when data is mapped to repetition from root' do
         let(:types_de_champ_public) do
           [
             {
@@ -461,11 +461,43 @@ describe Champs::ReferentielChamp, type: :model do
           ]
         end
         let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, { nom: "Bob", age: 12 }, {}] } }
-        it 'update le champ formatted avec la valeur string' do
+        it 'creates a rows' do
           subject
           values = dossier.reload.champs.filter(&:text?).map(&:value)
           expect(values).to include('Jeanne')
           expect(values).to include('Bob')
+        end
+      end
+
+      context 'when data is mapped from repetition to other elements' do
+        let(:types_de_champ_public) do
+          [
+            {
+              type: :repetition,
+              mandatory: true,
+              children: [
+                {
+                  type: :referentiel,
+                  referentiel_id: referentiel.id,
+                  referentiel_mapping: {
+                    "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
+                    "$.ok[0].age" => { prefill: "1", prefill_stable_id: 2 }
+                  }
+                },
+                { type: :text, stable_id: 1 },
+                { type: :integer_number, stable_id: 2 }
+              ]
+            }
+          ]
+        end
+        let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, {}] } }
+        let(:repetition_champ) { dossier.champs.find(&:repetition?) }
+        let(:referentiel_champ) { repetition_champ.rows.first.find(&:referentiel?) }
+        it 'update current row' do
+          expect { subject }.not_to change { repetition_champ.reload.rows.size }
+          champs = repetition_champ.rows.first
+          expect(champs.find(&:text?).value).to eq('Jeanne')
+          expect(champs.find(&:integer_number?).value).to eq('120')
         end
       end
 

@@ -169,14 +169,26 @@ class Champs::ReferentielChamp < Champ
     group_mappings_by_json_array(mappings).each do |array_key, array_mappings|
       json_array = JsonPath.on(data.with_indifferent_access, array_key).first || []
       next unless json_array.is_a?(Array)
+
       json_array.each do |json_value|
         next if json_value.blank?
-        row_id = dossier.repetition_add_row(repetition_type_de_champ, updated_by: :api)
+        row_id = determine_row_id(repetition_type_de_champ)
         array_mappings.each do |jsonpath, type_de_champ|
           raw_value = JsonPath.on(json_value, JSONPathUtil.extract_key_after_array(jsonpath)).first
           update_prefillable_champ(type_de_champ:, raw_value:, row_id:)
         end
       end
+    end
+  end
+
+  def determine_row_id(repetition_type_de_champ)
+    # When referentiel champ is inside a repetition, use current row_id to keep related data together.
+    # When outside, create new rows for each array element from external data.
+    # Note: Limited to updating current row only when inside repetition.
+    if type_de_champ.child?(dossier.revision)
+      self.row_id
+    else
+      dossier.repetition_add_row(repetition_type_de_champ, updated_by: :api)
     end
   end
 
