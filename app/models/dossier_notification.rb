@@ -3,16 +3,6 @@
 class DossierNotification < ApplicationRecord
   DELAY_DOSSIER_DEPOSE = 7.days
 
-  REFRESH_CONDITIONS_BY_TYPE = {
-    dossier_depose:          -> (dossier, _) { dossier.en_construction? && dossier.follows.empty? },
-    dossier_modifie:         -> (dossier, _) { dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at },
-    message:                 -> (dossier, instructeur_id) { dossier.commentaires.to_notify(instructeur_id).present? },
-    annotation_instructeur:  -> (dossier, _) { dossier.last_champ_private_updated_at.present? },
-    avis_externe:            -> (dossier, _) { dossier.avis.with_answer.present? },
-    attente_correction:      -> (dossier, _) { dossier.pending_correction? },
-    attente_avis:            -> (dossier, _) { dossier.avis.without_answer.present? }
-  }.freeze
-
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
     dossier_modifie: 'dossier_modifie',
@@ -40,23 +30,22 @@ class DossierNotification < ApplicationRecord
     create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids) if instructeur_ids.any?
   end
 
-  def self.refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, choice)
-    instructeur_preferences = instructeur_preferences(instructeur, dossier.procedure)
-
-    notification_types_to_refresh = notification_types.keys.map(&:to_sym).filter do |notification_type|
-      instructeur_preferences[notification_type] == choice
-    end
-
-    return if notification_types_to_refresh.empty?
-
-    notification_types_to_refresh.each do |notification_type|
-      find_or_create_notification(dossier, notification_type, instructeur.id) if REFRESH_CONDITIONS_BY_TYPE[notification_type].call(dossier, instructeur.id)
-    end
-  end
-
   def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
     destroy_notifications_by_dossier_and_type(dossier, :dossier_depose)
-    refresh_notifications_instructeur_for_dossier_by_choice(instructeur, dossier, 'followed')
+
+    instructeur_preferences = instructeur_preferences(instructeur, dossier.procedure)
+
+    notification_types_followed = notification_types.keys.map(&:to_sym).filter do |notification_type|
+      instructeur_preferences[notification_type] == 'followed'
+    end
+
+    return if notification_types_followed.empty?
+
+    notification_types_to_refresh = notification_types_followed.filter do |notification_type|
+      instructeur_ids_to_notify_by_notification_type(dossier, notification_type, [instructeur.id]).any?
+    end
+
+    create_notifications_for_dossier_instructeur(dossier, notification_types_to_refresh, instructeur.id)
   end
 
   def self.refresh_notifications_instructeur_for_dossiers(groupe_instructeur_ids, instructeur_id, notification_type, old_preference, new_preference)
@@ -294,22 +283,28 @@ class DossierNotification < ApplicationRecord
 
   private
 
-  def self.find_or_create_notification(dossier, notification_type, instructeur_id)
-    display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
-
-    DossierNotification.find_or_create_by!(
-      dossier:,
-      notification_type:,
-      instructeur_id:
-    ) do |notification|
-      notification.display_at = display_at
-    end
-  end
-
   def self.create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids)
     display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
 
     missing_notifications = instructeur_ids.map do |instructeur_id|
+      { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
+    end
+
+    DossierNotification.insert_all(missing_notifications)
+  end
+
+  def self.create_notifications_by_type_for_instructeur_dossiers(dossiers, notification_type, instructeur_id)
+    missing_notifications = dossiers.map do |dossier|
+      display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
+      { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
+    end
+
+    DossierNotification.insert_all(missing_notifications)
+  end
+
+  def self.create_notifications_for_dossier_instructeur(dossier, notification_types, instructeur_id)
+    missing_notifications = notification_types.map do |notification_type|
+      display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
     end
 
@@ -350,14 +345,6 @@ class DossierNotification < ApplicationRecord
     DossierNotification
       .where(dossier_id: dossiers, notification_type:, instructeur_id:)
       .delete_all
-  end
-
-  def self.create_notifications_by_type_for_instructeur_dossiers(dossiers, notification_type, instructeur_id)
-    missing_notifications = dossiers.map do |dossier|
-      display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
-      { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
-    end
-    DossierNotification.insert_all(missing_notifications)
   end
 
   def self.dossiers_to_notify(dossiers, notification_type, instructeur_id)
