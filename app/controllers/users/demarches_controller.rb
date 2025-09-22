@@ -17,7 +17,7 @@ module Users
         .publiees
         .where(dossiers: { created_at: 7.days.ago..Time.zone.now })
         .group("procedures.id")
-        .order("procedures_count DESC")
+        .order(procedures_count: :desc)
         .limit(5)
     end
   end

@@ -11,7 +11,7 @@ class ExportedColumnType < ActiveRecord::Type::Value
     in NilClass # default value
       nil
     # from db
-    in { id: String|Hash, libelle: String } => h
+    in { id: String | Hash, libelle: String } => h
       ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle])
     # from form
     in String

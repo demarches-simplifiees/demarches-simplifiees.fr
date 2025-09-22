@@ -41,7 +41,7 @@ module Maintenance
 
       champ_pjs = blob_champ_pjs.map(&:second).uniq.sort_by(&:id)
 
-      dossier_id_champs = champ_pjs.group_by { it.dossier_id }
+      dossier_id_champs = champ_pjs.group_by(&:dossier_id)
 
       brouillon_or_en_construction = Dossier.visible_by_user.includes(:user).where(id: dossier_id_champs.keys, state: %w[brouillon en_construction])
       brouillon_or_en_construction.group_by { it.user.email }.each do |to, dossiers|

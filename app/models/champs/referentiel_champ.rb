@@ -120,7 +120,7 @@ class Champs::ReferentielChamp < Champ
     in [:checkbox | :yes_no, v]
       bool = ActiveModel::Type::Boolean.new.cast(v)
       bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
-    in [:text | :textarea | :engagement_juridique| :dossier_link | :email| :phone| :iban| :siret | :formatted, v]
+    in [:text | :textarea | :engagement_juridique | :dossier_link | :email | :phone | :iban | :siret | :formatted, v]
       v.to_s
     # case of type from mapping, used to store for display
     in [:boolean, v]

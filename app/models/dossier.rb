@@ -1125,7 +1125,9 @@ class Dossier < ApplicationRecord
   end
 
   def deleted_dossier
-    @deleted_dossier ||= DeletedDossier.find_by(dossier_id: id)
+    return @deleted_dossier if defined?(@deleted_dossier)
+
+    @deleted_dossier = DeletedDossier.find_by(dossier_id: id)
   end
 
   def defaut_groupe_instructeur?

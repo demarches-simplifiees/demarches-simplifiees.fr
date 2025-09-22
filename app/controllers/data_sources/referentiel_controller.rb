@@ -58,7 +58,9 @@ class DataSources::ReferentielController < ApplicationController
   end
 
   def referentiel
-    @referentiel ||= Referentiel.find_by(id: params[:referentiel_id])
+    return @referentiel if defined?(@referentiel)
+
+    @referentiel = Referentiel.find_by(id: params[:referentiel_id])
   end
 
   class RetryableError < StandardError; end

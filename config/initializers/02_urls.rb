@@ -2,7 +2,7 @@
 
 # rubocop:disable DS/ApplicationName
 # API URLs
-API_ADRESSE_URL = ENV.fetch("API_ADRESSE_URL", "https://api-adresse.data.gouv.fr")
+API_ADRESSE_URL = ENV.fetch("API_ADRESSE_URL", "https://data.geopf.fr/geocodage")
 API_ENTREPRISE_URL = ENV.fetch("API_ENTREPRISE_URL", "https://entreprise.api.gouv.fr")
 API_EDUCATION_URL = ENV.fetch("API_EDUCATION_URL", "https://data.education.gouv.fr/api/records/1.0")
 API_GEO_URL = ENV.fetch("API_GEO_URL", "https://geo.api.gouv.fr")

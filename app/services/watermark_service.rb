@@ -27,7 +27,7 @@ class WatermarkService
   private
 
   def watermark_image(file, output, metadata)
-    MiniMagick::Tool::Convert.new do |convert|
+    MiniMagick.convert do |convert|
       setup_conversion_commands(convert, file)
       apply_watermark(convert, metadata)
       convert << output.to_path
