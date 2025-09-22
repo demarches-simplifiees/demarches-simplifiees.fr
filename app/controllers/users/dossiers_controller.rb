@@ -33,9 +33,11 @@ module Users
     def index
       ordered_dossiers = Dossier.includes(:pending_corrections, procedure: :procedure_paths).order_by_depose_at
 
-      user_revisions = ProcedureRevision.where(dossiers: current_user.dossiers.visible_by_user)
-      invite_revisions = ProcedureRevision.where(dossiers: current_user.dossiers_invites.visible_by_user)
-      all_dossier_procedures = Procedure.where(revisions: user_revisions.or(invite_revisions))
+      user_revision_ids = current_user.dossiers.visible_by_user.select(:revision_id).to_sql
+      invite_revision_ids = current_user.dossiers_invites.select(:revision_id).to_sql
+      all_revision_id = "(#{user_revision_ids}) UNION (#{invite_revision_ids})"
+
+      all_dossier_procedures = Procedure.where(id: ProcedureRevision.where("id IN (#{all_revision_id})").select(:procedure_id))
 
       @procedures_for_select = all_dossier_procedures
         .distinct(:procedure_id)
