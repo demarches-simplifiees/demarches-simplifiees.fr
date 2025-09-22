@@ -483,7 +483,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0902)
+    mime-types-data (3.2025.0916)
     mina (1.2.5)
       rake
     mini_magick (5.3.1)
