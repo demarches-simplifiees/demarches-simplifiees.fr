@@ -40,7 +40,7 @@ http_interactions:
   recorded_at: Tue, 02 Jul 2024 13:53:51 GMT
 - request:
     method: get
-    uri: https://api-adresse.data.gouv.fr/search?limit=10&q=78%20Rue%20du%20Gr%C3%A9s%2030310%20Verg%C3%A8
+    uri: https://data.geopf.fr/geocodage/search?limit=10&q=78%20Rue%20du%20Gr%C3%A9s%2030310%20Verg%C3%A8
     body:
       encoding: US-ASCII
       string: ''
