@@ -16,7 +16,7 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
 
     Geocoder.configure(lookup: :ban_data_gouv_fr, use_https: true)
 
-    stub_request(:get, "https://api-adresse.data.gouv.fr/search/?citycode=75112&limit=1&q=#{adresse}")
+    stub_request(:get, "https://data.geopf.fr/geocodage/search/?citycode=75112&limit=1&q=#{adresse}")
       .to_return(body: geocoder_body, status: status)
 
     allow(ENV).to receive(:[]).and_call_original
@@ -72,7 +72,7 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
       geocoder_response = JSON.parse(geocoder_body)
       geocoder_response["features"] = []
 
-      stub_request(:get, "https://api-adresse.data.gouv.fr/search/?citycode=75112&limit=1&q=#{adresse}")
+      stub_request(:get, "https://data.geopf.fr/geocodage/search/?citycode=75112&limit=1&q=#{adresse}")
         .to_return(body: JSON.generate(geocoder_response), status: status)
 
       subject
