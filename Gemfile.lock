@@ -317,7 +317,7 @@ GEM
     fog-openstack (1.1.5)
       fog-core (~> 2.1)
       fog-json (>= 1.0)
-    formatador (1.2.0)
+    formatador (1.2.1)
       reline
     front_matter_parser (1.0.1)
     fugit (1.11.2)
