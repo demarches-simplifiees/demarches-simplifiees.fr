@@ -23,7 +23,7 @@
 
       = render Dossiers::RowShowComponent.new(label: "SIRET") do |c|
         - c.with_value do
-          %p.copy-btn{ role: "button" }= pretty_siret(etablissement.siret)
+          %p.copy-btn{ role: "button", "data-to-copy": etablissement.siret }= pretty_siret(etablissement.siret)
 
       - unless local_assigns[:short_identity]
         - if etablissement.entreprise.siret_siege_social.present? && etablissement.siret != etablissement.entreprise.siret_siege_social
