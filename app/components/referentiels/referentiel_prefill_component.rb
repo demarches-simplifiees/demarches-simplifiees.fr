@@ -5,6 +5,8 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
            :referentiel_mapping_prefillable,
            to: :type_de_champ
 
+  delegate :draft_revision, to: :procedure
+
   MAPPING_TYPE_TO_TYPE_DE_CHAMP = {
     Referentiels::MappingFormComponent::TYPES[:string] => %w[text textarea engagement_juridique dossier_link email phone iban siret drop_down_list formatted],
     Referentiels::MappingFormComponent::TYPES[:decimal_number] => %w[decimal_number],
@@ -20,11 +22,10 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
 
   def source_tdcs
     @source_tdcs ||= begin
-      if type_de_champ.public?
-        tdcs_after_current(procedure.draft_revision.types_de_champ.filter(&:public?)) + procedure.draft_revision.types_de_champ.filter(&:private?)
-      else
-        tdcs_after_current(procedure.draft_revision.types_de_champ.filter(&:private?))
-      end
+      public_coordinates = collect_public_coordinates
+      private_coordinates = collect_private_coordinates
+
+      (public_coordinates + private_coordinates).map(&:type_de_champ)
     end
   end
 
@@ -92,7 +93,7 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
   end
 
   def tdc_option_for(tdc)
-    [tdc.libelle_with_parent(@procedure.draft_revision), tdc.stable_id]
+    [tdc.libelle_with_parent(draft_revision), tdc.stable_id]
   end
 
   def select_grouped_tdcs(grouped_tdcs)
@@ -103,9 +104,50 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
     end
   end
 
-  def tdcs_after_current(tdcs)
-    current_index = tdcs.find_index(type_de_champ)
-    tdcs.filter.with_index { |_tdc, index| index > current_index }
+  def tdcs_after_current(prtdcs)
+    current_coordinate = current_coordinate(prtdcs)
+
+    if current_coordinate.child?
+      siblings_after_current(current_coordinate)
+    else
+      elements_after_current_root(current_coordinate, prtdcs)
+    end
+  end
+
+  private
+
+  def current_coordinate(prtdcs)
+    prtdcs.find { it.type_de_champ == type_de_champ }
+  end
+
+  def siblings_after_current(current_coordinate)
+    current_coordinate.siblings.filter { it.position > current_coordinate.position }
+  end
+
+  def elements_after_current_root(current_coordinate, all_coordinates)
+    all_coordinates.filter do |coordinate|
+      if coordinate.child?
+        coordinate.parent.position >= current_coordinate.position
+      else
+        coordinate.position > current_coordinate.position
+      end
+    end
+  end
+
+  def collect_public_coordinates
+    if type_de_champ.public?
+      tdcs_after_current(draft_revision.revision_types_de_champ.filter(&:public?))
+    else
+      []
+    end
+  end
+
+  def collect_private_coordinates
+    if type_de_champ.public?
+      draft_revision.revision_types_de_champ.filter(&:private?)
+    else
+      tdcs_after_current(draft_revision.revision_types_de_champ.filter(&:private?))
+    end
   end
 
   def render?

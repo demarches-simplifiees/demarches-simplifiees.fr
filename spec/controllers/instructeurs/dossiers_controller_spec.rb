@@ -1185,8 +1185,6 @@ describe Instructeurs::DossiersController, type: :controller do
           champ_text.reload
         end
 
-        after do
-        end
         let(:champs_private_attributes) do
           {
             champ_multiple_drop_down_list.public_id => {
@@ -1260,6 +1258,41 @@ describe Instructeurs::DossiersController, type: :controller do
             expect(response).to have_http_status(200)
             assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
           }
+
+          context 'when one child is referentiel' do
+            let(:referentiel) { create(:api_referentiel, :exact_match, :with_exact_match_response) }
+            let(:types_de_champ_private) do
+              [
+                { type: :multiple_drop_down_list },
+                { type: :linked_drop_down_list },
+                { type: :datetime },
+                {
+                  type: :repetition,
+                  children: [
+                    {
+                      type: :referentiel,
+                      referentiel_id: referentiel.id
+                    }
+                  ]
+                },
+                { type: :drop_down_list, options: [:a, :b, :other] }
+              ]
+            end
+            let(:champs_private_attributes) do
+              {
+                champ_repetition.rows.first.first.public_id => {
+                  external_id: 'text'
+                }
+              }
+            end
+
+            it {
+              expect(champ_text.external_id).to eq('text')
+              expect(response).to have_http_status(200)
+              expect(dossier.last_champ_private_updated_at).to eq(now)
+              assert_enqueued_jobs(1, only: ChampFetchExternalDataJob)
+            }
+          end
         end
 
         context 'drop_down_list' do

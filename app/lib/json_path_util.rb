@@ -49,6 +49,10 @@ class JSONPathUtil
     str[/^[^\[]+/]
   end
 
+  def self.json_path_contains_array?(str)
+    str.include?('[') && str.include?(']')
+  end
+
   def self.extract_key_after_array(str)
     str[/\[(.*?)\](.*)/, 2]
   end

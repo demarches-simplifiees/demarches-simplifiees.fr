@@ -179,4 +179,61 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         end
     end
   end
+
+  describe '#source_tdcs' do
+    let(:types_de_champ_private) { [] }
+    let(:referentiel_mapping_type) { Referentiels::MappingFormComponent::TYPES[:string] }
+    subject { component.source_tdcs.map { |tdc| tdc[:libelle] } }
+
+    context 'when referentiel is not in repetition' do
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :repetition, libelle: 'la repetition', children: [
+              { type: :text, libelle: 'position 0' },
+              { type: :text, libelle: 'position 1' },
+              { type: :text, libelle: 'position 2' },
+              { type: :text, libelle: 'position 3' }
+            ]
+          },
+          { type: :referentiel, referentiel:, libelle: "referentiel" },
+          { type: :text, libelle: 'text after referentiel' }
+        ]
+      end
+
+      it 'ignores childs of repetition with higher position than referentiel' do
+        expect(subject).to eq(['text after referentiel'])
+      end
+    end
+
+    context 'when referentiel is in repetition' do
+      let(:types_de_champ_public) do
+        [
+          { type: :text, libelle: 'before repetition' },
+          {
+            type: :repetition, libelle: 'la repetition', children: [
+              { type: :text, libelle: 'position 0' },
+              { type: :referentiel, referentiel:, libelle: "referentiel" },
+              { type: :text, libelle: 'position 1' },
+              { type: :text, libelle: 'position 2' },
+              { type: :text, libelle: 'position 3' }
+            ]
+          },
+          {
+            type: :repetition, libelle: 'une autre', children: [
+              { type: :text, libelle: 'autre repetition position 0' },
+              { type: :text, libelle: 'autre repetition position 1' },
+              { type: :text, libelle: 'autre repetition position 2' }
+            ]
+          },
+          { type: :text, libelle: 'after repetition' }
+
+        ]
+      end
+
+      it "returns only children of current repetition" do
+        expect(subject).to eq(["position 1", "position 2", "position 3"])
+      end
+    end
+  end
 end
