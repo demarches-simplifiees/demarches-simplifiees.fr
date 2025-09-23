@@ -2,13 +2,13 @@
   = form_tag(defined?(form_path) ? form_path : terminer_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]), data: { turbo: true, turbo_confirm: confirm }, method: :post, multipart: true) do
     - if title == 'Accepter'
       = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: false
-      - if dossier.attestation_template&.activated?
+      - if dossier.attestation_acceptation_template&.activated?
         %p.help
           L’acceptation du dossier envoie automatiquement
-          = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
+          = link_to 'une attestation', apercu_attestation_acceptation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
-      - unspecified_attestation_champs = dossier.unspecified_attestation_champs
+      - unspecified_attestation_champs = dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:acceptation))
       - if unspecified_attestation_champs.present?
         .warning
           Attention, les valeurs suivantes n’ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
