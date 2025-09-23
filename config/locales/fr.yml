@@ -698,6 +698,17 @@ fr:
         not_a_phone: 'est invalide. Saisissez un numéro de téléphone valide. Exemple : 0612345678'
         url: 'n’est pas un lien valide'
         invalid_email_format: 'est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com'
+        api_response_pending: 'En attente de réponse...'
+        api_response_error: 'Aucun résultat ne correspond à votre recherche.'
+        code_429: 'Trop de demandes. Nous réessayons pour vous.'
+        code_500: 'Erreur du serveur. Nous réessayons pour vous.'
+        code_503: 'Service indisponible. Nous réessayons pour vous.'
+        code_408: 'La demande a pris trop de temps. Nous réessayons pour vous.'
+        code_502: 'Problème de connexion. Nous réessayons pour vous.'
+        code_404: 'Résultat introuvable. Vérifiez vos informations.'
+        code_400: 'Demande incorrecte. Vérifiez vos informations.'
+        code_403: 'Accès refusé. Vous n’avez pas les droits nécessaires.'
+        code_401: 'Non autorisé. Connectez-vous pour continuer.'
       models:
         attestation_template:
           attributes:

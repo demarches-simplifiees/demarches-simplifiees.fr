@@ -36,7 +36,7 @@ describe Champs::ReferentielChamp, type: :model do
       it 'adds the correct error message' do
         champ = with_value(**state_to_be_fetched)
         champ.validate(:champs_public_value)
-        expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.models.champs/referentiel_champ.attributes.value.api_response_pending'))
+        expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.api_response_pending'))
       end
     end
 
@@ -59,7 +59,7 @@ describe Champs::ReferentielChamp, type: :model do
         champ = with_value(**state_error)
         champ.validate(:champs_public_value)
 
-        expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.models.champs/referentiel_champ.attributes.value.code_404'))
+        expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.code_404'))
       end
     end
   end
