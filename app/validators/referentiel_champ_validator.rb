@@ -26,19 +26,35 @@ class ReferentielChampValidator < ActiveModel::Validator
   def error_key_for_api_response_code(record)
     http_status = record.fetch_external_data_exceptions.first.code
     error_key = :"code_#{http_status}"
-    i18n_ns = [
-      'activerecord',
-      'errors',
-      'models',
-      'champs/referentiel_champ',
-      'attributes',
-      'value',
-      error_key
-    ]
-    if http_status && I18n.exists?(i18n_ns.join('.'))
+
+    if http_status && translation_exists_for?(error_key, record)
       error_key
     else
       :api_response_error
     end
+  end
+
+  private
+
+  def translation_exists_for?(error_key, record)
+    model_key = record.class.model_name.i18n_key
+
+    [
+      [
+        'activerecord',
+        'errors',
+        'models',
+        model_key,
+        'attributes',
+        'value',
+        error_key
+      ].join('.'),
+      [
+        'activerecord',
+        'errors',
+        'messages',
+        error_key
+      ].join('.')
+    ].any? { I18n.exists?(_1) }
   end
 end

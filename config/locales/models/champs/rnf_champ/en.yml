@@ -15,5 +15,5 @@ en:
   activerecord:
     attributes:
       champs/rnf_champ:
-          hints:
-            value_html: "Example: <span aria-hidden='true'>075-FDD-00003-01</span> <span class='sr-only'>075 hyphen FDD hyphen 00003 hyphen 01</span>"
+        hints:
+          value_html: "Example: <span aria-hidden='true'>075-FDD-00003-01</span> <span class='sr-only'>075 hyphen FDD hyphen 00003 hyphen 01</span>"

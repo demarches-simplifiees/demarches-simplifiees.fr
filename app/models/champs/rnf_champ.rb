@@ -3,6 +3,8 @@
 class Champs::RNFChamp < Champ
   store_accessor :data, :title, :email, :phone, :createdAt, :updatedAt, :dissolvedAt, :address
 
+  validates_with ReferentielChampValidator, if: :validate_champ_value?
+
   def rnf_id
     external_id&.gsub(/[[:space:]]/, '')
   end

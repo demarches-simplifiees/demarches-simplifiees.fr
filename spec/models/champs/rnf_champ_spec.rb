@@ -1,10 +1,66 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 describe Champs::RNFChamp, type: :model do
   let(:champ) { described_class.new(external_id:) }
   let(:external_id) { '075-FDD-00003-01' }
   let(:body) { Rails.root.join('spec', 'fixtures', 'files', 'api_rnf', "#{response_type}.json").read }
   let(:response_type) { 'valid' }
+
+  describe '#valid?' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rnf }]) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:champ) { dossier.champs.find(&:rnf?) }
+
+    def with_state(external_id:, data:, fetch_external_data_exceptions: [])
+      champ.tap do
+        _1.external_id = external_id
+        _1.data = data
+        _1.fetch_external_data_exceptions = fetch_external_data_exceptions
+      end
+    end
+
+    context 'when external_id is nil and data is nil' do
+      it 'is valid' do
+        expect(with_state(external_id: nil, data: nil).validate(:champs_public_value)).to be_truthy
+      end
+    end
+
+    context 'when external_id is present but data is nil' do
+      it 'is invalid' do
+        expect(with_state(external_id: '075-FDD-00003-01', data: nil).validate(:champs_public_value)).to be_falsey
+      end
+
+      it 'adds the correct error message' do
+        champ = with_state(external_id: '075-FDD-00003-01', data: nil)
+        champ.validate(:champs_public_value)
+
+        expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.api_response_pending'))
+      end
+    end
+
+    context 'when external_id and data are present' do
+      it 'is valid' do
+        expect(with_state(external_id: '075-FDD-00003-01', data: { ok: :ok }).validate(:champs_public_value)).to be_truthy
+      end
+    end
+
+    context 'when fetch_external_data_exceptions contains a non-retryable error' do
+      let(:error) { ExternalDataException.new(reason: 'Not retryable', code: 404) }
+
+      it 'is invalid' do
+        expect(with_state(external_id: '075-FDD-00003-01', data: nil, fetch_external_data_exceptions: [error]).validate(:champs_public_value)).to be_falsey
+      end
+
+      it 'adds the correct error message' do
+        champ = with_state(external_id: '075-FDD-00003-01', data: nil, fetch_external_data_exceptions: [error])
+        champ.validate(:champs_public_value)
+
+        expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.code_404'))
+      end
+    end
+  end
 
   describe 'fetch_external_data' do
     let(:url) { RNFService.new.send(:url) }
