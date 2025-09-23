@@ -25,6 +25,32 @@
             %ul
               - unspecified_annotations_privees.each do |unspecified_annotations_privee|
                 %li= unspecified_annotations_privee.libelle
+
+    - elsif title == 'Refuser'
+      = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: true
+      - if dossier.attestation_refus_template&.activated?
+        %p.help
+          Le refus du dossier envoie automatiquement
+          = link_to 'une attestation', apercu_attestation_refus_instructeur_dossier_path(dossier.procedure, dossier),  target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
+          à l'usager.
+
+      - unspecified_attestation_champs = dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:refus))
+      - if unspecified_attestation_champs.present?
+        .warning
+          Attention, les valeurs suivantes n’ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
+          - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private?)
+
+          - if unspecified_champs.present?
+            %h4 Champs de la demande
+            %ul
+              - unspecified_attestation_champs.each do |unspecified_champ|
+                %li= unspecified_champ.libelle
+
+          - if unspecified_annotations_privees.present?
+            %h4 Annotations privées
+            %ul
+              - unspecified_annotations_privees.each do |unspecified_annotations_privee|
+                %li= unspecified_annotations_privee.libelle
     - else
       = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: true
     .optional-justificatif{ id: "justificatif_motivation_suggest_#{popup_class}", onclick: "DS.showImportJustificatif('#{popup_class}');" }

@@ -52,6 +52,13 @@ module Instructeurs
                 disposition: 'inline'
     end
 
+    def apercu_attestation_refus
+      send_data dossier.attestation_refus_template.send(:build_pdf, dossier),
+                filename: 'attestation.pdf',
+                type: 'application/pdf',
+                disposition: 'inline'
+    end
+
     def bilans_bdf
       extension = params[:format]
       render extension.to_sym => dossier.etablissement.entreprise_bilans_bdf_to_sheet(extension)
