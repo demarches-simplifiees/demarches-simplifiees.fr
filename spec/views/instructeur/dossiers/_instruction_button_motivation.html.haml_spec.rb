@@ -30,4 +30,34 @@ describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
       end
     end
   end
+
+  context 'refuser' do
+    subject do
+      allow(controller).to receive(:params).and_return(statut: 'a-suivre')
+      render(
+        'instructeurs/dossiers/instruction_button_motivation',
+        dossier: dossier,
+        popup_title: 'Refuser le dossier',
+        placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)',
+        popup_class: 'refuse',
+        process_action: 'refuser',
+        title: 'Refuser',
+        confirm: "Confirmez-vous le refus de ce dossier ?"
+      )
+    end
+
+    context 'without attestation' do
+      it do
+        expect(subject).not_to have_link(href: apercu_attestation_refus_instructeur_dossier_path(dossier.procedure, dossier))
+      end
+    end
+
+    context 'with an attestation' do
+      let(:dossier) { create :dossier, :accepte, :with_attestation_refus }
+
+      it 'includes a link to preview the attestation' do
+        expect(subject).to have_link(href: apercu_attestation_refus_instructeur_dossier_path(dossier.procedure, dossier))
+      end
+    end
+  end
 end
