@@ -10,14 +10,16 @@
               %th Exemple de donnée
               %th Type de donnée
               %th Libellé de la donnée récupérée
-              %th Afficher à l’usager
+              - unless type_de_champ.private?
+                %th Afficher à l’usager
               %th Afficher à l’instructeur
           %tbody
             - display_mapping.sort.each do |jsonpath, mapping_opts|
               %tr
-              %td.fr-cell--fixed= jsonpath
-              %td.fr-cell--multiline= mapping_opts[:example_value] || mapping_opts["example_value"]
-              %td= mapping_opts[:type] || mapping_opts["type"]
-              %td= mapping_opts[:libelle] || mapping_opts["libelle"]
-              %td.text-center= display_tag_for(jsonpath, "display_usager")
-              %td.text-center= display_tag_for(jsonpath, "display_instructeur")
+                %td.fr-cell--fixed= jsonpath
+                %td.fr-cell--multiline= mapping_opts[:example_value] || mapping_opts["example_value"]
+                %td= mapping_opts[:type] || mapping_opts["type"]
+                %td= mapping_opts[:libelle] || mapping_opts["libelle"]
+                - unless type_de_champ.private?
+                  %td.text-center= display_tag_for(jsonpath, "display_usager")
+                %td.text-center= display_tag_for(jsonpath, "display_instructeur")
