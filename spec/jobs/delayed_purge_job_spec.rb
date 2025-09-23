@@ -62,4 +62,18 @@ describe DelayedPurgeJob, type: :job do
       perform_enqueued_jobs
     end
   end
+
+  context 'error handling' do
+    context 'Excon::Error::RequestEntityTooLarge' do
+      let(:error) { Excon::Error::RequestEntityTooLarge.new('Request Entity Too Large') }
+
+      it 'handles the error by purging the blob' do
+        allow_any_instance_of(ActiveStorage::Blob).to receive(:service).and_raise(error)
+        expect(blob).to receive(:purge)
+
+        # The job should rescue the error and purge the blob without raising
+        expect { subject }.not_to raise_error
+      end
+    end
+  end
 end

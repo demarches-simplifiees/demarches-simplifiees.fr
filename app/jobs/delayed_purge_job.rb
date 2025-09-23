@@ -13,6 +13,10 @@ class DelayedPurgeJob < ApplicationJob
     retry_on Excon::Error::ServiceUnavailable
   end
 
+  rescue_from Excon::Error::RequestEntityTooLarge do
+    blob.purge
+  end
+
   # rate limit reached
   retry_on Excon::Error::TooManyRequests, wait: 10.minutes
 

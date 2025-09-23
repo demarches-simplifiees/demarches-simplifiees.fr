@@ -51,6 +51,21 @@ describe ProcedureArchiveService do
             .to change { ActiveStorage::Attachment.where(name: 'file', record_type: 'Archive', record_id: archive.id).count }.by(1)
         end
       end
+
+      context 'when file was already attached to the archive' do
+        let(:filesize) { ArchiveUploader::MAX_FILE_SIZE_FOR_BACKEND_BEFORE_CHUNKING + 1 }
+
+        let(:archive) { create(:archive) }
+        before do
+          expect(uploader).to receive(:upload_with_chunking_wrapper).and_return(fixture_blob)
+          archive.file.attach(fixture_file_upload(Rails.root.join('spec/fixtures/files/RIB.pdf'), 'text/plain'))
+        end
+
+        it 'purges the previous attachment' do
+          expect(archive.file).to be_attached
+          expect { uploader.upload(archive) }.not_to have_enqueued_job(DelayedPurgeJob)
+        end
+      end
     end
   end
 
