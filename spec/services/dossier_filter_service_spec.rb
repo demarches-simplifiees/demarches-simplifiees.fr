@@ -173,7 +173,7 @@ describe DossierFilterService do
         before do
           nothing_dossier
           procedure.draft_revision.add_type_de_champ(tdc)
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
           beurre_dossier.project_champs_public.last.update(value: 'beurre')
           tartine_dossier.project_champs_public.last.update(value: 'tartine')
         end

@@ -2,7 +2,7 @@
 
 RSpec.describe DossierCloneConcern do
   let(:procedure) do
-    create(:procedure, types_de_champ_public:, types_de_champ_private:).tap(&:publish!)
+    create(:procedure, types_de_champ_public:, types_de_champ_private:).tap { |it| it.publish!(it.administrateurs.first) }
   end
   let(:types_de_champ_public) do
     [
@@ -318,7 +318,7 @@ RSpec.describe DossierCloneConcern do
           libelle: "Un nouveau champ text"
         })
         procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it {
@@ -399,7 +399,7 @@ RSpec.describe DossierCloneConcern do
         })
         procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
         procedure.draft_revision.find_and_ensure_exclusive_use(updated_champ.stable_id).update(libelle: "Un nouveau libelle")
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
         added_champ.update(value: 'new value for added champ')
         added_repetition_champ.update(value: "new value in repetition champ")
 
@@ -435,7 +435,7 @@ RSpec.describe DossierCloneConcern do
           champ.update(value: 'old value')
         end
         procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
       it 'works' do
         expect { subject }.not_to raise_error

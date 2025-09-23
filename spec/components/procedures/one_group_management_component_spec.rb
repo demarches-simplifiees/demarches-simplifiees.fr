@@ -21,7 +21,7 @@ describe Procedure::OneGroupeManagementComponent, type: :component do
           libelle: 'Votre ville',
           drop_down_options: ["Paris", "Lyon", "Marseille"]
         })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
         procedure.reload
         subject
       end

@@ -3,6 +3,7 @@
 class ProcedureRevision < ApplicationRecord
   include Logic
   self.implicit_order_column = :created_at
+  belongs_to :administrateur, optional: true
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
 

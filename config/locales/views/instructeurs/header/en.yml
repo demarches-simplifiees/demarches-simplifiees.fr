@@ -16,6 +16,7 @@ en:
           history:
             title: Form modification history
             modification_published_at: "Modifications published on %{date}"
+            modification_published_at_and_by: "Modifications published on %{date} by %{email}"
             new: New
             no_history: "No modification has been published"
           administrators_list: Administrators list

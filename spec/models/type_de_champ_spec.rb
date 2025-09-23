@@ -308,7 +308,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'header_section_level' => '1', 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the header_section_level' do
@@ -321,7 +321,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'collapsible_explanation_enabled' => '1', 'collapsible_explanation_text' => 'hello', 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the collapsible_explanation keys' do
@@ -334,7 +334,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'character_limit' => '400', 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the character limit' do
@@ -347,7 +347,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'unesco' => '0', 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the layers' do
@@ -360,7 +360,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'drop_down_other' => '0', 'drop_down_options' => ['Premier choix', 'Deuxième choix'], 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the drop_down_other and drop_down_options' do
@@ -373,7 +373,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'drop_down_options' => ['Premier choix', 'Deuxième choix'], 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the drop_down_options' do
@@ -386,7 +386,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'drop_down_options' => ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes'], 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the drop_down_options' do
@@ -399,7 +399,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { "positive_number" => "1", "range_number" => '1', "min_number" => '2', "max_number" => '18' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping the positive number options' do
@@ -412,7 +412,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { "positive_number" => "1", "range_number" => '1', "min_number" => '2.5', "max_number" => '18' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping the positive number options' do
@@ -425,7 +425,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'old_pj' => '123', 'skip_pj_validation' => '1', 'skip_content_type_pj_validation' => '1', 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the old_pj, skip_validation_pj and skip_content_type_pj_validation' do
@@ -438,7 +438,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'formatted_mode' => 'simple', 'letters_accepted' => "1", 'numbers_accepted' => '1', "special_characters_accepted" => "0", 'min_character_length' => "4", 'max_character_length' => "5", "key" => "value" })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the formatted mode, letters_accepted, numbers_accepted, special_characters_accepted' do
@@ -451,7 +451,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'formatted_mode' => 'advanced', 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789', 'key' => 'value' })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the expression_reguliere, expression_reguliere_error_message and expression_reguliere_exemple_text' do
@@ -467,7 +467,7 @@ describe TypeDeChamp do
 
       before do
         type_de_champ.update!(options: { 'referentiel_mapping' => { 'kikoo' => 'lol' } })
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it 'keeping only the expression_reguliere, expression_reguliere_error_message and expression_reguliere_exemple_text' do

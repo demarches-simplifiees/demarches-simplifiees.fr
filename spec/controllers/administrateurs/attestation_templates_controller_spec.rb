@@ -206,11 +206,11 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       let(:body) { "body --#{type_de_champ.libelle}-- et --#{new_type_de_champ.libelle}--" }
 
       before do
-        procedure.publish!
+        procedure.publish!(procedure.administrateurs.first)
         procedure.reload
         procedure.draft_revision.remove_type_de_champ(removed_and_published_type_de_champ.stable_id)
         procedure.draft_revision.add_type_de_champ(libelle: 'new type de champ', type_champ: 'text', after_stable_id: procedure.draft_revision.types_de_champ_public.last.stable_id)
-        procedure.publish_revision!
+        procedure.publish_revision!(admin)
         procedure.reload
         procedure.draft_revision.remove_type_de_champ(removed_type_de_champ.stable_id)
         procedure.draft_revision.reload

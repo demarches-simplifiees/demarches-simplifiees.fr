@@ -289,7 +289,7 @@ module Administrateurs
     end
 
     def modifications
-      ProcedureRevisionPreloader.new(@procedure.revisions).all
+      ProcedureRevisionPreloader.new(@procedure.revisions.includes(administrateur: :user).reorder(published_at: :desc)).all
     end
 
     def update_jeton
@@ -390,7 +390,7 @@ module Administrateurs
     end
 
     def publish_revision
-      @procedure.publish_revision!
+      @procedure.publish_revision!(current_administrateur)
       flash.notice = "Nouvelle version de la démarche publiée"
 
       redirect_to admin_procedure_path(@procedure)
