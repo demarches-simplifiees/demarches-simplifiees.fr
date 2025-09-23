@@ -39,22 +39,7 @@ class ReferentielChampValidator < ActiveModel::Validator
   def translation_exists_for?(error_key, record)
     model_key = record.class.model_name.i18n_key
 
-    [
-      [
-        'activerecord',
-        'errors',
-        'models',
-        model_key,
-        'attributes',
-        'value',
-        error_key
-      ].join('.'),
-      [
-        'activerecord',
-        'errors',
-        'messages',
-        error_key
-      ].join('.')
-    ].any? { I18n.exists?(_1) }
+    I18n.exists?("activerecord.errors.models.#{model_key}.attributes.value.#{error_key}") ||
+      I18n.exists?("activerecord.errors.messages.#{error_key}")
   end
 end
