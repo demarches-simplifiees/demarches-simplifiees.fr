@@ -146,7 +146,7 @@ module DossierStateConcern
     end
 
     if attestation.nil?
-      self.attestation = build_attestation
+      self.attestation = build_attestation_acceptation
     end
 
     save!
@@ -187,7 +187,7 @@ module DossierStateConcern
     save!
 
     if attestation.nil?
-      self.attestation = build_attestation
+      self.attestation = build_attestation_acceptation
     end
 
     save!
