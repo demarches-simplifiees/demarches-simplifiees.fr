@@ -1,9 +1,9 @@
 %section.fr-accordion.fr-mt-2w
   %h3.fr-accordion__title
-    %button.fr-accordion__btn{ type: :button, "aria-controls" => "display_usager", "aria-expanded" => "false" }
+    %button.fr-accordion__btn{ type: :button, "aria-controls" => accordion_id, "aria-expanded" => "false" }
       = t('.accordion_title', value: @champ.value)
 
-.fr-collapse#display_usager
+.fr-collapse{ id: accordion_id }
   %dl.fr-mt-1w
     - data.each do |libelle, casted_value|
       .referentiel-flex-row.flex.align-baselinle

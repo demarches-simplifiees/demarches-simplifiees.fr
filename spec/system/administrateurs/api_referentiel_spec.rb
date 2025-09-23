@@ -192,8 +192,8 @@ describe 'Referentiel API:' do
             expect(page).to have_content("Donnée remplie automatiquement.", count: 4)
 
             # check display_usager populated web page too
-            page.find("button[aria-controls=display_usager]").click
-            within(".fr-collapse#display_usager") do
+            page.find("button.fr-accordion__btn").click
+            within(".fr-fieldset__element .fr-collapse") do
               # now we check that the filled libelle for the mapping and the value are in the webpage, with the accordion
               expect(page).to have_content("Coordonées du point : -0.570505392116188, 44.841034137099996")
               expect(page).to have_content("Type de point : Point")
