@@ -270,6 +270,14 @@ FactoryBot.define do
       end
     end
 
+    trait :with_attestation_refus do
+      after(:build) do |dossier, _evaluator|
+        dossier.procedure.attestation_refus_template ||= build(:attestation_template, :refus)
+        dossier.association(:attestation_refus_template).target = dossier.procedure.attestation_refus_template
+        dossier.attestation = dossier.build_attestation_refus
+      end
+    end
+
     trait :with_justificatif do
       after(:create) do |dossier, _evaluator|
         dossier.justificatif_motivation.attach(

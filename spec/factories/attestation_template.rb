@@ -15,6 +15,10 @@ FactoryBot.define do
     association :procedure
   end
 
+  trait :refus do
+    kind { 'refus' }
+  end
+
   trait :v2 do
     version { 2 }
     body { nil }
