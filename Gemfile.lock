@@ -282,6 +282,7 @@ GEM
       json-jwt (~> 1.16)
     faraday-net_http (3.4.1)
       net-http (>= 0.5.0)
+    ffi (1.17.2)
     ffi (1.17.2-aarch64-linux-gnu)
     ffi (1.17.2-aarch64-linux-musl)
     ffi (1.17.2-arm-linux-gnu)
@@ -489,6 +490,7 @@ GEM
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.25.5)
     msgpack (1.8.0)
     multi_json (1.17.0)
@@ -509,6 +511,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
+    nokogiri (1.18.9)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.18.9-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.9-aarch64-linux-musl)
@@ -991,6 +996,7 @@ PLATFORMS
   arm-linux-gnu
   arm-linux-musl
   arm64-darwin
+  ruby
   x86_64-darwin
   x86_64-linux-gnu
   x86_64-linux-musl
