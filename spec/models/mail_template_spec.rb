@@ -31,7 +31,7 @@ describe Mails::InitiatedMail, type: :model do
 
       before do
         procedure.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it { expect(subject.errors).to be_empty }
@@ -68,7 +68,7 @@ describe Mails::InitiatedMail, type: :model do
 
       before do
         procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it { expect(subject.errors.full_messages).to eq(["Le champ « Corps de l’email » contient la balise \"nom\" qui a été supprimée. Supprimer la balise"]) }
@@ -80,7 +80,7 @@ describe Mails::InitiatedMail, type: :model do
       before do
         create(:dossier, :en_construction, procedure: procedure)
         procedure.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it { expect(subject.errors.full_messages).to eq(["Le champ « Corps de l’email » contient la balise \"age\" qui n’existe pas sur un des dossiers en cours de traitement. Supprimer la balise"]) }

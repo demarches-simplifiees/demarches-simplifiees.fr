@@ -71,7 +71,7 @@ describe 'shared/_procedure_description', type: :view do
     end
 
     it 'shows the pieces jointes list for published procedure' do
-      procedure.publish!
+      procedure.publish!(procedure.administrateurs.first)
       subject
       expect(rendered).to have_text('Quelles sont les pièces justificatives à fournir')
       expect(rendered).to have_text('Libelle du champ')
@@ -123,7 +123,7 @@ describe 'shared/_procedure_description', type: :view do
       travel(1.minute)
 
       procedure.draft_revision.add_type_de_champ(type_champ: :piece_justificative, libelle: 'new pj')
-      procedure.publish_revision!
+      procedure.publish_revision!(procedure.administrateurs.first)
 
       render partial: 'shared/procedure_description', locals: { procedure: }
       expect(rendered).to have_text('new pj')

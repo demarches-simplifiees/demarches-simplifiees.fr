@@ -194,7 +194,7 @@ RSpec.describe DossierChampsConcern do
     context 'given a type de champ repetition in another revision' do
       before do
         procedure.draft_revision.remove_type_de_champ(type_de_champ_repetition.stable_id)
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it { expect { subject }.not_to raise_error }
@@ -307,7 +307,7 @@ RSpec.describe DossierChampsConcern do
         before do
           tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
           tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:checkbox))
-          dossier.procedure.publish_revision!
+          dossier.procedure.publish_revision!(procedure.administrateurs.first)
           perform_enqueued_jobs
           dossier.reload
         end
@@ -427,7 +427,7 @@ RSpec.describe DossierChampsConcern do
         before do
           tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
           tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:linked_drop_down_list), drop_down_options: ["--primary--", "secondary"])
-          dossier.procedure.publish_revision!
+          dossier.procedure.publish_revision!(procedure.administrateurs.first)
           perform_enqueued_jobs
           dossier.reload
         end
@@ -452,7 +452,7 @@ RSpec.describe DossierChampsConcern do
         before do
           tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
           tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:text))
-          dossier.procedure.publish_revision!
+          dossier.procedure.publish_revision!(procedure.administrateurs.first)
           perform_enqueued_jobs
           dossier.reload
         end
@@ -477,7 +477,7 @@ RSpec.describe DossierChampsConcern do
         before do
           tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
           tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:checkbox))
-          dossier.procedure.publish_revision!
+          dossier.procedure.publish_revision!(procedure.administrateurs.first)
           perform_enqueued_jobs
           dossier.reload
         end
@@ -502,7 +502,7 @@ RSpec.describe DossierChampsConcern do
         before do
           tdc = dossier.procedure.draft_revision.find_and_ensure_exclusive_use(99)
           tdc.update!(type_champ: TypeDeChamp.type_champs.fetch(:text))
-          dossier.procedure.publish_revision!
+          dossier.procedure.publish_revision!(procedure.administrateurs.first)
           perform_enqueued_jobs
           dossier.reload
         end

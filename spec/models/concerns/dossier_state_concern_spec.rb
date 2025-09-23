@@ -25,7 +25,7 @@ RSpec.describe DossierStateConcern do
       procedure.draft_revision.remove_type_de_champ(91)
       procedure.draft_revision.remove_type_de_champ(95)
       procedure.draft_revision.remove_type_de_champ(942)
-      procedure.publish_revision!
+      procedure.publish_revision!(procedure.administrateurs.first)
       perform_enqueued_jobs
       dossier.reload
       champ_repetition = dossier.project_champs_public.find { _1.stable_id == 94 }

@@ -17,6 +17,7 @@ fr:
           administrators_list: Administrateurs de la démarche
           history:
             title: Historique des modifications du formulaire
+            modification_published_at_and_by: "Modifications publiées le %{date} par %{email}"
             modification_published_at: "Modifications publiées le %{date}"
             new: Nouveau
             no_history: "Aucune modification n'a été publiée"

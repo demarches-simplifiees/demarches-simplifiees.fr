@@ -356,6 +356,7 @@ module Instructeurs
     def history
       @procedure = procedure
       @revisions = @procedure.revisions
+        .includes(administrateur: :user)
         .where.not(published_at: nil)
         .reorder(published_at: :desc)
       @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)

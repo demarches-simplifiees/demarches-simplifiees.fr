@@ -506,7 +506,7 @@ describe TagsSubstitutionConcern, type: :model do
       before do
         draft_type_de_champ.update(libelle: 'mon nouveau libellé')
         dossier.project_champs_public.first.update(value: 'valeur')
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       context "when using the champ's original label" do
