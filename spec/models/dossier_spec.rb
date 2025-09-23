@@ -886,7 +886,7 @@ describe Dossier, type: :model do
         .each { |c| c.update_attribute(:value, "specified") }
     end
 
-    subject { dossier.unspecified_attestation_champs.map(&:libelle) }
+    subject { dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:acceptation)).map(&:libelle) }
 
     context "without attestation template" do
       let(:attestation_template) { nil }
@@ -959,12 +959,12 @@ describe Dossier, type: :model do
     end
   end
 
-  describe '#build_attestation' do
+  describe '#build_attestation_acceptation' do
     let(:attestation_template) { nil }
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
 
     before :each do
-      dossier.attestation = dossier.build_attestation
+      dossier.attestation = dossier.build_attestation_acceptation
       dossier.reload
     end
 
@@ -1289,7 +1289,7 @@ describe Dossier, type: :model do
 
     before do
       allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
-      allow(dossier).to receive(:build_attestation).and_return(attestation)
+      allow(dossier).to receive(:build_attestation_acceptation).and_return(attestation)
 
       travel_to now
       dossier.accepter!(instructeur: instructeur, motivation: 'motivation')
@@ -1322,7 +1322,7 @@ describe Dossier, type: :model do
 
     before do
       allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
-      allow(dossier).to receive(:build_attestation).and_return(attestation)
+      allow(dossier).to receive(:build_attestation_acceptation).and_return(attestation)
 
       travel_to(now)
     end
