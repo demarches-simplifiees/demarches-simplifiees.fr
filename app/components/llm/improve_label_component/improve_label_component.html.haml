@@ -1,0 +1,33 @@
+= render Dsfr::CalloutComponent.new(title: 'À quoi sert cette règle ?', theme: :neutral) do |callout|
+  - callout.with_body do
+    %p
+      Cette règle propose une mise à jour des libellés détectés comme trop longs, en majuscules ou difficiles à comprendre.
+      Les suggestions visent à rendre chaque champ plus clair pour l’usager sans impacter la structure de la démarche.
+
+= form_with url: polymorphic_path([:accept_simplification, :admin, procedure, :types_de_champ], rule: rule) do |form|
+  = hidden_field_tag :changes_json, changes_json
+
+  - update_items.each do |item|
+    - original_tdc = tdc_for(item.stable_id)
+    - next unless original_tdc
+
+    .fr-checkbox-group.fr-my-1v.fr-my-2w
+      = check_box_tag 'selected[update][]', item.stable_id, true, id: "selected_update_#{item.stable_id}"
+      = label_tag "selected_update_#{item.stable_id}", class: 'fr-label' do
+        = original_tdc.libelle
+        - if item.payload&.[]('libelle').present? && item.payload['libelle'] != original_tdc.libelle
+          %span.fr-ml-1w= "→ #{item.payload['libelle']}"
+
+        - if item.justification.present?
+          %span.fr-hint-text
+            - if item.confidence.present?
+              %span.fr-badge= "confiance: #{item.confidence}"
+
+            = item.justification
+
+
+  %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
+    %li
+      = form.submit("Accepter les modifications", class: 'fr-btn')
+    %li
+      = link_to("Revenir à l'éditeur", [:champs, :admin, procedure], class: 'fr-btn fr-btn--secondary')

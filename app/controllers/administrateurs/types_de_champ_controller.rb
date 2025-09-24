@@ -288,31 +288,14 @@ module Administrateurs
       schema_hash = Digest::SHA256.hexdigest(schema)
 
       suggestion = LLMRuleSuggestion
-        .where(procedure_revision_id: published_revision.id, rule: @rule, state: 'completed')
+        .where(procedure_revision_id: published_revision.id, rule:, state: 'completed', schema_hash:)
         .order(created_at: :desc)
         .first
 
-      items = if suggestion&.schema_hash == schema_hash
-        suggestion.llm_rule_suggestion_items
-      else
-        []
-      end
-
-      # Map LLM items to the simplify view contract
-      updates = items
-        .select { |i| i.op_kind == 'update' && i.stable_id.present? }
-        .map do |i|
-          {
-            stable_id: i.stable_id,
-            libelle: i.payload['libelle'],
-            justification: i.justification,
-            confidence: i.confidence,
-          }
-        end
-
-      @changes = { destroy: [], update: updates, add: [] }
-      @text = [] # Label improver has no summary; keep empty for MVP
-     end
+      changes = suggestion&.llm_rule_suggestion_items&.order(created_at: :desc)&.group_by(&:op_kind)
+      component_class = LLM.const_get("#{rule.camelcase}Component")
+      @component = component_class.new(changes:, revision:)
+    end
 
     def allowed_rule?(rule)
       rule.in?([LLM::LabelImprover::TOOL_NAME])
