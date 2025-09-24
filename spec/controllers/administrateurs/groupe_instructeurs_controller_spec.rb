@@ -974,7 +974,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: departements_tdc.stable_id } } }
 
-      it do
+      it '', :slow do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
         expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
@@ -1015,7 +1015,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: pays_tdc.stable_id } } }
 
-      it do
+      it '', :slow do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
         expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("AD – Andorre")
@@ -1035,7 +1035,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: communes_tdc.stable_id } } }
 
-      it do
+      it '', :slow do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
         expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
@@ -1055,7 +1055,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: epci_tdc.stable_id } } }
 
-      it do
+      it '', :slow do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
         expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
@@ -1075,7 +1075,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: address_tdc.stable_id } } }
 
-      it do
+      it '', :slow do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
         expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")

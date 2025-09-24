@@ -16,7 +16,9 @@ describe Administrateurs::MailTemplatesController, type: :controller do
 
     subject { get :index, params: { procedure_id: procedure.id } }
 
-    it { expect(subject.status).to eq 200 }
+    it '', :slow do
+      expect(subject.status).to eq 200
+    end
     it { expect(subject.body).to include("Configuration des emails") }
     it { expect(subject.body).to include(Mails::InitiatedMail::DISPLAYED_NAME) }
   end

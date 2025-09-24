@@ -73,7 +73,7 @@ RSpec.describe PrefillChamps do
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => champ_value } }
 
-        it "builds an array of hash matching the given params" do
+        it "builds an array of hash matching the given params", :slow do
           expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, champ_value))])
         end
       end
@@ -88,7 +88,7 @@ RSpec.describe PrefillChamps do
 
         let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => champ_value } }
 
-        it "builds an array of hash matching the given params" do
+        it "builds an array of hash matching the given params", :slow do
           expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, champ_value))])
         end
       end

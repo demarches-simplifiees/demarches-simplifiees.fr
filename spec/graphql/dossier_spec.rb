@@ -108,7 +108,7 @@ RSpec.describe Types::DossierType, type: :graphql do
       dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:rna) }.update(data: rna)
     end
 
-    it do
+    it '', :slow do
       expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
       expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
       expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
@@ -136,7 +136,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         dossier.project_champs_public.find(&:address?).update_columns(value_json: not_in_ban_address)
       end
 
-      it 'should return address' do
+      it 'should return address', :slow do
         expect(errors).to be_nil
         expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
         expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Isère')
@@ -149,7 +149,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         dossier.project_champs_public.find(&:address?).update_columns(value_json: international_address)
       end
 
-      it 'should return address' do
+      it 'should return address', :slow do
         expect(errors).to be_nil
         expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
         expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Etranger')

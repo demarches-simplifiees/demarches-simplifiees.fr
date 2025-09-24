@@ -907,7 +907,9 @@ describe Dossier, type: :model do
       context "which is disabled" do
         let(:activated) { false }
 
-        it { is_expected.to eq([]) }
+        it '', :slow do
+          is_expected.to eq([])
+        end
       end
 
       context "which is enabled" do
@@ -2518,7 +2520,7 @@ describe Dossier, type: :model do
       create(:attestation, dossier: dossier)
     end
 
-    it "can destroy dossier, reset demarche, logg context" do
+    it "can destroy dossier, reset demarche, logg context", :slow do
       json_message = nil
       allow(Rails.logger).to receive(:info) { json_message ||= _1 }
 

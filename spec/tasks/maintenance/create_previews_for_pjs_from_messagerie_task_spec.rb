@@ -29,7 +29,7 @@ module Maintenance
         let(:file_name) { 'RIB.pdf' }
         let(:content_type) { 'application/pdf' }
 
-        it "creates a preview" do
+        it "creates a preview", :external_deps do
           expect(commentaire.piece_jointe.first.preview(resize_to_limit: [400, 400]).image.attached?).to be false
           expect { subject }.to change { commentaire.piece_jointe.first.reload.preview(resize_to_limit: [400, 400]).image.attached? }
         end

@@ -538,7 +538,7 @@ describe Champ do
         expect(subject.piece_justificative_file.first.watermark_pending?).to be_truthy
       end
 
-      it 'watermarks the file' do
+      it 'watermarks the file', :external_deps do
         subject
         perform_enqueued_jobs
         expect(champ.reload.piece_justificative_file.first.watermark_pending?).to be_falsy

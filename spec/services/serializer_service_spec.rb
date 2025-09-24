@@ -10,11 +10,11 @@ describe SerializerService do
     subject { SerializerService.champ(champ) }
 
     describe 'type champ is siret' do
-      it {
+      it '', :slow do
         is_expected.to include("stringValue" => etablissement.siret)
         expect(subject["etablissement"]).to include("siret" => etablissement.siret)
         expect(subject["etablissement"]["entreprise"]).to include("codeEffectifEntreprise" => etablissement.entreprise_code_effectif_entreprise)
-      }
+      end
 
       context 'with entreprise_date_creation is nil' do
         before { etablissement.update(entreprise_date_creation: nil) }

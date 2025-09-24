@@ -404,7 +404,9 @@ describe TagsSubstitutionConcern, type: :model do
       context "with date de dépôt" do
         let(:template) { '--date de dépôt--' }
 
-        it { is_expected.to eq('03/02/2001') }
+        it '', :slow do
+          is_expected.to eq('03/02/2001')
+        end
       end
 
       context "with date de passage en instruction" do

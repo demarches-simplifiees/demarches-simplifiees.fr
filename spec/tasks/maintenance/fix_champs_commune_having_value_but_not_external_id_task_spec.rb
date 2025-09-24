@@ -17,7 +17,7 @@ module Maintenance
         let!(:expected_external_id) { champ.external_id }
         before { champ.update_column(:external_id, nil) }
 
-        it "backfill external_id" do
+        it "backfill external_id", :slow do
           expect { subject }.to change { champ.reload.external_id }.from(nil).to(expected_external_id)
         end
       end
