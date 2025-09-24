@@ -1,0 +1,30 @@
+- content_for :title, "Amélioration des champs de la démarche « #{@procedure.libelle} »"
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Amélioration des champs']] }
+
+.fr-container
+  %h1.fr-h2.mt-2 Amélioration de la qualité de la démarche “#{@procedure.libelle}“
+
+  = render Dsfr::CalloutComponent.new(title: 'Comment fonctionne cette amélioration ?', theme: :neutral) do |callout|
+    - callout.with_body do
+      %p
+        Cette rubrique rassemble les règles d’assistance qui analysent votre démarche et suggèrent des améliorations automatiques.
+        Chaque règle s’appuie sur les révisions publiées et propose des modifications ciblées que vous pouvez appliquer sélectivement.
+
+  %section.fr-my-4w
+    %h2.fr-h3 Règles disponibles
+    %p.fr-text--sm
+      Sélectionnez une règle pour consulter les suggestions générées automatiquement et appliquer celles qui vous semblent pertinentes.
+
+    .fr-grid-row.fr-grid-row--gutters
+      - @rules.each_pair do |component, suggestion_count|
+        .fr-col-12.fr-col-md-6.fr-col-lg-4
+          .fr-tile.fr-enlarge-link
+            = link_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: component.key), class: 'fr-tile__body' do
+              %h3.fr-tile__title= component.libelle
+              %p.fr-tile__desc= component.summary
+              %p.fr-tile__desc= "#{suggestion_count} suggestion(s) disponible(s)"
+              %p.fr-link.fr-mt-2w Consulter les suggestions
