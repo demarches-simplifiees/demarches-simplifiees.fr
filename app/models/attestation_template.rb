@@ -4,7 +4,7 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, inverse_of: :attestation_template
+  belongs_to :procedure
 
   has_one_attached :logo
   has_one_attached :signature
