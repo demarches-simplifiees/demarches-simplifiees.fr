@@ -18,24 +18,31 @@ describe Champs::DgfipChamp, type: :model do
     end
   end
 
-  describe 'external_id' do
-    context 'when only one data is given' do
-      before do
-        champ.numero_fiscal = '1122299999092'
-        champ.save
-      end
+  describe 'ready_for_external_call?' do
+    let(:numero_fiscal) { '1122299999092' }
+    let(:reference_avis) { 'FC22299999092' }
 
-      it { expect(champ.external_id).to be_nil }
+    before do
+      champ.numero_fiscal = numero_fiscal
+      champ.reference_avis = reference_avis
     end
 
-    context 'when all data required for an external fetch are given' do
-      before do
-        champ.numero_fiscal = '1122299999092'
-        champ.reference_avis = 'FC22299999092'
-        champ.save
-      end
+    subject { champ.ready_for_external_call? }
 
-      it { expect(JSON.parse(champ.external_id)).to eq({ "reference_avis" => "FC22299999092", "numero_fiscal" => "1122299999092" }) }
+    context 'when both numero_fiscal and reference_avis are present and valid' do
+      it { is_expected.to be true }
+    end
+
+    context 'when numero_fiscal is missing' do
+      let(:numero_fiscal) { nil }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when reference_avis is missing' do
+      let(:reference_avis) { nil }
+
+      it { is_expected.to be false }
     end
   end
 

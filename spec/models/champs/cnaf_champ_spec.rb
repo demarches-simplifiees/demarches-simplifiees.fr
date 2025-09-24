@@ -18,24 +18,31 @@ describe Champs::CnafChamp, type: :model do
     end
   end
 
-  describe 'external_id' do
-    context 'when only one data is given' do
-      before do
-        champ.numero_allocataire = '1234567'
-        champ.save
-      end
+  describe 'ready_for_external_call?' do
+    let(:numero_allocataire) { '1234567' }
+    let(:code_postal) { '12345' }
 
-      it { expect(champ.external_id).to be_nil }
+    before do
+      champ.numero_allocataire = numero_allocataire
+      champ.code_postal = code_postal
     end
 
-    context 'when all data required for an external fetch are given' do
-      before do
-        champ.numero_allocataire = '1234567'
-        champ.code_postal = '12345'
-        champ.save
-      end
+    subject { champ.ready_for_external_call? }
 
-      it { expect(JSON.parse(champ.external_id)).to eq({ "code_postal" => "12345", "numero_allocataire" => "1234567" }) }
+    context 'when both numero_allocataire and code_postal are present and valid' do
+      it { is_expected.to be true }
+    end
+
+    context 'when numero_allocataire is missing' do
+      let(:numero_allocataire) { nil }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when code_postal is missing' do
+      let(:code_postal) { nil }
+
+      it { is_expected.to be false }
     end
   end
 
