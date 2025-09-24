@@ -71,6 +71,6 @@ describe Instructeurs::ArchivesController, type: :controller do
 
   def create_dossier_for_month(procedure, year, month)
     travel_to(Time.zone.local(year, month, 5))
-    create(:dossier, :accepte, :with_attestation, procedure: procedure)
+    create(:dossier, :accepte, :with_attestation_acceptation, procedure: procedure)
   end
 end
