@@ -402,7 +402,6 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#simplify' do
-    render_views
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :text, libelle: 'Ancien', stable_id: 123 }] }
     let(:rule) { LLM::LabelImprover::TOOL_NAME }
@@ -423,9 +422,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       get :simplify, params: { procedure_id: procedure.id, rule: rule }
 
       expect(response).to have_http_status(:ok)
-      expect(assigns(:changes)).to eq({ destroy: [], update: [{ stable_id: 123, libelle: 'Nouveau', justification: 'clarity', confidence: 0.9 }], add: [] })
-      expect(response.body).to include('Suggestions de votre assistant IA')
-      expect(response.body).to include('Ancien → Nouveau')
+      expect(assigns(:component)).to be_an_instance_of(LLM::ImproveLabelComponent)
     end
 
     it '404s on unknown rule' do
