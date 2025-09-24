@@ -13,7 +13,7 @@ describe 'shared/dossiers/_infos_generales', type: :view do
     let(:current_role) { create(:expert) }
 
     context 'with an attestation' do
-      let(:dossier) { create :dossier, :accepte, :with_attestation }
+      let(:dossier) { create :dossier, :accepte, :with_attestation_acceptation }
 
       it 'provides a link to the attestation' do
         pdf = dossier.attestation.pdf
@@ -43,7 +43,7 @@ describe 'shared/dossiers/_infos_generales', type: :view do
     end
 
     context 'with an attestation' do
-      let(:dossier) { create :dossier, :accepte, :with_attestation }
+      let(:dossier) { create :dossier, :accepte, :with_attestation_acceptation }
 
       it 'provides a link to the attestation' do
         pdf = dossier.attestation.pdf

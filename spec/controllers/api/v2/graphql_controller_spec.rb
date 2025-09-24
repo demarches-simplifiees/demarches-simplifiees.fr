@@ -633,7 +633,7 @@ describe API::V2::GraphqlController do
         end
 
         context "with links" do
-          let(:dossier) { create(:dossier, :accepte, :with_attestation, procedure: procedure) }
+          let(:dossier) { create(:dossier, :accepte, :with_attestation_acceptation, procedure: procedure) }
           let(:query) do
             "{
               dossier(number: #{dossier.id}) {

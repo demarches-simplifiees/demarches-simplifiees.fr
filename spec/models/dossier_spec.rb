@@ -2062,7 +2062,7 @@ describe Dossier, type: :model do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now, sva_svr_decision_on: 1.day.ago) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation_acceptation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now, sva_svr_decision_on: 1.day.ago) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -2787,13 +2787,13 @@ describe Dossier, type: :model do
 
   def create_dossier_for_month(procedure, year, month)
     travel_to(Time.zone.local(year, month, 5)) do
-      create(:dossier, :accepte, :with_attestation, procedure: procedure)
+      create(:dossier, :accepte, :with_attestation_acceptation, procedure: procedure)
     end
   end
 
   def create_archived_dossier_for_month(procedure, year, month)
     travel_to(Time.zone.local(year, month, 5)) do
-      create(:dossier, :accepte, :archived, :with_attestation, procedure: procedure)
+      create(:dossier, :accepte, :archived, :with_attestation_acceptation, procedure: procedure)
     end
   end
 end

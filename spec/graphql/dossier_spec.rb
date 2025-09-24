@@ -11,7 +11,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   let(:errors) { subject['errors'] }
 
   describe 'dossier with attestation' do
-    let(:dossier) { create(:dossier, :accepte, :with_attestation) }
+    let(:dossier) { create(:dossier, :accepte, :with_attestation_acceptation) }
     let(:query) { DOSSIER_WITH_ATTESTATION_QUERY }
     let(:variables) { { number: dossier.id } }
 
