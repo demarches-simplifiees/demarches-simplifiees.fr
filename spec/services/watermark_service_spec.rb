@@ -5,7 +5,7 @@ RSpec.describe WatermarkService do
   let(:watermark_service) { WatermarkService.new }
 
   describe '#process' do
-    it 'returns a tempfile if watermarking succeeds' do
+    it 'returns a tempfile if watermarking succeeds', :external_deps do
       Tempfile.create do |output|
         watermark_service.process(image, output)
         # output size should always be a little greater than input size

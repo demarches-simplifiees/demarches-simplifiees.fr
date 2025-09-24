@@ -53,7 +53,7 @@ RSpec.describe GalleryHelper, type: :helper do
     context "when pdf attachment has a preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-      it "returns the preview URL when processed" do
+      it "returns the preview URL when processed", :external_deps do
         attachment.preview(resize_to_limit: [400, 400]).processed
         expect(subject).not_to eq("pdf-placeholder.png")
       end

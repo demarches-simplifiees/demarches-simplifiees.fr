@@ -67,7 +67,7 @@ describe API::V2::GraphqlController do
     context "with 3 dossiers per state" do
       let(:dossiers_per_state) { 3 }
 
-      it "should not have n+1" do
+      it "should not have n+1", :slow do
         query_count = 0
 
         dossier

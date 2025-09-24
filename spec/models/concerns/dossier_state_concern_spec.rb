@@ -61,7 +61,7 @@ RSpec.describe DossierStateConcern do
         procedure.defaut_groupe_instructeur.add_instructeurs(ids: create_list(:instructeur, 2).map(&:id))
       end
 
-      it 'does not create notification when procedure is sva/svr' do
+      it 'does not create notification when procedure is sva/svr', :slow do
         procedure.update!(sva_svr: { 'decision' => 'sva' }, declarative_with_state: nil)
         dossier.procedure.reload
         dossier.passer_en_construction!
@@ -69,7 +69,7 @@ RSpec.describe DossierStateConcern do
         expect(DossierNotification.count).to eq(0)
       end
 
-      it 'does not create notification when procedure is declarative' do
+      it 'does not create notification when procedure is declarative', :slow do
         procedure.update!(declarative_with_state: "accepte", sva_svr: {})
         dossier.procedure.reload
         dossier.passer_en_construction!
@@ -158,7 +158,7 @@ RSpec.describe DossierStateConcern do
   describe 'classer_sans_suite' do
     let(:dossier_state) { :en_instruction }
 
-    it do
+    it '', :slow do
       expect(dossier.champs.size).to eq(20)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(2)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(2)
