@@ -137,7 +137,6 @@ class Dossier < ApplicationRecord
   has_many :batch_operations, through: :dossier_batch_operations
 
   has_one :procedure, through: :revision
-  has_one :attestation_template, through: :procedure
   has_one :attestation_acceptation_template, through: :procedure
   has_one :attestation_refus_template, through: :procedure
 
