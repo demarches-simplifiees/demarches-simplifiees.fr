@@ -12,7 +12,7 @@ describe.skip '20230512103830_fix_cloned_published_revisions' do
   let(:dossier_cloned_procedure) { create(:dossier, procedure: cloned_procedure) }
 
   before do
-    procedure.publish!
+    procedure.publish!(procedure.administrateurs.first)
     dossier_parent_procedure
     procedure.reload
     cloned_procedure
@@ -58,7 +58,7 @@ describe.skip '20230512103830_fix_cloned_published_revisions' do
 
   context 'clone and publish' do
     before do
-      cloned_procedure.publish!
+      cloned_procedure.publish!(cloned_procedure.administrateurs.first)
       cloned_procedure.reload
     end
 
@@ -100,11 +100,11 @@ describe.skip '20230512103830_fix_cloned_published_revisions' do
 
   context 'clone, publish and publish again' do
     before do
-      cloned_procedure.publish!
+      cloned_procedure.publish!(cloned_procedure.administrateurs.first)
       cloned_procedure.reload
       cloned_procedure.draft_revision.add_type_de_champ(libelle: 'test', type_champ: 'text')
       cloned_procedure.reload
-      cloned_procedure.publish_revision!
+      cloned_procedure.publish_revision!(cloned_procedure.administrateurs.first)
       cloned_procedure.reload
     end
 

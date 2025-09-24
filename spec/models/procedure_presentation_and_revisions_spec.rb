@@ -17,7 +17,7 @@ describe ProcedurePresentation do
       let!(:tdc) { procedure.draft_revision.add_type_de_champ({ type_champ: :number, libelle: 'libelle 1' }) }
 
       before do
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
       end
 
       it { is_expected.to match(['libelle 1']) }
@@ -27,7 +27,7 @@ describe ProcedurePresentation do
 
         before do
           procedure.draft_revision.add_type_de_champ(added_tdc)
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
         end
 
         it { is_expected.to match(['libelle 1', 'libelle 2']) }
@@ -39,7 +39,7 @@ describe ProcedurePresentation do
         before do
           created_tdc0 = procedure.draft_revision.add_type_de_champ(tdc0)
           procedure.draft_revision.reload.move_type_de_champ(created_tdc0.stable_id, 0)
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
         end
 
         it { is_expected.to match(['libelle 0', 'libelle 1']) }
@@ -50,7 +50,7 @@ describe ProcedurePresentation do
           before do
             procedure.draft_revision.remove_type_de_champ(previous_tdc0.stable_id)
 
-            procedure.publish_revision!
+            procedure.publish_revision!(procedure.administrateurs.first)
           end
 
           it { is_expected.to match(['libelle 1', 'libelle 0']) }
@@ -65,7 +65,7 @@ describe ProcedurePresentation do
           type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.id)
           type_de_champ.update(changed_tdc)
 
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
         end
 
         it { is_expected.to match(['changed libelle 1']) }

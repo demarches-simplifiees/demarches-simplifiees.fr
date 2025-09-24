@@ -70,7 +70,7 @@ describe PiecesJointesListConcern do
     before do
       procedure.draft_revision.remove_type_de_champ(1)
       procedure.draft_revision.add_type_de_champ(type_champ: :piece_justificative, libelle: 'new', mandatory: false)
-      procedure.publish_revision!
+      procedure.publish_revision!(procedure.administrateurs.first)
     end
 
     it { expect(procedure.exportables_pieces_jointes_for_all_versions.map(&:libelle)).to eq(["new", "kept", "outdated"]) }

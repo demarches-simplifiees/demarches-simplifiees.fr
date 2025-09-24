@@ -16,7 +16,10 @@
     .fr-card.fr-mb-2w.fr-p-2w
       %div
         %h2.fr-card__title
-          = t('instructeurs.dossiers.header.banner.history.modification_published_at', date: l(current_revision.published_at, format: :human))
+          - if current_revision.administrateur.present? && current_revision.administrateur.user.present?
+            = t('instructeurs.dossiers.header.banner.history.modification_published_at_and_by', date: l(current_revision.published_at, format: :human), email: current_revision.administrateur.user.email)
+          - else
+            = t('instructeurs.dossiers.header.banner.history.modification_published_at', date: l(current_revision.published_at, format: :human))
           - if current_revision.id > @instructeur_procedure.last_revision_seen_id.to_i
             %span.fr-badge.fr-badge--sm.fr-badge--new= t('instructeurs.dossiers.header.banner.history.new')
       %div
