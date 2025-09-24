@@ -47,6 +47,10 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def max_file_size
+    if champ.present?
+      return TypeDeChamp::IDENTITY_FILE_MAX_SIZE if champ.titre_identite? || champ.titre_identite_nature?
+      return champ.max_file_size_bytes
+    end
     return if file_size_validator.nil?
 
     file_size_validator.options[:less_than]
@@ -87,7 +91,7 @@ class Attachment::EditComponent < ApplicationComponent
         auto_attach_url:,
         turbo_force: :server,
         'enable-submit-if-uploaded-target': 'input'
-      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
+      }.merge(max_file_size.present? ? { max_file_size: max_file_size } : {})
     }
 
     describedby = []
@@ -97,7 +101,8 @@ class Attachment::EditComponent < ApplicationComponent
 
     options[:aria] = { describedby: describedby.join(' ') }
 
-    options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
+    accept = accept_from_type_de_champ || (has_content_type_validator? ? accept_content_type : nil)
+    options.merge!(accept.present? ? { accept: accept } : {})
     options[:multiple] = true if as_multiple?
     options[:disabled] = true if (@max && @index >= @max) || persisted?
 
@@ -222,16 +227,38 @@ class Attachment::EditComponent < ApplicationComponent
     list.join(', ')
   end
 
+  def accept_from_type_de_champ
+    return nil if champ.blank?
+
+    if champ.titre_identite_nature?
+      return ['.jpg', '.jpeg', '.png'].join(', ')
+    end
+
+    extensions = champ.type_de_champ.send(:allowed_extensions)
+    return nil if extensions.blank?
+
+    extensions.join(', ')
+  end
+
   def allowed_formats
     @allowed_formats ||= begin
-                           formats = content_type_validator.options[:in].filter_map do |content_type|
-                             MiniMime.lookup_by_content_type(content_type)&.extension
-                           end.uniq.sort_by { EXTENSIONS_ORDER.index(_1) || 999 }
+      if champ.present? && (champ.titre_identite? || champ.titre_identite_nature?)
+        return ['jpeg', 'png']
+      end
 
-                           # When too many formats are allowed, consider instead manually indicating
-                           # above the input a more comprehensive of formats allowed, like "any image", or a simplified list.
-                           formats.size > 5 ? [] : formats
-                         end
+      raw = if champ.present?
+        champ.piece_justificative? ? champ.allowed_content_types : (has_content_type_validator? ? content_type_validator.options[:in] : [])
+      elsif has_content_type_validator?
+        content_type_validator.options[:in]
+      else
+        []
+      end
+
+      extensions = raw.filter_map { |ct| MiniMime.lookup_by_content_type(ct)&.extension }.uniq
+
+      sorted_extensions = extensions.sort_by { |e| EXTENSIONS_ORDER.index(e) || 999 }
+      sorted_extensions.size > 5 ? (sorted_extensions.first(5) + ['…']) : sorted_extensions
+    end
   end
 
   def has_content_type_validator?
