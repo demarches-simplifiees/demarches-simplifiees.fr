@@ -70,6 +70,8 @@ module Users
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank?
 
+      cookies.encrypted[FranceConnectController::CONF_ID_COOKIE_NAME] = @procedure.service.nom
+
       store_user_location!(@procedure)
       redirect_to france_connect_path
     end
