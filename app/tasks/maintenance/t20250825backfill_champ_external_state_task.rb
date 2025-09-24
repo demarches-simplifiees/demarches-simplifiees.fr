@@ -36,10 +36,15 @@ module Maintenance
     end
 
     def process(champ)
-      if champ.external_data_fetched?
-        champ.external_data_fetched!
-      elsif champ.external_error_present?
-        champ.external_data_error!
+      begin
+        if champ.external_data_fetched?
+          champ.external_data_fetched!
+        elsif champ.external_error_present?
+          champ.external_data_error!
+        end
+      rescue => e
+        return if e.message.include?('not found in Revision')
+        raise e
       end
     end
   end
