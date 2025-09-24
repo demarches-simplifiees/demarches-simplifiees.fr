@@ -174,8 +174,24 @@ module Administrateurs
 
       @revision = @procedure.draft_revision
       load_suggestion(@rule, @revision)
+    end
 
+    def simplify_index
+      @revision = @procedure.draft_revision
       @procedure_linter = ProcedureLinter.new(@procedure, @revision)
+
+      published_revision = @procedure.published_revision
+      schema = published_revision.schema_to_llm.to_json
+      schema_hash = Digest::SHA256.hexdigest(schema)
+
+      components = [LLM::ImproveLabelComponent].select { |component| allowed_rule?(component.key) }
+      counts = LLMRuleSuggestionItem
+        .joins(:llm_rule_suggestion)
+        .where(llm_rule_suggestions: { procedure_revision_id: published_revision.id, state: 'completed', schema_hash:, rule: components.map(&:key) })
+        .group('llm_rule_suggestions.rule')
+        .count
+
+      @rules = components.index_with { |component| counts[component.key] || 0 }
     end
 
     def accept_simplification

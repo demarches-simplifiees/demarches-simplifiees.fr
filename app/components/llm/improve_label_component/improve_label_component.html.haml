@@ -1,8 +1,6 @@
 = render Dsfr::CalloutComponent.new(title: 'À quoi sert cette règle ?', theme: :neutral) do |callout|
   - callout.with_body do
-    %p
-      Cette règle propose une mise à jour des libellés détectés comme trop longs, en majuscules ou difficiles à comprendre.
-      Les suggestions visent à rendre chaque champ plus clair pour l’usager sans impacter la structure de la démarche.
+    %p= self.class.summary
 
 = form_with url: polymorphic_path([:accept_simplification, :admin, procedure, :types_de_champ], rule: rule) do |form|
   = hidden_field_tag :changes_json, changes_json
@@ -30,4 +28,4 @@
     %li
       = form.submit("Accepter les modifications", class: 'fr-btn')
     %li
-      = link_to("Revenir à l'éditeur", [:champs, :admin, procedure], class: 'fr-btn fr-btn--secondary')
+      = link_to("Revenir aux règles", back_link, class: 'fr-btn fr-btn--secondary')

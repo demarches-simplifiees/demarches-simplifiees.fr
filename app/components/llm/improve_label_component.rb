@@ -1,35 +1,22 @@
 # frozen_string_literal: true
 
-class LLM::ImproveLabelComponent < ApplicationComponent
-  TOOL_NAME = LLM::LabelImprover::TOOL_NAME
+class LLM::ImproveLabelComponent < LLM::RuleComponent
+  def self.libelle = 'Améliorer les libellés des champs'
+  def self.key = LLM::LabelImprover::TOOL_NAME
 
-  attr_reader :revision, :change_items, :tdcs, :tdc_by_stable_id
-
-  def initialize(changes:, revision:)
-    @revision = revision
-    @change_items = Array(changes['update'])
-    @tdcs = revision.types_de_champ_public
-    @tdc_by_stable_id = @tdcs.index_by(&:stable_id)
-  end
-
-  def procedure
-    @procedure ||= revision.procedure
+  def self.summary
+    <<-DESCRIPTION
+      Cette règle propose une mise à jour des libellés détectés comme trop longs, en majuscules ou difficiles à comprendre.
+      Les suggestions visent à rendre chaque champ plus clair pour l’usager sans impacter la structure de la démarche.
+    DESCRIPTION
   end
 
   def changes_json
-    { update: change_items.map { |item| serialized_update(item) } }.to_json
+    { update: update_items.map { |item| serialized_update(item) } }.to_json
   end
 
   def update_items
-    change_items
-  end
-
-  def tdc_for(stable_id)
-    tdc_by_stable_id[stable_id]
-  end
-
-  def rule
-    TOOL_NAME
+    @update_items ||= Array(changes['update'])
   end
 
   private

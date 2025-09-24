@@ -431,6 +431,28 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     end
   end
 
+  describe '#simplify_index' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: 'Ancien', stable_id: 123 }]) }
+
+    it 'with no suggestion available, it list available rules' do
+      get :simplify_index, params: { procedure_id: procedure.id }
+
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:rules).keys).to include(LLM::ImproveLabelComponent)
+      expect(assigns(:rules)[LLM::ImproveLabelComponent]).to eq(0)
+    end
+
+    it 'when suggestion are available, it list available rules and suggestion count' do
+      llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.published_revision, rule: LLM::ImproveLabelComponent.key, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
+      create(:llm_rule_suggestion_item, llm_rule_suggestion:, stable_id: 123, op_kind: 'update', payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' })
+      get :simplify_index, params: { procedure_id: procedure.id }
+
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:rules).keys).to include(LLM::ImproveLabelComponent)
+      expect(assigns(:rules)[LLM::ImproveLabelComponent]).to eq(1)
+    end
+  end
+
   describe '#accept_simplification' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'A' }, { type: :text, libelle: 'B' }]) }
 
