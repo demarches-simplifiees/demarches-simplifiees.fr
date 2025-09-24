@@ -77,7 +77,7 @@ describe 'users/dossiers/show/_status_overview', type: :view do
     end
 
     context 'with attestation' do
-      let(:dossier) { create :dossier, :accepte, :with_attestation }
+      let(:dossier) { create :dossier, :accepte, :with_attestation_acceptation }
       it { is_expected.to have_link(nil, href: attestation_dossier_path(dossier)) }
     end
   end
