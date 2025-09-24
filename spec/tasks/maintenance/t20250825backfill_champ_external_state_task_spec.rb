@@ -21,6 +21,15 @@ module Maintenance
 
           it { expect { process }.to change { champ.external_state }.from("idle").to('external_error') }
         end
+
+        context 'when an not found in Revision error occurs' do
+          before { allow(champ).to receive(:external_data_fetched?).and_raise(StandardError, "not found in Revision") }
+
+          it 'does not change external_state and does not rase errors' do
+            expect { process }.not_to raise_error
+            expect(champ.external_state).to eq("idle")
+          end
+        end
       end
     end
 end
