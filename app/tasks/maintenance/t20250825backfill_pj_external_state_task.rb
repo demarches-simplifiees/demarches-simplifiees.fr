@@ -20,7 +20,7 @@ module Maintenance
 
     def collection
       Procedure
-        .where(id: procedure_ids.split(",").map(&:strip)).map(&:dossiers)
+        .where(id: procedure_ids.split(",").map(&:strip)).flat_map(&:dossiers)
     end
 
     def process(dossier)
@@ -28,9 +28,9 @@ module Maintenance
         .filter { it.type == "Champs::PieceJustificativeChamp" && it.RIB? == true }
 
       pjs.each do |pj|
-        if pj.external_data_fetched?
+        if pj.external_data_fetched? && !pj.fetched?
           pj.external_data_fetched!
-        elsif pj.external_error_present?
+        elsif pj.external_error_present? && !pj.external_error?
           pj.external_data_error!
         end
       end
