@@ -18,6 +18,34 @@ describe Champs::CnafChamp, type: :model do
     end
   end
 
+  describe 'ready_for_external_call?' do
+    let(:numero_allocataire) { '1234567' }
+    let(:code_postal) { '12345' }
+
+    before do
+      champ.numero_allocataire = numero_allocataire
+      champ.code_postal = code_postal
+    end
+
+    subject { champ.ready_for_external_call? }
+
+    context 'when both numero_allocataire and code_postal are present and valid' do
+      it { is_expected.to be true }
+    end
+
+    context 'when numero_allocataire is missing' do
+      let(:numero_allocataire) { nil }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when code_postal is missing' do
+      let(:code_postal) { nil }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#validate' do
     let(:numero_allocataire) { '1234567' }
     let(:code_postal) { '12345' }
