@@ -9,20 +9,37 @@ class ProConnectService
     ENV['PRO_CONNECT_BASE_URL'].present?
   end
 
-  def self.authorization_uri
+  def self.authorization_uri(force_2fa: false)
     client = OpenIDConnect::Client.new(conf)
 
     state = SecureRandom.hex(16)
     nonce = SecureRandom.hex(16)
 
+    claims = if force_2fa
+      {
+        "id_token": {
+          "acr": {
+            "essential": true,
+            "values": [
+              "eidas2",
+              "eidas3",
+              "https://proconnect.gouv.fr/assurance/consistency-checked-2fa",
+              "https://proconnect.gouv.fr/assurance/self-asserted-2fa"
+            ]
+          }
+        }
+      }
+    else
+      { id_token: { amr: { essential: true } } }
+    end.to_json
+
     uri = client.authorization_uri(
-      scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
-      state:,
-      nonce:,
-      acr_values: 'eidas1',
-      claims: { id_token: { amr: { essential: true } } }.to_json,
-      prompt: :login
-    )
+        scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
+        state:,
+        nonce:,
+        claims:,
+        prompt: :login
+      )
 
     [uri, state, nonce]
   end
