@@ -62,6 +62,7 @@ export class Clipboard2Controller extends Controller {
 
   private copyContent(wrapper: HTMLElement): void {
     this.#copySpan.remove();
+    this.#copiedSpan.remove();
 
     const textToCopy = (
       wrapper.dataset['toCopy'] ||
