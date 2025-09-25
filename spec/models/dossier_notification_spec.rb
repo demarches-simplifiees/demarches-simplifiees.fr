@@ -190,6 +190,110 @@ RSpec.describe DossierNotification, type: :model do
     end
   end
 
+  describe '.dossiers_to_notify' do
+    subject { DossierNotification.dossiers_to_notify(Dossier.all, notification_type, instructeur.id) }
+
+    let(:instructeur) { create(:instructeur) }
+
+    context "when notification_type is dossier_depose" do
+      let(:notification_type) { :dossier_depose }
+      let!(:dossier_to_notify) { create(:dossier, state: :en_construction, follows: []) }
+      let!(:dossier_not_to_notify_1) { create(:dossier, :en_construction) }
+      let!(:follow) { create(:follow, instructeur:, dossier: dossier_not_to_notify_1) }
+      let!(:dossier_not_to_notify_2) { create(:dossier, :accepte) }
+
+      it "returns only dossiers en_construction without followers" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is dossier_modifie" do
+      let(:notification_type) { :dossier_modifie }
+      let!(:dossier_to_notify) { create(:dossier, depose_at: 2.days.ago, last_champ_updated_at: 1.day.ago) }
+      let!(:dossier_not_to_notify_1) { create(:dossier, depose_at: 1.day.ago, last_champ_updated_at: nil) }
+      let!(:dossier_not_to_notify_2) { create(:dossier, depose_at: 1.day.ago, last_champ_updated_at: 2.days.ago) }
+
+      it "returns only dossiers modified after the submission" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is message" do
+      let(:notification_type) { :message }
+      let!(:dossier_to_notify) { create(:dossier) }
+      let!(:commentaire_to_notify) { create(:commentaire, dossier: dossier_to_notify, instructeur_id: nil, email: "test@exemple.fr") }
+      let!(:dossier_not_to_notify) { create(:dossier) }
+      let!(:commentaire_not_to_notify) { create(:commentaire, dossier: dossier_not_to_notify, instructeur:) }
+
+      it "returns dossiers with commentaires to notify" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is annotation_instructeur" do
+      let(:notification_type) { :annotation_instructeur }
+      let!(:dossier_to_notify) { create(:dossier, last_champ_private_updated_at: Time.current) }
+      let!(:dossier_not_to_notify) { create(:dossier, last_champ_private_updated_at: nil) }
+
+      it "returns dossiers with last_champ_private_updated_at present" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is avis_externe" do
+      let(:notification_type) { :avis_externe }
+      let!(:dossier_to_notify) { create(:dossier) }
+      let!(:avis_with_answer) { create(:avis, :with_answer, dossier: dossier_to_notify) }
+      let!(:dossier_not_to_notify) { create(:dossier) }
+      let!(:avis_without_answer) { create(:avis, dossier: dossier_not_to_notify) }
+
+      it "returns dossiers with avis answered" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is attente_correction" do
+      let(:notification_type) { :attente_correction }
+      let!(:dossier_to_notify) { create(:dossier) }
+      let!(:commentaire_correction) { create(:commentaire, dossier: dossier_to_notify, instructeur:) }
+      let!(:correction) { create(:dossier_correction, dossier: dossier_to_notify, commentaire: commentaire_correction) }
+      let!(:dossier_not_to_notify) { create(:dossier) }
+
+      it "returns dossiers with pending corrections" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is attente_avis" do
+      let(:notification_type) { :attente_avis }
+      let!(:dossier_to_notify) { create(:dossier) }
+      let!(:avis_without_answer) { create(:avis, dossier: dossier_to_notify) }
+      let!(:dossier_not_to_notify) { create(:dossier) }
+      let!(:avis_with_answer) { create(:avis, :with_answer, dossier: dossier_not_to_notify) }
+
+      it "returns dossiers with avis without answer" do
+        expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+  end
+
+  describe '.instructeur_ids_to_notify_by_notification_type' do
+    subject { DossierNotification.instructeur_ids_to_notify_by_notification_type(dossier, notification_type, instructeur_ids) }
+
+    context "when notification_type is message" do
+      let(:notification_type) { :message }
+      let(:dossier) { create(:dossier) }
+      let(:instructeur_to_notify) { create(:instructeur) }
+      let(:instructeur_not_to_notify) { create(:instructeur) }
+      let!(:commentaire_not_to_notify) { create(:commentaire, dossier:, instructeur: instructeur_not_to_notify) }
+      let(:instructeur_ids) { [instructeur_to_notify, instructeur_not_to_notify].map(&:id) }
+
+      it "returns instructeur_ids to notify" do
+        expect(subject).to eq([instructeur_to_notify.id])
+      end
+    end
+  end
+
   describe '.destroy_notifications' do
     context 'when instructeur unfollow a dossier' do
       subject { DossierNotification.destroy_notifications_instructeur_of_unfollowed_dossier(instructeur, dossier) }
@@ -329,22 +433,6 @@ RSpec.describe DossierNotification, type: :model do
           traites: [procedure.id]
         })
       end
-    end
-  end
-
-  describe '.refresh_notifications_instructeur_for_dossiers_and_type' do
-    let(:dossier) { create(:dossier, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
-    let(:dossier_with_notification) { create(:dossier, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }
-    let(:dossiers) { [dossier, dossier_with_notification] }
-    let(:instructeur) { create(:instructeur) }
-    let!(:notification) { create(:dossier_notification, dossier: dossier_with_notification, instructeur:, notification_type: :dossier_modifie) }
-
-    subject { DossierNotification.refresh_notifications_instructeur_for_dossiers_and_type(dossiers, :dossier_modifie, instructeur.id) }
-
-    it 'inserts notifications and ignore those already present in the database' do
-      subject
-
-      expect(DossierNotification.count).to eq(2)
     end
   end
 end
