@@ -31,5 +31,15 @@ RSpec.describe LLM::GenerateImproveLabelJob, type: :job do
         [2, { 'stable_id' => 2, 'libelle' => 'Libellé 2' }]
       ])
     end
+
+    it 'handles exceptions gracefully and updates state to error' do
+      service = instance_double(LLM::LabelImprover, tool_name: LLM::LabelImprover::TOOL_NAME)
+      allow(LLM::LabelImprover).to receive(:new).and_return(service)
+      allow(service).to receive(:generate_for).and_raise(StandardError.new("Test error"))
+
+      expect { subject }.not_to have_enqueued_job(LLM::GenerateImproveLabelJob)
+
+      expect(suggestion.reload.state).to eq('failed')
+    end
   end
 end
