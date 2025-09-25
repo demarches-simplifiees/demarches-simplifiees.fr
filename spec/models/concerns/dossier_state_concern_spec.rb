@@ -100,23 +100,23 @@ RSpec.describe DossierStateConcern do
       expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
 
-    context "when there are instructeurs followers" do
-      let!(:instructeur_follower) { create(:instructeur, followed_dossiers: [dossier]) }
-      let!(:instructeur_not_follower) { create(:instructeur) }
+    context "when there are instructeurs wish to be notified" do
+      let(:instructeur_follower) { create(:instructeur, followed_dossiers: [dossier]) }
+      let(:instructeur_not_follower) { create(:instructeur) }
+      let!(:instructeur_not_follower_procedure) { create(:instructeurs_procedure, instructeur: instructeur_not_follower, procedure:, display_dossier_modifie_notifications: 'all') }
 
       before do
         procedure.defaut_groupe_instructeur.add_instructeurs(ids: [instructeur_follower, instructeur_not_follower].map(&:id))
       end
 
-      it "create dossier_modifie notification only for instructeur follower" do
+      it "create dossier_modifie notification only for instructeur wish to be notified" do
         dossier.submit_en_construction!
 
-        expect(DossierNotification.count).to eq(1)
+        expect(DossierNotification.count).to eq(2)
 
-        notification = DossierNotification.last
-        expect(notification.dossier_id).to eq(dossier.id)
-        expect(notification.instructeur_id).to eq(instructeur_follower.id)
-        expect(notification.notification_type).to eq("dossier_modifie")
+        expect(DossierNotification.distinct.pluck(:dossier_id)).to eq([dossier.id])
+        expect(DossierNotification.pluck(:instructeur_id)).to match_array([instructeur_follower.id, instructeur_not_follower.id])
+        expect(DossierNotification.distinct.pluck(:notification_type)).to eq(["dossier_modifie"])
       end
     end
   end
@@ -136,6 +136,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
     end
+
+    context "when dossier has attente_avis notification" do
+      let(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
+
+      it "destroy the notification" do
+        dossier.accepter!(motivation: 'test')
+
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
   end
 
   describe 'refuser' do
@@ -153,6 +164,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
     end
+
+    context "when dossier has attente_avis notification" do
+      let(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
+
+      it "destroy the notification" do
+        dossier.refuser!(motivation: 'test')
+
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
   end
 
   describe 'classer_sans_suite' do
@@ -169,6 +191,17 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.size).to eq(15)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.stable_id.in?([93, 98]) }.size).to eq(0)
+    end
+
+    context "when dossier has attente_avis notification" do
+      let(:instructeur) { create(:instructeur) }
+      let!(:notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :attente_avis) }
+
+      it "destroy the notification" do
+        dossier.classer_sans_suite!(motivation: 'test')
+
+        expect(DossierNotification.count).to eq(0)
+      end
     end
   end
 

@@ -10,6 +10,7 @@ en:
         relance_effectuee_le: "Reminder sent at %{date}"
         reponse_donnee_le: "Response sent at %{date}"
         en_attente: "Waiting for response"
+        avis_non_rendu: "Response not given"
       france_connect_login:
         title: "With FranceConnect"
         description: "FranceConnect is a solution proposed by the government to secure and simplify the connection to web services."
