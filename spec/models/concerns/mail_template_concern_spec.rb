@@ -64,48 +64,52 @@ describe MailTemplateConcern do
     end
 
     describe '--lien attestation--' do
-      let(:attestation_template) { AttestationTemplate.new(activated: true) }
+      let(:attestation_template) { build(:attestation_template, activated: true) }
       let(:procedure) { create(:procedure, attestation_acceptation_template: attestation_template) }
 
       subject { mail.body_for_dossier(dossier) }
 
-      before do
-        dossier.attestation = dossier.build_attestation
-        dossier.reload
-        mail.body = "--lien attestation--"
-      end
+      context 'acceptation' do
+        let(:kind) { AttestationTemplate.kinds.fetch(:acceptation) }
 
-      describe "in closed mail without justificatif" do
-        let(:mail) { create(:closed_mail, procedure: procedure) }
-        it do
-          is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>")
-          is_expected.to_not include("Télécharger le justificatif")
-        end
-      end
-
-      describe "in closed mail with justificatif" do
         before do
-          dossier.justificatif_motivation.attach(justificatif)
+          dossier.attestation = dossier.build_attestation_acceptation
+          dossier.reload
+          mail.body = "--lien attestation--"
         end
-        let(:mail) { create(:closed_mail, procedure: procedure) }
 
-        it do
-          expect(dossier.justificatif_motivation).to be_attached
-          is_expected.to include("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>")
-          is_expected.to_not include("Télécharger le justificatif")
+        describe "in closed mail without justificatif" do
+          let(:mail) { create(:closed_mail, procedure: procedure) }
+          it do
+            is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>")
+            is_expected.to_not include("Télécharger le justificatif")
+          end
         end
-      end
 
-      describe "in refuse mail" do
-        let(:mail) { create(:refused_mail, procedure: procedure) }
+        describe "in closed mail with justificatif" do
+          before do
+            dossier.justificatif_motivation.attach(justificatif)
+          end
+          let(:mail) { create(:closed_mail, procedure: procedure) }
 
-        it { is_expected.to eq("--lien attestation--") }
-      end
+          it do
+            expect(dossier.justificatif_motivation).to be_attached
+            is_expected.to include("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>")
+            is_expected.to_not include("Télécharger le justificatif")
+          end
+        end
 
-      describe "in without continuation mail" do
-        let(:mail) { create(:without_continuation_mail, procedure: procedure) }
+        describe "in refuse mail" do
+          let(:mail) { create(:refused_mail, procedure: procedure) }
 
-        it { is_expected.to eq("--lien attestation--") }
+          it { is_expected.to include("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>") }
+        end
+
+        describe "in without continuation mail" do
+          let(:mail) { create(:without_continuation_mail, procedure: procedure) }
+
+          it { is_expected.to eq("--lien attestation--") }
+        end
       end
     end
 
