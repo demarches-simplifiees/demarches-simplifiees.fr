@@ -57,11 +57,7 @@ class ContactForm < ApplicationRecord
   end
 
   def create_conversation_later
-    if user.present? && Flipper.enabled?(:contact_crisp, user)
-      CrispCreateConversationJob.perform_later(self)
-    else
-      HelpscoutCreateConversationJob.perform_later(self)
-    end
+    CrispCreateConversationJob.perform_later(self)
   end
 
   def require_email? = user.blank?
