@@ -244,6 +244,10 @@ class Champ < ApplicationRecord
     [input_id, attribute].compact.join('-')
   end
 
+  def input_label_id(attribute = :value)
+    "#{focusable_input_id(attribute)}-label"
+  end
+
   def user_buffer_changes?
     public? && dossier.user_buffer_changes_on_champ?(self)
   end
