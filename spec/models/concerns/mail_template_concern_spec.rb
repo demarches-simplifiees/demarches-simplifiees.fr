@@ -65,7 +65,7 @@ describe MailTemplateConcern do
 
     describe '--lien attestation--' do
       let(:attestation_template) { AttestationTemplate.new(activated: true) }
-      let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+      let(:procedure) { create(:procedure, attestation_acceptation_template: attestation_template) }
 
       subject { mail.body_for_dossier(dossier) }
 

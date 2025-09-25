@@ -388,7 +388,7 @@ class Dossier < ApplicationRecord
   scope :with_revision, -> { includes(revision: :revision_types_de_champ) }
   scope :for_api_v2, -> {
     with_revision
-      .includes(:attestation_template, :etablissement, :individual, :traitement, procedure: [:administrateurs], user: [:france_connect_informations])
+      .includes(:attestation_acceptation_template, :etablissement, :individual, :traitement, procedure: [:administrateurs], user: [:france_connect_informations])
   }
 
   scope :with_notifications, -> (instructeur) {

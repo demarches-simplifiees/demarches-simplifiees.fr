@@ -59,7 +59,7 @@ describe Procedure do
   end
 
   describe 'closed mail template body' do
-    let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+    let(:procedure) { create(:procedure, attestation_acceptation_template: attestation_template) }
     let(:attestation_template) { nil }
 
     subject { procedure.accepter_email_template.rich_body.body.to_html }
@@ -86,12 +86,12 @@ describe Procedure do
   end
 
   describe '#closed_mail_template_attestation_inconsistency_state' do
-    let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail, attestation_template: nil) }
+    let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: nil) }
     let(:procedure_with_active_attestation) do
-      create(:procedure, closed_mail: closed_mail, attestation_template: build(:attestation_template, activated: true))
+      create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: build(:attestation_template, activated: true))
     end
     let(:procedure_with_inactive_attestation) do
-      create(:procedure, closed_mail: closed_mail, attestation_template: build(:attestation_template, activated: false))
+      create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: build(:attestation_template, activated: false))
     end
 
     subject { procedure.closed_mail_template_attestation_inconsistency_state }
@@ -918,7 +918,7 @@ describe Procedure do
         create(
           :procedure,
           :published,
-          attestation_template: build(:attestation_template),
+          attestation_acceptation_template: build(:attestation_template),
           dossier_submitted_message: create(:dossier_submitted_message),
           types_de_champ_public: [{ type: :text, libelle: 'published tdc' }]
         )
@@ -927,7 +927,7 @@ describe Procedure do
       it "should reset draft revision" do
         procedure.draft_revision.add_type_de_champ(tdc_attributes)
         previous_draft_revision = procedure.draft_revision
-        previous_attestation_template = procedure.attestation_template
+        previous_attestation_template = procedure.attestation_acceptation_template
         previous_dossier_submitted_message = previous_draft_revision.dossier_submitted_message
 
         expect(procedure.draft_changed?).to be_truthy
@@ -935,7 +935,7 @@ describe Procedure do
         expect(procedure.draft_changed?).to be_falsey
         expect(procedure.draft_revision).not_to eq(previous_draft_revision)
         expect { previous_draft_revision.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect(procedure.attestation_template).to eq(previous_attestation_template)
+        expect(procedure.attestation_acceptation_template).to eq(previous_attestation_template)
         expect(procedure.draft_revision.dossier_submitted_message).to eq(previous_dossier_submitted_message)
       end
 
@@ -1524,7 +1524,7 @@ describe Procedure do
         create(:attestation_template, :v2, :draft, procedure: procedure)
       end
 
-      it { expect(subject.attestation_template.version).to eq(1) }
+      it { expect(subject.attestation_acceptation_template.version).to eq(1) }
     end
 
     context "when there is only a v1" do
@@ -1532,7 +1532,7 @@ describe Procedure do
         create(:attestation_template, procedure: procedure)
       end
 
-      it { expect(subject.attestation_template.version).to eq(1) }
+      it { expect(subject.attestation_acceptation_template.version).to eq(1) }
     end
 
     context "when there is only a v2" do
@@ -1540,7 +1540,7 @@ describe Procedure do
         create(:attestation_template, :v2, procedure: procedure)
       end
 
-      it { expect(subject.attestation_template.version).to eq(2) }
+      it { expect(subject.attestation_acceptation_template.version).to eq(2) }
     end
 
     context "when there is a v2 draft" do
@@ -1548,14 +1548,14 @@ describe Procedure do
         create(:attestation_template, :v2, :draft, procedure: procedure)
       end
 
-      it { expect(subject.attestation_template).to be_nil }
+      it { expect(subject.attestation_acceptation_template).to be_nil }
 
       context "and a published" do
         before do
           create(:attestation_template, :v2, :published, procedure: procedure)
         end
 
-        it { expect(subject.attestation_template).to be_published }
+        it { expect(subject.attestation_acceptation_template).to be_published }
       end
     end
   end
