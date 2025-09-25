@@ -5,12 +5,7 @@ describe ContactController, question_type: :controller do
 
   context 'signed in' do
     before do
-      Flipper.enable(:contact_crisp)
       sign_in user
-    end
-
-    after do
-      Flipper.disable(:contact_crisp)
     end
 
     let(:user) { create(:user) }
@@ -65,7 +60,7 @@ describe ContactController, question_type: :controller do
       context "when invisible captcha is ignored" do
         let(:params) { { subject: 'bonjour', text: 'un message', question_type: 'procedure_info' } }
 
-        it 'creates a conversation on HelpScout' do
+        it 'creates a conversation on Crisp' do
           expect { subject }.to \
             change(Commentaire, :count).by(0).and \
             change(ContactForm, :count).by(1)
@@ -94,7 +89,7 @@ describe ContactController, question_type: :controller do
             }
           end
 
-          it 'creates a conversation on HelpScout' do
+          it 'creates a conversation on Crisp' do
             expect { subject }.to \
               change(Commentaire, :count).by(0).and \
               change(ContactForm, :count).by(1)
@@ -180,13 +175,13 @@ describe ContactController, question_type: :controller do
 
       let(:params) { { subject: 'bonjour', email: "me@rspec.net", text: 'un message', question_type: 'procedure_info' } }
 
-      it 'creates a conversation on HelpScout' do
+      it 'creates a conversation on Crisp' do
         expect { subject }.to \
           change(Commentaire, :count).by(0).and \
         change(ContactForm, :count).by(1)
 
         contact_form = ContactForm.last
-        expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+        expect(CrispCreateConversationJob).to have_been_enqueued.with(contact_form)
         expect(contact_form.email).to eq("me@rspec.net")
 
         expect(flash[:notice]).to match('Votre message a été envoyé.')
@@ -196,8 +191,8 @@ describe ContactController, question_type: :controller do
       context "when email is invalid" do
         let(:params) { super().merge(email: "me@rspec") }
 
-        it 'creates a conversation on HelpScout' do
-          expect { subject }.not_to have_enqueued_job(HelpscoutCreateConversationJob)
+        it 'creates a conversation on Crisp' do
+          expect { subject }.not_to have_enqueued_job(CrispCreateConversationJob)
           expect(response.body).to include("Le champ « Votre adresse électronique » est invalide")
           expect(response.body).to include("bonjour")
           expect(response.body).to include("un message")
@@ -217,14 +212,6 @@ describe ContactController, question_type: :controller do
   end
 
   context 'contact admin' do
-    before do
-      Flipper.enable(:contact_crisp)
-    end
-
-    after do
-      Flipper.disable(:contact_crisp)
-    end
-
     context 'index' do
       it 'should have professionnal email field' do
         get :admin
@@ -242,11 +229,11 @@ describe ContactController, question_type: :controller do
       let(:params) { { for_admin: "true", email: "email@pro.fr", subject: 'bonjour', text: 'un message', question_type: 'admin question', phone: '06' } }
 
       describe "when form is filled" do
-        it "creates a conversation on HelpScout" do
+        it "creates a conversation on Crisp" do
           expect { subject }.to change(ContactForm, :count).by(1)
 
           contact_form = ContactForm.last
-          expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+          expect(CrispCreateConversationJob).to have_been_enqueued.with(contact_form)
           expect(contact_form.email).to eq(params[:email])
           expect(contact_form.phone).to eq("06")
           expect(contact_form.tags).to match_array(["admin question", "contact form"])
