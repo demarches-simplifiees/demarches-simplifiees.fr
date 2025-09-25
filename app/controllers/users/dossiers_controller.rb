@@ -258,6 +258,12 @@ module Users
           redirect_to merci_dossier_path(@dossier)
           return
         rescue ActiveRecord::RecordInvalid
+          Sentry.capture_message(
+            "422: Dossier failed to pass en construction",
+            extra: {
+              errors: @dossier.errors.full_messages
+            }
+          )
           # Continue to render brouillon below
         end
       end
