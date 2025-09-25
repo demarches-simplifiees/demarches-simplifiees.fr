@@ -255,11 +255,22 @@ module Users
       submit_dossier_and_compute_errors
 
       if @dossier.errors.blank? && @dossier.can_passer_en_construction?
-        @dossier.passer_en_construction!
-        redirect_to merci_dossier_path(@dossier)
-      else
-        render :brouillon
+        begin
+          @dossier.passer_en_construction!
+          redirect_to merci_dossier_path(@dossier)
+          return
+        rescue ActiveRecord::RecordInvalid
+          Sentry.capture_message(
+            "422: Dossier failed to pass en construction",
+            extra: {
+              errors: @dossier.errors.full_messages
+            }
+          )
+          # Continue to render brouillon below
+        end
       end
+
+      render :brouillon
     end
 
     def extend_conservation
