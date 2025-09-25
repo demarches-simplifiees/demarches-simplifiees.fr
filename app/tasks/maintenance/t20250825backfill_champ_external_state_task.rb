@@ -37,9 +37,9 @@ module Maintenance
 
     def process(champ)
       begin
-        if champ.external_data_fetched?
+        if champ.external_data_fetched? && !champ.fetched?
           champ.external_data_fetched!
-        elsif champ.external_error_present?
+        elsif champ.external_error_present? && !champ.external_error?
           champ.external_data_error!
         end
       rescue => e
