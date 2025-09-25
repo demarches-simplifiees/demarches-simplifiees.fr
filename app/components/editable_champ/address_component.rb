@@ -34,8 +34,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
       minimum_input_length: 2,
-      ariaLabelledbyPrefix: city_aria_labelledby_prefix,
-      labelId: city_label_id
+      ariaLabelledbyPrefix: "#{aria_labelledby_prefix} #{fieldset_legend_id}",
+      labelId: @champ.input_label_id(:commune_name)
     }
   end
 
@@ -43,48 +43,12 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
     APIGeoService.countries.map { [_1[:name], _1[:code]] }
   end
 
-  def not_in_ban_label_id
-    "#{@champ.focusable_input_id(:not_in_ban)}-label"
-  end
-
-  def not_in_ban_aria_labelledby
-    "#{aria_labelledby_prefix} #{not_in_ban_label_id}"
-  end
-
-  def country_label_id
-    "#{@champ.focusable_input_id(:country_code)}-label"
-  end
-
-  def country_aria_labelledby
-    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{country_label_id}"
-  end
-
-  def street_label_id
-    "#{@champ.focusable_input_id(:street_address)}-label"
-  end
-
-  def street_aria_labelledby
-    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{street_label_id}"
-  end
-
-  def city_label_id
-    "#{@champ.focusable_input_id(:city_name)}-label"
-  end
-
   def city_aria_labelledby
     "#{city_aria_labelledby_prefix} #{city_label_id}"
   end
 
-  def city_aria_labelledby_prefix
-    "#{aria_labelledby_prefix} #{fieldset_legend_id}"
-  end
-
-  def postal_code_label_id
-    "#{@champ.focusable_input_id(:postal_code)}-label"
-  end
-
-  def postal_code_aria_labelledby
-    "#{aria_labelledby_prefix} #{fieldset_legend_id} #{postal_code_label_id}"
+  def aria_labelledby(attribute)
+    [aria_labelledby_prefix, attribute == :not_in_ban ? nil : fieldset_legend_id, @champ.input_label_id(attribute)].compact.join(' ')
   end
 
   def fieldset_legend_id
