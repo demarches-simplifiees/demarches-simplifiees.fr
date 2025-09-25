@@ -2,8 +2,8 @@
 
 describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
-  let(:attestation_template) { build(:attestation_template, :v2) }
-  let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+  let(:attestation_acceptation_template) { build(:attestation_template, :v2) }
+  let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_acceptation_template:, libelle: "Ma démarche") }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
 
@@ -63,7 +63,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context 'with label direction' do
-        let(:attestation_template) { build(:attestation_template, :v2, label_direction: "calé à droite") }
+        let(:attestation_acceptation_template) { build(:attestation_template, :v2, label_direction: "calé à droite") }
 
         it do
           is_expected.to include("calé à droite")
@@ -71,7 +71,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context 'with footer' do
-        let(:attestation_template) { build(:attestation_template, :v2, footer: "c'est le pied") }
+        let(:attestation_acceptation_template) { build(:attestation_template, :v2, footer: "c'est le pied") }
 
         it do
           is_expected.to include("c'est le pied")
@@ -79,7 +79,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context 'with additional logo' do
-        let(:attestation_template) { build(:attestation_template, :v2, logo:) }
+        let(:attestation_acceptation_template) { build(:attestation_template, :v2, logo:) }
 
         it do
           is_expected.to include("Ministère des devs")
@@ -88,7 +88,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context 'with signature' do
-        let(:attestation_template) { build(:attestation_template, :v2, signature:) }
+        let(:attestation_acceptation_template) { build(:attestation_template, :v2, signature:) }
 
         it do
           is_expected.to include("black.png")
@@ -99,7 +99,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
     context 'pdf' do
       render_views
       let(:format) { :pdf }
-      let(:attestation_template) { build(:attestation_template, :v2, signature:) }
+      let(:attestation_acceptation_template) { build(:attestation_template, :v2, signature:) }
       let(:dossier) { create(:dossier, :en_construction, procedure:, for_procedure_preview: true) }
 
       before do
@@ -117,7 +117,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
   describe 'GET edit' do
     render_views
-    let(:attestation_template) { nil }
+    let(:attestation_acceptation_template) { nil }
 
     subject do
       get :edit, params: params
@@ -151,44 +151,44 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context 'if an attestation template already exist on v1' do
-        let(:attestation_template) { build(:attestation_template, version: 1) }
+        let(:attestation_acceptation_template) { build(:attestation_template, version: 1) }
 
         it 'build new v2 attestation template' do
           subject
           expect(assigns(:attestation_template).version).to eq(2)
           expect(assigns(:attestation_template)).to be_draft
-          expect(attestation_template.reload).to be_present
+          expect(attestation_acceptation_template.reload).to be_present
         end
 
         context 'on a draft procedure' do
-          let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+          let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_acceptation_template:, libelle: "Ma démarche") }
 
           it 'build v2 as draft' do
             subject
             expect(assigns(:attestation_template).version).to eq(2)
             expect(assigns(:attestation_template)).to be_draft
-            expect(attestation_template.reload).to be_present
+            expect(attestation_acceptation_template.reload).to be_present
           end
         end
       end
 
       context 'attestation template published exist without draft' do
-        let(:attestation_template) { build(:attestation_template, :v2, :published) }
+        let(:attestation_acceptation_template) { build(:attestation_template, :v2, :published) }
 
         it 'mention publication' do
           subject
-          expect(assigns(:attestation_template)).to eq(attestation_template)
+          expect(assigns(:attestation_template)).to eq(attestation_acceptation_template)
           expect(response.body).not_to have_link("Réinitialiser les modifications")
           expect(response.body).not_to have_button("Publier les modifications")
         end
       end
 
       context 'attestation template draft already exist on v2' do
-        let(:attestation_template) { build(:attestation_template, :v2, :draft) }
+        let(:attestation_acceptation_template) { build(:attestation_template, :v2, :draft) }
 
         it 'assigns this draft' do
           subject
-          expect(assigns(:attestation_template)).to eq(attestation_template)
+          expect(assigns(:attestation_template)).to eq(attestation_acceptation_template)
           expect(response.body).not_to have_link("Réinitialiser les modifications")
           expect(response.body).to have_button("Publier")
         end
@@ -198,7 +198,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
           it 'mention publication' do
             subject
-            expect(assigns(:attestation_template)).to eq(attestation_template)
+            expect(assigns(:attestation_template)).to eq(attestation_acceptation_template)
             expect(response.body).to have_link("Réinitialiser les modifications")
             expect(response.body).to have_button("Publier les modifications")
           end
@@ -206,7 +206,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context 'when procedure is draft' do
-        let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+        let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_acceptation_template:, libelle: "Ma démarche") }
 
         it 'built template is already live (published)' do
           subject
@@ -219,7 +219,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   end
 
   describe 'POST create' do
-    let(:attestation_template) { nil }
+    let(:attestation_acceptation_template) { nil }
 
     subject do
       post :create, params: { procedure_id: procedure.id, attestation_template: update_params, attestation_kind: }, format: :turbo_stream
@@ -325,8 +325,8 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect { subject }.to change { procedure.attestation_templates.count }.by(1)
 
         # published remains inchanged
-        expect(attestation_template.reload).to be_published
-        expect(attestation_template.label_logo).to eq("Ministère des devs")
+        expect(attestation_acceptation_template.reload).to be_published
+        expect(attestation_acceptation_template.label_logo).to eq("Ministère des devs")
 
         attestation_template = procedure.attestation_templates.draft.first
 
@@ -368,12 +368,12 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
 
       context "publishing a draft" do
-        let(:attestation_template) { build(:attestation_template, :draft, :v2) }
+        let(:attestation_acceptation_template) { build(:attestation_template, :draft, :v2) }
         let(:update_params) { super().merge(state: :published) }
 
         it "publish and redirect with notice" do
           subject
-          expect(attestation_template.reload).to be_published
+          expect(attestation_acceptation_template.reload).to be_published
           expect(flash.notice).to eq("L’attestation a été publiée.")
         end
       end
@@ -442,7 +442,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(flash.notice).to include("réinitialisées")
         expect(procedure.attestation_templates.count).to eq(3)
         expect(procedure.attestation_acceptation_templates_v2.count).to eq(1)
-        expect(procedure.attestation_templates.first).to eq(attestation_template)
+        expect(procedure.attestation_templates.first).to eq(attestation_acceptation_template)
       end
     end
 
@@ -456,7 +456,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(flash.notice).to include("réinitialisées")
         expect(procedure.attestation_templates.count).to eq(3)
         expect(procedure.attestation_refus_templates_v2.count).to eq(1)
-        expect(procedure.attestation_templates.first).to eq(attestation_template)
+        expect(procedure.attestation_templates.first).to eq(attestation_acceptation_template)
       end
     end
   end

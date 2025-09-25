@@ -208,7 +208,7 @@ module Types
     end
 
     def attestation
-      if object.termine? && object.attestation_template&.activated?
+      if object.termine? && object.attestation_acceptation_template&.activated?
         Loaders::Association.for(object.class, attestation: { pdf_attachment: :blob })
           .load(object)
           .then { |attestation| attestation&.pdf }

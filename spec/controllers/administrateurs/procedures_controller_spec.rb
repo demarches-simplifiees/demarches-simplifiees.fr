@@ -743,7 +743,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         monavis_embed:,
         administrateurs: [admin, administrateur_2],
         instructeurs: [admin.instructeur, instructeur_2],
-        attestation_template: build(:attestation_template),
+        attestation_acceptation_template: build(:attestation_template),
         accuse_lecture: true,
         api_entreprise_token:,
         initiated_mail:,
@@ -860,7 +860,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.instructeurs_self_management_enabled).to be_truthy
           expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1
           expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1
-          expect(Procedure.last.attestation_template).not_to be_nil
+          expect(Procedure.last.attestation_acceptation_template).not_to be_nil
           expect(Procedure.last.zones).not_to be_blank
           expect(Procedure.last.service).not_to be_nil
           expect(Procedure.last.monavis_embed).not_to be_nil
@@ -926,7 +926,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.instructeurs_self_management_enabled).to be_falsey
           expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 0
           expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 0
-          expect(Procedure.last.attestation_template).to be_nil
+          expect(Procedure.last.attestation_acceptation_template).to be_nil
           expect(Procedure.last.zones).to be_blank
           expect(Procedure.last.service).to be_nil
           expect(Procedure.last.monavis_embed).to be_nil

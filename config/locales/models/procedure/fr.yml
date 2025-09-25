@@ -69,7 +69,8 @@ fr:
         closed_mail: L’adresse électronique de notification d’acceptation de dossier
         refused_mail: L’adresse électronique de notification de refus de dossier
         without_continuation_mail: L’adresse électronique de notification de classement sans suite de dossier
-        attestation_template: Le modèle d’attestation
+        attestation_acceptation_template: Le modèle d’attestation d’acceptation
+        attestation_refus_template: Le modèle d’attestation de refus
         draft_revision: Le formulaire
         auto_archive_on: Date limite de dépôt des dossiers
       procedure_export:

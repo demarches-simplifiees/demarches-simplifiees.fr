@@ -74,7 +74,8 @@ module Administrateurs
           draft_revision: {
             revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
           },
-          attestation_template: [],
+          attestation_acceptation_template: [],
+          attestation_refus_template: [],
           initiated_mail: [],
           received_mail: [],
           closed_mail: [],

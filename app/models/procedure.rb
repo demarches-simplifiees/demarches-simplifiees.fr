@@ -270,7 +270,8 @@ class Procedure < ApplicationRecord
   validates_associated :refused_mail, on: :publication
   validates_associated :without_continuation_mail, on: :publication
   validates_associated :re_instructed_mail, on: :publication
-  validates_associated :attestation_template, on: :publication, if: -> { attestation_template&.activated? }
+  validates_associated :attestation_acceptation_template, on: :publication, if: -> { attestation_acceptation_template&.activated? }
+  validates_associated :attestation_refus_template, on: :publication, if: -> { attestation_refus_template&.activated? }
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
@@ -498,9 +499,9 @@ class Procedure < ApplicationRecord
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
       tag_present = closed_mail.body.to_s.include?("--lien attestation--")
-      if attestation_template&.activated? && !tag_present
+      if attestation_acceptation_template&.activated? && !tag_present
         :missing_tag
-      elsif !attestation_template&.activated? && tag_present
+      elsif !attestation_acceptation_template&.activated? && tag_present
         :extraneous_tag
       end
     end

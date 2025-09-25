@@ -101,8 +101,8 @@ en:
           zero: No instructor
           one: "%{count} instructor"
           other: "%{count} instructors"
-        attestation_template: Certificate of acceptance of the file
-        attestation_template_hint: Activated
+        attestation_acceptation_template: Certificate of acceptance of the file
+        attestation_acceptation_template_hint: Activated
         zones: Zones
         service: Service
         instructeurs_self_management:
