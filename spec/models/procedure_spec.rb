@@ -86,6 +86,33 @@ describe Procedure do
     end
   end
 
+  describe 'refused mail template body' do
+    let(:procedure) { create(:procedure, attestation_refus_template: attestation_template) }
+    let(:attestation_template) { nil }
+
+    subject { procedure.refuser_email_template.rich_body.body.to_html }
+
+    context 'for procedures without an attestation' do
+      it { is_expected.not_to include('lien attestation') }
+    end
+
+    context 'for procedures with an attestation' do
+      let(:attestation_template) { build(:attestation_template, activated: activated, kind: 'refus') }
+
+      context 'when the attestation is inactive' do
+        let(:activated) { false }
+
+        it { is_expected.not_to include('lien attestation') }
+      end
+
+      context 'when the attestation is inactive' do
+        let(:activated) { true }
+
+        it { is_expected.to include('lien attestation') }
+      end
+    end
+  end
+
   describe '#closed_mail_template_attestation_inconsistency_state' do
     let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: nil) }
     let(:procedure_with_active_attestation) do
