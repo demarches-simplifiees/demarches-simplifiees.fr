@@ -49,6 +49,8 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.refresh_notifications_instructeur_for_dossiers(groupe_instructeur_ids, instructeur_id, notification_type, old_preference, new_preference)
+    # We use the scope state_not_brouillon rather than visible_by_administration in order to keep notifications up to date
+    # on hidden dossiers, so that there is no need to refresh notifications if the dossier is restored.
     all_dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids).state_not_brouillon
     followed_dossiers = all_dossiers.joins(:follows).where(follows: { instructeur_id: }).distinct
     non_followed_dossiers = all_dossiers.where.not(id: followed_dossiers)
