@@ -379,16 +379,17 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
           # label
           expect(subject).to have_selector("label[id='#{champ.html_id}-label']")
+
           # input
-          subject
           props = JSON.parse(page.first("react-component")['props'])
           expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
           expect(props['labelId']).to eq("#{champ.html_id}-label")
 
           # not in ban checkbox
-          expect(subject).to have_selector("label[id='#{champ.not_in_ban_input_id}-label']")
+          expect(subject).to have_selector("label[id='#{champ.input_label_id(:not_in_ban)}']")
+
           # input of the not in ban checkbox
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.not_in_ban_input_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.input_label_id(:not_in_ban)}']")
         end
 
         context "when the address is not in the BAN" do
@@ -405,24 +406,24 @@ describe EditableChamp::RepetitionComponent, type: :component do
               expect(subject).to have_selector("legend[id='#{champ.html_id}-legend']")
 
               # label of the country select
-              expect(subject).to have_selector("label[id='#{champ.country_input_id}-label']")
+              expect(subject).to have_selector("label[id='#{champ.input_label_id(:country_code)}']")
               # select of the country
-              expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-country-label']")
+              expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:country_code)}']")
 
               # label of the street address
-              expect(subject).to have_selector("label[id='#{champ.street_input_id}-label']")
+              expect(subject).to have_selector("label[id='#{champ.input_label_id(:street_address)}']")
               # input of the street address
-              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-street-label']")
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:street_address)}']")
 
               # label of the city input
-              expect(subject).to have_selector("label[id='#{champ.city_input_id}-label']")
+              expect(subject).to have_selector("label[id='#{champ.input_label_id(:city_name)}']")
               # input of the city
-              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-city-label']")
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:city_name)}']")
 
               # label of the postal code input
-              expect(subject).to have_selector("label[id='#{champ.postal_code_input_id}-label']")
+              expect(subject).to have_selector("label[id='#{champ.input_label_id(:postal_code)}']")
               # input of the postal code
-              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.html_id}-input-postal-code-label']")
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:postal_code)}']")
             end
           end
 
@@ -434,12 +435,12 @@ describe EditableChamp::RepetitionComponent, type: :component do
             end
 
             it do
-              # label of the city input
-              expect(subject).to have_selector("label[id='#{champ.city_input_id}-label']")
-              # input of the city
+              # label of the commune input
+              expect(subject).to have_selector("label[id='#{champ.input_label_id(:commune_name)}']")
+              # input of the commune
               props = JSON.parse(page.first(".not-in-ban-fieldset react-component")['props'])
               expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-legend")
-              expect(props['labelId']).to eq("#{champ.html_id}-input-city-label")
+              expect(props['labelId']).to eq(champ.input_label_id(:commune_name))
             end
           end
         end
