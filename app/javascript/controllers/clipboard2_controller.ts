@@ -83,6 +83,10 @@ export class Clipboard2Controller extends Controller {
     this.#timer = setTimeout(() => {
       this.#copiedSpan.remove();
     }, SUCCESS_MESSAGE_TIMEOUT);
+
+    wrapper.addEventListener('mouseleave', () => {
+      this.#copiedSpan.remove();
+    });
   }
 
   private insertSpan(wrapper: HTMLElement, span: HTMLElement): void {
