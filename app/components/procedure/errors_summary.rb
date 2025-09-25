@@ -42,7 +42,7 @@ class Procedure::ErrorsSummary < ApplicationComponent
     when :draft_types_de_champ_private
       tdc = error.options[:type_de_champ]
       annotations_admin_procedure_path(@procedure, anchor: dom_id(tdc.stable_self, :editor_error))
-    when :attestation_template
+    when :attestation_acceptation_template, :attestation_refus_template
       if error.detail[:value].version == 1
         edit_admin_procedure_attestation_template_path(@procedure)
       else

@@ -261,7 +261,7 @@ module ProcedureCloneConcern
     }
 
     if options[:clone_attestation_template]
-      associations[:attestation_template] = []
+      associations[:attestation_acceptation_template] = []
     end
 
     if options[:clone_zones]

@@ -27,8 +27,8 @@ module Mails
     DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
     def self.default_template_name_for_procedure(procedure)
-      attestation_template = procedure.attestation_template
-      if attestation_template&.activated?
+      attestation_acceptation_template = procedure.attestation_acceptation_template
+      if attestation_acceptation_template&.activated?
         "notification_mailer/default_templates/closed_mail_with_attestation"
       else
         "notification_mailer/default_templates/closed_mail"

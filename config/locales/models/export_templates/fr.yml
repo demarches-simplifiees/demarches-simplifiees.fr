@@ -11,7 +11,7 @@ fr:
         name: Nom du modèle
         dossier_folder: Nom du répertoire
         export_pdf: Export PDF du dossier
-        attestation: Attestation d’acceptation au format PDF
+        attestation: Attestation au format PDF
         attachments: Pièces jointes au dossier
         other_files: Autres fichiers
         commentaires_attachments: Pièces jointes à la messagerie

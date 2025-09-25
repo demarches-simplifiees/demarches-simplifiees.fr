@@ -611,7 +611,7 @@ describe Instructeurs::DossiersController, type: :controller do
       context 'when the attestation template uses the motivation field' do
         let(:emailable) { false }
         let(:template) { create(:attestation_template) }
-        let(:procedure) { create(:procedure, :published, :for_individual, attestation_template: template, instructeurs: [instructeur]) }
+        let(:procedure) { create(:procedure, :published, :for_individual, attestation_acceptation_template: template, instructeurs: [instructeur]) }
 
         subject do
           post :terminer, params: {
