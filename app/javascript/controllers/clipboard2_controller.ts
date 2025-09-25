@@ -71,9 +71,11 @@ export class Clipboard2Controller extends Controller {
       ''
     ).trim();
 
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => this.showCopiedSpan(wrapper));
+    if (document.hasFocus()) {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => this.showCopiedSpan(wrapper));
+    }
   }
 
   private showCopiedSpan(wrapper: HTMLElement): void {
