@@ -22,7 +22,10 @@ if (enabled && key) {
       'e.getModifierState is not a function',
 
       // Piwik/Matomo invasive error
-      "'get' on proxy: property 'javaEnabled' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value"
+      "'get' on proxy: property 'javaEnabled' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value",
+
+      // La gaufre script often triggers an error while loading other dependencies
+      'NetworkError when attempting to fetch resource. (integration.lasuite.numerique.gouv.fr)'
     ]
   });
 
