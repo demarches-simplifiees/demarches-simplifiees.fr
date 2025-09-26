@@ -60,7 +60,7 @@ module Administrateurs
       # cache result to avoid multiple uninterlaced computations
       if @activated_attestation_params.nil?
         @activated_attestation_params = params.require(:attestation_template)
-          .permit(:title, :body, :footer, :activated, :logo, :signature)
+          .permit(:title, :body, :footer, :activated, :logo, :signature, :kind)
       end
 
       @activated_attestation_params

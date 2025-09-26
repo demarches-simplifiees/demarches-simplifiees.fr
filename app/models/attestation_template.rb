@@ -14,6 +14,11 @@ class AttestationTemplate < ApplicationRecord
     published: 'published'
   }
 
+  enum :kind, {
+    acceptation: 'acceptation',
+    refus: 'refus'
+  }
+
   validates :title, tags: true, if: -> { procedure.present? && version == 1 }
   validates :body, tags: true, if: -> { procedure.present? && version == 1 }
   validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
