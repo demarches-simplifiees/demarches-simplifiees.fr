@@ -255,7 +255,7 @@ describe 'Referentiel API:' do
           # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
           page.find('button[title="$.finess (010002699)"]').click
           page.find('button[title="$.ej_rs (CENTRE MEDICAL REGINA)"]').click
-          # VCR.use_cassette('referentiel/datagouv-finess-2') do
+
           click_on('Étape suivante')
           expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
         end
@@ -275,6 +275,11 @@ describe 'Referentiel API:' do
         custom_check('data-0-date_extract_finess')
 
         click_on('Étape suivante')
+        expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
+
+        # choose display usager/instructeur
+        custom_check('data-0-adresse_nom_voie-display_usager')
+        custom_check('data-0-adresse_nom_voie-display_instructeur')
         click_on("Valider")
 
         publish(procedure)
@@ -303,6 +308,19 @@ describe 'Referentiel API:' do
 
           expect(dossier.project_champs.find { _1.stable_id.to_s == prefill_text_stable_id.to_s }.value).to eq("010002699")
           expect(dossier.project_champs.find { _1.stable_id.to_s == prefill_date_stable_id.to_s }.value).to eq("2004-12-31")
+
+          expect(page).to have_content("$.data[0].adresse_nom_voie")
+          expect(page).to have_content("GEORGES GIRERD")
+
+          click_on("Déposer le dossier")
+          wait_until { Dossier.en_construction.count == 1 }
+
+          created_dossier = Dossier.last
+
+          ## check as instructeur
+          visit instructeur_dossier_path(procedure, created_dossier)
+          expect(page).to have_content("$.data[0].adresse_nom_voie")
+          expect(page).to have_content("GEORGES GIRERD")
         end
       end
     end
@@ -490,7 +508,7 @@ describe 'Referentiel API:' do
           # build tiptap template for autocomplete suggestion as `${$.finess} (${$.ej_rs})`
           page.find('button[title="$.finess (010002699)"]').click
           page.find('button[title="$.ej_rs (CENTRE MEDICAL REGINA)"]').click
-          # VCR.use_cassette('referentiel/datagouv-finess-2') do
+
           click_on('Étape suivante')
           expect(page).to have_content("Pré remplissage des champs et/ou affichage des données récupérées")
         end

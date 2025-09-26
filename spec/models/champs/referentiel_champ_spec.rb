@@ -125,7 +125,9 @@ describe Champs::ReferentielChamp, type: :model do
 
   describe 'data=' do
     subject { referentiel_champ.update(data:) }
+
     context 'when exact_match' do
+      let(:referentiel) { create(:api_referentiel, :exact_match) }
       let(:data) { { "ok" => "ko" } }
       it 'supers' do
         expect { subject }.to change { referentiel_champ.reload.data }.to(eq(data))
@@ -133,35 +135,69 @@ describe Champs::ReferentielChamp, type: :model do
     end
 
     context 'when autocomplete' do
-      let(:datasource) { '$.deep.nested' }
+      let(:types) { Referentiels::MappingFormComponent::TYPES }
       let(:referentiel) { create(:api_referentiel, :autocomplete, datasource: datasource) }
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :referentiel,
+            referentiel:,
+            referentiel_mapping:
+          }
+        ]
+      end
 
       let(:message_encryptor_service) { MessageEncryptorService.new }
       let(:data) { message_encryptor_service.encrypt_and_sign(raw_data, purpose: :storage, expires_in: 1.hour) }
 
       context 'when data is Hash' do
-        let(:raw_data) { { "ok" => "ko" } }
+        let(:datasource) { '$.deep.nested' }
+        let(:referentiel_mapping) do
+          {
+            "$.deep.nested[0].string" => { type: types[:string], display_usager: "1" }
+          }
+        end
+        let(:raw_data) { { "ok" => "ko", 'string' => 'value' } }
         it 'decrypts data and rewrap object in <datasource> as payload' do
           expect { subject }
             .to change { referentiel_champ.reload.data }
             .from(nil)
-            .to(referentiel_champ.send(:rewrap_selected_object_in_datasource, raw_data))
+            .to({ "deep" => { "nested" => [{ "ok" => "ko", 'string' => 'value' }] } })
+        end
+        it 'saves value json with expected mapping' do
+          expect { subject }
+            .to change { referentiel_champ.reload.value_json }
+            .from(nil)
+            .to({ '$.deep.nested[0].string' => 'value' })
         end
       end
 
       context 'when data is Array' do
-        let(:raw_data) { [{ "ok" => "ko" }] }
-
+        let(:datasource) { '$.' }
+        let(:raw_data) { [{ "ok" => "ko", 'string' => 'value' }] }
+        let(:referentiel_mapping) do
+          {
+            "$.[0].string" => { type: types[:string], display_usager: "1" }
+          }
+        end
         it 'decrypts data and rewrap object in <datasource> as payload' do
           expect { subject }
             .to change { referentiel_champ.reload.data }
             .from(nil)
-            .to(referentiel_champ.send(:rewrap_selected_object_in_datasource, raw_data))
+            .to([[{ "ok" => "ko", 'string' => 'value' }]])
+        end
+        it 'saves value json with expected mapping' do
+          expect { subject }
+            .to change { referentiel_champ.reload.value_json }
+            .from(nil)
+            .to({ "$.[0].string" => 'value' })
         end
       end
 
       context 'when data is not present' do
         let(:data) { nil }
+        let(:datasource) { '$.deep.nested' }
+        let(:referentiel_mapping) { {} }
         it 'void data' do
           expect { subject }.not_to change { referentiel_champ.reload.data }
         end
