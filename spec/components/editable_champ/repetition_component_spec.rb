@@ -36,7 +36,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         end
 
         it "the label in the rows should contain the row number" do
-          expect(subject).to have_selector("label[id='#{champ.html_id}-label']", text: "Prénom\n1")
+          expect(subject).to have_selector("label[id='#{champ.html_id}-label']", text: "Prénom 1")
         end
       end
 
@@ -81,9 +81,10 @@ describe EditableChamp::RepetitionComponent, type: :component do
       end
 
       context "for type civilite" do
-        let(:children) { [{ type: :civilite }] }
+        let(:children) { [{ type: :civilite, libelle: 'Civilité', mandatory: false }] }
 
         it do
+          expect(subject).to have_selector("legend[id='#{champ.html_id}-label']", text: "Civilité 1")
           expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-female-label']")
           expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-male-label']")
         end

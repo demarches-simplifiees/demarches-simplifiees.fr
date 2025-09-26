@@ -1,6 +1,4 @@
-= @champ.libelle
-- if @row_number
-  = @row_number
+= [@champ.libelle, @row_number].compact.join(" ")
 - if @champ.public?
   - if @champ.mandatory?
     = render EditableChamp::AsteriskMandatoryComponent.new
