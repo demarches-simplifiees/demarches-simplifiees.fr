@@ -59,6 +59,4 @@
   %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
     .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
 
-  - types_de_champ = dossier.revision.types_de_champ_public
-  - if types_de_champ.any? || dossier.procedure.routing_enabled?
-    = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
+  = render DossierTree::SectionComponent.new(children: dossier.public_tree(profile:).children, seen_at: demande_seen_at, profile:)

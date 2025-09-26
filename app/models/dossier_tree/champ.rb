@@ -33,6 +33,7 @@ class DossierTree::Champ
   def blank? = visible? ? value_blank? : true
   def created_at = @data&.created_at
   def updated_at = @data&.updated_at
+  def depose_at = @data&.dossier&.depose_at
   def private? = @type_de_champ.private?
   def public? = !private?
   def stable_id = @type_de_champ.stable_id
