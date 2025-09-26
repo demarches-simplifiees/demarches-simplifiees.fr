@@ -57,6 +57,11 @@ class DossierTree::Champ
   TYPE_PREDICATES = (TypeDeChamp.type_champs.values.reject { _1.in?(NON_CHAMP_TYPES) } + COMBINED_TYPES).map { "#{_1}?".to_sym }
   delegate(*TYPE_PREDICATES, to: :@type_de_champ)
 
+  # FIXME: expose legacy champ for now
+  def ar_champ
+    @data
+  end
+
   private
 
   def formatted_value
@@ -75,6 +80,15 @@ class DossierTree::Champ
   end
 
   def value_blank?
+    if @data&.is_type?(type)
+      case type
+      when 'carte'
+        return @data.geo_areas.blank?
+      when 'piece_justificative', 'titre_identite'
+        return @data.piece_justificative_file.blank?
+      end
+    end
+
     value != false && value.blank?
   end
 end
