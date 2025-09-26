@@ -4,7 +4,7 @@
 
 .fr-container
   .fr-grid-row.fr-grid-row--center
-    - summary = ViewableChamp::HeaderSectionsSummaryComponent.new(dossier: @dossier, is_private: false)
+    - summary = DossierTree::SectionsSummaryComponent.new(tree: @dossier.public_tree(profile: 'expert'))
     = render summary
     %div{ class: class_names("fr-col-12", "fr-col-xl-9" => summary.render?, "fr-col-xl-8" => !summary.render?) }
       = render partial: "shared/dossiers/demande", locals: { dossier: @dossier, demande_seen_at: nil, profile: 'expert' }
