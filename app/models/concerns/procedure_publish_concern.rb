@@ -129,7 +129,7 @@ module ProcedurePublishConcern
 
   def nullify_unused_referentiels
     draft_revision.types_de_champ
-      .reject { _1.drop_down_list? || _1.referentiel? }
+      .reject { _1.drop_down_list? || _1.multiple_drop_down_list? || _1.referentiel? }
       .each do |type_de_champ|
         type_de_champ.update!(referentiel_id: nil)
       end
