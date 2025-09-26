@@ -1,0 +1,45 @@
+<div id="summary" class="fr-col-12 fr-col-xl-3">
+  <nav
+    class="fr-sidemenu sticky fr-hidden fr-unhidden-xl"
+    aria-labelledby="fr-summary-title"
+    role="navigation"
+  >
+    <ul class="fr-sidemenu__list">
+      <% sections.each do |section| %>
+        <% if section.repeater? %>
+          <% section.rows.each.with_index(1) do |row, index| %>
+            <li class="fr-sidemenu__item">
+              <a class="fr-sidemenu__link" href="<%= href(row) %>">
+                +&nbsp;<%= section.libelle -%>&nbsp;<%= index -%>
+              </a>
+            </li>
+            <% row.sections.filter(&:visible?).each do |section| %>
+              <li class="fr-sidemenu__item">
+                <a
+                  class="fr-sidemenu__link fr-ml-2w"
+                  href="<%= href(section) %>"
+                >
+                  <% if section.level == 1 %>
+                    <%= '-'*section.level -%>
+                    &nbsp;
+                  <% end %>
+                  <%= section.libelle -%>
+                </a>
+              </li>
+            <% end %>
+          <% end %>
+        <% else %>
+          <li class="fr-sidemenu__item">
+            <a class="fr-sidemenu__link" href="<%= href(section) %>">
+              <% if section.level == 1 %>
+                <%= '-'*section.level -%>
+                &nbsp;
+              <% end %>
+              <%= section.libelle -%>
+            </a>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </nav>
+</div>

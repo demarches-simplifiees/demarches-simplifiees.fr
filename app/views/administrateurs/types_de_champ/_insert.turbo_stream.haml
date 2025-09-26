@@ -14,7 +14,10 @@
 
 = turbo_stream.replace 'errors-summary', render(Procedure::ErrorsSummary.new(procedure: @procedure, validation_context: @coordinate&.private? ? :types_de_champ_private_editor : :types_de_champ_public_editor))
 
-= turbo_stream.replace 'summary', render(TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: @coordinate&.private?))
+- if @coordinate&.private?
+  = turbo_stream.replace 'summary', render(DossierTree::SectionsSummaryComponent.new(tree: @procedure.draft_private_tree, revision: @procedure.draft_revision))
+- else
+  = turbo_stream.replace 'summary', render(DossierTree::SectionsSummaryComponent.new(tree: @procedure.draft_public_tree, revision: @procedure.draft_revision))
 
 - unless flash.alert
   = turbo_stream.show 'autosave-notice'
