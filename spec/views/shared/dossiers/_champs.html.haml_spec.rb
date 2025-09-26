@@ -17,7 +17,10 @@ describe 'shared/dossiers/champs', type: :view do
     end
   end
 
-  subject { render ViewableChamp::SectionComponent.new(types_de_champ:, dossier:, demande_seen_at:, profile:) }
+  subject do
+    champs = TreeService.new(dossier).tree
+    render Dossiers::ChampsRowsShowComponent.new(champs:, seen_at: demande_seen_at, profile:)
+  end
 
   context "there are some champs" do
     let(:types_de_champ_public) { [{ type: :checkbox }, { type: :header_section }, { type: :explication }, { type: :dossier_link }, { type: :textarea }, { type: :rna }] }
