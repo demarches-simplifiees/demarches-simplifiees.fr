@@ -19,7 +19,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
       let(:champ) { repetition_champ.rows.first.first }
 
       context "for type text" do
-        let(:children) { [{ type: :text, libelle: 'Prénom' }] }
+        let(:children) { [{ type: :text, libelle: 'Prénom', mandatory: false }] }
 
         it do
           # we should match
@@ -36,7 +36,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         end
 
         it "the label in the rows should contain the row number" do
-          expect(subject).to have_selector("label[id='#{text_champ.html_id}-label']", text: "Prénom 1")
+          expect(subject).to have_selector("label[id='#{champ.html_id}-label']", text: "Prénom\n1")
         end
       end
 
@@ -267,7 +267,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it do
           expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-code_departement-label']")
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-epci-label']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-value-label']")
         end
       end
 
@@ -396,6 +396,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
           context "not in France" do
             before do
               champ.country_code = 'US'
+              champ.not_in_ban = 'true'
               champ.save!
             end
 
