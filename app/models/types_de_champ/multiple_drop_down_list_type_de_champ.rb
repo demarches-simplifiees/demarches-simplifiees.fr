@@ -2,11 +2,34 @@
 
 class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_value(champ)
-    selected_options(champ).join(', ')
+    if drop_down_advanced? && champ.respond_to?(:referentiels) && champ.referentiels.present?
+      champ.referentiels_items_user_values.join(', ')
+    else
+      selected_options(champ).join(', ')
+    end
   end
 
   def champ_value_for_tag(champ, path = :value)
     ChampPresentations::MultipleDropDownListPresentation.new(selected_options(champ))
+  end
+
+  def columns(procedure:, displayable: true, prefix: nil)
+    if drop_down_advanced?
+      path = referentiel.present? ? referentiel.headers_with_path.first.second : nil
+      path.present? ? Columns::MultipleDropDownColumn.new(
+        procedure_id: procedure.id,
+        stable_id:,
+        tdc_type: type_champ,
+        label: libelle,
+        type: :enum,
+        jsonpath: "$.referentiels.*.data.row.#{path}",
+        displayable:,
+        options_for_select: referentiel.options_for_path(path),
+        mandatory: mandatory?
+      ) : []
+    else
+      super
+    end
   end
 
   def champ_value_for_export(champ, path = :value)

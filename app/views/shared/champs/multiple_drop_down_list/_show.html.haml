@@ -1,4 +1,16 @@
-- if !champ.blank?
+- if champ.referentiel_items_selected?
+  - if current_user.instructeur? && controller.try(:nav_bar_profile) == :instructeur
+    - champ.referentiels_items_column_values.each_with_index do |referentiel_item_column_values, index|
+      .fr-background-alt--grey.fr-mb-2w.fr-p-2w
+        = "#{champ.libelle} - #{index+1}"
+        - referentiel_item_column_values.each do |(header, value)|
+          = render Dossiers::RowShowComponent.new(label: header) do |c|
+            - c.with_value do
+              %p= value
+  - else
+    %p= champ.to_s
+
+- elsif !champ.blank?
   %ul.copy-btn{ role: "button" }
     - champ.selected_options.each do |item|
       %li= item
