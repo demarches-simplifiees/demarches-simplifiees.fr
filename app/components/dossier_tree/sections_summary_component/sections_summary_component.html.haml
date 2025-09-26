@@ -1,0 +1,20 @@
+#summary.fr-col-12.fr-col-xl-3
+  %nav.fr-sidemenu.sticky.fr-hidden.fr-unhidden-xl{ "aria-labelledby" => "fr-summary-title", role: "navigation" }
+    %ul.fr-sidemenu__list
+      - sections.each do |section|
+        - if section.repeater?
+          - section.rows.each.with_index(1) do |row, index|
+            %li.fr-sidemenu__item
+              %a.fr-sidemenu__link{ href: href(row) }= "+ #{section.libelle} #{index}"
+            - row.sections.filter(&:visible?).each do |section|
+              %li.fr-sidemenu__item
+                - if section.level == 1
+                  %a.fr-sidemenu__link.fr-ml-2w{ href: href(section) }= section.libelle
+                - else
+                  %a.fr-sidemenu__link.fr-ml-2w{ href: href(section) }= "#{'-'*section.level} #{section.libelle}"
+        - else
+          %li.fr-sidemenu__item
+            - if section.level == 1
+              %a.fr-sidemenu__link{ href: href(section) }= section.libelle
+            - else
+              %a.fr-sidemenu__link{ href: href(section) }= "#{'-'*section.level} #{section.libelle}"

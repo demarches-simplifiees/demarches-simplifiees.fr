@@ -11,7 +11,7 @@
 
   = render  NestedForms::FormOwnerComponent.new
   .fr-grid-row
-    = render TypesDeChampEditor::HeaderSectionsSummaryComponent.new(procedure: @procedure, is_private: true)
+    = render DossierTree::SectionsSummaryComponent.new(tree: @procedure.draft_private_tree)
     .fr-col
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: true)
 
