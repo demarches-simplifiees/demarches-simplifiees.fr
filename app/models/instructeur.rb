@@ -206,10 +206,10 @@ class Instructeur < ApplicationRecord
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND procedures.procedure_expires_when_termine_enabled
           AND (
             dossiers.state in ('accepte', 'refuse', 'sans_suite')
-              AND dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now
+              AND dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{Dossier::INTERVAL_BEFORE_EXPIRATION}' < :now
           ) OR (
             dossiers.state in ('en_construction') AND dossiers.hidden_by_expired_at IS NULL
-              AND dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now
+              AND dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{Dossier::INTERVAL_BEFORE_EXPIRATION}' < :now
           )
         ) AS expirant
       FROM dossiers
@@ -229,8 +229,7 @@ class Instructeur < ApplicationRecord
       query,
       instructeur_id: id,
       groupe_instructeur_ids: groupe_instructeur_ids,
-      now: Time.zone.now,
-      expires_in: Dossier::INTERVAL_BEFORE_EXPIRATION
+      now: Time.current
     ])
 
     Dossier.connection.select_all(sanitized_query).first
