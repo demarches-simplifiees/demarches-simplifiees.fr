@@ -36,6 +36,11 @@ module ChampConditionalConcern
       remove_instance_variable :@visible if instance_variable_defined? :@visible
     end
 
+    # FIXME we need this for compatibility with new champs tree
+    def set_visibility(visible)
+      @visible = visible
+    end
+
     private
 
     def champs_for_condition

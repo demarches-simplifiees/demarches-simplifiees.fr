@@ -1,0 +1,8 @@
+<% rows.each.with_index(1) do |row, row_number| %>
+  <div class="fr-background-alt--grey fr-p-2w fr-my-3w fr-ml-2w champ-repetition">
+    <p class="font-weight-bold" id="<%= dom_id(row) %>">
+      <%= repeater.libelle %>&nbsp;<%= row_number %>&nbsp;:
+    </p>
+    <%= render DossierTree::SectionComponent.new(children: row.children, seen_at:, profile:) %>
+  </div>
+<% end %>
