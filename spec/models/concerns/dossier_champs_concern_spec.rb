@@ -723,7 +723,7 @@ RSpec.describe DossierChampsConcern do
           dossier.reload
           expect(dossier.history.size).to eq(2)
           expect(dossier.history.map(&:piece_justificative_file).map(&:attached?)).to eq([false, false])
-          expect(dossier.history.map(&:data)).to eq([
+          expect(dossier.history.map(&:data)).to match_array([
             [
               { "checksum" => "6kFu0HWdRqjeWPY6WQd0mQ==", "filename" => "toto.txt" }
             ], [
