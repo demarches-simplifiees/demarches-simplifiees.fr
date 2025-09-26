@@ -1085,6 +1085,13 @@ class Dossier < ApplicationRecord
     submitted_revision_id.present? && submitted_revision_id != revision_id
   end
 
+  def all_public_coordinates
+    current_coordinates = revision.revision_types_de_champ.filter(&:public?)
+    submitted_coordinates = submitted_revision&.revision_types_de_champ&.filter(&:public?) || []
+
+    (current_coordinates + submitted_coordinates).uniq(&:stable_id)
+  end
+
   private
 
   def build_default_champs
