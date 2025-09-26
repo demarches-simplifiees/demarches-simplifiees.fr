@@ -9,13 +9,14 @@ runs:
       with:
         path: |
           public/assets
-          public/packs-test
-          tmp/cache/webpacker
-        key: asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}-${{ github.ref }}-${{ github.sha }}
+          public/vite-test
+          public/vite
+          tmp/cache/vite
+        key: asset-cache-${{ runner.os }}-${{ hashFiles('package.json', 'patches/**/*.patch', 'app/javascript/**', 'app/assets/**', 'vite.config.ts') }}
         restore-keys: |
-          asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}-${{ github.ref }}-${{ github.sha }}
-          asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}-${{ github.ref }}-
-          asset-cache-${{ runner.os }}-${{ hashFiles('patches/**/*.patch') }}
+          asset-cache-${{ runner.os }}-${{ hashFiles('package.json', 'patches/**/*.patch', 'app/javascript/**', 'app/assets/**') }}
+          asset-cache-${{ runner.os }}-${{ hashFiles('package.json', 'patches/**/*.patch') }}
+          asset-cache-${{ runner.os }}-
 
     - name: Precompile assets
       env:
