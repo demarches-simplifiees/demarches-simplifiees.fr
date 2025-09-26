@@ -60,9 +60,8 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     describe "aria-labelledby" do
+      let(:kwargs) { { aria_labelledby: champ.label_id } }
       it "targets input_id" do
-        subject
-
         expect(subject).to have_selector("input[aria-labelledby='#{champ.label_id}']")
       end
     end
