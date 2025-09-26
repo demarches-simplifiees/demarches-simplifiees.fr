@@ -1,0 +1,40 @@
+<div
+  class="<%= class_names(reset_tag_for_depth => true, "fr-my-2w": !first_level?) %>"
+  data-controller="expand"
+>
+  <% if section? %>
+    <div class="<%= class_names(flex: true, "top-bordered": first_level?) %>">
+      <%= tag.public_send(tag_for_depth, class: section_header_class, id: dom_id(section)) { section.libelle } %>
+
+      <% if first_level? %>
+        <button
+          type="button"
+          aria-controls="<%= section_id %>"
+          aria-expanded="true"
+          href="<%= section_id %>"
+          data-action="click->expand#toggle"
+          class="fr-btn fr-btn--tertiary-no-outline"
+        >
+          <i
+            class="fr-icon-arrow-up-s-line"
+            aria-hidden="true"
+            data-expand-target="icon"
+          ></i>
+          <span class="fr-sr-only"><%= t('.toggle_section', section: section.libelle) %></span>
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div id="<%= section_id %>" data-expand-target="content">
+    <% children.each do |child| %>
+      <% if child.section? %>
+        <%= render DossierTree::SectionComponent.new(children: child.children, section: child, seen_at:, profile:) %>
+      <% elsif child.repeater? %>
+        <%= render DossierTree::RepeaterComponent.new(repeater: child, seen_at:, profile:) %>
+      <% else %>
+        <%= render DossierTree::ChampComponent.new(champ: child, seen_at:, profile:) %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
