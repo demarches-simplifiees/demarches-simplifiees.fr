@@ -62,6 +62,7 @@ export class Clipboard2Controller extends Controller {
 
   private copyContent(wrapper: HTMLElement): void {
     this.#copySpan.remove();
+    this.#copiedSpan.remove();
 
     const textToCopy = (
       wrapper.dataset['toCopy'] ||
@@ -70,9 +71,11 @@ export class Clipboard2Controller extends Controller {
       ''
     ).trim();
 
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => this.showCopiedSpan(wrapper));
+    if (document.hasFocus()) {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => this.showCopiedSpan(wrapper));
+    }
   }
 
   private showCopiedSpan(wrapper: HTMLElement): void {
@@ -82,6 +85,10 @@ export class Clipboard2Controller extends Controller {
     this.#timer = setTimeout(() => {
       this.#copiedSpan.remove();
     }, SUCCESS_MESSAGE_TIMEOUT);
+
+    wrapper.addEventListener('mouseleave', () => {
+      this.#copiedSpan.remove();
+    });
   }
 
   private insertSpan(wrapper: HTMLElement, span: HTMLElement): void {
