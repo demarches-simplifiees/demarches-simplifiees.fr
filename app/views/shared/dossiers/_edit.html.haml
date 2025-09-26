@@ -6,7 +6,7 @@
 .dossier-edit.fr-container.counter-start-header-section
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
   = render NestedForms::FormOwnerComponent.new
-  = form_for dossier_for_editing, url: brouillon_dossier_url(dossier_for_editing), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } do |f|
+  = form_for dossier_for_editing, url: brouillon_dossier_url(dossier_for_editing), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate', data: { controller: 'prevent-submit-on-enter' } } do |f|
 
     = render Dossiers::ErrorsFullMessagesComponent.new(dossier: dossier_for_editing)
     %header.mb-6
