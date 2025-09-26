@@ -34,8 +34,6 @@ require "rack_session_access/capybara"
 Rails.root.glob('spec/support/**/*.rb').each { |f| require f }
 Rails.root.glob('spec/factories/**/*.rb').each { |f| require f }
 
-ActiveSupport::Deprecation.silenced = true
-
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 begin
