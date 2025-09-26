@@ -4,7 +4,7 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, inverse_of: :attestation_template
+  belongs_to :procedure
 
   has_one_attached :logo
   has_one_attached :signature
@@ -23,6 +23,7 @@ class AttestationTemplate < ApplicationRecord
   validates :body, tags: true, if: -> { procedure.present? && version == 1 }
   validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
   validates :footer, length: { maximum: 190 }
+  validates :kind, presence: true
 
   FILE_MAX_SIZE = 1.megabyte
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: FILE_MAX_SIZE }

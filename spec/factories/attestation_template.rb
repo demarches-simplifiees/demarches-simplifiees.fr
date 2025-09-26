@@ -11,7 +11,12 @@ FactoryBot.define do
     official_layout { true }
     label_direction { nil }
     label_logo { nil }
+    kind { 'acceptation' }
     association :procedure
+  end
+
+  trait :refus do
+    kind { 'refus' }
   end
 
   trait :v2 do

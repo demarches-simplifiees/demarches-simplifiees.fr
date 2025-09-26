@@ -37,7 +37,7 @@ namespace :benchmarks do
     procedure = Procedure.find(68139)
     Benchmark.bm do |x|
       x.report("Empty") { TagsSubstitutionConcern::TagsParser.parse('') }
-      x.report("Démarche 68139") { TagsSubstitutionConcern::TagsParser.parse(procedure.attestation_template.body) }
+      x.report("Démarche 68139") { TagsSubstitutionConcern::TagsParser.parse(procedure.attestation_acceptation_template.body) }
     end
   end
 

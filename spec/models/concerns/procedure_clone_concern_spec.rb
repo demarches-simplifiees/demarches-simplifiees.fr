@@ -11,7 +11,7 @@ describe ProcedureCloneConcern, type: :model do
         duree_conservation_etendue_par_ds: true,
         duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         max_duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
-        attestation_template: build(:attestation_template, logo: logo, signature: signature),
+        attestation_acceptation_template: build(:attestation_template, logo: logo, signature: signature),
         types_de_champ_public:,
         types_de_champ_private:,
         api_particulier_token: '123456789012345',
@@ -119,7 +119,7 @@ describe ProcedureCloneConcern, type: :model do
         expect(stc.revisions).to include(subject.draft_revision)
       end
 
-      expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
+      expect(subject.attestation_acceptation_template.title).to eq(procedure.attestation_acceptation_template.title)
 
       expect(subject.cloned_from_library).to be(false)
 

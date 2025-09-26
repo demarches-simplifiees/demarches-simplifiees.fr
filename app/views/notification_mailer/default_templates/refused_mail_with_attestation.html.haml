@@ -1,0 +1,15 @@
+%p
+  Bonjour,
+
+%p
+  Votre dossier n° --numéro du dossier--
+  %strong a été refusé
+  le --date de décision--.
+
+<p>Le motif de refus est le suivant :</p>
+<blockquote>--motivation--</blockquote>
+
+%p
+  Vous pouvez télécharger votre attestation à l'adresse suivante : --lien attestation--
+
+= render partial: "notification_mailer/default_templates/signature"
