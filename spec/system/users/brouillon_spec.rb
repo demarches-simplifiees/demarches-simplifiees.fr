@@ -154,7 +154,7 @@ describe 'The user', js: true do
     expect(page).to have_selector(".repetition .champs-group", count: 1)
 
     # adding an element means we can ddestroy last item
-    click_on 'Ajouter un élément pour'
+    click_on 'Ajouter un élément supplémentaire à'
     expect(page).to have_selector(".repetition .champs-group:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
     expect(page).to have_selector(".repetition .champs-group", count: 2)
     expect(page).to have_selector(".repetition .champs-group:last-child .utils-repetition-required-destroy-button", count: 1, visible: true)
@@ -166,7 +166,7 @@ describe 'The user', js: true do
 
     expect do
       within '.repetition .champs-group:last-child' do
-        click_on 'Supprimer l’élément'
+        click_on 'Supprimer'
       end
       wait_until { page.all(".champs-group").size == 1 }
       # removing a repetition means one child only, thus its button destroy is not visible

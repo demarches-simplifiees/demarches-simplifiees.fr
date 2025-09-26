@@ -18,7 +18,9 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       items: @champ.selected_items,
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
-      is_disabled: @champ.not_ban?)
+      is_disabled: @champ.not_ban?,
+      ariaLabelledbyPrefix: aria_labelledby_prefix,
+      labelId: @champ.label_id)
   end
 
   def commune_react_props
@@ -31,11 +33,25 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       items: @champ.commune_selected_items,
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
-      minimum_input_length: 2
+      minimum_input_length: 2,
+      ariaLabelledbyPrefix: "#{aria_labelledby_prefix} #{fieldset_legend_id}",
+      labelId: @champ.input_label_id(:commune_name)
     }
   end
 
   def pays_options
     APIGeoService.countries.map { [_1[:name], _1[:code]] }
+  end
+
+  def city_aria_labelledby
+    "#{city_aria_labelledby_prefix} #{city_label_id}"
+  end
+
+  def aria_labelledby(attribute)
+    [aria_labelledby_prefix, attribute == :not_in_ban ? nil : fieldset_legend_id, @champ.input_label_id(attribute)].compact.join(' ')
+  end
+
+  def fieldset_legend_id
+    "#{@champ.html_id}-legend"
   end
 end
