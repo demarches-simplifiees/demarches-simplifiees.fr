@@ -25,8 +25,11 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
 
   def labelledby_id(label_id = nil)
     labelledby = []
+    # in repetition, aria_labelledby_prefix is the fieldset legend id
     labelledby << @aria_labelledby_prefix if @aria_labelledby_prefix.present?
+    # in a type de champ with a fieldset (ex: address), we add the fieldset legend id of the type de champ
     labelledby << fieldset_legend_id if dsfr_champ_container == :fieldset
+    # we add the label id of the input
     labelledby << (label_id.presence || @champ.labelledby_id)
 
     labelledby.join(' ')
