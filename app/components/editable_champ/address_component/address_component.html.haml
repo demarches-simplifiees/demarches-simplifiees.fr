@@ -5,7 +5,7 @@
 
 .fr-input-group
   .fr-checkbox-group
-    = @form.check_box :not_in_ban, { id: @champ.focusable_input_id(:not_in_ban), class: "fr-input", checked: @champ.not_ban?, disabled: @champ.international?, 'aria-labelledby': aria_labelledby(:not_in_ban) }, 'true', 'false'
+    = @form.check_box :not_in_ban, { id: @champ.focusable_input_id(:not_in_ban), class: "fr-input", checked: @champ.not_ban?, 'aria-labelledby': aria_labelledby(:not_in_ban) }, 'true', 'false'
     = @form.label :not_in_ban, for: @champ.focusable_input_id(:not_in_ban), class: 'fr-label', id: @champ.input_label_id(:not_in_ban) do
       - t('.not_in_ban')
 
