@@ -1,0 +1,4 @@
+- rows.each.with_index(1) do |row, row_number|
+  .fr-background-alt--grey.fr-p-2w.fr-my-3w.fr-ml-2w.champ-repetition
+    %p.font-weight-bold= "#{repetition.libelle} #{row_number} :"
+    = render Dossiers::ChampsRowsShowComponent.new(champs: row.children, seen_at:, profile:)
