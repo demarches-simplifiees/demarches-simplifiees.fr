@@ -57,6 +57,11 @@ class DossierTree::Champ
   TYPE_PREDICATES = (TypeDeChamp.type_champs.values.reject { _1.in?(NON_CHAMP_TYPES) } + COMBINED_TYPES).map { "#{_1}?".to_sym }
   delegate(*TYPE_PREDICATES, to: :@type_de_champ)
 
+  # FIXME: expose legacy champ for now
+  def projected_champ
+    @data.dossier.project_champ(@type_de_champ, row_id: row&.id)
+  end
+
   private
 
   def formatted_value
