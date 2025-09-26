@@ -9,11 +9,6 @@ runs:
       with:
         bundler-cache: true
 
-    - name: Check YJIT support
-      run: |
-        ruby --yjit -v
-      shell: bash
-
     - name: Setup Bun
       uses: oven-sh/setup-bun@v1
 
