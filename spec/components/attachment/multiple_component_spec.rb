@@ -66,11 +66,8 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
   context 'when the user cannot destroy the attachment' do
     let(:kwargs) { { user_can_destroy: false } }
 
-    it 'hides the Delete button' do
+    it 'hides the Delete button but still renders the filename' do
       expect(subject).to have_no_link(title: "Supprimer le fichier #{attached_file.attachments[0].filename}")
-    end
-
-    it 'still renders the filename' do
       expect(subject).to have_content(attached_file.attachments[0].filename.to_s)
     end
   end

@@ -118,14 +118,10 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
-    it 'display published or closed procedures' do
+    it 'displays published/closed procedures but not draft procedures' do
       subject
       expect(assigns(:procedures).any? { |p| p.id == published_procedure.id }).to be_truthy
       expect(assigns(:procedures).any? { |p| p.id == closed_procedure.id }).to be_truthy
-    end
-
-    it 'doesn’t display draft procedures' do
-      subject
       expect(assigns(:procedures).any? { |p| p.id == draft_procedure.id }).to be_falsey
     end
 
