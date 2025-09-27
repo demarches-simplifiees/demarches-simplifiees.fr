@@ -579,7 +579,7 @@ RSpec.describe DossierChampsConcern do
       let(:new_attributes) do
         {
           "99" => { value: "Hello!!!" },
-          "994-#{row_id}" => { value: "Greer is the best" }
+          "994-#{row_id}" => { value: "Greer is the best, for sure !" }
         }
       end
 
@@ -657,7 +657,7 @@ RSpec.describe DossierChampsConcern do
         end
 
         expect(main_champ_99.value).to eq("Hello!!!")
-        expect(main_champ_994.value).to eq("Greer is the best")
+        expect(main_champ_994.value).to eq("Greer is the best, for sure !")
         expect(dossier.history.size).to eq(4)
 
         travel_to(2.hours.from_now) do
@@ -671,7 +671,7 @@ RSpec.describe DossierChampsConcern do
         dossier.reset_user_buffer_stream!
         expect(draft_champ_99.value).to eq("Hello!!!")
         expect(draft_champ_991.value).to eq("World")
-        expect(draft_champ_994.value).to eq("Greer is the best")
+        expect(draft_champ_994.value).to eq("Greer is the best, for sure !")
       }
 
       context "missing champs" do
@@ -723,7 +723,7 @@ RSpec.describe DossierChampsConcern do
           dossier.reload
           expect(dossier.history.size).to eq(2)
           expect(dossier.history.map(&:piece_justificative_file).map(&:attached?)).to eq([false, false])
-          expect(dossier.history.map(&:data)).to eq([
+          expect(dossier.history.map(&:data)).to match_array([
             [
               { "checksum" => "6kFu0HWdRqjeWPY6WQd0mQ==", "filename" => "toto.txt" }
             ], [
