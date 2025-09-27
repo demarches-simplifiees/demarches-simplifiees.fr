@@ -203,7 +203,7 @@ describe API::V2::GraphqlController do
           "#{type_champ.gsub('regions', 'region').gsub('departements', 'departement').gsub('communes', 'commune').camelcase}ChampDescriptor"
         end
 
-        it "returns the demarche" do
+        it "returns the demarche", :slow do
           expect(gql_errors).to eq(nil)
           expect(gql_data).to include(demarche: {
             id: procedure.to_typed_id,
@@ -485,7 +485,7 @@ describe API::V2::GraphqlController do
           }"
         end
 
-        it "should be returned" do
+        it "should be returned", :slow do
           expect(gql_errors).to eq(nil)
           expect(gql_data[:dossier]).to include(
             id: dossier.to_typed_id,

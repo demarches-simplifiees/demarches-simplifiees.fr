@@ -1,0 +1,14 @@
+name: 'Setup Bun and Node modules'
+description: 'instal Bun and Node modules'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+
+    - name: Install Node modules
+      run: |
+        bun --version
+        bun install
+      shell: bash

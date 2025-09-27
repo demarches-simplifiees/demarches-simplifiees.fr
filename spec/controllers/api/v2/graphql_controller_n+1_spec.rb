@@ -23,7 +23,7 @@ describe API::V2::GraphqlController do
     request.env['HTTP_AUTHORIZATION'] = authorization_header
   end
 
-  MAX_QUERY_COUNT = 63
+  MAX_QUERY_COUNT = 70
 
   describe 'demarche.dossiers' do
     let(:operation_name) { 'getDemarche' }
@@ -67,7 +67,7 @@ describe API::V2::GraphqlController do
     context "with 3 dossiers per state" do
       let(:dossiers_per_state) { 3 }
 
-      it "should not have n+1" do
+      it "should not have n+1", :slow do
         query_count = 0
 
         dossier

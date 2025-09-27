@@ -29,6 +29,9 @@ jobs:
       - name: Setup the app code and dependancies
         uses: ./.github/actions/ci-setup-rails
 
+      - name: Setup bun and node modules
+        uses: ./.github/actions/ci-setup-bun-node
+
       - name: Run linters
         run: |
           bundle exec rake lint
@@ -41,18 +44,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-
-      - name: Install Node modules
-        run: |
-          bun --version
-          bun install
-        shell: bash
+      - name: Setup bun and node modules
+        uses: ./.github/actions/ci-setup-bun-node
 
       - name: Run tests
-        run: |
-          bun run test
+        run: bun run test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -84,14 +80,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependancies
-        # - fonts pickable by ImageMagick
-        # - rust for YJIT support
-        # - poppler-utils for pdf previews
-        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc poppler-utils
-
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
+
+      - name: Download or pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
 
       - name: Setup split tests
         uses: ./.github/actions/ci-setup-split-tests
@@ -102,13 +95,55 @@ jobs:
         run: |
           SPEC_FILES=$(./split_tests -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=${{ strategy.job-index }} -split-total=${{ strategy.job-total }} -junit -junit-path=tmp/*.junit.xml)
           echo "Running tests for bin/rspec $SPEC_FILES"
-          bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+          bin/rspec $SPEC_FILES --tag ~slow --tag ~external_deps --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
       - name: Upload test results for this instance
         uses: actions/upload-artifact@v4
         with:
           name: rspec-results-${{ github.job }}-${{ strategy.job-index }}
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  unit_tests_slow_or_deps:
+    name: (slow, dep) unit tests
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    env:
+      RUBY_YJIT_ENABLE: "1"
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_USER: tps_test
+          POSTGRES_DB: tps_test
+          POSTGRES_PASSWORD: tps_test
+        ports: ["5432:5432"]
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup the app runtime and dependencies
+        uses: ./.github/actions/ci-setup-rails
+
+      - name: Download or pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
+
+      - name: Install build dependancies
+        # - fonts pickable by ImageMagick
+        # - rust for YJIT support
+        # - poppler-utils for pdf previews
+        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc poppler-utils
+
+      - name: Run tests
+        run: |
+          bin/rspec --tag slow --tag external_deps --format progress --format RspecJunitFormatter
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -136,19 +171,21 @@ jobs:
 
     strategy:
       matrix:
-        instances: [0, 1]
+        instances: [0, 1, 2, 3]
 
     steps:
       - uses: actions/checkout@v4
 
-
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
+
+      - name: Setup bun and node modules
+        uses: ./.github/actions/ci-setup-bun-node
 
       - name: Setup playwright
         run: bun playwright install chromium
 
-      - name: Pre-compile assets
+      - name: Download or pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
       - name: Setup split tests

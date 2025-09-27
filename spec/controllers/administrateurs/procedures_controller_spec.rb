@@ -855,7 +855,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           }
         end
 
-        it 'clones everything' do
+        it 'clones everything', :slow do
           expect(Procedure.last.notice.attached?).to be_truthy
           expect(Procedure.last.deliberation.attached?).to be_truthy
           expect(Procedure.last.logo.attached?).to be_truthy

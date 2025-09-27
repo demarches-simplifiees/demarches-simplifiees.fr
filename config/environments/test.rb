@@ -58,6 +58,15 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
+  # https://evilmartians.com/chronicles/the-whop-chop-how-we-cut-a-rails-test-suite-and-ci-time-in-half
+  if ENV["CI"].present?
+    config.active_record.verbose_query_logs = false
+    config.active_record.query_log_tags_enabled = false
+    config.log_level = :fatal
+
+    config.assets.compile = false
+  end
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
