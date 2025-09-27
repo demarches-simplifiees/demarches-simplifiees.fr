@@ -83,6 +83,9 @@ jobs:
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
+      - name: Download or pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
+
       - name: Setup split tests
         uses: ./.github/actions/ci-setup-split-tests
         with:
@@ -128,6 +131,9 @@ jobs:
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
+
+      - name: Download or pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
 
       - name: Install build dependancies
         # - fonts pickable by ImageMagick
@@ -179,7 +185,7 @@ jobs:
       - name: Setup playwright
         run: bun playwright install chromium
 
-      - name: Pre-compile assets
+      - name: Download or pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
       - name: Setup split tests
