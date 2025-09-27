@@ -19,6 +19,10 @@ runs:
           asset-cache-${{ runner.os }}-${{ hashFiles('package.json', 'patches/**/*.patch') }}
           asset-cache-${{ runner.os }}-
 
+    - name: Setup bun and node modules
+      uses: ./.github/actions/ci-setup-bun-node
+      if: steps.cache.outputs.cache-hit != 'true'
+
     - name: Precompile assets
       env:
         RAILS_ENV: test
