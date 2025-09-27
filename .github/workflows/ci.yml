@@ -29,6 +29,9 @@ jobs:
       - name: Setup the app code and dependancies
         uses: ./.github/actions/ci-setup-rails
 
+      - name: Setup bun and node modules
+        uses: ./.github/actions/ci-setup-bun-node
+
       - name: Run linters
         run: |
           bundle exec rake lint
@@ -41,18 +44,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-
-      - name: Install Node modules
-        run: |
-          bun --version
-          bun install
-        shell: bash
+      - name: Setup bun and node modules
+        uses: ./.github/actions/ci-setup-bun-node
 
       - name: Run tests
-        run: |
-          bun run test
+        run: bun run test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -176,6 +172,9 @@ jobs:
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
+
+      - name: Setup bun and node modules
+        uses: ./.github/actions/ci-setup-bun-node
 
       - name: Setup playwright
         run: bun playwright install chromium
