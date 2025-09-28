@@ -15,10 +15,12 @@ describe Instructeur, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to have_many(:archives) }
-    it { is_expected.to have_many(:exports) }
-    it { is_expected.to have_and_belong_to_many(:administrateurs) }
-    it { is_expected.to have_many(:batch_operations) }
+    it do
+      is_expected.to have_many(:archives)
+      is_expected.to have_many(:exports)
+      is_expected.to have_and_belong_to_many(:administrateurs)
+      is_expected.to have_many(:batch_operations)
+    end
   end
 
   describe 'follow' do
@@ -109,8 +111,10 @@ describe Instructeur, type: :model do
         already_followed_dossier.reload
       end
 
-      it { expect(instructeur.follow?(already_followed_dossier)).to be false }
-      it { expect(instructeur.previously_followed_dossiers).to include(already_followed_dossier) }
+      it do
+        expect(instructeur.follow?(already_followed_dossier)).to be false
+        expect(instructeur.previously_followed_dossiers).to include(already_followed_dossier)
+      end
     end
 
     context "when the instructeur has notifications on the dossier" do
@@ -234,15 +238,19 @@ describe Instructeur, type: :model do
       let(:procedure_id) { procedure.id }
       let!(:pp) { ProcedurePresentation.create(assign_to: procedure_assign) }
 
-      it { expect(procedure_presentation).to eq(pp) }
-      it { expect(errors).to be_nil }
+      it do
+        expect(procedure_presentation).to eq(pp)
+        expect(errors).to be_nil
+      end
     end
 
     context 'with default presentation' do
       let(:procedure_id) { procedure_2.id }
 
-      it { expect(procedure_presentation).to be_persisted }
-      it { expect(errors).to be_nil }
+      it do
+        expect(procedure_presentation).to be_persisted
+        expect(errors).to be_nil
+      end
     end
   end
 
@@ -336,8 +344,10 @@ describe Instructeur, type: :model do
         dossier.process_declarative!
       end
 
-      it { expect(procedure_to_assign.declarative_with_state).to eq("en_instruction") }
-      it { expect(dossier.state).to eq("en_instruction") }
+      it do
+        expect(procedure_to_assign.declarative_with_state).to eq("en_instruction")
+        expect(dossier.state).to eq("en_instruction")
+      end
       it do
         expect(instructeur.email_notification_data).to eq([
           {
@@ -360,8 +370,10 @@ describe Instructeur, type: :model do
         dossier.process_declarative!
       end
 
-      it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
-      it { expect(dossier.state).to eq("accepte") }
+      it do
+        expect(procedure_to_assign.declarative_with_state).to eq("accepte")
+        expect(dossier.state).to eq("accepte")
+      end
 
       it do
         expect(instructeur.email_notification_data).to eq([])
@@ -377,8 +389,10 @@ describe Instructeur, type: :model do
         dossier.traitements.last.update(processed_at: Time.zone.yesterday.beginning_of_day)
       end
 
-      it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
-      it { expect(dossier.state).to eq("accepte") }
+      it do
+        expect(procedure_to_assign.declarative_with_state).to eq("accepte")
+        expect(dossier.state).to eq("accepte")
+      end
 
       it do
         expect(instructeur.email_notification_data).to eq([
@@ -461,34 +475,40 @@ describe Instructeur, type: :model do
       end
 
       context "without any dossier" do
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['traites']).to eq(0) }
-        it { expect(subject['tous']).to eq(0) }
-        it { expect(subject['archives']).to eq(0) }
-        it { expect(subject['expirant']).to eq(0) }
+        it do
+          expect(subject['a_suivre']).to eq(0)
+          expect(subject['suivis']).to eq(0)
+          expect(subject['traites']).to eq(0)
+          expect(subject['tous']).to eq(0)
+          expect(subject['archives']).to eq(0)
+          expect(subject['expirant']).to eq(0)
+        end
       end
 
       context 'with a new brouillon dossier' do
         let!(:brouillon_dossier) { create(:dossier, procedure: procedure) }
 
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['traites']).to eq(0) }
-        it { expect(subject['tous']).to eq(0) }
-        it { expect(subject['archives']).to eq(0) }
-        it { expect(subject['expirant']).to eq(0) }
+        it do
+          expect(subject['a_suivre']).to eq(0)
+          expect(subject['suivis']).to eq(0)
+          expect(subject['traites']).to eq(0)
+          expect(subject['tous']).to eq(0)
+          expect(subject['archives']).to eq(0)
+          expect(subject['expirant']).to eq(0)
+        end
       end
 
       context 'with a new dossier without follower' do
         let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
-        it { expect(subject['a_suivre']).to eq(1) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['traites']).to eq(0) }
-        it { expect(subject['tous']).to eq(1) }
-        it { expect(subject['archives']).to eq(0) }
-        it { expect(subject['expirant']).to eq(0) }
+        it do
+          expect(subject['a_suivre']).to eq(1)
+          expect(subject['suivis']).to eq(0)
+          expect(subject['traites']).to eq(0)
+          expect(subject['tous']).to eq(1)
+          expect(subject['archives']).to eq(0)
+          expect(subject['expirant']).to eq(0)
+        end
 
         context 'and dossiers without follower on each of the others groups' do
           let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
@@ -496,8 +516,10 @@ describe Instructeur, type: :model do
 
           before { subject }
 
-          it { expect(subject['a_suivre']).to eq(2) }
-          it { expect(subject['tous']).to eq(2) }
+          it do
+            expect(subject['a_suivre']).to eq(2)
+            expect(subject['tous']).to eq(2)
+          end
         end
       end
 
@@ -508,24 +530,28 @@ describe Instructeur, type: :model do
           instructeur_2.followed_dossiers << new_followed_dossier
         end
 
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(1) }
-        it { expect(subject['traites']).to eq(0) }
-        it { expect(subject['tous']).to eq(1) }
-        it { expect(subject['archives']).to eq(0) }
-        it { expect(subject['expirant']).to eq(0) }
+        it do
+          expect(subject['a_suivre']).to eq(0)
+          expect(subject['suivis']).to eq(1)
+          expect(subject['traites']).to eq(0)
+          expect(subject['tous']).to eq(1)
+          expect(subject['archives']).to eq(0)
+          expect(subject['expirant']).to eq(0)
+        end
 
         context 'and another one follows the same dossier' do
           before do
             instructeur_3.followed_dossiers << new_followed_dossier
           end
 
-          it { expect(subject['a_suivre']).to eq(0) }
-          it { expect(subject['suivis']).to eq(1) }
-          it { expect(subject['traites']).to eq(0) }
-          it { expect(subject['tous']).to eq(1) }
-          it { expect(subject['archives']).to eq(0) }
-          it { expect(subject['expirant']).to eq(0) }
+          it do
+            expect(subject['a_suivre']).to eq(0)
+            expect(subject['suivis']).to eq(1)
+            expect(subject['traites']).to eq(0)
+            expect(subject['tous']).to eq(1)
+            expect(subject['archives']).to eq(0)
+            expect(subject['expirant']).to eq(0)
+          end
         end
 
         context 'and dossier with a follower on each of the others groups' do
@@ -537,8 +563,10 @@ describe Instructeur, type: :model do
           end
 
           # followed dossiers on another groupe should not be displayed
-          it { expect(subject['suivis']).to eq(2) }
-          it { expect(subject['tous']).to eq(2) }
+          it do
+            expect(subject['suivis']).to eq(2)
+            expect(subject['tous']).to eq(2)
+          end
         end
 
         context 'and dossier with a follower is unfollowed' do
@@ -546,22 +574,26 @@ describe Instructeur, type: :model do
             instructeur_2.unfollow(new_followed_dossier)
           end
 
-          it { expect(subject['a_suivre']).to eq(1) }
-          it { expect(subject['suivis']).to eq(0) }
-          it { expect(subject['tous']).to eq(1) }
-          it { expect(subject['expirant']).to eq(0) }
+          it do
+            expect(subject['a_suivre']).to eq(1)
+            expect(subject['suivis']).to eq(0)
+            expect(subject['tous']).to eq(1)
+            expect(subject['expirant']).to eq(0)
+          end
         end
       end
 
       context 'with a termine dossier' do
         let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
 
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['traites']).to eq(1) }
-        it { expect(subject['tous']).to eq(1) }
-        it { expect(subject['archives']).to eq(0) }
-        it { expect(subject['expirant']).to eq(0) }
+        it do
+          expect(subject['a_suivre']).to eq(0)
+          expect(subject['suivis']).to eq(0)
+          expect(subject['traites']).to eq(1)
+          expect(subject['tous']).to eq(1)
+          expect(subject['archives']).to eq(0)
+          expect(subject['expirant']).to eq(0)
+        end
 
         context 'and terminer dossiers on each of the others groups' do
           let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
@@ -569,12 +601,14 @@ describe Instructeur, type: :model do
 
           before { subject }
 
-          it { expect(subject['a_suivre']).to eq(0) }
-          it { expect(subject['suivis']).to eq(0) }
-          it { expect(subject['traites']).to eq(2) }
-          it { expect(subject['tous']).to eq(2) }
-          it { expect(subject['archives']).to eq(0) }
-          it { expect(subject['expirant']).to eq(0) }
+          it do
+            expect(subject['a_suivre']).to eq(0)
+            expect(subject['suivis']).to eq(0)
+            expect(subject['traites']).to eq(2)
+            expect(subject['tous']).to eq(2)
+            expect(subject['archives']).to eq(0)
+            expect(subject['expirant']).to eq(0)
+          end
         end
       end
 

@@ -24,9 +24,11 @@ describe 'users/procedure_footer', type: :view do
   context "quand le dossier n'a pas de service associé" do
     let(:service) { nil }
 
-    it { is_expected.to have_selector("footer") }
-    it { is_expected.to have_link("Accessibilité") }
-    it { is_expected.not_to have_text('téléphone') }
+    it do
+      is_expected.to have_selector("footer")
+      is_expected.to have_link("Accessibilité")
+      is_expected.not_to have_text('téléphone')
+    end
   end
 
   describe '#cadre_juridique' do

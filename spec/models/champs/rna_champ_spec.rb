@@ -15,12 +15,14 @@ describe Champs::RNAChamp do
   end
 
   describe '#valid?' do
-    it { expect(with_value(nil, nil).validate(:champs_public_value)).to be_truthy }
-    it { expect(with_value("2736251627", nil).validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("A172736283", nil).validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("W1827362718", nil).validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("W182736273", nil).validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("W182736273", { "api" => "response" }).validate(:champs_public_value)).to be_truthy }
+    it do
+      expect(with_value(nil, nil).validate(:champs_public_value)).to be_truthy
+      expect(with_value("2736251627", nil).validate(:champs_public_value)).to be_falsey
+      expect(with_value("A172736283", nil).validate(:champs_public_value)).to be_falsey
+      expect(with_value("W1827362718", nil).validate(:champs_public_value)).to be_falsey
+      expect(with_value("W182736273", nil).validate(:champs_public_value)).to be_falsey
+      expect(with_value("W182736273", { "api" => "response" }).validate(:champs_public_value)).to be_truthy
+    end
 
     it 'when invalid format, it contains only error message for invalid format' do
       champ = with_value("W1827362", nil)

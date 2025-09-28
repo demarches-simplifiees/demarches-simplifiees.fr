@@ -317,25 +317,31 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       context 'when instructeurs_self_management? is false' do
         let(:instructeurs_self_management_enabled) { false }
-        it { expect(response.body).not_to have_link(href: admin_procedure_groupe_instructeurs_path(procedure)) }
-        it { expect(response.body).not_to have_link(href: instructeur_groupes_path(procedure)) }
-        it { expect(response.body).not_to have_link(href: instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur)) }
+        it do
+          expect(response.body).not_to have_link(href: admin_procedure_groupe_instructeurs_path(procedure))
+          expect(response.body).not_to have_link(href: instructeur_groupes_path(procedure))
+          expect(response.body).not_to have_link(href: instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur))
+        end
       end
 
       context 'when instructeurs_self_management? is true' do
         let(:instructeurs_self_management_enabled) { true }
-        it { expect(response.body).not_to have_link(href: admin_procedure_groupe_instructeurs_path(procedure)) }
-        it { expect(response.body).to have_link(href: instructeur_groupes_path(procedure)) }
-        it { expect(response.body).not_to have_link(href: instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur)) }
+        it do
+          expect(response.body).not_to have_link(href: admin_procedure_groupe_instructeurs_path(procedure))
+          expect(response.body).to have_link(href: instructeur_groupes_path(procedure))
+          expect(response.body).not_to have_link(href: instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur))
+        end
       end
 
       context 'when instructeurs_self_management? is false but as owner of the procedure' do
         let(:instructeurs_self_management_enabled) { false }
         let(:administrateur) { create(:administrateur, user: instructeur.user) }
         let(:procedure) { create(:procedure, :expirable, instructeurs_self_management_enabled:, administrateurs: [administrateur], instructeurs: [instructeur]) }
-        it { expect(response.body).to have_link(href: admin_procedure_groupe_instructeurs_path(procedure)) }
-        it { expect(response.body).not_to have_link(href: instructeur_groupes_path(procedure)) }
-        it { expect(response.body).not_to have_link(href: instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur)) }
+        it do
+          expect(response.body).to have_link(href: admin_procedure_groupe_instructeurs_path(procedure))
+          expect(response.body).not_to have_link(href: instructeur_groupes_path(procedure))
+          expect(response.body).not_to have_link(href: instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur))
+        end
       end
     end
 
@@ -356,8 +362,10 @@ describe Instructeurs::ProceduresController, type: :controller do
       context "without any dossier" do
         before { subject }
 
-        it { expect(response).to have_http_status(:ok) }
-        it { expect(assigns(:procedure)).to eq(procedure) }
+        it do
+          expect(response).to have_http_status(:ok)
+          expect(assigns(:procedure)).to eq(procedure)
+        end
       end
 
       context 'with a new dossier without follower' do
@@ -525,43 +533,55 @@ describe Instructeurs::ProceduresController, type: :controller do
         context 'when statut is empty' do
           let(:statut) { nil }
 
-          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier].map(&:id)) }
-          it { expect(assigns(:statut)).to eq('a-suivre') }
+          it do
+            expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier].map(&:id))
+            expect(assigns(:statut)).to eq('a-suivre')
+          end
         end
 
         context 'when statut is a-suivre' do
           let(:statut) { 'a-suivre' }
 
-          it { expect(assigns(:statut)).to eq('a-suivre') }
-          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier].map(&:id)) }
+          it do
+            expect(assigns(:statut)).to eq('a-suivre')
+            expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier].map(&:id))
+          end
         end
 
         context 'when statut is suivis' do
           let(:statut) { 'suivis' }
 
-          it { expect(assigns(:statut)).to eq('suivis') }
-          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_followed_dossier].map(&:id)) }
+          it do
+            expect(assigns(:statut)).to eq('suivis')
+            expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_followed_dossier].map(&:id))
+          end
         end
 
         context 'when statut is traites' do
           let(:statut) { 'traites' }
 
-          it { expect(assigns(:statut)).to eq('traites') }
-          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier].map(&:id)) }
+          it do
+            expect(assigns(:statut)).to eq('traites')
+            expect(assigns(:filtered_sorted_paginated_ids)).to match_array([termine_dossier].map(&:id))
+          end
         end
 
         context 'when statut is tous' do
           let(:statut) { 'tous' }
 
-          it { expect(assigns(:statut)).to eq('tous') }
-          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier, new_followed_dossier, termine_dossier].map(&:id)) }
+          it do
+            expect(assigns(:statut)).to eq('tous')
+            expect(assigns(:filtered_sorted_paginated_ids)).to match_array([a_suivre_dossier, new_followed_dossier, termine_dossier].map(&:id))
+          end
         end
 
         context 'when statut is archives' do
           let(:statut) { 'archives' }
 
-          it { expect(assigns(:statut)).to eq('archives') }
-          it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier].map(&:id)) }
+          it do
+            expect(assigns(:statut)).to eq('archives')
+            expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier].map(&:id))
+          end
         end
       end
 
@@ -630,8 +650,10 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:last_export)).to eq(export) }
-          it { expect(response.body).to include("Votre dernier export est en cours de création") }
+          it do
+            expect(assigns(:last_export)).to eq(export)
+            expect(response.body).to include("Votre dernier export est en cours de création")
+          end
 
           context 'when export is generated but file not yet attached' do
             let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2]) }
@@ -648,8 +670,10 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:last_export)).to eq(export) }
-          it { expect(response.body).to include("Votre dernier export au format csv est prêt") }
+          it do
+            expect(assigns(:last_export)).to eq(export)
+            expect(response.body).to include("Votre dernier export au format csv est prêt")
+          end
         end
 
         context 'with failed export ' do
@@ -660,8 +684,10 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:last_export)).to eq(export) }
-          it { expect(response.body).to include("Votre dernier export au format csv n’a pas fonctionné") }
+          it do
+            expect(assigns(:last_export)).to eq(export)
+            expect(response.body).to include("Votre dernier export au format csv n’a pas fonctionné")
+          end
         end
 
         context 'with export more than hour ago' do

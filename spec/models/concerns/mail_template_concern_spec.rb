@@ -77,8 +77,10 @@ describe MailTemplateConcern do
 
       describe "in closed mail without justificatif" do
         let(:mail) { create(:closed_mail, procedure: procedure) }
-        it { is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>") }
-        it { is_expected.to_not include("Télécharger le justificatif") }
+        it do
+          is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>")
+          is_expected.to_not include("Télécharger le justificatif")
+        end
       end
 
       describe "in closed mail with justificatif" do
@@ -87,9 +89,11 @@ describe MailTemplateConcern do
         end
         let(:mail) { create(:closed_mail, procedure: procedure) }
 
-        it { expect(dossier.justificatif_motivation).to be_attached }
-        it { is_expected.to include("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>") }
-        it { is_expected.to_not include("Télécharger le justificatif") }
+        it do
+          expect(dossier.justificatif_motivation).to be_attached
+          is_expected.to include("<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}/attestation\">http://test.host/dossiers/#{dossier.id}/attestation</a>")
+          is_expected.to_not include("Télécharger le justificatif")
+        end
       end
 
       describe "in refuse mail" do
@@ -122,8 +126,10 @@ describe MailTemplateConcern do
         before do
           dossier.justificatif_motivation.attach(justificatif)
         end
-        it { expect(dossier.justificatif_motivation).to be_attached }
-        it { is_expected.to include("Télécharger le document justificatif") }
+        it do
+          expect(dossier.justificatif_motivation).to be_attached
+          is_expected.to include("Télécharger le document justificatif")
+        end
       end
     end
 

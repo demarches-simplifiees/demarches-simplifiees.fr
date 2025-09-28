@@ -12,8 +12,10 @@ describe Logic::Constant do
   end
 
   describe '#==' do
-    it { expect(empty).to eq(empty) }
-    it { expect(empty).not_to eq(constant(true)) }
+    it do
+      expect(empty).to eq(empty)
+      expect(empty).not_to eq(constant(true))
+    end
   end
 
   describe '#to_s' do

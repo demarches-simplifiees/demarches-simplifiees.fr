@@ -7,8 +7,10 @@ RSpec.describe AdministrateurMailer, type: :mailer do
   describe '.notify_procedure_expires_when_termine_forced' do
     subject { described_class.notify_procedure_expires_when_termine_forced(admin_email, procedure) }
 
-    it { expect(subject.to).to eq([admin_email]) }
-    it { expect(subject.subject).to include("La suppression automatique des dossiers a été activée sur la démarche") }
+    it do
+      expect(subject.to).to eq([admin_email])
+      expect(subject.subject).to include("La suppression automatique des dossiers a été activée sur la démarche")
+    end
 
     context 'when perform_later is called' do
       let(:custom_queue) { 'default' }
@@ -46,9 +48,11 @@ end
   describe '.notify_service_without_siret' do
     subject { described_class.notify_service_without_siret(admin_email) }
 
-    it { expect(subject.to).to eq([admin_email]) }
-    it { expect(subject.subject).to eq("Siret manquant sur un de vos services") }
-    it { expect(subject.body).to include("un de vos services n'a pas son siret renseigné") }
+    it do
+      expect(subject.to).to eq([admin_email])
+      expect(subject.subject).to eq("Siret manquant sur un de vos services")
+      expect(subject.body).to include("un de vos services n'a pas son siret renseigné")
+    end
 
     context 'when perform_later is called' do
       let(:custom_queue) { 'default' }

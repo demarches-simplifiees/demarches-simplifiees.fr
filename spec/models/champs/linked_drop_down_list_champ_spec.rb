@@ -18,8 +18,10 @@ describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
     let(:value) { '["primary", "secondary"]' }
 
-    it { expect(champ.primary_value).to eq('primary') }
-    it { expect(champ.secondary_value).to eq('secondary') }
+    it do
+      expect(champ.primary_value).to eq('primary')
+      expect(champ.secondary_value).to eq('secondary')
+    end
   end
 
   describe '#primary_value=' do

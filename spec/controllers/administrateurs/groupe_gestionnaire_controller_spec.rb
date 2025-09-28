@@ -19,8 +19,10 @@ describe Administrateurs::GroupeGestionnaireController, type: :controller do
         subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaire)).to eq(groupe_gestionnaire) }
+      it do
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaire)).to eq(groupe_gestionnaire)
+      end
     end
   end
 
@@ -40,8 +42,10 @@ describe Administrateurs::GroupeGestionnaireController, type: :controller do
         subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaire)).to eq(groupe_gestionnaire) }
+      it do
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaire)).to eq(groupe_gestionnaire)
+      end
     end
   end
 
@@ -61,8 +65,10 @@ describe Administrateurs::GroupeGestionnaireController, type: :controller do
         subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaire)).to eq(groupe_gestionnaire) }
+      it do
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaire)).to eq(groupe_gestionnaire)
+      end
     end
   end
 

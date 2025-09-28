@@ -21,14 +21,18 @@ RSpec.describe ReleaseNotesController, type: :controller do
       before { subject }
       context 'user is admininistrateur' do
         let(:user) { admin }
-        it { is_expected.to have_http_status(:ok) }
-        it { expect(assigns(:announces)).to eq([note_admin]) }
+        it do
+          is_expected.to have_http_status(:ok)
+          expect(assigns(:announces)).to eq([note_admin])
+        end
       end
 
       context 'user is instructeur' do
         let(:user) { instructeur }
-        it { is_expected.to have_http_status(:ok) }
-        it { expect(assigns(:announces)).to eq([note_instructeur]) }
+        it do
+          is_expected.to have_http_status(:ok)
+          expect(assigns(:announces)).to eq([note_instructeur])
+        end
       end
 
       context 'user is expert' do

@@ -234,10 +234,12 @@ describe Users::SessionsController, type: :controller do
 
       context 'when the instructeur is not logged in' do
         context 'when the token is valid' do
-          it { is_expected.to redirect_to new_user_session_path }
-          it { expect(controller.current_instructeur).to be_nil }
-          it { expect(controller).to have_received(:trust_device) }
-          it { expect(TrustedDeviceToken.find_by(token: jeton).activated_at).to be_present }
+          it do
+            is_expected.to redirect_to new_user_session_path
+            expect(controller.current_instructeur).to be_nil
+            expect(controller).to have_received(:trust_device)
+            expect(TrustedDeviceToken.find_by(token: jeton).activated_at).to be_present
+          end
         end
 
         context 'when the token is invalid' do
@@ -245,19 +247,23 @@ describe Users::SessionsController, type: :controller do
           it 'redirects to link_sent_path with encrypted email' do
             expect(response).to redirect_to link_sent_path(email: 'panpan')
           end
-          it { expect(controller.current_instructeur).to be_nil }
-          it { expect(controller).not_to have_received(:trust_device) }
-          it { expect(controller).to have_received(:send_login_token_or_bufferize) }
+          it do
+            expect(controller.current_instructeur).to be_nil
+            expect(controller).not_to have_received(:trust_device)
+            expect(controller).to have_received(:send_login_token_or_bufferize)
+          end
         end
 
         context 'when the token does not exist' do
           let(:jeton) { 'I do not exist' }
 
-          it { is_expected.to redirect_to root_path }
-          it { expect(controller.current_instructeur).to be_nil }
-          it { expect(controller).not_to have_received(:trust_device) }
-          it { expect(controller).not_to have_received(:send_login_token_or_bufferize) }
-          it { expect(flash.alert).to eq('Votre lien est invalide.') }
+          it do
+            is_expected.to redirect_to root_path
+            expect(controller.current_instructeur).to be_nil
+            expect(controller).not_to have_received(:trust_device)
+            expect(controller).not_to have_received(:send_login_token_or_bufferize)
+            expect(flash.alert).to eq('Votre lien est invalide.')
+          end
         end
       end
 
@@ -266,19 +272,23 @@ describe Users::SessionsController, type: :controller do
 
         context 'when the token is valid' do
           # redirect to root_path, then redirect to instructeur_procedures_path (see root_controller)
-          it { is_expected.to redirect_to root_path }
-          it { expect(controller.current_instructeur).to eq(instructeur) }
-          it { expect(controller).to have_received(:trust_device) }
-          it { expect(controller.current_instructeur.user.email_verified_at).not_to be_nil }
+          it do
+            is_expected.to redirect_to root_path
+            expect(controller.current_instructeur).to eq(instructeur)
+            expect(controller).to have_received(:trust_device)
+            expect(controller.current_instructeur.user.email_verified_at).not_to be_nil
+          end
         end
 
         context 'when the token is invalid' do
           let(:valid_token) { false }
 
-          it { is_expected.to redirect_to link_sent_path(email: 'panpan') }
-          it { expect(controller.current_instructeur).to eq(instructeur) }
-          it { expect(controller).not_to have_received(:trust_device) }
-          it { expect(controller).to have_received(:send_login_token_or_bufferize) }
+          it do
+            is_expected.to redirect_to link_sent_path(email: 'panpan')
+            expect(controller.current_instructeur).to eq(instructeur)
+            expect(controller).not_to have_received(:trust_device)
+            expect(controller).to have_received(:send_login_token_or_bufferize)
+          end
         end
       end
     end

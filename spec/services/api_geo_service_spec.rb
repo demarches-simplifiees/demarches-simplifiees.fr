@@ -113,8 +113,10 @@ describe APIGeoService do
         features.first.tap { _1["properties"].delete("postcode") }
       end
 
-      it { expect(subject[:postal_code]).to eq('') }
-      it { expect(subject[:city_name]).to eq('Paris') }
+      it do
+        expect(subject[:postal_code]).to eq('')
+        expect(subject[:city_name]).to eq('Paris')
+      end
     end
   end
 

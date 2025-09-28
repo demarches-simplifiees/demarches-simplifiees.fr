@@ -9,8 +9,10 @@ describe Logic::IncludeOperator do
   let(:champ) { Champs::MultipleDropDownListChamp.new(value: '["val1", "val2"]', stable_id: tdc.stable_id, dossier:) }
 
   describe '#compute' do
-    it { expect(ds_include(champ_value(champ.stable_id), constant('val1')).compute([champ])).to be(true) }
-    it { expect(ds_include(champ_value(champ.stable_id), constant('something else')).compute([champ])).to be(false) }
+    it do
+      expect(ds_include(champ_value(champ.stable_id), constant('val1')).compute([champ])).to be(true)
+      expect(ds_include(champ_value(champ.stable_id), constant('something else')).compute([champ])).to be(false)
+    end
   end
 
   describe '#errors' do

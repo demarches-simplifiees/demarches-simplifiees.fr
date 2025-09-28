@@ -15,7 +15,7 @@ describe Champs::DecimalNumberChamp do
       it 'validates integer and decimal numbers' do
         champ.value = 2
         expect(champ.validate(:champs_public_value)).to be_truthy
-        
+
         champ.value = 2.6
         expect(champ.validate(:champs_public_value)).to be_truthy
       end
@@ -48,7 +48,7 @@ describe Champs::DecimalNumberChamp do
       it 'validates empty values' do
         champ.value = ''
         expect(champ.validate(:champs_public_value)).to be_truthy
-        
+
         champ.value = nil
         expect(champ.validate(:champs_public_value)).to be_truthy
       end

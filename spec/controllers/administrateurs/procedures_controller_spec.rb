@@ -1781,9 +1781,11 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'when enabling pro_connect_restricted' do
         let(:pro_connect_restricted) { true }
 
-        it { expect(procedure.reload.pro_connect_restricted).to be true }
-        it { expect(flash.notice).to eq("La démarche est restreinte à ProConnect") }
-        it { expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure)) }
+        it do
+          expect(procedure.reload.pro_connect_restricted).to be true
+          expect(flash.notice).to eq("La démarche est restreinte à ProConnect")
+          expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
+        end
       end
 
       context 'when disabling pro_connect_restricted' do
@@ -1791,9 +1793,11 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         let(:pro_connect_restricted) { false }
 
-        it { expect(procedure.reload.pro_connect_restricted).to be false }
-        it { expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect") }
-        it { expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure)) }
+        it do
+          expect(procedure.reload.pro_connect_restricted).to be false
+          expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect")
+          expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
+        end
       end
     end
   end

@@ -17,14 +17,18 @@ describe 'shared/avis/_list', type: :view do
   let(:avis) { [create(:avis, claimant: instructeur, experts_procedure: experts_procedure, introduction_file: introduction_file)] }
   let(:seen_at) { avis.first.created_at + 1.hour }
 
-  it { is_expected.to have_text(avis.first.introduction) }
-  it { is_expected.not_to have_css(".highlighted") }
+  it do
+    is_expected.to have_text(avis.first.introduction)
+    is_expected.not_to have_css(".highlighted")
+  end
 
   context 'with a seen_at before avis created_at' do
     let(:seen_at) { avis.first.created_at - 1.hour }
 
-    it { is_expected.to have_text("Fichier joint à la demande d’avis") }
-    it { is_expected.to have_css(".highlighted") }
+    it do
+      is_expected.to have_text("Fichier joint à la demande d’avis")
+      is_expected.to have_css(".highlighted")
+    end
   end
 
   context 'with an answer' do

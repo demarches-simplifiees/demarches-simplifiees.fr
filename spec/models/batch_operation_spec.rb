@@ -2,17 +2,21 @@
 
 describe BatchOperation, type: :model do
   describe 'association' do
-    it { is_expected.to have_many(:dossiers) }
-    it { is_expected.to belong_to(:instructeur) }
-    it { is_expected.to have_many(:dossier_operations) }
+    it do
+      is_expected.to have_many(:dossiers)
+      is_expected.to belong_to(:instructeur)
+      is_expected.to have_many(:dossier_operations)
+    end
   end
 
   describe 'attributes' do
     subject { BatchOperation.new }
-    it { expect(subject.payload).to eq({}) }
-    it { expect(subject.run_at).to eq(nil) }
-    it { expect(subject.finished_at).to eq(nil) }
-    it { expect(subject.operation).to eq(nil) }
+    it do
+      expect(subject.payload).to eq({})
+      expect(subject.run_at).to eq(nil)
+      expect(subject.finished_at).to eq(nil)
+      expect(subject.operation).to eq(nil)
+    end
   end
 
   describe 'validations' do

@@ -30,8 +30,10 @@ describe 'experts/avis/instruction', type: :view do
   context 'when the avis has a question' do
     let(:avis) { create(:avis, question_label: "is it useful?", claimant: claimant, experts_procedure: experts_procedure) }
 
-    it { is_expected.to have_text(avis.question_label) }
-    it { is_expected.to have_unchecked_field("oui") }
+    it do
+      is_expected.to have_text(avis.question_label)
+      is_expected.to have_unchecked_field("oui")
+    end
   end
 
   context 'when the avis has no question' do

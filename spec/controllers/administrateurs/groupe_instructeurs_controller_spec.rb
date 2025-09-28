@@ -209,12 +209,14 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         dossier12.reload
       end
 
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
-      it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
-      it { expect(dossier12.dossier_assignment.dossier_id).to be(dossier12.id) }
-      it { expect(dossier12.dossier_assignment.groupe_instructeur_id).to be(gi_1_2.id) }
-      it { expect(dossier12.dossier_assignment.assigned_by).to eq(admin.email) }
+      it do
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+        expect(gi_1_2.dossiers.last.id).to be(dossier12.id)
+        expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id)
+        expect(dossier12.dossier_assignment.dossier_id).to be(dossier12.id)
+        expect(dossier12.dossier_assignment.groupe_instructeur_id).to be(gi_1_2.id)
+        expect(dossier12.dossier_assignment.assigned_by).to eq(admin.email)
+      end
     end
 
     describe 'when the target group is not a possible group' do

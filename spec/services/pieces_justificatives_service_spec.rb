@@ -126,8 +126,10 @@ describe PiecesJustificativesService do
           attach_file_to_champ(pj_champ(dossier))
         end
 
-        it { expect(subject.count).to eq(2) }
-        it { expect(subject).to match_array(pj_champ(dossier).piece_justificative_file.attachments) }
+        it do
+          expect(subject.count).to eq(2)
+          expect(subject).to match_array(pj_champ(dossier).piece_justificative_file.attachments)
+        end
       end
 
       context 'with a pj not safe on a champ' do

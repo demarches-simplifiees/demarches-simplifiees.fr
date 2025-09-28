@@ -57,8 +57,10 @@ RSpec.describe Export, type: :model do
 
     before { export.destroy! }
 
-    it { expect(Export.count).to eq(0) }
-    it { expect(groupe_instructeur.reload).to be_present }
+    it do
+      expect(Export.count).to eq(0)
+      expect(groupe_instructeur.reload).to be_present
+    end
   end
 
   describe '.by_key groupe_instructeurs' do
@@ -70,9 +72,11 @@ RSpec.describe Export, type: :model do
     context 'when an export is made for one groupe instructeur' do
       let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-      it { expect(Export.by_key([gi_1.id])).to be_empty }
-      it { expect(Export.by_key([gi_2.id, gi_1.id])).to eq([export]) }
-      it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id])).to be_empty }
+      it do
+        expect(Export.by_key([gi_1.id])).to be_empty
+        expect(Export.by_key([gi_2.id, gi_1.id])).to eq([export])
+        expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id])).to be_empty
+      end
     end
   end
 

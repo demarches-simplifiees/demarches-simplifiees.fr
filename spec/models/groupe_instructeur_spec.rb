@@ -35,8 +35,10 @@ describe GroupeInstructeur, type: :model do
       subject.reload
     end
 
-    it { is_expected.to be_valid }
-    it { expect(subject.label).to eq("Préfecture de la Marne") }
+    it do
+      is_expected.to be_valid
+      expect(subject.label).to eq("Préfecture de la Marne")
+    end
   end
 
   context 'with a label already used for this procedure' do

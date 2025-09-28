@@ -144,8 +144,10 @@ RSpec.describe DossierChampsConcern do
   describe '#project_champs_public' do
     subject { dossier.project_champs_public }
 
-    it { expect(subject.size).to eq(4) }
-    it { expect(subject.find { _1.libelle == 'Nom' }).to be_falsey }
+    it do
+      expect(subject.size).to eq(4)
+      expect(subject.find { _1.libelle == 'Nom' }).to be_falsey
+    end
   end
 
   describe '#project_champs_private' do
@@ -168,8 +170,10 @@ RSpec.describe DossierChampsConcern do
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     subject { dossier.filled_champs_public }
 
-    it { expect(subject.size).to eq(5) }
-    it { expect(subject.filter { _1.libelle == 'Nom' }.size).to eq(2) }
+    it do
+      expect(subject.size).to eq(5)
+      expect(subject.filter { _1.libelle == 'Nom' }.size).to eq(2)
+    end
   end
 
   describe '#filled_champs_private' do
@@ -205,8 +209,10 @@ RSpec.describe DossierChampsConcern do
     let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
     subject { dossier.project_rows_for(type_de_champ_repetition) }
 
-    it { expect(subject.size).to eq(1) }
-    it { expect(subject.first.size).to eq(1) }
+    it do
+      expect(subject.size).to eq(1)
+      expect(subject.first.size).to eq(1)
+    end
   end
 
   describe '#repetition_add_row' do
@@ -214,8 +220,10 @@ RSpec.describe DossierChampsConcern do
     let(:row_ids) { dossier.repetition_row_ids(type_de_champ_repetition) }
     subject { dossier.repetition_add_row(type_de_champ_repetition, updated_by: 'test') }
 
-    it { expect { subject }.to change { dossier.repetition_row_ids(type_de_champ_repetition).size }.by(1) }
-    it { expect(subject).to be_in(row_ids) }
+    it do
+      expect { subject }.to change { dossier.repetition_row_ids(type_de_champ_repetition).size }.by(1)
+      expect(subject).to be_in(row_ids)
+    end
   end
 
   describe '#repetition_remove_row' do
@@ -231,8 +239,10 @@ RSpec.describe DossierChampsConcern do
   describe "#champ_values_for_export" do
     subject { dossier.champ_values_for_export(dossier.revision.types_de_champ_public, format: :xlsx) }
 
-    it { expect(subject.size).to eq(4) }
-    it { expect(subject.first).to eq(["Un champ text", nil]) }
+    it do
+      expect(subject.size).to eq(4)
+      expect(subject.first).to eq(["Un champ text", nil])
+    end
   end
 
   describe "#champs_for_prefill" do

@@ -42,8 +42,10 @@ describe Gestionnaires::GroupeGestionnaireChildrenController, type: :controller 
     context 'of a child group' do
       let(:new_child_group_name) { 'child group' }
 
-      it { expect(groupe_gestionnaire.reload.children.map(&:name)).to include(new_child_group_name) }
-      it { expect(flash.notice).to eq("Le groupe enfants a bien été créé") }
+      it do
+        expect(groupe_gestionnaire.reload.children.map(&:name)).to include(new_child_group_name)
+        expect(flash.notice).to eq("Le groupe enfants a bien été créé")
+      end
     end
   end
 end

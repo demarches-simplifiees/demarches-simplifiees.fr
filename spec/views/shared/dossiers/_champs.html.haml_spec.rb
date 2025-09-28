@@ -81,9 +81,11 @@ describe 'shared/dossiers/champs', type: :view do
       dossier.champs.first.update(value: dossier.id)
     end
 
-    it { is_expected.not_to have_link("Dossier n° #{dossier.id}") }
-    it { is_expected.to include("Dossier n° #{dossier.id}") }
-    it { is_expected.to include(dossier.text_summary) }
+    it do
+      is_expected.not_to have_link("Dossier n° #{dossier.id}")
+      is_expected.to include("Dossier n° #{dossier.id}")
+      is_expected.to include(dossier.text_summary)
+    end
   end
 
   context "with a dossier_link champ but without value" do

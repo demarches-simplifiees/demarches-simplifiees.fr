@@ -4,8 +4,10 @@ describe Logic::And do
   include Logic
 
   describe '#compute' do
-    it { expect(and_from([true, true, true]).compute).to be true }
-    it { expect(and_from([true, true, false]).compute).to be false }
+    it do
+      expect(and_from([true, true, true]).compute).to be true
+      expect(and_from([true, true, false]).compute).to be false
+    end
   end
 
   describe '#to_s' do

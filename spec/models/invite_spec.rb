@@ -72,8 +72,10 @@ describe Invite do
     context "when dossier is not discarded" do
       let(:hidden_by_user_at) { nil }
 
-      it { expect(Invite.count).to eq(1) }
-      it { expect(Invite.all).to include(invite) }
+      it do
+        expect(Invite.count).to eq(1)
+        expect(Invite.all).to include(invite)
+      end
     end
 
     context "when dossier is discarded" do

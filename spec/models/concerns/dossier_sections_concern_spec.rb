@@ -14,20 +14,26 @@ describe DossierSectionsConcern do
     let(:private_type_de_champ) { dossier.types_de_champ_private[1] }
 
     context "with no section having number" do
-      it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(true) }
-      it { expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(true) }
+      it do
+        expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(true)
+        expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(true)
+      end
     end
 
     context "with public section having number" do
       let(:public_libelle) { "1 - infos" }
-      it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(false) }
-      it { expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(true) }
+      it do
+        expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(false)
+        expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(true)
+      end
     end
 
     context "with private section having number" do
       let(:private_libelle) { "1 - infos private" }
-      it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(true) }
-      it { expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(false) }
+      it do
+        expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(true)
+        expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(false)
+      end
     end
 
     context "header_section in a repetition are not auto-numbered" do

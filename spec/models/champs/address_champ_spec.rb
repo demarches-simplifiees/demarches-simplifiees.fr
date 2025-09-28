@@ -11,8 +11,10 @@ describe Champs::AddressChamp do
   context "with value but no data" do
     let(:value) { 'Paris' }
 
-    it { expect(champ.address_label).to eq('Paris') }
-    it { expect(champ.full_address?).to be_falsey }
+    it do
+      expect(champ.address_label).to eq('Paris')
+      expect(champ.full_address?).to be_falsey
+    end
   end
 
   context "with value and data" do
@@ -34,10 +36,12 @@ describe Champs::AddressChamp do
       }
     end
 
-    it { expect(champ.address_label).to eq('33 Rue Rébeval 75019 Paris') }
-    it { expect(champ.full_address?).to be_truthy }
-    it { expect(champ.commune).to eq({ name: 'Paris 19e Arrondissement', code: '75119', postal_code: '75019' }) }
-    it { expect(champ.commune_name).to eq('Paris 19e Arrondissement (75019)') }
+    it do
+      expect(champ.address_label).to eq('33 Rue Rébeval 75019 Paris')
+      expect(champ.full_address?).to be_truthy
+      expect(champ.commune).to eq({ name: 'Paris 19e Arrondissement', code: '75119', postal_code: '75019' })
+      expect(champ.commune_name).to eq('Paris 19e Arrondissement (75019)')
+    end
   end
 
   context "with wrong code INSEE" do
@@ -55,9 +59,11 @@ describe Champs::AddressChamp do
       }
     end
 
-    it { expect(champ.address_label).to eq('Rue du Bois Charles 27700 Les Trois Lacs') }
-    it { expect(champ.full_address?).to be_truthy }
-    it { expect(champ.commune).to eq({ name: 'Les Trois Lacs', code: '27676', postal_code: '27700' }) }
+    it do
+      expect(champ.address_label).to eq('Rue du Bois Charles 27700 Les Trois Lacs')
+      expect(champ.full_address?).to be_truthy
+      expect(champ.commune).to eq({ name: 'Les Trois Lacs', code: '27676', postal_code: '27700' })
+    end
   end
 
   context "with empty code postal" do

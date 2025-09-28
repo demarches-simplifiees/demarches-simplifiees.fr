@@ -10,8 +10,10 @@ RSpec.describe Champs::AnnuaireEducationChamp do
     subject { champ.send(:update_external_data!, data: data) }
 
     shared_examples "a data updater (without updating the value)" do |data|
-      it { expect { subject }.to change { champ.reload.data }.to(data) }
-      it { expect { subject }.not_to change { champ.reload.value } }
+      it do
+        expect { subject }.to change { champ.reload.data }.to(data)
+        expect { subject }.not_to change { champ.reload.value }
+      end
     end
 
     context 'when data is nil' do

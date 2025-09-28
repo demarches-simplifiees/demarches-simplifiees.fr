@@ -107,9 +107,11 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
     end
 
     context 'of multiple experts' do
-      it { expect(expert_procedure.revoked_at).to be_present }
-      it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(admin_procedure_experts_path(procedure)) }
+      it do
+        expect(expert_procedure.revoked_at).to be_present
+        expect(flash.notice).to be_present
+        expect(response).to redirect_to(admin_procedure_experts_path(procedure))
+      end
     end
   end
 end

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 describe Individual do
-  it { is_expected.to have_db_column(:gender) }
-  it { is_expected.to have_db_column(:nom) }
-  it { is_expected.to have_db_column(:prenom) }
-  it { is_expected.to belong_to(:dossier).required }
+  it do
+    is_expected.to have_db_column(:gender)
+    is_expected.to have_db_column(:nom)
+    is_expected.to have_db_column(:prenom)
+    is_expected.to belong_to(:dossier).required
+  end
 
   describe "#save" do
     let(:individual) { build(:individual) }

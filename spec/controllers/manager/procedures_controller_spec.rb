@@ -48,8 +48,10 @@ describe Manager::ProceduresController, type: :controller do
       get :show, params: { id: procedure.id }
     end
 
-    it { expect(response.body).to include('sub type de champ') }
-    it { expect(response.body).to include('Hidden At As Template') }
+    it do
+      expect(response.body).to include('sub type de champ')
+      expect(response.body).to include('Hidden At As Template')
+    end
   end
 
   describe '#discard' do
@@ -62,8 +64,10 @@ describe Manager::ProceduresController, type: :controller do
       dossier.reload
     end
 
-    it { expect(procedure.discarded?).to be_truthy }
-    it { expect(dossier.hidden_by_administration?).to be_truthy }
+    it do
+      expect(procedure.discarded?).to be_truthy
+      expect(dossier.hidden_by_administration?).to be_truthy
+    end
   end
 
   describe '#restore' do
@@ -77,8 +81,10 @@ describe Manager::ProceduresController, type: :controller do
       procedure.reload
     end
 
-    it { expect(procedure.kept?).to be_truthy }
-    it { expect(dossier.hidden_by_administration?).to be_falsey }
+    it do
+      expect(procedure.kept?).to be_truthy
+      expect(dossier.hidden_by_administration?).to be_falsey
+    end
   end
 
   describe '#index' do

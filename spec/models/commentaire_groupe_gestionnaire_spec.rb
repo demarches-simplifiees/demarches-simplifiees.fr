@@ -2,9 +2,11 @@
 
 describe CommentaireGroupeGestionnaire, type: :model do
   describe 'associations' do
-    it { is_expected.to belong_to(:groupe_gestionnaire) }
-    it { is_expected.to belong_to(:gestionnaire).optional }
-    it { is_expected.to belong_to(:sender) }
+    it do
+      is_expected.to belong_to(:groupe_gestionnaire)
+      is_expected.to belong_to(:gestionnaire).optional
+      is_expected.to belong_to(:sender)
+    end
   end
 
   describe "#create" do

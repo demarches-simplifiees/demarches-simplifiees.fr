@@ -125,10 +125,12 @@ RSpec.describe BillSignature, type: :model do
     context 'when there are no operations' do
       let(:dossier_operation_logs) { [] }
 
-      it { expect(bill_signature.operations_bill).to eq({}) }
-      it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{}')) }
-      it { expect(bill_signature.read_serialized).to eq('{}') }
-      it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
+      it do
+        expect(bill_signature.operations_bill).to eq({})
+        expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{}'))
+        expect(bill_signature.read_serialized).to eq('{}')
+        expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json')
+      end
     end
 
     context 'when there is one operation' do
@@ -136,10 +138,12 @@ RSpec.describe BillSignature, type: :model do
         [build(:dossier_operation_log, id: '1234', digest: 'abcd')]
       end
 
-      it { expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd' }) }
-      it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd"}')) }
-      it { expect(bill_signature.read_serialized).to eq('{"1234":"abcd"}') }
-      it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
+      it do
+        expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd' })
+        expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd"}'))
+        expect(bill_signature.read_serialized).to eq('{"1234":"abcd"}')
+        expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json')
+      end
     end
 
     context 'when there are several operations' do
@@ -150,10 +154,12 @@ RSpec.describe BillSignature, type: :model do
         ]
       end
 
-      it { expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd', '5678' => 'dcba' }) }
-      it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd","5678":"dcba"}')) }
-      it { expect(bill_signature.read_serialized).to eq('{"1234":"abcd","5678":"dcba"}') }
-      it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
+      it do
+        expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd', '5678' => 'dcba' })
+        expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd","5678":"dcba"}'))
+        expect(bill_signature.read_serialized).to eq('{"1234":"abcd","5678":"dcba"}')
+        expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json')
+      end
     end
   end
 
@@ -164,8 +170,10 @@ RSpec.describe BillSignature, type: :model do
 
     before { bill_signature.set_signature(signature, day) }
 
-    it { expect(bill_signature.signature.attached?).to be(true) }
-    it { expect(bill_signature.signature.filename.to_s).to eq('demarches-simplifiees-signature-2012-12-12.der') }
-    it { expect(bill_signature.signature.content_type).to eq('application/x-x509-ca-cert') }
+    it do
+      expect(bill_signature.signature.attached?).to be(true)
+      expect(bill_signature.signature.filename.to_s).to eq('demarches-simplifiees-signature-2012-12-12.der')
+      expect(bill_signature.signature.content_type).to eq('application/x-x509-ca-cert')
+    end
   end
 end

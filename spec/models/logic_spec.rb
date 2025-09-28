@@ -65,8 +65,10 @@ describe Logic do
   end
 
   describe '.compatible_type?' do
-    it { expect(Logic.compatible_type?(constant(true), constant(true), [])).to be true }
-    it { expect(Logic.compatible_type?(constant(1), constant(true), [])).to be false }
+    it do
+      expect(Logic.compatible_type?(constant(true), constant(true), [])).to be true
+      expect(Logic.compatible_type?(constant(1), constant(true), [])).to be false
+    end
 
     context 'with a dropdown' do
       let(:drop_down) { create(:type_de_champ_drop_down_list) }
@@ -87,8 +89,10 @@ describe Logic do
   end
 
   describe '.add_empty_condition_to' do
-    it { expect(Logic.add_empty_condition_to(nil)).to eq(empty_operator(empty, empty)) }
-    it { expect(Logic.add_empty_condition_to(constant(true))).to eq(ds_and([constant(true), empty_operator(empty, empty)])) }
-    it { expect(Logic.add_empty_condition_to(ds_or([constant(true)]))).to eq(ds_or([constant(true), empty_operator(empty, empty)])) }
+    it do
+      expect(Logic.add_empty_condition_to(nil)).to eq(empty_operator(empty, empty))
+      expect(Logic.add_empty_condition_to(constant(true))).to eq(ds_and([constant(true), empty_operator(empty, empty)]))
+      expect(Logic.add_empty_condition_to(ds_or([constant(true)]))).to eq(ds_or([constant(true), empty_operator(empty, empty)]))
+    end
   end
 end

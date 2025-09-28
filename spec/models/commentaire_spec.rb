@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 describe Commentaire do
-  it { is_expected.to have_db_column(:email) }
-  it { is_expected.to have_db_column(:body) }
-  it { is_expected.to have_db_column(:created_at) }
-  it { is_expected.to have_db_column(:updated_at) }
+  it do
+    is_expected.to have_db_column(:email)
+    is_expected.to have_db_column(:body)
+    is_expected.to have_db_column(:created_at)
+    is_expected.to have_db_column(:updated_at)
+  end
 
   describe 'messagerie_available validation' do
     subject { commentaire.valid?(:create) }

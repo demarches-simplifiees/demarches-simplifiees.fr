@@ -28,15 +28,19 @@ describe Gestionnaires::ActivateController, type: :controller do
     before { post :create, params: { gestionnaire: { reset_password_token: token, password: password } } }
 
     context 'when the token is ok' do
-      it { expect(gestionnaire.user.reload.valid_password?(password)).to be true }
-      it { expect(response).to redirect_to(gestionnaire_groupe_gestionnaires_path) }
+      it do
+        expect(gestionnaire.user.reload.valid_password?(password)).to be true
+        expect(response).to redirect_to(gestionnaire_groupe_gestionnaires_path)
+      end
     end
 
     context 'when the token is bad' do
       let(:token) { 'bad' }
 
-      it { expect(gestionnaire.user.reload.valid_password?(password)).to be false }
-      it { expect(response).to redirect_to(gestionnaires_activate_path(token: token)) }
+      it do
+        expect(gestionnaire.user.reload.valid_password?(password)).to be false
+        expect(response).to redirect_to(gestionnaires_activate_path(token: token))
+      end
     end
   end
 end

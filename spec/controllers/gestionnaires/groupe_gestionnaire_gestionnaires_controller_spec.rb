@@ -19,8 +19,10 @@ describe Gestionnaires::GroupeGestionnaireGestionnairesController, type: :contro
     context 'of a new gestionnaire' do
       let(:new_gestionnaire_email) { 'new_gestionnaire@mail.com' }
 
-      it { expect(groupe_gestionnaire.reload.gestionnaires.map(&:email)).to include(new_gestionnaire_email) }
-      it { expect(flash.notice).to eq("Les gestionnaires ont bien été affectés au groupe gestionnaire") }
+      it do
+        expect(groupe_gestionnaire.reload.gestionnaires.map(&:email)).to include(new_gestionnaire_email)
+        expect(flash.notice).to eq("Les gestionnaires ont bien été affectés au groupe gestionnaire")
+      end
     end
   end
 

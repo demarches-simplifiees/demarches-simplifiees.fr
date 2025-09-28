@@ -13,8 +13,10 @@ describe Users::RegistrationsController, type: :controller do
   describe '#new' do
     subject { get :new }
 
-    it { expect(subject).to have_http_status(:ok) }
-    it { expect(subject).to render_template(:new) }
+    it do
+      expect(subject).to have_http_status(:ok)
+      expect(subject).to render_template(:new)
+    end
 
     context 'when an email address is provided' do
       render_views true

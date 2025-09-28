@@ -79,8 +79,10 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
     before { get :edit, params: { procedure_id: procedure.id } }
 
     context 'if an attestation template exists on the procedure' do
-      it { expect(subject.status).to eq(200) }
-      it { expect(assigns(:attestation_template)).to eq(attestation_template) }
+      it do
+        expect(subject.status).to eq(200)
+        expect(assigns(:attestation_template)).to eq(attestation_template)
+      end
     end
 
     context 'if an attestation template does not exist on the procedure' do

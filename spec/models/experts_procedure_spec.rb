@@ -18,18 +18,22 @@ RSpec.describe ExpertsProcedure, type: :model do
       context 'when a procedure has one avis and known instructeur' do
         let!(:avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure) }
 
-        it { is_expected.to eq([experts_procedure]) }
-        it { expect(procedure.experts.count).to eq(1) }
-        it { expect(procedure.experts.first.email).to eq(expert.email) }
+        it do
+          is_expected.to eq([experts_procedure])
+          expect(procedure.experts.count).to eq(1)
+          expect(procedure.experts.first.email).to eq(expert.email)
+        end
       end
 
       context 'when a dossier has 2 avis from the same expert' do
         let!(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure) }
         let!(:avis2) { create(:avis, dossier: dossier, experts_procedure: experts_procedure) }
 
-        it { is_expected.to eq([experts_procedure]) }
-        it { expect(procedure.experts.count).to eq(1) }
-        it { expect(procedure.experts.first).to eq(expert) }
+        it do
+          is_expected.to eq([experts_procedure])
+          expect(procedure.experts.count).to eq(1)
+          expect(procedure.experts.first).to eq(expert)
+        end
       end
     end
 
@@ -42,9 +46,11 @@ RSpec.describe ExpertsProcedure, type: :model do
         let!(:avis2) { create(:avis, dossier: dossier2, experts_procedure: experts_procedure2) }
         let!(:avis3) { create(:avis, dossier: dossier2, experts_procedure: experts_procedure3) }
 
-        it { is_expected.to match_array([experts_procedure, experts_procedure2, experts_procedure3]) }
-        it { expect(procedure.experts.count).to eq(3) }
-        it { expect(procedure.experts).to match_array([expert, expert2, expert3]) }
+        it do
+          is_expected.to match_array([experts_procedure, experts_procedure2, experts_procedure3])
+          expect(procedure.experts.count).to eq(3)
+          expect(procedure.experts).to match_array([expert, expert2, expert3])
+        end
       end
     end
   end

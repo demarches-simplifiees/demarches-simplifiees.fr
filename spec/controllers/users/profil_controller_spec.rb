@@ -51,10 +51,12 @@ describe Users::ProfilController, type: :controller do
         user.reload
       end
 
-      it { expect(user.unconfirmed_email).to eq('loulou@lou.com') }
-      it { expect(user.requested_merge_into).to be_nil }
-      it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
+      it do
+        expect(user.unconfirmed_email).to eq('loulou@lou.com')
+        expect(user.requested_merge_into).to be_nil
+        expect(response).to redirect_to(profil_path)
+        expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation'))
+      end
     end
 
     context 'when the mail is already taken' do
@@ -84,8 +86,10 @@ describe Users::ProfilController, type: :controller do
         user.reload
       end
 
-      it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.alert).to eq(["Le champ « Adresse électronique » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com"]) }
+      it do
+        expect(response).to redirect_to(profil_path)
+        expect(flash.alert).to eq(["Le champ « Adresse électronique » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com"])
+      end
     end
 
     context 'when the user has an instructeur role' do
@@ -100,16 +104,20 @@ describe Users::ProfilController, type: :controller do
       context 'when the requested email is allowed' do
         let(:requested_email) { 'legit@gouv.fr' }
 
-        it { expect(user.unconfirmed_email).to eq('legit@gouv.fr') }
-        it { expect(response).to redirect_to(profil_path) }
-        it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
+        it do
+          expect(user.unconfirmed_email).to eq('legit@gouv.fr')
+          expect(response).to redirect_to(profil_path)
+          expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation'))
+        end
       end
 
       context 'when the requested email is not allowed' do
         let(:requested_email) { 'weird@gmail.com' }
 
-        it { expect(response).to redirect_to(profil_path) }
-        it { expect(flash.alert).to include('contactez le support') }
+        it do
+          expect(response).to redirect_to(profil_path)
+          expect(flash.alert).to include('contactez le support')
+        end
       end
     end
   end

@@ -13,9 +13,11 @@ describe Champs::PieceJustificativeChamp do
     subject { champ }
 
     context "by default" do
-      it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE) }
-      it { is_expected.to validate_content_type_of(:piece_justificative_file).rejecting('application/x-ms-dos-executable') }
-      it { expect(champ.type_de_champ.skip_pj_validation).to be_falsy }
+      it do
+        is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE)
+        is_expected.to validate_content_type_of(:piece_justificative_file).rejecting('application/x-ms-dos-executable')
+        expect(champ.type_de_champ.skip_pj_validation).to be_falsy
+      end
     end
 
     context "when validation is disabled" do
