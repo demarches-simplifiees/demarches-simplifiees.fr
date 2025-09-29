@@ -1,6 +1,13 @@
 - content_for(:root_class, 'scroll-margins-for-sticky-footer')
 - if params[:id] == 'closed_mail'
-  = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
+  = render partial: 'admin/mail_template_attestation_inconsistency_alert',
+           locals: { procedure: @procedure, state: @procedure.mail_template_attestation_inconsistency_state(:acceptation),
+                     mail_type: 'acceptation', attestation_template_v1: (@procedure.attestation_acceptation_template&.version == 1) }
+- elsif params[:id] == 'refused_mail'
+  = render partial: 'admin/mail_template_attestation_inconsistency_alert',
+           locals: { procedure: @procedure, state: @procedure.mail_template_attestation_inconsistency_state(:refus),
+                     mail_type: 'refus', attestation_template_v1: false }
+
 
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
