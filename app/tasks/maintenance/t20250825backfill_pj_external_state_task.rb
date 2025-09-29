@@ -27,10 +27,10 @@ module Maintenance
       pjs = dossier.project_champs_public
         .filter { it.type == "Champs::PieceJustificativeChamp" && it.RIB? == true }
 
-      pjs.each do |pj|
-        if pj.external_data_fetched? && !pj.fetched?
+      pjs.filter(&:idle?).each do |pj|
+        if pj.external_data_fetched?
           pj.external_data_fetched!
-        elsif pj.external_error_present? && !pj.external_error?
+        elsif pj.external_error_present?
           pj.external_data_error!
         end
       end
