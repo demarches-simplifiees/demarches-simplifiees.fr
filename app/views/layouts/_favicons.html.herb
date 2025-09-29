@@ -1,0 +1,9 @@
+<%= favicon_link_tag(image_url(FAVICONS_SRC["16px"]), type: "image/png", sizes: "16x16") if FAVICONS_SRC.key?("16px") %>
+
+<%= favicon_link_tag(image_url(FAVICONS_SRC["32px"]), type: "image/png", sizes: "32x32") if FAVICONS_SRC.key?("32px") %>
+
+<%= favicon_link_tag(image_url(FAVICONS_SRC["96px"]), type: "image/png", sizes: "96x96") if FAVICONS_SRC.key?("96px") %>
+
+<%= favicon_link_tag(image_url(FAVICONS_SRC["apple_touch"]), type: nil, sizes: "152x152", rel: "apple-touch-icon") if FAVICONS_SRC.key?("apple_touch") %>
+
+<meta name="theme-color" content="#ffffff">

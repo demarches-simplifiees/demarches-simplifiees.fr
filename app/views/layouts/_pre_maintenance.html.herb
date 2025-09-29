@@ -1,0 +1,23 @@
+<% if ENV['BANNER_MESSAGE'].present? %>
+  <div class="site-banner fr-text-default--warning fr-background-contrast--warning">
+    <div class="fr-container text-center">
+      <%= sanitize(ENV['BANNER_MESSAGE']) %>
+    </div>
+  </div>
+<% end %>
+
+<% if ENV['ADMINISTRATION_BANNER_MESSAGE'].present? && instructeur_signed_in? %>
+  <div class="site-banner fr-text-default--warning fr-background-contrast--warning">
+    <div class="fr-container text-center">
+      <%= sanitize(ENV['ADMINISTRATION_BANNER_MESSAGE']) %>
+    </div>
+  </div>
+<% end %>
+
+<% if ENV['USAGER_BANNER_MESSAGE'].present? && !instructeur_signed_in? %>
+  <div class="site-banner fr-text-default--warning fr-background-contrast--warning">
+    <div class="fr-container text-center">
+      <%= sanitize(ENV['USAGER_BANNER_MESSAGE']) %>
+    </div>
+  </div>
+<% end %>

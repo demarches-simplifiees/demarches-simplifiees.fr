@@ -1,0 +1,11 @@
+<% if show_outdated_browser_banner? %>
+  <%= render Dsfr::AlertComponent.new(state: :warning, title: "Navigateur trop ancien", heading_level: :h2) do |c| %>
+    <% c.with_body do %>
+      <%= "Votre navigateur internet, #{browser.name} #{browser.version}, est malheureusement trop ancien. Il n’est plus compatible avec #{APPLICATION_NAME}." %>
+      <br>
+      Veuillez installer un navigateur plus récent en suivant le lien suivant :
+      <br>
+      <%= link_to "Mettre à jour mon navigateur", "https://betagouv.github.io/navigateur-trop-ancien/", class: "fr-btn fr-btn--secondary fr-mt-2w", target: "_blank", rel: "noopener" %>
+    <% end %>
+  <% end %>
+<% end %>
