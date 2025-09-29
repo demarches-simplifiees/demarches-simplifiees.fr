@@ -1,0 +1,56 @@
+= render Dsfr::CalloutComponent.new(title: 'À quoi sert cette règle ?', theme: :neutral) do |callout|
+  - callout.with_body do
+    %p= self.class.summary
+
+= form_for llm_rule_suggestion, url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion), method: :post, data: { controller: 'checkbox-select-all' } do |form|
+  - llm_rule_suggestion.llm_rule_suggestion_items.each do |llm_rule_suggestion_item|
+    = form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff|
+      .fr-card.fr-card--sm.fr-my-2w
+        .fr-card__body
+          .fr-card__title
+            - original_tdc = tdc_for(ff.object.stable_id)
+
+            - if llm_rule_suggestion_item.op_kind == 'add'
+              %span.fr-badge.fr-badge--info.fr-mr-1w Ajout de section
+              = llm_rule_suggestion_item.payload['libelle']
+            - elsif llm_rule_suggestion_item.op_kind == 'update'
+              %span.fr-badge.fr-badge--warning.fr-mr-1w Réorganisation
+              = original_tdc.libelle
+
+          .fr-card__desc
+            %ul.fr-pl-0
+              - position = llm_rule_suggestion_item.payload['position']
+              - if llm_rule_suggestion_item.op_kind == 'update'
+                %li
+                  %strong Nouvelle position :
+                  = position
+                - if llm_rule_suggestion_item.payload.key?('mandatory')
+                  %li
+                    %strong Champ obligatoire :
+                    = llm_rule_suggestion_item.payload['mandatory'] ? 'Oui' : 'Non'
+              - if llm_rule_suggestion_item.op_kind == 'add'
+                %li
+                  %strong Position :
+                  = position
+                - if llm_rule_suggestion_item.payload['type_champ'].present?
+                  %li
+                    %strong Type :
+                    = llm_rule_suggestion_item.payload['type_champ']
+
+            - if llm_rule_suggestion_item.justification.present?
+              %p.fr-hint-text.fr-mt-2w
+                - if llm_rule_suggestion_item.confidence.present?
+                  %span.fr-badge.fr-mr-1w= "confiance: #{llm_rule_suggestion_item.confidence}"
+                = llm_rule_suggestion_item.justification
+
+        .fr-card__footer
+          .fr-checkbox-group
+            = ff.check_box :verify_status, {}, LLMRuleSuggestionItem.verify_statuses.fetch(:accepted), LLMRuleSuggestionItem.verify_statuses.fetch(:skipped)
+            = ff.label :verify_status, class: 'fr-label' do
+              Appliquer cette modification
+
+  %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
+    %li
+      = form.submit('Accepter les modifications', class: 'fr-btn')
+    %li
+      = link_to('Revenir aux règles', back_link, class: 'fr-btn fr-btn--secondary')

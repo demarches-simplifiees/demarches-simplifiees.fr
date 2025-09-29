@@ -1276,4 +1276,21 @@ describe ProcedureRevision do
 
     it { expect(draft.simple_routable_types_de_champ.pluck(:libelle)).to eq(['l2', 'l3', 'l4', 'l5', 'l6']) }
   end
+  describe "#apply_changes" do
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text, libelle: "A", stable_id: 1 }, { type: :text, libelle: "B", stable_id: 2 }] }
+    let(:revision) { procedure.draft_revision }
+    let(:schema_hash) { Digest::SHA256.hexdigest(revision.schema_to_llm.to_json) }
+
+    context 'from LLM::LabelImprover' do
+      it "can update libelle" do
+        llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch('improve_label'), schema_hash:)
+        create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 2, op_kind: 'update', payload: { 'stable_id' => 2, 'libelle' => 'B modifié' })
+
+        expect { revision.apply_changes(llm_rule_suggestion.changes_to_apply) }.not_to raise_error
+        libelles = revision.reload.types_de_champ_public.map(&:libelle)
+        expect(libelles).to include("B modifié")
+      end
+    end
+  end
 end

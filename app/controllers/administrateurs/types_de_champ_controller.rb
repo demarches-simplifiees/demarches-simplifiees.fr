@@ -175,13 +175,25 @@ module Administrateurs
     end
 
     def accept_simplification
-      rule = params[:rule].to_s
-      return head :not_found unless allowed_rule?(rule)
+      @llm_rule_suggestion = published_revision_llm_rule_suggestion_scope.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
+      @llm_rule_suggestion.save!
+      @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
 
-      changes = build_changes_from_selection
-      draft.apply_changes(changes)
+      redirect_to simplify_index_admin_procedure_types_de_champ_path(@procedure)
+    end
 
-      redirect_to [:champs, :admin, @procedure]
+    def published_revision_llm_rule_suggestion_scope
+      published_revision = @procedure.published_revision
+      schema = published_revision.schema_to_llm.to_json
+      schema_hash = Digest::SHA256.hexdigest(schema)
+
+      LLMRuleSuggestion.where(procedure_revision_id: published_revision.id, state: 'completed', schema_hash:)
+    end
+
+    def llm_rule_suggestion_items_attributes
+      params.require(:llm_rule_suggestion)
+        .permit(llm_rule_suggestion_items_attributes: [:id, :verify_status])
     end
 
     private
@@ -279,22 +291,6 @@ module Administrateurs
     def ensure_llm_calls_enabled
       return if @procedure.feature_enabled?(:llm_nightly_improve_procedure)
       redirect_to administrateur_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
-    end
-
-    def load_improve_label_suggestions
-      # Suggestions are computed on the latest published revision
-      published_revision = @procedure.published_revision
-      schema = published_revision.schema_to_llm.to_json
-      schema_hash = Digest::SHA256.hexdigest(schema)
-
-      suggestion = LLMRuleSuggestion
-        .where(procedure_revision_id: published_revision.id, rule:, state: 'completed', schema_hash:)
-        .order(created_at: :desc)
-        .first
-
-      changes = suggestion&.llm_rule_suggestion_items&.order(created_at: :desc)&.group_by(&:op_kind)
-      component_class = LLM.const_get("#{rule.camelcase}Component")
-      @component = component_class.new(changes:, revision:)
     end
 
     def allowed_rule?(rule)

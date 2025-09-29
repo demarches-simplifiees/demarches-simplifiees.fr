@@ -16,33 +16,5 @@ class LLM::ImproveLabelComponent < ApplicationComponent
     @procedure ||= revision.procedure
   end
 
-  def changes_json
-    { update: change_items.map { |item| serialized_update(item) } }.to_json
-  end
-
-  def update_items
-    change_items
-  end
-
-  def tdc_for(stable_id)
-    tdc_by_stable_id[stable_id]
-  end
-
-  def rule
-    TOOL_NAME
-  end
-
   private
-
-  def serialized_update(item)
-    payload = item.payload || {}
-
-    {
-      stable_id: item.stable_id,
-      libelle: payload['libelle'],
-      type_champ: payload['type_champ'],
-      justification: item.justification,
-      confidence: item.confidence
-    }.compact
-  end
 end
