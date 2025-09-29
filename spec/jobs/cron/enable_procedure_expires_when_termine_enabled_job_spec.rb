@@ -7,6 +7,7 @@ describe Cron::EnableProcedureExpiresWhenTermineEnabledJob, type: :job do
   let!(:procedure) { create(:procedure, procedure_expires_when_termine_enabled: false) }
   context 'when env[ENABLE_PROCEDURE_EXPIRES_WHEN_TERMINE_ENABLED_JOB_LIMIT] is present' do
     before do
+      allow(ENV).to receive(:[]).and_call_original
       allow(ENV).to receive(:[]).with('ENABLE_PROCEDURE_EXPIRES_WHEN_TERMINE_ENABLED_JOB_LIMIT').and_return(10)
     end
 
