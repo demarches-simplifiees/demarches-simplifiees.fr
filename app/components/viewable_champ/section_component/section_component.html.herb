@@ -28,9 +28,10 @@
   <div id="<%= section_id %>" data-expand-target="content">
     <% if !champs.empty? %>
       <%= render Dossiers::ChampsRowsShowComponent.new(champs:, seen_at: @demande_seen_at, profile: @profile) %>
-      <% sections.each do |section| %>
-        <%= render section %>
-      <% end %>
+    <% end %>
+
+    <% sections.each do |section| %>
+      <%= render section %>
     <% end %>
   </div>
 </div>
