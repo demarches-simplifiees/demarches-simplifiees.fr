@@ -9,6 +9,25 @@ module LLM
       @logger = logger
     end
 
+    def generate_for(suggestion)
+      messages = build_messages(suggestion)
+      calls = run_tool_call(tool_definition: self.class::TOOL_DEFINITION, messages:)
+      normalize_tool_calls(calls, self.class::TOOL_NAME) { |args| build_item(args) }
+    end
+
+    private
+
+    def build_messages(suggestion)
+      revision = suggestion.procedure_revision
+      schema = revision.schema_to_llm
+
+      [
+        { role: 'system', content: system_prompt },
+        { role: 'user', content: format(schema_prompt, schema: JSON.dump(schema)) },
+        { role: 'user', content: rules_prompt },
+      ]
+    end
+
     def run_tool_call(tool_definition:, messages:)
       return [] unless runner
 
@@ -26,21 +45,6 @@ module LLM
           yield(args)
         end
         .compact
-    end
-
-    def generate_for(revision)
-      messages = build_messages(revision)
-      calls = run_tool_call(tool_definition: self.class::TOOL_DEFINITION, messages:)
-      normalize_tool_calls(calls, self.class::TOOL_NAME) { |args| build_item(args) }
-    end
-
-    def build_messages(revision)
-      schema = revision.schema_to_llm
-      [
-        { role: 'system', content: system_prompt },
-        { role: 'user', content: format(schema_prompt, schema: JSON.dump(schema)) },
-        { role: 'user', content: rules_prompt }
-      ]
     end
   end
 end

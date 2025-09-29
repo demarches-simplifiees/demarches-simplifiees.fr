@@ -2,7 +2,6 @@
 
 module LLM
   # Orchestrates improve_label generation using tool-calling.
-  # - generate_for(revision): returns normalized items built from tool_calls
   class LabelImprover < BaseImprover
     TOOL_NAME = 'improve_label'
     TOOL_DEFINITION = {
