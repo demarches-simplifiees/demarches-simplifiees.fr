@@ -856,7 +856,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.deliberation.attached?).to be_truthy
           expect(Procedure.last.logo.attached?).to be_truthy
           expect(Procedure.last.administrateurs).to include(administrateur_2)
-          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur, instructeur_2])
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to match_array([admin.instructeur, instructeur_2])
           expect(Procedure.last.instructeurs_self_management_enabled).to be_truthy
           expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1
           expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1
