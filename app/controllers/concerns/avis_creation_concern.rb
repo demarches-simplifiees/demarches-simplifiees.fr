@@ -30,7 +30,7 @@ module AvisCreationConcern
         end
       end.join(' | ')
 
-      render error_template, status: :unprocessable_entity
+      render error_template, status: :unprocessable_content
     else
       redirect_to success_path
     end

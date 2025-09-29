@@ -53,7 +53,7 @@ RSpec.describe ErrorsController, type: :controller do
 
     context "422" do
       let(:status_code) { 422 }
-      let(:action_name) { :unprocessable_entity }
+      let(:action_name) { :unprocessable_content }
 
       it_behaves_like 'specific action'
     end

@@ -18,7 +18,7 @@ class Champs::CarteController < Champs::ChampController
         FetchCadastreRealGeometryJob.perform_later(geo_area) if geo_area.cadastre?
         render json: { feature: geo_area.to_feature }, status: :created
       else
-        render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_content
       end
     else
       render json: { feature: geo_area.to_feature }, status: :ok
@@ -33,7 +33,7 @@ class Champs::CarteController < Champs::ChampController
       FetchCadastreRealGeometryJob.perform_later(geo_area) if geo_area.cadastre?
       head :no_content
     else
-      render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_content
     end
   end
 
