@@ -36,10 +36,11 @@ module Maintenance
     end
 
     def process(champ)
+      return if !champ.idle?
       begin
-        if champ.external_data_fetched? && !champ.fetched?
+        if champ.external_data_fetched?
           champ.external_data_fetched!
-        elsif champ.external_error_present? && !champ.external_error?
+        elsif champ.external_error_present?
           champ.external_data_error!
         end
       rescue => e
