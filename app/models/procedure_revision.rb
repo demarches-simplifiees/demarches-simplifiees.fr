@@ -37,6 +37,8 @@ class ProcedureRevision < ApplicationRecord
 
   serialize :ineligibilite_rules, coder: LogicSerializer
 
+  normalizes :ineligibilite_message, with: -> message { message&.strip }
+
   def add_type_de_champ(params)
     parent_stable_id = params.delete(:parent_stable_id)
     parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
