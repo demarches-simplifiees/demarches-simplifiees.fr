@@ -2,27 +2,26 @@
   - callout.with_body do
     %p= self.class.summary
 
-= form_with url: polymorphic_path([:accept_simplification, :admin, procedure, :types_de_champ], rule: rule) do |form|
-  = hidden_field_tag :changes_json, changes_json
+= form_for llm_rule_suggestion, url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion), method: :post do |form|
+  - llm_rule_suggestion.llm_rule_suggestion_items.each do |llm_rule_suggestion_item|
+    = form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff|
+      - original_tdc = tdc_for(ff.object.stable_id)
+      - next unless original_tdc
+      .fr-checkbox-group.fr-my-1v.fr-my-2w
+        = ff.check_box :verify_status, {}, LLMRuleSuggestionItem.verify_statuses.fetch(:accepted), LLMRuleSuggestionItem.verify_statuses.fetch(:skipped)
+        = ff.label :verify_status, class: 'fr-label' do
+          = original_tdc.libelle
+          - if llm_rule_suggestion_item.payload&.[]('libelle').present? && llm_rule_suggestion_item.payload['libelle'] != original_tdc.libelle
+            %span.fr-ml-1w= "→ #{llm_rule_suggestion_item.payload['libelle']}"
 
-  - update_items.each do |item|
-    - original_tdc = tdc_for(item.stable_id)
-    - next unless original_tdc
+          - if llm_rule_suggestion_item.justification.present?
+            %span.fr-hint-text
+              - if llm_rule_suggestion_item.confidence.present?
+                %span.fr-badge= "confiance: #{llm_rule_suggestion_item.confidence}"
 
-    .fr-checkbox-group.fr-my-1v.fr-my-2w
-      = check_box_tag 'selected[update][]', item.stable_id, true, id: "selected_update_#{item.stable_id}"
-      = label_tag "selected_update_#{item.stable_id}", class: 'fr-label' do
-        = original_tdc.libelle
-        - if item.payload&.[]('libelle').present? && item.payload['libelle'] != original_tdc.libelle
-          %span.fr-ml-1w= "→ #{item.payload['libelle']}"
+              = llm_rule_suggestion_item.justification
 
-        - if item.justification.present?
-          %span.fr-hint-text
-            - if item.confidence.present?
-              %span.fr-badge= "confiance: #{item.confidence}"
-
-            = item.justification
-
+    
 
   %ul.fr-btns-group.fr-btns-group--inline-md.mt-4
     %li

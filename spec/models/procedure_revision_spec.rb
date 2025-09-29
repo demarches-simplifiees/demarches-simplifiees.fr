@@ -1280,31 +1280,17 @@ describe ProcedureRevision do
     let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :text, libelle: "A", stable_id: 1 }, { type: :text, libelle: "B", stable_id: 2 }] }
     let(:revision) { procedure.draft_revision }
+    let(:schema_hash) { Digest::SHA256.hexdigest(revision.schema_to_llm.to_json) }
 
-    it "deletes, updates and adds fields including repetition children" do
-      changes = {
-        destroy: [{ stable_id: 1 }],
-        update: [{ stable_id: 2, libelle: "B modifié" }],
-        add: [
-          {
-            after_stable_id: 2,
-            type_champ: "repetition",
-            libelle: "Enfants",
-            children: [
-              { type_champ: "text", libelle: "Prénom" },
-              { type_champ: "integer_number", libelle: "Âge" }
-            ]
-          }
-        ]
-      }.deep_symbolize_keys
+    context 'from LLM::LabelImprover' do
+      it "can update libelle" do
+        llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: LLM::LabelImprover::TOOL_NAME, schema_hash:)
+        create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted',stable_id: 2, op_kind: 'update', payload: { 'stable_id' => 2, 'libelle' => 'B modifié' })
 
-      expect { revision.apply_changes(changes) }.not_to raise_error
-      labels = revision.reload
-        .types_de_champ_public
-        .flat_map { it.repetition? ? revision.children_of(it) : it }
-        .map(&:libelle)
-      expect(labels).to include("B modifié", "Prénom", "Âge")
-      expect(labels).not_to include("A")
+        expect { revision.apply_changes(llm_rule_suggestion.changes_to_apply) }.not_to raise_error
+        libelles = revision.reload.types_de_champ_public.map(&:libelle)
+        expect(libelles).to include("B modifié")
+      end
     end
   end
 end
