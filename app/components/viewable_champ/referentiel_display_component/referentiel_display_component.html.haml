@@ -2,7 +2,7 @@
   - data.each do |libelle, value, jsonpath|
     = render Dossiers::RowShowComponent.new(label: libelle) do |c|
       - c.with_value do
-        %p.fr-mb-0.copy-btn{ role: "button" }
+        %p.fr-mb-0.copy-zone{ role: "button" }
           %span{ data: { to_copy: true } }= value
           %span.fr-icon-success-line.fr-icon--sm.text-info-blue{ aria: { describedby: tooltip_id(jsonpath) } }
           %span.fr-tooltip.fr-placement{ role: :tooltip, "aria-hidden" => "true", id: tooltip_id(jsonpath) }

@@ -1,6 +1,6 @@
 = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.normalized_address.full_address")) do |c|
   - c.with_value do
-    %p.copy-btn{ role: "button" }
+    %p.copy-zone{ role: "button" }
       = address.street_address
       %br
       = [address.city_name, address.postal_code].join(" ")
@@ -10,14 +10,14 @@
   - if address.public_send(scope).present?
     = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.normalized_address.#{scope}")) do |c|
       - c.with_value do
-        %p.copy-btn{ role: "button" }= address.public_send(scope)
+        %p.copy-zone{ role: "button" }= address.public_send(scope)
 
 - if address.departement_name.present?
   = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.normalized_address.department")) do |c|
     - c.with_value do
-      %p.copy-btn{ role: "button" }= "#{address.departement_name} – #{address.departement_code}"
+      %p.copy-zone{ role: "button" }= "#{address.departement_name} – #{address.departement_code}"
 
 - if address.region_name.present?
   = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.normalized_address.region")) do |c|
     - c.with_value do
-      %p.copy-btn{ role: "button" }= "#{address.region_name} – #{address.region_code}"
+      %p.copy-zone{ role: "button" }= "#{address.region_name} – #{address.region_code}"

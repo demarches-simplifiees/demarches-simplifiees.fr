@@ -1,9 +1,9 @@
 /**
  * Usage:
  * 1. Add `{ "data-controller": "clipboard2" }` to a parent container
- * 2. Mark copyable elements with `.copy-btn`
+ * 2. Mark copyable elements with `.copy-zone`
  * 3. Optionally use `data-to-copy` attribute to specify exact text to copy
- * 4. Optionally use `.copy-btn{ 'data-to-copy': 'coucou' }` to copy specific text
+ * 4. Optionally use `.copy-zone{ 'data-to-copy': 'coucou' }` to copy specific text
  * 5. Optionally use `data-copy-message-placeholder` to control message placement
  */
 import { Controller } from '@hotwired/stimulus';
@@ -40,7 +40,7 @@ export class Clipboard2Controller extends Controller {
   }
 
   private setupChampHoverListeners(): void {
-    [...this.element.querySelectorAll<HTMLElement>('.copy-btn')]
+    [...this.element.querySelectorAll<HTMLElement>('.copy-zone')]
       // cannot use innerText because of possible hidden/folded elements
       .filter((wrapper) => wrapper.textContent?.trim() !== '')
       .forEach((wrapper) => {
