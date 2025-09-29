@@ -4,7 +4,6 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
   let(:siret) { '30613890001294' }
   let(:service) { create(:service, siret: siret) }
   let(:entreprise_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
-  let(:geocoder_body) { File.read('spec/fixtures/files/api_address/address.json') }
   let(:status) { 200 }
   let(:api_entreprise_token) { JWT.encode({ exp: 2.months.from_now.to_i }, nil, 'none') }
 
@@ -13,11 +12,6 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
   before do
     stub_request(:get, %r{https://entreprise.api.gouv.fr/v3\/insee\/sirene\/etablissements\/#{siret}})
       .to_return(body: entreprise_body, status: status)
-
-    Geocoder.configure(lookup: :ban_data_gouv_fr, use_https: true)
-
-    stub_request(:get, "https://data.geopf.fr/geocodage/search/?citycode=75112&limit=1&q=#{adresse}")
-      .to_return(body: geocoder_body, status: status)
 
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('API_ENTREPRISE_KEY').and_return(api_entreprise_token)
@@ -29,7 +23,11 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
 
   subject { described_class.new.perform(service.id) }
 
-  it "update service with address" do
+  it "update service with address, updates departement, geocode" do
+    allow(Geocoder).to receive(:search)
+      .with(adresse, params: { citycode: "75112", limit: 1 })
+      .and_return([double('point', latitude: 48.859, longitude: 2.347)])
+
     subject
     infos = service.reload.etablissement_infos
 
@@ -39,18 +37,8 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
     expect(infos["code_postal"]).to eq("75016")
     expect(infos["code_insee_localite"]).to eq("75112")
     expect(infos["localite"]).to eq("PARIS 12")
-  end
-
-  it 'updates departement' do
-    subject
-    service.reload
 
     expect(service.departement).to eq "75"
-  end
-
-  it "geocode address" do
-    subject
-    service.reload
 
     expect(service.etablissement_lat).to eq(48.859)
     expect(service.etablissement_lng).to eq(2.347)
@@ -69,11 +57,9 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
     end
 
     it "supports empty geocode result" do
-      geocoder_response = JSON.parse(geocoder_body)
-      geocoder_response["features"] = []
-
-      stub_request(:get, "https://data.geopf.fr/geocodage/search/?citycode=75112&limit=1&q=#{adresse}")
-        .to_return(body: JSON.generate(geocoder_response), status: status)
+      allow(Geocoder).to receive(:search)
+        .with(adresse, params: { citycode: "75112", limit: 1 })
+        .and_return([])
 
       subject
       service.reload
