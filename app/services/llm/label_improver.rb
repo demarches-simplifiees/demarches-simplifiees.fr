@@ -3,10 +3,8 @@
 module LLM
   # Orchestrates improve_label generation using tool-calling.
   # - generate_for(revision): returns normalized items built from tool_calls
-  class LabelImprover
+  class LabelImprover < BaseImprover
     TOOL_NAME = 'improve_label'
-
-    # OpenAI-compatible tool schema.
     TOOL_DEFINITION = {
       type: 'function',
       function: {
@@ -31,48 +29,6 @@ module LLM
       },
     }.freeze
 
-    def initialize(runner: nil, logger: Rails.logger)
-      @runner = runner
-      @logger = logger
-    end
-
-    def tool_name
-      self.class::TOOL_NAME
-    end
-
-    # Returns an array of hashes suitable for LlmRuleSuggestionItem creation
-    # [{ rule:, op_kind:, stable_id:, payload:, safety:, justification:, confidence: }]
-    def generate_for(revision)
-      messages = propose_messages(revision)
-
-      calls = run_tools(messages: messages, tools: [TOOL_DEFINITION])
-
-      aggregate_calls(calls)
-    end
-
-    private
-
-    def run_tools(messages:, tools:)
-      return [] unless @runner
-
-      @runner.call(messages: messages, tools: tools) || []
-    rescue => e
-      @logger.warn("[LLM] improve_label tools failed: #{e.class}: #{e.message}")
-      []
-    end
-
-    def propose_messages(revision)
-      propose_messages_for_schema(revision.schema_to_llm)
-    end
-
-    def propose_messages_for_schema(schema)
-      [
-        { role: 'system', content: system_prompt },
-        { role: 'user', content: format(schema_prompt, schema: JSON.dump(schema)) },
-        { role: 'user', content: rules_prompt }
-      ]
-    end
-
     def system_prompt
       'Tu es un assistant qui améliore les libellés des champs de formulaires administratifs français.'
     end
@@ -96,26 +52,20 @@ module LLM
       TXT
     end
 
-    def aggregate_calls(calls)
-      calls
-        .filter { |c| c[:name] == TOOL_NAME }
-        .map do |call|
-          args = call[:arguments] || {}
-          update = args['update'].is_a?(Hash) ? args['update'] : {}
-          stable_id = update['stable_id'] || args['stable_id']
-          libelle = (update['libelle'] || args['libelle']).to_s.strip
-          next if stable_id.nil? || libelle.blank?
+    def build_item(args)
+      update = args['update'].is_a?(Hash) ? args['update'] : {}
+      stable_id = update['stable_id'] || args['stable_id']
+      libelle = (update['libelle'] || args['libelle']).to_s.strip
+      return if stable_id.nil? || libelle.blank?
 
-          {
-            op_kind: 'update',
-            stable_id: stable_id,
-            payload: { 'stable_id' => stable_id, 'libelle' => libelle },
-            safety: 'safe',
-            justification: args['justification'].to_s.presence,
-            confidence: args['confidence']
-          }
-        end
-        .compact
+      {
+        op_kind: 'update',
+        stable_id: stable_id,
+        payload: { 'stable_id' => stable_id, 'libelle' => libelle },
+        safety: 'safe',
+        justification: args['justification'].to_s.presence,
+        confidence: args['confidence'],
+      }
     end
   end
 end
