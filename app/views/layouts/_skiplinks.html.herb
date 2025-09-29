@@ -1,0 +1,9 @@
+<div class="fr-skiplinks">
+  <nav
+    class="fr-container"
+    role="navigation"
+    aria-label="<%= t("skiplinks.quick") %>"
+  >
+    <a class="fr-link" href="#contenu"><%= t('skiplinks.content') %></a>
+  </nav>
+</div>

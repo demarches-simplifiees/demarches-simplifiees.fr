@@ -1,0 +1,35 @@
+<% displayable_flash = flash.filter { |key, _| key.in?(['notice', 'alert']) } %>
+
+<div
+  id="flash_messages"
+  tabindex="-1"
+  data-turbo-force="server"
+  <% if displayable_flash.any? %>
+    data-controller="autofocus"
+  <% end %>
+>
+  <div
+    id="flash_message"
+    class="center <%= defined?(unique_classname) ? unique_classname : '' %>"
+  >
+    <% if displayable_flash.any? %>
+      <% displayable_flash.each do |key, value| %>
+        <% sticky = defined?(sticky) ? sticky : false %>
+        <% fixed = defined?(fixed) ? fixed : false %>
+        <div
+          class="alert <%= flash_class(key, sticky: sticky, fixed: fixed) %>"
+          role="<%= flash_role(key) %>"
+        >
+          <% if value.class == Array %>
+            <% value.each do |message| %>
+              <%= sanitize_with_link(message) %>
+              <br>
+            <% end %>
+          <% elsif value.present? %>
+            <%= sanitize_with_link(value) %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
