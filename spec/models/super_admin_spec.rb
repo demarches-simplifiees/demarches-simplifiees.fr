@@ -7,13 +7,11 @@ describe SuperAdmin, type: :model do
 
     subject { super_admin.invite_admin(valid_email) }
 
-    it {
+    it "has no errors" do
       user = subject
       expect(user.errors).to be_empty
       expect(user).to be_persisted
-    }
 
-    it do
       expect(super_admin.invite_admin(nil).errors).not_to be_empty
       expect(super_admin.invite_admin('toto').errors).not_to be_empty
     end

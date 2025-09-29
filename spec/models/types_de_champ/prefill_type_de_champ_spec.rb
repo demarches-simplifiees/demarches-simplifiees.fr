@@ -111,17 +111,19 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
         context 'when there is too many possible values' do
           before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD + 1).map(&:to_s) }
 
-          it { expect(possible_values).to include(link_to_all_possible_values) }
-
-          it { expect(possible_values).not_to include(built.all_possible_values.to_sentence) }
+          it do
+            expect(possible_values).to include(link_to_all_possible_values)
+            expect(possible_values).not_to include(built.all_possible_values.to_sentence)
+          end
         end
 
         context 'when there is not too many possible values' do
           before { type_de_champ.drop_down_options = (1..described_class::POSSIBLE_VALUES_THRESHOLD - 1).map(&:to_s) }
 
-          it { expect(possible_values).not_to include(link_to_all_possible_values) }
-
-          it { expect(possible_values).to include(built.all_possible_values.to_sentence) }
+          it do
+            expect(possible_values).not_to include(link_to_all_possible_values)
+            expect(possible_values).to include(built.all_possible_values.to_sentence)
+          end
         end
       end
     end

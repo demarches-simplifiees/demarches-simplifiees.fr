@@ -622,12 +622,12 @@ describe Administrateurs::ProceduresController, type: :controller do
           subject { procedure }
 
           it "update attributes" do
-          expect(subject.libelle).to eq(libelle)
-          expect(subject.description).to eq(description)
-          expect(subject.organisation).to eq(organisation)
-          expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
-          expect(subject.procedure_expires_when_termine_enabled).to eq(true)
-        end
+            expect(subject.libelle).to eq(libelle)
+            expect(subject.description).to eq(description)
+            expect(subject.organisation).to eq(organisation)
+            expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
+            expect(subject.procedure_expires_when_termine_enabled).to eq(true)
+          end
         end
 
         it do

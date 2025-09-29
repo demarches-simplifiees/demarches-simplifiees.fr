@@ -23,17 +23,19 @@ RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :cont
           .to_h.dig("data", "demarcheDescriptor").to_json
       end
 
-      it { expect(response).to have_http_status(:success) }
-
-      it { expect(response.body).to eq(expected_response) }
+      it do
+        expect(response).to have_http_status(:success)
+        expect(response.body).to eq(expected_response)
+      end
     end
 
     context "the procedure is not found" do
       let(:params) { { path: "error" } }
 
-      it { expect(response).to have_http_status(:not_found) }
-
-      it { expect(response).to have_failed_with("procedure error is not found") }
+      it do
+        expect(response).to have_http_status(:not_found)
+        expect(response).to have_failed_with("procedure error is not found")
+      end
     end
   end
 end

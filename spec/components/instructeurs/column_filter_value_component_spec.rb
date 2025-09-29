@@ -37,7 +37,6 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
   describe 'the input case' do
     let(:column) { double("Column", column: :value, type: :datetime, mandatory: true) }
 
-    it { puts "page: #{page.text}" }
     it { expect(page).to have_selector('input[name="filter[filter][value][]"][type="date"]', count: 1) }
   end
 
@@ -66,9 +65,8 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
         expect(page).to have_selector('input[name="filter[filter][value][]"][type="radio"]', count: 3)
         expect(page).to have_selector('label[for="filter[filter][value][]_true"]', text: 'oui')
         expect(page).to have_selector('label[for="filter[filter][value][]_false"]', text: 'non')
+        expect(page).to have_selector('label[for="filter[filter][value][]_nil"]', text: 'Non renseigné')
       end
-
-      it { expect(page).to have_selector('label[for="filter[filter][value][]_nil"]', text: 'Non renseigné') }
     end
   end
 
@@ -83,8 +81,6 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
         expect(page).to have_selector('label[for="filter[filter][value][]_true"]', text: 'coché')
         expect(page).to have_selector('label[for="filter[filter][value][]_false"]', text: 'non coché')
       end
-
-      # it { expect(page).to have_selector('input[name="filter[filter][value][]"][type="checkbox"]') }
     end
 
     context 'when the column is not mandatory' do

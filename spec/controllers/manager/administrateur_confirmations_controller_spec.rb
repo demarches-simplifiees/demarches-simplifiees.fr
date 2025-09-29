@@ -30,9 +30,10 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
     shared_examples "current admin isn't allowed to confirm adding another one" do
       before { new_request }
 
-      it { expect(flash[:alert]).to match(/Veuillez partager ce lien avec un autre super administrateur/) }
-
-      it { expect(response).to redirect_to(manager_procedure_path(procedure)) }
+      it do
+        expect(flash[:alert]).to match(/Veuillez partager ce lien avec un autre super administrateur/)
+        expect(response).to redirect_to(manager_procedure_path(procedure))
+      end
     end
 
     context 'when the current admin is the invited' do
@@ -107,9 +108,10 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
     shared_examples "current admin isn't allowed to confirm adding another one" do
       before { create_request }
 
-      it { expect(flash[:alert]).to match(/Veuillez partager ce lien avec un autre super administrateur/) }
-
-      it { expect(response).to redirect_to(manager_procedure_path(procedure)) }
+      it do
+        expect(flash[:alert]).to match(/Veuillez partager ce lien avec un autre super administrateur/)
+        expect(response).to redirect_to(manager_procedure_path(procedure))
+      end
     end
 
     context 'when the current admin is the invited' do

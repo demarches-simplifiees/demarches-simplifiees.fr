@@ -52,9 +52,10 @@ describe Procedure do
         subject.save
         subject.reload
       end
-      it { expect(subject.passer_en_construction_email_template.body).to eq('toto') }
-
-      it { expect(Mails::InitiatedMail.count).to eq(1) }
+      it do
+        expect(subject.passer_en_construction_email_template.body).to eq('toto')
+        expect(Mails::InitiatedMail.count).to eq(1)
+      end
     end
   end
 

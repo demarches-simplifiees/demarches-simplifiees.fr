@@ -127,9 +127,8 @@ describe TypeDeChamp do
 
       before { subject.instance_variable_set(:@dynamic_type, dynamic_type) }
 
-      it { is_expected.to be_invalid }
       it do
-        subject.validate
+        is_expected.to be_invalid
         expect(subject.errors.full_messages.to_sentence).to eq("Le champ « Troll » always invalid")
       end
     end

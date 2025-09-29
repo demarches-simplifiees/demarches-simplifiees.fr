@@ -16,6 +16,7 @@ describe Logic::IncludeOperator do
   end
 
   describe '#errors' do
+    # rubocop:disable RSpec/ConsecutiveItBlocks
     it { expect(ds_include(champ_value(champ.stable_id), constant('val1')).errors([champ.type_de_champ])).to be_empty }
     it do
       expected = {
@@ -28,6 +29,7 @@ describe Logic::IncludeOperator do
     end
 
     it { expect(ds_include(constant(1), constant('val1')).errors([])).to eq([{ type: :required_list }]) }
+    # rubocop:enable RSpec/ConsecutiveItBlocks
   end
 
   describe '#==' do
