@@ -765,8 +765,8 @@ Rails.application.routes.draw do
 
         collection do
           get 'simplify', action: :simplify_index, as: :simplify_index
-          get 'simplify/:rule', action: :simplify, as: :simplify
-          post 'accept_simplification/:rule', action: :accept_simplification, as: :accept_simplification
+          get 'simplify/:llm_suggestion_rule_id', action: :simplify, as: :simplify
+          post 'accept_simplification/:llm_suggestion_rule_id', action: :accept_simplification, as: :accept_simplification
         end
       end
 

@@ -11,25 +11,5 @@ class LLM::ImproveLabelComponent < LLM::RuleComponent
     DESCRIPTION
   end
 
-  def changes_json
-    { update: update_items.map { |item| serialized_update(item) } }.to_json
-  end
-
-  def update_items
-    @update_items ||= Array(changes['update'])
-  end
-
   private
-
-  def serialized_update(item)
-    payload = item.payload || {}
-
-    {
-      stable_id: item.stable_id,
-      libelle: payload['libelle'],
-      type_champ: payload['type_champ'],
-      justification: item.justification,
-      confidence: item.confidence
-    }.compact
-  end
 end

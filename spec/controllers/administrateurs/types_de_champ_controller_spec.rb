@@ -410,7 +410,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
     it 'renders label suggestions from stored LLMRuleSuggestion items' do
-      create(:llm_rule_suggestion_item,
+      llm_rule_suggestion_item = create(:llm_rule_suggestion_item,
         llm_rule_suggestion:,
         op_kind: 'update',
         stable_id: 123,
@@ -419,28 +419,25 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         justification: 'clarity',
         confidence: 0.9)
 
-      get :simplify, params: { procedure_id: procedure.id, rule: rule }
+      get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: llm_rule_suggestion.id }
 
       expect(response).to have_http_status(:ok)
       expect(assigns(:component)).to be_an_instance_of(LLM::ImproveLabelComponent)
     end
 
-    it '404s on unknown rule' do
-      get :simplify, params: { procedure_id: procedure.id, rule: 'unknown_rule' }
-      expect(response).to have_http_status(:not_found)
+    it 'redirect on unknown llm_suggestion' do
+      get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: 'unknown_rule' }
+      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+      expect(flash[:alert]).to eq("Suggestion non trouvée")
     end
   end
 
   describe '#simplify_index' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: 'Ancien', stable_id: 123 }]) }
-
-    it 'with no suggestion available, it list available rules' do
-      get :simplify_index, params: { procedure_id: procedure.id }
-
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:rules).keys).to include(LLM::ImproveLabelComponent)
-      expect(assigns(:rules)[LLM::ImproveLabelComponent]).to eq(0)
-    end
+    let(:procedure_revision) { procedure.published_revision }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
+    let(:rule) { LLM::LabelImprover::TOOL_NAME }
+    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
     it 'when suggestion are available, it list available rules and suggestion count' do
       llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.published_revision, rule: LLM::ImproveLabelComponent.key, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
@@ -448,40 +445,46 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       get :simplify_index, params: { procedure_id: procedure.id }
 
       expect(response).to have_http_status(:ok)
-      expect(assigns(:rules).keys).to include(LLM::ImproveLabelComponent)
-      expect(assigns(:rules)[LLM::ImproveLabelComponent]).to eq(1)
+      expect(assigns(:llm_rule_suggestions).first.id).to eq(llm_rule_suggestion.id)
+      expect(assigns(:llm_rule_suggestions).first.items_count).to eq(1)
     end
   end
 
   describe '#accept_simplification' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'A' }, { type: :text, libelle: 'B' }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :text, libelle: 'A', stable_id: 123 },
+        { type: :text, libelle: 'B' }
+      ]
+    end
 
     it 'applies only selected operations from posted changes_json' do
-      rev = procedure.draft_revision
-      first_id, second_id = rev.types_de_champ_public.map(&:stable_id)
-
-      changes = {
-        destroy: [{ stable_id: first_id, justification: 'Redondant' }],
-        update:  [{ stable_id: second_id, libelle: 'B modifié' }],
-        add:     [{ stable_id: 999_001, after_stable_id: second_id, type_champ: 'text', libelle: 'Nouveau' }]
-      }
+      suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.published_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
+      accepted_suggestion_item = create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9)
+      skipped_suggestion_item = create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9)
 
       post :accept_simplification, params: {
         procedure_id: procedure.id,
-        rule: LLM::LabelImprover::TOOL_NAME,
-        changes_json: changes.to_json,
-        selected: {
-          destroy: [first_id],
-          update: [second_id],
-          add: [999_001]
+        llm_suggestion_rule_id: suggestion.id,
+        llm_rule_suggestion: {
+          llm_rule_suggestion_items_attributes: {
+            "0" => { id: accepted_suggestion_item.id, verify_status: 'accepted' },
+            "1" => { id: skipped_suggestion_item.id, verify_status: 'skipped' }
+          }
         }
       }
 
-      expect(response).to redirect_to([:champs, :admin, procedure])
+      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
 
-      labels = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
-      expect(labels).to include('B modifié', 'Nouveau')
-      expect(labels).not_to include('A')
+      libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
+      expect(libelles).to include('Nouveau')
+      expect(libelles).not_to include('A')
+
+      expect(accepted_suggestion_item.reload.verify_status).to eq('accepted')
+      expect(accepted_suggestion_item.applied_at).not_to be_nil
+      expect(skipped_suggestion_item.reload.verify_status).to eq('skipped')
+      expect(skipped_suggestion_item.reload.applied_at).to be_nil
     end
   end
 end

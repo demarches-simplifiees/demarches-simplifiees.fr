@@ -20,11 +20,17 @@
       Sélectionnez une règle pour consulter les suggestions générées automatiquement et appliquer celles qui vous semblent pertinentes.
 
     .fr-grid-row.fr-grid-row--gutters
-      - @rules.each_pair do |component, suggestion_count|
-        .fr-col-12.fr-col-md-6.fr-col-lg-4
-          .fr-tile.fr-enlarge-link
-            = link_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: component.key), class: 'fr-tile__body' do
-              %h3.fr-tile__title= component.libelle
-              %p.fr-tile__desc= component.summary
-              %p.fr-tile__desc= "#{suggestion_count} suggestion(s) disponible(s)"
-              %p.fr-link.fr-mt-2w Consulter les suggestions
+      - @llm_rule_suggestions.each do |llm_rule_suggestion|
+        .fr-col-6.fr-col-md-4.fr-col-lg-3
+          = link_to simplify_admin_procedure_types_de_champ_path(procedure_id: @procedure.id, llm_suggestion_rule_id: llm_rule_suggestion.id), class: 'fr-tile fr-enlarge-link' do
+            .fr-tile__body.flex.column.align-center.justify-between
+              - if llm_rule_suggestion.items_count.positive?
+                %p.fr-badge.fr-badge--info
+                  = "#{llm_rule_suggestion.items_count} suggestion(s)"
+              - else
+                %p.fr-badge
+                  Aucune suggestion
+
+              %h3.fr-h6= llm_rule_suggestion.component.libelle
+              %p.fr-tile-subtitle= llm_rule_suggestion.component.summary
+              %p.fr-btn.fr-btn--tertiary Consulter les suggestions

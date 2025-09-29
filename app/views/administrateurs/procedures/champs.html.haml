@@ -70,7 +70,7 @@
             %li
               = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-link fr-mb-2w'
             %li
-              = link_to "Simplifie 🪄", simplify_admin_procedure_types_de_champ_path(@procedure, rule: LLM::LabelImprover::TOOL_NAME), method: :get, class: 'fr-btn fr-btn--secondary fr-mb-2w fr-ml-2w'
+              = link_to "Simplifie 🪄", simplify_index_admin_procedure_types_de_champ_path(@procedure), method: :get, class: 'fr-btn fr-btn--secondary fr-mb-2w fr-ml-2w'
         .fr-ml-auto
           #autosave-notice.hidden
           = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @procedure.draft_revision, is_annotation: false)

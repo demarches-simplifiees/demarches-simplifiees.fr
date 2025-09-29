@@ -168,40 +168,46 @@ module Administrateurs
       end
     end
 
-    def simplify
-      @rule = params[:rule].to_s
-      return head :not_found unless allowed_rule?(@rule)
-
-      @revision = @procedure.draft_revision
-      load_suggestion(@rule, @revision)
+    def simplify_index
+      @llm_rule_suggestions = published_revision_llm_rule_suggestion_scope
+        .joins(:llm_rule_suggestion_items)
+        .select('llm_rule_suggestions.*, COUNT(llm_rule_suggestion_items.id) as items_count')
+        .group('llm_rule_suggestions.id')
     end
 
-    def simplify_index
-      @revision = @procedure.draft_revision
-      @procedure_linter = ProcedureLinter.new(@procedure, @revision)
+    def simplify
+      suggestion = published_revision_llm_rule_suggestion_scope
+        .where(id: params[:llm_suggestion_rule_id])
+        .order(created_at: :desc)
+        .first
+      if suggestion
+        component_class = LLM.const_get("#{suggestion.rule.camelcase}Component")
+        @component = component_class.new(suggestion:)
+      else
+        redirect_to simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée"
+      end
+    end
 
+    def accept_simplification
+      @llm_rule_suggestion = published_revision_llm_rule_suggestion_scope.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
+      @llm_rule_suggestion.save!
+      @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
+
+      redirect_to simplify_index_admin_procedure_types_de_champ_path(@procedure)
+    end
+
+    def published_revision_llm_rule_suggestion_scope
       published_revision = @procedure.published_revision
       schema = published_revision.schema_to_llm.to_json
       schema_hash = Digest::SHA256.hexdigest(schema)
 
-      components = [LLM::ImproveLabelComponent].select { |component| allowed_rule?(component.key) }
-      counts = LLMRuleSuggestionItem
-        .joins(:llm_rule_suggestion)
-        .where(llm_rule_suggestions: { procedure_revision_id: published_revision.id, state: 'completed', schema_hash:, rule: components.map(&:key) })
-        .group('llm_rule_suggestions.rule')
-        .count
-
-      @rules = components.index_with { |component| counts[component.key] || 0 }
+      LLMRuleSuggestion.where(procedure_revision_id: published_revision.id, state: 'completed', schema_hash:)
     end
 
-    def accept_simplification
-      rule = params[:rule].to_s
-      return head :not_found unless allowed_rule?(rule)
-
-      changes = build_changes_from_selection
-      draft.apply_changes(changes)
-
-      redirect_to [:champs, :admin, @procedure]
+    def llm_rule_suggestion_items_attributes
+      params.require(:llm_rule_suggestion)
+        .permit(llm_rule_suggestion_items_attributes: [:id, :verify_status])
     end
 
     private
@@ -296,36 +302,7 @@ module Administrateurs
       Marcel::MimeType.for(referentiel_file.read, name: referentiel_file.original_filename, declared_type: referentiel_file.content_type)
     end
 
-    def build_changes_from_selection
-      all_changes = JSON.parse(params[:changes_json].presence || "{}", symbolize_names: true)
-      selected = (params[:selected] || {}).to_unsafe_h.symbolize_keys
-
-      destroy_ids = Array(selected[:destroy]).map { |v| v.to_i }
-      update_ids = Array(selected[:update]).map { |v| v.to_i }
-      add_ids = Array(selected[:add]).map { |v| v.to_i }
-
-      {
-        destroy: Array(all_changes[:destroy]).select { |c| destroy_ids.include?(c[:stable_id].to_i) },
-        update:  Array(all_changes[:update]).select  { |c| update_ids.include?(c[:stable_id].to_i) },
-        add:     Array(all_changes[:add]).select     { |c| add_ids.include?(c[:stable_id].to_i) }
-      }
-    rescue JSON::ParserError
-      { destroy: [], update: [], add: [] }
-    end
-
     def load_suggestion(rule, revision)
-      published_revision = @procedure.published_revision
-      schema = published_revision.schema_to_llm.to_json
-      schema_hash = Digest::SHA256.hexdigest(schema)
-
-      suggestion = LLMRuleSuggestion
-        .where(procedure_revision_id: published_revision.id, rule:, state: 'completed', schema_hash:)
-        .order(created_at: :desc)
-        .first
-
-      changes = suggestion&.llm_rule_suggestion_items&.order(created_at: :desc)&.group_by(&:op_kind)
-      component_class = LLM.const_get("#{rule.camelcase}Component")
-      @component = component_class.new(changes:, revision:)
      end
 
     def allowed_rule?(rule)
