@@ -2,7 +2,7 @@
 
 module LLM
   # Orchestrates improve_label generation using tool-calling.
-  class LabelImprover
+  class LabelImprover < BaseImprover
     TOOL_DEFINITION = {
       type: 'function',
       function: {
@@ -28,92 +28,12 @@ module LLM
       },
     }.freeze
 
-    def initialize(runner: nil, logger: Rails.logger)
-      @runner = runner
-      @logger = logger
-    end
-
-    # Returns an array of hashes suitable for LlmRuleSuggestionItem creation
-    # [{ rule:, op_kind:, stable_id:, payload:, safety:, justification:, confidence: }]
-    def generate_for(revision)
-      messages = propose_messages(revision)
-
-      calls = run_tools(messages: messages, tools: [TOOL_DEFINITION])
-
-      aggregate_calls(calls)
-    end
-
-    private
-
-    def run_tools(messages:, tools:)
-      return [] unless @runner
-
-      @runner.call(messages: messages, tools: tools) || []
-    rescue => e
-      @logger.warn("[LLM] improve_label tools failed: #{e.class}: #{e.message}")
-      []
-    end
-
-    def propose_messages(revision)
-      propose_messages_for_schema(revision.schema_to_llm)
-    end
-
-    def propose_messages_for_schema(schema)
-      [
-        { role: 'system', content: system_prompt },
-        { role: 'user', content: format(schema_prompt, schema: JSON.dump(schema)) },
-        { role: 'user', content: rules_prompt },
-      ]
-    end
-
     def system_prompt
       <<-ROLE
         Optimisation des formulaires en ligne (UX Writing)
         Tu es un assistant expert en UX Writing, en conception de formulaires en ligne et en simplification administrative.
         Ta mission est d’améliorer les libellés, descriptions, titres de section et explications d’un formulaire en ligne afin de les rendre plus clairs, plus simples, plus utiles et orientés vers l’action.
       ROLE
-    end
-
-    def schema_prompt
-      <<~PROMPT
-        Voici le schéma des champs (publics) du formulaire en JSON. Chaque entrée contient :
-          - stable_id : l'identifiant du champ
-          - type : le type de champ
-          - libellé : le libellé du champ
-          - mandatory : indique si le champ est obligatoire ou non
-          - description : la description du champ (optionnel)
-          - choices : les options disponibles pour les champs de type liste déroulante (drop_down_list ou multiple_drop_down_list)
-          - position : la position du champ dans le formulaire
-          - et éventuellement une description.
-
-          Les type de champ possibles sont :
-          - header_section : pour structurer le formulaire en sections (aucune saisie attendue, uniquement un libelle).
-          - repetition : pour des blocs répétables de champs enfants ; l’usager peut répéter le bloc autant de fois qu’il le souhaite.
-          - explication : pour fournir du contexte ou des consignes (aucune saisie attendue).
-          - civilite : pour choisir « Madame » ou « Monsieur » ; l’administration connaît déjà cette information.
-          - email : pour les adresses électroniques ; l’administration connaît déjà l’email de l’usager.
-          - phone : pour les numéros de téléphone.
-          - address : pour les adresses postales (auto-complétées avec commune, codes postaux, département, etc.).
-          - communes : pour sélectionner des communes françaises (auto-complétées avec code, code postal, département, etc.).
-          - departments : pour sélectionner des départements français.
-          - text : pour des champs texte courts.
-          - textarea : pour des champs texte longs.
-          - integer_number : pour des nombres entiers.
-          - decimal_number : pour des nombres décimaux.
-          - date : pour sélectionner une date.
-          - piece_justificative : pour téléverser des pièces justificatives (inutile de l’enfermer dans une répétition : plusieurs fichiers sont déjà possibles).
-          - titre_identite : pour téléverser un titre d’identité de manière sécurisée.
-          - checkbox : pour une case à cocher unique.
-          - yes_no : pour une question à réponse « oui »/« non ».
-          - drop_down_list : pour un choix unique dans une liste déroulante (options configurées ailleurs par l’administration).
-          - multiple_drop_down_list : pour un choix multiple dans une liste déroulante (options configurées ailleurs par l’administration).
-
-          Ce qui délimite les sections, c'est la position des champs "header_section" suivis des champs qui les suivent jusqu'à la prochaine "header_section".
-
-          <schema>
-          %<schema>s
-          </schema>
-      PROMPT
     end
 
     # https://www.modernisation.gouv.fr/files/2021-06/avec_logique_linformation_tu_organiseras_com.pdf
@@ -200,6 +120,7 @@ module LLM
     end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def aggregate_calls(calls)
       calls
         .filter { |c| c[:name] == TOOL_NAME }
@@ -233,11 +154,26 @@ module LLM
         op_kind: 'update',
         stable_id: stable_id,
         payload: { 'stable_id' => stable_id, 'libelle' => libelle, 'description' => description, 'position' => position },
+=======
+    def build_item(args)
+      update = args['update'].is_a?(Hash) ? args['update'] : {}
+      stable_id = update['stable_id'] || args['stable_id']
+      libelle = (update['libelle'] || args['libelle']).to_s.strip
+      return if stable_id.nil? || libelle.blank?
+
+      {
+        op_kind: 'update',
+        stable_id: stable_id,
+        payload: { 'stable_id' => stable_id, 'libelle' => libelle },
+>>>>>>> 7f33ed35bb (refactor(LabelImprover): extract LLM::BaseImprover in norder to share code between LabelImprover and upcoming StructureImprover)
         safety: 'safe',
         justification: args['justification'].to_s.presence,
         confidence: args['confidence'],
       }
+<<<<<<< HEAD
 >>>>>>> 4df4c0b58b (fixup! feat(LLM): wire first LLM calls to improve label of type de champ. So we glued : - an openai_client - a LLM::Runner (using the openai_client), it calls tools/returns tools results in a normalized way - LabelImprover that uses the runner to build payload that will be stored on LLMSuggestionItems)
+=======
+>>>>>>> 7f33ed35bb (refactor(LabelImprover): extract LLM::BaseImprover in norder to share code between LabelImprover and upcoming StructureImprover)
     end
   end
 end
