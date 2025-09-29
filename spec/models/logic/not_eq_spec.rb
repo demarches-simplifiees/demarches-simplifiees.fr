@@ -4,8 +4,10 @@ describe Logic::NotEq do
   include Logic
 
   describe '#compute' do
-    it { expect(ds_not_eq(constant(1), constant(1)).compute).to be(false) }
-    it { expect(ds_not_eq(constant(1), constant(2)).compute).to be(true) }
+    it do
+      expect(ds_not_eq(constant(1), constant(1)).compute).to be(false)
+      expect(ds_not_eq(constant(1), constant(2)).compute).to be(true)
+    end
   end
 
   describe '#errors' do

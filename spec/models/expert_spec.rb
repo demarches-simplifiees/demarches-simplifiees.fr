@@ -10,9 +10,11 @@ RSpec.describe Expert, type: :model do
       procedure.reload
     end
 
-    it { expect(procedure.experts).to eq([expert]) }
-    it { expect(ExpertsProcedure.where(expert: expert, procedure: procedure).count).to eq(1) }
-    it { expect(ExpertsProcedure.where(expert: expert, procedure: procedure).first.allow_decision_access).to be_falsy }
+    it do
+      expect(procedure.experts).to eq([expert])
+      expect(ExpertsProcedure.where(expert: expert, procedure: procedure).count).to eq(1)
+      expect(ExpertsProcedure.where(expert: expert, procedure: procedure).first.allow_decision_access).to be_falsy
+    end
   end
 
   describe '#merge' do

@@ -80,7 +80,7 @@ describe Champs::CarteController, type: :controller do
 
         it do
           expect { subject } .not_to change { dossier.reload.last_champ_updated_at }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
     end
@@ -125,7 +125,7 @@ describe Champs::CarteController, type: :controller do
 
         it do
           expect { subject } .not_to change { dossier.reload.last_champ_updated_at }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
     end

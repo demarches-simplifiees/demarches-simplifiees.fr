@@ -106,29 +106,35 @@ describe ApplicationController, type: :controller do
     context 'when no super_admin is logged in' do
       before { @controller.send(:reject) }
 
-      it { expect(@controller).to have_received(:sign_out).with(:user) }
-      it { expect(@controller).to have_received(:sign_out).with(:instructeur) }
-      it { expect(@controller).to have_received(:sign_out).with(:administrateur) }
-      it { expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
-      it { expect(@controller).to have_received(:redirect_to).with(root_path) }
+      it do
+        expect(@controller).to have_received(:sign_out).with(:user)
+        expect(@controller).to have_received(:sign_out).with(:instructeur)
+        expect(@controller).to have_received(:sign_out).with(:administrateur)
+        expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE)
+        expect(@controller).to have_received(:redirect_to).with(root_path)
+      end
 
       context 'when the path is safe' do
         ['/', '/manager', '/super_admins'].each do |path|
           let(:path_info) { path }
 
-          it { expect(@controller).not_to have_received(:sign_out) }
-          it { expect(@controller).not_to have_received(:redirect_to) }
-          it { expect(flash.alert).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
+          it do
+            expect(@controller).not_to have_received(:sign_out)
+            expect(@controller).not_to have_received(:redirect_to)
+            expect(flash.alert).to eq(ApplicationController::MAINTENANCE_MESSAGE)
+          end
         end
       end
 
       context 'when the path is api related' do
         let(:path_info) { '/api/some-stuff' }
         let(:json_error) { { error: ApplicationController::MAINTENANCE_MESSAGE }.to_json }
-        it { expect(@controller).not_to have_received(:sign_out) }
-        it { expect(@controller).not_to have_received(:redirect_to) }
-        it { expect(flash.alert).to be_nil }
-        it { expect(@controller).to have_received(:render).with({ json: json_error, status: :service_unavailable }) }
+        it do
+          expect(@controller).not_to have_received(:sign_out)
+          expect(@controller).not_to have_received(:redirect_to)
+          expect(flash.alert).to be_nil
+          expect(@controller).to have_received(:render).with({ json: json_error, status: :service_unavailable })
+        end
       end
     end
 
@@ -140,9 +146,11 @@ describe ApplicationController, type: :controller do
         @controller.send(:reject)
       end
 
-      it { expect(@controller).not_to have_received(:sign_out) }
-      it { expect(@controller).not_to have_received(:redirect_to) }
-      it { expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
+      it do
+        expect(@controller).not_to have_received(:sign_out)
+        expect(@controller).not_to have_received(:redirect_to)
+        expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE)
+      end
     end
   end
 
@@ -189,9 +197,11 @@ describe ApplicationController, type: :controller do
 
             before { subject }
 
-            it { expect(@controller).to have_received(:redirect_to) }
-            it { expect(@controller).to have_received(:send_login_token_or_bufferize) }
-            it { expect(@controller).to have_received(:store_location_for) }
+            it do
+              expect(@controller).to have_received(:redirect_to)
+              expect(@controller).to have_received(:send_login_token_or_bufferize)
+              expect(@controller).to have_received(:store_location_for)
+            end
           end
         end
 

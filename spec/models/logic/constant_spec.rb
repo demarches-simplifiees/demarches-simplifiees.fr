@@ -8,11 +8,13 @@ describe Logic::Constant do
   end
 
   describe '#type' do
-    it { expect(constant(1).type).to eq(:number) }
-    it { expect(constant(1.0).type).to eq(:number) }
-    it { expect(constant('a').type).to eq(:string) }
-    it { expect(constant(true).type).to eq(:boolean) }
-    it { expect(constant(false).type).to eq(:boolean) }
+    it do
+      expect(constant(1).type).to eq(:number)
+      expect(constant(1.0).type).to eq(:number)
+      expect(constant('a').type).to eq(:string)
+      expect(constant(true).type).to eq(:boolean)
+      expect(constant(false).type).to eq(:boolean)
+    end
   end
 
   describe '#errors' do
@@ -20,8 +22,10 @@ describe Logic::Constant do
   end
 
   describe '#==' do
-    it { expect(constant(1)).to eq(constant(1)) }
-    it { expect(constant(1)).not_to eq(constant('a')) }
+    it do
+      expect(constant(1)).to eq(constant(1))
+      expect(constant(1)).not_to eq(constant('a'))
+    end
   end
 
   describe '#sources' do

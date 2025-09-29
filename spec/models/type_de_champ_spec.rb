@@ -3,8 +3,10 @@
 describe TypeDeChamp do
   describe 'validation' do
     context 'type' do
-      it { is_expected.not_to allow_value(nil).for(:type_champ) }
-      it { is_expected.not_to allow_value('').for(:type_champ) }
+      it do
+        is_expected.not_to allow_value(nil).for(:type_champ)
+        is_expected.not_to allow_value('').for(:type_champ)
+      end
 
       let(:procedure) { create(:procedure, :with_all_champs) }
       let(:dossier) { create(:dossier, procedure:) }
@@ -19,9 +21,11 @@ describe TypeDeChamp do
     end
 
     context 'description' do
-      it { is_expected.to allow_value(nil).for(:description) }
-      it { is_expected.to allow_value('').for(:description) }
-      it { is_expected.to allow_value('blabla').for(:description) }
+      it do
+        is_expected.to allow_value(nil).for(:description)
+        is_expected.to allow_value('').for(:description)
+        is_expected.to allow_value('blabla').for(:description)
+      end
     end
 
     context 'stable_id' do
@@ -84,22 +88,28 @@ describe TypeDeChamp do
       context 'when the target type_champ is not drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
-        it { expect(tdc.drop_down_options).to be_present }
-        it { expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"]) }
+        it do
+          expect(tdc.drop_down_options).to be_present
+          expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"])
+        end
       end
 
       context 'when the target type_champ is linked_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
 
-        it { expect(tdc.drop_down_options).to be_present }
-        it { expect(tdc.drop_down_options).to eq(['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']) }
+        it do
+          expect(tdc.drop_down_options).to be_present
+          expect(tdc.drop_down_options).to eq(['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes'])
+        end
       end
 
       context 'when the target type_champ is multiple_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
 
-        it { expect(tdc.drop_down_options).to be_present }
-        it { expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"]) }
+        it do
+          expect(tdc.drop_down_options).to be_present
+          expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"])
+        end
       end
     end
 
@@ -256,8 +266,10 @@ describe TypeDeChamp do
   end
 
   describe '#normalize_libelle' do
-    it { expect(create(:type_de_champ, :header_section, libelle: " 2.3 Test").libelle).to eq("2.3 Test") }
-    it { expect(create(:type_de_champ, libelle: " fix me ").libelle).to eq("fix me") }
+    it do
+      expect(create(:type_de_champ, :header_section, libelle: " 2.3 Test").libelle).to eq("2.3 Test")
+      expect(create(:type_de_champ, libelle: " fix me ").libelle).to eq("fix me")
+    end
   end
 
   describe '#set_default_libelle' do

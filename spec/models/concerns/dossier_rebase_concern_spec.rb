@@ -183,7 +183,7 @@ describe DossierRebaseConcern do
         dossier.reload
       end
 
-      it "updates the brouillon champs with the latest revision changes" do
+      it "updates the brouillon champs with the latest revision changes", :slow do
         expect(dossier.revision).to eq(procedure.published_revision)
         expect(dossier.project_champs_public.size).to eq(5)
         expect(dossier.champs.count(&:public?)).to eq(6)

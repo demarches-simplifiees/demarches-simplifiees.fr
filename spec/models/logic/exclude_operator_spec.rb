@@ -9,8 +9,10 @@ describe Logic::ExcludeOperator do
   let(:champ) { Champs::MultipleDropDownListChamp.new(value: '["val1", "val2"]', stable_id: tdc.stable_id, dossier:) }
 
   describe '#compute' do
-    it { expect(ds_exclude(champ_value(champ.stable_id), constant('val1')).compute([champ])).to be(false) }
-    it { expect(ds_exclude(champ_value(champ.stable_id), constant('something else')).compute([champ])).to be(true) }
+    it do
+      expect(ds_exclude(champ_value(champ.stable_id), constant('val1')).compute([champ])).to be(false)
+      expect(ds_exclude(champ_value(champ.stable_id), constant('something else')).compute([champ])).to be(true)
+    end
   end
 
   describe '#errors' do

@@ -22,7 +22,9 @@ describe EditableChamp::ExplicationComponent, type: :component do
 
     subject { render_inline(component).to_html }
 
-    it { is_expected.to have_button("Lire plus") }
-    it { is_expected.to have_selector(".fr-collapse", text: "hide me") }
+    it do
+      is_expected.to have_button("Lire plus")
+      is_expected.to have_selector(".fr-collapse", text: "hide me")
+    end
   end
 end

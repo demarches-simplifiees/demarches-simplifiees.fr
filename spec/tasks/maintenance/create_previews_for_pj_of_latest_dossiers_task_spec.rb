@@ -27,7 +27,7 @@ module Maintenance
       context "when pj is a pdf" do
         let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-        it "creates a preview" do
+        it "creates a preview", :external_deps do
           attachment = champ_pj.piece_justificative_file.attachments.first
           expect(attachment.preview(resize_to_limit: [400, 400]).image.attached?).to be false
           expect { subject }.to change { attachment.reload.preview(resize_to_limit: [400, 400]).image.attached? }

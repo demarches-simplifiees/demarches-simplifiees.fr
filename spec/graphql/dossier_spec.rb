@@ -15,9 +15,11 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:query) { DOSSIER_WITH_ATTESTATION_QUERY }
     let(:variables) { { number: dossier.id } }
 
-    it { expect(data[:dossier][:attestation]).not_to be_nil }
-    it { expect(data[:dossier][:traitements]).to eq([{ state: 'accepte' }]) }
-    it { expect(data[:dossier][:dateExpiration]).not_to be_nil }
+    it do
+      expect(data[:dossier][:attestation]).not_to be_nil
+      expect(data[:dossier][:traitements]).to eq([{ state: 'accepte' }])
+      expect(data[:dossier][:dateExpiration]).not_to be_nil
+    end
 
     context 'when attestation is nil' do
       before do
@@ -108,7 +110,7 @@ RSpec.describe Types::DossierType, type: :graphql do
       dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:rna) }.update(data: rna)
     end
 
-    it do
+    it '', :slow do
       expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
       expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
       expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
@@ -136,7 +138,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         dossier.project_champs_public.find(&:address?).update_columns(value_json: not_in_ban_address)
       end
 
-      it 'should return address' do
+      it 'should return address', :slow do
         expect(errors).to be_nil
         expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
         expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Isère')
@@ -149,7 +151,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         dossier.project_champs_public.find(&:address?).update_columns(value_json: international_address)
       end
 
-      it 'should return address' do
+      it 'should return address', :slow do
         expect(errors).to be_nil
         expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
         expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Etranger')
@@ -218,15 +220,19 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     context 'when checkbox is true' do
-      it { expect(data[:dossier][:champs].size).to eq 2 }
-      it { expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp" }
-      it { expect(data[:dossier][:champs][1][:__typename]).to eq "TextChamp" }
+      it do
+        expect(data[:dossier][:champs].size).to eq 2
+        expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp"
+        expect(data[:dossier][:champs][1][:__typename]).to eq "TextChamp"
+      end
     end
 
     context 'when checkbox is false' do
       let(:checkbox_value) { 'false' }
-      it { expect(data[:dossier][:champs].size).to eq 1 }
-      it { expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp" }
+      it do
+        expect(data[:dossier][:champs].size).to eq 1
+        expect(data[:dossier][:champs][0][:__typename]).to eq "CheckboxChamp"
+      end
     end
   end
 

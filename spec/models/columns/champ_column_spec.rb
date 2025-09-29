@@ -8,7 +8,7 @@ describe Columns::ChampColumn do
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
       let(:types_de_champ) { procedure.all_revisions_types_de_champ }
 
-      it 'extracts values for columns and type de champ' do
+      it 'extracts values for columns and type de champ', :slow do
         expect_type_de_champ_values('civilite', eq(["M."]))
         expect_type_de_champ_values('email', eq(['yoda@beta.gouv.fr']))
         expect_type_de_champ_values('phone', eq(['0666666666']))

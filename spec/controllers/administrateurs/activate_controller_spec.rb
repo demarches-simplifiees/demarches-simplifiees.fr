@@ -39,15 +39,19 @@ describe Administrateurs::ActivateController, type: :controller do
     context 'when the password is not strong' do
       let(:password) { 'password-ok?' }
 
-      it { expect(administrateur.user.reload.valid_password?(password)).to be false }
-      it { expect(response).to redirect_to(admin_activate_path(token: token)) }
+      it do
+        expect(administrateur.user.reload.valid_password?(password)).to be false
+        expect(response).to redirect_to(admin_activate_path(token: token))
+      end
     end
 
     context 'when the token is bad' do
       let(:token) { 'bad' }
 
-      it { expect(administrateur.user.reload.valid_password?(password)).to be false }
-      it { expect(response).to redirect_to(admin_activate_path(token: token)) }
+      it do
+        expect(administrateur.user.reload.valid_password?(password)).to be false
+        expect(response).to redirect_to(admin_activate_path(token: token))
+      end
     end
   end
 end

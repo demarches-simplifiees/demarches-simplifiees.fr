@@ -15,8 +15,10 @@ describe VirusScannerJob, type: :job do
       subject
       blob.analyze
     end
-    it { expect(blob.virus_scanner.safe?).to be_truthy }
-    it { expect(blob.analyzed?).to be_truthy }
+    it do
+      expect(blob.virus_scanner.safe?).to be_truthy
+      expect(blob.analyzed?).to be_truthy
+    end
   end
 
   context "when there is an integrity error" do

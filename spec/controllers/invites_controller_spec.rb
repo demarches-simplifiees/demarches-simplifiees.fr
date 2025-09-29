@@ -56,8 +56,10 @@ describe InvitesController, type: :controller do
       let(:signed_in_profile) { create(:user) }
 
       shared_examples_for "he can not create a invite" do
-        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-        it { expect { subject rescue nil }.to change(Invite, :count).by(0) }
+        it do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { subject rescue nil }.to change(Invite, :count).by(0)
+        end
       end
 
       context 'when user has no access to dossier' do
@@ -273,8 +275,10 @@ describe InvitesController, type: :controller do
       context 'when invitation ID is not attached at the user email account' do
         let(:email) { 'fake@email.com' }
 
-        it { is_expected.to redirect_to dossiers_path }
-        it { expect(flash[:alert]).to be_present }
+        it do
+          is_expected.to redirect_to dossiers_path
+          expect(flash[:alert]).to be_present
+        end
       end
     end
   end

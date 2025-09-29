@@ -4,8 +4,10 @@ describe Logic::Eq do
   include Logic
 
   describe '#compute' do
-    it { expect(ds_eq(constant(1), constant(1)).compute).to be(true) }
-    it { expect(ds_eq(constant(1), constant(2)).compute).to be(false) }
+    it do
+      expect(ds_eq(constant(1), constant(1)).compute).to be(true)
+      expect(ds_eq(constant(1), constant(2)).compute).to be(false)
+    end
   end
 
   describe '#errors' do

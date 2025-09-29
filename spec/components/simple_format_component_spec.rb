@@ -41,8 +41,10 @@ TEXT
       TEXT
     end
 
-    it { expect(page).to have_selector("ul", count: 1) }
-    it { expect(page).to have_selector("li", count: 2) }
+    it do
+      expect(page).to have_selector("ul", count: 1)
+      expect(page).to have_selector("li", count: 2)
+    end
   end
 
   context 'ordered list items' do
@@ -54,10 +56,12 @@ TEXT
       TEXT
     end
 
-    it { expect(page).to have_selector("ol", count: 1) }
-    it { expect(page).to have_selector("li", count: 3) }
-    it { expect(page.native.inner_html).to match('value="1"') }
-    it { expect(page.native.inner_html).to match('value="4"') }
+    it do
+      expect(page).to have_selector("ol", count: 1)
+      expect(page).to have_selector("li", count: 3)
+      expect(page.native.inner_html).to match('value="1"')
+      expect(page.native.inner_html).to match('value="4"')
+    end
   end
 
   context 'multi line lists' do
@@ -88,10 +92,12 @@ TEXT
       TEXT
     end
 
-    it { expect(page).to have_selector("ol", count: 1) }
-    it { expect(page).to have_selector("ul", count: 1) }
-    it { expect(page).to have_selector("li", count: 6) }
-    it { expect(page).to have_selector("p", count: 5) }
+    it do
+      expect(page).to have_selector("ol", count: 1)
+      expect(page).to have_selector("ul", count: 1)
+      expect(page).to have_selector("li", count: 6)
+      expect(page).to have_selector("p", count: 5)
+    end
   end
 
   context 'strong' do
@@ -101,8 +107,10 @@ TEXT
       TEXT
     end
 
-    it { expect(page).to have_selector("strong", count: 1) }
-    it { expect(page).not_to have_selector("em") }
+    it do
+      expect(page).to have_selector("strong", count: 1)
+      expect(page).not_to have_selector("em")
+    end
   end
 
   context 'auto-link' do
@@ -191,9 +199,11 @@ TEXT
 
     context "without autolink" do
       let(:allow_a) { false }
-      it { expect(page).to have_selector("em", count: 1, text: "string emphased") }
-      it { expect(page).to have_text("https://example.fr/path_preserves_underscore") }
-      it { expect(page).to have_text("email: here_is_my@email.com") }
+      it do
+        expect(page).to have_selector("em", count: 1, text: "string emphased")
+        expect(page).to have_text("https://example.fr/path_preserves_underscore")
+        expect(page).to have_text("email: here_is_my@email.com")
+      end
     end
 
     context "with autolink" do

@@ -35,8 +35,10 @@ RSpec.describe Cron::WeeklyOverviewJob, type: :job do
           run_job
         end
 
-        it { expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur) }
-        it { expect { run_job }.not_to raise_error }
+        it do
+          expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur)
+          expect { run_job }.not_to raise_error
+        end
       end
     end
 

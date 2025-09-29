@@ -73,8 +73,10 @@ describe PiecesJointesListConcern do
       procedure.publish_revision!
     end
 
-    it { expect(procedure.exportables_pieces_jointes_for_all_versions.map(&:libelle)).to eq(["new", "kept", "outdated"]) }
-    it { expect(procedure.exportables_pieces_jointes.map(&:libelle)).to match_array(["kept", "new"]) }
-    it { expect(procedure.outdated_exportables_pieces_jointes.map(&:libelle)).to match_array(["outdated"]) }
+    it do
+      expect(procedure.exportables_pieces_jointes_for_all_versions.map(&:libelle)).to eq(["new", "kept", "outdated"])
+      expect(procedure.exportables_pieces_jointes.map(&:libelle)).to match_array(["kept", "new"])
+      expect(procedure.outdated_exportables_pieces_jointes.map(&:libelle)).to match_array(["outdated"])
+    end
   end
 end

@@ -64,8 +64,10 @@ describe ProcedurePathConcern do
         procedure.claim_path!(procedure.administrateurs.first, 'custom_path')
       end
 
-      it { expect(procedure.path).to eq('custom_path') }
-      it { is_expected.to be_truthy }
+      it do
+        expect(procedure.path).to eq('custom_path')
+        is_expected.to be_truthy
+      end
     end
   end
 

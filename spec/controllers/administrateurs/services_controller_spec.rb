@@ -171,19 +171,23 @@ describe Administrateurs::ServicesController, type: :controller do
     end
 
     context 'when updating a service' do
-      it { expect(flash.alert).to be_nil }
-      it { expect(flash.notice).to eq('nom modifié') }
-      it { expect(Service.last.nom).to eq('nom') }
-      it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association)) }
-      it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
-      it { expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(service.id) }
+      it do
+        expect(flash.alert).to be_nil
+        expect(flash.notice).to eq('nom modifié')
+        expect(Service.last.nom).to eq('nom')
+        expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association))
+        expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id))
+        expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(service.id)
+      end
     end
 
     context 'when updating a service with invalid data' do
       let(:service_params) { { nom: '', type_organisme: Service.type_organismes.fetch(:association) } }
 
-      it { expect(flash.alert).not_to be_nil }
-      it { expect(response).to render_template(:edit) }
+      it do
+        expect(flash.alert).not_to be_nil
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
@@ -206,10 +210,12 @@ describe Administrateurs::ServicesController, type: :controller do
     context 'when adding a service to a procedure' do
       before { post_add_to_procedure }
 
-      it { expect(flash.alert).to be_nil }
-      it { expect(flash.notice).to eq("service affecté : #{service.nom}") }
-      it { expect(procedure.service_id).to eq(service.id) }
-      it { expect(response).to redirect_to(admin_procedure_path(procedure.id)) }
+      it do
+        expect(flash.alert).to be_nil
+        expect(flash.notice).to eq("service affecté : #{service.nom}")
+        expect(procedure.service_id).to eq(service.id)
+        expect(response).to redirect_to(admin_procedure_path(procedure.id))
+      end
     end
 
     context 'when stealing a service to add it to a procedure' do
@@ -228,10 +234,12 @@ describe Administrateurs::ServicesController, type: :controller do
         delete :destroy, params: { id: service.id, procedure_id: procedure.id }
       end
 
-      it { expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
-      it { expect(flash.alert).to be_nil }
-      it { expect(flash.notice).to eq("#{service.nom} est supprimé") }
-      it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
+      it do
+        expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(flash.alert).to be_nil
+        expect(flash.notice).to eq("#{service.nom} est supprimé")
+        expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id))
+      end
     end
 
     context 'when a service still has some related procedures' do
@@ -242,10 +250,12 @@ describe Administrateurs::ServicesController, type: :controller do
         delete :destroy, params: { id: service.id, procedure_id: procedure.id }
       end
 
-      it { expect(service.reload).not_to be_nil }
-      it { expect(flash.alert).to eq("la démarche #{procedure.libelle} utilise encore le service #{service.nom}. Veuillez l'affecter à un autre service avant de pouvoir le supprimer") }
-      it { expect(flash.notice).to be_nil }
-      it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
+      it do
+        expect(service.reload).not_to be_nil
+        expect(flash.alert).to eq("la démarche #{procedure.libelle} utilise encore le service #{service.nom}. Veuillez l'affecter à un autre service avant de pouvoir le supprimer")
+        expect(flash.notice).to be_nil
+        expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id))
+      end
     end
 
     context "when a service has some related discarded procedures" do
@@ -256,10 +266,12 @@ describe Administrateurs::ServicesController, type: :controller do
         delete :destroy, params: { id: service.id, procedure_id: procedure.id }
       end
 
-      it { expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
-      it { expect(flash.alert).to be_nil }
-      it { expect(flash.notice).to eq("#{service.nom} est supprimé") }
-      it { expect(procedure.reload.service_id).to be_nil }
+      it do
+        expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(flash.alert).to be_nil
+        expect(flash.notice).to eq("#{service.nom} est supprimé")
+        expect(procedure.reload.service_id).to be_nil
+      end
     end
   end
 

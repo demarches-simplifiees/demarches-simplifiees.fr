@@ -25,10 +25,12 @@ describe 'instructeur_mailer/send_notifications', type: :view do
       ]
     end
 
-    it { expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213)) }
-    it { expect(rendered).to have_text('une superbe démarche') }
-    it { expect(rendered).to have_text('1 dossier en construction') }
-    it { expect(rendered).not_to have_text('notification') }
+    it do
+      expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213))
+      expect(rendered).to have_text('une superbe démarche')
+      expect(rendered).to have_text('1 dossier en construction')
+      expect(rendered).not_to have_text('notification')
+    end
   end
 
   context 'when there is one declarated dossier in instruction' do
@@ -45,12 +47,14 @@ describe 'instructeur_mailer/send_notifications', type: :view do
       ]
     end
 
-    it { expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213)) }
-    it { expect(rendered).to have_text('une superbe démarche') }
-    it { expect(rendered).to have_text('1 dossier') }
-    it { expect(rendered).not_to have_text('notification') }
-    it { expect(rendered).not_to have_text('construction') }
-    it { expect(rendered).not_to have_text('accepte') }
+    it do
+      expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213))
+      expect(rendered).to have_text('une superbe démarche')
+      expect(rendered).to have_text('1 dossier')
+      expect(rendered).not_to have_text('notification')
+      expect(rendered).not_to have_text('construction')
+      expect(rendered).not_to have_text('accepte')
+    end
   end
 
   context 'when there is one declarated dossier in accepte' do
@@ -67,12 +71,14 @@ describe 'instructeur_mailer/send_notifications', type: :view do
       ]
     end
 
-    it { expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213)) }
-    it { expect(rendered).to have_text('une superbe démarche') }
-    it { expect(rendered).to have_text('1 dossier') }
-    it { expect(rendered).not_to have_text('notification') }
-    it { expect(rendered).not_to have_text('construction') }
-    it { expect(rendered).not_to have_text('instruction') }
+    it do
+      expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213))
+      expect(rendered).to have_text('une superbe démarche')
+      expect(rendered).to have_text('1 dossier')
+      expect(rendered).not_to have_text('notification')
+      expect(rendered).not_to have_text('construction')
+      expect(rendered).not_to have_text('instruction')
+    end
   end
 
   context 'when there is one notification' do
@@ -89,7 +95,9 @@ describe 'instructeur_mailer/send_notifications', type: :view do
       ]
     end
 
-    it { expect(rendered).not_to have_text('en construction') }
-    it { expect(rendered).to have_text("1 dossier avec des notifications \"nouveautés\"") }
+    it do
+      expect(rendered).not_to have_text('en construction')
+      expect(rendered).to have_text("1 dossier avec des notifications \"nouveautés\"")
+    end
   end
 end

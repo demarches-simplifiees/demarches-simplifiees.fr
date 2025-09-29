@@ -204,7 +204,7 @@ describe ContactController, question_type: :controller do
 
         it "returns unprocessable entity status" do
           subject
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(response.body).to include("La pièce jointe doit être un fichier")
         end
       end

@@ -41,9 +41,11 @@ RSpec.describe Avis, type: :model do
       before do
         avis.reload
       end
-      it { expect(avis.valid?).to be_truthy }
-      it { expect(avis.email).to be_nil }
-      it { expect(avis.experts_procedure).to eq(experts_procedure) }
+      it do
+        expect(avis.valid?).to be_truthy
+        expect(avis.email).to be_nil
+        expect(avis.experts_procedure).to eq(experts_procedure)
+      end
     end
   end
 
@@ -82,14 +84,18 @@ RSpec.describe Avis, type: :model do
     context 'new avis' do
       before { allow(StrictEmailValidator).to receive(:eligible_to_new_validation?).and_return(true) }
 
-      it { expect(build(:avis, email: now_invalid_email).valid?).to be_falsey }
-      it { expect(build(:avis, email: nil).valid?).to be_truthy }
+      it do
+        expect(build(:avis, email: now_invalid_email).valid?).to be_falsey
+        expect(build(:avis, email: nil).valid?).to be_truthy
+      end
     end
     context 'old avis' do
       before { allow(StrictEmailValidator).to receive(:eligible_to_new_validation?).and_return(false) }
 
-      it { expect(build(:avis, email: now_invalid_email).valid?).to be_truthy }
-      it { expect(build(:avis, email: nil).valid?).to be_truthy }
+      it do
+        expect(build(:avis, email: now_invalid_email).valid?).to be_truthy
+        expect(build(:avis, email: nil).valid?).to be_truthy
+      end
     end
   end
 

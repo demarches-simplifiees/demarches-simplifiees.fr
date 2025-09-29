@@ -91,8 +91,10 @@ describe Champ do
       expect(dossier.project_champs_private.count).to eq(1)
     end
 
-    it { expect(champ.public?).to be_truthy }
-    it { expect(champ.private?).to be_falsey }
+    it do
+      expect(champ.public?).to be_truthy
+      expect(champ.private?).to be_falsey
+    end
 
     context 'when a procedure has 2 revisions' do
       it { expect(dossier.procedure.revisions.count).to eq(2) }
@@ -241,8 +243,10 @@ describe Champ do
         allow(champ_yes_no).to receive(:type_de_champ).and_return(type_de_champ_yes_no)
         allow(champ_text).to receive(:type_de_champ).and_return(type_de_champ_text)
       end
-      it { expect(type_de_champ_text.champ_value_for_export(champ_yes_no)).to eq(nil) }
-      it { expect(type_de_champ_yes_no.champ_value_for_export(champ_text)).to eq('') }
+      it do
+        expect(type_de_champ_text.champ_value_for_export(champ_yes_no)).to eq(nil)
+        expect(type_de_champ_yes_no.champ_value_for_export(champ_text)).to eq('')
+      end
     end
   end
 
@@ -538,7 +542,7 @@ describe Champ do
         expect(subject.piece_justificative_file.first.watermark_pending?).to be_truthy
       end
 
-      it 'watermarks the file' do
+      it 'watermarks the file', :external_deps do
         subject
         perform_enqueued_jobs
         expect(champ.reload.piece_justificative_file.first.watermark_pending?).to be_falsy

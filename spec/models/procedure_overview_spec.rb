@@ -78,9 +78,11 @@ describe ProcedureOverview, type: :model do
     let(:procedure_overview_gi_3) { ProcedureOverview.new(procedure, monday, [gi_3]) }
     let(:procedure_overview_default) { ProcedureOverview.new(procedure, monday, [procedure.defaut_groupe_instructeur]) }
 
-    it { expect(procedure_overview_gi_2.created_dossiers_count).to eq(1) }
-    it { expect(procedure_overview_gi_3.created_dossiers_count).to eq(2) }
-    it { expect(procedure_overview_default.created_dossiers_count).to eq(0) }
+    it do
+      expect(procedure_overview_gi_2.created_dossiers_count).to eq(1)
+      expect(procedure_overview_gi_3.created_dossiers_count).to eq(2)
+      expect(procedure_overview_default.created_dossiers_count).to eq(0)
+    end
   end
 
   describe 'had_some_activities?' do

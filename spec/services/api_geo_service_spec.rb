@@ -2,7 +2,7 @@
 
 describe APIGeoService do
   describe 'pays' do
-    it 'countrie_code' do
+    it 'countrie_code', :slow do
       countries = JSON.parse(Rails.root.join('spec/fixtures/files/pays_dump.json').read)
       countries_without_code = countries.map { APIGeoService.country_code(_1) }.count(&:nil?)
       expect(countries_without_code).to eq(67)
@@ -46,7 +46,7 @@ describe APIGeoService do
   end
 
   describe 'communes_by_postal_code' do
-    it 'return results' do
+    it 'return results', :slow do
       expect(APIGeoService.communes_by_postal_code('01500').size).to eq(8)
       expect(APIGeoService.communes_by_postal_code('75019').size).to eq(1)
       expect(APIGeoService.communes_by_postal_code('69005').size).to eq(1)
@@ -113,8 +113,10 @@ describe APIGeoService do
         features.first.tap { _1["properties"].delete("postcode") }
       end
 
-      it { expect(subject[:postal_code]).to eq('') }
-      it { expect(subject[:city_name]).to eq('Paris') }
+      it do
+        expect(subject[:postal_code]).to eq('')
+        expect(subject[:city_name]).to eq('Paris')
+      end
     end
   end
 

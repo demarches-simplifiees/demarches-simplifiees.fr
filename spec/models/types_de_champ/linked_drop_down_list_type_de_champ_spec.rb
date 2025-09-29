@@ -65,8 +65,10 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
   describe '#unpack_options' do
     context 'with no options' do
       let(:menu_options) { [] }
-      it { expect(subject.secondary_options).to eq({}) }
-      it { expect(subject.primary_options).to eq([]) }
+      it do
+        expect(subject.secondary_options).to eq({})
+        expect(subject.primary_options).to eq([])
+      end
     end
 
     context 'with two primary options' do

@@ -67,7 +67,9 @@ describe Manager::DossiersController, type: :controller do
       delete :transfer_destroy, params: { id: @dossier.id }
     end
 
-    it { expect(@dossier.transfer).to be_nil }
-    it { expect(flash[:notice]).to eq "La demande de transfert a été supprimée avec succès" }
+    it do
+      expect(@dossier.transfer).to be_nil
+      expect(flash[:notice]).to eq "La demande de transfert a été supprimée avec succès"
+    end
   end
 end

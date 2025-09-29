@@ -118,9 +118,11 @@ describe API::V1::DossiersController do
         describe 'pagination' do
           subject { body[:pagination] }
 
-          it { expect(subject[:page]).to eq(2) }
-          it { expect(subject[:resultats_par_page]).to eq(1) }
-          it { expect(subject[:nombre_de_page]).to eq(3) }
+          it do
+            expect(subject[:page]).to eq(2)
+            expect(subject[:resultats_par_page]).to eq(1)
+            expect(subject[:nombre_de_page]).to eq(3)
+          end
         end
       end
     end
@@ -245,8 +247,10 @@ describe API::V1::DossiersController do
           describe 'first champ' do
             subject { super().first }
 
-            it { expect(subject.key?(:value)).to be_truthy }
-            it { expect(subject.key?(:type_de_champ)).to be_truthy }
+            it do
+              expect(subject.key?(:value)).to be_truthy
+              expect(subject.key?(:type_de_champ)).to be_truthy
+            end
 
             describe 'type de champ' do
               let(:field_list) {
@@ -307,8 +311,10 @@ describe API::V1::DossiersController do
           describe 'first champs' do
             subject { super().first }
 
-            it { expect(subject.key?(:value)).to be_truthy }
-            it { expect(subject.key?(:type_de_champ)).to be_truthy }
+            it do
+              expect(subject.key?(:value)).to be_truthy
+              expect(subject.key?(:type_de_champ)).to be_truthy
+            end
 
             describe 'type de champ' do
               let(:field_list) {

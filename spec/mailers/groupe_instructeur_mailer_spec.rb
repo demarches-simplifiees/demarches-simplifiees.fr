@@ -19,9 +19,11 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
     before { groupe_instructeur.remove(instructeur_to_remove) }
 
     context 'when instructeur is fully removed form procedure' do
-      it { expect(subject.body).to include('Vous avez été désaffecté(e) de la démarche') }
-      it { expect(subject.to).to include('int3@g.fr') }
-      it { expect(subject.to).not_to include('int1@g.fr', 'int2@g.fr') }
+      it do
+        expect(subject.body).to include('Vous avez été désaffecté(e) de la démarche')
+        expect(subject.to).to include('int3@g.fr')
+        expect(subject.to).not_to include('int1@g.fr', 'int2@g.fr')
+      end
     end
 
     context 'when instructeur is removed from one group but still affected to procedure' do
@@ -31,9 +33,11 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
         gi2
       end
 
-      it { expect(subject.body).to include('Vous avez été retiré(e) du groupe « gi1 » par « toto@email.com »') }
-      it { expect(subject.to).to include('int3@g.fr') }
-      it { expect(subject.to).not_to include('int1@g.fr', 'int2@g.fr') }
+      it do
+        expect(subject.body).to include('Vous avez été retiré(e) du groupe « gi1 » par « toto@email.com »')
+        expect(subject.to).to include('int3@g.fr')
+        expect(subject.to).not_to include('int1@g.fr', 'int2@g.fr')
+      end
     end
   end
 
@@ -49,16 +53,20 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
     before { instructeurs_to_add.each { procedure.defaut_groupe_instructeur.add(_1) } }
 
     context 'when there is only one group on procedure' do
-      it { expect(subject.body).to include('Vous avez été affecté(e) à la démarche') }
-      it { expect(subject.bcc).to match_array(['int3@g.fr', 'int4@g.fr']) }
+      it do
+        expect(subject.body).to include('Vous avez été affecté(e) à la démarche')
+        expect(subject.bcc).to match_array(['int3@g.fr', 'int4@g.fr'])
+      end
     end
 
     context 'when there are many groups on procedure' do
       let!(:groupe_instructeur_2) do
         GroupeInstructeur.create(label: 'gi2', procedure: procedure)
       end
-      it { expect(subject.body).to include('Vous avez été ajouté(e) au groupe') }
-      it { expect(subject.bcc).to match_array(['int3@g.fr', 'int4@g.fr']) }
+      it do
+        expect(subject.body).to include('Vous avez été ajouté(e) au groupe')
+        expect(subject.bcc).to match_array(['int3@g.fr', 'int4@g.fr'])
+      end
     end
   end
 end

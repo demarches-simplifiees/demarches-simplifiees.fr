@@ -48,9 +48,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
       context 'on a procedure with anonymous instructeurs' do
         context 'redacts the instructeur email' do
-          it { is_expected.to have_text(commentaire.body) }
-          it { is_expected.to have_text("Instructeur n° #{instructeur.id}") }
-          it { is_expected.not_to have_text(instructeur.email) }
+          it do
+            is_expected.to have_text(commentaire.body)
+            is_expected.to have_text("Instructeur n° #{instructeur.id}")
+            is_expected.not_to have_text(instructeur.email)
+          end
         end
       end
 
@@ -88,8 +90,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         context 'on a procedure where commentaire had been written by connected instructeur and discarded' do
           let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message', discarded_at: 2.days.ago) }
 
-          it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
-          it { is_expected.to have_selector(".rich-text", text: component.t('.deleted_body')) }
+          it do
+            is_expected.not_to have_selector("form[action=\"#{form_url}\"]")
+            is_expected.to have_selector(".rich-text", text: component.t('.deleted_body'))
+          end
         end
 
         context 'on a procedure where commentaire had been written by connected an user' do
@@ -249,8 +253,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         context 'when commentaire had been written by connected gestionnaire and discarded' do
           let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin), gestionnaire: gestionnaire, body: 'Second message', discarded_at: 2.days.ago) }
 
-          it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
-          it { is_expected.to have_selector(".rich-text", text: component.t('.deleted_body')) }
+          it do
+            is_expected.not_to have_selector("form[action=\"#{form_url}\"]")
+            is_expected.to have_selector(".rich-text", text: component.t('.deleted_body'))
+          end
         end
 
         context 'on a procedure where commentaire had been written another gestionnaire' do

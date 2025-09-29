@@ -118,14 +118,10 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
-    it 'display published or closed procedures' do
+    it 'displays published/closed procedures but not draft procedures' do
       subject
       expect(assigns(:procedures).any? { |p| p.id == published_procedure.id }).to be_truthy
       expect(assigns(:procedures).any? { |p| p.id == closed_procedure.id }).to be_truthy
-    end
-
-    it 'doesn’t display draft procedures' do
-      subject
       expect(assigns(:procedures).any? { |p| p.id == draft_procedure.id }).to be_falsey
     end
 
@@ -855,12 +851,12 @@ describe Administrateurs::ProceduresController, type: :controller do
           }
         end
 
-        it 'clones everything' do
+        it 'clones everything', :slow do
           expect(Procedure.last.notice.attached?).to be_truthy
           expect(Procedure.last.deliberation.attached?).to be_truthy
           expect(Procedure.last.logo.attached?).to be_truthy
           expect(Procedure.last.administrateurs).to include(administrateur_2)
-          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to eq([admin.instructeur, instructeur_2])
+          expect(Procedure.last.defaut_groupe_instructeur.instructeurs).to match_array([admin.instructeur, instructeur_2])
           expect(Procedure.last.instructeurs_self_management_enabled).to be_truthy
           expect(Procedure.last.draft_revision.types_de_champ_public.count).to eq 1
           expect(Procedure.last.draft_revision.types_de_champ_private.count).to eq 1
@@ -1785,9 +1781,11 @@ describe Administrateurs::ProceduresController, type: :controller do
       context 'when enabling pro_connect_restricted' do
         let(:pro_connect_restricted) { true }
 
-        it { expect(procedure.reload.pro_connect_restricted).to be true }
-        it { expect(flash.notice).to eq("La démarche est restreinte à ProConnect") }
-        it { expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure)) }
+        it do
+          expect(procedure.reload.pro_connect_restricted).to be true
+          expect(flash.notice).to eq("La démarche est restreinte à ProConnect")
+          expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
+        end
       end
 
       context 'when disabling pro_connect_restricted' do
@@ -1795,9 +1793,11 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         let(:pro_connect_restricted) { false }
 
-        it { expect(procedure.reload.pro_connect_restricted).to be false }
-        it { expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect") }
-        it { expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure)) }
+        it do
+          expect(procedure.reload.pro_connect_restricted).to be false
+          expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect")
+          expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
+        end
       end
     end
   end

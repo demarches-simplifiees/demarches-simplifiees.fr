@@ -26,8 +26,10 @@ describe Manager::ServicesController, type: :controller do
       get :show, params: { id: @service.id }
     end
 
-    it { expect(response.body).to include(@service.nom) }
-    it { expect(response.body).to include("75 rue du Louvre") }
-    it { expect(response.body).to have_link(href: "https://www.geoportail.gouv.fr/carte?c=2.34,48.87&z=17&permalink=yes") }
+    it do
+      expect(response.body).to include(@service.nom)
+      expect(response.body).to include("75 rue du Louvre")
+      expect(response.body).to have_link(href: "https://www.geoportail.gouv.fr/carte?c=2.34,48.87&z=17&permalink=yes")
+    end
   end
 end

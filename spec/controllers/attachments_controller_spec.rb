@@ -38,8 +38,10 @@ describe AttachmentsController, type: :controller do
       context 'when the user opens the delete link in a new tab' do
         let(:format) { :html }
 
-        it { is_expected.to have_http_status(302) }
-        it { is_expected.to redirect_to(dossier_path(dossier)) }
+        it do
+          is_expected.to have_http_status(302)
+          is_expected.to redirect_to(dossier_path(dossier))
+        end
       end
     end
 

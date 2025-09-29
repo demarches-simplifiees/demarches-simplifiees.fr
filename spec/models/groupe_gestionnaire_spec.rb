@@ -2,10 +2,12 @@
 
 describe GroupeGestionnaire, type: :model do
   describe 'associations' do
-    it { is_expected.to have_many(:administrateurs) }
-    it { is_expected.to have_many(:commentaire_groupe_gestionnaires) }
-    it { is_expected.to have_many(:follow_commentaire_groupe_gestionnaires) }
-    it { is_expected.to have_and_belong_to_many(:gestionnaires) }
+    it do
+      is_expected.to have_many(:administrateurs)
+      is_expected.to have_many(:commentaire_groupe_gestionnaires)
+      is_expected.to have_many(:follow_commentaire_groupe_gestionnaires)
+      is_expected.to have_and_belong_to_many(:gestionnaires)
+    end
   end
 
   describe "#add_gestionnaire" do

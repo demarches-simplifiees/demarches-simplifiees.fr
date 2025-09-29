@@ -177,9 +177,11 @@ describe Procedure do
 
   describe 'validation' do
     context 'libelle' do
-      it { is_expected.not_to allow_value(nil).for(:libelle) }
-      it { is_expected.not_to allow_value('').for(:libelle) }
-      it { is_expected.to allow_value('Demande de subvention').for(:libelle) }
+      it do
+        is_expected.not_to allow_value(nil).for(:libelle)
+        is_expected.not_to allow_value('').for(:libelle)
+        is_expected.to allow_value('Demande de subvention').for(:libelle)
+      end
     end
 
     context 'closing procedure' do
@@ -197,9 +199,11 @@ describe Procedure do
     end
 
     context 'description' do
-      it { is_expected.not_to allow_value(nil).for(:description) }
-      it { is_expected.not_to allow_value('').for(:description) }
-      it { is_expected.to allow_value('Description Demande de subvention').for(:description) }
+      it do
+        is_expected.not_to allow_value(nil).for(:description)
+        is_expected.not_to allow_value('').for(:description)
+        is_expected.to allow_value('Description Demande de subvention').for(:description)
+      end
     end
 
     context 'organisation' do
@@ -225,8 +229,10 @@ describe Procedure do
     end
 
     context 'juridique' do
-      it { is_expected.not_to allow_value(nil).on(:publication).for(:cadre_juridique) }
-      it { is_expected.to allow_value('text').on(:publication).for(:cadre_juridique) }
+      it do
+        is_expected.not_to allow_value(nil).on(:publication).for(:cadre_juridique)
+        is_expected.to allow_value('text').on(:publication).for(:cadre_juridique)
+      end
 
       context 'with deliberation' do
         let(:procedure) { build(:procedure, cadre_juridique: nil, revisions: [build(:procedure_revision)]) }
@@ -260,14 +266,18 @@ describe Procedure do
     context 'api_particulier_token' do
       let(:valid_token) { "3841b13fa8032ed3c31d160d3437a76a" }
       let(:invalid_token) { 'jet0n 1nvalide' }
-      it { is_expected.to allow_value(valid_token).for(:api_particulier_token) }
-      it { is_expected.not_to allow_value(invalid_token).for(:api_particulier_token) }
+      it do
+        is_expected.to allow_value(valid_token).for(:api_particulier_token)
+        is_expected.not_to allow_value(invalid_token).for(:api_particulier_token)
+      end
     end
 
     context 'monavis' do
       context 'nil is allowed' do
-        it { is_expected.to allow_value(nil).for(:monavis_embed) }
-        it { is_expected.to allow_value('').for(:monavis_embed) }
+        it do
+          is_expected.to allow_value(nil).for(:monavis_embed)
+          is_expected.to allow_value('').for(:monavis_embed)
+        end
       end
 
       context 'random string is not allowed' do
@@ -345,20 +355,24 @@ describe Procedure do
       let(:field_name) { :duree_conservation_dossiers_dans_ds }
       context 'by default is caped to 12' do
         subject { create(:procedure, duree_conservation_dossiers_dans_ds: 12, max_duree_conservation_dossiers_dans_ds: 12) }
-        it { is_expected.not_to allow_value(nil).for(field_name) }
-        it { is_expected.not_to allow_value('').for(field_name) }
-        it { is_expected.not_to allow_value('trois').for(field_name) }
-        it { is_expected.to allow_value(3).for(field_name) }
-        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(12) }
+        it do
+          is_expected.not_to allow_value(nil).for(field_name)
+          is_expected.not_to allow_value('').for(field_name)
+          is_expected.not_to allow_value('trois').for(field_name)
+          is_expected.to allow_value(3).for(field_name)
+          is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(12)
+        end
       end
       context 'can be over riden' do
         subject { create(:procedure, duree_conservation_dossiers_dans_ds: 60, max_duree_conservation_dossiers_dans_ds: 60) }
-        it { is_expected.not_to allow_value(nil).for(field_name) }
-        it { is_expected.not_to allow_value('').for(field_name) }
-        it { is_expected.not_to allow_value('trois').for(field_name) }
-        it { is_expected.to allow_value(3).for(field_name) }
-        it { is_expected.to allow_value(60).for(field_name) }
-        it { is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(60) }
+        it do
+          is_expected.not_to allow_value(nil).for(field_name)
+          is_expected.not_to allow_value('').for(field_name)
+          is_expected.not_to allow_value('trois').for(field_name)
+          is_expected.to allow_value(3).for(field_name)
+          is_expected.to allow_value(60).for(field_name)
+          is_expected.to validate_numericality_of(field_name).is_less_than_or_equal_to(60)
+        end
       end
     end
 
@@ -981,10 +995,12 @@ describe Procedure do
     let(:procedure_close) { build(:procedure, :closed) }
     let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.brouillon?).to be_truthy }
-    it { expect(procedure_publiee.brouillon?).to be_falsey }
-    it { expect(procedure_close.brouillon?).to be_falsey }
-    it { expect(procedure_depubliee.brouillon?).to be_falsey }
+    it do
+      expect(procedure_brouillon.brouillon?).to be_truthy
+      expect(procedure_publiee.brouillon?).to be_falsey
+      expect(procedure_close.brouillon?).to be_falsey
+      expect(procedure_depubliee.brouillon?).to be_falsey
+    end
   end
 
   describe "#publiee?" do
@@ -993,10 +1009,12 @@ describe Procedure do
     let(:procedure_close) { build(:procedure, :closed) }
     let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.publiee?).to be_falsey }
-    it { expect(procedure_publiee.publiee?).to be_truthy }
-    it { expect(procedure_close.publiee?).to be_falsey }
-    it { expect(procedure_depubliee.publiee?).to be_falsey }
+    it do
+      expect(procedure_brouillon.publiee?).to be_falsey
+      expect(procedure_publiee.publiee?).to be_truthy
+      expect(procedure_close.publiee?).to be_falsey
+      expect(procedure_depubliee.publiee?).to be_falsey
+    end
   end
 
   describe "#close?" do
@@ -1005,10 +1023,12 @@ describe Procedure do
     let(:procedure_close) { build(:procedure, :closed) }
     let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.close?).to be_falsey }
-    it { expect(procedure_publiee.close?).to be_falsey }
-    it { expect(procedure_close.close?).to be_truthy }
-    it { expect(procedure_depubliee.close?).to be_falsey }
+    it do
+      expect(procedure_brouillon.close?).to be_falsey
+      expect(procedure_publiee.close?).to be_falsey
+      expect(procedure_close.close?).to be_truthy
+      expect(procedure_depubliee.close?).to be_falsey
+    end
   end
 
   describe "#depubliee?" do
@@ -1017,10 +1037,12 @@ describe Procedure do
     let(:procedure_close) { build(:procedure, :closed) }
     let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.depubliee?).to be_falsey }
-    it { expect(procedure_publiee.depubliee?).to be_falsey }
-    it { expect(procedure_close.depubliee?).to be_falsey }
-    it { expect(procedure_depubliee.depubliee?).to be_truthy }
+    it do
+      expect(procedure_brouillon.depubliee?).to be_falsey
+      expect(procedure_publiee.depubliee?).to be_falsey
+      expect(procedure_close.depubliee?).to be_falsey
+      expect(procedure_depubliee.depubliee?).to be_truthy
+    end
   end
 
   describe "#locked?" do
@@ -1029,10 +1051,12 @@ describe Procedure do
     let(:procedure_close) { build(:procedure, :closed) }
     let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.locked?).to be_falsey }
-    it { expect(procedure_publiee.locked?).to be_truthy }
-    it { expect(procedure_close.locked?).to be_truthy }
-    it { expect(procedure_depubliee.locked?).to be_truthy }
+    it do
+      expect(procedure_brouillon.locked?).to be_falsey
+      expect(procedure_publiee.locked?).to be_truthy
+      expect(procedure_close.locked?).to be_truthy
+      expect(procedure_depubliee.locked?).to be_truthy
+    end
   end
 
   describe 'close' do
@@ -1045,8 +1069,10 @@ describe Procedure do
       procedure.reload
     end
 
-    it { expect(procedure.close?).to be_truthy }
-    it { expect(procedure.closed_at).to eq(now) }
+    it do
+      expect(procedure.close?).to be_truthy
+      expect(procedure.closed_at).to eq(now)
+    end
 
     it 'sets published revision' do
       expect(procedure.published_revision).not_to be_nil
@@ -1123,15 +1149,19 @@ describe Procedure do
     context "when hidden_at is nil" do
       let(:hidden_at) { nil }
 
-      it { expect(Procedure.count).to eq(1) }
-      it { expect(Procedure.all).to include(procedure) }
+      it do
+        expect(Procedure.count).to eq(1)
+        expect(Procedure.all).to include(procedure)
+      end
     end
 
     context "when hidden_at is not nil" do
       let(:hidden_at) { 2.days.ago }
 
-      it { expect(Procedure.count).to eq(0) }
-      it { expect { Procedure.find(procedure.id) }.to raise_error(ActiveRecord::RecordNotFound) }
+      it do
+        expect(Procedure.count).to eq(0)
+        expect { Procedure.find(procedure.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 
@@ -1142,8 +1172,10 @@ describe Procedure do
     let!(:dossier2) { create(:dossier, procedure: procedure) }
     let(:instructeur) { create(:instructeur) }
 
-    it { expect(Dossier.count).to eq(2) }
-    it { expect(Dossier.all).to include(dossier, dossier2) }
+    it do
+      expect(Dossier.count).to eq(2)
+      expect(Dossier.all).to include(dossier, dossier2)
+    end
 
     context "when discarding procedure" do
       before do
@@ -1152,9 +1184,11 @@ describe Procedure do
         instructeur.reload
       end
 
-      it { expect(procedure.dossiers.count).to eq(0) }
-      it { expect(Dossier.count).to eq(0) }
-      it { expect(instructeur.followed_dossiers).not_to include(dossier) }
+      it do
+        expect(procedure.dossiers.count).to eq(0)
+        expect(Dossier.count).to eq(0)
+        expect(instructeur.followed_dossiers).not_to include(dossier)
+      end
     end
   end
 
@@ -1299,10 +1333,12 @@ describe Procedure do
   end
 
   describe 'lien_dpo' do
-    it { expect(build(:procedure).valid?).to be(true) }
-    it { expect(build(:procedure, lien_dpo: 'dpo@ministere.amere').valid?).to be(true) }
-    it { expect(build(:procedure, lien_dpo: 'https://legal.fr/contact_dpo').valid?).to be(true) }
-    it { expect(build(:procedure, lien_dpo: 'askjdlad l akdj asd ').valid?).to be(false) }
+    it do
+      expect(build(:procedure).valid?).to be(true)
+      expect(build(:procedure, lien_dpo: 'dpo@ministere.amere').valid?).to be(true)
+      expect(build(:procedure, lien_dpo: 'https://legal.fr/contact_dpo').valid?).to be(true)
+      expect(build(:procedure, lien_dpo: 'askjdlad l akdj asd ').valid?).to be(false)
+    end
   end
 
   describe 'factory' do

@@ -71,10 +71,12 @@ describe ApplicationHelper do
   end
 
   describe "#flash_class" do
-    it { expect(flash_class('notice')).to eq 'alert-success fr-icon-success-line fr-icon--sm fr-text--sm fr-mb-0' }
-    it { expect(flash_class('alert', sticky: true, fixed: true)).to eq 'alert-danger fr-icon-error-line fr-icon--sm fr-text--sm fr-mb-0 sticky alert-fixed' }
-    it { expect(flash_class('error')).to eq 'alert-danger fr-icon-error-line fr-icon--sm fr-text--sm fr-mb-0' }
-    it { expect(flash_class('unknown-level')).to eq '' }
+    it do
+      expect(flash_class('notice')).to eq 'alert-success fr-icon-success-line fr-icon--sm fr-text--sm fr-mb-0'
+      expect(flash_class('alert', sticky: true, fixed: true)).to eq 'alert-danger fr-icon-error-line fr-icon--sm fr-text--sm fr-mb-0 sticky alert-fixed'
+      expect(flash_class('error')).to eq 'alert-danger fr-icon-error-line fr-icon--sm fr-text--sm fr-mb-0'
+      expect(flash_class('unknown-level')).to eq ''
+    end
   end
 
   describe "#try_format_date" do

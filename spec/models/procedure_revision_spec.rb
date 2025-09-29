@@ -1239,8 +1239,10 @@ describe ProcedureRevision do
       end
     end
 
-    it { expect(draft.dependent_conditions(first_champ)).to eq([second_champ]) }
-    it { expect(draft.dependent_conditions(second_champ)).to eq([]) }
+    it do
+      expect(draft.dependent_conditions(first_champ)).to eq([second_champ])
+      expect(draft.dependent_conditions(second_champ)).to eq([])
+    end
   end
 
   describe 'only_present_on_draft?' do

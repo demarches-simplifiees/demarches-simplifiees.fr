@@ -9,20 +9,6 @@ runs:
       with:
         bundler-cache: true
 
-    - name: Check YJIT support
-      run: |
-        ruby --yjit -v
-      shell: bash
-
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-
-    - name: Install Node modules
-      run: |
-        bun --version
-        bun install
-      shell: bash
-
     - name: Setup environment variables
       run: cp config/env.example .env
       shell: bash

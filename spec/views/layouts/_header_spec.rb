@@ -23,8 +23,10 @@ describe 'layouts/_header', type: :view do
     let(:user) { nil }
     let(:profile) { nil }
 
-    it { is_expected.to have_css(".fr-header__logo") }
-    it { is_expected.to_not have_css(".account-btn") }
+    it do
+      is_expected.to have_css(".fr-header__logo")
+      is_expected.to_not have_css(".account-btn")
+    end
 
     it 'displays the Help link' do
       expect(subject).to have_link('Aide', href: I18n.t("links.common.faq.url"))
@@ -47,10 +49,12 @@ describe 'layouts/_header', type: :view do
     let(:user) { create(:user) }
     let(:profile) { :user }
 
-    it { is_expected.to have_css(".fr-header__logo") }
-    it { is_expected.to have_link("Mes dossiers", href: dossiers_path) }
-    it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
-    it { is_expected.not_to have_selector(:button, class: "lasuite-gaufre-btn") }
+    it do
+      is_expected.to have_css(".fr-header__logo")
+      is_expected.to have_link("Mes dossiers", href: dossiers_path)
+      is_expected.to have_selector(:button, user.email, class: "account-btn")
+      is_expected.not_to have_selector(:button, class: "lasuite-gaufre-btn")
+    end
 
     it 'displays the Help button' do
       expect(subject).to have_link("Aide", href: I18n.t("links.common.faq.url"))
@@ -64,9 +68,11 @@ describe 'layouts/_header', type: :view do
     let(:current_instructeur) { instructeur }
     let!(:release_note) { create(:release_note, categories: ['instructeur']) }
 
-    it { is_expected.to have_css(".fr-header__logo") }
-    it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
-    it { is_expected.to have_selector(:button, class: "lasuite-gaufre-btn") }
+    it do
+      is_expected.to have_css(".fr-header__logo")
+      is_expected.to have_selector(:button, user.email, class: "account-btn")
+      is_expected.to have_selector(:button, class: "lasuite-gaufre-btn")
+    end
 
     it 'displays the Help dropdown menu' do
       expect(subject).to have_selector("#help-menu")
@@ -84,9 +90,11 @@ describe 'layouts/_header', type: :view do
     let(:profile) { :administrateur }
     let(:current_administrateur) { administrateur }
 
-    it { is_expected.to have_css(".fr-header__logo") }
-    it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
-    it { is_expected.to have_selector(:button, class: "lasuite-gaufre-btn") }
+    it do
+      is_expected.to have_css(".fr-header__logo")
+      is_expected.to have_selector(:button, user.email, class: "account-btn")
+      is_expected.to have_selector(:button, class: "lasuite-gaufre-btn")
+    end
 
     it 'does not display the Help dropdown menu' do
       expect(subject).not_to have_selector("#help-menu")

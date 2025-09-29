@@ -75,8 +75,10 @@ describe Users::TransfersController, type: :controller do
     context "with valid email" do
       let(:email) { "test@rspec.net" }
 
-      it { expect(DossierTransfer.last.email).to eq(email) }
-      it { expect(DossierTransfer.last.dossiers).to eq([dossier]) }
+      it do
+        expect(DossierTransfer.last.email).to eq(email)
+        expect(DossierTransfer.last.dossiers).to eq([dossier])
+      end
     end
 
     context 'with upper case email' do
@@ -85,9 +87,11 @@ describe Users::TransfersController, type: :controller do
     end
 
     shared_examples 'email error' do
-      it { expect { subject }.not_to change { DossierTransfer.count } }
-      it { expect(flash.alert).to include(expected_error) }
-      it { is_expected.to redirect_to transferer_dossier_path(dossier.id) }
+      it do
+        expect { subject }.not_to change { DossierTransfer.count }
+        expect(flash.alert).to include(expected_error)
+        is_expected.to redirect_to transferer_dossier_path(dossier.id)
+      end
     end
 
     context "when email is empty" do

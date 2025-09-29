@@ -13,8 +13,10 @@ describe Logic::BinaryOperator do
   end
 
   describe '#==' do
-    it { expect(two_greater_than_one).to eq(greater_than(constant(2), constant(1))) }
-    it { expect(two_greater_than_one).not_to eq(greater_than(constant(1), constant(2))) }
+    it do
+      expect(two_greater_than_one).to eq(greater_than(constant(2), constant(1)))
+      expect(two_greater_than_one).not_to eq(greater_than(constant(1), constant(2)))
+    end
   end
 
   describe '#errors' do
@@ -25,10 +27,12 @@ describe Logic::BinaryOperator do
     let(:champ) { Champs::IntegerNumberChamp.new(value: nil, stable_id: 1) }
     let(:champ2) { Champs::IntegerNumberChamp.new(value: nil, stable_id: 2) }
 
-    it { expect(two_greater_than_one.sources).to eq([]) }
-    it { expect(greater_than(champ_value(champ.stable_id), constant(2)).sources).to eq([champ.stable_id]) }
-    it { expect(greater_than(constant(2), champ_value(champ.stable_id)).sources).to eq([champ.stable_id]) }
-    it { expect(greater_than(champ_value(champ.stable_id), champ_value(champ2.stable_id)).sources).to eq([champ.stable_id, champ2.stable_id]) }
+    it do
+      expect(two_greater_than_one.sources).to eq([])
+      expect(greater_than(champ_value(champ.stable_id), constant(2)).sources).to eq([champ.stable_id])
+      expect(greater_than(constant(2), champ_value(champ.stable_id)).sources).to eq([champ.stable_id])
+      expect(greater_than(champ_value(champ.stable_id), champ_value(champ2.stable_id)).sources).to eq([champ.stable_id, champ2.stable_id])
+    end
   end
 end
 

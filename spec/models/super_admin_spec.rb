@@ -13,8 +13,10 @@ describe SuperAdmin, type: :model do
       expect(user).to be_persisted
     }
 
-    it { expect(super_admin.invite_admin(nil).errors).not_to be_empty }
-    it { expect(super_admin.invite_admin('toto').errors).not_to be_empty }
+    it do
+      expect(super_admin.invite_admin(nil).errors).not_to be_empty
+      expect(super_admin.invite_admin('toto').errors).not_to be_empty
+    end
 
     it 'creates a corresponding user account for the email' do
       subject

@@ -13,6 +13,8 @@ RSpec.describe GroupeGestionnaire::GroupeGestionnaireTreeStructures::TreeStructu
 
   subject { render_inline(component).to_html }
 
-  it { is_expected.to include(groupe_gestionnaire.name) }
-  it { is_expected.to include(child_groupe_gestionnaire.name) }
+  it do
+    is_expected.to include(groupe_gestionnaire.name)
+    is_expected.to include(child_groupe_gestionnaire.name)
+  end
 end

@@ -14,14 +14,18 @@ RSpec.describe Procedure::Card::ProConnectRestrictedComponent, type: :component 
   context "when ProConnect restriction is enabled" do
     let(:pro_connect_restricted) { true }
 
-    it { is_expected.to have_css('p.fr-badge.fr-badge--success', text: "Activée") }
-    it { is_expected.to have_css('h3.fr-h6', text: "ProConnect") }
+    it do
+      is_expected.to have_css('p.fr-badge.fr-badge--success', text: "Activée")
+      is_expected.to have_css('h3.fr-h6', text: "ProConnect")
+    end
   end
 
   context "when ProConnect restriction is disabled" do
     let(:pro_connect_restricted) { false }
 
-    it { is_expected.to have_css('p.fr-badge', text: "Désactivée") }
-    it { is_expected.to have_css('h3.fr-h6', text: "ProConnect") }
+    it do
+      is_expected.to have_css('p.fr-badge', text: "Désactivée")
+      is_expected.to have_css('h3.fr-h6', text: "ProConnect")
+    end
   end
 end

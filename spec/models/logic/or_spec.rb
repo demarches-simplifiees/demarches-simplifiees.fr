@@ -4,9 +4,11 @@ describe Logic::Or do
   include Logic
 
   describe '#compute' do
-    it { expect(or_from([true, true, true]).compute).to be true }
-    it { expect(or_from([true, true, false]).compute).to be true }
-    it { expect(or_from([false, false, false]).compute).to be false }
+    it do
+      expect(or_from([true, true, true]).compute).to be true
+      expect(or_from([true, true, false]).compute).to be true
+      expect(or_from([false, false, false]).compute).to be false
+    end
   end
 
   describe '#to_s' do

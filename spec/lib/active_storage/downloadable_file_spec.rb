@@ -8,8 +8,10 @@ describe ActiveStorage::DownloadableFile do
 
   describe 'create_list_from_dossiers' do
     context 'when no piece_justificative is present' do
-      it { expect(list.length).to eq 1 }
-      it { expect(list.first[0].name).to eq "pdf_export_for_instructeur" }
+      it do
+        expect(list.length).to eq 1
+        expect(list.first[0].name).to eq "pdf_export_for_instructeur"
+      end
     end
   end
 

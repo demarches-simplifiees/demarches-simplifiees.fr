@@ -84,6 +84,6 @@ class ContactController < ApplicationController
 
     @form = ContactForm.new(user: current_user)
     flash.alert = t('invalid_piece_jointe', scope: "contact.create")
-    render(@form.for_admin ? :admin : :index, status: :unprocessable_entity)
+    render(@form.for_admin ? :admin : :index, status: :unprocessable_content)
   end
 end
