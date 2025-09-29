@@ -15,11 +15,10 @@ class Cron::LLMEnqueueNightlyImproveProcedureJob < Cron::CronJob
         schema = procedure_revision.schema_to_llm.to_json
         schema_hash = Digest::SHA256.hexdigest(schema)
 
-        if !LLMRuleSuggestion.exists?(procedure_revision_id: procedure_revision.id, schema_hash:)
-          suggestion = LLMRuleSuggestion.create!(procedure_revision:, schema_hash:, state: :queued, rule: LLM::LabelImprover::TOOL_NAME)
+        next if LLMRuleSuggestion.exists?(procedure_revision_id: procedure_revision.id, schema_hash:)
 
-          LLM::GenerateImproveLabelJob.perform_later(suggestion)
-        end
+        suggestion = LLMRuleSuggestion.create!(procedure_revision:, schema_hash:, state: :queued, rule: LLM::LabelImprover::TOOL_NAME)
+        LLM::GenerateRuleSuggestionJob.perform_later(suggestion)
       end
   end
 end

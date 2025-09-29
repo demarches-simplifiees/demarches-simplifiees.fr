@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class LLM::GenerateImproveLabelJob < ApplicationJob
+class LLM::GenerateRuleSuggestionJob < ApplicationJob
   queue_as :default
 
   rescue_from(StandardError) do |exception|
@@ -9,7 +9,7 @@ class LLM::GenerateImproveLabelJob < ApplicationJob
 
   def perform(suggestion)
     suggestion.update!(state: :running)
-    items = service.generate_for(suggestion)
+    items = service(suggestion).generate_for(suggestion)
     if items.any?
       LLMRuleSuggestionItem.transaction do
         suggestion.llm_rule_suggestion_items.delete_all
@@ -22,8 +22,17 @@ class LLM::GenerateImproveLabelJob < ApplicationJob
     raise e
   end
 
-  def service
+  private
+
+  def service(suggestion)
     @runner ||= LLM::Runner.new
-    @service ||= LLM::LabelImprover.new(runner: @runner)
+    @service ||= begin
+      case suggestion.rule
+      when 'improve_label'
+        LLM::LabelImprover.new(runner: @runner)
+      else
+        raise "Unknown rule: #{suggestion.rule}"
+      end
+    end
   end
 end
