@@ -12,6 +12,7 @@ RSpec.describe LLM::LabelImprover do
   end
 
   let(:revision) { double('revision', schema_to_llm: schema) }
+  let(:suggestion) { double('suggestion', procedure_revision: revision) }
 
   describe '#generate_for' do
     it 'aggregates tool calls into normalized items (no dedup, ignore unrelated tools)' do
@@ -25,7 +26,7 @@ RSpec.describe LLM::LabelImprover do
       runner = -> (messages:, tools:) { calls }
       service = described_class.new(runner: runner)
 
-      items = service.generate_for(revision)
+      items = service.generate_for(suggestion)
 
       expect(items.size).to eq(2)
       payloads = items.map { |i| i[:payload] }
