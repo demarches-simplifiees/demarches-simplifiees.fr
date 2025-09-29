@@ -21,7 +21,7 @@ class Rack::Attack
     end
   end
 
-  throttle('contact/ip', limit: 5, period: 15.seconds) do |req|
+  throttle('contact/ip', limit: 5, period: 30.seconds) do |req|
     if req.path == '/contact' && req.post? && rack_attack_enabled?
       req.remote_ip
     end

@@ -16,6 +16,15 @@ class CrispCreateConversationJob < ApplicationJob
   attr_reader :session_id
   attr_reader :api
 
+  before_perform do |job|
+    contact_form = job.arguments.first
+
+    if ignore?(contact_form)
+      contact_form.delete
+      throw :abort
+    end
+  end
+
   def perform(contact_form)
     @contact_form = contact_form
 
@@ -138,5 +147,16 @@ class CrispCreateConversationJob < ApplicationJob
 
   def dossier_link
     "[Dossier ##{contact_form.dossier_id}](#{Rails.application.routes.url_helpers.manager_dossier_url(contact_form.dossier_id)})"
+  end
+
+  def ignore?(contact_form)
+    email = contact_form.email.presence || contact_form.user&.email
+    subject = contact_form.subject
+
+    test_patterns = %w[testing ywh yeswehack example]
+
+    test_patterns.any? do |pattern|
+      email.downcase.include?(pattern) || subject.downcase.include?(pattern)
+    end
   end
 end

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe CrispCreateConversationJob, type: :job do
   let(:api) { instance_double(Crisp::APIService) }
-  let(:email) { 'test@example.com' }
+  let(:email) { 'test@domain.com' }
   let(:subject_text) { 'Test Subject' }
   let(:text) { 'Test message content' }
   let(:tags) { ['test tag'] }
@@ -148,6 +148,21 @@ RSpec.describe CrispCreateConversationJob, type: :job do
 
       it 'lève une exception' do
         expect { subject }.to raise_error('Message send failed')
+      end
+    end
+
+    context 'when email or subject contains test patterns' do
+      let(:email) { 'user-testing@example.com' }
+
+      before do
+        allow(api).to receive(:create_conversation)
+      end
+
+      it 'ignores contact form and aborts job execution' do
+        subject
+
+        expect(api).not_to have_received(:create_conversation)
+        expect(contact_form).to be_destroyed
       end
     end
   end
