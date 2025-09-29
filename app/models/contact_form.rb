@@ -13,6 +13,7 @@ class ContactForm < ApplicationRecord
   validates :email, presence: true, strict_email: true, if: :require_email?
   validates :subject, presence: true
   validates :text, presence: true
+  validates :dossier_id, numericality: { only_integer: true }, allow_nil: true
   validates :question_type, presence: true
 
   has_one_attached :piece_jointe
