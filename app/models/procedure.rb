@@ -495,15 +495,23 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
-  def closed_mail_template_attestation_inconsistency_state
-    # As an optimization, don’t check the predefined templates (they are presumed correct)
-    if closed_mail.present?
-      tag_present = closed_mail.body.to_s.include?("--lien attestation--")
-      if attestation_acceptation_template&.activated? && !tag_present
-        :missing_tag
-      elsif !attestation_acceptation_template&.activated? && tag_present
-        :extraneous_tag
-      end
+  def mail_template_attestation_inconsistency_state(mail_type)
+    case mail_type
+    when :acceptation
+      mail = closed_mail
+      attestation = attestation_acceptation_template
+    when :refus
+      mail = refused_mail
+      attestation = attestation_refus_template
+    end
+
+    return if mail.nil?
+
+    tag_present = mail.body.to_s.include?('--lien attestation--')
+    if attestation&.activated? && !tag_present
+      :missing_tag
+    elsif !attestation&.activated? && tag_present
+      :extraneous_tag
     end
   end
 

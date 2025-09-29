@@ -1,0 +1,37 @@
+- return if state.nil?
+
+.center
+  .alert{ class: flash_class('alert') }
+    - case state
+    - when :missing_tag
+      Cette démarche comporte une attestation, mais
+      = t("views.administrateurs.mail_#{mail_type}")
+      ne la mentionne pas :
+      - if !procedure.locked? && mail_type == 'acceptation' && attestation_template_v1
+        = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_path(procedure))
+      - elsif !procedure.locked? && mail_type == 'acceptation'
+        = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :acceptation))
+      - elsif !procedure.locked? && mail_type == 'refus'
+        = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :refus))
+      ou
+      = link_to('ajoutez la balise', edit_admin_procedure_mail_template_path(procedure, local_assigns[:mail_type]))
+      %code{ style: "white-space: pre-wrap;" }
+        « --lien attestation-- »
+      à
+      = t("views.administrateurs.mail_#{mail_type}")
+    - when :extraneous_tag
+      Cette démarche ne comporte pas d’attestation, mais
+      = t("views.administrateurs.mail_#{mail_type}")
+      en mentionne une :
+      - if mail_type == 'acceptation' && attestation_template_v1
+        = link_to('activez l’attestation', edit_admin_procedure_attestation_template_path(procedure))
+      - elsif mail_type == 'acceptation'
+        = link_to('activez l’attestation', edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :acceptation))
+      - elsif mail_type == 'refus'
+        = link_to('activez l’attestation', edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :refus))
+      ou
+      = link_to('enlevez la balise', edit_admin_procedure_mail_template_path(procedure, local_assigns[:mail_type]))
+      %code{ style: "white-space: pre-wrap;" }
+        « --lien attestation-- »
+      de
+      = t("views.administrateurs.mail_#{mail_type}")

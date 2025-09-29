@@ -113,7 +113,7 @@ describe Procedure do
     end
   end
 
-  describe '#closed_mail_template_attestation_inconsistency_state' do
+  describe '#mail_template_attestation_inconsistency_state with closed_mail' do
     let(:procedure_without_attestation) { create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: nil) }
     let(:procedure_with_active_attestation) do
       create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: build(:attestation_template, activated: true))
@@ -122,7 +122,7 @@ describe Procedure do
       create(:procedure, closed_mail: closed_mail, attestation_acceptation_template: build(:attestation_template, activated: false))
     end
 
-    subject { procedure.closed_mail_template_attestation_inconsistency_state }
+    subject { procedure.mail_template_attestation_inconsistency_state(:acceptation) }
 
     context 'with a custom mail template' do
       context 'that contains a lien attestation tag' do
@@ -131,19 +131,22 @@ describe Procedure do
         context 'when the procedure doesn’t have an attestation' do
           let(:procedure) { procedure_without_attestation }
 
-          it { is_expected.to eq(:extraneous_tag) }
+          it do
+            expect(subject).to eq(:extraneous_tag)
+          end
         end
 
         context 'when the procedure has an active attestation' do
           let(:procedure) { procedure_with_active_attestation }
-
-          it { is_expected.to be(nil) }
+          it { is_expected.to be_nil }
         end
 
         context 'when the procedure has an inactive attestation' do
           let(:procedure) { procedure_with_inactive_attestation }
 
-          it { is_expected.to eq(:extraneous_tag) }
+          it do
+            expect(subject).to eq(:extraneous_tag)
+          end
         end
       end
 
@@ -152,43 +155,82 @@ describe Procedure do
 
         context 'when the procedure doesn’t have an attestation' do
           let(:procedure) { procedure_without_attestation }
-
-          it { is_expected.to be(nil) }
+          it { is_expected.to be_nil }
         end
 
         context 'when the procedure has an active attestation' do
           let(:procedure) { procedure_with_active_attestation }
 
-          it { is_expected.to eq(:missing_tag) }
+          it do
+            expect(subject).to eq(:missing_tag)
+          end
+        end
+
+        context 'when the procedure has an inactive attestation' do
+          let(:procedure) { procedure_with_inactive_attestation }
+          it { is_expected.to be_nil }
+        end
+      end
+    end
+  end
+
+  describe '#mail_template_attestation_inconsistency_state with refused_mail' do
+    let(:procedure_without_attestation) { create(:procedure, refused_mail: refused_mail, attestation_refus_template: nil) }
+    let(:procedure_with_active_attestation) do
+      create(:procedure, refused_mail: refused_mail, attestation_refus_template: build(:attestation_template, activated: true, kind: 'refus'))
+    end
+    let(:procedure_with_inactive_attestation) do
+      create(:procedure, refused_mail: refused_mail, attestation_refus_template: build(:attestation_template, activated: false, kind: 'refus'))
+    end
+
+    subject { procedure.mail_template_attestation_inconsistency_state(:refus) }
+
+    context 'with a custom mail template' do
+      context 'that contains a lien attestation tag' do
+        let(:refused_mail) { build(:refused_mail, body: '--lien attestation--') }
+
+        context 'when the procedure doesn’t have an attestation' do
+          let(:procedure) { procedure_without_attestation }
+
+          it do
+            expect(subject).to eq(:extraneous_tag)
+          end
+        end
+
+        context 'when the procedure has an active attestation' do
+          let(:procedure) { procedure_with_active_attestation }
+          it { is_expected.to be_nil }
         end
 
         context 'when the procedure has an inactive attestation' do
           let(:procedure) { procedure_with_inactive_attestation }
 
-          it { is_expected.to be(nil) }
+          it do
+            expect(subject).to eq(:extraneous_tag)
+          end
         end
       end
-    end
 
-    context 'with the default mail template' do
-      let(:closed_mail) { nil }
+      context 'that doesn’t contain a lien attestation tag' do
+        let(:refused_mail) { build(:refused_mail) }
 
-      context 'when the procedure doesn’t have an attestation' do
-        let(:procedure) { procedure_without_attestation }
+        context 'when the procedure doesn’t have an attestation' do
+          let(:procedure) { procedure_without_attestation }
+          it { is_expected.to be_nil }
+        end
 
-        it { is_expected.to be(nil) }
-      end
+        context 'when the procedure has an active attestation' do
+          let(:procedure) { procedure_with_active_attestation }
 
-      context 'when the procedure has an active attestation' do
-        let(:procedure) { procedure_with_active_attestation }
+          it do
+            expect(subject).to eq(:missing_tag)
+          end
+        end
 
-        it { is_expected.to be(nil) }
-      end
-
-      context 'when the procedure has an inactive attestation' do
-        let(:procedure) { procedure_with_inactive_attestation }
-
-        it { is_expected.to be(nil) }
+        context 'when the procedure has an inactive attestation' do
+          let(:procedure) { procedure_with_inactive_attestation }
+          it { is_expected.to be_nil }
+        end
       end
     end
   end
