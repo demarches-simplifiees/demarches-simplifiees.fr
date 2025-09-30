@@ -15,6 +15,6 @@
       - if @champ.drop_down_secondary_description.present?
         .fr-hint-text.fr-mb-1w{ id: "#{@champ.describedby_id}-secondary" }
           = render SimpleFormatComponent.new(@champ.drop_down_secondary_description, allow_a: true)
-      = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], select_options, required: @champ.required?, class: 'fr-select', id: "#{@champ.focusable_input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }, translate: 'no'
+      = @form.select :secondary_value, @champ.secondary_options[@champ.primary_value], select_options, required: @champ.required?, class: 'fr-select', id: "#{@champ.focusable_input_id}-secondary", aria: { describedby: "#{@champ.describedby_id}-secondary" }, translate: 'no', data: { turbo_force: :server }
 - else
   = @form.hidden_field :secondary_value, value: ''
