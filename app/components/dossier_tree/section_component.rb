@@ -33,7 +33,7 @@ class DossierTree::SectionComponent < ApplicationComponent
   end
 
   def auto_numbering?
-    false
+    true
     # section.tree.sections.none? { _1.libelle =~ /^\d/ }
   end
 
