@@ -3,6 +3,7 @@
 module Dsfr
   module InputErrorable
     extend ActiveSupport::Concern
+    include ChampAriaLabelledbyHelper
 
     included do
       delegate :object, to: :@form
@@ -38,7 +39,7 @@ module Dsfr
 
       def fieldset_error_opts
         if dsfr_champ_container == :fieldset && errors_on_attribute?
-          labelledby = [@champ.labelledby_id]
+          labelledby = [input_label_id(@champ)]
           labelledby << describedby_id if @champ.description.present?
           labelledby << @champ.error_id
 
