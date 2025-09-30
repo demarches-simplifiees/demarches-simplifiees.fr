@@ -1,11 +1,11 @@
 
 .fr-fieldset__element.fr-fieldset__element--inline
   .fr-radio-group
-    = @form.radio_button :value, Individual::GENDER_FEMALE, id: @champ.female_input_id, translate: "no", aria: { labelledby: "#{aria_labelledby_prefix} #{fieldset_legend_id} #{@champ.female_input_label_id}" }
+    = @form.radio_button :value, Individual::GENDER_FEMALE, id: @champ.female_input_id, translate: "no", aria: labelledby_id_attr(@champ.female_input_label_id)
     %label.fr-label{ for: @champ.female_input_id, id: @champ.female_input_label_id }
       = Individual.human_attribute_name('gender.female')
 .fr-fieldset__element.fr-fieldset__element--inline
   .fr-radio-group
-    = @form.radio_button :value, Individual::GENDER_MALE, id: @champ.male_input_id, translate: "no", aria: { labelledby: "#{aria_labelledby_prefix} #{fieldset_legend_id} #{@champ.male_input_label_id}" }
+    = @form.radio_button :value, Individual::GENDER_MALE, id: @champ.male_input_id, translate: "no", aria: labelledby_id_attr(@champ.male_input_label_id)
     %label.fr-label{ for: @champ.male_input_id, id: @champ.male_input_label_id }
       = Individual.human_attribute_name('gender.male')
