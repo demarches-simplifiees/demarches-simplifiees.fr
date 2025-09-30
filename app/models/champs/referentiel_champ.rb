@@ -38,7 +38,7 @@ class Champs::ReferentielChamp < Champ
       data = rewrap_selected_object_in_datasource(data)
 
       super(data)
-      cast_displayable_values(data)
+      self.value_json = cast_displayable_values(data)
       propagate_prefill(data)
     end
   end
@@ -138,9 +138,11 @@ class Champs::ReferentielChamp < Champ
     { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }.merge(prefilled: true)
   end
 
-  def cast_displayable_values(data)
+  def cast_displayable_values(json)
     referentiel_mapping_displayable.reduce({}) do |accu, (jsonpath, mapping)|
-      casted_value = call_caster(mapping[:type], JsonPath.on(data, jsonpath).first)
+      json = json.first if json.is_a?(Array) # when json is an array, we take the first element
+
+      casted_value = call_caster(mapping[:type], JsonPath.on(json, jsonpath).first)
       accu[jsonpath] = casted_value if !casted_value.nil?
       accu
     end
@@ -234,6 +236,6 @@ class Champs::ReferentielChamp < Champ
   end
 
   def rewrap_to_array(data)
-    [data.with_indifferent_access]
+    [data]
   end
 end
