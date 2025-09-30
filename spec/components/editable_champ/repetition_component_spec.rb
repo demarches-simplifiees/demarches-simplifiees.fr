@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe EditableChamp::RepetitionComponent, type: :component do
+  include ChampAriaLabelledbyHelper
   describe "aria-labelledby" do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, libelle: 'Répétition', children: }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
@@ -24,19 +25,16 @@ describe EditableChamp::RepetitionComponent, type: :component do
         it do
           # we should match
           # aria-labelledby="champ-66-legend champ-67-01JWAZPQ0MZFCTPJ4SRV8YSGP2-label"
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
-        end
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
 
-        it "should have a fieldset legend for the repetition" do
-          expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']", text: "Répétition")
-        end
+          # should have a fieldset legend for the repetition
+          expect(subject).to have_selector("legend[id='#{repetition_fieldset_legend_id(repetition_champ)}']", text: "Répétition")
 
-        it "should not have a fieldset legend for the row" do
-          expect(subject).not_to have_selector("legend[id='#{champ.parent.html_id(champ.row_id)}-legend']")
-        end
+          # should not have a fieldset legend for the row
+          expect(subject).not_to have_selector("legend[id='#{repetition_row_fieldset_legend_id(repetition_champ, champ.row_id)}']")
 
-        it "the label in the rows should contain the row number" do
-          expect(subject).to have_selector("label[id='#{champ.html_id}-label']", text: "Prénom 1")
+          # the label in the rows should contain the row number
+          expect(subject).to have_selector("label[id='#{input_label_id(champ)}']", text: "Prénom 1")
         end
       end
 
@@ -44,7 +42,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :textarea }] }
 
         it do
-          expect(subject).to have_selector("textarea[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("textarea[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -52,7 +50,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :email }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -60,7 +58,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :date }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -68,7 +66,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :datetime }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -76,7 +74,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :dossier_link }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -84,9 +82,12 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :civilite, libelle: 'Civilité', mandatory: false }] }
 
         it do
-          expect(subject).to have_selector("legend[id='#{champ.html_id}-label']", text: "Civilité 1")
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-female-label']")
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-male-label']")
+          subject
+
+          expect(page).to have_selector("legend[id='#{champ_fieldset_legend_id(champ)}']", text: "Civilité 1")
+
+          expect(page).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :female)}']")
+          expect(page).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :male)}']")
         end
       end
 
@@ -94,7 +95,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :phone }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -102,7 +103,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :number }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -110,7 +111,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :decimal_number }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -118,7 +119,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :integer_number }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -126,7 +127,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :iban }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -134,7 +135,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :checkbox }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -144,7 +145,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
           it do
             champ.options_for_select_with_other.each do |_option, value|
-              expect(subject).to have_selector("input[type='radio'][aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.radio_label_id(value)}']")
+              expect(subject).to have_selector("input[type='radio'][aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{champ.radio_label_id(value)}']")
             end
           end
         end
@@ -153,7 +154,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
           let(:children) { [{ type: :drop_down_list, drop_down_options: Array.new(6) { "Option #{it + 1}" } }] }
 
           it do
-            expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+            expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
           end
         end
 
@@ -163,8 +164,8 @@ describe EditableChamp::RepetitionComponent, type: :component do
             subject
 
             props = JSON.parse(page.first('react-component')['props'])
-            expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
-            expect(props['labelId']).to eq("#{champ.html_id}-label")
+            expect(props['ariaLabelledbyPrefix']).to eq(repetition_fieldset_legend_id(repetition_champ))
+            expect(props['labelId']).to eq(input_label_id(champ))
           end
         end
       end
@@ -173,7 +174,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :engagement_juridique }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -181,8 +182,8 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :yes_no }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-yes-label']")
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-no-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :yes)}']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :no)}']")
         end
       end
 
@@ -190,7 +191,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :siret }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -198,7 +199,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :rna }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -206,7 +207,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :rnf }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -214,7 +215,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :cnaf }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']", count: 2)
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']", count: 2)
         end
       end
 
@@ -222,7 +223,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :dgfip }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']", count: 2)
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']", count: 2)
         end
       end
 
@@ -230,7 +231,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :pole_emploi }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -238,7 +239,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :mesri }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -246,7 +247,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :regions }] }
 
         it do
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -254,7 +255,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :pays }] }
 
         it do
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -267,8 +268,8 @@ describe EditableChamp::RepetitionComponent, type: :component do
         end
 
         it do
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-code_departement-label']")
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.html_id}-input-value-label']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :code_departement)}']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :value)}']")
         end
       end
 
@@ -276,7 +277,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :departements }] }
 
         it do
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -284,7 +285,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :formatted }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -293,7 +294,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :referentiel, referentiel_id: referentiel.id }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -303,8 +304,8 @@ describe EditableChamp::RepetitionComponent, type: :component do
         it do
           subject
           props = JSON.parse(page.first('react-component')['props'])
-          expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
-          expect(props['labelId']).to eq("#{champ.html_id}-label")
+          expect(props['ariaLabelledbyPrefix']).to eq(repetition_fieldset_legend_id(repetition_champ))
+          expect(props['labelId']).to eq(input_label_id(champ))
         end
       end
 
@@ -314,7 +315,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
           it do
             champ.options_for_select_with_other.each do |_option, value|
-              expect(subject).to have_selector("input[type='checkbox'][aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label #{champ.checkbox_label_id(value)}']")
+              expect(subject).to have_selector("input[type='checkbox'][aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{champ.checkbox_label_id(value)}']")
             end
           end
         end
@@ -325,18 +326,17 @@ describe EditableChamp::RepetitionComponent, type: :component do
           it do
             subject
             props = JSON.parse(page.first('react-component')['props'])
-            expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
-            expect(props['labelId']).to eq("#{champ.html_id}-label")
+            expect(props['ariaLabelledbyPrefix']).to eq(repetition_fieldset_legend_id(repetition_champ))
+            expect(props['labelId']).to eq(input_label_id(champ))
           end
         end
       end
 
-      xcontext "for type linked_drop_down_list" do
+      context "for type linked_drop_down_list" do
         let(:children) { [{ type: :linked_drop_down_list }] }
 
-        # TODO: à voir avec Corinne, fieldset legend manquant ?
         it do
-          expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -348,7 +348,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :piece_justificative }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -356,7 +356,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         let(:children) { [{ type: :titre_identite }] }
 
         it do
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-label']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ)}']")
         end
       end
 
@@ -366,8 +366,8 @@ describe EditableChamp::RepetitionComponent, type: :component do
         it do
           subject
           props = JSON.parse(page.first('react-component')['props'])
-          expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
-          expect(props['labelId']).to eq("#{champ.html_id}-label")
+          expect(props['ariaLabelledbyPrefix']).to eq(repetition_fieldset_legend_id(repetition_champ))
+          expect(props['labelId']).to eq(input_label_id(champ))
         end
       end
 
@@ -376,21 +376,21 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it do
           # first legend of the repetition
-          expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']")
+          expect(subject).to have_selector("legend[id='#{repetition_fieldset_legend_id(repetition_champ)}']")
 
           # label
-          expect(subject).to have_selector("label[id='#{champ.html_id}-label']")
+          expect(subject).to have_selector("label[id='#{input_label_id(champ)}']")
 
           # input
           props = JSON.parse(page.first("react-component")['props'])
-          expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend")
-          expect(props['labelId']).to eq("#{champ.html_id}-label")
+          expect(props['ariaLabelledbyPrefix']).to eq(repetition_fieldset_legend_id(repetition_champ))
+          expect(props['labelId']).to eq(input_label_id(champ))
 
           # not in ban checkbox
-          expect(subject).to have_selector("label[id='#{champ.input_label_id(:not_in_ban)}']")
+          expect(subject).to have_selector("label[id='#{input_label_id(champ, :not_in_ban)}']")
 
           # input of the not in ban checkbox
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.input_label_id(:not_in_ban)}']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ, :not_in_ban)}']")
         end
 
         context "when the address is not in the BAN" do
@@ -403,29 +403,29 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
             it do
               # first legend of the repetition
-              expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']")
+              expect(subject).to have_selector("legend[id='#{repetition_fieldset_legend_id(repetition_champ)}']")
               # second legend of the champ address
-              expect(subject).to have_selector("legend[id='#{champ.html_id}-legend']")
+              expect(subject).to have_selector("legend[id='#{champ_fieldset_legend_id(champ)}']")
 
               # label of the country select
-              expect(subject).to have_selector("label[id='#{champ.input_label_id(:country_code)}']")
+              expect(subject).to have_selector("label[id='#{input_label_id(champ, :country_code)}']")
               # select of the country
-              expect(subject).to have_selector("select[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:country_code)}']")
+              expect(subject).to have_selector("select[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :country_code)}']")
 
               # label of the street address
-              expect(subject).to have_selector("label[id='#{champ.input_label_id(:street_address)}']")
+              expect(subject).to have_selector("label[id='#{input_label_id(champ, :street_address)}']")
               # input of the street address
-              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:street_address)}']")
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :street_address)}']")
 
               # label of the city input
-              expect(subject).to have_selector("label[id='#{champ.input_label_id(:city_name)}']")
+              expect(subject).to have_selector("label[id='#{input_label_id(champ, :city_name)}']")
               # input of the city
-              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:city_name)}']")
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :city_name)}']")
 
               # label of the postal code input
-              expect(subject).to have_selector("label[id='#{champ.input_label_id(:postal_code)}']")
+              expect(subject).to have_selector("label[id='#{input_label_id(champ, :postal_code)}']")
               # input of the postal code
-              expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.html_id}-legend #{champ.html_id}-legend #{champ.input_label_id(:postal_code)}']")
+              expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :postal_code)}']")
             end
           end
 
@@ -438,11 +438,11 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
             it do
               # label of the commune input
-              expect(subject).to have_selector("label[id='#{champ.input_label_id(:commune_name)}']")
+              expect(subject).to have_selector("label[id='#{input_label_id(champ, :commune_name)}']")
               # input of the commune
               props = JSON.parse(page.first(".not-in-ban-fieldset react-component")['props'])
-              expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-legend")
-              expect(props['labelId']).to eq(champ.input_label_id(:commune_name))
+              expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)}")
+              expect(props['labelId']).to eq(input_label_id(champ, :commune_name))
             end
           end
         end
@@ -454,7 +454,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         it do
           subject
           attribute = JSON.parse(page.first("react-component")['props'])['ariaLabelledbyPrefix']
-          expect(attribute).to eq("#{repetition_champ.html_id}-legend #{champ.html_id}-label")
+          expect(attribute).to eq("#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)}")
         end
       end
     end
@@ -465,23 +465,20 @@ describe EditableChamp::RepetitionComponent, type: :component do
       let(:text_champ_2) { repetition_champ.rows.first.last }
 
       it "should have a fieldset legend for the repetition" do
-        expect(subject).to have_selector("legend[id='#{repetition_champ.html_id}-legend']", text: "Répétition")
-      end
+        subject
+        # should have a fieldset legend for the repetition
+        expect(page).to have_selector("legend[id='#{repetition_fieldset_legend_id(repetition_champ)}']", text: "Répétition")
 
-      it "should have a fieldset legend for the row with the row number" do
-        expect(subject).to have_selector("legend[id='#{text_champ.parent.html_id(text_champ.row_id)}-legend']", text: "Répétition 1")
-      end
+        # should have a fieldset legend for the row with the row number
+        expect(page).to have_selector("legend[id='#{repetition_row_fieldset_legend_id(repetition_champ, text_champ.row_id)}']", text: "Répétition 1")
 
-      it "the label in the rows should not contain the row number" do
-        expect(subject).to have_selector("label[id='#{text_champ.html_id}-label']", text: "Prénom")
-        expect(subject).to have_selector("label[id='#{text_champ_2.html_id}-label']", text: "Nom")
-      end
+        # the labels in the row
+        expect(page).to have_selector("label[id='#{input_label_id(text_champ)}']", text: "Prénom")
+        expect(page).to have_selector("label[id='#{input_label_id(text_champ_2)}']", text: "Nom")
 
-      it "should have an aria-labelledby that contains the id of the row fieldset and the label id" do
-        # we should match
-        # aria-labelledby='champ-110-01JWB4MXPDCFFKMBBGA01FY0M6-legend champ-111-01JWB4MXPDCFFKMBBGA01FY0M6-label'
-        expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.type_de_champ.html_id(text_champ.row_id)}-legend #{text_champ.html_id}-label']")
-        expect(subject).to have_selector("input[aria-labelledby='#{repetition_champ.type_de_champ.html_id(text_champ_2.row_id)}-legend #{text_champ_2.html_id}-label']")
+        # should have an aria-labelledby that contains the row fieldset id and the label id
+        expect(page).to have_selector("input[aria-labelledby='#{repetition_row_fieldset_legend_id(repetition_champ, text_champ.row_id)} #{input_label_id(text_champ)}']")
+        expect(page).to have_selector("input[aria-labelledby='#{repetition_row_fieldset_legend_id(repetition_champ, text_champ_2.row_id)} #{input_label_id(text_champ_2)}']")
       end
     end
   end

@@ -1,1 +1,1 @@
-= @form.select :value, options, select_options, required: @champ.required?, id: @champ.focusable_input_id, aria: { labelledby: labelledby_id, describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, class: "width-33-desktop width-100-mobile fr-select"
+= @form.select :value, options, select_options, required: @champ.required?, id: @champ.focusable_input_id, aria: { **labelledby_id_attr, describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, class: "width-33-desktop width-100-mobile fr-select"

@@ -21,7 +21,7 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
       items:,
       value_separator: false,
       ariaLabelledbyPrefix: aria_labelledby_prefix,
-      labelId: @champ.label_id
+      labelId: input_label_id(@champ)
     )
   end
 

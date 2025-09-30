@@ -27,6 +27,6 @@ class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseCompone
       },
       minimum_input_length: 2,
       ariaLabelledbyPrefix: aria_labelledby_prefix,
-      labelId: @champ.label_id)
+      labelId: input_label_id(@champ))
   end
 end

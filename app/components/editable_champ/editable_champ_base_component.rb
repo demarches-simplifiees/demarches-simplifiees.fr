@@ -2,6 +2,7 @@
 
 class EditableChamp::EditableChampBaseComponent < ApplicationComponent
   include Dsfr::InputErrorable
+  include ChampAriaLabelledbyHelper
 
   attr_reader :attribute
   attr_reader :aria_labelledby_prefix
@@ -23,25 +24,15 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
     @champ.describedby_id
   end
 
-  def labelledby_id(label_id = nil)
-    labelledby = []
-    # in repetition, aria_labelledby_prefix is the fieldset legend id
-    labelledby << @aria_labelledby_prefix if @aria_labelledby_prefix.present?
-    # in a type de champ with a fieldset (ex: address), we add the fieldset legend id of the type de champ
-    labelledby << fieldset_legend_id if dsfr_champ_container == :fieldset
-    # we add the label id of the input
-    labelledby << (label_id.presence || @champ.labelledby_id)
+  def labelledby_id_attr(label_id = nil)
+    return {} if !@champ.child?
 
-    labelledby.join(' ')
-  end
-
-  def fieldset_legend_id
-    @champ.labelledby_id
+    { labelledby: labelledby_id(label_id) }
   end
 
   def fieldset_aria_opts
     if dsfr_champ_container == :fieldset
-      labelledby = [@champ.labelledby_id]
+      labelledby = [input_label_id(@champ)]
       labelledby << describedby_id if @champ.description.present?
 
       {
@@ -51,5 +42,21 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
     else
       {}
     end
+  end
+
+  private
+
+  def labelledby_id(label_id = nil)
+    return nil if !@champ.child?
+
+    labelledby = []
+    # in repetition, aria_labelledby_prefix is the fieldset legend id
+    labelledby << @aria_labelledby_prefix if @aria_labelledby_prefix.present?
+    # in a type de champ with a fieldset (ex: address), we add the fieldset legend id of the type de champ
+    labelledby << champ_fieldset_legend_id(@champ) if dsfr_champ_container == :fieldset
+    # we add the label id of the input
+    labelledby << (label_id.presence || input_label_id(@champ))
+
+    labelledby.join(' ')
   end
 end

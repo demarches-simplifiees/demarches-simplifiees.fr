@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Attachment::EditComponent, type: :component do
+  include ChampAriaLabelledbyHelper
+
   let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :titre_identite }] }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
@@ -60,9 +62,9 @@ RSpec.describe Attachment::EditComponent, type: :component do
     end
 
     describe "aria-labelledby" do
-      let(:kwargs) { { aria_labelledby: champ.label_id } }
+      let(:kwargs) { { aria_labelledby: input_label_id(champ) } }
       it "targets input_id" do
-        expect(subject).to have_selector("input[aria-labelledby='#{champ.label_id}']")
+        expect(subject).to have_selector("input[aria-labelledby='#{input_label_id(champ)}']")
       end
     end
   end
