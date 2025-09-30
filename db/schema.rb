@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_30_134117) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_30_160810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1066,6 +1066,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_134117) do
     t.bigint "published_revision_id"
     t.boolean "rdv_enabled", default: false, null: false
     t.bigint "replaced_by_procedure_id"
+    t.boolean "robots_indexable", default: true, null: false
     t.boolean "routing_alert", default: false, null: false
     t.boolean "routing_enabled"
     t.bigint "service_id"
