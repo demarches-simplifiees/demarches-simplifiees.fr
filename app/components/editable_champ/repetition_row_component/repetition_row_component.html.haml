@@ -1,7 +1,7 @@
 .champs-group{ id: "safe-row-selector-#{row_id}" }
   - if has_fieldset?
     %fieldset.fr-mx-0.fr-px-0
-      %legend.fr-px-0{ id: fieldset_legend_id }= "#{@type_de_champ.libelle} #{row_number}"
+      %legend.fr-px-0{ id: repetition_row_fieldset_legend_id(@champ, row_id) }= "#{@type_de_champ.libelle} #{row_number}"
       = render section_component
   - else
     = render section_component

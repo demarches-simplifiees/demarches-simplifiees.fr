@@ -1,11 +1,11 @@
 .fr-fieldset__element
   = @form.label :code_departement, for: focusable_departement_input_id, class: 'fr-label', id: focusable_departement_label_id do
     - "Le département de l’EPCI"
-  = @form.select :code_departement, departement_options, departement_select_options, required: @champ.required?, id: focusable_departement_input_id, class: "width-33-desktop width-100-mobile fr-select", aria: { labelledby: labelledby_id(focusable_departement_label_id) }
+  = @form.select :code_departement, departement_options, departement_select_options, required: @champ.required?, id: focusable_departement_input_id, class: "width-33-desktop width-100-mobile fr-select", aria: labelledby_id_attr(focusable_departement_label_id)
 
 - if @champ.departement?
   .fr-fieldset__element
     .fr-select-group
       = @form.label :value, for: focusable_epci_input_id, class: 'fr-label', id: focusable_epci_label_id do
         - "EPCI"
-      = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: focusable_epci_input_id, class: "width-33-desktop width-100-mobile fr-select", aria: { labelledby: labelledby_id(focusable_epci_label_id) }
+      = @form.select :value, epci_options, epci_select_options, required: @champ.required?, id: focusable_epci_input_id, class: "width-33-desktop width-100-mobile fr-select", aria: labelledby_id_attr(focusable_epci_label_id)

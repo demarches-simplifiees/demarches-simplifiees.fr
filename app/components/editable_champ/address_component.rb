@@ -20,7 +20,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       minimum_input_length: 2,
       is_disabled: @champ.not_ban?,
       ariaLabelledbyPrefix: aria_labelledby_prefix,
-      labelId: @champ.label_id)
+      labelId: input_label_id(@champ))
   end
 
   def commune_react_props
@@ -34,8 +34,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
       minimum_input_length: 2,
-      ariaLabelledbyPrefix: "#{aria_labelledby_prefix} #{fieldset_legend_id}",
-      labelId: @champ.input_label_id(:commune_name)
+      ariaLabelledbyPrefix: "#{aria_labelledby_prefix} #{champ_fieldset_legend_id(@champ)}",
+      labelId: input_label_id(@champ, :commune_name)
     }
   end
 
@@ -48,10 +48,6 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
   end
 
   def aria_labelledby(attribute)
-    [aria_labelledby_prefix, attribute == :not_in_ban ? nil : fieldset_legend_id, @champ.input_label_id(attribute)].compact.join(' ')
-  end
-
-  def fieldset_legend_id
-    "#{@champ.html_id}-legend"
+    [aria_labelledby_prefix, attribute == :not_in_ban ? nil : champ_fieldset_legend_id(@champ), input_label_id(@champ, attribute)].compact.join(' ')
   end
 end
