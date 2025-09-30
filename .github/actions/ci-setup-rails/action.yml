@@ -16,6 +16,6 @@ runs:
     - name: Setup test database
       env:
         RAILS_ENV: test
-        DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
-      run: bin/rails db:create db:schema:load db:migrate
+        DATABASE_URL: 'postgres://tps_test@localhost:5432/tps_test'
+      run: bin/rails db:schema:load db:migrate
       shell: bash

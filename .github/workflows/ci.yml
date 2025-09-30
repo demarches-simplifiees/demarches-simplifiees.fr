@@ -33,7 +33,7 @@ jobs:
       - name: Run linters
         run: |
           bundle exec rake lint
-          bundle exec rake zeitwerk:check
+          RAILS_ENV=test bundle exec rake zeitwerk:check
 
   js_tests:
     name: JavaScript tests
