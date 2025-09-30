@@ -164,4 +164,33 @@ describe Administrateurs::APITokensController, type: :controller do
       it { expect(token.allowed_procedure_ids).to eq([]) }
     end
   end
+
+  describe 'remove_procedure' do
+    let!(:procedure1) { create(:procedure, administrateurs: [admin]) }
+    let!(:procedure2) { create(:procedure, administrateurs: [admin]) }
+    let(:token) { APIToken.generate(admin).first }
+
+    subject { delete :remove_procedure, params: { id: token.id, procedure_id: procedure1.id } }
+
+    context 'with all procedures allowed' do
+      it do
+        expect(token.allowed_procedure_ids).to be_nil
+        subject
+        token.reload
+        expect(token.allowed_procedure_ids).to eq([procedure2.id])
+      end
+    end
+
+    context 'with an existing procedure list' do
+      before do
+        token.update!(allowed_procedure_ids: [procedure1.id, procedure2.id])
+      end
+
+      it do
+        subject
+        token.reload
+        expect(token.allowed_procedure_ids).to eq([procedure2.id])
+      end
+    end
+  end
 end
