@@ -28,7 +28,6 @@ class DossierTree::Champ
   def libelle = @type_de_champ.libelle
   def description = @type_de_champ.description
   def required? = @type_de_champ.mandatory? && visible?
-  def value = @data ? columns.first&.value(@data) : nil
   def to_s = blank? ? "" : formatted_value
   def visible? = @visible
   def blank? = visible? ? value_blank? : true
@@ -62,6 +61,14 @@ class DossierTree::Champ
     @data
   end
 
+  def value
+    return if @data.nil?
+    # FIXME: we need this because of "other value" with referentiel
+    return @data.value if type == 'drop_down_list'
+
+    columns.first&.value(@data)
+  end
+
   def coordinate(revision)
     revision.coordinate_for(@type_de_champ)
   end
@@ -90,6 +97,8 @@ class DossierTree::Champ
         return @data.geo_areas.blank?
       when 'piece_justificative', 'titre_identite'
         return @data.piece_justificative_file.blank?
+      when 'cnaf', 'dgfip', 'pole_emploi', 'mesri'
+        return @data.external_id.blank?
       end
     end
 
