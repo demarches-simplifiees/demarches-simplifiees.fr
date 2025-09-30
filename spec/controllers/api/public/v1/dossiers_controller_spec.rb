@@ -18,24 +18,15 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
       shared_examples 'the procedure is found' do
         context 'when the dossier can be saved' do
-          it { expect(create_request).to have_http_status(:created) }
-
-          it { expect { create_request }.to change { Dossier.count }.by(1) }
-
-          it "marks the created dossier as prefilled" do
-            create_request
-            expect(Dossier.last.prefilled).to eq(true)
-          end
-
-          it "creates the dossier without a user" do
-            create_request
-            expect(Dossier.last.user).to eq(nil)
-          end
-
-          it "responds with the brouillon dossier url and id" do
-            create_request
+          it "marks the created dossier as prefilled and creates dossier without user" do
+            expect { create_request }.to change { Dossier.count }.by(1)
+            expect(create_request).to have_http_status(:created)
 
             dossier = Dossier.last
+            expect(dossier.prefilled).to eq(true)
+            expect(dossier.user).to eq(nil)
+
+            # responds with the brouillon dossier url and id" do
             dossier_url = "http://test.host#{commencer_path(procedure.path, prefill_token: dossier.prefill_token)}"
             expect(response.parsed_body["dossier_url"]).to eq(dossier_url)
             expect(response.parsed_body["dossier_id"]).to eq(dossier.to_typed_id)
@@ -105,18 +96,20 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
             create_request
           end
 
-          it { expect(response).to have_http_status(:bad_request) }
-
-          it { expect(response).to have_failed_with("something went wrong") }
+          it do
+            expect(response).to have_http_status(:bad_request)
+            expect(response).to have_failed_with("something went wrong")
+          end
         end
       end
 
       shared_examples 'the procedure is not found' do
         before { create_request }
 
-        it { expect(response).to have_http_status(:not_found) }
-
-        it { expect(response).to have_failed_with("procedure #{procedure.id} is not found") }
+        it do
+          expect(response).to have_http_status(:not_found)
+          expect(response).to have_failed_with("procedure #{procedure.id} is not found")
+        end
       end
 
       context 'when the procedure is found' do
@@ -154,9 +147,10 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
       before { create_request }
 
-      it { expect(response).to have_http_status(:bad_request) }
-
-      it { expect(response).to have_failed_with("Content-Type should be json") }
+      it do
+        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_failed_with("Content-Type should be json")
+      end
     end
   end
 

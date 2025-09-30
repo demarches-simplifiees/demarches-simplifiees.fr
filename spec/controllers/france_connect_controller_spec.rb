@@ -183,9 +183,10 @@ describe FranceConnectController, type: :controller do
         subject
       end
 
-      it { expect(response).to redirect_to(new_user_session_path) }
-
-      it { expect(flash[:alert]).to be_present }
+      it do
+        expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to be_present
+      end
     end
   end
 

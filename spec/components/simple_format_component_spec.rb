@@ -29,8 +29,10 @@ TEXT
       TEXT
     end
 
-    it { expect(page).to have_selector("p", count: 2) }
-    it { text.split("\n").map(&:strip).map { expect(page).to have_text(_1) } }
+    it do
+      expect(page).to have_selector("p", count: 2)
+      text.split("\n").map(&:strip).map { expect(page).to have_text(_1) }
+    end
   end
 
   context 'unordered list items' do

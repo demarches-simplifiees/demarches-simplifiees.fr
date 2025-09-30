@@ -33,12 +33,12 @@ describe ApplicationController, type: :controller do
     end
 
     context 'when no one is logged in' do
-      it do
+      it "configure sentry guest" do
         expect(Sentry).to have_received(:set_user)
           .with({ id: 'Guest' })
       end
 
-      it do
+      it "configure loggable context" do
         [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
           payload.delete(key)
         end
@@ -52,12 +52,12 @@ describe ApplicationController, type: :controller do
     context 'when a user is logged in' do
       let(:current_user) { create(:user) }
 
-      it do
+      it "configure sentry user" do
         expect(Sentry).to have_received(:set_user)
           .with({ id: "User##{current_user.id}" })
       end
 
-      it do
+      it "configure loggable context" do
         [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
           payload.delete(key)
         end
@@ -75,12 +75,12 @@ describe ApplicationController, type: :controller do
       let(:current_administrateur) { administrateurs(:default_admin) }
       let(:current_super_admin) { create(:super_admin) }
 
-      it do
+      it "configure sentry user" do
         expect(Sentry).to have_received(:set_user)
           .with({ id: "User##{current_user.id}" })
       end
 
-      it do
+      it "configure loggable context" do
         [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
           payload.delete(key)
         end

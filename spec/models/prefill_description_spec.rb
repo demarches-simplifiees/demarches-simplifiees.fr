@@ -23,9 +23,10 @@ RSpec.describe PrefillDescription, type: :model do
 
     subject(:types_de_champ) { prefill_description.types_de_champ }
 
-    it { expect(types_de_champ.count).to eq(1) }
-
-    it { expect(types_de_champ.first).to eql(TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ, procedure.active_revision)) }
+    it do
+      expect(types_de_champ.count).to eq(1)
+      expect(types_de_champ.first).to eql(TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ, procedure.active_revision))
+    end
 
     shared_examples "filters out non fillable types de champ" do |type_de_champ_name|
       context "when the procedure has a #{type_de_champ_name} champ" do

@@ -629,9 +629,10 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           context 'with cookie in past' do
             let(:exports_seen_at) { 1.hour.ago }
-            it { expect(assigns(:has_export_notification)).to be(true) }
-
-            it { expect(response.body).to match(/Un nouvel export est prêt/) }
+            it do
+              expect(assigns(:has_export_notification)).to be(true)
+              expect(response.body).to match(/Un nouvel export est prêt/)
+            end
           end
 
           context 'with cookie set after last generated export' do

@@ -31,8 +31,8 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
 
       context 'invalid menus' do
         shared_examples 'missing primary option' do
-          it { is_expected.to be_invalid }
           it do
+            is_expected.to be_invalid
             subject.validate
             expect(subject.errors.full_messages).to eq ["Le champ « #{subject.libelle} » doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>"]
           end
@@ -92,9 +92,8 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
               'Primary 2' => ['secondary 2.1', 'secondary 2.2', 'secondary 2.3']
             }
           )
+          expect(subject.primary_options).to eq(['Primary 1', 'Primary 2'])
         end
-
-        it { expect(subject.primary_options).to eq(['Primary 1', 'Primary 2']) }
       end
 
       context "not mandatory" do
@@ -107,9 +106,8 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
               'Primary 2' => ['secondary 2.1', 'secondary 2.2', 'secondary 2.3']
             }
           )
+          expect(subject.primary_options).to eq(['Primary 1', 'Primary 2'])
         end
-
-        it { expect(subject.primary_options).to eq(['Primary 1', 'Primary 2']) }
       end
     end
   end

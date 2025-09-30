@@ -23,11 +23,11 @@ describe Manager::ConfirmationUrlsController, type: :controller do
 
     before { get :new, params: params }
 
-    it { expect(response).to render_template(:new) }
-
-    it { expect(response.body).to match(/Veuillez partager ce lien/) }
-
     it "shows the confirmation url with encrypted parameters" do
+      expect(response).to render_template(:new)
+
+      expect(response.body).to match(/Veuillez partager ce lien/)
+
       path_base = new_manager_procedure_administrateur_confirmation_path(procedure)
       expect(response.body).to match(
         %r{#{Regexp.escape(path_base)}\?q=\S{30,}}m
@@ -43,9 +43,10 @@ describe Manager::ConfirmationUrlsController, type: :controller do
           }
         end
 
-        it { expect(flash[:alert]).to match(/Cet administrateur n'existe pas/) }
-
-        it { expect(response).to redirect_to(manager_procedure_path(procedure)) }
+        it do
+          expect(flash[:alert]).to match(/Cet administrateur n'existe pas/)
+          expect(response).to redirect_to(manager_procedure_path(procedure))
+        end
       end
 
       context 'when the administrateur has already been added to the procedure' do
@@ -56,9 +57,10 @@ describe Manager::ConfirmationUrlsController, type: :controller do
           }
         end
 
-        it { expect(flash[:alert]).to match(/Cet administrateur a déjà été ajouté/) }
-
-        it { expect(response).to redirect_to(manager_procedure_path(procedure)) }
+        it do
+          expect(flash[:alert]).to match(/Cet administrateur a déjà été ajouté/)
+          expect(response).to redirect_to(manager_procedure_path(procedure))
+        end
       end
     end
   end

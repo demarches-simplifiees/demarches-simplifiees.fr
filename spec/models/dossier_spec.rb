@@ -136,9 +136,10 @@ describe Dossier, type: :model do
     let(:procedure) { create(:procedure, :for_individual) }
     subject(:dossier) { create(:dossier, procedure: procedure) }
 
-    it { is_expected.to validate_presence_of(:individual) }
-
-    it { is_expected.to validate_presence_of(:user) }
+    it 'validates presence of required attributes' do
+      is_expected.to validate_presence_of(:individual)
+      is_expected.to validate_presence_of(:user)
+    end
 
     context 'when dossier has deleted_user_email_never_send' do
       subject(:dossier) { create(:dossier, procedure: procedure, deleted_user_email_never_send: "seb@totoro.org") }
@@ -168,9 +169,7 @@ describe Dossier, type: :model do
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
-    end
 
-    it do
       expect(expiring_dossier.close_to_expiration?).to be_truthy
       expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
     end
@@ -183,8 +182,9 @@ describe Dossier, type: :model do
         expiring_dossier_with_notification.reload
       end
 
-      it { is_expected.not_to include(expiring_dossier) }
       it do
+        is_expected.not_to include(expiring_dossier)
+
         expect(expiring_dossier.close_to_expiration?).to be_falsey
         expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
 
@@ -219,9 +219,7 @@ describe Dossier, type: :model do
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
-    end
 
-    it do
       expect(expiring_dossier.close_to_expiration?).to be_truthy
       expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
     end
@@ -234,8 +232,9 @@ describe Dossier, type: :model do
         expiring_dossier_with_notification.reload
       end
 
-      it { is_expected.not_to include(expiring_dossier) }
       it do
+        is_expected.not_to include(expiring_dossier)
+
         expect(expiring_dossier.close_to_expiration?).to be_falsey
         expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
 
@@ -279,9 +278,7 @@ describe Dossier, type: :model do
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
-    end
 
-    it do
       expect(expiring_dossier.close_to_expiration?).to be_truthy
       expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
     end
@@ -294,8 +291,9 @@ describe Dossier, type: :model do
         expiring_dossier_with_notification.reload
       end
 
-      it { is_expected.not_to include(expiring_dossier) }
       it do
+        is_expected.not_to include(expiring_dossier)
+
         expect(expiring_dossier.close_to_expiration?).to be_falsey
         expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
 
@@ -1443,17 +1441,11 @@ describe Dossier, type: :model do
       expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
     end
 
-    it { expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1) }
-
-    it "resolve pending correction" do
-      passer_en_instruction
+    it "resolves pending correction and creates commentaire with expected wording" do
+      expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1)
 
       expect(dossier.pending_correction?).to be_falsey
       expect(correction.reload.resolved_at).to be_present
-    end
-
-    it 'creates a commentaire in the messagerie with expected wording' do
-      passer_en_instruction
 
       email_template = dossier.procedure.email_template_for(dossier.state)
       commentaire = dossier.commentaires.last

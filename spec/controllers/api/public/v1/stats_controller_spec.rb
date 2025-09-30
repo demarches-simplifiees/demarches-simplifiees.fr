@@ -13,9 +13,8 @@ RSpec.describe API::Public::V1::StatsController, type: :controller do
         index_request
       end
 
-      it { expect(response).to be_successful }
-
       it {
+        expect(response).to be_successful
         expect(response.parsed_body).to match({
           funnel: procedure.stats_dossiers_funnel.as_json,
           processed: procedure.stats_termines_states.as_json,
@@ -29,9 +28,10 @@ RSpec.describe API::Public::V1::StatsController, type: :controller do
     shared_examples 'the procedure is not found' do
       before { index_request }
 
-      it { expect(response).to have_http_status(:not_found) }
-
-      it { expect(response).to have_failed_with("procedure #{procedure.id} is not found") }
+      it do
+        expect(response).to have_http_status(:not_found)
+        expect(response).to have_failed_with("procedure #{procedure.id} is not found")
+      end
     end
 
     context 'when the procedure is found' do

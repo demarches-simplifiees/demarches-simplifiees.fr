@@ -347,8 +347,7 @@ describe Instructeur, type: :model do
       it do
         expect(procedure_to_assign.declarative_with_state).to eq("en_instruction")
         expect(dossier.state).to eq("en_instruction")
-      end
-      it do
+
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,
@@ -373,9 +372,6 @@ describe Instructeur, type: :model do
       it do
         expect(procedure_to_assign.declarative_with_state).to eq("accepte")
         expect(dossier.state).to eq("accepte")
-      end
-
-      it do
         expect(instructeur.email_notification_data).to eq([])
       end
     end
@@ -392,9 +388,6 @@ describe Instructeur, type: :model do
       it do
         expect(procedure_to_assign.declarative_with_state).to eq("accepte")
         expect(dossier.state).to eq("accepte")
-      end
-
-      it do
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,

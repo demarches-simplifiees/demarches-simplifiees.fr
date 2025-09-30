@@ -18,8 +18,6 @@ describe Administrateurs::MailTemplatesController, type: :controller do
 
     it '', :slow do
       expect(subject.status).to eq 200
-    end
-    it do
       expect(subject.body).to include("Configuration des emails")
       expect(subject.body).to include(Mails::InitiatedMail::DISPLAYED_NAME)
     end

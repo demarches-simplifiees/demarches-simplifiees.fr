@@ -585,9 +585,6 @@ describe TagsSubstitutionConcern, type: :model do
       it do
         is_expected.not_to include(include({ libelle: 'motivation' }))
         is_expected.not_to include(include({ libelle: 'date de décision' }))
-      end
-
-      it do
         is_expected.to include(include({ libelle: 'public' }))
         is_expected.to include(include({ libelle: 'privé' }))
       end
@@ -600,9 +597,8 @@ describe TagsSubstitutionConcern, type: :model do
         is_expected.not_to include(include({ libelle: 'motivation' }))
         is_expected.not_to include(include({ libelle: 'date de décision' }))
         is_expected.not_to include(include({ libelle: 'privé' }))
+        is_expected.to include(include({ libelle: 'public' }))
       end
-
-      it { is_expected.to include(include({ libelle: 'public' })) }
     end
 
     context 'when generating document for dossier having conditional' do

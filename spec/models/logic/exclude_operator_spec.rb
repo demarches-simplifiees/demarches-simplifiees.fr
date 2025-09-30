@@ -16,8 +16,9 @@ describe Logic::ExcludeOperator do
   end
 
   describe '#errors' do
-    it { expect(ds_exclude(champ_value(champ.stable_id), constant('val1')).errors([champ.type_de_champ])).to be_empty }
-    it do
+    it "constants" do
+      expect(ds_exclude(champ_value(champ.stable_id), constant('val1')).errors([champ.type_de_champ])).to be_empty
+
       expected = {
         right: constant('something else'),
         stable_id: champ.stable_id,
@@ -25,9 +26,9 @@ describe Logic::ExcludeOperator do
       }
 
       expect(ds_exclude(champ_value(champ.stable_id), constant('something else')).errors([champ.type_de_champ])).to eq([expected])
-    end
 
-    it { expect(ds_exclude(constant(1), constant('val1')).errors([])).to eq([{ type: :required_list }]) }
+      expect(ds_exclude(constant(1), constant('val1')).errors([])).to eq([{ type: :required_list }])
+    end
   end
 
   describe '#==' do

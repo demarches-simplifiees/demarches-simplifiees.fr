@@ -9,6 +9,7 @@ require:
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
   - ./lib/cops/unscoped.rb
+  - ./lib/cops/rspec/consecutive_it_blocks.rb
 
 inherit_mode:
   merge:
@@ -1006,6 +1007,9 @@ Rails/WhereNotWithMultipleConditions:
   Enabled: true
 
 RSpec/Focus:
+  Enabled: true
+
+RSpec/ConsecutiveItBlocks:
   Enabled: true
 
 Security/Eval:
