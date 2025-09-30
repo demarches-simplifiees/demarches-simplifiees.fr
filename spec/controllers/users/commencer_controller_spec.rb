@@ -11,12 +11,14 @@ describe Users::CommencerController, type: :controller do
 
     context 'when the path is for a published procedure' do
       let(:path) { published_procedure.path }
+      render_views
 
       it 'renders the view' do
         expect(subject.status).to eq(200)
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq published_procedure
         expect(assigns(:revision)).to eq published_procedure.published_revision
+        expect(response.body).to include("index,follow")
       end
     end
 
@@ -39,12 +41,14 @@ describe Users::CommencerController, type: :controller do
 
     context 'when the path is for a draft procedure' do
       let(:path) { draft_procedure.path }
+      render_views
 
       it 'renders the view' do
         expect(subject.status).to eq(200)
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq draft_procedure
         expect(assigns(:revision)).to eq draft_procedure.draft_revision
+        expect(response.body).to include("noindex,nofollow")
       end
     end
 
