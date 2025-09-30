@@ -69,8 +69,14 @@ describe Administrateurs::ProceduresController, type: :controller do
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,
       zone_ids: zone_ids,
-      lien_site_web: lien_site_web,
       procedure_tag_names: ['Aao', 'Accompagnement']
+    }
+  }
+
+  let(:procedure_params_not_creatable) {
+    {
+      lien_site_web: lien_site_web,
+      robots_indexable: "0"
     }
   }
 
@@ -605,7 +611,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     context 'when administrateur is connected' do
       def update_procedure
-        put :update, params: { id: procedure.id, procedure: procedure_params.merge(procedure_expires_when_termine_enabled: true) }
+        put :update, params: { id: procedure.id, procedure: procedure_params.merge(procedure_params_not_creatable).merge(procedure_expires_when_termine_enabled: true) }
         procedure.reload
       end
 
@@ -627,6 +633,8 @@ describe Administrateurs::ProceduresController, type: :controller do
             expect(subject.organisation).to eq(organisation)
             expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
             expect(subject.procedure_expires_when_termine_enabled).to eq(true)
+            expect(subject.lien_site_web).to eq(lien_site_web)
+            expect(subject.robots_indexable?).to eq(false)
           end
         end
 
@@ -1478,8 +1486,9 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
     let(:procedure3) { create(:procedure, :published, :new_administrateur, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
+    let(:robots_indexable) { "0" }
 
-    subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }
+    subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, procedure: { path:, lien_site_web:, robots_indexable: } } }
 
     context 'when admin is the owner of the procedure' do
       context 'procedure path does not exist' do
@@ -1495,6 +1504,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
+          expect(procedure.robots_indexable?).to be(false)
 
           expect(response).to redirect_to(admin_procedure_confirmation_path(procedure))
         end
@@ -1509,11 +1519,13 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         let(:path) { procedure2.path }
         let(:lien_site_web) { 'http://mon-site.gouv.fr' }
+        let(:robots_indexable) { '1' }
 
         it 'publishes the procedure, unpublishes the old one and redirects to confirmation page' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
+          expect(procedure.robots_indexable?).to be(true)
 
           expect(procedure2.depubliee?).to be_truthy
 

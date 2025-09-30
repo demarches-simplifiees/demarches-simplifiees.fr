@@ -1,7 +1,6 @@
 = form_for procedure,
   url: admin_procedure_publish_path(procedure_id: procedure.id),
-  method: :put,
-  html: { class: 'form' } do |f|
+  method: :put do |f|
   = render Procedure::ErrorsSummary.new(procedure: @procedure, validation_context: :publication)
   .mt-2
     - if procedure.draft_changed?

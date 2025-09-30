@@ -31,6 +31,11 @@
                     class: 'fr-input',
                     autocomplete: 'off')
 
+.fr-input-group
+  = render Dsfr::ToggleComponent.new(form:, target: :robots_indexable, extra_class_names: "fr-mt-4w",
+      title: "Cette démarche est référençable par les moteurs de recherche (Google, …) pour aider les usagers à la découvrir",
+    )
+
 - if closed_procedures.present?
   .fr-select-group
     = label_tag :old_procedure, class: 'fr-label' do
