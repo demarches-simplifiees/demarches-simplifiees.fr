@@ -10,15 +10,25 @@ class Cron::LLMEnqueueNightlyImproveProcedureJob < Cron::CronJob
       .order(updated_at: :desc)
       .find_each(batch_size: 200) do |procedure|
         next unless Flipper.enabled?(:llm_nightly_improve_procedure, procedure)
-
         procedure_revision = procedure.published_revision
-        schema = procedure_revision.schema_to_llm.to_json
-        schema_hash = Digest::SHA256.hexdigest(schema)
+        schema_hash = schema_hash(procedure_revision)
+        next if LLMRuleSuggestion.exists?(procedure_revision:, schema_hash:)
 
-        next if LLMRuleSuggestion.exists?(procedure_revision_id: procedure_revision.id, schema_hash:)
-
-        suggestion = LLMRuleSuggestion.create!(procedure_revision:, schema_hash:, state: :queued, rule: LLM::LabelImprover::TOOL_NAME)
-        LLM::GenerateRuleSuggestionJob.perform_later(suggestion)
+        available_rules.each do |rule|
+          suggestion = LLMRuleSuggestion.create!(procedure_revision:, schema_hash:, state: :queued, rule:)
+          LLM::GenerateRuleSuggestionJob.perform_later(suggestion)
+        end
       end
+  end
+
+  def schema_hash(procedure_revision)
+    Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json)
+  end
+
+  def available_rules
+    [
+      LLM::LabelImprover::TOOL_NAME,
+      LLM::StructureImprover::TOOL_NAME
+    ]
   end
 end
