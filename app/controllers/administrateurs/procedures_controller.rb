@@ -631,6 +631,7 @@ module Administrateurs
         :procedure_expires_when_termine_enabled,
         :rdv_enabled,
         :pro_connect_restricted,
+        :robots_indexable,
         { zone_ids: [], procedure_tag_names: [] }
       ]
 
@@ -654,7 +655,7 @@ module Administrateurs
     end
 
     def publish_params
-      params.require(:procedure).permit(:path, :lien_site_web)
+      params.require(:procedure).permit(:path, :lien_site_web, :robots_indexable)
     end
 
     def closing_params
