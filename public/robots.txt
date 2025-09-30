@@ -2,7 +2,6 @@
 #
 # To ban all spiders from the entire site uncomment the next two lines:
 User-agent: *
-Disallow: /commencer*
 Disallow: /rails/
 Disallow: /super_admins/
 Disallow: /manager/
