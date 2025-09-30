@@ -62,6 +62,10 @@ class DossierTree::Champ
     @data
   end
 
+  def coordinate(revision)
+    revision.coordinate_for(@type_de_champ)
+  end
+
   private
 
   def formatted_value

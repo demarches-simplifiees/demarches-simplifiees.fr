@@ -39,4 +39,8 @@ class DossierTree::Section
   def repeaters = children.flat_map(&:repeaters)
   def sections = [self] + children.flat_map(&:sections)
   def flatten = [self] + children.flat_map(&:flatten)
+
+  def coordinate(revision)
+    revision.coordinate_for(@type_de_champ)
+  end
 end

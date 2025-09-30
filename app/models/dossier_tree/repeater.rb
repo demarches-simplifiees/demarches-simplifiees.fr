@@ -39,6 +39,10 @@ class DossierTree::Repeater
   def sections = rows.flat_map(&:sections)
   def flatten = [self] + rows.flat_map(&:flatten)
 
+  def coordinate(revision)
+    revision.coordinate_for(@type_de_champ)
+  end
+
   class Row
     attr_reader :id, :children, :repeater
 
@@ -60,5 +64,9 @@ class DossierTree::Repeater
 
     def to_key = [@key]
     def model_name = @_model_name ||= ActiveModel::Name.new(self, nil, 'repeater_row')
+
+    def coordinate(revision)
+      @repeater.coordinate(revision)
+    end
   end
 end

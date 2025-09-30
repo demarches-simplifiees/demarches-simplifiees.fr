@@ -36,4 +36,8 @@ class DossierTree::Explication
   def repeaters = []
   def sections = []
   def flatten = [self]
+
+  def coordinate(revision)
+    revision.coordinate_for(@type_de_champ)
+  end
 end
