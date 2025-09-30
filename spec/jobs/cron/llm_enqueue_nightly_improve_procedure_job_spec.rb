@@ -10,12 +10,12 @@ describe Cron::LLMEnqueueNightlyImproveProcedureJob, type: :job do
 
   describe 'perform' do
     it 'enqueues jobs only for procedures with feature enabled' do
-      expect { subject }.to have_enqueued_job(LLM::GenerateRuleSuggestionJob).with(an_instance_of(LLMRuleSuggestion)).once
+      expect { subject }.to have_enqueued_job(LLM::GenerateRuleSuggestionJob).with(an_instance_of(LLMRuleSuggestion)).twice
     end
 
     context 'idempotence' do
       it 'create once' do
-        expect { subject }.to change { LLMRuleSuggestion.count }.by(1)
+        expect { subject }.to change { LLMRuleSuggestion.count }.by(2)
         expect { subject }.not_to change { LLMRuleSuggestion.count }
       end
     end
