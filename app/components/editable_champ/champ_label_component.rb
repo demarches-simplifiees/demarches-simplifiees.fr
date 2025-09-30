@@ -2,6 +2,7 @@
 
 class EditableChamp::ChampLabelComponent < ApplicationComponent
   include Dsfr::InputErrorable
+  include ChampAriaLabelledbyHelper
 
   attr_reader :attribute
 

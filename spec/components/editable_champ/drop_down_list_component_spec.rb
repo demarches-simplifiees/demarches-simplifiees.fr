@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 describe EditableChamp::DropDownListComponent, type: :component do
-  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
+  include ChampAriaLabelledbyHelper
+
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :drop_down_list }] }
   let(:dossier) { create(:dossier, procedure:) }
   let(:tdc) { procedure.active_revision.types_de_champ.first }
   let(:champ) { dossier.champs.first }
@@ -27,7 +30,7 @@ describe EditableChamp::DropDownListComponent, type: :component do
       it do
         render
 
-        expect(aria_labelledby(fieldset)).to eq([champ.labelledby_id, champ.describedby_id])
+        expect(aria_labelledby(fieldset)).to eq([input_label_id(champ), champ.describedby_id])
         expect(fieldset['role']).to eq('group')
 
         expect(no_aria_on_radio?).to be true
@@ -39,8 +42,24 @@ describe EditableChamp::DropDownListComponent, type: :component do
         it do
           render
 
-          expect(aria_labelledby(fieldset)).to eq([champ.labelledby_id, champ.describedby_id, champ.error_id])
+          expect(aria_labelledby(fieldset)).to eq([input_label_id(champ), champ.describedby_id, champ.error_id])
           expect(no_aria_on_radio?).to be true
+        end
+      end
+
+      context "when the champ is in a repetition" do
+        let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :drop_down_list }] }] }
+
+        # the first fieldset is for the repetition
+        let(:fieldset) { page.find('fieldset fieldset') }
+
+        let(:repetition_champ) { dossier.project_champs_public.first }
+        let(:drop_down_list_champ) { repetition_champ.rows.first.first }
+
+        it do
+          render
+
+          expect(aria_labelledby(radios.first)).to eq([repetition_fieldset_legend_id(repetition_champ), champ_fieldset_legend_id(drop_down_list_champ), input_label_id(drop_down_list_champ)])
         end
       end
     end
@@ -51,7 +70,7 @@ describe EditableChamp::DropDownListComponent, type: :component do
       it do
         render
 
-        expect(aria_labelledby(fieldset)).to eq([champ.labelledby_id])
+        expect(aria_labelledby(fieldset)).to eq([input_label_id(champ)])
         expect(no_aria_on_radio?).to be true
       end
 
@@ -61,7 +80,7 @@ describe EditableChamp::DropDownListComponent, type: :component do
         it do
           render
 
-          expect(aria_labelledby(fieldset)).to eq([champ.labelledby_id, champ.error_id])
+          expect(aria_labelledby(fieldset)).to eq([input_label_id(champ), champ.error_id])
           expect(no_aria_on_radio?).to be true
         end
       end

@@ -6,41 +6,41 @@
 .fr-input-group
   .fr-checkbox-group
     = @form.check_box :not_in_ban, { id: @champ.focusable_input_id(:not_in_ban), class: "fr-input", checked: @champ.not_ban?, 'aria-labelledby': aria_labelledby(:not_in_ban) }, 'true', 'false'
-    = @form.label :not_in_ban, for: @champ.focusable_input_id(:not_in_ban), class: 'fr-label', id: @champ.input_label_id(:not_in_ban) do
+    = @form.label :not_in_ban, for: @champ.focusable_input_id(:not_in_ban), class: 'fr-label', id: input_label_id(@champ, :not_in_ban) do
       - t('.not_in_ban')
 
 - if @champ.not_ban?
   .fr-mt-3w
 
     %fieldset.fr-fieldset.not-in-ban-fieldset
-      %legend.fr-fieldset__legend.fr-mb-1w{ id: fieldset_legend_id }
+      %legend.fr-fieldset__legend.fr-mb-1w{ id: champ_fieldset_legend_id(@champ) }
         = @champ.libelle
       - if @champ.description.present?
         .fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
 
       .champs-group.width-100
         .fr-input-group
-          = @form.label :country_code, for: @champ.focusable_input_id(:country_code), class: 'fr-label', id: @champ.input_label_id(:country_code) do
+          = @form.label :country_code, for: @champ.focusable_input_id(:country_code), class: 'fr-label', id: input_label_id(@champ, :country_code) do
             - capture do
               = t('.country_label')
               = render EditableChamp::AsteriskMandatoryComponent.new
           = @form.select :country_code, pays_options, @champ.mandatory? ? { prompt: '' } : { include_blank: '' }, required: @champ.required?, id: @champ.focusable_input_id(:country_code), class: "width-33-desktop fr-select small-margin", 'aria-labelledby': aria_labelledby(:country_code)
 
-        = render Dsfr::InputComponent.new(form: @form, attribute: :street_address, opts: { id: @champ.focusable_input_id(:street_address), class:"fr-input small-margin", "aria-labelledby": aria_labelledby(:street_address) }, label_opts: { id: @champ.input_label_id(:street_address) }) do |c|
+        = render Dsfr::InputComponent.new(form: @form, attribute: :street_address, opts: { id: @champ.focusable_input_id(:street_address), class:"fr-input small-margin", "aria-labelledby": aria_labelledby(:street_address) }, label_opts: { id: input_label_id(@champ, :street_address) }) do |c|
           - c.with_label { t('.street_label') }
           - c.with_hint { @champ.international? ? t('.street_international_hint') : t('.street_fr_hint') }
 
         - if @champ.international?
-          = render Dsfr::InputComponent.new(form: @form, attribute: :city_name, opts: { id: @champ.focusable_input_id(:city_name), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:city_name) }, label_opts: { id: @champ.input_label_id(:city_name) }) do |c|
+          = render Dsfr::InputComponent.new(form: @form, attribute: :city_name, opts: { id: @champ.focusable_input_id(:city_name), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:city_name) }, label_opts: { id: input_label_id(@champ, :city_name) }) do |c|
             - c.with_label { t('.city_label') }
             - c.with_hint t('.city_hint')
 
           .fr-input-group
-            = render Dsfr::InputComponent.new(form: @form, attribute: :postal_code, opts: { id: @champ.focusable_input_id(:postal_code), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:postal_code) }, label_opts: { id: @champ.input_label_id(:postal_code) }) do |c|
+            = render Dsfr::InputComponent.new(form: @form, attribute: :postal_code, opts: { id: @champ.focusable_input_id(:postal_code), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:postal_code) }, label_opts: { id: input_label_id(@champ, :postal_code) }) do |c|
               - c.with_label { t('.postal_code_label') }
         - else
           .fr-input-group{ class: class_names("fr-input-group--error": @champ.errors.include?(:commune_name)) }
-            = @form.label :commune_name, for: @champ.focusable_input_id(:commune_name), class: 'fr-label', id: @champ.input_label_id(:commune_name) do
+            = @form.label :commune_name, for: @champ.focusable_input_id(:commune_name), class: 'fr-label', id: input_label_id(@champ, :commune_name) do
               - capture do
                 = t('.commune_label')
                 = render EditableChamp::AsteriskMandatoryComponent.new

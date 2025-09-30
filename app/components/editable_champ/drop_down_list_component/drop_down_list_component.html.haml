@@ -2,13 +2,13 @@
   .fr-fieldset__content
     - items.each do |value, option_id|
       .fr-radio-group
-        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no', aria: { labelledby: labelledby_id(@champ.radio_label_id(option_id)) }
+        = @form.radio_button :value, option_id, id: @champ.radio_id(option_id), translate: 'no', aria: labelledby_id_attr(@champ.radio_label_id(option_id))
         %label.fr-label{ for: @champ.radio_id(option_id), id: @champ.radio_label_id(option_id) }
           = value
 
     - if !@champ.mandatory?
       .fr-radio-group
-        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: @champ.radio_id(:blank), aria: { labelledby: labelledby_id(@champ.radio_label_id(:blank)) }
+        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: @champ.radio_id(:blank), aria: labelledby_id_attr(@champ.radio_label_id(:blank))
         %label.fr-label{ for: @champ.radio_id(:blank), id: @champ.radio_label_id(:blank) }
           Non renseigné
 
@@ -22,7 +22,7 @@
     { required: @champ.required?,
     id: @champ.focusable_input_id,
     class: select_class_names,
-    aria: { labelledby: labelledby_id, describedby: select_aria_describedby },
+    aria: { **labelledby_id_attr, describedby: select_aria_describedby },
     translate: 'no' }
 
 - if @champ.drop_down_other?
