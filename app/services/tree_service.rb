@@ -21,19 +21,20 @@ class TreeService
 
     head, *tail = coordinates
 
-    if head.header_section?
-      children, rest = tail.slice_before { same_level?(head, it) }.to_a
+    case head
+    in header if head.header_section?
+      children, rest = tail.slice_before { same_level?(header, it) }.to_a
       tree_children = tree_it(children, row_id:)
 
-      [to_champ(head, children: tree_children, row_id:)] + tree_it(rest, row_id:)
+      [to_champ(header, children: tree_children, row_id:)] + tree_it(rest, row_id:)
 
-    elsif head.repetition?
-      rows = row_ids(head).map do |row_id|
-        tree_children = tree_it(head.revision_types_de_champ, row_id:)
+    in repetition if head.repetition?
+      rows = row_ids(repetition).map do |row_id|
+        tree_children = tree_it(repetition.revision_types_de_champ, row_id:)
         Row.new(children: tree_children)
       end
 
-      [to_champ(head, rows:)] + tree_it(tail)
+      [to_champ(repetition, rows:)] + tree_it(tail)
 
     else
       [to_champ(head, row_id:)] + tree_it(tail, row_id:)
