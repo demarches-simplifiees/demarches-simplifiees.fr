@@ -25,15 +25,34 @@ describe Champs::LinkedDropDownListChamp do
   end
 
   describe '#primary_value=' do
-    before { champ.primary_value = '' }
+    let(:options) { ["--1--", "11", "0", "--2--", "22", "0"] }
+    let(:value) { '["", ""]' }
 
     it {
-      champ.primary_value = 'primary'
-      expect(champ.value).to eq('["primary",""]')
-      champ.secondary_value = 'secondary'
-      expect(champ.value).to eq('["primary","secondary"]')
+      champ.primary_value = '1'
+      expect(champ.value).to eq('["1",""]')
+      champ.secondary_value = '11'
+      expect(champ.value).to eq('["1","11"]')
+      champ.primary_value = '2'
+      expect(champ.value).to eq('["2",""]')
+      champ.secondary_value = '0'
+      expect(champ.value).to eq('["2","0"]')
+      champ.primary_value = '1'
+      expect(champ.value).to eq('["1","0"]')
       champ.primary_value = ''
       expect(champ.value).to eq('["",""]')
+    }
+  end
+
+  describe '#secondary_value=' do
+    let(:options) { ["--1--", "11", "0", "--2--", "22", "0"] }
+    let(:value) { '["1", "11"]' }
+
+    it {
+      champ.secondary_value = '0'
+      expect(champ.value).to eq('["1","0"]')
+      champ.secondary_value = '22'
+      expect(champ.value).to eq('["1",""]')
     }
   end
 

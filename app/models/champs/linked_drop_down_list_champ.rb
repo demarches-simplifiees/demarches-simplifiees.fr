@@ -23,12 +23,14 @@ class Champs::LinkedDropDownListChamp < Champ
     if value.blank?
       pack_value("", "")
     else
-      pack_value(value, secondary_value)
+      new_secondary_value = secondary_options[value]&.include?(secondary_value) ? secondary_value : ""
+      pack_value(value, new_secondary_value)
     end
   end
 
   def secondary_value=(value)
-    pack_value(primary_value, value)
+    new_secondary_value = secondary_options[primary_value].include?(value) ? value : ""
+    pack_value(primary_value, new_secondary_value)
   end
 
   def main_value_name
