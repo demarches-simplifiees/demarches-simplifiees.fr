@@ -5,13 +5,14 @@ class TreeService
     @dossier = dossier
   end
 
-  def tree
-    coordinates = @dossier.revision.revision_types_de_champ.filter(&:public?).filter(&:root?)
-    tree_it(coordinates)
+  def tree(private: false)
+    coordinates = @dossier.revision.revision_types_de_champ.filter(&:root?)
+    tree_it(coordinates).tap { private ? it.filter(&:private?) : it.filter(&:public?) }
   end
 
-  def submitted_tree
-    tree_it(@dossier.submitted_revision.revision_types_de_champ.filter(&:public?).filter(&:root?))
+  def submitted_tree(private: false)
+    coordinates = @dossier.submitted_revision.revision_types_de_champ.filter(&:root?)
+    tree_it(coordinates).tap { private ? it.filter(&:private?) : it.filter(&:public?) }
   end
 
   private

@@ -4,8 +4,10 @@ describe TreeService do
   describe '.tree' do
     subject(:tree) { described_class.new(dossier).tree }
 
-    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:types_de_champ_public) { [] }
+    let(:types_de_champ_private) { [] }
 
     context 'with a nested structure' do
       let(:types_de_champ_public) do
@@ -43,6 +45,12 @@ describe TreeService do
         expect(repetition.parent).to eq(header_section)
         expect(header_section.parent).to be_nil
       end
+    end
+
+    context 'with private champs' do
+      let(:types_de_champ_private) { [{ type: :text, libelle: 'private text' }] }
+
+      it { expect(described_class.new(dossier).tree(private: true).map(&:libelle)).to eq(['private text']) }
     end
   end
 
