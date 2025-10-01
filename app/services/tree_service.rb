@@ -49,5 +49,11 @@ class TreeService
     champ
   end
 
-  Row = Data.define(:children)
+  class Row
+    attr_accessor :children, :parent
+    def initialize(children: [])
+      @children = children
+      children.each { it.parent = self }
+    end
+  end
 end

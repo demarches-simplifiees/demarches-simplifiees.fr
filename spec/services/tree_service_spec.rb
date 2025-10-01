@@ -27,10 +27,12 @@ describe TreeService do
         ]
       end
       let(:header_section) { subject.first }
+      let(:text) { header_section.children.first }
 
       it do
         expect(subject.map(&:libelle)).to eq(["h1"])
         expect(header_section.children.map(&:libelle)).to eq(["text"])
+        expect(text.parent).to eq(header_section)
       end
     end
 
@@ -69,11 +71,21 @@ describe TreeService do
       end
       let(:header_section) { subject.first }
       let(:repetition) { header_section.children.first }
+      let(:first_row) { repetition.new_rows.first }
+      let(:nested_h1) { first_row.children.first }
+      let(:nested_h2) { nested_h1.children.first }
 
       it do
         expect(subject.map(&:libelle)).to eq(["h1"])
         expect(header_section.children.map(&:libelle)).to eq(["repetition"])
         expect(repetition.new_rows.first.children.map(&:libelle)).to eq(["nested h1", "another nested h1"])
+        expect(nested_h2.libelle).to eq("nested h2")
+
+        expect(nested_h2.parent).to eq(nested_h1)
+        expect(nested_h1.parent).to eq(first_row)
+        expect(first_row.parent).to eq(repetition)
+        expect(repetition.parent).to eq(header_section)
+        expect(header_section.parent).to be_nil
       end
     end
   end

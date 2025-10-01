@@ -9,6 +9,7 @@ class Champ < ApplicationRecord
   self.ignored_columns += [:type_de_champ_id, :parent_id]
 
   attr_readonly :stable_id
+  attr_accessor :parent
 
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   has_many_attached :piece_justificative_file

@@ -3,7 +3,12 @@
 class Champs::RepetitionChamp < Champ
   delegate :libelle_for_export, to: :type_de_champ
 
-  attr_accessor :new_rows
+  attr_reader :new_rows
+
+  def new_rows=(value)
+    @new_rows = value
+    value.each { it.parent = self }
+  end
 
   def rows
     dossier.project_rows_for(type_de_champ)
