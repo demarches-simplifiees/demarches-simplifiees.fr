@@ -444,10 +444,8 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'is case insentivite and unaccented' do
         expect(response_procedures).to include(matching_procedure)
         expect(response_procedures).not_to include(unmatching_procedure)
-      end
 
-      it 'hide procedure if it is hidden as template' do
-        expect(response_procedures).to include(matching_procedure)
+        # hide procedure if it is hidden as template
         expect(response_procedures).not_to include(unmatching_procedure_cause_hidden_as_template)
       end
     end
@@ -532,9 +530,8 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(subject.procedure_tags.pluck(:name)).to match_array(['Aao', 'Accompagnement'])
           expect(response).to redirect_to(champs_admin_procedure_path(Procedure.last))
           expect(flash[:notice]).to be_present
-        end
 
-        it "create generic labels" do
+          # creates generic labels
           expect(subject.labels.size).to eq(5)
           expect(subject.labels.first.name).to eq('À examiner')
         end
@@ -575,23 +572,17 @@ describe Administrateurs::ProceduresController, type: :controller do
     context 'when many attributs are not valid' do
       let(:libelle) { '' }
       let(:description) { '' }
+      subject { post :create, params: { procedure: procedure_params } }
 
       describe 'no new procedure in database' do
-        subject { post :create, params: { procedure: procedure_params } }
-
-        it { expect { subject }.to change { Procedure.count }.by(0) }
+        it do
+          expect { subject }.to change { Procedure.count }.by(0)
+          expect(flash[:alert]).to be_present
+        end
 
         describe 'no new module api carto in database' do
           it { expect { subject }.to change { ModuleAPICarto.count }.by(0) }
         end
-      end
-
-      describe 'flash message is present' do
-        before do
-          post :create, params: { procedure: procedure_params }
-        end
-
-        it { expect(flash[:alert]).to be_present }
       end
     end
   end
