@@ -259,6 +259,16 @@ class ProcedureRevision < ApplicationRecord
         position, type_champ, libelle, mandatory = llm_rule_suggestion_items.payload.with_indifferent_access.values_at(:position, :type_champ, :libelle, :mandatory)
         tdc = find_and_ensure_exclusive_use(llm_rule_suggestion_items.stable_id)
         tdc.update({ type_champ:, libelle:, mandatory: }.compact)
+        if position
+          move_type_de_champ(llm_rule_suggestion_items.stable_id, position)
+        end
+      end
+
+      changes.fetch(:add, []).each do |llm_rule_suggestion_items|
+        after_stable_id, type_champ, libelle = llm_rule_suggestion_items.payload.with_indifferent_access.values_at(:after_stable_id, :type_champ, :libelle)
+        after_stable_id = nil if after_stable_id.to_i.zero?
+
+        add_type_de_champ(after_stable_id:, type_champ:, libelle:)
       end
     end
   end
