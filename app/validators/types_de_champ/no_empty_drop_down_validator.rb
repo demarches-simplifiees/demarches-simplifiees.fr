@@ -10,7 +10,7 @@ class TypesDeChamp::NoEmptyDropDownValidator < ActiveModel::EachValidator
   private
 
   def validate_drop_down_not_empty(procedure, attribute, drop_down)
-    if drop_down.drop_down_advanced? && drop_down.referentiel.blank?
+    if (drop_down.drop_down_list? || drop_down.multiple_drop_down_list?) && drop_down.drop_down_advanced? && drop_down.referentiel.blank?
       procedure.errors.add(
         attribute,
         procedure.errors.generate_message(attribute, :empty_csv, { value: drop_down.libelle }),

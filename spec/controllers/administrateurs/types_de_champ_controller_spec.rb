@@ -118,9 +118,11 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
     end
 
-    context 'with referentiel' do
+    context 'with a dropdown list with a referentiel' do
       let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
-      let(:type_de_champ) { procedure.draft_revision.types_de_champ.last }
+      let(:drop_down_list_type_de_champ) do
+        procedure.draft_revision.types_de_champ_public.third
+      end
 
       let(:params) do
         {
@@ -137,8 +139,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       context 'working case with multi column file' do
         it 'creates a valid referentiel' do
           expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
-          expect(type_de_champ.reload.referentiel).to eq Referentiel.last
-          expect(Referentiel.last.types_de_champ).to eq [type_de_champ]
+          expect(drop_down_list_type_de_champ.reload.referentiel).to eq Referentiel.last
+          expect(Referentiel.last.types_de_champ).to eq [drop_down_list_type_de_champ]
           expect(Referentiel.last.name).to eq referentiel_file.original_filename
           expect(Referentiel.last.type).to eq 'Referentiels::CsvReferentiel'
           expect(ReferentielItem.first.data).to eq({ "row" => { "calorie_kcal" => "145", "dessert" => "Éclair au café", "poids_g" => "60" } })
@@ -205,6 +207,44 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(2)
           expect(ReferentielItem.first.data).to eq({ "row" => { "adresse" => "115, Boulevard Exelmans, Paris, 75016", "email" => "moha.ali@diplomatie.gouv.fr", "nom" => "Mohamed Ali", "numero" => "UK +447 864 743 320" } })
           expect(Referentiel.first.headers).to eq(["adresse", "nom", "numéro", "email"])
+        end
+      end
+    end
+
+    context 'with a multiple dropdown list with a referentiel' do
+      let(:procedure) do
+        create(:procedure,
+               types_de_champ_public: [
+                 { type: :multiple_drop_down_list, libelle: 'l1' }
+               ])
+      end
+      let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+      let(:multiple_drop_down_list_type_de_champ) do
+        procedure.draft_revision.types_de_champ_public.first
+      end
+      let(:coordinate) { procedure.draft_revision.revision_types_de_champ_public.first }
+
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          stable_id: coordinate.stable_id,
+          referentiel_file:,
+          name: referentiel_file.original_filename,
+          type_de_champ: {
+            libelle: 'updated'
+          }
+        }
+      end
+
+      context 'working case with multi column file' do
+        it 'creates a valid referentiel' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(3)
+          expect(multiple_drop_down_list_type_de_champ.reload.referentiel).to eq Referentiel.last
+          expect(Referentiel.last.types_de_champ).to eq [multiple_drop_down_list_type_de_champ]
+          expect(Referentiel.last.name).to eq referentiel_file.original_filename
+          expect(Referentiel.last.type).to eq 'Referentiels::CsvReferentiel'
+          expect(ReferentielItem.first.data).to eq({ "row" => { "calorie_kcal" => "145", "dessert" => "Éclair au café", "poids_g" => "60" } })
+          expect(ReferentielItem.first.referentiel_id).to eq(Referentiel.last.id)
         end
       end
     end
