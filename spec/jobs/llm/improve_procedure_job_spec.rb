@@ -3,7 +3,7 @@
 describe LLM::ImproveProcedureJob, type: :job do
   subject(:perform) { described_class.perform_now(procedure) }
 
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure) }
 
   before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
 
