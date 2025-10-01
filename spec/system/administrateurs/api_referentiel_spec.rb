@@ -561,10 +561,10 @@ describe 'Referentiel API:' do
     click_on("Publier")
 
     # publish
-    find("#procedure_path").fill_in(with: "htxbye")
-    find("#lien_site_web").fill_in(with: "google.fr")
-    within(".form") do
-      click_on("Publier")
+    fill_in("procedure[path]", with: "htxbye")
+    fill_in("procedure[lien_site_web]", with: "google.fr")
+    within("form") do
+      click_on("publish")
     end
     wait_until { procedure.reload.published_revision.present? }
   end

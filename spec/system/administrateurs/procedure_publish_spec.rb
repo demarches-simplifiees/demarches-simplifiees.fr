@@ -51,7 +51,7 @@ describe 'Publishing a procedure', js: true do
       find('#publish-procedure-link').click
 
       expect(find_field('procedure_path').value).to eq procedure.path
-      fill_in 'lien_site_web', with: 'http://some.website'
+      fill_in 'procedure[lien_site_web]', with: 'http://some.website'
       within('form') { click_on 'Publier' }
 
       expect(page).to have_text('Votre démarche est désormais publiée !')
@@ -86,7 +86,7 @@ describe 'Publishing a procedure', js: true do
 
         visit admin_procedure_publication_path(procedure)
         expect(find_field('procedure_path').value).to eq procedure.path
-        fill_in 'lien_site_web', with: 'http://some.website'
+        fill_in 'procedure[lien_site_web]', with: 'http://some.website'
 
         expect(page).to have_button('Publier', disabled: true)
       end
@@ -99,7 +99,7 @@ describe 'Publishing a procedure', js: true do
 
         expect(page).to have_content 'vous devez la modifier afin de pouvoir publier votre démarche'
 
-        fill_in 'lien_site_web', with: 'http://some.website'
+        fill_in 'procedure[lien_site_web]', with: 'http://some.website'
         within('form') { click_on 'Publier' }
 
         expect(page).to have_text('Le champ « Lien public » est déjà utilisé par une démarche.')
@@ -124,7 +124,7 @@ describe 'Publishing a procedure', js: true do
       find('#publish-procedure-link').click
 
       expect(find_field('procedure_path').value).to eq procedure.path
-      fill_in 'lien_site_web', with: 'http://some.website'
+      fill_in 'procedure[lien_site_web]', with: 'http://some.website'
       click_on 'publish'
 
       expect(page).to have_text('Votre démarche est désormais publiée !')
@@ -155,7 +155,7 @@ describe 'Publishing a procedure', js: true do
 
       expect(page).to have_text('Les modifications suivantes seront appliquées')
       expect(find_field('procedure_path').value).to eq procedure.path
-      fill_in 'lien_site_web', with: 'http://some.website'
+      fill_in 'procedure[lien_site_web]', with: 'http://some.website'
       find('#publish').click
 
       expect(page).to have_text('Votre démarche est désormais publiée !')

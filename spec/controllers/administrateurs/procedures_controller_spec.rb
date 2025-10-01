@@ -1348,7 +1348,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     let(:procedure) { create(:procedure, :published, administrateur: admin) }
 
-    subject(:perform_request) { get :check_path, params: { procedure_id: procedure.id, path: path }, format: :turbo_stream }
+    subject(:perform_request) { get :check_path, params: { procedure_id: procedure.id, procedure: { path: } }, format: :turbo_stream }
 
     context 'when path is not used' do
       let(:path) { SecureRandom.uuid }
