@@ -325,7 +325,7 @@ module Administrateurs
     end
 
     def check_path
-      path = params[:path]
+      path = publish_params[:path]
       @path_available = @procedure.path_available?(path)
       @other_procedure = @procedure.other_procedure_with_path(path)
 
@@ -654,7 +654,7 @@ module Administrateurs
     end
 
     def publish_params
-      params.permit(:path, :lien_site_web)
+      params.require(:procedure).permit(:path, :lien_site_web)
     end
 
     def closing_params
