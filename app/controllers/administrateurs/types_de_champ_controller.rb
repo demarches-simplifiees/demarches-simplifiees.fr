@@ -172,28 +172,34 @@ module Administrateurs
     end
 
     def simplify
+      if allowed_rule?(rule)
+        @llm_rule_suggestion = llm_rule_suggestion_scope.completed
+          .where(rule: rule)
+          .order(created_at: :desc)
+          .first
+        @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule: params[:rule])
+      else
+        redirect_to admin_procedure_path(@procedure), alert: "Suggestion non trouvée"
+      end
     end
 
     def accept_simplification
-      @llm_rule_suggestion = published_revision_llm_rule_suggestion_scope.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
-      @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
-      @llm_rule_suggestion.save!
+      @llm_rule_suggestion = llm_rule_suggestion_scope.completed.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée") unless @llm_rule_suggestion
+
+      @llm_rule_suggestion.transaction do
+        @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
+        @llm_rule_suggestion.state = 'accepted'
+        @llm_rule_suggestion.save!
+      end
       @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
 
-      redirect_to simplify_index_admin_procedure_types_de_champ_path(@procedure)
-    end
-
-    def published_revision_llm_rule_suggestion_scope
-      published_revision = @procedure.published_revision
-      schema = published_revision.schema_to_llm.to_json
-      schema_hash = Digest::SHA256.hexdigest(schema)
-
-      LLMRuleSuggestion.where(procedure_revision_id: published_revision.id, state: 'completed', schema_hash:)
-    end
-
-    def llm_rule_suggestion_items_attributes
-      params.require(:llm_rule_suggestion)
-        .permit(llm_rule_suggestion_items_attributes: [:id, :verify_status])
+      case @llm_rule_suggestion.rule
+      when 'improve_label'
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: 'improve_structure'), notice: "Parfait continuons"
+      else
+        redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+      end
     end
 
     private
@@ -290,11 +296,24 @@ module Administrateurs
 
     def ensure_llm_calls_enabled
       return if @procedure.feature_enabled?(:llm_nightly_improve_procedure)
-      redirect_to administrateur_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
+      redirect_to admin_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
+    end
+
+    def rule
+      params[:rule]
     end
 
     def allowed_rule?(rule)
-      rule.in?([LLM::LabelImprover::TOOL_NAME])
+      rule.in?(LLMRuleSuggestion.rules.values)
+    end
+
+    def llm_rule_suggestion_scope
+      LLMRuleSuggestion.where(procedure_revision_id: draft.id, schema_hash: current_schema_hash)
+    end
+
+    def llm_rule_suggestion_items_attributes
+      params.require(:llm_rule_suggestion)
+        .permit(llm_rule_suggestion_items_attributes: [:id, :verify_status])
     end
   end
 end

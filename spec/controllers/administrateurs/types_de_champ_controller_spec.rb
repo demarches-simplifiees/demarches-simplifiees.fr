@@ -402,32 +402,41 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#simplify' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :text, libelle: 'Ancien', stable_id: 123 }] }
-    let(:rule) { LLM::LabelImprover::TOOL_NAME }
-    let(:procedure_revision) { procedure.published_revision }
+    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+    let(:procedure_revision) { procedure.draft_revision }
     let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
-    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    subject { get :simplify, params: { procedure_id: procedure.id, rule: llm_rule_suggestion.rule } }
 
-    it 'renders label suggestions from stored LLMRuleSuggestion items' do
-      llm_rule_suggestion_item = create(:llm_rule_suggestion_item,
-        llm_rule_suggestion:,
-        op_kind: 'update',
-        stable_id: 123,
-        payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' },
-        safety: 'safe',
-        justification: 'clarity',
-        confidence: 0.9)
+    context 'with existing completed suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
-      get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: llm_rule_suggestion.id }
+      it 'assigns label suggestions from stored LLMRuleSuggestion items' do
+        expect(subject).to have_http_status(:ok)
+        expect(assigns(:llm_rule_suggestion)).to eq(llm_rule_suggestion)
+      end
+    end
 
-      expect(response).to have_http_status(:ok)
-      expect(assigns(:component)).to be_an_instance_of(LLM::ImproveLabelComponent)
+    context 'with pending llm suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'running', rule: rule) }
+      it 'redirects to procedure admin page with alert' do
+        expect(subject).to have_http_status(:ok)
+      end
+    end
+
+    context 'without LLM Suggestion' do
+      let(:llm_rule_suggestion) { double(rule:) }
+      it 'builds a new LLMRuleSuggestion when none exists' do
+        expect(subject).to have_http_status(:ok)
+        expect(assigns(:llm_rule_suggestion)).to an_instance_of(LLMRuleSuggestion)
+      end
     end
 
     it 'redirect on unknown llm_suggestion' do
-      get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: 'unknown_rule' }
-      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+      get :simplify, params: { procedure_id: procedure.id, rule: 'unknown_rule' }
+      expect(response).to redirect_to(admin_procedure_path(procedure))
       expect(flash[:alert]).to eq("Suggestion non trouvée")
     end
   end
@@ -440,12 +449,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         { type: :text, libelle: 'B' },
       ]
     end
-
-    it 'applies only selected operations from posted changes_json' do
-      suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.published_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
-      accepted_suggestion_item = create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9)
-      skipped_suggestion_item = create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9)
-
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    subject do
       post :accept_simplification, params: {
         procedure_id: procedure.id,
         llm_suggestion_rule_id: suggestion.id,
@@ -456,8 +461,14 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           },
         },
       }
+    end
+    let(:suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: 'improve_label', state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json)) }
+    let(:accepted_suggestion_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9) }
+    let(:skipped_suggestion_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9) }
 
-      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+    it 'applies only selected operations from posted changes_json' do
+      expect { subject }.to change { suggestion.reload.state }.from('completed').to('accepted')
+      expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(suggestion.procedure, rule: 'improve_structure'))
 
       libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
       expect(libelles).to include('Nouveau')
