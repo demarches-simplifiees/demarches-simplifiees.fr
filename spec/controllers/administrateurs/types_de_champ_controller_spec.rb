@@ -425,6 +425,15 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       expect(assigns(:component)).to be_an_instance_of(LLM::ImproveLabelComponent)
     end
 
+    it 'redirects when suggestion is not completed' do
+      queued_suggestion = create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'queued', rule: rule)
+
+      get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: queued_suggestion.id }
+
+      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+      expect(flash[:alert]).to eq('Suggestion non trouvée')
+    end
+
     it 'redirect on unknown llm_suggestion' do
       get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: 'unknown_rule' }
       expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
@@ -434,18 +443,80 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
   describe '#simplify_index' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: 'Ancien', stable_id: 123 }]) }
-    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.draft_revision.schema_to_llm.to_json) }
-    let(:rule) { LLM::LabelImprover::TOOL_NAME }
-    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, schema_hash:, state: 'completed', rule: rule) }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }
 
-    it 'when suggestion are available, it list available rules and suggestion count' do
-      llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::ImproveLabelComponent.key, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
-      create(:llm_rule_suggestion_item, llm_rule_suggestion:, stable_id: 123, op_kind: 'update', payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' })
+    it 'assigns completed suggestions with their item counts' do
+      suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'completed', schema_hash:)
+      create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, stable_id: 123, op_kind: 'update', payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' })
+
       get :simplify_index, params: { procedure_id: procedure.id }
 
       expect(response).to have_http_status(:ok)
-      expect(assigns(:llm_rule_suggestions).first.id).to eq(llm_rule_suggestion.id)
-      expect(assigns(:llm_rule_suggestions).first.items_count).to eq(1)
+      grouped = assigns(:llm_suggestions_by_state)
+      expect(grouped['completed'].map(&:id)).to eq([suggestion.id])
+      expect(grouped['completed'].first.items_count).to eq(1)
+      expect(grouped['queued']).to be_nil
+      expect(grouped['failed']).to be_nil
+    end
+
+    it 'marks ongoing analysis as pending' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'queued', schema_hash:)
+
+      get :simplify_index, params: { procedure_id: procedure.id }
+
+      expect(assigns(:llm_suggestions_by_state)['queued']).to be_present
+    end
+
+    it 'marks failed analysis' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'failed', schema_hash:)
+
+      get :simplify_index, params: { procedure_id: procedure.id }
+
+      expect(assigns(:llm_suggestions_by_state)['failed']).to be_present
+    end
+  end
+
+  describe '#enqueue_simplify' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }
+
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+
+    it 'enqueues the improve procedure job when no analysis is running' do
+      expect(LLM::ImproveProcedureJob).to receive(:perform_now).with(procedure)
+      post :enqueue_simplify, params: { procedure_id: procedure.id }
+
+      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+      expect(flash[:notice]).to be_present
+    end
+
+    it 'does not enqueue when analysis already running' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'queued', schema_hash:)
+      expect(LLM::ImproveProcedureJob).not_to receive(:perform_now).with(procedure)
+
+      post :enqueue_simplify, params: { procedure_id: procedure.id }
+
+      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+      expect(flash[:alert]).to eq('Une analyse est déjà en cours pour cette version de la démarche.')
+    end
+
+    it 'does not enqueue when feature disabled' do
+      Flipper.disable_actor(:llm_nightly_improve_procedure, procedure)
+      expect(LLM::ImproveProcedureJob).not_to receive(:perform_now).with(procedure)
+
+      post :enqueue_simplify, params: { procedure_id: procedure.id }
+
+      expect(response).to redirect_to(simplify_index_admin_procedure_types_de_champ_path(procedure))
+      expect(flash[:alert]).to eq('Fonctionnalité indisponible pour cette démarche.')
+    end
+
+    it 're-enqueues after a failure' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'failed', schema_hash:)
+      expect(LLM::ImproveProcedureJob).to receive(:perform_now).with(procedure)
+
+      post :enqueue_simplify, params: { procedure_id: procedure.id }
+
+      expect(flash[:notice]).to be_present
     end
   end
 

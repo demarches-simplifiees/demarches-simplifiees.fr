@@ -169,14 +169,30 @@ module Administrateurs
     end
 
     def simplify_index
-      @llm_rule_suggestions = llm_rule_suggestion_scope
-        .joins(:llm_rule_suggestion_items)
-        .select('llm_rule_suggestions.*, COUNT(llm_rule_suggestion_items.id) as items_count')
+      suggestions = llm_rule_suggestion_scope
+        .left_outer_joins(:llm_rule_suggestion_items)
+        .select('llm_rule_suggestions.*, COUNT(llm_rule_suggestion_items.id) AS items_count')
         .group('llm_rule_suggestions.id')
+        .order(created_at: :desc)
+
+      @llm_suggestions_by_state = suggestions.group_by(&:state)
+    end
+
+    def enqueue_simplify
+      unless Flipper.enabled?(:llm_nightly_improve_procedure, @procedure)
+        return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Fonctionnalité indisponible pour cette démarche.")
+      end
+
+      if llm_rule_suggestion_scope.exists?(state: [:queued, :running])
+        redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Une analyse est déjà en cours pour cette version de la démarche.")
+      else
+        LLM::ImproveProcedureJob.perform_now(@procedure)
+        redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), notice: "Analyse de la démarche lancée. Revenez dans quelques minutes pour consulter les suggestions.")
+      end
     end
 
     def simplify
-      suggestion = llm_rule_suggestion_scope
+      suggestion = llm_rule_suggestion_scope.completed
         .where(id: params[:llm_suggestion_rule_id])
         .order(created_at: :desc)
         .first
@@ -189,7 +205,9 @@ module Administrateurs
     end
 
     def accept_simplification
-      @llm_rule_suggestion = llm_rule_suggestion_scope.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      @llm_rule_suggestion = llm_rule_suggestion_scope.completed.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée") unless @llm_rule_suggestion
+
       @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
       @llm_rule_suggestion.save!
       @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
@@ -198,11 +216,7 @@ module Administrateurs
     end
 
     def llm_rule_suggestion_scope
-      draft_revision = @procedure.draft_revision
-      schema = draft_revision.schema_to_llm.to_json
-      schema_hash = Digest::SHA256.hexdigest(schema)
-
-      LLMRuleSuggestion.where(procedure_revision_id: draft_revision.id, state: 'completed', schema_hash:)
+      LLMRuleSuggestion.where(procedure_revision_id: draft.id, schema_hash: current_schema_hash)
     end
 
     def llm_rule_suggestion_items_attributes
@@ -211,6 +225,10 @@ module Administrateurs
     end
 
     private
+
+    def current_schema_hash
+      @current_schema_hash ||= Digest::SHA256.hexdigest(draft.schema_to_llm.to_json)
+    end
 
     def changing_of_type?(type_de_champ)
       type_de_champ_update_params['type_champ'].present? && (type_de_champ_update_params['type_champ'] != type_de_champ.type_champ)
