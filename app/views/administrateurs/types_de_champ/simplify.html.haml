@@ -7,4 +7,4 @@
 .fr-container
   %h1.fr-h2.mt-2 Amélioration de la qualité de la démarche “#{@procedure.libelle}“
 
-  = render @component if @component
+  = render LLM::SuggestionFormComponent.new(llm_rule_suggestion: @llm_rule_suggestion)

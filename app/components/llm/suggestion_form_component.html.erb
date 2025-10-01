@@ -1,0 +1,22 @@
+<h2 class="fr-h3 mt-4"><%= title %></h2>
+<%= render Dsfr::CalloutComponent.new(title: "À quoi sert cette règle ?", theme: :neutral) do |callout| %>
+  <% callout.with_body do %>
+    <p><%= summary %></p>
+  <% end %>
+<% end %>
+
+<%= form_for llm_rule_suggestion,
+              url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion),
+              method: :post,
+              data: form_data do |form| %>
+  <% llm_rule_suggestion.llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
+    <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
+      <%= render item_component.new(form_builder: ff) %>
+    <% end %>
+  <% end %>
+
+  <ul class="fr-btns-group fr-btns-group--inline-md mt-4">
+    <li><%= form.submit("Accepter les modifications", class: "fr-btn") %></li>
+    <li><%= link_to("Revenir aux règles", back_link, class: "fr-btn fr-btn--secondary") %></li>
+  </ul>
+<% end %>

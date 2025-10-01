@@ -51,8 +51,9 @@
                     <p class="fr-badge">Aucune suggestion</p>
                   <% end %>
 
-                  <h3 class="fr-h6"><%= llm_rule_suggestion.component.libelle %></h3>
-                  <p class="fr-tile-subtitle"><%= llm_rule_suggestion.component.summary %></p>
+                  <% config = LLM::SuggestionFormComponent.configuration_for(llm_rule_suggestion.rule) %>
+                  <h3 class="fr-h6"><%= config[:title] %></h3>
+                  <p class="fr-tile-subtitle"><%= config[:summary] %></p>
                   <p class="fr-btn fr-btn--tertiary">Consulter les suggestions</p>
                 </div>
               <% end %>
