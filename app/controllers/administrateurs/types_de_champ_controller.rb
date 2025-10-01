@@ -197,8 +197,7 @@ module Administrateurs
         .order(created_at: :desc)
         .first
       if suggestion
-        component_class = LLM.const_get("#{suggestion.rule.camelcase}Component")
-        @component = component_class.new(suggestion:)
+        @llm_rule_suggestion = suggestion
       else
         redirect_to simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée"
       end

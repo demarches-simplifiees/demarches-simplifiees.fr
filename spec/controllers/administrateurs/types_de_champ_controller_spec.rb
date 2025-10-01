@@ -409,7 +409,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
     let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
-    it 'renders label suggestions from stored LLMRuleSuggestion items' do
+    it 'assigns label suggestions from stored LLMRuleSuggestion items' do
       llm_rule_suggestion_item = create(:llm_rule_suggestion_item,
         llm_rule_suggestion:,
         op_kind: 'update',
@@ -422,7 +422,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       get :simplify, params: { procedure_id: procedure.id, llm_suggestion_rule_id: llm_rule_suggestion.id }
 
       expect(response).to have_http_status(:ok)
-      expect(assigns(:component)).to be_an_instance_of(LLM::ImproveLabelComponent)
+      expect(assigns(:llm_rule_suggestion)).to eq(llm_rule_suggestion)
     end
 
     it 'redirects when suggestion is not completed' do

@@ -1,0 +1,15 @@
+<div class="fr-checkbox-group fr-my-1v fr-my-2w">
+  <%= checkbox do %>
+    <%= original_tdc.libelle %>
+    <% if libelle_changed? %>
+      <span class="fr-ml-1w">→ <%= payload['libelle'] %></span>
+    <% end %>
+
+    <% if item.justification.present? %>
+      <span class="fr-hint-text">
+        <%= confidence_badge if item.confidence.present? %>
+        <%= item.justification %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

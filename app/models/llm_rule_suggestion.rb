@@ -12,17 +12,6 @@ class LLMRuleSuggestion < ApplicationRecord
 
   accepts_nested_attributes_for :llm_rule_suggestion_items
 
-  def component
-    case rule
-    when 'improve_label'
-      LLM::ImproveLabelComponent
-    when 'improve_structure'
-      LLM::ImproveStructureComponent
-    else
-      raise 'unknown rule'
-    end
-  end
-
   def llm_rule_suggestion_items_attributes=(attributes)
     attributes.each do |(_idx, llm_rule_suggestion_items_attribute)|
       llm_rule_suggestion_item = llm_rule_suggestion_items.find { it.id.to_i == llm_rule_suggestion_items_attribute[:id].to_i }
