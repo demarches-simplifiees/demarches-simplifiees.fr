@@ -169,14 +169,14 @@ module Administrateurs
     end
 
     def simplify_index
-      @llm_rule_suggestions = published_revision_llm_rule_suggestion_scope
+      @llm_rule_suggestions = llm_rule_suggestion_scope
         .joins(:llm_rule_suggestion_items)
         .select('llm_rule_suggestions.*, COUNT(llm_rule_suggestion_items.id) as items_count')
         .group('llm_rule_suggestions.id')
     end
 
     def simplify
-      suggestion = published_revision_llm_rule_suggestion_scope
+      suggestion = llm_rule_suggestion_scope
         .where(id: params[:llm_suggestion_rule_id])
         .order(created_at: :desc)
         .first
@@ -189,7 +189,7 @@ module Administrateurs
     end
 
     def accept_simplification
-      @llm_rule_suggestion = published_revision_llm_rule_suggestion_scope.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      @llm_rule_suggestion = llm_rule_suggestion_scope.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
       @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
       @llm_rule_suggestion.save!
       @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
@@ -197,12 +197,12 @@ module Administrateurs
       redirect_to simplify_index_admin_procedure_types_de_champ_path(@procedure)
     end
 
-    def published_revision_llm_rule_suggestion_scope
-      published_revision = @procedure.published_revision
-      schema = published_revision.schema_to_llm.to_json
+    def llm_rule_suggestion_scope
+      draft_revision = @procedure.draft_revision
+      schema = draft_revision.schema_to_llm.to_json
       schema_hash = Digest::SHA256.hexdigest(schema)
 
-      LLMRuleSuggestion.where(procedure_revision_id: published_revision.id, state: 'completed', schema_hash:)
+      LLMRuleSuggestion.where(procedure_revision_id: draft_revision.id, state: 'completed', schema_hash:)
     end
 
     def llm_rule_suggestion_items_attributes

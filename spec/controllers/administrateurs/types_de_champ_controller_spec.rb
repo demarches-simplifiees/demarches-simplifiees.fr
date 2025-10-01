@@ -402,10 +402,10 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#simplify' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:types_de_champ_public) { [{ type: :text, libelle: 'Ancien', stable_id: 123 }] }
     let(:rule) { LLM::LabelImprover::TOOL_NAME }
-    let(:procedure_revision) { procedure.published_revision }
+    let(:procedure_revision) { procedure.draft_revision }
     let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
     let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
@@ -434,13 +434,12 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
   describe '#simplify_index' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: 'Ancien', stable_id: 123 }]) }
-    let(:procedure_revision) { procedure.published_revision }
-    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.draft_revision.schema_to_llm.to_json) }
     let(:rule) { LLM::LabelImprover::TOOL_NAME }
-    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
+    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, schema_hash:, state: 'completed', rule: rule) }
 
     it 'when suggestion are available, it list available rules and suggestion count' do
-      llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.published_revision, rule: LLM::ImproveLabelComponent.key, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
+      llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::ImproveLabelComponent.key, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
       create(:llm_rule_suggestion_item, llm_rule_suggestion:, stable_id: 123, op_kind: 'update', payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' })
       get :simplify_index, params: { procedure_id: procedure.id }
 
@@ -460,7 +459,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     end
 
     it 'applies only selected operations from posted changes_json' do
-      suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.published_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
+      suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json))
       accepted_suggestion_item = create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9)
       skipped_suggestion_item = create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9)
 
