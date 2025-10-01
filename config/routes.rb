@@ -764,6 +764,7 @@ Rails.application.routes.draw do
         end
 
         collection do
+          post 'simplify/enqueue/:rule', action: :enqueue_simplify, as: :enqueue_simplify
           get 'simplify/:rule', action: :simplify, as: :simplify
           post 'accept_simplification/:llm_suggestion_rule_id', action: :accept_simplification, as: :accept_simplification
         end

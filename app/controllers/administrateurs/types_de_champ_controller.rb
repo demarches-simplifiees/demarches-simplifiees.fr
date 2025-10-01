@@ -9,7 +9,7 @@ module Administrateurs
 
     before_action :retrieve_procedure
     before_action :reload_procedure_with_includes, only: [:destroy]
-    before_action :ensure_llm_calls_enabled, only: [:simplify, :accept_simplification]
+    before_action :ensure_llm_calls_enabled, only: [:simplify, :accept_simplification, :enqueue_simplify]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
@@ -171,6 +171,15 @@ module Administrateurs
       @morphed = [champ_component_from(@coordinate)]
     end
 
+    def enqueue_simplify
+      if llm_rule_suggestion_scope.where(rule:).exists?(state: [:queued, :running])
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'Une recherche est déjà en cours pour cette règle.'
+      else
+        LLM::ImproveProcedureJob.perform_now(@procedure, [rule])
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'La recherche a été lancée. Vous serez notifié lorsque les suggestions seront prêtes.'
+      end
+    end
+
     def simplify
       if allowed_rule?(rule)
         @llm_rule_suggestion = llm_rule_suggestion_scope.completed
@@ -203,6 +212,10 @@ module Administrateurs
     end
 
     private
+
+    def current_schema_hash
+      @current_schema_hash ||= Digest::SHA256.hexdigest(draft.schema_to_llm.to_json)
+    end
 
     def changing_of_type?(type_de_champ)
       type_de_champ_update_params['type_champ'].present? && (type_de_champ_update_params['type_champ'] != type_de_champ.type_champ)
