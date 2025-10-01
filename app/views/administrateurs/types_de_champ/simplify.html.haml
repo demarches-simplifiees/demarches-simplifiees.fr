@@ -7,4 +7,4 @@
 .fr-container
   %h1.fr-h2.mt-2 Simplification proposée par Albert
 
-  = render @component if @component
+  = render LLM::SuggestionFormComponent.new(llm_rule_suggestion: @llm_rule_suggestion)
