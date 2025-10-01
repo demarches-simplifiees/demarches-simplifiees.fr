@@ -15,6 +15,21 @@ class TreeService
     tree_it(coordinates).tap { private ? it.filter(&:private?) : it.filter(&:public?) }
   end
 
+  def discarded_tree
+    submitted_tree.filter_map do |champ|
+      current_champ = tree.find { it.stable_id == champ.stable_id }
+
+      if current_champ.nil?
+        champ
+      elsif champ.repetition?
+        champ.new_rows = champ.new_rows.map { |row| row - current_champ.new_rows.first }.compact
+        champ.new_rows.any? ? champ : nil
+      else
+        nil
+      end
+    end
+  end
+
   private
 
   def tree_it(coordinates, row_id: nil)
@@ -70,6 +85,14 @@ class TreeService
     def initialize(children: [])
       @children = children
       children.each { it.parent = self }
+    end
+
+    def -(other)
+      to_keep = children.map(&:stable_id) - other.children.map(&:stable_id)
+
+      return nil if to_keep.empty?
+
+      Row.new(children: children.filter { it.stable_id.in?(to_keep) })
     end
   end
 end

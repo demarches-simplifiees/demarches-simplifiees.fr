@@ -91,4 +91,64 @@ describe TreeService do
       expect(submitted_tree.first.new_rows.first.children.map(&:libelle)).to eq(["nested", "nested 2"])
     end
   end
+
+  describe '.discarded_tree' do
+    subject(:discarded_tree) { described_class.new(dossier).discarded_tree }
+
+    let!(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:types_de_champ_public) do
+      [
+        {
+          type: :repetition,
+          libelle: 'rep',
+          children: [
+            { type: :text, libelle: 'nested' },
+            { type: :text, libelle: 'nested 2' }
+          ]
+        },
+        { type: :text, libelle: 'text' }
+      ]
+    end
+    let(:rep_tdc) { procedure.draft_revision.types_de_champ.find { it.libelle == 'rep' } }
+
+    context 'when a repetition champ is removed' do
+      before do
+        procedure.draft_revision.remove_type_de_champ(rep_tdc.stable_id)
+
+        procedure.publish_revision!
+        perform_enqueued_jobs
+
+        procedure.reload
+        dossier.reload
+      end
+
+      it do
+        expect(dossier.submitted_revision.id).not_to eq(dossier.revision_id)
+
+        expect(discarded_tree.map(&:libelle)).to eq(["rep"])
+        expect(discarded_tree.first.new_rows.first.children.map(&:libelle)).to eq(["nested", "nested 2"])
+      end
+    end
+
+    context 'when a nested champ is removed' do
+      let(:text_2) { procedure.draft_revision.types_de_champ.find { it.libelle == 'nested 2' } }
+      let(:rep) { discarded_tree.first }
+
+      before do
+        procedure.draft_revision.remove_type_de_champ(text_2.stable_id)
+
+        procedure.publish_revision!
+        perform_enqueued_jobs
+
+        procedure.reload
+        dossier.reload
+      end
+
+      it do
+        expect(discarded_tree.map(&:libelle)).to eq(["rep"])
+        expect(rep.new_rows.first.children.map(&:libelle)).to eq(["nested 2"])
+      end
+    end
+  end
 end
