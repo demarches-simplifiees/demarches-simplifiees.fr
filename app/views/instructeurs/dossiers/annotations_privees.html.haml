@@ -5,7 +5,7 @@
 #dossier-annotations-privees
   .fr-container
     .fr-grid-row.fr-grid-row--center
-      - summary = ViewableChamp::HeaderSectionsSummaryComponent.new(dossier: @dossier, is_private: true)
+      - summary = DossierTree::SectionsSummaryComponent.new(tree: @dossier.private_tree(profile: 'instructeur'))
       = render summary
       %div{ class: class_names("fr-col-12", "fr-col-xl-9" => summary.render?, "fr-col-xl-8" => !summary.render?) }
         = render partial: "shared/dossiers/edit_annotations", locals: { dossier: @dossier, seen_at: @annotations_privees_seen_at }
