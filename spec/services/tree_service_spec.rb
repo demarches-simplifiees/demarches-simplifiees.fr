@@ -45,4 +45,42 @@ describe TreeService do
       end
     end
   end
+
+  describe '.submitted_tree' do
+    subject(:submitted_tree) { described_class.new(dossier).submitted_tree }
+
+    let!(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:types_de_champ_public) do
+      [
+        {
+          type: :repetition,
+          libelle: 'rep',
+          children: [
+            { type: :text, libelle: 'nested' },
+            { type: :text, libelle: 'nested 2' }
+          ]
+        },
+        { type: :text, libelle: 'text' }
+      ]
+    end
+    let(:rep_tdc) { procedure.draft_revision.types_de_champ.find { it.libelle == 'rep' } }
+
+    context 'when a repetition champ is removed' do
+      before do
+        procedure.draft_revision.remove_type_de_champ(rep_tdc.stable_id)
+
+        procedure.publish_revision!
+        perform_enqueued_jobs
+
+        procedure.reload
+        dossier.reload
+      end
+    end
+
+    it do
+      expect(submitted_tree.map(&:libelle)).to eq(["rep", "text"])
+      expect(submitted_tree.first.new_rows.first.children.map(&:libelle)).to eq(["nested", "nested 2"])
+    end
+  end
 end

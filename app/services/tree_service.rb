@@ -10,6 +10,10 @@ class TreeService
     tree_it(coordinates)
   end
 
+  def submitted_tree
+    tree_it(@dossier.submitted_revision.revision_types_de_champ.filter(&:public?).filter(&:root?))
+  end
+
   private
 
   def tree_it(coordinates, row_id: nil)
@@ -24,8 +28,7 @@ class TreeService
       [to_champ(head, children: tree_children, row_id:)] + tree_it(rest, row_id:)
 
     elsif head.repetition?
-      repetition = @dossier.project_champ(head.type_de_champ)
-      rows = repetition.row_ids.map do |row_id|
+      rows = row_ids(head).map do |row_id|
         tree_children = tree_it(head.revision_types_de_champ, row_id:)
         Row.new(children: tree_children)
       end
@@ -46,7 +49,18 @@ class TreeService
     champ = @dossier.project_champ(coord.type_de_champ, row_id:)
     champ.children = children if children
     champ.new_rows = rows if rows
+    champ.type_de_champ = coord.type_de_champ
     champ
+  end
+
+  def row_ids(coord)
+    @dossier
+      .champs
+      .filter { it.stream == @dossier.stream }
+      .filter(&:row?)
+      .reject(&:discarded?)
+      .filter { it.stable_id == coord.stable_id }
+      .map(&:row_id).uniq.sort
   end
 
   class Row
