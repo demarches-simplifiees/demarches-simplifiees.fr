@@ -9,17 +9,23 @@ module LLM
     def perform(procedure)
       return unless Flipper.enabled?(:llm_nightly_improve_procedure, procedure)
 
-      draft_revision = procedure.draft_revision
-      schema_hash = Digest::SHA256.hexdigest(draft_revision.schema_to_llm.to_json)
-      return if LLMRuleSuggestion.exists?(procedure_revision: draft_revision, schema_hash:)
+      procedure_revision = procedure.draft_revision
+      return unless procedure_revision
+
+      schema_hash = Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json)
 
       available_rules.each do |rule|
-        suggestion = LLMRuleSuggestion.create!(procedure_revision: draft_revision, schema_hash:, state: :queued, rule:)
+        suggestion = LLMRuleSuggestion.find_or_initialize_by(procedure_revision:, schema_hash:, rule:)
+
+        next if suggestion.persisted? && !suggestion.failed?
+        suggestion.state = :queued
+        suggestion.save!
         LLM::GenerateRuleSuggestionJob.perform_later(suggestion)
       end
     end
 
     private
+
     def available_rules
       [
         LLM::LabelImprover::TOOL_NAME,
