@@ -378,19 +378,22 @@ describe EditableChamp::RepetitionComponent, type: :component do
           # first legend of the repetition
           expect(subject).to have_selector("legend[id='#{repetition_fieldset_legend_id(repetition_champ)}']")
 
-          # label
+          # legend of the champ address
+          expect(subject).to have_selector("legend[id='#{champ_fieldset_legend_id(champ)}']")
+
+          # label of the main input
           expect(subject).to have_selector("label[id='#{input_label_id(champ)}']")
 
           # input
           props = JSON.parse(page.first("react-component")['props'])
-          expect(props['ariaLabelledbyPrefix']).to eq(repetition_fieldset_legend_id(repetition_champ))
+          expect(props['ariaLabelledbyPrefix']).to eq([repetition_fieldset_legend_id(repetition_champ), champ_fieldset_legend_id(champ)].join(' '))
           expect(props['labelId']).to eq(input_label_id(champ))
 
           # not in ban checkbox
           expect(subject).to have_selector("label[id='#{input_label_id(champ, :not_in_ban)}']")
 
           # input of the not in ban checkbox
-          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{input_label_id(champ, :not_in_ban)}']")
+          expect(subject).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :not_in_ban)}']")
         end
 
         context "when the address is not in the BAN" do
@@ -440,7 +443,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
               # label of the commune input
               expect(subject).to have_selector("label[id='#{input_label_id(champ, :commune_name)}']")
               # input of the commune
-              props = JSON.parse(page.first(".not-in-ban-fieldset react-component")['props'])
+              props = JSON.parse(page.first(".not-in-ban-group react-component")['props'])
               expect(props['ariaLabelledbyPrefix']).to eq("#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)}")
               expect(props['labelId']).to eq(input_label_id(champ, :commune_name))
             end
