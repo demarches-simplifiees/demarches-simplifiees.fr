@@ -4,8 +4,8 @@
       = t('.subtitle').html_safe
 
 = form_for instructeur_procedure, url: update_badge_notifications_instructeur_procedure_path(procedure), html: { class: 'form', data: { controller: 'enable-submit-if-form-changes', action: 'change->enable-submit-if-form-changes#onFormChange' } } do |form|
-  - DossierNotification.notification_types.values.each do |notification_type|
-    - if notification_type == DossierNotification.notification_types.fetch(:dossier_depose)
+  - InstructeursProcedure::NOTIFICATION_COLUMNS.keys.each do |notification_type|
+    - if notification_type == :dossier_depose
       = render Dsfr::RadioButtonListComponent.new(form: form,
         target: :display_dossier_depose_notifications,
         buttons: [{ label: t('.label.positive'),
