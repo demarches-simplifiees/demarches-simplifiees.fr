@@ -169,7 +169,9 @@ module DossierHelper
     type = extract_notification_type(notification)
 
     case type
-    when DossierNotification.notification_types.fetch(:dossier_depose)
+    when DossierNotification.notification_types.fetch(:dossier_depose),
+      DossierNotification.notification_types.fetch(:dossier_expirant),
+      DossierNotification.notification_types.fetch(:dossier_suppression)
       "fr-badge fr-badge--sm fr-badge--warning"
     when DossierNotification.notification_types.fetch(:dossier_modifie),
       DossierNotification.notification_types.fetch(:message),
@@ -186,17 +188,13 @@ module DossierHelper
     type = extract_notification_type(notification)
 
     case type
-    when DossierNotification.notification_types.fetch(:dossier_depose)
+    when DossierNotification.notification_types.fetch(:dossier_depose),
+      DossierNotification.notification_types.fetch(:dossier_expirant),
+      DossierNotification.notification_types.fetch(:dossier_suppression)
       if generic[:generic]
         t("activerecord.attributes.notification.#{type}.generic")
       else
-        days =
-          if notification.respond_to?(:display_at) && notification.display_at.present?
-            (Time.current.to_date - (notification.display_at - DossierNotification::DELAY_DOSSIER_DEPOSE).to_date).to_i
-          else
-            'X'
-          end
-
+        days = days_for_specific_badge_notification(notification, type)
         t("activerecord.attributes.notification.#{type}.specific", days: days)
       end
     else
@@ -255,5 +253,20 @@ module DossierHelper
 
   def extract_notification_type(notification_or_type)
     notification_or_type.is_a?(DossierNotification) ? notification_or_type.notification_type : notification_or_type
+  end
+
+  def days_for_specific_badge_notification(notification, type)
+    if notification.respond_to?(:display_at) && notification.display_at.present?
+      case type
+      when DossierNotification.notification_types.fetch(:dossier_depose)
+        (Time.current.to_date - (notification.display_at - DossierNotification::DELAY_DOSSIER_DEPOSE).to_date).to_i
+      when DossierNotification.notification_types.fetch(:dossier_expirant)
+        ((notification.display_at + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks).to_date - Time.current.to_date).to_i
+      when DossierNotification.notification_types.fetch(:dossier_suppression)
+        ((notification.display_at + Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks).to_date - Time.current.to_date).to_i
+      end
+    else
+      'X'
+    end
   end
 end

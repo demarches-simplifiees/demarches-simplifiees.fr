@@ -5,6 +5,8 @@ class DossierNotification < ApplicationRecord
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
+    dossier_expirant: 'dossier_expirant',
+    dossier_suppression: 'dossier_suppression',
     dossier_modifie: 'dossier_modifie',
     message: 'message',
     annotation_instructeur: 'annotation_instructeur',
