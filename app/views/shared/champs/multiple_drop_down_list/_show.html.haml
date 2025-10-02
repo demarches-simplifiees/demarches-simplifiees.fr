@@ -11,6 +11,6 @@
     %p= champ.to_s
 
 - elsif !champ.blank?
-  %ul.copy-btn{ role: "button" }
+  %ul.copy-zone
     - champ.selected_options.each do |item|
       %li= item

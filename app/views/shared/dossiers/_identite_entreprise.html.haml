@@ -10,7 +10,7 @@
   - if etablissement.as_degraded_mode?
     = render Dossiers::RowShowComponent.new(label: "SIRET") do |c|
       - c.with_value do
-        %p.copy-btn{ role: "button" }= pretty_siret(etablissement.siret)
+        %p.copy-zone= pretty_siret(etablissement.siret)
   - else
     - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
       = render Dossiers::RowShowComponent.new(label: nil) do |c|
@@ -19,33 +19,33 @@
     - else
       = render Dossiers::RowShowComponent.new(label: "Dénomination") do |c|
         - c.with_value do
-          %p.copy-btn{ role: "button" }= raison_sociale_or_name(etablissement)
+          %p.copy-zone= raison_sociale_or_name(etablissement)
 
       = render Dossiers::RowShowComponent.new(label: "SIRET") do |c|
         - c.with_value do
-          %p.copy-btn{ role: "button", "data-to-copy": etablissement.siret }= pretty_siret(etablissement.siret)
+          %p.copy-zone{ "data-to-copy": etablissement.siret }= pretty_siret(etablissement.siret)
 
       - unless local_assigns[:short_identity]
         - if etablissement.entreprise.siret_siege_social.present? && etablissement.siret != etablissement.entreprise.siret_siege_social
           = render Dossiers::RowShowComponent.new(label: "SIRET du siège social") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= pretty_siret(etablissement.entreprise.siret_siege_social)
+              %p.copy-zone= pretty_siret(etablissement.entreprise.siret_siege_social)
 
         = render Dossiers::RowShowComponent.new(label: "Forme juridique") do |c|
           - c.with_value do
-            %p.copy-btn{ role: "button" }= sanitize(etablissement.entreprise.forme_juridique)
+            %p.copy-zone= sanitize(etablissement.entreprise.forme_juridique)
 
         = render Dossiers::RowShowComponent.new(label: "Libellé NAF") do |c|
           - c.with_value do
-            %p.copy-btn{ role: "button" }= etablissement.libelle_naf
+            %p.copy-zone= etablissement.libelle_naf
 
         = render Dossiers::RowShowComponent.new(label: "Code NAF") do |c|
           - c.with_value do
-            %p.copy-btn{ role: "button" }= etablissement.naf
+            %p.copy-zone= etablissement.naf
 
         = render Dossiers::RowShowComponent.new(label: "Date de création") do |c|
           - c.with_value do
-            %p.copy-btn{ role: "button" }
+            %p.copy-zone
               %span{ data: { to_copy: true } }= try_format_date(etablissement.entreprise.date_creation)
 
               - if etablissement.entreprise_etat_administratif.present?
@@ -57,25 +57,25 @@
         - if profile == 'instructeur'
           = render Dossiers::RowShowComponent.new(label: "Effectif mensuel #{try_format_mois_effectif(etablissement)} de l'établissement (URSSAF ou MSA)") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= etablissement.entreprise_effectif_mensuel
+              %p.copy-zone= etablissement.entreprise_effectif_mensuel
 
           = render Dossiers::RowShowComponent.new(label: "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} de l'unité légale (URSSAF ou MSA)") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= etablissement.entreprise_effectif_annuel
+              %p.copy-zone= etablissement.entreprise_effectif_annuel
 
           = render Dossiers::RowShowComponent.new(label: "Effectif de l’organisation (INSEE)") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= effectif(etablissement)
+              %p.copy-zone= effectif(etablissement)
 
           = render Dossiers::RowShowComponent.new(label: "Numéro de TVA intracommunautaire") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= etablissement.entreprise.numero_tva_intracommunautaire
+              %p.copy-zone= etablissement.entreprise.numero_tva_intracommunautaire
 
           = render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(defined?(champ) ? champ : etablissement)}
 
           = render Dossiers::RowShowComponent.new(label: "Capital social") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= pretty_currency(etablissement.entreprise.capital_social)
+              %p.copy-zone= pretty_currency(etablissement.entreprise.capital_social)
 
         - if etablissement.exercices.any?
           = render Dossiers::RowShowComponent.new(label: "Chiffre d’affaires") do |c|
@@ -145,27 +145,27 @@
         - if etablissement.association?
           = render Dossiers::RowShowComponent.new(label: "Numéro RNA") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= etablissement.association_rna
+              %p.copy-zone= etablissement.association_rna
 
           = render Dossiers::RowShowComponent.new(label: "Titre") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= etablissement.association_titre
+              %p.copy-zone= etablissement.association_titre
 
           = render Dossiers::RowShowComponent.new(label: "Objet") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= etablissement.association_objet
+              %p.copy-zone= etablissement.association_objet
 
           = render Dossiers::RowShowComponent.new(label: "Date de création") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= try_format_date(etablissement.association_date_creation)
+              %p.copy-zone= try_format_date(etablissement.association_date_creation)
 
           = render Dossiers::RowShowComponent.new(label: "Date de publication") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= try_format_date(etablissement.association_date_publication)
+              %p.copy-zone= try_format_date(etablissement.association_date_publication)
 
           = render Dossiers::RowShowComponent.new(label: "Date de déclaration") do |c|
             - c.with_value do
-              %p.copy-btn{ role: "button" }= try_format_date(etablissement.association_date_declaration)
+              %p.copy-zone= try_format_date(etablissement.association_date_declaration)
 
   - unless local_assigns[:short_identity]
     .champ-row

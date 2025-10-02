@@ -1,21 +1,21 @@
 - if champ.data.blank?
-  %span.copy-btn{ role: "button" }= champ.to_s
+  %span.copy-zone= champ.to_s
 - else
   %table.table.vertical.dossier-champs
     %tbody
       %tr
         %th.libelle Nom de l’établissement :
-        %td.copy-btn{ role: "button" }= champ.data['nom_etablissement']
+        %td.copy-zone= champ.data['nom_etablissement']
       %tr
         %th.libelle L’identifiant de l’etablissement :
-        %td.copy-btn{ role: "button" }= champ.data['identifiant_de_l_etablissement']
+        %td.copy-zone= champ.data['identifiant_de_l_etablissement']
       - if champ.data['siren_siret'].present?
         %tr
           %th.libelle SIREN/SIRET :
-          %td.copy-btn{ role: "button" }= champ.data['siren_siret']
+          %td.copy-zone= champ.data['siren_siret']
       %tr
         %th.libelle Commune :
-        %td.copy-btn{ role: "button" }
+        %td.copy-zone
           - if champ.data['nom_commune'].present?
             = champ.data['nom_commune']
           - else
@@ -24,23 +24,23 @@
           = " (#{champ.data['code_commune']})" if champ.data['code_commune'].present?
       %tr
         %th.libelle Academie :
-        %td.copy-btn{ role: "button" }= "#{champ.data['libelle_academie']} (#{champ.data['code_academie']})"
+        %td.copy-zone= "#{champ.data['libelle_academie']} (#{champ.data['code_academie']})"
       %tr
         %th.libelle Nature de l’établissement :
-        %td.copy-btn{ role: "button" }= "#{champ.data['libelle_nature']} (#{champ.data['code_nature']})"
+        %td.copy-zone= "#{champ.data['libelle_nature']} (#{champ.data['code_nature']})"
       - if champ.data['type_contrat_prive'] != 'SANS OBJET'
         %tr
           %th.libelle Type de contrat privé :
-          %td.copy-btn{ role: "button" }= champ.data['type_contrat_prive']
+          %td.copy-zone= champ.data['type_contrat_prive']
 
       - if champ.data['nombre_d_eleves'].present?
         %tr
           %th.libelle Nombre d’élèves :
-          %td.copy-btn{ role: "button" }= champ.data['nombre_d_eleves']
+          %td.copy-zone= champ.data['nombre_d_eleves']
 
       %tr
         %th.libelle Adresse :
-        %td.copy-btn{ role: "button" }
+        %td.copy-zone
           - if champ.data['adresse_1'].present?
             = champ.data['adresse_1']
           %br
@@ -51,14 +51,14 @@
       - if champ.data['telephone'].present?
         %tr
           %th.libelle Téléphone :
-          %td.copy-btn{ role: "button" }= champ.data['telephone']
+          %td.copy-zone= champ.data['telephone']
 
       - if champ.data['mail'].present?
         %tr
           %th.libelle Email :
-          %td.copy-btn{ role: "button" }= champ.data['mail']
+          %td.copy-zone= champ.data['mail']
 
       - if champ.data['web'].present?
         %tr
           %th.libelle Site internet :
-          %td.copy-btn{ role: "button" }= champ.data['web']
+          %td.copy-zone= champ.data['web']

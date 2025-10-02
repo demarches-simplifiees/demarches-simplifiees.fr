@@ -4,18 +4,18 @@
   .fr-background-alt--grey.fr-p-3v
     = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.rnf_id")) do |c|
       - c.with_value do
-        %p.copy-btn{ role: "button" }
+        %p.copy-zone
           = champ.rnf_id
 
     - ['title', 'email', 'phone','status'].each do |scope|
       - if champ.data[scope].present?
         = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.data.#{scope}")) do |c|
           - c.with_value do
-            %p.copy-btn{ role: "button" }= champ.data[scope]
+            %p.copy-zone= champ.data[scope]
 
     - ['createdAt', 'updatedAt', 'dissolvedAt'].each do |scope|
       - if champ.data[scope].present?
         = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.data.#{scope}")) do |c|
           - c.with_value do
-            %p.copy-btn{ role: "button" }= l(champ.data[scope].to_date)
+            %p.copy-zone= l(champ.data[scope].to_date)
     = render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(champ) }

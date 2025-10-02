@@ -53,15 +53,15 @@
           - when TypeDeChamp.type_champs.fetch(:cojo)
             = render partial: "shared/champs/cojo/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:date)
-            %p.copy-btn{ role: "button" }= champ.to_s
+            %p.copy-zone= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:datetime)
-            %p.copy-btn{ role: "button" }= champ.to_s
+            %p.copy-zone= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
-            %p.copy-btn{ role: "button" }= helpers.number_with_html_delimiter(champ.to_s)
+            %p.copy-zone= helpers.number_with_html_delimiter(champ.to_s)
           - when TypeDeChamp.type_champs.fetch(:referentiel)
-            %p.copy-btn{ role: "button" }= champ.to_s
+            %p.copy-zone= champ.to_s
             = render ViewableChamp::ReferentielDisplayComponent.new(champ: champ, profile: @profile)
 
           - else
-            .copy-btn{ role: "button", 'data-to-copy': champ.to_s.strip }
+            .copy-zone{ 'data-to-copy': champ.to_s.strip }
               = helpers.format_text_value(champ.to_s.strip)
