@@ -7,9 +7,9 @@ class Dossiers::IdentiteEntrepriseComponent < ApplicationComponent
     :effectif, :pretty_currency, :sanitize, :pretty_date_exercice, :year_for_bilan, :value_for_bilan_key,
     :pretty_currency_unit, :external_link_attributes, :address_array, to: :helpers
 
-  def initialize(champ:)
-    @etablissement = champ.etablissement
-    @dossier = champ.dossier
+  def initialize(champ: nil, etablissement: nil)
+    @etablissement = champ&.etablissement || etablissement
+    @dossier = champ&.dossier
   end
 
   def call
@@ -56,6 +56,7 @@ class Dossiers::IdentiteEntrepriseComponent < ApplicationComponent
   end
 
   def chiffre_cles_bdf
+    return if @dossier.nil?
     csv, xlsx, ods = ['csv', 'xlsx', 'ods'].map { link_to("au format #{it}", bilan_bdf(it)) }
 
     safe_join(["Les consulter ", csv, ", ", xlsx, " ou ", ods])

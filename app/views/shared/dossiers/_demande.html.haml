@@ -53,8 +53,14 @@
       = render partial: "shared/dossiers/identite_individual", locals: { dossier: dossier }
 
   - if dossier.etablissement.present?
+    - etablissement = dossier.etablissement
     .fr-mt-1w.fr-mb-4w.fr-px-2w
-      = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, profile: profile }
+      - if etablissement.as_degraded_mode?
+        = render Dossiers::DegradedIdentiteEntrepriseComponent.new(etablissement:, profile: @profile)
+      - elsif @profile == 'usager'
+        = render Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement:)
+      - else
+        = render Dossiers::IdentiteEntrepriseComponent.new(etablissement:)
 
   %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
     .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
