@@ -94,5 +94,9 @@ class TreeService
 
       Row.new(children: children.filter { it.stable_id.in?(to_keep) })
     end
+
+    def visible?
+      parent.visible?
+    end
   end
 end

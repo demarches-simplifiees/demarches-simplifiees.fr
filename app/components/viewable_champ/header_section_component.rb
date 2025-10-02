@@ -16,4 +16,6 @@ class ViewableChamp::HeaderSectionComponent < ApplicationComponent
   end
 
   def section_id = dom_id(header_section, :content)
+
+  def render? = header_section.visible?
 end

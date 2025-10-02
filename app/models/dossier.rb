@@ -1085,6 +1085,12 @@ class Dossier < ApplicationRecord
     submitted_revision_id.present? && submitted_revision_id != revision_id
   end
 
+  def validate(args)
+    TreeService.new(self).tree
+
+    super(args)
+  end
+
   private
 
   def build_default_champs
