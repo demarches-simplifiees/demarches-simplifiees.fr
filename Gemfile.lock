@@ -122,7 +122,6 @@ GEM
     after_commit_everywhere (1.6.0)
       activerecord (>= 4.2)
       activesupport
-    after_party (1.11.2)
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
     anchored (1.1.0)
@@ -1017,7 +1016,6 @@ DEPENDENCIES
   administrate
   administrate-field-enum
   after_commit_everywhere
-  after_party
   ancestry
   anchored
   axe-core-rspec

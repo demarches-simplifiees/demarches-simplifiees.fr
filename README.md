@@ -154,7 +154,7 @@ To run the application tests, several options are available:
 
 ### Adding tasks to run during deployment
 
-        rails generate after_party:task task_name
+        rails generate maintenance_tasks:task task_name
 
 ### Linting
 

@@ -151,7 +151,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
 ### Ajout de taches à exécuter au déploiement
 
-        rails generate after_party:task task_name
+        rails generate maintenance_tasks:task task_name
 
 ### Linting
 
