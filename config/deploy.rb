@@ -60,16 +60,6 @@ namespace :yarn do
   end
 end
 
-namespace :after_party do
-  desc "Run after_party tasks."
-  task :run do
-    command %{
-      echo "-----> Running after_party"
-      #{echo_cmd %[bundle exec rake after_party:run]}
-    }
-  end
-end
-
 namespace :jobs_schedule do
   desc "Run jobs_schedule tasks."
   task :run do
@@ -146,6 +136,5 @@ task :post_deploy do
   command 'source /home/ds/.profile'
   command 'cd /home/ds/current'
 
-  invoke :'after_party:run'
   invoke :'jobs_schedule:run'
 end
