@@ -181,7 +181,7 @@ jobs:
         uses: ./.github/actions/ci-setup-bun-node
 
       - name: Setup playwright
-        run: bun playwright install chromium
+        run: bun playwright install --only-shell chromium
 
       - name: Download or pre-compile assets
         uses: ./.github/actions/ci-setup-assets
