@@ -7,9 +7,10 @@ class Dossiers::IdentiteEntrepriseComponent < ApplicationComponent
     :effectif, :pretty_currency, :sanitize, :pretty_date_exercice, :year_for_bilan, :value_for_bilan_key,
     :pretty_currency_unit, :external_link_attributes, :address_array, to: :helpers
 
-  def initialize(champ: nil, etablissement: nil)
+  def initialize(champ: nil, etablissement: nil, avis: nil)
     @etablissement = champ&.etablissement || etablissement
     @dossier = champ&.dossier
+    @avis = avis
   end
 
   def call
@@ -56,7 +57,7 @@ class Dossiers::IdentiteEntrepriseComponent < ApplicationComponent
   end
 
   def chiffre_cles_bdf
-    return if @dossier.nil?
+    return if @dossier.nil? || @avis.nil?
     csv, xlsx, ods = ['csv', 'xlsx', 'ods'].map { link_to("au format #{it}", bilan_bdf(it)) }
 
     safe_join(["Les consulter ", csv, ", ", xlsx, " ou ", ods])
@@ -75,7 +76,7 @@ class Dossiers::IdentiteEntrepriseComponent < ApplicationComponent
   end
 
   def bilan_bdf(format)
-    if controller.is_a?(Instructeurs::AvisController)
+    if @avis.present?
       bilans_bdf_instructeur_avis_path(@avis, format:)
     else
       dossier_id, procedure_id = @dossier.id, @dossier.procedure.id

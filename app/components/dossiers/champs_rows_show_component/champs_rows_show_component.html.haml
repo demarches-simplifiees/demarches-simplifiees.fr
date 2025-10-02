@@ -32,7 +32,7 @@
               - elsif @profile == 'usager'
                 = render Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement:)
               - else
-                = render Dossiers::IdentiteEntrepriseComponent.new(champ:)
+                = render Dossiers::IdentiteEntrepriseComponent.new(champ:, avis: @avis)
           - when TypeDeChamp.type_champs.fetch(:iban)
             = render partial: "shared/champs/iban/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:annuaire_education)
