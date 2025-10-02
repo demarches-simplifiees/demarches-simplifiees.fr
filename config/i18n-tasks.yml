@@ -126,6 +126,8 @@ ignore_unused:
 - 'utils.decimal_number'
 - 'utils.integer_entier'
 - 'utils.string'
+- 'views.shared.avis.avis_non_rendu'
+- 'views.shared.avis.en_attente'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'

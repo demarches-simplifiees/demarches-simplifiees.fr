@@ -10,6 +10,7 @@ fr:
         relance_effectuee_le: "Relance effectuée le %{date}"
         reponse_donnee_le: "Réponse donnée le %{date}"
         en_attente: "En attente d'avis"
+        avis_non_rendu: "Avis non rendu"
       france_connect_login:
         title: 'Se créer un compte avec FranceConnect'
         description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne."

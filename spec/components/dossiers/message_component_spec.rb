@@ -183,29 +183,40 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
     end
 
     describe '#correction_badge' do
-      let(:resolved_at) { nil }
+      context "when the correction is not resolved" do
+        let!(:correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: nil) }
 
-      before do
-        create(:dossier_correction, commentaire:, dossier:, resolved_at:)
-      end
+        it 'returns a badge à corriger' do
+          expect(subject).to have_text('à corriger')
+        end
 
-      it 'returns a badge à corriger' do
-        expect(subject).to have_text('à corriger')
-      end
+        context 'connected as instructeur' do
+          let(:connected_user) { create(:instructeur) }
 
-      context 'connected as instructeur' do
-        let(:connected_user) { create(:instructeur) }
-
-        it 'returns a badge en attente' do
-          expect(subject).to have_text('en attente')
+          it 'returns a badge en attente' do
+            expect(subject).to have_text('en attente')
+          end
         end
       end
 
       context 'when the correction is resolved' do
-        let(:resolved_at) { 1.minute.ago }
+        context "when the dossier has not been modified: commentaire discarded or dossier en_instruction" do
+          let!(:correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: 1.minute.ago) }
 
-        it 'returns a badge corrigé' do
-          expect(subject).to have_text("corrigé")
+          it 'returns a badge non modifié' do
+            expect(subject).to have_text("non modifié")
+          end
+        end
+
+        context "when the dossier has been modified" do
+          let!(:correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: nil) }
+
+          before { dossier.submit_en_construction! }
+
+          it 'returns a badge modifié' do
+            correction.reload
+            expect(subject).to have_text("modifié")
+          end
         end
       end
     end

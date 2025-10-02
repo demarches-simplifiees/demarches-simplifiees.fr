@@ -25,7 +25,8 @@ fr:
       pending_correction:
         for_instructeur: "en attente de correction"
         for_user: "à corriger"
-        resolved: "Dossier corrigé"
+        modified: "Dossier modifié"
+        not_modified: "Dossier non modifié"
       traitement:
         state: "État"
       traitement/state:
