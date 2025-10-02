@@ -121,7 +121,9 @@ module SystemHelpers
 
   def log_out
     if page.has_selector?('.fr-notice__body', text: 'Masquer le message')
-      within(page.find('.fr-notice__body', text: 'Masquer le message')) { click_on("Masquer le message") }
+      all('.fr-notice__body', text: 'Masquer le message').each do |notice|
+        within(notice) { click_on("Masquer le message") }
+      end
     end
     within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
       scroll_to(find('button[title="Mon profil"]'), align: :center)
