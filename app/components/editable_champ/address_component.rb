@@ -5,6 +5,10 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
     'fr-select'
   end
 
+  def dsfr_champ_container
+    :fieldset
+  end
+
   def dsfr_group_classname
     class_names(super, "fr-input-address-ban--disabled" => @champ.not_ban?)
   end
@@ -19,7 +23,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
       is_disabled: @champ.not_ban?,
-      ariaLabelledbyPrefix: aria_labelledby_prefix,
+      ariaLabelledbyPrefix: "#{aria_labelledby_prefix} #{champ_fieldset_legend_id(@champ)}",
       labelId: input_label_id(@champ))
   end
 
@@ -43,11 +47,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
     APIGeoService.countries.map { [_1[:name], _1[:code]] }
   end
 
-  def city_aria_labelledby
-    "#{city_aria_labelledby_prefix} #{city_label_id}"
-  end
-
   def aria_labelledby(attribute)
-    [aria_labelledby_prefix, attribute == :not_in_ban ? nil : champ_fieldset_legend_id(@champ), input_label_id(@champ, attribute)].compact.join(' ')
+    [aria_labelledby_prefix, champ_fieldset_legend_id(@champ), input_label_id(@champ, attribute)].compact.join(' ')
   end
 end

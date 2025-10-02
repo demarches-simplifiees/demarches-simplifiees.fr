@@ -53,8 +53,9 @@ describe 'The user', js: true do
     find('.fr-menu__item', text: 'Brétigny (60400)').click
     wait_until { champ_value_for('communes') == "Brétigny" }
 
-    scroll_to(find_field('address'), align: :center)
-    fill_in('address', with: '78 Rue du Grés 30310 Vergè')
+    address_locator = "Saisissez une adresse, une voie, un lieu-dit ou une commune. Exemple : 11 rue Réaumur, Paris"
+    scroll_to(find_field(address_locator), align: :center)
+    fill_in(address_locator, with: '78 Rue du Grés 30310 Vergè')
     find('.fr-menu__item', text: '78 Rue du Grés 30310 Vergèze').click
     wait_until { champ_value_for('address') == '78 Rue du Grés 30310 Vergèze' }
     wait_until { champ_for('address').full_address? }
