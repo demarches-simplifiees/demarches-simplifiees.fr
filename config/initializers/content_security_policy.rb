@@ -15,13 +15,13 @@ Rails.application.configure do
 
     # Javascript: allow us, SendInBlue and Matomo.
     # We need unsafe_inline because miniprofiler and us have some inline buttons :(
-    scripts_whitelist = ["*.crisp.chat", "crisp.chat", "integration.lasuite.numerique.gouv.fr", "unpkg.com"]
+    scripts_whitelist = ["*.crisp.chat", "crisp.chat", "cdn.jsdelivr.net", "integration.lasuite.numerique.gouv.fr", "unpkg.com"]
     scripts_whitelist << URI(MATOMO_IFRAME_URL).host if MATOMO_IFRAME_URL.present?
     policy.script_src(:self, :unsafe_eval, :unsafe_inline, :blob, *scripts_whitelist)
 
     # CSS: We have a lot of inline style, and some <style> tags.
     # It's too complicated to be fixed right now (and it wouldn't add value: this is hardcoded in views, so not subject to injections)
-    policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", "unpkg.com")
+    policy.style_src(:self, :unsafe_inline, "*.crisp.chat", "crisp.chat", "unpkg.com", "cdn.jsdelivr.net")
 
     connect_whitelist = ["wss://*.crisp.chat", "*.crisp.chat", "integration.lasuite.numerique.gouv.fr", "app.franceconnect.gouv.fr", "openmaptiles.data.gouv.fr", "openmaptiles.geo.data.gouv.fr", "openmaptiles.github.io", "tiles.geo.api.gouv.fr", "data.geopf.fr"]
     connect_whitelist << ENV.fetch('APP_HOST')

@@ -2,9 +2,8 @@
 
 RSpec.describe Procedure::SVASVRFormComponent, type: :component do
   let(:procedure) { create(:procedure, :published) }
-  let(:configuration) { SVASVRConfiguration.new }
 
-  subject(:rendered) { render_inline(described_class.new(procedure: procedure, configuration: configuration)) }
+  subject(:rendered) { render_inline(described_class.new(procedure: procedure, configuration: SVASVRConfiguration.new)) }
 
   let(:sva_enabled) { true }
   before { allow(procedure).to receive(:feature_enabled?).with(:sva).and_return(sva_enabled) }
