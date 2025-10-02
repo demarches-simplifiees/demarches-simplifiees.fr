@@ -1,0 +1,14 @@
+- if etablissement.as_degraded_mode?
+  %p= t('insee_down')
+
+- else
+  - if etablissement.diffusable_commercialement == false
+    %p= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret))
+
+  %dl.fr-pl-0
+    .champ-row
+      %dt.champ-label= label('.denomination')
+      %dd.champ-content= raison_sociale_or_name(etablissement)
+    .champ-row
+      %dt.champ-label= label('.siret')
+      %dd.champ-content= pretty_siret(etablissement.siret)

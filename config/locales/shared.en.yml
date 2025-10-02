@@ -23,9 +23,6 @@ en:
           fetching_data: "Fetching data for recipient no. %{numero_allocataire} with postal code %{code_postal}."
           data_fetched: "Data concerning %{sources} linked to the account Nº %{numero_allocataire} with the postal code %{code_postal} has been received from the CAF."
           data_fetched_title: "Data received from la Caisse nationale d’allocations familiales"
-      rnf:
-        show:
-          not_found: "RNF %{rnf} (no foundation found)"
       dgfip:
         show:
           not_filled: not filled

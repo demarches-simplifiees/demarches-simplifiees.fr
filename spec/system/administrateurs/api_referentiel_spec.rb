@@ -206,8 +206,8 @@ describe 'Referentiel API:' do
             created_dossier = Dossier.last
             # check data is also visible on demande page as an usager
             visit demande_dossier_path(created_dossier)
-            expect(page).to have_content("Coordonées du point : -0.570505392116188, 44.841034137099996")
-            expect(page).to have_content("Type de point : Point")
+            expect(page).to have_content("Coordonées du point -0.570505392116188, 44.841034137099996")
+            expect(page).to have_content("Type de point Point")
             expect(page).not_to have_content("$.shape.type") # not displayed to usager
 
             # check data is also visible on demande page as an usager

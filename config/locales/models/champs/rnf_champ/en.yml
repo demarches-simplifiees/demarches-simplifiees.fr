@@ -1,19 +1,21 @@
 en:
-  activemodel:
-    attributes:
-      rnf_champ:
-        rnf_id: RNF id
-        data:
-          title: Foundation name
-          email: Email
-          phone: Phone
-          createdAt: Created at
-          updatedAt: Updated at
-          dissolvedAt: Dissolved at
-          address: Address
-          status: Status
   activerecord:
+    errors:
+      models:
+        champs/rnf_champ:
+          attributes:
+            value:
+              not_found: "RNF %{rnf} (no foundation found)"
     attributes:
       champs/rnf_champ:
+        rnf_id: RNF id
+        title: Foundation name
+        email: Email
+        phone: Phone
+        createdAt: Created at
+        updatedAt: Updated at
+        dissolvedAt: Dissolved at
+        address: Address
+        status: Status
         hints:
           value_html: "Example: <span aria-hidden='true'>075-FDD-00003-01</span> <span class='sr-only'>075 hyphen FDD hyphen 00003 hyphen 01</span>"

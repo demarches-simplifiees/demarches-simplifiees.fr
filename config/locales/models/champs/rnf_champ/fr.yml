@@ -1,19 +1,21 @@
 fr:
-  activemodel:
-    attributes:
-      rnf_champ:
-        rnf_id: Numéro RNF
-        data:
-          title: Nom de la fondation
-          email: Adresse électronique
-          phone: Téléphone
-          createdAt: Créée le
-          updatedAt: Mise à jour le
-          dissolvedAt: Dissoute le
-          address: Adresse
-          status: Statut
   activerecord:
+    errors:
+      models:
+        champs/rnf_champ:
+          attributes:
+            value:
+              not_found: "RNF %{rnf} (aucune fondation trouvée)"
     attributes:
       champs/rnf_champ:
+        rnf_id: Numéro RNF
+        title: Nom de la fondation
+        email: Adresse électronique
+        phone: Téléphone
+        createdAt: Créée le
+        updatedAt: Mise à jour le
+        dissolvedAt: Dissoute le
+        address: Adresse
+        status: Statut
         hints:
           value_html: "Exemple : <span aria-hidden='true'>075-FDD-00003-01</span> <span class='sr-only'>075 tiret FDD tiret 00003 tiret 01</span>"

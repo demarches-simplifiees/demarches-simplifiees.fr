@@ -1,17 +1,24 @@
 # frozen_string_literal: true
 
-class ViewableChamp::ReferentielDisplayComponent < Referentiels::ReferentielDisplayBaseComponent
-  attr_reader :profile
+class Dossiers::ReferentielComponent < Referentiels::ReferentielDisplayBaseComponent
+  attr_reader :champ, :profile
 
   def initialize(champ:, profile:)
-    super(champ:)
+    @champ = champ
     @profile = profile
   end
 
+  def call
+    render Dossiers::ExternalChampComponent.new(data:, source:)
+  end
+
+  private
+
   def data
+    [['Identifiant', champ.to_s]] +
     data_source.filter_map do |jsonpath, _mapping|
       value = format(jsonpath, safe_value_json.dig(jsonpath))
-      [libelle(jsonpath), value, jsonpath] if !value.nil?
+      [libelle(jsonpath), value]
     end
   end
 
@@ -23,7 +30,7 @@ class ViewableChamp::ReferentielDisplayComponent < Referentiels::ReferentielDisp
     end
   end
 
-  def tooltip_id(jsonpath)
-    "#{@champ.focusable_input_id}_#{jsonpath.parameterize}_tooltip"
+  def source
+    tag.acronym("Référentiel Externe")
   end
 end

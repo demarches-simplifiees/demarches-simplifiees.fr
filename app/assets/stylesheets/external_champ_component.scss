@@ -1,0 +1,64 @@
+.champ-repetition {
+  .external-champ {
+    background-color: var(--background-default-grey);
+  }
+}
+
+.external-champ {
+  background-color: var(--blue-cumulus-975-75);
+  overflow: auto;
+
+  .source {
+    background-color: var(--blue-cumulus-925-125);
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  dl {
+    padding-left: 0;
+
+    > *:first-child {
+      padding-top: 0;
+    }
+  }
+
+  .champ-row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .champ-content {
+    position: relative;
+  }
+
+  [data-copy-message-placeholder] {
+    display: inline-block;
+    min-width: 110px; // to prevent layout shift
+  }
+
+  details {
+    cursor: default;
+
+    .less-information {
+      display: none;
+    }
+
+    summary {
+      padding-left: 0;
+    }
+
+    &[open] {
+      .more-information {
+        display: none;
+      }
+
+      .less-information {
+        display: inline;
+      }
+
+      > summary::after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
