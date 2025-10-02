@@ -438,7 +438,7 @@
   }
 
   .fr-input-address-ban--disabled {
-    & > .fr-label,
+    & .address-ban .fr-label,
     & > .fr-hint-text,
     & > .fr-label .fr-hint-text {
       color: var(--text-disabled-grey);

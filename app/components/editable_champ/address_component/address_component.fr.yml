@@ -11,3 +11,4 @@ fr:
   postal_code_label: Code postal
   country_label: Pays
   not_in_ban: Je ne trouve pas mon adresse dans les suggestions
+  address_label: 'Saisissez une adresse, une voie, un lieu-dit ou une commune. Exemple : 11 rue Réaumur, Paris'

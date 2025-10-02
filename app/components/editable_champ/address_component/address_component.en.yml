@@ -11,3 +11,4 @@ en:
   postal_code_label: Postal code
   country_label: Country
   not_in_ban: I cannot find my address in the suggestions
+  address_label: 'Enter an address, a street, a city. Example: 11 rue Réaumur, Paris'
