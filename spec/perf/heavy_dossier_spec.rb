@@ -70,7 +70,6 @@ describe Users::DossiersController, type: :controller do
     describe 'POST #submit_en_construction' do
       before do
         dossier.passer_en_construction!
-        dossier.owner_editing_fork
       end
 
       it '', :slow do

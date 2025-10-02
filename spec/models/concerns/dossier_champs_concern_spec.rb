@@ -345,7 +345,6 @@ RSpec.describe DossierChampsConcern do
           let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
 
           before do
-            Flipper.enable(:user_buffer_stream, procedure)
             dossier.with_update_stream(dossier.user)
           end
 
@@ -572,8 +571,6 @@ RSpec.describe DossierChampsConcern do
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
 
     describe "#public_champ_for_update" do
-      before { Flipper.enable(:user_buffer_stream, procedure) }
-
       let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
       let(:row_ids) { dossier.project_champ(type_de_champ_repetition).row_ids }
       let(:row_id) { row_ids.first }

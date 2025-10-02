@@ -240,21 +240,15 @@ module DossierChampsConcern
   end
 
   def user_buffer_changes?
-    # TODO remove when all forks are gone
-    return true if forked_with_changes?
-
     champs_on_user_buffer_stream.present?
   end
 
   def user_buffer_changes_on_champ?(champ)
-    # TODO remove when all forks are gone
-    return true if champ_forked_with_changes?(champ)
-
     champs_on_user_buffer_stream.any? { _1.public_id == champ.public_id }
   end
 
   def with_update_stream(user, &block)
-    if update_with_stream? && user.owns_or_invite?(self)
+    if en_construction? && user.owns_or_invite?(self)
       with_stream(Champ::USER_BUFFER_STREAM, &block)
     else
       with_stream(Champ::MAIN_STREAM, &block)
@@ -277,20 +271,7 @@ module DossierChampsConcern
     champs_in_revision.filter(&:history_stream?)
   end
 
-  def update_with_stream?
-    en_construction? && user_buffer_stream_enabled?
-  end
-
-  def update_with_fork?
-    en_construction? && !user_buffer_stream_enabled?
-  end
-
   private
-
-  def user_buffer_stream_enabled?
-    return false if with_editing_fork?
-    procedure.feature_enabled?(:user_buffer_stream) || champs.any? { !_1.main_stream? }
-  end
 
   def with_stream(stream)
     if block_given?
@@ -413,10 +394,8 @@ module DossierChampsConcern
       if stream != Champ::MAIN_STREAM
         raise "Can not write a private champ to \"#{stream}\" stream"
       end
-    elsif !with_editing_fork?
-      if stream == Champ::MAIN_STREAM && en_construction?
-        raise 'Can not write to "main" stream on a dossier "en construction"'
-      end
+    elsif stream == Champ::MAIN_STREAM && en_construction?
+      raise 'Can not write to "main" stream on a dossier "en construction"'
     end
   end
 

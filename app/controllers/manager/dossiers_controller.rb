@@ -14,17 +14,6 @@ module Manager
       super
     end
 
-    def show
-      dossier = Dossier.find(params[:id])
-
-      if dossier.editing_fork_origin_id.present?
-        fork_url = manager_dossier_url(dossier.editing_fork_origin)
-        flash[:alert] = "Ce dossier est un fork de #{view_context.link_to("Dossier ##{dossier.editing_fork_origin.id}", fork_url)}"
-      end
-
-      super
-    end
-
     # Override this if you have certain roles that require a subset
     # this will be used to set the records shown on the `index` action.
     def scoped_resource

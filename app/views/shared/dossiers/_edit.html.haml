@@ -4,11 +4,11 @@
 
 
 .dossier-edit.fr-container.counter-start-header-section
-  = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
+  = render partial: "shared/dossiers/submit_is_over", locals: { dossier: }
   = render NestedForms::FormOwnerComponent.new
-  = form_for dossier_for_editing, url: brouillon_dossier_url(dossier_for_editing), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate', data: { controller: 'prevent-submit-on-enter' } } do |f|
+  = form_for dossier, url: brouillon_dossier_url(dossier), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate', data: { controller: 'prevent-submit-on-enter' } } do |f|
 
-    = render Dossiers::ErrorsFullMessagesComponent.new(dossier: dossier_for_editing)
+    = render Dossiers::ErrorsFullMessagesComponent.new(dossier:)
     %header.mb-6
       .fr-highlight
         %p.fr-text--sm
@@ -19,10 +19,10 @@
 
           = render Procedure::NoticeComponent.new(procedure: dossier.procedure)
 
-    %fieldset.fr-fieldset= render EditableChamp::SectionComponent.new(dossier: dossier_for_editing, types_de_champ: dossier_for_editing.revision.types_de_champ_public)
+    %fieldset.fr-fieldset= render EditableChamp::SectionComponent.new(dossier:, types_de_champ: dossier.revision.types_de_champ_public)
 
-    = render Dossiers::PendingCorrectionCheckboxComponent.new(dossier: dossier)
+    = render Dossiers::PendingCorrectionCheckboxComponent.new(dossier:)
 
-  = render Dossiers::InvalidIneligibiliteRulesComponent.new(dossier: dossier)
+  = render Dossiers::InvalidIneligibiliteRulesComponent.new(dossier:)
 
-  = render Dossiers::EditFooterComponent.new(dossier: dossier_for_editing, annotation: false)
+  = render Dossiers::EditFooterComponent.new(dossier:, annotation: false)

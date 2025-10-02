@@ -6,6 +6,6 @@
   - if last_attached_file
     = turbo_stream.focus_all "#persisted_row_attachment_#{last_attached_file.id} .attachment-filename a"
 
-- if @champ.dossier.en_construction_for_editor?
+- if @champ.dossier.en_construction?
   = turbo_stream.replace_all '.dossier-edit-sticky-footer' do
     = render Dossiers::EditFooterComponent.new(dossier: @champ.dossier, annotation: @champ.private?)
