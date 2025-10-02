@@ -252,7 +252,7 @@ module DossierHelper
   private
 
   def extract_notification_type(notification_or_type)
-    notification_or_type.is_a?(DossierNotification) ? notification_or_type.notification_type : notification_or_type
+    notification_or_type.is_a?(DossierNotification) ? notification_or_type.notification_type : notification_or_type.to_s
   end
 
   def days_for_specific_badge_notification(notification, type)
