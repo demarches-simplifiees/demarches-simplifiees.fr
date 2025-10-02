@@ -5,6 +5,12 @@ fr:
         dossier_depose:
           generic: Déposé depuis longtemps
           specific: "Déposé depuis %{days} J."
+        dossier_expirant:
+          generic: Expire bientôt
+          specific: "Expire dans %{days} J."
+        dossier_suppression:
+          generic: Bientôt supprimé
+          specific: "Suppression dans %{days} J."
         dossier_modifie: Dossier modifié
         attente_correction: En attente de correction
         attente_avis: En attente d'avis externe
