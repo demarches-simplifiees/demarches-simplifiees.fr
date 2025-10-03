@@ -35,6 +35,11 @@
     .fr-fieldset__element
       = render Dsfr::InputComponent.new(form: f, attribute: :lien_site_web, input_type: :text_field, opts: {}, required: false)
 
+    .fr-fieldset__element
+      = render Dsfr::ToggleComponent.new(form: f, target: :robots_indexable, extra_class_names: "fr-mt-2w",
+          title: "Cette démarche est référençable par les moteurs de recherche (Google, …) pour aider les usagers à la découvrir",
+        )
+
 %fieldset.fr-fieldset
   %legend.fr-fieldset__legend Cadre juridique
   .fr-fieldset__element
