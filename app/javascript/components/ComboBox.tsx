@@ -220,7 +220,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
                 className="fr-tag fr-tag--sm fr-tag--dismiss"
               >
                 {item.label}
-                <Button slot="remove" className="fr-tag--dismiss"></Button>
+                <Button aria-label={null} slot="remove" className="fr-tag--dismiss"></Button>
               </Tag>
             ))}
           </TagList>
