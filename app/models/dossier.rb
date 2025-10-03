@@ -13,6 +13,7 @@ class Dossier < ApplicationRecord
   include DossierStateConcern
   include DossierChampsConcern
   include DossierExportConcern
+  include DossierTreeConcern
 
   enum :state, {
     brouillon:       'brouillon',
@@ -1086,7 +1087,7 @@ class Dossier < ApplicationRecord
   end
 
   def validate(args)
-    TreeService.new(self).tree
+    link_parent_children!
 
     super(args)
   end

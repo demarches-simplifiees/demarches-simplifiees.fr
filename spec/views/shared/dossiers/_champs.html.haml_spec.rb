@@ -18,7 +18,7 @@ describe 'shared/dossiers/champs', type: :view do
   end
 
   subject do
-    champs = TreeService.new(dossier).tree
+    champs = dossier.link_parent_children!
     render Dossiers::ChampsRowsShowComponent.new(champs:, seen_at: demande_seen_at, profile:)
   end
 
