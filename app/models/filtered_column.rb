@@ -19,7 +19,7 @@ class FilteredColumn
 
   def initialize(column:, filter:)
     @column = column
-    @filter = filter
+    @filter = ValueNormalizer.normalize(filter)
   end
 
   def ==(other)
