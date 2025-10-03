@@ -12,7 +12,7 @@ describe 'address champ', js: true do
   end
 
   scenario "the BAN autocomplete is enabled by default" do
-    expect(page).to have_selector('label', text: 'Adresse du domicile')
+    expect(page).to have_selector('legend', text: 'Adresse du domicile')
     expect(page).to have_selector('.fr-input-group.address-ban input:enabled')
     expect(page).to have_unchecked_field("Je ne trouve pas mon adresse dans les suggestions")
     expect(page).not_to have_selector('.fr-input-group', text: 'Adresse du domicile', visible: true)
@@ -21,7 +21,7 @@ describe 'address champ', js: true do
   scenario "the user wants to fill an address that is not in the BAN" do
     find('label', text: 'Je ne trouve pas mon adresse dans les suggestions').click
     expect(page).to have_selector('.fr-input-group.address-ban input:disabled')
-    expect(page).to have_selector('.fr-input-group', text: 'Adresse du domicile')
+    expect(page).to have_selector('fieldset legend.fr-fieldset__legend', text: 'Adresse du domicile')
     expect(page).to have_select("Pays", selected: 'France')
     expect(page).to have_field("Numéro et nom de voie, ou lieu-dit")
     expect(page).to have_field("Ville ou commune")
