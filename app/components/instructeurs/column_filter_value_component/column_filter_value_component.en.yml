@@ -1,9 +1,11 @@
 en:
   value: Value
   operator: Operator
-  operator_le: On
-  operator_before: Before
-  operator_after: After
-  operator_this_week: This week
-  operator_this_month: This month
-  operator_this_year: This year
+  operators:
+    match: On
+    before: Before
+    after: After
+    this_week: This week
+    this_month: This month
+    this_year: This year
+  update: Update
