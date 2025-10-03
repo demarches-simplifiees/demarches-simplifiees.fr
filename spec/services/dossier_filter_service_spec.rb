@@ -990,6 +990,25 @@ describe DossierFilterService do
       end
     end
 
+    context 'with multiple in filters for the same column' do
+      let(:filtered_columns) do
+        [
+          FilteredColumn.new(column: column1, filter: { operator: 'in', value: ['a'] }),
+          FilteredColumn.new(column: column1, filter: { operator: 'in', value: ['b', 'a'] })
+        ]
+      end
+
+      it 'merges their values' do
+        expected = {
+          [column1, "in"] => [
+            { operator: 'in', value: ['a', 'b'] }
+          ]
+        }
+
+        expect(subject).to eq(expected)
+      end
+    end
+
     context 'with hash filters' do
       let(:filtered_columns) do
         [
@@ -1044,6 +1063,26 @@ describe DossierFilterService do
             value: ['Dessert', 'Fromage']
           }
         ]
+        expect(subject).to eq(expected)
+      end
+    end
+
+    context 'when in filters' do
+      let(:filters) do
+        [
+          { operator: 'in', value: ['A'] },
+          { operator: 'in', value: ['B', 'A'] }
+        ]
+      end
+
+      it 'groups values by operator with unique values' do
+        expected = [
+          {
+            operator: 'in',
+            value: ['A', 'B']
+          }
+        ]
+
         expect(subject).to eq(expected)
       end
     end

@@ -86,12 +86,14 @@ class DossierFilterService
 
   def self.merge_match_filters(filters)
     # [{ operator: "match", value: ["Dessert"] }, { operator: "match", value: ["Fromage"] }] => { operator: "match", value: ["Dessert", "Fromage"] }
+    # [{ operator: "in", value: ["A"] }, { operator: "in", value: ["B"] }] => { operator: "in", value: ["A", "B"] }
     # [{ operator: "before", value: ["2025-02-01"] }, { operator: "before", value: ["2025-01-01"] }] => do not group
 
     # we assume that all filters have the same operator (grouped by column and operator)
-    return filters if filters.first[:operator] != 'match' || filters.size == 1
+    operator = filters.first[:operator]
+    return filters if !%w[match in].include?(operator) || filters.size == 1
 
-    [{ operator: 'match', value: filters.map { it[:value] }.flatten }]
+    [{ operator:, value: filters.flat_map { it[:value] }.uniq }]
   end
 
   def self.normalize_filter(filter)
