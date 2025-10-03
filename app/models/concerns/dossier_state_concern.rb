@@ -146,7 +146,7 @@ module DossierStateConcern
     end
 
     if attestation.nil?
-      self.attestation = build_attestation
+      self.attestation = build_attestation_acceptation
     end
 
     save!
@@ -187,7 +187,7 @@ module DossierStateConcern
     save!
 
     if attestation.nil?
-      self.attestation = build_attestation
+      self.attestation = build_attestation_acceptation
     end
 
     save!
@@ -225,6 +225,10 @@ module DossierStateConcern
       self.justificatif_motivation.attach(justificatif)
     end
 
+    if attestation.nil?
+      self.attestation = build_attestation_refus
+    end
+
     save!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
@@ -260,6 +264,10 @@ module DossierStateConcern
     self.expired_at = expiration_date
 
     save!
+
+    if attestation.nil?
+      self.attestation = build_attestation_refus
+    end
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
 

@@ -63,7 +63,8 @@ en:
         closed_mail: File sorted as accepted notification email
         refused_mail: File sorted as refused notification email
         without_continuation_mail: File sorted with no further action notification email
-        attestation_template: Attestation template
+        attestation_acceptation_template: Attestation template acceptation
+        attestation_refus_template: Attestation template refused
         draft_revision: The form
         auto_archive_on: Application deadline
       procedure_export:

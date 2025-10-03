@@ -87,6 +87,10 @@
               %blockquote.fr-mx-0.fr-mt-0.fr-mb-2w= format_text_value(dossier.motivation)
 
             = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
+
+            - if dossier.attestation.present?
+              = link_to attestation_dossier_path(dossier), class: "fr-btn fr-icon-download-line fr-btn--icon-left fr-mb-2w", **external_link_attributes do
+                = t('views.users.dossiers.show.status_overview.accepte_attestation')
             .action
               = link_to t('views.users.dossiers.show.status_overview.refuse_reply'), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'fr-link'
 
