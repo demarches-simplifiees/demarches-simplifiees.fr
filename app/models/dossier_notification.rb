@@ -4,6 +4,7 @@ class DossierNotification < ApplicationRecord
   DELAY_DOSSIER_DEPOSE = 7.days
   DELAY_DOSSIER_EXPIRANT = 14.days
   DELAY_DOSSIER_SUPPRESSION = 7.days
+  NON_CUSTOMISABLE_TYPE = [:dossier_expirant, :dossier_suppression]
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
