@@ -58,8 +58,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def types_of_type_de_champ
     cat_scope = "activerecord.attributes.type_de_champ.categorie"
     tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
-    TypeDeChamp.type_champs
-      .keys
+    accepted_type_champs
       .filter(&method(:filter_type_champ))
       .filter(&method(:filter_featured_type_champ))
       .filter(&method(:filter_block_type_champ))
@@ -72,6 +71,19 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
           tdc.map { [t(_1, scope: tdc_scope), _1] }
         ]
       end
+  end
+
+  ACCEPTED_TYPES = Columns::ChampColumn::CAST.keys.group_by { |(from)| from.to_s }.transform_values { |(_, to)| to.to_s }
+
+  def accepted_type_champs
+    published_type_champ = procedure.published_revision&.types_de_champ&.find { _1.stable_id == type_de_champ.stable_id }&.type_champ
+
+    if published_type_champ.present?
+
+      ([published_type_champ] + ACCEPTED_TYPES.fetch(published_type_champ, [])).uniq
+    else
+      TypeDeChamp.type_champs.keys
+    end
   end
 
   def piece_justificative_template_options

@@ -783,20 +783,7 @@ class TypeDeChamp < ApplicationRecord
   private
 
   def castable_on_change?(from_type, to_type)
-    case [from_type, to_type]
-    when ['integer_number', 'decimal_number'], # recast numbers automatically
-      ['decimal_number', 'integer_number'], # may lose some data, but who cares ?
-      ['text', 'textarea'], # allow short text to long text
-      ['text', 'formatted'], # plain text can become formatted text
-      ['formatted', 'text'], # formatted text can become plain text
-      ['formatted', 'textarea'], # formatted text can become long text
-      ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
-      ['date', 'datetime'], # date <=> datetime
-      ['datetime', 'date'] # may lose some data, but who cares ?
-      true
-    else
-      false
-    end
+    Columns::ChampColumn::CAST.key?([from_type.to_sym, to_type.to_sym])
   end
 
   def populate_stable_id

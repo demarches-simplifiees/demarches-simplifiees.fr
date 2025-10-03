@@ -494,7 +494,7 @@ describe TypeDeChamp do
       let(:last_write_type_champ) { :text }
       let(:type_champ) { :integer_number }
 
-      it { expect(subject).to eq('') }
+      it { expect(subject).to eq('hello') }
     end
 
     context 'integer_number -> text' do
@@ -502,7 +502,7 @@ describe TypeDeChamp do
       let(:type_champ) { :text }
       let(:champ_value) { '42' }
 
-      it { expect(subject).to eq('') }
+      it { expect(subject).to eq('42') }
     end
 
     context 'integer_number -> decimal_number' do
@@ -521,6 +521,14 @@ describe TypeDeChamp do
       it { expect(subject).to eq('42.1') }
     end
 
+    context 'decimal_number -> text' do
+      let(:last_write_type_champ) { :decimal_number }
+      let(:type_champ) { :text }
+      let(:champ_value) { '42.1' }
+
+      it { expect(subject).to eq('42.1') }
+    end
+
     context 'drop_down_list -> multiple_drop_down_list' do
       let(:last_write_type_champ) { :drop_down_list }
       let(:type_champ) { :multiple_drop_down_list }
@@ -529,12 +537,28 @@ describe TypeDeChamp do
       it { expect(subject).to eq(champ_value) }
     end
 
+    context 'drop_down_list -> text' do
+      let(:last_write_type_champ) { :drop_down_list }
+      let(:type_champ) { :text }
+      let(:champ_value) { 'val1' }
+
+      it { expect(subject).to eq(champ_value) }
+    end
+
     context 'multiple_drop_down_list -> drop_down_list' do
       let(:last_write_type_champ) { :multiple_drop_down_list }
       let(:type_champ) { :drop_down_list }
-      let(:champ_value) { "[\"#{type_de_champ.drop_down_options.first}\"]" }
+      let(:champ_value) { type_de_champ.drop_down_options.to_json }
 
-      it { expect(subject).to eq('') }
+      it { expect(subject).to eq(type_de_champ.drop_down_options.first) }
+    end
+
+    context 'multiple_drop_down_list -> text' do
+      let(:last_write_type_champ) { :multiple_drop_down_list }
+      let(:type_champ) { :text }
+      let(:champ_value) { '["val1", "val2"]' }
+
+      it { expect(subject).to eq("val1, val2") }
     end
 
     context 'text -> formatted' do
