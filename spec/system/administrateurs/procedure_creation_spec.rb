@@ -41,7 +41,7 @@ describe 'Creating a new procedure', js: true do
       fill_in 'Libellé du champ', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
-      expect(page).to have_selector('select > optgroup', count: 8)
+      expect(page).to have_selector('select > optgroup', count: 7)
 
       within(find('.type-de-champ-add-button', match: :first)) {
         add_champ

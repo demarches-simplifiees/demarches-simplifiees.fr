@@ -361,11 +361,12 @@ module DossierStateConcern
     remove_not_visible_or_empty_champs!
     # TODO remove when all forks are gone
     editing_forks.each(&:destroy_editing_fork!)
-  end
+ end
 
   def clean_champs_after_instruction!
     remove_discarded_rows!
     remove_titres_identite!
+    remove_auto_purged_piece_justificatives!
   end
 
   private
@@ -412,5 +413,17 @@ module DossierStateConcern
 
   def remove_attente_avis_notification
     DossierNotification.destroy_notifications_by_dossier_and_type(self, :attente_avis)
+  end
+
+  def remove_auto_purged_piece_justificatives!
+    champs_to_purge = filled_champs.filter do |champ|
+      champ.piece_justificative? && champ.pj_auto_purge?
+    end
+
+    return if champs_to_purge.empty?
+
+    champs_to_purge.each do |champ|
+      champ.piece_justificative_file.purge_later
+    end
   end
 end
