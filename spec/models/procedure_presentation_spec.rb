@@ -161,6 +161,25 @@ describe ProcedurePresentation do
         expect(procedure_presentation.archives_filters).to eq([])
       end
     end
+
+    context 'when the filter contains control characters' do
+      let(:statut) { 'tous' }
+      let(:filter_value_in_db) { "Valeur avec retour\n" }
+      let(:stored_filter) { FilteredColumn.new(column:, filter: { operator: 'match', value: [filter_value_in_db] }) }
+      let(:filter_to_remove) { FilteredColumn.new(column:, filter: { operator: 'match', value: ["Valeur avec retour\r\n"] }) }
+
+      before do
+        procedure_presentation.update(tous_filters: [stored_filter])
+      end
+
+      it 'removes the filter successfully' do
+        expect(procedure_presentation.tous_filters).to eq([stored_filter])
+
+        subject
+
+        expect(procedure_presentation.reload.tous_filters).to eq([])
+      end
+    end
   end
 
   describe '#update_filter_for_statut!' do

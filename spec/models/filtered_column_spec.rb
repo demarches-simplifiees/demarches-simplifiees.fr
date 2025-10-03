@@ -1,8 +1,33 @@
 # frozen_string_literal: true
 
 describe FilteredColumn do
+  let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column', label: 'label') }
+
+  describe '#initialize' do
+    it 'stores the raw filter untouched' do
+      raw = "foo\r\nbar\u0007"
+      filtered_column = described_class.new(column:, filter: raw)
+
+      expect(filtered_column.raw_filter).to eq(raw)
+    end
+
+    it 'normalizes control characters for comparisons' do
+      filtered_column = described_class.new(column:, filter: "foo\r\nbar")
+
+      expect(filtered_column.filter_value).to eq(["foo\nbar"])
+      expect(filtered_column.id).to include("foo\\nbar")
+    end
+
+    it 'normalizes hash values recursively' do
+      filter = { operator: 'in', value: ["foo\r\n", "bar\u0007"] }
+      filtered_column = described_class.new(column:, filter:)
+
+      expect(filtered_column.filter_value).to eq(["foo\n", 'bar'])
+      expect(filtered_column.filter_operator).to eq('in')
+    end
+  end
+
   describe '#check_filters_max_length' do
-    let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column', label: 'label') }
     let(:filtered_column) { described_class.new(column:, filter:) }
 
     before { filtered_column.valid? }
@@ -50,7 +75,6 @@ describe FilteredColumn do
   end
 
   describe '#check_filter_is_not_blank' do
-    let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column', label: 'label') }
     let(:filtered_column) { described_class.new(column:, filter:) }
 
     before { filtered_column.valid? }

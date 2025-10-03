@@ -7,7 +7,7 @@ class FilteredColumn
   # https://www.postgresql.org/docs/current/datatype-numeric.html
   PG_INTEGER_MAX_VALUE = 2147483647
 
-  attr_reader :column, :filter
+  attr_reader :column, :filter, :raw_filter
 
   delegate :label, to: :column
 
@@ -17,9 +17,10 @@ class FilteredColumn
     message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" }
   }
 
-  def initialize(column:, filter:)
+  def initialize(column:, filter:, raw_filter: nil)
     @column = column
-    @filter = filter
+    @raw_filter = raw_filter.nil? ? filter : raw_filter
+    @filter = FilterValueNormalizer.normalize(filter)
   end
 
   def ==(other)
@@ -27,7 +28,13 @@ class FilteredColumn
   end
 
   def id
-    column.h_id.merge(filter: filter.is_a?(Hash) ? filter&.sort : filter).sort.to_json
+    serialized_filter = if filter.is_a?(Hash)
+      filter.sort
+    else
+      filter
+    end
+
+    column.h_id.merge(filter: serialized_filter).sort.to_json
   end
 
   def filter_operator

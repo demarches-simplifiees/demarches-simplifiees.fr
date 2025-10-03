@@ -153,8 +153,10 @@ module Administrateurs
         )
 
         items_to_insert = csv_content.map do |row|
+          normalized_row = row.transform_values { FilterValueNormalizer.normalize(_1) }
+
           {
-            data: { row: row.transform_keys { Referentiel.header_to_path(_1) } },
+            data: { row: normalized_row.transform_keys { Referentiel.header_to_path(_1) } },
             referentiel_id: referentiel.id
           }
         end
