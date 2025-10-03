@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe FilteredColumn do
+  let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column', label: 'label') }
+
   describe '#check_filters_max_length' do
-    let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column', label: 'label') }
     let(:filtered_column) { described_class.new(column:, filter:) }
 
     before { filtered_column.valid? }
@@ -50,7 +51,6 @@ describe FilteredColumn do
   end
 
   describe '#check_filter_is_not_blank' do
-    let(:column) { Column.new(procedure_id: 1, table: 'table', column: 'column', label: 'label') }
     let(:filtered_column) { described_class.new(column:, filter:) }
 
     before { filtered_column.valid? }
