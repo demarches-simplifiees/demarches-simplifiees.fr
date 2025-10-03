@@ -56,9 +56,11 @@ describe ChampConditionalConcern do
       end
 
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:champs) { TreeService.new(dossier).tree }
+      let(:champs) { dossier.champs }
       let(:first_repet) { champs.find { it.type == "Champs::RepetitionChamp" } }
-      let(:first_yes_no) { first_repet.rows.first.first }
+      let(:first_yes_no) { first_repet.children.first }
+
+      before { dossier.link_parent_children! }
 
       context 'when the repetition is visible' do
         let(:condition) { nil }
@@ -93,10 +95,11 @@ describe ChampConditionalConcern do
     let(:condition_2) { nil }
 
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-    let(:champs) { TreeService.new(dossier).tree }
-    let(:section_1) { champs.find { _1.header_section_level_value == 1 } }
-    let(:section_2) { section_1.children.first }
-    let(:text_champ) { section_2.children.first }
+    let(:text_champ) { dossier.champs.find { it.type == "Champs::TextChamp" } }
+    let(:section_2) { text_champ.parent }
+    let(:section_1) { section_2.parent }
+
+    before { dossier.link_parent_children! }
 
     describe '#visible?' do
       it { expect(text_champ.visible?).to be true }

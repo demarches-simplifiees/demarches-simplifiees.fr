@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe TreeService do
-  describe '.tree' do
-    subject(:tree) { described_class.new(dossier).tree }
+describe DossierTreeConcern do
+  describe '.link_parent_children!' do
+    subject(:tree) { dossier.link_parent_children! }
 
     let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
@@ -50,12 +50,12 @@ describe TreeService do
     context 'with private champs' do
       let(:types_de_champ_private) { [{ type: :text, libelle: 'private text' }] }
 
-      it { expect(described_class.new(dossier).tree(private: true).map(&:libelle)).to eq(['private text']) }
+      it { expect(tree.filter(&:private).map(&:libelle)).to eq(['private text']) }
     end
   end
 
   describe '.submitted_tree' do
-    subject(:submitted_tree) { described_class.new(dossier).submitted_tree }
+    subject(:submitted_tree) { dossier.submitted_tree }
 
     let!(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let!(:dossier) { create(:dossier, :en_construction, procedure:) }
@@ -89,66 +89,6 @@ describe TreeService do
     it do
       expect(submitted_tree.map(&:libelle)).to eq(["rep", "text"])
       expect(submitted_tree.first.new_rows.first.children.map(&:libelle)).to eq(["nested", "nested 2"])
-    end
-  end
-
-  describe '.discarded_tree' do
-    subject(:discarded_tree) { described_class.new(dossier).discarded_tree }
-
-    let!(:procedure) { create(:procedure, :published, types_de_champ_public:) }
-    let!(:dossier) { create(:dossier, :en_construction, procedure:) }
-    let(:types_de_champ_public) do
-      [
-        {
-          type: :repetition,
-          libelle: 'rep',
-          children: [
-            { type: :text, libelle: 'nested' },
-            { type: :text, libelle: 'nested 2' }
-          ]
-        },
-        { type: :text, libelle: 'text' }
-      ]
-    end
-    let(:rep_tdc) { procedure.draft_revision.types_de_champ.find { it.libelle == 'rep' } }
-
-    context 'when a repetition champ is removed' do
-      before do
-        procedure.draft_revision.remove_type_de_champ(rep_tdc.stable_id)
-
-        procedure.publish_revision!
-        perform_enqueued_jobs
-
-        procedure.reload
-        dossier.reload
-      end
-
-      it do
-        expect(dossier.submitted_revision.id).not_to eq(dossier.revision_id)
-
-        expect(discarded_tree.map(&:libelle)).to eq(["rep"])
-        expect(discarded_tree.first.new_rows.first.children.map(&:libelle)).to eq(["nested", "nested 2"])
-      end
-    end
-
-    context 'when a nested champ is removed' do
-      let(:text_2) { procedure.draft_revision.types_de_champ.find { it.libelle == 'nested 2' } }
-      let(:rep) { discarded_tree.first }
-
-      before do
-        procedure.draft_revision.remove_type_de_champ(text_2.stable_id)
-
-        procedure.publish_revision!
-        perform_enqueued_jobs
-
-        procedure.reload
-        dossier.reload
-      end
-
-      it do
-        expect(discarded_tree.map(&:libelle)).to eq(["rep"])
-        expect(rep.new_rows.first.children.map(&:libelle)).to eq(["nested 2"])
-      end
     end
   end
 end
