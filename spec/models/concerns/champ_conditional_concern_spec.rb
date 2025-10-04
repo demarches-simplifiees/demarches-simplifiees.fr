@@ -56,8 +56,11 @@ describe ChampConditionalConcern do
       end
 
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-      let(:first_repet) { dossier.champs.find { it.type == "Champs::RepetitionChamp" } }
-      let(:first_yes_no) { dossier.champs.find { it.type == "Champs::YesNoChamp" && it.row_id == first_repet.row_id } }
+      let(:champs) { dossier.champs }
+      let(:first_repet) { champs.find { it.type == "Champs::RepetitionChamp" } }
+      let(:first_yes_no) { first_repet.children.first }
+
+      before { dossier.link_parent_children! }
 
       context 'when the repetition is visible' do
         let(:condition) { nil }
@@ -74,6 +77,49 @@ describe ChampConditionalConcern do
         it 'the enclosed champ is hidden' do
           expect(first_repet.visible?).to be false
           expect(first_yes_no.visible?).to be false
+        end
+      end
+    end
+  end
+
+  context 'inside a section' do
+    let(:procedure) do
+      create(:procedure, :published, types_de_champ_public: [
+        { type: :header_section, level: 1, condition: condition_1 },
+        { type: :header_section, level: 2, condition: condition_2 },
+        { type: :text, stable_id: 1 }
+      ])
+    end
+
+    let(:condition_1) { nil }
+    let(:condition_2) { nil }
+
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:text_champ) { dossier.champs.find { it.type == "Champs::TextChamp" } }
+    let(:section_2) { text_champ.parent }
+    let(:section_1) { section_2.parent }
+
+    before { dossier.link_parent_children! }
+
+    describe '#visible?' do
+      it { expect(text_champ.visible?).to be true }
+
+      context 'when the parent section is hidden' do
+        let(:condition_2) { ds_eq(constant(true), constant(false)) }
+
+        it do
+          expect(section_2.visible?).to be false
+          expect(text_champ.visible?).to be false
+        end
+      end
+
+      context 'when the grand-parent section is hidden' do
+        let(:condition_1) { ds_eq(constant(true), constant(false)) }
+
+        it do
+          expect(section_1.visible?).to be false
+          expect(section_2.visible?).to be false
+          expect(text_champ.visible?).to be false
         end
       end
     end

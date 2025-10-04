@@ -32,7 +32,7 @@ class Dossiers::ChampsRowsShowComponent < ApplicationComponent
   end
 
   def visible?(champ)
-    return false if champ.header_section? || champ.explication?
+    return false if champ.explication?
     return true if champ.visible?
 
     if profile == 'instructeur' && champ.public?
