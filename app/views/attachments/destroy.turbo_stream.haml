@@ -1,6 +1,6 @@
 - if @champ
   = turbo_stream.replace @champ.input_group_id do
-    = render EditableChamp::EditableChampComponent.new champ: @champ
+    = render EditableChamp::EditableChampComponent.new champs: [@champ]
 - else
   = turbo_stream.replace dom_id(@attachment, :edit) do
     = render Attachment::EditComponent.new(**@attachment_options)

@@ -4,14 +4,15 @@ describe EditableChamp::CommunesComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :communes }]) }
   let(:dossier) { create(:dossier, procedure:) }
   let(:tdc) { procedure.active_revision.types_de_champ.first }
-  let(:champ) { dossier.champs.first }
+  let(:champs) { dossier.champs }
+  let(:champ) { champs.first }
 
   describe 'aria-describedby' do
     let(:react_component) { page.find('react-component') }
     let(:react_props) { JSON.parse(react_component['props']) }
 
     subject do
-      render_inline(EditableChamp::EditableChampComponent.new(champ:))
+      render_inline(EditableChamp::EditableChampComponent.new(champs:))
       react_props['aria-describedby']&.split
     end
 

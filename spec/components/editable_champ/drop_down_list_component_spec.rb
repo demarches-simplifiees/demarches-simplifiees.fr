@@ -4,10 +4,11 @@ describe EditableChamp::DropDownListComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
   let(:dossier) { create(:dossier, procedure:) }
   let(:tdc) { procedure.active_revision.types_de_champ.first }
-  let(:champ) { dossier.champs.first }
+  let(:champs) { dossier.champs }
+  let(:champ) { champs.first }
 
   subject(:render) do
-    render_inline(EditableChamp::EditableChampComponent.new(champ:))
+    render_inline(EditableChamp::EditableChampComponent.new(champs:))
   end
 
   let(:fieldset) { page.find('fieldset') }

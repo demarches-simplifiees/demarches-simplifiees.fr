@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class EditableChamp::EditableChampComponent < ApplicationComponent
-  def initialize(champ:, seen_at: nil)
-    @champ, @seen_at = champ, seen_at
+  def initialize(champs:, seen_at: nil)
+    @champs, @seen_at = champs, seen_at
     @attribute = :value
   end
 

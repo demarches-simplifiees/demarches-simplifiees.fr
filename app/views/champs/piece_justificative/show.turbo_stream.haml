@@ -1,5 +1,5 @@
 = turbo_stream.replace @champ.input_group_id do
-  = render EditableChamp::EditableChampComponent.new champ: @champ
+  = render EditableChamp::EditableChampComponent.new champs: [@champ]
 
 - last_attached_file = @champ.piece_justificative_file.attachments.last
 - if last_attached_file

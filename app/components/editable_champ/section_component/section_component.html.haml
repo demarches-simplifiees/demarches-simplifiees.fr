@@ -1,16 +1,5 @@
-- if render_within_fieldset?
-  .fr-fieldset__element.fr-my-0
-    %fieldset.fr-fieldset.fr-my-0{ class: "reset-#{tag_for_depth}" }
-      %legend.fr-fieldset__legend
-        = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
-      - splitted_tail.each do |section, champ|
-        - if section.present?
-          = render section
-        - else
-          = render EditableChamp::EditableChampComponent.new champ:
-- else
-  - splitted_tail.each do |section, champ|
-    - if section.present?
-      = render section
-    - else
-      = render EditableChamp::EditableChampComponent.new champ:
+.fr-fieldset__element.fr-my-0
+  %fieldset.fr-fieldset.fr-my-0{ class: "reset-#{tag_for_depth}" }
+    %legend.fr-fieldset__legend
+      = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
+    = render EditableChamp::EditableChampComponent.new champs: header_section.children

@@ -5,7 +5,7 @@
 - to_update.each do |champ|
   - if champ.refresh_after_update?
     = turbo_stream.replace champ.input_group_id do
-      = render EditableChamp::EditableChampComponent.new champ:
+      = render EditableChamp::EditableChampComponent.new champs: [champ]
   - else
     = turbo_stream.update champ.labelledby_id do
       = fields_for champ.input_name, champ do |form|

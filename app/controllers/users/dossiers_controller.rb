@@ -354,6 +354,8 @@ module Users
       type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id], :public)
       champ = dossier.project_champ(type_de_champ, row_id: params[:row_id])
 
+      dossier.link_parent_children!
+
       champ.validate(:champs_public_value) if champ.external_data_fetched?
       respond_to do |format|
         format.turbo_stream do
