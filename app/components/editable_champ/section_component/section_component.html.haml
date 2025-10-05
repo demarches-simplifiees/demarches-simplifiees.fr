@@ -7,12 +7,10 @@
         - if section.present?
           = render section
         - else
-          = fields_for champ.input_name, champ do |form|
-            = render EditableChamp::EditableChampComponent.new form:, champ:
+          = render EditableChamp::EditableChampComponent.new champ:
 - else
   - splitted_tail.each do |section, champ|
     - if section.present?
       = render section
     - else
-      = fields_for champ.input_name, champ do |form|
-        = render EditableChamp::EditableChampComponent.new form:, champ:
+      = render EditableChamp::EditableChampComponent.new champ:

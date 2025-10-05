@@ -11,12 +11,7 @@ describe EditableChamp::CommunesComponent, type: :component do
     let(:react_props) { JSON.parse(react_component['props']) }
 
     subject do
-      component = nil
-      ActionView::Base.empty.form_for(champ, url: '/') do |form|
-        component = EditableChamp::EditableChampComponent.new(champ:, form:)
-      end
-
-      render_inline(component)
+      render_inline(EditableChamp::EditableChampComponent.new(champ:))
       react_props['aria-describedby']&.split
     end
 

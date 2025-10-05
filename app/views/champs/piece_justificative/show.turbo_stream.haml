@@ -1,10 +1,9 @@
-= fields_for @champ.input_name, @champ do |form|
-  = turbo_stream.replace @champ.input_group_id do
-    = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
+= turbo_stream.replace @champ.input_group_id do
+  = render EditableChamp::EditableChampComponent.new champ: @champ
 
-  - last_attached_file = @champ.piece_justificative_file.attachments.last
-  - if last_attached_file
-    = turbo_stream.focus_all "#persisted_row_attachment_#{last_attached_file.id} .attachment-filename a"
+- last_attached_file = @champ.piece_justificative_file.attachments.last
+- if last_attached_file
+  = turbo_stream.focus_all "#persisted_row_attachment_#{last_attached_file.id} .attachment-filename a"
 
 - if @champ.dossier.en_construction_for_editor?
   = turbo_stream.replace_all '.dossier-edit-sticky-footer' do

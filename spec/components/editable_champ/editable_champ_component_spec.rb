@@ -7,7 +7,7 @@ describe EditableChamp::EditableChampComponent, type: :component do
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
   let(:champ) { (dossier.project_champs_public + dossier.project_champs_private).first }
 
-  let(:component) { described_class.new(form: nil, champ:) }
+  let(:component) { described_class.new(champ:) }
 
   describe "editable_champ_controller" do
     let(:controllers) { [] }

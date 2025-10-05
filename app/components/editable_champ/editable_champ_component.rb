@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class EditableChamp::EditableChampComponent < ApplicationComponent
-  def initialize(form:, champ:, seen_at: nil)
-    @form, @champ, @seen_at = form, champ, seen_at
+  def initialize(champ:, seen_at: nil)
+    @champ, @seen_at = champ, seen_at
     @attribute = :value
   end
 
-  def champ_component
-    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
+  def champ_component(form:)
+    @champ_component ||= component_class.new(form:, champ: @champ, seen_at: @seen_at)
   end
 
   private
@@ -26,19 +26,19 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     "EditableChamp::#{@champ.type_champ.camelcase}Component".constantize
   end
 
-  def html_options
+  def html_options(component)
     {
       class: class_names(
         {
           'editable-champ': true,
           "editable-champ-#{@champ.type_champ}": true,
-          champ_component.dsfr_group_classname => true
-        }.merge(champ_component.input_group_error_class_names)
+          component.dsfr_group_classname => true
+        }.merge(component.input_group_error_class_names)
       ),
       data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }
     }
-      .deep_merge(champ_component.fieldset_aria_opts)
-      .deep_merge(champ_component.fieldset_error_opts)
+      .deep_merge(component.fieldset_aria_opts)
+      .deep_merge(component.fieldset_error_opts)
   end
 
   def fieldset_element_attributes
