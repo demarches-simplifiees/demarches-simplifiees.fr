@@ -13,7 +13,7 @@ describe EditableChamp::EditableChampComponent, type: :component do
     let(:controllers) { [] }
     let(:data) { controllers.join(' ') }
 
-    subject { component.send(:stimulus_controller) }
+    subject { component.send(:stimulus_controller, champ:) }
 
     context 'when an editable public champ' do
       let(:controllers) { ['autosave'] }
