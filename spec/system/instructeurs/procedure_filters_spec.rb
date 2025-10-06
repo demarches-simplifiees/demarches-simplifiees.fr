@@ -184,6 +184,28 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
       expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
     end
+
+    scenario "cumule les valeurs ajoutées séquentiellement sur un filtre multi-sélection", js: true do
+      first_label = procedure.labels.first
+      second_label = procedure.labels.second
+
+      DossierLabel.create!(dossier: new_unfollow_dossier, label: first_label)
+      DossierLabel.create!(dossier: new_unfollow_dossier_2, label: second_label)
+
+      add_filter('Labels', first_label.name, type: :multi_select)
+
+      within ".dossiers-table" do
+        expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
+        expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
+      end
+
+      add_filter('Labels', second_label.name, type: :multi_select)
+
+      within ".dossiers-table" do
+        expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
+        expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
+      end
+    end
   end
 
   scenario "should be able to add and remove two filters for the same field", js: true do
