@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source 'https://gem.coop'
 
 gem 'rails', '~> 7.2.2' # allows update to security fixes at any time
 
