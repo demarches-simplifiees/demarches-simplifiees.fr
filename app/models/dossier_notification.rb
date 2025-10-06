@@ -42,9 +42,22 @@ class DossierNotification < ApplicationRecord
   scope :type_news, -> { where(notification_type: [:dossier_modifie, :message, :annotation_instructeur, :avis_externe]) }
 
   def self.create_notification(dossier, notification_type, except_instructeur: nil)
+    return if NON_CUSTOMISABLE_TYPE.include?(notification_type)
+
     instructeur_ids = instructeur_to_notify_ids(dossier, notification_type, except_instructeur)
 
     create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids) if instructeur_ids.any?
+  end
+
+  def self.create_notifications_for_non_customisable_type(dossiers, notification_type)
+    return unless NON_CUSTOMISABLE_TYPE.include?(notification_type)
+
+    instructeur_ids_by_dossier_id = dossiers
+        .includes(groupe_instructeur: :instructeurs)
+        .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
+        .to_h
+
+    create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
   end
 
   def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
@@ -325,6 +338,16 @@ class DossierNotification < ApplicationRecord
     missing_notifications = notification_types.map do |notification_type|
       display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
+    end
+
+    DossierNotification.insert_all(missing_notifications)
+  end
+
+  def self.create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
+    missing_notifications = instructeur_ids_by_dossier_id.flat_map do |dossier_id, instructeur_ids|
+      instructeur_ids.map do |instructeur_id|
+        { dossier_id:, instructeur_id:, notification_type:, display_at: Time.zone.now }
+      end
     end
 
     DossierNotification.insert_all(missing_notifications)
