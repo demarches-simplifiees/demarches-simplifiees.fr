@@ -102,7 +102,8 @@ fr:
           one: "%{count} instructeur"
           other: "%{count} instructeurs"
         attestation_acceptation_template: Attestation d’acceptation du dossier
-        attestation_acceptation_template_hint: Activée
+        attestation_refus_template: Attestation de refus du dossier
+        attestation_template_hint: Activée
         zones: Zones
         service: Service
         instructeurs_self_management:

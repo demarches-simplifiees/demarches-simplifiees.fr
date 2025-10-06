@@ -83,7 +83,16 @@
               = fco.label 'attestation_acceptation_template', class: "fr-label" do
                 = t('administrateurs.procedures.clone.attestation_acceptation_template')
                 .fr-hint-text
-                  = t('administrateurs.procedures.clone.attestation_acceptation_template_hint')
+                  = t('administrateurs.procedures.clone.attestation_template_hint')
+
+        - if @procedure.attestation_refus_template&.activated?
+          .fr-fieldset__element
+            .fr-checkbox-group
+              = fco.check_box 'attestation_refus_template', checked: true
+              = fco.label 'attestation_refus_template', class: "fr-label" do
+                = t('administrateurs.procedures.clone.attestation_refus_template')
+                .fr-hint-text
+                  = t('administrateurs.procedures.clone.attestation_template_hint')
 
         - if @procedure.experts_require_administrateur_invitation
           .fr-fieldset__element

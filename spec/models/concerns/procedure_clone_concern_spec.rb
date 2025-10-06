@@ -12,6 +12,7 @@ describe ProcedureCloneConcern, type: :model do
         duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         max_duree_conservation_dossiers_dans_ds: Procedure::OLD_MAX_DUREE_CONSERVATION,
         attestation_acceptation_template: build(:attestation_template, logo: logo, signature: signature),
+        attestation_refus_template: build(:attestation_template, kind: 'refus'),
         types_de_champ_public:,
         types_de_champ_private:,
         api_particulier_token: '123456789012345',
@@ -37,7 +38,8 @@ describe ProcedureCloneConcern, type: :model do
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
     let(:options) do
       {
-        clone_attestation_template: true,
+        clone_attestation_acceptation_template: true,
+        clone_attestation_refus_template: true,
         cloned_from_library: from_library,
         clone_presentation: true,
         clone_instructeurs: true,
@@ -120,6 +122,7 @@ describe ProcedureCloneConcern, type: :model do
       end
 
       expect(subject.attestation_acceptation_template.title).to eq(procedure.attestation_acceptation_template.title)
+      expect(subject.attestation_refus_template.title).to eq(procedure.attestation_refus_template.title)
 
       expect(subject.cloned_from_library).to be(false)
 

@@ -190,7 +190,8 @@ module ProcedureCloneConcern
       clone_instructeurs: true,
       clone_champs: true,
       clone_annotations: true,
-      clone_attestation_template: true,
+      clone_attestation_acceptation_template: true,
+      clone_attestation_refus_template: true,
       clone_zones: true,
       clone_ineligibilite: true,
       clone_monavis_embed: true,
@@ -260,8 +261,12 @@ module ProcedureCloneConcern
       }
     }
 
-    if options[:clone_attestation_template]
+    if options[:clone_attestation_acceptation_template]
       associations[:attestation_acceptation_template] = []
+    end
+
+    if options[:clone_attestation_refus_template]
+      associations[:attestation_refus_template] = []
     end
 
     if options[:clone_zones]
