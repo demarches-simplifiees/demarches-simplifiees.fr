@@ -434,6 +434,7 @@ en:
         restore: "Restore"
         filters:
           title: Select a filter
+          missing_column: Please select a column before adding a filter
         select_all: Select all
         batch_operation:
           enabled: "Add file %{dossier_id} to the selection for the bulk operation"
