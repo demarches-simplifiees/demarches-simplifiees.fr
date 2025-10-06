@@ -38,35 +38,43 @@ module Instructeurs
       @procedures_draft_count = all_procedures_for_listing.brouillons.count
       @procedures_closes_count = closes_with_no_dossier_en_cours.count
 
-      @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.by_statut('a-suivre').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_termines_count_per_procedure = dossiers.by_statut('traites').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers.by_statut('expirant').group('groupe_instructeurs.procedure_id').count
-
-      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
-      @followed_dossiers_count_per_procedure = current_instructeur
-        .followed_dossiers
-        .joins(:groupe_instructeur)
-        .en_cours
-        .where(groupe_instructeur_id: groupe_ids)
-        .visible_by_administration
-        .group('groupe_instructeurs.procedure_id')
-        .reorder(nil)
-        .count
-
-      @all_dossiers_counts = {
-        'a-suivre' => @dossiers_a_suivre_count_per_procedure.sum { |_, v| v },
-        'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
-        'traites' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
-        'tous' => @dossiers_count_per_procedure.sum { |_, v| v },
-        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
-      }
-
-      @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
-      @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
-
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
+
+      @collection = case statut
+      when 'en-cours'
+        @procedures_en_cours
+      when 'brouillons'
+        @collection = @procedures_draft
+      when 'archivees'
+        @collection = @procedures_closes
+      end
+
+      @dossiers_count_per_procedure = {}
+      @dossiers_a_suivre_count_per_procedure = {}
+      @dossiers_termines_count_per_procedure = {}
+      @dossiers_expirant_count_per_procedure = {}
+      @followed_dossiers_count_per_procedure = {}
+
+      @all_dossiers_counts = {}
+
+      @procedure_ids_with_notifications = { a_suivre: [], suivis: [], traites: [] } # DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
+      @notifications_counts_per_procedure = {}
+
+      if turbo_frame_request?
+        groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
+        compute_dossiers_count(groupe_ids)
+
+        @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
+        @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
+
+        render partial: 'procedures_list'
+      end
+    end
+
+    def synthese
+      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
+      compute_dossiers_count(groupe_ids)
     end
 
     def order_positions
@@ -530,6 +538,35 @@ module Instructeurs
 
     def cookies_export_key
       "exports_#{@procedure.id}_seen_at"
+    end
+
+    def compute_dossiers_count(groupe_ids)
+      dossiers = current_instructeur.dossiers
+        .joins(groupe_instructeur: :procedure)
+        .where(procedures: { hidden_at: nil })
+
+      @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers.by_statut('a-suivre').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_termines_count_per_procedure = dossiers.by_statut('traites').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_expirant_count_per_procedure = dossiers.by_statut('expirant').group('groupe_instructeurs.procedure_id').reorder(nil).count
+
+      @followed_dossiers_count_per_procedure = current_instructeur
+        .followed_dossiers
+        .joins(:groupe_instructeur)
+        .en_cours
+        .where(groupe_instructeur_id: groupe_ids)
+        .visible_by_administration
+        .group('groupe_instructeurs.procedure_id')
+        .reorder(nil)
+        .count
+
+      @all_dossiers_counts = {
+        'a-suivre' => @dossiers_a_suivre_count_per_procedure.sum { |_, v| v },
+        'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
+        'traites' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
+        'tous' => @dossiers_count_per_procedure.sum { |_, v| v },
+        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
+      }
     end
 
     def ordered_procedure_ids_params
