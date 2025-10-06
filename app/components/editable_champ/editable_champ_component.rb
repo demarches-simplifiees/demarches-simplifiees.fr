@@ -3,13 +3,13 @@
 class EditableChamp::EditableChampComponent < ApplicationComponent
   include ChampAriaLabelledbyHelper
 
-  def initialize(form:, champ:, seen_at: nil)
-    @form, @champ, @seen_at = form, champ, seen_at
+  def initialize(form:, champ:, seen_at: nil, row_number: nil)
+    @form, @champ, @seen_at, @row_number = form, champ, seen_at, row_number
     @attribute = :value
   end
 
   def champ_component
-    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at, aria_labelledby_prefix: aria_labelledby_prefix)
+    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at, aria_labelledby_prefix: aria_labelledby_prefix, row_number: row_number_if_in_repetition)
   end
 
   def parent_fieldset_legend_id
