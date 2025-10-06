@@ -349,6 +349,13 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
+  scope :without_dossier_expirant_notification, -> do
+    where.not(
+      id: DossierNotification.where(notification_type: :dossier_expirant)
+                            .select(:dossier_id)
+    )
+  end
+
   scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
   scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
   scope :deleted_by_automatic_expired, -> { where(dossiers: { hidden_by_expired_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
