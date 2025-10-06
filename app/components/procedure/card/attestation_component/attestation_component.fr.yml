@@ -1,0 +1,8 @@
+---
+fr:
+  acceptation:
+    title: Attestation d’acceptation
+    subtitle: Délivrance automatique pour les dossiers acceptés
+  refus:
+    title: Attestation de refus
+    subtitle: Délivrance automatique pour les dossiers refusés

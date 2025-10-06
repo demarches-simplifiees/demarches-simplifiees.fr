@@ -784,6 +784,10 @@ class Procedure < ApplicationRecord
     public_send("attestation_#{kind}_templates_v2")
   end
 
+  def published_attestation_template_for(kind)
+    public_send("attestation_#{kind}_template")
+  end
+
   private
 
   def stable_ids_used_by_routing_rules

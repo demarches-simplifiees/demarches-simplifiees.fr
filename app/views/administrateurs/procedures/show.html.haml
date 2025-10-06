@@ -101,8 +101,8 @@
 
   %h3.fr-h6 Autres paramètres
   .fr-grid-row.fr-grid-row--gutters.fr-mb-5w
-    = render Procedure::Card::AttestationAcceptationComponent.new(procedure: @procedure)
-    = render Procedure::Card::AttestationRefusComponent.new(procedure: @procedure)
+    = render Procedure::Card::AttestationComponent.new(procedure: @procedure, kind: AttestationTemplate.kinds.fetch(:acceptation))
+    = render Procedure::Card::AttestationComponent.new(procedure: @procedure, kind: AttestationTemplate.kinds.fetch(:refus))
     = render Procedure::Card::ExpertsComponent.new(procedure: @procedure)
     = render Procedure::Card::EmailsComponent.new(procedure: @procedure)
     = render Procedure::Card::AnnotationsComponent.new(procedure: @procedure)
