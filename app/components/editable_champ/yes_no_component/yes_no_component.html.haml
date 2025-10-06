@@ -1,12 +1,12 @@
 .fr-fieldset__element.fr-fieldset__element--inline
   .fr-radio-group
-    = @form.radio_button :value, true, id: @champ.yes_input_id, aria: labelledby_id_attr(@champ.yes_input_label_id)
-    %label.fr-label{ for: @champ.yes_input_id, id: @champ.yes_input_label_id }
+    = @form.radio_button :value, true, id: @champ.yes_input_id, aria: labelledby_id_attr(input_label_id(@champ, :yes))
+    %label.fr-label{ for: @champ.yes_input_id, id: input_label_id(@champ, :yes) }
       = t(".yes")
 .fr-fieldset__element.fr-fieldset__element--inline
   .fr-radio-group
-    = @form.radio_button :value, false, id: @champ.no_input_id, aria: labelledby_id_attr(@champ.no_input_label_id)
-    %label.fr-label{ for: @champ.no_input_id, id: @champ.no_input_label_id }
+    = @form.radio_button :value, false, id: @champ.no_input_id, aria: labelledby_id_attr(input_label_id(@champ, :no))
+    %label.fr-label{ for: @champ.no_input_id, id: input_label_id(@champ, :no) }
       = t(".no")
 - if !@champ.mandatory?
   .fr-fieldset__element.fr-fieldset__element--inline

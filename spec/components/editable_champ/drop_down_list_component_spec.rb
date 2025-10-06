@@ -48,7 +48,7 @@ describe EditableChamp::DropDownListComponent, type: :component do
       end
 
       context "when the champ is in a repetition" do
-        let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :drop_down_list }] }] }
+        let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :drop_down_list, drop_down_options: ['Option 1', 'Option 2'] }] }] }
 
         # the first fieldset is for the repetition
         let(:fieldset) { page.find('fieldset fieldset') }
@@ -59,7 +59,7 @@ describe EditableChamp::DropDownListComponent, type: :component do
         it do
           render
 
-          expect(aria_labelledby(radios.first)).to eq([repetition_fieldset_legend_id(repetition_champ), champ_fieldset_legend_id(drop_down_list_champ), input_label_id(drop_down_list_champ)])
+          expect(aria_labelledby(radios.first)).to eq([repetition_fieldset_legend_id(repetition_champ), champ_fieldset_legend_id(drop_down_list_champ), input_label_id(drop_down_list_champ, 'Option 1')])
         end
       end
     end
