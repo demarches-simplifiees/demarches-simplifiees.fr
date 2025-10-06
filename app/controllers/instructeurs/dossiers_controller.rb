@@ -45,18 +45,12 @@ module Instructeurs
         filename: "dossier-#{dossier.id}-features.json"
     end
 
-    def apercu_attestation_acceptation
-      send_data dossier.attestation_acceptation_template.send(:build_pdf, dossier),
-                filename: 'attestation.pdf',
-                type: 'application/pdf',
-                disposition: 'inline'
-    end
-
-    def apercu_attestation_refus
-      send_data dossier.attestation_refus_template.send(:build_pdf, dossier),
-                filename: 'attestation.pdf',
-                type: 'application/pdf',
-                disposition: 'inline'
+    def apercu_attestation
+      attestation_kind = params[:attestation_kind]
+      send_data dossier.attestation_template_for(attestation_kind).send(:build_pdf, dossier),
+                  filename: 'attestation.pdf',
+                  type: 'application/pdf',
+                  disposition: 'inline'
     end
 
     def bilans_bdf

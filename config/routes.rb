@@ -556,8 +556,7 @@ Rails.application.routes.draw do
             patch 'annotations' => 'dossiers#update_annotations'
             get 'annotations/:stable_id', to: 'dossiers#annotation', as: :annotation
             get 'geo_data'
-            get 'apercu_attestation_acceptation'
-            get 'apercu_attestation_refus'
+            get 'apercu_attestation'
             get 'bilans_bdf'
           end
         end

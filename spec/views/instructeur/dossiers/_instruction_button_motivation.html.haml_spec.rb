@@ -19,14 +19,14 @@ describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
     end
 
     context 'without attestation' do
-      it { expect(subject).not_to have_link(href: apercu_attestation_acceptation_instructeur_dossier_path(dossier.procedure, dossier)) }
+      it { expect(subject).not_to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: 'acceptation')) }
     end
 
     context 'with an attestation' do
       let(:dossier) { create :dossier, :accepte, :with_attestation_acceptation }
 
       it 'includes a link to preview the attestation' do
-        expect(subject).to have_link(href: apercu_attestation_acceptation_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(subject).to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: 'acceptation'))
       end
     end
   end
@@ -48,7 +48,7 @@ describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
 
     context 'without attestation' do
       it do
-        expect(subject).not_to have_link(href: apercu_attestation_refus_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(subject).not_to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: 'refus'))
       end
     end
 
@@ -56,7 +56,7 @@ describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
       let(:dossier) { create :dossier, :accepte, :with_attestation_refus }
 
       it 'includes a link to preview the attestation' do
-        expect(subject).to have_link(href: apercu_attestation_refus_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(subject).to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: 'refus'))
       end
     end
   end

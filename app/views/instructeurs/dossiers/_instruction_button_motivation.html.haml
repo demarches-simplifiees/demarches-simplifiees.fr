@@ -5,7 +5,7 @@
       - if dossier.attestation_acceptation_template&.activated?
         %p.help
           L’acceptation du dossier envoie automatiquement
-          = link_to 'une attestation', apercu_attestation_acceptation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
+          = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: AttestationTemplate.kinds.fetch(:acceptation)), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
       - unspecified_attestation_champs = dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:acceptation))
@@ -31,7 +31,7 @@
       - if dossier.attestation_refus_template&.activated?
         %p.help
           Le refus du dossier envoie automatiquement
-          = link_to 'une attestation', apercu_attestation_refus_instructeur_dossier_path(dossier.procedure, dossier),  target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
+          = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: AttestationTemplate.kinds.fetch(:refus)),  target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
       - unspecified_attestation_champs = dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:refus))
