@@ -5,7 +5,7 @@ module Instructeurs
     include InstructeurProcedureConcern
     include ProConnectSessionConcern
 
-    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
+    before_action :ensure_ownership!, except: [:index, :synthese, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
     after_action :mark_latest_revision_as_seen, only: [:history]
 
