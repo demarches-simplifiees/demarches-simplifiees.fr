@@ -1,0 +1,14 @@
+<turbo-frame id="synthese-content">
+  <p>
+    <% @all_dossiers_counts.each do |tab_key, dossier_count| %>
+      <% if dossier_count.positive? %>
+        <span class="fr-badge">
+          <span class="flex column align-center">
+            <span class="fr-cell--numeric"><%= number_with_html_delimiter(dossier_count) %></span>
+            <%= i18n_tab_from_status(tab_key) %>
+          </span>
+        </span>
+      <% end %>
+    <% end %>
+  </p>
+</turbo-frame>

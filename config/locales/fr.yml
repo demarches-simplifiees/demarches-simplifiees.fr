@@ -451,7 +451,6 @@ fr:
         follow_file: Suivre
         stop_follow: Ne plus suivre
         no_file: Aucun dossier
-        dossier_synthesis: Synthèse des dossiers
         passer_en_instruction_blocked_by_pending_correction: |
           Le passage en instruction est impossible tant que le dossier est en attente de correction.
           Si nécessaire, l’instructeur ayant demandé la correction peut supprimer le message correspondant.
