@@ -25,10 +25,6 @@ class Champs::DropDownListChamp < Champ
     "#{input_id}-#{Digest::MD5.hexdigest(value.to_s)}"
   end
 
-  def radio_label_id(value)
-    "#{radio_id(value)}-label"
-  end
-
   def html_label?
     !render_as_radios?
   end

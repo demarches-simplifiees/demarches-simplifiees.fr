@@ -6,9 +6,10 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
 
   attr_reader :attribute
   attr_reader :aria_labelledby_prefix
+  attr_reader :row_number
 
-  def initialize(form:, champ:, seen_at: nil, opts: {}, aria_labelledby_prefix: nil)
-    @form, @champ, @seen_at, @opts, @aria_labelledby_prefix = form, champ, seen_at, opts, aria_labelledby_prefix
+  def initialize(form:, champ:, seen_at: nil, opts: {}, aria_labelledby_prefix: nil, row_number: nil)
+    @form, @champ, @seen_at, @opts, @aria_labelledby_prefix, @row_number = form, champ, seen_at, opts, aria_labelledby_prefix, row_number
     @attribute = :value
   end
 

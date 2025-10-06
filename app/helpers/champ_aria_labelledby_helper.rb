@@ -54,6 +54,6 @@ module ChampAriaLabelledbyHelper
   end
 
   def input_label_id(champ, attribute = :value)
-    "#{champ.focusable_input_id(attribute)}-label"
+    [champ.html_id, attribute, "label"].compact.join('-').parameterize
   end
 end

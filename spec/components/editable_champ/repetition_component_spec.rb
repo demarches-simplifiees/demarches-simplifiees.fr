@@ -2,6 +2,96 @@
 
 describe EditableChamp::RepetitionComponent, type: :component do
   include ChampAriaLabelledbyHelper
+
+  describe "the champ label or legend text" do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, libelle: 'Répétition', children: }]) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:repetition_champ) { dossier.project_champs_public.first }
+
+    subject(:render) do
+      component = nil
+      ActionView::Base.empty.form_for(repetition_champ, url: '/') do |form|
+        component = described_class.new(champ: repetition_champ, form:)
+      end
+
+      render_inline(component)
+    end
+
+    before { subject }
+
+    shared_examples "has the repetition legend with no row number" do
+      it do
+        expect(page).to have_selector(:xpath, "//legend[normalize-space(text())='Répétition']")
+      end
+    end
+
+    context "when there is one champ per row" do
+      context "when the champ has a label before the input (ex: text)" do
+        let(:children) { [{ type: :text, libelle: 'Prénom', mandatory: false }] }
+
+        it_behaves_like "has the repetition legend with no row number"
+        it do
+          expect(page).to have_selector("label", text: "Prénom 1")
+        end
+      end
+
+      context "when the champ has a label, in a checkbox (ex: checkbox)" do
+        let(:children) { [{ type: :checkbox, libelle: 'Je suis une checkbox', mandatory: false }] }
+
+        it_behaves_like "has the repetition legend with no row number"
+        it do
+          expect(page).to have_selector("label", text: "Je suis une checkbox 1")
+        end
+      end
+
+      context "when the champ has a legend around the input (ex: choix simple)" do
+        let(:children) { [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }] }
+
+        it_behaves_like "has the repetition legend with no row number"
+        it do
+          expect(page).to have_selector("legend", text: "Votre ville 1")
+        end
+      end
+    end
+
+    shared_examples "has the repetition legend with row number" do
+      it do
+        expect(page).to have_selector("legend", text: "Répétition 1")
+      end
+    end
+
+    context "when there is multiple champ per row" do
+      let(:children) { [champ, { type: :text, libelle: 'Nom', mandatory: false }] }
+
+      context "when the champ has a label before the input (ex: text)" do
+        let(:champ) { { type: :text, libelle: 'Prénom', mandatory: false } }
+
+        it_behaves_like "has the repetition legend with row number"
+        it do
+          expect(page).to have_selector(:xpath, "//label[normalize-space(text())='Prénom']")
+        end
+      end
+
+      context "when the champ has a label, in a checkbox (ex: checkbox)" do
+        let(:champ) { { type: :checkbox, libelle: 'Je suis une checkbox', mandatory: false } }
+
+        it_behaves_like "has the repetition legend with row number"
+        it do
+          expect(page).to have_selector(:xpath, "//label[normalize-space(.)='Je suis une checkbox']")
+        end
+      end
+
+      context "when the champ has a legend around the input (ex: choix simple)" do
+        let(:champ) { { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] } }
+
+        it_behaves_like "has the repetition legend with row number"
+        it do
+          expect(page).to have_selector(:xpath, "//legend[normalize-space(text())='Votre ville']")
+        end
+      end
+    end
+  end
+
   describe "aria-labelledby" do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, libelle: 'Répétition', children: }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
@@ -145,7 +235,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
           it do
             champ.options_for_select_with_other.each do |_option, value|
-              expect(subject).to have_selector("input[type='radio'][aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{champ.radio_label_id(value)}']")
+              expect(subject).to have_selector("input[type='radio'][aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, value)}']")
             end
           end
         end
