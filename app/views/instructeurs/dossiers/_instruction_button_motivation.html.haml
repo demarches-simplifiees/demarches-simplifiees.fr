@@ -8,23 +8,7 @@
           = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: AttestationTemplate.kinds.fetch(:acceptation)), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
-      - unspecified_attestation_champs = dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:acceptation))
-      - if unspecified_attestation_champs.present?
-        .warning
-          Attention, les valeurs suivantes n’ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
-          - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private?)
-
-          - if unspecified_champs.present?
-            %h4 Champs de la demande
-            %ul
-              - unspecified_attestation_champs.each do |unspecified_champ|
-                %li= unspecified_champ.libelle
-
-          - if unspecified_annotations_privees.present?
-            %h4 Annotations privées
-            %ul
-              - unspecified_annotations_privees.each do |unspecified_annotations_privee|
-                %li= unspecified_annotations_privee.libelle
+      = render partial: 'instructeurs/dossiers/unspecified_champs', locals: { unspecified_attestation_champs: dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:acceptation)) }
 
     - elsif title == 'Refuser'
       = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: true
@@ -34,23 +18,8 @@
           = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier, attestation_kind: AttestationTemplate.kinds.fetch(:refus)),  target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
-      - unspecified_attestation_champs = dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:refus))
-      - if unspecified_attestation_champs.present?
-        .warning
-          Attention, les valeurs suivantes n’ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
-          - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private?)
+      = render partial: 'instructeurs/dossiers/unspecified_champs', locals: { unspecified_attestation_champs: dossier.unspecified_attestation_champs(AttestationTemplate.kinds.fetch(:refus)) }
 
-          - if unspecified_champs.present?
-            %h4 Champs de la demande
-            %ul
-              - unspecified_attestation_champs.each do |unspecified_champ|
-                %li= unspecified_champ.libelle
-
-          - if unspecified_annotations_privees.present?
-            %h4 Annotations privées
-            %ul
-              - unspecified_annotations_privees.each do |unspecified_annotations_privee|
-                %li= unspecified_annotations_privee.libelle
     - else
       = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: true
     .optional-justificatif{ id: "justificatif_motivation_suggest_#{popup_class}", onclick: "DS.showImportJustificatif('#{popup_class}');" }
