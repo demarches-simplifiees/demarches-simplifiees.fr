@@ -8,6 +8,8 @@ class Champs::HeaderSectionChamp < Champ
     value.each { it.parent = self }
   end
 
+  def flattened_self_and_children = [self] + children.flat_map(&:flattened_self_and_children)
+
   def search_terms
     # The user cannot enter any information here so it doesn’t make much sense to search
   end

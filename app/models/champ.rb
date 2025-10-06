@@ -11,6 +11,8 @@ class Champ < ApplicationRecord
   attr_readonly :stable_id
   attr_accessor :parent
 
+  def flattened_self_and_children = [self]
+
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   has_many_attached :piece_justificative_file
 
