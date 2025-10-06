@@ -55,11 +55,11 @@ export function ComboBox({
 }) {
   const generatedId = useId();
   // if label is passed, we need to generate an id for the input, otherwise we use the labelId passed in the props
-  const idToUse = label ? generatedId : labelId;
+  const labelIdToUse = label ? generatedId : labelId;
 
   const inputAriaLabelledby = ariaLabelledbyPrefix
-    ? `${ariaLabelledbyPrefix} ${idToUse}`
-    : idToUse;
+    ? `${ariaLabelledbyPrefix} ${labelIdToUse}`
+    : labelIdToUse;
 
   return (
     <AriaComboBox
@@ -68,7 +68,7 @@ export function ComboBox({
       shouldFocusWrap={true}
     >
       {label ? (
-        <Label className="fr-label" id={labelId}>
+        <Label className="fr-label" id={labelIdToUse}>
           {label}
           {description ? (
             <Text slot="description" className="fr-hint-text fr-mb-1w">
