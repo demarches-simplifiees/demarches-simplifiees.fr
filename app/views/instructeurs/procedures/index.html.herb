@@ -51,18 +51,20 @@
       <% end %>
     </div>
     <ul class="procedure-list fr-pl-0">
-      <%= render(Instructeurs::ProcedureSummaryComponent.with_collection(
-          @collection,
-          dossiers_count_per_procedure: @dossiers_count_per_procedure,
-          dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
-          dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
-          dossiers_expirant_count_per_procedure: @dossiers_expirant_count_per_procedure,
-          followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure,
-          procedure_ids_with_notifications: @procedure_ids_with_notifications,
-          notifications_counts_per_procedure: @notifications_counts_per_procedure,
-          has_export_notification: @has_export_notification || false,
-        )) %>
-      <%= paginate @collection, views_prefix: 'shared' %>
+      <turbo-frame id="procedure-list" src="<%= instructeur_procedures_path(statut: params[:statut], page: params[:page]) %>">
+        <%= render(Instructeurs::ProcedureSummaryComponent.with_collection(
+            @collection,
+            dossiers_count_per_procedure: @dossiers_count_per_procedure,
+            dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
+            dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
+            dossiers_expirant_count_per_procedure: @dossiers_expirant_count_per_procedure,
+            followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure,
+            procedure_ids_with_notifications: @procedure_ids_with_notifications,
+            notifications_counts_per_procedure: @notifications_counts_per_procedure,
+            has_export_notification: @has_export_notification || false,
+          )) %>
+      </turbo-frame>
     </ul>
+    <%= paginate @collection, views_prefix: 'shared' %>
   <% end %>
 </div>
