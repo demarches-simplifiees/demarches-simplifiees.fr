@@ -35,14 +35,7 @@ class Administrateur < ApplicationRecord
   end
 
   delegate :rdv_connection, to: :instructeur
-
-  def email
-    user&.email
-  end
-
-  def active?
-    user&.active?
-  end
+  delegate :email, :active?, to: :user, allow_nil: true
 
   def self.find_inactive_by_token(reset_password_token)
     self.inactive.with_reset_password_token(reset_password_token)

@@ -64,7 +64,7 @@ module ProcedurePublishConcern
     publish_new_revision(administrateur)
   end
 
-  def after_republish(canonical_procedure = nil, administrateur)
+  def after_republish(administrateur, canonical_procedure = nil)
     touch(:published_at)
   end
 

@@ -18,10 +18,10 @@
       - dossiers_en_instruction_count = dossiers.state_en_instruction.count
       .card.mb-4
         %h2.card-title
-          - if revision.administrateur.present? && revision.administrateur.user.present?
-            = "Modifications publiées le #{l(revision.published_at, format: '%d %B %Y à %R')} par #{revision.administrateur.user.email}"
+          - if revision.administrateur.present?
+            = "Modifications publiées le #{l(revision.published_at, format: :default)} par #{revision.administrateur.user.email}"
           - else
-            = "Modifications publiées le #{l(revision.published_at, format: '%d %B %Y à %R')}"
+            = "Modifications publiées le #{l(revision.published_at, format: :default)}"
         - if !dossiers_en_construction_count.zero? && !dossiers_en_instruction_count.zero?
           %p
             - if dossiers_en_construction_count == 1
