@@ -257,7 +257,6 @@ class Attachment::EditComponent < ApplicationComponent
 
   def allowed_formats
     @allowed_formats ||= begin
-
       if identity_context?
         tdc = champ.present? ? champ.type_de_champ : @attached_file.record
         return tdc.send(:allowed_extensions).map { _1.delete_prefix('.') }
