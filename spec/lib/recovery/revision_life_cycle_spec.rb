@@ -15,7 +15,7 @@ describe 'Recovery::Revision::LifeCycle' do
 
     before do
       cleanup_export_file
-      procedure.publish!
+      procedure.publish!(procedure.administrateurs.first)
       exporter.dump
     end
 

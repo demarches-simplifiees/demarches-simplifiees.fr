@@ -47,7 +47,7 @@ describe ExportTemplate do
 
             type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
             type_de_champ.update(changed_tdc)
-            procedure.publish_revision!
+            procedure.publish_revision!(procedure.administrateurs.first)
           end
 
           it 'update columns with original libelle for champs with new revision' do
@@ -65,7 +65,7 @@ describe ExportTemplate do
         before do
           type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
           type_de_champ.update(changed_tdc)
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
 
           export_template.exported_columns = [
             ExportedColumn.new(libelle: 'Ça roule ?', column: procedure.find_column(label: "Ca roule ?"))

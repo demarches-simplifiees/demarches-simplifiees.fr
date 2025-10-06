@@ -32,7 +32,7 @@ describe 'administrateurs/procedures/show', type: :view do
 
   describe 'procedure is published' do
     before do
-      procedure.publish!
+      procedure.publish!(procedure.administrateurs.first)
       procedure.reload
       render
     end
@@ -49,7 +49,7 @@ describe 'administrateurs/procedures/show', type: :view do
 
   describe 'procedure is closed' do
     before do
-      procedure.publish!
+      procedure.publish!(procedure.administrateurs.first)
       procedure.close!
       procedure.reload
       render

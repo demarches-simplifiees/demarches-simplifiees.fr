@@ -327,7 +327,7 @@ describe ProcedureRevision do
 
     context 'bug with duplicated repetition child' do
       before do
-        procedure.publish!
+        procedure.publish!(procedure.administrateurs.first)
         procedure.reload
         draft.find_and_ensure_exclusive_use(last_type_de_champ.stable_id).update(libelle: 'new libelle')
         procedure.reload
@@ -911,7 +911,7 @@ describe ProcedureRevision do
       context 'with multiple revision' do
         let(:new_child) { create(:type_de_champ_text) }
         let(:new_draft) do
-          procedure.publish!
+          procedure.publish!(procedure.administrateurs.first)
           procedure.draft_revision
         end
 
@@ -1251,12 +1251,12 @@ describe ProcedureRevision do
 
     it {
       expect(type_de_champ.only_present_on_draft?).to be_truthy
-      procedure.publish!
+      procedure.publish!(procedure.administrateurs.first)
       expect(type_de_champ.only_present_on_draft?).to be_falsey
       procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
       expect(type_de_champ.only_present_on_draft?).to be_falsey
       expect(type_de_champ.revisions.count).to eq(1)
-      procedure.publish_revision!
+      procedure.publish_revision!(procedure.administrateurs.first)
       expect(type_de_champ.only_present_on_draft?).to be_falsey
       expect(type_de_champ.revisions.count).to eq(1)
     }

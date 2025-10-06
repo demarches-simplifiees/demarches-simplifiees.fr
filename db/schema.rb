@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_22_200515) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_23_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -974,6 +974,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_22_200515) do
   end
 
   create_table "procedure_revisions", force: :cascade do |t|
+    t.bigint "administrateur_id"
     t.datetime "created_at", precision: nil, null: false
     t.bigint "dossier_submitted_message_id"
     t.boolean "ineligibilite_enabled", default: false, null: false
@@ -982,6 +983,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_22_200515) do
     t.bigint "procedure_id", null: false
     t.datetime "published_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["administrateur_id"], name: "index_procedure_revisions_on_administrateur_id"
     t.index ["dossier_submitted_message_id"], name: "index_procedure_revisions_on_dossier_submitted_message_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
   end

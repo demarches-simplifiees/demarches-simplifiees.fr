@@ -86,7 +86,7 @@ describe ChampConditionalConcern do
 
     context 'when dossier not on submitted revision' do
       before {
-        procedure.publish_revision!
+        procedure.publish_revision!(procedure.administrateurs.first)
         dossier.rebase!
         dossier.reload
       }

@@ -1511,7 +1511,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       context 'procedure was closed and is re opened' do
         before do
-          procedure.publish!
+          procedure.publish!(procedure.administrateurs.first)
           procedure.update!(closing_reason: 'internal_procedure', replaced_by_procedure_id: procedure2.id)
           procedure.close!
           procedure.update!(closing_notification_brouillon: true, closing_notification_en_cours: true)

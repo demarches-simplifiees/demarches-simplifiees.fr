@@ -644,7 +644,7 @@ describe Users::DossiersController, type: :controller do
 
         before do
           procedure.draft_revision.remove_type_de_champ(champ_repetition.stable_id)
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
 
           champ_repetition.dossier.reload
           champ_repetition.dossier.rebase!
@@ -810,7 +810,7 @@ describe Users::DossiersController, type: :controller do
 
         before do
           procedure.draft_revision.remove_type_de_champ(champ_repetition.stable_id)
-          procedure.publish_revision!
+          procedure.publish_revision!(procedure.administrateurs.first)
 
           champ_repetition.dossier.reload
           champ_repetition.dossier.rebase!

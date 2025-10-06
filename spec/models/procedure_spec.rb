@@ -707,7 +707,7 @@ describe Procedure do
     context 'when publishing a new procedure' do
       before do
         travel_to(now) do
-          procedure.publish!
+          procedure.publish!(procedure.administrateurs.first)
         end
       end
 
@@ -735,7 +735,7 @@ describe Procedure do
 
       before do
         travel_to(now) do
-          procedure.publish!(canonical_procedure)
+          procedure.publish!(procedure.administrateurs.first, canonical_procedure)
         end
       end
 
@@ -853,7 +853,8 @@ describe Procedure do
   end
 
   describe "#publish_revision!" do
-    let(:procedure) { create(:procedure, :published) }
+    let(:administrateur) { create(:administrateur) }
+    let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
     let(:tdc_attributes) { { type_champ: :number, libelle: 'libelle 1' } }
     let(:publication_date) { Time.zone.local(2021, 1, 1, 12, 00, 00) }
 
@@ -863,7 +864,7 @@ describe Procedure do
 
     subject do
       travel_to(publication_date) do
-        procedure.publish_revision!
+        procedure.publish_revision!(administrateur)
       end
     end
 
@@ -880,6 +881,13 @@ describe Procedure do
       expect(procedure.draft_revision.revision_types_de_champ_public).to be_present
       expect(procedure.draft_revision.types_de_champ_public).to be_present
       expect(procedure.draft_revision.types_de_champ_public.first.libelle).to eq('libelle 1')
+    end
+
+    it 'records the publishing administrateur' do
+      subject
+
+      expect(procedure.published_revision.administrateur).to eq(administrateur)
+      expect(procedure.draft_revision.administrateur).to be_nil
     end
 
     context 'when the procedure has dossiers' do
