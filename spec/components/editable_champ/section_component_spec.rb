@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe EditableChamp::SectionComponent, type: :component do
-  include TreeableConcern
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:types_de_champ_public) { [] }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
