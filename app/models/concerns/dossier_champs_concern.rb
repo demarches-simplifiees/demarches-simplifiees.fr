@@ -338,7 +338,7 @@ module DossierChampsConcern
   end
 
   def champs_on_main_stream
-    champs_in_revision.filter(&:main_stream?)
+    champs.filter(&:main_stream?)
   end
 
   def champs_on_user_buffer_stream
