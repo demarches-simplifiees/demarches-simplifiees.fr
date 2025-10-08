@@ -7,6 +7,11 @@ module Instructeurs
     def add_filter
       statut = params[:statut]
 
+      if filter_params[:id].blank?
+        flash.alert = I18n.t('views.instructeurs.dossiers.filters.missing_column')
+        return redirect_back_or_to([:instructeur, procedure])
+      end
+
       new_filter = filtered_column_from_params
 
       if new_filter.valid?

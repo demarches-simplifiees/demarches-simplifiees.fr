@@ -136,6 +136,19 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
         expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'in', value: ['Paris', 'Lyon'] })])
       end
     end
+
+    context 'when the column id is missing' do
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { filter: { operator: 'match', value: ['Paris'] } } } }
+
+      it 'does not add the filter and sets a flash alert' do
+        expect {
+          subject
+        }.not_to change { procedure_presentation.reload.tous_filters }
+
+        expect(response).to redirect_to(instructeur_procedure_url(procedure))
+        expect(flash.alert).to eq(I18n.t('views.instructeurs.dossiers.filters.missing_column'))
+      end
+    end
   end
 
   describe '#remove_filter' do

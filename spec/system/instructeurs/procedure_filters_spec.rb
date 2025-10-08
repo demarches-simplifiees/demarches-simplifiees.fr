@@ -99,6 +99,15 @@ describe "procedure filters" do
     end
   end
 
+  scenario "shows an error when trying to add a filter without selecting a column", js: true do
+    click_on 'Sélectionner un filtre'
+    wait_until { all("#search-filter").size == 1 }
+
+    click_button 'Ajouter le filtre'
+    expect(page).to have_content("Veuillez sélectionner une colonne avant d'ajouter un filtre")
+    expect(page).not_to have_content('Filtre ajouté avec succès')
+  end
+
   describe 'with dropdown' do
     let(:types_de_champ_public) { [{ type: :drop_down_list }] }
 
