@@ -8,6 +8,7 @@ module Connections
     end
 
     def nodes
+      # test
       load_nodes
     end
 
