@@ -51,6 +51,8 @@ describe 'Signin in:' do
     end
 
     scenario 'an existing user can sign-in and fill the procedure' do
+      expect(page).to have_link('Agent', href: commencer_pro_connect_path(procedure.path))
+
       click_on 'J’ai déjà un compte'
       expect(page).to have_current_path new_user_session_path
 
