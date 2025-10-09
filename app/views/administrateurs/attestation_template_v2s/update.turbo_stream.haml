@@ -1,5 +1,5 @@
 - if @attestation_template.draft?
-  = turbo_stream.update "sticky-header", render(partial: "sticky_header")
+  = turbo_stream.update "sticky-header", render(partial: "sticky_header", locals: { procedure: @procedure, attestation_kind: @attestation_template.kind, attestation_templates_for_kind: @procedure.attestation_templates_for(@attestation_template.kind).reload })
 
 = turbo_stream.show 'autosave-notice'
 = turbo_stream.replace('autosave-notice', render(AutosaveNoticeComponent.new(success: !@attestation_template.changed?, label_scope: :attestation)))

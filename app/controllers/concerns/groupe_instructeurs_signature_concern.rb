@@ -27,9 +27,9 @@ module GroupeInstructeursSignatureConcern
       end
     end
 
-    def preview_attestation
-      attestation_template = procedure.attestation_template || procedure.build_attestation_template
-      @attestation = attestation_template.render_attributes_for({ groupe_instructeur: groupe_instructeur })
+    def preview_attestation_acceptation
+      attestation_acceptation_template = procedure.attestation_acceptation_template || procedure.build_attestation_acceptation_template
+      @attestation = attestation_acceptation_template.render_attributes_for({ groupe_instructeur: groupe_instructeur })
 
       render 'administrateurs/attestation_templates/show', formats: [:pdf]
     end
@@ -40,12 +40,12 @@ module GroupeInstructeursSignatureConcern
       redirect, preview = if self.class.module_parent_name == "Administrateurs"
         [
           :admin_procedure_groupe_instructeur_path,
-          :preview_attestation_admin_procedure_groupe_instructeur_path
+          :preview_attestation_acceptation_admin_procedure_groupe_instructeur_path
         ]
       else
         [
           :instructeur_groupe_path,
-          :preview_attestation_instructeur_groupe_path
+          :preview_attestation_acceptation_instructeur_groupe_path
         ]
       end
 

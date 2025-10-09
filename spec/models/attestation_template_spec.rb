@@ -58,7 +58,7 @@ describe AttestationTemplate, type: :model do
       create(:procedure,
         types_de_champ_public: types_de_champ,
         types_de_champ_private: types_de_champ_private,
-        attestation_template: attestation_template)
+        attestation_acceptation_template: attestation_template)
     end
     let(:etablissement) { create(:etablissement) }
     let(:types_de_champ) { [] }

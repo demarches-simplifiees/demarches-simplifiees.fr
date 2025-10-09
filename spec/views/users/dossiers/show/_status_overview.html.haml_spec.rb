@@ -77,7 +77,7 @@ describe 'users/dossiers/show/_status_overview', type: :view do
     end
 
     context 'with attestation' do
-      let(:dossier) { create :dossier, :accepte, :with_attestation }
+      let(:dossier) { create :dossier, :accepte, :with_attestation_acceptation }
       it { is_expected.to have_link(nil, href: attestation_dossier_path(dossier)) }
     end
   end
@@ -91,6 +91,14 @@ describe 'users/dossiers/show/_status_overview', type: :view do
       expect(subject).to have_text(dossier.motivation)
       expect(subject).to have_link(nil, href: messagerie_dossier_url(dossier, anchor: 'new_commentaire'))
       expect(subject).to have_link('https://prefecture-93.fr/faq', href: 'https://prefecture-93.fr/faq')
+    end
+
+    context 'with attestation' do
+      let(:dossier) { create :dossier, :refuse, :with_attestation_refus }
+
+      it do
+        is_expected.to have_link(nil, href: attestation_dossier_path(dossier))
+      end
     end
   end
 

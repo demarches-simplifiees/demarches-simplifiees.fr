@@ -3,7 +3,7 @@
 describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
   let(:attestation_template) { build(:attestation_template) }
-  let(:procedure) { create(:procedure, administrateur: admin, attestation_template: attestation_template) }
+  let(:procedure) { create(:procedure, administrateur: admin, attestation_acceptation_template: attestation_template) }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:logo2) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
@@ -110,11 +110,11 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       end
 
       it do
-        expect(procedure.attestation_template).to have_attributes(attestation_params)
-        expect(procedure.attestation_template.activated).to be true
-        expect(procedure.attestation_template.logo.download).to eq(logo2.read)
-        expect(procedure.attestation_template.signature.download).to eq(signature2.read)
-        expect(procedure.attestation_template.kind).to eq('acceptation')
+        expect(procedure.attestation_acceptation_template).to have_attributes(attestation_params)
+        expect(procedure.attestation_acceptation_template.activated).to be true
+        expect(procedure.attestation_acceptation_template.logo.download).to eq(logo2.read)
+        expect(procedure.attestation_acceptation_template.signature.download).to eq(signature2.read)
+        expect(procedure.attestation_acceptation_template.kind).to eq('acceptation')
         expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
         expect(flash.notice).to eq("Le modèle de l’attestation a bien été enregistré")
       end
@@ -134,14 +134,14 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
 
       it do
         expect(flash.alert).to be_present
-        expect(procedure.attestation_template).to be nil
+        expect(procedure.attestation_acceptation_template).to be nil
       end
     end
 
     context 'when procedure is published' do
       let(:procedure) { create(:procedure, :published, administrateur: admin) }
       let(:attestation_template) { nil }
-      let(:attestation_params) { { title: 't', body: 'b', footer: '', activated: true } }
+      let(:attestation_params) { { title: 't', body: 'b', footer: '', activated: true, kind: 'acceptation' } }
       let(:revisions_enabled) { false }
 
       before do
@@ -157,8 +157,8 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       end
 
       it do
-        expect(procedure.attestation_template).to eq(procedure.attestation_template)
-        expect(procedure.attestation_template.title).to eq('t')
+        expect(procedure.attestation_acceptation_template).to eq(procedure.attestation_acceptation_template)
+        expect(procedure.attestation_acceptation_template.title).to eq('t')
       end
     end
   end
@@ -177,16 +177,16 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       end
 
       it do
-        expect(procedure.attestation_template).to have_attributes(attestation_params)
-        expect(procedure.attestation_template.logo.download).to eq(logo2.read)
-        expect(procedure.attestation_template.signature.download).to eq(signature2.read)
+        expect(procedure.attestation_acceptation_template).to have_attributes(attestation_params)
+        expect(procedure.attestation_acceptation_template.logo.download).to eq(logo2.read)
+        expect(procedure.attestation_acceptation_template.signature.download).to eq(signature2.read)
         expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
         expect(flash.notice).to eq("Le modèle de l’attestation a bien été modifié")
       end
     end
 
     context 'when procedure is published' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }, { type: :text }, { type: :text }], administrateur: admin, attestation_template: attestation_template) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }, { type: :text }, { type: :text }], administrateur: admin, attestation_acceptation_template: attestation_template) }
       let(:dossier) {}
       let(:attestation_template) { build(:attestation_template, title: 'a') }
       let(:attestation_params) do
@@ -228,8 +228,8 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
       context 'normal' do
         it do
           expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure)
-          expect(procedure.attestation_template.title).to eq(title)
-          expect(procedure.attestation_template.body).to eq(body)
+          expect(procedure.attestation_acceptation_template.title).to eq(title)
+          expect(procedure.attestation_acceptation_template.body).to eq(body)
         end
       end
 

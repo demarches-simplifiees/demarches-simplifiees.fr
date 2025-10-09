@@ -44,7 +44,7 @@
             libelle: ExportTemplate.human_attribute_name(:export_pdf),
             prefix: 'export_template[export_pdf]' }
 
-        - if procedure.attestation_template&.activated?
+        - if procedure.attestation_acceptation_template&.activated? || procedure.attestation_refus_template&.activated?
           %h3= ExportTemplate.human_attribute_name(:attestation)
 
           = render partial: 'export_item',

@@ -50,9 +50,21 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
-  has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
-  has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
+  has_many :attestation_acceptation_templates_v2, -> { AttestationTemplate.v2.where(kind: "acceptation") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_many :attestation_refus_templates_v2, -> { AttestationTemplate.v2.where(kind: "refus") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+
+  has_one :attestation_acceptation_template,
+          -> { published.where(kind: "acceptation") },
+          class_name: "AttestationTemplate",
+          dependent: :destroy,
+          inverse_of: :procedure
+
+  has_one :attestation_refus_template,
+          -> { published.where(kind: "refus") },
+          class_name: "AttestationTemplate",
+          dependent: :destroy,
+          inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -258,7 +270,8 @@ class Procedure < ApplicationRecord
   validates_associated :refused_mail, on: :publication
   validates_associated :without_continuation_mail, on: :publication
   validates_associated :re_instructed_mail, on: :publication
-  validates_associated :attestation_template, on: :publication, if: -> { attestation_template&.activated? }
+  validates_associated :attestation_acceptation_template, on: :publication, if: -> { attestation_acceptation_template&.activated? }
+  validates_associated :attestation_refus_template, on: :publication, if: -> { attestation_refus_template&.activated? }
 
   FILE_MAX_SIZE = 20.megabytes
   validates :notice, content_type: [
@@ -482,15 +495,23 @@ class Procedure < ApplicationRecord
     touch(:whitelisted_at)
   end
 
-  def closed_mail_template_attestation_inconsistency_state
-    # As an optimization, don’t check the predefined templates (they are presumed correct)
-    if closed_mail.present?
-      tag_present = closed_mail.body.to_s.include?("--lien attestation--")
-      if attestation_template&.activated? && !tag_present
-        :missing_tag
-      elsif !attestation_template&.activated? && tag_present
-        :extraneous_tag
-      end
+  def mail_template_attestation_inconsistency_state(mail_type)
+    case mail_type
+    when :acceptation
+      mail = closed_mail
+      attestation = attestation_acceptation_template
+    when :refus
+      mail = refused_mail
+      attestation = attestation_refus_template
+    end
+
+    return if mail.nil?
+
+    tag_present = mail.body.to_s.include?('--lien attestation--')
+    if attestation&.activated? && !tag_present
+      :missing_tag
+    elsif !attestation&.activated? && tag_present
+      :extraneous_tag
     end
   end
 
@@ -757,6 +778,14 @@ class Procedure < ApplicationRecord
 
   def disallow_expert_review?
     !allow_expert_review?
+  end
+
+  def attestation_templates_for(kind)
+    public_send("attestation_#{kind}_templates_v2")
+  end
+
+  def published_attestation_template_for(kind)
+    public_send("attestation_#{kind}_template")
   end
 
   private

@@ -362,6 +362,62 @@ describe Instructeurs::DossiersController, type: :controller do
         it { expect(subject.body).to include('header-top') }
       end
 
+      context 'when the dossier does not have any attestation' do
+        it 'Notification email is sent' do
+          subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
+          subject
+        end
+      end
+
+      context 'when the dossier has an attestation' do
+        before do
+          attestation = Attestation.new
+          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes, attached?: false))
+          allow(attestation).to receive(:pdf_url).and_return('http://some_document_url')
+          allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
+        end
+
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
+
+        it 'The instructeur is sent back to the dossier page' do
+          subject
+          expect(response.body).to include('header-top')
+        end
+
+        context 'and the dossier has already an attestation' do
+          it 'should not crash' do
+            dossier.attestation = Attestation.new
+            dossier.save
+            subject
+            expect(response.body).to include('header-top')
+          end
+        end
+      end
+
+      context 'when the attestation template uses the motivation field' do
+        let(:emailable) { false }
+        let(:template) { create(:attestation_template, kind: :refus) }
+        let(:procedure) { create(:procedure, :published, :for_individual, attestation_refus_template: template, instructeurs: [instructeur]) }
+
+        subject do
+          post :terminer, params: {
+            process_action: "refuser",
+            procedure_id: procedure.id,
+            dossier_id: dossier.id,
+            dossier: { motivation: "Non" },
+            statut: 'a-suivre'
+          }, format: :turbo_stream
+        end
+
+        before do
+          expect_any_instance_of(AttestationTemplate)
+            .to receive(:attestation_for)
+            .with(have_attributes(motivation: "Non"))
+        end
+
+        it { subject }
+      end
+
       context 'with dossier in batch_operation' do
         let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
         subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream }
@@ -555,7 +611,7 @@ describe Instructeurs::DossiersController, type: :controller do
       context 'when the attestation template uses the motivation field' do
         let(:emailable) { false }
         let(:template) { create(:attestation_template) }
-        let(:procedure) { create(:procedure, :published, :for_individual, attestation_template: template, instructeurs: [instructeur]) }
+        let(:procedure) { create(:procedure, :published, :for_individual, attestation_acceptation_template: template, instructeurs: [instructeur]) }
 
         subject do
           post :terminer, params: {

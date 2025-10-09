@@ -574,7 +574,7 @@ Rails.application.routes.draw do
             post 'add_instructeur'
             delete 'remove_instructeur'
             post 'add_signature'
-            get 'preview_attestation'
+            get 'preview_attestation_acceptation'
           end
         end
 
@@ -733,7 +733,7 @@ Rails.application.routes.draw do
           get 'reaffecter_dossiers'
           post 'reaffecter'
           post 'add_signature'
-          get 'preview_attestation'
+          get 'preview_attestation_acceptation'
         end
 
         collection do

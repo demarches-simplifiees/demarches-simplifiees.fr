@@ -46,10 +46,11 @@ module Instructeurs
     end
 
     def apercu_attestation
-      send_data dossier.attestation_template.send(:build_pdf, dossier),
-                filename: 'attestation.pdf',
-                type: 'application/pdf',
-                disposition: 'inline'
+      attestation_kind = params[:attestation_kind]
+      send_data dossier.attestation_template_for(attestation_kind).send(:build_pdf, dossier),
+                  filename: 'attestation.pdf',
+                  type: 'application/pdf',
+                  disposition: 'inline'
     end
 
     def bilans_bdf
