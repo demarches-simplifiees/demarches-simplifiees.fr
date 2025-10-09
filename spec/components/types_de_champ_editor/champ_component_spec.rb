@@ -107,4 +107,25 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
       end
     end
   end
+
+  describe 'ACCEPTED_TYPES' do
+    it 'contains expected conversions' do
+      expect(described_class::ACCEPTED_TYPES).to include(
+        "checkbox" => ["checkbox", "text"],
+        "civilite" => ["civilite", "textarea"],
+        "date" => ["date", "text"],
+        "datetime" => ["datetime", "text"],
+        "decimal_number" => ["decimal_number", "text"],
+        "drop_down_list" => ["drop_down_list", "text"],
+        "email" => ["email", "textarea"],
+        "formatted" => ["formatted", "text"],
+        "integer_number" => ["integer_number", "text"],
+        "multiple_drop_down_list" => ["multiple_drop_down_list", "text"],
+        "phone" => ["phone", "textarea"],
+        "text" => ["text", "formatted"],
+        "textarea" => ["textarea", "formatted"],
+        "yes_no" => ["yes_no", "text"]
+      )
+    end
+  end
 end
