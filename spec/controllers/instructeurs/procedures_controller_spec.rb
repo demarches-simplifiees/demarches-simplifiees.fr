@@ -88,187 +88,78 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
 
         it 'assigns procedures visible to the instructeur' do
-          expect(assigns(:procedures)).to include(procedure_draft, procedure_published, procedure_closed)
-          expect(assigns(:procedures)).not_to include(procedure_draft_discarded, procedure_closed_discarded, procedure_not_assigned)
+          expect(assigns(:all_procedures)).to match_array([procedure_draft, procedure_published, procedure_closed])
+          expect(assigns(:procedures)).to match_array([procedure_published])
         end
       end
+    end
+  end
 
-      context "with dossiers" do
-        let(:procedure) { create(:procedure, :published, :expirable) }
-        let(:dossier) { create(:dossier, state: state, procedure: procedure) }
+  describe "#counters" do
+    let(:instructeur) { create(:instructeur) }
+    subject { get :counters, format: :turbo_stream }
+
+    context "when not logged in" do
+      before { subject }
+      it { expect(response).to redirect_to(new_user_session_path) }
+    end
+
+    context "when logged in" do
+      before { sign_in(instructeur.user) }
+
+      it { expect(response).to have_http_status(:ok) }
+
+      context "with procedures and dossiers" do
+        let(:procedure_published) { create(:procedure, :published) }
+        let(:procedure_with_dossier) { create(:procedure, :published) }
+        let(:procedure_draft) { create(:procedure) }
+        let(:dossier_en_cours) do
+          create(:dossier, :en_construction,
+                 procedure: procedure_with_dossier,
+                 groupe_instructeur: procedure_with_dossier.defaut_groupe_instructeur)
+        end
 
         before do
-          instructeur.groupe_instructeurs << procedure.defaut_groupe_instructeur
-          dossier
+          [procedure_published, procedure_with_dossier, procedure_draft].each_with_index do |procedure, idx|
+            instructeur.groupe_instructeurs << procedure.defaut_groupe_instructeur
+
+            # #counters expects #index have been run before, which create instructeurs_procedure
+            create(:instructeurs_procedure, instructeur:, procedure:, position: idx + 1)
+          end
+
+          create(:dossier_notification, dossier: dossier_en_cours, instructeur:, notification_type: "dossier_modifie")
         end
 
-        context "with brouillon state" do
-          let(:state) { Dossier.states.fetch(:brouillon) }
-          before { subject }
+        it 'assigns counters, notifications, default statut' do
+          subject
 
-          it "assign values" do
-            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil)
-            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil)
-            expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil)
-            expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil)
-            expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(nil)
+          expect(assigns(:procedures)).to match_array([procedure_published, procedure_with_dossier])
+          expect(assigns(:counters).groupes_instructeurs_ids).to match_array(instructeur.groupe_instructeurs.ids)
 
-            expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(0)
-            expect(assigns(:all_dossiers_counts)['suivis']).to eq(0)
-            expect(assigns(:all_dossiers_counts)['traites']).to eq(0)
-            expect(assigns(:all_dossiers_counts)['tous']).to eq(0)
-            expect(assigns(:all_dossiers_counts)['expirant']).to eq(0)
-          end
-        end
+          expect(assigns(:procedure_ids_with_notifications)).to eq({ a_suivre: [procedure_with_dossier.id], suivis: [], traites: [] })
+          expect(assigns(:notifications_counts_per_procedure)).to eq({ procedure_with_dossier.id => { "dossier_modifie" => 1 } })
 
-        context "with not draft state on multiple procedures" do
-          let(:procedure2) { create(:procedure, :published, :expirable) }
-          let(:procedure3) { create(:procedure, :closed, :expirable) }
-          let(:procedure4) { create(:procedure, :closed, :expirable) }
-          let(:state) { Dossier.states.fetch(:en_construction) }
-
-          before do
-            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction))
-            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), hidden_by_user_at: 1.hour.ago)
-            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction))
-
-            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true)
-            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true,
-                             hidden_by_administration_at: 1.day.ago)
-
-            instructeur.groupe_instructeurs << procedure2.defaut_groupe_instructeur
-            create(:dossier, :followed, procedure: procedure2, state: Dossier.states.fetch(:en_construction))
-            create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:accepte))
-            instructeur.followed_dossiers << create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:en_instruction))
-
-            create(:dossier, procedure: procedure,
-                             state: Dossier.states.fetch(:sans_suite),
-                             processed_at: 8.months.ago).tap(&:update_expired_at) # counted as expirable
-            create(:dossier, procedure: procedure,
-                             state: Dossier.states.fetch(:sans_suite),
-                             processed_at: 8.months.ago,
-                             hidden_by_administration_at: 1.day.ago) # not counted as expirable since its removed by instructeur
-            create(:dossier, procedure: procedure,
-                             state: Dossier.states.fetch(:sans_suite),
-                             processed_at: 8.months.ago,
-                             hidden_by_user_at: 1.day.ago).tap(&:update_expired_at) # counted as expirable because even if user remove it, instructeur see it
-
-            instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
-            create(:dossier, :followed, procedure: procedure3, state: Dossier.states.fetch(:en_construction))
-            create(:dossier, procedure: procedure3, state: Dossier.states.fetch(:sans_suite))
-
-            instructeur.groupe_instructeurs << procedure4.defaut_groupe_instructeur
-            create(:dossier, procedure: procedure4, state: Dossier.states.fetch(:sans_suite))
-            subject
-          end
-
-          it "assign values" do
-            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(5)
-            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3)
-            expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil)
-            expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(2)
-            expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(2)
-
-            expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3)
-            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil)
-            expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1)
-            expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1)
-
-            expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2)
-
-            expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(3 + 0)
-            expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1)
-            expect(assigns(:all_dossiers_counts)['traites']).to eq(2 + 1 + 1 + 1)
-            expect(assigns(:all_dossiers_counts)['tous']).to eq(5 + 3 + 2 + 1)
-            expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0)
-
-            expect(assigns(:procedures_en_cours)).to match_array([procedure2, procedure, procedure3])
-            expect(assigns(:procedures_en_cours_count)).to eq(3)
-
-            expect(assigns(:procedures_closes)).to eq([procedure4])
-            expect(assigns(:procedures_closes_count)).to eq(1)
-          end
-        end
-
-        context 'with not draft state on discarded procedure' do
-          let(:discarded_procedure) { create(:procedure, :discarded, :expirable) }
-          let(:state) { Dossier.states.fetch(:en_construction) }
-          before do
-            create(:dossier, procedure: discarded_procedure, state: Dossier.states.fetch(:en_construction))
-            instructeur.groupe_instructeurs << discarded_procedure.defaut_groupe_instructeur
-            subject
-          end
-
-          it "assign values" do
-            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(1)
-            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(1)
-
-            expect(assigns(:dossiers_count_per_procedure)[discarded_procedure.id]).to be_nil
-
-            expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(1)
-          end
+          expect(assigns(:statut)).to eq('en-cours')
         end
       end
 
-      context "with a routed procedure" do
-        let!(:procedure) { create(:procedure, :published) }
-        let!(:gi_p1_1) { procedure.defaut_groupe_instructeur }
-        let!(:gi_p1_2) { GroupeInstructeur.create(label: '2', procedure: procedure) }
+      context "with specific statut parameter" do
+        subject { get :counters, params: { statut: 'brouillons' }, format: :turbo_stream }
 
-        context 'with multiple dossiers en construction on each group' do
-          before do
-            alternate_gis = 0.upto(20).map { |i| i.even? ? gi_p1_1 : gi_p1_2 }
+        let(:procedure_draft) { create(:procedure) }
+        let(:procedure_published) { create(:procedure, :published) }
 
-            alternate_gis.take(4).each { |gi| create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi) }
+        before do
+          instructeur.groupe_instructeurs << procedure_draft.defaut_groupe_instructeur
+          instructeur.groupe_instructeurs << procedure_published.defaut_groupe_instructeur
+        end
 
-            alternate_gis.take(6).each do |gi|
-              instructeur.followed_dossiers << create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), groupe_instructeur: gi)
-            end
+        it 'uses the provided statut' do
+          subject
 
-            alternate_gis.take(10).each { |gi| create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), groupe_instructeur: gi) }
-            alternate_gis.take(14).each { |gi| create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true, groupe_instructeur: gi) }
-          end
+          expect(assigns(:statut)).to eq('brouillons')
 
-          context 'when an instructeur belongs to the 2 gi' do
-            before do
-              instructeur.groupe_instructeurs << gi_p1_1 << gi_p1_2
-
-              subject
-            end
-
-            it "assign values" do
-              expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(4)
-              expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(6)
-              expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(10)
-              expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4 + 6 + 10)
-
-              expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(4)
-              expect(assigns(:all_dossiers_counts)['suivis']).to eq(6)
-              expect(assigns(:all_dossiers_counts)['traites']).to eq(10)
-              expect(assigns(:all_dossiers_counts)['tous']).to eq(4 + 6 + 10)
-            end
-          end
-
-          context 'when an instructeur only belongs to one of them gi' do
-            before do
-              instructeur.groupe_instructeurs << gi_p1_1
-
-              subject
-            end
-
-            it "assign values" do
-              expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(2)
-              # An instructeur cannot follow a dossier which belongs to another groupe
-              expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(3)
-              expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(5)
-              expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2 + 3 + 5)
-
-              expect(assigns(:all_dossiers_counts)['a-suivre']).to eq(2)
-              expect(assigns(:all_dossiers_counts)['suivis']).to eq(3)
-              expect(assigns(:all_dossiers_counts)['traites']).to eq(5)
-              expect(assigns(:all_dossiers_counts)['tous']).to eq(2 + 3 + 5)
-            end
-          end
+          expect(assigns(:procedures)).to match_array([procedure_draft])
         end
       end
     end
