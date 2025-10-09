@@ -5,7 +5,7 @@ module Instructeurs
     include InstructeurProcedureConcern
     include ProConnectSessionConcern
 
-    before_action :ensure_ownership!, except: [:index, :synthese, :order_positions, :update_order_positions, :select_procedure]
+    before_action :ensure_ownership!, except: [:index, :counters, :synthese, :order_positions, :update_order_positions, :select_procedure]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
     after_action :mark_latest_revision_as_seen, only: [:history]
 
@@ -26,55 +26,61 @@ module Instructeurs
       # .uniq is much more faster than a distinct on a joint column
       procedures_dossiers_en_cours = dossiers.joins(:revision).en_cours.pluck(ProcedureRevision.arel_table[:procedure_id]).uniq
 
-      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
+      @all_procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
       publiees_or_closes_with_dossiers_en_cours = all_procedures_for_listing.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
       ensure_instructeur_procedures_for(publiees_or_closes_with_dossiers_en_cours)
-      @all_procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur)
-      @procedures_en_cours = @all_procedures_en_cours.page(params[:page]).per(ITEMS_PER_PAGE)
       closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
-      @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_draft = all_procedures_for_listing.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+
       @procedures_en_cours_count = publiees_or_closes_with_dossiers_en_cours.count
       @procedures_draft_count = all_procedures_for_listing.brouillons.count
       @procedures_closes_count = closes_with_no_dossier_en_cours.count
 
-      @statut = params[:statut]
-      @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
+      @statut = params[:statut].presence || 'en-cours'
+      @procedures = collection_scope_for_statut(
+        @statut,
+        publiees_or_closes_with_dossiers_en_cours,
+        all_procedures_for_listing.brouillons,
+        closes_with_no_dossier_en_cours
+      ).includes(:procedure_paths)
 
-      @collection = case statut
-      when 'en-cours'
-        @procedures_en_cours
-      when 'brouillons'
-        @collection = @procedures_draft
-      when 'archivees'
-        @collection = @procedures_closes
-      end
-
-      @dossiers_count_per_procedure = {}
-      @dossiers_a_suivre_count_per_procedure = {}
-      @dossiers_termines_count_per_procedure = {}
-      @dossiers_expirant_count_per_procedure = {}
-      @followed_dossiers_count_per_procedure = {}
-
-      @all_dossiers_counts = {}
-
-      @procedure_ids_with_notifications = { a_suivre: [], suivis: [], traites: [] } # DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
-      @notifications_counts_per_procedure = {}
-
-      if turbo_frame_request?
-        groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
-        compute_dossiers_count(groupe_ids)
-
-        @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
-        @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
-
-        render partial: 'procedures_list'
+      if current_administrateur.present?
+        @procedures = @procedures.includes(:administrateurs_procedures)
       end
     end
 
+    def counters
+      all_procedures = current_instructeur.procedures.kept
+      procedures_dossiers_en_cours = current_instructeur.dossiers
+        .joins(groupe_instructeur: :procedure)
+        .where(procedures: { hidden_at: nil })
+        .joins(:revision)
+        .en_cours
+        .pluck(ProcedureRevision.arel_table[:procedure_id])
+        .uniq
+
+      @statut = params[:statut].presence || 'en-cours'
+      publiees_or_closes_with_dossiers_en_cours = all_procedures.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
+      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
+
+      @procedures = collection_scope_for_statut(@statut,
+                                                publiees_or_closes_with_dossiers_en_cours,
+                                                all_procedures.brouillons,
+                                                closes_with_no_dossier_en_cours)
+
+      @counters = InstructeursProceduresCountersService.new(
+        procedures: all_procedures,
+        instructeur: current_instructeur
+      ).call
+
+      @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(@counters.groupes_instructeurs_ids, current_instructeur)
+      @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(@counters.groupes_instructeurs_ids, current_instructeur)
+    end
+
     def synthese
-      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
-      compute_dossiers_count(groupe_ids)
+      @counters = InstructeursProceduresCountersService.new(
+        procedures: current_instructeur.procedures.kept,
+        instructeur: current_instructeur
+      ).call
     end
 
     def order_positions
@@ -540,35 +546,6 @@ module Instructeurs
       "exports_#{@procedure.id}_seen_at"
     end
 
-    def compute_dossiers_count(groupe_ids)
-      dossiers = current_instructeur.dossiers
-        .joins(groupe_instructeur: :procedure)
-        .where(procedures: { hidden_at: nil })
-
-      @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.by_statut('a-suivre').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_termines_count_per_procedure = dossiers.by_statut('traites').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers.by_statut('expirant').group('groupe_instructeurs.procedure_id').reorder(nil).count
-
-      @followed_dossiers_count_per_procedure = current_instructeur
-        .followed_dossiers
-        .joins(:groupe_instructeur)
-        .en_cours
-        .where(groupe_instructeur_id: groupe_ids)
-        .visible_by_administration
-        .group('groupe_instructeurs.procedure_id')
-        .reorder(nil)
-        .count
-
-      @all_dossiers_counts = {
-        'a-suivre' => @dossiers_a_suivre_count_per_procedure.sum { |_, v| v },
-        'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
-        'traites' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
-        'tous' => @dossiers_count_per_procedure.sum { |_, v| v },
-        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
-      }
-    end
-
     def ordered_procedure_ids_params
       params.require(:ordered_procedure_ids)
     end
@@ -577,6 +554,22 @@ module Instructeurs
       cache = Cache::ProcedureDossierPagination.new(procedure_presentation:, statut:)
 
       cache.save_context(ids: @filtered_sorted_paginated_ids, incoming_page: params[:page])
+    end
+
+    def collection_scope_for_statut(statut, publiees_or_closes_with_dossiers_en_cours, procedures_draft, closes_with_no_dossier_en_cours)
+      scope = case statut
+      when 'en-cours'
+        publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur)
+      when 'brouillons'
+        procedures_draft.order(created_at: :desc)
+      when 'archivees'
+        closes_with_no_dossier_en_cours.order(created_at: :desc)
+      end
+
+      scope
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .strict_loading!
     end
 
     def badge_notification_params

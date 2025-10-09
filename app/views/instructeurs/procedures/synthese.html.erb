@@ -1,6 +1,6 @@
 <turbo-frame id="synthese-content">
   <p>
-    <% @all_dossiers_counts.each do |tab_key, dossier_count| %>
+    <% @counters.all_dossiers_counts.each do |tab_key, dossier_count| %>
       <% if dossier_count.positive? %>
         <span class="fr-badge">
           <span class="flex column align-center">
