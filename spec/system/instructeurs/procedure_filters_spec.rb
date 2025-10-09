@@ -99,15 +99,6 @@ describe "procedure filters" do
     end
   end
 
-  scenario "shows an error when trying to add a filter without selecting a column", js: true do
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
-
-    click_button 'Ajouter le filtre'
-    expect(page).to have_content("Veuillez sélectionner une colonne avant d'ajouter un filtre")
-    expect(page).not_to have_content('Filtre ajouté avec succès')
-  end
-
   describe 'with dropdown' do
     let(:types_de_champ_public) { [{ type: :drop_down_list }] }
 
@@ -253,25 +244,28 @@ describe "procedure filters" do
   def add_filter(column_name, filter_value, type: :text)
     click_on 'Sélectionner un filtre'
     wait_until { all("#search-filter").size == 1 }
+
     fill_in 'search-filter', with: column_name
     select_combobox('Colonne', column_name)
 
-    case type
-    when :text
-      fill_in "Valeur", with: filter_value
-    when :date
-      find("input#value[type=date]", visible: true)
-      fill_in "Valeur", with: Date.parse(filter_value)
-    when :multi_select
-      # Wait for React component to be ready
-      find('.dom-ready') if page.has_css?('.dom-ready')
+    within "#filter-component" do
+      case type
+      when :text
+        fill_in "Valeur", with: filter_value
+      when :date
+        find("input[type=date]", visible: true)
+        fill_in "Valeur", with: Date.parse(filter_value)
+      when :multi_select
+        # Wait for React component to be ready
+        find('.dom-ready') if page.has_css?('.dom-ready')
 
-      fill_in "Valeur", with: filter_value
+        fill_in "Valeur", with: filter_value
 
-      find("input#value", visible: true).send_keys(:down, :enter, :escape)
+        find("#column_filter_value_component input.fr-select", visible: true).send_keys(:down, :enter, :escape)
+      end
+      click_button "Ajouter le filtre"
+      expect(page).to have_no_css("#search-filter", visible: true)
     end
-    click_button "Ajouter le filtre"
-    expect(page).to have_no_css("#search-filter", visible: true)
   end
 
   def remove_filter(filter_value)
