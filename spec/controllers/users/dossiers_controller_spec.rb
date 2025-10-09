@@ -1619,6 +1619,38 @@ describe Users::DossiersController, type: :controller do
         end
       end
     end
+
+    context 'when the champ is an autocomplete with prefillable champs' do
+      render_views
+      let(:referentiel) { create(:api_referentiel, :exact_match, :with_exact_match_response) }
+      let(:referentiel_stable_id) { 1 }
+      let(:external_id) { "PG46YY6YWCX8" }
+      let(:types_de_champ_public) do
+        [
+          {
+            type: :referentiel,
+            referentiel: referentiel,
+            stable_id: referentiel_stable_id
+          }
+        ]
+      end
+      let (:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            champs_public_attributes: {
+              first_champ.public_id => {
+                external_id:
+              }
+            }
+          }
+        }
+      end
+
+      it 'includes enqueues job' do
+        expect { subject }.to have_enqueued_job(ChampFetchExternalDataJob)
+      end
+    end
   end
 
   describe '#index' do
