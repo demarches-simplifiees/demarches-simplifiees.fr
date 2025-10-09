@@ -1,0 +1,27 @@
+<% procedure = @procedure || @dossier&.procedure || nil %>
+
+<% content_for :content do %>
+  <div class="fr-container fr-mt-5w">
+    <div class="fr-grid-row">
+      <div class="fr-col-12 fr-col-md-8 fr-col-offset-md-2">
+        <div class="procedure-preview fr-mb-5w">
+          <%= render partial: 'shared/procedure_description', locals: { procedure: } %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% content_for :footer do %>
+  <% if procedure.present? %>
+    <%= render partial: 'users/procedure_footer', locals: { procedure:, dossier: @dossier } %>
+  <% else %>
+    <%= render partial: "root/footer" %>
+  <% end %>
+<% end %>
+
+<% if procedure.present? %>
+  <% content_for(:pro_connect_path, commencer_pro_connect_path(procedure.path)) %>
+<% end %>
+
+<%= render template: 'layouts/application' %>
