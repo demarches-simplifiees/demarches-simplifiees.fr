@@ -67,4 +67,5 @@
 
   - types_de_champ = dossier.revision.types_de_champ_public
   - if types_de_champ.any? || dossier.procedure.routing_enabled?
-    = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
+    - champs = params[:submitted].present? ? dossier.submitted_tree : dossier.link_parent_children!.filter(&:public?)
+    = render Dossiers::ChampsRowsShowComponent.new(champs: champs, seen_at: demande_seen_at, profile: profile)

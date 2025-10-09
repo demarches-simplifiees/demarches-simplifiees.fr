@@ -1,5 +1,4 @@
 - if @row_id.present?
-  = fields_for @champ.input_name, @champ do |form|
-    = turbo_stream.append dom_id(@champ, :rows), render(EditableChamp::RepetitionRowComponent.new(form: form, dossier: @champ.dossier, type_de_champ: @champ.type_de_champ, row_id: @row_id, row_number: @row_number))
-    - if @first_champ_id
-      = turbo_stream.focus(@first_champ_id)
+  = turbo_stream.append dom_id(@champ, :rows), render(EditableChamp::RepetitionRowComponent.new(row: @row, row_number: @row_number))
+  - if @first_champ_id
+    = turbo_stream.focus(@first_champ_id)

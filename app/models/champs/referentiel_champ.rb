@@ -59,12 +59,12 @@ class Champs::ReferentielChamp < Champ
   def prefillable_champs
     elligible_stable_ids = prefillable_stable_ids
     if public?
-      dossier.project_champs_public
+      dossier.link_parent_children!.filter(&:public?)
     else
-      dossier.project_champs_private
+      dossier.link_parent_children!.filter(&:private?)
     end.filter do |champ|
       if champ.repetition?
-        dossier.revision.children_of(champ.type_de_champ).any? { _1.stable_id.in?(elligible_stable_ids) }
+        champ.new_rows.flat_map(&:children).any? { _1.stable_id.in?(elligible_stable_ids) }
       else
         champ.stable_id.in?(elligible_stable_ids)
       end

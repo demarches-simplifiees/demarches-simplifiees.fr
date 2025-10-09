@@ -5,6 +5,11 @@ class Champs::RepetitionController < Champs::ChampController
     @row_id = @champ.add_row(updated_by: current_user.email)
     @first_champ_id = @champ.focusable_input_id
     @row_number = @row_id.nil? ? 0 : @champ.row_ids.find_index(@row_id) + 1
+
+    dossier = @champ.dossier
+    dossier.link_parent_children!
+
+    @row = dossier.champs.find { it.repetition? && it.row_id == @row_id }
     @champ.update_timestamps
   end
 

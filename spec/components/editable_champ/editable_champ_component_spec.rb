@@ -7,13 +7,13 @@ describe EditableChamp::EditableChampComponent, type: :component do
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
   let(:champ) { (dossier.project_champs_public + dossier.project_champs_private).first }
 
-  let(:component) { described_class.new(form: nil, champ:) }
+  let(:component) { described_class.new(champs: [champ]) }
 
   describe "editable_champ_controller" do
     let(:controllers) { [] }
     let(:data) { controllers.join(' ') }
 
-    subject { component.send(:stimulus_controller) }
+    subject { component.send(:stimulus_controller, champ:) }
 
     context 'when an editable public champ' do
       let(:controllers) { ['autosave'] }

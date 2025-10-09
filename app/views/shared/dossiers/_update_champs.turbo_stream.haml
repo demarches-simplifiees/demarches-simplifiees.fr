@@ -3,12 +3,12 @@
 - if to_hide.present?
   = turbo_stream.hide_all(to_hide)
 - to_update.each do |champ|
-  = fields_for champ.input_name, champ do |form|
-    - if champ.refresh_after_update?
-      = turbo_stream.replace champ.input_group_id do
-        = render EditableChamp::EditableChampComponent.new champ:, form:
-    - else
-      = turbo_stream.update champ.labelledby_id do
+  - if champ.refresh_after_update?
+    = turbo_stream.replace champ.input_group_id do
+      = render EditableChamp::EditableChampComponent.new champs: [champ]
+  - else
+    = turbo_stream.update champ.labelledby_id do
+      = fields_for champ.input_name, champ do |form|
         = render EditableChamp::ChampLabelContentComponent.new champ:, form:
 
 = turbo_stream.remove_all(".editable-champ + .spinner-removable")
