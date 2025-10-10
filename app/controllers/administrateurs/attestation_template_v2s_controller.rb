@@ -8,7 +8,7 @@ module Administrateurs
 
     def show
       preview_service = DossierPreviewService.new(procedure: @procedure, current_user:)
-      attributes = @attestation_template.render_attributes_for(dossier: preview_service.dossier)
+      attributes = @attestation_template.render_attributes_for(dossier: preview_service.dossier, is_admin: true)
 
       @body = attributes.fetch(:body)
       @signature = attributes.fetch(:signature)

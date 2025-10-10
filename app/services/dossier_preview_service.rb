@@ -3,9 +3,10 @@
 class DossierPreviewService
   include Rails.application.routes.url_helpers
 
-  def initialize(procedure:, current_user:)
+  def initialize(procedure:, current_user:, groupe_instructeur: procedure.defaut_groupe_instructeur)
     @procedure = procedure
     @user = current_user
+    @groupe_instructeur = groupe_instructeur
   end
 
   def dossier
@@ -18,14 +19,15 @@ class DossierPreviewService
 
   private
 
-  attr_reader :procedure, :user
+  attr_reader :procedure, :user, :groupe_instructeur
 
   def fetch_or_build_dossier
     dossier = Dossier
       .create_with(autorisation_donnees: true)
       .find_or_initialize_by(
         revision: procedure.active_revision,
-        user: user,
+        user:,
+        groupe_instructeur:,
         for_procedure_preview: true,
         state: Dossier.states.fetch(:brouillon)
       )

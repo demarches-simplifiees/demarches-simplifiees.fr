@@ -34,6 +34,27 @@ module GroupeInstructeursSignatureConcern
       render 'administrateurs/attestation_templates/show', formats: [:pdf]
     end
 
+    def preview_attestation_acceptation
+      attestation_acceptation_template = procedure.attestation_acceptation_template || procedure.build_attestation_acceptation_template
+
+      if attestation_acceptation_template.version == 2
+        preview_service = DossierPreviewService.new(procedure:, current_user:, groupe_instructeur:)
+        attributes = attestation_acceptation_template.render_attributes_for(dossier: preview_service.dossier)
+
+        @body = attributes.fetch(:body)
+        @signature = attributes.fetch(:signature)
+        @attestation_template = attestation_acceptation_template
+
+        html = render_to_string('/administrateurs/attestation_template_v2s/show', layout: 'attestation', formats: [:html])
+        pdf = WeasyprintService.generate_pdf(html, procedure_id: procedure.id, path: request.path, user_id: current_user.id)
+
+        send_data(pdf, filename: 'attestation.pdf', type: 'application/pdf', disposition: 'inline')
+      else
+        @attestation = attestation_acceptation_template.render_attributes_for({ groupe_instructeur: groupe_instructeur })
+        render 'administrateurs/attestation_templates/show', formats: [:pdf]
+      end
+    end
+
     private
 
     def handle_redirect(status)

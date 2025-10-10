@@ -120,11 +120,12 @@ class AttestationTemplate < ApplicationRecord
   def render_attributes_for(params = {})
     groupe_instructeur = params[:groupe_instructeur]
     groupe_instructeur ||= params[:dossier]&.groupe_instructeur
+    is_admin = params[:is_admin]
 
     base_attributes = {
       created_at: Time.current,
       footer: params.fetch(:footer, footer),
-      signature: signature_to_render(groupe_instructeur)
+      signature: signature_to_render(groupe_instructeur, is_admin)
     }
 
     if version == 2
@@ -184,8 +185,8 @@ class AttestationTemplate < ApplicationRecord
     end
   end
 
-  def signature_to_render(groupe_instructeur)
-    if groupe_instructeur&.signature&.attached?
+  def signature_to_render(groupe_instructeur, is_admin)
+    if groupe_instructeur&.signature&.attached? && !is_admin
       groupe_instructeur.signature
     else
       signature
