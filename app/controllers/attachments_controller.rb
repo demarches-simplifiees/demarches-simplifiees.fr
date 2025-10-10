@@ -4,6 +4,7 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_logged_user!
   include ActiveStorage::SetBlob
   before_action :set_attachment
+  before_action :ensure_legitimate_access, only: :destroy
 
   def show
     @user_can_edit = cast_bool(params[:user_can_edit])
@@ -41,6 +42,12 @@ class AttachmentsController < ApplicationController
   end
 
   private
+
+  def ensure_legitimate_access
+    if champ?
+      head :not_found if !current_user.owns_or_invite?(champ.dossier)
+    end
+  end
 
   def set_attachment
     @attachment = @blob.attachments.find(params[:id])

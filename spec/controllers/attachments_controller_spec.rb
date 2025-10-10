@@ -94,6 +94,16 @@ describe AttachmentsController, type: :controller do
       end
     end
 
+    context 'when authenticated as another user' do
+      let(:other_user) { create(:user) }
+      before { sign_in(other_user) }
+
+      it 'doesn’t remove the attachment' do
+        is_expected.to have_http_status(404)
+        expect(champ.reload.piece_justificative_file.attached?).to be(true)
+      end
+    end
+
     context 'when not authenticated' do
       it 'doesn’t remove the attachment' do
         is_expected.to redirect_to(new_user_session_path)
