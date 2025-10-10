@@ -54,7 +54,16 @@ module Administrateurs
     private
 
     def find_mail_template_by_slug(slug)
-      @procedure.mail_templates.find { |template| template.class.const_get(:SLUG) == slug }
+      mail_template_map = {
+        Mails::InitiatedMail::SLUG => :passer_en_construction_email_template,
+        Mails::ReceivedMail::SLUG => :passer_en_instruction_email_template,
+        Mails::ClosedMail::SLUG => :accepter_email_template,
+        Mails::RefusedMail::SLUG => :refuser_email_template,
+        Mails::WithoutContinuationMail::SLUG => :classer_sans_suite_email_template,
+        Mails::ReInstructedMail::SLUG => :repasser_en_instruction_email_template
+      }
+
+      @procedure.send(mail_template_map.fetch(slug) { raise ActiveRecord::RecordNotFound })
     end
 
     def update_params
