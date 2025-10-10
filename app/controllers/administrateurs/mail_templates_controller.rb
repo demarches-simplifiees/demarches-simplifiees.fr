@@ -33,19 +33,19 @@ module Administrateurs
         mail_template.rich_body = mail_template.body
 
         @mail_template = mail_template
+        @preview_service = DossierPreviewService.new(procedure: @procedure, current_user:)
         render :edit
       end
     end
 
     def preview
       mail_template = find_mail_template_by_slug(params[:id])
-      dossier = @procedure.active_revision.dossier_for_preview(current_user)
-
-      @dossier = dossier
+      @preview_service = DossierPreviewService.new(procedure: @procedure, current_user:)
+      @dossier = @preview_service.dossier
       @logo_url = @procedure.logo_url
       @service = @procedure.service
-      @rendered_template = sanitize(mail_template.body_for_dossier(dossier), scrubber: Sanitizers::MailScrubber.new)
-      @actions = mail_template.actions_for_dossier(dossier)
+      @rendered_template = sanitize(mail_template.body_for_dossier(@dossier), scrubber: Sanitizers::MailScrubber.new)
+      @actions = mail_template.actions_for_dossier(@dossier)
 
       render(template: 'notification_mailer/send_notification', layout: 'mailers/notifications_layout')
     end
