@@ -40,7 +40,6 @@
     .selected-tag.fr-mb-2w
       - @filter.tags.each do |tag|
         = link_to tag, all_admin_procedures_path(@filter.without(:tags, tag)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-        - params[:tags].delete(tag)
   - if @filter.template?
     .selected-template.fr-mb-2w
       = link_to "Modèle DS", all_admin_procedures_path(@filter.without(:template)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
