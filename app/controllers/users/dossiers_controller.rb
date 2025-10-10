@@ -632,15 +632,15 @@ module Users
       # We save the dossier without validating fields, and if it is successful and the client
       # requests it, we ask for field validation errors.
       if Dossier.no_touching { champ.save }
-        if dossier.brouillon? && champ_changed
-          champ.update_timestamps
+        if champ_changed
+          champ.update_timestamps if dossier.brouillon?
 
           if champ.uses_external_data?
             champ.reset_external_data! if champ.may_reset_external_data?
             champ.fetch_later! if champ.may_fetch_later?
           end
 
-          if champ.used_by_routing_rules?
+          if champ.used_by_routing_rules? && dossier.brouillon?
             @update_contact_information = true
             RoutingEngine.compute(dossier)
           end
