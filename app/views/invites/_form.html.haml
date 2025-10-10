@@ -8,9 +8,8 @@
           %small
             = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission', email: invite.email) }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline", id: "dossier-invite-delete-#{index}", "aria-labelledby": "dossier-invite-delete-#{index} dossier-invite-#{index}"
 
-    - if dossier.brouillon?
-      .fr-alert.fr-alert--info.fr-mb-4w
-        %p= t('views.invites.form.submit_dossier_yourself')
+    .fr-alert.fr-alert--info.fr-mb-4w
+      %p= t('views.invites.form.submit_dossier_yourself')
 
   %hr.fr-hr
 
