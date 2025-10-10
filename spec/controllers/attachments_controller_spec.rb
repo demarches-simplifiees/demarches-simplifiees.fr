@@ -102,6 +102,17 @@ describe AttachmentsController, type: :controller do
         is_expected.to have_http_status(404)
         expect(champ.reload.piece_justificative_file.attached?).to be(true)
       end
+
+      context 'when trying to delete an attachment which is not a champ' do
+        let(:procedure) { create(:procedure, :with_logo, types_de_champ_public: [{ type: :text }]) }
+        let(:attachment) { procedure.logo.attachments.first }
+        let(:signed_id) { attachment.blob.signed_id }
+
+        it 'doesn’t remove the attachment' do
+          is_expected.to have_http_status(404)
+          expect(attachment.reload).to be_present
+        end
+      end
     end
 
     context 'when not authenticated' do

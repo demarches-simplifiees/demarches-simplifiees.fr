@@ -44,8 +44,8 @@ class AttachmentsController < ApplicationController
   private
 
   def ensure_legitimate_access
-    if champ?
-      head :not_found if !current_user.owns_or_invite?(champ.dossier)
+    if !champ? || !current_user.owns_or_invite?(champ.dossier)
+      head :not_found
     end
   end
 
