@@ -36,8 +36,9 @@ class ProConnectController < ApplicationController
         confirmed_at: Time.current,
         email_verified_at: Time.current
       )
+      user.after_confirmation
     else
-      user.update!(email_verified_at: Time.current)
+      user.update!(email_verified_at: Time.current) if user.email_verified_at.nil?
     end
 
     pro_connect_info = ProConnectInformation.find_or_initialize_by(user:, sub: user_info['sub'])
