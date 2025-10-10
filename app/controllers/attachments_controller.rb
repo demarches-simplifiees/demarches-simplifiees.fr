@@ -3,10 +3,9 @@
 class AttachmentsController < ApplicationController
   before_action :authenticate_logged_user!
   include ActiveStorage::SetBlob
+  before_action :set_attachment
 
   def show
-    @attachment = @blob.attachments.find(params[:id])
-
     @user_can_edit = cast_bool(params[:user_can_edit])
     @direct_upload = cast_bool(params[:direct_upload])
     @view_as = params[:view_as]&.to_sym
@@ -19,8 +18,6 @@ class AttachmentsController < ApplicationController
   end
 
   def destroy
-    @attachment = @blob.attachments.find(params[:id])
-
     if champ?
       @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
       if @attachment.present?
@@ -44,6 +41,10 @@ class AttachmentsController < ApplicationController
   end
 
   private
+
+  def set_attachment
+    @attachment = @blob.attachments.find(params[:id])
+  end
 
   def record
     @attachment.record
