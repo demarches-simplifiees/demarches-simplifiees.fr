@@ -15,7 +15,7 @@ class Procedure::GroupeInstructeurMenuComponent < ApplicationComponent
       { name: 'Affectation des instructeurs', url: '#affectation-instructeurs' },
       { name: 'Informations de contact', url: '#informations-contact' }
     ]
-    links.push({ name: 'Tampon de l’attestation', url: '#tampon-attestation' }) if @procedure.attestation_acceptation_template&.activated?
+    links.push({ name: 'Tampon de l’attestation', url: '#tampon-attestation' }) if @procedure.attestation_acceptation_template&.activated? || @procedure.attestation_refus_template&.activated?
     links
   end
 end

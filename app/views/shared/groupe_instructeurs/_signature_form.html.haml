@@ -1,9 +1,9 @@
-%h2.fr-h3#tampon-attestation Tampon de l’attestation d’acceptation
+%h2.fr-h3#tampon-attestation Tampon de l’attestation
 .card.mt-2
   = render NestedForms::FormOwnerComponent.new
   = form_with url: { action: :add_signature }, method: :post, html: { multipart: true , 'data-controller': 'enable-submit-if-uploaded' } do |f|
     %p
-      Vous pouvez apposer sur l’attestation  d’acceptation du dossier un tampon (ou signature) dédié à ce groupe d’instructeurs.
+      Vous pouvez apposer un tampon (ou signature) dédié à ce groupe d’instructeurs sur l’attestation  d’acceptation ou de refus du dossier.
       Si vous n’en fournissez pas, celui de la démarche sera utilisé, le cas échéant.
 
     .fr-upload-group.fr-mb-2w{ data: { 'action': "input->enable-submit-if-uploaded#upload" } }
