@@ -27,10 +27,8 @@ describe AttachmentsController, type: :controller do
       context 'when requesting turbo_stream' do
         let(:format) { :turbo_stream }
 
-        it { is_expected.to have_http_status(200) }
-
         it 'renders turbo_stream that replaces the attachment HTML' do
-          subject
+          is_expected.to have_http_status(200)
           expect(response.body).to include(ActionView::RecordIdentifier.dom_id(attachment, :show))
         end
       end
@@ -79,10 +77,9 @@ describe AttachmentsController, type: :controller do
 
       context 'and dossier en_construction is owned by user' do
         let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, user:, procedure:) }
-        it { is_expected.to have_http_status(200) }
 
         it 'removes the attachment' do
-          subject
+          is_expected.to have_http_status(200)
           expect(user_buffer_champ.piece_justificative_file.attached?).to be(false)
         end
       end
@@ -90,20 +87,16 @@ describe AttachmentsController, type: :controller do
       context 'and signed_id is invalid' do
         let(:signed_id) { 'yolo' }
 
-        it { is_expected.to have_http_status(404) }
-
         it 'doesn’t remove the attachment' do
-          subject
+          is_expected.to have_http_status(404)
           expect(champ.reload.piece_justificative_file.attached?).to be(true)
         end
       end
     end
 
     context 'when not authenticated' do
-      it { is_expected.to redirect_to(new_user_session_path) }
-
       it 'doesn’t remove the attachment' do
-        subject
+        is_expected.to redirect_to(new_user_session_path)
         expect(champ.reload.piece_justificative_file.attached?).to be(true)
       end
     end
