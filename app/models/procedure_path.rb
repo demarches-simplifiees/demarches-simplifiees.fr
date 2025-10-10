@@ -5,7 +5,9 @@ class ProcedurePath < ApplicationRecord
 
   before_destroy :ensure_one_path, :ensure_is_customized
 
-  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { case_sensitive: false }
+  normalizes :path, with: -> path { path.strip.downcase }
+
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: true
 
   def ensure_one_path
     return if procedure.procedure_paths.count > 1 || destroyed_by_association
