@@ -12,7 +12,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   def operator_hidden_field
     return nil if is_date?
 
-    @form.hidden_field "filter[filter][operator]", value: selectable? ? 'in' : 'match'
+    @form.hidden_field "filter[filter][operator]", value: 'match'
   end
 
   def column

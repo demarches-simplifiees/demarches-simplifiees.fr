@@ -88,6 +88,7 @@ class DossierFilterService
     # [{ operator: "match", value: ["Dessert"] }, { operator: "match", value: ["Fromage"] }] => { operator: "match", value: ["Dessert", "Fromage"] }
     # [{ operator: "in", value: ["A"] }, { operator: "in", value: ["B"] }] => { operator: "in", value: ["A", "B"] }
     # [{ operator: "before", value: ["2025-02-01"] }, { operator: "before", value: ["2025-01-01"] }] => do not group
+    # Note: "in" operator is deprecated but kept for backward compatibility during migration
 
     # we assume that all filters have the same operator (grouped by column and operator)
     operator = filters.first[:operator]
