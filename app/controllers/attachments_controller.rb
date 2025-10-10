@@ -44,9 +44,12 @@ class AttachmentsController < ApplicationController
   private
 
   def ensure_legitimate_access
-    if !champ? || !current_user.owns_or_invite?(champ.dossier)
-      head :not_found
-    end
+    return head :not_found if !champ?
+
+    return if champ.public? && current_user.owns_or_invite?(champ.dossier)
+    return if champ.private? && current_user.instructeur? && current_user.instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
+
+    head :not_found
   end
 
   def set_attachment

@@ -94,6 +94,26 @@ describe AttachmentsController, type: :controller do
       end
     end
 
+    context 'as an instructeur' do
+      let(:instructeur) { create(:instructeur) }
+      before { sign_in(instructeur.user) }
+
+      context 'when the instructeur belongs to the procedure' do
+        let(:procedure) { create(:procedure, instructeurs: [instructeur], types_de_champ_private: [{ type: :piece_justificative }]) }
+        let(:dossier) { create(:dossier, procedure:) }
+        let(:champ) do
+          dossier.champs.private_only.first.tap do |c|
+            c.piece_justificative_file.attach({ io: Rails.root.join('spec/fixtures/files/Contrat.pdf').open, filename: 'Contrat.pdf' })
+          end
+        end
+
+        it 'remove the attachment' do
+          is_expected.to have_http_status(200)
+          expect(champ.reload.piece_justificative_file.attached?).to be(false)
+        end
+      end
+    end
+
     context 'when authenticated as another user' do
       let(:other_user) { create(:user) }
       before { sign_in(other_user) }
