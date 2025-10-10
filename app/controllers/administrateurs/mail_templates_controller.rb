@@ -13,6 +13,7 @@ module Administrateurs
 
     def edit
       @mail_template = find_mail_template_by_slug(params[:id])
+      @preview_service = DossierPreviewService.new(procedure: @procedure, current_user:)
       if !@mail_template.valid?
         flash.now.alert = @mail_template.errors.full_messages
       end
