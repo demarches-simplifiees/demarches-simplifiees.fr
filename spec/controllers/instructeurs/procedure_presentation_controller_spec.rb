@@ -126,14 +126,14 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
     before { sign_in(instructeur.user) }
 
     context 'nominal case' do
-      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'in', value: ['Paris', 'Lyon'] } } } }
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'match', value: ['Paris', 'Lyon'] } } } }
 
       it 'adds the filter' do
         subject
 
         expect(response).to redirect_to(instructeur_procedure_url(procedure))
 
-        expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'in', value: ['Paris', 'Lyon'] })])
+        expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'match', value: ['Paris', 'Lyon'] })])
       end
     end
 
@@ -165,11 +165,11 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
 
     before do
       sign_in(instructeur.user)
-      procedure_presentation.update!(tous_filters: [FilteredColumn.new(column:, filter: { operator: 'in', value: ['Paris', 'Lyon'] })])
+      procedure_presentation.update!(tous_filters: [FilteredColumn.new(column:, filter: { operator: 'match', value: ['Paris', 'Lyon'] })])
     end
 
     context 'nominal case' do
-      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'in', value: ['Paris', 'Lyon'] } } } }
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'match', value: ['Paris', 'Lyon'] } } } }
 
       it 'removes the filter' do
         subject
