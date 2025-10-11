@@ -44,10 +44,9 @@ class AttachmentsController < ApplicationController
   private
 
   def ensure_legitimate_access
-    return head :not_found if !champ?
-
-    return if champ.public? && current_user.owns_or_invite?(champ.dossier)
-    return if champ.private? && current_user.instructeur? && current_user.instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
+    return if champ&.public? && current_user.owns_or_invite?(champ.dossier)
+    return if champ&.private? && current_user.instructeur? && current_instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
+    return if procedure? && current_user.administrateur? && current_administrateur.in?(record.administrateurs)
 
     head :not_found
   end
@@ -56,13 +55,9 @@ class AttachmentsController < ApplicationController
     @attachment = @blob.attachments.find(params[:id])
   end
 
-  def record
-    @attachment.record
-  end
-
-  def champ?
-    record.is_a?(Champ)
-  end
+  def record = @attachment.record
+  def champ? = record.is_a?(Champ)
+  def procedure? = record.is_a?(Procedure)
 
   def champ
     @champ ||= if champ?

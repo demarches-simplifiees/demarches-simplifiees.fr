@@ -53,9 +53,10 @@ describe AttachmentsController, type: :controller do
 
     let(:attachment) { champ.piece_justificative_file.attachments.first }
     let(:signed_id) { attachment.blob.signed_id }
+    let(:view_as) { nil }
 
     subject do
-      delete :destroy, params: { id: attachment.id, signed_id: signed_id, dossier_id: dossier.id, stable_id: champ.stable_id }, format: :turbo_stream
+      delete :destroy, params: { id: attachment.id, signed_id:, dossier_id: dossier&.id, stable_id: champ&.stable_id, view_as: }, format: :turbo_stream
     end
 
     context "when authenticated" do
@@ -90,6 +91,31 @@ describe AttachmentsController, type: :controller do
         it 'doesn’t remove the attachment' do
           is_expected.to have_http_status(404)
           expect(champ.reload.piece_justificative_file.attached?).to be(true)
+        end
+      end
+    end
+
+    context 'as an administrateur' do
+      let(:procedure) { create(:procedure, :with_logo) }
+      let(:administrateur) { procedure.administrateurs.first }
+      let(:attachment) { procedure.logo.attachments.first }
+      let(:signed_id) { attachment.blob.signed_id }
+      let(:view_as) { 'link' }
+      before { sign_in(administrateur.user) }
+
+      context 'when the administrateur owns the procedure' do
+        it 'can remove the procedure attachment' do
+          is_expected.to have_http_status(200)
+          expect(procedure.reload.logo.attached?).to be(false)
+        end
+      end
+
+      context 'when the administrateur does not own the procedure' do
+        let(:administrateur) { create(:administrateur) }
+
+        it 'can remove the procedure attachment' do
+          is_expected.to have_http_status(404)
+          expect(procedure.reload.logo.attached?).to be(true)
         end
       end
     end
