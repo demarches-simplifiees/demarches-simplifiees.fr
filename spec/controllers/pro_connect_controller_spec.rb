@@ -68,6 +68,15 @@ describe ProConnectController, type: :controller do
             expect(nonce_cookie).to be_nil
             expect(Instructeur.count).to eq(initial_instructeur_count)
           end
+
+          context 'when invites are pending' do
+            let!(:invite) { create(:invite, email:, user: nil) }
+
+            it 'links invites to the new user' do
+              expect { subject }.to change { invite.reload.user }.from(nil)
+              expect(invite.reload.user.email).to eq(email)
+            end
+          end
         end
 
         context 'and the user already has an account but is not an instructeur' do
