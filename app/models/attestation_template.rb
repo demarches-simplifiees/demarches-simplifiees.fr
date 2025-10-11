@@ -185,7 +185,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def signature_to_render(groupe_instructeur)
-    if groupe_instructeur&.signature&.attached?
+    if groupe_instructeur&.signature&.attached? && kind == AttestationTemplate.kinds.fetch(:acceptation)
       groupe_instructeur.signature
     else
       signature
