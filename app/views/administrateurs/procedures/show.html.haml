@@ -91,10 +91,10 @@
   %h2= "Gestion de la démarche № #{number_with_html_delimiter(@procedure.id)}"
   %h3.fr-h6 Indispensable avant publication
   .fr-grid-row.fr-grid-row--gutters.fr-mb-5w
-    = render Procedure::Card::AiComponent.new(procedure: @procedure)
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
     = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if Rails.application.config.ds_zonage_enabled
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
+    = render Procedure::Card::AiComponent.new(procedure: @procedure)
     = render Procedure::Card::IneligibiliteDossierComponent.new(procedure: @procedure)
     = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
     = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)

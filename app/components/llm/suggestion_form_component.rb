@@ -3,18 +3,34 @@
 class LLM::SuggestionFormComponent < ApplicationComponent
   RULES = {
     LLM::LabelImprover::TOOL_NAME => {
-      title: 'Améliorer les libellés des champs',
+      title: 'Libellés des champs',
       summary: <<~DESCRIPTION.squish,
         Cette règle propose une mise à jour des libellés détectés comme trop longs, en majuscules ou difficiles à comprendre.
-        Les suggestions visent à rendre chaque champ plus clair pour l’usager sans impacter la structure de la démarche.
+        Les suggestions visent à rendre chaque champ plus clair pour l’usager.
       DESCRIPTION
       item_component: LLM::ImproveLabelItemComponent,
       select_all: false
     },
     LLM::StructureImprover::TOOL_NAME => {
-      title: 'Amélioration de la structure',
+      title: 'Structure du formulaire',
       summary: <<~DESCRIPTION.squish,
-        Propose l’ajout de sections et le repositionnement des champs pour rendre la démarche plus lisible sans supprimer de contenu.
+        Propose l’ajout de sections et le repositionnement des champs pour rendre le formulaire plus lisible sans supprimer de contenu.
+      DESCRIPTION
+      item_component: LLM::ImproveStructureItemComponent,
+      select_all: true
+    },
+    'Utilisez les bons champs' => {
+      title: 'Bonne utilisaation des types de champs',
+      summary: <<~DESCRIPTION.squish,
+        Utilisez les bons champs. Exemple, le champs adresse remonte en une saisie usager son departement, code postal, rue etc...
+      DESCRIPTION
+      item_component: LLM::ImproveStructureItemComponent,
+      select_all: true
+    },
+    'DLNUF' => {
+      title: 'Dites le nous une fois',
+      summary: <<~DESCRIPTION.squish,
+        Certains champs remontent plus d'informations que juste la saisie usager (ex: siret), nous vous aidons a identifier des simplifications.
       DESCRIPTION
       item_component: LLM::ImproveStructureItemComponent,
       select_all: true

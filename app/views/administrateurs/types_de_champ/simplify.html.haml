@@ -5,6 +5,6 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Amélioration des champs']] }
 .fr-container
-  %h1.fr-h2.mt-2 Amélioration de la qualité de la démarche “#{@procedure.libelle}“
+  %h1.fr-h2.mt-2 Amélioration de la qualité du formulaire “#{@procedure.libelle}“
 
   = render LLM::SuggestionFormComponent.new(llm_rule_suggestion: @llm_rule_suggestion)
