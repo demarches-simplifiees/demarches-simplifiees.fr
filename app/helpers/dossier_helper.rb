@@ -255,9 +255,9 @@ module DossierHelper
       when DossierNotification.notification_types.fetch(:dossier_depose)
         (Time.current.to_date - (notification.display_at - DossierNotification::DELAY_DOSSIER_DEPOSE).to_date).to_i
       when DossierNotification.notification_types.fetch(:dossier_expirant)
-        (notification.display_at + DossierNotification::DELAY_DOSSIER_EXPIRANT - Time.current).to_i / 1.day + 1
+        (notification.display_at + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks - Time.current).to_i / 1.day + 1
       when DossierNotification.notification_types.fetch(:dossier_suppression)
-        (notification.display_at + DossierNotification::DELAY_DOSSIER_SUPPRESSION - Time.current).to_i / 1.day + 1
+        (notification.display_at + Dossier::WEEKS_BEFORE_DELETION.week - Time.current).to_i / 1.day + 1
       end
     else
       'X'

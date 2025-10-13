@@ -34,6 +34,7 @@ class Dossier < ApplicationRecord
   MONTHS_AFTER_EXPIRATION = 1
   DAYS_AFTER_EXPIRATION = 5
   INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
+  WEEKS_BEFORE_DELETION = 1
 
   has_secure_token :prefill_token
 
@@ -361,9 +362,9 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
-  scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...1.week.ago }) }
-  scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...1.week.ago }) }
-  scope :deleted_by_automatic_expired, -> { where(dossiers: { hidden_by_expired_at: ...1.week.ago }) }
+  scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...WEEKS_BEFORE_DELETION.week.ago }) }
+  scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...WEEKS_BEFORE_DELETION.week.ago }) }
+  scope :deleted_by_automatic_expired, -> { where(dossiers: { hidden_by_expired_at: ...WEEKS_BEFORE_DELETION.week.ago }) }
   scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired.or(state_brouillon.deleted_by_automatic_expired) }
   scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired.or(state_en_construction.deleted_by_automatic_expired) }
   scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired.or(state_termine.deleted_by_automatic_expired) }

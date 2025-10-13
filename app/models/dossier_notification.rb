@@ -2,8 +2,6 @@
 
 class DossierNotification < ApplicationRecord
   DELAY_DOSSIER_DEPOSE = 7.days
-  DELAY_DOSSIER_EXPIRANT = 14.days
-  DELAY_DOSSIER_SUPPRESSION = 7.days
   NON_CUSTOMISABLE_TYPE = [:dossier_expirant, :dossier_suppression]
 
   enum :notification_type, {
@@ -109,7 +107,7 @@ class DossierNotification < ApplicationRecord
       instructeur_preferences[notification_type] == 'all'
     end
 
-    return if notification_types_to_refresh.empty?
+    notification_types_to_refresh << NON_CUSTOMISABLE_TYPE
 
     dossiers = groupe_instructeur.dossiers.state_not_brouillon
 
@@ -324,7 +322,17 @@ class DossierNotification < ApplicationRecord
 
   def self.create_notifications_by_type_for_instructeur_dossiers(dossiers, notification_type, instructeur_id)
     missing_notifications = dossiers.map do |dossier|
-      display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
+      display_at = case notification_type
+        when :dossier_depose
+          dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE
+        when :dossier_expirant
+          dossier.expired_at - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+        when :dossier_suppression
+          (dossier.hidden_by_administration_at || dossier.hidden_by_expired_at) - Dossier::WEEKS_BEFORE_DELETION.weeks
+        else
+          Time.zone.now
+        end
+
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
     end
 
@@ -393,6 +401,10 @@ class DossierNotification < ApplicationRecord
         .select(:id, :state, :depose_at)
         .where(state: :en_construction)
         .without_followers
+    when :dossier_expirant
+      dossiers.by_statut('expirant')
+    when :dossier_suppression
+      dossiers.by_statut('supprimes')
     when :dossier_modifie
       dossiers
         .select(:id, :last_champ_updated_at, :depose_at)
