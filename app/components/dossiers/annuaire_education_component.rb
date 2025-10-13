@@ -14,6 +14,8 @@ class Dossiers::AnnuaireEducationComponent < ApplicationComponent
   private
 
   def data
+    return [] if champ.data.blank?
+
     [
       ['Nom de l’établissement', champ.data['nom_etablissement']],
       ['L’identifiant de l’etablissement', champ.data['identifiant_de_l_etablissement']],
@@ -22,6 +24,8 @@ class Dossiers::AnnuaireEducationComponent < ApplicationComponent
   end
 
   def details
+    return [] if champ.data.blank?
+
     [
       ['Commune', commune],
       ['Académie', "#{champ.data['libelle_academie']} (#{champ.data['code_academie']})"],
