@@ -248,9 +248,8 @@ class Etablissement < ApplicationRecord
   end
 
   def dedicated_siret_siege_social
-    if entreprise.siret_siege_social.present? &&
-        siret != entreprise.siret_siege_social
-      pretty_siret(etablissement.entreprise.siret_siege_social)
+    if siret != entreprise.siret_siege_social
+      entreprise.siret_siege_social
     end
   end
 
