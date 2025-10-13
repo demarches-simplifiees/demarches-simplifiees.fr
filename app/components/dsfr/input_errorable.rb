@@ -28,9 +28,10 @@ module Dsfr
       end
 
       def errors_on_attribute?
-        # When the object is a Champ, errors are stored as nested errors on the dossier
+        # When the object is a Champ, errors can be stored as nested errors on the dossier
+        # or directly on the champ object
         if object.is_a?(Champ) && object.dossier.present?
-          dossier_errors_for_champ.any?
+          dossier_errors_for_champ.any? || errors.has_key?(attribute_or_rich_body)
         else
           errors.has_key?(attribute_or_rich_body)
         end
@@ -38,10 +39,11 @@ module Dsfr
 
       # errors helpers
       def error_full_messages
-        # When the object is a Champ, errors are stored as nested errors on the dossier
+        # When the object is a Champ, errors can be stored as nested errors on the dossier
         # because validation adds errors to champ instances that may differ from the form object
+        # or directly on the champ object
         if object.is_a?(Champ) && object.dossier.present?
-          dossier_errors_for_champ
+          dossier_errors_for_champ + errors.full_messages_for(attribute_or_rich_body)
         else
           errors.full_messages_for(attribute_or_rich_body)
         end
