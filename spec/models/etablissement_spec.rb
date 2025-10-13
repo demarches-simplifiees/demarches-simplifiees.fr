@@ -38,6 +38,22 @@ describe Etablissement do
     end
   end
 
+  describe '#dedicated_siret_siege_social' do
+    let(:etablissement) { create(:etablissement, entreprise_siret_siege_social:) }
+
+    context 'when entreprise_siret_siege_social is nil' do
+      let(:entreprise_siret_siege_social) { nil }
+
+      it { expect(etablissement.dedicated_siret_siege_social).to eq nil }
+    end
+
+    context 'when entreprise_siret_siege_social is nil' do
+      let(:entreprise_siret_siege_social) { '123' }
+
+      it { expect(etablissement.dedicated_siret_siege_social).to eq '123' }
+    end
+  end
+
   describe '#entreprise_raison_sociale' do
     subject { etablissement.entreprise_raison_sociale }
 
