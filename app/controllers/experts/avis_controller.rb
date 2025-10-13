@@ -18,8 +18,7 @@ module Experts
     def index
       avis = current_expert.avis
         .not_revoked
-        .includes(:dossier)
-        .includes(procedure: { logo_attachment: :blob })
+        .includes(:dossier, :procedure)
         .not_hidden_by_administration
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
