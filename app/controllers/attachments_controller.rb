@@ -44,16 +44,32 @@ class AttachmentsController < ApplicationController
   private
 
   def ensure_legitimate_access
-    return if champ&.public? && current_user.owns_or_invite?(champ.dossier)
-    return if champ&.private? && current_user.instructeur? && current_instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
-    return if procedure? && current_user.administrateur? && current_administrateur.in?(record.administrateurs)
-    return if avis? && current_expert == record.expert
+    return if an_user_or_invite_change_its_dossier?
+    return if an_instructeur_change_a_private_attachment?
+    return if an_administrateur_change_its_procedure?
+    return if an_expert_change_its_avis?
 
     head :not_found
   end
 
   def set_attachment
     @attachment = @blob.attachments.find(params[:id])
+  end
+
+  def user_or_invite_changing_its_dossier?
+    champ&.public? && current_user.owns_or_invite?(champ.dossier)
+  end
+
+  def instructeur_changing_a_private_attachment?
+    champ&.private? && current_user.instructeur? && current_instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
+  end
+
+  def admin_changing_its_procedure?
+    procedure? && current_user.administrateur? && current_administrateur.in?(record.administrateurs)
+  end
+
+  def an_expert_change_its_avis?
+    avis? && current_expert == record.expert
   end
 
   def record = @attachment.record
