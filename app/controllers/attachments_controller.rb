@@ -3,10 +3,10 @@
 class AttachmentsController < ApplicationController
   before_action :authenticate_logged_user!
   include ActiveStorage::SetBlob
+  before_action :set_attachment
+  before_action :ensure_legitimate_access, only: :destroy
 
   def show
-    @attachment = @blob.attachments.find(params[:id])
-
     @user_can_edit = cast_bool(params[:user_can_edit])
     @direct_upload = cast_bool(params[:direct_upload])
     @view_as = params[:view_as]&.to_sym
@@ -19,8 +19,6 @@ class AttachmentsController < ApplicationController
   end
 
   def destroy
-    @attachment = @blob.attachments.find(params[:id])
-
     if champ?
       @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
       if @attachment.present?
@@ -45,13 +43,45 @@ class AttachmentsController < ApplicationController
 
   private
 
-  def record
-    @attachment.record
+  def ensure_legitimate_access
+    return if user_or_invite_changing_its_dossier?
+    return if instructeur_changing_a_private_attachment?
+    return if admin_changing_its_procedure?
+    return if admin_changing_its_attestation_template?
+    return if expert_changing_its_avis?
+
+    head :not_found
   end
 
-  def champ?
-    record.is_a?(Champ)
+  def set_attachment
+    @attachment = @blob.attachments.find(params[:id])
   end
+
+  def user_or_invite_changing_its_dossier?
+    champ&.public? && current_user.owns_or_invite?(champ.dossier)
+  end
+
+  def instructeur_changing_a_private_attachment?
+    champ&.private? && current_user.instructeur? && current_instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
+  end
+
+  def admin_changing_its_procedure?
+    procedure? && current_user.administrateur? && current_administrateur.in?(record.administrateurs)
+  end
+
+  def admin_changing_its_attestation_template?
+    attestation_template? && current_user.administrateur? && current_administrateur.in?(record.procedure.administrateurs)
+  end
+
+  def expert_changing_its_avis?
+    avis? && current_expert == record.expert
+  end
+
+  def record = @attachment.record
+  def champ? = record.is_a?(Champ)
+  def procedure? = record.is_a?(Procedure)
+  def avis? = record.is_a?(Avis)
+  def attestation_template? = record.is_a?(AttestationTemplate)
 
   def champ
     @champ ||= if champ?
