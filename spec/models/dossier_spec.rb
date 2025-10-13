@@ -327,6 +327,21 @@ describe Dossier, type: :model do
     end
   end
 
+  describe "#extend_conservation" do
+    subject { dossier.extend_conservation(1.month) }
+
+    let(:dossier) { create(:dossier, :en_construction) }
+
+    context "when the dossier has a dossier_expirant notification" do
+      let!(:notification_expirant) { create(:dossier_notification, dossier:, notification_type: :dossier_expirant) }
+
+      it "destroys dossier_expirant notification" do
+        subject
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
     let(:etablissement) { dossier.etablissement }

@@ -693,6 +693,7 @@ class Dossier < ApplicationRecord
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
     update_expired_at
+    DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_expirant)
   end
 
   def extend_conservation_and_restore(conservation_extension, author)
