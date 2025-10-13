@@ -47,6 +47,7 @@ class AttachmentsController < ApplicationController
     return if champ&.public? && current_user.owns_or_invite?(champ.dossier)
     return if champ&.private? && current_user.instructeur? && current_instructeur.in?(champ.dossier.groupe_instructeur.instructeurs)
     return if procedure? && current_user.administrateur? && current_administrateur.in?(record.administrateurs)
+    return if avis? && current_expert == record.expert
 
     head :not_found
   end
@@ -58,6 +59,7 @@ class AttachmentsController < ApplicationController
   def record = @attachment.record
   def champ? = record.is_a?(Champ)
   def procedure? = record.is_a?(Procedure)
+  def avis? = record.is_a?(Avis)
 
   def champ
     @champ ||= if champ?

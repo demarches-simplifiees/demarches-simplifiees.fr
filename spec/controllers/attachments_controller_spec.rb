@@ -120,6 +120,39 @@ describe AttachmentsController, type: :controller do
       end
     end
 
+    context 'for an avis' do
+      let(:expert) { create(:expert) }
+      let(:procedure) { create(:procedure) }
+      let(:experts_procedure) { create(:experts_procedure, procedure:, expert:) }
+      let(:avis) { create(:avis, dossier:, experts_procedure:) }
+      let(:attachment) { avis.piece_justificative_file.attachments.first }
+      let(:signed_id) { attachment.blob.signed_id }
+      let(:view_as) { 'link' }
+
+      before do
+        avis.piece_justificative_file.attach({ io: Rails.root.join('spec/fixtures/files/Contrat.pdf').open, filename: 'Contrat.pdf' })
+      end
+
+      context 'when the expert owns the avis' do
+        before { sign_in(expert.user) }
+
+        it 'can remove the attachment' do
+          is_expected.to have_http_status(200)
+          expect(avis.reload.piece_justificative_file.attached?).to be(false)
+        end
+      end
+
+      context 'when the expert does not own the avis' do
+        let(:other_expert) { create(:expert) }
+        before { sign_in(other_expert.user) }
+
+        it 'can’t remove the attachment' do
+          is_expected.to have_http_status(404)
+          expect(avis.reload.piece_justificative_file.attached?).to be(true)
+        end
+      end
+    end
+
     context 'as an instructeur' do
       let(:instructeur) { create(:instructeur) }
       before { sign_in(instructeur.user) }
