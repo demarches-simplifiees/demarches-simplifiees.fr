@@ -12,6 +12,7 @@ class ResetExpiringDossiersJob < ApplicationJob
                         en_construction_close_to_expiration_notice_sent_at: nil,
                         termine_close_to_expiration_notice_sent_at: nil)
           dossier.update_expired_at
+          DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :dossier_expirant)
         end
       end
     end
