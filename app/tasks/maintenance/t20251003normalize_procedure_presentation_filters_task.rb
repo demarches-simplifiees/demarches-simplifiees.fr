@@ -23,11 +23,7 @@ module Maintenance
 
     def process(pp)
       FILTER_ATTRIBUTES.each do |attribute|
-        begin
-          current_filters = pp.public_send(attribute)
-        rescue ActiveRecord::RecordNotFound
-          next
-        end
+        current_filters = pp.public_send(attribute)
 
         next if current_filters.blank?
 
@@ -41,6 +37,9 @@ module Maintenance
       end
 
       pp.save!
+    rescue ActiveRecord::RecordNotFound
+      # a column can be not found for various reasons (deleted tdc, changed type, etc)
+      # in this case we just ignore the error and continue
     end
   end
 end
