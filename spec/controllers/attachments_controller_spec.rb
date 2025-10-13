@@ -108,6 +108,18 @@ describe AttachmentsController, type: :controller do
           is_expected.to have_http_status(200)
           expect(procedure.reload.logo.attached?).to be(false)
         end
+
+        context 'can remove an attestation template attachment' do
+          let(:attestation_template) { create(:attestation_template, :with_files) }
+          let(:procedure) { attestation_template.procedure }
+          let(:attachment) { attestation_template.logo.attachments.first }
+          let(:signed_id) { attachment.blob.signed_id }
+
+          it do
+            is_expected.to have_http_status(200)
+            expect(attestation_template.reload.logo.attached?).to be(false)
+          end
+        end
       end
 
       context 'when the administrateur does not own the procedure' do

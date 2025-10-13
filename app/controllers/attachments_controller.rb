@@ -44,10 +44,11 @@ class AttachmentsController < ApplicationController
   private
 
   def ensure_legitimate_access
-    return if an_user_or_invite_change_its_dossier?
-    return if an_instructeur_change_a_private_attachment?
-    return if an_administrateur_change_its_procedure?
-    return if an_expert_change_its_avis?
+    return if user_or_invite_changing_its_dossier?
+    return if instructeur_changing_a_private_attachment?
+    return if admin_changing_its_procedure?
+    return if admin_changing_its_attestation_template?
+    return if expert_changing_its_avis?
 
     head :not_found
   end
@@ -68,7 +69,11 @@ class AttachmentsController < ApplicationController
     procedure? && current_user.administrateur? && current_administrateur.in?(record.administrateurs)
   end
 
-  def an_expert_change_its_avis?
+  def admin_changing_its_attestation_template?
+    attestation_template? && current_user.administrateur? && current_administrateur.in?(record.procedure.administrateurs)
+  end
+
+  def expert_changing_its_avis?
     avis? && current_expert == record.expert
   end
 
@@ -76,6 +81,7 @@ class AttachmentsController < ApplicationController
   def champ? = record.is_a?(Champ)
   def procedure? = record.is_a?(Procedure)
   def avis? = record.is_a?(Avis)
+  def attestation_template? = record.is_a?(AttestationTemplate)
 
   def champ
     @champ ||= if champ?
