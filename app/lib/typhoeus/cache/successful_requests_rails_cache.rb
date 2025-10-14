@@ -22,6 +22,9 @@ module Typhoeus
         if response&.success? && cache_info.cacheable?
           ::Rails.cache.write(to_key(request), response, expires_in: cache_info.expires_in)
         end
+
+      rescue => e
+        Sentry.capture_exception(e, extra: { request: request.to_json })
       end
 
       private

@@ -78,6 +78,18 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
         expect(Rails.cache.read(to_key(request))).to be nil
       end
     end
+
+    context 'does not crash if an unattended error is raised' do
+      before do
+        cache_info_class = Typhoeus::Cache::SuccessfulRequestsRailsCache::CacheInfo
+        expect(cache_info_class).to receive(:new).and_raise(StandardError)
+      end
+
+      it 'silently swallows the error' do
+        cache.set(request, response)
+        expect(Rails.cache.read(to_key(request))).to be nil
+      end
+    end
   end
 
   describe "#get" do
