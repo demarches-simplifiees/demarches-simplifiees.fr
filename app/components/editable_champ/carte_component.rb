@@ -17,6 +17,7 @@ class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
         address_input_label: t(".address_input_label"),
         address_input_description: t(".address_input_description"),
         address_placeholder: t(".address_placeholder"),
+        address_search_error: t(".address_search_error"),
         pin_input_label: t(".pin_input_label"),
         pin_input_description: t(".pin_input_description"),
         show_pin: t(".show_pin"),

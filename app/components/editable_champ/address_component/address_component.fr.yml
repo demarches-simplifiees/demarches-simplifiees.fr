@@ -2,6 +2,7 @@ fr:
   street_label: Numéro et nom de voie, ou lieu-dit
   street_fr_hint: 'Exemple : 11 rue des Mimosas'
   street_international_hint: 'Exemple : 12 Main Street'
+  search_error: 'Une erreur est survenue lors de la recherche'
   city_label: Ville
   city_hint: 'Exemple : London'
   commune_label: Ville ou commune

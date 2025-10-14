@@ -18,6 +18,9 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       items: @champ.selected_items,
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
+      translations: {
+        search_error: t('.search_error')
+      },
       is_disabled: @champ.not_ban?)
   end
 
@@ -31,7 +34,10 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       items: @champ.commune_selected_items,
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
-      minimum_input_length: 2
+      minimum_input_length: 2,
+      translations: {
+        search_error: t('.search_error')
+      }
     }
   end
 

@@ -2,6 +2,7 @@ en:
   street_label: Street name and number or, place name
   street_fr_hint: 'Example : 12 Main Street'
   street_international_hint: 'Example : 12 Main Street'
+  search_error: 'An error occurred while searching'
   city_label: City
   city_hint: 'Example : London'
   commune_label: City or Municipality
