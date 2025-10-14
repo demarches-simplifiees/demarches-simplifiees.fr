@@ -22,7 +22,7 @@ module Mails
     validates :body, tags: true
 
     SLUG = "refused_mail"
-    DISPLAYED_NAME = 'Accusé de rejet du dossier'
+    DISPLAYED_NAME = 'Accusé de refus du dossier'
     DEFAULT_SUBJECT = 'Votre dossier n° --numéro du dossier-- a été refusé (--libellé démarche--)'
     DOSSIER_STATE = Dossier.states.fetch(:refuse)
 

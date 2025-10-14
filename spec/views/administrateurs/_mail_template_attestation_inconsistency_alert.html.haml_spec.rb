@@ -84,7 +84,7 @@ describe 'admin/_mail_template_attestation_inconsistency_alert', type: :view do
 
       it 'includes extraneous_tag alert text' do
         expect(render_alert(procedure, mail_type))
-          .to include("Cette démarche ne comporte pas d’attestation, mais\nl’accusé de rejet\nen mentionne une")
+          .to include("Cette démarche ne comporte pas d’attestation, mais\nl’accusé de refus\nen mentionne une")
       end
 
       it 'includes mail template edit link' do
@@ -105,7 +105,7 @@ describe 'admin/_mail_template_attestation_inconsistency_alert', type: :view do
 
       it 'includes missing_tag alert text' do
         expect(render_alert(procedure, mail_type))
-          .to include("Cette démarche comporte une attestation, mais\nl’accusé de rejet\nne la mentionne pas :")
+          .to include("Cette démarche comporte une attestation, mais\nl’accusé de refus\nne la mentionne pas :")
       end
 
       it 'includes mail template edit link' do
