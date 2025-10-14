@@ -294,17 +294,15 @@ module Administrateurs
     end
 
     def update_jeton
-      token = params[:procedure][:api_entreprise_token]
-      @procedure.api_entreprise_token = token
+      string_token = params[:procedure][:api_entreprise_token]
+      jwt_token = APIEntrepriseToken.new(string_token)
 
-      if @procedure.valid? &&
-          APIEntreprise::PrivilegesAdapter.new(token).valid? &&
-          @procedure.save
+      @procedure.api_entreprise_token = string_token
 
+      if APIEntreprise::PrivilegesAdapter.new(jwt_token).valid? && @procedure.save
         flash.notice = 'Le jeton a bien été mis à jour'
         redirect_to admin_procedure_path(id: @procedure.id)
       else
-
         flash.now.alert = "Mise à jour impossible : le jeton n’est pas valide"
         render 'jeton'
       end

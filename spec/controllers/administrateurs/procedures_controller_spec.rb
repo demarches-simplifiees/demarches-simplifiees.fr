@@ -1296,18 +1296,23 @@ describe Administrateurs::ProceduresController, type: :controller do
   describe 'PATCH #jeton' do
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+    let(:api_response_body) { nil }
 
     subject { patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: token } } }
 
     before do
-      allow_any_instance_of(APIEntreprise::PrivilegesAdapter).to receive(:valid?).and_return(token_is_valid)
-      subject
+      if api_response_body
+        stub_request(:get, "https://entreprise.api.gouv.fr/privileges")
+          .to_return(body: api_response_body, status: api_response_status)
+      end
     end
 
     context 'when jeton is valid' do
-      let(:token_is_valid) { true }
+      let(:api_response_status) { 200 }
+      let(:api_response_body) { File.read('spec/fixtures/files/api_entreprise/privileges.json') }
 
       it do
+        subject
         expect(flash.alert).to be_nil
         expect(flash.notice).to eq('Le jeton a bien été mis à jour')
         expect(procedure.reload.api_entreprise_token.jwt_token).to eq(token)
@@ -1315,20 +1320,22 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when jeton is invalid' do
-      let(:token_is_valid) { false }
+      let(:api_response_status) { 403 }
+      let(:api_response_body) { '' }
 
       it do
-      expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide")
-      expect(flash.notice).to be_nil
-      expect(procedure.reload.api_entreprise_token).not_to eq(token)
-    end
+        subject
+        expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide")
+        expect(flash.notice).to be_nil
+        expect(procedure.reload.api_entreprise_token).not_to eq(token)
+      end
     end
 
     context 'when jeton is not a jwt' do
       let(:token) { "invalid" }
-      let(:token_is_valid) { true } # just to check jwt format by procedure model
 
       it do
+        subject
         expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide")
         expect(flash.notice).to be_nil
         expect(procedure.reload.api_entreprise_token).not_to eq(token)
