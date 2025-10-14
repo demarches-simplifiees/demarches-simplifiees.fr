@@ -155,4 +155,23 @@ describe APIGeoService do
       it { is_expected.to eq('Paris') }
     end
   end
+
+  describe 'degraded mode' do
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('API_GEO_DEGRADED_MODE').and_return('enabled')
+    end
+
+    it 'returns commune results without calling API' do
+      expect(Typhoeus).not_to receive(:get)
+
+      response = APIGeoService.commune_by_name_or_postal_code('stras')
+      results = JSON.parse(response.body)
+      expect(results[0]["nom"]).to eq("Strasbourg")
+
+      response = APIGeoService.commune_by_name_or_postal_code('41000')
+      results = JSON.parse(response.body)
+      expect(results[0]["nom"]).to eq("Blois")
+    end
+  end
 end
