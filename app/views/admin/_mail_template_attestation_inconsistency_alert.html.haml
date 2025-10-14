@@ -9,11 +9,13 @@
       ne la mentionne pas :
       - if !procedure.locked? && mail_type == 'acceptation' && attestation_template_v1
         = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_path(procedure))
+        ou
       - elsif !procedure.locked? && mail_type == 'acceptation'
         = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :acceptation))
+        ou
       - elsif !procedure.locked? && mail_type == 'refus'
         = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_v2_path(procedure, attestation_kind: :refus))
-      ou
+        ou
       ajoutez la balise
       %code{ style: "white-space: pre-wrap;" }
         « --lien attestation-- »
