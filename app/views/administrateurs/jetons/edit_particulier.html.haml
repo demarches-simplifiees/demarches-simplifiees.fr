@@ -1,0 +1,22 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Jetons API', [:admin, @procedure, :jetons]],
+                    ['Jeton Particulier']] }
+
+.fr-container
+  .fr-mb-3w
+    = link_to "Liste des jetons",
+      [:admin, @procedure, :jetons],
+      class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
+
+  %h1.fr-h2
+    Jeton API particulier
+
+= form_with model: @procedure, url: url_for({ controller: 'administrateurs/jetons', action: :update_particulier }) do |f|
+  .fr-container
+    %fieldset.fr-fieldset
+      .fr-fieldset__element
+        = render Dsfr::InputComponent.new(form: f, attribute: :api_particulier_token, input_type: :password_field, opts: { value: @procedure.read_attribute(:api_particulier_token)})
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Procedure::Card::APIEntrepriseComponent, type: :component do
+RSpec.describe Procedure::Card::APITokenComponent, type: :component do
   subject { render_inline(described_class.new(procedure:)) }
 
   let(:procedure) { create(:procedure, api_entreprise_token:) }

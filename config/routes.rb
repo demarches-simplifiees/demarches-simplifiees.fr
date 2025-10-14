@@ -663,8 +663,6 @@ Rails.application.routes.draw do
         patch 'update_monavis'
         get 'accuse_lecture'
         patch 'update_accuse_lecture'
-        get 'jeton'
-        patch 'update_jeton'
         get 'rdv'
         patch 'rdv', to: 'procedures#update_rdv'
         get 'pro_connect_restricted'
@@ -676,11 +674,18 @@ Rails.application.routes.draw do
         get 'api_champ_columns'
       end
 
-      get :api_particulier, controller: 'jeton_particulier'
+      get 'jetons', to: 'jetons#index'
 
-      resource 'api_particulier', only: [] do
-        resource 'jeton', only: [:show, :update], controller: 'jeton_particulier'
-        resource 'sources', only: [:show, :update], controller: 'sources_particulier'
+      resource :jetons, only: [], controller: 'jetons' do
+        get 'api_particulier', action: :edit_particulier
+        patch 'api_particulier', action: :update_particulier
+
+        get 'api_entreprise', action: :edit_entreprise
+        patch 'api_entreprise', action: :update_entreprise
+      end
+
+      resource :api_particulier, only: [], as: :api_particulier do
+        resource :sources, only: [:show, :update], controller: 'sources_particulier'
       end
 
       resources :conditions, only: [:update, :destroy], param: :stable_id do
