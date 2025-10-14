@@ -2,4 +2,4 @@ fr:
   views:
     administrateurs:
       mail_acceptation: l’accusé d’acceptation
-      mail_refus: l’accusé de rejet
+      mail_refus: l’accusé de refus
