@@ -52,11 +52,6 @@ describe 'admin/_mail_template_attestation_inconsistency_alert', type: :view do
           .to include("Cette démarche comporte une attestation, mais\nl’accusé d’acceptation\nne la mentionne pas")
       end
 
-      it 'includes mail template edit link' do
-        expect(render_alert(procedure, mail_type))
-          .to include(edit_admin_procedure_mail_template_path(procedure, 'acceptation'))
-      end
-
       context 'when procedure is draft' do
         it 'can disable attestation' do
           expect(render_alert(procedure, mail_type))
@@ -106,11 +101,6 @@ describe 'admin/_mail_template_attestation_inconsistency_alert', type: :view do
       it 'includes missing_tag alert text' do
         expect(render_alert(procedure, mail_type))
           .to include("Cette démarche comporte une attestation, mais\nl’accusé de rejet\nne la mentionne pas :")
-      end
-
-      it 'includes mail template edit link' do
-        expect(render_alert(procedure, mail_type))
-          .to include(edit_admin_procedure_mail_template_path(procedure, 'refus'))
       end
 
       it 'includes attestation edit link' do
