@@ -9,10 +9,14 @@ module Typhoeus
     #   Typhoeus.config.cache = Typhoeus::Cache::SuccessfulRequestsRailsCache.new
     class SuccessfulRequestsRailsCache
       def get(request)
+        return if request.options[:method] != :get
+
         ::Rails.cache.read(to_key(request))
       end
 
       def set(request, response)
+        return if request.options[:method] != :get
+
         cache_info = CacheInfo.new(cache_controle_header(response))
 
         if response&.success? && cache_info.cacheable?

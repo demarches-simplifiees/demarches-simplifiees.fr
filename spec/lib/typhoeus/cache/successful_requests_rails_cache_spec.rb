@@ -4,7 +4,8 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
   let(:cache) { described_class.new }
 
   let(:base_url) { "localhost:3001" }
-  let(:request) { Typhoeus::Request.new(base_url, { method: :get }) }
+  let(:method) { :get }
+  let(:request) { Typhoeus::Request.new(base_url, { method: }) }
   let(:response) { Typhoeus::Response.new(response_code:, return_code: 0, mock: true, headers:) }
   let(:headers) { {} }
 
@@ -29,6 +30,15 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
         it 'saves the request in the Rails cache' do
           cache.set(request, response)
           expect(Rails.cache.read(to_key(request))).to be_a(Typhoeus::Response)
+        end
+
+        context 'but the verb is not GET' do
+          let(:method) { :post }
+
+          it 'doesn’t save the request in the Rails cache' do
+            cache.set(request, response)
+            expect(Rails.cache.read(to_key(request))).to be nil
+          end
         end
       end
 
@@ -71,9 +81,18 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
   end
 
   describe "#get" do
+    before { Rails.cache.write(to_key(request), response) }
+
     it 'returns the request in the cache' do
-      Rails.cache.write(to_key(request), response)
       expect(cache.get(request)).to be_a(Typhoeus::Response)
+    end
+
+    context 'when the query is not a get' do
+      let(:method) { :post }
+
+      it 'returns the request in the cache' do
+        expect(cache.get(request)).to be nil
+      end
     end
   end
 
