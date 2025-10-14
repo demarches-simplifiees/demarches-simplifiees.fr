@@ -17,6 +17,8 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
     Rails.cache = old_cache
   end
 
+  def to_key(request) = cache.send(:to_key, request)
+
   describe "#set" do
     context 'when the request is successful' do
       let(:response_code) { 200 }
@@ -26,8 +28,7 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
 
         it 'saves the request in the Rails cache' do
           cache.set(request, response)
-          expect(Rails.cache.exist?(request)).to be true
-          expect(Rails.cache.read(request)).to be_a(Typhoeus::Response)
+          expect(Rails.cache.read(to_key(request))).to be_a(Typhoeus::Response)
         end
       end
 
@@ -36,7 +37,7 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
 
         it 'doesn’t save the request in the Rails cache' do
           cache.set(request, response)
-          expect(Rails.cache.exist?(request)).to be false
+          expect(Rails.cache.read(to_key(request))).to be nil
         end
       end
 
@@ -64,14 +65,14 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
 
       it 'doesn’t save the request in the Rails cache' do
         cache.set(request, response)
-        expect(Rails.cache.exist?(request)).to be false
+        expect(Rails.cache.read(to_key(request))).to be nil
       end
     end
   end
 
   describe "#get" do
     it 'returns the request in the cache' do
-      Rails.cache.write(request, response)
+      Rails.cache.write(to_key(request), response)
       expect(cache.get(request)).to be_a(Typhoeus::Response)
     end
   end

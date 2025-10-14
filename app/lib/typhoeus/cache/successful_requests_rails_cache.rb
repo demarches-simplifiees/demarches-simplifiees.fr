@@ -9,18 +9,20 @@ module Typhoeus
     #   Typhoeus.config.cache = Typhoeus::Cache::SuccessfulRequestsRailsCache.new
     class SuccessfulRequestsRailsCache
       def get(request)
-        ::Rails.cache.read(request)
+        ::Rails.cache.read(to_key(request))
       end
 
       def set(request, response)
         cache_info = CacheInfo.new(cache_controle_header(response))
 
         if response&.success? && cache_info.cacheable?
-          ::Rails.cache.write(request, response, expires_in: cache_info.expires_in)
+          ::Rails.cache.write(to_key(request), response, expires_in: cache_info.expires_in)
         end
       end
 
       private
+
+      def to_key(request) = ActiveSupport::Cache.expand_cache_key(request, 'typhoeus')
 
       def cache_controle_header(resp) = Array.wrap(resp&.headers&.[]('cache-control')).join(', ')
 
