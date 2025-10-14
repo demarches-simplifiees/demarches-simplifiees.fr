@@ -14,7 +14,9 @@ Rails.application.configure do
         tags: ['request', event.payload[:exception] ? 'exception' : nil].compact,
         process: {
           pid: Process.pid
-        }
+        },
+        db_queries: event.payload[:queries_count],
+        db_queries_cached: event.payload[:cached_queries_count]
       }
 
       hash.merge!(event.payload[:to_log]) if event.payload.key?(:to_log)
