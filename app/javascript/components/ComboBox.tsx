@@ -98,12 +98,17 @@ export function ComboBox({
 }
 
 export function ComboBoxItem(props: ListBoxItemProps<Item>) {
-  if (props.id == 'combo-alert-message') {
+  if (props.id == 'combo-alert-message' || props.id == 'combo-error-message') {
+    const badgeClass = {
+      'combo-alert-message': 'fr-badge--info',
+      'combo-error-message': 'fr-badge--error'
+    }[props.id];
+
     return (
       <ListBoxItem
         {...props}
         isDisabled={true}
-        className="fr-menu__item fr-badge fr-badge--info fr-badge--no-text-transform width-100"
+        className={`fr-menu__item fr-badge ${badgeClass} fr-badge--no-text-transform width-100`}
       />
     );
   }
@@ -287,6 +292,7 @@ export function RemoteComboBox({
     form,
     data,
     usePost,
+    translations,
     ...props
   } = useMemo(() => s.create(maybeProps, RemoteComboBoxProps), [maybeProps]);
 
@@ -299,10 +305,11 @@ export function RemoteComboBox({
             minimumInputLength,
             limit,
             coerce,
-            usePost
+            usePost,
+            errorMessage: translations?.search_error
           })
         : loader,
-    [loader, minimumInputLength, limit, coerce, usePost]
+    [loader, minimumInputLength, limit, coerce, usePost, translations]
   );
 
   const { selectedItem, onReset, shouldShowPopover, ...comboBoxProps } =

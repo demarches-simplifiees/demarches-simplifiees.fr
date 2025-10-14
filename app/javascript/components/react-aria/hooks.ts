@@ -508,6 +508,7 @@ export const createLoader = (
     param?: string;
     coerce?: keyof typeof Coerce;
     usePost?: boolean;
+    errorMessage?: string;
   }
 ): Loader => {
   return async ({ signal, filterText }) => {
@@ -565,8 +566,18 @@ export const createLoader = (
         }
       }
       return { items: [] };
-    } catch {
-      return { items: [] };
+    } catch (error) {
+      // Return an error item to display in the dropdown
+      const errorMessage = options?.errorMessage ?? 'An error occurred';
+      return {
+        items: [
+          {
+            value: 'combo-error-message',
+            label: errorMessage,
+            data: error
+          }
+        ]
+      };
     }
   };
 };
