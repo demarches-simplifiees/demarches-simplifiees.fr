@@ -13,7 +13,7 @@ module Typhoeus
       end
 
       def set(request, response)
-        cache_info = CacheInfo.new(response&.headers&.[]('cache-control'))
+        cache_info = CacheInfo.new(cache_controle_header(response))
 
         if response&.success? && cache_info.cacheable?
           ::Rails.cache.write(request, response, expires_in: cache_info.expires_in)
@@ -21,6 +21,8 @@ module Typhoeus
       end
 
       private
+
+      def cache_controle_header(resp) = Array.wrap(resp&.headers&.[]('cache-control')).join(', ')
 
       class CacheInfo
         attr_reader :expires_in

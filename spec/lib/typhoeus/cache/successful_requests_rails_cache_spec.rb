@@ -40,6 +40,15 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
         end
       end
 
+      context 'but the result is not cacheable (in a multiple headers form)' do
+        let(:headers) { { 'cache-control' => ['public', 'no-cache'] } }
+
+        it 'doesn’t save the request in the Rails cache' do
+          cache.set(request, response)
+          expect(Rails.cache.read(to_key(request))).to be nil
+        end
+      end
+
       context 'but the result is as a max-age of 0' do
         let(:headers) { { 'cache-control' => 'public, max-age=0' } }
 
