@@ -120,6 +120,22 @@ describe AttachmentsController, type: :controller do
             expect(attestation_template.reload.logo.attached?).to be(false)
           end
         end
+
+        context 'can remove a type de champ notice explicative' do
+          let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }]) }
+          let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
+          let(:attachment) { type_de_champ.notice_explicative.attachments.first }
+          let(:signed_id) { attachment.blob.signed_id }
+
+          before do
+            type_de_champ.notice_explicative.attach({ io: Rails.root.join('spec/fixtures/files/Contrat.pdf').open, filename: 'Notice.pdf' })
+          end
+
+          it do
+            is_expected.to have_http_status(200)
+            expect(type_de_champ.reload.notice_explicative.attached?).to be(false)
+          end
+        end
       end
 
       context 'when the administrateur does not own the procedure' do
