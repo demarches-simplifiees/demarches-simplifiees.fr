@@ -27,6 +27,8 @@ module Typhoeus
       class CacheInfo
         attr_reader :expires_in
 
+        MAX_AGE_LIMIT = 1.day.to_i
+
         def initialize(directives)
           directives = directives&.split(',')&.map(&:strip)&.map(&:downcase) || []
 
@@ -36,6 +38,8 @@ module Typhoeus
 
         def cacheable? = @cacheable
 
+        private
+
         def self.public?(directives)
           directives.include?('public') &&
             !directives.include?('no-store') &&
@@ -43,9 +47,11 @@ module Typhoeus
         end
 
         def self.expires_in(directives)
-          directives
+          duration = directives
             .find { it.start_with?('max-age=') }
             &.then { it.split('=').last.to_i } || 0
+
+          duration.clamp(0, MAX_AGE_LIMIT)
         end
       end
     end

@@ -75,4 +75,69 @@ describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
       expect(cache.get(request)).to be_a(Typhoeus::Response)
     end
   end
+
+  describe Typhoeus::Cache::SuccessfulRequestsRailsCache::CacheInfo do
+    describe '#initialize' do
+      it 'parses simple directives in mix cases and with extranous spaces' do
+        cache_info = described_class.new(' Public  , Max-age=60  ')
+        expect(cache_info.cacheable?).to be true
+        expect(cache_info.expires_in).to eq(60)
+      end
+
+      it 'handles nil directives' do
+        cache_info = described_class.new(nil)
+        expect(cache_info.cacheable?).to be false
+        expect(cache_info.expires_in).to eq(0)
+      end
+    end
+
+    describe '#cacheable?' do
+      it 'returns true when public directive is present' do
+        cache_info = described_class.new('public')
+        expect(cache_info.cacheable?).to be true
+      end
+
+      it 'returns false when no-store is present' do
+        cache_info = described_class.new('public, no-store')
+        expect(cache_info.cacheable?).to be false
+      end
+
+      it 'returns false when no-cache is present' do
+        cache_info = described_class.new('public, no-cache')
+        expect(cache_info.cacheable?).to be false
+      end
+
+      it 'returns false when public is not present' do
+        cache_info = described_class.new('private, max-age=60')
+        expect(cache_info.cacheable?).to be false
+      end
+    end
+
+    describe '#expires_in' do
+      it 'returns max-age value when present' do
+        cache_info = described_class.new('public, max-age=3600')
+        expect(cache_info.expires_in).to eq(3600)
+      end
+
+      it 'returns 0 when max-age is not present' do
+        cache_info = described_class.new('public')
+        expect(cache_info.expires_in).to eq(0)
+      end
+
+      it 'returns 0 when max-age is negative' do
+        cache_info = described_class.new('public, max-age=-60')
+        expect(cache_info.expires_in).to eq(0)
+      end
+
+      it 'clips max-age to MAX_AGE_LIMIT (1 day)' do
+        cache_info = described_class.new('public, max-age=999999999')
+        expect(cache_info.expires_in).to eq(1.day.to_i)
+      end
+
+      it 'handles malformed max-age' do
+        cache_info = described_class.new('public, max-age=invalid')
+        expect(cache_info.expires_in).to eq(0)
+      end
+    end
+  end
 end
