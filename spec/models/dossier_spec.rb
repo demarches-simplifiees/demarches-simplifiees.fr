@@ -342,6 +342,25 @@ describe Dossier, type: :model do
     end
   end
 
+  describe "#restore" do
+    subject { dossier.restore(author) }
+
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, hidden_by_administration_at: 1.hour.ago) }
+
+    context "when an instructeur restore the dossier" do
+      let(:author) { create(:instructeur) }
+
+      context "when there is a dossier_suppression notification" do
+        let!(:notification_suppression) { create(:dossier_notification, dossier:, notification_type: :dossier_suppression) }
+
+        it "destroys the notification" do
+          subject
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
     let(:etablissement) { dossier.etablissement }

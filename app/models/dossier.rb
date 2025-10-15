@@ -905,6 +905,7 @@ class Dossier < ApplicationRecord
     transaction do
       if is_administration?(author)
         update(hidden_by_administration_at: nil)
+        DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_suppression)
       elsif is_user?(author)
         update(hidden_by_user_at: nil)
       end
