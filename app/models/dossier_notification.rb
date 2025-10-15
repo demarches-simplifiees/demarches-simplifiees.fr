@@ -52,7 +52,8 @@ class DossierNotification < ApplicationRecord
   def self.create_notifications_for_non_customisable_type(dossiers, notification_type)
     return unless NON_CUSTOMISABLE_TYPE.include?(notification_type)
 
-    instructeur_ids_by_dossier_id = dossiers
+    instructeur_ids_by_dossier_id = Dossier
+        .where(id: dossiers)
         .includes(groupe_instructeur: :instructeurs)
         .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
         .to_h
