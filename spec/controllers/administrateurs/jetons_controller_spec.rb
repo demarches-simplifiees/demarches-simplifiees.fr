@@ -65,6 +65,18 @@ describe Administrateurs::JetonsController, type: :controller do
         end
       end
     end
+
+    describe 'DELETE #destroy_entreprise' do
+      let(:procedure) { create(:procedure, administrateur: admin) }
+
+      subject { delete :destroy_entreprise, params: { procedure_id: procedure.id } }
+
+      it do
+        subject
+        expect(flash.notice).to eq("Le jeton API Entreprise a bien été supprimé")
+        expect(procedure.reload.specific_api_entreprise_token?).to eq(false)
+      end
+    end
   end
 
   context 'API Particulier' do
@@ -182,6 +194,22 @@ describe Administrateurs::JetonsController, type: :controller do
           expect(flash.notice).to be_nil
           expect(procedure.reload.api_particulier_token).not_to eql(token)
         end
+      end
+    end
+
+    describe 'DELETE #destroy_particulier' do
+      let(:procedure) { create(:procedure, administrateur: admin, api_particulier_token:, api_particulier_scopes:, api_particulier_sources: { cnaf: { allocataires: ['nomPrenom'] } }) }
+      let(:api_particulier_token) { "d7e9c9f4c3ca00caadde31f50fd4521a" }
+      let(:api_particulier_scopes) { ['cnaf_allocataires', 'cnaf_adresse'] }
+
+      subject { delete :destroy_particulier, params: { procedure_id: procedure.id } }
+
+      it do
+        subject
+        expect(flash.notice).to eq("Le jeton API Particulier a bien été supprimé")
+        expect(procedure.reload.api_particulier_token).to eq(nil)
+        expect(procedure.reload.api_particulier_sources).to eq(nil)
+        expect(procedure.reload.api_particulier_scopes).to eq(nil)
       end
     end
   end

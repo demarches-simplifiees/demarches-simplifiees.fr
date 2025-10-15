@@ -45,6 +45,12 @@
                       api_entreprise_admin_procedure_jetons_path(@procedure),
                       class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-pencil-line'
 
+                    = link_to 'Supprimer',
+                      api_entreprise_admin_procedure_jetons_path(@procedure),
+                      method: :delete,
+                      data: { confirm: "Êtes-vous sûr de vouloir supprimer le jeton API Entreprise ?"} ,
+                      class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-delete-line fr-ml-1w'
+
 
   - else
     = link_to 'Ajouter un jeton API Entreprise',
@@ -81,6 +87,12 @@
                       = link_to 'Modifier',
                         api_particulier_admin_procedure_jetons_path(@procedure),
                         class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-pencil-line'
+
+                      = link_to 'Supprimer',
+                        api_particulier_admin_procedure_jetons_path(@procedure),
+                        method: :delete,
+                        data: { confirm: "Êtes-vous sûr de vouloir supprimer le jeton API Particulier?"} ,
+                        class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-delete-line fr-ml-1w'
 
     - else
       = link_to 'Ajouter un jeton API Particulier',

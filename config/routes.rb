@@ -679,9 +679,11 @@ Rails.application.routes.draw do
       resource :jetons, only: [], controller: 'jetons' do
         get 'api_particulier', action: :edit_particulier
         patch 'api_particulier', action: :update_particulier
+        delete 'api_particulier', action: :destroy_particulier
 
         get 'api_entreprise', action: :edit_entreprise
         patch 'api_entreprise', action: :update_entreprise
+        delete 'api_entreprise', action: :destroy_entreprise
       end
 
       resource :api_particulier, only: [], as: :api_particulier do

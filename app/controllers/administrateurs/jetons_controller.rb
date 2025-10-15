@@ -34,6 +34,17 @@ module Administrateurs
       render :edit_particulier
     end
 
+    def destroy_particulier
+      @procedure.update!(
+        api_particulier_token: nil,
+        api_particulier_sources: nil,
+        api_particulier_scopes: nil
+      )
+
+      flash.notice = 'Le jeton API Particulier a bien été supprimé'
+      redirect_to admin_procedure_jetons_path(@procedure)
+    end
+
     def edit_entreprise
     end
 
@@ -50,6 +61,12 @@ module Administrateurs
         flash.now.alert = "Mise à jour impossible : le jeton n’est pas valide"
         render :edit_entreprise
       end
+    end
+
+    def destroy_entreprise
+      @procedure.update!(api_entreprise_token: nil)
+      flash.notice = 'Le jeton API Entreprise a bien été supprimé'
+      redirect_to admin_procedure_jetons_path(@procedure)
     end
 
     private
