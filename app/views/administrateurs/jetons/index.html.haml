@@ -13,14 +13,14 @@
     - c.with_body do
       %p
         Démarches Simplifiées utilise
-        = link_to 'API Entreprise', "https://entreprise.api.gouv.fr/"
+        = link_to 'API Entreprise', "https://entreprise.api.gouv.fr/", title: new_tab_suffix("En savoir plus sur API Entreprise"), **external_link_attributes
         qui permet de récupérer les informations administratives des entreprises et des associations.
         Si votre démarche nécessite des autorisations spécifiques que Démarches Simplifiées n’a pas par défaut, merci de renseigner ci-dessous
         %strong le jeton API Entreprise
         propre à votre démarche.
       %p
         Si besoin, vous pouvez demander une habilitation API Entreprise en cliquant sur le lien suivant :
-        = link_to "https://api.gouv.fr/les-api/api-entreprise/demande-acces.", "https://api.gouv.fr/les-api/api-entreprise/demande-acces"
+        = link_to "https://api.gouv.fr/les-api/api-entreprise/demande-acces.", "https://api.gouv.fr/les-api/api-entreprise/demande-acces", title: new_tab_suffix("Demander une habilitation API Entreprise"),  **external_link_attributes
 
   - if @procedure.specific_api_entreprise_token?
     .fr-table.fr-table--lg#api_entreprise
