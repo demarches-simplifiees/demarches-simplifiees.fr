@@ -16,6 +16,7 @@ class EditableChamp::ReferentielComponent < EditableChamp::EditableChampBaseComp
       placeholder: t('views.components.remote_combobox'),
       selected_key: @champ.selected_key,
       items: @champ.selected_items,
+      limit: ReferentielAutocompleteRenderService::MAX_RENDERED_OBJECTS,
       loader: data_sources_data_source_referentiel_path(referentiel_id: referentiel.id),
       minimum_input_length: DataSources::ReferentielController::MIN_QUERY_LENGTH,
       use_post: true,
