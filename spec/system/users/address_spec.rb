@@ -66,7 +66,7 @@ describe 'address champ', js: true do
     fill_in('Adresse', with: 'test address')
 
     # Wait for the error message to appear in the dropdown
-    expect(page).to have_css('.fr-menu__item', text: 'Une erreur est survenue lors de la recherche')
+    expect(page).to have_css('.fr-message--error', text: 'Une erreur est survenue lors de la recherche')
   end
 
   scenario "displays error message when commune API call fails" do
@@ -79,7 +79,7 @@ describe 'address champ', js: true do
     fill_in('Ville ou commune', with: '75001')
 
     # Wait for the error message to appear
-    expect(page).to have_css('.fr-menu__item', text: 'Une erreur est survenue lors de la recherche')
+    expect(page).to have_css('.fr-message--error', text: 'Une erreur est survenue lors de la recherche')
   end
 
   private

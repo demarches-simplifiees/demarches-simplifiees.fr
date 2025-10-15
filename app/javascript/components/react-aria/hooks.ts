@@ -420,22 +420,27 @@ export function useRemoteList({
   });
 
   // add to items list current selected item if it's not in the list
-  const items =
-    selectedItem && !list.getItem(selectedItem.value)
+  const items = list.error
+    ? []
+    : selectedItem && !list.getItem(selectedItem.value)
       ? [selectedItem, ...list.items]
       : list.items;
 
   const shouldShowPopover = useMemo(() => {
+    if (!isExplicitlySelected && list.error) {
+      return true;
+    }
+
     if (isExplicitlySelected || list.items.length == 0) {
       return false;
     }
-
     // Visible while loading new items or when loaded but explicit selection not yet done
     return list.loadingState == 'filtering' || !list.isLoading;
   }, [
     list.isLoading,
     list.loadingState,
     list.items.length,
+    list.error,
     isExplicitlySelected
   ]);
 
@@ -466,7 +471,8 @@ export function useRemoteList({
     items,
     onReset,
     isLoading: list.isLoading,
-    shouldShowPopover
+    shouldShowPopover,
+    error: list.error
   };
 }
 
@@ -567,17 +573,8 @@ export const createLoader = (
       }
       return { items: [] };
     } catch (error) {
-      // Return an error item to display in the dropdown
-      const errorMessage = options?.errorMessage ?? 'An error occurred';
-      return {
-        items: [
-          {
-            value: 'combo-error-message',
-            label: errorMessage,
-            data: error
-          }
-        ]
-      };
+      console.error(error);
+      throw new Error(options?.errorMessage ?? 'An error occurred');
     }
   };
 };
