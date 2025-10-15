@@ -26,6 +26,10 @@ class Attachment::MultipleComponent < ApplicationComponent
     @max = max || DEFAULT_MAX_ATTACHMENTS
 
     @attachments = attached_file.attachments || []
+
+    if @attachments.respond_to?(:preload)
+      @attachments = @attachments.preload(blob: { attachments: :record })
+    end
   end
 
   def each_attachment(&block)
