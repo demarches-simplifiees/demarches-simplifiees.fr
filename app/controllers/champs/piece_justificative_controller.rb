@@ -35,6 +35,8 @@ class Champs::PieceJustificativeController < Champs::ChampController
       @champ.fetch_later! if @champ.uses_external_data?
 
       @champ.update_timestamps
+
+      DossierPreloader.load_one(@champ.dossier, pj_template: true)
     end
 
     save_succeed
