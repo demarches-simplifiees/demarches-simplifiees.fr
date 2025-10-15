@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
+  include EtablissementHelper
+
   def dsfr_input_classname
     'fr-input'
   end
@@ -11,10 +13,5 @@ class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
 
   def hintable?
     true
-  end
-
-  def update_path
-    validate = @champ.prefilled? ? :prefill : nil
-    champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, validate:)
   end
 end
