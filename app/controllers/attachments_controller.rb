@@ -29,6 +29,10 @@ class AttachmentsController < ApplicationController
       end
       champ.piece_justificative_file.reload
       flash.notice = t("activerecord.models.attachment.successfully_deleted_with_anchor", attachment: @attachment.blob.filename, champ: @champ.focusable_input_id)
+
+      dossier = DossierPreloader.load_one(champ.dossier, pj_template: true)
+      # because preloader reassigns new champ instances champs, we have to reassign it
+      @champ = dossier.champs.find { it.id == champ.id }
     else
       @attachment.purge_later
       @attachment_options = attachment_options
