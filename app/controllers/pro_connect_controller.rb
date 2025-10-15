@@ -14,7 +14,7 @@ class ProConnectController < ApplicationController
   end
 
   def login
-    uri, state, nonce = ProConnectService.authorization_uri
+    uri, state, nonce = ProConnectService.authorization_uri(force_2fa: true)
 
     cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
     cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
