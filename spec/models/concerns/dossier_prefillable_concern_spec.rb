@@ -124,6 +124,18 @@ RSpec.describe DossierPrefillableConcern do
       end
     end
 
+    context 'when dossier contains champs with external_id' do
+      let(:types_de_champ_public) { [{ type: :siret }] }
+      let(:values) { [{ id: champ_id_1, external_id: value_1 }] }
+      let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
+      let(:value_1) { "130 025 265 00013" }
+      let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
+
+      it "updates the champs with the new values and mark them as prefilled" do
+        expect { fill }.to have_enqueued_job(ChampFetchExternalDataJob).once
+      end
+    end
+
     private
 
     def find_champ_by_stable_id(dossier, stable_id)
