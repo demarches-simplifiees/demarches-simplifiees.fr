@@ -202,6 +202,9 @@ GEM
     csv (3.3.5)
     daemons (1.4.1)
     date (3.4.1)
+    debug (1.11.0)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     deep_cloneable (3.2.1)
       activerecord (>= 3.1.0, < 9)
     delayed_cron_job (0.9.0)
@@ -1029,6 +1032,7 @@ DEPENDENCIES
   clamav-client
   concurrent-ruby (< 1.3.5)
   daemons
+  debug
   deep_cloneable
   delayed_cron_job
   delayed_job_active_record
