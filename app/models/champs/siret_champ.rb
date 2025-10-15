@@ -1,12 +1,62 @@
 # frozen_string_literal: true
 
 class Champs::SiretChamp < Champ
-  include SiretChampEtablissementFetchableConcern
-
   validate :validate_etablissement, if: :validate_champ_value?
+  before_save :clear_previous_result, if: -> { external_id_changed? }
+
+  def uses_external_data?
+    true
+  end
+
+  def should_ui_auto_refresh?
+    true
+  end
+
+  def clear_previous_result
+    if etablissement.present?
+      etablissement_to_destroy = etablissement
+      update_column(:etablissement_id, nil)
+      etablissement_to_destroy.destroy
+    end
+    self.value_json = nil
+    self.value = nil
+    self.prefilled = false
+  end
+
+  def external_data_present?
+    etablissement.present?
+  end
+
+  def update_external_data!(data:)
+    update(value: external_id)
+  end
+
+  def fetch_external_data
+    fetch_etablissement!(external_id, dossier.user)
+  end
 
   def search_terms
     etablissement.present? ? etablissement.search_terms : [value]
+  end
+
+  def fetch_etablissement!(siret, user)
+    return clear_previous_result if siret.empty?
+    return clear_previous_result if Siret.new(siret:).invalid?
+
+    etablissement = APIEntrepriseService.create_etablissement(self, siret.delete(" "), user&.id)
+    return clear_previous_result if etablissement.blank?
+
+    update!(etablissement:)
+  rescue APIEntreprise::API::Error, APIEntrepriseToken::TokenError => error
+    if APIEntrepriseService.service_unavailable_error?(error, target: :insee)
+      update!(
+        etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, siret, user.id)
+      )
+      false
+    else
+      Sentry.capture_exception(error, extra: { dossier_id:, siret: })
+      clear_previous_result
+    end
   end
 
   private
