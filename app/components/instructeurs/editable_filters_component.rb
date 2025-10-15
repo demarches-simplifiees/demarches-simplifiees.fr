@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Instructeurs::EditableFiltersComponent < ApplicationComponent
-  attr_reader :procedure_presentation, :statut, :instructeur_procedure
+  attr_reader :procedure_presentation, :statut, :instructeur_procedure, :filters_customization
 
-  def initialize(procedure_presentation:, instructeur_procedure:, statut:)
+  def initialize(procedure_presentation:, instructeur_procedure:, statut:, filters_customization: false)
     @procedure_presentation = procedure_presentation
     @instructeur_procedure = instructeur_procedure
     @statut = statut
+    @filters_customization = filters_customization
   end
 
   def id
@@ -15,6 +16,23 @@ class Instructeurs::EditableFiltersComponent < ApplicationComponent
 
   def render?
     filters.any?
+  end
+
+  def delete_button(filter)
+    button_to(
+      remove_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+      method: :delete,
+      class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-delete-line',
+      params: {
+        filter: { id: filter.column.id, filter: filter.filter },
+        statut: @statut,
+        filters_customization: true
+      }.compact,
+      form: { data: { turbo: true } },
+      form_class: 'inline'
+    ) do
+      "Supprimer"
+    end
   end
 
   def filters

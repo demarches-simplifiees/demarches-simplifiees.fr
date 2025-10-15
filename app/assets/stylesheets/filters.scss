@@ -1,3 +1,5 @@
+@import 'colors';
+
 #editable-filters-component {
   background-color: var(--background-alt-grey);
 
@@ -8,5 +10,15 @@
 
   .editable-filter-form {
     max-width: 350px;
+  }
+
+  .filter-box {
+    border: 2px dashed $blue-france-700;
+    padding: 1rem 1rem 1rem 1.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
