@@ -17,6 +17,22 @@ class Instructeurs::EditableFiltersComponent < ApplicationComponent
     filters.any?
   end
 
+  def delete_button(filter)
+    button_to(
+      remove_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+      method: :delete,
+      class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-delete-line',
+      params: {
+        filter: { id: filter.column.id, filter: filter.filter },
+        statut: @statut,
+      }.compact,
+      form: { data: { turbo: true } },
+      form_class: 'inline'
+    ) do
+      "Supprimer"
+    end
+  end
+
   def filters
     procedure_presentation.filters_for(statut)
   end

@@ -483,6 +483,7 @@ Rails.application.routes.draw do
         post 'update_filter'
         delete 'remove_filter'
         post 'toggle_filters_expanded'
+        post 'toggle_filters_customization'
       end
     end
 
