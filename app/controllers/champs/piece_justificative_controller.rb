@@ -35,6 +35,10 @@ class Champs::PieceJustificativeController < Champs::ChampController
       @champ.fetch_later! if @champ.uses_external_data?
 
       @champ.update_timestamps
+
+      dossier = DossierPreloader.load_one(@champ.dossier, pj_template: true)
+      # because preloader reassigns new champ instances champs, we have to reassign it
+      @champ = dossier.champs.find { it.id == @champ.id }
     end
 
     save_succeed
