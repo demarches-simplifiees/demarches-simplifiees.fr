@@ -4,15 +4,11 @@ describe EditableChamp::DropDownListComponent, type: :component do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
   let(:dossier) { create(:dossier, procedure:) }
   let(:tdc) { procedure.active_revision.types_de_champ.first }
-  let(:champ) { dossier.champs.first }
+  let(:champs) { dossier.champs }
+  let(:champ) { champs.first }
 
   subject(:render) do
-    component = nil
-    ActionView::Base.empty.form_for(champ, url: '/') do |form|
-      component = EditableChamp::EditableChampComponent.new(champ:, form:)
-    end
-
-    render_inline(component)
+    render_inline(EditableChamp::EditableChampComponent.new(champs:))
   end
 
   let(:fieldset) { page.find('fieldset') }

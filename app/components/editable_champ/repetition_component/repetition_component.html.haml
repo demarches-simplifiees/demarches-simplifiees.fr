@@ -5,8 +5,9 @@
 
 
   .repetition{ id: dom_id(@champ, :rows), class: class_names('utils-repetition-required' => @champ.mandatory?) }
-    - @champ.row_ids.each.with_index(1) do |row_id, row_number|
-      = render EditableChamp::RepetitionRowComponent.new(form: @form, dossier: @champ.dossier, type_de_champ: @champ.type_de_champ, row_id:, row_number:, seen_at: @seen_at)
+    - @champ.new_rows.each.with_index(1) do |row, row_number|
+      = render EditableChamp::RepetitionRowComponent.new(row:, row_number:, seen_at: @seen_at)
+
 
   .actions
     = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.dossier, @champ.stable_id), http_method: :create, opt: { class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line fr-mb-3w", title: t(".add_title", libelle: @champ.libelle), id: dom_id(@champ, :create_repetition)}) do

@@ -338,7 +338,7 @@ module Users
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_attributes_params, dossier.project_champs_public_all)
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_attributes_params, dossier.link_parent_children!.filter(&:public?))
           render :update, layout: false
         end
       end
@@ -353,6 +353,8 @@ module Users
       @dossier = dossier_with_champs(pj_template: false)
       type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id], :public)
       champ = dossier.project_champ(type_de_champ, row_id: params[:row_id])
+
+      dossier.link_parent_children!
 
       champ.validate(:champs_public_value) if champ.external_data_fetched?
       respond_to do |format|

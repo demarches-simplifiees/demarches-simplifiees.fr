@@ -9,6 +9,9 @@ class Champ < ApplicationRecord
   self.ignored_columns += [:type_de_champ_id, :parent_id]
 
   attr_readonly :stable_id
+  attr_accessor :parent
+
+  def flattened_self_and_children = [self]
 
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   has_many_attached :piece_justificative_file
@@ -25,6 +28,10 @@ class Champ < ApplicationRecord
     @type_de_champ ||= dossier.revision
       .types_de_champ
       .find(-> { raise "Type De Champ #{stable_id} not found in Revision #{dossier.revision_id}" }) { _1.stable_id == stable_id }
+  end
+
+  def type_de_champ=(new_type_de_champ)
+    @type_de_champ = new_type_de_champ
   end
 
   delegate :libelle,

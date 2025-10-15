@@ -3,6 +3,22 @@
 class Champs::RepetitionChamp < Champ
   delegate :libelle_for_export, to: :type_de_champ
 
+  attr_accessor :parent
+  attr_reader :new_rows, :children
+
+  def new_rows=(value)
+    @new_rows = value
+    value.each { it.parent = self }
+  end
+
+  def children=(value)
+    @children = value
+    value.each { it.parent = self }
+  end
+
+  def rows_or_children = (Array.wrap(new_rows) + Array.wrap(children))
+  def flattened_self_and_children = [self] + rows_or_children.flat_map(&:flattened_self_and_children)
+
   def rows
     dossier.project_rows_for(type_de_champ)
   end

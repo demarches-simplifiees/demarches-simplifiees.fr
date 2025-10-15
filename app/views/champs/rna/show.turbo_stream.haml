@@ -1,3 +1,2 @@
-= fields_for @champ.input_name, @champ do |form|
-  = turbo_stream.replace @champ.input_group_id do
-    = render EditableChamp::EditableChampComponent.new champ:@champ, form:
+= turbo_stream.replace @champ.input_group_id do
+  = render EditableChamp::EditableChampComponent.new champs: [@champ]

@@ -1,0 +1,11 @@
+= tag.div(class: class_names(reset_tag_for_depth => true, "fr-my-2w" => !first_level?), 'data-controller': 'expand') do
+  %div{ class: class_names(flex: true, "top-bordered" => first_level?) }
+    = render EditableChamp::HeaderSectionComponent.new(champ: header_section, html_class: { 'fr-m-0 fr-text--md fr-px-4v flex-grow': true, "fr-text-action-high--blue-france fr-py-2w": first_level?, 'fr-py-1v': !first_level? })
+    - if !header_section.children.empty? && first_level?
+      %button{ type: "button", aria: { controls: section_id, "expanded": "true" }, href: section_id, 'data-action': 'click->expand#toggle', class: "fr-btn fr-btn--tertiary-no-outline" }
+        %i.fr-icon-arrow-up-s-line{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+        %span.fr-sr-only= t('.toggle_section', section: header_section.libelle)
+
+  %div{ id: section_id, 'data-expand-target': 'content' }
+    - if !header_section.children.empty?
+      = render Dossiers::ChampsRowsShowComponent.new(champs: header_section.children, seen_at: @demande_seen_at, profile: @profile)

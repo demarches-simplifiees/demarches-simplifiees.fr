@@ -13,6 +13,7 @@ class Dossier < ApplicationRecord
   include DossierStateConcern
   include DossierChampsConcern
   include DossierExportConcern
+  include DossierTreeConcern
 
   enum :state, {
     brouillon:       'brouillon',
@@ -1095,6 +1096,12 @@ class Dossier < ApplicationRecord
 
   def revision_changed_since_submitted?
     submitted_revision_id.present? && submitted_revision_id != revision_id
+  end
+
+  def validate(args)
+    link_parent_children!
+
+    super(args)
   end
 
   private

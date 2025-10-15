@@ -350,7 +350,7 @@ module Instructeurs
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.project_champs_private_all)
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.link_parent_children!.filter(&:private?))
         end
       end
     end

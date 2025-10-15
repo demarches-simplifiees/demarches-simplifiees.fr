@@ -1,11 +1,11 @@
 .champs-group{ id: "safe-row-selector-#{row_id}" }
-  - if @types_de_champ.size > 1
+  - if @row.children.size > 1
     %fieldset.fr-mx-0.fr-px-0
-      %legend.block-id.fr-px-0= "#{@type_de_champ.libelle} "
-      = render section_component
+      %legend.block-id.fr-px-0= "#{@row.libelle} "
+      = render EditableChamp::EditableChampComponent.new(champs: @row.children, seen_at: @seen_at)
   - else
-    = render section_component
+    = render EditableChamp::EditableChampComponent.new(champs: @row.children, seen_at: @seen_at)
 
   .flex.row-reverse
-    = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@dossier, @type_de_champ.stable_id, row_id:), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne utils-repetition-required-destroy-button", title: t(".delete_title", row_number:), "aria-label": t(".delete_label", row_number:)}) do
+    = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@dossier, @row.stable_id, row_id:), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne utils-repetition-required-destroy-button", title: t(".delete_title", row_number:), "aria-label": t(".delete_label", row_number:)}) do
       = t(".delete")
