@@ -2,6 +2,11 @@
 en:
   rna:
     data_fetched: "This RNA number is linked to: %{title}, %{address}."
+  siret:
+    pending: "Search in progress for SIRET %{value}…"
+    fetched_with_capital: "%{raison_sociale_or_name} %{forme_juridique} with a share capital of %{capital_sociale}"
+    fetched: "%{raison_sociale_or_name} %{forme_juridique}"
+    error: "An error occurred while retrieving SIRET information."
   referentiel:
     fetching: "Search in progress."
     error: "No item found for the reference: %{value}"
