@@ -39,8 +39,4 @@ class Champs::PieceJustificativeController < Champs::ChampController
 
     save_succeed
   end
-
-  def dossier
-    @champ.dossier
-  end
 end
