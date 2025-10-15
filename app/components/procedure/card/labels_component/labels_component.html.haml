@@ -2,14 +2,14 @@
   = link_to  [:admin, @procedure, :labels], class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.column.align-center.justify-between
       - if @procedure.labels.present?
-        %p.fr-badge.fr-badge--info
+        %p.fr-badge.fr-badge--success
           Configuré
         %div
           .line-count.fr-my-1w
             %p.fr-tag= @procedure.labels.size
       - else
-        %p.fr-badge
-          Non configuré
+        %p.fr-badge--info
+          À configurer
 
       %h3.fr-h6
         = t('.title')
