@@ -394,6 +394,18 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
+      context 'when data is mapped to siret' do
+        let(:prefilled_type_de_champ_type) { :siret }
+        let(:data) { { ok: '13002526500013' } }
+        it 'casts and updates the siret champ' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.find(&:siret?).external_id }.from(nil).to('13002526500013')
+        end
+        it 'enqueue job' do
+          expect { subject }.to have_enqueued_job(ChampFetchExternalDataJob).with(dossier.reload.project_champs.find(&:siret?), '13002526500013')
+        end
+      end
+
       context 'when data is mapped to multiple_drop_down_list' do
         let(:prefilled_type_de_champ_type) { :multiple_drop_down_list }
         let(:prefilled_type_de_champ_options) { { options: ['valid', 'valid_one', 'valid_two'] } }
