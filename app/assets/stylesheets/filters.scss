@@ -1,7 +1,9 @@
 @import 'colors';
 
 #editable-filters-component {
-  background-color: var(--background-alt-grey);
+  .filters-panel {
+    background-color: var(--background-alt-grey);
+  }
 
   .fr-fieldset,
   .fr-ds-combobox__multiple {

@@ -32,7 +32,6 @@ module Instructeurs
 
     def remove_filter
       @procedure_presentation.remove_filter_for_statut!(params[:statut], filtered_column_from_params)
-
       if params[:filters_customization]
         render turbo_stream: turbo_stream.remove("customize-filter-#{filtered_column_from_params.id.parameterize}")
       else
