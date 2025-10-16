@@ -3,6 +3,10 @@
 module Devise
   # Useful helpers additions to Devise::Controllers::StoreLocation
   module StoreLocationExtension
+    def extra_query_params
+      params.permit(:prefill_token, :test).to_h
+    end
+
     # A variant of `stored_location_key_for` which doesn't delete the stored path.
     def get_stored_location_for(resource_or_scope)
       location = stored_location_for(resource_or_scope)

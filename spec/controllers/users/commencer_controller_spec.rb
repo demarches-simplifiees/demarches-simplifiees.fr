@@ -93,6 +93,10 @@ describe Users::CommencerController, type: :controller do
       subject { get :commencer, params: { path: path, prefill_token: dossier.prefill_token } }
 
       shared_examples 'a prefilled brouillon dossier retriever' do
+        it 'stores the prefill token in session' do
+          expect { subject }.to change { controller.stored_location_for(:user) }.to(commencer_path(dossier.procedure.path, prefill_token: dossier.prefill_token))
+        end
+
         context 'when the dossier is a prefilled brouillon and the prefill token is present' do
           it 'retrieves the dossier' do
             subject
@@ -126,6 +130,14 @@ describe Users::CommencerController, type: :controller do
         let(:user) { nil }
 
         it_behaves_like 'a prefilled brouillon dossier retriever'
+
+        context 'when rendered view' do
+          render_views
+          it 'includes the prefill token in Pro Connect link' do
+            subject
+            expect(response.body).to have_link('Agent', href: commencer_pro_connect_path(dossier.procedure.path, prefill_token: dossier.prefill_token))
+          end
+        end
       end
 
       context 'when the user is authenticated' do
