@@ -8,19 +8,10 @@
     Jetons API
 
 .fr-container
-  %h2.fr-h3 API Entreprise
-  = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-    - c.with_body do
-      %p
-        Démarches Simplifiées utilise
-        = link_to 'API Entreprise', "https://entreprise.api.gouv.fr/", title: new_tab_suffix("En savoir plus sur API Entreprise"), **external_link_attributes
-        qui permet de récupérer les informations administratives des entreprises et des associations.
-        Si votre démarche nécessite des autorisations spécifiques que Démarches Simplifiées n’a pas par défaut, merci de renseigner ci-dessous
-        %strong le jeton API Entreprise
-        propre à votre démarche.
-      %p
-        Si besoin, vous pouvez demander une habilitation API Entreprise en cliquant sur le lien suivant :
-        = link_to "https://api.gouv.fr/les-api/api-entreprise/demande-acces.", "https://api.gouv.fr/les-api/api-entreprise/demande-acces", title: new_tab_suffix("Demander une habilitation API Entreprise"),  **external_link_attributes
+  %h2.fr-h4 API Entreprise
+
+  %p
+    = t('.api_entreprise_description_html', app_name: Current.application_name)
 
   - if @procedure.specific_api_entreprise_token?
     .fr-table.fr-table--lg#api_entreprise
@@ -31,14 +22,24 @@
               %thead
                 %tr
                   %th{ scope: "col" }
-                    Nom
-                  %th.change{ scope: "col" }
+                    Jeton
+                  %th{ scope: "col" }
+                    Expiration
+                  %th.change.fr-col-2{ scope: "col" }
                     Actions
 
               %tbody
                 %tr
                   %td
-                    API entreprise
+                    .fr-badge
+                      API entreprise
+                  %td
+                    - if @procedure.api_entreprise_token&.expired_or_expires_soon?
+                      .fr-badge.fr-badge--error
+                        = l(@procedure.api_entreprise_token.expires_at.to_date)
+                    - else
+                      .fr-badge.fr-badge--success
+                        = l(@procedure.api_entreprise_token.expires_at.to_date)
                   %td.change
 
                     = link_to 'Modifier',
@@ -56,14 +57,12 @@
     = link_to 'Ajouter un jeton API Entreprise',
                       api_entreprise_admin_procedure_jetons_path(@procedure),
                       class: 'fr-btn'
-
-  %h2.fr-h3.fr-mt-3w API Particulier
+  %hr.fr-hr.fr-mt-5w.fr-mb-1w
+  %h2.fr-h4 API Particulier
 
   - if @procedure.feature_enabled?(:api_particulier)
-    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-      - c.with_body do
-        %p
-          = t('.api_particulier_description_html', app_name: Current.application_name)
+    %p
+      = t('.api_particulier_description_html', app_name: Current.application_name)
 
     - if @procedure.api_particulier_token.present?
       .fr-table.fr-table--lg
@@ -74,14 +73,15 @@
                 %thead
                   %tr
                     %th{ scope: "col" }
-                      Nom
-                    %th.change{ scope: "col" }
+                      Jeton
+                    %th.change.fr-col-2{ scope: "col" }
                       Actions
 
                 %tbody
                   %tr
                     %td
-                      API particulier
+                      .fr-badge
+                        API particulier
                     %td.change
 
                       = link_to 'Modifier',
@@ -100,27 +100,25 @@
                         class: 'fr-btn'
 
     - if @procedure.api_particulier_scopes.present?
-      .fr-table.fr-table--lg
-        .fr-table__wrapper
-          .fr-table__container
-            .fr-table__content
-              %table
-                %thead
-                  %tr
-                    %th{ scope: "col" }
-                      Nom
-                    %th.change{ scope: "col" }
-                      Actions
+      .fr-pt-4w.fr-px-4w.fr-pb-2w.fr-background-alt--blue-france
+        .flex.align-start
+          %h3.fr-h6= t('administrateurs.sources_particulier.show.data_sources')
+          = link_to 'Modifier',
+          admin_procedure_api_particulier_sources_path,
+          class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-pencil-line fr-ml-auto'
+        - if @procedure.api_particulier_sources.present?
+          - @procedure.api_particulier_sources.each do |source_name, categories|
+            %p.fr-text--sm
+              %strong= source_name.upcase
+              %br
+              - categories.each do |category, fields|
+                = "#{category}:"
+                - fields.each do |field|
+                  %span.fr-tag.fr-tag--sm.fr-mb-1v
+                    = field
+        - else
+          Pas de source de données définies
 
-                %tbody
-                  %tr
-                    %td
-                      = t('administrateurs.sources_particulier.show.data_sources')
-                    %td.change
-
-                      = link_to 'Modifier',
-                        admin_procedure_api_particulier_sources_path,
-                        class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-pencil-line'
 
   - else
     %p
