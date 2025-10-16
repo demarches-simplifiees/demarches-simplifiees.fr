@@ -38,6 +38,10 @@ class FilteredColumn
     Array(filter.is_a?(String) ? filter : filter&.dig(:value))
   end
 
+  def filter_is_active?
+    filter_value.any?(&:present?)
+  end
+
   private
 
   def check_filter_max_length
