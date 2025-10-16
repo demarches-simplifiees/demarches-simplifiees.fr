@@ -174,6 +174,24 @@ describe 'The user', js: true do
     end.to change { Champ.where.not(discarded_at: nil).count }
   end
 
+  let(:procedure_with_repetition_2) do
+    create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :text, mandatory: true, libelle: 'texte obligatoire' }, { type: :repetition, mandatory: true, libelle: 'repetition', children: [{ libelle: 'sub type de champ' }] }])
+  end
+
+  scenario 'do not fill a dossier with repetition and check errors on champs' do
+    log_in(user, procedure_with_repetition_2)
+    fill_individual
+    click_on 'Déposer le dossier'
+
+    # errors in header section
+    expect(page).to have_content('texte obligatoire doit être rempli')
+    expect(page).to have_content('sub type de champ doit être rempli')
+
+    # errors on champs
+    expect(page).to have_content('« texte obligatoire » doit être rempli')
+    expect(page).to have_content('« sub type de champ » doit être rempli')
+  end
+
   let(:simple_procedure) {
     create(:procedure, :published, :for_individual, types_de_champ_public: [
       { mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' },
