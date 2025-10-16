@@ -1,3 +1,12 @@
+- if current_instructeur.feature_enabled?(:notification)
+  = render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-notice-name" => "instr-recapitulatif-notifications" }) do |c|
+    - c.with_title do
+      Un récapitulatif des badges de notifications est maintenant affiché dès la liste de vos démarches : qu'en pensez-vous ?
+    - c.with_desc do
+      %br
+    - c.with_link do
+      = link_to "Donnez votre avis sur cette nouvelle fonctionnalité", "https://grist.numerique.gouv.fr/o/docs/forms/mcbcbSbS8eybwCmPmmkRKb/4", class: "fr-notice__link", **external_link_attributes
+
 - content_for(:title, "Démarches")
 
 .sub-header
