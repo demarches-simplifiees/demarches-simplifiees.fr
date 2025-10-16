@@ -37,7 +37,6 @@
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       = render Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: @statut)
-      = render Instructeurs::RemoveFilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
 
     - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 
