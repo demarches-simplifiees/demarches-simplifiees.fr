@@ -3,7 +3,16 @@
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
       .fr-col
         %h6.fr-mb-0.fr-p-2w= t('.search_filter_dossiers')
-      - if !filters_customization
+      - if filters_customization
+        .fr-col-auto
+          = button_to toggle_filters_customization_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_customization: !filters_customization),
+              method: :post,
+              class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline',
+              form: { data: { turbo: true } },
+              aria: { expanded: procedure_presentation.filters_expanded.to_s } do
+            %span= t('.disable_filters_customization')
+            %span.fr-icon-close-line
+      - else
         .fr-col-auto
           = button_to toggle_filters_expanded_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_expanded: !procedure_presentation.filters_expanded),
               method: :post,
@@ -28,12 +37,13 @@
             = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:,instructeur_procedure:, edit_mode: true)
 
       - if !filters_customization
-        = button_to toggle_filters_customization_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_customization: !filters_customization),
-            method: :post,
-            class: 'fr-btn fr-btn--sm fr-btn--tertiary',
-            form: { data: { turbo: true } },
-            aria: { expanded: procedure_presentation.filters_expanded.to_s } do
-          %span.fr-icon-settings-5-line
-          %span= t('.enable_filters_customization')
+        .ml-auto.fr-p-2w.flex.align-end
+          = button_to toggle_filters_customization_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_customization: !filters_customization),
+              method: :post,
+              class: 'fr-btn fr-btn--sm fr-btn--tertiary',
+              form: { data: { turbo: true } },
+              aria: { expanded: procedure_presentation.filters_expanded.to_s } do
+            %span.fr-icon-settings-5-line
+            %span= t('.enable_filters_customization')
 
   = render Instructeurs::RemoveFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)
