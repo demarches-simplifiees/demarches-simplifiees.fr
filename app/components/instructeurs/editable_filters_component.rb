@@ -13,10 +13,6 @@ class Instructeurs::EditableFiltersComponent < ApplicationComponent
     "editable-filters-component"
   end
 
-  def render?
-    filters.any?
-  end
-
   def delete_button(filter)
     button_to(
       remove_filter_instructeur_procedure_presentation_path(@procedure_presentation),
