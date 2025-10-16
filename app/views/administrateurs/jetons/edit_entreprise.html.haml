@@ -1,0 +1,22 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Jetons API', [:admin, @procedure, :jetons]],
+                    ['Jeton API Entreprise']] }
+
+.fr-container
+  .fr-mb-3w
+    = link_to "Liste des jetons",
+      [:admin, @procedure, :jetons],
+      class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
+
+  %h1.fr-h2 Jeton API Entreprise
+
+= form_with model: @procedure, url: url_for({ controller: 'administrateurs/jetons', action: :update_entreprise }) do |f|
+  .fr-container
+
+    = render partial: 'administrateurs/procedures/api_entreprise_token_expiration_alert', locals: { procedure: @procedure }
+
+    = render Dsfr::InputComponent.new(form: f, attribute: :api_entreprise_token, input_type: :password_field, required: false, opts: { value: @procedure.read_attribute(:api_entreprise_token)})
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
