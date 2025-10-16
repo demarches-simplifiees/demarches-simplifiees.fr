@@ -12,7 +12,7 @@ class Attachment::EditComponent < ApplicationComponent
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, attachments: [], max: nil, **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, attachments: [], max: nil, aria_labelledby: nil, **kwargs)
     @champ = champ
     @attached_file = attached_file
     @direct_upload = direct_upload
@@ -34,6 +34,8 @@ class Attachment::EditComponent < ApplicationComponent
     # When parent form has nested attributes, pass the form builder object_name
     # to correctly infer the input attribute name.
     @form_object_name = kwargs.delete(:form_object_name)
+
+    @aria_labelledby = aria_labelledby
 
     verify_initialization!(kwargs)
   end
@@ -95,7 +97,7 @@ class Attachment::EditComponent < ApplicationComponent
     describedby << describedby_hint_id if show_hint?
     describedby << champ.error_id if champ&.errors&.has_key?(:value)
 
-    options[:aria] = { describedby: describedby.join(' ') }
+    options[:aria] = { describedby: describedby.join(' '), labelledby: @aria_labelledby }
 
     options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
     options[:multiple] = true if as_multiple?
