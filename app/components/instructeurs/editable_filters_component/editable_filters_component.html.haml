@@ -21,8 +21,8 @@
               aria: { expanded: procedure_presentation.filters_expanded.to_s } do
             %span{ class: procedure_presentation.filters_expanded ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line', data: { 'expand-target': 'icon' } }
             %span.fr-sr-only= t('.toggle_filters')
-    .fr-grid-row{ class: class_names({ "hidden": !procedure_presentation.filters_expanded }) }
 
+    .fr-grid-row{ class: class_names({ "hidden": !procedure_presentation.filters_expanded }) }
       - filters.each do |filter|
         .fr-col-auto.fr-p-2w.flex.column
           - if filters_customization
@@ -41,7 +41,13 @@
 
               = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:,instructeur_procedure:, edit_mode: true)
 
-      - if !filters_customization
+      - if filters_customization
+        .flex.align-center.fr-p-2w
+          = render Instructeurs::AddFilterDropdownComponent.new(procedure_presentation:, statut:, instructeur_procedure:)
+      - else
+        - if filters.none?
+          .flex.align-center.fr-p-2w
+            = t('.no_filters')
         .ml-auto.fr-p-2w.flex.align-end
           = button_to toggle_filters_customization_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_customization: !filters_customization),
               method: :post,
