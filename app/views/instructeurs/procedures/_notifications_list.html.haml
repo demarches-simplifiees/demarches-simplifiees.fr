@@ -15,8 +15,12 @@
             .fr-col-9.flex.align-center.notification-dossiers
               - notifications_type.each.with_index do |notification, index|
                 .flex.align-center.notification-dossier
-                  .fr-link.fr-link--sm.fr-mr-1w
-                    = link_to notification.dossier_id, instructeur_dossier_path(procedure_id, notification.dossier_id)
+                  - if statut != 'supprimes'
+                    .fr-link.fr-link--sm.fr-mr-1w
+                      = link_to notification.dossier_id, instructeur_dossier_path(procedure_id, notification.dossier_id)
+                  - else
+                    %span.fr-mr-1w.fr-text--sm.fr-mb-0
+                      = notification.dossier_id
                   .fr-mb-0
                     %span.no-wrap.fr-text--sm
                       = notification.dossier.owner_name
