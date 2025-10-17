@@ -8,6 +8,11 @@ class ApplicationJob < ActiveJob::Base
   attr_writer :request_id
 
   before_perform do |job|
+    # Set url_options for ActiveStorage in job context (needed for Disk service only)
+    if ActiveStorage::Blob.service.name == :local
+      ActiveStorage::Current.url_options = Rails.application.routes.default_url_options
+    end
+
     arg = job.arguments.first
 
     case arg
