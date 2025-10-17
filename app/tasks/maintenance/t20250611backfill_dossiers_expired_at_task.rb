@@ -2,16 +2,15 @@
 
 module Maintenance
   class T20250611backfillDossiersExpiredAtTask < MaintenanceTasks::Task
-    # Documentation: cette tâche modifie les données pour remplir
-    # le nouvel attribut expired_at de la table dossiers.
+    # Documentation: cette tâche modifie les données pour corriger
+    # la valeur du champ expired_at des dossiers pour lesquels
+    # une notification d'expiration a été envoyée.
 
     include RunnableOnDeployConcern
     include StatementsHelpersConcern
 
     def collection
-      Dossier
-        .where.not(state: Dossier.states.fetch(:en_instruction))
-        .where(expired_at: nil)
+      Dossier.where.not(state: Dossier.states.fetch(:en_instruction))
     end
 
     def process(dossier)
