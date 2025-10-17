@@ -59,7 +59,7 @@
             %span.fr-hint-text
               Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
 
-            %div{ id: dom_id(attestation_template, :logo_attachment) }
+            %div{ id: h(dom_id(attestation_template, :logo_attachment)) }
               = render Attachment::EditComponent.new(attached_file: attestation_template.logo, direct_upload: false)
 
           .fr-fieldset__element
@@ -102,7 +102,7 @@
             %span.fr-hint-text
               Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
 
-            %div{ id: dom_id(attestation_template, :signature_attachment) }
+            %div{ id: h(dom_id(attestation_template, :signature_attachment)) }
               = render Attachment::EditComponent.new(attached_file: attestation_template.signature, direct_upload: false)
 
           .fr-fieldset__element
