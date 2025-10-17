@@ -376,6 +376,20 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           expect(attestation_acceptation_template.reload).to be_published
           expect(flash.notice).to eq("L’attestation a été publiée.")
         end
+
+        context 'when there is already an acceptation template v1' do
+          let!(:acceptation_template_v1) { create(:attestation_template, :published, version: 1, procedure:) }
+
+          it 'publish the draft v2 and destroys the v1' do
+            expect(procedure.attestation_templates.count).to eq 2
+            expect(procedure.attestation_templates.map(&:version)).to match_array([1, 2])
+            subject
+            expect(procedure.attestation_templates.count).to eq 1
+            expect(attestation_acceptation_template.reload).to be_published
+            expect(attestation_acceptation_template.version).to eq 2
+            expect(flash.notice).to eq("La nouvelle version de l’attestation a été publiée.")
+          end
+        end
       end
     end
 
