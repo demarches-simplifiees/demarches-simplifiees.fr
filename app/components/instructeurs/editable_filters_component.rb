@@ -25,7 +25,7 @@ class Instructeurs::EditableFiltersComponent < ApplicationComponent
       form: { data: { turbo: true } },
       form_class: 'inline'
     ) do
-      "Supprimer"
+      t('.delete_filter', filter_label: filter.label)
     end
   end
 
