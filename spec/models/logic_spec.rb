@@ -71,7 +71,9 @@ describe Logic do
       it 'returns a stable condition and reports the missing value' do
         drop_down.update!(drop_down_options: [])
 
-        expect { subject }.not_to raise_error
+        expect(subject.errors(type_de_champs)).to include(
+          a_hash_including(type: :empty_options, stable_id: drop_down.stable_id)
+        )
       end
     end
   end
