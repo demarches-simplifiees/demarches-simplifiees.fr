@@ -64,7 +64,7 @@ module Administrateurs
       attestation_kind = @attestation_template.kind
       # toggle activation
       if @attestation_template.persisted? && @attestation_template.activated? != cast_bool(attestation_params[:activated])
-        @procedure.attestation_templates_for(attestation_kind).update_all(activated: attestation_params[:activated])
+        @procedure.attestation_templates_v2_for(attestation_kind).update_all(activated: attestation_params[:activated])
         render :update
         return
       end
@@ -103,7 +103,7 @@ module Administrateurs
     def create = update
 
     def reset
-      @procedure.attestation_templates_for(@attestation_template.kind).draft&.destroy_all
+      @procedure.attestation_templates_v2_for(@attestation_template.kind).draft&.destroy_all
 
       flash.notice = "Les modifications ont été réinitialisées."
       redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure, attestation_kind: @attestation_template.kind)
@@ -114,7 +114,7 @@ module Administrateurs
     def retrieve_attestation_template
       attestation_kind = params[:attestation_kind]
 
-      attestation_templates_by_kind = @procedure.attestation_templates_for(attestation_kind)
+      attestation_templates_by_kind = @procedure.attestation_templates_v2_for(attestation_kind)
       @attestation_template = attestation_templates_by_kind.find(&:draft?) || attestation_templates_by_kind.find(&:published?) || build_default_attestation(attestation_kind)
     end
 

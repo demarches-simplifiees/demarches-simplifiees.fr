@@ -54,6 +54,8 @@ class Procedure < ApplicationRecord
   has_many :attestation_acceptation_templates_v2, -> { AttestationTemplate.v2.where(kind: "acceptation") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
   has_many :attestation_refus_templates_v2, -> { AttestationTemplate.v2.where(kind: "refus") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
+  has_many :attestation_acceptation_templates, -> { AttestationTemplate.where(kind: "acceptation") }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+
   has_one :attestation_acceptation_template,
           -> { published.where(kind: "acceptation") },
           class_name: "AttestationTemplate",
@@ -780,8 +782,16 @@ class Procedure < ApplicationRecord
     !allow_expert_review?
   end
 
-  def attestation_templates_for(kind)
+  def attestation_templates_v2_for(kind)
     public_send("attestation_#{kind}_templates_v2")
+  end
+
+  def attestation_templates_for(kind)
+    if kind == AttestationTemplate.kinds.fetch(:acceptation)
+      public_send("attestation_acceptation_templates")
+    elsif kind == AttestationTemplate.kinds.fetch(:refus)
+      public_send("attestation_refus_templates_v2")
+    end
   end
 
   def published_attestation_template_for(kind)
