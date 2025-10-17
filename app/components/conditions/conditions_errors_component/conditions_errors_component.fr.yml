@@ -10,3 +10,4 @@ fr:
       eq: "Lʼopérateur « est » ne s'applique pas au choix multiple. Sélectionnez l’opérateur « contient »."
       not_eq: "Lʼopérateur « n’est pas » ne s'applique pas au choix multiple."
     not_included: "« %{right} » ne fait pas partie de « %{libelle} »."
+    empty_options: "Le champ « %{libelle} » n'a aucune option parmi lesquelles choisir."

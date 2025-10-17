@@ -62,6 +62,10 @@ class Conditions::ConditionsErrorsComponent < ApplicationComponent
       t("required_include.eq", scope: '.errors')
     in { type: :required_include, operator_name: "Logic::NotEq" }
       t("required_include.not_eq", scope: '.errors')
+    in { type: :empty_options, stable_id: stable_id }
+      targeted_champ = @source_tdcs.find { |tdc| tdc.stable_id == stable_id }
+      t('empty_options', scope: '.errors',
+        libelle: targeted_champ.libelle)
     else
       nil
     end

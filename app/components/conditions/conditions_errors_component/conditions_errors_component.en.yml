@@ -10,3 +10,4 @@ en:
       eq: "The « is » operator does not apply to multiple dropdown list. Select the « includes » operator."
       not_eq: "The « is not » operator does not apply to multiple dropdown list."
     not_included: "« %{right} » is not included in « %{libelle} »."
+    empty_options: "The field « %{libelle} » has no options to select from."
