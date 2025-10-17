@@ -14,6 +14,7 @@ module Users
       @revision = params[:test] ? @procedure.draft_revision : @procedure.active_revision
 
       if params[:prefill_token].present? || commencer_page_is_reloaded?
+        store_user_location!(@procedure)
         retrieve_prefilled_dossier(params[:prefill_token] || session[:prefill_token])
       elsif prefill_params_present?
         build_prefilled_dossier
@@ -99,10 +100,6 @@ module Users
     end
 
     private
-
-    def extra_query_params
-      params.slice(:prefill_token, :test).to_unsafe_h.compact
-    end
 
     def commencer_page_is_reloaded?
       session[:prefill_token].present? && session[:prefill_params_digest] == PrefillChamps.digest(params)
