@@ -27,7 +27,7 @@ class FilteredColumn
   end
 
   def id
-    column.h_id.merge(filter: filter.is_a?(Hash) ? filter.to_a.sort : filter).sort.to_json
+    column.h_id.merge(filter: { operator: filter_operator, value: filter_value }).sort.to_json
   end
 
   def filter_operator
