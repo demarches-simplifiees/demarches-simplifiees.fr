@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class ProcedurePresentation < ApplicationRecord
+  ALL_FILTERS = [
+    :a_suivre_filters,
+    :suivis_filters,
+    :traites_filters,
+    :tous_filters,
+    :supprimes_filters,
+    :supprimes_recemment_filters,
+    :expirant_filters,
+    :archives_filters,
+  ]
+
   self.ignored_columns += ["displayed_fields", "filters", "sort"]
 
   belongs_to :assign_to, optional: false
@@ -23,6 +34,7 @@ class ProcedurePresentation < ApplicationRecord
   attribute :archives_filters, :filtered_column, array: true
 
   before_create { self.displayed_columns = procedure.default_displayed_columns }
+  before_create :set_default_filters
 
   validates_associated :displayed_columns, :sorted_column, :a_suivre_filters, :suivis_filters,
     :traites_filters, :tous_filters, :supprimes_filters, :expirant_filters, :archives_filters
@@ -65,5 +77,17 @@ class ProcedurePresentation < ApplicationRecord
     ]
     columns.concat(procedure.sva_svr_columns.filter(&:displayable)) if procedure.sva_svr_enabled?
     columns
+  end
+
+  def set_default_filters
+    default_filters_for_all_statuts = [
+      FilteredColumn.new(column: procedure.dossier_state_column, filter: { operator: 'match', value: [] }),
+      FilteredColumn.new(column: procedure.dossier_id_column, filter: { operator: 'match', value: [] }),
+      FilteredColumn.new(column: procedure.dossier_notifications_column, filter: { operator: 'match', value: [] })
+    ]
+
+    ALL_FILTERS.each do |filters_by_status|
+      send("#{filters_by_status}=", default_filters_for_all_statuts) if send(filters_by_status).blank?
+    end
   end
 end

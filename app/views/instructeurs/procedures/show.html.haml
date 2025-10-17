@@ -31,8 +31,7 @@
         statut_with_notifications: @statut_with_notifications }
 
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
-    - if @filtered_sorted_paginated_ids.present?
-      = render Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: @statut)
+    = render Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: @statut)
 
     - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 
