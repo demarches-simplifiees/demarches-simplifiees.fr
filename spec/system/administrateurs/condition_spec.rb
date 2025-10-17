@@ -20,6 +20,14 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
     visit champs_admin_procedure_path(procedure)
   end
 
+  scenario 'add/remove/add condition' do
+    within '.type-de-champ:nth-child(2)' do
+      click_on 'cliquer pour activer'
+      find('button[title="Supprimer la ligne"]').click
+      click_on 'cliquer pour activer'
+    end
+  end
+
   scenario "adding a new condition" do
     within '.type-de-champ:nth-child(2)' do
       click_on 'cliquer pour activer'
