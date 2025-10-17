@@ -10,6 +10,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
   end
 
   def react_props
+    search_error = ENV.fetch('API_GEO_DEGRADED_MODE', false) ? t('.search_error_support_degraded_mode') : t('.search_error')
+
     react_input_opts(id: @champ.focusable_input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value),
@@ -19,7 +21,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
       translations: {
-        search_error: t('.search_error')
+        search_error:
       },
       is_disabled: @champ.not_ban?)
   end
