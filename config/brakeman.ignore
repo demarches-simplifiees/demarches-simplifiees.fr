@@ -346,48 +346,6 @@
         89
       ],
       "note": "The table and column are escaped, which should make this safe"
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "1c3026ab97d6eefc30de3360f962ad7d5519f6597419b00916c57f90a23e1d85",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped parameter value",
-      "file": "app/views/administrateurs/attestation_template_v2s/_form.html.haml",
-      "line": 62,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "::Haml::AttributeBuilder.build_id(true, dom_id((@procedure.attestation_templates_for(params[:attestation_kind]).find(&:draft?) or (@procedure.attestation_templates_for(params[:attestation_kind]).find(&:published?) or build_default_attestation(params[:attestation_kind]))), :logo_attachment))",
-      "location": {
-        "type": "template",
-        "template": "administrateurs/attestation_template_v2s/_form"
-      },
-      "user_input": "params[:attestation_kind]",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "2427ef1215f69c0a9f024397dba430aa2b9e5e1d79097d84c2d94fe6728c4e0d",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped parameter value",
-      "file": "app/views/administrateurs/attestation_template_v2s/_form.html.haml",
-      "line": 105,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "::Haml::AttributeBuilder.build_id(true, dom_id((@procedure.attestation_templates_for(params[:attestation_kind]).find(&:draft?) or (@procedure.attestation_templates_for(params[:attestation_kind]).find(&:published?) or build_default_attestation(params[:attestation_kind]))), :signature_attachment))",
-      "location": {
-        "type": "template",
-        "template": "administrateurs/attestation_template_v2s/_form"
-      },
-      "user_input": "params[:attestation_kind]",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": ""
     }
   ],
   "brakeman_version": "7.1.0"
