@@ -981,6 +981,12 @@ en:
         close_to_expiration: expiring
         to_archive: to archive
         trash: trash
+    procedure_presentation:
+      customize_filters:
+        exit_customization: "Exit customization"
+        title: "Customize search criteria / filters"
+        cancel: "Cancel"
+        validate: "Validate"
   france_connect:
     choose_email:
       intro_html: "Your FranceConnect account uses <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> as the contact email."

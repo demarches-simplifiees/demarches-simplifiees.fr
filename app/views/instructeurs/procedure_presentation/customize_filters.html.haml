@@ -1,0 +1,11 @@
+.fr-container.fr-mt-6w.fr-mb-15w
+  = link_to " #{t('.exit_customization')}", instructeur_procedure_path(@procedure, statut: @statut), class: 'fr-link fr-icon-arrow-left-line fr-link--icon--left fr-icon--sm'
+  %h3.fr-my-3w
+    = t('.title')
+
+  = render Instructeurs::CustomizeFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: @statut, filters_customization: true)
+
+.fixed-footer.fr-py-1w
+  .fr-btns-group.fr-btns-group--center.fr-btns-group--inline.fr-btns-group--inline-lg
+    = link_to "Annuler", instructeur_procedure_path(@procedure, statut: @statut), class: 'fr-btn fr-btn--secondary fr-my-1w'
+    %button.fr-btn.fr-my-1w{ type: "submit", form: 'order-instructeur-procedures-form' } Valider

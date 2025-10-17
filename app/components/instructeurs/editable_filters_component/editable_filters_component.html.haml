@@ -28,18 +28,10 @@
 
       - if filters.none?
         .flex.align-center.fr-p-2w
-          = render Instructeurs::AddFilterDropdownComponent.new(procedure_presentation:, statut:, instructeur_procedure:)
-      - else
-        - if filters.none?
-          .flex.align-center.fr-p-2w
-            = t('.no_filters')
-        .ml-auto.fr-p-2w.flex.align-end
-          = button_to toggle_filters_customization_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_customization: !filters_customization),
-              method: :post,
-              class: 'fr-btn fr-btn--sm fr-btn--tertiary',
-              form: { data: { turbo: true } },
-              aria: { expanded: procedure_presentation.filters_expanded.to_s } do
-            %span.fr-icon-settings-5-line
-            %span= t('.enable_filters_customization')
+          = t('.no_filters')
+      .ml-auto.fr-p-2w.flex.align-end
+        = link_to t('.enable_filters_customization'),
+          customize_filters_instructeur_procedure_presentation_path(procedure_presentation, statut: statut),
+          class: 'fr-btn--icon-left fr-icon-settings-5-line fr-btn fr-btn--sm fr-btn--tertiary'
 
   = render Instructeurs::RemoveFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)

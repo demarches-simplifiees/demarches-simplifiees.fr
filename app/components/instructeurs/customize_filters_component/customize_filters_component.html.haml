@@ -1,0 +1,15 @@
+#customize-filters
+  .fr-grid-row
+    .fr-col-7.fr-pr-2w
+      .fr-card
+      .fr-card
+      .fr-card
+      .fr-card
+    .fr-col-5
+      .bg-alt-grey.rounded-4.fr-p-2w
+        %h4= t('.selection_title')
+        .flex.column.flex-gap-2
+          - filters.each do |filter|
+            .filter-box{ id: filter.id.parameterize }
+              %p.fr-mb-0= filter.label
+              = delete_button(filter)

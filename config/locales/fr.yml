@@ -986,6 +986,12 @@ fr:
         close_to_expiration: expirants
         to_archive: à archiver
         trash: corbeille
+    procedure_presentation:
+      customize_filters:
+        exit_customization: "Quitter la personnalisation"
+        title: "Personnaliser les critères de recherche / filtres"
+        cancel: "Annuler"
+        validate: "Valider"
   administrateurs:
     procedures_menu: "Mes démarches"
     preview_menu: "Démarche « %{libelle} »"

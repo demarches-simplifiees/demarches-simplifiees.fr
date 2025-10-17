@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter, :update_filter, :toggle_filters_expanded, :toggle_filters_customization]
+    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter, :update_filter, :toggle_filters_expanded, :toggle_filters_customization, :customize_filters]
 
     def add_filter
       statut = params[:statut]
@@ -33,7 +33,7 @@ module Instructeurs
     def remove_filter
       @procedure_presentation.remove_filter_for_statut!(params[:statut], filtered_column_from_params)
       if params[:filters_customization]
-        render turbo_stream: turbo_stream.remove("customize-filter-#{filtered_column_from_params.id.parameterize}")
+        render turbo_stream: turbo_stream.remove(filtered_column_from_params.id.parameterize)
       else
         render turbo_stream: turbo_stream.refresh
       end
@@ -62,6 +62,13 @@ module Instructeurs
       end
 
       redirect_back_or_to([:instructeur, procedure])
+    end
+
+    def customize_filters
+      @procedure = @procedure_presentation.procedure
+      @statut = params[:statut]
+      @filters = @procedure_presentation.filters_for(@statut)
+      render layout: "empty_layout"
     end
 
     def refresh_column_filter
