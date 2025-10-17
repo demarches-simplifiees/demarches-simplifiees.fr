@@ -5,3 +5,4 @@ fr:
   enable_filters_customization: Personnaliser
   disable_filters_customization: Quitter la personnalisation
   no_filters: Cliquez sur « Personnaliser » pour ajouter des critères de recherche / filtres.
+  delete_filter: Supprimer le filtre « %{filter_label} »
