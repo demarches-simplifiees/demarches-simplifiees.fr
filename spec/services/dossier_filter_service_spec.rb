@@ -626,9 +626,9 @@ describe DossierFilterService do
         end
       end
 
-      context "with filter with IN operator" do
+      context "with filter with match operator" do
         let(:filtered_columns) { filters.map { to_filter(_1) } }
-        let(:filters) { [['drop_down_list', { operator: 'in', value: ['Dessert', 'Fromage'] }]] }
+        let(:filters) { [['drop_down_list', { operator: 'match', value: ['Dessert', 'Fromage'] }]] }
 
         let(:types_de_champ_public) do
           [
@@ -940,10 +940,10 @@ describe DossierFilterService do
     end
 
     context 'when filter has operator and values' do
-      let(:filter) { { operator: 'in', value: ['a', 'b'] } }
+      let(:filter) { { operator: 'match', value: ['a', 'b'] } }
 
       it 'returns the filter as is' do
-        expect(subject).to eq({ operator: 'in', value: ['a', 'b'] })
+        expect(subject).to eq({ operator: 'match', value: ['a', 'b'] })
       end
     end
   end
@@ -990,18 +990,18 @@ describe DossierFilterService do
       end
     end
 
-    context 'with multiple in filters for the same column' do
+    context 'with multiple match filters for the same column' do
       let(:filtered_columns) do
         [
-          FilteredColumn.new(column: column1, filter: { operator: 'in', value: ['a'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'in', value: ['b', 'a'] })
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['a'] }),
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['b', 'a'] })
         ]
       end
 
       it 'merges their values' do
         expected = {
-          [column1, "in"] => [
-            { operator: 'in', value: ['a', 'b'] }
+          [column1, "match"] => [
+            { operator: 'match', value: ['a', 'b'] }
           ]
         }
 
@@ -1013,15 +1013,13 @@ describe DossierFilterService do
       let(:filtered_columns) do
         [
           FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_construction'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_instruction'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'in', value: ['a', 'b'] })
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_instruction'] })
         ]
       end
 
       it 'groups filters by column and operator' do
         expected = {
-          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }],
-          [column1, "in"] => [{ operator: 'in', value: ['a', 'b'] }]
+          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }]
         }
         expect(subject).to eq(expected)
       end
@@ -1030,14 +1028,14 @@ describe DossierFilterService do
     context 'with not mergeable filters' do
       let(:filtered_columns) do
         [
-          FilteredColumn.new(column: column1, filter: { operator: 'in', value: ['a', 'b'] }),
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['a', 'b'] }),
           FilteredColumn.new(column: column1, filter: { operator: 'before', value: ['2025-01-01'] })
         ]
       end
 
       it 'groups filters by column and operator' do
         expected = {
-          [column1, "in"] => [{ operator: 'in', value: ['a', 'b'] }],
+          [column1, "match"] => [{ operator: 'match', value: ['a', 'b'] }],
           [column1, "before"] => [{ operator: 'before', value: ['2025-01-01'] }]
         }
         expect(subject).to eq(expected)
@@ -1063,26 +1061,6 @@ describe DossierFilterService do
             value: ['Dessert', 'Fromage']
           }
         ]
-        expect(subject).to eq(expected)
-      end
-    end
-
-    context 'when in filters' do
-      let(:filters) do
-        [
-          { operator: 'in', value: ['A'] },
-          { operator: 'in', value: ['B', 'A'] }
-        ]
-      end
-
-      it 'groups values by operator with unique values' do
-        expected = [
-          {
-            operator: 'in',
-            value: ['A', 'B']
-          }
-        ]
-
         expect(subject).to eq(expected)
       end
     end
