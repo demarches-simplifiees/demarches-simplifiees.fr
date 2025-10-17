@@ -62,6 +62,18 @@ describe Logic do
 
       it { is_expected.to eq(ds_include(champ_value(multiple_drop_down.stable_id), constant(first_option))) }
     end
+
+    context 'when dropdown has no options' do
+      let(:drop_down) { create(:type_de_champ_drop_down_list) }
+      let(:type_de_champs) { [drop_down] }
+      let(:condition) { empty_operator(champ_value(drop_down.stable_id), empty) }
+
+      it 'returns a stable condition and reports the missing value' do
+        drop_down.update!(drop_down_options: [])
+
+        expect { subject }.not_to raise_error
+      end
+    end
   end
 
   describe '.compatible_type?' do
