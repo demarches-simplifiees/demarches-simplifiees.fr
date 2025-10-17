@@ -5,3 +5,4 @@ en:
   enable_filters_customization: Customize filters
   disable_filters_customization: Close filters customization
   no_filters: Click on « Customize filters » to add search criteria / filters.
+  delete_filter: Delete the filter « %{filter_label} »
