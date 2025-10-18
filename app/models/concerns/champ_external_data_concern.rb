@@ -51,7 +51,7 @@ module ChampExternalDataConcern
 
       # TODO: remove idle after first MEP
       event :external_data_error do
-        transitions from: [:idle, :fetching], to: :external_error
+        transitions from: [:idle, :waiting_for_job, :fetching], to: :external_error
       end
 
       # TODO: remove idle after first MEP

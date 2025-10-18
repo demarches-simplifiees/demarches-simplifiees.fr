@@ -37,16 +37,17 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
   end
 
   describe 'error handling and backoff strategy' do
+    let(:error) { Excon::Error::InternalServerError.new('Retryable error') }
+    let(:failure) { Dry::Monads::Failure(retryable: true, reason: error, code: 504) }
+
     before do
       champ.update_column(:external_state, 'waiting_for_job')
-      expect_any_instance_of(Champ).to receive(:fetch!).and_raise(error)
+      allow_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data).and_return(failure)
     end
 
     context 'when a retryable error occurs' do
-      let(:error) { Excon::Error::InternalServerError.new('Retryable error') }
-
-      it 'retries 5 times and the final state is external_error' do
-        assert_performed_jobs 6 do
+      it 'tries 5 times and the final state is external_error' do
+        assert_performed_jobs 5 do
           described_class.perform_later(champ, external_id) rescue Excon::Error::InternalServerError
         end
         expect(champ.reload).to be_external_error
