@@ -36,6 +36,7 @@ import {
 
 export function ComboBox({
   children,
+  errorMessage,
   label,
   description,
   className,
@@ -48,6 +49,7 @@ export function ComboBox({
   inputRef?: RefObject<HTMLInputElement | null>;
   isOpen?: boolean;
   placeholder?: string;
+  errorMessage?: string;
 }) {
   return (
     <AriaComboBox
@@ -90,7 +92,18 @@ export function ComboBox({
       </div>
       <Popover className="fr-ds-combobox__menu fr-menu" isOpen={isOpen}>
         <Virtualizer layout={ListLayout}>
-          <ListBox className="fr-menu__list">{children}</ListBox>
+          <ListBox
+            className="fr-menu__list"
+            renderEmptyState={() =>
+              errorMessage ? (
+                <p className="fr-message fr-message--error fr-p-1w">
+                  {errorMessage}
+                </p>
+              ) : undefined
+            }
+          >
+            {children}
+          </ListBox>
         </Virtualizer>
       </Popover>
     </AriaComboBox>
@@ -98,15 +111,6 @@ export function ComboBox({
 }
 
 export function ComboBoxItem(props: ListBoxItemProps<Item>) {
-  if (props.id == 'combo-alert-message') {
-    return (
-      <ListBoxItem
-        {...props}
-        isDisabled={true}
-        className="fr-menu__item fr-badge fr-badge--info fr-badge--no-text-transform width-100"
-      />
-    );
-  }
   return <ListBoxItem {...props} className="fr-menu__item" />;
 }
 
@@ -287,6 +291,7 @@ export function RemoteComboBox({
     form,
     data,
     usePost,
+    translations,
     ...props
   } = useMemo(() => s.create(maybeProps, RemoteComboBoxProps), [maybeProps]);
 
@@ -299,13 +304,14 @@ export function RemoteComboBox({
             minimumInputLength,
             limit,
             coerce,
-            usePost
+            usePost,
+            errorMessage: translations?.search_error
           })
         : loader,
-    [loader, minimumInputLength, limit, coerce, usePost]
+    [loader, minimumInputLength, limit, coerce, usePost, translations]
   );
 
-  const { selectedItem, onReset, shouldShowPopover, ...comboBoxProps } =
+  const { selectedItem, onReset, shouldShowPopover, error, ...comboBoxProps } =
     useRemoteList({
       defaultItems,
       defaultSelectedKey,
@@ -322,8 +328,10 @@ export function RemoteComboBox({
       <ComboBox
         placeholder={placeholder}
         allowsEmptyCollection={
-          comboBoxProps.inputValue.length >= (minimumInputLength ?? 0)
+          comboBoxProps.inputValue.length >= (minimumInputLength ?? 0) ||
+          !!error
         }
+        errorMessage={error?.message}
         isOpen={shouldShowPopover}
         {...comboBoxProps}
         {...props}

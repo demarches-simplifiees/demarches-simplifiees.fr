@@ -58,6 +58,30 @@ describe 'address champ', js: true do
     expect(page).not_to have_selector('.fr-input-group', text: 'Adresse du domicile', visible: true)
   end
 
+  scenario "displays error message when API call fails" do
+    # Stub the API to return an error
+    stub_request(:get, /data\.geopf\.fr\/geocodage\/search/)
+      .to_timeout
+
+    fill_in('Adresse', with: 'test address')
+
+    # Wait for the error message to appear in the dropdown
+    expect(page).to have_css('.fr-message--error', text: 'Une erreur est survenue lors de la recherche')
+  end
+
+  scenario "displays error message when commune API call fails" do
+    find('label', text: 'Je ne trouve pas mon adresse dans les suggestions').click
+
+    # Stub the commune API to return an error
+    stub_request(:get, /geo\.api\.gouv\.fr\/communes/)
+      .to_timeout
+
+    fill_in('Ville ou commune', with: '75001')
+
+    # Wait for the error message to appear
+    expect(page).to have_css('.fr-message--error', text: 'Une erreur est survenue lors de la recherche')
+  end
+
   private
 
   def log_in(user, procedure)

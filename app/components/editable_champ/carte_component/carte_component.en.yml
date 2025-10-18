@@ -3,6 +3,7 @@ en:
   address_input_label: "Center the map by searching for an address"
   address_input_description: "Enter an address, a street, a city. Example: 11 rue Réaumur, Paris"
   address_placeholder: "Start typing"
+  address_search_error: "An error occurred while searching for the address"
   pin_input_label: "Add a point to the map"
   pin_input_description: "Example: "
   show_pin: "Show your location on the map"

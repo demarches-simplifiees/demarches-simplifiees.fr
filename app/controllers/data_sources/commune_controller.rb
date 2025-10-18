@@ -9,8 +9,12 @@ class DataSources::CommuneController < ApplicationController
         results = JSON.parse(response.body, symbolize_names: true)
 
         render json: APIGeoService.format_commune_response(results, params[:with_combined_code])
+      elsif response.timed_out?
+        return head :gateway_timeout
       else
-        render json: []
+        Sentry.set_extras(body: response.body, code: response.code)
+        Sentry.capture_message("Commune API failure: #{response.return_message}")
+        return head :bad_gateway
       end
     else
       render json: []

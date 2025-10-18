@@ -71,7 +71,8 @@ export const RemoteComboBoxProps = s.assign(
       debounce: s.number(),
       coerce: s.enums(['Default', 'AnnuaireEducation']),
       placeholder: s.string(),
-      usePost: s.defaulted(s.boolean(), false)
+      usePost: s.defaulted(s.boolean(), false),
+      translations: s.record(s.string(), s.string())
     })
   )
 );
@@ -82,5 +83,6 @@ export type MultiComboBoxProps = s.Infer<typeof MultiComboBoxProps>;
 export type RemoteComboBoxProps = s.Infer<typeof RemoteComboBoxProps> & {
   children?: ReactNode;
   loader: Loader | string;
+  translation?: Record<string, string>;
   onChange?: (item: Item | null) => void;
 };
