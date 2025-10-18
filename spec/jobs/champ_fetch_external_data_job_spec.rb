@@ -11,7 +11,10 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
   let(:external_id) { champ.external_id }
 
   describe 'perform' do
+    let(:external_state) { 'waiting_for_job' }
+
     before do
+      champ.update_columns(external_state:)
       allow(champ).to receive(:fetch!)
       described_class.new.perform(champ, external_id)
     end
@@ -25,10 +28,19 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
 
       it { expect(champ).not_to have_received(:fetch!) }
     end
+
+    context 'when champ is not in waiting_for_job state' do
+      let(:external_state) { 'fetched' }
+
+      it { expect(champ).not_to have_received(:fetch!) }
+    end
   end
 
   describe 'error handling and backoff strategy' do
-    before { expect_any_instance_of(Champ).to receive(:fetch!).and_raise(error) }
+    before do
+      champ.update_column(:external_state, 'waiting_for_job')
+      expect_any_instance_of(Champ).to receive(:fetch!).and_raise(error)
+    end
 
     context 'when a retryable error occurs' do
       let(:error) { Excon::Error::InternalServerError.new('Retryable error') }
