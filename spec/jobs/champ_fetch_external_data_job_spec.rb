@@ -50,7 +50,11 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
         assert_performed_jobs 5 do
           described_class.perform_later(champ, external_id) rescue Excon::Error::InternalServerError
         end
-        expect(champ.reload).to be_external_error
+
+        champ.reload
+
+        expect(champ).to be_external_error
+        expect(champ.fetch_external_data_exceptions.size).to eq(5)
       end
     end
   end
