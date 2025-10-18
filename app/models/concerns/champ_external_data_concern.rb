@@ -74,11 +74,6 @@ module ChampExternalDataConcern
       end
     end
 
-    def fetch_and_handle_result
-      result = fetch_external_data
-      handle_result(result)
-    end
-
     def waiting_for_external_data?
       uses_external_data? &&
         should_ui_auto_refresh? &&
@@ -106,6 +101,11 @@ module ChampExternalDataConcern
     end
 
     private
+
+    # it should only be called after fetch! event callback
+    def fetch_and_handle_result
+      fetch_external_data.then { handle_result(it) }
+    end
 
     def should_ui_auto_refresh?
       false

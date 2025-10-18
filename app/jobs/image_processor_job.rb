@@ -101,7 +101,7 @@ class ImageProcessorJob < ApplicationJob
     champ = blob&.attachments&.first&.record
     return if !rib?(champ)
 
-    champ.fetch_and_handle_result
+    champ.fetch!
   end
 
   def rib?(champ)

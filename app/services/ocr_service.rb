@@ -4,7 +4,7 @@ class OCRService
   def self.analyze(blob)
     url = ENV.fetch("OCR_SERVICE_URL", nil)
 
-    return if url.nil? # Service is not enabled
+    return Dry::Monads::Failure(retryable: false, reason: StandardError.new('OCR not configured')) if url.nil? # Service is not enabled
 
     blob_url = blob.url
     json = { "url": blob_url, "hint": { "type": "rib" } }

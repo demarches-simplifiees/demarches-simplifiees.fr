@@ -164,6 +164,7 @@ describe ImageProcessorJob, type: :job do
     let(:blob) do
       pj = champ_pj.piece_justificative_file
       pj = pj.attach(file)
+      champ_pj.fetch_later! # to set the state to waiting_for_job
       pj.blobs.first
     end
 
