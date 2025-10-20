@@ -19,7 +19,7 @@ module Maintenance
         .where(notification_type: :attente_avis)
     end
 
-    def process(element)
+    def process(notification)
       notification.destroy!
     end
   end
