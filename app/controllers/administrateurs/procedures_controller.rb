@@ -251,12 +251,13 @@ module Administrateurs
     end
 
     def update_monavis
-      if !@procedure.update(procedure_params)
-        flash.now.alert = @procedure.errors.full_messages
-        render 'monavis'
-      else
+      @procedure.assign_attributes(procedure_params)
+      if @procedure.validate(:publication) && @procedure.save
         flash.notice = 'le champ MonAvis a bien été mis à jour'
         redirect_to admin_procedure_path(id: @procedure.id)
+      else
+        flash.now.alert = @procedure.errors.full_messages
+        render 'monavis'
       end
     end
 

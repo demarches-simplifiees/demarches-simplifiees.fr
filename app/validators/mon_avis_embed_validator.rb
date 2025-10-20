@@ -12,7 +12,7 @@ class MonAvisEmbedValidator < ActiveModel::Validator
   ALLOWED_SCHEME = /\Ahttps:\/\//i
 
   def validate(record)
-    return unless record.monavis_embed.present?
+    return if record.monavis_embed.blank?
     fragment = parse_fragment(record)
     return unless fragment
 
@@ -38,14 +38,13 @@ class MonAvisEmbedValidator < ActiveModel::Validator
     src = img['src'].to_s.strip
     record.errors.add(:monavis_embed, :forbidden_scheme) unless allowed_scheme?(src)
     record.errors.add(:monavis_embed, :bad_domain_image) unless IMG_CHECKER.match?(src)
-    record.errors.add(:monavis_embed, :missing_alt) if img['alt'].blank?
   end
 
   private
 
   def parse_fragment(record)
     Nokogiri::HTML::DocumentFragment.parse(record.monavis_embed)
-  rescue StandardError => e
+  rescue StandardError
     record.errors.add(:monavis_embed, :invalid_format)
     nil
   end
