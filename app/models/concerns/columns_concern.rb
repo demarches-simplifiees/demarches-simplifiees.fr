@@ -103,6 +103,33 @@ module ColumnsConcern
 
     def default_displayed_columns = [email_column]
 
+    def dossier_filterable_columns
+      dossier_columns.filter(&:filterable)
+    end
+
+    def instructeurs_filterable_columns
+      Array([groupe_instructeurs_id_column, followers_instructeurs_email_column]).filter(&:filterable)
+    end
+
+    def usager_filterable_columns
+      columns = []
+      if for_individual?
+        columns.concat(individual_columns)
+      else
+        columns.concat(moral_columns)
+      end
+      columns.concat([email_column])
+      columns.filter(&:filterable)
+    end
+
+    def form_filterable_columns
+      all_revisions_types_de_champ.public_only.flat_map { _1.columns(procedure: self) }.filter(&:filterable)
+    end
+
+    def annotation_privees_filterable_columns
+      all_revisions_types_de_champ.private_only.flat_map { _1.columns(procedure: self) }.filter(&:filterable)
+    end
+
     private
 
     def groupe_instructeurs_id_column = dossier_col(table: 'groupe_instructeur', column: 'id', type: :enum)
