@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_30_160810) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_20_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -523,6 +523,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_160810) do
     t.datetime "last_commentaire_updated_at", precision: nil
     t.string "mandataire_first_name"
     t.string "mandataire_last_name"
+    t.datetime "messagerie_seen_by_user_at"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
@@ -1442,7 +1443,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_30_160810) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
-  add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
