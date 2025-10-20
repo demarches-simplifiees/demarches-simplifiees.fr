@@ -39,27 +39,22 @@ module ChampExternalDataConcern
         transitions from: :idle, to: :waiting_for_job, guard: :ready_for_external_call?
       end
 
-      # TODO: remove idle after first MEP
       event :fetch, after_commit: :fetch_and_handle_result do
-        transitions from: [:idle, :waiting_for_job], to: :fetching
+        transitions from: [:waiting_for_job], to: :fetching
       end
 
-      # TODO: remove idle after first MEP
       event :external_data_fetched do
-        transitions from: [:idle, :fetching], to: :fetched
+        transitions from: [:fetching], to: :fetched
       end
 
-      # TODO: remove idle after first MEP
       event :external_data_error do
-        transitions from: [:idle, :waiting_for_job, :fetching], to: :external_error
+        transitions from: [:waiting_for_job, :fetching], to: :external_error
       end
 
-      # TODO: remove idle after first MEP
       event :retry do
-        transitions from: [:idle, :fetching], to: :waiting_for_job
+        transitions from: [:fetching], to: :waiting_for_job
       end
 
-      # TODO: remove idle after first MEP
       event :reset_external_data, after: :after_reset_external_data do
         transitions from: [:waiting_for_job, :fetching, :fetched, :external_error], to: :idle
       end
