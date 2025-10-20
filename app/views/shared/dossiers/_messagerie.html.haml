@@ -7,7 +7,7 @@
 
       - commentaires_of_the_day.each do |commentaire|
         %li.message{ class: commentaire_is_from_me_class(commentaire, connected_user), id: dom_id(commentaire) }
-          = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, heading_level: 'h2')
+          = render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, heading_level: 'h2', instructeurs_seen_at: local_assigns[:instructeurs_messagerie_seen_at])
 
 .padded-fixed-footer
   .fixed-footer
