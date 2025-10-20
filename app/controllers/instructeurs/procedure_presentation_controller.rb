@@ -2,54 +2,26 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :add_filter, :remove_filter, :update_filter, :toggle_filters_expanded, :toggle_filters_customization, :customize_filters]
+    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :refresh_filters, :update_filter, :persist_filters, :toggle_filters_expanded, :customize_filters]
 
-    def add_filter
-      statut = params[:statut]
-
-      if filter_params[:id].blank?
-        flash.alert = I18n.t('views.instructeurs.dossiers.filters.missing_column')
-        return redirect_back_or_to([:instructeur, procedure])
-      end
-
-      new_filter = filtered_column_from_params
-
-      if new_filter.valid?
-        @procedure_presentation.add_filter_for_statut!(statut, new_filter)
-        flash.notice = "Filtre ajouté avec succès"
-      else
-        flash.alert = new_filter.errors.full_messages.join(', ')
-      end
-
-      redirect_back_or_to([:instructeur, procedure])
-    end
-
+    # updates the value of a filter
     def update_filter
       @procedure_presentation.update_filter_for_statut!(params[:statut], params[:filter_key], filtered_column_from_params)
 
       render turbo_stream: turbo_stream.refresh
     end
 
-    def remove_filter
-      @procedure_presentation.remove_filter_for_statut!(params[:statut], filtered_column_from_params)
-      if params[:filters_customization]
-        render turbo_stream: turbo_stream.remove(filtered_column_from_params.id.parameterize)
-      else
-        render turbo_stream: turbo_stream.refresh
-      end
+    # updates the filters in customization without saving them
+    def refresh_filters
+      customize_filters_component = Instructeurs::CustomizeFiltersComponent.new(procedure_presentation: @procedure_presentation, statut: params[:statut], filters_columns: filters_columns_from_params)
+
+      render turbo_stream: turbo_stream.replace(customize_filters_component.id, customize_filters_component)
     end
 
     def toggle_filters_expanded
       @procedure_presentation.update!(filters_expanded: params[:filters_expanded])
 
       editable_filters_component = Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: params[:statut])
-
-      render turbo_stream: turbo_stream.replace(editable_filters_component.id, editable_filters_component)
-    end
-
-    def toggle_filters_customization
-      filters_customization = params[:filters_customization].in?([true, 'true'])
-      editable_filters_component = Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: params[:statut], filters_customization:)
 
       render turbo_stream: turbo_stream.replace(editable_filters_component.id, editable_filters_component)
     end
@@ -64,10 +36,16 @@ module Instructeurs
       redirect_back_or_to([:instructeur, procedure])
     end
 
+    def persist_filters
+      @procedure_presentation.replace_filters!(params[:statut], filters_columns_from_params)
+
+      redirect_to instructeur_procedure_path(procedure, statut: params[:statut])
+    end
+
     def customize_filters
       @procedure = @procedure_presentation.procedure
       @statut = params[:statut]
-      @filters = @procedure_presentation.filters_for(@statut)
+      @filters_columns = @procedure_presentation.filters_for(@statut).map(&:column)
       render layout: "empty_layout"
     end
 
@@ -83,6 +61,10 @@ module Instructeurs
     end
 
     private
+
+    def filters_columns_from_params
+      Array(params[:filters_columns]).uniq.map { ColumnType.new.cast(it) }
+    end
 
     def filtered_column_from_params
       params_hash = filter_params.to_h.deep_stringify_keys

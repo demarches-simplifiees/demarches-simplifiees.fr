@@ -480,11 +480,10 @@ Rails.application.routes.draw do
       member do
         get 'customize_filters'
         post 'refresh_column_filter'
-        post 'add_filter'
         post 'update_filter'
-        delete 'remove_filter'
+        post 'refresh_filters'
+        post 'persist_filters'
         post 'toggle_filters_expanded'
-        post 'toggle_filters_customization'
       end
     end
 

@@ -1,42 +1,24 @@
-#customize-filters
+%div{ id: }
   .fr-grid-row
     .fr-col-7.fr-pr-2w.flex.column.flex-gap-2
-      .fr-card.fr-p-2w
-        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
-          .flex.align-end.flex-gap-2
-            .flex.flex-1.column
-              = form.label :column, "Informations dossier", class: "fr-label"
-              = form.select :column, dossier_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
-            = form.submit t('.add'), class: "fr-btn"
+      - filters_selects.each do |filter_select|
+        .fr-card.fr-p-2w
+          = form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), data: { turbo: true } do |form|
+            = filters_in_hidden_inputs(form, filter_select[:label].parameterize)
+            .flex.align-end.flex-gap-2
+              .flex.flex-1.column
+                = form.label "filters_columns[]", filter_select[:label], class: "fr-label"
+                = form.select "filters_columns[]", filter_select[:items], { prompt: t('.select'), required: true, disabled: disabled_items, selected: "" }, class: 'fr-select width-100'
+              = form.submit t('.add'), class: "fr-btn"
 
-      .fr-card.fr-p-2w
-        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
-          .flex.align-end.flex-gap-2
-            .flex.flex-1.column
-              = form.label :column, "Informations usager", class: "fr-label"
-              = form.select :column, usager_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
-            = form.submit t('.add'), class: "fr-btn"
-
-      .fr-card.fr-p-2w
-        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
-          .flex.align-end.flex-gap-2
-            .flex.flex-1.column
-              = form.label :column, "Formulaire usager", class: "fr-label"
-              = form.select :column, form_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
-            = form.submit t('.add'), class: "fr-btn"
-
-      .fr-card.fr-p-2w
-        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
-          .flex.align-end.flex-gap-2
-            .flex.flex-1.column
-              = form.label :column, "Annotations privées (instructeurs)", class: "fr-label"
-              = form.select :column, annotation_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
-            = form.submit t('.add'), class: "fr-btn"
     .fr-col-5
       .bg-alt-grey.rounded-4.fr-p-2w
         %h4= t('.selection_title')
         .flex.column.flex-gap-2
-          - filters.each do |filter|
-            .filter-box{ id: filter.id.parameterize }
-              %p.fr-mb-0= filter.label
-              = delete_button(filter)
+          - filters_columns.each do |filter_column|
+            .filter-box{ id: filter_column.id.parameterize }
+              %p.fr-mb-0= filter_column.label
+              = delete_button(filter_column)
+
+  = form_with url: persist_filters_instructeur_procedure_presentation_path(@procedure_presentation), id: "save-filters-form", data: { turbo: true, turbo_force: :server }  do |form|
+    = filters_in_hidden_inputs(form, "save-filters-form")
