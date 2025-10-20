@@ -9,14 +9,13 @@ describe TargetedUserLinksController, type: :controller do
       let!(:expert) { create(:expert, user: user) }
       let!(:target_model) { create(:avis, experts_procedure: expert_procedure) }
       let!(:expert_procedure) { create(:experts_procedure, expert: expert) }
+      subject { get :show, params: { id: targeted_user_link.id } }
 
       context 'not connected as active expert' do
         let(:user) { create(:user, last_sign_in_at: 2.days.ago) }
 
-        before { get :show, params: { id: targeted_user_link.id } }
-
         it 'redirects to expert_avis_url' do
-          expect(response).to redirect_to(expert_avis_path(target_model.procedure, target_model))
+          expect(subject).to redirect_to(expert_avis_path(target_model.procedure, target_model))
           expect(controller.stored_location_for(:user)).to eq(controller.request.path)
         end
       end
@@ -24,10 +23,11 @@ describe TargetedUserLinksController, type: :controller do
       context 'not connected as inactive expert' do
         let(:user) { create(:user, last_sign_in_at: nil) }
 
-        before { get :show, params: { id: targeted_user_link.id } }
+        it { is_expected.to redirect_to(sign_up_expert_avis_path(target_model.procedure, target_model, email: user.email)) }
 
-        it 'redirects to sign_up_expert_avis_url' do
-          expect(response).to redirect_to(sign_up_expert_avis_path(target_model.procedure, target_model, email: user.email))
+        context 'with confirmation_token' do
+          subject { get :show, params: { id: targeted_user_link.id, confirmation_token: 'token' } }
+          it { is_expected.to redirect_to(sign_up_expert_avis_path(target_model.procedure, target_model, email: user.email, confirmation_token: 'token')) }
         end
       end
 
@@ -36,12 +36,9 @@ describe TargetedUserLinksController, type: :controller do
 
         before do
           sign_in(targeted_user_link.user)
-          get :show, params: { id: targeted_user_link.id }
         end
 
-        it 'redirects to expert_avis_url' do
-          expect(response).to redirect_to(expert_avis_path(target_model.procedure, target_model))
-        end
+        it { is_expected.to redirect_to(expert_avis_path(target_model.procedure, target_model)) }
       end
 
       context 'connected as different user' do
@@ -49,12 +46,9 @@ describe TargetedUserLinksController, type: :controller do
 
         before do
           sign_in(create(:expert).user)
-          get :show, params: { id: targeted_user_link.id }
         end
 
-        it 'renders error page ' do
-          expect(response).to have_http_status(200)
-        end
+        it { is_expected.to have_http_status(200) }
       end
     end
 

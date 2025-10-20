@@ -7,7 +7,7 @@ class TargetedUserLinksController < ApplicationController
     if targeted_user_link.invalid_signed_in_user?(current_user)
       render
     else
-      redirect_to targeted_user_link.redirect_url(Rails.application.routes.url_helpers)
+      redirect_to targeted_user_link.redirect_url(Rails.application.routes.url_helpers, params.permit(:confirmation_token)["confirmation_token"])
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, flash: { error: t('errors.messages.targeted_user_link_expired') }
