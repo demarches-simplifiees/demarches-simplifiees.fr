@@ -11,6 +11,8 @@ Sentry.init do |config|
   config.environment = ENV['SENTRY_CURRENT_ENV'] || Rails.env
   config.enabled_environments = ['production', ENV['SENTRY_CURRENT_ENV'].presence].compact
   config.breadcrumbs_logger = [:active_support_logger]
+  config.app_dirs_pattern = %r{#{Regexp.escape(Rails.root.to_s)}/(app|bin|config|db|lib)/}
+
   config.traces_sampler = lambda do |sampling_context|
     # if this is the continuation of a trace, just use that decision (rate controlled by the caller)
     unless sampling_context[:parent_sampled].nil?
