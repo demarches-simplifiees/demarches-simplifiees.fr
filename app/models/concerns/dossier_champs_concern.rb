@@ -231,7 +231,7 @@ module DossierChampsConcern
   end
 
   def reset_user_buffer_stream!
-    champs.where(stream: Champ::USER_BUFFER_STREAM).delete_all
+    champs.where(stream: Champ::USER_BUFFER_STREAM).destroy_all
 
     # update loaded champ instances
     association(:champs).target = champs.filter { _1.stream != Champ::USER_BUFFER_STREAM }
