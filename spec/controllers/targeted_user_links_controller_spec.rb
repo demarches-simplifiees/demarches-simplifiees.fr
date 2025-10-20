@@ -31,6 +31,17 @@ describe TargetedUserLinksController, type: :controller do
         end
       end
 
+      context 'when user is not connected and he is active but had never verified his email' do
+        let(:user) { create(:user, last_sign_in_at: 2.days.ago, email_verified_at: nil) }
+
+        it { is_expected.to redirect_to(sign_up_expert_avis_path(target_model.procedure, target_model, email: user.email)) }
+
+        context 'with confirmation_token' do
+          subject { get :show, params: { id: targeted_user_link.id, confirmation_token: 'token' } }
+          it { is_expected.to redirect_to(users_confirm_email_url(target_model.procedure, target_model, email: user.email, token: 'token')) }
+        end
+      end
+
       context 'connected as expected user' do
         let(:user) { create(:user, last_sign_in_at: 2.days.ago) }
 

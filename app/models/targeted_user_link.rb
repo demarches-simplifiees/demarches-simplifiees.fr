@@ -32,13 +32,17 @@ class TargetedUserLink < ApplicationRecord
         url_helper.invite_path(invite) :
         url_helper.invite_path(invite, params: { email: invite.email })
     when "avis"
+
       avis = target_model
-      if avis.expert.user.active?
-        url_helper.expert_avis_path(avis.procedure, avis)
-      else
-        params = { email: avis.expert.email }
+      params = { email: avis.expert.email }
+      if !avis.expert.user.active?
         params = params.merge(confirmation_token: confirmation_token) if confirmation_token.present?
         url_helper.sign_up_expert_avis_path(avis.procedure, avis, **params)
+      elsif avis.expert.user.unverified_email?
+        params = params.merge(token: confirmation_token) if confirmation_token.present?
+        url_helper.users_confirm_email_url(avis.procedure, avis, **params)
+      else
+        url_helper.expert_avis_path(avis.procedure, avis)
       end
     end
   end

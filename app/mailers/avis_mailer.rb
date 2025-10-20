@@ -31,9 +31,16 @@ class AvisMailer < ApplicationMailer
                                                   target_model_id: avis.id,
                                                   user: avis.expert.user)
       email = user.email
-      @token = token
       @avis = avis
-      @url = targeted_user_link_url(targeted_user_link)
+      @url = targeted_user_link_url(id: targeted_user_link.id, confirmation_token: token)
+
+      if !@avis.expert.user.active?
+        @call_to_action = "Inscrivez-vous pour donner votre avis"
+      elsif @avis.expert.user.unverified_email?
+        @call_to_action = 'Confirmez votre adresse email pour donner votre avis'
+      else
+        @call_to_action = 'Donnez votre avis'
+      end
       subject = "Donnez votre avis sur le dossier n° #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
 
       bypass_unverified_mail_protection!
