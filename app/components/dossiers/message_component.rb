@@ -3,12 +3,13 @@
 class Dossiers::MessageComponent < ApplicationComponent
   include DossierHelper
 
-  def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, groupe_gestionnaire: nil, heading_level: 'h2')
+  def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, groupe_gestionnaire: nil, heading_level: 'h2', instructeurs_seen_at: nil)
     @commentaire = commentaire
     @connected_user = connected_user
     @messagerie_seen_at = messagerie_seen_at
     @groupe_gestionnaire = groupe_gestionnaire
     @heading_level = heading_level
+    @instructeurs_seen_at = instructeurs_seen_at
   end
 
   attr_reader :commentaire, :connected_user, :messagerie_seen_at, :groupe_gestionnaire
@@ -76,7 +77,7 @@ class Dossiers::MessageComponent < ApplicationComponent
     issuer = if commentaire.sent_by_system?
       t('.automatic_email')
     elsif commentaire.sent_by_usager?
-      demandeur_dossier(commentaire.dossier)
+      demandeur_dossier(commentaire.dossier).presence || t('.applicant')
     elsif groupe_gestionnaire
       commentaire.gestionnaire_id ? commentaire.gestionnaire_email : commentaire.sender_email
     else
@@ -84,9 +85,10 @@ class Dossiers::MessageComponent < ApplicationComponent
     end
 
     if commentaire.sent_by?(connected_user)
-      issuer.prepend("[#{t('.you')}] ")
+      "[#{t('.you')}] #{issuer}"
+    else
+      issuer
     end
-    issuer
   end
 
   def commentaire_from_guest?
@@ -94,8 +96,7 @@ class Dossiers::MessageComponent < ApplicationComponent
   end
 
   def commentaire_date
-    is_current_year = (commentaire.created_at.year == Time.zone.today.year)
-    l(commentaire.created_at, format: is_current_year ? :message_date : :message_date_with_year)
+    "Le #{commentaire.created_at.strftime('%d/%m/%Y %H:%M')}"
   end
 
   def delete_url
@@ -104,5 +105,33 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   def highlight?
     commentaire.persisted? && (messagerie_seen_at.nil? || messagerie_seen_at < commentaire.created_at)
+  end
+
+  def read_by_recipient?
+    return false if !commentaire.persisted?
+
+    return false if !sent_by_connected_user?
+
+    if commentaire.sent_by_usager?
+      last_seen_at = @instructeurs_seen_at || commentaire.dossier.follows.maximum(:messagerie_seen_at)
+      last_seen_at.present? && last_seen_at >= commentaire.created_at
+    elsif commentaire.sent_by_instructeur?
+      seen_by_user_at = commentaire.dossier.messagerie_seen_by_user_at
+      seen_by_user_at.present? && seen_by_user_at >= commentaire.created_at
+    else
+      false
+    end
+  end
+
+  def sent_by_connected_user?
+    if commentaire.sent_by_usager?
+      connected_user.is_a?(User) && commentaire.sent_by?(connected_user)
+    elsif commentaire.sent_by_instructeur?
+      connected_user.is_a?(Instructeur) && commentaire.sent_by?(connected_user)
+    elsif commentaire.sent_by_expert?
+      connected_user.is_a?(Expert) && commentaire.sent_by?(connected_user)
+    else
+      false
+    end
   end
 end

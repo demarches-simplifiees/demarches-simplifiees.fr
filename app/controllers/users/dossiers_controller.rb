@@ -107,6 +107,8 @@ module Users
     def messagerie
       @dossier = dossier
       @commentaire = Commentaire.new
+      @dossier.touch(:messagerie_seen_by_user_at)
+      @instructeurs_messagerie_seen_at = @dossier.follows.maximum(:messagerie_seen_at)
     end
 
     def rendez_vous
