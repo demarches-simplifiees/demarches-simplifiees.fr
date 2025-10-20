@@ -2,3 +2,4 @@
 en:
   select: Select
   add: Add
+  delete_filter: Delete the filter « %{filter_label} »

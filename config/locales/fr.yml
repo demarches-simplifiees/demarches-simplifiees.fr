@@ -28,14 +28,14 @@ fr:
     copied: 'Copié'
   help: 'Aide'
   help_dropdown:
-    procedure_title: "Une question sur cette démarche ?"
+    procedure_title: 'Une question sur cette démarche ?'
     problem_title: Un problème avec le site %{app_name} ?
     problem_description: Trouvez votre réponse dans la
     problem_url_title: FAQ
     technical_contact_title: Contact technique
     technical_contact_description: Envoyez nous un message à %{contact_email}.
-    help_brouillon_title: "Besoin d’aide pour remplir votre dossier ?"
-    help_filled_dossier: "Une question sur votre dossier ?"
+    help_brouillon_title: 'Besoin d’aide pour remplir votre dossier ?'
+    help_filled_dossier: 'Une question sur votre dossier ?'
   utils:
     'yes': Oui
     'no': Non
@@ -52,27 +52,27 @@ fr:
       wanna_say: 'Voulez-vous dire ?'
 
     i_dont_know: Je ne sais pas
-    deconnexion: "Déconnexion"
-    pj: "Pièces jointes"
+    deconnexion: 'Déconnexion'
+    pj: 'Pièces jointes'
     asterisk_html: "Les champs suivis d’un astérisque ( <svg aria-label='obligatoire' class='icon mandatory' height='10' role='img' viewBox='0 0 1200 1200' width='10' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'><desc>obligatoire</desc><path d='M489.838 29.354v443.603L68.032 335.894 0 545.285l421.829 137.086-260.743 358.876 178.219 129.398L600.048 811.84l260.673 358.806 178.146-129.398-260.766-358.783L1200 545.379l-68.032-209.403-421.899 137.07V29.443H489.84l-.002-.089z'></path></svg> ) sont obligatoires."
     no_mandatory: (facultatif)
     send_mail: Envoyer le message
-    new_tab: "Nouvel onglet"
-    modal_close: "Fermer"
-    modal_close_alt: "Fermer la fenêtre modale"
+    new_tab: 'Nouvel onglet'
+    modal_close: 'Fermer'
+    modal_close_alt: 'Fermer la fenêtre modale'
     accepted: acceptés
     accepted_f: acceptées
     forbidden: interdits
     forbidden_f: interdites
   helpers:
     commentaire:
-      send_message_to_instructeur: "Envoyer un message à l’instructeur"
-      reply_in_mailbox: "Répondre dans la messagerie"
+      send_message_to_instructeur: 'Envoyer un message à l’instructeur'
+      reply_in_mailbox: 'Répondre dans la messagerie'
   skiplinks:
     quick: Accès rapide
     content: Contenu
   combo_search_component:
-    screen_reader_instructions: "Quand les résultats de l’autocomplete sont disponibles, utilisez les flèches haut et bas pour naviguer dans la liste des résultats. Appuyez sur Entrée pour sélectionner un résultat. Appuyez sur Echap pour fermer la liste des résultats."
+    screen_reader_instructions: 'Quand les résultats de l’autocomplete sont disponibles, utilisez les flèches haut et bas pour naviguer dans la liste des résultats. Appuyez sur Entrée pour sélectionner un résultat. Appuyez sur Echap pour fermer la liste des résultats.'
     result_slot_html:
       zero: Aucun résultat
       one: 1 résultat
@@ -84,13 +84,13 @@ fr:
         are_you_new: Vous êtes nouveau sur %{app_name} ?
     my_account: Mon compte
     header:
-      back: "Revenir en arrière"
-      back_title: "Revenir en arrière, sur le site de mon administration"
-      main_menu: "Menu principal"
-      files: "Mes dossiers"
+      back: 'Revenir en arrière'
+      back_title: 'Revenir en arrière, sur le site de mon administration'
+      main_menu: 'Menu principal'
+      files: 'Mes dossiers'
     locale_dropdown:
-      select_locale: "Sélectionner une langue"
-      locale_name: "Français"
+      select_locale: 'Sélectionner une langue'
+      locale_name: 'Français'
     notifications:
       actions:
         access: Consulter mon dossier
@@ -100,146 +100,147 @@ fr:
       default: 'Aller à la page d’accueil'
       user: 'Aller à la liste des dossiers'
       instructeur: 'Aller à la liste des démarches'
-      admin: "Aller au panneau d’administration"
-      gestionnaire: "Aller au panneau de gestionnaire"
+      admin: 'Aller au panneau d’administration'
+      gestionnaire: 'Aller au panneau de gestionnaire'
   views:
     legal_notice:
-      title: "Mentions légales"
-      editing: "Éditeur"
+      title: 'Mentions légales'
+      editing: 'Éditeur'
       editing_content:
-        line_one: "Direction Interministérielle au Numérique (DINUM)"
-        line_two: "20 Avenue de Ségur"
-        line_three: "75007 PARIS"
-      direction: "Direction de la publication"
-      direction_content: "Madame Stéphanie Schaer, Directrice interministérielle du numérique."
-      hosting: "Prestataire d’hébergement"
+        line_one: 'Direction Interministérielle au Numérique (DINUM)'
+        line_two: '20 Avenue de Ségur'
+        line_three: '75007 PARIS'
+      direction: 'Direction de la publication'
+      direction_content: 'Madame Stéphanie Schaer, Directrice interministérielle du numérique.'
+      hosting: 'Prestataire d’hébergement'
       hosting_content:
-        firm: "OVH"
-        RCS_term: "RCS"
-        RCS_value: "Roubaix – Tourcoing 424 761 419 00045"
-        APE_term: "Code APE"
-        APE_value: "6202A"
-        TVA_term_html: "N° TVA"
-        TVA_value: "FR 22 424 761 419"
-        headquarters_term: "Siège social"
-        headquarters_value: "2 rue Kellermann - 59100 Roubaix - France"
+        firm: 'OVH'
+        RCS_term: 'RCS'
+        RCS_value: 'Roubaix – Tourcoing 424 761 419 00045'
+        APE_term: 'Code APE'
+        APE_value: '6202A'
+        TVA_term_html: 'N° TVA'
+        TVA_value: 'FR 22 424 761 419'
+        headquarters_term: 'Siège social'
+        headquarters_value: '2 rue Kellermann - 59100 Roubaix - France'
     accessibility_statement:
-      title: "Déclaration d’accessibilité"
-      line_one_html: "La DINUM s’engage à rendre son service accessible, conformément à l’<a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\">article 47 de la loi n° 2005-102 du 11 février 2005</a>."
-      line_two_html: "Cette déclaration d’accessibilité s’applique au site <a href=\"https://%{host}\">%{app_name}</a>."
+      title: 'Déclaration d’accessibilité'
+      line_one_html: 'La DINUM s’engage à rendre son service accessible, conformément à l’<a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867">article 47 de la loi n° 2005-102 du 11 février 2005</a>.'
+      line_two_html: 'Cette déclaration d’accessibilité s’applique au site <a href="https://%{host}">%{app_name}</a>.'
       compliance:
-        title: "État de conformité"
-        content_html: "Le site Démarches simplifiées est <strong>partiellement conforme</strong> au <a href=\"https://accessibilite.numerique.gouv.fr/\">Référentiel Général d’Amélioration de l’Accessibilité (RGAA)</a> version 4.1.2 en raison des non-conformités listées ci-après."
+        title: 'État de conformité'
+        content_html: 'Le site Démarches simplifiées est <strong>partiellement conforme</strong> au <a href="https://accessibilite.numerique.gouv.fr/">Référentiel Général d’Amélioration de l’Accessibilité (RGAA)</a> version 4.1.2 en raison des non-conformités listées ci-après.'
       results:
-        title: "Résultats des tests"
-        content: "L’audit réalisé en interne en avril 2025 révèle que le taux de conformité global est de 93,10% sur l’échantillon de pages analysés."
+        title: 'Résultats des tests'
+        content: 'L’audit réalisé en interne en avril 2025 révèle que le taux de conformité global est de 93,10% sur l’échantillon de pages analysés.'
         programme:
-          intro: "Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site grâce au "
-          label: "programme d’amélioration continue de DS en matière d’accessibilité"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
-          title: "programme d’amélioration continue de DS en matière d’accessibilité - nouvel onglet"
+          intro: 'Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site grâce au '
+          label: 'programme d’amélioration continue de DS en matière d’accessibilité'
+          url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+'
+          title: 'programme d’amélioration continue de DS en matière d’accessibilité - nouvel onglet'
       no_accessible:
-        title: "Contenus non accessibles"
-        subtitle_one: "Non-conformités"
-        examples_html: "
+        title: 'Contenus non accessibles'
+        subtitle_one: 'Non-conformités'
+        examples_html: '
           <h4>Certains scripts ne sont pas compatibles avec les technologies d’assistance</h4>
           <ul>
-            <li>Sur la combinaison Chrome / TalkBack, le focus n'est pas capturé dans les modales.
-              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
-            <li>Sur le formulaire d'une démarche, l'intitulé du bouton permettant d'afficher la suite des erreurs n'est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
-            <li>Le bouton d'action de la combobox <em>Adresse postale</em> n'a pas d'étiquette.</li>
-            <li>Le bouton d'action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d'attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
+          <li>Sur la combinaison Chrome / TalkBack, le focus n''est pas capturé dans les modales.
+          <br /><a href="https://github.com/GouvernementFR/dsfr/issues/967">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
+          <li>Sur le formulaire d''une démarche, l''intitulé du bouton permettant d''afficher la suite des erreurs n''est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
+          <li>Le bouton d''action de la combobox <em>Adresse postale</em> n''a pas d''étiquette.</li>
+          <li>Le bouton d''action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d''attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
           </ul>
           <h4>Certains messages de statut ne sont pas correctement restitués par les technologies d’assistance</h4>
           <ul>
-            <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l'erreur ne soit restituée aux technologies d'assistance.</li>
-            <li>Sur le formulaire d'une démarche, la progression du téléversement d'une pièce jointe (et le message d'échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
-            <li>Sur le formulaire d'une démarche, le message d'échec de l'enregistrement automatique n'est pas restitué aux technologies d’assistance.</li>
+          <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l''erreur ne soit restituée aux technologies d''assistance.</li>
+          <li>Sur le formulaire d''une démarche, la progression du téléversement d''une pièce jointe (et le message d''échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
+          <li>Sur le formulaire d''une démarche, le message d''échec de l''enregistrement automatique n''est pas restitué aux technologies d’assistance.</li>
           </ul>
           <h4>Certaines prises de focus sont altérées</h4>
           <ul>
-            <li>Sur la FAQ, la visibilité de la prise de focus est altérée sur les boutons du sommaire.
-            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
-            <li>En version mobile, sur les pages d'une démarche, la visibilité de la prise de focus du lien de retour aux dossiers (ou à la page d'accueil) est altérée.</li>
-            <li>En version mobile, sur le formulaire d'une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
+          <li>Sur la FAQ, la visibilité de la prise de focus est altérée sur les boutons du sommaire.
+          <br /><a href="https://github.com/GouvernementFR/dsfr/issues/967">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
+          <li>En version mobile, sur les pages d''une démarche, la visibilité de la prise de focus du lien de retour aux dossiers (ou à la page d''accueil) est altérée.</li>
+          <li>En version mobile, sur le formulaire d''une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
           </ul>
           <h4>Certains documents PDF ne sont pas accessibles</h4>
-          <p>Sur les pages d'une démarche, le document PDF de dématérialisation de la démarche n'est pas accessible.</p>"
-        subtitle_two: "Contenus exemptés"
-        exemption_html: "<p class=\"fr-mb-2w\">Les documents PDF, accessibles via le lien <em>Texte cadrant la demande d’information</em> présent dans le pied de pages de chaque démarche, sont fournis par l'administration en charge de la démarche.</p>"
-        subtitle_three: "Remarques complémentaires"
-        content_html: "<p class=\"fr-mb-2w\">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>"
+          <p>Sur les pages d''une démarche, le document PDF de dématérialisation de la démarche n''est pas accessible.</p>'
+        subtitle_two: 'Contenus exemptés'
+        exemption_html: '<p class="fr-mb-2w">Les documents PDF, accessibles via le lien <em>Texte cadrant la demande d’information</em> présent dans le pied de pages de chaque démarche, sont fournis par l''administration en charge de la démarche.</p>'
+        subtitle_three: 'Remarques complémentaires'
+        content_html: '<p class="fr-mb-2w">Les pages de documentation sont gérées par un outil tiers. Elles ne sont pas entièrement accessibles.</p>'
 
       preparation:
-        title: "Établissement de cette déclaration d’accessibilité"
-        intro: "Cette déclaration a été établie le 27 avril 2022. Elle a été mise à jour le 15 avril 2025."
-        subtitle_one: "Technologies utilisées pour la réalisation du site"
+        title: 'Établissement de cette déclaration d’accessibilité'
+        intro: 'Cette déclaration a été établie le 27 avril 2022. Elle a été mise à jour le 15 avril 2025.'
+        subtitle_one: 'Technologies utilisées pour la réalisation du site'
         techno_ruby:
-          label: "Ruby on Rails"
-          url: "https://rubyonrails.org/"
-          title: "Ruby on Rails - nouvel onglet"
-        subtitle_two: "Environnement de test"
-        environment_intro: "Les vérifications de restitution de contenus ont été réalisées sur la base d’une combinaison fournie par la base de référence du RGAA, avec les versions suivantes :"
-        environment_one: "Chrome 134 et NVDA 2024.4.2"
-        environment_two: "Safari et VoiceOver (MacOS 15.3.2 Sequoia)"
-        environment_three: "Firefox 136 et JAWS 2024"
-        environment_four: "Chrome 134 et TalkBack 15.2 (Android 13)"
-        environment_five: "Safari et VoiceOver (iOS 18.3.2)"
-        subtitle_three: "Outils pour évaluer l’accessibilité"
-        tool_one: "Assistant RGAA (extension Firefox)"
-        tool_two: "Web Developer (extension Firefox)"
-        tool_three: "HeadingsMap (extension Firefox)"
-        tool_four: "Application Colour Contrast Analyser"
-        tool_five: "Stylus (extension Firefox)"
-        tool_six: "Outils de développement de Firefox"
-        subtitle_four: "Pages du site ayant fait l’objet de la vérification de conformité"
-        page_one: "Accueil"
-        page_two: "Contact"
-        page_three: "Mentions légales"
-        page_four: "Déclaration d’accessibilité"
-        page_five: "Aide - Catégorie"
-        page_six: "Aide - Contenu"
-        page_six_url: "/faq/usager/comment-trouver-ma-demarche"
-        page_seven: "Création de compte"
-        page_seven_url: "/users/sign_up"
-        page_height: "Démarche - Accueil"
-        page_height_url: "/commencer/cd92-demande-amethyste-ph-v1"
-        page_nine: "Authentification"
-        page_ten: "Mot de passe oublié"
-        page_ten_url: "/users/password/new"
+          label: 'Ruby on Rails'
+          url: 'https://rubyonrails.org/'
+          title: 'Ruby on Rails - nouvel onglet'
+        subtitle_two: 'Environnement de test'
+        environment_intro: 'Les vérifications de restitution de contenus ont été réalisées sur la base d’une combinaison fournie par la base de référence du RGAA, avec les versions suivantes :'
+        environment_one: 'Chrome 134 et NVDA 2024.4.2'
+        environment_two: 'Safari et VoiceOver (MacOS 15.3.2 Sequoia)'
+        environment_three: 'Firefox 136 et JAWS 2024'
+        environment_four: 'Chrome 134 et TalkBack 15.2 (Android 13)'
+        environment_five: 'Safari et VoiceOver (iOS 18.3.2)'
+        subtitle_three: 'Outils pour évaluer l’accessibilité'
+        tool_one: 'Assistant RGAA (extension Firefox)'
+        tool_two: 'Web Developer (extension Firefox)'
+        tool_three: 'HeadingsMap (extension Firefox)'
+        tool_four: 'Application Colour Contrast Analyser'
+        tool_five: 'Stylus (extension Firefox)'
+        tool_six: 'Outils de développement de Firefox'
+        subtitle_four: 'Pages du site ayant fait l’objet de la vérification de conformité'
+        page_one: 'Accueil'
+        page_two: 'Contact'
+        page_three: 'Mentions légales'
+        page_four: 'Déclaration d’accessibilité'
+        page_five: 'Aide - Catégorie'
+        page_six: 'Aide - Contenu'
+        page_six_url: '/faq/usager/comment-trouver-ma-demarche'
+        page_seven: 'Création de compte'
+        page_seven_url: '/users/sign_up'
+        page_height: 'Démarche - Accueil'
+        page_height_url: '/commencer/cd92-demande-amethyste-ph-v1'
+        page_nine: 'Authentification'
+        page_ten: 'Mot de passe oublié'
+        page_ten_url: '/users/password/new'
         page_eleven: "Création d'un dossier - Identité"
         page_twelve: "Création d'un dossier - Brouillon"
         page_thirteen: "Création d'un dossier - Confirmation d'envoi"
-        page_note_html: "La démarche <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l'audit."
+        page_note_html: 'La démarche <a href="https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l''audit.'
       contact:
-        title: "Retour d’information et contact"
-        intro: "Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de Démarches simplifiées pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme."
+        title: 'Retour d’information et contact'
+        intro: 'Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de Démarches simplifiées pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.'
         infos:
-          email_html: "Par voie électronique :"
-          adress_html: "Par voie postale : DINUM , 20 avenue de Ségur 75007 Paris"
+          email_html: 'Par voie électronique :'
+          adress_html: 'Par voie postale : DINUM , 20 avenue de Ségur 75007 Paris'
       remedies:
-        title: "Voies de recours"
-        line_one: "Si vous constatez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du site, que vous nous le signalez et que vous ne parvenez pas à obtenir une réponse rapide de notre part, vous êtes en droit de contacter l’Arcom ou de saisir le Défenseur des droits."
-        arcom_title: "Contacter l’Arcom"
-        arcom_content_html: "Afin de signaler un ou plusieurs manquement(s) à la réglementation relative à l’accessibilité numérique, rendez-vous sur le <a href=\"https://www.arcom.fr/contact\">formulaire de contact du site web de l’Arcom</a>."
-        ddd_title: "Saisir le Défenseur des droits"
-        ddd_intro: "Pour faire valoir vos droits relatifs à des défauts d’accessibilité que vous avez rencontrés, plusieurs moyens sont à votre disposition :"
+        title: 'Voies de recours'
+        line_one: 'Si vous constatez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du site, que vous nous le signalez et que vous ne parvenez pas à obtenir une réponse rapide de notre part, vous êtes en droit de contacter l’Arcom ou de saisir le Défenseur des droits.'
+        arcom_title: 'Contacter l’Arcom'
+        arcom_content_html: 'Afin de signaler un ou plusieurs manquement(s) à la réglementation relative à l’accessibilité numérique, rendez-vous sur le <a href="https://www.arcom.fr/contact">formulaire de contact du site web de l’Arcom</a>.'
+        ddd_title: 'Saisir le Défenseur des droits'
+        ddd_intro: 'Pour faire valoir vos droits relatifs à des défauts d’accessibilité que vous avez rencontrés, plusieurs moyens sont à votre disposition :'
         remedies_one:
-          label: "Un formulaire de contact"
-          url: "https://www.defenseurdesdroits.fr/nous-contacter"
-          title: "Un formulaire de contact - nouvel onglet"
-          info: "Choisissez la thématique « Je suis victime de discrimination » puis « Biens et services privés » et enfin « Handicap »."
+          label: 'Un formulaire de contact'
+          url: 'https://www.defenseurdesdroits.fr/nous-contacter'
+          title: 'Un formulaire de contact - nouvel onglet'
+          info: 'Choisissez la thématique « Je suis victime de discrimination » puis « Biens et services privés » et enfin « Handicap ».'
         remedies_two:
-          label: "Contacter le délégué du Défenseur des droits dans votre région"
-          url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
-          title: "Contacter le délégué du Défenseur des droits dans votre région - nouvel onglet"
-        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l’adresse suivante :
-          <p class=\"fr-mb-2w\">Défenseur des droits
+          label: 'Contacter le délégué du Défenseur des droits dans votre région'
+          url: 'https://www.defenseurdesdroits.fr/fr/saisir/delegues'
+          title: 'Contacter le délégué du Défenseur des droits dans votre région - nouvel onglet'
+        remedies_three_html:
+          'Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l’adresse suivante :
+          <p class="fr-mb-2w">Défenseur des droits
           <br >Libre réponse 71120
-          <br>75342 Paris CEDEX 07</p>"
+          <br>75342 Paris CEDEX 07</p>'
     prefill_descriptions:
       edit:
-        intro_html: "Vous souhaitez permettre à vos usager·ères la <strong>création d’un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} »."
+        intro_html: 'Vous souhaitez permettre à vos usager·ères la <strong>création d’un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} ».'
         info_html: Pour cela, sélectionnez ci-dessous les champs que vous souhaitez préremplir.<br> Vous trouverez ensuite en bas de cette page un lien de préremplissage qu’il ne vous restera plus qu’à copier, à adapter en remplaçant les valeurs par défaut et à partager.<br> De la même façon, vous trouverez en bas de page un exemple de requête cURL à adapter si vous souhaitez préremplir les dossiers par API.
         champ_id: ID
         champ_type: Type
@@ -290,9 +291,9 @@ fr:
           epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l’EPCI</a>
         examples:
           title: Exemple
-          prenom: "Jean"
-          nom: "Dupont"
-          genre: "M."
+          prenom: 'Jean'
+          nom: 'Dupont'
+          genre: 'M.'
           text: Texte court
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
@@ -300,19 +301,19 @@ fr:
           email: adresse@mail.com
           phone: 0612345678
           iban: FR7611315000011234567890138
-          yes_no: "true"
-          civilite: "M."
-          pays: "FR"
-          departements: "56"
-          regions: "53"
-          address: "20 Avenue de Ségur 75007 Paris"
-          date: "2023-02-01"
-          datetime: "2023-02-01T10:30"
-          checkbox: "true"
-          annuaire_education: "0561383Z"
+          yes_no: 'true'
+          civilite: 'M.'
+          pays: 'FR'
+          departements: '56'
+          regions: '53'
+          address: '20 Avenue de Ségur 75007 Paris'
+          date: '2023-02-01'
+          datetime: '2023-02-01T10:30'
+          checkbox: 'true'
+          annuaire_education: '0561383Z'
           dossier_link: 42
-          rna: "W503726238"
-          siret: "13002526500013"
+          rna: 'W503726238'
+          siret: '13002526500013'
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
@@ -326,29 +327,29 @@ fr:
         json_description_copy: Copier la requête d’obtention de la description JSON
     registrations:
       new:
-        title: "Creation de compte sur %{name}"
-        subtitle: "Se créer un compte avec une adresse électronique"
+        title: 'Creation de compte sur %{name}'
+        subtitle: 'Se créer un compte avec une adresse électronique'
         email_label: 'Adresse électronique'
-        password_label: "Mot de passe (%{min_length} caractères minimum)"
+        password_label: 'Mot de passe (%{min_length} caractères minimum)'
     confirmation:
       new:
         title: 'Confirmez votre adresse électronique'
-        email_cta_html: "Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse électronique <strong>%{email}</strong>."
-        email_guidelines_html: "Ouvrez votre boîte email, et <strong>cliquez sur le lien d’activation</strong> dans le message que vous avez reçu."
-        email_missing: "Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer."
+        email_cta_html: 'Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse électronique <strong>%{email}</strong>.'
+        email_guidelines_html: 'Ouvrez votre boîte email, et <strong>cliquez sur le lien d’activation</strong> dans le message que vous avez reçu.'
+        email_missing: 'Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer.'
         resent: 'Renvoyer un email de confirmation'
     invites:
       create:
-        success: "Une invitation a été envoyée à %{email}. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
+        success: 'Une invitation a été envoyée à %{email}. Vous pouvez <a href="#" class="fr-link fr-text--sm" aria-controls="dossier-invites-modal-dialog" data-fr-opened="false" data-fr-js-modal-button="true">inviter une autre personne</a>.'
       destroy:
-        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
-        error: "Vous ne pouvez pas révoquer cette autorisation"
+        success: 'L''autorisation de %{email} vient d''être révoquée. Vous pouvez <a href="#" class="fr-link fr-text--sm" aria-controls="dossier-invites-modal-dialog" data-fr-opened="false" data-fr-js-modal-button="true">inviter une autre personne</a>.'
+        error: 'Vous ne pouvez pas révoquer cette autorisation'
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
-        view_invited_people: "Voir les personnes invitées"
-        invite_to_view: "Inviter une personne à consulter ce dossier"
+        view_invited_people: 'Voir les personnes invitées'
+        invite_to_view: 'Inviter une personne à consulter ce dossier'
       form:
-        modal_title: "Gestion des invités"
+        modal_title: 'Gestion des invités'
         cancel: Annuler
         modal_highlight: Les invités ont le droit de voir et modifier votre dossier.
         title: Ajouter un invité
@@ -356,13 +357,13 @@ fr:
         email_hint: 'Exemple : adresse@mail.com'
         invite_message: Message optionnel pour la personne invitée
         send_invitation: Envoyer une invitation
-        withdraw_permission: "Révoquer l’accès"
-        want_to_withdraw_permission: "Souhaitez-vous supprimer l’accès invité de %{email} ?"
+        withdraw_permission: 'Révoquer l’accès'
+        want_to_withdraw_permission: 'Souhaitez-vous supprimer l’accès invité de %{email} ?'
         edit_dossier_html:
           zero: '<p class="fr-my-2w"><em>Aucun invité ne peut voir et modifier ce dossier actuellement.</em></p>'
           one: '<h3 class="fr-h6 fr-mt-2w fr-mb-1w">1 personne invitée</h3>'
           other: '<h3 class="fr-h6 fr-mt-2w fr-mb-1w">%{count} personnes invitées</h3>'
-        submit_dossier_yourself: "Une fois le dossier complet, vous devrez le déposer vous-même."
+        submit_dossier_yourself: 'Une fois le dossier complet, vous devrez le déposer vous-même.'
     pagination:
       next: Suivant
       last: Dernier
@@ -382,32 +383,32 @@ fr:
         best_regards: Cordialement,
       dossiers:
         form:
-          submitted_at: "Déposé le %{datetime}"
-          updated_at: "Modifié le %{datetime}"
-          switched_to_instruction_at: "Passé en instruction le %{datetime}"
-          revert_to_submitted_at: "Correction demandée le %{datetime}"
-          acceptee_at: "Accepté le %{datetime}"
-          refuse_at: "Refusé le %{datetime}"
-          closed_at: "Classé sans suite le %{datetime}"
-          download_attestation: "Télécharger l’attestation"
+          submitted_at: 'Déposé le %{datetime}'
+          updated_at: 'Modifié le %{datetime}'
+          switched_to_instruction_at: 'Passé en instruction le %{datetime}'
+          revert_to_submitted_at: 'Correction demandée le %{datetime}'
+          acceptee_at: 'Accepté le %{datetime}'
+          refuse_at: 'Refusé le %{datetime}'
+          closed_at: 'Classé sans suite le %{datetime}'
+          download_attestation: 'Télécharger l’attestation'
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
         messages:
           form:
-            send_message: "Envoyer le message"
-            message_label_mandatory: "Votre message (obligatoire)"
-            write_message_placeholder: "Écrivez votre message ici"
-            write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
+            send_message: 'Envoyer le message'
+            message_label_mandatory: 'Votre message (obligatoire)'
+            write_message_placeholder: 'Écrivez votre message ici'
+            write_message_to_administration_placeholder: 'Écrivez votre message à l’administration ici'
         demande:
-          history: "Historique du dossier"
-          en_construction_notice: "Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier."
-          requester_identity: "Identité du demandeur"
-          mandataire_identity: "Identité du mandataire"
-          requester_identity_updated_at: "modifiée le %{date}"
-          individual_identity: "Votre identité"
-          form: "Sections du formulaire"
-          edit_siret: "Modifier le SIRET"
-          edit_identity: "Modifier l’identité"
+          history: 'Historique du dossier'
+          en_construction_notice: 'Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.'
+          requester_identity: 'Identité du demandeur'
+          mandataire_identity: 'Identité du mandataire'
+          requester_identity_updated_at: 'modifiée le %{date}'
+          individual_identity: 'Votre identité'
+          form: 'Sections du formulaire'
+          edit_siret: 'Modifier le SIRET'
+          edit_identity: 'Modifier l’identité'
           edit_identity_html: 'Modifier <span aria-hidden="true"> l’identité</span>'
           accuse_lecture: Cette démarche est soumise à un accusé de lecture.
           accuse_lecture_with_agreement: L’usager a pris connaissance de la décision concernant son dossier le %{agreement}.
@@ -416,10 +417,10 @@ fr:
       groupe_gestionnaires:
         delete: Supprimer
     instructeurs:
-      procedure_menu: "Dossiers de la démarche numero %{id}"
-      procedures_menu: "Démarches"
+      procedure_menu: 'Dossiers de la démarche numero %{id}'
+      procedures_menu: 'Démarches'
       dossiers:
-        dossier_menu: "Dossier numéro %{id}"
+        dossier_menu: 'Dossier numéro %{id}'
         tab_steps:
           request: Demande
           private_annotations: Annotations privées
@@ -429,22 +430,19 @@ fr:
           reaffectation: Réaffectation
           attachments: Pièces jointes
           rendez_vous: Rendez-vous
-        archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
-        delete_dossier: "Mettre à la corbeille"
+        archived_dossier: 'Le dossier sera conservé 1 mois supplémentaire'
+        delete_dossier: 'Mettre à la corbeille'
         deleted_reason:
           user_request: Dossier supprimé par l’usager
           expired: Le dossier a expiré
           user_removed: L’usager a supprimé son compte
-        acts_on_behalf: "agit pour"
-        restore: "Restaurer"
-        restore_and_extend: "Restaurer et étendre la conservation"
-        filters:
-          title: Sélectionner un filtre
-          missing_column: Veuillez sélectionner une colonne avant d'ajouter un filtre
+        acts_on_behalf: 'agit pour'
+        restore: 'Restaurer'
+        restore_and_extend: 'Restaurer et étendre la conservation'
         select_all: Tout selectionner
         batch_operation:
-          enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
-          disabled: "Impossible d’ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
+          enabled: 'Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse'
+          disabled: 'Impossible d’ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse'
         show_deleted_dossiers: Historique des dossiers supprimés
         customize: Personnaliser le tableau
         passer_en_instruction: Passer en instruction
@@ -463,15 +461,15 @@ fr:
           <br/>
           Pour sauvegarder et archiver vos dossiers sur votre serveur, vous devez les télécharger.
       avis:
-        introduction_file_explaination: "Fichier joint à la demande d’avis"
+        introduction_file_explaination: 'Fichier joint à la demande d’avis'
       search:
-        dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
-        deleted_dossier: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été supprimé le %{deleted_at}."
-        hidden_dossier: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été placé dans la "
-        hidden_dossier_link: "corbeille"
+        dossier_not_in_instructor_group: 'Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} ».'
+        deleted_dossier: 'Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été supprimé le %{deleted_at}.'
+        hidden_dossier: 'Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il a été placé dans la '
+        hidden_dossier_link: 'corbeille'
     users:
       dossiers:
-        archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
+        archived_dossier: 'Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire'
         identite:
           legend: 'Ce dossier est : '
           identity_siret: Identifier votre établissement
@@ -504,47 +502,47 @@ fr:
         show:
           header:
             summary_html: 'Suivi<span class="fr-hidden fr-unhidden-sm"> de votre dossier</span>'
-            request: "Votre dossier"
+            request: 'Votre dossier'
             mailbox_html: 'Messagerie<span class="fr-hidden fr-unhidden-sm"> administration</span>'
-            rendez_vous: "Rendez-vous"
-            dossier_number: "Dossier n° %{dossier_id}"
-            created_date: "- En brouillon depuis le %{date_du_dossier}"
-            submit_date: "- Déposé le %{date_du_dossier}"
-            download: "dossier-%{dossier_id}.pdf"
-            download_without_number: "dossier-DS.pdf"
+            rendez_vous: 'Rendez-vous'
+            dossier_number: 'Dossier n° %{dossier_id}'
+            created_date: '- En brouillon depuis le %{date_du_dossier}'
+            submit_date: '- Déposé le %{date_du_dossier}'
+            download: 'dossier-%{dossier_id}.pdf'
+            download_without_number: 'dossier-DS.pdf'
           status_overview:
             status_draft: brouillon
             status_in_progress: en construction
-            en_construction_html: "Votre dossier est en construction. Cela signifie que <strong>vous pouvez encore le modifier</strong>. Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction »."
+            en_construction_html: 'Votre dossier est en construction. Cela signifie que <strong>vous pouvez encore le modifier</strong>. Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction ».'
             status_review: en instruction
             admin_review: Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
             delay_title:
-              sva: "Votre dossier est soumis au cadre législatif « Silence Vaut Accord »"
-              svr: "Votre dossier est soumis au cadre législatif « Silence Vaut Rejet »"
-            delay_text_sva_svr: "Vous aurez un retour de l’administration au plus tard le %{date}."
+              sva: 'Votre dossier est soumis au cadre législatif « Silence Vaut Accord »'
+              svr: 'Votre dossier est soumis au cadre législatif « Silence Vaut Rejet »'
+            delay_text_sva_svr: 'Vous aurez un retour de l’administration au plus tard le %{date}.'
             status_completed: terminé
-            use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
-            motivation: "Motivation :"
-            attestation: "Attestation :"
-            justificatif: "Justificatif de décision :"
-            acceptee: "Votre dossier a été accepté"
-            accepte_motivation: "Motif de l’acceptation"
-            accepte_attestation: "Télécharger l’attestation"
-            refuse: "Votre dossier a été refusé"
-            refuse_motivation: "Motif du refus"
-            refuse_reply: "Envoyer un message à l’administration"
-            sans_suite: "Votre dossier a été classé sans suite"
-            sans_suite_motivation: "Motif du classement sans suite"
+            use_mailbox_for_questions_html: '<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href="%{mailbox_url}">contacter l’administration directement</a>.'
+            motivation: 'Motivation :'
+            attestation: 'Attestation :'
+            justificatif: 'Justificatif de décision :'
+            acceptee: 'Votre dossier a été accepté'
+            accepte_motivation: 'Motif de l’acceptation'
+            accepte_attestation: 'Télécharger l’attestation'
+            refuse: 'Votre dossier a été refusé'
+            refuse_motivation: 'Motif du refus'
+            refuse_reply: 'Envoyer un message à l’administration'
+            sans_suite: 'Votre dossier a été classé sans suite'
+            sans_suite_motivation: 'Motif du classement sans suite'
           latest_message:
-            latest_message: "Dernier message"
+            latest_message: 'Dernier message'
         messagerie:
-          mailbox: "La messagerie vous permet de contacter l’administration en charge de votre dossier."
+          mailbox: 'La messagerie vous permet de contacter l’administration en charge de votre dossier.'
         rendez_vous:
-          title: "Votre prochain rendez-vous"
-          navigate_to_rdv_sp: "Voir mon rendez-vous sur RDV Service Public"
+          title: 'Votre prochain rendez-vous'
+          navigate_to_rdv_sp: 'Voir mon rendez-vous sur RDV Service Public'
         demande:
           edit_dossier: Modifier le dossier
-          edit_dossier_title: "Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
+          edit_dossier_title: 'Modifier le dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction'
         search:
           search_file: Rechercher un dossier (par n° de dossier, mots-clés…)
           label: Rechercher un dossier (par n° de dossier, nom / prénom, mots-clés…)
@@ -553,16 +551,16 @@ fr:
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »
-        dossiers_menu: "Mes dossiers"
-        dossier_menu: "Dossier numéro %{id}"
+        dossiers_menu: 'Mes dossiers'
+        dossier_menu: 'Dossier numéro %{id}'
         index:
-          dossiers: "Mes dossiers"
+          dossiers: 'Mes dossiers'
           see_deleted_dossiers_history: Historique des dossiers supprimés
-          administration_no_longer_processes: "L’administration ne traitera plus votre demande."
+          administration_no_longer_processes: 'L’administration ne traitera plus votre demande.'
         dossiers_list:
-          n_dossier: "dossier n°"
+          n_dossier: 'dossier n°'
           no_result_title: Aucun dossier
-          no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
+          no_result_text_html: 'Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx.'
           no_result_text_with_search: ne correspond aux termes recherchés
           no_result_reset_search: Réinitialiser la recherche
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
@@ -590,18 +588,18 @@ fr:
           deleted_by_user: Mis à la corbeille le %{date} par l’usager
           deleted_by_automatic: Mis à la corbeille automatiquement le %{date} car le délai maximal de conservation a été atteint
         dossier_action:
-          edit_dossier: "Modifier le dossier"
-          start_other_dossier: "Commencer un nouveau dossier"
-          clone: "Dupliquer le dossier"
-          delete_dossier: "Mettre à la corbeille"
-          delete_dossier_confirm: "Voulez-vous vraiment mettre à la corbeille ce dossier ?"
+          edit_dossier: 'Modifier le dossier'
+          start_other_dossier: 'Commencer un nouveau dossier'
+          clone: 'Dupliquer le dossier'
+          delete_dossier: 'Mettre à la corbeille'
+          delete_dossier_confirm: 'Voulez-vous vraiment mettre à la corbeille ce dossier ?'
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
-          transfer_dossier: "Transférer le dossier"
-          edit_draft: "Continuer à remplir"
-          restore: "Restaurer"
+          transfer_dossier: 'Transférer le dossier'
+          edit_draft: 'Continuer à remplir'
+          restore: 'Restaurer'
           restore_and_extend_conservation_html: 'Restaurer et étendre la conservation <span class="visually-hidden">du dossier numéro %{id}</span> (%{duree_conservation_dossiers_dans_ds} mois)'
-          actions: "Actions"
-          other_actions: "Autres actions"
+          actions: 'Actions'
+          other_actions: 'Autres actions'
         transfers:
           sender_from_support: Le support technique
           sender_demande_en_cours_html: '<h4 class="card-title fr-mb-1v">Une demande de transfert est en cours sur le dossier n° %{id} pour %{email}</h4>'
@@ -620,26 +618,26 @@ fr:
           find_procedure: Trouvez votre démarche
           state_civil_servant: Vous êtes agent de la fonction publique d’État ?
           connect_with_pro_connect: Accédez à notre page dédiée
-          subtitle: "Se connecter avec son compte"
+          subtitle: 'Se connecter avec son compte'
           for_tiers_alert: Si vous remplissez un dossier pour un tiers, vous devez utiliser vos propres identifiants.
         link_sent:
           consult_help_page_html: Si vous voyez cette page trop souvent, <a target="_blank" rel="noopener noreferrer" href="%{href}">consultez notre aide</a>.
-          email_cta_html: "Nous avons besoin de vérifier votre adresse électronique <strong>%{email}</strong>."
+          email_cta_html: 'Nous avons besoin de vérifier votre adresse électronique <strong>%{email}</strong>.'
       passwords:
         edit:
           subtitle: Changement de mot de passe
           submit: Changer le mot de passe
           submit_loading: Envoi…
         reset_link_sent:
-          email_sent_html: "Si un compte existe avec l’adresse <strong>%{email}</strong>, nous vous avons envoyé un email pour réinitialiser votre mot de passe."
-          no_mail: "Vous n’avez pas reçu l’email ?"
-          check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
-          check_account_html: "Avez-vous bien créé un compte <strong>%{application_name}</strong> avec l’adresse <strong>%{email}</strong> ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
-          check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
-          check_gpdr: "Le compte a pu être supprimé en cas d’inactivité prolongée et sans dossier en cours. Dans ce cas vous devrez recréer un compte à partir d’une démarche."
-          title: "Lien de réinitialisation du mot de passe envoyé"
+          email_sent_html: 'Si un compte existe avec l’adresse <strong>%{email}</strong>, nous vous avons envoyé un email pour réinitialiser votre mot de passe.'
+          no_mail: 'Vous n’avez pas reçu l’email ?'
+          check_spams: 'Vérifiez la boite Indésirables ou Spam de votre boite email.'
+          check_account_html: 'Avez-vous bien créé un compte <strong>%{application_name}</strong> avec l’adresse <strong>%{email}</strong> ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message.'
+          check_france_connect_html: 'Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href="%{href}">essayez à nouveau avec France Connect</a>.'
+          check_gpdr: 'Le compte a pu être supprimé en cas d’inactivité prolongée et sans dossier en cours. Dans ce cas vous devrez recréer un compte à partir d’une démarche.'
+          title: 'Lien de réinitialisation du mot de passe envoyé'
       shared:
-        email_can_take_a_while_html: "<strong>Attention</strong>, ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
+        email_can_take_a_while_html: '<strong>Attention</strong>, ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver.'
         contact_us_if_any_trouble_html: 'En cas de difficultés, nous restons joignables <a href="%{href}">via ce formulaire</a>.'
   modal:
     publish:
@@ -670,30 +668,30 @@ fr:
           email: 'Exemple : adresse@mail.com'
       user:
         siret: 'Numéro SIRET'
-        << : *default_attributes
+        <<: *default_attributes
       instructeur:
-        << : *default_attributes
+        <<: *default_attributes
       super_admin:
-        << : *default_attributes
+        <<: *default_attributes
         otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
-        ineligibilite_rules: "Les règles d’inéligibilité"
+        ineligibilite_rules: 'Les règles d’inéligibilité'
       champs:
         value: Valeur du champ
       default_mail_attributes: &default_mail_attributes
         hints:
-          subject: "L’objet généré sera tronqué s’il dépasse 100 caractères."
+          subject: 'L’objet généré sera tronqué s’il dépasse 100 caractères.'
       mails/closed_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/initiated_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/received_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/refused_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/without_continuation_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
 
     errors:
       messages:
@@ -715,7 +713,7 @@ fr:
         attestation_template:
           attributes:
             footer:
-              too_long: ": le pied de page est trop long."
+              too_long: ': le pied de page est trop long.'
         invite:
           attributes:
             email:
@@ -723,25 +721,25 @@ fr:
         user:
           attributes: &error_attributes
             reset_password_token:
-              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
+              invalid: ': Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau.'
             email:
               blank: 'est vide. Saisissez une adresse électronique'
               invalid: 'est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com'
               taken: 'déjà utilisé. Saisir une autre adresse électronique.'
             password:
-              too_short: "est trop court. Saisir un mot de passe avec au moins 12 caractères"
-              not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
+              too_short: 'est trop court. Saisir un mot de passe avec au moins 12 caractères'
+              not_strong: 'n’est pas assez complexe. Saisir un mot de passe plus complexe'
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
             requested_merge_into:
-              same: "ne peut être identique à l’ancienne. Saisir une autre adresse électronique"
+              same: 'ne peut être identique à l’ancienne. Saisir une autre adresse électronique'
 
         instructeur:
           attributes:
-            << : *error_attributes
+            <<: *error_attributes
         super_admin:
           attributes:
-            << : *error_attributes
+            <<: *error_attributes
 
         procedure:
           attributes:
@@ -753,110 +751,110 @@ fr:
           attributes:
             ineligibilite_rules:
               invalid: ne sont pas valides
-        "dossier/champs":
-          format: "%{message}"
+        'dossier/champs':
+          format: '%{message}'
           attributes:
             value:
-              format: "%{message}"
+              format: '%{message}'
 
-        "champs/cnaf_champ":
+        'champs/cnaf_champ':
           attributes:
             numero_allocataire:
-              invalid: "doit être composé au maximum de 7 chiffres"
+              invalid: 'doit être composé au maximum de 7 chiffres'
             code_postal:
-              invalid: "doit posséder 5 caractères"
-        "champs/dgfip_champ":
+              invalid: 'doit posséder 5 caractères'
+        'champs/dgfip_champ':
           attributes:
             numero_fiscal:
-              invalid: "doit posséder 13 ou 14 caractères"
+              invalid: 'doit posséder 13 ou 14 caractères'
             reference_avis:
-              invalid: "doit posséder 13 ou 14 caractères"
-        "champs/drop_down_list_champ":
+              invalid: 'doit posséder 13 ou 14 caractères'
+        'champs/drop_down_list_champ':
           attributes:
             value:
-              not_in_options: "doit être dans les options proposées"
-        "champs/multiple_drop_down_list_champ":
+              not_in_options: 'doit être dans les options proposées'
+        'champs/multiple_drop_down_list_champ':
           attributes:
             value:
-              not_in_options: "doit être dans les options proposées"
-        "champs/region_champ":
+              not_in_options: 'doit être dans les options proposées'
+        'champs/region_champ':
           attributes:
             value:
-              not_in_region_names: "doit être un nom de région valide"
+              not_in_region_names: 'doit être un nom de région valide'
             external_id:
-              not_in_region_codes: "doit être un code de région valide"
-        "champs/departement_champ":
+              not_in_region_codes: 'doit être un code de région valide'
+        'champs/departement_champ':
           attributes:
             value:
-              not_in_departement_names: "doit être un nom de département valide"
+              not_in_departement_names: 'doit être un nom de département valide'
             external_id:
-              not_in_departement_codes: "doit être un code de département valide"
-        "champs/epci_champ":
+              not_in_departement_codes: 'doit être un code de département valide'
+        'champs/epci_champ':
           attributes:
             code_departement:
-              not_in_departement_codes: "doit être un code de département valide"
+              not_in_departement_codes: 'doit être un code de département valide'
             external_id:
-              not_in_departement_epci_codes: "doit être un code d’EPCI du département correspondant"
+              not_in_departement_epci_codes: 'doit être un code d’EPCI du département correspondant'
             value:
-              not_in_departement_epci_names: "doit être un nom d’EPCI du département correspondant"
-        "champs/dossier_link_champ":
+              not_in_departement_epci_names: 'doit être un nom d’EPCI du département correspondant'
+        'champs/dossier_link_champ':
           attributes:
             value:
-              not_integerable: "doit être un entier"
+              not_integerable: 'doit être un entier'
   errors:
-    format: "Le champ « %{attribute} » %{message}"
+    format: 'Le champ « %{attribute} » %{message}'
     messages:
-      saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
-      dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
+      saml_not_authorized: 'Vous n’êtes pas autorisé à accéder à ce service.'
+      dossier_not_found: 'Le dossier n’existe pas ou vous n’y avez pas accès.'
       # dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
-      targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
-      procedure_not_found: "La démarche n’existe pas"
+      targeted_user_link_expired: 'Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible.'
+      procedure_not_found: 'La démarche n’existe pas'
       pro_connect:
-        connexion: "Une erreur est survenue lors de la connexion avec ProConnect. Veuillez réessayer."
-        email_domain_not_allowed: "Votre domaine d’email n’est pas autorisé à utiliser ProConnect sur cette plateforme."
+        connexion: 'Une erreur est survenue lors de la connexion avec ProConnect. Veuillez réessayer.'
+        email_domain_not_allowed: 'Votre domaine d’email n’est pas autorisé à utiliser ProConnect sur cette plateforme.'
       france_connect:
-        connexion: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez réessayer."
+        connexion: 'Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez réessayer.'
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
-        internal_error: "Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez essayer un autre mode de connexion."
+        internal_error: 'Une erreur est survenue lors de la connexion avec FranceConnect. Veuillez essayer un autre mode de connexion.'
       siret:
         network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
         not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro SIRET.'
       invalid_character_rules: Vous devez sélectionner au moins un type de caractère.
-      invalid_character_length: "Le nombre minimum de caractères doit être inférieur au nombre maximum de caractères"
+      invalid_character_length: 'Le nombre minimum de caractères doit être inférieur au nombre maximum de caractères'
       evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
       mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie
       syntax_error_regexp: La syntaxe de l'expression régulière n'est pas valide
       # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:
-        one: "Aucune parcelle cadastrale sur la zone sélectionnée"
-        other: "Aucune parcelle cadastrale sur les zones sélectionnées"
-      not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
-      not_positive: "doit être un nombre positif"
-      not_in_range: "doit être un nombre compris entre %{min} et %{max}"
-      limit_min: "doit être un nombre supérieur ou égal à %{min}"
-      limit_max: "doit être un nombre inférieur ou égal à %{max}"
-      date_in_past: "doit être une date dans le passé"
-      not_in_range_date: "doit être une date comprise entre le %{start_date} et le %{end_date}"
-      limit_start_date: "doit être une date supérieure ou égale au %{start_date}"
-      limit_end_date: "doit être une date inférieure ou égale au %{end_date}"
-      not_a_float: "doit comprendre entre 1 et 3 chiffres après le point"
-      not_a_date: "doit être une date correctement formatée"
-      not_a_datetime: "doit être une date et heure correctement formatée"
-      blank: "doit être rempli"
+        one: 'Aucune parcelle cadastrale sur la zone sélectionnée'
+        other: 'Aucune parcelle cadastrale sur les zones sélectionnées'
+      not_an_integer: 'doit être un nombre entier (sans chiffres après la virgule)'
+      not_positive: 'doit être un nombre positif'
+      not_in_range: 'doit être un nombre compris entre %{min} et %{max}'
+      limit_min: 'doit être un nombre supérieur ou égal à %{min}'
+      limit_max: 'doit être un nombre inférieur ou égal à %{max}'
+      date_in_past: 'doit être une date dans le passé'
+      not_in_range_date: 'doit être une date comprise entre le %{start_date} et le %{end_date}'
+      limit_start_date: 'doit être une date supérieure ou égale au %{start_date}'
+      limit_end_date: 'doit être une date inférieure ou égale au %{end_date}'
+      not_a_float: 'doit comprendre entre 1 et 3 chiffres après le point'
+      not_a_date: 'doit être une date correctement formatée'
+      not_a_datetime: 'doit être une date et heure correctement formatée'
+      blank: 'doit être rempli'
   time:
     formats:
-      default: "%d %B %Y %R"
-      long: "%d %B %y %H:%M"
-      human: "%A %-d %B à %Hh%M"
+      default: '%d %B %Y %R'
+      long: '%d %B %y %H:%M'
+      human: '%A %-d %B à %Hh%M'
   datetime:
     formats:
-      long: "%d %B %y %H:%M"
+      long: '%d %B %y %H:%M'
   dates:
-    today: "Aujourd’hui"
-    yesterday: "Hier"
+    today: 'Aujourd’hui'
+    yesterday: 'Hier'
     days_ago:
-      one: "Il y a 1 jour"
-      other: "Il y a %{count} jours"
+      one: 'Il y a 1 jour'
+      other: 'Il y a %{count} jours'
   pluralize:
     case:
       one: dossier
@@ -883,7 +881,7 @@ fr:
       one: '<span class="visually-hidden">dans la </span>corbeille'
       other: '<span class="visually-hidden">dans la </span>corbeille'
     dossiers_historique:
-      one:  supprimé définitivement
+      one: supprimé définitivement
       other: supprimés définitivement
     dossiers_transferes:
       one: demande de transfert
@@ -892,8 +890,8 @@ fr:
       one: expirant
       other: expirants
     dossier_trouve:
-      one: "%{count} dossier trouvé"
-      other: "%{count} dossiers trouvés"
+      one: '%{count} dossier trouvé'
+      other: '%{count} dossiers trouvés'
     published:
       one: publiée
       other: publiées
@@ -911,68 +909,68 @@ fr:
       other: Démarches
   users:
     dossiers:
-      test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
-      no_access_html: "Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse électronique de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n’est pas le cas, déconnectez-vous"
-      no_longer_editable: "Votre dossier ne peut plus être modifié"
-      en_construction_submitted: "Les modifications ont déjà été déposées"
+      test_procedure: 'Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression.'
+      no_access_html: 'Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse électronique de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n’est pas le cas, déconnectez-vous'
+      no_longer_editable: 'Votre dossier ne peut plus être modifié'
+      en_construction_submitted: 'Les modifications ont déjà été déposées'
       fill_identity:
         individual: Complétez l’identité du déposant du dossier pour poursuivre.
         siret: Complétez l’identification de l’établissement pour poursuivre.
       create_commentaire:
-        message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
-      cloned_success: "Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer."
+        message_send: 'Votre message a bien été envoyé à l’instructeur en charge de votre dossier.'
+      cloned_success: 'Votre dossier a bien été dupliqué. Vous pouvez maintenant le vérifier, l’adapter puis le déposer.'
       ask_deletion:
-        undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
-        soft_deleted_dossier: "Votre dossier a bien été mis à la corbeille"
-      restore: "Votre dossier a bien été restauré"
+        undergoingreview: 'L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier.'
+        soft_deleted_dossier: 'Votre dossier a bien été mis à la corbeille'
+      restore: 'Votre dossier a bien été restauré'
       etablissement:
-        no_establishment: "Aucun établissement n’est associé à ce dossier"
+        no_establishment: 'Aucun établissement n’est associé à ce dossier'
       update_identite:
-        identity_saved: "Identité enregistrée"
+        identity_saved: 'Identité enregistrée'
       attestation:
-        no_longer_available: "L’attestation n’est plus disponible sur ce dossier."
+        no_longer_available: 'L’attestation n’est plus disponible sur ce dossier.'
       papertrail:
-        receipt: "Attestation de dépôt"
-        description: "Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} »."
-        file_submitted_at: "Dossier déposé le"
-        dossier_state: "État du dossier"
+        receipt: 'Attestation de dépôt'
+        description: 'Ce document atteste que %{user_name} a déposé le %{date} un dossier sur la démarche « %{procedure} ».'
+        file_submitted_at: 'Dossier déposé le'
+        dossier_state: 'État du dossier'
         states:
-          en_construction: "déposé, en attente d’examen par l’administration"
-          en_instruction: "en cours d’instruction par l’administration"
-          accepte: "accepté"
-          refuse: "refusé"
-          sans suite: "classé sans suite"
-        administrative_service: "Service administratif"
-        generated_at: "Fait le %{date},"
-        signature: "La direction de %{app_name}"
+          en_construction: 'déposé, en attente d’examen par l’administration'
+          en_instruction: 'en cours d’instruction par l’administration'
+          accepte: 'accepté'
+          refuse: 'refusé'
+          sans suite: 'classé sans suite'
+        administrative_service: 'Service administratif'
+        generated_at: 'Fait le %{date},'
+        signature: 'La direction de %{app_name}'
       show:
         papertrail:
-          get_papertrail: "Obtenir une attestation de dépôt de dossier"
-          filename: "attestation-depot_dossier-%{dossier_id}.pdf"
+          get_papertrail: 'Obtenir une attestation de dépôt de dossier'
+          filename: 'attestation-depot_dossier-%{dossier_id}.pdf'
       show_in_trash:
-        page_title: "Dossier nº %{numero} - En corbeille"
-        title: "Le dossier n° %{numero} a été mis à la corbeille"
-        explanation_html: "Vous pouvez retrouver ce dossier depuis l'onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n'est pas consultable actuellement."
-        consult_trash: "Consulter la corbeille"
-        user_request_info_without_if: "Ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
-        user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
+        page_title: 'Dossier nº %{numero} - En corbeille'
+        title: 'Le dossier n° %{numero} a été mis à la corbeille'
+        explanation_html: 'Vous pouvez retrouver ce dossier depuis l''onglet <a href="%{trash_link}" class="fr-link">corbeille</a> de votre compte.<br>Il n''est pas consultable actuellement.'
+        consult_trash: 'Consulter la corbeille'
+        user_request_info_without_if: 'Ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>.'
+        user_request_info: 'Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>.'
         automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu'il ne soit supprimé définitivement."
       show_deleted:
-        page_title: "Dossier nº %{numero} - Supprimé définitivement"
-        title: "Le dossier n° %{numero} a été supprimé"
-        explanation: "Vous ne pouvez plus récupérer ce dossier pour une des raisons suivantes :"
-        reason_user_request: "Il a été mis à la corbeille à votre demande, puis automatiquement supprimé."
-        reason_automatic: "Il a été supprimé car son délai maximal de conservation a été atteint."
-        history_link_html: "Vous pouvez retrouver l'ensemble des dossiers supprimés de votre compte (hors \"BROUILLON\") sur la page <a href=\"%{history_link}\" class=\"fr-link\">Historique des dossiers supprimés</a>."
+        page_title: 'Dossier nº %{numero} - Supprimé définitivement'
+        title: 'Le dossier n° %{numero} a été supprimé'
+        explanation: 'Vous ne pouvez plus récupérer ce dossier pour une des raisons suivantes :'
+        reason_user_request: 'Il a été mis à la corbeille à votre demande, puis automatiquement supprimé.'
+        reason_automatic: 'Il a été supprimé car son délai maximal de conservation a été atteint.'
+        history_link_html: 'Vous pouvez retrouver l''ensemble des dossiers supprimés de votre compte (hors "BROUILLON") sur la page <a href="%{history_link}" class="fr-link">Historique des dossiers supprimés</a>.'
   instructeurs:
     dossiers:
-      deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
-      impossible_deletion: "Supression impossible : le dossier n’est pas traité"
-      restore: "Le dossier a bien été restauré"
-      reaffectation: "Le dossier n° %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+      deleted_by_instructeur: 'Le dossier a bien été supprimé de votre interface'
+      impossible_deletion: 'Supression impossible : le dossier n’est pas traité'
+      restore: 'Le dossier a bien été restauré'
+      reaffectation: 'Le dossier n° %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} ».'
       existing_groupe:
-        one: "%{count} groupe existe"
-        other: "%{count} groupes existent"
+        one: '%{count} groupe existe'
+        other: '%{count} groupes existent'
       labels:
         to_follow: à suivre
         followed: suivis par moi
@@ -982,8 +980,8 @@ fr:
         to_archive: à archiver
         trash: corbeille
   administrateurs:
-    procedures_menu: "Mes démarches"
-    preview_menu: "Démarche « %{libelle} »"
+    procedures_menu: 'Mes démarches'
+    preview_menu: 'Démarche « %{libelle} »'
     activate:
       new:
         title: Choix du mot de passe
@@ -1004,25 +1002,25 @@ fr:
       closed_at: archivée le
       auto_archive_on: sera clôturée le
       show:
-        ready: "Validé"
-        needs_configuration: "À configurer"
-        configure_api_particulier_token: "Configurer le jeton API particulier"
+        ready: 'Validé'
+        needs_configuration: 'À configurer'
+        configure_api_particulier_token: 'Configurer le jeton API particulier'
     jeton_particulier:
       show:
-        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d’accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
-        token_description: "Il doit contenir au minimum 15 caractères."
+        api_particulier_description_html: '%{app_name} utilise <a href="https://api.gouv.fr/les-api/api-particulier">API Particulier</a> qui permet d’accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen.<br />Renseignez ici le <a href="https://api.gouv.fr/les-api/api-particulier/demande-acces">jeton API Particulier</a> propre à votre démarche.'
+        token_description: 'Il doit contenir au minimum 15 caractères.'
       update:
-        token_ok: "Le jeton a bien été mis à jour"
+        token_ok: 'Le jeton a bien été mis à jour'
         no_scopes_token: "Mise à jour impossible : le jeton n’a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
         not_found_token: "Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
-        network_error:  "Mise à jour impossible : une erreur réseau est survenue"
+        network_error: 'Mise à jour impossible : une erreur réseau est survenue'
       api_particulier:
-        already_configured: "Déjà rempli"
-        needs_configuration: "À remplir"
+        already_configured: 'Déjà rempli'
+        needs_configuration: 'À remplir'
     sources_particulier:
       show:
-        title: "Définir les sources de données"
-        data_sources: "Sources de données"
+        title: 'Définir les sources de données'
+        data_sources: 'Sources de données'
         explication_html: "<p>API Particulier facilite l’accès des administrations aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen pour simplifier les démarches administratives mises en œuvre par les collectivités et les administrations.<br> Cela permet aux administrations d’accéder à des informations certifiées à la source et ainsi : </p> <ul> <li>de s’affranchir des pièces justificatives lors des démarches en ligne,</li> <li>de réduire le nombre d’erreurs de saisie,</li> <li>d’écarter le risque de fraude documentaire.</li> </ul> <p> <strong>Important&nbsp;:</strong> les disposition de l’article <a href='https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&amp;idArticle=LEGIARTI000031367412&amp;dateTexte=&amp;categorieLien=cid'>L144-8</a> n’autorisent que l’échange des informations strictement nécessaires pour traiter une démarche.<br /><br />En conséquence, ne sélectionnez ici que les données auxquelles vous aurez accès d’un point de vue légal.</p>"
       update:
         sources_ok: 'Mise à jour effectuée'
@@ -1040,78 +1038,78 @@ fr:
       confirm: Valider
       choose_email_contact: Choisissez votre adresse électronique de contact pour finaliser votre connexion
       alternative_email: Veuillez nous fournir l’adresse électronique à utiliser pour vous contacter
-      keep_fc_email_html: "<span>Oui, utiliser <b>%{email}</b> comme adresse électronique de contact</span>"
+      keep_fc_email_html: '<span>Oui, utiliser <b>%{email}</b> comme adresse électronique de contact</span>'
       use_another_email: Non, utiliser une autre adresse
       email_suggest:
         wanna_say: 'Voulez-vous dire ?'
     merge:
-      title: "Fusion des comptes FranceConnect et %{application_name}"
+      title: 'Fusion des comptes FranceConnect et %{application_name}'
       subtitle_html: "Bonjour,<br /><br />Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme adresse électronique de contact.<br />Or il existe un compte sur %{application_name} avec cette adresse électronique."
       label_select_merge_flow: Ce compte %{email} vous appartient-il ?
-      title_fill_in_password:  Pour les fusionner, entrez votre mot de passe
+      title_fill_in_password: Pour les fusionner, entrez votre mot de passe
       button_merge: Fusionner les comptes
       title_fill_in_email: Donnez-nous alors l'adresse électronique que %{application_name} utilisera pour vous contacter
       button_use_this_email: Utiliser cette adresse électronique
       link_confirm_by_email: Confirmer mon compte par email
     flash:
-      confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
-      confirmation_mail_resent: "Le lien de confirmation a expiré. Un nouveau lien de confirmation vous a été envoyé par email."
-      confirmation_mail_resent_error: "Une erreur inattendue est survenue. Veuillez contacter le support si le problème persiste."
-      redirect_new_user_session: "Vous avez été déconnecté de votre précédent compte. Veuillez cliquer à nouveau sur le lien de confirmation."
+      confirmation_mail_sent: 'Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes'
+      confirmation_mail_resent: 'Le lien de confirmation a expiré. Un nouveau lien de confirmation vous a été envoyé par email.'
+      confirmation_mail_resent_error: 'Une erreur inattendue est survenue. Veuillez contacter le support si le problème persiste.'
+      redirect_new_user_session: 'Vous avez été déconnecté de votre précédent compte. Veuillez cliquer à nouveau sur le lien de confirmation.'
       email_confirmed: 'Votre adresse électronique est bien vérifiée'
       user_not_found: 'Utilisateur non trouvé'
-      invalid_password: "Mot de passe incorrect"
-      connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
-      merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes."
+      invalid_password: 'Mot de passe incorrect'
+      connection_done: 'Les comptes FranceConnect et %{application_name} sont à présent fusionnés'
+      merger_token_expired: 'Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.'
   groupe_gestionnaires:
     flash:
       alert:
         groupe_gestionnaire_administrateur:
-          cannot_be_deleted: "L’administrateur « %{email} » ne peut pas être supprimé du groupe gestionnaire."
-          not_in_groupe_gestionnaire: "L’administrateur « %{email} » n’est pas dans le groupe gestionnaire."
+          cannot_be_deleted: 'L’administrateur « %{email} » ne peut pas être supprimé du groupe gestionnaire.'
+          not_in_groupe_gestionnaire: 'L’administrateur « %{email} » n’est pas dans le groupe gestionnaire.'
         groupe_gestionnaire_gestionnaire:
-          destroy_at_least_one: "Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine"
-          not_in_groupe_gestionnaire: "Le gestionnaire « %{email} » n’est pas dans le groupe gestionnaire."
+          destroy_at_least_one: 'Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine'
+          not_in_groupe_gestionnaire: 'Le gestionnaire « %{email} » n’est pas dans le groupe gestionnaire.'
       notice:
         groupe_gestionnaire_administrateur:
-          create: "Les administrateurs ont bien été affectés au groupe gestionnaire"
-          destroy: "L’administrateur « %{email} » a été supprimé."
-          remove: "L’administrateur « %{email} » a été retiré du groupe gestionnaire."
+          create: 'Les administrateurs ont bien été affectés au groupe gestionnaire'
+          destroy: 'L’administrateur « %{email} » a été supprimé.'
+          remove: 'L’administrateur « %{email} » a été retiré du groupe gestionnaire.'
         groupe_gestionnaire_gestionnaire:
-          create: "Les gestionnaires ont bien été affectés au groupe gestionnaire"
-          destroy: "Le gestionnaire « %{email} » a été retiré du groupe gestionnaire."
+          create: 'Les gestionnaires ont bien été affectés au groupe gestionnaire'
+          destroy: 'Le gestionnaire « %{email} » a été retiré du groupe gestionnaire.'
   shared:
     procedures:
-      no_siret: "Vous n’avez pas renseigné le siret du service pour certaines de vos démarches. Merci de les modifier."
+      no_siret: 'Vous n’avez pas renseigné le siret du service pour certaines de vos démarches. Merci de les modifier.'
       add_siret_to_service_without_siret_html: Ajouter le siret du service <a href="%{link}">%{nom}</a>
-      no_service: "Certaines de vos démarches n’ont pas de service associé."
+      no_service: 'Certaines de vos démarches n’ont pas de service associé.'
       add_service_html: <a href="%{link}">Ajouter un service</a> à la démarche %{id}
 
       stats:
-        usual_processing_time: "Temps de traitement usuel"
-        processing_time: "Temps de traitement"
-        since_procedure_creation: "depuis le lancement de la démarche"
-        nb_days: "Nb Jours"
-        processing_time_graph_description: "Moyenne pondérée du temps de traitement entre la dernière date de dépot et la réponse (accepté, refusé, ou classé sans suite)."
-        status_evolution_details: "depuis le lancement de la démarche"
-        status_evolution: "Avancée des dossiers"
-        acceptance_rate: "Taux d’acceptation"
-        acceptance_rate_details: "depuis le lancement de la démarche"
-        rate: "Taux"
-        dossiers_count: "Nb dossiers"
-        weekly_distribution: "Répartition par semaine"
-        weekly_distribution_details: "au cours des 6 derniers mois"
+        usual_processing_time: 'Temps de traitement usuel'
+        processing_time: 'Temps de traitement'
+        since_procedure_creation: 'depuis le lancement de la démarche'
+        nb_days: 'Nb Jours'
+        processing_time_graph_description: 'Moyenne pondérée du temps de traitement entre la dernière date de dépot et la réponse (accepté, refusé, ou classé sans suite).'
+        status_evolution_details: 'depuis le lancement de la démarche'
+        status_evolution: 'Avancée des dossiers'
+        acceptance_rate: 'Taux d’acceptation'
+        acceptance_rate_details: 'depuis le lancement de la démarche'
+        rate: 'Taux'
+        dossiers_count: 'Nb dossiers'
+        weekly_distribution: 'Répartition par semaine'
+        weekly_distribution_details: 'au cours des 6 derniers mois'
       sva_svr_rule_name:
-        sva: "Silence Vaut Accord"
-        svr: "Silence Vaut Rejet"
+        sva: 'Silence Vaut Accord'
+        svr: 'Silence Vaut Rejet'
     procedure_description:
-      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} min (variable selon les options choisies)"
+      estimated_fill_duration: 'Temps de remplissage estimé : %{estimated_minutes} min (variable selon les options choisies)'
       usual_traitement_time_title: Quels sont les délais d’instruction pour cette démarche ?
-      pieces_jointes : Quelles sont les pièces justificatives à fournir ?
-      pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
-      sva_svr_title: "Cette démarche applique le « %{rule} »"
-      sva_text_html: "Le SVA, ou « <strong>Silence Vaut Accord</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement acceptée à l’issue d’un délai si votre dossier est complet."
-      svr_text_html: "Le SVR, ou « <strong>Silence Vaut Rejet</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement refusée à l’issue d’un délai si votre dossier est complet."
+      pieces_jointes: Quelles sont les pièces justificatives à fournir ?
+      pieces_jointes_conditionnal_list_title: Liste des pièces en fonction de votre situation
+      sva_svr_title: 'Cette démarche applique le « %{rule} »'
+      sva_text_html: 'Le SVA, ou « <strong>Silence Vaut Accord</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement acceptée à l’issue d’un délai si votre dossier est complet.'
+      svr_text_html: 'Le SVR, ou « <strong>Silence Vaut Rejet</strong> », est un principe législatif qui définit le comportement d’une demande en cas d’absence de réponse de l’administration : la demande sera automatiquement refusée à l’issue d’un délai si votre dossier est complet.'
       sva_svr_prevision_date:
         Ainsi, vous recevrez une réponse à votre demande dans les %{delay} après avoir déposé votre dossier complet.
         Par exemple, si vous déposez votre dossier aujourd’hui, vous aurez une réponse au plus tard le %{date}.

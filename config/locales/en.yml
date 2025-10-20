@@ -38,14 +38,14 @@ en:
     copied: 'Copied'
   help: 'Help'
   help_dropdown:
-    procedure_title: "Do you have a question about this procedure?"
+    procedure_title: 'Do you have a question about this procedure?'
     problem_title: A problem with the website %{app_name}?
     problem_description: Find your answer in the
     problem_url_title: FAQ
     technical_contact_title: Technical contact
     technical_contact_description: Send us a message to %{contact_email}.
-    help_brouillon_title: "Need help filling out your file?"
-    help_filled_dossier: "A question about your file?"
+    help_brouillon_title: 'Need help filling out your file?'
+    help_filled_dossier: 'A question about your file?'
   utils:
     'yes': 'Yes'
     'no': 'No'
@@ -62,23 +62,23 @@ en:
     email_suggest:
       wanna_say: 'Do you mean to say ?'
 
-    deconnexion: "Log out"
-    pj: "Attachments"
+    deconnexion: 'Log out'
+    pj: 'Attachments'
     asterisk_html: "Fields marked by an asterisk ( <svg aria-label='required' class='icon mandatory' height='10' role='img' viewBox='0 0 1200 1200' width='10' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'><desc>required</desc><path d='M489.838 29.354v443.603L68.032 335.894 0 545.285l421.829 137.086-260.743 358.876 178.219 129.398L600.048 811.84l260.673 358.806 178.146-129.398-260.766-358.783L1200 545.379l-68.032-209.403-421.899 137.07V29.443H489.84l-.002-.089z'></path></svg> ) are mandatory."
     no_mandatory: (optional)
     send_mail: Send message
     new_tab: New tab
-    modal_close: "Close"
-    modal_close_alt: "Close this modal"
+    modal_close: 'Close'
+    modal_close_alt: 'Close this modal'
   helpers:
     commentaire:
-      send_message_to_instructeur: "Send a message to the instructor"
-      reply_in_mailbox: "Reply in mailbox"
+      send_message_to_instructeur: 'Send a message to the instructor'
+      reply_in_mailbox: 'Reply in mailbox'
   skiplinks:
     quick: Quick access
     content: Content
   combo_search_component:
-    screen_reader_instructions: "When autocomplete results are available, use the up and down arrows to navigate through the list of results. Press Enter to select a result. Press Escape to close the results list."
+    screen_reader_instructions: 'When autocomplete results are available, use the up and down arrows to navigate through the list of results. Press Enter to select a result. Press Escape to close the results list.'
     result_slot_html:
       zero: No result
       one: 1 result
@@ -90,13 +90,13 @@ en:
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
-      back: "Back"
+      back: 'Back'
       back_title: "Back to my administration's website"
-      main_menu: "Main menu"
-      files: "My files"
+      main_menu: 'Main menu'
+      files: 'My files'
     locale_dropdown:
-      select_locale: "Choose a language"
-      locale_name: "English"
+      select_locale: 'Choose a language'
+      locale_name: 'English'
     notifications:
       actions:
         access: View your File
@@ -107,137 +107,137 @@ en:
       user: 'Go to files list'
       instructeur: 'Go to procedures list'
       admin: 'Go to administration panel'
-      gestionnaire: "Go to admins group panel"
+      gestionnaire: 'Go to admins group panel'
   views:
     legal_notice:
-      title: "Legal Notices"
-      editing: "Editor"
+      title: 'Legal Notices'
+      editing: 'Editor'
       editing_content:
-        line_one: "Interministerial Directorate for Digital Affairs (DINUM)"
-      direction: "Publishing Department"
-      direction_content: "Ms. Stéphanie Schaer, Interministerial Director of Digital Affairs."
-      hosting: "Hosting provider"
+        line_one: 'Interministerial Directorate for Digital Affairs (DINUM)'
+      direction: 'Publishing Department'
+      direction_content: 'Ms. Stéphanie Schaer, Interministerial Director of Digital Affairs.'
+      hosting: 'Hosting provider'
       hosting_content:
-        firm: "OVH"
-        RCS_term: "Commercial register"
-        RCS_value: "Roubaix – Tourcoing 424 761 419 00045"
-        APE_term: "APE (business activity) code"
-        APE_value: "6202A"
-        TVA_term_html: "VAT NUMBER"
-        TVA_value: "FR 22 424 761 419"
-        headquarters_term: "Head office"
-        headquarters_value: "2 rue Kellermann - 59100 Roubaix - France"
+        firm: 'OVH'
+        RCS_term: 'Commercial register'
+        RCS_value: 'Roubaix – Tourcoing 424 761 419 00045'
+        APE_term: 'APE (business activity) code'
+        APE_value: '6202A'
+        TVA_term_html: 'VAT NUMBER'
+        TVA_value: 'FR 22 424 761 419'
+        headquarters_term: 'Head office'
+        headquarters_value: '2 rue Kellermann - 59100 Roubaix - France'
     accessibility_statement:
-      title: "Accessibility statement"
-      line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law no. 2005-102 of 11 February 2005</a>."
-      line_two_html: "This accessibility statement applies to <a href=\"https://%{host}\">%{app_name}</a> website."
+      title: 'Accessibility statement'
+      line_one_html: 'DINUM is committed to making its service accessible in accordance with <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867" hreflang="fr">Article 47 of Law no. 2005-102 of 11 February 2005</a>.'
+      line_two_html: 'This accessibility statement applies to <a href="https://%{host}">%{app_name}</a> website.'
       compliance:
-        title: "Compliance status"
-        content_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with <a href=\"https://accessibilite.numerique.gouv.fr/\">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below."
+        title: 'Compliance status'
+        content_html: 'The website Démarches simplifiées is <strong>partially compliant</strong> with <a href="https://accessibilite.numerique.gouv.fr/">the General Accessibility Guidelines (RGAA)</a> version 4.1.2 as a result of the non-compliances listed below.'
       results:
-        title: "Test results"
-        content: "The internal audit performed in April 2025 revealed an overall compliance rate of 93.10% on the sample of pages analyzed."
+        title: 'Test results'
+        content: 'The internal audit performed in April 2025 revealed an overall compliance rate of 93.10% on the sample of pages analyzed.'
         programme:
-          intro: "Users can follow the measures taken by the service to improve the accessibility of the site via "
-          label: "the DS accessibility continuous improvement programme"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
-          title: "the DS accessibility continuous improvement programme - new tab"
+          intro: 'Users can follow the measures taken by the service to improve the accessibility of the site via '
+          label: 'the DS accessibility continuous improvement programme'
+          url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+'
+          title: 'the DS accessibility continuous improvement programme - new tab'
       no_accessible:
-        title: "Non-accessible content"
-        subtitle_one: "Non-compliances"
-        examples_html: "
+        title: 'Non-accessible content'
+        subtitle_one: 'Non-compliances'
+        examples_html: '
           <h4>Some scripts are not compatible with assistive technologies</h4>
           <ul>
-            <li>On the Chrome / TalkBack combination, focus is not captured in modals.
-              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
-            <li>On a procedure form, the title of the button used to display the error sequence is irrelevant. Once activated, the focus remains on the button.</li>
-            <li>The combobox action button <em>Adresse postale</em> has no label.</li>
-            <li>The action buttons in the <em>Invite someone to edit this file</em> and <em>Identity of the requester</em> panels have conflicting attributes (<code>aria-expanded</code> and <code>aria-haspopup</code>).</li>
+          <li>On the Chrome / TalkBack combination, focus is not captured in modals.
+          <br /><a href="https://github.com/GouvernementFR/dsfr/issues/967">A ticket has been opened with the DSFR on this subject.</a>.</li>
+          <li>On a procedure form, the title of the button used to display the error sequence is irrelevant. Once activated, the focus remains on the button.</li>
+          <li>The combobox action button <em>Adresse postale</em> has no label.</li>
+          <li>The action buttons in the <em>Invite someone to edit this file</em> and <em>Identity of the requester</em> panels have conflicting attributes (<code>aria-expanded</code> and <code>aria-haspopup</code>).</li>
           </ul>
           <h4>Some status messages are not correctly rendered by assistive technologies</h4>
           <ul>
-            <li>On the account creation page, when the form submitted contains an error, the page reloads without the error being returned to the support technologies.</li>
-            <li>On a procedure form, the progress of an attachment upload (and the failure message, if applicable) are not returned to the assistive technologies.</li>
-            <li>On a procedure form, the automatic registration failure message is not returned to assistive technologies.</li>
+          <li>On the account creation page, when the form submitted contains an error, the page reloads without the error being returned to the support technologies.</li>
+          <li>On a procedure form, the progress of an attachment upload (and the failure message, if applicable) are not returned to the assistive technologies.</li>
+          <li>On a procedure form, the automatic registration failure message is not returned to assistive technologies.</li>
           </ul>
           <h4>Some focus is impaired</h4>
           <ul>
-            <li>On the FAQ, the visibility of the focus is altered on the summary buttons.
-            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
-            <li>In the mobile version, the focus on the link back to the files (or the home page) is altered.</li>
-            <li>In the mobile version, when the <em>Invite someone to edit this file</em> panel is open, it hides the following fields from focus.</li>
+          <li>On the FAQ, the visibility of the focus is altered on the summary buttons.
+          <br /><a href="https://github.com/GouvernementFR/dsfr/issues/967">A ticket has been opened with the DSFR on this subject.</a>.</li>
+          <li>In the mobile version, the focus on the link back to the files (or the home page) is altered.</li>
+          <li>In the mobile version, when the <em>Invite someone to edit this file</em> panel is open, it hides the following fields from focus.</li>
           </ul>
           <h4>Some PDF documents are not accessible</h4>
-          <p>The PDF document used to dematerialize a procedure is not accessible on the procedure pages.</p>"
-        subtitle_two: "Exempted content"
-        exemption_html: "<p class=\"fr-mb-2w\">The PDF documents, accessible via the <em>Laws regarding this data collection</em> link in the footer of each procedure, are provided by the administration in charge of the procedure.</p>"
-        subtitle_three: "Additional notes"
-        content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>"
-
+          <p>The PDF document used to dematerialize a procedure is not accessible on the procedure pages.</p>'
+        subtitle_two: 'Exempted content'
+        exemption_html: '<p class="fr-mb-2w">The PDF documents, accessible via the <em>Laws regarding this data collection</em> link in the footer of each procedure, are provided by the administration in charge of the procedure.</p>'
+        subtitle_three: 'Additional notes'
+        content_html: '<p class="fr-mb-2w">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>'
 
       preparation:
-        title: "Preparation of this accessibility declaration"
-        intro: "This declaration was drawn up on 27 April 2022. It was updated on 15 April 2025."
-        subtitle_one: "Technologies used to create the site"
+        title: 'Preparation of this accessibility declaration'
+        intro: 'This declaration was drawn up on 27 April 2022. It was updated on 15 April 2025.'
+        subtitle_one: 'Technologies used to create the site'
         techno_ruby:
-          label: "Ruby on Rails"
-          url: "https://rubyonrails.org/"
-          title: "Ruby on Rails - new tab"
-        subtitle_two: "Test environment"
-        environment_intro: "The content rendering checks were carried out on the basis of a combination provided by the RGAA reference base, with the following versions:"
-        environment_one: "Chrome 134 and NVDA 2024.4.2"
-        environment_two: "Safari and VoiceOver (MacOS 15.3.2 Sequoia)"
-        environment_three: "Firefox 136 and JAWS 2024"
-        environment_four: "Chrome 134 and TalkBack 15.2 (Android 13)"
-        environment_five: "Safari and VoiceOver (iOS 18.3.2)"
-        subtitle_three: "Tools for assessing accessibility"
-        tool_one: "RGAA Assistant (Firefox extension)"
-        tool_two: "Web Developer (Firefox extension)"
-        tool_three: "HeadingsMap (Firefox extension)"
-        tool_four: "Colour Contrast Analyser application"
-        tool_five: "Stylus (Firefox extension)"
-        tool_six: "Firefox developer tools"
-        subtitle_four: "Pages of the site subject to the compliance check"
-        page_one: "Home"
-        page_two: "Contact"
-        page_three: "Legal notices"
-        page_four: "Accessibility statement"
-        page_five: "Help - Category"
-        page_six: "Help - Content"
-        page_seven: "Create an account"
-        page_height: "Procedure - Home"
-        page_nine: "Authentification"
-        page_ten: "Forgotten password"
-        page_eleven: "File creation - Identity"
-        page_twelve: "File creation - Draft"
-        page_thirteen: "File creation - Dispatch confirmation"
-        page_note_html: "The procedure <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit."
+          label: 'Ruby on Rails'
+          url: 'https://rubyonrails.org/'
+          title: 'Ruby on Rails - new tab'
+        subtitle_two: 'Test environment'
+        environment_intro: 'The content rendering checks were carried out on the basis of a combination provided by the RGAA reference base, with the following versions:'
+        environment_one: 'Chrome 134 and NVDA 2024.4.2'
+        environment_two: 'Safari and VoiceOver (MacOS 15.3.2 Sequoia)'
+        environment_three: 'Firefox 136 and JAWS 2024'
+        environment_four: 'Chrome 134 and TalkBack 15.2 (Android 13)'
+        environment_five: 'Safari and VoiceOver (iOS 18.3.2)'
+        subtitle_three: 'Tools for assessing accessibility'
+        tool_one: 'RGAA Assistant (Firefox extension)'
+        tool_two: 'Web Developer (Firefox extension)'
+        tool_three: 'HeadingsMap (Firefox extension)'
+        tool_four: 'Colour Contrast Analyser application'
+        tool_five: 'Stylus (Firefox extension)'
+        tool_six: 'Firefox developer tools'
+        subtitle_four: 'Pages of the site subject to the compliance check'
+        page_one: 'Home'
+        page_two: 'Contact'
+        page_three: 'Legal notices'
+        page_four: 'Accessibility statement'
+        page_five: 'Help - Category'
+        page_six: 'Help - Content'
+        page_seven: 'Create an account'
+        page_height: 'Procedure - Home'
+        page_nine: 'Authentification'
+        page_ten: 'Forgotten password'
+        page_eleven: 'File creation - Identity'
+        page_twelve: 'File creation - Draft'
+        page_thirteen: 'File creation - Dispatch confirmation'
+        page_note_html: 'The procedure <a href="https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit.'
       contact:
-        title: "Feedback and contact"
-        intro: "If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form."
+        title: 'Feedback and contact'
+        intro: 'If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form.'
         infos:
-          email_html: "By email:"
-          adress_html: "By post : DINUM , 20 avenue de Ségur 75007 Paris"
+          email_html: 'By email:'
+          adress_html: 'By post : DINUM , 20 avenue de Ségur 75007 Paris'
       remedies:
-        title: "Remedies"
-        line_one: "If you notice a lack of accessibility that prevents you from accessing a content or functionality of the site, and you report it to us and do not manage to obtain a rapid response from us, you are entitled to contact Arcom or send your complaints to the Human Rights Defender."
-        arcom_title: "Contact Arcom"
-        arcom_content_html: "To report one or more violations of digital accessibility regulations, please use the <a href=\"https://www.arcom.fr/contact\">contact form available on the Arcom website</a>."
-        ddd_title: "Reach Out to the Human Rights Defender"
-        ddd_intro: "There are a number of ways you can exercise your rights with regard to accessibility issues you may have encountered:"
+        title: 'Remedies'
+        line_one: 'If you notice a lack of accessibility that prevents you from accessing a content or functionality of the site, and you report it to us and do not manage to obtain a rapid response from us, you are entitled to contact Arcom or send your complaints to the Human Rights Defender.'
+        arcom_title: 'Contact Arcom'
+        arcom_content_html: 'To report one or more violations of digital accessibility regulations, please use the <a href="https://www.arcom.fr/contact">contact form available on the Arcom website</a>.'
+        ddd_title: 'Reach Out to the Human Rights Defender'
+        ddd_intro: 'There are a number of ways you can exercise your rights with regard to accessibility issues you may have encountered:'
         remedies_one:
-          label: "A contact form"
-          url: "https://www.defenseurdesdroits.fr/nous-contacter"
-          title: "A contact form - new tab"
-          info: "Select “I am a victim of discrimination,” followed by “Private goods and services,” and then “Disability.”"
+          label: 'A contact form'
+          url: 'https://www.defenseurdesdroits.fr/nous-contacter'
+          title: 'A contact form - new tab'
+          info: 'Select “I am a victim of discrimination,” followed by “Private goods and services,” and then “Disability.”'
         remedies_two:
-          label: "Contact the delegate of the Human Rights Defender in your region"
-          url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
-          title: "Contact the delegate of the Human Rights Defender in your region - new tab"
-        remedies_three_html: "Send a letter by post (free of charge, do not put a stamp) to the following address
-          <p class=\"fr-mb-2w\">Défenseur des droits
+          label: 'Contact the delegate of the Human Rights Defender in your region'
+          url: 'https://www.defenseurdesdroits.fr/fr/saisir/delegues'
+          title: 'Contact the delegate of the Human Rights Defender in your region - new tab'
+        remedies_three_html:
+          'Send a letter by post (free of charge, do not put a stamp) to the following address
+          <p class="fr-mb-2w">Défenseur des droits
           <br >Libre réponse 71120
-          <br>75342 Paris CEDEX 07</p>"
+          <br>75342 Paris CEDEX 07</p>'
     prefill_descriptions:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
@@ -290,9 +290,9 @@ en:
           dossier_link_html: The file ID, as integer
         examples:
           title: Example
-          prenom: "Jean"
-          nom: "Dupont"
-          genre: "M."
+          prenom: 'Jean'
+          nom: 'Dupont'
+          genre: 'M.'
           text: Short text
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
@@ -300,19 +300,19 @@ en:
           email: address@mail.com
           phone: 0612345678
           iban: FR7611315000011234567890138
-          yes_no: "true"
-          pays: "FR"
-          departements: "56"
-          regions: "53"
-          address: "20 Avenue de Ségur 75007 Paris"
-          date: "2023-02-01"
-          datetime: "2023-02-01T10:30"
-          checkbox: "true"
-          annuaire_education: "0561383Z"
+          yes_no: 'true'
+          pays: 'FR'
+          departements: '56'
+          regions: '53'
+          address: '20 Avenue de Ségur 75007 Paris'
+          date: '2023-02-01'
+          datetime: '2023-02-01T10:30'
+          checkbox: 'true'
+          annuaire_education: '0561383Z'
           dossier_link: 42
-          rna: "W503726238"
-          siret: "13002526500013"
-          civilite: "M."
+          rna: 'W503726238'
+          siret: '13002526500013'
+          civilite: 'M.'
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
@@ -326,37 +326,37 @@ en:
         json_description_copy: Copy the JSON description query
     registrations:
       new:
-        title: "Create an account %{name}"
-        subtitle: "Create an account using an email"
+        title: 'Create an account %{name}'
+        subtitle: 'Create an account using an email'
         email_label: 'Email (name@site.com)'
-        password_label: "Password (%{min_length} characters minimum)"
+        password_label: 'Password (%{min_length} characters minimum)'
     confirmation:
       new:
         title: 'Confirm your email address'
-        email_cta_html: "Before filling your file, we have to validate your email address <strong>%{email}</strong>."
-        email_guidelines_html: "Open your mailbox and <strong>click on the activation link</strong> within the mail we just sent you."
-        email_missing: "If you have not received our email (have you checked your spam ?), we can resend it."
+        email_cta_html: 'Before filling your file, we have to validate your email address <strong>%{email}</strong>.'
+        email_guidelines_html: 'Open your mailbox and <strong>click on the activation link</strong> within the mail we just sent you.'
+        email_missing: 'If you have not received our email (have you checked your spam ?), we can resend it.'
         resent: 'Resend the confirmation email'
     invites:
       create:
-        success: "An invitation has been sent to %{email}. You can <button type=\"button\" class=\"fr-link\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\">create another one</button>."
+        success: 'An invitation has been sent to %{email}. You can <button type="button" class="fr-link" aria-controls="dossier-invites-modal-dialog" data-fr-opened="false">create another one</button>.'
       destroy:
-        success: "The permission given to %{email} had been revoked. You can <button type=\"button\" class=\"fr-link\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\">create another one</button>."
+        success: 'The permission given to %{email} had been revoked. You can <button type="button" class="fr-link" aria-controls="dossier-invites-modal-dialog" data-fr-opened="false">create another one</button>.'
         error: "You can't revoke this invitation"
       dropdown:
         invite_to_edit: Invite someone to edit this file
-        view_invited_people: "View invited people"
-        invite_to_view: "Invite someone to view this file"
+        view_invited_people: 'View invited people'
+        invite_to_view: 'Invite someone to view this file'
       form:
         modal_title: Invite someone
         cancel: Cancel
-        modal_highlight: "Invited people can view and edit your file"
+        modal_highlight: 'Invited people can view and edit your file'
         title: Invite someone
         email: Email address
         invite_message: Optional message for the person you invite
         send_invitation: Send an invitation
-        withdraw_permission: "Withdraw the permission"
-        want_to_withdraw_permission: "Would you like to withdraw the permission of %{email}?"
+        withdraw_permission: 'Withdraw the permission'
+        want_to_withdraw_permission: 'Would you like to withdraw the permission of %{email}?'
         edit_dossier_html:
           zero: '<p class="fr-my-2w"><em>No user can view and edit this file at this time.</em></p>'
           one: '<h3 class="fr-h6 fr-mt-2w fr-mb-1w">1 user invited</h3>'
@@ -377,32 +377,32 @@ en:
         best_regards: Best Regards,
       dossiers:
         form:
-          submitted_at: "Submitted on %{datetime}"
-          updated_at: "Updated on %{datetime}"
-          switched_to_instruction_at: "Switched to instruction on %{datetime}"
-          revert_to_submitted_at: "Correction requested on on %{datetime}"
-          download_attestation: "Download attestation"
-          acceptee_at: "Accepted on %{datetime}"
-          refuse_at: "Declined on %{datetime}"
-          closed_at: "Closed on %{datetime}"
+          submitted_at: 'Submitted on %{datetime}'
+          updated_at: 'Updated on %{datetime}'
+          switched_to_instruction_at: 'Switched to instruction on %{datetime}'
+          revert_to_submitted_at: 'Correction requested on on %{datetime}'
+          download_attestation: 'Download attestation'
+          acceptee_at: 'Accepted on %{datetime}'
+          refuse_at: 'Declined on %{datetime}'
+          closed_at: 'Closed on %{datetime}'
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
         messages:
           form:
-            send_message: "Send message"
-            message_label_mandatory: "Your message (mandatory)"
-            write_message_placeholder: "Write your message here"
-            write_message_to_administration_placeholder: "Write your message to the administration here"
+            send_message: 'Send message'
+            message_label_mandatory: 'Your message (mandatory)'
+            write_message_placeholder: 'Write your message here'
+            write_message_to_administration_placeholder: 'Write your message to the administration here'
         demande:
-          history: "File history"
-          en_construction_notice: "Unless otherwise indicated, fields were entered on the date the file was submitted."
-          requester_identity: "Identity of the requester"
-          mandataire_identity: "Identity of the mandatary"
-          requester_identity_updated_at: "updated on %{date}"
-          individual_identity: "Your identity"
-          form: "Form"
-          edit_siret: "Edit SIRET"
-          edit_identity: "Edit identity data"
+          history: 'File history'
+          en_construction_notice: 'Unless otherwise indicated, fields were entered on the date the file was submitted.'
+          requester_identity: 'Identity of the requester'
+          mandataire_identity: 'Identity of the mandatary'
+          requester_identity_updated_at: 'updated on %{date}'
+          individual_identity: 'Your identity'
+          form: 'Form'
+          edit_siret: 'Edit SIRET'
+          edit_identity: 'Edit identity data'
           edit_identity_html: 'Edit identity <span aria-hidden="true"> data<span>'
           accuse_lecture: This procedure is subject to a reading receipt.
           accuse_lecture_with_agreement: The user has read the decision taken on his file on %{agreement}.
@@ -411,10 +411,10 @@ en:
       groupe_gestionnaires:
         delete: Delete
     instructeurs:
-      procedure_menu: "Files of the procedure number %{id}"
-      procedures_menu: "Procedures"
+      procedure_menu: 'Files of the procedure number %{id}'
+      procedures_menu: 'Procedures'
       dossiers:
-        dossier_menu: "File number %{id}"
+        dossier_menu: 'File number %{id}'
         tab_steps:
           request: Request
           private_annotations: Private annotations
@@ -424,21 +424,18 @@ en:
           reaffectation: reassignment
           attachments: Attachments
           rendez_vous: Appointment
-        archived_dossier: "This file will be kept for an additional month"
-        delete_dossier: "Move file to trash"
+        archived_dossier: 'This file will be kept for an additional month'
+        delete_dossier: 'Move file to trash'
         deleted_reason:
           user_request: File deleted by the user
           expired: The file is expired
           user_removed: The user has deleted his/her account
-        acts_on_behalf: "acts for"
-        restore: "Restore"
-        filters:
-          title: Select a filter
-          missing_column: Please select a column before adding a filter
+        acts_on_behalf: 'acts for'
+        restore: 'Restore'
         select_all: Select all
         batch_operation:
-          enabled: "Add file %{dossier_id} to the selection for the bulk operation"
-          disabled: "Impossible to add file %{dossier_id} to the selection because it is already in a bulk operation"
+          enabled: 'Add file %{dossier_id} to the selection for the bulk operation'
+          disabled: 'Impossible to add file %{dossier_id} to the selection because it is already in a bulk operation'
         customize: Customize the table
         passer_en_instruction: Switch to instruction
         repasser_en_construction: Revert to submitted
@@ -457,15 +454,15 @@ en:
           <br/>
           To save and archive your files on your server, you must download them.
       avis:
-        introduction_file_explaination: "File attached to the request for advice"
+        introduction_file_explaination: 'File attached to the request for advice'
       search:
-        dossier_not_in_instructor_group: "File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it is attached to the “%{groupe_instructeur_label}” instructor group."
-        deleted_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it was deleted on %{deleted_at}."
-        hidden_dossier: "The File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it was move to the "
-        hidden_dossier_link: "bin"
+        dossier_not_in_instructor_group: 'File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it is attached to the “%{groupe_instructeur_label}” instructor group.'
+        deleted_dossier: 'The File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it was deleted on %{deleted_at}.'
+        hidden_dossier: 'The File no. %{dossier_id} of the procedure “%{procedure_libelle}” matches your search but it was move to the '
+        hidden_dossier_link: 'bin'
     users:
       dossiers:
-        archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
+        archived_dossier: 'Your file will be kept %{duree_conservation_dossiers_dans_ds} more months'
         identite:
           legend: 'This file is:'
           identity_siret: Identify your establishment
@@ -498,14 +495,14 @@ en:
         show:
           header:
             summary_html: 'Follow-up<span class="fr-hidden fr-unhidden-sm"> on your file</span>'
-            request: "Your file"
+            request: 'Your file'
             mailbox_html: '<span class="fr-hidden fr-unhidden-sm">Administration </span> messaging'
-            rendez_vous: "Appointment"
-            dossier_number: "File no. %{dossier_id}"
-            created_date: "- Draft on %{date_du_dossier}"
-            submit_date: "- Submit on %{date_du_dossier}"
-            download: "file-%{dossier_id}.pdf"
-            download_without_number: "DS-file.pdf"
+            rendez_vous: 'Appointment'
+            dossier_number: 'File no. %{dossier_id}'
+            created_date: '- Draft on %{date_du_dossier}'
+            submit_date: '- Submit on %{date_du_dossier}'
+            download: 'file-%{dossier_id}.pdf'
+            download_without_number: 'DS-file.pdf'
           status_overview:
             status_draft: draft
             status_in_progress: in progress
@@ -513,32 +510,32 @@ en:
             status_review: undergoing review
             admin_review: The administration is reviewing your file. You are no longer able to edit it.
             delay_title:
-              sva: "Your file is subject to the legislative framework « Silence Vaut Accord »"
-              svr: "Your file is subject to the legislative framework « Silence Vaut Rejet »"
-            delay_text_sva_svr: "You will receive a reply from the administration no later than %{date}."
+              sva: 'Your file is subject to the legislative framework « Silence Vaut Accord »'
+              svr: 'Your file is subject to the legislative framework « Silence Vaut Rejet »'
+            delay_text_sva_svr: 'You will receive a reply from the administration no later than %{date}.'
             status_completed: completed
-            use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
-            motivation: "Motivation :"
-            attestation: "Attestation :"
-            justificatif: "Justification of decision :"
-            acceptee: "Your file had been accepted"
-            accepte_motivation: "Reason"
-            accepte_attestation: "Download the attestation"
-            refuse: "Your file had been rejected"
-            refuse_motivation: "Reason"
-            refuse_reply: "Send a message to the administration"
-            sans_suite: "Your file had been closed, no further action"
-            sans_suite_motivation: "Reason"
+            use_mailbox_for_questions_html: '<strong>You have a question?</strong> Use the mailbox to <a href="%{mailbox_url}">contact the administration directly</a>.'
+            motivation: 'Motivation :'
+            attestation: 'Attestation :'
+            justificatif: 'Justification of decision :'
+            acceptee: 'Your file had been accepted'
+            accepte_motivation: 'Reason'
+            accepte_attestation: 'Download the attestation'
+            refuse: 'Your file had been rejected'
+            refuse_motivation: 'Reason'
+            refuse_reply: 'Send a message to the administration'
+            sans_suite: 'Your file had been closed, no further action'
+            sans_suite_motivation: 'Reason'
           latest_message:
-            latest_message: "Latest message"
+            latest_message: 'Latest message'
         messagerie:
-          mailbox: "The mailbox allows you to contact the administration in charge of your file."
+          mailbox: 'The mailbox allows you to contact the administration in charge of your file.'
         rendez_vous:
-          title: "Your next appointment"
-          navigate_to_rdv_sp: "See my appointment on RDV Service Public"
+          title: 'Your next appointment'
+          navigate_to_rdv_sp: 'See my appointment on RDV Service Public'
         demande:
           edit_dossier: Edit my file
-          edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
+          edit_dossier_title: 'Edit my file - You can modify your file as long as it has not been sent for processing'
         search:
           search_file: Search a file (by file number, keywords…)
           label: Search a file (by file number, last name / first name, keywords…)
@@ -548,15 +545,15 @@ en:
           result_term_title: Search result for « %{search_terms} »
           result_procedure_title: and procedure « %{procedure_libelle} »
         dossiers_menu: My files
-        dossier_menu: "File number %{id}"
+        dossier_menu: 'File number %{id}'
         index:
-          dossiers: "My files"
+          dossiers: 'My files'
           see_deleted_dossiers_history: Deleted files history
-          administration_no_longer_processes: "The administration will no longer process your request."
+          administration_no_longer_processes: 'The administration will no longer process your request.'
         dossiers_list:
-          n_dossier: "File no."
+          n_dossier: 'File no.'
           no_result_title: No files
-          no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
+          no_result_text_html: 'To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx.'
           no_result_text_with_search: found with search terms
           no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
@@ -593,18 +590,18 @@ en:
           accept: Accept
           reject: Reject
         dossier_action:
-          edit_dossier: "Edit the file"
-          start_other_dossier: "Start another empty file"
-          clone: "Duplicate the file"
-          delete_dossier: "Move file to trash"
-          delete_dossier_confirm: "Do you really want to move this file to the trash?"
+          edit_dossier: 'Edit the file'
+          start_other_dossier: 'Start another empty file'
+          clone: 'Duplicate the file'
+          delete_dossier: 'Move file to trash'
+          delete_dossier_confirm: 'Do you really want to move this file to the trash?'
           delete_dossier_with_transfer_confirm: "If you continue, you will delete this file, the information it contains and its transfer request to %{email}. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
-          transfer_dossier: "Transfer the file"
-          edit_draft: "Keep filling"
-          restore: "Restore"
+          transfer_dossier: 'Transfer the file'
+          edit_draft: 'Keep filling'
+          restore: 'Restore'
           restore_and_extend_conservation_html: 'Restore and extend conservation <span class="visually-hidden">of file number %{id}</span> (%{duree_conservation_dossiers_dans_ds} month)'
-          actions: "Actions"
-          other_actions: "Other actions"
+          actions: 'Actions'
+          other_actions: 'Other actions'
       sessions:
         new:
           sign_in: Sign in on %{application_name}
@@ -614,24 +611,24 @@ en:
           find_procedure: Find your procedure
           state_civil_servant: Are you a state civil servant?
           connect_with_pro_connect: Visit our dedicated page
-          subtitle: "Sign in with my account"
+          subtitle: 'Sign in with my account'
           for_tiers_alert: If you are completing a forme for someone else, you must use your own credentials.
         link_sent:
           consult_help_page_html: If you're seeing this page too often, <a target="_blank" rel="noopener noreferrer" href="%{href}">please consult our help page</a>.
-          email_cta_html: "We have to validate your email address <strong>%{email}</strong>."
+          email_cta_html: 'We have to validate your email address <strong>%{email}</strong>.'
       passwords:
         edit:
           subtitle: Change password
           submit: Change password
           submit_loading: Sending…
         reset_link_sent:
-          email_sent_html: "If an account exists with the address <strong>%{email}</strong>, we have sent you an email."
+          email_sent_html: 'If an account exists with the address <strong>%{email}</strong>, we have sent you an email.'
           no_mail: Didn't receive the email?
           check_spams: Check your junk or spam email.
           check_account_html: Have you created a <strong> %{application_name} </strong>account with the adress <strong> %{email}</strong>? You will not receive any message if no account is linked to your email adress.
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
-          check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
-          title: "Password reset link sent"
+          check_gpdr: 'The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure.'
+          title: 'Password reset link sent'
       shared:
         email_can_take_a_while_html: <strong>Please note</strong> that this email can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
@@ -664,30 +661,30 @@ en:
           email: 'Example: address@mail.com'
       user:
         siret: 'SIRET number'
-        << : *default_attributes
+        <<: *default_attributes
       instructeur:
-        << : *default_attributes
+        <<: *default_attributes
       super_admin:
-        << : *default_attributes
+        <<: *default_attributes
         otp_attempt: 'OTP code (only if you have already activated 2FA)'
       procedure:
         zone: This procedure is run by
-        ineligibilite_rules: "Eligibility rules"
+        ineligibilite_rules: 'Eligibility rules'
       champs:
         value: Value
       default_mail_attributes: &default_mail_attributes
         hints:
           subject: The generated subject will be truncated if it exceeds 100 characters.
       mails/closed_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/initiated_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/received_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/refused_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
       mails/without_continuation_mail:
-        << : *default_mail_attributes
+        <<: *default_mail_attributes
 
     errors:
       messages:
@@ -709,7 +706,7 @@ en:
         attestation_template:
           attributes:
             footer:
-              too_long: ": the footer is too long."
+              too_long: ': the footer is too long.'
 
         invite:
           attributes:
@@ -719,25 +716,25 @@ en:
         user:
           attributes: &error_attributes
             reset_password_token:
-              invalid: ": is expired. Ask a new one"
+              invalid: ': is expired. Ask a new one'
             email:
               blank: 'is empty. Fill in the email'
               invalid: 'is invalid. Fill in a valid email address, example: address@mail.com'
               taken: 'already in use. Fill in another email'
             password:
-              too_short: "is too short. Fill in a password with at least 12 characters"
-              not_strong: "not strong enough. Fill in a stronger password"
+              too_short: 'is too short. Fill in a password with at least 12 characters'
+              not_strong: 'not strong enough. Fill in a stronger password'
             password_confirmation:
-              confirmation: ": The two passwords do not match"
+              confirmation: ': The two passwords do not match'
             requested_merge_into:
               same: "can't be the same as the old one"
 
         instructeur:
           attributes:
-            << : *error_attributes
+            <<: *error_attributes
         super_admin:
           attributes:
-            << : *error_attributes
+            <<: *error_attributes
 
         procedure:
           attributes:
@@ -749,69 +746,69 @@ en:
           attributes:
             ineligibilite_rules:
               invalid: are invalid
-        "dossier/champs":
-          format: "%{message}"
+        'dossier/champs':
+          format: '%{message}'
           attributes:
             value:
-              format: "%{message}"
-        "champs/cnaf_champ":
+              format: '%{message}'
+        'champs/cnaf_champ':
           attributes:
             numero_allocataire:
-              invalid: "must be a maximum of 7 digits"
+              invalid: 'must be a maximum of 7 digits'
             code_postal:
-              invalid: "must be 5 characters long"
-        "champs/dgfip_champ":
+              invalid: 'must be 5 characters long'
+        'champs/dgfip_champ':
           attributes:
             numero_fiscal:
-              invalid: "must be 13 or 14 characters long"
+              invalid: 'must be 13 or 14 characters long'
             reference_avis:
-              invalid: "must be 13 or 14 characters long"
-        "champs/drop_down_list_champ":
+              invalid: 'must be 13 or 14 characters long'
+        'champs/drop_down_list_champ':
           attributes:
             value:
-              not_in_options: "must be in the given options"
-        "champs/multiple_drop_down_list_champ":
+              not_in_options: 'must be in the given options'
+        'champs/multiple_drop_down_list_champ':
           attributes:
             value:
-              not_in_options: "must be in the given options"
-        "champs/region_champ":
+              not_in_options: 'must be in the given options'
+        'champs/region_champ':
           attributes:
             value:
-              not_in_region_names: "must be a valid region name"
+              not_in_region_names: 'must be a valid region name'
             external_id:
-              not_in_region_codes: "must be a valid region code"
-        "champs/departement_champ":
+              not_in_region_codes: 'must be a valid region code'
+        'champs/departement_champ':
           attributes:
             value:
-              not_in_departement_names: "must be a valid department name"
+              not_in_departement_names: 'must be a valid department name'
             external_id:
-              not_in_departement_codes: "must be a valid department code"
-        "champs/epci_champ":
+              not_in_departement_codes: 'must be a valid department code'
+        'champs/epci_champ':
           attributes:
             code_departement:
-              not_in_departement_codes: "must be a valid department code"
+              not_in_departement_codes: 'must be a valid department code'
             external_id:
-              not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
+              not_in_departement_epci_codes: 'must be a valid EPCI code of the matching department'
             value:
-              not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
-        "champs/dossier_link_champ":
+              not_in_departement_epci_names: 'must be a valid EPCI name of the matching department'
+        'champs/dossier_link_champ':
           attributes:
             value:
-              not_integerable: "must be an integer"
+              not_integerable: 'must be an integer'
   errors:
-    format: "Field « %{attribute} » %{message}"
+    format: 'Field « %{attribute} » %{message}'
     messages:
-      dossier_not_found: "The file does not exist or you do not have access to it."
+      dossier_not_found: 'The file does not exist or you do not have access to it.'
       # # dossier_map_not_activated: "The file does not have access to the map."
-      targeted_user_link_expired: "This invitation link or the file is no longer available."
-      procedure_not_found: "The procedure does not exist"
+      targeted_user_link_expired: 'This invitation link or the file is no longer available.'
+      procedure_not_found: 'The procedure does not exist'
       siret:
         network_error: 'Sorry, SIRET information retrieval is temporarily unavailable. Please try again shortly.'
         not_found: "We haven't found an establishment corresponding to this SIRET number."
       france_connect:
-        connexion: "Error trying to connect to France Connect."
+        connexion: 'Error trying to connect to France Connect.'
         forbidden_html: "Only citizen can use FranceConnect. As an instructor or administrator, you should <a href='%{reset_link}'>reset your password</a>."
-        internal_error: "Error trying to connect to France Connect. Please try another way to connect."
+        internal_error: 'Error trying to connect to France Connect. Please try another way to connect.'
       evil_regexp: The regular expression you have entered is potentially dangerous and could lead to performance issues.
       mismatch_regexp: The provided example must match the regular expression
       syntax_error_regexp: The syntax of the regular expression is invalid
@@ -819,28 +816,28 @@ en:
       # cadastres_empty:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
       #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
-      not_an_integer: "must be an integer (without decimal)"
-      not_positive: "must be a positive number"
-      not_in_range: "must be a number between %{min} and %{max}"
-      limit_min: "must be a number greater than or equal to %{min}"
-      limit_max: "must be a number less than or equal to %{max}"
-      date_in_past: "must be a date in the past"
-      not_in_range_date: "must be a date between %{start_date} and %{end_date}"
-      limit_start_date: "must be a date greater than or equal to %{start_date}"
-      limit_end_date: "must be a date less than or equal to %{end_date}"
-      not_a_float: "must have between 1 and 3 decimal places"
-      not_a_date: "must be a correct date"
-      not_a_datetime: "must be a correct datetime"
+      not_an_integer: 'must be an integer (without decimal)'
+      not_positive: 'must be a positive number'
+      not_in_range: 'must be a number between %{min} and %{max}'
+      limit_min: 'must be a number greater than or equal to %{min}'
+      limit_max: 'must be a number less than or equal to %{max}'
+      date_in_past: 'must be a date in the past'
+      not_in_range_date: 'must be a date between %{start_date} and %{end_date}'
+      limit_start_date: 'must be a date greater than or equal to %{start_date}'
+      limit_end_date: 'must be a date less than or equal to %{end_date}'
+      not_a_float: 'must have between 1 and 3 decimal places'
+      not_a_date: 'must be a correct date'
+      not_a_datetime: 'must be a correct datetime'
       blank: "can't be blank"
   time:
     formats:
-      default: "%B %d %Y %R"
+      default: '%B %d %Y %R'
   dates:
-    today: "Today"
-    yesterday: "Yesterday"
+    today: 'Today'
+    yesterday: 'Yesterday'
     days_ago:
-      one: "1 day ago"
-      other: "%{count} days ago"
+      one: '1 day ago'
+      other: '%{count} days ago'
   pluralize:
     case:
       one: file
@@ -873,8 +870,8 @@ en:
       one: expiring
       other: expiring
     dossier_trouve:
-      one: "%{count} file found"
-      other: "%{count} files found"
+      one: '%{count} file found'
+      other: '%{count} files found'
     published:
       one: published
       other: published
@@ -888,8 +885,8 @@ en:
       one: deleted
       other: deleted
   administrateurs:
-    procedures_menu: "My procedures"
-    preview_menu: "Procedure « %{libelle} »"
+    procedures_menu: 'My procedures'
+    preview_menu: 'Procedure « %{libelle} »'
     activate:
       new:
         title: Pick a password
@@ -908,64 +905,64 @@ en:
         continue: Continue
   users:
     dossiers:
-      test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
-      no_access_html: "You do not have access to this file.<br>Check that you were signed in as <b>%{email}</b> to fill this procedure.<br>If not, please log off"
-      no_longer_editable: "Your file can no longer be edited"
-      en_construction_submitted: "The modifications have already been submitted"
+      test_procedure: 'This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file.'
+      no_access_html: 'You do not have access to this file.<br>Check that you were signed in as <b>%{email}</b> to fill this procedure.<br>If not, please log off'
+      no_longer_editable: 'Your file can no longer be edited'
+      en_construction_submitted: 'The modifications have already been submitted'
       fill_identity:
         individual: Complete the identity of the applicant to continue.
         siret: Complete the identification of the establishment to continue.
       create_commentaire:
-        message_send: "Your message has been sent to the instructor in charge of your file."
-      cloned_success: "Your file has been duplicated. Please review it then you can submit it"
+        message_send: 'Your message has been sent to the instructor in charge of your file.'
+      cloned_success: 'Your file has been duplicated. Please review it then you can submit it'
       ask_deletion:
-        undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
-        soft_deleted_dossier: "Your file has been successfully moved to the trash"
-      restore: "Your file has been successfully restored"
+        undergoingreview: 'Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox.'
+        soft_deleted_dossier: 'Your file has been successfully moved to the trash'
+      restore: 'Your file has been successfully restored'
       etablissement:
-        no_establishment: "There is no establishment tied to this file"
+        no_establishment: 'There is no establishment tied to this file'
       update_identite:
-        identity_saved: "Identity data is registred"
+        identity_saved: 'Identity data is registred'
       attestation:
-        no_longer_available: "The certificate is no longer available on this file."
+        no_longer_available: 'The certificate is no longer available on this file.'
       show:
         papertrail:
-          get_papertrail: "Get a deposit receipt"
-          filename: "deposit-receipt_file-%{dossier_id}.pdf"
+          get_papertrail: 'Get a deposit receipt'
+          filename: 'deposit-receipt_file-%{dossier_id}.pdf'
       show_in_trash:
-        page_title: "File nº %{numero} - In trash"
-        title: "File n° %{numero} has been moved to trash"
-        explanation_html: "You can find this file from the <a href=\"%{trash_link}\" class=\"fr-link\">trash</a> tab of your account.<br>It is not currently viewable."
-        consult_trash: "View trash"
-        user_request_info_without_if: "This file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
-        user_request_info: "If this file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
-        automatic_info: "If this file was moved to trash automatically because its maximum retention period has been reached:<br>We recommend <strong>downloading</strong> it as soon as possible before it is permanently deleted."
+        page_title: 'File nº %{numero} - In trash'
+        title: 'File n° %{numero} has been moved to trash'
+        explanation_html: 'You can find this file from the <a href="%{trash_link}" class="fr-link">trash</a> tab of your account.<br>It is not currently viewable.'
+        consult_trash: 'View trash'
+        user_request_info_without_if: 'This file was moved to trash at your request:<br>You can still <strong>restore</strong> it.'
+        user_request_info: 'If this file was moved to trash at your request:<br>You can still <strong>restore</strong> it.'
+        automatic_info: 'If this file was moved to trash automatically because its maximum retention period has been reached:<br>We recommend <strong>downloading</strong> it as soon as possible before it is permanently deleted.'
       show_deleted:
-        page_title: "File nº %{numero} - Permanently deleted"
-        title: "File n° %{numero} has been deleted"
-        explanation: "You can no longer recover this file for one of the following reasons:"
-        reason_user_request: "It was moved to trash at your request, then automatically deleted."
-        reason_automatic: "It was deleted because its maximum retention period has been reached."
-        history_link_html: "You can find all deleted files from your account (except \"DRAFT\") on the <a href=\"%{history_link}\" class=\"fr-link\">Deleted files history</a> page."
+        page_title: 'File nº %{numero} - Permanently deleted'
+        title: 'File n° %{numero} has been deleted'
+        explanation: 'You can no longer recover this file for one of the following reasons:'
+        reason_user_request: 'It was moved to trash at your request, then automatically deleted.'
+        reason_automatic: 'It was deleted because its maximum retention period has been reached.'
+        history_link_html: 'You can find all deleted files from your account (except "DRAFT") on the <a href="%{history_link}" class="fr-link">Deleted files history</a> page.'
       papertrail:
-        receipt: "Deposit receipt"
-        description: "This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”."
-        file_submitted_at: "File submission date"
-        dossier_state: "File status"
+        receipt: 'Deposit receipt'
+        description: 'This document attests that on the %{date}, %{user_name} submitted a file on the procedure “%{procedure}”.'
+        file_submitted_at: 'File submission date'
+        dossier_state: 'File status'
         states:
-          en_construction: "submitted, pending processing"
-          en_instruction: "processing"
-          accepte: "accepted"
-          refuse: "declined"
-          sans suite: "closed, no further action"
-        administrative_service: "Administrative department"
-        generated_at: "Made on %{date},"
-        signature: "%{app_name}"
+          en_construction: 'submitted, pending processing'
+          en_instruction: 'processing'
+          accepte: 'accepted'
+          refuse: 'declined'
+          sans suite: 'closed, no further action'
+        administrative_service: 'Administrative department'
+        generated_at: 'Made on %{date},'
+        signature: '%{app_name}'
   instructeurs:
     dossiers:
-      deleted_by_instructeur: "The folder has been deleted"
-      impossible_deletion: "Unable to delete : the folder is not processed"
-      restore: "The folder has been restored"
+      deleted_by_instructeur: 'The folder has been deleted'
+      impossible_deletion: 'Unable to delete : the folder is not processed'
+      restore: 'The folder has been restored'
       labels:
         to_follow: to follow
         followed: followed by me
@@ -977,63 +974,63 @@ en:
   france_connect:
     choose_email:
       intro_html: "Your FranceConnect account uses <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> as the contact email."
-      use_email_for_notifications: "Would you like to use it to receive notifications regarding the progress of your cases?"
-      confirm: "Confirm"
-      choose_email_contact: "Choose your contact email"
-      alternative_email: "Please provide the email to use for contacting you."
+      use_email_for_notifications: 'Would you like to use it to receive notifications regarding the progress of your cases?'
+      confirm: 'Confirm'
+      choose_email_contact: 'Choose your contact email'
+      alternative_email: 'Please provide the email to use for contacting you.'
       keep_fc_email_html: Yes, use <b class='bold'>%{email}</b> as contact email.
       use_another_email: No, use another address.
     merge:
-      title: "Merge your account FranceConnect and %{application_name}"
+      title: 'Merge your account FranceConnect and %{application_name}'
       subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
       label_select_merge_flow: Is %{email} one of your email account ?
-      title_fill_in_password:  To merge your accounts fill in your password
+      title_fill_in_password: To merge your accounts fill in your password
       button_merge: Merge accounts
       title_fill_in_email: Fill in the email that %{application_name} will use to contact you
       button_use_this_email: Use this email
       link_confirm_by_email: Confirm by receiving an email
     flash:
-        confirmation_mail_sent: "An email with the confirmation link has been sent, please click on the link."
-        confirmation_mail_resent: "Confirmation link expired. A new link has been sent by email."
-        confirmation_mail_resent_error: "An unexpected error has occurred. Please contact support if the problem persists."
-        redirect_new_user_session: "You have been disconnected from your previous account. Please click on the confirmation link again."
-        email_confirmed: "Your email is confirmed"
-        user_not_found: "User not found"
-        invalid_password: "The password is not correct."
-        connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
-        merger_token_expired: "Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
+      confirmation_mail_sent: 'An email with the confirmation link has been sent, please click on the link.'
+      confirmation_mail_resent: 'Confirmation link expired. A new link has been sent by email.'
+      confirmation_mail_resent_error: 'An unexpected error has occurred. Please contact support if the problem persists.'
+      redirect_new_user_session: 'You have been disconnected from your previous account. Please click on the confirmation link again.'
+      email_confirmed: 'Your email is confirmed'
+      user_not_found: 'User not found'
+      invalid_password: 'The password is not correct.'
+      connection_done: 'The accounts for FranceConnect and %{application_name} are now merged.'
+      merger_token_expired: 'Le delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry.'
   shared:
     procedures:
-      no_siret: "Some procedures have service without siret. Please update."
+      no_siret: 'Some procedures have service without siret. Please update.'
       add_siret_to_service_without_siret_html: Add siret for service <a href="%{link}">%{nom}</a>
-      no_service: "Some procedures have no service."
+      no_service: 'Some procedures have no service.'
       add_service_html: <a href="%{link}">Add service</a> to procedure %{id}
 
       stats:
-        usual_processing_time: "Usual processing time"
-        processing_time: "Processing time"
-        since_procedure_creation: "since the procedure was created"
-        nb_days: "Nb Days"
-        processing_time_graph_description: "Weiweighted mean time between last submission and final answer (accepted, rejected or closed)."
-        status_evolution_details: "since the procedure launch"
-        status_evolution: "Evolution of file statuses"
-        acceptance_rate: "Acceptance rate"
-        acceptance_rate_details: "since the procedure launch"
-        rate: "Rate"
-        dossiers_count: "Nb files"
-        weekly_distribution: "Weekly distribution"
-        weekly_distribution_details: "in the last 6 months"
+        usual_processing_time: 'Usual processing time'
+        processing_time: 'Processing time'
+        since_procedure_creation: 'since the procedure was created'
+        nb_days: 'Nb Days'
+        processing_time_graph_description: 'Weiweighted mean time between last submission and final answer (accepted, rejected or closed).'
+        status_evolution_details: 'since the procedure launch'
+        status_evolution: 'Evolution of file statuses'
+        acceptance_rate: 'Acceptance rate'
+        acceptance_rate_details: 'since the procedure launch'
+        rate: 'Rate'
+        dossiers_count: 'Nb files'
+        weekly_distribution: 'Weekly distribution'
+        weekly_distribution_details: 'in the last 6 months'
       sva_svr_rule_name:
-        sva: "Silence Vaut Accord"
-        svr: "Silence Vaut Rejet"
+        sva: 'Silence Vaut Accord'
+        svr: 'Silence Vaut Rejet'
     procedure_description:
-      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mins. (may vary depending on the options)"
+      estimated_fill_duration: 'Estimated fill time: %{estimated_minutes} mins. (may vary depending on the options)'
       usual_traitement_time_title: What are the processing times for this procedure?
-      pieces_jointes : What are the required attachments ?
-      pieces_jointes_conditionnal_list_title : Attachments list according to your situation
-      sva_svr_title: "This procedure applies the « %{rule} »"
-      sva_text_html: "SVA, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically accepted after a certain period if your file is complete."
-      svr_text_html: "SVR, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically refused after a certain period if your file is complete."
+      pieces_jointes: What are the required attachments ?
+      pieces_jointes_conditionnal_list_title: Attachments list according to your situation
+      sva_svr_title: 'This procedure applies the « %{rule} »'
+      sva_text_html: 'SVA, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically accepted after a certain period if your file is complete.'
+      svr_text_html: 'SVR, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically refused after a certain period if your file is complete.'
       sva_svr_prevision_date:
         Thus, you will receive an answer to your request within %{delay} of submitting your complete file.
         For example, if you submit your application today, you will receive a reply no later than %{date}.
