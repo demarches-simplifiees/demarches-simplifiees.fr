@@ -56,7 +56,7 @@ module ChampExternalDataConcern
       end
 
       event :reset_external_data, after: :after_reset_external_data do
-        transitions from: [:waiting_for_job, :fetching, :fetched, :external_error], to: :idle
+        transitions from: [:idle, :waiting_for_job, :fetching, :fetched, :external_error], to: :idle
       end
     end
 

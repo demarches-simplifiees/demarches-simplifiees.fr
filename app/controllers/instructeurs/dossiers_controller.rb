@@ -338,7 +338,7 @@ module Instructeurs
         annotation.update_timestamps
 
         if annotation.uses_external_data?
-          annotation.reset_external_data! if annotation.may_reset_external_data?
+          annotation.reset_external_data!
           annotation.fetch_later! if annotation.may_fetch_later?
         end
 

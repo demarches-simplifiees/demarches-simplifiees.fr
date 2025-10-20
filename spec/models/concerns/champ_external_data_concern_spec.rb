@@ -137,17 +137,24 @@ RSpec.describe ChampExternalDataConcern do
     end
 
     describe 'reset_external_data' do
-      before do
-        allow(champ).to receive(:ready_for_external_call?).and_return(true)
-        champ.fetch_later!
+      context 'from idle' do
+        before { champ.reset_external_data! }
 
-        allow(champ).to receive(:after_reset_external_data)
-        champ.reset_external_data!
+        it { expect(champ).to be_idle }
       end
+      context 'from waiting_for_job' do
+        before do
+          allow(champ).to receive(:ready_for_external_call?).and_return(true)
+          champ.fetch_later!
 
-      it do
-        expect(champ).to be_idle
-        expect(champ).to have_received(:after_reset_external_data)
+          allow(champ).to receive(:after_reset_external_data)
+          champ.reset_external_data!
+        end
+
+        it do
+          expect(champ).to be_idle
+          expect(champ).to have_received(:after_reset_external_data)
+        end
       end
     end
   end
