@@ -3,25 +3,26 @@
 describe TargetedUserLinksController, type: :controller do
   describe '#show' do
     context 'avis' do
-      let!(:targeted_user_link) { create(:targeted_user_link, target_context: target_context, target_model: target_model, user: user) }
+      let!(:targeted_user_link) { create(:targeted_user_link, target_context:, target_model:, user:) }
 
       let(:target_context) { :avis }
       let!(:expert) { create(:expert, user: user) }
       let!(:target_model) { create(:avis, experts_procedure: expert_procedure) }
       let!(:expert_procedure) { create(:experts_procedure, expert: expert) }
-      subject { get :show, params: { id: targeted_user_link.id } }
 
-      context 'not connected as active expert' do
-        let(:user) { create(:user, last_sign_in_at: 2.days.ago) }
+      context 'not connected, pointing to an active expert that has not confirmed his email' do
+        subject { get :show, params: { id: targeted_user_link.id, confirmation_token: user.confirmation_token } }
+        let(:user) { create(:user, last_sign_in_at: 2.days.ago, confirmation_token: '123') }
 
-        it 'redirects to expert_avis_url' do
-          expect(subject).to redirect_to(expert_avis_path(target_model.procedure, target_model))
-          expect(controller.stored_location_for(:user)).to eq(controller.request.path)
+        it 'redirects to users_confirm_email_url and store current location' do
+          expect(subject).to redirect_to(users_confirm_email_url(token: user.confirmation_token))
+          expect(controller.stored_location_for(:user)).to eq(controller.request.fullpath)
         end
       end
 
-      context 'not connected as inactive expert' do
-        let(:user) { create(:user, last_sign_in_at: nil) }
+      context 'not connected as a new user' do
+        subject { get :show, params: { id: targeted_user_link.id } }
+        let(:user) { create(:user, last_sign_in_at: nil, email_verified_at: nil) }
 
         it { is_expected.to redirect_to(sign_up_expert_avis_path(target_model.procedure, target_model, email: user.email)) }
 
@@ -31,19 +32,9 @@ describe TargetedUserLinksController, type: :controller do
         end
       end
 
-      context 'when user is not connected and he is active but had never verified his email' do
-        let(:user) { create(:user, last_sign_in_at: 2.days.ago, email_verified_at: nil) }
-
-        it { is_expected.to redirect_to(sign_up_expert_avis_path(target_model.procedure, target_model, email: user.email)) }
-
-        context 'with confirmation_token' do
-          subject { get :show, params: { id: targeted_user_link.id, confirmation_token: 'token' } }
-          it { is_expected.to redirect_to(users_confirm_email_url(target_model.procedure, target_model, email: user.email, token: 'token')) }
-        end
-      end
-
       context 'connected as expected user' do
-        let(:user) { create(:user, last_sign_in_at: 2.days.ago) }
+        let(:user) { create(:user, last_sign_in_at: 2.days.ago, email_verified_at: 1.day.ago) }
+        subject { get :show, params: { id: targeted_user_link.id } }
 
         before do
           sign_in(targeted_user_link.user)
@@ -54,6 +45,7 @@ describe TargetedUserLinksController, type: :controller do
 
       context 'connected as different user' do
         let(:user) { create(:user, last_sign_in_at: 2.days.ago) }
+        subject { get :show, params: { id: targeted_user_link.id } }
 
         before do
           sign_in(create(:expert).user)

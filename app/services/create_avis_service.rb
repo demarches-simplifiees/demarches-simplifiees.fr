@@ -77,11 +77,7 @@ class CreateAvisService
       avis.dossier.demander_un_avis!(avis)
       if avis.dossier == @dossier
         if avis.experts_procedure.notify_on_new_avis?
-          if avis.expert.user.unverified_email?
-            avis.expert.user.invite_expert_and_send_avis!(avis)
-          else
-            AvisMailer.avis_invitation(avis).deliver_later
-          end
+          avis.expert.user.invite_expert_and_send_avis!(avis)
         end
         sent_emails << avis.expert.email
         avis.update_column(:email, nil)
