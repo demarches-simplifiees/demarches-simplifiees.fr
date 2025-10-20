@@ -636,7 +636,7 @@ module Users
           champ.update_timestamps if dossier.brouillon?
 
           if champ.uses_external_data?
-            champ.reset_external_data! if champ.may_reset_external_data?
+            champ.reset_external_data!
             champ.fetch_later! if champ.may_fetch_later?
           end
 

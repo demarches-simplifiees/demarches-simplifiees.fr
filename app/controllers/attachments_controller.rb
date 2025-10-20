@@ -22,7 +22,7 @@ class AttachmentsController < ApplicationController
     if champ?
       @attachment = champ.piece_justificative_file.find { _1.blob.id == @blob.id }
       if @attachment.present?
-        champ.reset_external_data! if champ.may_reset_external_data?
+        champ.reset_external_data!
 
         @attachment.purge_later
         champ.update_timestamps
