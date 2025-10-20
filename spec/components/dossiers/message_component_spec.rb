@@ -22,6 +22,38 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
     let(:groupe_gestionnaire) { nil }
 
     subject { render_inline(component).to_html }
+    describe 'read receipt (usager => instructeur)' do
+      let(:connected_user) { dossier.user }
+      let(:dossier) { create(:dossier, :en_construction) }
+      let(:commentaire) { create(:commentaire, dossier: dossier, email: connected_user.email, body: 'msg') }
+
+      context 'when at least one instructeur has seen the messagerie after the message' do
+        before { create(:follow, dossier: dossier, messagerie_seen_at: commentaire.created_at + 5.minutes) }
+        it { is_expected.to include('Lu') }
+      end
+
+      context 'when no instructeur has seen the messagerie after the message' do
+        before { create(:follow, dossier: dossier, messagerie_seen_at: commentaire.created_at - 5.minutes) }
+        it { is_expected.to include('Non lu') }
+      end
+    end
+
+    describe 'read receipt (instructeur => usager)' do
+      let(:instructeur) { create(:instructeur) }
+      let(:dossier) { create(:dossier, :en_construction) }
+      let(:connected_user) { instructeur }
+      let(:commentaire) { create(:commentaire, dossier: dossier, instructeur: instructeur, body: 'msg') }
+
+      context 'when the user has opened messagerie after the message' do
+        before { dossier.update!(messagerie_seen_by_user_at: commentaire.created_at + 5.minutes) }
+        it { is_expected.to include('Lu') }
+      end
+
+      context 'when the user has not opened messagerie after the message' do
+        before { dossier.update!(messagerie_seen_by_user_at: commentaire.created_at - 5.minutes) }
+        it { is_expected.to include('Non lu') }
+      end
+    end
 
     context 'escape <img> tag' do
       before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
@@ -163,21 +195,21 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         travel_to(present_date) { component.send(:commentaire_date) }
       end
 
-      it 'doesn’t include the creation year' do
-        expect(subject).to eq 'le 2 septembre à 10 h 05'
+      it 'formats as numeric date with year' do
+        expect(subject).to eq 'Le 02/09/2018 10:05'
       end
 
       context 'when displaying a commentaire created on a previous year' do
         let(:creation_date) { present_date.prev_year }
-        it 'includes the creation year' do
-          expect(subject).to eq 'le 2 septembre 2017 à 10 h 05'
+        it 'formats as numeric date with previous year' do
+          expect(subject).to eq 'Le 02/09/2017 10:05'
         end
       end
 
       context 'when formatting the first day of the month' do
         let(:present_date) { Time.zone.local(2018, 9, 1, 10, 5, 0) }
-        it 'includes the ordinal' do
-          expect(subject).to eq 'le 1er septembre à 10 h 05'
+        it 'formats as numeric date for first day of month' do
+          expect(subject).to eq 'Le 01/09/2018 10:05'
         end
       end
     end
@@ -295,21 +327,21 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         travel_to(present_date) { component.send(:commentaire_date) }
       end
 
-      it 'doesn’t include the creation year' do
-        expect(subject).to eq 'le 2 septembre à 10 h 05'
+      it 'formats as numeric date with year' do
+        expect(subject).to eq 'Le 02/09/2018 10:05'
       end
 
       context 'when displaying a commentaire created on a previous year' do
         let(:creation_date) { present_date.prev_year }
-        it 'includes the creation year' do
-          expect(subject).to eq 'le 2 septembre 2017 à 10 h 05'
+        it 'formats as numeric date with previous year' do
+          expect(subject).to eq 'Le 02/09/2017 10:05'
         end
       end
 
       context 'when formatting the first day of the month' do
         let(:present_date) { Time.zone.local(2018, 9, 1, 10, 5, 0) }
-        it 'includes the ordinal' do
-          expect(subject).to eq 'le 1er septembre à 10 h 05'
+        it 'formats as numeric date for first day of month' do
+          expect(subject).to eq 'Le 01/09/2018 10:05'
         end
       end
     end
