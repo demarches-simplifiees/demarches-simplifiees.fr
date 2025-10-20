@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
-  let(:champ) { double('champ', value_json:, RIB?: rib, external_data_fetched?: external_data_fetched, external_error_present?: external_error_present) }
+  let(:champ) { double('champ', value_json:, RIB?: rib, fetched?: fetched) }
   let(:component) { described_class.new(champ:) }
 
   let(:value_json) { nil }
   let(:rib) { true }
-  let(:external_data_fetched) { true }
-  let(:external_error_present) { false }
+  let(:fetched) { true }
 
   describe '#render?' do
     context 'nominal' do
@@ -21,13 +20,7 @@ RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
     end
 
     context 'when the data is not fetched' do
-      let(:external_data_fetched) { false }
-
-      it { expect(component.render?).to be false }
-    end
-
-    context 'when the are external errors' do
-      let(:external_error_present) { true }
+      let(:fetched) { false }
 
       it { expect(component.render?).to be false }
     end

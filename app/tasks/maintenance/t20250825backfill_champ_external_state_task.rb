@@ -36,17 +36,20 @@ module Maintenance
     end
 
     def process(champ)
-      return if !champ.idle?
-      begin
-        if champ.external_data_fetched?
-          champ.external_data_fetched!
-        elsif champ.external_error_present?
-          champ.external_data_error!
-        end
-      rescue => e
-        return if e.message.include?('not found in Revision')
-        raise e
-      end
+      # ! the old method external_data_fetched? is now removed
+      # run the task before applying this version
+      #
+      # return if !champ.idle?
+      # begin
+      #   if champ.external_data_fetched?
+      #     champ.external_data_fetched!
+      #   elsif champ.external_error_present?
+      #     champ.external_data_error!
+      #   end
+      # rescue => e
+      #   return if e.message.include?('not found in Revision')
+      #   raise e
+      # end
     end
   end
 end

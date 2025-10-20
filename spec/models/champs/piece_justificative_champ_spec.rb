@@ -70,27 +70,6 @@ describe Champs::PieceJustificativeChamp do
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     let(:champ) { dossier.champs.first }
 
-    describe "external_data_fetched?" do
-      context "not RIB" do
-        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
-        it { expect(champ.external_data_fetched?).to be_falsey }
-      end
-
-      context "empty" do
-        before { champ.piece_justificative_file.purge }
-        it { expect(champ.external_data_fetched?).to be_falsey }
-      end
-
-      context "pending" do
-        it { expect(champ.external_data_fetched?).to be_falsey }
-      end
-
-      context "done" do
-        before { champ.update(value_json: 'yolo') }
-        it { expect(champ.external_data_fetched?).to be_truthy }
-      end
-    end
-
     describe "#external_error_present?" do
       context 'an error is present' do
         before { champ.update(fetch_external_data_exceptions: [ExternalDataException.new(reason: 'oops', code: 123)]) }
