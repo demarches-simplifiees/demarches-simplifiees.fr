@@ -34,4 +34,27 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
   def filters
     procedure_presentation.filters_for(statut)
   end
+
+  def procedure
+    @procedure_presentation.procedure
+  end
+
+  def dossier_filter_items
+    {
+      "-- #{t('.file_section')} --" => procedure.dossier_filterable_columns,
+      "-- #{t('.instructors_section')} --" => procedure.instructeurs_filterable_columns,
+    }.transform_values { it.map { [_1.label, _1.id] } }
+  end
+
+  def usager_filter_items
+    procedure.usager_filterable_columns.map { [_1.label, _1.id] }
+  end
+
+  def form_filter_items
+    procedure.form_filterable_columns.map { [_1.label, _1.id] }
+  end
+
+  def annotation_filter_items
+    procedure.annotation_privees_filterable_columns.map { [_1.label, _1.id] }
+  end
 end

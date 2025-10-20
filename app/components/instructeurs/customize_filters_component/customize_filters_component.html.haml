@@ -1,10 +1,37 @@
 #customize-filters
   .fr-grid-row
-    .fr-col-7.fr-pr-2w
-      .fr-card
-      .fr-card
-      .fr-card
-      .fr-card
+    .fr-col-7.fr-pr-2w.flex.column.flex-gap-2
+      .fr-card.fr-p-2w
+        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
+          .flex.align-end.flex-gap-2
+            .flex.flex-1.column
+              = form.label :column, "Informations dossier", class: "fr-label"
+              = form.select :column, dossier_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
+            = form.submit t('.add'), class: "fr-btn"
+
+      .fr-card.fr-p-2w
+        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
+          .flex.align-end.flex-gap-2
+            .flex.flex-1.column
+              = form.label :column, "Informations usager", class: "fr-label"
+              = form.select :column, usager_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
+            = form.submit t('.add'), class: "fr-btn"
+
+      .fr-card.fr-p-2w
+        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
+          .flex.align-end.flex-gap-2
+            .flex.flex-1.column
+              = form.label :column, "Formulaire usager", class: "fr-label"
+              = form.select :column, form_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
+            = form.submit t('.add'), class: "fr-btn"
+
+      .fr-card.fr-p-2w
+        = form_with url: add_filter_instructeur_procedure_presentation_path(@procedure_presentation) do |form|
+          .flex.align-end.flex-gap-2
+            .flex.flex-1.column
+              = form.label :column, "Annotations privées (instructeurs)", class: "fr-label"
+              = form.select :column, annotation_filter_items, { prompt: t('.select'), required: true }, class: 'fr-select width-100'
+            = form.submit t('.add'), class: "fr-btn"
     .fr-col-5
       .bg-alt-grey.rounded-4.fr-p-2w
         %h4= t('.selection_title')
