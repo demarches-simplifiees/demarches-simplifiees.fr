@@ -12,6 +12,7 @@ module DossierChampsConcern
       rebased_at = champ&.rebased_at
       type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:, stream:)
     else
+      champ.type_de_champ = type_de_champ
       champ
     end
   end
