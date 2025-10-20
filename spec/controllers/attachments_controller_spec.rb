@@ -9,8 +9,6 @@ describe AttachmentsController, type: :controller do
   let(:user_buffer_champ) { dossier.champs.reload.find(&:user_buffer_stream?) }
   let(:signed_id) { attachment.blob.signed_id }
 
-  before { Flipper.enable(:user_buffer_stream, procedure) }
-
   describe '#show' do
     render_views
 

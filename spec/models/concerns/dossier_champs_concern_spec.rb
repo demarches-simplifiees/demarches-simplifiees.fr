@@ -751,8 +751,6 @@ RSpec.describe DossierChampsConcern do
     end
 
     describe "#repetition_remove_row" do
-      before { Flipper.enable(:user_buffer_stream, procedure) }
-
       let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
       let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
       let(:row_ids) { dossier.project_champ(type_de_champ_repetition).row_ids }
