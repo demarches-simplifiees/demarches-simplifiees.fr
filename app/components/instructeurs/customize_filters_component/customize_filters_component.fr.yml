@@ -2,4 +2,4 @@
 fr:
   select: Sélectionner
   add: Ajouter
-  delete_filter: Supprimer le filtre « %{filter_label} »
+  clear_filter: Effacer le filtre « %{filter_label} »
