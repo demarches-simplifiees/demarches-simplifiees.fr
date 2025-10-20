@@ -8,11 +8,9 @@
       = commentaire_issuer
     - if commentaire_from_guest?
       %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.guest')
-
-    = correction_badge
-
-    %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
-      = commentaire_date
+  - if (badge = correction_badge)
+    .fr-mt-1v
+      = badge
   .rich-text
     - if commentaire.discarded?
       %p= "(#{t('.deleted_body')})"
@@ -22,13 +20,24 @@
       = render SimpleFormatComponent.new(commentaire.body, allow_a: false, allow_autolink: groupe_gestionnaire.nil? && commentaire.sent_by_instructeur?)
 
   - if soft_deletable?
-    = button_to delete_url, method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
+    = button_to delete_url, method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning fr-mb-1w', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
       = delete_button_text
 
   - if groupe_gestionnaire.nil? && commentaire.piece_jointe.attached?
     .fr-mt-2w
       - commentaire.piece_jointe.each do |attachment|
         = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
+
+  .fr-mt-1v.flex.align-center.flex-gap-1.justify-between
+    %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
+      = commentaire_date
+    - if sent_by_connected_user?
+      - if read_by_recipient?
+        .flex
+          = dsfr_icon('fr-icon-check-line fr-icon--sm fr-mr-1w')
+          %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.read_label')
+      - else
+        %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.unread_label')
 
 - if commentaire.sent_by?(connected_user)
   .icon-avatar{ class: commentaire_class(commentaire, connected_user) }
