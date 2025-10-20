@@ -51,9 +51,10 @@ describe "Dossier en_construction", js: true do
 
       input_selector = "##{champ.focusable_input_id}"
       expect(page).to have_selector(input_selector)
-      find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
+      find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/white.png'))
 
-      expect(page).to have_text("file.pdf")
+      wait_until { user_buffer_champ.piece_justificative_file.first&.filename == 'white.png' }
+      expect(page).to have_text("white.png")
     end
   end
 
