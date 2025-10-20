@@ -261,7 +261,7 @@ class Procedure < ApplicationRecord
                                                     less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH
                                                   }
 
-  validates_with MonAvisEmbedValidator
+  validates_with MonAvisEmbedValidator, on: :publication
 
   validate :validates_associated_draft_revision_with_context
   validates_associated :initiated_mail, on: :publication

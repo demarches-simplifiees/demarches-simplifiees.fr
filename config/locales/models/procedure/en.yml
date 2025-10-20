@@ -121,3 +121,13 @@ en:
             sva_svr:
               immutable: "SVA/SVR configuration can no longer be modified"
               declarative_incompatible: "SVA/SVR is incompatible with a declarative procedure"
+            monavis_embed:
+              format: 'MonAvis code %{message}'
+              invalid_format: "is not a valid MonAvis embed"
+              single_link_required: "must contain exactly one link"
+              forbidden_scheme: "contains a URL with a forbidden scheme"
+              bad_domain_link: "contains a link pointing to an invalid domain"
+              single_image_required: "must contain exactly one image"
+              bad_domain_image: "contains an image pointing to an invalid domain"
+              forbidden_element: "contains a forbidden tag: %{value}"
+              forbidden_attribute: "contains a forbidden attribute: %{value}"
