@@ -13,14 +13,9 @@ class Instructeurs::ProcedureSummaryComponent < ApplicationComponent
 
   alias_method :p, :procedure
 
-  def initialize(procedure:,
-    notifications_counts_per_procedure: {},
-    has_export_notification: false)
+  def initialize(procedure:)
     @procedure = procedure
-    @has_export_notification = has_export_notification
   end
-
-  def has_export_notification? = @has_export_notification
 
   def placeholder_span
     "⋯"

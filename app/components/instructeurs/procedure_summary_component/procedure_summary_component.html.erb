@@ -146,13 +146,6 @@
                           style="height: 47px"
                         >
                           <%= t('instructeurs.dossiers.header.banner.downloads') %>
-                          <span class="<%= class_names("relative" => true, "fr-pr-1w" => has_export_notification?) %>"></span>
-                          <% if has_export_notification? %>
-                            <span
-                              class="notifications"
-                              aria-label="<%= t('instructeurs.dossiers.header.banner.exports_notification_label') %>"
-                            ></span>
-                          <% end %>
                         </button>
 
                         <div
@@ -163,12 +156,6 @@
                             <li>
                               <%= link_to exports_instructeur_procedure_path(p), class: 'fr-nav__link' do %>
                                 <%= t('instructeurs.dossiers.header.banner.exports_list') %>
-                                <% if has_export_notification? %>
-                                  <span
-                                    class="fr-ml-1v notifications"
-                                    aria-label="<%= t('instructeurs.dossiers.header.banner.exports_notification_label') %>"
-                                  ></span>
-                                <% end %>
                               <% end %>
                             </li>
 
