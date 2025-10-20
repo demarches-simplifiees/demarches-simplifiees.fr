@@ -62,13 +62,6 @@ module ChampExternalDataConcern
 
     def pending? = waiting_for_job? || fetching?
 
-    def waiting_for_external_data?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (!external_data_present? && !external_error_present?)
-    end
-
     def external_data_fetched?
       uses_external_data? &&
         should_ui_auto_refresh? &&
