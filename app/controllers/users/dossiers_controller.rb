@@ -646,7 +646,7 @@ module Users
           end
         end
 
-        if params[:validate].present? && !champ.waiting_for_external_data?
+        if params[:validate].present? && !champ.pending?
           dossier.validate(:champs_public_value)
         end
       end

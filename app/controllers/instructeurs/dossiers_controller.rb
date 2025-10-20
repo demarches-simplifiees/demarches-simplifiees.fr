@@ -346,7 +346,7 @@ module Instructeurs
         DossierNotification.create_notification(dossier, :annotation_instructeur, except_instructeur: current_instructeur) if !dossier.brouillon?
       end
 
-      dossier.validate(:champs_private_value) if !annotation.waiting_for_external_data?
+      dossier.validate(:champs_private_value) if !annotation.pending?
 
       respond_to do |format|
         format.turbo_stream do

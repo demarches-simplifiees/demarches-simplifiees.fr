@@ -6,7 +6,7 @@ class ReferentielChampValidator < ActiveModel::Validator
     return if record.external_id.blank? # not filled by user
     return if record.data.present? # already fetched successfully
 
-    if record.waiting_for_external_data? # user filled the field, but background job is still running / pending
+    if record.pending? # user filled the field, but background job is still running / pending
       record.errors.add(:value, :api_response_pending)
     elsif record.external_error_present? # user filled the field, but background job failed
       record.errors.add(:value, error_key_for_api_response_code(record))
