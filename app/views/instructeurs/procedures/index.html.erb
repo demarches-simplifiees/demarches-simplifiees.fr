@@ -60,10 +60,7 @@
       data-controller="stream-loader"
       data-stream-loader-url-value="<%= counters_instructeur_procedures_path(statut: params[:statut], page: params[:page]) %>"
     >
-      <%= render(Instructeurs::ProcedureSummaryComponent.with_collection(
-            @procedures,
-            has_export_notification: @has_export_notification || false,
-          )) %>
+      <%= render Instructeurs::ProcedureSummaryComponent.with_collection(@procedures) %>
     </ul>
     <%= paginate @procedures, views_prefix: 'shared' %>
   <% end %>
