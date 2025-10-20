@@ -62,13 +62,6 @@ module ChampExternalDataConcern
 
     def pending? = waiting_for_job? || fetching?
 
-    def fetch_external_data_later
-      if uses_external_data? && external_id.present? && data.nil?
-        update_column(:fetch_external_data_exceptions, [])
-        ChampFetchExternalDataJob.perform_later(self, external_id)
-      end
-    end
-
     def waiting_for_external_data?
       uses_external_data? &&
         should_ui_auto_refresh? &&
@@ -98,6 +91,13 @@ module ChampExternalDataConcern
     end
 
     private
+
+    def fetch_external_data_later
+      if uses_external_data? && external_id.present? && data.nil?
+        update_column(:fetch_external_data_exceptions, [])
+        ChampFetchExternalDataJob.perform_later(self, external_id)
+      end
+    end
 
     # it should only be called after fetch! event callback
     def fetch_and_handle_result
