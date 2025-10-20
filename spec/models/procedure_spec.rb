@@ -367,7 +367,7 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_blanc) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { expect(procedure.tap(&:valid?).errors).to be_empty }
       end
 
       context 'Monavis embed code with blue button is allowed' do
@@ -377,7 +377,7 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_bleu) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { expect(procedure.tap(&:valid?).errors).to be_empty }
       end
 
       context 'Monavis embed code with voxusages is allowed' do
@@ -387,7 +387,7 @@ describe Procedure do
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_phillipe) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { expect(procedure.tap(&:valid?).errors).to be_empty }
       end
 
       context 'Monavis embed code without title allowed' do
@@ -397,7 +397,7 @@ describe Procedure do
           </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_bouchra) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { expect(procedure.tap(&:valid?).errors).to be_empty }
       end
 
       context 'Monavis embed code with jedonnemonavis' do
@@ -407,7 +407,7 @@ describe Procedure do
           </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_jedonnemonavis) }
-        it { expect(procedure.valid?).to eq(true) }
+        it { expect(procedure.tap(&:valid?).errors).to be_empty }
       end
 
       context 'Monavis embed code with kthxbye' do
