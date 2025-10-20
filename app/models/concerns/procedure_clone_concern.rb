@@ -82,7 +82,8 @@ module ProcedureCloneConcern
     'routing_alert',
     'api_particulier_token',
     'no_gender',
-    'pro_connect_restricted'
+    'pro_connect_restricted',
+    'robots_indexable'
   ]
 
   NEW_MAX_DUREE_CONSERVATION = Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
@@ -181,6 +182,7 @@ module ProcedureCloneConcern
     procedure.template = false
     procedure.labels = labels.map(&:dup)
     procedure.routing_alert = false
+    procedure.robots_indexable = true
     procedure
   end
 

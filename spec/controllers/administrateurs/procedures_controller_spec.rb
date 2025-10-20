@@ -69,8 +69,14 @@ describe Administrateurs::ProceduresController, type: :controller do
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,
       zone_ids: zone_ids,
-      lien_site_web: lien_site_web,
       procedure_tag_names: ['Aao', 'Accompagnement']
+    }
+  }
+
+  let(:procedure_params_not_creatable) {
+    {
+      lien_site_web: lien_site_web,
+      robots_indexable: "0"
     }
   }
 
@@ -438,10 +444,8 @@ describe Administrateurs::ProceduresController, type: :controller do
       it 'is case insentivite and unaccented' do
         expect(response_procedures).to include(matching_procedure)
         expect(response_procedures).not_to include(unmatching_procedure)
-      end
 
-      it 'hide procedure if it is hidden as template' do
-        expect(response_procedures).to include(matching_procedure)
+        # hide procedure if it is hidden as template
         expect(response_procedures).not_to include(unmatching_procedure_cause_hidden_as_template)
       end
     end
@@ -526,9 +530,8 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(subject.procedure_tags.pluck(:name)).to match_array(['Aao', 'Accompagnement'])
           expect(response).to redirect_to(champs_admin_procedure_path(Procedure.last))
           expect(flash[:notice]).to be_present
-        end
 
-        it "create generic labels" do
+          # creates generic labels
           expect(subject.labels.size).to eq(5)
           expect(subject.labels.first.name).to eq('À examiner')
         end
@@ -569,23 +572,17 @@ describe Administrateurs::ProceduresController, type: :controller do
     context 'when many attributs are not valid' do
       let(:libelle) { '' }
       let(:description) { '' }
+      subject { post :create, params: { procedure: procedure_params } }
 
       describe 'no new procedure in database' do
-        subject { post :create, params: { procedure: procedure_params } }
-
-        it { expect { subject }.to change { Procedure.count }.by(0) }
+        it do
+          expect { subject }.to change { Procedure.count }.by(0)
+          expect(flash[:alert]).to be_present
+        end
 
         describe 'no new module api carto in database' do
           it { expect { subject }.to change { ModuleAPICarto.count }.by(0) }
         end
-      end
-
-      describe 'flash message is present' do
-        before do
-          post :create, params: { procedure: procedure_params }
-        end
-
-        it { expect(flash[:alert]).to be_present }
       end
     end
   end
@@ -605,7 +602,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     context 'when administrateur is connected' do
       def update_procedure
-        put :update, params: { id: procedure.id, procedure: procedure_params.merge(procedure_expires_when_termine_enabled: true) }
+        put :update, params: { id: procedure.id, procedure: procedure_params.merge(procedure_params_not_creatable).merge(procedure_expires_when_termine_enabled: true) }
         procedure.reload
       end
 
@@ -627,6 +624,8 @@ describe Administrateurs::ProceduresController, type: :controller do
             expect(subject.organisation).to eq(organisation)
             expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
             expect(subject.procedure_expires_when_termine_enabled).to eq(true)
+            expect(subject.lien_site_web).to eq(lien_site_web)
+            expect(subject.robots_indexable?).to eq(false)
           end
         end
 
@@ -1348,7 +1347,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     let(:procedure) { create(:procedure, :published, administrateur: admin) }
 
-    subject(:perform_request) { get :check_path, params: { procedure_id: procedure.id, path: path }, format: :turbo_stream }
+    subject(:perform_request) { get :check_path, params: { procedure_id: procedure.id, procedure: { path: } }, format: :turbo_stream }
 
     context 'when path is not used' do
       let(:path) { SecureRandom.uuid }
@@ -1478,8 +1477,9 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
     let(:procedure3) { create(:procedure, :published, :new_administrateur, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
+    let(:robots_indexable) { "0" }
 
-    subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }
+    subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, procedure: { path:, lien_site_web:, robots_indexable: } } }
 
     context 'when admin is the owner of the procedure' do
       context 'procedure path does not exist' do
@@ -1495,6 +1495,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
+          expect(procedure.robots_indexable?).to be(false)
 
           expect(response).to redirect_to(admin_procedure_confirmation_path(procedure))
         end
@@ -1509,11 +1510,13 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         let(:path) { procedure2.path }
         let(:lien_site_web) { 'http://mon-site.gouv.fr' }
+        let(:robots_indexable) { '1' }
 
         it 'publishes the procedure, unpublishes the old one and redirects to confirmation page' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
+          expect(procedure.robots_indexable?).to be(true)
 
           expect(procedure2.depubliee?).to be_truthy
 

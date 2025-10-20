@@ -1,4 +1,5 @@
 - content_for(:title, @procedure.libelle)
+- content_for(:meta_robots, @procedure.publiee? && @procedure.robots_indexable? ? "index,follow" : "noindex,nofollow")
 
 .commencer.form
   - if !user_signed_in?

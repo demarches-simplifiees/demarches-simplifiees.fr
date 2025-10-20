@@ -1,0 +1,49 @@
+<div class="fr-input-group">
+  <%= form.label :path, class: 'fr-label' do %>
+    <%= t('activerecord.attributes.procedure.procedure_path') %>
+    <span class="fr-hint-text"><%= t('activerecord.attributes.procedure.hints.procedure_path') %></span>
+  <% end %>
+
+  <div class="fr-input">
+    <div class="flex">
+      <span class="placeholder"><%= commencer_url(path: '') %></span>
+      <%= form.text_field(:path, value: procedure.suggested_path,
+                          placeholder: t('activerecord.attributes.procedure.procedure_path_placeholder'),
+                          required: true,
+                          class: 'unstyled flex-1',
+                          pattern: '[a-z0-9.\-_]{3,200}',
+                          autocomplete: 'off',
+                          data: { controller: 'turbo-input', turbo_input_url_value: admin_procedure_check_path_path }) %>
+    </div>
+  </div>
+
+  <div id="check_path"></div>
+</div>
+
+<div class="fr-input-group">
+  <%= form.label :lien_site_web, class: 'fr-label' do %>
+    <%= t('activerecord.attributes.procedure.lien_site_web') %>
+    <span class="fr-hint-text"><%= t('activerecord.attributes.procedure.hints.lien_site_web') %></span>
+  <% end %>
+  <%= form.text_field(:lien_site_web,
+                      required: true,
+                      class: 'fr-input',
+                      autocomplete: 'off') %>
+</div>
+
+<div class="fr-input-group">
+  <%= render Dsfr::ToggleComponent.new(form:, target: :robots_indexable, extra_class_names: "fr-mt-4w",
+      title: "Cette démarche est référençable par les moteurs de recherche (Google, …) pour aider les usagers à la découvrir",
+    ) %>
+</div>
+
+<% if closed_procedures.present? %>
+  <div class="fr-select-group">
+    <%= label_tag :old_procedure, class: 'fr-label' do %>
+      <%= t('activerecord.attributes.procedure.old_procedure') %>
+      <%= t('utils.no_mandatory') %>
+      <span class="fr-hint-text"><%= t('activerecord.attributes.procedure.hints.old_procedure') %></span>
+    <% end %>
+    <%= select_tag :old_procedure, options_for_select(@closed_procedures), include_blank: true, class: 'fr-select' %>
+  </div>
+<% end %>

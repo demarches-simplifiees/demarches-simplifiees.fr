@@ -2,21 +2,35 @@
 
 describe Users::CommencerController, type: :controller do
   let(:user) { create(:user) }
-  let(:published_procedure) { create(:procedure, :for_individual, :published, types_de_champ_public:) }
+  let(:published_procedure) { create(:procedure, :for_individual, :published, types_de_champ_public:, robots_indexable:) }
   let(:types_de_champ_public) { [] }
   let(:draft_procedure) { create(:procedure, :with_path) }
+  let(:robots_indexable) { true }
 
   describe '#commencer' do
     subject { get :commencer, params: { path: path } }
 
     context 'when the path is for a published procedure' do
       let(:path) { published_procedure.path }
+      render_views
 
       it 'renders the view' do
         expect(subject.status).to eq(200)
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq published_procedure
         expect(assigns(:revision)).to eq published_procedure.published_revision
+        expect(response.body).to include("index,follow")
+      end
+    end
+
+    context "when procedure is not indexable" do
+      render_views
+      let(:robots_indexable) { false }
+      let(:path) { published_procedure.path }
+
+      it "apply robots directives" do
+        subject
+        expect(response.body).to include("noindex,nofollow")
       end
     end
 
@@ -39,12 +53,14 @@ describe Users::CommencerController, type: :controller do
 
     context 'when the path is for a draft procedure' do
       let(:path) { draft_procedure.path }
+      render_views
 
       it 'renders the view' do
         expect(subject.status).to eq(200)
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq draft_procedure
         expect(assigns(:revision)).to eq draft_procedure.draft_revision
+        expect(response.body).to include("noindex,nofollow")
       end
     end
 
