@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
+class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
   def initialize(filters:, procedure_presentation:, statut:)
     @filters = filters
     @procedure_presentation = procedure_presentation
@@ -22,19 +22,19 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
   end
 
   def filter_form(filter)
-    # button_to(
-    #   remove_filter_instructeur_procedure_presentation_path(@procedure_presentation),
-    #   method: :delete,
-    #   class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm',
-    #   params: {
-    #     filter: { id: filter.column.id, filter: filter.filter },
-    #     statut: @statut
-    #   }.compact,
-    #   form: { data: { turbo: true } },
-    #   form_class: 'inline'
-    # ) do
-    #   button_content(filter)
-    # end
+    button_to(
+      update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+      class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm',
+      params: {
+        filter_key: filter.id,
+        filter: { id: filter.column.id, filter: filter.empty_filter },
+        statut: @statut
+      }.compact,
+      form: { data: { turbo: true } },
+      form_class: 'inline'
+    ) do
+      button_content(filter)
+    end
   end
 
   def button_content(filter)

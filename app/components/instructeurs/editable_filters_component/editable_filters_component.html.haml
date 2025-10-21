@@ -34,4 +34,4 @@
           customize_filters_instructeur_procedure_presentation_path(procedure_presentation, statut: statut),
           class: 'fr-btn--icon-left fr-icon-settings-5-line fr-btn fr-btn--sm fr-btn--tertiary'
 
-  = render Instructeurs::RemoveFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)
+  = render Instructeurs::ClearFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)

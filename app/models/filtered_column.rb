@@ -19,11 +19,15 @@ class FilteredColumn
 
   def initialize(column:, filter: nil)
     @column = column
-    @filter = filter || { operator: 'match', value: [] }
+    @filter = filter || empty_filter
   end
 
   def ==(other)
     other&.column == column && other.filter_value == filter_value && other.filter_operator == filter_operator
+  end
+
+  def empty_filter
+    { operator: 'match', value: [] }
   end
 
   def id
