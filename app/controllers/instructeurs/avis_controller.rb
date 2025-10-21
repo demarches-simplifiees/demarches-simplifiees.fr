@@ -19,11 +19,7 @@ module Instructeurs
     def remind
       avis = Avis.find(params[:id])
       if avis.remind_by!(current_instructeur)
-        if avis.expert.user.unverified_email?
-          avis.expert.user.invite_expert_and_send_avis!(avis)
-        else
-          AvisMailer.avis_invitation(avis).deliver_later
-        end
+        avis.expert.user.invite_expert_and_send_avis!(avis)
         flash.notice = "Un mail de relance a été envoyé à #{avis.expert.email}"
         redirect_back(fallback_location: avis_instructeur_dossier_path(avis.procedure, params[:statut], avis.dossier))
       end

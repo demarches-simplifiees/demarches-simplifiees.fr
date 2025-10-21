@@ -6,23 +6,6 @@ class AvisMailer < ApplicationMailer
 
   layout 'mailers/layout'
 
-  def avis_invitation(avis, targeted_user_link = nil) # ensure re-entrance if existing AvisMailer.avis_invitation in queue
-    if avis.dossier.visible_by_administration?
-      targeted_user_link = avis.targeted_user_links
-        .find_or_create_by(target_context: 'avis',
-                                                  target_model_type: Avis.name,
-                                                  target_model_id: avis.id,
-                                                  user: avis.expert.user)
-      @avis = avis
-      email = @avis.expert&.email
-      @url = targeted_user_link_url(targeted_user_link)
-      subject = "Donnez votre avis sur le dossier n° #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
-
-      configure_defaults_for_email(email)
-      mail(to: email, subject: subject)
-    end
-  end
-
   def avis_invitation_and_confirm_email(user, token, avis, targeted_user_link = nil) # ensure re-entrance if existing AvisMailer.avis_invitation in queue
     if avis.dossier.visible_by_administration?
       targeted_user_link = avis.targeted_user_links
@@ -31,9 +14,16 @@ class AvisMailer < ApplicationMailer
                                                   target_model_id: avis.id,
                                                   user: avis.expert.user)
       email = user.email
-      @token = token
       @avis = avis
-      @url = targeted_user_link_url(targeted_user_link)
+      @url = targeted_user_link_url(id: targeted_user_link.id, confirmation_token: token)
+
+      if !@avis.expert.user.active?
+        @call_to_action = "Inscrivez-vous pour donner votre avis"
+      elsif @avis.expert.user.unverified_email?
+        @call_to_action = 'Confirmez votre adresse email pour donner votre avis'
+      else
+        @call_to_action = 'Donnez votre avis'
+      end
       subject = "Donnez votre avis sur le dossier n° #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
 
       bypass_unverified_mail_protection!

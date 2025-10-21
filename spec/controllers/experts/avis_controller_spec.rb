@@ -649,72 +649,85 @@ describe Experts::AvisController, type: :controller do
       let(:avis_id) { avis.id }
       let(:email) { avis.expert.email }
       let(:password) { SECURE_PASSWORD }
+      let(:valid_confirmation_token) { "1234" }
+      before { avis.expert.user.update(confirmation_token: valid_confirmation_token) }
 
       subject do
-        post :update_expert, params: {
-          id: avis_id,
-          procedure_id:,
-          email:,
-          user: {
-            password:
+          post :update_expert, params: {
+            id: avis_id,
+            procedure_id:,
+            email:,
+            user: {
+              password:,
+              confirmation_token:
+            }
           }
-        }
-      end
+        end
 
-      context 'when the avis is revoked' do
-        before { avis.update(revoked_at: Time.zone.now) }
+      context 'when token is invalid' do
+        let(:confirmation_token) { "kthxbye" }
 
         it { is_expected.to redirect_to(root_path) }
       end
 
-      context 'when the expert hasn’t signed up yet' do
-        before { expert.user.update(last_sign_in_at: nil) }
+      context 'when valid token is provided' do
+        let(:confirmation_token) { valid_confirmation_token }
 
-        it 'saves the expert new password' do
-          subject
-          expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be true
+        context 'when the avis is revoked' do
+          before { avis.update(revoked_at: Time.zone.now) }
+
+          it { is_expected.to redirect_to(root_path) }
         end
 
-        it { is_expected.to redirect_to expert_all_avis_path }
-      end
+        context 'when the expert hasn’t signed up yet' do
+          before { expert.user.update(last_sign_in_at: nil) }
 
-      context 'with a random avis, procedure and user' do
-        let(:avis_id) { create(:avis).id }
-        let(:random_user) { create(:user, password: '{Another-$3cure-p4ssWord}') }
-        let(:email) { random_user.email }
+          it 'saves the expert new password' do
+            subject
+            expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be true
+          end
 
-        it 'doesn’t change the random user password' do
-          expect(random_user.reload.valid_password?(password)).to be false
-          subject
-          expect(random_user.reload.valid_password?(password)).to be false
-          expect(flash[:alert]).to eq("Vous n’avez pas accès à cet avis.")
-        end
-      end
-
-      context 'with a matching avis procedure, and a random user' do
-        let(:avis) { create(:avis) }
-        let(:avis_id) { avis.id }
-        let(:procedure_id) { avis.procedure.id }
-        let(:random_user) { create(:user, password: '{Another-$3cure-p4ssWord}') }
-        let(:email) { random_user.email }
-
-        it 'doesn’t change the random user password' do
-          expect(random_user.reload.valid_password?(password)).to be false
-          subject
-          expect(random_user.reload.valid_password?(password)).to be false
-          expect(flash[:alert]).to eq("Vous n’avez pas accès à cet avis.")
-        end
-      end
-
-      context 'when the expert has already signed up' do
-        before { expert.user.update(last_sign_in_at: Time.zone.now) }
-
-        it 'doesn’t change the expert password' do
-          subject
-          expect(expert.user.reload.valid_password?('{Another-$3cure-p4ssWord}')).to be false
+          it { is_expected.to redirect_to expert_all_avis_path }
         end
 
-        it { is_expected.to redirect_to new_user_session_url }
+        context 'with a random avis, procedure and user' do
+          let(:avis_id) { create(:avis).id }
+          let(:random_user) { create(:user, password: '{Another-$3cure-p4ssWord}') }
+          let(:email) { random_user.email }
+
+          it 'doesn’t change the random user password' do
+            expect(random_user.reload.valid_password?(password)).to be false
+            subject
+            expect(random_user.reload.valid_password?(password)).to be false
+            expect(flash[:alert]).to eq("Vous n’avez pas accès à cet avis.")
+          end
+        end
+
+        context 'with a matching avis procedure, and a random user' do
+          let(:avis) { create(:avis) }
+          let(:avis_id) { avis.id }
+          let(:procedure_id) { avis.procedure.id }
+          let(:random_user) { create(:user, password: '{Another-$3cure-p4ssWord}') }
+          let(:email) { random_user.email }
+
+          it 'doesn’t change the random user password' do
+            expect(random_user.reload.valid_password?(password)).to be false
+            subject
+            expect(random_user.reload.valid_password?(password)).to be false
+            expect(flash[:alert]).to eq("Vous n’avez pas accès à cet avis.")
+          end
+        end
+
+        context 'when the expert has already signed up' do
+          before { expert.user.update(last_sign_in_at: Time.zone.now) }
+
+          it 'doesn’t change the expert password' do
+            subject
+            expect(expert.user.reload.valid_password?('{Another-$3cure-p4ssWord}')).to be false
+          end
+
+          it { is_expected.to redirect_to new_user_session_url }
+        end
       end
     end
   end

@@ -22,12 +22,8 @@
 %div{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
   = render SimpleFormatComponent.new(@avis.introduction, allow_a: false)
 
-- if @avis.expert.user.active?
   %p
-    = round_button('Confirmez votre adresse email pour donner votre avis', users_confirm_email_url(token: @token), :primary)
-- else
-  %p
-    = round_button("Inscrivez-vous pour donner votre avis", @url, :primary)
+    = round_button(@call_to_action, @url, :primary)
 
 
 = render partial: "layouts/mailers/signature"

@@ -7,6 +7,13 @@ FactoryBot.define do
     password { '{My-$3cure-p4ssWord}' }
     confirmed_at { Time.zone.now }
 
+    trait :active do
+      last_sign_in_at { Time.zone.now }
+    end
+    trait :inactive do
+      last_sign_in_at { nil }
+    end
+
     trait :unconfirmed do
       confirmed_at { nil }
     end
