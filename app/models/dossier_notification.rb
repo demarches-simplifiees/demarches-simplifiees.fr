@@ -237,6 +237,7 @@ class DossierNotification < ApplicationRecord
     notifications_by_dossier_id = DossierNotification
       .where(dossier: dossiers, instructeur:)
       .to_display
+      .includes(dossier: [:etablissement, :individual])
       .group_by(&:dossier_id)
 
     dossiers_by_statut.filter_map do |statut, dossiers|
