@@ -297,45 +297,36 @@ class Dossier < ApplicationRecord
       .where.not(user_id: nil)
   end
 
-  scope :interval_brouillon_close_to_expiration, -> do
+  scope :brouillon_close_to_expiration, -> do
     state_brouillon
       .visible_by_user
-      .where("dossiers.updated_at + dossiers.conservation_extension + (LEAST(procedures.duree_conservation_dossiers_dans_ds, #{Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION}) * INTERVAL '1 month') - INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
-  end
-  scope :interval_en_construction_close_to_expiration, -> do
-    state_en_construction
-      .visible_by_user_or_administration
-      .where("dossiers.en_construction_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
-  end
-  scope :interval_termine_close_to_expiration, -> do
-    state_termine
-      .visible_by_user_or_administration
-      .where(procedures: { procedure_expires_when_termine_enabled: true })
-      .where("dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
-  end
-
-  scope :brouillon_close_to_expiration, -> do
-    joins(:procedure).interval_brouillon_close_to_expiration
+      .where(expired_at: ..(Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :en_construction_close_to_expiration, -> do
-    joins(:procedure).interval_en_construction_close_to_expiration
+    state_en_construction
+      .visible_by_user_or_administration
+      .where(expired_at: ..(Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :termine_close_to_expiration, -> do
-    joins(:procedure).interval_termine_close_to_expiration
+    state_termine
+      .visible_by_user_or_administration
+      .joins(:procedure)
+      .where(procedures: { procedure_expires_when_termine_enabled: true })
+      .where(expired_at: ..(Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
 
   scope :close_to_expiration, -> do
     joins(:procedure).scoping do
-      interval_brouillon_close_to_expiration
-        .or(interval_en_construction_close_to_expiration)
-        .or(interval_termine_close_to_expiration)
+      brouillon_close_to_expiration
+        .or(en_construction_close_to_expiration)
+        .or(termine_close_to_expiration)
     end
   end
 
   scope :termine_or_en_construction_close_to_expiration, -> do
     joins(:procedure).scoping do
-      interval_en_construction_close_to_expiration
-        .or(interval_termine_close_to_expiration)
+      en_construction_close_to_expiration
+        .or(termine_close_to_expiration)
     end
   end
 
