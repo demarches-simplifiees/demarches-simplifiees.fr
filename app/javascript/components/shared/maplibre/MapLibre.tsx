@@ -9,7 +9,8 @@ import {
   useCallback
 } from 'react';
 import { createPortal } from 'react-dom';
-import { Map, NavigationControl } from 'maplibre-gl';
+import { Map, NavigationControl, addProtocol } from 'maplibre-gl';
+import { Protocol } from 'pmtiles';
 import type { StyleSpecification, IControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -59,6 +60,8 @@ export function MapLibre({ children, layers }: MapLibreProps) {
       map.addControl(new NavigationControl({}), 'top-right');
       const styleControl = new ReactControl();
       map.addControl(styleControl, 'bottom-left');
+      const protocol = new Protocol();
+      addProtocol('pmtiles', protocol.tile);
       map.on('load', () => {
         setMap(map);
         setStyleControlElement(styleControl.container);
