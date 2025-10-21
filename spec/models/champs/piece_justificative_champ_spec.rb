@@ -70,14 +70,6 @@ describe Champs::PieceJustificativeChamp do
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     let(:champ) { dossier.champs.first }
 
-    describe "#external_error_present?" do
-      context 'an error is present' do
-        before { champ.update(fetch_external_data_exceptions: [ExternalDataException.new(reason: 'oops', code: 123)]) }
-
-        it { expect(champ.external_error_present?).to be_truthy }
-      end
-    end
-
     describe "cleaning up" do
       let(:dossier) { create(:dossier, procedure:) }
 

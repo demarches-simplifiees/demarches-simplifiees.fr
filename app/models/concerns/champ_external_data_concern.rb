@@ -63,10 +63,6 @@ module ChampExternalDataConcern
     def pending? = waiting_for_job? || fetching?
     def done? = fetched? || external_error?
 
-    def external_error_present?
-      fetch_external_data_exceptions.present? && self.external_id.present?
-    end
-
     def save_external_exception(exception, code)
       exceptions = fetch_external_data_exceptions || []
       exceptions << ExternalDataException.new(reason: exception.inspect, code:)

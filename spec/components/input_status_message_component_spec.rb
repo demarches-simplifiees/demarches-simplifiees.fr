@@ -38,9 +38,9 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       let(:referentiel) { create(:api_referentiel, :exact_match) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
 
-      context "when the field is a referentiel and waiting_for_external_data? is true" do
+      context "when the field is a referentiel and pending? is true" do
         before do
-          allow(champ).to receive(:waiting_for_external_data?).and_return(true)
+          allow(champ).to receive(:pending?).and_return(true)
         end
 
         it "renders the pending message" do
@@ -48,10 +48,9 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
         end
       end
 
-      context "when the field is a referentiel and external_error_present? is true" do
+      context "when the field is a referentiel and external_error? is true" do
         before do
-          allow(champ).to receive(:waiting_for_external_data?).and_return(false)
-          allow(champ).to receive(:external_error_present?).and_return(true)
+          allow(champ).to receive(:external_error?).and_return(true)
         end
 
         it "renders the error message 'KC'" do
@@ -62,7 +61,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       context "when the field is a referentiel and value is present" do
         before do
           allow(champ).to receive(:waiting_for_external_data?).and_return(false)
-          allow(champ).to receive(:external_error_present?).and_return(false)
+          allow(champ).to receive(:external_error?).and_return(false)
           allow(champ).to receive(:value).and_return('value')
         end
         it "renders the OK message" do
@@ -74,20 +73,18 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
     context 'with piece_justificative champs (RIB)' do
       let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'RIB' }] }
 
-      before do
-        allow(champ).to receive(:piece_justificative_file).and_return(double(blobs: [double]))
-      end
-
-      context "when OCR is nil" do
-        before { allow(champ).to receive(:value_json).and_return(nil) }
+      context "when the champ is idle" do
+        before { allow(champ).to receive(:pending?).and_return(true) }
 
         it "renders the info message" do
           expect(subject).to have_css(".fr-message--info")
         end
       end
 
-      context "when OCR exists but IBAN is nil" do
-        before { allow(champ).to receive(:value_json).and_return({ 'rib' => {} }) }
+      context "when the state is fetched but IBAN is nil" do
+        before do
+          allow(champ).to receive(:value_json).and_return({ 'rib' => {} })
+        end
 
         it "renders the warning message" do
           expect(subject).to have_css(".fr-message--warning")
@@ -105,7 +102,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when OCR has an error" do
-        before { allow(champ).to receive(:external_error_present?).and_return(true) }
+        before { allow(champ).to receive(:external_error?).and_return(true) }
 
         it "renders the warning message" do
           expect(subject).to have_css(".fr-message--warning", text: 'Une erreur')

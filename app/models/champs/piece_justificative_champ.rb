@@ -21,10 +21,6 @@ class Champs::PieceJustificativeChamp < Champ
     # We don’t know how to search inside documents yet
   end
 
-  def external_error_present?
-    fetch_external_data_exceptions.present? && piece_justificative_file.attached?
-  end
-
   def uses_external_data?
     RIB?
   end
