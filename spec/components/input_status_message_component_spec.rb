@@ -37,11 +37,18 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
     context 'with referentiel champs' do
       let(:referentiel) { create(:api_referentiel, :exact_match) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
+      let(:state) { :idle }
+
+      before do
+        allow(champ).to receive(:idle?).and_return((state == :idle))
+        allow(champ).to receive(:pending?).and_return((state == :pending))
+        allow(champ).to receive(:fetched?).and_return((state == :fetched))
+        allow(champ).to receive(:external_error?).and_return((state == :external_error))
+        allow(champ).to receive(:value).and_return('value')
+      end
 
       context "when the field is a referentiel and pending? is true" do
-        before do
-          allow(champ).to receive(:pending?).and_return(true)
-        end
+        let(:state) { :pending }
 
         it "renders the pending message" do
           expect(subject).to have_css(".fr-message--info", text: "Recherche en cours.")
@@ -49,9 +56,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when the field is a referentiel and external_error? is true" do
-        before do
-          allow(champ).to receive(:external_error?).and_return(true)
-        end
+        let(:state) { :external_error }
 
         it "renders the error message 'KC'" do
           expect(subject).to have_css(".fr-message--info", text: "Aucun élément trouvé pour la référence : ")
@@ -59,11 +64,8 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when the field is a referentiel and value is present" do
-        before do
-          allow(champ).to receive(:waiting_for_external_data?).and_return(false)
-          allow(champ).to receive(:external_error?).and_return(false)
-          allow(champ).to receive(:value).and_return('value')
-        end
+        let(:state) { :fetched }
+
         it "renders the OK message" do
           expect(subject).to have_css(".fr-message--valid", text: 'value')
         end
@@ -72,9 +74,19 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
 
     context 'with piece_justificative champs (RIB)' do
       let(:types_de_champ_public) { [{ type: :piece_justificative, nature: 'RIB' }] }
+      let(:state) { :idle }
+      let(:value_json) { {} }
 
-      context "when the champ is idle" do
-        before { allow(champ).to receive(:pending?).and_return(true) }
+      before do
+        allow(champ).to receive(:idle?).and_return((state == :idle))
+        allow(champ).to receive(:pending?).and_return((state == :pending))
+        allow(champ).to receive(:fetched?).and_return((state == :fetched))
+        allow(champ).to receive(:external_error?).and_return((state == :external_error))
+        allow(champ).to receive(:value_json).and_return(value_json)
+      end
+
+      context "when the champ is pending" do
+        let(:state) { :pending }
 
         it "renders the info message" do
           expect(subject).to have_css(".fr-message--info")
@@ -82,9 +94,8 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when the state is fetched but IBAN is nil" do
-        before do
-          allow(champ).to receive(:value_json).and_return({ 'rib' => {} })
-        end
+        let(:state) { :fetched }
+        let(:value_json) { { 'rib' => {} } }
 
         it "renders the warning message" do
           expect(subject).to have_css(".fr-message--warning")
@@ -92,9 +103,9 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when IBAN is present" do
+        let(:state) { :fetched }
         let(:iban) { "FRjesuisuniban" }
-
-        before { allow(champ).to receive(:value_json).and_return({ 'rib' => { 'iban' => iban } }) }
+        let(:value_json) { { 'rib' => { 'iban' => iban } } }
 
         it "renders the valid message with IBAN" do
           expect(subject).to have_css(".fr-message--valid", text: iban)
@@ -102,7 +113,7 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
 
       context "when OCR has an error" do
-        before { allow(champ).to receive(:external_error?).and_return(true) }
+        let(:state) { :external_error }
 
         it "renders the warning message" do
           expect(subject).to have_css(".fr-message--warning", text: 'Une erreur')
