@@ -1,7 +1,9 @@
 import { fire } from '@utils';
 import type { FeatureCollection } from 'geojson';
+import { useMemo } from 'react';
 
 import { RemoteComboBox } from '../../ComboBox';
+import { createLoader } from '../../react-aria/hooks';
 
 export function AddressInput({
   source,
@@ -14,12 +16,21 @@ export function AddressInput({
   champId: string;
   translations: Record<string, string>;
 }) {
+  const loader = useMemo(
+    () =>
+      createLoader(source, {
+        minimumInputLength: 2,
+        errorMessage: translations.address_search_error
+      }),
+    [source, translations.address_search_error]
+  );
+
   return (
     <div style={{ marginBottom: '10px' }}>
       <RemoteComboBox
         minimumInputLength={2}
         id={champId}
-        loader={source}
+        loader={loader}
         label={translations.address_input_label}
         description={translations.address_input_description}
         placeholder={translations.address_placeholder}
