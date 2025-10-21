@@ -30,6 +30,10 @@ class FilteredColumn
     { operator: 'match', value: [] }
   end
 
+  def empty_filter?
+    filter_operator == 'match' && filter_value.empty?
+  end
+
   def id
     column.h_id.merge(filter: { operator: filter_operator, value: filter_value }).sort.to_json
   end
