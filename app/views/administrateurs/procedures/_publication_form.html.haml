@@ -38,6 +38,6 @@
     - else
       = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures, form: f }
 
-  %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left
+  %ul.fr-btns-group.fr-btns-group--inline-md.fr-btns-group--icon-left.fr-mt-3w
     = f.submit t('.submit'), { disabled: procedure.errors.present?, class: "fr-btn fr-btn--primary", id: 'publish' }
     = link_to t('.back_to_procedure'), admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-arrow-go-back-line fr-ml-1w'

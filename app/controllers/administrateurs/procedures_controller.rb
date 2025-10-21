@@ -364,6 +364,10 @@ module Administrateurs
 
       @procedure.publish_or_reopen!(current_administrateur, publish_params[:path])
 
+      if @procedure.draft_changed?
+        @procedure.publish_revision!(current_administrateur)
+      end
+
       if params[:old_procedure].present? && @procedure.errors.empty?
         current_administrateur
           .procedures

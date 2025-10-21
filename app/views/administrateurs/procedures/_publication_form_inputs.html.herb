@@ -1,6 +1,7 @@
 <div class="fr-input-group">
   <%= form.label :path, class: 'fr-label' do %>
     <%= t('activerecord.attributes.procedure.procedure_path') %>
+    <%= render EditableChamp::AsteriskMandatoryComponent.new %>
     <span class="fr-hint-text"><%= t('activerecord.attributes.procedure.hints.procedure_path') %></span>
   <% end %>
 
@@ -21,14 +22,7 @@
 </div>
 
 <div class="fr-input-group">
-  <%= form.label :lien_site_web, class: 'fr-label' do %>
-    <%= t('activerecord.attributes.procedure.lien_site_web') %>
-    <span class="fr-hint-text"><%= t('activerecord.attributes.procedure.hints.lien_site_web') %></span>
-  <% end %>
-  <%= form.text_field(:lien_site_web,
-                      required: true,
-                      class: 'fr-input',
-                      autocomplete: 'off') %>
+  <%= render Dsfr::InputComponent.new(form:, attribute: :lien_site_web) %>
 </div>
 
 <div class="fr-input-group">
