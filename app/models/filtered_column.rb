@@ -17,9 +17,9 @@ class FilteredColumn
     message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" },
   }
 
-  def initialize(column:, filter:)
+  def initialize(column:, filter: nil)
     @column = column
-    @filter = filter
+    @filter = filter || { operator: 'match', value: [] }
   end
 
   def ==(other)

@@ -74,7 +74,7 @@ class ProcedurePresentation < ApplicationRecord
     # if the filter is already present keep it, else add it
     replaced_filters = new_filters_columns.map do |new_filter_column|
       current_filters.find { |f| f.column.id == new_filter_column.id } ||
-        FilteredColumn.new(column: new_filter_column, filter: { operator: 'match', value: [] })
+        FilteredColumn.new(column: new_filter_column)
     end
 
     update!(filters_attr => replaced_filters)
@@ -94,9 +94,9 @@ class ProcedurePresentation < ApplicationRecord
 
   def set_default_filters
     default_filters_for_all_statuts = [
-      FilteredColumn.new(column: procedure.dossier_state_column, filter: { operator: 'match', value: [] }),
-      FilteredColumn.new(column: procedure.dossier_id_column, filter: { operator: 'match', value: [] }),
-      FilteredColumn.new(column: procedure.dossier_notifications_column, filter: { operator: 'match', value: [] })
+      FilteredColumn.new(column: procedure.dossier_state_column),
+      FilteredColumn.new(column: procedure.dossier_id_column),
+      FilteredColumn.new(column: procedure.dossier_notifications_column),
     ]
 
     ALL_FILTERS.each do |filters_by_status|
