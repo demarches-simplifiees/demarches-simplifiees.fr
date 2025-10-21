@@ -12,7 +12,7 @@
           %span{ class: procedure_presentation.filters_expanded ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line', data: { 'expand-target': 'icon' } }
           %span.fr-sr-only= t('.toggle_filters')
 
-    .fr-grid-row{ class: class_names({ "hidden": !procedure_presentation.filters_expanded }) }
+    .flex.flex-gap-2{ class: class_names({ "hidden": !procedure_presentation.filters_expanded }) }
       - filters.each do |filter|
         .flex.column
           = form_with url: update_filter_instructeur_procedure_presentation_path(procedure_presentation),
@@ -34,4 +34,5 @@
           customize_filters_instructeur_procedure_presentation_path(procedure_presentation, statut: statut),
           class: 'fr-btn--icon-left fr-icon-settings-5-line fr-btn fr-btn--sm fr-btn--tertiary'
 
-  = render Instructeurs::ClearFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)
+  .flex.flex-gap-1
+    = render Instructeurs::ClearFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)
