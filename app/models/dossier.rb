@@ -615,6 +615,16 @@ class Dossier < ApplicationRecord
     ].any?
   end
 
+  def close_to_expiration?
+    return false if en_instruction?
+    expired_at < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now && Time.zone.now < expired_at
+  end
+
+  def has_expired?
+    return false if en_instruction?
+    expired_at < Time.zone.now
+  end
+
   def expiration_date_reference
     if brouillon?
       updated_at
@@ -631,24 +641,10 @@ class Dossier < ApplicationRecord
     expiration_date_reference + duree_totale_conservation_in_months.months
   end
 
-  def expiration_notification_date
-    expiration_date_with_extension - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
-  end
-
-  def close_to_expiration?
-    return false if en_instruction?
-    expiration_notification_date < Time.zone.now && Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago < expiration_notification_date
-  end
-
   def duree_totale_conservation_in_months
     duree_conservation_dossier = brouillon? ? [procedure.duree_conservation_dossiers_dans_ds, Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION].min : procedure.duree_conservation_dossiers_dans_ds
 
     duree_conservation_dossier + (conservation_extension / 1.month.to_i)
-  end
-
-  def has_expired?
-    return false if en_instruction?
-    expiration_notification_date < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
   end
 
   def after_notification_expiration_date
