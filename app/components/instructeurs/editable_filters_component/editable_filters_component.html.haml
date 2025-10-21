@@ -24,7 +24,7 @@
             = form.hidden_field "filter[id]", value: filter.column.id
             = form.hidden_field :statut, value: statut
 
-            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:,instructeur_procedure:, edit_mode: true)
+            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, instructeur_procedure:)
 
       - if filters.none?
         .flex.align-center.fr-p-2w

@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update, :refresh_column_filter, :refresh_filters, :update_filter, :persist_filters, :toggle_filters_expanded, :customize_filters]
+    before_action :set_procedure_presentation, only: [:update, :refresh_filters, :update_filter, :persist_filters, :toggle_filters_expanded, :customize_filters]
 
     # updates the value of a filter
     def update_filter
@@ -47,17 +47,6 @@ module Instructeurs
       @statut = params[:statut]
       @filters_columns = @procedure_presentation.filters_for(@statut).map(&:column)
       render layout: "empty_layout"
-    end
-
-    def refresh_column_filter
-      @filtered_column = filtered_column_from_params
-      @column = @filtered_column.column
-      procedure = current_instructeur.procedures.find(@column.h_id[:procedure_id])
-      @instructeur_procedure = InstructeursProcedure.find_by!(procedure:, instructeur: current_instructeur)
-
-      if @column.groupe_instructeur?
-        @column.options_for_select = current_instructeur.groupe_instructeur_options_for(procedure)
-      end
     end
 
     private

@@ -1,3 +1,0 @@
-= form_with(url: instructeur_procedure_presentation_path(@procedure_presentation)) do |form|
-  = turbo_stream.replace 'column_filter_value_component' do
-    = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: @filtered_column, form:, instructeur_procedure: @instructeur_procedure)
