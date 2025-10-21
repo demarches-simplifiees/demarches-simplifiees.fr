@@ -114,10 +114,18 @@ module Instructeurs
           filter.column.options_for_select = current_instructeur.groupe_instructeur_options_for(procedure)
         end
       end
-      @counts = current_instructeur
-        .dossiers_count_summary(groupe_instructeur_ids)
-        .symbolize_keys
-      @can_download_dossiers = (@counts[:tous] + @counts[:archives]) > 0 && !instructeur_as_manager?
+
+      @counts = DossierCountCache.new(procedure_ids: [procedure.id], instructeur: current_instructeur).count_by_procedure.fetch(procedure.id).symbolize_keys
+      @counts[:suivis] = current_instructeur
+        .followed_dossiers
+        .joins(:groupe_instructeur)
+        .en_cours
+        .where(groupe_instructeur_id: current_instructeur.groupe_instructeurs.where(procedure: @procedure).pluck(:id))
+        .visible_by_administration
+        .reorder(nil)
+        .count
+
+      @can_download_dossiers = @counts[:tous] > 0 && !instructeur_as_manager?
 
       dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
       dossiers_count = @counts[statut.underscore.to_sym]
