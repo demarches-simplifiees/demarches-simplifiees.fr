@@ -145,6 +145,7 @@ end
 group :development do
   gem 'benchmark-ips', require: false
   gem 'brakeman', require: false
+  gem 'debug', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'
   gem 'memory_profiler'
