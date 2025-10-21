@@ -75,13 +75,7 @@
           %p= t(:opendata_notice_html, scope: [:administrateurs, :informations])
 
     .fr-fieldset__element
-      .fr-input-group
-        = f.label :opendata, t(:opendata, scope: [:administrateurs, :informations]), class: 'fr-label'
-        %label.toggle-switch
-          = f.check_box :opendata, class: 'toggle-switch-checkbox'
-          %span.toggle-switch-control.round
-          %span.toggle-switch-label.on Oui
-          %span.toggle-switch-label.off Non
+      = render Dsfr::ToggleComponent.new(form: f, target: :opendata, title: t(:opendata, scope: [:administrateurs, :informations]), extra_class_names: nil)
 
   .fr-fieldset__element
     .fr-input-group
