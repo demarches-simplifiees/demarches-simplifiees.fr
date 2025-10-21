@@ -286,4 +286,60 @@ describe "procedure filters" do
     end
     click_button "Enregistrer"
   end
+
+  scenario "should be able to access filter customization page", js: true do
+    # Click on the "Personnaliser" button for filters
+    click_on 'Personnaliser', match: :first
+
+    # Test that we are redirected to the customize_filters page
+    expect(page).to have_current_path(/\/procedure_presentation\/\d+\/customize_filters\?statut=a-suivre/)
+
+    # Verify we're on the customization page with the correct content
+    expect(page).to have_content("Personnaliser les critères de recherche / filtres")
+    expect(page).to have_content("Votre sélection de critères")
+
+    # Check that we have the 3 default filters listed on the page
+    within ".fr-col-5" do
+      expect(page).to have_content("N° dossier")
+      expect(page).to have_content("État du dossier")
+      expect(page).to have_content("Notifications sur le dossier")
+    end
+
+    # Delete the first filter
+    within ".fr-col-5" do
+      # Find the filter box containing "N° dossier" and click its delete button
+      within ".filter-box", text: "N° dossier" do
+        find('button.fr-icon-delete-line').click
+      end
+    end
+
+    # Check that the filter is deleted
+    within ".fr-col-5" do
+      expect(page).not_to have_content("N° dossier")
+    end
+
+    # Add a new filter
+    within "#form-informations-usager" do
+      select "Demandeur", from: "select-informations-usager"
+      click_button "Ajouter"
+    end
+
+    # Check that the filter is added
+    within ".fr-col-5" do
+      expect(page).to have_content("Demandeur")
+    end
+
+    # Click on the "Valider" button it should redirect to the procedure page
+    click_button "Valider"
+
+    expect(page).to have_current_path(instructeur_procedure_path(procedure))
+
+    # Check that the filters are available in the editable-filters-component
+    within "#editable-filters-component" do
+      expect(page).to have_content("Demandeur")
+      expect(page).to have_content("État du dossier")
+      expect(page).to have_content("Notifications sur le dossier")
+      expect(page).not_to have_content("N° dossier")
+    end
+  end
 end

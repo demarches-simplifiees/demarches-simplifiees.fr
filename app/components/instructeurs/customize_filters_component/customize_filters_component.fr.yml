@@ -3,3 +3,11 @@ fr:
   select: Sélectionner
   add: Ajouter
   clear_filter: Effacer le filtre « %{filter_label} »
+  delete_filter: Supprimer le filtre « %{filter_label} »
+  file_information: Informations dossier
+  user_information: Informations usager
+  user_form: Formulaire usager
+  private_annotations: Annotations privées (instructeurs)
+  file_section: Dossier
+  instructors_section: Instructeurs
+  selection_title: Votre sélection de critères

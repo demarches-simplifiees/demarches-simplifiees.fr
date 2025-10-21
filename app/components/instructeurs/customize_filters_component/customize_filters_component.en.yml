@@ -3,3 +3,11 @@ en:
   select: Select
   add: Add
   clear_filter: Clear the filter « %{filter_label} »
+  delete_filter: Delete the filter « %{filter_label} »
+  file_information: File information
+  user_information: User information
+  user_form: User form
+  private_annotations: Private annotations (instructors)
+  file_section: File
+  instructors_section: Instructors
+  selection_title: Your criteria selection
