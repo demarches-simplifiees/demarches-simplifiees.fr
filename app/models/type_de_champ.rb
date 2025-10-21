@@ -292,6 +292,7 @@ class TypeDeChamp < ApplicationRecord
 
   def params_for_champ
     {
+      type_de_champ: self,
       private: private?,
       type: champ_class.name,
       stable_id:,

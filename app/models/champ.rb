@@ -27,6 +27,10 @@ class Champ < ApplicationRecord
       .find(-> { raise "Type De Champ #{stable_id} not found in Revision #{dossier.revision_id}" }) { _1.stable_id == stable_id }
   end
 
+  def type_de_champ=(type_de_champ)
+    @type_de_champ = type_de_champ
+  end
+
   delegate :libelle,
     :type_champ,
     :description,
