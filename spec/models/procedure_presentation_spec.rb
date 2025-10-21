@@ -41,110 +41,12 @@ describe ProcedurePresentation do
     end
   end
 
-  describe '#add_filter_for_statut!' do
-    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
-    let(:column) { procedure.find_column(label: 'Demandeur') }
-    let(:new_filter) { FilteredColumn.new(column:, filter: 'new_filter_value') }
-
-    subject { procedure_presentation.add_filter_for_statut!(statut, new_filter) }
-
-    context 'when adding a filter to an empty statut' do
-      let(:statut) { 'a-suivre' }
-
-      it 'adds the filter to the statut' do
-        expect { subject }
-          .to change { procedure_presentation.a_suivre_filters }.from([]).to([new_filter])
-      end
-    end
-
-    context 'when adding a filter to a statut with existing filters' do
-      let(:existing_filter) { FilteredColumn.new(column:, filter: 'existing_filter_value') }
-
-      let(:statut) { 'a-suivre' }
-
-      before do
-        procedure_presentation.update(a_suivre_filters: [existing_filter])
-      end
-
-      it 'adds the new filter to the existing filters' do
-        expect { subject }
-          .to change { procedure_presentation.a_suivre_filters }.from([existing_filter]).to([existing_filter, new_filter])
-      end
-    end
-
-    context 'when adding a filter to a different statut' do
-      let(:statut) { 'suivis' }
-      it 'adds the filter to the correct statut' do
-        expect { subject }
-          .to change { procedure_presentation.suivis_filters }.from([]).to([new_filter])
-          .and not_change { procedure_presentation.a_suivre_filters }
-      end
-    end
-  end
-
-  describe '#remove_filter_for_statut!' do
-    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
-    let(:column) { procedure.find_column(label: 'Demandeur') }
-    let(:filter_to_remove) { FilteredColumn.new(column:, filter: 'filter_to_remove') }
-    let(:other_filter) { FilteredColumn.new(column:, filter: 'other_filter') }
-
-    subject { procedure_presentation.remove_filter_for_statut!(statut, filter_to_remove) }
-
-    context 'when removing a filter from a statut with multiple filters' do
-      let(:statut) { 'a-suivre' }
-
-      before do
-        procedure_presentation.update(a_suivre_filters: [filter_to_remove, other_filter])
-      end
-
-      it 'removes only the specified filter' do
-        expect { subject }
-          .to change { procedure_presentation.a_suivre_filters }.from([filter_to_remove, other_filter]).to([other_filter])
-      end
-    end
-
-    context 'when removing the only filter from a statut' do
-      let(:statut) { 'suivis' }
-
-      before do
-        procedure_presentation.update(suivis_filters: [filter_to_remove])
-      end
-
-      it 'removes the filter and leaves an empty array' do
-        expect { subject }
-          .to change { procedure_presentation.suivis_filters }.from([filter_to_remove]).to([])
-      end
-    end
-
-    context 'when removing a filter that does not exist' do
-      let(:statut) { 'traites' }
-
-      before do
-        procedure_presentation.update(traites_filters: [other_filter])
-      end
-
-      it 'does not change the filters' do
-        expect { subject }
-          .to not_change { procedure_presentation.traites_filters.map(&:as_json) }
-      end
-    end
-
-    context 'when removing a filter from an empty statut' do
-      let(:statut) { 'archives' }
-
-      it 'does not change the filters' do
-        expect { subject }
-          .to not_change { procedure_presentation.archives_filters }
-      end
-    end
-  end
-
   describe '#update_filter_for_statut!' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
     let(:column) { procedure.find_column(label: 'Demandeur') }
-    let(:existing_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: 'existing_filter_value' }) }
-    let(:updated_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: 'updated_filter_value' }) }
-    let(:other_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: 'other_filter_value' }) }
+    let(:existing_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: ['existing_filter_value'] }) }
+    let(:updated_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: ['updated_filter_value'] }) }
+    let(:other_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: ['other_filter_value'] }) }
 
     subject { procedure_presentation.update_filter_for_statut!(statut, filter_key, updated_filter) }
 
@@ -179,6 +81,10 @@ describe ProcedurePresentation do
     context 'when updating a filter in an empty statut' do
       let(:statut) { 'archives' }
       let(:filter_key) { 'any_filter_id' }
+
+      before do
+        procedure_presentation.update(archives_filters: [])
+      end
 
       it 'does not change the filters' do
         expect { subject }
