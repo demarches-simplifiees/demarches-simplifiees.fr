@@ -77,6 +77,7 @@ describe Expired::DossiersDeletionService do
           expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil
           expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once
           expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with([dossier], dossier.user.email)
+          expect(dossier.expired_at).to be_within(1.second).of(dossier.expiration_date)
         end
       end
     end
@@ -198,6 +199,7 @@ describe Expired::DossiersDeletionService do
           expect(DossierMailer).to have_received(:notify_near_deletion_to_user).with([dossier], dossier.user.email)
           expect(DossierMailer).not_to have_received(:notify_near_deletion_to_administration).with([dossier], dossier.procedure.administrateurs.first.email)
           expect(DossierMailer).to have_received(:notify_near_deletion_to_administration).with([dossier], dossier.followers_instructeurs.first.email)
+          expect(dossier.expired_at).to be_within(1.second).of(dossier.expiration_date)
         end
       end
     end
@@ -403,6 +405,7 @@ describe Expired::DossiersDeletionService do
           expect(DossierMailer).to have_received(:notify_near_deletion_to_user).with([dossier], dossier.user.email)
           expect(DossierMailer).not_to have_received(:notify_near_deletion_to_administration).with([dossier], dossier.procedure.administrateurs.first.email)
           expect(DossierMailer).to have_received(:notify_near_deletion_to_administration).with([dossier], dossier.followers_instructeurs.first.email)
+          expect(dossier.expired_at).to be_within(1.second).of(dossier.expiration_date)
         end
       end
     end
