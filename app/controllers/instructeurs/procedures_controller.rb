@@ -38,10 +38,13 @@ module Instructeurs
       @procedures_draft_count = all_procedures_for_listing.brouillons.count
       @procedures_closes_count = closes_with_no_dossier_en_cours.count
 
-      @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.by_statut('a-suivre').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_termines_count_per_procedure = dossiers.by_statut('traites').group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_expirant_count_per_procedure = dossiers.by_statut('expirant').group('groupe_instructeurs.procedure_id').count
+      # use DossierCountCache service to compute counts (centralized, cacheable)
+      cache_service = DossierCountCache.new(procedure_ids: all_procedures.pluck(:id), instructeur: current_instructeur)
+      counts = cache_service.count_by_procedure
+      @dossiers_count_per_procedure = counts.transform_values { it['tous'] || 0 }
+      @dossiers_a_suivre_count_per_procedure = counts.transform_values { it['a-suivre'] || 0 }
+      @dossiers_termines_count_per_procedure = counts.transform_values { it['traites'] || 0 }
+      @dossiers_expirant_count_per_procedure = counts.transform_values { it['expirant'] || 0 }
 
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
       @followed_dossiers_count_per_procedure = current_instructeur
