@@ -8,7 +8,7 @@ class ReferentielChampValidator < ActiveModel::Validator
 
     if record.pending? # user filled the field, but background job is still running / pending
       record.errors.add(:value, :api_response_pending)
-    elsif record.external_error_present? # user filled the field, but background job failed
+    elsif record.external_error? # user filled the field, but background job failed
       record.errors.add(:value, error_key_for_api_response_code(record))
     else # this is unexpected
       Sentry.capture_message(
