@@ -17,7 +17,15 @@ class Champs::CarteChamp < Champ
   # the following collections on unsaved records.
   def cadastres
     if cadastres?
-      geo_areas.filter { _1.source == GeoArea.sources.fetch(:cadastre) }
+      geo_areas.filter(&:cadastre?)
+    else
+      []
+    end
+  end
+
+  def rpgs
+    if rpg?
+      geo_areas.filter(&:rpg?)
     else
       []
     end
@@ -31,6 +39,10 @@ class Champs::CarteChamp < Champ
 
   def cadastres?
     type_de_champ.layer_enabled?(:cadastres)
+  end
+
+  def rpg?
+    type_de_champ.layer_enabled?(:rpg)
   end
 
   def optional_layers

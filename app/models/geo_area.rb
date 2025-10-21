@@ -24,7 +24,11 @@ class GeoArea < ApplicationRecord
   end
 
   def numero
-    properties['numero']
+    if rpg?
+      properties['id']
+    else
+      properties['numero']
+    end
   end
 
   def section
@@ -37,11 +41,9 @@ class GeoArea < ApplicationRecord
 
   enum :source, {
     cadastre: 'cadastre',
-    selection_utilisateur: 'selection_utilisateur'
+    selection_utilisateur: 'selection_utilisateur',
+    rpg: 'rpg'
   }
-
-  scope :selections_utilisateur, -> { where(source: sources.fetch(:selection_utilisateur)) }
-  scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
 
   validates :geometry, geo_json: true, allow_nil: false
 
@@ -49,7 +51,7 @@ class GeoArea < ApplicationRecord
     {
       type: 'Feature',
       geometry: geometry.deep_symbolize_keys,
-      properties: cadastre_properties.merge(
+      properties: extra_properties.merge(
         source: source,
         area: area,
         length: length,
@@ -69,6 +71,8 @@ class GeoArea < ApplicationRecord
     case source
     when GeoArea.sources.fetch(:cadastre)
       I18n.t("cadastre", scope: 'geo_area.label', numero: numero, prefixe: prefixe, section: section, surface: surface&.round, commune: commune)
+    when GeoArea.sources.fetch(:rpg)
+      I18n.t("rpg", scope: 'geo_area.label', numero:, surface: surface_hectares)
     when GeoArea.sources.fetch(:selection_utilisateur)
       if polygon?
         if area > 0
@@ -126,7 +130,11 @@ class GeoArea < ApplicationRecord
     source == GeoArea.sources.fetch(:cadastre)
   end
 
-  def cadastre_properties
+  def rpg?
+    source == GeoArea.sources.fetch(:rpg)
+  end
+
+  def extra_properties
     if cadastre?
       {
         cid: cid,
@@ -135,6 +143,10 @@ class GeoArea < ApplicationRecord
         prefixe: prefixe,
         commune: commune,
         surface: surface
+      }
+    elsif rpg?
+      {
+        cid:
       }
     else
       {}
@@ -233,5 +245,12 @@ class GeoArea < ApplicationRecord
     else
       properties['id']
     end
+  end
+
+  private
+
+  def surface_hectares
+    return if surface.nil?
+    surface.round / 10_000
   end
 end
