@@ -59,11 +59,10 @@
                       class: 'fr-btn'
   %hr.fr-hr.fr-mt-5w.fr-mb-1w
   %h2.fr-h4 API Particulier
+  %p
+    = t('.api_particulier_description_html', app_name: Current.application_name)
 
   - if @procedure.feature_enabled?(:api_particulier)
-    %p
-      = t('.api_particulier_description_html', app_name: Current.application_name)
-
     - if @procedure.api_particulier_token.present?
       .fr-table.fr-table--lg
         .fr-table__wrapper
@@ -121,8 +120,10 @@
 
 
   - else
-    %p
-      Pour activer le paramétrage de cette fonctionnalité, contactez-nous sur
-      = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}", external_link_attributes
-      en indiquant votre numéro de démarche (#{@procedure.id}) et le cadre d’application de l'API particulier.
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
+      - c.with_body do
+        %p
+          Pour activer le paramétrage de cette fonctionnalité, contactez-nous sur
+          = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}", external_link_attributes
+          en indiquant votre numéro de démarche (#{@procedure.id}) et le cadre d’application de l'API particulier.
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)
