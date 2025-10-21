@@ -56,7 +56,7 @@ module Administrateurs
 
       if APIEntreprise::PrivilegesAdapter.new(jwt_token).valid? && @procedure.save
         flash.notice = 'Le jeton a bien été mis à jour'
-        redirect_to admin_procedure_path(id: @procedure.id)
+        redirect_to admin_procedure_jetons_path(id: @procedure.id)
       else
         flash.now.alert = "Mise à jour impossible : le jeton n’est pas valide"
         render :edit_entreprise
