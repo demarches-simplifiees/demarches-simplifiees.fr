@@ -1,9 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
-import { httpRequest, fire, ResponseError } from '@utils';
+import { fire, httpRequest, ResponseError } from '@utils';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import { useCallback, useEffect, useState } from 'react';
 
 export const SOURCE_SELECTION_UTILISATEUR = 'selection_utilisateur';
-export const SOURCE_CADASTRE = 'cadastre';
 
 export type CreateFeatures = (params: {
   features: Feature<Geometry>[];
@@ -67,7 +66,7 @@ export function useFeatureCollection(
               }
             });
           } else {
-            fire(document, 'map:internal:cadastre:highlight', {
+            fire(document, 'map:internal:parcelle:highlight', {
               cid: feature.properties?.cid,
               highlight: true
             });
@@ -85,7 +84,7 @@ export function useFeatureCollection(
           if (feature.properties?.source == SOURCE_SELECTION_UTILISATEUR) {
             fire(document, 'map:internal:draw:delete', { id: feature.id });
           } else {
-            fire(document, 'map:internal:cadastre:highlight', {
+            fire(document, 'map:internal:parcelle:highlight', {
               cid: feature.properties?.cid,
               highlight: false
             });

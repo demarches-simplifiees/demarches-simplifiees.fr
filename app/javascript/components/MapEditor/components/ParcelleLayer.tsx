@@ -14,19 +14,17 @@ import {
   findFeature
 } from '../../shared/maplibre/utils';
 
-import {
-  SOURCE_CADASTRE,
-  type CreateFeatures,
-  type DeleteFeatures
-} from '../hooks';
+import { type CreateFeatures, type DeleteFeatures } from '../hooks';
 
-export function CadastreLayer({
+export function ParcelleLayer({
+  source,
   featureCollection,
   createFeatures,
   deleteFeatures,
   toggle,
   enabled
 }: {
+  source: 'rpg' | 'cadastre';
   featureCollection: FeatureCollection;
   createFeatures: CreateFeatures;
   deleteFeatures: DeleteFeatures;
@@ -34,10 +32,11 @@ export function CadastreLayer({
   enabled: boolean;
 }) {
   const map = useMapLibre();
-  const selectedCadastresRef = useRef(new Set<string>());
+  const selectedParcellesRef = useRef(new Set<string>());
   const [controlElement, setControlElement] = useState<HTMLElement | null>(
     null
   );
+  const cidProperty = source == 'rpg' ? 'ID_PARCEL' : 'id';
 
   useEffect(() => {
     const control = new ReactControl();
@@ -53,29 +52,29 @@ export function CadastreLayer({
   const highlightFeature = useCallback(
     (cid: string, highlight: boolean) => {
       if (highlight) {
-        selectedCadastresRef.current.add(cid);
+        selectedParcellesRef.current.add(cid);
       } else {
-        selectedCadastresRef.current.delete(cid);
+        selectedParcellesRef.current.delete(cid);
       }
-      if (selectedCadastresRef.current.size == 0) {
-        map.setFilter('parcelle-highlighted', ['in', 'id', '']);
+      if (selectedParcellesRef.current.size == 0) {
+        map.setFilter('parcelle-highlighted', ['in', cidProperty, '']);
       } else {
         map.setFilter('parcelle-highlighted', [
           'in',
-          'id',
-          ...selectedCadastresRef.current
+          cidProperty,
+          ...selectedParcellesRef.current
         ]);
       }
     },
-    [map]
+    [map, cidProperty]
   );
 
   const hoverFeature = useCallback(
     (feature: Feature, hover: boolean) => {
-      if (!selectedCadastresRef.current.has(feature.properties?.id)) {
+      if (!selectedParcellesRef.current.has(feature.properties?.id)) {
         map.setFeatureState(
           {
-            source: 'cadastre',
+            source,
             sourceLayer: 'parcelles',
             id: String(feature.id)
           },
@@ -83,10 +82,11 @@ export function CadastreLayer({
         );
       }
     },
-    [map]
+    [map, source]
   );
 
-  useCadastres(featureCollection, {
+  useParcelles(featureCollection, {
+    source,
     hoverFeature,
     createFeatures,
     deleteFeatures,
@@ -94,16 +94,16 @@ export function CadastreLayer({
   });
 
   useMapEvent('styledata', () => {
-    selectedCadastresRef.current = new Set(
-      filterFeatureCollection(featureCollection, SOURCE_CADASTRE).features.map(
+    selectedParcellesRef.current = new Set(
+      filterFeatureCollection(featureCollection, source).features.map(
         ({ properties }) => properties?.cid
       )
     );
-    if (selectedCadastresRef.current.size > 0) {
+    if (selectedParcellesRef.current.size > 0) {
       map.setFilter('parcelle-highlighted', [
         'in',
-        'id',
-        ...selectedCadastresRef.current
+        cidProperty,
+        ...selectedParcellesRef.current
       ]);
     }
   });
@@ -115,13 +115,13 @@ export function CadastreLayer({
     [highlightFeature]
   );
 
-  useEvent('map:internal:cadastre:highlight', onHighlight);
+  useEvent('map:internal:parcelle:highlight', onHighlight);
 
   return (
     <>
       {controlElement != null
         ? createPortal(
-            <CadastreSwitch enabled={enabled} toggle={toggle} />,
+            <ParcelleSwitch enabled={enabled} toggle={toggle} />,
             controlElement
           )
         : null}
@@ -129,7 +129,7 @@ export function CadastreLayer({
   );
 }
 
-function CadastreSwitch({
+function ParcelleSwitch({
   enabled,
   toggle
 }: {
@@ -140,7 +140,7 @@ function CadastreSwitch({
     <button
       type="button"
       onClick={toggle}
-      title="Sélectionner les parcelles cadastrales"
+      title="Sélectionner les parcelles"
       className={enabled ? 'on' : 'off'}
     >
       <CursorClickIcon className="icon-size" />
@@ -148,15 +148,17 @@ function CadastreSwitch({
   );
 }
 
-function useCadastres(
+function useParcelles(
   featureCollection: FeatureCollection,
   {
+    source,
     enabled,
     hoverFeature,
     createFeatures,
     deleteFeatures
   }: {
     enabled: boolean;
+    source: 'rpg' | 'cadastre';
     hoverFeature: (feature: Feature, flag: boolean) => void;
     createFeatures: CreateFeatures;
     deleteFeatures: DeleteFeatures;
@@ -190,28 +192,33 @@ function useCadastres(
   const onClick = useCallback<EventHandler>(
     async (event) => {
       if (enabled && event.features && event.features.length > 0) {
+        for (const feature of event.features) {
+          if (feature.properties?.ID_PARCEL) {
+            feature.properties.id = feature.properties.ID_PARCEL;
+          }
+        }
         const currentId = event.features[0].properties?.id;
         const feature = findFeature(
-          filterFeatureCollection(featureCollection, SOURCE_CADASTRE),
+          filterFeatureCollection(featureCollection, source),
           currentId,
           'cid'
         );
         if (feature) {
           deleteFeatures({
             features: [feature],
-            source: SOURCE_CADASTRE,
+            source,
             external: true
           });
         } else {
           createFeatures({
             features: event.features,
-            source: SOURCE_CADASTRE,
+            source,
             external: true
           });
         }
       }
     },
-    [enabled, featureCollection, createFeatures, deleteFeatures]
+    [enabled, source, featureCollection, createFeatures, deleteFeatures]
   );
 
   useMapEvent('click', onClick, 'parcelles-fill');

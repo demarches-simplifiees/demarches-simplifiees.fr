@@ -106,7 +106,7 @@ export function useStyle(
   optionalLayers: string[],
   onStyleChange: (style: StyleSpecification) => void
 ) {
-  const [styleId, setStyle] = useState('ortho');
+  const [styleId, setStyle] = useState<'ortho' | 'vector' | 'ign'>('ortho');
   const [layers, setLayers] = useState(() => optionalLayersMap(optionalLayers));
   const setLayerEnabled = (layer: string, enabled: boolean) =>
     setLayers((optionalLayers) => {

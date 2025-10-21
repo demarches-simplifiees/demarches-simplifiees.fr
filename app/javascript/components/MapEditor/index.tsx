@@ -3,9 +3,10 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import type { FeatureCollection } from 'geojson';
 
 import { MapLibre } from '../shared/maplibre/MapLibre';
+import { getParcellesSource } from '../shared/maplibre/utils';
 import { useFeatureCollection } from './hooks';
 import { DrawLayer } from './components/DrawLayer';
-import { CadastreLayer } from './components/CadastreLayer';
+import { ParcelleLayer } from './components/ParcelleLayer';
 import { AddressInput } from './components/AddressInput';
 import { PointInput } from './components/PointInput';
 import { ImportFileInput } from './components/ImportFileInput';
@@ -26,12 +27,14 @@ export default function MapEditor({
   champId: string;
   translations: Record<string, string>;
 }) {
-  const [cadastreEnabled, setCadastreEnabled] = useState(false);
+  const [parcellesEnabled, setParcellesEnabled] = useState(false);
 
   const { featureCollection, error, ...actions } = useFeatureCollection(
     initialFeatureCollection,
     { url }
   );
+
+  const parcellesSource = getParcellesSource(options.layers);
 
   return (
     <>
@@ -53,14 +56,15 @@ export default function MapEditor({
         <DrawLayer
           featureCollection={featureCollection}
           {...actions}
-          enabled={!cadastreEnabled}
+          enabled={!parcellesEnabled}
         />
-        {options.layers.includes('cadastres') ? (
-          <CadastreLayer
+        {parcellesSource ? (
+          <ParcelleLayer
+            source={parcellesSource}
             featureCollection={featureCollection}
             {...actions}
-            toggle={() => setCadastreEnabled((enabled) => !enabled)}
-            enabled={cadastreEnabled}
+            toggle={() => setParcellesEnabled((enabled) => !enabled)}
+            enabled={parcellesEnabled}
           />
         ) : null}
       </MapLibre>
