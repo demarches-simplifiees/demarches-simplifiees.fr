@@ -780,7 +780,7 @@ class Procedure < ApplicationRecord
     !allow_expert_review?
   end
 
-  def attestation_templates_for(kind)
+  def attestation_templates_v2_for(kind)
     public_send("attestation_#{kind}_templates_v2")
   end
 
