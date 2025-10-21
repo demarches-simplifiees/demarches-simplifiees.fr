@@ -23,15 +23,11 @@ module Dsfr
     end
 
     def referentiel_support_statut?
-      type_de_champ.referentiel? && (
-        @champ.pending? ||
-        @champ.external_error? ||
-        @champ.value.present?
-      )
+      type_de_champ.referentiel? && !@champ.idle?
     end
 
     def pjs_statut?
-      @champ.RIB? && @champ.piece_justificative_file.blobs.any?
+      @champ.RIB? && !@champ.idle?
     end
 
     def statut_message
