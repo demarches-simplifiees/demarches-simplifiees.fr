@@ -31,7 +31,7 @@ class FilteredColumn
   end
 
   def empty_filter?
-    filter_operator == 'match' && filter_value.empty?
+    filter_operator.in?(["match", "before", "after"]) && !filter_is_active?
   end
 
   def id

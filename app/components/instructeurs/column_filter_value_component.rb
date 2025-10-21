@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
-  attr_reader :filtered_column, :form, :instructeur_procedure, :edit_mode
+  attr_reader :filtered_column, :form, :instructeur_procedure
 
-  def initialize(filtered_column:, form:, instructeur_procedure:, edit_mode: false)
+  def initialize(filtered_column:, form:, instructeur_procedure:)
     @filtered_column = filtered_column
     @form = form
     @instructeur_procedure = instructeur_procedure
-    @edit_mode = edit_mode
   end
 
   def id
     # unique id to avoid turbo-frame reload
-    edit_mode ? "#{filtered_column.id.parameterize}_column_filter_value_component" : "column_filter_value_component"
+    "#{filtered_column.id.parameterize}_column_filter_value_component"
   end
 
   def operator_hidden_field
@@ -26,7 +25,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def label
-    edit_mode ? filtered_column&.label : t('.value')
+    filtered_column&.label
   end
 
   def value

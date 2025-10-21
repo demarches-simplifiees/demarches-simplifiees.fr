@@ -9,22 +9,20 @@
   - elsif is_date?
     .flex.flex-gap-2.flex-1
       .flex.column.justify-between
-        = form.label "filter[filter][operator]", edit_mode ? filtered_column&.label : t('.operator'), class: 'fr-label'
+        = form.label "filter[filter][operator]", filtered_column&.label, class: 'fr-label'
         = form.select "filter[filter][operator]",
           options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } }
       - if is_operator_with_value?
         .flex.column.justify-between
-          = form.label input_id, edit_mode ? t(".operators.#{operator}") : t('.value'), class: 'fr-label'
+          = form.label input_id, t(".operators.#{operator}"), class: 'fr-label'
           .flex
             = form.text_field "filter[filter][value][]",
               id: input_id,
               class: 'fr-input',
               type: 'date',
               value:,
-              data: { no_autosubmit: true },
-              required: true
-            - if edit_mode
-              = form.button t('.update'), class: 'fr-btn fr-icon-search-line'
+              data: { no_autosubmit: true }
+            = form.button t('.update'), class: 'fr-btn fr-icon-search-line'
 
   - elsif selectable?
     = form.label input_id, label, class: 'fr-label'
@@ -41,7 +39,5 @@
         value:,
         disabled: column.nil?,
         maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
-        data: { no_autosubmit: true },
-        required: !edit_mode
-      - if edit_mode
-        = form.button t('.update'), class: 'fr-btn fr-icon-search-line'
+        data: { no_autosubmit: true }
+      = form.button t('.update'), class: 'fr-btn fr-icon-search-line'
