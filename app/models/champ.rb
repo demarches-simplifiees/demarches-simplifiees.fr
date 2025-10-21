@@ -303,6 +303,7 @@ class Champ < ApplicationRecord
     end
 
     dossier.update_columns(attributes)
+    dossier.update_expired_at_from(date_reference: updated_at) if dossier.brouillon?
   end
 
   class NotImplemented < ::StandardError

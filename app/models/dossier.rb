@@ -677,6 +677,10 @@ class Dossier < ApplicationRecord
     after_notification_expiration_date.presence || expiration_date_with_extension
   end
 
+  def update_expired_at_from(date_reference:)
+    date_reference + duree_totale_conservation_in_months.months
+  end
+
   def duration_after_notice
     MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
   end
