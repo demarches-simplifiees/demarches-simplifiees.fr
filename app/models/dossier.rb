@@ -30,7 +30,6 @@ class Dossier < ApplicationRecord
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
-  INTERVAL_EXPIRATION = "#{Expired::REMAINING_WEEKS_BEFORE_EXPIRATION} weeks"
   REMAINING_WEEKS_BEFORE_DELETION = 2
 
   has_secure_token :prefill_token
@@ -334,17 +333,17 @@ class Dossier < ApplicationRecord
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
-      .where("brouillon_close_to_expiration_notice_sent_at + INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
+      .where(brouillon_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :en_construction_expired, -> do
     state_en_construction
       .visible_by_user_or_administration
-      .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
+      .where(en_construction_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :termine_expired, -> do
     state_termine
       .visible_by_user_or_administration
-      .where("termine_close_to_expiration_notice_sent_at + INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
+      .where(termine_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
 
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
@@ -622,7 +621,19 @@ class Dossier < ApplicationRecord
 
   def has_expired?
     return false if en_instruction?
-    expired_at < Time.zone.now
+
+    notice_sent_at =
+      if brouillon?
+        brouillon_close_to_expiration_notice_sent_at
+      elsif en_construction?
+        en_construction_close_to_expiration_notice_sent_at
+      elsif termine?
+        termine_close_to_expiration_notice_sent_at
+      end
+
+    return false if notice_sent_at.nil?
+
+    notice_sent_at < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
   end
 
   def expiration_date_reference
