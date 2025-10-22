@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "the user has got a prefilled dossier, owned by themselves" do
+  include EtablissementHelper
+
   scenario "the user has got a prefilled dossier, owned by themselves" do
     expect(dossier.user).to eq(user)
 
@@ -18,7 +20,7 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
     expect(page).to have_field(type_de_champ_phone.libelle, with: phone_value)
     expect(page).to have_css('label', text: type_de_champ_phone.libelle)
-    expect(page).to have_field(type_de_champ_siret.libelle, with: siret_value)
+    expect(page).to have_field(type_de_champ_siret.libelle, with: pretty_siret(siret_value))
     expect(page).to have_css('legend', text: type_de_champ_repetition.libelle)
     expect(page).to have_field(text_repetition_libelle, with: text_repetition_value)
     expect(page).to have_field(integer_repetition_libelle, with: integer_repetition_value)
@@ -31,7 +33,6 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_field(type_de_champ_dossier_link.libelle, with: dossier_link_value)
     expect(page).to have_field(type_de_champ_commune.libelle, with: commune_libelle)
     expect(page).to have_content(address_value.last)
-
-    expect(page).to have_text("Coiff Land, CoiffureLand")
+    expect(page).to have_text("Recherche en cours pour le SIRET #{pretty_siret(siret_value)}")
   end
 end
