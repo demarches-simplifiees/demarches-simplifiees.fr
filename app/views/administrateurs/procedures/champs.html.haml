@@ -39,6 +39,12 @@
                     data: { "fr-opened" => "false", "turbo-frame" => "api-champ-columns", action: "lazy-modal#load" }, src: api_champ_columns_admin_procedure_path(id: @procedure.id, stub_type_champ: 'siret'),
                     "aria-controls" => "api-champ-columns-modal")
 
+      - if @procedure.revised?
+        = render Dsfr::AlertComponent.new(title: "Possibilités de modification limitées", state: :info, extra_class_names: 'fr-my-2w') do |c|
+          - c.with_body do
+            %p
+              Votre démarche est publiée et des dossiers ont déjà été déposés. Afin d'éviter la perte de données sur les dossiers déjà déposés, certaines transformations de champs uniquement sont autorisées. Les types de champs non autorisés sont désactivés dans la liste "TYPE DE CHAMP" d'un champ existant. Si vous souhaitez modifier un champ existant, nous vous recommandons de supprimer ce champ et d'ajouter un nouveau champ avec le type souhaité.
+
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: false)
 
       %dialog#api-champ-columns-modal.fr-modal{ "aria-labelledby" => 'fr-modal-api-champ-columns-h1', role: "dialog" }
