@@ -111,20 +111,20 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
   describe 'ACCEPTED_TYPES' do
     it 'contains expected conversions' do
       expect(described_class::ACCEPTED_TYPES).to include(
-        "checkbox" => ["checkbox", "text"],
-        "civilite" => ["civilite", "textarea"],
-        "date" => ["date", "text"],
-        "datetime" => ["datetime", "text"],
-        "decimal_number" => ["decimal_number", "text"],
-        "drop_down_list" => ["drop_down_list", "text"],
-        "email" => ["email", "textarea"],
-        "formatted" => ["formatted", "text"],
-        "integer_number" => ["integer_number", "text"],
-        "multiple_drop_down_list" => ["multiple_drop_down_list", "text"],
-        "phone" => ["phone", "textarea"],
-        "text" => ["text", "formatted"],
-        "textarea" => ["textarea", "formatted"],
-        "yes_no" => ["yes_no", "text"]
+        "checkbox" => ["yes_no", "text", "textarea", "formatted"],
+        "civilite" => ["text", "textarea", "formatted"],
+        "date" => ["datetime", "text", "textarea", "formatted"],
+        "datetime" => ["date", "text", "textarea", "formatted"],
+        "decimal_number" => ["integer_number", "text", "textarea", "formatted"],
+        "drop_down_list" => ["multiple_drop_down_list", "text", "textarea", "formatted"],
+        "email" => ["text", "textarea", "formatted"],
+        "formatted" => ["textarea", "text", "email", "phone"],
+        "integer_number" => ["decimal_number", "text", "textarea", "formatted"],
+        "multiple_drop_down_list" => ["drop_down_list", "text", "textarea", "formatted"],
+        "phone" => ["text", "textarea", "formatted"],
+        "text" => ["textarea", "formatted", "email", "phone", "decimal_number", "integer_number"],
+        "textarea" => ["text", "formatted"],
+        "yes_no" => ["checkbox", "text", "textarea", "formatted"]
       )
     end
   end
