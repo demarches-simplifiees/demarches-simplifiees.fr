@@ -326,7 +326,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def check_mandatory
-    if non_fillable? || private?
+    if non_fillable?
       self.mandatory = false
     else
       true
