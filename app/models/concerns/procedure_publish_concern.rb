@@ -4,9 +4,13 @@ module ProcedurePublishConcern
   extend ActiveSupport::Concern
 
   def publish_or_reopen!(administrateur, path)
-    Procedure.transaction do
+    new_revision = false
+    transaction do
       if brouillon?
         reset!
+      elsif draft_changed?
+        new_revision = true
+        publish_new_revision(administrateur)
       end
 
       other_procedure = other_procedure_with_path(path)
@@ -18,6 +22,12 @@ module ProcedurePublishConcern
       else
         publish!(administrateur, nil)
       end
+    end
+
+    if new_revision
+      dossiers
+        .state_not_termine
+        .find_each(&:rebase_later)
     end
   end
 
