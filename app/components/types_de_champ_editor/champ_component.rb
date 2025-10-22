@@ -58,7 +58,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def types_of_type_de_champ
     cat_scope = "activerecord.attributes.type_de_champ.categorie"
     tdc_scope = "activerecord.attributes.type_de_champ.type_champs"
-    accepted_type_champs
+    TypeDeChamp.type_champs.keys
       .filter(&method(:filter_type_champ))
       .filter(&method(:filter_featured_type_champ))
       .filter(&method(:filter_block_type_champ))
@@ -68,7 +68,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       .to_h do |cat, tdc|
         [
           t(cat, scope: cat_scope),
-          tdc.map { [t(_1, scope: tdc_scope), _1] }
+          tdc.map { [t(_1, scope: tdc_scope), _1, { disabled: !accepted_type_champs.include?(_1) }] }
         ]
       end
   end
@@ -76,14 +76,19 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   ACCEPTED_TYPES = Columns::ChampColumn::CAST.keys.group_by { |(from)| from.to_s }.transform_values { _1.map(&:second).map(&:to_s) }
 
   def accepted_type_champs
-    published_type_champ = procedure.published_revision&.types_de_champ&.find { _1.stable_id == type_de_champ.stable_id }&.type_champ
-
-    if published_type_champ.present?
-
+    @accepted_type_champs ||= if published_type_champ.present?
       ([published_type_champ] + ACCEPTED_TYPES.fetch(published_type_champ, [])).uniq
     else
       TypeDeChamp.type_champs.keys
     end
+  end
+
+  def published_type_champ
+    @published_type_champ ||= procedure.published_revision&.types_de_champ&.find { _1.stable_id == type_de_champ.stable_id }&.type_champ
+  end
+
+  def disabled_type_de_champ_select?
+    coordinate.used_by_routing_rules? || coordinate.used_by_ineligibilite_rules? || accepted_type_champs.size == 1
   end
 
   def piece_justificative_template_options
