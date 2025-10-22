@@ -5,48 +5,29 @@ module Instructeurs
     include InstructeurProcedureConcern
     include ProConnectSessionConcern
 
-    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure]
+    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions, :select_procedure, :synthese]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
     after_action :mark_latest_revision_as_seen, only: [:history]
 
     ITEMS_PER_PAGE = 100
 
-    def index
-      all_procedures = current_instructeur
+    def synthese
+      @all_procedures = current_instructeur
         .procedures
         .kept
+      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
-      all_procedures_for_listing = all_procedures
-        .with_attached_logo
+      fetch_counters(@all_procedures, groupe_ids)
+    end
 
-      dossiers = current_instructeur.dossiers
-        .joins(groupe_instructeur: :procedure)
-        .where(procedures: { hidden_at: nil })
-
-      # .uniq is much more faster than a distinct on a joint column
-      procedures_dossiers_en_cours = dossiers.joins(:revision).en_cours.pluck(ProcedureRevision.arel_table[:procedure_id]).uniq
-
-      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
-      publiees_or_closes_with_dossiers_en_cours = all_procedures_for_listing.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
-      ensure_instructeur_procedures_for(publiees_or_closes_with_dossiers_en_cours)
-      @all_procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur)
-      @procedures_en_cours = @all_procedures_en_cours.page(params[:page]).per(ITEMS_PER_PAGE)
-      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
-      @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_draft = all_procedures_for_listing.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_en_cours_count = publiees_or_closes_with_dossiers_en_cours.count
-      @procedures_draft_count = all_procedures_for_listing.brouillons.count
-      @procedures_closes_count = closes_with_no_dossier_en_cours.count
-
-      # use DossierCountCache service to compute counts (centralized, cacheable)
-      cache_service = DossierCountCache.new(procedure_ids: all_procedures.pluck(:id), instructeur: current_instructeur)
+    def fetch_counters(procedures, groupe_ids)
+      cache_service = DossierCountCache.new(procedure_ids: procedures.pluck(:id), instructeur: current_instructeur)
       counts = cache_service.count_by_procedure
       @dossiers_count_per_procedure = counts.transform_values { it['tous'] || 0 }
       @dossiers_a_suivre_count_per_procedure = counts.transform_values { it['a-suivre'] || 0 }
       @dossiers_termines_count_per_procedure = counts.transform_values { it['traites'] || 0 }
       @dossiers_expirant_count_per_procedure = counts.transform_values { it['expirant'] || 0 }
 
-      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
       @followed_dossiers_count_per_procedure = current_instructeur
         .followed_dossiers
         .joins(:groupe_instructeur)
@@ -64,6 +45,40 @@ module Instructeurs
         'tous' => @dossiers_count_per_procedure.sum { |_, v| v },
         'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
       }
+    end
+
+    def index
+      all_procedures = current_instructeur
+        .procedures
+        .kept
+
+      all_procedures_for_listing = all_procedures
+        .with_attached_logo
+
+      dossiers = current_instructeur.dossiers
+        .joins(groupe_instructeur: :procedure)
+        .where(procedures: { hidden_at: nil })
+
+      # .uniq is much more faster than a distinct on a joint column
+      procedures_dossiers_en_cours = dossiers.joins(:revision).en_cours.pluck(ProcedureRevision.arel_table[:procedure_id]).uniq
+
+      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc).includes(:procedure_paths)
+      publiees_or_closes_with_dossiers_en_cours = all_procedures_for_listing.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
+      ensure_instructeur_procedures_for(publiees_or_closes_with_dossiers_en_cours)
+
+      @all_procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur)
+      @procedures_en_cours = @all_procedures_en_cours.page(params[:page]).per(ITEMS_PER_PAGE)
+      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
+      @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_draft = all_procedures_for_listing.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+
+      @procedures_en_cours_count = publiees_or_closes_with_dossiers_en_cours.count
+      @procedures_draft_count = all_procedures_for_listing.brouillons.count
+      @procedures_closes_count = closes_with_no_dossier_en_cours.count
+
+      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
+
+      fetch_counters(all_procedures, groupe_ids)
 
       @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
       @notifications_counts_per_procedure = DossierNotification.notifications_counts_for_instructeur_procedures(groupe_ids, current_instructeur)
