@@ -386,7 +386,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.8, >= 1.8.1)
       terminal-table (>= 1.5.1)
-    i18n_data (0.13.0)
+    i18n_data (1.1.0)
+      simple_po_parser (~> 1.1)
     iban-tools (1.2.1)
     ice_nine (0.11.2)
     image_processing (1.14.0)
@@ -840,6 +841,7 @@ GEM
       fugit (~> 1.8)
       globalid (>= 1.0.1)
       sidekiq (>= 6)
+    simple_po_parser (1.1.6)
     simple_xlsx_reader (5.1.0)
       nokogiri
       rubyzip

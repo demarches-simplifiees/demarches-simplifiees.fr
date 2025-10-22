@@ -5,7 +5,7 @@ describe APIGeoService do
     it 'countrie_code', :slow do
       countries = JSON.parse(Rails.root.join('spec/fixtures/files/pays_dump.json').read)
       countries_without_code = countries.map { APIGeoService.country_code(_1) }.count(&:nil?)
-      expect(countries_without_code).to eq(67)
+      expect(countries_without_code).to eq(78)
     end
 
     describe 'country_name' do

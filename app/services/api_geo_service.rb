@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class APIGeoService
+  # Excluded from country list (French overseas departments that are not sovereign countries)
+  EXCLUDED_COUNTRY_CODES = %w[GP MQ GF RE YT].freeze
+
   class << self
     def degraded_mode?
       ENV.enabled?('API_GEO_DEGRADED_MODE')
@@ -9,6 +12,7 @@ class APIGeoService
     def countries(locale: I18n.locale)
       I18nData.countries(locale)
         .merge(get_localized_additional_countries(locale))
+        .reject { |code, _name| code.in?(EXCLUDED_COUNTRY_CODES) }
         .map { |(code, name)| { name:, code: } }
         .sort_by { I18n.transliterate(_1[:name].tr('î', 'Î')) }
     end
