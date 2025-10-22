@@ -23,15 +23,11 @@ module Dsfr
     end
 
     def referentiel_support_statut?
-      type_de_champ.referentiel? && (
-        @champ.waiting_for_external_data? ||
-        @champ.external_error_present? ||
-        @champ.value.present?
-      )
+      type_de_champ.referentiel? && !@champ.idle?
     end
 
     def pjs_statut?
-      @champ.RIB? && @champ.piece_justificative_file.blobs.any?
+      @champ.RIB? && !@champ.idle?
     end
 
     def statut_message
@@ -40,9 +36,9 @@ module Dsfr
       when TypeDeChamp.type_champs[:rna]
         { state: :info, text: t(".rna.data_fetched", title: @champ.title, address: @champ.full_address) }
       when TypeDeChamp.type_champs[:referentiel]
-        if @champ.waiting_for_external_data?
+        if @champ.pending?
           { state: :info, text: t(".referentiel.fetching") }
-        elsif @champ.external_error_present?
+        elsif @champ.external_error?
           { state: :info, text: t(".referentiel.error", value: @champ.external_id) }
         elsif @champ.value.present?
           { state: :valid, text: t(".referentiel.success", value: @champ.value) }
@@ -52,9 +48,9 @@ module Dsfr
         iban = value_json&.dig('rib', 'iban')
         bank_name = value_json&.dig('rib', 'bank_name')
 
-        if @champ.waiting_for_external_data?
+        if @champ.pending?
           { state: :info, text: t('.pj.info') }
-        elsif @champ.external_error_present?
+        elsif @champ.external_error?
           { state: :warning, text: t('.pj.error') }
         elsif iban.nil?
           { state: :warning, text: t('.pj.warning') }

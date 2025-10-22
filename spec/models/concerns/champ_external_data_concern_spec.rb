@@ -8,29 +8,6 @@ RSpec.describe ChampExternalDataConcern do
     let(:dossier) { create(:dossier, procedure:) }
     let(:champ) { dossier.champs.first }
 
-    describe "waiting_for_external_data?" do
-      context "pending" do
-        before { champ.update(external_id: 'external_id') }
-        it { expect(champ.waiting_for_external_data?).to be_truthy }
-      end
-
-      context "done" do
-        before { champ.update_columns(external_id: 'external_id', data: 'some data') }
-        it { expect(champ.waiting_for_external_data?).to be_falsey }
-      end
-    end
-
-    describe "external_data_fetched?" do
-      context "pending" do
-        it { expect(champ.external_data_fetched?).to be_falsey }
-      end
-
-      context "done" do
-        before { champ.update_columns(external_id: 'external_id', data: 'some data') }
-        it { expect(champ.external_data_fetched?).to be_truthy }
-      end
-    end
-
     describe "fetch_external_data" do
       context "cleanup_if_empty" do
         before { champ.update_columns(data: 'some data') }
@@ -149,17 +126,24 @@ RSpec.describe ChampExternalDataConcern do
     end
 
     describe 'reset_external_data' do
-      before do
-        allow(champ).to receive(:ready_for_external_call?).and_return(true)
-        champ.fetch_later!
+      context 'from idle' do
+        before { champ.reset_external_data! }
 
-        allow(champ).to receive(:after_reset_external_data)
-        champ.reset_external_data!
+        it { expect(champ).to be_idle }
       end
+      context 'from waiting_for_job' do
+        before do
+          allow(champ).to receive(:ready_for_external_call?).and_return(true)
+          champ.fetch_later!
 
-      it do
-        expect(champ).to be_idle
-        expect(champ).to have_received(:after_reset_external_data)
+          allow(champ).to receive(:after_reset_external_data)
+          champ.reset_external_data!
+        end
+
+        it do
+          expect(champ).to be_idle
+          expect(champ).to have_received(:after_reset_external_data)
+        end
       end
     end
   end

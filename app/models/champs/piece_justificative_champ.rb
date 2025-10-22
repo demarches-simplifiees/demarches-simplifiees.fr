@@ -21,19 +21,15 @@ class Champs::PieceJustificativeChamp < Champ
     # We don’t know how to search inside documents yet
   end
 
-  def fetch_external_data_later
-    nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
-  end
-
-  def external_error_present?
-    fetch_external_data_exceptions.present? && piece_justificative_file.attached?
-  end
-
   def uses_external_data?
     RIB?
   end
 
   private
+
+  def fetch_external_data_later
+    nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
+  end
 
   def should_ui_auto_refresh?
     RIB?

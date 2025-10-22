@@ -28,11 +28,14 @@ module Maintenance
         .filter { it.type == "Champs::PieceJustificativeChamp" && it.RIB? == true }
 
       pjs.filter(&:idle?).each do |pj|
-        if pj.external_data_fetched?
-          pj.external_data_fetched!
-        elsif pj.external_error_present?
-          pj.external_data_error!
-        end
+        # ! the old method external_data_fetched? is now removed
+        # run the task before applying this version
+        #
+        # if pj.external_data_fetched?
+        #   pj.external_data_fetched!
+        # elsif pj.external_error_present?
+        #   pj.external_data_error!
+        # end
       end
     end
 

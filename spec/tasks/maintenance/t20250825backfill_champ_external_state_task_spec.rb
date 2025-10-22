@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Maintenance
   RSpec.describe T20250825backfillChampExternalStateTask do
-      describe "#process" do
+      xdescribe "#process" do
         subject(:process) { described_class.process(champ) }
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :referentiel }]) }
         let(:dossier) { create(:dossier, procedure:) }

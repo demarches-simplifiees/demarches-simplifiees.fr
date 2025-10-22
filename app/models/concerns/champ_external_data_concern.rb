@@ -39,58 +39,28 @@ module ChampExternalDataConcern
         transitions from: :idle, to: :waiting_for_job, guard: :ready_for_external_call?
       end
 
-      # TODO: remove idle after first MEP
       event :fetch, after_commit: :fetch_and_handle_result do
-        transitions from: [:idle, :waiting_for_job], to: :fetching
+        transitions from: [:waiting_for_job], to: :fetching
       end
 
-      # TODO: remove idle after first MEP
       event :external_data_fetched do
-        transitions from: [:idle, :fetching], to: :fetched
+        transitions from: [:fetching], to: :fetched
       end
 
-      # TODO: remove idle after first MEP
       event :external_data_error do
-        transitions from: [:idle, :waiting_for_job, :fetching], to: :external_error
+        transitions from: [:waiting_for_job, :fetching], to: :external_error
       end
 
-      # TODO: remove idle after first MEP
       event :retry do
-        transitions from: [:idle, :fetching], to: :waiting_for_job
+        transitions from: [:fetching], to: :waiting_for_job
       end
 
-      # TODO: remove idle after first MEP
       event :reset_external_data, after: :after_reset_external_data do
-        transitions from: [:waiting_for_job, :fetching, :fetched, :external_error], to: :idle
+        transitions from: [:idle, :waiting_for_job, :fetching, :fetched, :external_error], to: :idle
       end
     end
 
     def pending? = waiting_for_job? || fetching?
-
-    def fetch_external_data_later
-      if uses_external_data? && external_id.present? && data.nil?
-        update_column(:fetch_external_data_exceptions, [])
-        ChampFetchExternalDataJob.perform_later(self, external_id)
-      end
-    end
-
-    def waiting_for_external_data?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (!external_data_present? && !external_error_present?)
-    end
-
-    def external_data_fetched?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (external_data_present? || external_error_present?)
-    end
-
-    def external_error_present?
-      fetch_external_data_exceptions.present? && self.external_id.present?
-    end
 
     def save_external_exception(exception, code)
       exceptions = fetch_external_data_exceptions || []
@@ -103,6 +73,13 @@ module ChampExternalDataConcern
     end
 
     private
+
+    def fetch_external_data_later
+      if uses_external_data? && external_id.present? && data.nil?
+        update_column(:fetch_external_data_exceptions, [])
+        ChampFetchExternalDataJob.perform_later(self, external_id)
+      end
+    end
 
     # it should only be called after fetch! event callback
     def fetch_and_handle_result
