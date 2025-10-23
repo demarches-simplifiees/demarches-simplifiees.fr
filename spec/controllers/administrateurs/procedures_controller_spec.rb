@@ -1478,6 +1478,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:procedure3) { create(:procedure, :published, :new_administrateur, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
     let(:robots_indexable) { "0" }
+    let(:tdc_attributes) { { type_champ: :number, libelle: 'libelle 1' } }
 
     subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, procedure: { path:, lien_site_web:, robots_indexable: } } }
 
@@ -1530,18 +1531,20 @@ describe Administrateurs::ProceduresController, type: :controller do
           procedure.update!(closing_reason: 'internal_procedure', replaced_by_procedure_id: procedure2.id)
           procedure.close!
           procedure.update!(closing_notification_brouillon: true, closing_notification_en_cours: true)
+          procedure.draft_revision.add_type_de_champ(tdc_attributes)
           perform_request
           procedure.reload
           procedure2.reload
         end
 
-        it 'publish the given procedure and reset closing params' do
+        it 'publish the given procedure, reset closing params and publish revision if procedure changed' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.closing_reason).to be_nil
           expect(procedure.replaced_by_procedure_id).to be_nil
           expect(procedure.closing_notification_brouillon).to be_falsy
           expect(procedure.closing_notification_en_cours).to be_falsy
+          expect(procedure.published_revision.types_de_champ_public.first.libelle).to eq('libelle 1')
         end
       end
 
