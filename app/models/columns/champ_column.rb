@@ -215,7 +215,7 @@ class Columns::ChampColumn < Column
     # multiple_drop_down_list
     [:multiple_drop_down_list, :drop_down_list] => -> (v) { v.first },
     [:multiple_drop_down_list, :text] => -> (v) { v.join(', ') },
-    [:multiple_drop_down_list, :textarea] => -> (v) { v.join(', ') },
+    [:multiple_drop_down_list, :textarea] => -> (v) { v.join("\n") },
     [:multiple_drop_down_list, :formatted] => -> (v) { v.join(', ') }
   }
 
