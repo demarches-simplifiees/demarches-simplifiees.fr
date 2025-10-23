@@ -580,7 +580,9 @@ module Instructeurs
       if exception.originating_state == target_state
         "Le dossier est déjà #{dossier_display_state(target_state, lower: true)}."
       elsif exception.failures.include?(:can_terminer?) && dossier.any_etablissement_as_degraded_mode?
-        "Les données relatives au SIRET de ce dossier n’ont pas pu encore être vérifiées : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."
+        "Les données relatives au SIRET de ce dossier n’ont pas pu encore être vérifiées : il n’est pas possible de le passer en #{dossier_display_state(target_state, lower: true)}."
+      elsif exception.failures.include?(:can_terminer?) && dossier.any_annotations_privees_with_errors?
+        "Les annotations privées ne sont pas remplis correctement : il n’est pas possible de le passer en #{dossier_display_state(target_state, lower: true)}."
       else
         "Le dossier est en ce moment #{dossier_display_state(exception.originating_state, lower: true)} : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."
       end
