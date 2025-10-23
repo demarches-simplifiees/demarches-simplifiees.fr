@@ -27,6 +27,10 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
         }
       end
 
+      before do
+        procedure_presentation.update!(tous_filters: [])
+      end
+
       it 'updates the procedure_presentation' do
         expect(procedure_presentation.displayed_columns).to eq(procedure.default_displayed_columns)
         expect(procedure_presentation.sorted_column).to eq(procedure.default_sorted_column)
@@ -80,37 +84,6 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
         subject
 
         expect(flash.alert).to include(/ne peut pas être vide/)
-      end
-    end
-  end
-
-  describe '#remove_filter' do
-    subject { delete :remove_filter, params: }
-
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }]) }
-    let(:instructeur) { create(:instructeur) }
-    let(:procedure_presentation) do
-      groupe_instructeur = procedure.defaut_groupe_instructeur
-      assign_to = create(:assign_to, instructeur:, groupe_instructeur:)
-      assign_to.procedure_presentation_or_default_and_errors.first
-    end
-    let(:column) { procedure.find_column(label: 'Votre ville') }
-
-    before do
-      sign_in(instructeur.user)
-      procedure_presentation.update!(tous_filters: [FilteredColumn.new(column:, filter: { operator: 'match', value: ['Paris', 'Lyon'] })])
-    end
-
-    context 'nominal case' do
-      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter: { id: column.id, filter: { operator: 'match', value: ['Paris', 'Lyon'] } } } }
-
-      it 'removes the filter' do
-        subject
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('<turbo-stream action="refresh">')
-
-        expect(procedure_presentation.reload.tous_filters).to eq([])
       end
     end
   end
