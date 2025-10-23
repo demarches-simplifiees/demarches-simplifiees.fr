@@ -43,7 +43,13 @@ describe APIEntrepriseToken, type: :model do
     context "with an invalid token" do
       let(:token) { "NOT-A-VALID-TOKEN" }
 
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      it "log an error and return true" do
+        allow(Rails.logger).to receive(:error)
+        result = subject
+
+        expect(Rails.logger).to have_received(:error).with(/Not enough or too many segments/)
+        expect(result).to eq(true)
+      end
     end
 
     context "with a valid not expiring token" do
@@ -89,7 +95,13 @@ describe APIEntrepriseToken, type: :model do
     context "with an invalid token" do
       let(:token) { "NOT-A-VALID-TOKEN" }
 
-      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+      it "log an error and return nil" do
+        allow(Rails.logger).to receive(:error)
+        result = subject
+
+        expect(Rails.logger).to have_received(:error).with(/Not enough or too many segments/)
+        expect(result).to be_nil
+      end
     end
 
     context "with a valid token" do
