@@ -7,7 +7,7 @@ module Maintenance
 
     # Uncomment only if this task MUST run imperatively on its first deployment.
     # If possible, leave commented for manual execution later.
-    # run_on_first_deploy
+    run_on_first_deploy
 
     def collection
       AttestationTemplate.where(kind: nil).in_batches
