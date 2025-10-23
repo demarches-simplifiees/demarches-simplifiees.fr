@@ -21,7 +21,7 @@ module DossierStateConcern
     self.depose_at = self.en_construction_at = self.traitements
       .passer_en_construction
       .processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
     self.submitted_revision_id = revision_id
 
     save!
@@ -57,7 +57,7 @@ module DossierStateConcern
     self.en_instruction_at = self.traitements
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
-    self.expired_at = nil
+    self.update_expired_at
 
     save!
 
@@ -83,7 +83,7 @@ module DossierStateConcern
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
     self.en_instruction_at = traitements.passer_en_instruction.processed_at
-    self.expired_at = nil
+    self.update_expired_at
 
     if procedure.declarative_en_instruction?
       self.declarative_triggered_at = en_instruction_at
@@ -116,7 +116,7 @@ module DossierStateConcern
     self.en_construction_at = self.traitements
       .passer_en_construction(instructeur: instructeur)
       .processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
 
     save!
 
@@ -134,7 +134,7 @@ module DossierStateConcern
     self.processed_at = self.traitements
       .accepter(motivation: motivation, instructeur: instructeur)
       .processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
 
     save!
 
@@ -172,7 +172,7 @@ module DossierStateConcern
 
   def after_accepter_automatiquement
     self.processed_at = traitements.accepter_automatiquement.processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
 
     if procedure.declarative_accepte?
       self.en_instruction_at = self.processed_at
@@ -214,7 +214,7 @@ module DossierStateConcern
     self.processed_at = self.traitements
       .refuser(motivation: motivation, instructeur: instructeur)
       .processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
 
     save!
 
@@ -258,7 +258,7 @@ module DossierStateConcern
 
     self.processed_at = traitements.refuser_automatiquement(motivation:).processed_at
     self.sva_svr_decision_triggered_at = self.processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
 
     save!
 
@@ -291,7 +291,7 @@ module DossierStateConcern
     self.processed_at = self.traitements
       .classer_sans_suite(motivation: motivation, instructeur: instructeur)
       .processed_at
-    self.expired_at = expiration_date
+    self.update_expired_at
 
     save!
 
@@ -335,7 +335,7 @@ module DossierStateConcern
     self.en_instruction_at = self.traitements
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
-    self.expired_at = nil
+    self.update_expired_at
     attestation&.destroy
 
     self.sva_svr_decision_on = nil

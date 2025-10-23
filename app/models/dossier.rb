@@ -669,8 +669,12 @@ class Dossier < ApplicationRecord
   end
 
   def expiration_date
+    return nil if en_instruction?
+
     after_notification_expiration_date.presence || expiration_date_with_extension
   end
+
+  def update_expired_at = update_column(:expired_at, expiration_date)
 
   def expiration_can_be_extended?
     brouillon? || en_construction?
@@ -1081,8 +1085,6 @@ class Dossier < ApplicationRecord
     end
     update_columns(attributes)
   end
-
-  def update_expired_at = update_column(:expired_at, expiration_date)
 
   def revision_changed_since_submitted?
     submitted_revision_id.present? && submitted_revision_id != revision_id
