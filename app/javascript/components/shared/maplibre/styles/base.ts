@@ -6,7 +6,8 @@ import type {
 } from 'maplibre-gl';
 import invariant from 'tiny-invariant';
 
-import cadastreLayers from './layers/cadastre.json';
+import { layers as cadastreLayers } from './layers/cadastre.ts';
+import { layers as rpgLayers } from './layers/rpg.ts';
 
 function ignServiceURL(layer: string, style: string, format = 'image/png') {
   const url = `https://data.geopf.fr/wmts`;
@@ -154,12 +155,17 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
     layers: [
       ['Cadastre', 'CADASTRE', 'DECALAGE DE LA REPRESENTATION CADASTRALE']
     ]
+  },
+  {
+    label: 'RPG',
+    id: 'rpg',
+    layers: [['RPG', 'RPG', 'DECALAGE DE LA REPRESENTATION CADASTRALE']]
   }
 ];
 
 function buildSources() {
   return Object.fromEntries(
-    OPTIONAL_LAYERS.filter(({ id }) => id !== 'cadastres')
+    OPTIONAL_LAYERS.filter(({ id }) => id != 'cadastres' && id != 'rpg')
       .flatMap(({ layers }) => layers)
       .map(([, code, style]) => [
         getLayerCode(code),
@@ -202,11 +208,14 @@ export function buildOptionalLayers(
     .flatMap(({ layers, id }) =>
       layers.map(([, code]) => [code, opacity[id] / 100] as const)
     )
-    .flatMap(([code, opacity]) =>
-      code === 'CADASTRE'
-        ? (cadastreLayers as LayerSpecification[])
-        : [rasterLayer(getLayerCode(code), opacity)]
-    );
+    .flatMap(([code, opacity]) => {
+      if (code == 'CADASTRE') {
+        return cadastreLayers;
+      } else if (code == 'RPG') {
+        return rpgLayers;
+      }
+      return [rasterLayer(getLayerCode(code), opacity)];
+    });
 }
 
 export const NBS = ' ' as const;
@@ -265,6 +274,10 @@ export const style: StyleSpecification = {
       [ignServiceURL('GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2', 'normal')],
       'IGN-F/Géoportail'
     ),
+    rpg: {
+      type: 'vector',
+      url: 'pmtiles://https://object.data.gouv.fr/pmtiles/rpg_2023.pmtiles'
+    },
     ...buildSources()
   },
   sprite: 'https://openmaptiles.github.io/osm-bright-gl-style/sprite',

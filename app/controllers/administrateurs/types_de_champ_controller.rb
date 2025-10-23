@@ -231,6 +231,7 @@ module Administrateurs
         :nature,
         editable_options: [
           :cadastres,
+          :rpg,
           :unesco,
           :arretes_protection,
           :conservatoire_littoral,

@@ -11,7 +11,8 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
     :natura_2000,
     :zones_humides,
     :znieff,
-    :cadastres
+    :cadastres,
+    :rpg
   ]
 
   def estimated_fill_duration(revision)

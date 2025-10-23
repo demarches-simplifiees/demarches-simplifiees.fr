@@ -15,3 +15,10 @@
     %ul
       - champ.cadastres.each do |geo_area|
         = render Dossiers::GeoAreaComponent.new(geo_area:, editing:)
+
+- if champ.rpgs.present?
+  .fr-label Parcelles agricoles
+  .areas
+    %ul
+      - champ.rpgs.each do |geo_area|
+        = render Dossiers::GeoAreaComponent.new(geo_area:, editing:)

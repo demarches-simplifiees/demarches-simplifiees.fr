@@ -5,16 +5,19 @@ import { useMapLibre } from '../../shared/maplibre/MapLibre';
 import { useMapEvent } from '../../shared/maplibre/hooks';
 import { filterFeatureCollection } from '../../shared/maplibre/utils';
 
-export function CadastreLayer({
+export function ParcelleLayer({
+  source,
   featureCollection
 }: {
+  source: 'rpg' | 'cadastre';
   featureCollection: FeatureCollection;
 }) {
   const map = useMapLibre();
+  const cidProperty = source == 'rpg' ? 'ID_PARCEL' : 'id';
 
   const render = useCallback(() => {
     const selectedCadastreIds = new Set(
-      filterFeatureCollection(featureCollection, 'cadastre').features.map(
+      filterFeatureCollection(featureCollection, source).features.map(
         ({ properties }) => properties?.cid
       )
     );
@@ -22,11 +25,11 @@ export function CadastreLayer({
     if (selectedCadastreIds.size > 0) {
       map.setFilter('parcelle-highlighted', [
         'in',
-        'id',
+        cidProperty,
         ...selectedCadastreIds
       ]);
     }
-  }, [map, featureCollection]);
+  }, [map, source, cidProperty, featureCollection]);
 
   useEffect(render, [render]);
   useMapEvent('styledata', render);

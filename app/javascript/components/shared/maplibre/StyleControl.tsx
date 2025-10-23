@@ -4,13 +4,13 @@ import { MapIcon } from '@heroicons/react/outline';
 import { Slider } from '@reach/slider';
 import '@reach/slider/styles.css';
 
-import { type LayersMap, NBS } from './styles';
+import { type LayersMap, type MapStyle, NBS } from './styles';
 
 const STYLES = {
   ortho: 'Satellite',
   vector: 'Vectoriel',
   ign: 'Carte IGN'
-};
+} as const;
 
 export function StyleSwitch({
   styleId,
@@ -19,8 +19,8 @@ export function StyleSwitch({
   setLayerEnabled,
   setLayerOpacity
 }: {
-  styleId: string;
-  setStyle: (style: string) => void;
+  styleId: MapStyle;
+  setStyle: (style: MapStyle) => void;
   layers: LayersMap;
   setLayerEnabled: (layer: string, enabled: boolean) => void;
   setLayerOpacity: (layer: string, opacity: number) => void;
@@ -60,7 +60,7 @@ export function StyleSwitch({
                       defaultValue={style}
                       checked={styleId == style}
                       onChange={(event) => {
-                        setStyle(event.target.value);
+                        setStyle(event.target.value as MapStyle);
                       }}
                     />
                     <label htmlFor={`${mapId}-${style}`} className="fr-label">

@@ -54,6 +54,7 @@
     "lightgallery": "^2.9.0",
     "maplibre-gl": "^4.5.0",
     "match-sorter": "^8.1.0",
+    "pmtiles": "^4.3.0",
     "react": "^19.2.0",
     "react-aria-components": "^1.13.0",
     "react-coordinate-input": "^1.0.0",

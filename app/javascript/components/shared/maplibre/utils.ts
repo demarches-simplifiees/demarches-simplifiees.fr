@@ -1,5 +1,5 @@
-import type { LngLat, LngLatLike, LngLatBoundsLike } from 'maplibre-gl';
-import type { Geometry, FeatureCollection, Feature } from 'geojson';
+import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import type { LngLat, LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
 import { LngLatBounds } from 'maplibre-gl';
 import invariant from 'tiny-invariant';
 
@@ -85,5 +85,14 @@ export function getCenter(geometry: Geometry, lngLat: LngLat): LngLatLike {
         bbox.extend(coordinate as [number, number]);
       }
       return bbox.getCenter();
+  }
+}
+
+export function getParcellesSource(layers: string[]) {
+  if (layers.includes('cadastres')) {
+    return 'cadastre';
+  }
+  if (layers.includes('rpg')) {
+    return 'rpg';
   }
 }

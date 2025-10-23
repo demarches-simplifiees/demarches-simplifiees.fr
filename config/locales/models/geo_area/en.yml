@@ -4,6 +4,7 @@ en:
       geo_area:
         source:
           cadastre: Cadastral parcel
+          rpg: Agricultural parcel
           quartier_prioritaire: Priority neighbourhood
           selection_utilisateur: User selection
     errors:
@@ -17,9 +18,9 @@ en:
   geo_area:
     label:
       cadastre: "Parcel n° %{numero} - Sheet %{prefixe} %{section} - %{surface} m² - town %{commune}"
+      rpg: "Parcel n° %{numero} - %{surface} hectares"
       area: "An area of %{area} m²"
       area_unknown: "An area of unknown surface"
       line: "A %{length} m long line"
       line_unknown: "A line of unknown length"
       point: "A point located at %{location}"
-

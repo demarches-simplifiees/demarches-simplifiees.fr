@@ -6,7 +6,7 @@ import {
   getLayerName,
   NBS
 } from './base';
-import ignLayers from './layers/ign.json';
+import { layers as ignLayers } from './layers/ign.ts';
 import orthoLayers from './layers/ortho.json';
 import vectorLayers from './layers/vector.json';
 
@@ -22,29 +22,36 @@ export type LayersMap = Record<
   }
 >;
 
+export type MapStyle = 'ortho' | 'vector' | 'ign';
+
 export function getMapStyle(
-  id: string,
+  id: MapStyle,
   layers: string[],
   opacity: Record<string, number>
-): StyleSpecification & { id: string } {
-  const style = { ...baseStyle, id };
+): StyleSpecification & { id: MapStyle } {
+  const optionalLayers = buildOptionalLayers(layers, opacity);
 
   switch (id) {
     case 'ortho':
-      style.layers = orthoLayers as LayerSpecification[];
-      style.name = 'Photographies aériennes';
-      break;
+      return {
+        ...baseStyle,
+        id,
+        name: 'Photographies aériennes',
+        layers: [...(orthoLayers as LayerSpecification[]), ...optionalLayers]
+      };
     case 'vector':
-      style.layers = vectorLayers as LayerSpecification[];
-      style.name = 'Carte OSM';
-      break;
-    case 'ign':
-      style.layers = ignLayers as LayerSpecification[];
-      style.name = 'Carte IGN';
-      break;
+      return {
+        ...baseStyle,
+        id,
+        name: 'Carte OSM',
+        layers: [...(vectorLayers as LayerSpecification[]), ...optionalLayers]
+      };
+    default:
+      return {
+        ...baseStyle,
+        id,
+        name: 'Carte IGN',
+        layers: [...ignLayers, ...optionalLayers]
+      };
   }
-
-  style.layers = style.layers?.concat(buildOptionalLayers(layers, opacity));
-
-  return style;
 }
