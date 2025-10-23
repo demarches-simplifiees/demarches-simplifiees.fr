@@ -357,8 +357,8 @@ describe Procedure do
 
       context 'Monavis embed code with white button is allowed' do
         monavis_blanc = <<-MSG
-        <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
-          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        <a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+          <img src="https://jedonnemonavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
         </a>
         MSG
         let(:procedure) { build(:procedure, monavis_embed: monavis_blanc) }
@@ -367,11 +367,21 @@ describe Procedure do
 
       context 'Monavis embed code with blue button is allowed' do
         monavis_bleu = <<-MSG
+        <a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+          <img src="https://jedonnemonavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_bleu) }
+        it { is_expected.to eq([]) }
+      end
+
+      context 'Monavis embed code with old monavis domain still works (backward compatibility)' do
+        monavis_old = <<-MSG
         <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
           <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
         </a>
         MSG
-        let(:procedure) { build(:procedure, monavis_embed: monavis_bleu) }
+        let(:procedure) { build(:procedure, monavis_embed: monavis_old) }
         it { is_expected.to eq([]) }
       end
 
