@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_20_120000) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_23_121224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -313,10 +313,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_120000) do
     t.string "email"
     t.bigint "expert_id"
     t.bigint "instructeur_id"
+    t.datetime "seen_by_recipient_at"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
     t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
+    t.index ["seen_by_recipient_at"], name: "index_commentaires_on_seen_by_recipient_at"
   end
 
   create_table "contact_forms", force: :cascade do |t|
@@ -523,7 +525,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_120000) do
     t.datetime "last_commentaire_updated_at", precision: nil
     t.string "mandataire_first_name"
     t.string "mandataire_last_name"
-    t.datetime "messagerie_seen_by_user_at"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"

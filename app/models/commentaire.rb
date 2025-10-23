@@ -24,6 +24,8 @@ class Commentaire < ApplicationRecord
 
   scope :chronological, -> { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
+  scope :sent_by_usager, -> { where(instructeur_id: nil, expert_id: nil) }
+  scope :sent_by_instructeur, -> { where.not(instructeur_id: nil) }
   scope :to_notify, -> (instructeur_id) {
     where.not(email: SYSTEM_EMAILS)
       .where(discarded_at: nil)
@@ -31,6 +33,20 @@ class Commentaire < ApplicationRecord
   }
 
   after_create :notify
+
+  def self.mark_usager_messages_as_seen(dossier)
+    where(dossier: dossier)
+      .sent_by_usager
+      .where(seen_by_recipient_at: nil)
+      .update_all(seen_by_recipient_at: Time.current)
+  end
+
+  def self.mark_instructeur_messages_as_seen(dossier)
+    where(dossier: dossier)
+      .sent_by_instructeur
+      .where(seen_by_recipient_at: nil)
+      .update_all(seen_by_recipient_at: Time.current)
+  end
 
   def email
     if sent_by_instructeur?
