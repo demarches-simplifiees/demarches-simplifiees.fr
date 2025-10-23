@@ -104,7 +104,9 @@ module ColumnsConcern
     def default_displayed_columns = [email_column]
 
     def dossier_filterable_columns
-      dossier_columns.filter(&:filterable)
+      dossier_columns
+        .concat([dossier_labels_column])
+        .filter(&:filterable)
     end
 
     def instructeurs_filterable_columns
