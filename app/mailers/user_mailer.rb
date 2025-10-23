@@ -38,6 +38,8 @@ class UserMailer < ApplicationMailer
 
   def custom_confirmation_instructions(user, token)
     @user = user
+    configure_defaults_for_user(@user)
+
     @token = token
     mail(to: @user.email, subject: 'Confirmez votre adresse électronique')
   end
