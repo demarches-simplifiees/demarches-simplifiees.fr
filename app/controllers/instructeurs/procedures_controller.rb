@@ -70,7 +70,20 @@ module Instructeurs
     end
 
     def order_positions
-      @procedures = Procedure.where(id: params[:collection_ids]).order_by_position_for(current_instructeur)
+      all_procedures = current_instructeur
+        .procedures
+        .kept
+
+      dossiers = current_instructeur.dossiers
+        .joins(groupe_instructeur: :procedure)
+        .where(procedures: { hidden_at: nil })
+
+      procedures_dossiers_en_cours = dossiers.joins(:revision).en_cours.pluck(ProcedureRevision.arel_table[:procedure_id]).uniq
+
+      publiees_or_closes_with_dossiers_en_cours = all_procedures.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
+
+      @procedures = publiees_or_closes_with_dossiers_en_cours.order_by_position_for(current_instructeur)
+
       render layout: "empty_layout"
     end
 
