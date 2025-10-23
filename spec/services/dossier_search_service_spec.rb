@@ -21,7 +21,7 @@ describe DossierSearchService do
       let(:etablissement) { create(:etablissement, entreprise_raison_sociale: 'Direction Interministerielle Du Numérique', siret: '13002526500013') }
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }], types_de_champ_private: [{ type: :text }]) }
       let(:dossier) do
-        create(:dossier, procedure:, state: :en_construction, user:, etablissement:).tap do |dossier|
+        create(:dossier, :en_construction, procedure:, user:, etablissement:).tap do |dossier|
           dossier.project_champs_public.first.update!(value: 'Hélène mange des pommes')
           dossier.project_champs_private.first.update!(value: 'annotations')
         end
@@ -81,7 +81,7 @@ describe DossierSearchService do
     end
 
     describe 'does not ignore archived dossiers' do
-      let(:dossier) { create(:dossier, state: :en_construction, archived: true) }
+      let(:dossier) { create(:dossier, :en_construction, archived: true) }
 
       it { expect(searching(dossier.id.to_s)).to eq([dossier.id]) }
     end
