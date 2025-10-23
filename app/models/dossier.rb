@@ -1093,10 +1093,6 @@ class Dossier < ApplicationRecord
 
   def update_expired_at = update_column(:expired_at, expiration_date)
 
-  def update_expired_at_from(date_reference:)
-    update_column(:expired_at, (date_reference + duree_totale_conservation_in_months.months))
-  end
-
   def revision_changed_since_submitted?
     submitted_revision_id.present? && submitted_revision_id != revision_id
   end
