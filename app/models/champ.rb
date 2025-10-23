@@ -133,7 +133,7 @@ class Champ < ApplicationRecord
   end
 
   def to_s
-    type_de_champ.champ_value(self)
+    type_de_champ.champ_value(self) || ''
   end
 
   def last_write_type_champ
