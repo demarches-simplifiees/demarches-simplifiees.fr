@@ -1,0 +1,6 @@
+<turbo-frame id="procedure-list">
+  <%= render(Instructeurs::ProcedureSummaryComponent.with_collection(
+      @collection,
+      dossiers_count_per_procedure: @dossiers_count_per_procedure
+    )) %>
+</turbo-frame>
