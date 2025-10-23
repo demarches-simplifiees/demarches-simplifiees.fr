@@ -148,6 +148,8 @@ describe Columns::ChampColumn do
         it do
           expect(column('simple_drop_down_list').value(champ)).to eq('val1')
           expect(column('text').value(champ)).to eq('val1, val2')
+          expect(column('formatted').value(champ)).to eq('val1, val2')
+          expect(column('textarea').value(champ)).to eq("val1\nval2")
         end
       end
     end
