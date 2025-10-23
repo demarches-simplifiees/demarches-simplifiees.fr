@@ -2,17 +2,17 @@
   - c.with_body do
     %p
       Proposez aux usagers de donner un avis sur votre démarche. Pour ce faire, vous devez précédemment aller sur «
-      %a{ :href => "https://monavis.numerique.gouv.fr" } https://monavis.numerique.gouv.fr
+      %a{ :href => "https://jedonnemonavis.numerique.gouv.fr" } https://jedonnemonavis.numerique.gouv.fr
       », créer un compte, et référencer la démarche que vous venez de publier.
       %br
       %br
       Vous pouvez
       %a{ :href => DOC_INTEGRATION_MONAVIS_URL } consulter notre tutoriel complet
-      pour intégrer le bouton « MonAvis » sur #{Current.application_name}.
+      pour intégrer le bouton « Je Donne Mon Avis » sur #{Current.application_name}.
       %br
       %br
-      Une fois en possession du code généré sur le site MonAvis, vous pouvez le coller dans le champ ci-dessous :
+      Une fois en possession du code généré sur le site Je Donne Mon Avis, vous pouvez le coller dans le champ ci-dessous :
 
 .fr-input-group
-  = f.label :monavis_embed, "Code généré sur le site MonAvis", class: "fr-label"
-  = f.text_area :monavis_embed, rows: '6', placeholder: '<a href="https://monavis.numerique.gouv.fr/Demarches/123456?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d4"><img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" /></a>', class: 'fr-input'
+  = f.label :monavis_embed, "Code généré sur le site Je Donne Mon Avis", class: "fr-label"
+  = f.text_area :monavis_embed, rows: '6', placeholder: '<a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/123456?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d4"><img src="https://jedonnemonavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" /></a>', class: 'fr-input'

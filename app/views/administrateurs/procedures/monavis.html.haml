@@ -1,11 +1,11 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['MonAvis']] }
+                    ['Je Donne Mon Avis']] }
 
 .fr-container
   %h1.fr-h2
-    Bouton « MonAvis »
+    Bouton « Je Donne Mon Avis »
 
 = form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), html: { class: 'form', multipart: true } do |f|
   .fr-container
