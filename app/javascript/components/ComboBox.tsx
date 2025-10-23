@@ -77,7 +77,6 @@ export function ComboBox({
         />
         <Button
           aria-haspopup="false"
-          aria-label=""
           style={{
             width: '40px',
             height: '100%',

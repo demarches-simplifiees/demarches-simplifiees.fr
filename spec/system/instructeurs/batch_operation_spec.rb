@@ -53,8 +53,7 @@ describe 'BatchOperation a dossier:', js: true do
         .to change { dossier_1.reload.archived }
         .from(false).to(true)
 
-      # simulate a page reload
-      visit current_path
+      scroll_to(find_button("Personnaliser le tableau"))
 
       # ensure alert updates when jobs are run
       expect(page).to have_content("L’action de masse est terminée")
@@ -187,6 +186,8 @@ describe 'BatchOperation a dossier:', js: true do
       click_on "Autres actions multiples"
       click_on "Demander un avis externe"
 
+      scroll_to(find("#modal-avis-batch"))
+
       # can close the modal
       expect(page).to have_selector("#modal-avis-batch", visible: true)
       click_on "Annuler", visible: true
@@ -235,8 +236,7 @@ describe 'BatchOperation a dossier:', js: true do
         .to change { dossier_1.reload.avis }
         .from([]).to(anything)
 
-      # simulate a page reload
-      visit current_path
+      scroll_to(find_button("Personnaliser le tableau"))
 
       # ensure alert updates when jobs are run
       expect(page).to have_content("L’action de masse est terminée")
@@ -269,6 +269,8 @@ describe 'BatchOperation a dossier:', js: true do
 
       click_on "Autres actions multiples"
       click_on "Envoyer un message aux usagers"
+
+      scroll_to(find("#modal-commentaire-batch"))
 
       # can close the modal
       expect(page).to have_selector("#modal-commentaire-batch", visible: true)
@@ -306,6 +308,8 @@ describe 'BatchOperation a dossier:', js: true do
       expect { perform_enqueued_jobs(only: [BatchOperationProcessOneJob]) }
         .to change { dossier_1.reload.commentaires }
         .from([]).to(anything)
+
+      scroll_to(find(".batch-alert-component"))
 
       # ensure alert updates when jobs are run
       expect(page).to have_content("L’action de masse est terminée")
@@ -394,6 +398,8 @@ describe 'BatchOperation a dossier:', js: true do
       expect(page).to have_button("Envoyer un message aux usagers")
 
       click_on "Envoyer un message aux usagers"
+
+      scroll_to(find("#modal-commentaire-batch"))
 
       expect(page).to have_selector("#modal-commentaire-batch", visible: true)
       expect(page).to have_content("Envoyer un message à 2 usagers")
