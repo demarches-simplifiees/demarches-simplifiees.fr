@@ -32,13 +32,13 @@ class PrefillDescription < SimpleDelegator
   end
 
   def prefill_link
-    @prefill_link ||= CGI.unescape(commencer_url({ path: path }.merge(prefilled_champs_as_params).merge(prefilled_identity_as_params)))
+    @prefill_link ||= CGI.unescape(commencer_url({ path: path, host: Current.host || ENV["APP_HOST"] }.merge(prefilled_champs_as_params).merge(prefilled_identity_as_params)))
   end
 
   def prefill_query
     @prefill_query ||=
       <<~TEXT
-        curl --request POST '#{api_public_v1_dossiers_url(self)}' \\
+        curl --request POST '#{api_public_v1_dossiers_url(self, host: Current.host || ENV["APP_HOST"])}' \\
              --header 'Content-Type: application/json' \\
              --data '#{prefilled_identity_as_params.merge(prefilled_champs_as_params).to_json}'
       TEXT
