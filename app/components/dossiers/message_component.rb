@@ -96,7 +96,7 @@ class Dossiers::MessageComponent < ApplicationComponent
   end
 
   def commentaire_date
-    "Le #{commentaire.created_at.strftime('%d/%m/%Y %H:%M')}"
+    "Le #{I18n.l(commentaire.created_at, format: :short_datetime)}"
   end
 
   def delete_url
@@ -109,18 +109,8 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   def read_by_recipient?
     return false if !commentaire.persisted?
-
     return false if !sent_by_connected_user?
-
-    if commentaire.sent_by_usager?
-      last_seen_at = @instructeurs_seen_at || commentaire.dossier.follows.maximum(:messagerie_seen_at)
-      last_seen_at.present? && last_seen_at >= commentaire.created_at
-    elsif commentaire.sent_by_instructeur?
-      seen_by_user_at = commentaire.dossier.messagerie_seen_by_user_at
-      seen_by_user_at.present? && seen_by_user_at >= commentaire.created_at
-    else
-      false
-    end
+    commentaire.seen_by_recipient_at.present?
   end
 
   def sent_by_connected_user?

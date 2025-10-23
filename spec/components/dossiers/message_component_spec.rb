@@ -27,13 +27,13 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:dossier) { create(:dossier, :en_construction) }
       let(:commentaire) { create(:commentaire, dossier: dossier, email: connected_user.email, body: 'msg') }
 
-      context 'when at least one instructeur has seen the messagerie after the message' do
-        before { create(:follow, dossier: dossier, messagerie_seen_at: commentaire.created_at + 5.minutes) }
+      context 'when recipient has seen the message' do
+        before { commentaire.update!(seen_by_recipient_at: Time.current) }
         it { is_expected.to include('Lu') }
       end
 
-      context 'when no instructeur has seen the messagerie after the message' do
-        before { create(:follow, dossier: dossier, messagerie_seen_at: commentaire.created_at - 5.minutes) }
+      context 'when recipient has not seen the message' do
+        before { commentaire.update!(seen_by_recipient_at: nil) }
         it { is_expected.to include('Non lu') }
       end
     end
@@ -44,13 +44,13 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:connected_user) { instructeur }
       let(:commentaire) { create(:commentaire, dossier: dossier, instructeur: instructeur, body: 'msg') }
 
-      context 'when the user has opened messagerie after the message' do
-        before { dossier.update!(messagerie_seen_by_user_at: commentaire.created_at + 5.minutes) }
+      context 'when recipient has seen the message' do
+        before { commentaire.update!(seen_by_recipient_at: Time.current) }
         it { is_expected.to include('Lu') }
       end
 
-      context 'when the user has not opened messagerie after the message' do
-        before { dossier.update!(messagerie_seen_by_user_at: commentaire.created_at - 5.minutes) }
+      context 'when recipient has not seen the message' do
+        before { commentaire.update!(seen_by_recipient_at: nil) }
         it { is_expected.to include('Non lu') }
       end
     end
