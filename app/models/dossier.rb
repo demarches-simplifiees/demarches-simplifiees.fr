@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:search_terms, :private_search_terms]
+  self.ignored_columns += [:search_terms, :private_search_terms, :editing_fork_origin_id]
 
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -233,7 +233,7 @@ class Dossier < ApplicationRecord
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
   scope :hidden_by_expired,         -> { where.not(hidden_by_expired_at: nil) }
   scope :hidden_by_not_modified_for_a_long_time, -> { hidden_by_expired.where(hidden_by_reason: :not_modified_for_a_long_time) }
-  scope :visible_by_user,           -> { where(for_procedure_preview: false, hidden_by_user_at: nil, editing_fork_origin_id: nil, hidden_by_expired_at: nil) }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false, hidden_by_user_at: nil, hidden_by_expired_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
@@ -245,7 +245,6 @@ class Dossier < ApplicationRecord
     state_not_brouillon.hidden_by_administration.or(state_en_construction.hidden_by_user)
   }
   scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
-  scope :for_editing_fork, -> { where.not(editing_fork_origin_id: nil) }
   scope :for_groupe_instructeur, -> (groupe_instructeurs) { where(groupe_instructeur: groupe_instructeurs) }
   scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order, id: order) }
   scope :order_by_depose_at,             -> (order = :desc) { order(depose_at: order, id: order) }
@@ -531,7 +530,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview? && !editing_fork?
+    brouillon? && procedure.dossier_can_transition_to_en_construction? && !for_procedure_preview?
   end
 
   def can_terminer?
