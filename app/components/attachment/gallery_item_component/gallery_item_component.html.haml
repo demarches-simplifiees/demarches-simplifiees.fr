@@ -4,7 +4,7 @@
   - if displayable_pdf?(blob) || displayable_image?(blob)
     = gallery_link(blob) do
       .thumbnail
-        = image_tag(representation_url_for(attachment), loading: :lazy)
+        = image_tag(representation_url_for(attachment))
         .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
           Visualiser
     - if !gallery_demande?
