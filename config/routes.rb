@@ -473,6 +473,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get 'synthese'
         get 'order_positions'
         patch 'update_order_positions'
         get 'select_procedure'
