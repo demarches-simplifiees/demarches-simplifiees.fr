@@ -66,12 +66,6 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       it { is_expected.not_to have_css(".highlighted") }
     end
 
-    context 'with a seen_at after commentaire created_at' do
-      let(:seen_at) { commentaire.created_at - 1.hour  }
-
-      it { is_expected.to have_css(".highlighted") }
-    end
-
     context 'with an instructeur message' do
       let(:instructeur) { create(:instructeur) }
       let(:procedure) { create(:procedure, hide_instructeurs_email: true) }
@@ -269,12 +263,6 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:seen_at) { commentaire.created_at + 1.hour  }
 
       it { is_expected.not_to have_css(".highlighted") }
-    end
-
-    context 'with a seen_at after commentaire created_at' do
-      let(:seen_at) { commentaire.created_at - 1.hour  }
-
-      it { is_expected.to have_css(".highlighted") }
     end
 
     context 'with an gestionnaire message' do

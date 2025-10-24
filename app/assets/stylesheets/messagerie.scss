@@ -95,3 +95,7 @@ ol.messages-list > li::marker {
     --icon-size: 1rem;
   }
 }
+
+.flex.align-center .fr-text--xs {
+  margin: 0 !important;
+}
