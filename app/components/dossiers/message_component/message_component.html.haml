@@ -3,13 +3,13 @@
     = icon
 
 .width-100.fr-p-2w{ class: commentaire_class(commentaire, connected_user) }
-  = tag.send(heading_level, class: 'fr-h6') do
+  = tag.send(heading_level, class: 'fr-h6 fr-mb-1w') do
     %span.mail
       = commentaire_issuer
     - if commentaire_from_guest?
       %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.guest')
-  - if (badge = correction_badge)
-    .fr-mt-1v
+  - if badge = correction_badge
+    .fr-mt-1v.fr-mb-1w
       = badge
   .rich-text
     - if commentaire.discarded?
@@ -29,15 +29,15 @@
         = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
 
   .fr-mt-1v.flex.align-center.flex-gap-1.justify-between
-    %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
+    %span.date{ class: ["fr-mb-0", "fr-text--xs", "fr-text-mention--grey", "font-weight-normal"], data: scroll_to_target }
       = commentaire_date
     - if sent_by_connected_user?
       - if read_by_recipient?
-        .flex
+        .flex.align-center
           = dsfr_icon('fr-icon-check-line fr-icon--sm fr-mr-1w')
           %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.read_label')
       - else
-        %span.fr-text--xs.fr-text-mention--grey.font-weight-normal= t('.unread_label')
+        %span.fr-text--xs.fr-text-mention--grey.font-weight-normal.fr-mb-0= t('.unread_label')
 
 - if commentaire.sent_by?(connected_user)
   .icon-avatar{ class: commentaire_class(commentaire, connected_user) }

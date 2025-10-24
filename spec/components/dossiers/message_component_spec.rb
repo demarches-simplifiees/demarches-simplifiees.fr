@@ -46,7 +46,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
       context 'when recipient has seen the message' do
         before { commentaire.update!(seen_by_recipient_at: Time.current) }
-        it { is_expected.to include('Lu') }
+
+        it do
+          is_expected.to include('Lu')
+          is_expected.not_to include('Non lu')
+        end
       end
 
       context 'when recipient has not seen the message' do
@@ -64,12 +68,6 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:seen_at) { commentaire.created_at + 1.hour  }
 
       it { is_expected.not_to have_css(".highlighted") }
-    end
-
-    context 'with a seen_at after commentaire created_at' do
-      let(:seen_at) { commentaire.created_at - 1.hour  }
-
-      it { is_expected.to have_css(".highlighted") }
     end
 
     context 'with an instructeur message' do
@@ -269,12 +267,6 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:seen_at) { commentaire.created_at + 1.hour  }
 
       it { is_expected.not_to have_css(".highlighted") }
-    end
-
-    context 'with a seen_at after commentaire created_at' do
-      let(:seen_at) { commentaire.created_at - 1.hour  }
-
-      it { is_expected.to have_css(".highlighted") }
     end
 
     context 'with an gestionnaire message' do
