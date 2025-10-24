@@ -46,11 +46,7 @@ ol.messages-list > li::marker {
   margin-bottom: $default-padding;
 
   h2 {
-    margin-bottom: $default-spacer;
-  }
-
-  .date {
-    float: right;
+    margin-bottom: 0;
   }
 
   blockquote {
@@ -98,4 +94,8 @@ ol.messages-list > li::marker {
   @media (max-width: 48em) {
     --icon-size: 1rem;
   }
+}
+
+.flex.align-center .fr-text--xs {
+  margin: 0 !important;
 }

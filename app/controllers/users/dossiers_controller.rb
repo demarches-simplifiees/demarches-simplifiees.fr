@@ -108,6 +108,7 @@ module Users
     def messagerie
       @dossier = dossier
       @commentaire = Commentaire.new
+      Commentaire.mark_instructeur_messages_as_seen(@dossier)
     end
 
     def rendez_vous
