@@ -21,7 +21,7 @@ class Users::ActivateController < ApplicationController
       reset_password_token: user_params[:reset_password_token]
     })
 
-    if user.valid?
+    if user.valid? && user.instructeur?
       sign_in(user, scope: :user)
 
       flash.notice = "Mot de passe enregistré"
