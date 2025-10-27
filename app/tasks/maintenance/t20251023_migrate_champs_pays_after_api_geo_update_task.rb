@@ -55,9 +55,7 @@ module Maintenance
     end
 
     def count
-      with_statement_timeout("15min") do
-        collection.count
-      end
+      # NOOP too long
     end
   end
 end
