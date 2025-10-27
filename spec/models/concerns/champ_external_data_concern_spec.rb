@@ -3,24 +3,6 @@
 RSpec.describe ChampExternalDataConcern do
   include Dry::Monads[:result]
 
-  context "external_data" do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rnf }]) }
-    let(:dossier) { create(:dossier, procedure:) }
-    let(:champ) { dossier.champs.first }
-
-    describe "fetch_external_data" do
-      context "cleanup_if_empty" do
-        before { champ.update_columns(data: 'some data') }
-
-        it "remove data if external_id changes" do
-          expect(champ.data).to_not be_nil
-          champ.update(external_id: 'external_id')
-          expect(champ.data).to be_nil
-        end
-      end
-    end
-  end
-
   describe '#save_external_exception' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rnf }]) }
     let(:dossier) { create(:dossier, procedure:) }

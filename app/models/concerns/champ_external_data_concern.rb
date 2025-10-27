@@ -16,7 +16,6 @@ module ChampExternalDataConcern
     include AASM
 
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
-    before_save :cleanup_if_empty
 
     # useful to serialize idle as nil
     # otherwise, all the champ are mark as dirty and saved on first dossier.save
@@ -101,12 +100,6 @@ module ChampExternalDataConcern
 
     def update_external_data!(data:)
       update!(data:, fetch_external_data_exceptions: [])
-    end
-
-    def cleanup_if_empty
-      if uses_external_data? && persisted? && external_identifier_changed?
-        self.data = nil
-      end
     end
 
     def handle_result(result)
