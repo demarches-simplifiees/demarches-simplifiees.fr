@@ -8,55 +8,34 @@ describe Champs::ReferentielChamp, type: :model do
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, procedure:) }
   let(:referentiel_champ) { dossier.champs.find(&:referentiel?) }
+  let(:champ) { referentiel_champ }
 
   describe '#valid?' do
-    def with_value(external_id:, data: {}, fetch_external_data_exceptions: [])
-      referentiel_champ.tap do
-        _1.external_id = external_id
-        _1.data = data
-        _1.fetch_external_data_exceptions = fetch_external_data_exceptions
-      end
-    end
-
-    context 'when external_id is nil and data is nil' do
-      let(:state_not_filled) { { external_id: nil, data: nil } }
-
-      it 'is valid' do
-        expect(with_value(**state_not_filled).validate(:champs_public_value)).to be_truthy
-      end
-    end
-
-    context 'when external_id is present but data is nil' do
-      let(:state_to_be_fetched) { { external_id: "KTHXBYE", data: nil } }
-
-      it 'is invalid' do
-        expect(with_value(**state_to_be_fetched).validate(:champs_public_value)).to be_falsey
-      end
+    context 'when the champ is pending' do
+      before { champ.update_columns(external_state: 'waiting_for_job') }
 
       it 'adds the correct error message' do
-        champ = with_value(**state_to_be_fetched)
         champ.validate(:champs_public_value)
         expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.api_response_pending'))
       end
     end
 
-    context 'when external_id and data are present' do
-      let(:state_fetched) { { external_id: "KTHXBYE", data: { ok: :ok } } }
+    context 'when the champ is fetched' do
+      before { champ.update_columns(external_state: 'fetched') }
 
       it 'is valid' do
-        expect(with_value(**state_fetched).validate(:champs_public_value)).to be_truthy
+        expect(champ.validate(:champs_public_value)).to be_truthy
       end
     end
 
-    context 'when fetch_external_data_exceptions contains a non-retryable error' do
-      let(:state_error) { { external_id: "KTHXBYE", data: nil, fetch_external_data_exceptions: [reason: 'Not retryable: 404, 400, 403, 401', code: 404] } }
-
-      it 'is invalid' do
-        expect(with_value(**state_error).validate(:champs_public_value)).to be_falsey
+    context 'when the champ is in error with a non-retryable error' do
+      let(:external_data_exceptions) do
+        ExternalDataException.new(reason: 'Not retryable: 404, 400, 403, 401', code: 404)
       end
 
+      before { champ.update_columns(external_state: 'external_error', fetch_external_data_exceptions: [external_data_exceptions]) }
+
       it 'adds the correct error message' do
-        champ = with_value(**state_error)
         champ.validate(:champs_public_value)
 
         expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.code_404'))
