@@ -42,13 +42,13 @@ describe Champs::SiretChamp do
     end
   end
 
-  describe '.fetch_etablissement!' do
+  describe '.fetch_external_data' do
     let(:api_etablissement_status) { 200 }
     let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
     let(:token_expired) { false }
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret }]) }
     let(:dossier) { create(:dossier, procedure:) }
-    let!(:champ) { dossier.champs.first.tap { _1.update!(etablissement: create(:etablissement)) } }
+    let!(:champ) { dossier.champs.first.tap { _1.update!(etablissement: create(:etablissement), external_id: siret) } }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
@@ -59,10 +59,10 @@ describe Champs::SiretChamp do
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
     end
 
-    subject(:fetch_etablissement!) { champ.fetch_etablissement!(siret, build_stubbed(:user)) }
+    subject(:fetch_external_data) { champ.fetch_external_data }
 
     shared_examples 'an error occured' do
-    end
+      it { expect(fetch_external_data).to be_failure }
     end
 
     context 'when the API is unavailable due to network error' do
@@ -75,7 +75,7 @@ describe Champs::SiretChamp do
 
       it 'sends the error to Sentry' do
         expect(Sentry).to receive(:capture_exception)
-        fetch_etablissement!
+        fetch_external_data
       end
     end
 
@@ -85,13 +85,13 @@ describe Champs::SiretChamp do
 
       before { expect(APIEntrepriseService).to receive(:api_insee_up?).and_return(false) }
 
-      it { expect { fetch_etablissement! }.to change { champ.reload.etablissement } }
+      it { expect { fetch_external_data }.to change { champ.reload.etablissement } }
 
-      it { expect { fetch_etablissement! }.to change { champ.reload.etablissement.as_degraded_mode? }.to(true) }
+      it { expect { fetch_external_data }.to change { champ.reload.etablissement.as_degraded_mode? }.to(true) }
 
-      it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(1) }
+      it { expect { fetch_external_data }.to change { Etablissement.count }.by(1) }
 
-      it { expect(fetch_etablissement!).to eq(false) }
+      it { expect(fetch_external_data).to be_failure }
     end
 
     context 'when the SIRET is valid but unknown' do
@@ -106,16 +106,16 @@ describe Champs::SiretChamp do
       let(:api_etablissement_status) { 200 }
       let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
-      it { expect { fetch_etablissement! }.to change { champ.reload.etablissement.siret }.to(siret) }
+      it { expect { fetch_external_data }.to change { champ.reload.etablissement.siret }.to(siret) }
 
-      it { expect { fetch_etablissement! }.to change { champ.reload.etablissement.naf }.to("8411Z") }
+      it { expect { fetch_external_data }.to change { champ.reload.etablissement.naf }.to("8411Z") }
 
-      it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(1) }
+      it { expect { fetch_external_data }.to change { Etablissement.count }.by(1) }
 
-      it { expect(fetch_etablissement!).to eq(true) }
+      it { expect(fetch_external_data).to be_success }
 
       it "fetches the entreprise raison sociale" do
-        fetch_etablissement!
+        fetch_external_data
         expect(champ.reload.etablissement.entreprise_raison_sociale).to eq("DIRECTION INTERMINISTERIELLE DU NUMERIQUE")
       end
     end

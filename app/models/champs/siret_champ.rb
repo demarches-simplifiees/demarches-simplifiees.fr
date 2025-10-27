@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Champs::SiretChamp < Champ
+  include Dry::Monads[:result]
   validate :validate_etablissement, if: :validate_champ_value?
 
   def uses_external_data?
@@ -21,28 +22,26 @@ class Champs::SiretChamp < Champ
   end
 
   def fetch_external_data
-    fetch_etablissement!(external_id, dossier.user)
+    etablissement = APIEntrepriseService.create_etablissement(self, external_id.delete(" "), dossier.user&.id)
+    if etablissement.blank?
+      Failure(retryable: false, reason: :not_found, code: 404)
+    else
+      Success(etablissement:)
+    end
+  rescue APIEntreprise::API::Error, APIEntrepriseToken::TokenError => error
+    if APIEntrepriseService.service_unavailable_error?(error, target: :insee)
+      update!(
+        etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, external_id, dossier.user&.id)
+      )
+      Failure(retryable: true, reason: :api_down, code: 503)
+    else
+      Sentry.capture_exception(error, extra: { dossier_id:, siret: external_id })
+      Failure(retryable: false, reason: :api_down, code: 503)
+    end
   end
 
   def search_terms
     etablissement.present? ? etablissement.search_terms : [value]
-  end
-
-  def fetch_etablissement!(siret, user)
-    etablissement = APIEntrepriseService.create_etablissement(self, siret.delete(" "), user&.id)
-    return clear_previous_result if etablissement.blank?
-
-    update!(etablissement:)
-  rescue APIEntreprise::API::Error, APIEntrepriseToken::TokenError => error
-    if APIEntrepriseService.service_unavailable_error?(error, target: :insee)
-      update!(
-        etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, siret, user.id)
-      )
-      false
-    else
-      Sentry.capture_exception(error, extra: { dossier_id:, siret: })
-      clear_previous_result
-    end
   end
 
   private
