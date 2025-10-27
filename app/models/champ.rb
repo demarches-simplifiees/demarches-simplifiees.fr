@@ -218,19 +218,19 @@ class Champ < ApplicationRecord
     false
   end
 
-  def clone(fork = false)
+  def clone
     champ_attributes = [:private, :row_id, :type, :stable_id, :stream]
-    value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
-    relationships = fork || !private? ? [:etablissement, :geo_areas] : []
+    value_attributes = !private? ? [:value, :value_json, :data, :external_id] : []
+    relationships = !private? ? [:etablissement, :geo_areas] : []
 
-    deep_clone(only: champ_attributes + value_attributes, include: relationships, validate: !fork) do |original, kopy|
+    deep_clone(only: champ_attributes + value_attributes, include: relationships, validate: true) do |original, kopy|
       if original.is_a?(Champ)
         kopy.write_attribute(:stable_id, original.stable_id)
         kopy.write_attribute(:stream, 'main')
         # TODO: overwrite row_id "N" with nil
         kopy.write_attribute(:row_id, kopy.row_id)
       end
-      ClonePiecesJustificativesService.clone_attachments(original, kopy) if fork || !private?
+      ClonePiecesJustificativesService.clone_attachments(original, kopy) if !private?
     end
   end
 

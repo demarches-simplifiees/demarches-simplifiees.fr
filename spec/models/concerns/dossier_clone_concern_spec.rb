@@ -14,14 +14,12 @@ RSpec.describe DossierCloneConcern do
   end
   let(:types_de_champ_private) { [] }
   let(:dossier) { create(:dossier, :en_construction, procedure:) }
-  let(:forked_dossier) { dossier.find_or_create_editing_fork(dossier.user) }
 
   describe '#clone' do
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
     let(:types_de_champ_public) { [{}] }
     let(:types_de_champ_private) { [] }
-    let(:fork) { false }
-    subject(:new_dossier) { dossier.clone(fork:) }
+    subject(:new_dossier) { dossier.clone }
 
     it 'resets most of the attributes for the cloned dossier' do
       expect(new_dossier.id).not_to eq(dossier.id)
@@ -69,18 +67,11 @@ RSpec.describe DossierCloneConcern do
     end
 
     context 'copies some attributes' do
-      context 'when fork' do
-        let(:fork) { true }
-        it { expect(new_dossier.groupe_instructeur).to eq(dossier.groupe_instructeur) }
-      end
-
-      context 'when not forked' do
-        it "copies or reset attributes" do
-          expect(new_dossier.groupe_instructeur).to be_nil
-          expect(new_dossier.autorisation_donnees).to eq(dossier.autorisation_donnees)
-          expect(new_dossier.revision_id).to eq(dossier.revision_id)
-          expect(new_dossier.user_id).to eq(dossier.user_id)
-        end
+      it "copies or reset attributes" do
+        expect(new_dossier.groupe_instructeur).to be_nil
+        expect(new_dossier.autorisation_donnees).to eq(dossier.autorisation_donnees)
+        expect(new_dossier.revision_id).to eq(dossier.revision_id)
+        expect(new_dossier.user_id).to eq(dossier.user_id)
       end
     end
 
@@ -204,279 +195,6 @@ RSpec.describe DossierCloneConcern do
           expect(new_dossier.project_champs_private.first.value).to eq(nil)
         end
       end
-    end
-
-    context "as a fork" do
-      let(:new_dossier) { dossier.clone(fork: true) }
-      before { dossier.project_champs_public } # we compare timestamps so we have to get the precision limit from the db }
-
-      it do
-        expect(new_dossier.editing_fork_origin).to eq(dossier)
-        expect(new_dossier.project_champs_public[0].id).not_to eq(dossier.project_champs_public[0].id)
-        expect(new_dossier.project_champs_public[0].created_at).to eq(dossier.project_champs_public[0].created_at)
-        expect(new_dossier.project_champs_public[0].updated_at).to eq(dossier.project_champs_public[0].updated_at)
-      end
-
-      context "piece justificative champ" do
-        let(:types_de_champ_public) { [{ type: :piece_justificative }] }
-        let(:champ_pj) { dossier.champs.first }
-        let(:cloned_champ_pj) { new_dossier.champs.first }
-
-        it {
-          expect(cloned_champ_pj.piece_justificative_file.first.blob).to eq(champ_pj.piece_justificative_file.first.blob)
-          expect(cloned_champ_pj.created_at).to eq(champ_pj.created_at)
-          expect(cloned_champ_pj.updated_at).to eq(champ_pj.updated_at)
-        }
-      end
-
-      context 'invalid origin' do
-        let(:procedure) do
-          create(:procedure, types_de_champ_public: [
-            { type: :drop_down_list, libelle: "Le savez-vous?", stable_id: 992, drop_down_options: ["Oui", "Non", "Peut-être"], mandatory: true }
-          ])
-        end
-
-        before do
-          champ = dossier.champs.find { _1.stable_id == 992 }
-          champ.value = "Je ne sais pas"
-          champ.save!(validate: false)
-        end
-
-        it 'can still fork' do
-          expect(dossier.validate(:champs_public_value)).to be_falsey
-
-          new_dossier.champs.load # load relation so champs are validated below
-
-          expect(new_dossier.validate(:champs_public_value)).to be_falsey
-          expect(new_dossier.champs.find { _1.stable_id == 992 }.value).to eq("Je ne sais pas")
-        end
-
-        context 'when associated record is invalid' do
-          let(:procedure) do
-            create(:procedure, types_de_champ_public: [
-              { type: :carte, libelle: "Carte", stable_id: 992, mandatory: true }
-            ])
-          end
-
-          before do
-            champ = dossier.champs.find { _1.stable_id == 992 }
-            geo_area = champ.geo_areas.first
-            geo_area.geometry = { "i'm" => "invalid" }
-            geo_area.save!(validate: false)
-          end
-
-          it 'can still fork' do
-            new_dossier.champs.load # load relation so champs are validated below
-
-            expect(new_dossier.champs.find { _1.stable_id == 992 }.geo_areas.first).not_to be_valid
-          end
-        end
-      end
-    end
-  end
-
-  describe '#make_diff' do
-    subject { dossier.make_diff(forked_dossier) }
-
-    context 'with no changes' do
-      it { is_expected.to eq(added: [], updated: [], removed: []) }
-    end
-
-    context 'with updated groupe instructeur' do
-      before {
-        dossier.update!(groupe_instructeur: create(:groupe_instructeur))
-        forked_dossier.assign_to_groupe_instructeur(dossier.procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:manual))
-      }
-
-      it do
-        expect(subject).to eq(added: [], updated: [], removed: [])
-        expect(forked_dossier.user_buffer_changes?).to be_truthy
-      end
-    end
-
-    context 'with updated champ' do
-      let(:updated_champ) { forked_dossier.champs.find { _1.stable_id == 99 } }
-
-      before { updated_champ.update(value: 'new value') }
-
-      it 'user_buffer_changes? should reflect dossier state' do
-        expect(subject).to eq(added: [], updated: [updated_champ], removed: [])
-        expect(dossier.user_buffer_changes?).to be_truthy
-        expect(forked_dossier.user_buffer_changes?).to be_truthy
-        expect(updated_champ.user_buffer_changes?).to be_truthy
-      end
-    end
-
-    context 'with new revision' do
-      let(:added_champ) { forked_dossier.project_champs_public.find { _1.libelle == "Un nouveau champ text" } }
-      let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
-      let(:new_dossier) { dossier.clone }
-
-      before do
-        procedure.draft_revision.add_type_de_champ({
-          type_champ: TypeDeChamp.type_champs.fetch(:text),
-          libelle: "Un nouveau champ text"
-        })
-        procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
-        procedure.publish_revision!(procedure.administrateurs.first)
-      end
-
-      it {
-        expect(dossier.revision_id).to eq(procedure.revisions.first.id)
-        expect(new_dossier.revision_id).to eq(procedure.published_revision.id)
-        expect(forked_dossier.revision_id).to eq(procedure.published_revision_id)
-        expect(subject[:added].map(&:stable_id)).to eq([added_champ.stable_id])
-        expect(subject[:added].first.new_record?).to be_truthy
-        expect(subject[:updated]).to be_empty
-        expect(subject[:removed]).to eq([removed_champ])
-      }
-    end
-  end
-
-  describe '#merge_fork' do
-    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-    subject { dossier.merge_fork(forked_dossier) }
-
-    context 'with updated champ' do
-      let(:repetition_champ) { dossier.project_champs_public.last }
-      let(:updated_champ) { forked_dossier.champs.find { _1.stable_id == 99 } }
-      let(:updated_repetition_champs) { forked_dossier.champs.filter { _1.stable_id == 994 } }
-
-      before do
-        repetition_champ.add_row(updated_by: 'test')
-        dossier.en_construction!
-        dossier.champs.each do |champ|
-          champ.update(value: 'old value')
-        end
-        updated_champ.update(value: 'new value')
-        updated_repetition_champs.each { _1.update(value: 'new value in repetition') }
-        dossier.debounce_index_search_terms_flag.remove
-      end
-
-      it { expect { subject }.to change { dossier.champs.reload.size }.by(0) }
-      it { expect { subject }.not_to change { dossier.champs.order(:created_at).reject { _1.stable_id.in?([99, 994]) }.map(&:value) } }
-      it { expect { subject }.to have_enqueued_job(DossierIndexSearchTermsJob).with(dossier) }
-      it { expect { subject }.to change { dossier.champs.find { _1.stable_id == 99 }.value }.from('old value').to('new value') }
-      it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
-
-      it 'fork is hidden after merge' do
-        subject
-        expect(forked_dossier.reload.hidden_by_reason).to eq("stale_fork")
-        expect(dossier.reload.editing_forks).to be_empty
-      end
-    end
-
-    context 'with new revision' do
-      let(:added_champ) {
-        tdc = forked_dossier.revision.types_de_champ.find { _1.libelle == "Un nouveau champ text" }
-        forked_dossier.champ_for_update(tdc, updated_by: 'test')
-      }
-      let(:added_repetition_champ) {
-        tdc_repetition = forked_dossier.revision.types_de_champ.find { _1.stable_id == 993 }
-        tdc = forked_dossier.revision.types_de_champ.find { _1.libelle == "Texte en répétition" }
-        row_id = forked_dossier.repetition_row_ids(tdc_repetition).first
-        forked_dossier.champ_for_update(tdc, row_id:, updated_by: 'test')
-      }
-      let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
-      let(:updated_champ) { dossier.champs.find { _1.stable_id == 991 } }
-      let(:repetition_updated_champ) { champ_for_update(dossier.champs.find { _1.stable_id == 994 }) }
-      let(:forked_updated_champ) { champ_for_update(forked_dossier.champs.find { _1.stable_id == 991 }) }
-      let(:forked_repetition_updated_champ) { champ_for_update(forked_dossier.champs.find { _1.stable_id == 994 }) }
-
-      before do
-        dossier.champs.each do |champ|
-          champ.update(value: 'old value')
-        end
-        dossier.reload
-        procedure.draft_revision.add_type_de_champ({
-          type_champ: TypeDeChamp.type_champs.fetch(:text),
-          libelle: "Un nouveau champ text"
-        })
-        procedure.draft_revision.add_type_de_champ({
-          type_champ: TypeDeChamp.type_champs.fetch(:text),
-          parent_stable_id: 993,
-          libelle: "Texte en répétition"
-        })
-        procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
-        procedure.draft_revision.find_and_ensure_exclusive_use(updated_champ.stable_id).update(libelle: "Un nouveau libelle")
-        procedure.publish_revision!(procedure.administrateurs.first)
-        added_champ.update(value: 'new value for added champ')
-        added_repetition_champ.update(value: "new value in repetition champ")
-
-        forked_updated_champ.update(value: 'new value for updated champ')
-        forked_repetition_updated_champ.update(value: 'new value for updated champ in repetition')
-        updated_champ.update(type: 'Champs::TextareaChamp')
-        repetition_updated_champ.update(type: 'Champs::TextareaChamp')
-        dossier.reload
-        forked_dossier.reload
-      end
-
-      it { expect { subject }.to change { dossier.filled_champs.size }.by(3) }
-      it { expect { subject }.to change { dossier.filled_champs.map(&:to_s).sort }.from(['Non', 'old value', 'old value']).to(["Non", "new value for added champ", "new value for updated champ", "new value for updated champ in repetition", "new value in repetition champ", "old value"]) }
-
-      it "dossier after merge should be on last published revision" do
-        expect(dossier.revision_id).to eq(procedure.revisions.first.id)
-        expect(forked_dossier.revision_id).to eq(procedure.published_revision_id)
-
-        subject
-        perform_enqueued_jobs only: DestroyRecordLaterJob
-
-        expect(dossier.revision_id).to eq(procedure.published_revision_id)
-        expect(dossier.filled_champs.all? { dossier.revision.in?(_1.type_de_champ.revisions) }).to be_truthy
-        expect(Dossier.exists?(forked_dossier.id)).to be_falsey
-      end
-    end
-
-    context 'with old revision having repetition' do
-      let(:removed_champ) { dossier.project_champs_public.find(&:repetition?) }
-
-      before do
-        dossier.champs.each do |champ|
-          champ.update(value: 'old value')
-        end
-        procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
-        procedure.publish_revision!(procedure.administrateurs.first)
-      end
-      it 'works' do
-        expect { subject }.not_to raise_error
-      end
-    end
-
-    context 'with added row' do
-      let(:repetition_champ) { forked_dossier.project_champs_public.find(&:repetition?) }
-
-      def dossier_rows(dossier) = dossier.champs.filter(&:row?)
-
-      before do
-        repetition_champ.add_row(updated_by: 'test')
-      end
-
-      it {
-        expect(dossier_rows(dossier).size).to eq(2)
-        expect { subject }.to change { dossier_rows(dossier).size }.by(1)
-      }
-    end
-
-    context 'with removed row' do
-      let(:repetition_champ) { forked_dossier.project_champs_public.find(&:repetition?) }
-      let(:row_id) { repetition_champ.row_ids.first }
-
-      def dossier_rows(dossier) = dossier.champs.filter(&:row?)
-      def dossier_discarded_rows(dossier) = dossier_rows(dossier).filter(&:discarded?)
-
-      before do
-        repetition_champ.remove_row(row_id, updated_by: 'test')
-      end
-
-      it {
-        expect(dossier_rows(dossier).size).to eq(2)
-        expect { subject }.to change { dossier_rows(dossier).size }.by(0)
-      }
-
-      it {
-        expect(dossier_discarded_rows(dossier).size).to eq(0)
-        expect { subject }.to change { dossier_discarded_rows(dossier).size }.by(1)
-      }
     end
   end
 end
