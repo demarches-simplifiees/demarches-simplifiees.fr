@@ -2619,6 +2619,38 @@ type DossierSupprimerMessagePayload {
   message: Message
 }
 
+type DropDownListChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
+  Les colonnes sont des données associées à un champ. ex: Pour un champ adresse,
+  nous pouvons renvoyer les composant (rue, code postal, departement, region)
+  sous formes de colonne
+  """
+  columns: [Column!]!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+  value: String
+}
+
 type DropDownListChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
@@ -2899,6 +2931,37 @@ type EpciChampDescriptor implements ChampDescriptor {
   Type de la valeur du champ.
   """
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type ExplicationChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
+  Les colonnes sont des données associées à un champ. ex: Pour un champ adresse,
+  nous pouvons renvoyer les composant (rue, code postal, departement, region)
+  sous formes de colonne
+  """
+  columns: [Column!]!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type ExplicationChampDescriptor implements ChampDescriptor {
@@ -3348,6 +3411,38 @@ type GroupeInstructeurWithDossiers {
   ): DeletedDossierConnection!
 }
 
+type HeaderSectionChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
+  Les colonnes sont des données associées à un champ. ex: Pour un champ adresse,
+  nous pouvons renvoyer les composant (rue, code postal, departement, region)
+  sous formes de colonne
+  """
+  columns: [Column!]!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  level: Int!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+}
+
 type HeaderSectionChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
@@ -3364,6 +3459,7 @@ type HeaderSectionChampDescriptor implements ChampDescriptor {
   Libellé du champ.
   """
   label: String!
+  level: Int!
 
   """
   Est-ce que le champ est obligatoire ?

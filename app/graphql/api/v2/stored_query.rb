@@ -428,6 +428,9 @@ class API::V2::StoredQuery
       collapsibleExplanationEnabled
       collapsibleExplanationText
     }
+    ... on HeaderSectionChampDescriptor {
+      level
+    }
   }
 
   fragment AvisFragment on Avis {
@@ -481,6 +484,7 @@ class API::V2::StoredQuery
   fragment RootChampFragment on Champ {
     ... on RepetitionChamp {
       rows {
+        id
         champs {
           ...ChampFragment
         }
@@ -606,6 +610,9 @@ class API::V2::StoredQuery
       engagementJuridique {
         ...EngagementJuridiqueFragment
       }
+    }
+    ... on HeaderSectionChamp {
+      level
     }
   }
 
