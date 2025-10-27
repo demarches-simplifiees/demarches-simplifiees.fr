@@ -75,10 +75,7 @@ module ChampExternalDataConcern
     private
 
     def fetch_external_data_later
-      if uses_external_data? && external_id.present? && data.nil?
-        update_column(:fetch_external_data_exceptions, [])
-        ChampFetchExternalDataJob.perform_later(self, external_id)
-      end
+      ChampFetchExternalDataJob.perform_later(self, external_id)
     end
 
     # it should only be called after fetch! event callback
