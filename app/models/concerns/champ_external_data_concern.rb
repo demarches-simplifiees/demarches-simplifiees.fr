@@ -87,10 +87,6 @@ module ChampExternalDataConcern
       fetch_external_data.then { handle_result(it) }
     end
 
-    def should_ui_auto_refresh?
-      false
-    end
-
     def external_identifier_changed?
       external_id_changed?
     end

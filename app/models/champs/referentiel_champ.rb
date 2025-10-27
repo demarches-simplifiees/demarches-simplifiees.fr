@@ -47,10 +47,6 @@ class Champs::ReferentielChamp < Champ
     exact_match?
   end
 
-  def should_ui_auto_refresh?
-    true
-  end
-
   def prefillable_stable_ids
     referentiel_mapping_prefillable_with_stable_id
       .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }

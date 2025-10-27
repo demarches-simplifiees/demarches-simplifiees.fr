@@ -31,10 +31,6 @@ class Champs::PieceJustificativeChamp < Champ
     nil # the job is already enqueued by the ImageProcessorJob when the blob is attached
   end
 
-  def should_ui_auto_refresh?
-    RIB?
-  end
-
   # store directly the data in value_json
   # as there is no transformation to do
   def update_external_data!(data:)
