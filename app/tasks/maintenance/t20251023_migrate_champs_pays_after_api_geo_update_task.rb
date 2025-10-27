@@ -41,7 +41,7 @@ module Maintenance
     }.freeze
 
     def collection
-      Champs::PaysChamp.where(value: COUNTRY_VALUE_MAPPING.keys)
+      Champs::PaysChamp.select(:id, :value, :external_id)
     end
 
     def process(champ)
@@ -55,7 +55,9 @@ module Maintenance
     end
 
     def count
-      # NOOP too long
+      with_statement_timeout("15min") do
+        collection.count(:id)
+      end
     end
   end
 end
