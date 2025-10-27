@@ -105,7 +105,7 @@ module ChampExternalDataConcern
           raise reason
         in Failure(retryable: false, reason:, code:)
           save_external_exception(reason, code)
-          Sentry.capture_exception(reason)
+          Sentry.capture_exception(reason) if code != 404
           external_data_error!
         end
       elsif result.present?

@@ -82,12 +82,26 @@ RSpec.describe ChampExternalDataConcern do
         allow(champ).to receive(:ready_for_external_call?).and_return(true)
         champ.fetch_later!
 
-        failure = Failure(retryable: false, reason: Exception.new('nop'), code: 404)
+        failure = Failure(retryable: false, reason: Exception.new('nop'), code:)
         allow(champ).to receive(:fetch_external_data).and_return(failure)
+        allow(Sentry).to receive(:capture_exception)
         champ.fetch!
       end
 
-      it { expect(champ).to be_external_error }
+      context 'when code is 404' do
+        let(:code) { 404 }
+
+        it do
+          expect(champ).to be_external_error
+          expect(Sentry).not_to have_received(:capture_exception)
+        end
+      end
+
+      context 'when code is 500' do
+        let(:code) { 500 }
+
+        it { expect(Sentry).to have_received(:capture_exception) }
+      end
     end
 
     describe 'fetch a retryable failure, now is back in waiting_for_job state' do
