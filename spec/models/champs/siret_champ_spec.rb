@@ -62,29 +62,7 @@ describe Champs::SiretChamp do
     subject(:fetch_etablissement!) { champ.fetch_etablissement!(siret, build_stubbed(:user)) }
 
     shared_examples 'an error occured' do
-      it { expect { fetch_etablissement! }.to change { champ.reload.etablissement }.to(nil) }
-
-      it { expect { fetch_etablissement! }.to change { Etablissement.count }.by(-1) }
-
-      it { expect(fetch_etablissement!).to eq(false) }
     end
-
-    context 'when the SIRET is empty' do
-      let(:siret) { '' }
-
-      it_behaves_like 'an error occured'
-    end
-
-    context "when the SIRET is invalid because of it's length" do
-      let(:siret) { '1234' }
-
-      it_behaves_like 'an error occured'
-    end
-
-    context "when the SIRET is invalid because of it's checksum" do
-      let(:siret) { '82812345600023' }
-
-      it_behaves_like 'an error occured'
     end
 
     context 'when the API is unavailable due to network error' do

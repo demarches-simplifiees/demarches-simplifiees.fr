@@ -2,33 +2,18 @@
 
 class Champs::SiretChamp < Champ
   validate :validate_etablissement, if: :validate_champ_value?
-  before_save :clear_previous_result, if: -> { external_id_changed? }
 
   def uses_external_data?
     true
   end
 
-  def should_ui_auto_refresh?
-    true
-  end
-
-  def clear_previous_result
-    if etablissement.present?
-      etablissement_to_destroy = etablissement
-      update_column(:etablissement_id, nil)
-      etablissement_to_destroy.destroy
-    end
-    self.value_json = nil
-    self.value = nil
-    self.prefilled = false
-  end
-
-  def external_data_present?
-    etablissement.present?
+  def after_reset_external_data
+    super
+    update_columns(prefilled: false, value: nil, etablissement_id: nil)
   end
 
   def update_external_data!(data:)
-    update(value: external_id)
+    update(etablissement: data[:etablissement], value: external_id)
   end
 
   def fetch_external_data

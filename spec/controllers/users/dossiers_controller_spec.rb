@@ -880,6 +880,43 @@ describe Users::DossiersController, type: :controller do
         end
       end
 
+      context 'when the champ is a siret champ' do
+        let(:types_de_champ_public) { [{ type: :siret }] }
+        let(:champs_public_attributes) do
+          {
+            first_champ.public_id => { external_id: }
+          }
+        end
+
+        before do
+          first_champ.update_columns(external_state: 'fetched', etablissement_id: create(:etablissement).id)
+        end
+
+        context 'when the SIRET is invalid' do
+          let(:external_id) { 'nomatterthereason' }
+          it 'resets its etablissement' do
+            expect { subject }.to change { first_champ.reload.etablissement }.from(an_instance_of(Etablissement)).to(nil)
+          end
+        end
+
+        context 'when the SIRET is empty' do
+          let(:external_id) { '' }
+
+          it { expect { subject }.not_to have_enqueued_job(ChampFetchExternalDataJob) }
+        end
+
+        context "when the SIRET is invalid because of it's length" do
+          let(:external_id) { '1234' }
+
+          it { expect { subject }.not_to have_enqueued_job(ChampFetchExternalDataJob) }
+        end
+
+        context "when the SIRET is invalid because of it's checksum" do
+          let(:external_id) { '82812345600023' }
+
+          it { expect { subject }.not_to have_enqueued_job(ChampFetchExternalDataJob) }
+        end
+      end
       context 'when the champ is an external champ in fetched state' do
         let(:types_de_champ_public) { [{ type: :rnf }] }
         let(:champs_public_attributes) do
