@@ -5,12 +5,17 @@ module ChampExternalDataConcern
 
   include Dry::Monads[:result]
 
-  # A champ is updated
-  # before_save cleanup_if_empty : back to initial state if external_id
-  # after_update_commit fetch_external_data_later : start ChampFetchExternalDataJob
-  # the job call fetch_and_handle_result which return data or exception
-  # if data, the job call update_external_data!
-  # if exception, the job call save_external_exception
+  # A champ is updated, a reset and fetch later event is triggered
+  # from the controller
+  # idle -> waiting_for_job
+  # A ChampFetchExternalDataJob is processed, the fetch event is triggered
+  # waiting_for_job -> fetching
+  # if an retryable error occurs, the retry event is triggered and the job is re-enqueued
+  # fetching -> waiting_for_job
+  # if a non-retryable error occurs, the external_data_error event is triggered
+  # fetching -> external_error
+  # if the data is fetched successfully, the external_data_fetched event is triggered
+  # fetching -> fetched
 
   included do
     include AASM
