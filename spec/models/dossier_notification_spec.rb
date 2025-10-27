@@ -367,8 +367,8 @@ RSpec.describe DossierNotification, type: :model do
       subject { DossierNotification.notifications_for_instructeur_procedure(groupe_instructeur_ids, instructeur) }
 
       it 'includes correct notifications and excludes the others' do
-        expect(subject['traites']['dossier_modifie']).to include(notification_instructeur)
-        expect(subject['a-suivre']['dossier_modifie']).to include(other_notification_instructeur)
+        expect(subject['traites']['dossier_modifie']).to include(dossier)
+        expect(subject['a-suivre']['dossier_modifie']).to include(other_dossier)
       end
     end
   end
