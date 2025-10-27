@@ -16,6 +16,10 @@ class Champs::SiretChamp < Champ
     update(etablissement: data[:etablissement], value: external_id)
   end
 
+  def ready_for_external_call?
+    Siret.new(siret: external_id).valid?
+  end
+
   def fetch_external_data
     fetch_etablissement!(external_id, dossier.user)
   end
@@ -25,9 +29,6 @@ class Champs::SiretChamp < Champ
   end
 
   def fetch_etablissement!(siret, user)
-    return clear_previous_result if siret.empty?
-    return clear_previous_result if Siret.new(siret:).invalid?
-
     etablissement = APIEntrepriseService.create_etablissement(self, siret.delete(" "), user&.id)
     return clear_previous_result if etablissement.blank?
 
