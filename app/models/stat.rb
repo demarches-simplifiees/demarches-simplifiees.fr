@@ -34,7 +34,7 @@ class Stat < ApplicationRecord
           COUNT(*) FILTER ( WHERE state != 'brouillon' ) AS "not_brouillon",
           COUNT(*) FILTER ( WHERE state != 'brouillon' and depose_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
           COUNT(*) FILTER ( WHERE state != 'brouillon' and depose_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
-          COUNT(*) FILTER ( WHERE state = 'brouillon' AND editing_fork_origin_id IS NULL AND for_procedure_preview = false) AS "brouillon",
+          COUNT(*) FILTER ( WHERE state = 'brouillon' AND for_procedure_preview = false) AS "brouillon",
           COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "en_construction",
           COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "en_instruction",
           COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "termines"

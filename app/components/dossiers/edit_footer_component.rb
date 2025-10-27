@@ -41,8 +41,6 @@ class Dossiers::EditFooterComponent < ApplicationComponent
   def submit_button_path
     if can_submit_draft?
       brouillon_dossier_path(@dossier)
-    elsif @dossier.editing_fork?
-      modifier_dossier_path(@dossier.editing_fork_origin)
     else
       modifier_dossier_path(@dossier)
     end

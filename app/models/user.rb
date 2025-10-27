@@ -71,11 +71,7 @@ class User < ApplicationRecord
   end
 
   def invite?(dossier)
-    if dossier.editing_fork?
-      invites.exists?(dossier: dossier.editing_fork_origin_id)
-    else
-      invites.exists?(dossier:)
-    end
+    invites.exists?(dossier:)
   end
 
   def owns_or_invite?(dossier)
