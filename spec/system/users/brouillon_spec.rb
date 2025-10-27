@@ -316,11 +316,7 @@ describe 'The user', js: true do
 
   scenario 'extends dossier experation date more than one time, ' do
     simple_procedure.update(procedure_expires_when_termine_enabled: true)
-    user_old_dossier = travel_to(simple_procedure.duree_conservation_dossiers_dans_ds.month.ago) do
-      create(:dossier,
-       procedure: simple_procedure,
-       user: user)
-    end
+    user_old_dossier = create(:dossier, procedure: simple_procedure, user: user, brouillon_close_to_expiration_notice_sent_at: 3.weeks.ago)
     login_as(user, scope: :user)
     visit brouillon_dossier_path(user_old_dossier)
 
@@ -330,7 +326,8 @@ describe 'The user', js: true do
 
     months_before_expiration = Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION + simple_procedure.duree_conservation_dossiers_dans_ds
 
-    travel_to((months_before_expiration.months + 1.day).from_now) do
+    travel_to((months_before_expiration.months).from_now) do
+      user_old_dossier.update(brouillon_close_to_expiration_notice_sent_at: 3.weeks.ago)
       visit brouillon_dossier_path(user_old_dossier)
       expect(page).to have_css('.fr-callout__title', text: 'Votre dossier a expiré', visible: true)
       find('#test-user-repousser-expiration').click

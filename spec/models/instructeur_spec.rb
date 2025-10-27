@@ -631,7 +631,8 @@ describe Instructeur, type: :model do
         let!(:expiring_dossier_termine_auto_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_expired_at: 2.days.ago) }
         let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
         let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, procedure: procedure) }
-        before { subject }
+
+        before { procedure.dossiers.each(&:update_expired_at) }
 
         it do
           expect(subject['a_suivre']).to eq(1)
