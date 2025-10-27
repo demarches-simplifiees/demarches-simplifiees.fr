@@ -83,10 +83,6 @@ module ChampExternalDataConcern
       fetch_external_data.then { handle_result(it) }
     end
 
-    def external_identifier_changed?
-      external_id_changed?
-    end
-
     def ready_for_external_call?
       external_id.present?
     end

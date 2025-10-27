@@ -37,11 +37,6 @@ class Champs::PieceJustificativeChamp < Champ
     update!(value_json: data, fetch_external_data_exceptions: [])
   end
 
-  # Does not detect file removal
-  def external_identifier_changed?
-    piece_justificative_file.attached? && piece_justificative_file.blobs.first.changed?
-  end
-
   def ready_for_external_call?
     piece_justificative_file.blobs.present?
   end
