@@ -21,7 +21,6 @@ module Users
     before_action :ensure_editing_brouillon, only: [:brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :ensure_dossier_has_changes, only: [:submit_en_construction], if: :update_with_stream?
-    before_action :set_dossier_as_editing_fork, only: [:submit_en_construction], if: :update_with_fork?
     before_action :set_dossier_stream, only: [:modifier, :update, :submit_en_construction, :champ], if: :update_with_stream?
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
@@ -287,52 +286,28 @@ module Users
 
     def modifier
       @dossier = dossier_with_champs
-
-      if update_with_stream?
-        @dossier_for_editing = dossier
-      else
-        # TODO remove when all forks are gone
-        @dossier_for_editing = dossier.owner_editing_fork.with_champs
-      end
     end
 
     def submit_en_construction
-      @dossier.with_champs
-      editing_fork_origin = dossier.editing_fork_origin
-      dossier_en_construction = editing_fork_origin || dossier
-      editing_fork_origin&.with_champs
+      dossier.with_champs
 
       if cast_bool(params.dig(:dossier, :pending_correction))
-        dossier_en_construction.resolve_pending_correction
+        dossier.resolve_pending_correction
       end
 
       submit_dossier_and_compute_errors
 
       if dossier.errors.blank? && dossier.can_passer_en_construction?
-        if editing_fork_origin.present?
-          # TODO remove when all forks are gone
-          editing_fork_origin.merge_fork(dossier)
-          # merge_fork do a `reload`, the preloader is used to reload the whole tree
-          editing_fork_origin.with_champs
-        else
-          dossier.merge_user_buffer_stream!
-        end
+        dossier.merge_user_buffer_stream!
+        dossier.submit_en_construction!
 
-        dossier_en_construction.submit_en_construction!
-
-        redirect_to dossier_path(dossier_en_construction)
+        redirect_to dossier_path(dossier)
       else
-        @dossier_for_editing = dossier
-        if editing_fork_origin.present?
-          @dossier = editing_fork_origin
-        end
-
         render :modifier
       end
     end
 
     def update
-      @dossier = update_with_fork? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
       update_dossier_and_compute_errors
 
@@ -570,7 +545,7 @@ module Users
 
     def dossier_scope
       if action_name == 'update' || action_name == 'champ'
-        Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
+        Dossier.visible_by_user.or(Dossier.for_procedure_preview)
       elsif action_name == 'restore'
         Dossier.hidden_by_user.or(Dossier.hidden_by_not_modified_for_a_long_time)
       elsif action_name == 'extend_conservation_and_restore' ||
@@ -592,15 +567,6 @@ module Users
       DossierPreloader.load_one(dossier, pj_template:)
     end
 
-    def set_dossier_as_editing_fork
-      @dossier = dossier.find_editing_fork(dossier.user)
-
-      return if @dossier.present?
-
-      flash[:alert] = t('users.dossiers.en_construction_submitted')
-      redirect_to dossier_path(dossier)
-    end
-
     def ensure_dossier_has_changes
       return if dossier.with_champs.user_buffer_changes?
 
@@ -613,11 +579,7 @@ module Users
     end
 
     def update_with_stream?
-      dossier.update_with_stream?
-    end
-
-    def update_with_fork?
-      dossier.update_with_fork?
+      dossier.en_construction?
     end
 
     def update_dossier_and_compute_errors
@@ -655,14 +617,6 @@ module Users
     def submit_dossier_and_compute_errors
       dossier.validate(:champs_public_value)
       dossier.check_mandatory_and_visible_champs
-
-      # TODO remove when all forks are gone
-      if dossier.editing_fork_origin&.pending_correction?
-        dossier.editing_fork_origin.validate(:champs_public_value)
-        dossier.editing_fork_origin.errors.where(:pending_correction).each do |error|
-          dossier.errors.import(error)
-        end
-      end
     end
 
     def ensure_ownership!
