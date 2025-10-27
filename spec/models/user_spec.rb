@@ -68,16 +68,6 @@ describe User, type: :model do
     context 'when user is not invite at the dossier' do
       it { expect(subject.call(dossier)).to be_falsey }
     end
-
-    context 'when user is invite to the origin dossier of a forked dossier' do
-      let(:editing_fork) { dossier.owner_editing_fork }
-
-      before do
-        create :invite, dossier_id: dossier.id, user: invite_user
-      end
-
-      it { expect(subject.call(editing_fork)).to be_truthy }
-    end
   end
 
   describe '#owns_or_invite?' do

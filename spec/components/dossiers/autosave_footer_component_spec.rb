@@ -15,7 +15,7 @@ RSpec.describe Dossiers::AutosaveFooterComponent, type: :component do
   end
 
   context 'when editing fork and can pass en construction' do
-    let(:dossier) { create(:dossier, :en_construction).find_or_create_editing_fork(create(:user)) }
+    let(:dossier) { create(:dossier, :en_construction) }
 
     it 'displays en construction explanation' do
       expect(component).to have_text("Vos modifications")
