@@ -69,11 +69,6 @@ class Dsfr::InputComponent < ApplicationComponent
     dom_id(object, "#{@attribute}-messages")
   end
 
-  # i18n lookups
-  def label
-    get_slot(:label).presence || default_label
-  end
-
   def dsfr_input_classname
     'fr-input'
   end
@@ -106,8 +101,6 @@ class Dsfr::InputComponent < ApplicationComponent
   def show_password_id
     dom_id(object, "#{@attribute}_show_password")
   end
-
-  private
 
   def default_label
     object.class.human_attribute_name(@attribute)

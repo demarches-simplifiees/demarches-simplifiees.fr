@@ -46,7 +46,7 @@
       .fr-table__footer
         .fr-table__footer--start
         .fr-table__footer--middle
-          = paginate @deleted_dossiers, views_prefix: 'shared'
+          = helpers.paginate @deleted_dossiers, views_prefix: 'shared'
         .fr-table__footer--end.flex-no-grow
 
   - else

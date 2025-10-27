@@ -23,7 +23,7 @@ RSpec.describe SwitchDomainBannerComponent, type: :component do
   end
 
   subject(:rendered) do
-    with_request_url path, host: request_host, format: nil do
+    with_request_url path, host: request_host do
       render_inline(described_class.new(user: user))
     end
   end

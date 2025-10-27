@@ -49,8 +49,6 @@ module TPS
     default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u'] - ['img', 'a']
 
-    config.view_component.capture_compatibility_patch_enabled = true
-
     # ActionDispatch's IP spoofing detection is quite limited, and often rejects
     # legitimate requests from misconfigured proxies (such as mobile telcos).
     #
@@ -102,7 +100,7 @@ module TPS
     config.view_component.generate.preview = true
     config.view_component.show_previews_source = true
     config.view_component.default_preview_layout = 'component_preview'
-    config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+    config.view_component.previews.paths << "#{Rails.root}/spec/components/previews"
 
     config.graphql.parser_cache = true
 
