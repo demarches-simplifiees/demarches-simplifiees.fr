@@ -151,7 +151,7 @@ describe 'Referentiel API:' do
         # update champ should not trigger an error and render a feedback
         expect(page).to have_content("Recherche en cours.")
 
-        # but submitting bef  ore API response was fetched should trigger an error
+        # but submitting before API response was fetched should trigger an error
         click_on("Déposer le dossier")
         expect(page).to have_content("En attente de réponse...")
 

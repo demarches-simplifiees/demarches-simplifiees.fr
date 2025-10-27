@@ -108,7 +108,7 @@ module ChampExternalDataConcern
     end
 
     def update_external_data!(data:)
-      update!(data: data, fetch_external_data_exceptions: [])
+      update!(data:, fetch_external_data_exceptions: [])
     end
 
     def cleanup_if_empty
