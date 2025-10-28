@@ -582,44 +582,20 @@ describe Champ do
     let(:types_de_champ_public) { [] }
     let(:champ) { dossier.champs.first }
 
-    subject { champ.clone(fork) }
+    subject { champ.clone }
 
-    context 'when champ public' do
+    context 'champ public' do
       let(:types_de_champ_public) { [{ type: :piece_justificative }] }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
 
-      context 'when fork' do
-        let(:fork) { true }
-        it do
-          expect(subject.piece_justificative_file).to be_attached
-        end
-      end
-
-      context 'when not fork' do
-        let(:fork) { false }
-        it do
-          expect(subject.piece_justificative_file).to be_attached
-        end
-      end
+      it { expect(subject.piece_justificative_file).to be_attached }
     end
 
     context 'champ private' do
       let(:dossier) { create(:dossier, :with_populated_annotations, procedure:) }
       let(:types_de_champ_private) { [{ type: :piece_justificative }] }
 
-      context 'when fork' do
-        let(:fork) { true }
-        it do
-          expect(subject.piece_justificative_file).to be_attached
-        end
-      end
-
-      context 'when not fork' do
-        let(:fork) { false }
-        it do
-          expect(subject.piece_justificative_file).not_to be_attached
-        end
-      end
+      it { expect(subject.piece_justificative_file).not_to be_attached }
     end
   end
 end

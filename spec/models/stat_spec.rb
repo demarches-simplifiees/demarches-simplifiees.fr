@@ -38,7 +38,6 @@ describe Stat, type: :model do
       create_list(:dossier, 1, :sans_suite, procedure:)
 
       # ignored dossiers
-      create(:dossier, :brouillon, editing_fork_origin: Dossier.en_construction.first)
       create(:dossier, :brouillon, procedure: create(:procedure, :draft))
       create(:dossier, :brouillon, for_procedure_preview: true)
     end
