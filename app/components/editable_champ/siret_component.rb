@@ -3,6 +3,11 @@
 class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
   include EtablissementHelper
 
+  def initialize(form:, champ:, seen_at: nil, opts: {})
+    super
+    @attribute = :external_id
+  end
+
   def dsfr_input_classname
     'fr-input'
   end

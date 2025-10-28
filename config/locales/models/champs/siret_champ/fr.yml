@@ -3,12 +3,13 @@ fr:
     attributes:
       champs/siret_champ:
         hints:
-          value: 'Format attendu : 14 chiffres. Exemple : 500 001 234 56789'
+          external_id: 'Format attendu : 14 chiffres. Exemple : 500 001 234 56789'
     errors:
       models:
         champs/siret_champ:
           attributes:
-            value:
+            external_id:
+              format: '%{message}'
               wrong_siret_format: 'doit comporter exactement 14 chiffres. Exemple : 500 001 234 56789'
               invalid: 'comporte une erreur de saisie. Corrigez-la.'
               not_found: 'ne correspond pas à un établissement existant'

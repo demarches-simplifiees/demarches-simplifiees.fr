@@ -45,7 +45,7 @@ module Dsfr
           { state: :info, text: t('.siret.fetched', raison_sociale_or_name: raison_sociale_or_name(@champ.etablissement), forme_juridique: @champ.etablissement.entreprise_forme_juridique) }
         elsif @champ.external_error?
           { state: :warning, text: t('.siret.error', value: pretty_siret(@champ.external_id)) }
-        elsif @champ.waiting_for_external_data?
+        elsif @champ.pending?
           { state: :info, text: t('.siret.pending', value: pretty_siret(@champ.external_id)) }
         end
       when TypeDeChamp.type_champs[:rna]

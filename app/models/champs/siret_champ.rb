@@ -3,6 +3,7 @@
 class Champs::SiretChamp < Champ
   include Dry::Monads[:result]
   validate :validate_etablissement, if: :validate_champ_value?
+  normalizes :external_id, with: -> siret { siret.gsub(/[[:space:]]/, "") }
 
   def uses_external_data?
     true
@@ -51,16 +52,17 @@ class Champs::SiretChamp < Champ
   # When API Entreprise is down, user won't be stuck because
   # SIRET controller creates an etablissement in degraded mode
   def validate_etablissement
-    return if value.blank?
+    return if external_id.blank?
     return if etablissement.present?
+    return if pending?
 
     validator = ActiveModel::Validations::SiretValidator.new(attributes: { value: true })
 
     # siret may have been formatted with spaces
-    validator.validate_each(self, :value, value.gsub(/[[:space:]]/, ""))
+    validator.validate_each(self, :external_id, external_id.gsub(/[[:space:]]/, ""))
 
     if errors.empty?
-      errors.add(:value, :not_found)
+      errors.add(:external_id, :not_found)
     end
   end
 end
