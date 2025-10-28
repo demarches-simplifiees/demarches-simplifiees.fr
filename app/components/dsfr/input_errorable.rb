@@ -50,6 +50,14 @@ module Dsfr
         end
       end
 
+      def default_hint
+        if I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+          I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+        elsif I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html")
+          I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html").html_safe
+        end
+      end
+
       private
 
       # lookup for edge case from `form.rich_text_area`
@@ -122,19 +130,10 @@ module Dsfr
         Array(array_or_string_or_nil).index_with { true }
       end
 
-      def hint
-        get_slot(:hint).presence || default_hint
-      end
-
-      def default_hint
-        if I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
-          I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
-        elsif I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html")
-          I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html").html_safe
-        end
-      end
-
-      def hint? = hint.present?
+      # Replaces `hint?` because view_component considers that
+      # having `default_hint` method means we always render a hint,
+      # which is not true.
+      def hint_renderable? = hint&.content?
 
       def password?
         false

@@ -6,7 +6,7 @@
       - if required?
         = render EditableChamp::AsteriskMandatoryComponent.new
 
-      - if hint?
+      - if hint_renderable?
         %span.fr-hint-text= hint
 
   = @form.public_send(@input_type, @attribute, input_opts)

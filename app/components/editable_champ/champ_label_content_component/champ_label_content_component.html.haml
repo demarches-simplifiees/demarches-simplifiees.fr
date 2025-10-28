@@ -14,7 +14,7 @@
   %span.updated-at.highlighted
     = t('.check_content_rebased')
 
-- if hint?
+- if hint_renderable?
   %span.fr-hint-text{ data: { controller: 'date-input-hint' } }= hint
 
 - if @champ.textarea? && @champ.character_limit_base&.positive?

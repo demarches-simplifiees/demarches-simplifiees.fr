@@ -56,7 +56,7 @@
                   %span.fr-icon.fr-icon-user-line{ style: 'width: 25px; text-align: center;' }
 
   .fr-mt-1w
-    = paginate @groupe_instructeurs
+    = helpers.paginate @groupe_instructeurs
 
 = form_for @procedure,
   method: :patch,
