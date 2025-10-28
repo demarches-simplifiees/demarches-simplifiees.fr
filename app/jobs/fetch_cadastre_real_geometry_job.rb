@@ -3,6 +3,8 @@
 class FetchCadastreRealGeometryJob < ApplicationJob
   MAX_ATTEMPT = 10
   discard_on ActiveRecord::RecordNotFound
+  discard_on ActiveJob::DeserializationError
+
   retry_on StandardError, attempts: MAX_ATTEMPT, wait: :polynomially_longer
 
   def perform(geo_area)
