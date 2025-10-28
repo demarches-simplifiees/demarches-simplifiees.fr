@@ -1,26 +1,26 @@
 - if display == 'true'
   .fr-container{ id: "notifications-container-#{procedure_id}", class: 'fr-my-1w fr-px-0' }
     .fr-container.fr-background-alt--grey.fr-p-2w{ data: { controller: 'truncate-notifications' } }
-      - notifications.each.with_index do |(statut, notifications_statut), index|
+      - notifications.each_with_index do |(statut, dossiers_by_notification_type), index|
         - if index != 0
           .fr-hr.fr-pb-1w.fr-mt-1w
         %p.font-weight-bold.fr-mr-2w.fr-mb-1w
           = t("instructeurs.procedures.index.statuts.#{statut}")
 
-        - notifications_statut.each do |type, notifications_type|
+        - dossiers_by_notification_type.each do |notification_type, dossiers|
           .flex.align-center.fr-mt-1w.notification-container-type
             .fr-col-3.fr-pr-1w.notification-badge
-              = tag_notification(notifications_type.first, generic: true)
+              = tag_notification(notification_type, generic: true)
 
             .fr-col-9.flex.align-center.notification-dossiers
-              - notifications_type.each.with_index do |notification, index|
+              - dossiers.each_with_index do |dossier, index|
                 .flex.align-center.notification-dossier
                   .fr-link.fr-link--sm.fr-mr-1w
-                    = link_to notification.dossier_id, instructeur_dossier_path(procedure_id, notification.dossier_id)
+                    = link_to dossier.id, instructeur_dossier_path(procedure_id, dossier.id)
                   .fr-mb-0
                     %span.no-wrap.fr-text--sm
-                      = notification.dossier.owner_name
-                  - if index != (notifications_type.size - 1)
+                      = dossier.owner_name
+                  - if index != (dossiers.size - 1)
                     .fr-mx-2w
                       |
               %span.no-wrap.fr-text--sm.fr-text--bold.fr-mb-0.notification-indicator

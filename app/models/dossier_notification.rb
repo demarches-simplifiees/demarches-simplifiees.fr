@@ -226,30 +226,32 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_for_instructeur_procedure(groupe_instructeur_ids, instructeur)
-    dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+    notifications = DossierNotification
+      .to_display
+      .joins(:dossier)
+      .where(dossiers: { groupe_instructeur_id: groupe_instructeur_ids }, instructeur:)
 
-    dossiers_by_statut = {
-      'a-suivre' => dossiers.by_statut('a-suivre'),
-      'suivis' => dossiers.by_statut('suivis', instructeur:),
-      'traites' => dossiers.by_statut('traites')
+    dossier_ids_with_notifications_by_statut = {
+      'a-suivre' => notifications.merge(Dossier.by_statut('a-suivre')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
+      'suivis' => notifications.merge(Dossier.by_statut('suivis', instructeur:)).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
+      'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) }
     }
 
-    notifications_by_dossier_id = DossierNotification
-      .where(dossier: dossiers, instructeur:)
-      .to_display
-      .includes(dossier: [:etablissement, :individual])
-      .group_by(&:dossier_id)
+    dossiers = Dossier
+      .select(:id)
+      .where(id: dossier_ids_with_notifications_by_statut.values.flat_map(&:values).flatten.uniq)
+      .includes(:etablissement, :individual)
+      .index_by(&:id)
 
-    dossiers_by_statut.filter_map do |statut, dossiers|
-      notifications = dossiers
-        .flat_map { |d| notifications_by_dossier_id[d.id] || [] }
-        .group_by(&:notification_type)
+    dossier_ids_with_notifications_by_statut.filter_map do |statut, dossier_ids_by_notification_type|
+      next if dossier_ids_by_notification_type.empty?
 
-      next if notifications.empty?
+      dossier_ids_by_sorted_notification_type = notification_types.keys.index_with { |type| dossier_ids_by_notification_type[type] }.compact
 
-      sorted_notifications = notification_types.keys.index_with { |type| notifications[type] }.compact
+      dossiers_by_sorted_notification_type = dossier_ids_by_sorted_notification_type
+        .transform_values { |dossier_ids| dossiers.values_at(*dossier_ids) }
 
-      [statut, sorted_notifications]
+      [statut, dossiers_by_sorted_notification_type]
     end.to_h
   end
 

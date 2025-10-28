@@ -393,7 +393,7 @@ class Dossier < ApplicationRecord
 
   scope :with_notifications, -> (instructeur) {
     joins(:dossier_notifications)
-      .where(dossier_notifications: { instructeur_id: [instructeur.id, nil] })
+      .where(dossier_notifications: { instructeur_id: instructeur.id })
       .merge(DossierNotification.to_display)
       .distinct
   }
