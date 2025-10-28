@@ -22,10 +22,6 @@ class Champs::COJOChamp < Champ
     true
   end
 
-  def should_ui_auto_refresh?
-    true
-  end
-
   def fetch_external_data
     COJOService.new.(accreditation_number:, accreditation_birthdate:)
   end

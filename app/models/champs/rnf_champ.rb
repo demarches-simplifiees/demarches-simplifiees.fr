@@ -25,10 +25,6 @@ class Champs::RNFChamp < Champ
     true
   end
 
-  def should_ui_auto_refresh?
-    true
-  end
-
   def code_departement
     address.present? && address['departmentCode']
   end

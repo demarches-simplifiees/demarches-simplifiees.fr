@@ -5,18 +5,22 @@ module ChampExternalDataConcern
 
   include Dry::Monads[:result]
 
-  # A champ is updated
-  # before_save cleanup_if_empty : back to initial state if external_id
-  # after_update_commit fetch_external_data_later : start ChampFetchExternalDataJob
-  # the job call fetch_and_handle_result which return data or exception
-  # if data, the job call update_external_data!
-  # if exception, the job call save_external_exception
+  # A champ is updated, a reset and fetch later event is triggered
+  # from the controller
+  # idle -> waiting_for_job
+  # A ChampFetchExternalDataJob is processed, the fetch event is triggered
+  # waiting_for_job -> fetching
+  # if an retryable error occurs, the retry event is triggered and the job is re-enqueued
+  # fetching -> waiting_for_job
+  # if a non-retryable error occurs, the external_data_error event is triggered
+  # fetching -> external_error
+  # if the data is fetched successfully, the external_data_fetched event is triggered
+  # fetching -> fetched
 
   included do
     include AASM
 
     attribute :fetch_external_data_exceptions, :external_data_exception, array: true
-    before_save :cleanup_if_empty
 
     # useful to serialize idle as nil
     # otherwise, all the champ are mark as dirty and saved on first dossier.save
@@ -39,104 +43,54 @@ module ChampExternalDataConcern
         transitions from: :idle, to: :waiting_for_job, guard: :ready_for_external_call?
       end
 
-      # TODO: remove idle after first MEP
       event :fetch, after_commit: :fetch_and_handle_result do
-        transitions from: [:idle, :waiting_for_job], to: :fetching
+        transitions from: [:waiting_for_job], to: :fetching
       end
 
-      # TODO: remove idle after first MEP
       event :external_data_fetched do
-        transitions from: [:idle, :fetching], to: :fetched
+        transitions from: [:fetching], to: :fetched
       end
 
-      # TODO: remove idle after first MEP
       event :external_data_error do
-        transitions from: [:idle, :waiting_for_job, :fetching], to: :external_error
+        transitions from: [:waiting_for_job, :fetching], to: :external_error
       end
 
-      # TODO: remove idle after first MEP
       event :retry do
-        transitions from: [:idle, :fetching], to: :waiting_for_job
+        transitions from: [:fetching], to: :waiting_for_job
       end
 
-      # TODO: remove idle after first MEP
       event :reset_external_data, after: :after_reset_external_data do
-        transitions from: [:waiting_for_job, :fetching, :fetched, :external_error], to: :idle
+        transitions from: [:idle, :waiting_for_job, :fetching, :fetched, :external_error], to: :idle
       end
     end
 
     def pending? = waiting_for_job? || fetching?
+    def done? = fetched? || external_error?
 
-    def fetch_external_data_later
-      if uses_external_data? && external_id.present? && data.nil?
-        update_column(:fetch_external_data_exceptions, [])
-        ChampFetchExternalDataJob.perform_later(self, external_id)
-      end
-    end
+    def uses_external_data? = false
 
-    def waiting_for_external_data?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (!external_data_present? && !external_error_present?)
-    end
-
-    def external_data_fetched?
-      uses_external_data? &&
-        should_ui_auto_refresh? &&
-        ready_for_external_call? &&
-        (external_data_present? || external_error_present?)
-    end
-
-    def external_error_present?
-      fetch_external_data_exceptions.present? && self.external_id.present?
-    end
-
+    # TODO: move in private section after refactoring api entreprise jobs
     def save_external_exception(exception, code)
       exceptions = fetch_external_data_exceptions || []
       exceptions << ExternalDataException.new(reason: exception.inspect, code:)
       update_columns(fetch_external_data_exceptions: exceptions, data: nil, value_json: nil, value: nil)
     end
 
-    def uses_external_data?
-      false
-    end
-
     private
+
+    def ready_for_external_call? = external_id.present?
+
+    def fetch_external_data_later
+      ChampFetchExternalDataJob.perform_later(self, external_id)
+    end
 
     # it should only be called after fetch! event callback
     def fetch_and_handle_result
       fetch_external_data.then { handle_result(it) }
     end
 
-    def should_ui_auto_refresh?
-      false
-    end
-
-    def external_identifier_changed?
-      external_id_changed?
-    end
-
-    def ready_for_external_call?
-      external_id.present?
-    end
-
-    def external_data_present?
-      data.present?
-    end
-
     def fetch_external_data
       raise NotImplemented.new(:fetch_external_data)
-    end
-
-    def update_external_data!(data:)
-      update!(data: data, fetch_external_data_exceptions: [])
-    end
-
-    def cleanup_if_empty
-      if uses_external_data? && persisted? && external_identifier_changed?
-        self.data = nil
-      end
     end
 
     def handle_result(result)
@@ -151,13 +105,17 @@ module ChampExternalDataConcern
           raise reason
         in Failure(retryable: false, reason:, code:)
           save_external_exception(reason, code)
-          Sentry.capture_exception(reason)
+          Sentry.capture_exception(reason) if code != 404
           external_data_error!
         end
       elsif result.present?
         update_external_data!(data: result)
         external_data_fetched!
       end
+    end
+
+    def update_external_data!(data:)
+      update!(data:, fetch_external_data_exceptions: [])
     end
 
     def after_reset_external_data

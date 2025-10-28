@@ -21,40 +21,30 @@ describe Champs::RNFChamp, type: :model do
       end
     end
 
-    context 'when external_id is nil and data is nil' do
-      it 'is valid' do
-        expect(with_state(external_id: nil, data: nil).validate(:champs_public_value)).to be_truthy
-      end
-    end
-
-    context 'when external_id is present but data is nil' do
-      it 'is invalid' do
-        expect(with_state(external_id: '075-FDD-00003-01', data: nil).validate(:champs_public_value)).to be_falsey
-      end
+    context 'when the champ is pending' do
+      before { champ.update_columns(external_state: 'waiting_for_job') }
 
       it 'adds the correct error message' do
-        champ = with_state(external_id: '075-FDD-00003-01', data: nil)
         champ.validate(:champs_public_value)
 
         expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.api_response_pending'))
       end
     end
 
-    context 'when external_id and data are present' do
+    context 'when the champ is fetched' do
+      before { champ.update_columns(external_state: 'fetched') }
+
       it 'is valid' do
-        expect(with_state(external_id: '075-FDD-00003-01', data: { ok: :ok }).validate(:champs_public_value)).to be_truthy
+        expect(champ.validate(:champs_public_value)).to be_truthy
       end
     end
 
     context 'when fetch_external_data_exceptions contains a non-retryable error' do
       let(:error) { ExternalDataException.new(reason: 'Not retryable', code: 404) }
 
-      it 'is invalid' do
-        expect(with_state(external_id: '075-FDD-00003-01', data: nil, fetch_external_data_exceptions: [error]).validate(:champs_public_value)).to be_falsey
-      end
+      before { champ.update_columns(external_state: 'external_error', fetch_external_data_exceptions: [error]) }
 
       it 'adds the correct error message' do
-        champ = with_state(external_id: '075-FDD-00003-01', data: nil, fetch_external_data_exceptions: [error])
         champ.validate(:champs_public_value)
 
         expect(champ.errors[:value]).to include(I18n.t('activerecord.errors.messages.code_404'))

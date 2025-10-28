@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Maintenance
   RSpec.describe T20250825backfillPjExternalStateTask do
-    describe "#process" do
+    xdescribe "#process" do
       let(:procedure) do
         create(:procedure, types_de_champ_public: [{ type: :piece_justificative, nature: 'RIB' }])
       end

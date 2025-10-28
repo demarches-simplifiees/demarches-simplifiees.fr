@@ -354,7 +354,7 @@ module Users
       type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id], :public)
       champ = dossier.project_champ(type_de_champ, row_id: params[:row_id])
 
-      champ.validate(:champs_public_value) if champ.external_data_fetched?
+      champ.validate(:champs_public_value) if champ.done?
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide = []
@@ -636,7 +636,7 @@ module Users
           champ.update_timestamps if dossier.brouillon?
 
           if champ.uses_external_data?
-            champ.reset_external_data! if champ.may_reset_external_data?
+            champ.reset_external_data!
             champ.fetch_later! if champ.may_fetch_later?
           end
 
@@ -646,7 +646,7 @@ module Users
           end
         end
 
-        if params[:validate].present? && !champ.waiting_for_external_data?
+        if params[:validate].present? && !champ.pending?
           dossier.validate(:champs_public_value)
         end
       end
