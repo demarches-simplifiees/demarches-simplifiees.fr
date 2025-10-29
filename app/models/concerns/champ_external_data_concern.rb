@@ -118,8 +118,8 @@ module ChampExternalDataConcern
       update!(data:, fetch_external_data_exceptions: [])
     end
 
-    def after_reset_external_data
-      update(data: nil, value_json: nil, fetch_external_data_exceptions: [])
+    def after_reset_external_data(opts = {})
+      update(opts.merge(data: nil, value_json: nil, fetch_external_data_exceptions: []))
     end
   end
 end

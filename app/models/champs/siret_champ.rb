@@ -9,9 +9,8 @@ class Champs::SiretChamp < Champ
     true
   end
 
-  def after_reset_external_data
-    super
-    update_columns(prefilled: false, value: nil, etablissement_id: nil)
+  def after_reset_external_data(opts = {})
+    super(etablissement_id: nil, prefilled: false, value: nil)
   end
 
   def update_external_data!(data:)
