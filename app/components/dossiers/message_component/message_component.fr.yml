@@ -8,3 +8,6 @@ fr:
   automatic_email: Email automatique
   you: Vous
   deleted_body: Message supprimé
+  read_label: Lu
+  unread_label: Non lu
+  applicant: Usager

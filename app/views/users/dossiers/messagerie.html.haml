@@ -10,4 +10,4 @@
     %p.fr-text-mention--grey
       = t('views.users.dossiers.messagerie.mailbox')
 
-  = render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_user, messagerie_seen_at: nil, new_commentaire: @commentaire, form_url: commentaire_dossier_path(@dossier) }
+= render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_user, messagerie_seen_at: nil, new_commentaire: @commentaire, form_url: commentaire_dossier_path(@dossier), instructeurs_messagerie_seen_at: @instructeurs_messagerie_seen_at }

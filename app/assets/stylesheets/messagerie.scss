@@ -45,14 +45,6 @@ ol.messages-list > li::marker {
   align-items: flex-start;
   margin-bottom: $default-padding;
 
-  h2 {
-    margin-bottom: $default-spacer;
-  }
-
-  .date {
-    float: right;
-  }
-
   blockquote {
     quotes: '« ' ' »' '“' '”';
     font-style: italic;

@@ -551,6 +551,7 @@ module Instructeurs
 
     def mark_messagerie_as_read
       current_instructeur.mark_tab_as_seen(dossier, :messagerie)
+      Commentaire.mark_usager_messages_as_seen(dossier)
     end
 
     def mark_avis_as_read
