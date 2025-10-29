@@ -96,7 +96,10 @@ class Export < ApplicationRecord
   end
 
   def self.for_groupe_instructeurs(groupe_instructeurs_ids)
-    joins(:groupe_instructeurs).where(groupe_instructeurs: groupe_instructeurs_ids).distinct(:id)
+    joins(:groupe_instructeurs)
+      .where(groupe_instructeurs: groupe_instructeurs_ids)
+      .where.not(id: joins(:groupe_instructeurs).where.not(groupe_instructeurs: groupe_instructeurs_ids))
+      .distinct
   end
 
   def self.by_key(groupe_instructeurs_ids)

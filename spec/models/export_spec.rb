@@ -226,8 +226,8 @@ RSpec.describe Export, type: :model do
     end
 
     it 'returns unique exports even if they belong to multiple matching groupe instructeurs' do
-      results = Export.for_groupe_instructeurs([groupe_instructeur1.id])
-      expect(results.count).to eq(1)
+      results = Export.for_groupe_instructeurs([groupe_instructeur1.id, groupe_instructeur2.id])
+      expect(results.count).to eq(2)
     end
 
     it 'does not returns export including more than the specified groupe instructeurs' do
