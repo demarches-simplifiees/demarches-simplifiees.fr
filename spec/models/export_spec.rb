@@ -229,6 +229,10 @@ RSpec.describe Export, type: :model do
       results = Export.for_groupe_instructeurs([groupe_instructeur1.id])
       expect(results.count).to eq(1)
     end
+
+    it 'does not returns export including more than the specified groupe instructeurs' do
+      expect(Export.for_groupe_instructeurs([groupe_instructeur2.id])).to eq([export2])
+    end
   end
 
   describe '.dossiers_count' do
