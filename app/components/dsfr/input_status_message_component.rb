@@ -21,7 +21,7 @@ module Dsfr
     end
 
     def siret_support_status?
-      type_de_champ.siret? && @champ.idle?
+      type_de_champ.siret? && @champ.external_id.present?
     end
 
     def rna_support_statut?
@@ -39,9 +39,10 @@ module Dsfr
     def statut_message
       case @champ.type_de_champ.type_champ
       when TypeDeChamp.type_champs[:siret]
-        if @champ.fetched? && @champ.etablissement.entreprise_capital_social.present?
+        # TODO: use fetched? after T20251029backfillChampSiretExternalStateTask
+        if @champ.etablissement && @champ.etablissement.entreprise_capital_social.present?
           { state: :info, text: t('.siret.fetched_with_capital', raison_sociale_or_name: raison_sociale_or_name(@champ.etablissement), forme_juridique: @champ.etablissement.entreprise_forme_juridique, capital_sociale: pretty_currency(@champ.etablissement.entreprise_capital_social)) }
-        elsif @champ.fetched? && @champ.etablissement.entreprise_capital_social.blank?
+        elsif @champ.etablissement && @champ.etablissement.entreprise_capital_social.blank?
           { state: :info, text: t('.siret.fetched', raison_sociale_or_name: raison_sociale_or_name(@champ.etablissement), forme_juridique: @champ.etablissement.entreprise_forme_juridique) }
         elsif @champ.external_error?
           { state: :warning, text: t('.siret.error', value: pretty_siret(@champ.external_id)) }

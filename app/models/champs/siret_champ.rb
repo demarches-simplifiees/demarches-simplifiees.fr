@@ -9,6 +9,11 @@ class Champs::SiretChamp < Champ
     true
   end
 
+  # TODO: remove after T20251029backfillChampSiretExternalStateTask
+  def external_id
+    idle? && etablissement_id.present? ? value : super
+  end
+
   def after_reset_external_data(opts = {})
     super(etablissement_id: nil, prefilled: false, value: nil)
   end
