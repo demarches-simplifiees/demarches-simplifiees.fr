@@ -82,10 +82,19 @@ export class Clipboard2Controller extends Controller {
       return;
     }
 
-    const lastChild = wrapper.lastElementChild;
+    // lastElementChild only returns HTMLElements (skipping TextNode).
+    // But numbers champs have a <span>separator</span> in between groups of 3 digits ie:
+    //  <textNode text="1"><span class="delimiter"/><textNode text="000">
+    // So we use childNodes to get the actual last node (which can be a TextNode).
+    // Then we insert after that node
+    const lastChild = wrapper.childNodes[wrapper.childNodes.length - 1] as
+      | Node
+      | undefined;
 
-    if (lastChild && lastChild.tagName !== 'BR') {
+    if (lastChild instanceof HTMLElement && lastChild.tagName !== 'BR') {
       lastChild.appendChild(button);
+    } else if (lastChild instanceof Text && lastChild.parentNode) {
+      lastChild.parentNode.insertBefore(button, lastChild.nextSibling);
     } else {
       wrapper.appendChild(button);
     }
