@@ -1,0 +1,20 @@
+%main#content{ role: "main" }
+  .fr-container
+    .fr-my-7w.fr-mt-md-12w.fr-mb-md-10w.fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.fr-grid-row--center
+      .fr-py-0.fr-col-12.fr-col-md-6
+        %h1= t('.title')
+        %p.fr-text--sm.fr-mb-3w= t('.code_label')
+        %p.fr-text--lead.fr-mb-3w= t('.intro')
+        %p.fr-text--sm.fr-mb-3w= t('.guidance')
+        %p.fr-text--sm.fr-mb-5w
+          = t('.contact_intro')
+          = " "
+          = link_to t('.contact_action'), contact_path, class: 'fr-link'
+
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to t('.primary_action'), root_path, class: 'fr-btn'
+          %li
+            = link_to t('.secondary_action'), contact_path, class: 'fr-btn fr-btn--secondary'
+
+      = render partial: "artwork"

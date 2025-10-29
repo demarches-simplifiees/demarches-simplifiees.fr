@@ -58,4 +58,29 @@ RSpec.describe ErrorsController, type: :controller do
       it_behaves_like 'specific action'
     end
   end
+
+  describe 'GET #unprocessable_entity' do
+    context 'with InvalidAuthenticityToken in HTML format' do
+      before do
+        request.env['action_dispatch.exception'] = ActionController::InvalidAuthenticityToken.new('CSRF detected')
+      end
+
+      it 'renders the dedicated CSRF template' do
+        get :unprocessable_entity, format: :html
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template('errors/unprocessable_entity_csrf')
+        expect(response.body).to include(I18n.t('errors.unprocessable_entity_csrf.title'))
+      end
+    end
+
+    context 'without InvalidAuthenticityToken' do
+      it 'falls back to the generic template' do
+        get :unprocessable_entity, format: :html
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template('errors/unprocessable_entity')
+      end
+    end
+  end
 end

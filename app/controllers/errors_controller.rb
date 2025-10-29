@@ -15,7 +15,14 @@ class ErrorsController < ApplicationController
   end
 
   def not_found = render_error 404
-  def unprocessable_entity = render_error 422
+
+  def unprocessable_entity
+    if request.format&.html? && invalid_authenticity_token_exception?
+      render :unprocessable_entity_csrf, status: :unprocessable_entity
+    else
+      render_error 422
+    end
+  end
 
   def show # generic page for others errors
     @status = params[:status].to_i
@@ -45,5 +52,10 @@ class ErrorsController < ApplicationController
       format.html { render status: }
       format.json { render status:, json: { status:, name: Rack::Utils::HTTP_STATUS_CODES[status] } }
     end
+  end
+
+  def invalid_authenticity_token_exception?
+    exception = request.env['action_dispatch.exception'] || request.env['action_dispatch.original_exception']
+    exception.is_a?(ActionController::InvalidAuthenticityToken)
   end
 end

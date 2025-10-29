@@ -1,0 +1,12 @@
+---
+en:
+  errors:
+    unprocessable_entity_csrf:
+      title: "Pick up your application"
+      intro: "Your session changed and we can't continue with this action."
+      guidance: "Open the service again from the homepage or your account, then restart the operation."
+      primary_action: "Back to the homepage"
+      secondary_action: "Need help?"
+      contact_intro: "Need more help?"
+      contact_action: "Contact us"
+      code_label: "Error 422"

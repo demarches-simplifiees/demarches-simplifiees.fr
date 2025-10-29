@@ -1,0 +1,12 @@
+---
+fr:
+  errors:
+    unprocessable_entity_csrf:
+      title: "Reprenez votre démarche"
+      intro: "Votre session a changé et nous ne pouvons pas poursuivre cette action."
+      guidance: "Rouvrez le service depuis la page d’accueil ou votre espace usager, puis recommencez l’opération."
+      primary_action: "Retour à l’accueil"
+      secondary_action: "Besoin d’aide ?"
+      contact_intro: "Besoin d’aide supplémentaire ?"
+      contact_action: "Contactez-nous"
+      code_label: "Erreur 422"
