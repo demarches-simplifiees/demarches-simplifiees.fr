@@ -11,7 +11,7 @@ FactoryBot.define do
       procedure_presentation = export.procedure_presentation
       filters = Array.wrap(procedure_presentation&.filters_for(export.statut))
       sorted_column = procedure_presentation&.sorted_column
-      export.key = Export.generate_cache_key(export.groupe_instructeurs.map(&:id), filters, sorted_column)
+      export.key = Export.generate_cache_key(filters, sorted_column)
       export.user_profile = export.groupe_instructeurs.first&.instructeurs&.first if export.user_profile.nil?
       export.dossiers_count = 10 if !export.pending?
     end

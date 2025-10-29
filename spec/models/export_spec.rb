@@ -63,23 +63,6 @@ RSpec.describe Export, type: :model do
     end
   end
 
-  describe '.by_key groupe_instructeurs' do
-    let!(:procedure) { create(:procedure) }
-    let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
-    let!(:gi_2) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
-    let!(:gi_3) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
-
-    context 'when an export is made for one groupe instructeur' do
-      let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
-
-      it do
-        expect(Export.by_key([gi_1.id])).to be_empty
-        expect(Export.by_key([gi_2.id, gi_1.id])).to eq([export])
-        expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id])).to be_empty
-      end
-    end
-  end
-
   describe '.find_or_create_fresh_export' do
     let!(:procedure) { create(:procedure) }
     let(:instructeur) { create(:instructeur) }
