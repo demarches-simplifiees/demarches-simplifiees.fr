@@ -230,7 +230,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       end
 
       context 'when the correction is resolved' do
-        context "when the dossier has not been modified: commentaire discarded or dossier en_instruction" do
+        context "when the dossier has not been modified due to a change en_instruction" do
           let!(:correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: 1.minute.ago) }
 
           it 'returns a badge non modifié' do
@@ -246,6 +246,19 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
           it 'returns a badge modifié' do
             correction.reload
             expect(subject).to have_text("modifié")
+          end
+        end
+
+        context "when the correction has been discarded by instructeur" do
+          let!(:correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: nil) }
+
+          before do
+            commentaire.soft_delete!
+          end
+
+          it "returns a badge correction annulée" do
+            correction.reload
+            expect(subject).to have_text("Demande de correction annulée")
           end
         end
       end

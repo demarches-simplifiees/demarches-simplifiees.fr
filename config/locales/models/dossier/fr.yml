@@ -27,6 +27,7 @@ fr:
         for_user: "à corriger"
         modified: "Dossier modifié"
         not_modified: "Dossier non modifié"
+        discarded: "Demande de correction annulée"
       traitement:
         state: "État"
       traitement/state:

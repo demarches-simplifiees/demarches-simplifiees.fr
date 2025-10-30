@@ -21,7 +21,15 @@ class Dossiers::MessageComponent < ApplicationComponent
     return if groupe_gestionnaire || commentaire.dossier_correction.nil?
 
     if commentaire.dossier_correction.resolved?
-      helpers.correction_resolved_badge(commentaire.dossier_correction.resolved_by_modification? ? :modified : :not_modified)
+      type = if commentaire.discarded?
+        :discarded
+      elsif commentaire.dossier_correction.resolved_by_modification?
+        :modified
+      else
+        :not_modified
+      end
+
+      helpers.correction_resolved_badge(type)
     else
       helpers.pending_correction_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
     end
