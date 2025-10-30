@@ -33,8 +33,8 @@
                     = form.label :mandatory, "Champ obligatoire", for: dom_id(type_de_champ, :mandatory)
               = form.text_field :libelle, class: 'fr-input small-margin small width-100', id: dom_id(type_de_champ, :libelle), data: input_autofocus
             - if type_de_champ.header_section?
-              %p
-                %small Nous numérotons automatiquement les titres lorsqu’aucun de vos titres ne commence par un chiffre.
+              %p.fr-text--sm
+                Nous numérotons automatiquement les titres lorsqu’aucun de vos titres ne commence par un chiffre.
 
             - if !type_de_champ.header_section? && !type_de_champ.titre_identite?
               .cell.fr-mt-1w
