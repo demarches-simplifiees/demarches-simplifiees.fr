@@ -13,7 +13,8 @@
         %p.fr-text--sm= t('views.users.dossiers.identite.complete_siret')
 
       .fr-fieldset__element.fr-fieldset__element--short-text
-        = render Dsfr::InputComponent.new form: f, attribute: :siret, opts: { placeholder: t('views.users.dossiers.identite.siret_placeholder') }
+        = render Dsfr::InputComponent.new(form: f, attribute: :siret) do |c|
+          - c.with_hint { t('views.users.dossiers.identite.siret_hint') }
 
       .fr-fieldset__element
         %p.fr-text--sm= t('views.users.dossiers.identite.siret_help_html',
