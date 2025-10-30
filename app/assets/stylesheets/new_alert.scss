@@ -3,21 +3,29 @@
 
 .alert {
   padding: 15px;
-  color: #ffffff;
-  a {
-    color: #ffffff;
-  }
   &:before {
     margin-right: 3px;
   }
 }
 
 .alert-danger {
+  color: #fff;
   background-color: var(--error-425-625);
 }
 
+:root[data-fr-theme='dark'] .alert-danger {
+  color: var(--text-default-error);
+  background-color: var(--background-contrast-error);
+}
+
 .alert-success {
+  color: #fff;
   background-color: var(--success-425-625);
+}
+
+:root[data-fr-theme='dark'] .alert-success {
+  color: var(--text-default-success);
+  background-color: var(--background-contrast-success);
 }
 
 .alert-fixed {
