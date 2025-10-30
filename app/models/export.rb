@@ -79,7 +79,7 @@ class Export < ApplicationRecord
       time_span_type:,
       statut:,
       include_archived:,
-      key: generate_cache_key(groupe_instructeurs.map(&:id), filtered_columns, sorted_column)
+      key: generate_cache_key(filtered_columns, sorted_column)
     }
 
     recent_export = pending
@@ -96,18 +96,16 @@ class Export < ApplicationRecord
   end
 
   def self.for_groupe_instructeurs(groupe_instructeurs_ids)
-    joins(:groupe_instructeurs).where(groupe_instructeurs: groupe_instructeurs_ids).distinct(:id)
+    joins(:groupe_instructeurs)
+      .where(groupe_instructeurs: groupe_instructeurs_ids)
+      .where.not(id: joins(:groupe_instructeurs).where.not(groupe_instructeurs: groupe_instructeurs_ids))
+      .distinct
   end
 
-  def self.by_key(groupe_instructeurs_ids)
-    where(key: generate_cache_key(groupe_instructeurs_ids))
-  end
-
-  def self.generate_cache_key(groupe_instructeurs_ids, filtered_columns = [], sorted_column = nil)
+  def self.generate_cache_key(filtered_columns = [], sorted_column = nil)
     columns_key = ([sorted_column] + filtered_columns).compact.map(&:id).sort.join
 
     [
-      groupe_instructeurs_ids.sort.join('-'),
       Digest::MD5.hexdigest(columns_key)
     ].join('--')
   end

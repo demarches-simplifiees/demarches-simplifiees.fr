@@ -8,7 +8,7 @@ module Administrateurs
     helper_method :create_archive_url
 
     def index
-      @exports = Export.ante_chronological.by_key(all_groupe_instructeurs.map(&:id))
+      @exports = Export.for_groupe_instructeurs(all_groupe_instructeurs).ante_chronological
       @average_dossier_weight = @procedure.average_dossier_weight
       @count_dossiers_termines_by_month = @procedure
         .dossiers
