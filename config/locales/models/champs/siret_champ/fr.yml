@@ -3,7 +3,7 @@ fr:
     attributes:
       champs/siret_champ:
         hints:
-          external_id: 'Format attendu : 14 chiffres. Exemple : 500 001 234 56789'
+          value: 'Format attendu : 14 chiffres. Exemple : 500 001 234 56789'
     errors:
       models:
         champs/siret_champ:

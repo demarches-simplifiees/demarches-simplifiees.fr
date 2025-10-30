@@ -6,16 +6,14 @@
   = procedure.libelle
 
 - if procedure.persisted? && procedure.estimated_duration_visible?
-  %p
-    %small
-      %span.fr-icon-timer-line{ "aria-hidden" => "true" }
-      = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
+  %p.fr-text--sm
+    %span.fr-icon-timer-line{ "aria-hidden" => "true" }
+    = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
 - if procedure.auto_archive_on
-  %p
-    %small
-      %span.fr-icon-calendar-line
-        Date limite : #{procedure_auto_archive_datetime(procedure)}.
+  %p.fr-text--sm
+    %span.fr-icon-calendar-line
+      Date limite : #{procedure_auto_archive_datetime(procedure)}.
 
 = yield
 
