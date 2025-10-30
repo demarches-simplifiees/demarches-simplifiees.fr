@@ -2,6 +2,7 @@
 
 module Dsfr
   class InputStatusMessageComponent < ApplicationComponent
+    include EtablissementHelper
     delegate :type_de_champ, to: :@champ
     delegate :prefilled?, to: :@champ
     def initialize(errors_on_attribute:, error_full_messages:, champ:)
@@ -12,10 +13,15 @@ module Dsfr
     end
 
     def statutable?
+      siret_support_status? ||
       rna_support_statut? ||
       referentiel_support_statut? ||
       prefilled? ||
       pjs_statut?
+    end
+
+    def siret_support_status?
+      type_de_champ.siret? && @champ.external_id.present?
     end
 
     def rna_support_statut?
@@ -31,8 +37,18 @@ module Dsfr
     end
 
     def statut_message
-      return { state: :info, text: t('.prefilled') } if prefilled?
       case @champ.type_de_champ.type_champ
+      when TypeDeChamp.type_champs[:siret]
+        # TODO: use fetched? after T20251029backfillChampSiretExternalStateTask
+        if @champ.etablissement && @champ.etablissement.entreprise_capital_social.present?
+          { state: :info, text: t('.siret.fetched_with_capital', raison_sociale_or_name: raison_sociale_or_name(@champ.etablissement), forme_juridique: @champ.etablissement.entreprise_forme_juridique, capital_sociale: pretty_currency(@champ.etablissement.entreprise_capital_social)) }
+        elsif @champ.etablissement && @champ.etablissement.entreprise_capital_social.blank?
+          { state: :info, text: t('.siret.fetched', raison_sociale_or_name: raison_sociale_or_name(@champ.etablissement), forme_juridique: @champ.etablissement.entreprise_forme_juridique) }
+        elsif @champ.external_error?
+          { state: :warning, text: t('.siret.error', value: pretty_siret(@champ.external_id)) }
+        elsif @champ.pending?
+          { state: :info, text: t('.siret.pending', value: pretty_siret(@champ.external_id)) }
+        end
       when TypeDeChamp.type_champs[:rna]
         { state: :info, text: t(".rna.data_fetched", title: @champ.title, address: @champ.full_address) }
       when TypeDeChamp.type_champs[:referentiel]
@@ -58,7 +74,6 @@ module Dsfr
           text = bank_name.present? ? t('.pj.valid_with_bank', iban:, bank_name:) : t('.pj.valid', iban:)
           { state: :valid, text: }
         end
-
       end
     end
   end

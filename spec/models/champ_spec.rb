@@ -584,7 +584,19 @@ describe Champ do
 
     subject { champ.clone }
 
-    context 'champ public' do
+    context 'when champ referentiel' do
+      let(:referentiel) { create(:api_referentiel, :autocomplete) }
+      let(:types_de_champ_public) { [{ type: :referentiel, referentiel:, mandatory: true }] }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+
+      context 'when referentiel' do
+        let(:data) { { 'id' => '123', 'label' => 'foo' } }
+        before { champ.update_columns(data:) }
+        it { expect(subject.data).to eq(data) }
+      end
+    end
+
+    context 'when champ public' do
       let(:types_de_champ_public) { [{ type: :piece_justificative }] }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
 

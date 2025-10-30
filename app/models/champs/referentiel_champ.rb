@@ -26,6 +26,7 @@ class Champs::ReferentielChamp < Champ
       )
       propagate_prefill(data)
     end
+    dossier.with_champ_stream(self).enqueue_fetch_external_data_jobs
   end
 
   def data=(data)
@@ -40,6 +41,8 @@ class Champs::ReferentielChamp < Champ
       super(data)
       self.value_json = cast_displayable_values(data)
       propagate_prefill(data)
+
+      dossier.with_champ_stream(self).enqueue_fetch_external_data_jobs
     end
   end
 
@@ -48,7 +51,7 @@ class Champs::ReferentielChamp < Champ
   end
 
   def prefillable_stable_ids
-    referentiel_mapping_prefillable_with_stable_id
+    @prefillable_stable_ids ||= referentiel_mapping_prefillable_with_stable_id
       .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
   end
 
@@ -131,7 +134,12 @@ class Champs::ReferentielChamp < Champ
   end
 
   def cast_value_for_type_de_champ(value, type_de_champ)
-    { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }.merge(prefilled: true)
+    case type_de_champ.type_champ.to_sym
+    when :siret
+      { external_id: call_caster(type_de_champ.type_champ, value, type_de_champ) }
+    else
+      { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }
+    end.merge(prefilled: true)
   end
 
   def cast_displayable_values(json)
@@ -165,7 +173,6 @@ class Champs::ReferentielChamp < Champ
 
   def update_repetition_prefillable_champs(data, repetition_type_de_champ, mappings)
     group_mappings_by_json_array(mappings).each do |array_key, array_mappings|
-      # binding.irb
       json_array = Array(JsonPath.on(data.with_indifferent_access, array_key).first)
       next unless json_array.is_a?(Array)
 
@@ -208,6 +215,7 @@ class Champs::ReferentielChamp < Champ
 
   def update_prefillable_champ(type_de_champ:, raw_value:, row_id: nil)
     prefill_champ = dossier.champ_for_update(type_de_champ, row_id:, updated_by: :api)
+
     prefill_champ.update(cast_value_for_type_de_champ(raw_value, type_de_champ))
   end
 

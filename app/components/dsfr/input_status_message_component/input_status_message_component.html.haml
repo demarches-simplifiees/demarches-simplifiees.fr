@@ -4,5 +4,8 @@
       = "« #{@champ.libelle} » "
 
       = @error_full_messages.to_sentence
-  - elsif statutable?
+  - elsif statutable? && statut_message.present?
     %p.fr-message{ class: "fr-message--#{statut_message[:state]}" }= sanitize(statut_message[:text])
+
+  - if prefilled?
+    %p.fr-message.fr-message--info= sanitize(t('.prefilled'))

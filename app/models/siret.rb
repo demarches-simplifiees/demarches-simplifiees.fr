@@ -12,8 +12,6 @@ class Siret
   before_validation :remove_whitespace
 
   def remove_whitespace
-    if siret.present?
-      siret.delete!(' ')
-    end
+    self.siret = siret.delete(' ') if siret.present?
   end
 end

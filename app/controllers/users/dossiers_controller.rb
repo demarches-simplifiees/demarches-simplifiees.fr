@@ -201,14 +201,14 @@ module Users
       # This is the only remaining use of User#siret: it could be refactored away.
       # However some existing users have a siret but no associated etablissement,
       # so we would need to analyze the legacy data and decide what to do with it.
-      current_user.siret = siret_params[:siret]
 
       siret_model = Siret.new(siret: siret_params[:siret])
-      if !siret_model.valid?
+      valid = siret_model.valid?
+      current_user.siret = sanitized_siret = siret_model.siret
+      if !valid
         return render_siret_error(siret_model.errors.full_messages)
       end
 
-      sanitized_siret = siret_model.siret
       etablissement = begin
                         APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
                       rescue APIEntreprise::API::Error, APIEntrepriseToken::TokenError => error

@@ -10,8 +10,8 @@ module DossierPrefillableConcern
     attributes[:champs_attributes] = champs_attributes.map { |h| h.merge(prefilled: true) }
     attributes[:individual_attributes] = identity_attributes if identity_attributes.present?
     reload
-
     assign_attributes(attributes)
     save(validate: false)
+    with_update_stream(user).enqueue_fetch_external_data_jobs
   end
 end

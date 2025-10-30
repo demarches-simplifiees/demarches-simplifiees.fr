@@ -2,6 +2,11 @@
 fr:
   rna:
     data_fetched: "Ce RNA correspond à : %{title}, %{address}"
+  siret:
+    pending: "Recherche en cours pour le SIRET %{value}…"
+    fetched_with_capital: "%{raison_sociale_or_name} %{forme_juridique} au capital social de %{capital_sociale}"
+    fetched: "%{raison_sociale_or_name} %{forme_juridique}"
+    error: "Une erreur est survenue lors de la récupération des informations SIRET."
   referentiel:
     fetching: "Recherche en cours."
     error: "Aucun élément trouvé pour la référence : %{value}"
@@ -13,3 +18,4 @@ fr:
     valid: "Notre système a identifié l’IBAN %{iban}"
     valid_with_bank: "Notre système a identifié l’IBAN %{iban} - <b>%{bank_name}</b>"
     error: "Une erreur est survenue lors de l’analyse de votre document.<br>Ne tenez pas compte de ce message si vous êtes sûr(e) de votre fichier."
+

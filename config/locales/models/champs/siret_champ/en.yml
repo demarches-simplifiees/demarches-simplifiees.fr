@@ -3,12 +3,13 @@ en:
     attributes:
       champs/siret_champ:
         hints:
-          value: 'Expected format: 14 digits. Example: 500 0012 345 6789'
+          external_id: 'Expected format: 14 digits. Example: 500 0012 345 6789'
     errors:
       models:
         champs/siret_champ:
           attributes:
-            value:
+            external_id:
+              format: '%{message}'
               wrong_siret_format: 'must contain exactly 14 numbers. Example: 500 0012 345 6789'
               invalid: 'is invalid. Check for input errors.'
               not_found: 'no establishment is linked to this number.'
