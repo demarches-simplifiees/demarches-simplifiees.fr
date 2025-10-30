@@ -20,6 +20,10 @@
     gap: 0.3rem;
     margin-bottom: 0.5rem;
   }
+  .fr-tag--dismiss button:focus {
+    outline: 1px solid currentColor;
+    outline-offset: -2px;
+  }
 }
 
 .fr-ds-combobox__menu {
