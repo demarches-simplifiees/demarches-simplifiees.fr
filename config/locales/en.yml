@@ -832,6 +832,8 @@ en:
       not_a_date: "must be a correct date"
       not_a_datetime: "must be a correct datetime"
       blank: "can't be blank"
+    csrf_retry:
+      message: "Your session was renewed. Please repeat this action from this page."
   time:
     formats:
       default: "%B %d %Y %R"

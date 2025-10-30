@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_javascript_settings
   before_action :setup_tracking
   before_action :set_customizable_view_path
+  before_action :display_csrf_retry_message
 
   around_action :switch_locale
 
@@ -145,6 +146,14 @@ class ApplicationController < ActionController::Base
 
   def feature_enabled?(feature_name)
     Flipper.enabled?(feature_name, current_user)
+  end
+
+  private
+
+  def display_csrf_retry_message
+    return unless params[:csrf_retry] == '1'
+
+    flash.now[:alert] = I18n.t('errors.csrf_retry.message')
   end
 
   def authenticate_logged_user!
