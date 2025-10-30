@@ -118,8 +118,8 @@ module DossierHelper
       ))
   end
 
-  def correction_resolved_badge(change, html_class: nil)
-    tag.span(Dossier.human_attribute_name("pending_correction.#{change}"), class: ['fr-badge fr-badge--sm', html_class])
+  def correction_resolved_badge(type, html_class: nil)
+    tag.span(Dossier.human_attribute_name("pending_correction.#{type}"), class: ['fr-badge fr-badge--sm', html_class])
   end
 
   def tags_label(labels)
