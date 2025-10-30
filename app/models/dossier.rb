@@ -638,7 +638,7 @@ class Dossier < ApplicationRecord
 
   def expiration_date_reference
     if brouillon?
-      updated_at
+      [last_champ_updated_at, identity_updated_at].compact.max || updated_at
     elsif en_construction?
       en_construction_at
     elsif termine?
