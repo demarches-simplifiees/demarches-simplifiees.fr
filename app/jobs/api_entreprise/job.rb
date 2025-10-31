@@ -3,7 +3,7 @@
 class APIEntreprise::Job < ApplicationJob
   DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS = 5
 
-  queue_as :default
+  queue_as :down
 
   # BadGateway could mean
   # - acoss: réessayer ultérieurement
