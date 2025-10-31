@@ -61,17 +61,22 @@ module Maintenance
       if !found
         blob.attachments.each do |attachment|
           name, record_type, record_id = attachment.name, attachment.record_type, attachment.record_id
-          if record_type == 'Champ'
+
+          champ = (record_type == 'Champ') ? attachment.record : nil
+
+          # sometime the attachment as no more record
+          if champ.present?
             champ_libelle = begin
               attachment.record.libelle
                             # sometimes, a type de champ is found in the revision
                             rescue StandardError
                               ''
             end
-            dossier_id = attachment.record.dossier_id
-            dossier_state = attachment.record.dossier.state
-            email = attachment.record.dossier.user.email
-            procedure = attachment.record.dossier.procedure
+
+            dossier_id = champ.dossier_id
+            dossier_state = champ.dossier.state
+            email = champ.dossier.user.email
+            procedure = champ.dossier.procedure
             procedure_id, procedure_libelle = procedure.id, procedure.libelle
 
             TaskLog.create!(data: { blob_key:, dossier_id:, dossier_state:, champ_libelle:, procedure_id:, procedure_libelle:, email:, state: 'lost' })
