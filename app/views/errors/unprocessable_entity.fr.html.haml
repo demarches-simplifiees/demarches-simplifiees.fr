@@ -2,23 +2,20 @@
   .fr-container
     .fr-my-7w.fr-mt-md-12w.fr-mb-md-10w.fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.fr-grid-row--center
       .fr-py-0.fr-col-12.fr-col-md-6
-        %h1 L’action demandée a été rejetée
+        %h1 Nous ne pouvons pas poursuivre cette action.
         %p.fr-text--sm.fr-mb-3w Erreur 422
-        %p.fr-text--lead.fr-mb-3w Nous sommes désolés, mais nous ne pouvons pas traiter votre requête.
+        %p.fr-text--lead.fr-mb-3w Vous vous êtes reconnecté dans un autre onglet.
         %p.fr-text--sm.fr-mb-5w
-          Cela peut être dû à une requête qui ne peut être traitée dans son état actuel.
-          %br
-          Revenez à
-          = link_to("la page précédente", "javascript:window.location = document.referrer", class: "fr-link")
-          puis réessayez.
-          %br
-
-          Si le problème persiste, n’hésitez pas à nous contacter pour obtenir de l’aide.
+          Afin de poursuivre votre démarche, veuillez retourner à la page précédente puis ré-essayer.
 
         %ul.fr-btns-group.fr-btns-group--inline-md
           %li
-            = link_to 'Retour', 'javascript:window.location = document.referrer', class: 'fr-btn'
-          %li
-            = link_to 'Contactez-nous', contact_path, class: 'fr-btn fr-btn--secondary'
+            = link_to("Retourner à la page précédente", "javascript:window.location = document.referrer", class: "fr-btn")
+
+        %p.fr-hint-text.fr-mb-0
+          Si le problème persiste, n’hésitez pas à
+          = link_to 'nous contacter', contact_path
+          pour obtenir de l’aide.
+
 
       = render partial: "artwork"

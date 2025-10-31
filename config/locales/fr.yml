@@ -843,6 +843,8 @@ fr:
       not_a_date: "doit être une date correctement formatée"
       not_a_datetime: "doit être une date et heure correctement formatée"
       blank: "doit être rempli"
+    csrf_retry:
+      message: "Votre session a été renouvelée. Merci de reprendre cette action depuis cette page."
   time:
     formats:
       default: "%d %B %Y %R"
