@@ -12,7 +12,7 @@
           .clipboard-container
             .fr-mb-2w.fr-mt-2w
               %h3.font-weight-normal.fr-link.fr-mr-2w
-                = link_to procedure_libelle_with_number(p), instructeur_procedure_path(p)
+                = link_to procedure_libelle_with_number(p), procedure_expert_avis_index_path(p, statut: Instructeurs::AvisController::A_DONNER_STATUS)
               = procedure_badge(p)
 
           %ul.procedure-stats.flex.wrap.flex-gap-1
