@@ -96,6 +96,25 @@ module Maintenance
               "procedure_libelle" => procedure.libelle
             })
           end
+
+          context 'when the attachment has no record' do
+            before do
+              attachment.update_columns(record_id: '9999999999999')
+            end
+
+            it "creates a TaskLog entry with limited info" do
+              subject
+
+              expect(TaskLog.count).to eq(1)
+              expect(TaskLog.last.data).to eq({
+                "state" => "lost",
+                "blob_key" => blob.key,
+                "name" => "piece_justificative_file",
+                "record_type" => "Champ",
+                "record_id" => 9999999999999
+              })
+            end
+          end
         end
 
         context "and is not lost but will autodestruct" do
