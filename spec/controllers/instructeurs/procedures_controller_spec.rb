@@ -143,7 +143,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
             create(:dossier, procedure: procedure,
                              state: Dossier.states.fetch(:sans_suite),
-                             processed_at: 8.months.ago) # counted as expirable
+                             processed_at: 8.months.ago).tap(&:update_expired_at) # counted as expirable
             create(:dossier, procedure: procedure,
                              state: Dossier.states.fetch(:sans_suite),
                              processed_at: 8.months.ago,
@@ -151,7 +151,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             create(:dossier, procedure: procedure,
                              state: Dossier.states.fetch(:sans_suite),
                              processed_at: 8.months.ago,
-                             hidden_by_user_at: 1.day.ago) # counted as expirable because even if user remove it, instructeur see it
+                             hidden_by_user_at: 1.day.ago).tap(&:update_expired_at) # counted as expirable because even if user remove it, instructeur see it
 
             instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
             create(:dossier, :followed, procedure: procedure3, state: Dossier.states.fetch(:en_construction))
@@ -510,9 +510,9 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       context 'with an expirants dossier' do
         let(:statut) { 'expirant' }
-        let!(:expiring_dossier_termine_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_administration_at: 2.days.ago) }
-        let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago) }
-        let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 175.days.ago) }
+        let!(:expiring_dossier_termine_deleted) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago, hidden_by_administration_at: 2.days.ago).tap(&:update_expired_at) }
+        let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, processed_at: 175.days.ago).tap(&:update_expired_at) }
+        let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 175.days.ago).tap(&:update_expired_at) }
 
         before { subject }
 

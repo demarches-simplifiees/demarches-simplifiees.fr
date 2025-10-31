@@ -47,10 +47,11 @@ FactoryBot.define do
       operation { BatchOperation.operations.fetch(:repousser_expiration) }
       after(:build) do |batch_operation, evaluator|
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
-        batch_operation.dossiers = [
-          create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago),
-          create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago)
-        ]
+        batch_operation.dossiers =
+          [
+            create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago),
+            create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago)
+          ].each(&:update_expired_at)
       end
     end
 

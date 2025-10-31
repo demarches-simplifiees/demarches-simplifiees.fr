@@ -27,8 +27,10 @@ module Maintenance
 
       context "when dossier is en instruction" do
         let(:dossier) { create(:dossier, :en_instruction) }
-        it "raises an error" do
-          expect { process }.to raise_error(RuntimeError, 'expiration_date_reference should not be called in state en_instruction')
+        before { dossier.update_column(:expired_at, nil) }
+
+        it "does not update dossier expired_at attribute" do
+          expect { process }.not_to change { dossier.reload.expired_at }
         end
       end
     end

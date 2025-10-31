@@ -214,14 +214,15 @@ describe Dossier, type: :model do
 
     subject { Dossier.en_construction_close_to_expiration }
 
+    before { procedure.dossiers.each(&:update_expired_at) }
+
     it do
       is_expected.not_to include(young_dossier)
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
-
-      expect(expiring_dossier.close_to_expiration?).to be_truthy
-      expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
+      expect(expiring_dossier.reload.close_to_expiration?).to be_truthy
+      expect(expiring_dossier_with_notification.reload.close_to_expiration?).to be_truthy
     end
 
     context 'does not include an expiring dossier that has been postponed' do
@@ -252,6 +253,7 @@ describe Dossier, type: :model do
         is_expected.to include(long_expired_dossier)
       end
     end
+
     context 'when .termine_or_en_construction_close_to_expiration' do
       subject { Dossier.termine_or_en_construction_close_to_expiration }
       it do
@@ -273,14 +275,16 @@ describe Dossier, type: :model do
 
     subject { Dossier.termine_close_to_expiration }
 
+    before { procedure.dossiers.each(&:update_expired_at) }
+
     it do
       is_expected.not_to include(young_dossier)
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
 
-      expect(expiring_dossier.close_to_expiration?).to be_truthy
-      expect(expiring_dossier_with_notification.close_to_expiration?).to be_truthy
+      expect(expiring_dossier.reload.close_to_expiration?).to be_truthy
+      expect(expiring_dossier_with_notification.reload.close_to_expiration?).to be_truthy
     end
 
     context 'does not include an expiring dossier that has been postponed' do
@@ -2221,7 +2225,7 @@ describe Dossier, type: :model do
         create(:dossier, :en_construction, user: user).procedure.discard_and_keep_track!(administrateur)
       end
 
-      travel_to(1.week.ago) do
+      travel_to(2.weeks.ago) do
         create(:dossier, user: user).hide_and_keep_track!(user, reason)
         create(:dossier, :en_construction, user: user).hide_and_keep_track!(user, reason)
       end
