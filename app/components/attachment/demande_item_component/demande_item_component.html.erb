@@ -1,0 +1,33 @@
+<div class="gallery-item">
+  <% if !gallery_demande? %>
+    <p class="fr-tag fr-tag--sm fr-mb-3v"><%= origin %></p>
+  <% end %>
+
+  <% if displayable_pdf?(blob) || displayable_image?(blob) %>
+    <%= gallery_link(blob) do %>
+      <div class="thumbnail">
+        <%= image_tag(representation_url_for(attachment), loading: :lazy) %>
+        <div
+          class="fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-eye"
+          role="button"
+        >
+          Visualiser
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="thumbnail"><%= image_tag('apercu-indisponible.png') %></div>
+  <% end %>
+
+  <% if !gallery_demande? %>
+    <div class="fr-text--sm fr-mt-2v fr-mb-1v"><%= libelle.truncate(30) %></div>
+  <% end %>
+
+  <%= render Attachment::ShowComponent.new(attachment:, truncate: true, new_tab: gallery_demande?) %>
+
+  <% if !gallery_demande? %>
+    <div class="fr-mt-2v fr-mb-2v <%= badge_updated_class %>">
+      <%= t(updated? ? '.updated_at' : '.created_at', datetime: helpers.try_format_datetime(updated_at, format: :veryshort)) %>
+    </div>
+  <% end %>
+</div>

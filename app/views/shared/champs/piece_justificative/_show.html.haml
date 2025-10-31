@@ -3,7 +3,7 @@
     .gallery-items-list
       - champ.piece_justificative_file.attachments.each do |attachment|
         .flex.width-100
-          = render Attachment::GalleryItemComponent.new(attachment:, gallery_demande: true)
+          = render Attachment::DemandeItemComponent.new(attachment:, gallery_demande: true)
           = render Instructeurs::OCRViewerComponent.new(champ:)
 
   - else
