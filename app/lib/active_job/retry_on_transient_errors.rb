@@ -6,10 +6,8 @@ module ActiveJob::RetryOnTransientErrors
   TRANSIENT_ERRORS = [
     Excon::Error::InternalServerError,
     Excon::Error::GatewayTimeout,
-    Excon::Error::Socket,
-    Excon::Error::ServiceUnavailable,
-    Excon::Error::TooManyRequests,
-    Excon::Error::Unauthorized
+    Excon::Error::BadRequest,
+    Excon::Error::Socket
   ]
 
   included do
