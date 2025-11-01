@@ -116,7 +116,7 @@ RSpec.describe ChampExternalDataConcern do
       subject { champ.fetch!; champ }
 
       it do
-        expect { subject }.to raise_error(Exception, 'nop')
+        expect { subject }.to raise_error(RetryableFetchError)
         expect(champ.reload).to be_waiting_for_job
       end
     end

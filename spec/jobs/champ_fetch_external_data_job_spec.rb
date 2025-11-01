@@ -37,7 +37,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
   end
 
   describe 'error handling and backoff strategy' do
-    let(:error) { Excon::Error::InternalServerError.new('Retryable error') }
+    let(:error) { StandardError.new('Retryable error') }
     let(:failure) { Dry::Monads::Failure(retryable: true, reason: error, code: 504) }
 
     before do
@@ -48,7 +48,7 @@ RSpec.describe ChampFetchExternalDataJob, type: :job do
     context 'when a retryable error occurs' do
       it 'tries 5 times and the final state is external_error' do
         assert_performed_jobs 5 do
-          described_class.perform_later(champ, external_id) rescue Excon::Error::InternalServerError
+          described_class.perform_later(champ, external_id) rescue StandardError
         end
 
         champ.reload
