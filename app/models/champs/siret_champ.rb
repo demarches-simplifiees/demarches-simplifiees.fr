@@ -38,7 +38,7 @@ class Champs::SiretChamp < Champ
   rescue APIEntreprise::API::Error => error
     if APIEntrepriseService.service_unavailable_error?(error, target: :insee)
       update!(
-        etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, external_id, dossier.user&.id)
+        etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, external_id.delete(" "), dossier.user&.id)
       )
       Failure(retryable: true, reason: error, code: 503)
     else
