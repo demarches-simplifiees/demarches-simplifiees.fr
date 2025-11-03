@@ -33,7 +33,7 @@ class Champs::TextareaChamp < Champs::TextChamp
 
   def analyze_character_count
     if character_limit? && character_count.present?
-      if character_count >= character_limit_base
+      if character_count > character_limit_base
         return :warning
       elsif character_count >= character_limit_threshold_75
         return :info

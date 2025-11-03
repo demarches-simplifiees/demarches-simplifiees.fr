@@ -1,3 +1,4 @@
 fr:
   remaining_characters: Il vous reste %{remaining_words} caractères.
+  character_limit_reached: Vous avez atteint la taille maximale conseillée.
   excess_characters: Vous avez dépassé la taille conseillée de %{excess_words} caractères. Veuillez réduire le nombre de caractères.
