@@ -16,7 +16,14 @@ module Maintenance
       return if champ.external_id.nil?
 
       champ.reset_external_data!
-      champ.fetch_later! if champ.may_fetch_later?
+      if champ.may_fetch_later?
+        champ.fetch_later!(wait: rand(0..max_wait))
+      end
+    end
+
+    # we spread the fethes every 20 seconds per champ
+    def max_wait
+      count * 20
     end
   end
 end
