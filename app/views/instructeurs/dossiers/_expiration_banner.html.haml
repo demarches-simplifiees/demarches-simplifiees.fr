@@ -1,11 +1,9 @@
 -# small expires mention
 - if dossier.expirable?
-  %p.expires_at.fr-mb-1w
-
-    %small
-      = t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
-      - if dossier.conservation_extension.positive?
-        = t('instructeurs.dossiers.header.banner.expiration_date_extended')
+  %p.expires_at.fr-mb-1w.fr-text--sm
+    = t("shared.dossiers.header.expires_at.#{dossier.state}", date: safe_expiration_date(dossier), duree_conservation_totale: dossier.duree_totale_conservation_in_months)
+    - if dossier.conservation_extension.positive?
+      = t('instructeurs.dossiers.header.banner.expiration_date_extended')
 
   - if dossier.close_to_expiration? || dossier.has_expired?
     - title = dossier.has_expired? ? 'title_expired' : 'title'
@@ -24,5 +22,5 @@
             = t('instructeurs.dossiers.header.banner.button_delay_expiration', count: dossier.procedure.duree_conservation_dossiers_dans_ds)
 
 - elsif dossier.en_instruction? && dossier.procedure.procedure_expires_when_termine_enabled
-  %p.expires_at_en_instruction
-    %small= t("shared.dossiers.header.expires_at.en_instruction")
+  %p.expires_at_en_instruction.fr-text--sm
+    = t("shared.dossiers.header.expires_at.en_instruction")

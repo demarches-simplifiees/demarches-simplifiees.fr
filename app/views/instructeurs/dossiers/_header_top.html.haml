@@ -14,8 +14,8 @@
   = render partial: 'instructeurs/dossiers/expiration_banner', locals: { dossier: }
 
   - if dossier.user_deleted?
-    %p.fr-mb-1w
-      %small L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
+    %p.fr-mb-1w.fr-text--sm
+      L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
 
 
   .flex

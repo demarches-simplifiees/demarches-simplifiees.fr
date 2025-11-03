@@ -12,5 +12,5 @@
         - c.with_body do
           %p= t(".#{batch.operation}.in_progress.text_success", count: @batch.total_count, success_count: @batch.success_count)
 
-          %p.fr-mt-2w
-            %small= t('.context', mail: @batch.instructeur.email, time_ago: time_ago_in_words(@batch.created_at))
+          %p.fr-mt-2w.fr-text--sm
+            = t('.context', mail: @batch.instructeur.email, time_ago: time_ago_in_words(@batch.created_at))
