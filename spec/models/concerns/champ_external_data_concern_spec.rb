@@ -27,24 +27,35 @@ RSpec.describe ChampExternalDataConcern do
     describe 'fetch_later' do
       let(:ready_for_external_call?) { true }
 
-      subject { champ.fetch_later!; champ }
-
       before do
         allow(champ).to receive(:ready_for_external_call?).and_return(ready_for_external_call?)
         allow(champ).to receive(:fetch_external_data_later)
       end
 
-      it do
-        is_expected.to be_waiting_for_job
-        expect(champ).to have_received(:fetch_external_data_later)
+      context 'without args' do
+        subject { champ.fetch_later!; champ }
+
+        it do
+          is_expected.to be_waiting_for_job
+          expect(champ).to have_received(:fetch_external_data_later)
+        end
+
+        context 'when not ready for external call' do
+          let(:ready_for_external_call?) { false }
+
+          it 'does not change the state' do
+            expect(champ.may_fetch_later?).to be_falsey
+            expect { subject }.to raise_error(AASM::InvalidTransition)
+          end
+        end
       end
 
-      context 'when not ready for external call' do
-        let(:ready_for_external_call?) { false }
+      context 'with a wait arg' do
+        subject { champ.fetch_later!(wait: 20); champ }
 
-        it 'does not change the state' do
-          expect(champ.may_fetch_later?).to be_falsey
-          expect { subject }.to raise_error(AASM::InvalidTransition)
+        it do
+          is_expected.to be_waiting_for_job
+          expect(champ).to have_received(:fetch_external_data_later).with(wait: 20)
         end
       end
     end
