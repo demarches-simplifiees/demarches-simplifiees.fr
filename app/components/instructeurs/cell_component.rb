@@ -62,12 +62,13 @@ class Instructeurs::CellComponent < ApplicationComponent
       raw_value = DateTime.parse(raw_value) if raw_value.is_a?(String)
       I18n.l(raw_value)
     else
-      raw_value
+      # Escape if it's a string and not already safe
+      raw_value.html_safe? ? raw_value : html_escape(raw_value.to_s)
     end
   end
 
   def format_enums(column:, raw_values:)
-    raw_values.map { format_enum(column:, raw_value: _1) }.join(', ')
+    safe_join(raw_values.map { format_enum(column:, raw_value: _1) }, ', ')
   end
 
   def format_enum(column:, raw_value:)
@@ -79,15 +80,16 @@ class Instructeurs::CellComponent < ApplicationComponent
 
     if dossier.for_tiers
       prenom, nom = dossier&.individual&.prenom, dossier&.individual&.nom
-      "#{email} #{I18n.t('views.instructeurs.dossiers.acts_on_behalf')} #{prenom} #{nom}"
+      safe_join([email, I18n.t('views.instructeurs.dossiers.acts_on_behalf'), prenom, nom], ' ')
     else
-      email
+      html_escape(email)
     end
   end
 
   def sum_up_avis(avis)
-    avis.map(&:question_answer)&.compact&.tally
+    result = avis.map(&:question_answer)&.compact&.tally
       &.map { |k, v| I18n.t("helpers.label.question_answer_with_count.#{k}", count: v) }
-      &.join(' / ')
+
+    result ? safe_join(result, ' / ') : nil
   end
 end

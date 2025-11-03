@@ -11,7 +11,7 @@ class ExpertDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    user: Field::HasOne.with_options(searchable: true, searchable_field: 'email'),
+    user: Field::HasOne.with_options(searchable: true, searchable_fields: %w[email]),
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
