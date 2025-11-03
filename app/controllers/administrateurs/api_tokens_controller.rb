@@ -4,7 +4,6 @@ module Administrateurs
   class APITokensController < AdministrateurController
     include ActionView::RecordIdentifier
 
-    before_action :authenticate_administrateur!
     before_action :set_api_token, only: [:edit, :update, :destroy, :remove_procedure]
 
     def nom
