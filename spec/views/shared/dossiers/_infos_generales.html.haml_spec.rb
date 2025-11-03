@@ -35,7 +35,7 @@ describe 'shared/dossiers/_infos_generales', type: :view do
     end
 
     context 'with a motivation and procedure with accuse de lecture' do
-      let(:dossier) { create :dossier, :accepte, :with_justificatif, procedure: create(:procedure, :accuse_lecture) }
+      let(:dossier) { create :dossier, :accepte, :with_motivation, procedure: create(:procedure, :accuse_lecture) }
 
       it 'still displays the motivation text for the instructeur' do
         expect(subject).to have_content(dossier.motivation)
