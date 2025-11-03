@@ -31,7 +31,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   end
 
   describe 'dossier with champs' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }, { type: :rna }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }, { type: :rna }, { type: :header_section }, { type: :explication }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
     let(:variables) { { number: dossier.id } }
@@ -111,14 +111,16 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     it '', :slow do
-      expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
-      expect(data[:dossier][:champs][1][:__typename]).to eq "AddressChamp"
-      expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
+      expect(data[:dossier][:champs].map { _1[:__typename] }).to eq ["CommuneChamp", "AddressChamp", "SiretChamp", "RNAChamp", "HeaderSectionChamp", "ExplicationChamp"]
+
       expect(data[:dossier][:champs][1][:commune][:code]).to eq('75119')
       expect(data[:dossier][:champs][1][:commune][:postalCode]).to eq('75019')
       expect(data[:dossier][:champs][1][:departement][:code]).to eq('75')
       expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.project_champs_public[2].etablissement.siret
-      expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id])
+
+      expect(data[:dossier][:revision][:champDescriptors].map { _1[:level] }).to eq([nil, nil, nil, nil, 1, nil])
+      expect(data[:dossier][:revision][:champDescriptors].map { _1[:__typename] }).to eq ["CommuneChampDescriptor", "AddressChampDescriptor", "SiretChampDescriptor", "RNAChampDescriptor", "HeaderSectionChampDescriptor", "ExplicationChampDescriptor"]
+      expect(data[:dossier][:champs].map { _1[:id] }).to eq(data[:dossier][:revision][:champDescriptors].map { _1[:id] })
 
       expect(data[:dossier][:champs][1][:address][:cityName]).to eq('Paris 19e Arrondissement')
       expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Paris')
@@ -468,12 +470,6 @@ RSpec.describe Types::DossierType, type: :graphql do
     dossier(number: $number) {
       id
       number
-      revision {
-        champDescriptors {
-          id
-          label
-        }
-      }
       annotations {
         id
         label
@@ -499,8 +495,12 @@ RSpec.describe Types::DossierType, type: :graphql do
       number
       revision {
         champDescriptors {
+          __typename
           id
           label
+          ... on HeaderSectionChampDescriptor {
+            level
+          }
         }
       }
       champs {
@@ -508,6 +508,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         label
         __typename
         ...CommuneChampFragment
+        ...RNAChampFragment
         ... on AddressChamp {
           address {
             ...AddressFragment
@@ -526,8 +527,9 @@ RSpec.describe Types::DossierType, type: :graphql do
             entreprise { capitalSocial }
           }
         }
-
-        ...RNAChampFragment
+        ... on HeaderSectionChamp {
+          level
+        }
       }
     }
   }
