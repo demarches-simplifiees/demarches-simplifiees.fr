@@ -36,11 +36,8 @@ describe ProcedurePresentation do
     subject { procedure_presentation.destroy_filters_for!('a-suivre') }
 
     it do
-      expect(procedure_presentation.a_suivre_filters).not_to eq([])
-
-      subject
-
-      expect(procedure_presentation.a_suivre_filters).to eq([])
+      expect { subject }
+        .to change { procedure_presentation.a_suivre_filters.size }.from(1).to(0)
     end
   end
 
@@ -55,11 +52,8 @@ describe ProcedurePresentation do
       let(:statut) { 'a-suivre' }
 
       it 'adds the filter to the statut' do
-        expect(procedure_presentation.a_suivre_filters).to eq([])
-
-        subject
-
-        expect(procedure_presentation.a_suivre_filters).to eq([new_filter])
+        expect { subject }
+          .to change { procedure_presentation.a_suivre_filters }.from([]).to([new_filter])
       end
     end
 
@@ -73,23 +67,17 @@ describe ProcedurePresentation do
       end
 
       it 'adds the new filter to the existing filters' do
-        expect(procedure_presentation.a_suivre_filters).to eq([existing_filter])
-
-        subject
-
-        expect(procedure_presentation.a_suivre_filters).to eq([existing_filter, new_filter])
+        expect { subject }
+          .to change { procedure_presentation.a_suivre_filters }.from([existing_filter]).to([existing_filter, new_filter])
       end
     end
 
     context 'when adding a filter to a different statut' do
       let(:statut) { 'suivis' }
       it 'adds the filter to the correct statut' do
-        expect(procedure_presentation.suivis_filters).to eq([])
-
-        subject
-
-        expect(procedure_presentation.suivis_filters).to eq([new_filter])
-        expect(procedure_presentation.a_suivre_filters).to eq([])
+        expect { subject }
+          .to change { procedure_presentation.suivis_filters }.from([]).to([new_filter])
+          .and not_change { procedure_presentation.a_suivre_filters }
       end
     end
   end
@@ -110,11 +98,8 @@ describe ProcedurePresentation do
       end
 
       it 'removes only the specified filter' do
-        expect(procedure_presentation.a_suivre_filters).to eq([filter_to_remove, other_filter])
-
-        subject
-
-        expect(procedure_presentation.a_suivre_filters).to eq([other_filter])
+        expect { subject }
+          .to change { procedure_presentation.a_suivre_filters }.from([filter_to_remove, other_filter]).to([other_filter])
       end
     end
 
@@ -126,11 +111,8 @@ describe ProcedurePresentation do
       end
 
       it 'removes the filter and leaves an empty array' do
-        expect(procedure_presentation.suivis_filters).to eq([filter_to_remove])
-
-        subject
-
-        expect(procedure_presentation.suivis_filters).to eq([])
+        expect { subject }
+          .to change { procedure_presentation.suivis_filters }.from([filter_to_remove]).to([])
       end
     end
 
@@ -142,11 +124,8 @@ describe ProcedurePresentation do
       end
 
       it 'does not change the filters' do
-        expect(procedure_presentation.traites_filters).to eq([other_filter])
-
-        subject
-
-        expect(procedure_presentation.traites_filters).to eq([other_filter])
+        expect { subject }
+          .to not_change { procedure_presentation.traites_filters.map(&:as_json) }
       end
     end
 
@@ -154,11 +133,56 @@ describe ProcedurePresentation do
       let(:statut) { 'archives' }
 
       it 'does not change the filters' do
-        expect(procedure_presentation.archives_filters).to eq([])
+        expect { subject }
+          .to not_change { procedure_presentation.archives_filters }
+      end
+    end
+  end
 
-        subject
+  describe '#update_filter_for_statut!' do
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
+    let(:column) { procedure.find_column(label: 'Demandeur') }
+    let(:existing_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: 'existing_filter_value' }) }
+    let(:updated_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: 'updated_filter_value' }) }
+    let(:other_filter) { FilteredColumn.new(column:, filter: { operator: "match", value: 'other_filter_value' }) }
 
-        expect(procedure_presentation.archives_filters).to eq([])
+    subject { procedure_presentation.update_filter_for_statut!(statut, filter_key, updated_filter) }
+
+    context 'when updating a filter' do
+      let(:statut) { 'a-suivre' }
+      let(:filter_key) { existing_filter.id }
+
+      before do
+        procedure_presentation.update(a_suivre_filters: [existing_filter, other_filter])
+      end
+
+      it 'updates only the specified filter' do
+        expect { subject }
+          .to change { procedure_presentation.a_suivre_filters }.from([existing_filter, other_filter]).to([updated_filter, other_filter])
+      end
+    end
+
+    context 'when updating a filter that does not exist' do
+      let(:statut) { 'traites' }
+      let(:filter_key) { 'non_existent_filter_id' }
+
+      before do
+        procedure_presentation.update(traites_filters: [other_filter])
+      end
+
+      it 'does not change the filters' do
+        expect { subject }
+          .to not_change { procedure_presentation.traites_filters.map(&:as_json) }
+      end
+    end
+
+    context 'when updating a filter in an empty statut' do
+      let(:statut) { 'archives' }
+      let(:filter_key) { 'any_filter_id' }
+
+      it 'does not change the filters' do
+        expect { subject }
+          .to not_change { procedure_presentation.archives_filters }
       end
     end
   end
