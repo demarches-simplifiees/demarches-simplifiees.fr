@@ -165,7 +165,7 @@
                     <tbody>
                       <%- if content_for?(:procedure_logo) %>
                         <%= yield :procedure_logo %>
-                      <%- else -%>
+                      <%- else %>
                         <tr>
                           <td
                             style="word-wrap:break-word;font-size:0px;padding:0;padding-top:0px;padding-bottom:0px;"
@@ -174,12 +174,7 @@
                             <p
                               style="cursor:auto;color:#000091;font-family:Helvetica, Arial, sans-serif;font-size:14px;text-align:center"
                             >
-                              <img
-                                align="middle"
-                                alt="Logo <%= "#{Current.application_name}" %>"
-                                src="<%= image_url(MAILER_LOGO_SRC) %>"
-                                style="max-height:100px; padding:15px 30px 15px 30px; vertical-aligne:middle; display:inline !important; border:0; height:auto; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;"
-                              />
+                              <%= image_tag image_url(MAILER_LOGO_SRC), alt: "Logo #{Current.application_name}", style: "max-height:100px; padding:15px 30px 15px 30px; vertical-aligne:middle; display:inline !important; border:0; height:auto; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;", align: "middle" %>
                               <b
                                 style="font-size:26px;font-weight:600;display:inline-block"
                               >
@@ -188,7 +183,7 @@
                             </p>
                           </td>
                         </tr>
-                      <%- end -%>
+                      <%- end %>
                       <tr>
                         <td
                           style="word-wrap:break-word;font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-bottom:0px;"
