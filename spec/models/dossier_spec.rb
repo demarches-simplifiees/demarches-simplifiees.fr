@@ -2734,7 +2734,6 @@ describe Dossier, type: :model do
 
       it do
         is_expected.to change(dossier, :last_champ_updated_at)
-        is_expected.to change(dossier, :last_champ_piece_jointe_updated_at)
         is_expected.to change(dossier, :updated_at)
       end
     end
@@ -2744,19 +2743,17 @@ describe Dossier, type: :model do
 
       it do
         is_expected.to change(dossier, :last_champ_updated_at)
-        is_expected.to change(dossier, :last_champ_piece_jointe_updated_at)
         is_expected.to change(dossier, :updated_at)
       end
     end
   end
 
   describe '#never_touched_brouillon_expired' do
-    let!(:dossier) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
-    let!(:dossier_2) { travel_to(1.week.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) } }
-    let!(:dossier_with_champ_updated) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: 1.day.ago, last_champ_piece_jointe_updated_at: nil) } }
-    let!(:dossier_with_piece_jointe_updated) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: 1.day.ago) } }
+    let!(:dossier) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil) } }
+    let!(:dossier_2) { travel_to(1.week.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil) } }
+    let!(:dossier_with_champ_updated) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: 1.day.ago) } }
 
-    let!(:dossier_en_construction) { create(:dossier, :en_construction, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil) }
+    let!(:dossier_en_construction) { create(:dossier, :en_construction, last_champ_updated_at: nil) }
 
     subject { Dossier.never_touched_brouillon_expired }
 
@@ -2770,13 +2767,13 @@ describe Dossier, type: :model do
     end
 
     context 'when the dossier has an etablissement' do
-      let!(:dossier_with_etablissement) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, etablissement: create(:etablissement)) } }
+      let!(:dossier_with_etablissement) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, etablissement: create(:etablissement)) } }
 
       it { is_expected.not_to include(dossier_with_etablissement) }
     end
 
     context 'when the dossier has an individual' do
-      let!(:dossier_with_individual) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, individual: create(:individual)) } }
+      let!(:dossier_with_individual) { travel_to(3.weeks.ago) { create(:dossier, :brouillon, last_champ_updated_at: nil, individual: create(:individual)) } }
 
       it { is_expected.not_to include(dossier_with_individual) }
     end
