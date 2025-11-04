@@ -155,7 +155,7 @@ en:
           <h4>Some scripts are not compatible with assistive technologies</h4>
           <ul>
             <li>On the Chrome / TalkBack combination, focus is not captured in modals.
-              <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
+              <br><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
             <li>On a procedure form, the title of the button used to display the error sequence is irrelevant. Once activated, the focus remains on the button.</li>
             <li>The combobox action button <em>Adresse postale</em> has no label.</li>
             <li>The action buttons in the <em>Invite someone to edit this file</em> and <em>Identity of the requester</em> panels have conflicting attributes (<code>aria-expanded</code> and <code>aria-haspopup</code>).</li>
@@ -169,7 +169,7 @@ en:
           <h4>Some focus is impaired</h4>
           <ul>
             <li>On the FAQ, the visibility of the focus is altered on the summary buttons.
-            <br /><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
+            <br><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">A ticket has been opened with the DSFR on this subject.</a>.</li>
             <li>In the mobile version, the focus on the link back to the files (or the home page) is altered.</li>
             <li>In the mobile version, when the <em>Invite someone to edit this file</em> panel is open, it hides the following fields from focus.</li>
           </ul>
@@ -461,7 +461,7 @@ en:
         archives_notice_html: |
           These files will be deleted when their retention period in %{app_name} (%{duration_months} months) expires.
           <a href="%{doc_url}" rel="external noopener" target="_blank" title="Documentation about files archiving" lang="fr">Learn more</a>
-          <br/>
+          <br>
           To save and archive your files on your server, you must download them.
       avis:
         introduction_file_explaination: "File attached to the request for advice"
@@ -992,7 +992,7 @@ en:
       use_another_email: No, use another address.
     merge:
       title: "Merge your account FranceConnect and %{application_name}"
-      subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
+      subtitle_html: "Hello,<br><br>Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br>But there is an existing %{application_name} account using this email."
       label_select_merge_flow: Is %{email} one of your email account ?
       title_fill_in_password:  To merge your accounts fill in your password
       button_merge: Merge accounts
