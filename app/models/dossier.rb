@@ -1084,10 +1084,15 @@ class Dossier < ApplicationRecord
     procedure.accuse_lecture? && termine?
   end
 
-  def update_champs_timestamps(changed_champs)
+  def update_champs_timestamps(changed_champs, stream)
     return if changed_champs.empty?
     updated_at = Time.zone.now
-    attributes = { updated_at:, last_champ_updated_at: updated_at }
+    attributes = { updated_at: }
+    if stream == Champ::USER_BUFFER_STREAM
+      attributes[:last_champ_updated_at] = updated_at
+    elsif stream == Champ::INSTRUCTEUR_BUFFER_STREAM
+      attributes[:last_champ_instructeur_updated_at] = updated_at
+    end
     update_columns(attributes)
   end
 
