@@ -203,15 +203,7 @@ class Instructeur < ApplicationRecord
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND not archived) AS tous,
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND archived) AS archives,
         COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NOT NULL AND not archived OR dossiers.hidden_by_expired_at IS NOT NULL) AS supprimes,
-        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND procedures.procedure_expires_when_termine_enabled
-          AND (
-            dossiers.state in ('accepte', 'refuse', 'sans_suite')
-              AND dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{Dossier::INTERVAL_BEFORE_EXPIRATION}' < :now
-          ) OR (
-            dossiers.state in ('en_construction') AND dossiers.hidden_by_expired_at IS NULL
-              AND dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{Dossier::INTERVAL_BEFORE_EXPIRATION}' < :now
-          )
-        ) AS expirant
+        COUNT(DISTINCT dossiers.id) FILTER (where dossiers.hidden_by_administration_at IS NULL AND dossiers.hidden_by_expired_at IS NULL AND procedures.procedure_expires_when_termine_enabled AND (dossiers.expired_at - INTERVAL '#{Expired::REMAINING_WEEKS_BEFORE_EXPIRATION} weeks' < :now)) AS expirant
       FROM dossiers
         INNER JOIN procedure_revisions
           ON procedure_revisions.id = dossiers.revision_id

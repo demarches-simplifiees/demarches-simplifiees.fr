@@ -30,10 +30,7 @@ class Dossier < ApplicationRecord
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
-  INTERVAL_BEFORE_EXPIRATION = "#{Expired::REMAINING_WEEKS_BEFORE_EXPIRATION} weeks"
-  MONTHS_AFTER_EXPIRATION = 1
-  DAYS_AFTER_EXPIRATION = 5
-  INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
+  REMAINING_WEEKS_BEFORE_DELETION = 2
 
   has_secure_token :prefill_token
 
@@ -299,71 +296,62 @@ class Dossier < ApplicationRecord
       .where.not(user_id: nil)
   end
 
-  scope :interval_brouillon_close_to_expiration, -> do
+  scope :brouillon_close_to_expiration, -> do
     state_brouillon
       .visible_by_user
-      .where("dossiers.updated_at + dossiers.conservation_extension + (LEAST(procedures.duree_conservation_dossiers_dans_ds, #{Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION}) * INTERVAL '1 month') - INTERVAL '#{INTERVAL_BEFORE_EXPIRATION}' < :now", { now: Time.current })
-  end
-  scope :interval_en_construction_close_to_expiration, -> do
-    state_en_construction
-      .visible_by_user_or_administration
-      .where("dossiers.en_construction_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{INTERVAL_BEFORE_EXPIRATION}' < :now", { now: Time.current })
-  end
-  scope :interval_termine_close_to_expiration, -> do
-    state_termine
-      .visible_by_user_or_administration
-      .where(procedures: { procedure_expires_when_termine_enabled: true })
-      .where("dossiers.processed_at + dossiers.conservation_extension + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL '#{INTERVAL_BEFORE_EXPIRATION}' < :now", { now: Time.current })
-  end
-
-  scope :brouillon_close_to_expiration, -> do
-    joins(:procedure).interval_brouillon_close_to_expiration
+      .where(expired_at: ..(Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :en_construction_close_to_expiration, -> do
-    joins(:procedure).interval_en_construction_close_to_expiration
+    state_en_construction
+      .visible_by_user_or_administration
+      .where(expired_at: ..(Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :termine_close_to_expiration, -> do
-    joins(:procedure).interval_termine_close_to_expiration
+    state_termine
+      .visible_by_user_or_administration
+      .joins(:procedure)
+      .where(procedures: { procedure_expires_when_termine_enabled: true })
+      .where(expired_at: ..(Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
 
   scope :close_to_expiration, -> do
     joins(:procedure).scoping do
-      interval_brouillon_close_to_expiration
-        .or(interval_en_construction_close_to_expiration)
-        .or(interval_termine_close_to_expiration)
+      brouillon_close_to_expiration
+        .or(en_construction_close_to_expiration)
+        .or(termine_close_to_expiration)
     end
   end
 
   scope :termine_or_en_construction_close_to_expiration, -> do
     joins(:procedure).scoping do
-      interval_en_construction_close_to_expiration
-        .or(interval_termine_close_to_expiration)
+      en_construction_close_to_expiration
+        .or(termine_close_to_expiration)
     end
   end
 
-  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where("dossiers.updated_at = dossiers.created_at").where(created_at: ..2.weeks.ago) }
+  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where(created_at: ..2.weeks.ago) }
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
-      .where("brouillon_close_to_expiration_notice_sent_at + INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
+      .where(brouillon_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :en_construction_expired, -> do
     state_en_construction
       .visible_by_user_or_administration
-      .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
+      .where(en_construction_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
   scope :termine_expired, -> do
     state_termine
       .visible_by_user_or_administration
-      .where("termine_close_to_expiration_notice_sent_at + INTERVAL '#{INTERVAL_EXPIRATION}' < :now", { now: Time.current })
+      .where(termine_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
 
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
-  scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...1.week.ago }) }
-  scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...1.week.ago }) }
-  scope :deleted_by_automatic_expired, -> { where(dossiers: { hidden_by_expired_at: ...1.week.ago }) }
+  scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
+  scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
+  scope :deleted_by_automatic_expired, -> { where(dossiers: { hidden_by_expired_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
   scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired.or(state_brouillon.deleted_by_automatic_expired) }
   scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired.or(state_en_construction.deleted_by_automatic_expired) }
   scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired.or(state_termine.deleted_by_automatic_expired) }
@@ -626,9 +614,31 @@ class Dossier < ApplicationRecord
     ].any?
   end
 
+  def close_to_expiration?
+    return false if en_instruction?
+    expired_at < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now && Time.zone.now < expired_at
+  end
+
+  def has_expired?
+    return false if en_instruction?
+
+    notice_sent_at =
+      if brouillon?
+        brouillon_close_to_expiration_notice_sent_at
+      elsif en_construction?
+        en_construction_close_to_expiration_notice_sent_at
+      elsif termine?
+        termine_close_to_expiration_notice_sent_at
+      end
+
+    return false if notice_sent_at.nil?
+
+    notice_sent_at < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
+  end
+
   def expiration_date_reference
     if brouillon?
-      updated_at
+      [last_champ_updated_at, identity_updated_at].compact.max || updated_at
     elsif en_construction?
       en_construction_at
     elsif termine?
@@ -642,43 +652,29 @@ class Dossier < ApplicationRecord
     expiration_date_reference + duree_totale_conservation_in_months.months
   end
 
-  def expiration_notification_date
-    expiration_date_with_extension - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
-  end
-
-  def close_to_expiration?
-    return false if en_instruction?
-    expiration_notification_date < Time.zone.now && Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago < expiration_notification_date
-  end
-
   def duree_totale_conservation_in_months
     duree_conservation_dossier = brouillon? ? [procedure.duree_conservation_dossiers_dans_ds, Expired::MONTHS_BEFORE_BROUILLON_EXPIRATION].min : procedure.duree_conservation_dossiers_dans_ds
 
     duree_conservation_dossier + (conservation_extension / 1.month.to_i)
   end
 
-  def has_expired?
-    return false if en_instruction?
-    expiration_notification_date < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
-  end
-
   def after_notification_expiration_date
     if brouillon? && brouillon_close_to_expiration_notice_sent_at.present?
-      brouillon_close_to_expiration_notice_sent_at + duration_after_notice
+      brouillon_close_to_expiration_notice_sent_at + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
     elsif en_construction? && en_construction_close_to_expiration_notice_sent_at.present?
-      en_construction_close_to_expiration_notice_sent_at + duration_after_notice
+      en_construction_close_to_expiration_notice_sent_at + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
     elsif termine? && termine_close_to_expiration_notice_sent_at.present?
-      termine_close_to_expiration_notice_sent_at + duration_after_notice
+      termine_close_to_expiration_notice_sent_at + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
     end
   end
 
   def expiration_date
+    return nil if en_instruction?
+
     after_notification_expiration_date.presence || expiration_date_with_extension
   end
 
-  def duration_after_notice
-    MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
-  end
+  def update_expired_at = update_column(:expired_at, expiration_date)
 
   def expiration_can_be_extended?
     brouillon? || en_construction?
@@ -1089,8 +1085,6 @@ class Dossier < ApplicationRecord
     end
     update_columns(attributes)
   end
-
-  def update_expired_at = update_column(:expired_at, expiration_date)
 
   def revision_changed_since_submitted?
     submitted_revision_id.present? && submitted_revision_id != revision_id

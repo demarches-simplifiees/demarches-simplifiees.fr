@@ -60,7 +60,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
         end
 
         context 'hidden not so long ago' do
-          let(:hidden_at) { 1.week.ago + 1.hour }
+          let(:hidden_at) { 2.weeks.ago + 1.hour }
 
           include_examples "does not delete"
         end
@@ -72,7 +72,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
         let(:state) { state }
 
         context 'hidden long ago' do
-          let(:hidden_at) { 1.week.ago - 1.hour }
+          let(:hidden_at) { 2.weeks.ago - 1.hour }
           include_examples "does delete"
 
           it "uses relevant deleted_at depending on user hidden it and state" do

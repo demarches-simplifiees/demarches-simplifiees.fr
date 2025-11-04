@@ -66,7 +66,7 @@ describe BatchOperationProcessOneJob, type: :job do
         create(:batch_operation, :repousser_expiration,
                                  options.merge(instructeur: create(:instructeur)))
       end
-      it 'archives the dossier in the batch' do
+      it 'extends conservation of the dossier in the batch' do
         expect { subject.perform_now }
           .to change { dossier_job.reload.conservation_extension }
           .from(dossier_job.conservation_extension)

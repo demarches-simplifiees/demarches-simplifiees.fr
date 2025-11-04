@@ -57,7 +57,7 @@ module DossierStateConcern
     self.en_instruction_at = self.traitements
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
-    self.expired_at = nil
+    self.expired_at = expiration_date
 
     save!
 
@@ -83,7 +83,7 @@ module DossierStateConcern
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
     self.en_instruction_at = traitements.passer_en_instruction.processed_at
-    self.expired_at = nil
+    self.expired_at = expiration_date
 
     if procedure.declarative_en_instruction?
       self.declarative_triggered_at = en_instruction_at
@@ -335,7 +335,7 @@ module DossierStateConcern
     self.en_instruction_at = self.traitements
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
-    self.expired_at = nil
+    self.expired_at = expiration_date
     attestation&.destroy
 
     self.sva_svr_decision_on = nil
