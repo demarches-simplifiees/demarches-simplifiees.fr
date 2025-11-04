@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:search_terms, :private_search_terms, :editing_fork_origin_id]
+  self.ignored_columns += [:search_terms, :private_search_terms, :editing_fork_origin_id, :last_champ_piece_jointe_updated_at]
 
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -337,7 +337,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where(created_at: ..2.weeks.ago) }
+  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where(created_at: ..2.weeks.ago) }
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
@@ -1088,9 +1088,6 @@ class Dossier < ApplicationRecord
     return if changed_champs.empty?
     updated_at = Time.zone.now
     attributes = { updated_at:, last_champ_updated_at: updated_at }
-    if changed_champs.any?(&:piece_justificative_or_titre_identite?)
-      attributes[:last_champ_piece_jointe_updated_at] = updated_at
-    end
     update_columns(attributes)
   end
 
