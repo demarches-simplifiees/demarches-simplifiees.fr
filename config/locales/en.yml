@@ -378,7 +378,8 @@ en:
       dossiers:
         form:
           submitted_at: "Submitted on %{datetime}"
-          updated_at: "Updated on %{datetime}"
+          user_updated_at: "Updated by user on %{datetime}"
+          instructeur_updated_at: "Updated by instructor on %{datetime}"
           switched_to_instruction_at: "Switched to instruction on %{datetime}"
           revert_to_submitted_at: "Correction requested on on %{datetime}"
           download_attestation: "Download attestation"
