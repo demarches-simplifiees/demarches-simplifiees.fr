@@ -31,16 +31,14 @@ module GalleryHelper
   end
 
   def preview_url_for(attachment)
-    attachment.blob.preview_image.url.presence || 'pdf-placeholder.png'
+    attachment.blob.preview_image.url.presence
   rescue StandardError
-    'pdf-placeholder.png'
   end
 
   def variant_url_for(attachment)
     variant = attachment.variant(resize_to_limit: [400, 400])
-    variant.key.present? ? variant.processed.url : 'apercu-indisponible.png'
+    variant.key.present? ? variant.processed.url : nil
   rescue StandardError
-    'apercu-indisponible.png'
   end
 
   def blob_url(attachment)

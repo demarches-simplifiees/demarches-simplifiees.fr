@@ -27,9 +27,9 @@ class Attachment::ThumbnailComponent < ApplicationComponent
     end
   end
 
-  def btn_text = small ? '' : 'Visualiser'
+  def btn_text = small ? '' : t('.view')
 
   private
 
-  def title = "#{record_libelle(record)} -- #{sanitize(blob.filename.to_s)}"
+  def title = "#{t('.view')} #{record_libelle(record)} -- #{sanitize(blob.filename.to_s)}"
 end

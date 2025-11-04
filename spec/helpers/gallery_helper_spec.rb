@@ -33,7 +33,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create variant when not processed" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("apercu-indisponible.png")
+        expect(subject).to be_nil
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create variant" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("apercu-indisponible.png")
+        expect(subject).to be_nil
       end
     end
   end
@@ -64,7 +64,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create preview when not processed" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("pdf-placeholder.png")
+        expect(subject).to be_nil
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create preview" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("pdf-placeholder.png")
+        expect(subject).to be_nil
       end
     end
   end
@@ -84,13 +84,13 @@ RSpec.describe GalleryHelper, type: :helper do
     context "when attachment is an image with no variant" do
       let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
 
-      it { is_expected.to eq("apercu-indisponible.png") }
+      it { is_expected.to be_nil }
     end
 
     context "when attachment is a pdf with no preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-      it { is_expected.to eq("pdf-placeholder.png") }
+      it { is_expected.to be_nil }
     end
   end
 

@@ -23,7 +23,7 @@ RSpec.describe Attachment::ThumbnailComponent, type: :component do
     let(:libelle) { champ_pj.libelle }
 
     it do
-      expect(subject).to have_css("a[title='#{libelle} -- #{filename}']")
+      expect(subject).to have_css("a[title='Visualiser #{libelle} -- #{filename}']")
     end
   end
 end
