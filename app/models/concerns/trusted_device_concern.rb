@@ -26,7 +26,7 @@ module TrustedDeviceConcern
   def send_login_token_or_bufferize(instructeur)
     if !instructeur.young_login_token?
       token = instructeur.create_trusted_device_token
-      InstructeurMailer.send_login_token(instructeur, token).deliver_later
+      InstructeurMailer.send_login_token(instructeur, token, Current.host).deliver_later
       true
     else
       false

@@ -40,6 +40,29 @@ RSpec.describe InstructeurMailer, type: :mailer do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name)
       end
     end
+
+    context 'without given host' do
+      let(:host) { ApplicationHelper::APP_HOST }
+
+      subject { described_class.send_login_token(user, token) }
+
+      it { expect(subject.body).to include(ApplicationHelper::APP_HOST_LEGACY) }
+    end
+
+    context 'with given host as APP_HOST' do
+      let(:host) { ApplicationHelper::APP_HOST }
+
+      subject { described_class.send_login_token(user, token, host) }
+
+      it { expect(subject.body).to include("demarches.numerique.gouv.fr") }
+    end
+    context 'with given host as APP_HOST_LEGACY' do
+      let(:host) { ApplicationHelper::APP_HOST_LEGACY }
+
+      subject { described_class.send_login_token(user, token, host) }
+
+      it { expect(subject.body).to include(host) }
+    end
   end
 
   describe '#trusted_device_token_renewal' do
