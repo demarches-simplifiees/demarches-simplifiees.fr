@@ -47,6 +47,16 @@ describe ExportTemplate do
       it 'gives absolute filename for export of specific dossier' do
         expect(export_template.attachment_path(dossier, attachment)).to eq("DOSSIER-#{dossier.id}/mon_export-#{dossier.id}.pdf")
       end
+
+      context 'when export pdf is disabled' do
+        let(:export_template) do
+          build(:export_template, groupe_instructeur:, dossier_folder: ExportItem.default(prefix: "DOSSIER"), export_pdf: ExportItem.default(prefix: "mon_export", enabled: false))
+        end
+
+        it 'returns nil' do
+          expect(export_template.attachment_path(dossier, attachment)).to be_nil
+        end
+      end
     end
 
     context 'for pj' do
