@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 module GalleryHelper
+  def record_libelle(record)
+    case record
+    in Champ
+      record.libelle
+    in Commentaire
+      'Pièce jointe au message'
+    in Avis
+      'Pièce jointe à l’avis'
+    else
+      if attachment.name == 'justificatif_motivation'
+        'Pièce jointe à la décision'
+      end
+    end
+  end
+
   def displayable_pdf?(blob)
     blob.content_type.in?(AUTHORIZED_PDF_TYPES)
   end

@@ -93,4 +93,26 @@ RSpec.describe GalleryHelper, type: :helper do
       it { is_expected.to eq("pdf-placeholder.png") }
     end
   end
+
+  describe ".record_libelle" do
+    subject { record_libelle(record) }
+
+    context "when record is a Champ" do
+      let(:record) { champ_pj }
+
+      it { is_expected.to eq('Justificatif de domicile') }
+    end
+
+    context "when record is a Commentaire" do
+      let(:record) { create(:commentaire, dossier:) }
+
+      it { is_expected.to eq('Pièce jointe au message') }
+    end
+
+    context "when record is an Avis" do
+      let(:record) { create(:avis, dossier:) }
+
+      it { is_expected.to eq("Pièce jointe à l’avis") }
+    end
+  end
 end

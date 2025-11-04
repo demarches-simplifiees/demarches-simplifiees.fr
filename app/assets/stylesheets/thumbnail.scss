@@ -1,0 +1,62 @@
+.thumbnail {
+  border: 1px solid var(--border-default-grey);
+  background-color: var(--border-default-grey);
+  overflow: hidden;
+
+  img {
+    position: relative;
+    z-index: 1;
+    object-fit: cover;
+  }
+
+  &.thumbnail-100 {
+    width: 100px;
+    height: 100px;
+
+    img {
+      width: 100px;
+      height: 100px;
+    }
+
+    .fr-icon-eye::before {
+      margin: 0;
+    }
+  }
+
+  &.thumbnail-200 {
+    width: 200px;
+    height: 200px;
+
+    img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  a.gallery-link {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover .fr-btn,
+    &:active .fr-btn,
+    &:focus .fr-btn {
+      display: flex;
+    }
+
+    &:active .fr-btn {
+      background-color: var(--hover-tint);
+    }
+
+    .fr-btn {
+      position: absolute;
+      z-index: 10;
+      background-color: var(--background-default-grey);
+      color: var(--text-active-blue-france);
+      border: 1px solid var(--border-active-blue-france);
+      padding: 0.25rem 0.75rem;
+      display: none;
+    }
+  }
+}

@@ -1,49 +1,6 @@
 .gallery {
-  a {
-    background-image: none;
-  }
-
   .champ-libelle {
     margin-top: 0.5rem;
-  }
-
-  img {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-  }
-
-  .thumbnail {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid var(--border-default-grey);
-    background-color: var(--border-default-grey);
-
-    img {
-      position: relative;
-      z-index: 1;
-    }
-
-    .fr-btn {
-      position: absolute;
-      z-index: 10;
-      background-color: var(--background-default-grey);
-      color: var(--text-active-blue-france);
-      border: 1px solid var(--border-active-blue-france);
-      padding: 0.25rem 0.75rem;
-      display: none;
-    }
-  }
-
-  a.gallery-link:hover .fr-btn,
-  a.gallery-link:active .fr-btn {
-    display: flex;
-  }
-
-  a.gallery-link:active .fr-btn {
-    background-color: var(--hover-tint);
   }
 }
 
