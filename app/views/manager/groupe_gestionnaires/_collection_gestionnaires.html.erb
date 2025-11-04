@@ -1,81 +1,84 @@
-
 <% if attribute.resources.any? %>
-<% order = attribute.order_from_params(params.fetch(attribute.name, {})) %>
-<% page_number = params.fetch(attribute.name, {}).fetch(:page, nil) %>
-
-<table aria-labelledby="<%= attribute.name %>">
-  <thead>
-    <tr>
-      <% attribute.associated_collection(order).attribute_types.select{ |attr_name, attr_type| [:id, :user].include?(attr_name) }.each do |attr_name, attr_type| %>
-        <th class="cell-label
-        cell-label--<%= attr_type.html_class %>
-        cell-label--<%= attribute.associated_collection(order).ordered_html_class(attr_name) %>
-        cell-label--<%= "#{attribute.associated_collection(order).resource_name}_#{attr_name}" %>"
-        scope="col"
-        aria-sort="<%= sort_order(attribute.associated_collection(order).ordered_html_class(attr_name)) %>">
-        <%= link_to(sanitized_order_params(page, attribute.name).merge(
+  <% order = attribute.order_from_params(params.fetch(attribute.name, {})) %>
+  <% page_number = params.fetch(attribute.name, {}).fetch(:page, nil) %>
+  <table aria-labelledby="<%= attribute.name %>">
+    <thead>
+      <tr>
+        <% attribute.associated_collection(order).attribute_types.select{ |attr_name, attr_type| [:id, :user].include?(attr_name) }.each do |attr_name, attr_type| %>
+          <th
+            class="
+              cell-label
+              cell-label--<%= attr_type.html_class %>
+              cell-label--<%= attribute.associated_collection(order).ordered_html_class(attr_name) %>
+              cell-label--<%= "#{attribute.associated_collection(order).resource_name}_#{attr_name}" %>
+            "
+            scope="col"
+            aria-sort="<%= sort_order(attribute.associated_collection(order).ordered_html_class(attr_name)) %>"
+          >
+            <%= link_to(sanitized_order_params(page, attribute.name).merge(
           attribute.associated_collection(order).order_params_for(attr_name, key: attribute.name)
         )) do %>
-        <%= t(
+              <%= t(
           "helpers.label.#{attribute.associated_collection(order).resource_name}.#{attr_name}",
           default: attribute.associated_class.human_attribute_name(attr_name).titleize,
         ) %>
-            <% if attribute.associated_collection(order).ordered_by?(attr_name) %>
-              <span class="cell-label__sort-indicator cell-label__sort-indicator--<%= attribute.associated_collection(order).ordered_html_class(attr_name) %>">
-                <svg aria-hidden="true">
-                  <use xlink:href="#icon-up-caret" />
-                </svg>
-              </span>
+              <% if attribute.associated_collection(order).ordered_by?(attr_name) %>
+                <span class="cell-label__sort-indicator cell-label__sort-indicator--<%= attribute.associated_collection(order).ordered_html_class(attr_name) %>">
+                  <svg aria-hidden="true">
+                    <use xlink:href="#icon-up-caret" />
+                  </svg>
+                </span>
+              <% end %>
             <% end %>
-          <% end %>
-        </th>
-      <% end %>
-      <% [false && existing_action?(attribute.associated_collection(order).resource_name, :edit),
-          existing_action?(attribute.associated_collection(order).resource_name, :destroy)].count(true).times do %>
-        <th scope="col"></th>
-      <% end %>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% attribute.resources(page_number, order).each do |resource| %>
-      <tr class="js-table-row">
-        <% attribute.associated_collection(order).attributes_for(resource).select{ |field| ["id", "user"].include?(field.name) }.each do |field| %>
-          <td class="cell-data cell-data--<%= field.html_class %>">
-              <%= render_field field %>
-          </td>
+          </th>
         <% end %>
-        <% if false %>
-          <td><%= link_to(
+        <% [false && existing_action?(attribute.associated_collection(order).resource_name, :edit),
+          existing_action?(attribute.associated_collection(order).resource_name, :destroy)].count(true).times do %>
+          <th scope="col"></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% attribute.resources(page_number, order).each do |resource| %>
+        <tr class="js-table-row">
+          <% attribute.associated_collection(order).attributes_for(resource).select{ |field| ["id", "user"].include?(field.name) }.each do |field| %>
+            <td class="cell-data cell-data--<%= field.html_class %>">
+              <%= render_field field %>
+            </td>
+          <% end %>
+          <% if false %>
+            <td>
+              <%= link_to(
             t("administrate.actions.edit"),
             [:edit, namespace, resource],
             class: "action-edit",
-          ) if accessible_action?(resource, :edit) %></td>
-        <% end %>
-        
-        <% if existing_action?(attribute.associated_collection(order).resource_name, :destroy) %>
-          <td class="actions"><%= button_to 'Retirer',
+          ) if accessible_action?(resource, :edit) %>
+            </td>
+          <% end %>
+
+          <% if existing_action?(attribute.associated_collection(order).resource_name, :destroy) %>
+            <td class="actions">
+              <%= button_to 'Retirer',
           { action: :remove_gestionnaire, id: page.resource.id },
           { method: :delete,
             data: { confirm: t("administrate.actions.confirm") },
             params: { gestionnaire: { id: resource.id }},
-            class: 'fr-btn fr-btn--secondary' } 
-          %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<% if attribute.more_than_limit? %>
-  <%= render("pagination", resources: attribute.resources(page_number), param_name: "#{attribute.name}[page]") %>
-<% end %>
-
+            class: 'fr-btn fr-btn--secondary' } %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if attribute.more_than_limit? %>
+    <%= render("pagination", resources: attribute.resources(page_number), param_name: "#{attribute.name}[page]") %>
+  <% end %>
 <% else %>
-<%= t("administrate.fields.has_many.none", default: "–") %>
+  <%= t("administrate.fields.has_many.none", default: "–") %>
 <% end %>
 
 <%= form_tag(add_gestionnaire_manager_groupe_gestionnaire_path(page.resource), style: 'margin-top: 1rem;') do %>
-    <%= email_field_tag(:emails, '', placeholder: 'Emails', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
-    <button>Ajouter un gestionnaire</button>
+  <%= email_field_tag(:emails, '', placeholder: 'Emails', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
+  <button>Ajouter un gestionnaire</button>
 <% end %>

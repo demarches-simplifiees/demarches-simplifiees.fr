@@ -1,9 +1,7 @@
 <% content_for(:title) { "Confirmation d'ajout d'un administrateur" } %>
 
 <header class="main-content__header">
-  <h1 class="main-content__page-title">
-    <%= content_for(:title) %>
-  </h1>
+  <h1 class="main-content__page-title"><%= content_for(:title) %></h1>
 
   <div>
     <%= link_to t("administrate.actions.back"), :back, class: "button" %>
@@ -13,18 +11,11 @@
 <section class="main-content__body">
   <p>
     Vous avez été invité·e par
-    <em>
-      <%= @inviter.email %>
-    </em>
+    <em><%= @inviter.email %></em>
     à confirmer l'ajout de
-    <em>
-      <%= @invited_email %>
-    </em>
+    <em><%= @invited_email %></em>
     à la démarche
-    <strong>
-      <%= @procedure.libelle %>
-      (<%= @procedure.id %>).
-    </strong>
+    <strong><%= @procedure.libelle %> (<%= @procedure.id %>).</strong>
   </p>
 
   <p>
