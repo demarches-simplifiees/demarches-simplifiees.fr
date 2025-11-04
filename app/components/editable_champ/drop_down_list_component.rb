@@ -33,6 +33,12 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
     describedby.present? ? describedby.join(' ') : nil
   end
 
+  def other_input_aria_labelledby_prefix
+    labelledby = [@aria_labelledby_prefix]
+    labelledby << champ_fieldset_legend_id(@champ) if @champ.render_as_radios?
+    labelledby.compact.join(' ')
+  end
+
   def react_props
     react_input_opts(
       id: @champ.focusable_input_id,
