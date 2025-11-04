@@ -305,10 +305,6 @@ class Champ < ApplicationRecord
     attributes = { updated_at: }
     update_columns(attributes) if persisted?
 
-    if piece_justificative_or_titre_identite?
-      attributes[:last_champ_piece_jointe_updated_at] = updated_at
-    end
-
     if private?
       attributes[:last_champ_private_updated_at] = updated_at
     else
