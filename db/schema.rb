@@ -253,6 +253,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
 
   create_table "champs", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: nil
+    t.string "created_with_stream"
     t.jsonb "data"
     t.datetime "discarded_at"
     t.integer "dossier_id"
