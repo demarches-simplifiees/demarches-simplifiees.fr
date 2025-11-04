@@ -243,6 +243,7 @@ class FranceConnectController < ApplicationController
     sign_in user
 
     user.update_attribute('loged_in_with_france_connect', User.loged_in_with_france_connects.fetch(:particulier))
+    user.update_preferred_domain(Current.host)
 
     redirect_to destination_path(current_user)
   end

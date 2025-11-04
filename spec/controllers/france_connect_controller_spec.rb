@@ -108,6 +108,7 @@ describe FranceConnectController, type: :controller do
             expect(fc_user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
             expect(cookies.encrypted[FranceConnectController::NONCE_COOKIE_NAME]).to be_nil
             expect(cookies.encrypted[FranceConnectController::ID_TOKEN_COOKIE_NAME]).to eq('id_token')
+            expect(fc_user.preferred_domain_demarche_numerique_gouv_fr?).to be_truthy
           end
 
           context 'and the user has a stored location' do
