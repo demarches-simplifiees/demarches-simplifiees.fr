@@ -63,7 +63,7 @@ describe 'address champ', js: true do
     stub_request(:get, /data\.geopf\.fr\/geocodage\/search/)
       .to_timeout
 
-    fill_in('Adresse', with: 'test address')
+    find('.fr-input-group.address-ban input', match: :first).fill_in(with: 'test address')
 
     # Wait for the error message to appear in the dropdown
     expect(page).to have_css('.fr-message--error', text: 'Une erreur est survenue lors de la recherche')
