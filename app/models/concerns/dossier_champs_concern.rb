@@ -236,6 +236,10 @@ module DossierChampsConcern
     with_stream(Champ::INSTRUCTEUR_BUFFER_STREAM, &block)
   end
 
+  def with_user_history_stream(&block)
+    with_stream(Champ::USER_HISTORY_STREAM, &block)
+  end
+
   def with_champ_stream(champ, &block)
     with_stream(champ.stream, &block)
   end
@@ -295,16 +299,23 @@ module DossierChampsConcern
 
   def merge_buffer_champs(buffer_champ_ids, changed_main_champ_ids, stream)
     now = Time.zone.now
-    history_stream = "#{Champ::HISTORY_STREAM}#{now}"
+    user_history_stream = "#{Champ::USER_HISTORY_STREAM}#{now}"
+    instructeur_history_stream = "#{Champ::INSTRUCTEUR_HISTORY_STREAM}#{now}"
     changed_champs = champs.filter { _1.id.in?(buffer_champ_ids) }
 
     transaction do
-      champs.where(id: changed_main_champ_ids, stream: Champ::MAIN_STREAM).update_all(stream: history_stream)
+      # move champs with changes and created by "instructeur" from "main" to "instructeur history" stream
+      champs.where(id: changed_main_champ_ids, stream: Champ::MAIN_STREAM, created_with_stream: Champ::INSTRUCTEUR_BUFFER_STREAM).update_all(stream: instructeur_history_stream)
+      # move champs with changes and created by "user" from "main" to "user history" stream
+      champs.where(id: changed_main_champ_ids, stream: Champ::MAIN_STREAM).update_all(stream: user_history_stream)
+      # set "created_with_stream" to current "stream" in order to preserve origin after champ is moved to "main"
+      champs.where(id: buffer_champ_ids, stream:).update_all('created_with_stream = stream')
+      # move champs from "buffer" to "main"
       champs.where(id: buffer_champ_ids, stream:).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
       update_champs_timestamps(changed_champs, stream)
     end
 
-    champs.where(id: changed_main_champ_ids, stream: history_stream)
+    champs.where(id: changed_main_champ_ids, stream: [user_history_stream, instructeur_history_stream])
       .where(type: ['Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'])
       .with_attached_piece_justificative_file.find_each do |champ|
         files = champ.piece_justificative_file.map { _1.slice(:filename, :checksum) }
@@ -317,7 +328,11 @@ module DossierChampsConcern
     # update loaded champ instances
     champs.each do |champ|
       if champ.id.in?(changed_main_champ_ids)
-        champ.stream = history_stream
+        if champ.created_with_instructeur_buffer_stream?
+          champ.stream = instructeur_history_stream
+        else
+          champ.stream = user_history_stream
+        end
       elsif champ.id.in?(buffer_champ_ids)
         champ.stream = Champ::MAIN_STREAM
       end
@@ -356,6 +371,9 @@ module DossierChampsConcern
       (champs_on_user_buffer_stream + champs_on_main_stream).uniq(&:public_id)
     when Champ::INSTRUCTEUR_BUFFER_STREAM
       (champs_on_instructeur_buffer_stream + champs_on_main_stream).uniq(&:public_id)
+    when Champ::USER_HISTORY_STREAM
+      # champs on "user history" streams and champs on "main" except for the ones created by "instructeur"
+      (champs_on_user_history_stream + champs_on_main_stream.reject(&:created_with_instructeur_buffer_stream?)).uniq(&:public_id)
     else
       champs_on_main_stream
     end
@@ -387,6 +405,11 @@ module DossierChampsConcern
       updated_at = main_updated_at[champ.public_id]
       updated_at.present? ? champ.updated_at > updated_at : true
     end
+  end
+
+  def champs_on_user_history_stream
+    # for every "public_id" we get the most recent "user history" champ
+    champs.filter(&:user_history_stream?).sort_by(&:updated_at).reverse.uniq(&:public_id)
   end
 
   def filled_champ(type_de_champ, row_id: nil, with_discarded: false)
