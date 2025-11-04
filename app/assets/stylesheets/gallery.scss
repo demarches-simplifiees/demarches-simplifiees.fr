@@ -11,33 +11,15 @@
   .gallery-item {
     margin: 0 2rem 3rem 0;
 
-    .fr-download {
-      margin-bottom: 0;
-    }
-
     .fr-text--sm {
       margin-bottom: 0;
     }
   }
 }
 
-.gallery-demande {
-  .gallery-items-list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .gallery-item {
-    margin: 0.5rem 2rem 1rem 0;
-  }
-
+.gallery-item {
   .fr-download {
-    margin-bottom: 0.5rem;
-  }
-
-  .thumbnail {
-    width: fit-content;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 }
 
