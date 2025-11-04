@@ -48,11 +48,6 @@ describe Users::RegistrationsController, type: :controller do
 
     before do
       allow(Current).to receive(:host).and_return(ENV.fetch("APP_HOST"))
-      Flipper.enable(:switch_domain)
-    end
-
-    after do
-      Flipper.disable(:switch_domain)
     end
 
     context 'when user is correct' do
