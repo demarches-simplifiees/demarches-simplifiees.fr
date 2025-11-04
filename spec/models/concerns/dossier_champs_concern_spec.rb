@@ -788,38 +788,47 @@ RSpec.describe DossierChampsConcern do
   end
 
   context 'en_construction(instructeur)' do
-    let(:dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:dossier) { create(:dossier, procedure:) }
 
     describe "#public_champ_for_update" do
       let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
       let(:row_ids) { dossier.project_champ(type_de_champ_repetition).row_ids }
       let(:row_id) { row_ids.first }
 
-      let(:attributes) do
+      let(:user_attributes_0) do
+        {
+          "99" => { value: "Bonjour" },
+          "991" => { value: "Au revoir" },
+        }
+      end
+
+      let(:attributes_0) do
         {
           "99" => { value: "Hello" },
           "991" => { value: "World" },
-          "994-#{row_id}" => { value: "Greer" }
+          "994-#{row_id}" => { value: "Greer" },
         }
       end
 
-      let(:new_attributes) do
+      let(:attributes_1) do
         {
           "99" => { value: "Hello!!!" },
-          "994-#{row_id}" => { value: "Greer is the best, for sure !" }
+          "994-#{row_id}" => { value: "Greer is the best, for sure !" },
         }
       end
 
-      let(:user_attributes) do
-        {
-          "99" => { value: "Hello???" }
-        }
+      let(:user_attributes_1) do
+        { "99" => { value: "Hello???" } }
+      end
+
+      let(:attributes_2) do
+        { "99" => { value: "Hello..." } }
       end
 
       let(:bad_attributes) do
         {
           "99" => { value: "bad" },
-          "994-#{row_id}" => { value: "bad" }
+          "994-#{row_id}" => { value: "bad" },
         }
       end
 
@@ -841,6 +850,12 @@ RSpec.describe DossierChampsConcern do
         end
       end
 
+      def user_history_champ(stable_id, row_id = nil)
+        dossier.with_user_history_stream do
+          dossier.project_champ(dossier.find_type_de_champ_by_stable_id(stable_id), row_id:)
+        end
+      end
+
       def main_champ_99 = main_champ(99)
       def main_champ_991 = main_champ(991)
       def main_champ_994 = main_champ(994, row_id)
@@ -848,6 +863,9 @@ RSpec.describe DossierChampsConcern do
       def draft_champ_991 = draft_champ(991)
       def draft_champ_994 = draft_champ(994, row_id)
       def user_draft_champ_99 = user_draft_champ(99)
+      def user_history_champ_99 = user_history_champ(99)
+      def user_history_champ_991 = user_history_champ(991)
+      def user_history_champ_994 = user_history_champ(994, row_id)
 
       def assign_champs_attributes(attributes)
         attributes.each do |public_id, attributes|
@@ -857,7 +875,10 @@ RSpec.describe DossierChampsConcern do
       end
 
       subject do
-        dossier.with_instructeur_buffer_stream { assign_champs_attributes(attributes) }
+        assign_champs_attributes(user_attributes_0)
+        dossier.save!
+        dossier.passer_en_construction!
+        dossier.with_instructeur_buffer_stream { assign_champs_attributes(attributes_0) }
       end
 
       it {
@@ -870,8 +891,8 @@ RSpec.describe DossierChampsConcern do
         expect(main_champ_991.stream).to eq(Champ::MAIN_STREAM)
         expect(main_champ_994.stream).to eq(Champ::MAIN_STREAM)
 
-        expect(main_champ_99.value).to be_nil
-        expect(main_champ_991.value).to be_nil
+        expect(main_champ_99.value).to eq('Bonjour')
+        expect(main_champ_991.value).to eq('Au revoir')
         expect(main_champ_994.value).to be_nil
 
         expect(draft_champ_99.stream).to eq(Champ::INSTRUCTEUR_BUFFER_STREAM)
@@ -892,7 +913,7 @@ RSpec.describe DossierChampsConcern do
         expect(dossier.history.size).to eq(2)
 
         travel_to(10.minutes.from_now) do
-          dossier.with_instructeur_buffer_stream { assign_champs_attributes(new_attributes) }
+          dossier.with_instructeur_buffer_stream { assign_champs_attributes(attributes_1) }
           dossier.save!
         end
 
@@ -900,7 +921,7 @@ RSpec.describe DossierChampsConcern do
         expect(draft_champ_994.value).to eq("Greer is the best, for sure !")
 
         travel_to(20.minutes.from_now) do
-          dossier.with_update_stream(dossier.user) { assign_champs_attributes(user_attributes) }
+          dossier.with_update_stream(dossier.user) { assign_champs_attributes(user_attributes_1) }
           dossier.save!
 
           # main stream value
@@ -911,6 +932,7 @@ RSpec.describe DossierChampsConcern do
           expect(user_draft_champ_99.value).to eq("Hello???")
 
           dossier.merge_user_buffer_stream!
+          dossier.touch(:en_construction_at)
           dossier.champs.reload
         end
 
@@ -940,6 +962,21 @@ RSpec.describe DossierChampsConcern do
         expect(draft_champ_99.value).to eq("Hello???")
         expect(draft_champ_991.value).to eq("World")
         expect(draft_champ_994.value).to eq("Greer is the best, for sure !")
+
+        travel_to(40.minutes.from_now) do
+          dossier.with_instructeur_buffer_stream { assign_champs_attributes(attributes_2) }
+          dossier.save!
+          dossier.merge_instructeur_buffer_stream!
+          dossier.champs.reload
+        end
+
+        expect(main_champ_99.value).to eq("Hello...")
+        expect(main_champ_991.value).to eq("World")
+        expect(main_champ_994.value).to eq("Greer is the best, for sure !")
+
+        expect(user_history_champ_99.value).to eq("Hello???")
+        expect(user_history_champ_991.value).to eq("World")
+        expect(user_history_champ_994.value).to eq("Greer")
       }
     end
   end

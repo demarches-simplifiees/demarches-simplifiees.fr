@@ -262,6 +262,7 @@ class Champ < ApplicationRecord
   MAIN_STREAM = 'main'
   USER_BUFFER_STREAM = 'user:buffer'
   INSTRUCTEUR_BUFFER_STREAM = 'instructeur:buffer'
+  USER_HISTORY_STREAM = 'user:history'
   HISTORY_STREAM = 'history:'
 
   def main_stream?
@@ -278,6 +279,10 @@ class Champ < ApplicationRecord
 
   def history_stream?
     stream.start_with?(HISTORY_STREAM)
+  end
+
+  def buffer_stream?
+    user_buffer_stream? || instructeur_buffer_stream?
   end
 
   def clone_value_from(champ)
