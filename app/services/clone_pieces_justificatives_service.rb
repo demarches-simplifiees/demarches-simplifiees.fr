@@ -17,6 +17,8 @@ class ClonePiecesJustificativesService
     when Etablissement
       clone_one_attachment(original, kopy, :entreprise_attestation_sociale)
       clone_one_attachment(original, kopy, :entreprise_attestation_fiscale)
+    when GroupeInstructeur
+      clone_one_attachment(original, kopy, :signature)
     end
   end
 

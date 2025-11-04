@@ -790,6 +790,13 @@ describe Administrateurs::ProceduresController, type: :controller do
       procedure.groupe_instructeurs.each { |gi| gi.update!(contact_information: create(:contact_information)) }
       procedure.active_revision.update(ineligibilite_rules:, ineligibilite_message:, ineligibilite_enabled:)
 
+      procedure.defaut_groupe_instructeur.signature.attach(
+        io: StringIO.new("signature"),
+        filename: "signature.png",
+        content_type: "image/png",
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+
       response = Typhoeus::Response.new(code: 200, body: 'Hello world')
       Typhoeus.stub(/active_storage\/disk/).and_return(response)
     end
@@ -884,6 +891,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.labels).not_to be_blank
           expect(Procedure.last.labels.first.procedure_id).to eq(Procedure.last.id)
           expect(Procedure.last.libelle).to eq 'Démarche avec un nouveau nom'
+          expect(Procedure.last.defaut_groupe_instructeur.signature.attached?).to be_truthy
         end
       end
 
@@ -950,6 +958,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(Procedure.last.experts_require_administrateur_invitation).to be_falsey
           expect(Procedure.last.experts).to be_blank
           expect(Procedure.last.labels).to be_blank
+          expect(Procedure.last.defaut_groupe_instructeur.signature.attached?).to be_falsey
         end
       end
     end
