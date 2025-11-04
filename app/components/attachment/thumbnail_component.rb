@@ -17,11 +17,11 @@ class Attachment::ThumbnailComponent < ApplicationComponent
 
   def gallery_link(&block)
     if displayable_image?(blob)
-      link_to image_url(blob_url(attachment)), title:, data: { src: blob.url }, class: 'gallery-link' do
+      link_to image_url(blob_url(attachment)), title:, data: { src: blob.url }, class: 'lightGalleryLink' do
         yield
       end
     elsif displayable_pdf?(blob)
-      link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: do
+      link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'lightGalleryLink', type: blob.content_type, title: do
         yield
       end
     end

@@ -19,7 +19,7 @@ export default class extends ApplicationController {
       zoomFromOrigin: false,
       allowMediaOverlap: true,
       toggleThumb: true,
-      selector: '.gallery-link',
+      selector: '.lightGalleryLink',
       // license key is not mandatory for open source projects but we purchased
       // an organization license to show our support (see https://www.lightgalleryjs.com/license/)
       licenseKey: import.meta.env.VITE_LIGHTGALLERY_LICENSE_KEY
