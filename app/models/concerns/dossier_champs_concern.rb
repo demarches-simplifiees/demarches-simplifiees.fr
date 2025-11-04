@@ -289,7 +289,7 @@ module DossierChampsConcern
     transaction do
       champs.where(id: changed_ids, stream: Champ::MAIN_STREAM).update_all(stream: history_stream)
       champs.where(id: buffer_ids, stream:).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
-      update_champs_timestamps(buffer_champs)
+      update_champs_timestamps(buffer_champs, stream)
     end
 
     # update loaded champ instances
