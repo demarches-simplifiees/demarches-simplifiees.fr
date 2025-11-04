@@ -430,7 +430,6 @@ module Instructeurs
 
     def pieces_jointes
       @dossier = dossier
-      @pieces_jointes_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.pieces_jointes_seen_at
     end
 
     def next

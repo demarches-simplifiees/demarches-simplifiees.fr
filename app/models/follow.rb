@@ -18,6 +18,5 @@ class Follow < ApplicationRecord
     self.annotations_privees_seen_at ||= Time.zone.now
     self.avis_seen_at ||= Time.zone.now
     self.messagerie_seen_at ||= Time.zone.now
-    self.pieces_jointes_seen_at ||= Time.zone.now
   end
 end
