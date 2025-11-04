@@ -50,37 +50,48 @@ RSpec.describe ErrorsController, type: :controller do
   end
 
   describe 'GET #unprocessable_entity' do
-    context 'with HTML referer' do
-      before do
-        request.env['HTTP_REFERER'] = 'http://test.host/dossiers/123'
-      end
-
-      it 'redirects to the referer with csrf_retry flag' do
-        get :unprocessable_entity, format: :html
-
-        expect(response).to redirect_to('http://test.host/dossiers/123?csrf_retry=1')
-      end
-    end
-
-    context 'with referer already flagged' do
-      before do
-        request.env['HTTP_REFERER'] = 'http://test.host/dossiers/123?csrf_retry=1'
-      end
-
-      it 'falls back to the generic rendering' do
-        get :unprocessable_entity, format: :html
-
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response).to render_template('errors/unprocessable_entity')
-      end
-    end
-
-    context 'without InvalidAuthenticityToken' do
+    context 'when user is not signed in' do
       it 'renders the generic template' do
         get :unprocessable_entity, format: :html
 
-        expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template('errors/unprocessable_entity')
+      end
+    end
+
+    context 'when user is signed' do
+      before { sign_in(create(:user)) }
+      context 'with HTML referer' do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/dossiers/123'
+        end
+
+        it 'redirects to the referer with csrf_retry flag' do
+          get :unprocessable_entity, format: :html
+
+          expect(response).to redirect_to('http://test.host/dossiers/123?csrf_retry=1')
+        end
+      end
+
+      context 'with referer already flagged' do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/dossiers/123?csrf_retry=1'
+        end
+
+        it 'falls back to the generic rendering' do
+          get :unprocessable_entity, format: :html
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to render_template('errors/unprocessable_entity')
+        end
+      end
+
+      context 'without InvalidAuthenticityToken' do
+        it 'renders the generic template' do
+          get :unprocessable_entity, format: :html
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to render_template('errors/unprocessable_entity')
+        end
       end
     end
   end

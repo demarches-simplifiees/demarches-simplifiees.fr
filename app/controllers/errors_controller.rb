@@ -63,6 +63,7 @@ class ErrorsController < ApplicationController
   # bypassed, so the normal `flash` mechanism is not available. Do not rely on
   # `flash` in this controller; use the csrf_retry parameter instead which is catched by application controller
   def csrf_retry_redirect_url
+    return if !user_signed_in?
     return if request.referer.blank?
 
     referer_uri = URI.parse(request.referer)
