@@ -10,4 +10,4 @@
 
   .gallery.gallery-pieces-jointes{ "data-controller": "lightbox" }
     - @gallery_attachments.each do |attachment|
-      = render Attachment::GalleryItemComponent.new(attachment:, seen_at: @pieces_jointes_seen_at)
+      = render Attachment::GalleryItemComponent.new(attachment:)
