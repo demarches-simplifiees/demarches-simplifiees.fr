@@ -3522,7 +3522,7 @@ type IntegerColumn implements Column {
   La valeur de la colonne sous forme texte.
   """
   stringValue: String
-  value: Int
+  value: BigInt
 }
 
 type IntegerNumberChamp implements Champ {
