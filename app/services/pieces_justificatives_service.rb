@@ -31,6 +31,7 @@ class PiecesJustificativesService
 
   def generate_dossiers_export(dossiers) # TODO: renommer generate_dossier_export sans s
     return [] if dossiers.empty?
+    return [] if @export_template && !@export_template.export_pdf.enabled?
 
     pdfs = []
 

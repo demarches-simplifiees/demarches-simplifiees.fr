@@ -489,6 +489,14 @@ describe PiecesJustificativesService do
       it 'gives custom name to export pdf file' do
         expect(subject.first.second).to eq "DOSSIER-#{dossier.id}/export-#{dossier.id}.pdf"
       end
+
+      context 'when export pdf is disabled' do
+        let(:export_template) { create(:export_template, groupe_instructeur:, export_pdf: ExportItem.default(prefix: 'export', enabled: false)) }
+
+        it 'does not export pdf' do
+          expect(subject).to be_empty
+        end
+      end
     end
   end
 

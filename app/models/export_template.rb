@@ -59,7 +59,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
-    file_path = if attachment.name == 'pdf_export_for_instructeur'
+    file_path = if attachment.name == 'pdf_export_for_instructeur' && export_pdf.enabled?
       export_pdf.path(dossier, attachment:)
     elsif attachment.record_type == 'Attestation' && attestation&.enabled?
       attestation.path(dossier, attachment:)
