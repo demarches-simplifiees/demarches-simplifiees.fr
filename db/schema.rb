@@ -518,6 +518,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.datetime "identity_updated_at", precision: nil
     t.datetime "last_avis_piece_jointe_updated_at"
     t.datetime "last_avis_updated_at", precision: nil
+    t.datetime "last_champ_instructeur_updated_at"
     t.datetime "last_champ_piece_jointe_updated_at"
     t.datetime "last_champ_private_updated_at", precision: nil
     t.datetime "last_champ_updated_at", precision: nil

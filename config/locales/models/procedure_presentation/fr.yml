@@ -29,6 +29,7 @@ fr:
             archived: 'Archivé'
             dossier_state: 'État du dossier'
             last_champ_updated_at: Date de dernière modification (usager)
+            last_champ_instructeur_updated_at: Date de dernière modification (instructeur)
             motivation: 'Motivation de la décision'
             accuse_lecture_agreement_at: 'Accusé de lecture'
             expired_at: 'Date d’expiration'
