@@ -27,11 +27,15 @@ module MailerDefaultsConfigurableConcern
     before_action :set_currents_for_legacy
     after_action -> { self.class.reset_original_defaults }
 
-    def configure_defaults_for_user(user)
+    def configure_defaults_for_user(user, forced_domain = nil)
       return if !user.is_a?(User) # not for super-admins
 
       if user.preferred_domain_demarches_numerique_gouv_fr?
         set_currents_for_demarches_numerique_gouv_fr
+      elsif forced_domain == ApplicationHelper::APP_HOST
+        set_currents_for_demarches_numerique_gouv_fr
+      elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
+        set_currents_for_legacy
       else
         set_currents_for_legacy
       end

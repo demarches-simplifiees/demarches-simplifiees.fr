@@ -349,7 +349,7 @@ describe Users::SessionsController, type: :controller do
 
     context 'when the instructeur is signed without trust_device_token' do
       it 'send InstructeurMailer.send_login_token' do
-        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything).and_return(double(deliver_later: true))
+        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything, anything).and_return(double(deliver_later: true))
         expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(1)
       end
     end
@@ -368,7 +368,7 @@ describe Users::SessionsController, type: :controller do
         travel_to 15.minutes.from_now
       end
       it 'send InstructeurMailer.send_login_token' do
-        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything).and_return(double(deliver_later: true))
+        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything, anything).and_return(double(deliver_later: true))
         expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(1)
       end
     end

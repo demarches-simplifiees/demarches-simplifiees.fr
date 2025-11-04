@@ -35,14 +35,14 @@ class InstructeurMailer < ApplicationMailer
     mail(to: recipient.email, subject: subject)
   end
 
-  def send_login_token(instructeur, login_token)
+  def send_login_token(instructeur, login_token, host = nil)
     @instructeur = instructeur
     @login_token = login_token
     subject = "Connexion sécurisée à #{Current.application_name}"
 
     bypass_unverified_mail_protection!
 
-    configure_defaults_for_user(instructeur.user)
+    configure_defaults_for_user(instructeur.user, host)
     mail(to: instructeur.email, subject: subject)
   end
 
