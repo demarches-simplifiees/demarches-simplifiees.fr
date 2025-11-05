@@ -47,7 +47,7 @@ module Administrateurs
       @export_options ||= {
         time_span_type: params[:time_span_type],
         statut: params[:statut],
-        procedure_presentation: nil
+        procedure_presentation: nil,
       }.compact
     end
 

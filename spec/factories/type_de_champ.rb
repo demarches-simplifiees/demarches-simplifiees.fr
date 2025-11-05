@@ -110,7 +110,7 @@ FactoryBot.define do
           {
             formatted_mode: 'simple',
             numbers_accepted: '1',
-            letters_accepted: '0'
+            letters_accepted: '0',
           }
         end
       end

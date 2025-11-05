@@ -86,8 +86,8 @@ class Attachment::EditComponent < ApplicationComponent
       data: {
         auto_attach_url:,
         turbo_force: :server,
-        'enable-submit-if-uploaded-target': 'input'
-      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
+        'enable-submit-if-uploaded-target': 'input',
+      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {}),
     }
 
     describedby = []
@@ -130,7 +130,7 @@ class Attachment::EditComponent < ApplicationComponent
   def remove_button_options
     {
       role: 'button',
-      data: { turbo: "true", turbo_method: :delete }
+      data: { turbo: "true", turbo_method: :delete },
     }
   end
 
@@ -139,8 +139,8 @@ class Attachment::EditComponent < ApplicationComponent
       type: 'button',
       data: {
         action: "click->replace-attachment#open",
-        auto_attach_url: auto_attach_url
-      }.compact
+        auto_attach_url: auto_attach_url,
+      }.compact,
     }
   end
 
@@ -148,7 +148,7 @@ class Attachment::EditComponent < ApplicationComponent
     {
       type: 'button',
       class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mt-1w attachment-upload-error-retry',
-      data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' }
+      data: { input_target: ".#{attachment_input_class}", action: 'autosave#onClickRetryButton' },
     }
   end
 
@@ -260,7 +260,7 @@ class Attachment::EditComponent < ApplicationComponent
       extra: {
         champ: champ,
         field_name: field_name,
-        attachment_id: attachment_id
+        attachment_id: attachment_id,
       }
     )
   end

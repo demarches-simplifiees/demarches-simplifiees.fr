@@ -13,7 +13,7 @@ class ExpertDashboard < Administrate::BaseDashboard
     id: Field::Number,
     user: Field::HasOne.with_options(searchable: true, searchable_fields: %w[email]),
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -24,7 +24,7 @@ class ExpertDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :user,
-    :created_at
+    :created_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -32,7 +32,7 @@ class ExpertDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :user,
-    :created_at
+    :created_at,
   ].freeze
 
   # Overwrite this method to customize how users are displayed

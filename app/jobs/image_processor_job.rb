@@ -25,7 +25,7 @@ class ImageProcessorJob < ApplicationJob
     'improper image header',
     'width or height exceeds limit',
     'attempt to perform an operation not allowed by the security policy',
-    'no decode delegate for this image format'
+    'no decode delegate for this image format',
   ]
   discard_on do |_, error|
     DISCARDABLE_ERRORS.any? { error.message.match?(_1) }

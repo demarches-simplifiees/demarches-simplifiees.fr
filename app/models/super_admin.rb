@@ -24,7 +24,7 @@ class SuperAdmin < ApplicationRecord
         encrypted_otp_secret_iv: nil,
         encrypted_otp_secret_salt: nil,
         consumed_timestep: nil,
-        otp_required_for_login: false
+        otp_required_for_login: false,
       }
     )
     save!

@@ -24,7 +24,7 @@ RSpec.describe InstructeursProcedure, type: :model do
         [procedures[1].id, 3],
         [procedures[2].id, 2],
         [procedures[3].id, 1],
-        [procedures[4].id, 0]
+        [procedures[4].id, 0],
       ])
     end
   end
@@ -45,7 +45,7 @@ RSpec.describe InstructeursProcedure, type: :model do
         annotation_instructeur: 'followed',
         avis_externe: 'followed',
         attente_correction: 'followed',
-        attente_avis: 'followed'
+        attente_avis: 'followed',
       }
     }
     let(:new_preferences) {
@@ -56,7 +56,7 @@ RSpec.describe InstructeursProcedure, type: :model do
         annotation_instructeur: 'followed',
         avis_externe: 'followed',
         attente_correction: 'followed',
-        attente_avis: 'followed'
+        attente_avis: 'followed',
       }
     }
 

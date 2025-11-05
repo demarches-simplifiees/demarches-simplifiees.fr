@@ -71,7 +71,7 @@ class ChampSerializer < ActiveModel::Serializer
       libelle: legacy_carto_libelle,
       type_champ: legacy_carto_type_champ,
       order_place: -1,
-      description: ''
+      description: '',
     }
   end
 

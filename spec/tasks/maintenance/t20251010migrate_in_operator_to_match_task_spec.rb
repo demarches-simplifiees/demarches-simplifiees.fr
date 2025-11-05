@@ -18,14 +18,14 @@ module Maintenance
         before do
           procedure_presentation.update!(
             tous_filters: [
-              FilteredColumn.new(column: column, filter: { operator: 'in', value: ['Paris', 'Lyon'] })
+              FilteredColumn.new(column: column, filter: { operator: 'in', value: ['Paris', 'Lyon'] }),
             ],
             suivis_filters: [
               FilteredColumn.new(column: column, filter: { operator: 'in', value: ['Marseille'] }),
-              FilteredColumn.new(column: column, filter: { operator: 'match', value: ['Paris', 'Marseille'] })
+              FilteredColumn.new(column: column, filter: { operator: 'match', value: ['Paris', 'Marseille'] }),
             ],
             archives_filters: [
-              FilteredColumn.new(column: date_column, filter: { operator: 'before', value: ['2025-01-01'] })
+              FilteredColumn.new(column: date_column, filter: { operator: 'before', value: ['2025-01-01'] }),
             ]
           )
         end
@@ -46,7 +46,7 @@ module Maintenance
           procedure_presentation.update!(
             tous_filters: [
               FilteredColumn.new(column: column, filter: { operator: 'in', value: ['Paris'] }),
-              FilteredColumn.new(column: date_column, filter: { operator: 'before', value: ['2025-01-01'] })
+              FilteredColumn.new(column: date_column, filter: { operator: 'before', value: ['2025-01-01'] }),
             ]
           )
         end

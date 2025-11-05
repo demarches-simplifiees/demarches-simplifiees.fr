@@ -620,7 +620,7 @@ describe Dossier, type: :model do
           create(:procedure,
                  types_de_champ_public: [
                    { type: :drop_down_list, libelle: 'Votre ville', options: [gi_libelle, 'Lyon', 'Marseille'] },
-                   { type: :text, libelle: 'Un champ texte' }
+                   { type: :text, libelle: 'Un champ texte' },
                  ])
         end
         let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
@@ -932,7 +932,7 @@ describe Dossier, type: :model do
             "unspecified champ-in-title",
             "unspecified annotation privée-in-title",
             "unspecified champ-in-body",
-            "unspecified annotation privée-in-body"
+            "unspecified annotation privée-in-body",
           ])
         end
       end
@@ -944,7 +944,7 @@ describe Dossier, type: :model do
       # - with tag correponding to a champ and an annotation privée
       let(:body) {
         [
-          { "type" => "mention", "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find {  _1.libelle == "unspecified champ-in-body" }.stable_id}", "label" => "unspecified champ-in-body" } }
+          { "type" => "mention", "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find {  _1.libelle == "unspecified champ-in-body" }.stable_id}", "label" => "unspecified champ-in-body" } },
         ]
       }
       let(:attestation_acceptation_template) { build(:attestation_template, :v2) }
@@ -955,7 +955,7 @@ describe Dossier, type: :model do
 
           {
             "type" => "mention",
-            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] }
+            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] },
           }
         end
 
@@ -967,7 +967,7 @@ describe Dossier, type: :model do
       it do
         is_expected.to eq([
           "unspecified champ-in-body",
-          "unspecified annotation privée-in-body"
+          "unspecified annotation privée-in-body",
         ])
       end
     end
@@ -2138,8 +2138,8 @@ describe Dossier, type: :model do
         Geocoder::Lookup::Test.add_stub(
           dossier.etablissement.geo_adresse, [
             {
-              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f]
-            }
+              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f],
+            },
           ]
         )
       end
@@ -2269,7 +2269,7 @@ describe Dossier, type: :model do
             type: 'Feature',
             geometry: {
               coordinates: [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
-              type: 'Polygon'
+              type: 'Polygon',
             },
             properties: {
               area: 103.6,
@@ -2278,10 +2278,10 @@ describe Dossier, type: :model do
               champ_private: false,
               dossier_id: dossier.id,
               id: geo_area.id,
-              source: 'selection_utilisateur'
-            }
-          }
-        ]
+              source: 'selection_utilisateur',
+            },
+          },
+        ],
       })
     end
   end
@@ -2336,7 +2336,7 @@ describe Dossier, type: :model do
           { type: :yes_no },
           { type: :explication },
           { type: :communes },
-          { type: :repetition, children: [{ type: :text }] }
+          { type: :repetition, children: [{ type: :text }] },
         ]
       end
 
@@ -2454,7 +2454,7 @@ describe Dossier, type: :model do
             [text_tdc.libelle, "text"],
             ["commune", nil],
             ["commune (Code INSEE)", nil],
-            ["commune (Département)", nil]
+            ["commune (Département)", nil],
           ]
         end
 

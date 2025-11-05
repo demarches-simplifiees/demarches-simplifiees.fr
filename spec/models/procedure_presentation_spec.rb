@@ -199,7 +199,7 @@ describe ProcedurePresentation do
 
     subject do
       procedure_presentation.update(displayed_columns: [
-        en_construction_column.id, mise_a_jour_column.id
+        en_construction_column.id, mise_a_jour_column.id,
       ])
     end
 
@@ -209,7 +209,7 @@ describe ProcedurePresentation do
       subject
 
       expect(procedure_presentation.displayed_columns).to eq([
-        en_construction_column, mise_a_jour_column
+        en_construction_column, mise_a_jour_column,
       ])
     end
   end

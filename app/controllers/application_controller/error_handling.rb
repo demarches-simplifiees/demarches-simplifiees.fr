@@ -25,7 +25,7 @@ module ApplicationController::ErrorHandling
   def log_invalid_authenticity_token_error
     Sentry.with_scope do |temp_scope|
       tags = {
-        action: "#{self.class.name}#{action_name}"
+        action: "#{self.class.name}#{action_name}",
       }
       temp_scope.set_tags(tags)
       Sentry.capture_message("ActionController::InvalidAuthenticityToken")

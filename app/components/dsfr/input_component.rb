@@ -33,8 +33,8 @@ class Dsfr::InputComponent < ApplicationComponent
     opts = {
       class: class_names({
         'fr-input-group': true,
-        'fr-password': password?
-      }.merge(input_group_error_class_names))
+        'fr-password': password?,
+      }.merge(input_group_error_class_names)),
     }
     if email?
       opts[:data] = { controller: 'email-input', email_input_url_value: show_email_suggestions_path }
@@ -56,7 +56,7 @@ class Dsfr::InputComponent < ApplicationComponent
         'fr-label': true,
         'fr-password__label': password?,
         @label_opts[:class] => @label_opts[:class].present?
-      )
+      ),
     }.merge(@opts[:id].present? ? { for: @opts[:id] } : {})
   end
 

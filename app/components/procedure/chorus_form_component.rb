@@ -12,7 +12,7 @@ class Procedure::ChorusFormComponent < ApplicationComponent
     {
       centre_de_cout: data_sources_search_centre_couts_path,
       domaine_fonctionnel: data_sources_search_domaine_fonct_path,
-      referentiel_de_programmation: data_sources_search_ref_programmation_path
+      referentiel_de_programmation: data_sources_search_ref_programmation_path,
     }
   end
 
@@ -62,7 +62,7 @@ class Procedure::ChorusFormComponent < ApplicationComponent
       selected_key: selected_key(chorus_configuration_attribute),
       items: items(chorus_configuration_attribute),
       loader: datasource_endpoint,
-      id: chorus_configuration_attribute
+      id: chorus_configuration_attribute,
     }
   end
 end

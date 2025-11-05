@@ -19,7 +19,7 @@ describe Procedure::OneGroupeManagementComponent, type: :component do
         procedure.draft_revision.add_type_de_champ({
           type_champ: :drop_down_list,
           libelle: 'Votre ville',
-          drop_down_options: ["Paris", "Lyon", "Marseille"]
+          drop_down_options: ["Paris", "Lyon", "Marseille"],
         })
         procedure.publish_revision!(procedure.administrateurs.first)
         procedure.reload

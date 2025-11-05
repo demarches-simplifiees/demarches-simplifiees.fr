@@ -19,7 +19,7 @@ describe ProcedureStatsConcern do
           ['Tous (dont brouillon)', procedure.dossiers.visible_by_user_or_administration.count],
           ['Déposés', procedure.dossiers.visible_by_administration.count],
           ['Instruction débutée', procedure.dossiers.visible_by_administration.state_instruction_commencee.count],
-          ['Traités', procedure.dossiers.visible_by_administration.state_termine.count]
+          ['Traités', procedure.dossiers.visible_by_administration.state_termine.count],
         ]
       )
     end
@@ -118,7 +118,7 @@ describe ProcedureStatsConcern do
   [
     [90.days, 90.days],
     [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days],
-    [30.days, 60.days, 60.days, 60.days]
+    [30.days, 60.days, 60.days, 60.days],
   ]
 }
 

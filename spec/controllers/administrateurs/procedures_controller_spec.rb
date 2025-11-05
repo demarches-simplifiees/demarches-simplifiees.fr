@@ -69,14 +69,14 @@ describe Administrateurs::ProceduresController, type: :controller do
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       monavis_embed: monavis_embed,
       zone_ids: zone_ids,
-      procedure_tag_names: ['Aao', 'Accompagnement']
+      procedure_tag_names: ['Aao', 'Accompagnement'],
     }
   }
 
   let(:procedure_params_not_creatable) {
     {
       lien_site_web: lien_site_web,
-      robots_indexable: "0"
+      robots_indexable: "0",
     }
   }
 
@@ -98,7 +98,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     subject {
       get :index, params: {
-        'statut': 'publiees'
+        'statut': 'publiees',
       }
     }
 
@@ -779,9 +779,9 @@ describe Administrateurs::ProceduresController, type: :controller do
         procedure: {
           libelle: procedure.libelle,
           clone_options: {
-            instructeurs: '0'
-          }
-        }
+            instructeurs: '0',
+          },
+        },
       }
     end
     subject { post :clone, params: params }
@@ -821,9 +821,9 @@ describe Administrateurs::ProceduresController, type: :controller do
             procedure: {
               libelle: procedure.libelle,
               clone_options: {
-                instructeurs: '0'
-              }
-            }
+                instructeurs: '0',
+              },
+            },
           }
         end
 
@@ -853,9 +853,9 @@ describe Administrateurs::ProceduresController, type: :controller do
                 mail_templates: '1',
                 ineligibilite: '1',
                 avis: '1',
-                labels: '1'
-              }
-            }
+                labels: '1',
+              },
+            },
           }
         end
 
@@ -918,9 +918,9 @@ describe Administrateurs::ProceduresController, type: :controller do
                 mail_templates: '0',
                 ineligibilite: '0',
                 avis: '0',
-                labels: '0'
-              }
-            }
+                labels: '0',
+              },
+            },
           }
         end
 
@@ -1228,7 +1228,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     let!(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_params) {
       {
-        monavis_embed: monavis_embed
+        monavis_embed: monavis_embed,
       }
     }
 
@@ -1745,7 +1745,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       before do
         patch :update_rdv, params: {
           id: procedure.id,
-          procedure: { rdv_enabled: true }
+          procedure: { rdv_enabled: true },
         }
       end
 
@@ -1768,7 +1768,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       before do
         patch :update_rdv, params: {
           id: procedure.id,
-          procedure: { rdv_enabled: false }
+          procedure: { rdv_enabled: false },
         }
       end
 
@@ -1795,7 +1795,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     subject do
       patch :update_pro_connect_restricted, params: {
         id: procedure.id,
-        procedure: { pro_connect_restricted: pro_connect_restricted }
+        procedure: { pro_connect_restricted: pro_connect_restricted },
       }
     end
 

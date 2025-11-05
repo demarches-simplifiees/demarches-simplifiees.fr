@@ -8,7 +8,7 @@ class ReleaseNote < ApplicationRecord
     'instructeur',
     'expert',
     'usager',
-    'api'
+    'api',
   ]
 
   validates :categories, presence: true, inclusion: { in: CATEGORIES }

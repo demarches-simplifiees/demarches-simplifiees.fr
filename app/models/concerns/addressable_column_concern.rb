@@ -9,7 +9,7 @@ module AddressableColumnConcern
         ["Code postal (5 chiffres)", '$.postal_code', :text, []],
         ["Commune", '$.city_name', :text, []],
         ["Département", '$.department_code', :enum, APIGeoService.departement_options],
-        ["Région", '$.region_name', :enum, APIGeoService.region_options]
+        ["Région", '$.region_name', :enum, APIGeoService.region_options],
       ].map do |(label, jsonpath, type, options_for_select)|
         Columns::JSONPathColumn.new(
           procedure_id: procedure.id,

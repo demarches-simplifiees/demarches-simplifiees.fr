@@ -83,7 +83,7 @@ module Connections
     def load_nodes_deprecated_order(limit, inverted)
       payload = {
         message: "CursorConnection: using deprecated order [#{Current.user.email}]",
-        user_id: Current.user.id
+        user_id: Current.user.id,
       }
       logger = Lograge.logger || Rails.logger
       logger.info payload.to_json

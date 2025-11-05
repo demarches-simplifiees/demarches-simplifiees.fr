@@ -28,7 +28,7 @@ describe ProConnectController, type: :controller do
         'sub' => 'sub',
         'email' => email,
         'given_name' => 'given',
-        'usual_name' => 'usual'
+        'usual_name' => 'usual',
       }
     end
     let(:amr) { [] }

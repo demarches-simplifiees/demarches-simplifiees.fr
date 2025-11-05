@@ -17,8 +17,8 @@ describe ChampPresentations::MultipleDropDownListPresentation do
         content: [
           { content: [{ content: [{ :text => "Option 1", type: "text" }], type: "paragraph" }], type: "listItem" },
           { content: [{ content: [{ :text => "Option 2", type: "text" }], type: "paragraph" }], type: "listItem" },
-          { content: [{ content: [{ :text => "Option 3", type: "text" }], type: "paragraph" }], type: "listItem" }
-        ]
+          { content: [{ content: [{ :text => "Option 3", type: "text" }], type: "paragraph" }], type: "listItem" },
+        ],
       }
 
       expect(representation.to_tiptap_node).to eq(expected_node)

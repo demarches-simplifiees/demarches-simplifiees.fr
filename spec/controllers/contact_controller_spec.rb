@@ -85,7 +85,7 @@ describe ContactController, question_type: :controller do
               dossier_id: dossier.id,
               question_type: ContactForm::TYPE_INSTRUCTION,
               subject: 'bonjour',
-              text: 'un message'
+              text: 'un message',
             }
           end
 
@@ -112,7 +112,7 @@ describe ContactController, question_type: :controller do
               dossier_id: dossier.id,
               question_type: ContactForm::TYPE_INSTRUCTION,
               subject: 'bonjour',
-              text: 'un message'
+              text: 'un message',
             }
           end
 
@@ -135,7 +135,7 @@ describe ContactController, question_type: :controller do
         subject do
           post :create, params: {
             contact_form: { subject: 'bonjour', text: 'un message', question_type: 'procedure_info' },
-            InvisibleCaptcha.honeypots.sample => 'boom'
+            InvisibleCaptcha.honeypots.sample => 'boom',
           }
         end
 

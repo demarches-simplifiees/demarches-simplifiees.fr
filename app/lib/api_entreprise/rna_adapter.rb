@@ -26,7 +26,7 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
         # see: https://mattermost.incubateur.net/betagouv/pl/r6txumw9cpyx58rt7iq5dte9qe
         "association_date_declaration" => meta[:date_derniere_mise_a_jour_rna],
         "association_date_publication" => data[:date_publication_journal_officiel],
-        "adresse" => data[:adresse_siege]
+        "adresse" => data[:adresse_siege],
       }
     end
   end

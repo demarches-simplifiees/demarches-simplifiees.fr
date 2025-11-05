@@ -25,8 +25,8 @@ describe APIParticulier::DgfipAdapter do
                 "echeance_avis" => ["dateRecouvrement", "dateEtablissement"],
                 "foyer_fiscal" => ["adresse", "annee", "nombreParts", "nombrePersonnesCharge", "situationFamille"],
                 "agregats_fiscaux" => ["revenuBrutGlobal", "revenuImposable", "impotRevenuNetAvantCorrections", "montantImpot", "revenuFiscalReference", "anneeImpots", "anneeRevenus"],
-                "complements" => ["erreurCorrectif", "situationPartielle"]
-              }
+                "complements" => ["erreurCorrectif", "situationPartielle"],
+              },
             }
           end
 

@@ -23,8 +23,8 @@ class SelectProcedureDropDownListComponent < Dsfr::InputComponent
         no_autosubmit: 'input blur',
         no_autosubmit_on_empty: 'true',
         autosubmit_target: 'input',
-        action_path: @action_path
-      }
+        action_path: @action_path,
+      },
     }
   end
 

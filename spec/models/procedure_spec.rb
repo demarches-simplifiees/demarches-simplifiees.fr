@@ -477,7 +477,7 @@ describe Procedure do
         let(:types_de_champ_public) do
           [
             { type: :repetition, libelle: 'Enfants', children: [] },
-            { type: :drop_down_list, libelle: 'Civilité', options: [] }
+            { type: :drop_down_list, libelle: 'Civilité', options: [] },
           ]
         end
         let(:types_de_champ_private) { [] }
@@ -516,7 +516,7 @@ describe Procedure do
           let(:special_characters_accepted) { "0" }
           let(:types_de_champ_public) do
             [
-              { type: :formatted, formatted_mode:, letters_accepted:, numbers_accepted:, special_characters_accepted: }
+              { type: :formatted, formatted_mode:, letters_accepted:, numbers_accepted:, special_characters_accepted: },
             ]
           end
 
@@ -541,7 +541,7 @@ describe Procedure do
           let(:max_character_length) { "10" }
           let(:types_de_champ_public) do
             [
-              { type: :formatted, formatted_mode:, min_character_length:, max_character_length: }
+              { type: :formatted, formatted_mode:, min_character_length:, max_character_length: },
             ]
           end
 
@@ -571,7 +571,7 @@ describe Procedure do
         let(:types_de_champ_private) do
           [
             { type: :repetition, libelle: 'Enfants', children: [] },
-            { type: :drop_down_list, libelle: 'Civilité', options: [] }
+            { type: :drop_down_list, libelle: 'Civilité', options: [] },
           ]
         end
         let(:types_de_champ_public) { [] }
@@ -618,13 +618,13 @@ describe Procedure do
         let(:types_de_champ_public) do
           [
             { type: :decimal_number, stable_id: 1 },
-            { type: :decimal_number, stable_id: 2 }
+            { type: :decimal_number, stable_id: 2 },
           ]
         end
 
         let(:types_de_champ_private) do
           [
-            { type: :text, condition: ds_eq(champ_value(2), constant(2)), stable_id: 3 }
+            { type: :text, condition: ds_eq(champ_value(2), constant(2)), stable_id: 3 },
           ]
         end
 
@@ -1491,9 +1491,9 @@ describe Procedure do
             children: [
               { libelle: 'Nom', mandatory: true },
               { libelle: 'Prénom', mandatory: true },
-              { libelle: 'Age', type: :integer_number, mandatory: false }
-            ]
-          }
+              { libelle: 'Age', type: :integer_number, mandatory: false },
+            ],
+          },
         ]
       end
       let(:revision) { procedure.draft_revision }
@@ -1723,7 +1723,7 @@ describe Procedure do
     let(:types_de_champ_public) do
       [
         { type: :text },
-        { type: :header_section }
+        { type: :header_section },
       ]
     end
 
@@ -1774,7 +1774,7 @@ describe Procedure do
         [labels[1].id, 1],
         [labels[2].id, 2],
         [labels[3].id, 3],
-        [labels[4].id, 4]
+        [labels[4].id, 4],
       ])
     end
   end

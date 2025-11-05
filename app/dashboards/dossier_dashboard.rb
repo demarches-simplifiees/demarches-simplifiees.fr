@@ -25,7 +25,7 @@ class DossierDashboard < Administrate::BaseDashboard
     en_instruction_at: Field::DateTime,
     processed_at: Field::DateTime,
     project_champs_public: ChampCollectionField,
-    groupe_instructeur: Field::BelongsTo
+    groupe_instructeur: Field::BelongsTo,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -37,7 +37,7 @@ class DossierDashboard < Administrate::BaseDashboard
     :id,
     :procedure,
     :created_at,
-    :state
+    :state,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -57,7 +57,7 @@ class DossierDashboard < Administrate::BaseDashboard
     :depose_at,
     :en_construction_at,
     :en_instruction_at,
-    :processed_at
+    :processed_at,
   ].freeze
 
   # FORM_ATTRIBUTES

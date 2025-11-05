@@ -7,34 +7,34 @@ describe JSONPathUtil do
         'foo' => {
           'bar' => 1,
           'baz' => [
-            { 'qux' => 'valeur' }
-          ]
+            { 'qux' => 'valeur' },
+          ],
         },
-        'simple' => 'ok'
+        'simple' => 'ok',
       }
       result = described_class.hash_to_jsonpath(hash)
       expect(result).to eq({
         '$.foo.bar' => 1,
         '$.foo.baz[0].qux' => 'valeur',
-        '$.simple' => 'ok'
+        '$.simple' => 'ok',
       })
     end
 
     it 'jsonpathify simple hash' do
       expect(described_class.hash_to_jsonpath({ "key" => "value" })).to eq({
-        "$.key" => "value"
+        "$.key" => "value",
       })
     end
 
     it 'jsonpathify nested hash' do
       expect(described_class.hash_to_jsonpath({ "key" => { "nested" => "value" } })).to eq({
-        "$.key.nested" => "value"
+        "$.key.nested" => "value",
       })
     end
 
     it 'jsonpathify array in hash' do
       expect(described_class.hash_to_jsonpath({ data: [{ "key" => "value" }] })).to eq({
-        "$.data[0].key" => "value"
+        "$.data[0].key" => "value",
       })
     end
 
@@ -59,18 +59,18 @@ describe JSONPathUtil do
         "$.addresses[0].city_zipcode",
         "$.addresses[0].street_number",
         "$.addresses[0].city_insee_code",
-        "$.is_active"
+        "$.is_active",
       ])
     end
 
     it 'handles an array of hashes' do
       array = [
         { 'key1' => 'value1' },
-        { 'key2' => 'value2' }
+        { 'key2' => 'value2' },
       ]
       result = described_class.hash_to_jsonpath(array)
       expect(result).to eq({
-        '$.[0].key1' => 'value1'
+        '$.[0].key1' => 'value1',
       })
     end
 
@@ -92,15 +92,15 @@ describe JSONPathUtil do
         {
           "foo" => [
             { "bar" => 1 },
-            { "bar" => 2 }
+            { "bar" => 2 },
           ],
           "baz" => {
             "qux" => [
               { "a" => "x" },
-              { "a" => "y" }
-            ]
+              { "a" => "y" },
+            ],
           },
-          "simple" => "value"
+          "simple" => "value",
         }
       end
 
@@ -120,7 +120,7 @@ describe JSONPathUtil do
       let(:array) do
         [
           { "key1" => "value1" },
-          { "key2" => "value2" }
+          { "key2" => "value2" },
         ]
       end
 

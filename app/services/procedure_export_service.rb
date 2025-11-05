@@ -115,7 +115,7 @@ class ProcedureExportService
           {
             sheet_name: type_de_champ_repetition.libelle_for_export,
             instances: rows,
-            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ, export_template: @export_template, format:) }
+            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ, export_template: @export_template, format:) },
           }
         end
       end
@@ -123,7 +123,7 @@ class ProcedureExportService
 
   DEFAULT_STYLES = {
     header_style: { background_color: "000000", color: "FFFFFF", font_size: 12, bold: true },
-    row_style: { background_color: nil, color: "000000", font_size: 12 }
+    row_style: { background_color: nil, color: "000000", font_size: 12 },
   }
 
   def options_for(table, format)

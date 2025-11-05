@@ -13,7 +13,7 @@ class Instructeurs::ScheduleRdvButtonComponent < ApplicationComponent
       class: 'fr-btn' do
       safe_join([
         button_text,
-        content_tag(:span, nil, class: 'fr-ml-1w fr-icon-external-link-line', 'aria-hidden': 'true')
+        content_tag(:span, nil, class: 'fr-ml-1w fr-icon-external-link-line', 'aria-hidden': 'true'),
       ])
     end
   end

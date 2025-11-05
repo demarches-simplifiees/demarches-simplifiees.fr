@@ -7,7 +7,7 @@ class User < ApplicationRecord
 
   enum :loged_in_with_france_connect, {
     particulier: 'particulier',
-    entreprise: 'entreprise'
+    entreprise: 'entreprise',
   }
 
   # Include default devise modules. Others available are:
@@ -262,7 +262,7 @@ class User < ApplicationRecord
       [
         [old_user.instructeur, instructeur],
         [old_user.expert, expert],
-        [old_user.administrateur, administrateur]
+        [old_user.administrateur, administrateur],
       ].each do |old_role, targeted_role|
         if targeted_role.nil?
           old_role&.update(user: self)

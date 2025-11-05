@@ -38,7 +38,7 @@ module Maintenance
             "entreprise_nom_commercial" => "GRTGAZ",
             "entreprise_raison_sociale" => "GRTGAZ",
             "entreprise_siren" => "440117620",
-            "libelle_naf" => "Transports par conduites"
+            "libelle_naf" => "Transports par conduites",
           })
       end
     end

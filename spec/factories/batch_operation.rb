@@ -15,7 +15,7 @@ FactoryBot.define do
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure),
           create(:dossier, :with_individual, :refuse, procedure: procedure),
-          create(:dossier, :with_individual, :sans_suite, procedure: procedure)
+          create(:dossier, :with_individual, :sans_suite, procedure: procedure),
         ]
       end
     end
@@ -27,7 +27,7 @@ FactoryBot.define do
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure, archived: true),
           create(:dossier, :with_individual, :refuse, procedure: procedure, archived: true),
-          create(:dossier, :with_individual, :sans_suite, procedure: procedure, archived: true)
+          create(:dossier, :with_individual, :sans_suite, procedure: procedure, archived: true),
         ]
       end
     end
@@ -38,7 +38,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_construction, procedure: procedure),
-          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+          create(:dossier, :with_individual, :en_construction, procedure: procedure),
         ]
       end
     end
@@ -50,7 +50,7 @@ FactoryBot.define do
         batch_operation.dossiers =
           [
             create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago),
-            create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago)
+            create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago),
           ].each(&:update_expired_at)
       end
     end
@@ -61,7 +61,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_instruction, procedure: procedure)
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure),
         ]
       end
     end
@@ -72,7 +72,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_instruction, procedure: procedure)
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure),
         ]
       end
     end
@@ -83,7 +83,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_instruction, procedure: procedure)
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure),
         ]
       end
     end
@@ -94,7 +94,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+          create(:dossier, :with_individual, :en_construction, procedure: procedure),
         ]
       end
     end
@@ -105,7 +105,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure, followers_instructeurs: procedure.instructeurs),
-          create(:dossier, :with_individual, :en_construction, procedure: procedure, followers_instructeurs: procedure.instructeurs)
+          create(:dossier, :with_individual, :en_construction, procedure: procedure, followers_instructeurs: procedure.instructeurs),
         ]
       end
     end
@@ -116,7 +116,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure, hidden_by_administration_at: Time.zone.now),
-          create(:dossier, :with_individual, :refuse, procedure: procedure, hidden_by_administration_at: Time.zone.now)
+          create(:dossier, :with_individual, :refuse, procedure: procedure, hidden_by_administration_at: Time.zone.now),
         ]
       end
     end
@@ -127,7 +127,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_instruction, procedure: procedure)
+          create(:dossier, :with_individual, :en_instruction, procedure: procedure),
         ]
       end
     end
@@ -138,7 +138,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :accepte, procedure: procedure),
-          create(:dossier, :with_individual, :refuse, procedure: procedure)
+          create(:dossier, :with_individual, :refuse, procedure: procedure),
         ]
       end
     end
@@ -149,7 +149,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+          create(:dossier, :with_individual, :en_construction, procedure: procedure),
         ]
       end
     end
@@ -160,7 +160,7 @@ FactoryBot.define do
         procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur])
         batch_operation.dossiers = [
           create(:dossier, :with_individual, :en_instruction, procedure: procedure),
-          create(:dossier, :with_individual, :en_construction, procedure: procedure)
+          create(:dossier, :with_individual, :en_construction, procedure: procedure),
         ]
       end
     end

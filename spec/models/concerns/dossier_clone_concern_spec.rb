@@ -9,7 +9,7 @@ RSpec.describe DossierCloneConcern do
       { type: :text, libelle: "Un champ text", stable_id: 99 },
       { type: :text, libelle: "Un autre champ text", stable_id: 991 },
       { type: :yes_no, libelle: "Un champ yes no", stable_id: 992 },
-      { type: :repetition, libelle: "Un champ répétable", stable_id: 993, mandatory: true, children: [{ type: :text, libelle: 'Nom', stable_id: 994 }] }
+      { type: :repetition, libelle: "Un champ répétable", stable_id: 993, mandatory: true, children: [{ type: :text, libelle: 'Nom', stable_id: 994 }] },
     ]
   end
   let(:types_de_champ_private) { [] }

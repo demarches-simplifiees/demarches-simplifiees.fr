@@ -173,7 +173,7 @@ class APIEntreprise::API
     {
       context: APPLICATION_NAME,
       recipient: recipient_for(siret_or_siren),
-      non_diffusables: true
+      non_diffusables: true,
     }
   end
 

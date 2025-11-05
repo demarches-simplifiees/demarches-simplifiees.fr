@@ -52,7 +52,7 @@ describe Administrateurs::ServicesController, type: :controller do
       let(:params) do
         {
           procedure_id: procedure.id,
-          siret: "20004021000060"
+          siret: "20004021000060",
         }
       end
 
@@ -70,7 +70,7 @@ describe Administrateurs::ServicesController, type: :controller do
       let(:params) do
         {
           procedure_id: procedure.id,
-          siret: "20004021000000"
+          siret: "20004021000000",
         }
       end
 
@@ -86,7 +86,7 @@ describe Administrateurs::ServicesController, type: :controller do
       let(:params) do
         {
           procedure_id: procedure.id,
-          siret: "41816609600051"
+          siret: "41816609600051",
         }
       end
 
@@ -120,9 +120,9 @@ describe Administrateurs::ServicesController, type: :controller do
             telephone: '1234',
             horaires: 'horaires',
             adresse: 'adresse',
-            siret: "35600011719156"
+            siret: "35600011719156",
           },
-          procedure_id: procedure.id
+          procedure_id: procedure.id,
         }
       end
 
@@ -165,7 +165,7 @@ describe Administrateurs::ServicesController, type: :controller do
       params = {
         id: service.id,
         service: service_params,
-        procedure_id: procedure.id
+        procedure_id: procedure.id,
       }
       patch :update, params: params
     end
@@ -200,8 +200,8 @@ describe Administrateurs::ServicesController, type: :controller do
       params = {
         procedure: {
           id: procedure.id,
-          service_id: service.id
-        }
+          service_id: service.id,
+        },
       }
       patch :add_to_procedure, params: params
       procedure.reload

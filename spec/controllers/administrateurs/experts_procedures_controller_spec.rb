@@ -77,8 +77,8 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
         id: expert_procedure.id,
         procedure_id: procedure.id,
         experts_procedure: {
-          allow_decision_access: true
-        }
+          allow_decision_access: true,
+        },
       }, format: :js
     end
 

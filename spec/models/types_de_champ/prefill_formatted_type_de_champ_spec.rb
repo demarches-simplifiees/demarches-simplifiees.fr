@@ -12,7 +12,7 @@ RSpec.describe TypesDeChamp::PrefillFormattedTypeDeChamp do
        before do
          type_de_champ.options = {
            "formatted_mode" => "advanced",
-           "expression_reguliere_exemple_text" => "ABC123"
+           "expression_reguliere_exemple_text" => "ABC123",
          }
        end
 
@@ -27,7 +27,7 @@ RSpec.describe TypesDeChamp::PrefillFormattedTypeDeChamp do
            "numbers_accepted" => "0",
            "special_characters_accepted" => "0",
            "min_character_length" => "",
-           "max_character_length" => ""
+           "max_character_length" => "",
          }
        end
 

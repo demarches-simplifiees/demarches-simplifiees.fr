@@ -28,7 +28,7 @@ class Instructeurs::RemoveFilterButtonsComponent < ApplicationComponent
       class: 'fr-tag fr-tag--dismiss fr-my-1w fr-tag--sm',
       params: {
         filter: { id: filter.column.id, filter: filter.filter },
-        statut: @statut
+        statut: @statut,
       }.compact,
       form: { data: { turbo: true } },
       form_class: 'inline'

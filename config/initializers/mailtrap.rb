@@ -13,7 +13,7 @@ if ENV.enabled?("MAILTRAP")
       address: 'sandbox.smtp.mailtrap.io',
       domain: 'sandbox.smtp.mailtrap.io',
       port: '2525',
-      authentication: :login
+      authentication: :login,
     }
   end
 end

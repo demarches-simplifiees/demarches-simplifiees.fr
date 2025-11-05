@@ -93,7 +93,7 @@ module Maintenance
               "dossier_state" => dossier.state,
               "procedure_id" => procedure.id,
               "champ_libelle" => "Justificatif de domicile",
-              "procedure_libelle" => procedure.libelle
+              "procedure_libelle" => procedure.libelle,
             })
           end
 
@@ -111,7 +111,7 @@ module Maintenance
                 "blob_key" => blob.key,
                 "name" => "piece_justificative_file",
                 "record_type" => "Champ",
-                "record_id" => 9999999999999
+                "record_id" => 9999999999999,
               })
             end
           end

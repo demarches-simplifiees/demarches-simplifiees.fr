@@ -13,7 +13,7 @@ describe Service, type: :model do
         horaires: 'du lundi au vendredi',
         adresse: '12 rue des schtroumpfs',
         administrateur_id: administrateur.id,
-        siret: "35600011719156"
+        siret: "35600011719156",
       }
     end
 

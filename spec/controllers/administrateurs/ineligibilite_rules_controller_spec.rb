@@ -13,7 +13,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
     let(:default_params) do
       {
         procedure_id: procedure.id,
-        revision_id: procedure.draft_revision.id
+        revision_id: procedure.draft_revision.id,
       }
     end
 
@@ -39,7 +39,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
             .from(empty_operator(empty, empty))
             .to(ds_and([
               empty_operator(empty, empty),
-              empty_operator(empty, empty)
+              empty_operator(empty, empty),
             ]))
         end
       end
@@ -53,20 +53,20 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
             {
               targeted_champ: empty.to_json,
               operator_name:  Logic::EmptyOperator,
-              value: empty.to_json
+              value: empty.to_json,
             },
             {
               targeted_champ: empty.to_json,
               operator_name:  Logic::EmptyOperator,
-              value: empty.to_json
-            }
-          ]
+              value: empty.to_json,
+            },
+          ],
         }
       end
       let(:initial_condition) do
         ds_and([
           empty_operator(empty, empty),
-          empty_operator(empty, empty)
+          empty_operator(empty, empty),
         ])
       end
 
@@ -93,9 +93,9 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
               {
                 targeted_champ: targeted_champ,
                 operator_name:  Logic::Eq.name,
-                value: constant(true).to_json
-              }
-            ]
+                value: constant(true).to_json,
+              },
+            ],
           }
         end
         subject { patch :change_targeted_champ, params: default_params.merge(procedure_revision: { condition_form: }), format: :turbo_stream }
@@ -115,9 +115,9 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
               {
                 targeted_champ: targeted_champ,
                 operator_name: operator_name,
-                value: value
-              }
-            ]
+                value: value,
+              },
+            ],
           }
         end
         subject { patch :update, params: default_params.merge(procedure_revision: { condition_form: condition_form }), format: :turbo_stream }
@@ -139,9 +139,9 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
             {
               targeted_champ: targeted_champ,
               operator_name:  Logic::Eq.name,
-              value: constant(true).to_json
-            }
-          ]
+              value: constant(true).to_json,
+            },
+          ],
         }
       end
       subject { patch :change_targeted_champ, params: default_params.merge(procedure_revision: { condition_form: }), format: :turbo_stream }
@@ -160,9 +160,9 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
               {
                 targeted_champ: targeted_champ,
                 operator_name:  Logic::Eq.name,
-                value: constant(true).to_json
-              }
-            ]
+                value: constant(true).to_json,
+              },
+            ],
           }
         end
         subject { patch :change_targeted_champ, params: default_params.merge(procedure_revision: { condition_form: }), format: :turbo_stream }
@@ -217,8 +217,8 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
         procedure_id: procedure.id,
         procedure_revision: {
           ineligibilite_message: 'panpan',
-          ineligibilite_enabled: '1'
-        }
+          ineligibilite_enabled: '1',
+        },
       }
     end
     before { sign_in(admin.user) }

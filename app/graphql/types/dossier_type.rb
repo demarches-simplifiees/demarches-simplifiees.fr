@@ -47,7 +47,7 @@ module Types
 
     field :motivation, String, null: true
     field :motivation_attachment, Types::File, null: true, extensions: [
-      { Extensions::Attachment => { attachment: :justificatif_motivation } }
+      { Extensions::Attachment => { attachment: :justificatif_motivation } },
     ]
 
     field :pdf, Types::File, "L’URL du dossier au format PDF.", null: true
@@ -190,7 +190,7 @@ module Types
         byte_size: 0,
         byte_size_big_int: '0',
         checksum: '',
-        created_at: Time.zone.now
+        created_at: Time.zone.now,
       }
     end
 
@@ -203,7 +203,7 @@ module Types
         byte_size: 0,
         byte_size_big_int: '0',
         checksum: '',
-        created_at: Time.zone.now
+        created_at: Time.zone.now,
       }
     end
 

@@ -49,7 +49,7 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
           displayable:,
           type: :number,
           mandatory: mandatory?
-        )
+        ),
       ]
     )
   end
@@ -62,13 +62,13 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
       libelle: "#{libelle} (Code INSEE)",
       description: "#{description} (Code INSEE)",
       path: :code,
-      maybe_null: public? && !mandatory?
+      maybe_null: public? && !mandatory?,
     })
     paths.push({
       libelle: "#{libelle} (Département)",
       description: "#{description} (Département)",
       path: :departement,
-      maybe_null: public? && !mandatory?
+      maybe_null: public? && !mandatory?,
     })
     paths
   end

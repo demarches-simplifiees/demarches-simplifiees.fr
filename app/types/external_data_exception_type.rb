@@ -31,7 +31,7 @@ class ExternalDataExceptionType < ActiveRecord::Type::Value
     in ExternalDataException
       JSON.generate({
         code: value.code,
-        reason: value.reason
+        reason: value.reason,
       })
     else
       raise ArgumentError, "Invalid value for ExternalDataException serialization: #{value}"

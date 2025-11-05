@@ -46,7 +46,7 @@ describe ProcedureCloneConcern, type: :model do
         clone_mail_templates: true,
         clone_champs: true,
         clone_annotations: true,
-        clone_api_entreprise_token: true
+        clone_api_entreprise_token: true,
       }
     end
 
@@ -131,7 +131,7 @@ describe ProcedureCloneConcern, type: :model do
       expect(cloned_procedure).to have_same_attributes_as(procedure, except: [
         "path", "draft_revision_id", "service_id", 'estimated_dossiers_count',
         "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds',
-        "defaut_groupe_instructeur_id", "template"
+        "defaut_groupe_instructeur_id", "template",
       ])
     end
 

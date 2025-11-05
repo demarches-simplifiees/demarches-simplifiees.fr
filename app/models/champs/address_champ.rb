@@ -162,17 +162,17 @@ class Champs::AddressChamp < Champs::TextChamp
     if commune_name.present?
       {
         code: city_code,
-        name: commune_name
+        name: commune_name,
       }
     elsif commune_code.present?
       {
         code: commune_code,
-        name: city_name
+        name: city_name,
       }
     else
       {
         code: city_code,
-        name: city_name
+        name: city_name,
       }
     end.merge(postal_code:)
   end

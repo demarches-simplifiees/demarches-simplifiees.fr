@@ -14,7 +14,7 @@ module Crisp
       data = {
         "Compte" => build_properties,
         **build_links,
-        **build_notifications_data
+        **build_notifications_data,
       }
 
       truncate_values(data)

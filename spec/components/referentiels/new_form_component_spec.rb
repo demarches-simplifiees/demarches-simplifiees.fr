@@ -28,7 +28,7 @@ RSpec.describe Referentiels::NewFormComponent, type: :component do
             referentiel_id: 1,
             test_data: 1,
             hint: 1,
-            url: 0
+            url: 0,
           }
           input[:type] = 2 if Referentiels::APIReferentiel.csv_available?
 

@@ -23,7 +23,7 @@ class Procedure::Card::EmailsComponent < ApplicationComponent
       @procedure.errors.messages_for(:received_mail),
       @procedure.errors.messages_for(:closed_mail),
       @procedure.errors.messages_for(:refused_mail),
-      @procedure.errors.messages_for(:without_continuation_mail)
+      @procedure.errors.messages_for(:without_continuation_mail),
     ].flatten.to_sentence
   end
 
@@ -34,7 +34,7 @@ class Procedure::Card::EmailsComponent < ApplicationComponent
       @procedure.closed_mail,
       @procedure.refused_mail,
       @procedure.without_continuation_mail,
-      @procedure.re_instructed_mail
+      @procedure.re_instructed_mail,
     ].map { |mail| mail&.updated_at }.compact.size
   end
 end

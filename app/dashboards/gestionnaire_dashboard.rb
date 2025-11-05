@@ -16,7 +16,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     groupe_gestionnaires: Field::HasMany.with_options(limit: 20),
     registration_state: Field::String.with_options(searchable: false),
-    email: Field::Email.with_options(searchable: false)
+    email: Field::Email.with_options(searchable: false),
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -29,7 +29,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     :user,
     :created_at,
     :groupe_gestionnaires,
-    :registration_state
+    :registration_state,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,14 +40,14 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     :created_at,
     :updated_at,
     :registration_state,
-    :groupe_gestionnaires
+    :groupe_gestionnaires,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :email
+    :email,
   ].freeze
 
   # Overwrite this method to customize how users are displayed

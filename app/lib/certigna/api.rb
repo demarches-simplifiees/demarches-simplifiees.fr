@@ -37,7 +37,7 @@ class Certigna::API
     {
       'hashAlgorithm': 'SHA256',
       'certReq': 'true',
-      'hashedMessage': data
+      'hashedMessage': data,
     }
   end
 

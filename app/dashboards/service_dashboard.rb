@@ -23,7 +23,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     adresse: Field::String,
     siret: Field::String,
     etablissement_adresse: Field::String.with_options(searchable: false),
-    etablissement_latlng: GeopointField
+    etablissement_latlng: GeopointField,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -33,7 +33,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :nom,
-    :type_organisme
+    :type_organisme,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -52,7 +52,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     :adresse,
     :siret,
     :etablissement_adresse,
-    :etablissement_latlng
+    :etablissement_latlng,
   ].freeze
 
   # FORM_ATTRIBUTES

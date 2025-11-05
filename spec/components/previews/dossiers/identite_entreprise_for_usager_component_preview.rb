@@ -7,7 +7,7 @@ class Dossiers::IdentiteEntrepriseForUsagerComponentPreview < ViewComponent::Pre
     render_with_template(
       template: 'dossiers/external_champ_component_preview/default',
       locals: {
-        component: Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement:)
+        component: Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement:),
       }
     )
   end
@@ -18,7 +18,7 @@ class Dossiers::IdentiteEntrepriseForUsagerComponentPreview < ViewComponent::Pre
     render_with_template(
       template: 'dossiers/external_champ_component_preview/default',
       locals: {
-        component: Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement: et)
+        component: Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement: et),
       }
     )
   end

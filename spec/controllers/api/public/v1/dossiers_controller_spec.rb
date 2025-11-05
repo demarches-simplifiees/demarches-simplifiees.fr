@@ -47,7 +47,7 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
                 id: procedure.id,
                 "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
                 "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2,
-                "identite_prenom" => prenom_value
+                "identite_prenom" => prenom_value,
               }
             }
 
@@ -67,8 +67,8 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
               [
                 type: :repetition,
                 children: [
-                  { type: :text, libelle: 'child of repet text' }
-                ]
+                  { type: :text, libelle: 'child of repet text' },
+                ],
               ]
             end
             let(:prefilled_champs) { TypesDeChamp::PrefillTypeDeChamp.wrap(procedure.published_revision.types_de_champ, procedure.active_revision) }

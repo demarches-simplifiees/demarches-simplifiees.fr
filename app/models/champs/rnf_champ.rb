@@ -67,17 +67,17 @@ class Champs::RNFChamp < Champ
       if commune_name.present?
         {
           code: city_code,
-          name: commune_name
+          name: commune_name,
         }
       elsif commune_code.present?
         {
           code: commune_code,
-          name: city_name
+          name: city_name,
         }
       else
         {
           code: city_code,
-          name: city_name
+          name: city_name,
         }
       end.merge(postal_code:)
     end
@@ -97,7 +97,7 @@ class Champs::RNFChamp < Champ
         department_name: address["departmentName"],
         department_code: address["departmentCode"],
         region_name: address["regionName"],
-        region_code: address["regionCode"]
+        region_code: address["regionCode"],
       }.with_indifferent_access
     end
   end

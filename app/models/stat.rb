@@ -16,11 +16,11 @@ class Stat < ApplicationRecord
         dossiers_termines: states['termines'],
         dossiers_cumulative: cumulative_month_serie([
           [Dossier.state_not_brouillon, :depose_at],
-          [DeletedDossier.where.not(state: :brouillon), :depose_at]
+          [DeletedDossier.where.not(state: :brouillon), :depose_at],
         ]),
         dossiers_in_the_last_4_months: last_four_months_serie([
           [Dossier.state_not_brouillon, :depose_at],
-          [DeletedDossier.where.not(state: :brouillon), :depose_at]
+          [DeletedDossier.where.not(state: :brouillon), :depose_at],
         ]),
         administrations_partenaires: AdministrateursProcedure.joins(:procedure).merge(Procedure.publiees_ou_closes).select('distinct administrateur_id').count
       )
@@ -92,7 +92,7 @@ class Stat < ApplicationRecord
         query,
         now: Time.zone.now,
         one_month_ago: 1.month.ago,
-        two_months_ago: 2.months.ago
+        two_months_ago: 2.months.ago,
       ])
       model.connection.select_all(sanitized_query).first
     end

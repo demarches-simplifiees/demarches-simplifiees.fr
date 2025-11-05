@@ -23,8 +23,8 @@ describe APIParticulier::CnafAdapter do
                 'allocataires' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
                 'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
                 'adresse' => ['identite', 'complementIdentite', 'complementIdentiteGeo', 'numeroRue', 'lieuDit', 'codePostalVille', 'pays'],
-                'quotient_familial' => ['quotientFamilial', 'annee', 'mois']
-              }
+                'quotient_familial' => ['quotientFamilial', 'annee', 'mois'],
+              },
             }
           end
 

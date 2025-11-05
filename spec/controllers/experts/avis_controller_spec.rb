@@ -578,8 +578,8 @@ describe Experts::AvisController, type: :controller do
                 emails: ["expert@example.com"],
                 introduction: "Please review",
                 confidentiel: false,
-                invite_linked_dossiers: true
-              }
+                invite_linked_dossiers: true,
+              },
             }
           }.to change(Avis, :count).by(2)
 
@@ -659,8 +659,8 @@ describe Experts::AvisController, type: :controller do
             email:,
             user: {
               password:,
-              confirmation_token:
-            }
+              confirmation_token:,
+            },
           }
         end
 

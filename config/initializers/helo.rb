@@ -13,7 +13,7 @@ if ENV['HELO_ENABLED'] == 'enabled'
       address: '127.0.0.1',
       domain: '127.0.0.1',
       port: ENV.fetch('HELO_PORT', '2525'),
-      authentication: :plain
+      authentication: :plain,
     }
   end
 end

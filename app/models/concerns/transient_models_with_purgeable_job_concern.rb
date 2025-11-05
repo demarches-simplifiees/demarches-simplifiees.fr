@@ -13,7 +13,7 @@ module TransientModelsWithPurgeableJobConcern
     enum :job_status, {
       pending: 'pending',
       generated: 'generated',
-      failed: 'failed'
+      failed: 'failed',
     }
 
     aasm whiny_persistence: true, column: :job_status, enum: true do

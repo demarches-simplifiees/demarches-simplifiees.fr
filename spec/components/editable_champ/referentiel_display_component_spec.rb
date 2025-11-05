@@ -18,7 +18,7 @@ describe EditableChamp::ReferentielDisplayComponent, type: :component do
     let(:referentiel_mapping) do
       {
         "$.string" => { libelle: "Libellé string", display_usager: "1", type: types[:string] },
-        "$.integer" => { display_usager: "1", type: types[:integer_number] } # pas de libellé, fallback sur jsonpath
+        "$.integer" => { display_usager: "1", type: types[:integer_number] }, # pas de libellé, fallback sur jsonpath
       }
     end
 
@@ -41,7 +41,7 @@ describe EditableChamp::ReferentielDisplayComponent, type: :component do
       let(:referentiel_mapping) do
         {
           "$.date" => { libelle: "Date de naissance", display_usager: "1", type: types[:date] },
-          "$.datetime" => { libelle: "Date et heure de naissance", display_usager: "1", type: types[:datetime] }
+          "$.datetime" => { libelle: "Date et heure de naissance", display_usager: "1", type: types[:datetime] },
         }
       end
 
@@ -59,7 +59,7 @@ describe EditableChamp::ReferentielDisplayComponent, type: :component do
       let(:referentiel_mapping) do
         {
           "$.bool_true" => { libelle: "Accepté", display_usager: "1", type: types[:boolean] },
-          "$.bool_false" => { libelle: "Refusé", display_usager: "1", type: types[:boolean] }
+          "$.bool_false" => { libelle: "Refusé", display_usager: "1", type: types[:boolean] },
         }
       end
 
@@ -76,7 +76,7 @@ describe EditableChamp::ReferentielDisplayComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.list" => { libelle: "Liste de choix", display_usager: "1", type: types[:array] }
+          "$.list" => { libelle: "Liste de choix", display_usager: "1", type: types[:array] },
         }
       end
 
@@ -91,7 +91,7 @@ describe EditableChamp::ReferentielDisplayComponent, type: :component do
       end
       let(:referentiel_mapping) do
         {
-          "$.xss" => { libelle: "Champ potentiellement dangereux", display_usager: "1", type: types[:string] }
+          "$.xss" => { libelle: "Champ potentiellement dangereux", display_usager: "1", type: types[:string] },
         }
       end
 

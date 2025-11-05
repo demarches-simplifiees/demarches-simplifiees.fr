@@ -66,7 +66,7 @@ FactoryBot.define do
           department_code: "38",
           department_name: "Isère",
           country_code: "FR",
-          country_name: "France"
+          country_name: "France",
         }
       end
     end

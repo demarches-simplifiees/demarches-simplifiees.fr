@@ -18,7 +18,7 @@ describe InstructeursImportService do
         [
           { "groupe" => "Auvergne Rhone-Alpes", "email" => "john@lennon.fr" },
           { "groupe" => "  Occitanie  ", "email" => "paul@mccartney.uk" },
-          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" }
+          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" },
         ]
       end
 
@@ -38,7 +38,7 @@ describe InstructeursImportService do
       let!(:gi) { create(:groupe_instructeur, label: 'Occitanie', procedure: procedure) }
       let(:lines) do
         [
-          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" }
+          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" },
         ]
       end
 
@@ -60,7 +60,7 @@ describe InstructeursImportService do
         [
           { "groupe" => "Occitanie", "email" => "paul" },
           { "groupe" => "Occitanie", "email" => "  Paul@mccartney.uk " },
-          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" }
+          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" },
         ]
       end
 
@@ -80,7 +80,7 @@ describe InstructeursImportService do
       let(:lines) do
         [
           { "groupe" => "Occitanie", "email" => instructeur.email },
-          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" }
+          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" },
         ]
       end
 
@@ -97,7 +97,7 @@ describe InstructeursImportService do
       let(:lines) do
         [
           { "groupe" => "Occitanie", "email" => "ringo@starr.uk" },
-          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" }
+          { "groupe" => "Occitanie", "email" => "ringo@starr.uk" },
         ]
       end
 
@@ -114,7 +114,7 @@ describe InstructeursImportService do
       let(:lines) do
         [
           { "groupe" => "", "email" => "ringo@starr.uk" },
-          { "groupe" => " ", "email" => "paul@starr.uk" }
+          { "groupe" => " ", "email" => "paul@starr.uk" },
         ]
       end
 

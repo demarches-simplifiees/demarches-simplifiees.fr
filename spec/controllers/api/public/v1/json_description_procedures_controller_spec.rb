@@ -17,7 +17,7 @@ RSpec.describe API::Public::V1::JSONDescriptionProceduresController, type: :cont
         API::V2::Schema.execute(API::V2::StoredQuery.get('ds-query-v2'),
           variables: {
             demarche: { "number": procedure.id },
-            includeRevision: true
+            includeRevision: true,
           },
           operation_name: "getDemarcheDescriptor")
           .to_h.dig("data", "demarcheDescriptor").to_json

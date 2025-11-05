@@ -31,7 +31,7 @@ describe Columns::ChampColumn do
             "92270",
             "Bois-Colombes",
             "92",
-            "Île-de-France"
+            "Île-de-France",
           ]
         ))
         expect_type_de_champ_values('text', eq(['text']))

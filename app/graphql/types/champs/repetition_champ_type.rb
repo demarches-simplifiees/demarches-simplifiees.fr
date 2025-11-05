@@ -22,7 +22,7 @@ module Types::Champs
         .map do
           {
             id: GraphQL::Schema::UniqueWithinType.encode('Row', _1.first.row_id),
-            champs: _1.filter(&:visible?)
+            champs: _1.filter(&:visible?),
           }
         end
     end

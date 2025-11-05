@@ -28,8 +28,8 @@ describe SuperAdmins::ReleaseNotesController, type: :controller do
               released_on: Date.current,
               published: "1",
               categories: release_note.categories,
-              body: "hacked body"
-            }
+              body: "hacked body",
+            },
           }
         }.not_to change { release_note.reload.body }
         expect(response.status).to eq(302)
@@ -65,8 +65,8 @@ describe SuperAdmins::ReleaseNotesController, type: :controller do
             released_on: Date.current,
             published: "1",
             categories: release_note.categories,
-            body: "new body"
-          }
+            body: "new body",
+          },
         }
 
         release_note.reload

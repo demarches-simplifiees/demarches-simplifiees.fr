@@ -40,12 +40,12 @@ module GroupeInstructeursSignatureConcern
       redirect, preview = if self.class.module_parent_name == "Administrateurs"
         [
           :admin_procedure_groupe_instructeur_path,
-          :preview_attestation_acceptation_admin_procedure_groupe_instructeur_path
+          :preview_attestation_acceptation_admin_procedure_groupe_instructeur_path,
         ]
       else
         [
           :instructeur_groupe_path,
-          :preview_attestation_acceptation_instructeur_groupe_path
+          :preview_attestation_acceptation_instructeur_groupe_path,
         ]
       end
 

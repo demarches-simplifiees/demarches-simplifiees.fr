@@ -20,7 +20,7 @@ class Dossier < ApplicationRecord
     en_instruction:  'en_instruction',
     accepte:         'accepte',
     refuse:          'refuse',
-    sans_suite:      'sans_suite'
+    sans_suite:      'sans_suite',
   }
 
   EN_CONSTRUCTION_OU_INSTRUCTION = [states.fetch(:en_construction), states.fetch(:en_instruction)]
@@ -486,7 +486,7 @@ class Dossier < ApplicationRecord
     [
       brouillon_close_to_expiration_notice_sent_at,
       en_construction_close_to_expiration_notice_sent_at,
-      termine_close_to_expiration_notice_sent_at
+      termine_close_to_expiration_notice_sent_at,
     ].any?(&:present?)
   end
 
@@ -610,7 +610,7 @@ class Dossier < ApplicationRecord
     [
       brouillon?,
       en_construction?,
-      termine? && procedure.procedure_expires_when_termine_enabled
+      termine? && procedure.procedure_expires_when_termine_enabled,
     ].any?
   end
 
@@ -735,7 +735,7 @@ class Dossier < ApplicationRecord
         "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation_name
+        procedure.organisation_name,
       ]
     else
       parts = [
@@ -744,7 +744,7 @@ class Dossier < ApplicationRecord
         " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation_name
+        procedure.organisation_name,
       ]
     end
 
@@ -992,7 +992,7 @@ class Dossier < ApplicationRecord
       type: 'FeatureCollection',
       id: id,
       bbox: bounding_box,
-      features: geo_areas.map(&:to_feature)
+      features: geo_areas.map(&:to_feature),
     }
   end
 
@@ -1236,7 +1236,7 @@ class Dossier < ApplicationRecord
       user_id: Current.user&.id,
       controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
       caller: app_traces.first,
-      hidden_by_reason:
+      hidden_by_reason:,
     }
 
     logger = Lograge.logger || Rails.logger
@@ -1248,7 +1248,7 @@ class Dossier < ApplicationRecord
     Sentry.capture_message(
       "Assigned dossier without groupe_instructeur",
       extra: {
-        dossier_id: self.id
+        dossier_id: self.id,
       }
     )
   end

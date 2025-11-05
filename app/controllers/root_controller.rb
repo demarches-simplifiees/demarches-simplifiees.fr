@@ -59,7 +59,7 @@ class RootController < ApplicationController
                 "option A",
                 "option B",
                 "-- section 2 --",
-                "option C"
+                "option C",
               ]
             type_de_champ.save
           elsif type_de_champ.any_drop_down_list?
@@ -68,7 +68,7 @@ class RootController < ApplicationController
                 "option A",
                 "option B",
                 "-- avant l'option C --",
-                "option C"
+                "option C",
               ]
             type_de_champ.save
           elsif type_de_champ.referentiel?

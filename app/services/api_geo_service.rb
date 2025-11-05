@@ -135,12 +135,12 @@ class APIGeoService
           city_name: safely_normalize_city_name(department_code, city_code, properties['city']),
           city_code:,
           country_code: 'FR',
-          country_name: country_name('FR')
+          country_name: country_name('FR'),
         }
       else
         {
           city_name: properties['city'],
-          city_code:
+          city_code:,
         }
       end
 
@@ -151,7 +151,7 @@ class APIGeoService
         postal_code: properties.fetch('postcode') { '' }, # API graphql / serializer requires non-null data
         street_number: properties['housenumber'],
         street_name: properties['street'],
-        geometry: feature['geometry']
+        geometry: feature['geometry'],
       }.merge(territory)
     end
 
@@ -183,7 +183,7 @@ class APIGeoService
         region_code:,
         region_name: region_name(region_code),
         country_code: 'FR',
-        country_name: country_name('FR')
+        country_name: country_name('FR'),
       }
     end
 
@@ -215,7 +215,7 @@ class APIGeoService
         region_code:,
         region_name: region_name(region_code),
         country_code: 'FR',
-        country_name: country_name('FR')
+        country_name: country_name('FR'),
       }
     end
 
@@ -248,7 +248,7 @@ class APIGeoService
         region_code:,
         region_name: region_name(region_code),
         country_code: etablissement.nom_pays.present? ? nil : 'FR',
-        country_name: etablissement.nom_pays || country_name('FR')
+        country_name: etablissement.nom_pays || country_name('FR'),
       }
     end
 
@@ -272,7 +272,7 @@ class APIGeoService
           region_code:,
           region_name: region_name(region_code),
           country_code: 'FR',
-          country_name: country_name('FR')
+          country_name: country_name('FR'),
         }
       else
         {}
@@ -289,7 +289,7 @@ class APIGeoService
       results.reject(&method(:code_metropole?)).flat_map do |result|
         item = {
           name: result[:nom].tr("'", '’'),
-          code: result[:code]
+          code: result[:code],
         }.compact
 
         items = if result[:codesPostaux].present?
@@ -303,13 +303,13 @@ class APIGeoService
           if with_combined_code.present?
             {
               label:,
-              value: "#{item[:code]}-#{item[:postal_code]}"
+              value: "#{item[:code]}-#{item[:postal_code]}",
             }
           else
             {
               label:,
               value: item[:code],
-              data: item[:postal_code]
+              data: item[:postal_code],
             }
           end
         end
@@ -330,7 +330,7 @@ class APIGeoService
         {
           label: _1[:properties][:label],
           value: _1[:properties][:label],
-          data: parse_ban_address(_1.deep_stringify_keys)
+          data: parse_ban_address(_1.deep_stringify_keys),
         }
       end
     end
@@ -344,7 +344,7 @@ class APIGeoService
         address_data['complement2'],
         address_data['service_distribution'],
         address_data['code_postal'],
-        address_data['nom_commune']
+        address_data['nom_commune'],
       ].compact_blank
 
       components.join(' ')
@@ -384,7 +384,7 @@ class APIGeoService
     def additional_countries
       {
         'FR' => { 'XK' => 'Kosovo' },
-        'EN' => { 'XK' => 'Kosovo' }
+        'EN' => { 'XK' => 'Kosovo' },
       }
     end
 
@@ -398,7 +398,7 @@ class APIGeoService
           type: 'commune-actuelle,arrondissement-municipal',
           nom: name,
           boost: 'population',
-          limit: 100
+          limit: 100,
         }, timeout: 3)
       end
     end
@@ -411,7 +411,7 @@ class APIGeoService
           type: 'commune-actuelle,arrondissement-municipal',
           codePostal: postal_code,
           boost: 'population',
-          limit: 50
+          limit: 50,
         }, timeout: 3)
       end
     end

@@ -46,7 +46,7 @@ RSpec.describe PrefillDescription, type: :model do
         expect(prefill_description.types_de_champ.map(&:type_champ)).to eq([
           'text',
           'decimal_number',
-          'carte'
+          'carte',
         ])
       end
     end
@@ -115,9 +115,9 @@ RSpec.describe PrefillDescription, type: :model do
           type: :repetition, children: [
             { type: :text },
             { type: :integer_number },
-            { type: :regions }
-          ]
-        }
+            { type: :regions },
+          ],
+        },
       ])
     end
     let(:type_de_champ_text) { procedure.active_revision.types_de_champ_public.find(&:text?) }
@@ -156,9 +156,9 @@ RSpec.describe PrefillDescription, type: :model do
           type: :repetition, children: [
             { type: :text },
             { type: :integer_number },
-            { type: :regions }
-          ]
-        }
+            { type: :regions },
+          ],
+        },
       ])
     end
     let(:type_de_champ_text) { procedure.active_revision.types_de_champ_public.find(&:text?) }

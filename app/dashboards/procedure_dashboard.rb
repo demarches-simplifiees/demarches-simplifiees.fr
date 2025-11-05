@@ -58,7 +58,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     opendata: Field::Boolean,
     hide_instructeurs_email: Field::Boolean,
     dossiers_count: Field::Number,
-    no_gender: Field::Boolean
+    no_gender: Field::Boolean,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -74,7 +74,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :service,
     :dossiers,
     :published_at,
-    :aasm_state
+    :aasm_state,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -126,7 +126,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :for_tiers_enabled,
     :hide_instructeurs_email,
     :opendata,
-    :replaced_by_procedure_id
+    :replaced_by_procedure_id,
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -141,7 +141,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :for_tiers_enabled,
     :hide_instructeurs_email,
     :replaced_by_procedure_id,
-    :no_gender
+    :no_gender,
   ].freeze
 
   # Overwrite this method to customize how procedures are displayed

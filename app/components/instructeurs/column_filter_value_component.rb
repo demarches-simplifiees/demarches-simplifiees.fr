@@ -91,7 +91,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       name: 'filter[filter][value][]',
       items: column_filter_options,
       value_separator: false,
-      selected_keys: filtered_column&.filter_value
+      selected_keys: filtered_column&.filter_value,
     }
   end
 

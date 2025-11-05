@@ -98,7 +98,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       post :create,
         params: {
           procedure_id: procedure.id,
-          groupe_instructeur: { label: label }
+          groupe_instructeur: { label: label },
         }
     end
 
@@ -128,7 +128,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       delete :destroy,
         params: {
           procedure_id: procedure.id,
-          id: group.id
+          id: group.id,
         }
     end
 
@@ -177,7 +177,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       get :reaffecter_dossiers,
         params: {
           procedure_id: procedure.id,
-          id: gi_1_2.id
+          id: gi_1_2.id,
         }
     end
     def reaffecter_url(group)
@@ -204,7 +204,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           params: {
             procedure_id: procedure.id,
             id: gi_1_1.id,
-            target_group: gi_1_2.id
+            target_group: gi_1_2.id,
           }
         dossier12.reload
       end
@@ -226,7 +226,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
             {
               procedure_id: procedure.id,
               id: gi_1_1.id,
-              target_group: gi_2_2.id
+              target_group: gi_2_2.id,
             }
       }
       before do
@@ -244,7 +244,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     before do
       post :destroy_all_groups_but_defaut,
            params: {
-             procedure_id: procedure.id
+             procedure_id: procedure.id,
            }
       dossierA.reload
       dossierB.reload
@@ -271,7 +271,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure_non_routee.id,
           id: gi_1_1.id,
-          groupe_instructeur: { label: new_name }
+          groupe_instructeur: { label: new_name },
         }
       gi_1_1.reload
     end
@@ -303,7 +303,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
             params: {
               procedure_id: procedure_non_routee.id,
               groupe_instructeur_id: group.id,
-              closed: closed_value
+              closed: closed_value,
             }
       group.reload
     end
@@ -376,7 +376,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
-          emails: new_instructeur_emails
+          emails: new_instructeur_emails,
         }
     end
 
@@ -488,7 +488,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_1.id,
-          instructeur: { id: instructeur.id }
+          instructeur: { id: instructeur.id },
         }
     end
 
@@ -541,7 +541,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         delete :remove_instructeur, params: {
           instructeur: { id: instructeur_assigned_1.id },
           procedure_id: procedure_non_routee.id,
-          id: procedure_non_routee.defaut_groupe_instructeur.id
+          id: procedure_non_routee.defaut_groupe_instructeur.id,
         }
       end
 
@@ -558,7 +558,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         delete :remove_instructeur, params: {
           instructeur: { id: instructeur_assigned_3.id },
           procedure_id: procedure_non_routee.id,
-          id: procedure_non_routee.defaut_groupe_instructeur.id
+          id: procedure_non_routee.defaut_groupe_instructeur.id,
         }
       end
 
@@ -909,7 +909,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let!(:procedure) do
         create(:procedure,
                types_de_champ_public: [
-                 { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }
+                 { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
                ],
                administrateurs: [admin])
       end
@@ -926,7 +926,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let!(:procedure) do
         create(:procedure,
                types_de_champ_public: [
-                 { type: :integer_number }
+                 { type: :integer_number },
                ],
                administrateurs: [admin])
       end
@@ -945,7 +945,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         create(:procedure,
                types_de_champ_public: [
                  { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
-                 { type: :text, libelle: 'Un champ texte' }
+                 { type: :text, libelle: 'Un champ texte' },
                ],
                administrateurs: [admin])
       end
@@ -1092,7 +1092,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       create(:procedure,
              types_de_champ_public: [
                { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
-               { type: :text, libelle: 'Un champ texte' }
+               { type: :text, libelle: 'Un champ texte' },
              ],
              administrateurs: [admin])
     end
@@ -1117,8 +1117,8 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         procedure_id: procedure.id,
         id: gi_1_1.id,
         groupe_instructeur: {
-          signature: signature
-        }
+          signature: signature,
+        },
       }
     }
 
@@ -1133,7 +1133,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       create(:procedure,
              types_de_champ_public: [
                { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
-               { type: :text, libelle: 'Un champ texte' }
+               { type: :text, libelle: 'Un champ texte' },
              ],
              administrateurs: [admin])
     end

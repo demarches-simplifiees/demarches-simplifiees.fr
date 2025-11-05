@@ -31,7 +31,7 @@ class API::V1::DossiersController < APIController
     {
       page: dossiers.current_page,
       resultats_par_page: dossiers.limit_value,
-      nombre_de_page: dossiers.total_pages
+      nombre_de_page: dossiers.total_pages,
     }
   end
 

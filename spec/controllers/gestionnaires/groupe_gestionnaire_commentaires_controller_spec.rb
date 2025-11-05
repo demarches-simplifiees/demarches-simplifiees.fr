@@ -79,7 +79,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
         params: {
           id: commentaire.id,
           groupe_gestionnaire_id: groupe_gestionnaire.id,
-          commentaire_groupe_gestionnaire: { body: "avant\napres" }
+          commentaire_groupe_gestionnaire: { body: "avant\napres" },
         }
     end
 
@@ -135,7 +135,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
         params: {
           id: commentaire.id,
           groupe_gestionnaire_id: child_groupe_gestionnaire.id,
-          commentaire_groupe_gestionnaire: { body: "avant\napres" }
+          commentaire_groupe_gestionnaire: { body: "avant\napres" },
         }
     end
 
@@ -156,7 +156,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
       delete :destroy,
         params: {
           groupe_gestionnaire_id: groupe_gestionnaire.id,
-          id: commentaire_to_delete.id
+          id: commentaire_to_delete.id,
         },
         format: :turbo_stream
     end

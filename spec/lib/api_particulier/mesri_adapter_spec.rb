@@ -23,8 +23,8 @@ describe APIParticulier::MesriAdapter do
                 'identite' => ['nom', 'prenom', 'dateNaissance'],
                 'inscriptions' => ['statut', 'regime', 'dateDebutInscription', 'dateFinInscription', 'codeCommune'],
                 'admissions' => ['statut', 'regime', 'dateDebutAdmission', 'dateFinAdmission', 'codeCommune'],
-                'etablissements' => ['uai', 'nom']
-              }
+                'etablissements' => ['uai', 'nom'],
+              },
             }
           end
 

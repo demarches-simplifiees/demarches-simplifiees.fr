@@ -15,12 +15,12 @@ class SimpleFormatComponent < ApplicationComponent
     underline: false,
     highlight: false,
     quote: false,
-    footnotes: false
+    footnotes: false,
   }
 
   # see: https://github.com/vmg/redcarpet#darling-i-packed-you-a-couple-renderers-for-lunch
   REDCARPET_RENDERER_OPTS = {
-    no_images: true
+    no_images: true,
   }
 
   SIMPLE_URL_REGEX = %r{https?://[^\s<>]+}

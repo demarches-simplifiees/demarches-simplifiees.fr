@@ -6,7 +6,7 @@ class Champs::RNAChamp < Champ
   RNA_REGEXP = /\AW[0-9A-Z]{9}\z/
 
   validates :value, allow_blank: true, format: {
-    with: RNA_REGEXP, message: :invalid_rna
+    with: RNA_REGEXP, message: :invalid_rna,
   }, if: :validate_champ_value?
 
   validate :ensure_association_found, if: :validate_champ_value?
@@ -52,7 +52,7 @@ class Champs::RNAChamp < Champ
       street_name: [address["type_voie"], address["libelle_voie"]].compact.join(' '),
       postal_code: address["code_postal"],
       city_name: address["commune"],
-      city_code: address["code_insee"]
+      city_code: address["code_insee"],
     }.with_indifferent_access
   end
 

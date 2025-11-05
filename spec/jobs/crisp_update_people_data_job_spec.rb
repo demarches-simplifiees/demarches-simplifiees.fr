@@ -17,7 +17,7 @@ RSpec.describe CrispUpdatePeopleDataJob, type: :job do
 
     before do
       stub_request(:patch, url_regex).and_return(body: {
-        error: false, reason: "updated", data: {}
+        error: false, reason: "updated", data: {},
       }.to_json)
     end
 
@@ -29,7 +29,7 @@ RSpec.describe CrispUpdatePeopleDataJob, type: :job do
 
         expect(a_request(:patch, url_regex).with(headers: {
           'X-Crisp-Tier' => 'plugin',
-          'Authorization' => /Basic /
+          'Authorization' => /Basic /,
         }, body: /Manager.+#{user.id}/)).to have_been_made.once
       end
     end
@@ -48,7 +48,7 @@ RSpec.describe CrispUpdatePeopleDataJob, type: :job do
 
         expect(a_request(:patch, url_regex).with(headers: {
           'X-Crisp-Tier' => 'plugin',
-          'Authorization' => /Basic /
+          'Authorization' => /Basic /,
         }, body: /Manager.+#{user.id}/)).to have_been_made.once
       end
     end

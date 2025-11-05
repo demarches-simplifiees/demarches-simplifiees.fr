@@ -174,7 +174,7 @@ module Administrateurs
       in 'custom'
         [
           Date.parse(params[:customLifetime]),
-          1.year.from_now
+          1.year.from_now,
         ].min
       in 'infinite' if authorized_networks.present?
         nil

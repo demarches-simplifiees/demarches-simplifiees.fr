@@ -31,13 +31,13 @@ RSpec.describe Champs::AnnuaireEducationChamp do
         {
           'nom_etablissement' => "karrigel an ankou",
           'nom_commune' => 'kumun',
-          'identifiant_de_l_etablissement' => '666667'
+          'identifiant_de_l_etablissement' => '666667',
         }
       }
       it_behaves_like "a data updater (without updating the value)", {
         'nom_etablissement' => "karrigel an ankou",
         'nom_commune' => 'kumun',
-        'identifiant_de_l_etablissement' => '666667'
+        'identifiant_de_l_etablissement' => '666667',
       }
     end
   end

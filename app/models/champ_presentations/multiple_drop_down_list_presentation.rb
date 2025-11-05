@@ -23,13 +23,13 @@ class ChampPresentations::MultipleDropDownListPresentation < ChampPresentations:
               content: [
                 {
                   type: 'text',
-                  text: text
-                }
-              ]
-            }
-          ]
+                  text: text,
+                },
+              ],
+            },
+          ],
         }
-      end
+      end,
     }
   end
 end

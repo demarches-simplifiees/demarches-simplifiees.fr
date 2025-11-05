@@ -13,7 +13,7 @@ module Maintenance
       :supprimes_filters,
       :supprimes_recemment_filters,
       :expirant_filters,
-      :archives_filters
+      :archives_filters,
     ].freeze
 
     def collection

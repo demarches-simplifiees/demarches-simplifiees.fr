@@ -16,7 +16,7 @@ describe DemarchesPubliquesExportService do
         service: {
           nom: procedure.service.nom,
           organisme: "organisme",
-          typeOrganisme: "association"
+          typeOrganisme: "association",
         },
         cadreJuridiqueUrl: "un cadre juridique important",
         demarcheUrl: Rails.application.routes.url_helpers.commencer_url(path: procedure.path),
@@ -36,10 +36,10 @@ describe DemarchesPubliquesExportService do
               description: procedure.active_revision.types_de_champ_public.first.description,
               label: procedure.active_revision.types_de_champ_public.first.libelle,
               required: true,
-              __typename: "TextChampDescriptor"
-            }
-          ]
-        }
+              __typename: "TextChampDescriptor",
+            },
+          ],
+        },
       }
       DemarchesPubliquesExportService.new(gzip_filename).call
 

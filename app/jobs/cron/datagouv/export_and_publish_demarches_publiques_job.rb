@@ -10,7 +10,7 @@ class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
     gzip_filepath = [
       'tmp/',
       Time.zone.now.to_fs(:number),
-      '-demarches.json.gz'
+      '-demarches.json.gz',
     ].join
 
     begin

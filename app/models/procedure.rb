@@ -208,12 +208,12 @@ class Procedure < ApplicationRecord
 
   enum :declarative_with_state, {
     en_instruction:  'en_instruction',
-    accepte:         'accepte'
+    accepte:         'accepte',
   }
 
   enum :closing_reason, {
     internal_procedure: 'internal_procedure',
-    other: 'other'
+    other: 'other',
   }, prefix: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -252,13 +252,13 @@ class Procedure < ApplicationRecord
                                                   numericality: {
                                                     only_integer: true,
                                                     greater_than_or_equal_to: 1,
-                                                    less_than_or_equal_to: :max_duree_conservation_dossiers_dans_ds
+                                                    less_than_or_equal_to: :max_duree_conservation_dossiers_dans_ds,
                                                   }
   validates :max_duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {
                                                     only_integer: true,
                                                     greater_than_or_equal_to: 1,
-                                                    less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH
+                                                    less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH,
                                                   }
 
   validates_with MonAvisEmbedValidator, on: :publication
@@ -285,7 +285,7 @@ class Procedure < ApplicationRecord
     "image/jpeg",
     "image/jpg",
     "image/png",
-    "text/plain"
+    "text/plain",
   ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
@@ -296,7 +296,7 @@ class Procedure < ApplicationRecord
     "image/jpeg",
     "image/jpg",
     "image/png",
-    "text/plain"
+    "text/plain",
   ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
   LOGO_MAX_SIZE = 5.megabytes
@@ -772,7 +772,7 @@ class Procedure < ApplicationRecord
       self.accepter_email_template,
       self.refuser_email_template,
       self.classer_sans_suite_email_template,
-      self.repasser_en_instruction_email_template
+      self.repasser_en_instruction_email_template,
     ]
   end
 

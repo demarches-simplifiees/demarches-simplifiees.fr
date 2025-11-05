@@ -16,7 +16,7 @@ module Redcarpet
 
     def link(href, title, content)
       html_options = {
-        href: href
+        href: href,
       }
 
       unless href.starts_with?('/')
@@ -52,7 +52,7 @@ module Redcarpet
       image_options = {
         alt: alt_text,
         title:,
-        loading: :lazy
+        loading: :lazy,
       }.merge(custom_attributes)
 
       view_context.image_tag(link, image_options)

@@ -23,7 +23,7 @@ class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseCompone
       loader: data_sources_data_source_commune_path(with_combined_code: true),
       limit: 20,
       translations: {
-        search_error: t('.search_error')
+        search_error: t('.search_error'),
       },
       minimum_input_length: 2)
   end

@@ -8,12 +8,12 @@ describe Champs::CarteController, type: :controller do
     {
       dossier: {
         champs_public_attributes: {
-          champ.public_id => { value: value }
-        }
+          champ.public_id => { value: value },
+        },
       },
       position: '1',
       dossier_id: champ.dossier_id,
-      stable_id: champ.stable_id
+      stable_id: champ.stable_id,
     }
   end
   let(:champ) { dossier.champs.first }
@@ -37,7 +37,7 @@ describe Champs::CarteController, type: :controller do
             dossier_id: champ.dossier_id,
             stable_id: champ.stable_id,
             feature: feature,
-            source: GeoArea.sources.fetch(:selection_utilisateur)
+            source: GeoArea.sources.fetch(:selection_utilisateur),
           }
         end
 
@@ -53,7 +53,7 @@ describe Champs::CarteController, type: :controller do
             dossier_id: champ.dossier_id,
             stable_id: champ.stable_id,
             feature: feature,
-            source: GeoArea.sources.fetch(:cadastre)
+            source: GeoArea.sources.fetch(:cadastre),
           }
         end
 
@@ -74,7 +74,7 @@ describe Champs::CarteController, type: :controller do
             dossier_id: champ.dossier_id,
             stable_id: champ.stable_id,
             feature: feature,
-            source: GeoArea.sources.fetch(:selection_utilisateur)
+            source: GeoArea.sources.fetch(:selection_utilisateur),
           }
         end
 
@@ -91,7 +91,7 @@ describe Champs::CarteController, type: :controller do
           dossier_id: champ.dossier_id,
           stable_id: champ.stable_id,
           id: geo_area.id,
-          feature: feature
+          feature: feature,
         }
       end
 
@@ -108,8 +108,8 @@ describe Champs::CarteController, type: :controller do
         let(:feature) do
           {
             properties: {
-              description: 'un point'
-            }
+              description: 'un point',
+            },
           }
         end
 
@@ -135,7 +135,7 @@ describe Champs::CarteController, type: :controller do
         {
           dossier_id: champ.dossier_id,
           stable_id: champ.stable_id,
-          id: geo_area.id
+          id: geo_area.id,
         }
       end
 
@@ -158,7 +158,7 @@ describe Champs::CarteController, type: :controller do
         let(:params) do
           {
             dossier_id: champ.dossier_id,
-            stable_id: champ.stable_id
+            stable_id: champ.stable_id,
           }
         end
 
@@ -173,7 +173,7 @@ describe Champs::CarteController, type: :controller do
           {
             dossier_id: champ.dossier_id,
             stable_id: champ.stable_id,
-            focus: true
+            focus: true,
           }
         end
 

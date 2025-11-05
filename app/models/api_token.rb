@@ -32,7 +32,7 @@ class APIToken < ApplicationRecord
       administrateur_id:,
       api_token_id: id,
       procedure_ids:,
-      write_access:
+      write_access:,
     }
   end
 

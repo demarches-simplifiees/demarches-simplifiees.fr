@@ -551,7 +551,7 @@ describe DossierFilterService do
         let(:types_de_champ_public) do
           [
             { type: :drop_down_list, options: ['pizzeria', 'gastronomique'] },
-            { type: :yes_no }
+            { type: :yes_no },
           ]
         end
         let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
@@ -632,7 +632,7 @@ describe DossierFilterService do
 
         let(:types_de_champ_public) do
           [
-            { type: :drop_down_list, libelle: 'drop_down_list', options: ['Fromage', 'Dessert', 'Chocolat'] }
+            { type: :drop_down_list, libelle: 'drop_down_list', options: ['Fromage', 'Dessert', 'Chocolat'] },
           ]
         end
 
@@ -959,14 +959,14 @@ describe DossierFilterService do
       let(:filtered_columns) do
         [
           FilteredColumn.new(column: column1, filter: { operator: 'match', value: 'en_construction' }),
-          FilteredColumn.new(column: column2, filter: { operator: 'match', value: '2025-01-01' })
+          FilteredColumn.new(column: column2, filter: { operator: 'match', value: '2025-01-01' }),
         ]
       end
 
       it 'groups filters by column and operator and normalizes them' do
         expected = {
           [column1, "match"] => [{ operator: 'match', value: ['en_construction'] }],
-          [column2, "match"] => [{ operator: 'match', value: ['2025-01-01'] }]
+          [column2, "match"] => [{ operator: 'match', value: ['2025-01-01'] }],
         }
         expect(subject).to eq(expected)
       end
@@ -976,15 +976,15 @@ describe DossierFilterService do
       let(:filtered_columns) do
         [
           FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_construction'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_instruction'] })
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_instruction'] }),
         ]
       end
 
       it 'groups multiple filters by column and normalizes them' do
         expected = {
           [column1, "match"] => [
-            { operator: 'match', value: ['en_construction', 'en_instruction'] }
-          ]
+            { operator: 'match', value: ['en_construction', 'en_instruction'] },
+          ],
         }
         expect(subject).to eq(expected)
       end
@@ -994,15 +994,15 @@ describe DossierFilterService do
       let(:filtered_columns) do
         [
           FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['a'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['b', 'a'] })
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['b', 'a'] }),
         ]
       end
 
       it 'merges their values' do
         expected = {
           [column1, "match"] => [
-            { operator: 'match', value: ['a', 'b'] }
-          ]
+            { operator: 'match', value: ['a', 'b'] },
+          ],
         }
 
         expect(subject).to eq(expected)
@@ -1013,13 +1013,13 @@ describe DossierFilterService do
       let(:filtered_columns) do
         [
           FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_construction'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_instruction'] })
+          FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['en_instruction'] }),
         ]
       end
 
       it 'groups filters by column and operator' do
         expected = {
-          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }]
+          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }],
         }
         expect(subject).to eq(expected)
       end
@@ -1029,14 +1029,14 @@ describe DossierFilterService do
       let(:filtered_columns) do
         [
           FilteredColumn.new(column: column1, filter: { operator: 'match', value: ['a', 'b'] }),
-          FilteredColumn.new(column: column1, filter: { operator: 'before', value: ['2025-01-01'] })
+          FilteredColumn.new(column: column1, filter: { operator: 'before', value: ['2025-01-01'] }),
         ]
       end
 
       it 'groups filters by column and operator' do
         expected = {
           [column1, "match"] => [{ operator: 'match', value: ['a', 'b'] }],
-          [column1, "before"] => [{ operator: 'before', value: ['2025-01-01'] }]
+          [column1, "before"] => [{ operator: 'before', value: ['2025-01-01'] }],
         }
         expect(subject).to eq(expected)
       end
@@ -1050,7 +1050,7 @@ describe DossierFilterService do
       let(:filters) do
         [
           { operator: 'match', value: ['Dessert'] },
-          { operator: 'match', value: ['Fromage'] }
+          { operator: 'match', value: ['Fromage'] },
         ]
       end
 
@@ -1058,8 +1058,8 @@ describe DossierFilterService do
         expected = [
           {
             operator: 'match',
-            value: ['Dessert', 'Fromage']
-          }
+            value: ['Dessert', 'Fromage'],
+          },
         ]
         expect(subject).to eq(expected)
       end
@@ -1069,7 +1069,7 @@ describe DossierFilterService do
       let(:filters) do
         [
           { operator: 'before', value: ['2025-01-01'] },
-          { operator: 'before', value: ['2025-01-02'] }
+          { operator: 'before', value: ['2025-01-02'] },
         ]
       end
 

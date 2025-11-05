@@ -24,7 +24,7 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
     [
       { label: t("disabled", scope:), value: "disabled", disabled: form_disabled? },
       { label: t("sva", scope:), value: "sva", hint: t("sva_hint", scope:), disabled: form_disabled? },
-      { label: t("svr", scope:), value: "svr", hint: t("svr_hint", scope:), disabled: form_disabled? }
+      { label: t("svr", scope:), value: "svr", hint: t("svr_hint", scope:), disabled: form_disabled? },
     ]
   end
 
@@ -36,14 +36,14 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
         value: "continue",
         label: t("continue_label", scope: scope),
         hint: t("continue_hint", scope: scope),
-        disabled: form_disabled?
+        disabled: form_disabled?,
       },
       {
         value: "reset",
         label: t("reset_label", scope: scope),
         hint: t("reset_hint", scope: scope),
-        disabled: form_disabled?
-      }
+        disabled: form_disabled?,
+      },
     ]
   end
 end

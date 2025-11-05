@@ -208,7 +208,7 @@ describe Users::ProfilController, type: :controller do
 
         [
           FranceConnectController::ID_TOKEN_COOKIE_NAME,
-          FranceConnectController::STATE_COOKIE_NAME
+          FranceConnectController::STATE_COOKIE_NAME,
         ].map(&:to_s).each do |cookie_name|
           expect(response.cookies.keys).to include(cookie_name)
           expect(response.cookies[cookie_name]).to be_nil

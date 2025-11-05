@@ -35,7 +35,7 @@ describe Administrateurs::ChorusController, type: :controller do
       put :update,
           params: {
             procedure_id: procedure.id,
-            chorus_configuration: chorus_configuration_params
+            chorus_configuration: chorus_configuration_params,
           }
     end
 
@@ -57,7 +57,7 @@ describe Administrateurs::ChorusController, type: :controller do
         let(:centre_de_cout) { '{"code":"D00C8DX004","label":"Aumôniers+protestant","ville":null,"code_postal":null,"description":"Aumoniers+protestants"}' }
         let(:chorus_configuration_params) do
           {
-            centre_de_cout:, domaine_fonctionnel:, referentiel_de_programmation:
+            centre_de_cout:, domaine_fonctionnel:, referentiel_de_programmation:,
           }
         end
         it 'updates params and redirect back to complete all infos' do
@@ -78,7 +78,7 @@ describe Administrateurs::ChorusController, type: :controller do
         let(:referentiel_de_programmation) { '{"code":"010101010101","label":"DOTATIONS+CARPA+AJ+ET+AUTRES+INTERVENTIONS","description":null,"code_programme":"101"}' }
         let(:chorus_configuration_params) do
           {
-            centre_de_cout:, domaine_fonctionnel:, referentiel_de_programmation:
+            centre_de_cout:, domaine_fonctionnel:, referentiel_de_programmation:,
           }
         end
 

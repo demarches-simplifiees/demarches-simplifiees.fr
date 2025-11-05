@@ -56,7 +56,7 @@ class APIEntrepriseService
         APIEntreprise::EntrepriseJob, APIEntreprise::ExtraitKbisJob, APIEntreprise::TvaJob,
         APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
         APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
-        APIEntreprise::BilansBdfJob
+        APIEntreprise::BilansBdfJob,
       ]
       if etablissement.as_degraded_mode?
         jobs << APIEntreprise::EtablissementJob

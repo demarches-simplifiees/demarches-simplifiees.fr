@@ -6,7 +6,7 @@ class MapFilter
 
   LEGEND = {
     "nb_demarches" => { 'nothing': -1, 'small': 20, 'medium': 50, 'large': 100, 'xlarge': 500 },
-    "nb_dossiers" => { 'nothing': -1, 'small': 500, 'medium': 2000, 'large': 10000, 'xlarge': 50000 }
+    "nb_dossiers" => { 'nothing': -1, 'small': 500, 'medium': 2000, 'large': 10000, 'xlarge': 50000 },
   }.freeze
 
   YEARS_INTERVAL = 2018..Date.current.year

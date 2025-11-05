@@ -16,7 +16,7 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     gestionnaires: Field::HasMany,
     administrateurs: Field::HasMany,
-    parent_name: Field::String
+    parent_name: Field::String,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -30,7 +30,7 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     :name,
     :gestionnaires,
     :administrateurs,
-    :parent_name
+    :parent_name,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,14 +40,14 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     :administrateurs,
     :id,
     :created_at,
-    :parent_name
+    :parent_name,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :name
+    :name,
   ].freeze
 
   # Overwrite this method to customize how users are displayed

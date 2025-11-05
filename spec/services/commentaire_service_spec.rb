@@ -31,7 +31,7 @@ describe CommentaireService do
     context 'when it has multiple files' do
       let(:files) do
         [
-          fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')
+          fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf'),
         ]
       end
 

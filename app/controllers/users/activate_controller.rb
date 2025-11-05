@@ -18,7 +18,7 @@ class Users::ActivateController < ApplicationController
   def create
     user = User.reset_password_by_token({
       password: user_params[:password],
-      reset_password_token: user_params[:reset_password_token]
+      reset_password_token: user_params[:reset_password_token],
     })
 
     if user.valid?

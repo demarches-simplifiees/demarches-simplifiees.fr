@@ -13,7 +13,7 @@ class SafeMailerDashboard < Administrate::BaseDashboard
     id: Field::Number,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    forced_delivery_method: Field::Enum
+    forced_delivery_method: Field::Enum,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -25,7 +25,7 @@ class SafeMailerDashboard < Administrate::BaseDashboard
     :id,
     :created_at,
     :updated_at,
-    :forced_delivery_method
+    :forced_delivery_method,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -33,13 +33,13 @@ class SafeMailerDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :created_at,
     :updated_at,
-    :forced_delivery_method
+    :forced_delivery_method,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :forced_delivery_method
+    :forced_delivery_method,
   ].freeze
 end

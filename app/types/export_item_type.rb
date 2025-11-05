@@ -36,7 +36,7 @@ class ExportItemType < ActiveRecord::Type::Value
       JSON.generate({
         template: value.template,
         enabled: value.enabled,
-        stable_id: value.stable_id
+        stable_id: value.stable_id,
       }.compact)
     else
       raise ArgumentError, "Invalid value for ExportItem serialization: #{value}"

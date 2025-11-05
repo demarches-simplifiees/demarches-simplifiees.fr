@@ -36,9 +36,9 @@ RSpec.describe CrispMattermostTechNotificationJob, type: :job do
               "waiting_since" => Time.parse("2025-09-02 15:12:12 +02:00").to_i * 1000,
               "meta" => {
                 "email" => user.email,
-                "segments" => ["customer", "tech"]
-              }
-            }
+                "segments" => ["customer", "tech"],
+              },
+            },
           }.to_json
         )
     end
@@ -59,7 +59,7 @@ RSpec.describe CrispMattermostTechNotificationJob, type: :job do
           /#{user.email}/,
           /User ##{user.id}/,
           /customer, tech/,
-          /02 sept\. 15h12/
+          /02 sept\. 15h12/,
         ]
 
         expected_patterns.each do |pattern|

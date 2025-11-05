@@ -4,7 +4,7 @@ class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
     engagement_juridique: :engagement_juridique_type_de_champ,
-    cojo: :cojo_type_de_champ
+    cojo: :cojo_type_de_champ,
   }
 
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
@@ -61,7 +61,7 @@ class TypeDeChamp < ApplicationRecord
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
-    cojo: REFERENTIEL_EXTERNE
+    cojo: REFERENTIEL_EXTERNE,
   }
 
   enum :type_champ, {
@@ -105,7 +105,7 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri',
     epci: 'epci',
     cojo: 'cojo',
-    referentiel: 'referentiel'
+    referentiel: 'referentiel',
   }
 
   enum :nature, { RIB: 'RIB' }
@@ -117,11 +117,11 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:regions),
     type_champs.fetch(:pays),
     type_champs.fetch(:epci),
-    type_champs.fetch(:address)
+    type_champs.fetch(:address),
   ]
 
   PRIVATE_ONLY_TYPES = [
-    type_champs.fetch(:engagement_juridique)
+    type_champs.fetch(:engagement_juridique),
   ]
 
   store_accessor :options,
@@ -207,7 +207,7 @@ class TypeDeChamp < ApplicationRecord
   validates :character_limit, numericality: {
     greater_than_or_equal_to: MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH,
     only_integer: true,
-    allow_blank: true
+    allow_blank: true,
   }
 
   after_initialize :set_dynamic_type
@@ -296,7 +296,7 @@ class TypeDeChamp < ApplicationRecord
       private: private?,
       type: champ_class.name,
       stable_id:,
-      stream: Champ::MAIN_STREAM
+      stream: Champ::MAIN_STREAM,
     }
   end
 
@@ -373,7 +373,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:epci),
       TypeDeChamp.type_champs.fetch(:dossier_link),
-      TypeDeChamp.type_champs.fetch(:siret)
+      TypeDeChamp.type_champs.fetch(:siret),
     ])
   end
 
@@ -384,7 +384,7 @@ class TypeDeChamp < ApplicationRecord
   def non_fillable?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:header_section),
-      TypeDeChamp.type_champs.fetch(:explication)
+      TypeDeChamp.type_champs.fetch(:explication),
     ])
   end
 
@@ -393,7 +393,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:yes_no)
+      TypeDeChamp.type_champs.fetch(:yes_no),
     ])
   end
 
@@ -686,9 +686,9 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:formatted) => [
       :formatted_mode, :numbers_accepted, :letters_accepted, :special_characters_accepted,
       :min_character_length, :max_character_length,
-      :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
+      :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message,
     ],
-    type_champs.fetch(:referentiel) => [:referentiel_mapping]
+    type_champs.fetch(:referentiel) => [:referentiel_mapping],
   }
 
   def clean_options
@@ -777,7 +777,7 @@ class TypeDeChamp < ApplicationRecord
   def piece_justificative_or_titre_identite?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:piece_justificative),
-      TypeDeChamp.type_champs.fetch(:titre_identite)
+      TypeDeChamp.type_champs.fetch(:titre_identite),
     ])
   end
 
@@ -785,7 +785,7 @@ class TypeDeChamp < ApplicationRecord
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list),
     ])
   end
 

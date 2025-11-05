@@ -152,7 +152,7 @@ describe "procedure filters" do
             "street_number" => "fake",
             "street_address" => "fake",
             "department_code" => "37",
-            "department_name" => "Indre-et-Loire"
+            "department_name" => "Indre-et-Loire",
           }
         )
         rna_champ.reload

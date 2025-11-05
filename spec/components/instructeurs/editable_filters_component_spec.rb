@@ -15,7 +15,7 @@ RSpec.describe Instructeurs::EditableFiltersComponent, type: :component do
     before do
       procedure_presentation.update!(
         suivis_filters: [
-          FilteredColumn.new(column: procedure.dossier_state_column, filter: { operator: 'match', value: 'en_construction' })
+          FilteredColumn.new(column: procedure.dossier_state_column, filter: { operator: 'match', value: 'en_construction' }),
         ]
       )
     end
@@ -28,7 +28,7 @@ RSpec.describe Instructeurs::EditableFiltersComponent, type: :component do
       react_props_items = JSON.parse(react_component['props'])
 
       expect(react_props_items["items"].map(&:first)).to eq([
-        "En construction", "En instruction", "Accepté", "Refusé", "Classé sans suite"
+        "En construction", "En instruction", "Accepté", "Refusé", "Classé sans suite",
       ])
       expect(react_props_items["selected_keys"]).to eq(["en_construction"])
     end

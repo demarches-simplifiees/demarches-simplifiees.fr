@@ -91,7 +91,7 @@ module Maintenance
         "Transport",
         "Travail",
         "Université",
-        "Urbanisme"
+        "Urbanisme",
       ]
     end
 

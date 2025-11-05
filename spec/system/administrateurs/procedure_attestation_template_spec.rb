@@ -20,7 +20,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
     full_selector = [
       "a[href=\"#{attestation_path}\"]",
-      with_nested_selector
+      with_nested_selector,
     ].compact.join(" ")
     page.find(full_selector)
   end
@@ -105,7 +105,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         first_content == [
           { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }, # added by click above
           { "type" => "text", "text" => " " },
-          { "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } } # defaut initial content
+          { "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } }, # defaut initial content
         ]
       }
 

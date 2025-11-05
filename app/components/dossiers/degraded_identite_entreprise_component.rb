@@ -15,7 +15,7 @@ class Dossiers::DegradedIdentiteEntrepriseComponent < ApplicationComponent
       render(Dossiers::AnnuaireEntrepriseLinkComponent.new(
         siret: etablissement.siret,
         extra_class_names: 'pull-left'
-      ))
+      )),
     ])
 
     render Dossiers::ExternalChampComponent.new(source:)

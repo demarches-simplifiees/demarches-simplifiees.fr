@@ -24,7 +24,7 @@ module Maintenance
                 FilteredColumn.new(
                   column: procedure.dossier_id_column,
                   filter: "1"
-                )
+                ),
               ]
             )
           end
@@ -54,7 +54,7 @@ module Maintenance
                 FilteredColumn.new(
                   column: procedure.dossier_state_column,
                   filter: "en_construction"
-                )
+                ),
               ]
             )
           end
@@ -82,7 +82,7 @@ module Maintenance
                 FilteredColumn.new(
                   column: procedure.dossier_notifications_column,
                   filter: "attente_correction"
-                )
+                ),
               ]
             )
           end

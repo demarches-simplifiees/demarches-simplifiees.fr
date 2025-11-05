@@ -28,8 +28,8 @@ RSpec.describe FAQController, type: :controller do
       let(:faqs) do
         {
           'usager' => {
-            'oops' => [{ category: 'usager', subcategory: 'oops', title: 'FAQ Title 1', slug: 'faq1' }]
-          }
+            'oops' => [{ category: 'usager', subcategory: 'oops', title: 'FAQ Title 1', slug: 'faq1' }],
+          },
         }
       end
 

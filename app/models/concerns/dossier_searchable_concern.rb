@@ -20,7 +20,7 @@ module DossierSearchableConcern
         individual&.nom,
         individual&.prenom,
         mandataire_first_name,
-        mandataire_last_name
+        mandataire_last_name,
       ].compact_blank.join(' ')
 
       private_search_terms = project_champs_private.flat_map(&:search_terms).compact_blank.join(' ')

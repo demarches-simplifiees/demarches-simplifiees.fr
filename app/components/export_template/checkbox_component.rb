@@ -11,7 +11,7 @@ class ExportTemplate::CheckboxComponent < ApplicationComponent
   def call
     safe_join([
       check_box,
-      label_tag(label_id, exported_column.libelle)
+      label_tag(label_id, exported_column.libelle),
     ])
   end
 

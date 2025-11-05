@@ -18,8 +18,8 @@ describe Champs::RNAController, type: :controller do
         dossier_id: champ.dossier_id,
         stable_id: champ.stable_id,
         dossier: {
-          champs_public_attributes: champs_public_attributes
-        }
+          champs_public_attributes: champs_public_attributes,
+        },
       }
     end
 
@@ -149,7 +149,7 @@ describe Champs::RNAController, type: :controller do
             "street_number" => "33",
             "title" => "LA PRÉVENTION ROUTIERE",
             "country_code" => "FR",
-            "country_name" => "France"
+            "country_name" => "France",
           })
         end
       end

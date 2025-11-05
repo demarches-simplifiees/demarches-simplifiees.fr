@@ -15,7 +15,7 @@ class Dossiers::IdentiteEntrepriseForUsagerComponent < ApplicationComponent
       c.with_header do
         safe_join([
           tag.p(warning_for_private_info),
-          render(Dossiers::AnnuaireEntrepriseLinkComponent.new(siret: etablissement.siret))
+          render(Dossiers::AnnuaireEntrepriseLinkComponent.new(siret: etablissement.siret)),
         ])
       end
       render c
@@ -28,7 +28,7 @@ class Dossiers::IdentiteEntrepriseForUsagerComponent < ApplicationComponent
     [
       [label('.siret'), pretty_siret(etablissement.siret), data_to_copy: etablissement.siret],
       [label('.denomination'), raison_sociale_or_name(etablissement)],
-      [label('.forme_juridique'), sanitize(etablissement.entreprise.forme_juridique)]
+      [label('.forme_juridique'), sanitize(etablissement.entreprise.forme_juridique)],
     ]
   end
 
@@ -45,7 +45,7 @@ class Dossiers::IdentiteEntrepriseForUsagerComponent < ApplicationComponent
       [label('.objet'), etablissement.association_objet],
       [label('.date_creation_association'), try_format_date(etablissement.association_date_creation)],
       [label('.date_publication'), try_format_date(etablissement.association_date_publication)],
-      [label('.date_declaration'), try_format_date(etablissement.association_date_declaration)]
+      [label('.date_declaration'), try_format_date(etablissement.association_date_declaration)],
     ]
   end
 

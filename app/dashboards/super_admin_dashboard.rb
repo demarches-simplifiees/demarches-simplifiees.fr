@@ -23,7 +23,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     failed_attempts: Field::Number,
-    locked_at: Field::DateTime
+    locked_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

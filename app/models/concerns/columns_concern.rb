@@ -88,7 +88,7 @@ module ColumnsConcern
 
       columns = [
         dossier_col(table: 'self', column: 'sva_svr_decision_on', type: :date,
-                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:, type: sva_svr_configuration.human_decision))
+                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:, type: sva_svr_configuration.human_decision)),
       ]
       if !for_export
         columns << dossier_col(table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
@@ -164,7 +164,7 @@ module ColumnsConcern
         user_france_connected_column,
         dossier_labels_column,
         dossier_notifications_column,
-        traitements_email_column
+        traitements_email_column,
       ]
     end
 

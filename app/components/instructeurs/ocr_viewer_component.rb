@@ -12,7 +12,7 @@ class Instructeurs::OCRViewerComponent < ApplicationComponent
       account_holder: value_json.dig('rib', 'account_holder')&.split("\n")&.join('<br>'),
       iban: value_json.dig('rib', 'iban'),
       bic: value_json.dig('rib', 'bic'),
-      bank_name: value_json.dig('rib', 'bank_name')
+      bank_name: value_json.dig('rib', 'bank_name'),
     }
       .transform_values! { (it.presence || processing_error) }
   end
@@ -27,7 +27,7 @@ class Instructeurs::OCRViewerComponent < ApplicationComponent
     tag.span class: 'fr-hint-text fr-text-default--warning font-weight-normal' do
       safe_join([
         dsfr_icon("fr-icon-warning-line", :sm, :mr),
-        t('.processing_error')
+        t('.processing_error'),
       ])
     end
   end

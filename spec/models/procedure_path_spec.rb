@@ -10,7 +10,7 @@ RSpec.describe ProcedurePath, type: :model do
     it 'returns false for non-UUID format paths' do
       [
         'ma-super-demarche',
-        'demarch-2024'
+        'demarch-2024',
       ].each do |path|
         procedure_path = build(:procedure_path, path: path)
         expect(procedure_path.uuid_path?).to be false

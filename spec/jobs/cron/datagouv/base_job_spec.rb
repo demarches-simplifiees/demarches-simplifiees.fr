@@ -40,7 +40,7 @@ RSpec.describe Cron::Datagouv::BaseJob, type: :job do
           ["2023-10", 10],
           ["2023-11", 11],
           ["2023-12", 0],
-          ["2024-01", 0]
+          ["2024-01", 0],
         ]
         expect(sent_csv.to_a).to eq(expected_csv)
       end

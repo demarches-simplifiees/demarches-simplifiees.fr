@@ -12,7 +12,7 @@ def setup_driver(app, download_path, options)
         offline: false,
         latency: 800,
         download_throughput: 1024000,
-        upload_throughput: 1024000
+        upload_throughput: 1024000,
       }
     end
 
@@ -78,7 +78,7 @@ RSpec.configure do |config|
       headless: ENV['NO_HEADLESS'].blank?,
       locale: Rails.application.config.i18n.default_locale,
       downloadsPath: Capybara.save_path,
-      playwright_cli_executable_path: 'bun playwright'
+      playwright_cli_executable_path: 'bun playwright',
     }
 
     driven_by(:playwright, options:)

@@ -10,7 +10,7 @@ class BillSignatureDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     serialized: AttachmentField,
-    signature: AttachmentField
+    signature: AttachmentField,
   }.freeze
 
   COLLECTION_ATTRIBUTES = [
@@ -19,7 +19,7 @@ class BillSignatureDashboard < Administrate::BaseDashboard
     :dossier_operation_logs,
     :digest,
     :serialized,
-    :signature
+    :signature,
   ].freeze
 
   # The show page is disabled, but administrate requires the constant

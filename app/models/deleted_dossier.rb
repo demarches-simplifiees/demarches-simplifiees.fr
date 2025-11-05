@@ -15,7 +15,7 @@ class DeletedDossier < ApplicationRecord
     procedure_removed: 'procedure_removed',
     expired:           'expired',
     instructeur_request: 'instructeur_request',
-    user_expired:      'user_expired'
+    user_expired:      'user_expired',
   }
 
   enum :state, {
@@ -23,7 +23,7 @@ class DeletedDossier < ApplicationRecord
     en_instruction:  'en_instruction',
     accepte:         'accepte',
     refuse:          'refuse',
-    sans_suite:      'sans_suite'
+    sans_suite:      'sans_suite',
   }
 
   def self.create_from_dossier(dossier, reason)

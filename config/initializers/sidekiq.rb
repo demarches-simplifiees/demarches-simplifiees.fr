@@ -18,7 +18,7 @@ sidekiq_redis = if ENV.key?('REDIS_SIDEKIQ_SENTINELS')
     sentinels:,
     username:,
     password:,
-    role: :master
+    role: :master,
   }
 else
   {} # default config from REDIS_URL

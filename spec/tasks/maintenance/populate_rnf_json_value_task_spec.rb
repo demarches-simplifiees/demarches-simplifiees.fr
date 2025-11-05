@@ -37,10 +37,10 @@ module Maintenance
             departmentName: "Paris",
             departmentCode: "75",
             regionName: "Île-de-France",
-            regionCode: "11"
+            regionCode: "11",
           },
           status: nil,
-          persons: []
+          persons: [],
         }
       end
 
@@ -69,7 +69,7 @@ module Maintenance
               "region_name" => "Île-de-France",
               "title" => "Fondation SFR",
               "country_name" => "France",
-              "country_code" => "FR"
+              "country_code" => "FR",
             })
         end
       end
@@ -98,7 +98,7 @@ module Maintenance
               "region_name" => "Île-de-France",
               "title" => "Fondation SFR",
               "country_name" => "France",
-              "country_code" => "FR"
+              "country_code" => "FR",
             })
         end
       end

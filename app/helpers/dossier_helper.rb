@@ -144,7 +144,7 @@ module DossierHelper
       safe_join([
         tag.span(count, class: "fr-background-alt--grey fr-my-1v fr-mr-1v fr-px-1v fr-text-default--grey"),
         tag.span(nil, class: [badge_notification_class(type), 'fr-my-0', 'fr-mx-0', 'fr-px-0'], aria: { hidden: true }),
-        badge_notification_text(type, generic: true)
+        badge_notification_text(type, generic: true),
       ])
     end
   end

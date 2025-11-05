@@ -20,11 +20,11 @@ describe Instructeurs::ContactInformationsController, type: :controller do
             email: 'email@toto.com',
             telephone: '1234',
             horaires: 'horaires',
-            adresse: 'adresse'
+            adresse: 'adresse',
           },
           procedure_id: procedure.id,
           groupe_id: gi.id,
-          from_admin: from_admin
+          from_admin: from_admin,
         }
       end
 
@@ -56,10 +56,10 @@ describe Instructeurs::ContactInformationsController, type: :controller do
       let(:params) {
         {
           contact_information: {
-            nom: 'super service'
+            nom: 'super service',
           },
           procedure_id: procedure.id,
-          groupe_id: gi.id
+          groupe_id: gi.id,
         }
       }
 
@@ -75,7 +75,7 @@ describe Instructeurs::ContactInformationsController, type: :controller do
     let(:contact_information) { create(:contact_information, groupe_instructeur: gi) }
     let(:contact_information_params) {
       {
-        nom: 'nom'
+        nom: 'nom',
       }
     }
     let(:params) {
@@ -84,7 +84,7 @@ describe Instructeurs::ContactInformationsController, type: :controller do
         contact_information: contact_information_params,
         procedure_id: procedure.id,
         groupe_id: gi.id,
-        from_admin: from_admin
+        from_admin: from_admin,
       }
     }
 

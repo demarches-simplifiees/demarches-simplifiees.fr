@@ -157,7 +157,7 @@ module Administrateurs
 
           {
             data: { row: normalized_row.transform_keys { Referentiel.header_to_path(_1) } },
-            referentiel_id: referentiel.id
+            referentiel_id: referentiel.id,
           }
         end
 
@@ -240,7 +240,7 @@ module Administrateurs
           :reserves_naturelles,
           :natura_2000,
           :zones_humides,
-          :znieff
+          :znieff,
         ])
     end
 

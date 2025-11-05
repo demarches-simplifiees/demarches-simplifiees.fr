@@ -63,7 +63,7 @@ class Avis < ApplicationRecord
       ['Créé le', :created_at],
       ['Répondu le', :updated_at],
       ['Instructeur', claimant&.email],
-      ['Expert', expert&.email]
+      ['Expert', expert&.email],
     ]
   end
 

@@ -32,7 +32,7 @@ describe DossierRebaseConcern do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text"
+            libelle: "Un champ text",
           })
           procedure.publish_revision!(procedure.administrateurs.first)
           dossier.reload
@@ -58,7 +58,7 @@ describe DossierRebaseConcern do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text"
+            libelle: "Un champ text",
           })
           procedure.publish_revision!(procedure.administrateurs.first)
           dossier.reload
@@ -84,7 +84,7 @@ describe DossierRebaseConcern do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text"
+            libelle: "Un champ text",
           })
           procedure.publish_revision!(procedure.administrateurs.first)
           dossier.reload
@@ -105,12 +105,12 @@ describe DossierRebaseConcern do
         { type: :text, mandatory: true, stable_id: 1 },
         {
           type: :repetition, stable_id: 101, mandatory: true, children: [
-            { type: :text, stable_id: 102 }
-          ]
+            { type: :text, stable_id: 102 },
+          ],
         },
         { type: :datetime, stable_id: 103 },
         { type: :yes_no, stable_id: 104 },
-        { type: :integer_number, stable_id: 105 }
+        { type: :integer_number, stable_id: 105 },
       ]
     end
     let(:types_de_champ_private) { [{ type: :text, stable_id: 11 }] }
@@ -142,11 +142,11 @@ describe DossierRebaseConcern do
         procedure.publish!(procedure.administrateurs.first)
         procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
-          libelle: "Un champ text"
+          libelle: "Un champ text",
         })
         procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative),
-          libelle: "Un champ pj"
+          libelle: "Un champ pj",
         })
         procedure.draft_revision.find_and_ensure_exclusive_use(text_type_de_champ.stable_id).update(mandatory: false, libelle: "nouveau libelle")
         procedure.draft_revision.find_and_ensure_exclusive_use(datetime_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
@@ -154,23 +154,23 @@ describe DossierRebaseConcern do
         procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
           libelle: "oui ou non",
-          parent_stable_id: repetition_type_de_champ.stable_id
+          parent_stable_id: repetition_type_de_champ.stable_id,
         })
         procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
         new_repetition_type_de_champ = procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:repetition),
           libelle: "une autre repetition",
-          mandatory: true
+          mandatory: true,
         })
         procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "un champ text dans une autre repetition",
-          parent_stable_id: new_repetition_type_de_champ.stable_id
+          parent_stable_id: new_repetition_type_de_champ.stable_id,
         })
         procedure.draft_revision.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:date),
           libelle: "un champ date dans une autre repetition",
-          parent_stable_id: new_repetition_type_de_champ.stable_id
+          parent_stable_id: new_repetition_type_de_champ.stable_id,
         })
 
         datetime_champ.update(value: Time.zone.now.to_s)
@@ -497,9 +497,9 @@ describe DossierRebaseConcern do
             mandatory: true,
             children: [
               { type: :text, libelle: 'c1' },
-              { type: :text, libelle: 'c2' }
-            ]
-          }
+              { type: :text, libelle: 'c2' },
+            ],
+          },
         ])
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }

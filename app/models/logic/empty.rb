@@ -13,7 +13,7 @@ class Logic::Empty < Logic::Term
 
   def to_h
     {
-      "term" => self.class.name
+      "term" => self.class.name,
     }
   end
 

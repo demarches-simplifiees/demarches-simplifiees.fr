@@ -19,7 +19,7 @@ describe Instructeurs::ColumnPickerComponent, type: :component do
     before do
       allow(procedure).to receive(:columns).and_return([
         default_user_email,
-        excluded_displayable_field
+        excluded_displayable_field,
       ])
     end
 

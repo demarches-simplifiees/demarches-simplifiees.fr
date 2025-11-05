@@ -17,7 +17,7 @@ class Procedure::InstructeursMenuComponent < ApplicationComponent
 
     [
       { name: first_option, url: admin_procedure_groupe_instructeurs_path(@procedure), icon: "#{first_icon} fr-icon--sm" },
-      { name: 'Options', url: options_admin_procedure_groupe_instructeurs_path(@procedure), icon: 'fr-icon-settings-5-line fr-icon--sm' }
+      { name: 'Options', url: options_admin_procedure_groupe_instructeurs_path(@procedure), icon: 'fr-icon-settings-5-line fr-icon--sm' },
     ].compact
   end
 end

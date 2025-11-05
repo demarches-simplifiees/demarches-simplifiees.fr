@@ -32,7 +32,7 @@ class ProcedureArchiveService
 
     [
       File.basename(zip_filename, File.extname(zip_filename)),
-      archive.id
+      archive.id,
     ].join("-")
   end
 end

@@ -17,7 +17,7 @@ describe Manager::ConfirmationUrlsController, type: :controller do
     let(:params) do
       {
         procedure_id: procedure.id,
-        email: invited_administrateur.email
+        email: invited_administrateur.email,
       }
     end
 
@@ -39,7 +39,7 @@ describe Manager::ConfirmationUrlsController, type: :controller do
         let(:params) do
           {
             procedure_id: procedure.id,
-            email: "wrong@email.com"
+            email: "wrong@email.com",
           }
         end
 
@@ -53,7 +53,7 @@ describe Manager::ConfirmationUrlsController, type: :controller do
         let(:params) do
           {
             procedure_id: procedure.id,
-            email: inviter_super_admin.email
+            email: inviter_super_admin.email,
           }
         end
 

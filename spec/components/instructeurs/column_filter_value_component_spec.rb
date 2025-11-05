@@ -29,7 +29,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
     it {
       expect(react_props_items["items"]).to eq([
-        "option1", "option2"
+        "option1", "option2",
       ])
     }
   end
@@ -98,7 +98,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
       it {
         expect(react_props_items["items"].map(&:first)).to eq([
-          "Déposé depuis longtemps", "Dossier modifié", "Annotation privée", "Avis externe", "En attente de correction", "En attente d'avis externe"
+          "Déposé depuis longtemps", "Dossier modifié", "Annotation privée", "Avis externe", "En attente de correction", "En attente d'avis externe",
         ])
       }
     end

@@ -29,7 +29,7 @@ module ChampExternalDataConcern
       waiting_for_job: 'waiting_for_job',
       fetching: 'fetching',
       fetched: 'fetched',
-      external_error: 'external_error'
+      external_error: 'external_error',
     }
 
     aasm column: :external_state, enum: true do

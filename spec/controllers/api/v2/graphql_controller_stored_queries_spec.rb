@@ -156,7 +156,7 @@ describe API::V2::GraphqlController do
             { type: :checkbox, libelle: 'label checkbox' },
             { type: :piece_justificative, libelle: 'label piece_justificative' },
             { type: :multiple_drop_down_list, libelle: 'label multiple_drop_down_list' },
-            { type: :siret, libelle: 'label entreprise' }
+            { type: :siret, libelle: 'label entreprise' },
           ]
         end
         let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, procedure:) }

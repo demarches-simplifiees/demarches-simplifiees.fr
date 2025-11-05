@@ -18,7 +18,7 @@ module UserFindByConcern
       [
         where(id: ids).or(where(users: { email: valid_emails })).distinct(:id),
         valid_emails,
-        invalid_emails
+        invalid_emails,
       ]
     end
   end

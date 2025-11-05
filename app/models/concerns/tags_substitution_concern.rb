@@ -69,7 +69,7 @@ module TagsSubstitutionConcern
       libelle: 'numéro du dossier',
       description: '',
       lambda: -> (d) { d.id },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
   }
 
   DOSSIER_TAGS = [
@@ -79,50 +79,50 @@ module TagsSubstitutionConcern
       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
       lambda: -> (d) { simple_format(d.motivation) },
       escapable: false, # sanitized by simple_format
-      available_for_states: Dossier::TERMINE
+      available_for_states: Dossier::TERMINE,
     },
     {
       id: 'dossier_depose_at',
       libelle: 'date de dépôt',
       description: 'Date de dépôt du dossier par l’usager',
       lambda: -> (d) { format_date(d.depose_at) },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'dossier_en_instruction_at',
       libelle: 'date de passage en instruction',
       description: '',
       lambda: -> (d) { format_date(d.en_instruction_at) },
-      available_for_states: Dossier::INSTRUCTION_COMMENCEE
+      available_for_states: Dossier::INSTRUCTION_COMMENCEE,
     },
     {
       id: 'dossier_processed_at',
       libelle: 'date de décision',
       description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
       lambda: -> (d) { format_date(d.processed_at) },
-      available_for_states: Dossier::TERMINE
+      available_for_states: Dossier::TERMINE,
     },
     {
       id: 'dossier_last_champ_updated_at',
       libelle: 'date de mise à jour',
       description: 'Date de dernière mise à jour d’un champ du dossier',
       lambda: -> (d) { format_date(d.last_champ_updated_at) },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'dossier_procedure_libelle',
       libelle: 'libellé démarche',
       description: '',
       lambda: -> (d) { d.procedure.libelle },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'dossier_service_name',
       libelle: 'nom du service',
       description: 'Le nom du service de la démarche',
       lambda: -> (d) { d.procedure.organisation_name || '' },
-      available_for_states: Dossier::SOUMIS
-    }
+      available_for_states: Dossier::SOUMIS,
+    },
   ].push(DOSSIER_ID_TAG)
 
   DOSSIER_TAGS_FOR_MAIL = [
@@ -132,7 +132,7 @@ module TagsSubstitutionConcern
       description: '',
       lambda: -> (d) { external_link(dossier_url(d, host:)) },
       available_for_states: Dossier::SOUMIS,
-      escapable: false
+      escapable: false,
     },
     {
       id: 'dossier_attestation_url',
@@ -140,7 +140,7 @@ module TagsSubstitutionConcern
       description: '',
       lambda: -> (d) { external_link(attestation_dossier_url(d, host:)) },
       available_for_states: [Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse)],
-      escapable: false
+      escapable: false,
     },
     {
       id: 'dossier_motivation_url',
@@ -154,8 +154,8 @@ module TagsSubstitutionConcern
         end
       },
       available_for_states: Dossier::TERMINE,
-      escapable: false
-    }
+      escapable: false,
+    },
   ]
 
   DOSSIER_SVA_SVR_DECISION_DATE_TAG = {
@@ -163,7 +163,7 @@ module TagsSubstitutionConcern
     libelle: 'date prévisionnelle SVA/SVR',
     description: 'Date prévisionnelle de décision automatique par le SVA/SVR',
     lambda: -> (d) { format_date(d.sva_svr_decision_on) },
-    available_for_states: Dossier.states.fetch(:en_instruction)
+    available_for_states: Dossier.states.fetch(:en_instruction),
   }
 
   INDIVIDUAL_TAGS = [
@@ -172,22 +172,22 @@ module TagsSubstitutionConcern
       libelle: 'civilité',
       description: 'M., Mme',
       lambda: -> (d) { d.individual&.gender },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'individual_last_name',
       libelle: 'nom',
       description: "nom de l'usager",
       lambda: -> (d) { d.individual&.nom },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'individual_first_name',
       libelle: 'prénom',
       description: "prénom de l'usager",
       lambda: -> (d) { d.individual&.prenom },
-      available_for_states: Dossier::SOUMIS
-    }
+      available_for_states: Dossier::SOUMIS,
+    },
   ]
 
   ENTREPRISE_TAGS = [
@@ -196,36 +196,36 @@ module TagsSubstitutionConcern
       libelle: 'SIREN',
       description: '',
       lambda: -> (d) { d.etablissement&.entreprise&.siren },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'entreprise_numero_tva_intracommunautaire',
       libelle: 'numéro de TVA intracommunautaire',
       description: '',
       lambda: -> (d) { d.etablissement&.entreprise&.numero_tva_intracommunautaire },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'entreprise_siret_siege_social',
       libelle: 'SIRET du siège social',
       description: '',
       lambda: -> (d) { d.etablissement&.entreprise&.siret_siege_social },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'entreprise_raison_sociale',
       libelle: 'raison sociale',
       description: '',
       lambda: -> (d) { d.etablissement&.entreprise&.raison_sociale },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
     },
     {
       id: 'entreprise_adresse',
       libelle: 'adresse',
       description: '',
       lambda: -> (d) { d.etablissement&.entreprise&.inline_adresse },
-      available_for_states: Dossier::SOUMIS
-    }
+      available_for_states: Dossier::SOUMIS,
+    },
   ]
 
   ROUTAGE_TAGS = [
@@ -234,8 +234,8 @@ module TagsSubstitutionConcern
       libelle: 'groupe instructeur',
       description: 'Le groupe instructeur en charge du dossier',
       lambda: -> (d) { d.groupe_instructeur&.label },
-      available_for_states: Dossier::SOUMIS
-    }
+      available_for_states: Dossier::SOUMIS,
+    },
   ]
 
   CONTACT_INFORMATION_NAME_TAG = {
@@ -243,7 +243,7 @@ module TagsSubstitutionConcern
     libelle: 'nom du service instructeur',
     description: 'Le nom du service qui traite le dossier (celui des informations de contact du groupe instructeur s’il existe, sinon celui de la démarche)',
     lambda: -> (d) { d.service_or_contact_information&.nom || '' },
-    available_for_states: Dossier::SOUMIS
+    available_for_states: Dossier::SOUMIS,
   }
 
   SHARED_TAG_IDS = (DOSSIER_TAGS + DOSSIER_TAGS_FOR_MAIL + INDIVIDUAL_TAGS + ENTREPRISE_TAGS + ROUTAGE_TAGS).map { _1[:id] }
@@ -275,7 +275,7 @@ module TagsSubstitutionConcern
       identity_key => tags_for_dossier_state(identity_tags),
       dossier: tags_for_dossier_state(dossier_tags + routage_tags),
       champ_public: tags_for_dossier_state(champ_public_tags),
-      champ_private: tags_for_dossier_state(champ_private_tags)
+      champ_private: tags_for_dossier_state(champ_private_tags),
     }.reject { |_, ary| ary.empty? }
   end
 
@@ -497,7 +497,7 @@ module TagsSubstitutionConcern
       dossier_tags,
       ROUTAGE_TAGS,
       INDIVIDUAL_TAGS,
-      ENTREPRISE_TAGS
+      ENTREPRISE_TAGS,
     ]
   end
 

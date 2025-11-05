@@ -8,7 +8,7 @@ describe DossierProjectionService do
     let(:types_de_champ_public) do
       [
         { type: :text, libelle: 'texte' },
-        { type: :integer_number, libelle: 'nombre entier' }
+        { type: :integer_number, libelle: 'nombre entier' },
       ]
     end
     let(:dossiers) { create_list(:dossier, 3, procedure:) }

@@ -20,8 +20,8 @@ describe Users::PasswordsController, type: :controller do
           user: {
             reset_password_token: @token,
             password: "mot de passe super secret",
-            password_confirmation: "mot de passe super secret"
-          }
+            password_confirmation: "mot de passe super secret",
+          },
         }
         expect(subject.current_user).to eq(user)
         expect(subject.current_instructeur.email).to eq(administrateur.email)
@@ -32,8 +32,8 @@ describe Users::PasswordsController, type: :controller do
           user: {
             reset_password_token: @token,
             password: "mot de passe super secret",
-            password_confirmation: "mot de passe super secret"
-          }
+            password_confirmation: "mot de passe super secret",
+          },
         }
         expect(subject.current_user).to eq(user)
         expect(subject.current_administrateur).to eq(administrateur)
@@ -45,8 +45,8 @@ describe Users::PasswordsController, type: :controller do
             user: {
               reset_password_token: @token,
               password: "mot de passe super secret",
-              password_confirmation: "mot de passe super secret"
-            }
+              password_confirmation: "mot de passe super secret",
+            },
           }
         end.to change { user.reload.email_verified_at }
           .from(nil).to(anything)

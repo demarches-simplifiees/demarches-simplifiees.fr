@@ -28,7 +28,7 @@ class DataSources::ChorusController < ApplicationController
       {
         label: label_formatter.call(item),
         value: item[:code],
-        data: item
+        data: item,
       }
     end
   end

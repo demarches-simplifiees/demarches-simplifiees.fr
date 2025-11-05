@@ -11,7 +11,7 @@ class APIBretagneService
     # see: https://api.databretagne.fr/budget/doc#operations-Domaine_Fonctionnel-get_ref_controller_list
     "domaine-fonct" => '/budget/api/v1/domaine-fonct',
     # see: https://api.databretagne.fr/budget/doc#operations-Referentiel_Programmation-get_ref_controller_list
-    "ref-programmation" => '/budget/api/v1/ref-programmation'
+    "ref-programmation" => '/budget/api/v1/ref-programmation',
   }
 
   def search_domaine_fonct(code_or_label: "")
@@ -74,7 +74,7 @@ class APIBretagneService
     result = API::Client.new.call(url: build_url(ENDPOINTS.fetch("login")),
                                   json: {
                                     email: ENV['API_DATABRETAGE_USERNAME'],
-                                    password: ENV['API_DATABRETAGE_PASSWORD']
+                                    password: ENV['API_DATABRETAGE_PASSWORD'],
                                   },
                                   method: :post)
     case result

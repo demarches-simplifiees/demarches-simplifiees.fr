@@ -88,35 +88,35 @@ class Conditions::ConditionsComponent < ApplicationComponent
     case left.type(@source_tdcs)
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
-        [t('is', scope: 'logic'), Eq.name]
+        [t('is', scope: 'logic'), Eq.name],
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:empty)
       [
-        [t('is', scope: 'logic'), EmptyOperator.name]
+        [t('is', scope: 'logic'), EmptyOperator.name],
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enum)
       [
         [t('is', scope: 'logic'), Eq.name],
-        [t('is_not', scope: 'logic'), NotEq.name]
+        [t('is_not', scope: 'logic'), NotEq.name],
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:commune_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:epci_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:address)
       [
         [t(InDepartementOperator.name, scope: 'logic.operators'), InDepartementOperator.name],
         [t(NotInDepartementOperator.name, scope: 'logic.operators'), NotInDepartementOperator.name],
         [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
-        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
+        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name],
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:departement_enum)
       [
         [t('is', scope: 'logic'), Eq.name],
         [t('is_not', scope: 'logic'), NotEq.name],
         [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
-        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
+        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name],
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enums)
       [
         [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name],
-        [t(ExcludeOperator.name, scope: 'logic.operators'), ExcludeOperator.name]
+        [t(ExcludeOperator.name, scope: 'logic.operators'), ExcludeOperator.name],
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]

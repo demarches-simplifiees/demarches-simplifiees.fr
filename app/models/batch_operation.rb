@@ -17,7 +17,7 @@ class BatchOperation < ApplicationRecord
     unfollow: 'unfollow',
     supprimer: 'supprimer',
     create_avis: 'create_avis',
-    create_commentaire: 'create_commentaire'
+    create_commentaire: 'create_commentaire',
   }
 
   has_many :dossiers, dependent: :nullify
@@ -121,7 +121,7 @@ class BatchOperation < ApplicationRecord
           introduction_file: introduction_file,
           confidentiel: confidentiel,
           invite_linked_dossiers: payload['invite_linked_dossiers'],
-          question_label: question_label
+          question_label: question_label,
         }.with_indifferent_access
       )
     when BatchOperation.operations.fetch(:create_commentaire)

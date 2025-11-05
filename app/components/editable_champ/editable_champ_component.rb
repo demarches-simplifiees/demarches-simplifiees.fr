@@ -17,7 +17,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
       TypeDeChamp.type_champs.fetch(:header_section),
       TypeDeChamp.type_champs.fetch(:explication),
       TypeDeChamp.type_champs.fetch(:repetition),
-      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list),
     ]
     !types_without_label.include?(@champ.type_champ)
   end
@@ -32,10 +32,10 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
         {
           'editable-champ': true,
           "editable-champ-#{@champ.type_champ}": true,
-          champ_component.dsfr_group_classname => true
+          champ_component.dsfr_group_classname => true,
         }.merge(champ_component.input_group_error_class_names)
       ),
-      data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }
+      data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values },
     }
       .deep_merge(champ_component.fieldset_aria_opts)
       .deep_merge(champ_component.fieldset_error_opts)
@@ -44,7 +44,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   def fieldset_element_attributes
     {
       id: @champ.input_group_id,
-      "hidden": !@champ.visible?
+      "hidden": !@champ.visible?,
     }
   end
 
@@ -53,7 +53,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
       {
         turbo_poll_url_value:,
         turbo_poll_interval_value: 2_000,
-        turbo_poll_strategy_value: 'fixed'
+        turbo_poll_strategy_value: 'fixed',
       }
     else
       {}

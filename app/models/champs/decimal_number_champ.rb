@@ -9,7 +9,7 @@ class Champs::DecimalNumberChamp < Champ
     allow_blank: true,
     message: -> (object, _data) {
       object.errors.generate_message(:value, :not_a_number)
-    }
+    },
   }, format: {
     with: /\A-?[0-9]+([\.,][0-9]{1,3})?\z/,
     allow_nil: true,
@@ -17,7 +17,7 @@ class Champs::DecimalNumberChamp < Champ
     message: -> (object, _data) {
       # i18n-tasks-use t('errors.messages.not_a_float')
       object.errors.generate_message(:value, :not_a_float)
-    }
+    },
   }, if: :validate_champ_value?
 
   private

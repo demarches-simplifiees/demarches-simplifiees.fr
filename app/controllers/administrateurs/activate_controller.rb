@@ -24,7 +24,7 @@ class Administrateurs::ActivateController < ApplicationController
     user = User.reset_password_by_token({
       password: password,
       password_confirmation: password,
-      reset_password_token: update_administrateur_params[:reset_password_token]
+      reset_password_token: update_administrateur_params[:reset_password_token],
     })
 
     if user&.errors&.empty?

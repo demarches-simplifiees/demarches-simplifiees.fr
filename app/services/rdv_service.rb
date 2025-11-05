@@ -49,10 +49,10 @@ class RdvService
       user: {
         first_name:,
         last_name:,
-        email:
+        email:,
       },
       return_url:,
-      dossier_url:
+      dossier_url:,
     }
 
     response = Typhoeus.post(
@@ -185,7 +185,7 @@ class RdvService
   def headers
     {
       'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{@rdv_connection.access_token}"
+      'Authorization' => "Bearer #{@rdv_connection.access_token}",
     }
   end
 end

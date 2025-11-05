@@ -14,7 +14,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
       { type: :dossier_link },
       { type: :communes },
       { type: :address },
-      { type: :repetition, children: [{ type: :text }, { type: :decimal_number }] }
+      { type: :repetition, children: [{ type: :text }, { type: :decimal_number }] },
     ]
   end
   let(:procedure) { create(:procedure, :for_individual, :published, types_de_champ_public:) }
@@ -40,7 +40,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:multiple_drop_down_list_values) {
     [
       type_de_champ_multiple_drop_down_list.drop_down_options.first,
-      type_de_champ_multiple_drop_down_list.drop_down_options.last
+      type_de_champ_multiple_drop_down_list.drop_down_options.last,
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
@@ -136,7 +136,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
             allow(FranceConnectService).to receive(:authorization_uri)
               .and_return([
                 france_connect_callback_path(code: "c0d3", state:),
-                state, nonce
+                state, nonce,
               ])
 
             allow(FranceConnectService).to receive(:retrieve_user_informations).and_return([build(:france_connect_information), 'id_token'])
@@ -168,8 +168,8 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
         "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
           {
             "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
-            "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value
-          }
+            "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value,
+          },
         ],
         "champ_#{type_de_champ_datetime.to_typed_id_for_query}" => datetime_value,
         "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id_for_query}" => multiple_drop_down_list_values,
@@ -179,7 +179,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
         "champ_#{type_de_champ_address.to_typed_id_for_query}" => address_value,
         "identite_prenom" => prenom_value,
         "identite_nom" => nom_value,
-        "identite_genre" => genre_value
+        "identite_genre" => genre_value,
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end

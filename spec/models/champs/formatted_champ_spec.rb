@@ -59,7 +59,7 @@ describe Champs::FormattedChamp do
               type: :formatted,
               formatted_mode: "advanced",
               expression_reguliere: "/coucou/",
-              expression_reguliere_error_message: "certainement pas"
+              expression_reguliere_error_message: "certainement pas",
             }
           }
 
@@ -75,7 +75,7 @@ describe Champs::FormattedChamp do
             {
               type: :formatted,
               formatted_mode: "advanced",
-              expression_reguliere: "/coucou/"
+              expression_reguliere: "/coucou/",
             }
           }
 

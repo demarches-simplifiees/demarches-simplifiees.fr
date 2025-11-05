@@ -22,7 +22,7 @@ class StatsController < ApplicationController
       "Brouillon" => stat.dossiers_brouillon,
       "En construction" => stat.dossiers_en_construction,
       "En instruction" => stat.dossiers_en_instruction,
-      "Terminé" => stat.dossiers_termines
+      "Terminé" => stat.dossiers_termines,
     }
 
     @procedures_cumulative = cumulative_month_serie(procedures, :published_at)
@@ -41,7 +41,7 @@ class StatsController < ApplicationController
       'Etat du fichier',
       'Durée en brouillon',
       'Durée en construction',
-      'Durée en instruction'
+      'Durée en instruction',
     ]
 
     data = Dossier
@@ -82,7 +82,7 @@ class StatsController < ApplicationController
     {
       total: total.to_s,
       last_30_days_count: last_30_days_count.to_s,
-      evolution: formatted_evolution
+      evolution: formatted_evolution,
     }
   end
 
@@ -97,7 +97,7 @@ class StatsController < ApplicationController
     {
       total: total.to_s,
       last_30_days_count: last_30_days_count.to_s,
-      evolution: formatted_evolution
+      evolution: formatted_evolution,
     }
   end
 

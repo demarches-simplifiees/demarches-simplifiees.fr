@@ -36,7 +36,7 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
         displayable: false,
         filterable: false,
         mandatory: mandatory?
-      )
+      ),
     ]
 
     if RIB?
@@ -44,7 +44,7 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
         ['Titulaire', '$.rib.account_holder'],
         ['IBAN', '$.rib.iban'],
         ['BIC', '$.rib.bic'],
-        ['Nom de la Banque', '$.rib.bank_name']
+        ['Nom de la Banque', '$.rib.bank_name'],
       ].map do |label, jsonpath|
         Columns::JSONPathColumn.new(
          procedure_id: procedure.id,

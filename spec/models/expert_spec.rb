@@ -121,7 +121,7 @@ RSpec.describe Expert, type: :model do
         expect(subject).to eq([
           expert,
           unsigned_expert,
-          new_unsigned_expert
+          new_unsigned_expert,
         ]
           .map { _1.user.email }
           .sort)

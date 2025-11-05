@@ -42,7 +42,7 @@ class Traitement < ApplicationRecord
     :repasse_en_instruction,
     :passe_en_instruction_automatiquement,
     :accepte_automatiquement,
-    :refuse_automatiquement
+    :refuse_automatiquement,
   ].index_with { _1.to_s.humanize }
 
   def event

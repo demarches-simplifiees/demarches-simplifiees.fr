@@ -21,7 +21,7 @@ class ExportDashboard < Administrate::BaseDashboard
     time_span_type: Field::Select.with_options(searchable: false, collection: -> (field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     created_at: Field::DateTime.with_options(format: "%d/%m %H:%M:%S"),
     updated_at: Field::DateTime.with_options(format: "%d/%m %H:%M:%S"),
-    procedure: IdField
+    procedure: IdField,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

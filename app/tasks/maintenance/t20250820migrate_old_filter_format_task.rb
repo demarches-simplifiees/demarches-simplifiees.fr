@@ -24,7 +24,7 @@ module Maintenance
         :supprimes_filters,
         :supprimes_recemment_filters,
         :expirant_filters,
-        :archives_filters
+        :archives_filters,
       ].each do |filter_name|
         element.send("#{filter_name}=", element.send(filter_name.to_s).map do |filtered_column|
           normalize_filtered_column(filtered_column)

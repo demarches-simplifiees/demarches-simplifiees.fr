@@ -65,7 +65,7 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
     {
       title: t(".refresh_old_export"),
       "aria-label" =>  t(".refresh_old_export"),
-      class: "fr-btn fr-btn--sm fr-icon-refresh-line fr-btn--tertiary fr-btn--icon-left"
+      class: "fr-btn fr-btn--sm fr-icon-refresh-line fr-btn--tertiary fr-btn--icon-left",
     }
   end
 end

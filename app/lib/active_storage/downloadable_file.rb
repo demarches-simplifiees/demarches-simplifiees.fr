@@ -43,14 +43,14 @@ class ActiveStorage::DownloadableFile
   def self.bill_and_path(bill)
     [
       bill,
-      "bills/#{self.timestamped_filename(bill)}"
+      "bills/#{self.timestamped_filename(bill)}",
     ]
   end
 
   def self.pj_and_path(dossier_id, pj)
     [
       pj,
-      "dossier-#{dossier_id}/#{self.timestamped_filename(pj)}"
+      "dossier-#{dossier_id}/#{self.timestamped_filename(pj)}",
     ]
   end
 

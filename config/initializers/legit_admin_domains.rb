@@ -9,6 +9,6 @@ domains = [
   "gouv.fr",
   "justice.fr",
   "msa.fr",
-  "sante.fr"
+  "sante.fr",
 ]
 LEGIT_ADMIN_DOMAINS = ENV["LEGIT_ADMIN_DOMAINS"]&.split(';') || domains

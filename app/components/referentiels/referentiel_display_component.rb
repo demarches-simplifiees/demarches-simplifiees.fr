@@ -11,7 +11,7 @@ class Referentiels::ReferentielDisplayComponent < Referentiels::MappingFormBase
       safe_join([
         hidden_field_tag(attribute_name(jsonpath, attribute_name), "0"),
         check_box_tag(attribute_name(jsonpath, attribute_name), "1", lookup_existing_value(jsonpath, attribute_name) == "1", class: "fr-checkbox", id:),
-        tag.label(for: id, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") }
+        tag.label(for: id, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") },
       ])
     end
   end

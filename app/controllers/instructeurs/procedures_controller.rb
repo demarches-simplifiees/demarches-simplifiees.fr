@@ -59,7 +59,7 @@ module Instructeurs
         'suivis' => @followed_dossiers_count_per_procedure.sum { |_, v| v },
         'traites' => @dossiers_termines_count_per_procedure.sum { |_, v| v },
         'tous' => @dossiers_count_per_procedure.sum { |_, v| v },
-        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v }
+        'expirant' => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
       }
 
       @procedure_ids_with_notifications = DossierNotification.notifications_sticker_for_instructeur_procedures(groupe_ids, current_instructeur)
@@ -158,7 +158,7 @@ module Instructeurs
           extra: {
             procedure_presentation_id: procedure_presentation.id,
             errors: e.message,
-            filters: procedure_presentation.filters_for(statut).map(&:to_json).join
+            filters: procedure_presentation.filters_for(statut).map(&:to_json).join,
           }
         )
 
@@ -301,7 +301,7 @@ module Instructeurs
         value: DateTime.current,
         expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT,
         httponly: true,
-        secure: Rails.env.production?
+        secure: Rails.env.production?,
       }
 
       respond_to do |format|
@@ -433,7 +433,7 @@ module Instructeurs
         statut: params[:statut],
         export_template:,
         include_archived: params[:include_archived],
-        procedure_presentation: params[:statut].present? ? procedure_presentation : nil
+        procedure_presentation: params[:statut].present? ? procedure_presentation : nil,
       }.compact
     end
 

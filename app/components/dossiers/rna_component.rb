@@ -22,14 +22,14 @@ class Dossiers::RNAComponent < ApplicationComponent
   def data
     [
       [champ.class.human_attribute_name(:value), champ.to_s],
-      *['titre', 'objet'].map { label_value(it) }
+      *['titre', 'objet'].map { label_value(it) },
     ]
   end
 
   def details
     [
       *['date_creation', 'date_declaration', 'date_publication'].map { label_value(it) },
-      *helpers.address_array(champ)
+      *helpers.address_array(champ),
     ]
   end
 

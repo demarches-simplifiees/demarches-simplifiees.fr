@@ -124,7 +124,7 @@ FactoryBot.define do
       zones {
         [
           create(:zone, labels:
-                 [{ designated_on: Time.zone.now, name: "Ministère 1" }])
+                 [{ designated_on: Time.zone.now, name: "Ministère 1" }]),
         ]
       }
     end

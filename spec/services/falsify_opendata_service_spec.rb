@@ -17,7 +17,7 @@ describe FalsifyOpendataService do
       let(:lines) do
         [
           { "id" => procedure1.id },
-          { "id" => procedure2.id }
+          { "id" => procedure2.id },
         ]
       end
 
@@ -33,7 +33,7 @@ describe FalsifyOpendataService do
     context 'with unknown procedure' do
       let(:lines) do
         [
-          { "id" => procedure1.id + procedure2.id }
+          { "id" => procedure1.id + procedure2.id },
         ]
       end
       it 'returns errors' do

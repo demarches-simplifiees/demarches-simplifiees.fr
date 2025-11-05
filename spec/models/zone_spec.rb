@@ -16,12 +16,12 @@ describe Zone do
       create(:zone, labels: [
         {
           designated_on: start_previous_government,
-          name: "Ministère de l'Économie, des Finances et de la Relance"
+          name: "Ministère de l'Économie, des Finances et de la Relance",
         },
         {
           designated_on: start_last_government,
-          name: "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique"
-        }
+          name: "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique",
+        },
       ])
     end
 
@@ -44,16 +44,16 @@ describe Zone do
       create(:zone, labels: [
         {
           designated_on: start_previous_government,
-          name: "Ministère des Outre-mer"
+          name: "Ministère des Outre-mer",
         },
         {
           designated_on: start_last_government,
-          name: "Non attribué"
+          name: "Non attribué",
         },
         {
           designated_on: start_futur_government,
-          name: "Ministère des Territoires d'Outre-mer"
-        }
+          name: "Ministère des Territoires d'Outre-mer",
+        },
       ])
     end
 
@@ -75,16 +75,16 @@ describe Zone do
       create(:zone, labels: [
         {
           designated_on: start_previous_government,
-          name: "Ministère des Outre-mer"
+          name: "Ministère des Outre-mer",
         },
         {
           designated_on: start_last_government,
-          name: "Non attribué"
+          name: "Non attribué",
         },
         {
           designated_on: start_futur_government,
-          name: "Ministère des Territoires d'Outre-mer"
-        }
+          name: "Ministère des Territoires d'Outre-mer",
+        },
       ])
     end
 
@@ -92,8 +92,8 @@ describe Zone do
       create(:zone, labels: [
         {
           designated_on: start_previous_government,
-          name: "Ministère de la Culture"
-        }
+          name: "Ministère de la Culture",
+        },
       ])
     end
 
@@ -101,16 +101,16 @@ describe Zone do
       create(:zone, labels: [
         {
           designated_on: start_previous_government,
-          name: "Ministère des Outre-mer"
+          name: "Ministère des Outre-mer",
         },
         {
           designated_on: start_last_government,
-          name: "Non attribué"
+          name: "Non attribué",
         },
         {
           designated_on: start_futur_government,
-          name: "Ministère des Territoires d'Outre-mer"
-        }
+          name: "Ministère des Territoires d'Outre-mer",
+        },
       ])
     end
 

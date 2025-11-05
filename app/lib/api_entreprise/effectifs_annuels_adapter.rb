@@ -26,7 +26,7 @@ class APIEntreprise::EffectifsAnnuelsAdapter < APIEntreprise::Adapter
       if effectifs.present?
         {
           entreprise_effectif_annuel: effectifs[:value],
-          entreprise_effectif_annuel_annee: data[:annee]
+          entreprise_effectif_annuel_annee: data[:annee],
         }
       else
         {}

@@ -15,12 +15,12 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     when Dossier.states.fetch(:en_instruction)
       [
         BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser),
-        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:create_avis)
+        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:create_avis),
       ]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       [
         BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:desarchiver), BatchOperation.operations.fetch(:supprimer),
-        BatchOperation.operations.fetch(:restaurer), BatchOperation.operations.fetch(:repousser_expiration)
+        BatchOperation.operations.fetch(:restaurer), BatchOperation.operations.fetch(:repousser_expiration),
       ]
     else
       []
@@ -37,19 +37,19 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
           [
             {
               label: t(".operations.passer_en_instruction"),
-              operation: BatchOperation.operations.fetch(:passer_en_instruction)
+              operation: BatchOperation.operations.fetch(:passer_en_instruction),
             },
             {
               label: t(".operations.follow"),
-              operation: BatchOperation.operations.fetch(:follow)
+              operation: BatchOperation.operations.fetch(:follow),
             },
             {
               label: t(".operations.create_commentaire"),
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
-              aria:  'modal-commentaire-batch'
-            }
-          ]
+              aria:  'modal-commentaire-batch',
+            },
+          ],
       }
     when 'archives' then
       {
@@ -57,9 +57,9 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
           [
             {
               label: t(".operations.desarchiver"),
-              operation: BatchOperation.operations.fetch(:desarchiver)
-            }
-          ]
+              operation: BatchOperation.operations.fetch(:desarchiver),
+            },
+          ],
       }
     when 'traites' then
       {
@@ -67,19 +67,19 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
           [
             {
               label: t(".operations.archiver"),
-              operation: BatchOperation.operations.fetch(:archiver)
+              operation: BatchOperation.operations.fetch(:archiver),
             },
             {
               label: t(".operations.supprimer"),
-              operation: BatchOperation.operations.fetch(:supprimer)
+              operation: BatchOperation.operations.fetch(:supprimer),
             },
             {
               label: t(".operations.create_commentaire"),
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
-              aria:  'modal-commentaire-batch'
-            }
-          ]
+              aria:  'modal-commentaire-batch',
+            },
+          ],
       }
     when 'expirant' then
       {
@@ -87,9 +87,9 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
           [
             {
               label: t(".operations.repousser_expiration"),
-              operation: BatchOperation.operations.fetch(:repousser_expiration)
-            }
-          ]
+              operation: BatchOperation.operations.fetch(:repousser_expiration),
+            },
+          ],
       }
     when 'supprimes' then
       {
@@ -97,9 +97,9 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
           [
             {
               label: t(".operations.restaurer"),
-              operation: BatchOperation.operations.fetch(:restaurer)
-            }
-          ]
+              operation: BatchOperation.operations.fetch(:restaurer),
+            },
+          ],
       }
     when 'suivis' then
       {
@@ -108,7 +108,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
 
             {
               label: t(".operations.passer_en_instruction"),
-              operation: BatchOperation.operations.fetch(:passer_en_instruction)
+              operation: BatchOperation.operations.fetch(:passer_en_instruction),
             },
 
             {
@@ -120,7 +120,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
                                 operation: BatchOperation.operations.fetch(:accepter),
                                 operation_class_name: 'fr-icon-checkbox-circle-fill fr-text-default--success',
                                 placeholder: t(".placeholders.accepter"),
-                                instruction_operation: 'accept'
+                                instruction_operation: 'accept',
                               },
 
                               {
@@ -129,7 +129,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
                                 operation: BatchOperation.operations.fetch(:classer_sans_suite),
                                 operation_class_name: 'fr-icon-intermediate-circle-fill fr-text-mention--grey',
                                 placeholder: t(".placeholders.classer_sans_suite"),
-                                instruction_operation: 'without-continuation'
+                                instruction_operation: 'without-continuation',
                               },
 
                               {
@@ -138,25 +138,25 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
                                 operation: BatchOperation.operations.fetch(:refuser),
                                 operation_class_name: 'fr-icon-close-circle-fill fr-text-default--warning',
                                 placeholder: t(".placeholders.refuser"),
-                                instruction_operation: 'refuse'
-                              }
-                            ]
+                                instruction_operation: 'refuse',
+                              },
+                            ],
             },
             {
               label: t(".operations.unfollow"),
-              operation: BatchOperation.operations.fetch(:unfollow)
+              operation: BatchOperation.operations.fetch(:unfollow),
             },
 
             {
               label: t(".operations.repasser_en_construction"),
-              operation: BatchOperation.operations.fetch(:repasser_en_construction)
+              operation: BatchOperation.operations.fetch(:repasser_en_construction),
             },
 
             {
               label: t(".operations.create_avis"),
               operation: BatchOperation.operations.fetch(:create_avis),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'avis' },
-              aria:  'modal-avis-batch'
+              aria:  'modal-avis-batch',
 
             },
 
@@ -164,10 +164,10 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               label: t(".operations.create_commentaire"),
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
-              aria:  'modal-commentaire-batch'
+              aria:  'modal-commentaire-batch',
 
-            }
-          ]
+            },
+          ],
       }
     when 'tous' then
       {
@@ -177,13 +177,13 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               label: t(".operations.create_commentaire"),
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
-              aria:  'modal-commentaire-batch'
-            }
-          ]
+              aria:  'modal-commentaire-batch',
+            },
+          ],
       }
     else
       {
-        options: []
+        options: [],
       }
     end
   end
@@ -200,7 +200,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       restaurer: 'fr-icon-refresh-line',
       unfollow: 'fr-icon-star-fill',
       create_avis: 'fr-icon-questionnaire-line',
-      create_commentaire: 'fr-icon-mail-line'
+      create_commentaire: 'fr-icon-mail-line',
     }
   end
 

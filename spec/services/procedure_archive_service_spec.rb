@@ -37,7 +37,7 @@ describe ProcedureArchiveService do
             "export/dossier-#{dossier.id}/",
             "export/dossier-#{dossier.id}/pieces_justificatives/",
             "export/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
-            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
+            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf",
           ]
           expect(read_zip_entries(f.path)).to match_array(structure)
         end
@@ -56,7 +56,7 @@ describe ProcedureArchiveService do
             "export/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
             "export/dossier-#{dossier.id}/",
             "export/dossier-#{dossier.id}/pieces_justificatives/",
-            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
+            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf",
           ]
           expect(read_zip_entries(f.path)).to match_array(structure)
         end
@@ -103,7 +103,7 @@ describe ProcedureArchiveService do
               "export/dossier-#{dossier.id}/",
               "export/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
               "export/dossier-#{dossier.id}/pieces_justificatives/",
-              "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
+              "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf",
             ]
             expect(read_zip_entries(f.path)).to match_array(structure)
 
@@ -136,7 +136,7 @@ describe ProcedureArchiveService do
             "export/dossier-#{dossier_2020.id}/",
             "export/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id % 10000}.pdf",
             "export/dossier-#{dossier_2020.id}/pieces_justificatives/",
-            "export/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+            "export/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf",
           ]
           expect(read_zip_entries(f.path)).to match_array(structure)
         end

@@ -31,8 +31,8 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
         input: {
           dossierId: dossier.to_typed_id,
           annotationId: annotation.to_typed_id,
-          instructeurId: instructeur.to_typed_id
-        }
+          instructeurId: instructeur.to_typed_id,
+        },
       }
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
       it 'return error' do
         expect(data).to eq(dossierModifierAnnotationAjouterLigne: {
           annotation: nil,
-          errors: [{ message: "L’annotation \"#{annotation.to_typed_id}\" n’existe pas" }]
+          errors: [{ message: "L’annotation \"#{annotation.to_typed_id}\" n’existe pas" }],
         })
       end
     end
@@ -51,9 +51,9 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
       expect(annotation.row_ids.size).to eq(2)
       expect(data).to eq(dossierModifierAnnotationAjouterLigne: {
         annotation: {
-          id: annotation.to_typed_id
+          id: annotation.to_typed_id,
         },
-        errors: nil
+        errors: nil,
       })
       dossier.reload
       expect(annotation.row_ids.size).to eq(3)
@@ -72,17 +72,17 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
           dossierId: dossier.to_typed_id,
           annotationId: annotation.to_typed_id,
           instructeurId: instructeur.to_typed_id,
-          value: 'Hello world'
-        }
+          value: 'Hello world',
+        },
       }
     end
 
     it 'update champ' do
       expect(data).to eq(dossierModifierAnnotationText: {
         annotation: {
-          id: annotation.to_typed_id
+          id: annotation.to_typed_id,
         },
-        errors: nil
+        errors: nil,
       })
       expect(annotation.reload.value).to eq('Hello world')
     end
@@ -93,7 +93,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
       it 'return error' do
         expect(data).to eq(dossierModifierAnnotationText: {
           annotation: nil,
-          errors: [{ message: "L’annotation \"#{annotation.to_typed_id}\" n’existe pas" }]
+          errors: [{ message: "L’annotation \"#{annotation.to_typed_id}\" n’existe pas" }],
         })
       end
     end
@@ -105,9 +105,9 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
       it 'update champ' do
         expect(data).to eq(dossierModifierAnnotationText: {
           annotation: {
-            id: annotation.to_typed_id
+            id: annotation.to_typed_id,
           },
-          errors: nil
+          errors: nil,
         })
         expect(annotation.reload.value).to eq('Hello world')
         expect(other_annotation.reload.value).not_to eq('Hello world')
@@ -127,17 +127,17 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
           dossierId: dossier.to_typed_id,
           annotationId: annotation.to_typed_id,
           instructeurId: instructeur.to_typed_id,
-          value: 12.34
-        }
+          value: 12.34,
+        },
       }
     end
 
     it 'update champ' do
       expect(data).to eq(dossierModifierAnnotationDecimalNumber: {
         annotation: {
-          id: annotation.to_typed_id
+          id: annotation.to_typed_id,
         },
-        errors: nil
+        errors: nil,
       })
       expect(annotation.reload.value).to eq('12.34')
     end
@@ -148,7 +148,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
       it 'return error' do
         expect(data).to eq(dossierModifierAnnotationDecimalNumber: {
           annotation: nil,
-          errors: [{ message: "L’annotation \"#{annotation.to_typed_id}\" n’existe pas" }]
+          errors: [{ message: "L’annotation \"#{annotation.to_typed_id}\" n’existe pas" }],
         })
       end
     end
@@ -160,9 +160,9 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
       it 'update champ' do
         expect(data).to eq(dossierModifierAnnotationDecimalNumber: {
           annotation: {
-            id: annotation.to_typed_id
+            id: annotation.to_typed_id,
           },
-          errors: nil
+          errors: nil,
         })
         expect(annotation.reload.value).to eq('12.34')
         expect(other_annotation.reload.value).not_to eq('12.34')

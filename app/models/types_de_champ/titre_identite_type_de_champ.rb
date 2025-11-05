@@ -35,7 +35,7 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
         displayable: false,
         filterable: false,
         mandatory: mandatory?
-      )
+      ),
     ]
   end
 end

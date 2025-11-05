@@ -32,7 +32,7 @@ class DossierTransfer < ApplicationRecord
           dossier: dossier,
           from: dossier.user_email_for(:notification),
           from_support: transfer.from_support,
-          to: transfer.email
+          to: transfer.email,
         }
       end)
       transfer.dossiers.update_all(user_id: current_user.id)

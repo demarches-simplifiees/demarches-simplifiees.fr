@@ -9,7 +9,7 @@ class Dossiers::IdentiteEntrepriseComponentPreview < ViewComponent::Preview
     render_with_template(
       template: 'dossiers/external_champ_component_preview/default',
       locals: {
-        component: Dossiers::IdentiteEntrepriseComponent.new(champ:)
+        component: Dossiers::IdentiteEntrepriseComponent.new(champ:),
       }
     )
   end

@@ -10,7 +10,7 @@ RSpec.describe PrefillIdentity do
       let(:params) {
         {
           "identite_prenom" => "Prénom",
-          "identite_nom" => "Nom"
+          "identite_nom" => "Nom",
         }
       }
 

@@ -37,7 +37,7 @@ class APIDatagouv::API
       response = Typhoeus.post(
         datagouv_upload_url(dataset, resource),
         body: {
-          file: io
+          file: io,
         },
         headers: { "X-Api-Key" => datagouv_api_key }
       )
@@ -76,7 +76,7 @@ class APIDatagouv::API
         API_URL,
         "datasets", dataset,
         "resources", resource,
-        ""
+        "",
       ].join('/')
     end
 
@@ -85,7 +85,7 @@ class APIDatagouv::API
         API_URL,
         "datasets", dataset,
         "resources", resource,
-        "upload", ""
+        "upload", "",
       ].join('/')
     end
 

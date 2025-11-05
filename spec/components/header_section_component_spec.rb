@@ -30,7 +30,7 @@ RSpec.describe TypesDeChampEditor::HeaderSectionComponent, type: :component do
       let(:types_de_champ_public) do
         [
           { type: :header_section, level: 1 },
-          { type: :header_section, level: 2 }
+          { type: :header_section, level: 2 },
         ]
       end
       let(:tdc) { procedure.draft_revision.types_de_champ_public.last }
@@ -46,7 +46,7 @@ RSpec.describe TypesDeChampEditor::HeaderSectionComponent, type: :component do
         [
           { type: :header_section, level: 1 },
           { type: :header_section, level: 2 },
-          { type: :header_section, level: 3 }
+          { type: :header_section, level: 3 },
         ]
       end
       let(:tdc) { procedure.draft_revision.types_de_champ_public.third }

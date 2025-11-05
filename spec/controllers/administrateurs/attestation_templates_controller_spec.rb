@@ -32,7 +32,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
     before do
       get :preview,
         params: {
-          procedure_id: procedure.id
+          procedure_id: procedure.id,
         }
     end
 
@@ -105,7 +105,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         post :create,
           params: {
             procedure_id: procedure.id,
-            attestation_template: attestation_params.merge(logo: logo, signature: signature)
+            attestation_template: attestation_params.merge(logo: logo, signature: signature),
           }
       end
 
@@ -128,7 +128,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         post :create,
           params: {
             procedure_id: procedure.id,
-            attestation_template: attestation_params
+            attestation_template: attestation_params,
           }
       end
 
@@ -152,7 +152,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         post :create,
           params: {
             procedure_id: procedure.id,
-            attestation_template: attestation_params
+            attestation_template: attestation_params,
           }
       end
 
@@ -172,7 +172,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         patch :update,
           params: {
             procedure_id: procedure.id,
-            attestation_template: attestation_params_with_images
+            attestation_template: attestation_params_with_images,
           }
       end
 
@@ -194,7 +194,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
           title: title,
           body: body,
           footer: '',
-          activated: true
+          activated: true,
         }
       end
       let(:type_de_champ) { procedure.draft_revision.types_de_champ_public[0] }
@@ -221,7 +221,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         patch :update,
           params: {
             procedure_id: procedure.id,
-            attestation_template: attestation_params
+            attestation_template: attestation_params,
           }
       end
 

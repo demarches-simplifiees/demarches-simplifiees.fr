@@ -55,7 +55,7 @@ class DossierPreloader
 
         # equivalent scope of with_all_variant_records
         variant_records: { image_attachment: :blob },
-        preview_image_attachment: { blob: { variant_records: { image_attachment: :blob } } }
+        preview_image_attachment: { blob: { variant_records: { image_attachment: :blob } } },
       }
     else
       {}
@@ -63,8 +63,8 @@ class DossierPreloader
 
     to_include << [
       piece_justificative_file_attachments: {
-        blob: blob_include
-      }
+        blob: blob_include,
+      },
     ]
 
     all_champs = Champ

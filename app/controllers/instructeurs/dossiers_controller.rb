@@ -532,7 +532,7 @@ module Instructeurs
         :country_code,
         :commune_code,
         :postal_code,
-        value: []
+        value: [],
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with
       # static keys. We create a static hash based on the available keys.

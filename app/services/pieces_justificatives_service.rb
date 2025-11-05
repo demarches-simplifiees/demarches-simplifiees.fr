@@ -43,7 +43,7 @@ class PiecesJustificativesService
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
                   acls: acl_for_dossier_export(procedure),
-                  dossier: dossier
+                  dossier: dossier,
                 })
       a = ActiveStorage::FakeAttachment.new(
         file: StringIO.new(pdf),
@@ -75,7 +75,7 @@ class PiecesJustificativesService
         libelle: type_champ.libelle,
         description: description,
         order_place: order_place,
-        lien_demarche: lien_demarche
+        lien_demarche: lien_demarche,
       }
     end
   end
@@ -87,21 +87,21 @@ class PiecesJustificativesService
         include_messagerie: procedure.allow_expert_messaging,
         include_infos_administration: false,
         include_avis_for_expert: true,
-        only_for_expert: @user_profile
+        only_for_expert: @user_profile,
       }
     when Instructeur, Administrateur
       {
         include_messagerie: true,
         include_infos_administration: true,
         include_avis_for_expert: true,
-        only_for_export: false
+        only_for_export: false,
       }
     when User
       {
         include_messagerie: true,
         include_infos_administration: false,
         include_avis_for_expert: false, # should be true, expert can use the messagerie, why not provide avis ?
-        only_for_expert: false
+        only_for_expert: false,
       }
     else
       raise 'not supported'
@@ -116,19 +116,19 @@ class PiecesJustificativesService
       {
         with_bills: false,
         with_champs_private: false,
-        with_avis_piece_justificative: false
+        with_avis_piece_justificative: false,
       }
     when Instructeur
       {
         with_bills: export_with_horodatage?,
         with_champs_private: true,
-        with_avis_piece_justificative: true
+        with_avis_piece_justificative: true,
       }
     when Administrateur
       {
         with_bills: true,
         with_champs_private: true,
-        with_avis_piece_justificative: true
+        with_avis_piece_justificative: true,
       }
     else
       raise 'not supported'

@@ -37,8 +37,8 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
         checked: current_instructeur_in_groupe?(groupe_instructeur.id),
         data: {
           "checkbox-select-all-target": "checkbox",
-          **bulk_message_stimulus_data(dossier_count_for(groupe_instructeur))
-        }
+          **bulk_message_stimulus_data(dossier_count_for(groupe_instructeur)),
+        },
       },
       'true',
       'false'
@@ -53,9 +53,9 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
         tag.span(class: 'fr-hint-text') do
           safe_join([
             t('.dossier_count_per_group', count: dossier_count_for(groupe_instructeur)),
-            text_belongs_to_group(groupe_instructeur)
+            text_belongs_to_group(groupe_instructeur),
           ])
-        end
+        end,
       ])
     end
   end
@@ -64,7 +64,7 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
     {
       "bulk-message-target": "element",
       "action": "change->bulk-message#change",
-      "count": count
+      "count": count,
     }
   end
 
@@ -110,7 +110,7 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
         id: "tooltip-#{groupe_instructeur.id}",
         role: "tooltip",
         aria: { hidden: "true" }
-      )
+      ),
     ])
   end
 

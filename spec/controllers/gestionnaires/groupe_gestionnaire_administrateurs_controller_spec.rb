@@ -11,7 +11,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       post :create,
         params: {
           groupe_gestionnaire_id: groupe_gestionnaire.id,
-          administrateur: { email: new_administrateur_email }
+          administrateur: { email: new_administrateur_email },
         },
         format: :turbo_stream
     end
@@ -38,7 +38,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       delete :destroy,
         params: {
           groupe_gestionnaire_id: groupe_gestionnaire.id,
-          id: administrateur.id
+          id: administrateur.id,
         },
         format: :turbo_stream
     end
@@ -89,7 +89,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
       delete :remove,
         params: {
           groupe_gestionnaire_id: groupe_gestionnaire.id,
-          id: administrateur.id
+          id: administrateur.id,
         },
         format: :turbo_stream
     end

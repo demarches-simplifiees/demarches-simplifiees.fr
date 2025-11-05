@@ -63,10 +63,10 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
-            }
+              "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id },
+            },
           },
-          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
+          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options),
         ]
       end
 
@@ -100,8 +100,8 @@ describe Champs::ReferentielChamp, type: :model do
           {
             type: :referentiel,
             referentiel:,
-            referentiel_mapping:
-          }
+            referentiel_mapping:,
+          },
         ]
       end
 
@@ -112,7 +112,7 @@ describe Champs::ReferentielChamp, type: :model do
         let(:datasource) { '$.deep.nested' }
         let(:referentiel_mapping) do
           {
-            "$.deep.nested[0].string" => { type: types[:string], display_usager: "1" }
+            "$.deep.nested[0].string" => { type: types[:string], display_usager: "1" },
           }
         end
         let(:raw_data) { { "ok" => "ko", 'string' => 'value' } }
@@ -135,7 +135,7 @@ describe Champs::ReferentielChamp, type: :model do
         let(:raw_data) { [{ "ok" => "ko", 'string' => 'value' }] }
         let(:referentiel_mapping) do
           {
-            "$.[0].string" => { type: types[:string], display_usager: "1" }
+            "$.[0].string" => { type: types[:string], display_usager: "1" },
           }
         end
         it 'decrypts data and rewrap object in <datasource> as payload' do

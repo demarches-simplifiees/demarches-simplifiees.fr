@@ -50,7 +50,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         "department_code" => "75",
         "department_name" => "Paris",
         "country_code" => "FR",
-        "country_name" => "France"
+        "country_name" => "France",
       }
     end
 
@@ -67,7 +67,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         department_code: "38",
         department_name: "Isère",
         country_code: "FR",
-        country_name: "France"
+        country_name: "France",
       }.stringify_keys
     end
 
@@ -81,7 +81,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         department_code: "99",
         department_name: APIGeoService.departement_name('99'),
         country_code: "IT",
-        country_name: APIGeoService.country_name('IT')
+        country_name: APIGeoService.country_name('IT'),
       }.stringify_keys
     end
 
@@ -95,13 +95,13 @@ RSpec.describe Types::DossierType, type: :graphql do
           "code_postal" => "75512",
           "numero_voie" => "12",
           "distribution" => nil,
-          "libelle_voie" => "xyz"
+          "libelle_voie" => "xyz",
         },
        "association_rna" => "W173847273",
        "association_objet" => "prévenir",
        "association_titre" => "CROIX ROUGE",
        "association_date_creation" => "1964-12-30",
-       "association_date_declaration" => "2022-08-10"
+       "association_date_declaration" => "2022-08-10",
       }
     end
 
@@ -441,7 +441,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         {
           id: label.to_typed_id,
           name: "Urgent",
-          color: "pink_macaron"
+          color: "pink_macaron",
         }
       )
     }

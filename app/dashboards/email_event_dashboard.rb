@@ -9,7 +9,7 @@ class EmailEventDashboard < Administrate::BaseDashboard
     subject: Field::String,
     method: Field::Enum,
     status: Field::Enum,
-    processed_at: Field::DateTime.with_options(format: "%F %T")
+    processed_at: Field::DateTime.with_options(format: "%F %T"),
   }
   COLLECTION_ATTRIBUTES = [:id, :to, :subject, :method, :status, :processed_at].freeze
   SHOW_PAGE_ATTRIBUTES = [:id, :to, :subject, :method, :status, :processed_at].freeze
@@ -21,6 +21,6 @@ class EmailEventDashboard < Administrate::BaseDashboard
 
   COLLECTION_FILTERS = {
     dispatched: -> (resources) { resources.dispatched },
-    dispatch_error: -> (resources) { resources.dispatch_error }
+    dispatch_error: -> (resources) { resources.dispatch_error },
   }.merge(METHODS_FILTERS).freeze
 end

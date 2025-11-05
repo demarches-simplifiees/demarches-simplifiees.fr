@@ -5,13 +5,13 @@ class Dossiers::ExternalChampComponentPreview < ViewComponent::Preview
     data = [
       ['SIRET', '110 046 018 00013'],
       ['Dénomination', 'MINISTERE DE LA CULTURE'],
-      ['Forme juridique', 'Ministère']
+      ['Forme juridique', 'Ministère'],
     ]
 
     details = [
       ['Libellé NAF', 'Administration publique générale'],
       ['Code NAF', '84.11Z'],
-      ['Adresse', "182 rue Saint-Honoré\n75001 Paris"]
+      ['Adresse', "182 rue Saint-Honoré\n75001 Paris"],
     ]
 
     source = 'Annuaire des Entreprises'

@@ -27,7 +27,7 @@ class SortedColumnType < ActiveRecord::Type::Value
     in SortedColumn
       JSON.generate({
         id: value.column.h_id,
-        order: value.order
+        order: value.order,
       })
     else
       raise ArgumentError, "Invalid value for SortedColumn serialization: #{value}"

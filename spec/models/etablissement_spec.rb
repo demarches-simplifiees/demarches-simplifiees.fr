@@ -100,20 +100,20 @@ describe Etablissement do
         "dettes4_maturite_a_un_an_au_plus", "evolution_dettes4_maturite_a_un_an_au_plus",
         "emprunts_et_dettes_financieres_divers", "evolution_emprunts_et_dettes_financieres_divers",
         "total_dettes_stables", "evolution_total_dettes_stables", "groupes_et_associes",
-        "evolution_groupes_et_associes", "total_passif", "evolution_total_passif"
+        "evolution_groupes_et_associes", "total_passif", "evolution_total_passif",
       ]
     }
     let(:bilans) do
       [
         {
           "total_passif": "1200",
-          "chiffre_affaires_ht": "40000"
+          "chiffre_affaires_ht": "40000",
         },
         {
           "total_passif": "0",
           "new_key": "50",
-          "evolution_total_dettes_stables": "30"
-        }
+          "evolution_total_dettes_stables": "30",
+        },
       ]
     end
 
@@ -156,7 +156,7 @@ describe Etablissement do
         "street_number" => "6",
         "street_name" => "RAOUL NORDLING",
         "postal_code" => "92270",
-        "city_name" => "BOIS COLOMBES"
+        "city_name" => "BOIS COLOMBES",
       }
     end
 

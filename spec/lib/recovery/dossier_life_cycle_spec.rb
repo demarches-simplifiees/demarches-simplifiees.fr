@@ -7,7 +7,7 @@ describe 'Dossier::Recovery::LifeCycle' do
              types_de_champ_public: [
                { type: :repetition, children: [{ type: :piece_justificative }], mandatory: false },
                { type: :carte },
-               { type: :siret }
+               { type: :siret },
              ])
     end
 

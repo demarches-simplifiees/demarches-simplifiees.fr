@@ -7,7 +7,7 @@ class InstructeursImportService
     groupes_emails = groupes_emails.map do
       {
         groupe: _1['groupe'].strip,
-        email: _1['email'].present? ? EmailSanitizableConcern::EmailSanitizer.sanitize(_1['email']) : nil
+        email: _1['email'].present? ? EmailSanitizableConcern::EmailSanitizer.sanitize(_1['email']) : nil,
       }
     end
     errors = error_groupe_emails.map { _1['email'] }.uniq

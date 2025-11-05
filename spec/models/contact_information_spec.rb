@@ -10,7 +10,7 @@ describe ContactInformation, type: :model do
         telephone: '012345678',
         horaires: 'du lundi au vendredi',
         adresse: '12 rue des schtroumpfs',
-        groupe_instructeur_id: gi.id
+        groupe_instructeur_id: gi.id,
       }
     end
 

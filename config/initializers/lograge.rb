@@ -13,10 +13,10 @@ Rails.application.configure do
         source: ENV['SOURCE'],
         tags: ['request', event.payload[:exception] ? 'exception' : nil].compact,
         process: {
-          pid: Process.pid
+          pid: Process.pid,
         },
         db_queries: event.payload[:queries_count],
-        db_queries_cached: event.payload[:cached_queries_count]
+        db_queries_cached: event.payload[:cached_queries_count],
       }
 
       hash.merge!(event.payload[:to_log]) if event.payload.key?(:to_log)
@@ -26,7 +26,7 @@ Rails.application.configure do
 
     config.lograge.custom_payload do |controller|
       {
-        xhr: !!controller&.request&.xhr?
+        xhr: !!controller&.request&.xhr?,
       }
     end
   end

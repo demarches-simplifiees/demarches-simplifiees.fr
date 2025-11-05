@@ -15,7 +15,7 @@ class Cron::Datagouv::InstructeurConnectedByMonthJob < Cron::Datagouv::BaseJob
   def data_for(month:)
     [
       month.strftime(DATE_FORMAT),
-      Instructeur.joins(:user).where(user: { last_sign_in_at: month.all_month }).count
+      Instructeur.joins(:user).where(user: { last_sign_in_at: month.all_month }).count,
     ]
   end
 end

@@ -24,7 +24,7 @@ module Mutations
         .then do |by_id, by_email|
           [
             by_id.map { Instructeur.id_from_typed_id(_1.id) },
-            by_email.map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1.email) }
+            by_email.map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1.email) },
           ]
         end
     end

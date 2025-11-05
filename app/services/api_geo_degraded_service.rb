@@ -11,7 +11,7 @@ class APIGeoDegradedService
           codesPostaux: [commune[:postal_code]],
           codeDepartement: commune[:departement_code],
           codeRegion: commune[:region_code],
-          population: nil
+          population: nil,
         }
       end
 

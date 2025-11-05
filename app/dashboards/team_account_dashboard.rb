@@ -18,7 +18,7 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     last_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
     procedures: Field::HasMany,
-    procedures_count: Field::Number
+    procedures_count: Field::Number,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -30,7 +30,7 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     :email,
     :last_sign_in_at,
     :current_sign_in_at,
-    :procedures_count
+    :procedures_count,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -42,7 +42,7 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     :email,
     :current_sign_in_at,
     :last_sign_in_at,
-    :created_at
+    :created_at,
   ].freeze
 
   # FORM_ATTRIBUTES

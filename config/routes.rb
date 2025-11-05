@@ -143,7 +143,7 @@ Rails.application.routes.draw do
 
   devise_for :super_admins, skip: [:registrations], controllers: {
     sessions: 'super_admins/sessions',
-    passwords: 'super_admins/passwords'
+    passwords: 'super_admins/passwords',
   }
 
   namespace :super_admins do
@@ -157,7 +157,7 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     registrations: 'users/registrations',
     confirmations: 'users/confirmations',
-    passwords: 'users/passwords'
+    passwords: 'users/passwords',
   }
 
   devise_scope :user do

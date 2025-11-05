@@ -30,7 +30,7 @@ end
 def format_in_2_lines(pdf, label, text)
   min_height = [
     label.present? ? pdf.height_of_formatted([{ text: label, style: :bold, size: 12 }]) : nil,
-    text.present? ? pdf.height_of_formatted([{ text: text }]) : nil
+    text.present? ? pdf.height_of_formatted([{ text: text }]) : nil,
   ].compact.sum
   maybe_start_new_page(pdf, min_height)
 
@@ -47,7 +47,7 @@ end
 def format_in_2_columns(pdf, label, text)
   min_height = [
     label.present? ? pdf.height_of_formatted([{ text: label }]) : nil,
-    text.present? ? pdf.height_of_formatted([{ text: text }]) : nil
+    text.present? ? pdf.height_of_formatted([{ text: text }]) : nil,
   ].compact.max
   maybe_start_new_page(pdf, min_height)
 
@@ -55,7 +55,7 @@ def format_in_2_columns(pdf, label, text)
     height = [
       text_box(pdf, label, 0, 150),
       text_box(pdf, ':', 150, 10),
-      text_box(pdf, text, 160, pdf.bounds.width - 160)
+      text_box(pdf, text, 160, pdf.bounds.width - 160),
     ].max
     pdf.move_down height
   end
@@ -253,7 +253,7 @@ def add_avis(pdf, avis)
     pdf.height_of_formatted([{ text: answer, size: 12 }]),
 
     binary_question.present? ? pdf.height_of_formatted([{ text: binary_question, size: 12 }]) : nil,
-    binary_answer.present? ? pdf.height_of_formatted([{ text: binary_answer, size: 12 }]) : nil
+    binary_answer.present? ? pdf.height_of_formatted([{ text: binary_answer, size: 12 }]) : nil,
   ].compact.sum
 
   maybe_start_new_page(pdf, min_height)
@@ -321,7 +321,7 @@ end
 prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
-    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
   })
   pdf.font 'marianne'
   pdf.fallback_fonts = ['Helvetica']

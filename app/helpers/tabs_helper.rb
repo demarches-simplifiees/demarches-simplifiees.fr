@@ -29,7 +29,7 @@ module TabsHelper
       active: active,
       badge: badge,
       notification: notification,
-      html_class: html_class
+      html_class: html_class,
     }
   end
 

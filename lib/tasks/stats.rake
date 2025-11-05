@@ -30,7 +30,7 @@ namespace :stats do
       percentage: percentage,
       sample_ids: sample_ids,
       total_dossiers: total_dossiers,
-      dossiers_percentage: dossiers_percentage
+      dossiers_percentage: dossiers_percentage,
     }
 
     rake_puts "#{feature_name}: #{count} démarches (#{percentage}%) - #{total_dossiers} dossiers (#{dossiers_percentage}%)"
@@ -54,7 +54,7 @@ namespace :stats do
       count: count,
       percentage: percentage,
       sample_ids: sample_ids,
-      total_instructeurs: total_instructeurs
+      total_instructeurs: total_instructeurs,
     }
   end
   desc <<~EOD
@@ -210,7 +210,7 @@ namespace :stats do
       ["Email acceptation personnalisé", :closed_mail],
       ["Email refus personnalisé", :refused_mail],
       ["Email classé sans suite personnalisé", :without_continuation_mail],
-      ["Email ré-instruction personnalisé", :re_instructed_mail]
+      ["Email ré-instruction personnalisé", :re_instructed_mail],
     ]
 
     email_stats.each do |label, association|
@@ -289,7 +289,7 @@ namespace :stats do
         nb_procedures: nb_procedures,
         nb_dossiers: nb_dossiers,
         percentage_procedures: percentage_procedures,
-        percentage_dossiers: percentage_dossiers
+        percentage_dossiers: percentage_dossiers,
       }
 
       rake_puts "#{type_champ}: #{nb_procedures} démarches (#{percentage_procedures}%) - #{nb_dossiers} dossiers (#{percentage_dossiers}%)"
@@ -349,7 +349,7 @@ namespace :stats do
           stat[:percentage],
           stat[:total_dossiers],
           stat[:dossiers_percentage],
-          stat[:sample_ids].join(', ')
+          stat[:sample_ids].join(', '),
         ]
       end
 
@@ -365,7 +365,7 @@ namespace :stats do
           result[:percentage_procedures],
           result[:nb_dossiers],
           result[:percentage_dossiers],
-          ''
+          '',
         ]
       end
 
@@ -390,7 +390,7 @@ namespace :stats do
         export_templates_stat[:percentage],
         export_templates_stat[:total_instructeurs],
         nil,
-        export_templates_stat[:sample_ids].join(', ')
+        export_templates_stat[:sample_ids].join(', '),
       ]
     end
 

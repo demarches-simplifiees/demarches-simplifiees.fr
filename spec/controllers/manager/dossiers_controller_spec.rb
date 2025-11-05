@@ -24,7 +24,7 @@ describe Manager::DossiersController, type: :controller do
   describe "GET #show" do
     let(:types_de_champ) {
       [
-        { libelle: "Nom", mandatory: true }
+        { libelle: "Nom", mandatory: true },
       ]
     }
 

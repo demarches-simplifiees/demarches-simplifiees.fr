@@ -20,7 +20,7 @@ class UserDashboard < Administrate::BaseDashboard
     blocked_reason: Field::String,
     current_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
-    dossiers_invites: Field::HasMany
+    dossiers_invites: Field::HasMany,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -31,7 +31,7 @@ class UserDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :email,
-    :created_at
+    :created_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -46,14 +46,14 @@ class UserDashboard < Administrate::BaseDashboard
     :current_sign_in_at,
     :created_at,
     :blocked_at,
-    :blocked_reason
+    :blocked_reason,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :email
+    :email,
   ].freeze
 
   # Overwrite this method to customize how users are displayed

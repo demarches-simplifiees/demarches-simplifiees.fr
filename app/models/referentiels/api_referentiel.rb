@@ -13,7 +13,7 @@ class Referentiels::APIReferentiel < Referentiel
 
   enum :mode, {
     exact_match: 'exact_match',
-    autocomplete: 'autocomplete'
+    autocomplete: 'autocomplete',
   }
 
   validates :mode, inclusion: { in: modes.values }
@@ -84,7 +84,7 @@ class Referentiels::APIReferentiel < Referentiel
     [
       authentication_method == 'header_token',
       authentication_data_header.present?,
-      authentication_header_token.present?
+      authentication_header_token.present?,
     ].all?
   end
 

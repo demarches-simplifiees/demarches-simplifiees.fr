@@ -10,7 +10,7 @@ class WebHookJob < ApplicationJob
       procedure_id: procedure_id,
       dossier_id: dossier_id,
       state: state,
-      updated_at: updated_at
+      updated_at: updated_at,
     }
 
     procedure = Procedure.find(procedure_id)

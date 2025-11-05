@@ -12,10 +12,10 @@ module Types
     field :date_reponse, GraphQL::Types::ISO8601DateTime, null: true, method: :updated_at
 
     field :attachment, Types::File, null: true, deprecation_reason: "Utilisez le champ `attachments` à la place.", extensions: [
-      { Extensions::Attachment => { attachment: :piece_justificative_file } }
+      { Extensions::Attachment => { attachment: :piece_justificative_file } },
     ]
     field :attachments, [Types::File], null: false, extensions: [
-      { Extensions::Attachment => { attachment: :piece_justificative_file, as: :multiple } }
+      { Extensions::Attachment => { attachment: :piece_justificative_file, as: :multiple } },
     ]
 
     field :instructeur, Types::ProfileType, null: false, method: :claimant, deprecation_reason: "Utilisez le champ `claimant` à la place."

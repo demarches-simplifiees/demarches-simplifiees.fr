@@ -11,7 +11,7 @@ SimpleCov.start "rails" do
   else
     formatter SimpleCov::Formatter::MultiFormatter.new([
       SimpleCov::Formatter::SimpleFormatter,
-      SimpleCov::Formatter::HTMLFormatter
+      SimpleCov::Formatter::HTMLFormatter,
     ])
   end
 

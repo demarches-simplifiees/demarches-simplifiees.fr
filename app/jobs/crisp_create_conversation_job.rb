@@ -63,8 +63,8 @@ class CrispCreateConversationJob < ApplicationJob
       fingerprint: contact_form.id, # must be a number
       timestamp: original_timestamp_ms,
       user: {
-        type: "participant"
-      }
+        type: "participant",
+      },
     }
 
     response = api.send_message(session_id:, body:)
@@ -85,13 +85,13 @@ class CrispCreateConversationJob < ApplicationJob
       content: {
         name: attachment.attachable_filename,
         url: attachment.url(expires_in: 1.week),
-        type: attachment.content_type
+        type: attachment.content_type,
       },
       fingerprint: attachment.id,
       timestamp: original_timestamp_ms,
       user: {
-        type: "participant"
-      }
+        type: "participant",
+      },
     }
 
     response = api.send_message(session_id:, body:)
@@ -105,7 +105,7 @@ class CrispCreateConversationJob < ApplicationJob
       email:,
       nickname:,
       subject: contact_form.subject,
-      segments: contact_form.tags
+      segments: contact_form.tags,
       # TODO: ip & device ?
     }
 

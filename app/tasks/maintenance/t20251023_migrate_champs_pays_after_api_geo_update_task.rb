@@ -37,7 +37,7 @@ module Maintenance
       "Corée, République de" => { new_value: "Corée du Sud", code: "KR" },
       "Lao, République démocratique populaire" => { new_value: "Laos", code: "LA" },
       "Syrienne, République arabe" => { new_value: "Syrie", code: "SY" },
-      "Îles Vierges des États-Unis" => { new_value: "Îles Vierges, États-Unis", code: "VI" }
+      "Îles Vierges des États-Unis" => { new_value: "Îles Vierges, États-Unis", code: "VI" },
     }.freeze
 
     def collection

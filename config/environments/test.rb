@@ -81,7 +81,7 @@ Rails.application.configure do
   config.action_mailer.asset_host = "http://" + ENV.fetch("APP_HOST")
   Rails.application.routes.default_url_options = {
     host: ENV.fetch("APP_HOST"),
-    protocol: :http
+    protocol: :http,
   }
 
   # Disallow all connections to external domains during tests
@@ -92,7 +92,7 @@ Rails.application.configure do
 
   config.ds_autosave = {
     debounce_delay: 0,
-    status_visible_duration: 500
+    status_visible_duration: 500,
   }
 
   config.ds_zonage_enabled = true

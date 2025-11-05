@@ -61,7 +61,7 @@ module Administrateurs
       {
         procedure_id: params[:procedure_id],
         subject: params["mails_#{mail_template_id}"] ? params["mails_#{mail_template_id}"][:subject] : params["mails_#{mail_template_id}_mail"][:subject],
-        body: params["mails_#{mail_template_id}"] ? params["mails_#{mail_template_id}"][:rich_body] : params["mails_#{mail_template_id}_mail"][:rich_body]
+        body: params["mails_#{mail_template_id}"] ? params["mails_#{mail_template_id}"][:rich_body] : params["mails_#{mail_template_id}_mail"][:rich_body],
       }
     end
   end

@@ -14,7 +14,7 @@ class DossierOperationLog < ApplicationRecord
     supprimer: 'supprimer',
     restaurer: 'restaurer',
     modifier_annotation: 'modifier_annotation',
-    demander_un_avis: 'demander_un_avis'
+    demander_un_avis: 'demander_un_avis',
   }
 
   has_one_attached :serialized
@@ -72,7 +72,7 @@ class DossierOperationLog < ApplicationRecord
       author: self.serialize_author(params[:author]),
       subject: self.serialize_subject(params[:subject], operation_log.operation),
       automatic_operation: operation_log.automatic_operation?,
-      executed_at: operation_log.executed_at.iso8601
+      executed_at: operation_log.executed_at.iso8601,
     }.compact
 
     operation_log.data = data
@@ -87,7 +87,7 @@ class DossierOperationLog < ApplicationRecord
     else
       {
         id: serialize_author_id(author),
-        email: author.email
+        email: author.email,
       }.as_json
     end
   end
@@ -114,7 +114,7 @@ class DossierOperationLog < ApplicationRecord
       {
         date_de_depot: subject.depose_at,
         date_de_mise_en_instruction: subject.en_instruction_at,
-        date_de_decision: subject.processed_at
+        date_de_decision: subject.processed_at,
       }.as_json
     else
       case subject

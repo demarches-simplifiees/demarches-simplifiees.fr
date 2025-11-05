@@ -46,16 +46,16 @@ describe DataSources::ReferentielController, type: :controller do
                             { "type" => "mention", "attrs" => { "id" => "$.type.nature.cfd.libelle", "label" => "$.type.nature.cfd.libelle (DIPLOME NATIONAL / DIPLOME D'ETAT)" } },
                             { "text" => " – ", "type" => "text" },
                             { "type" => "mention", "attrs" => { "id" => "$.domaines.nsf.cfd.intitule", "label" => "$.domaines.nsf.cfd.intitule (AGRO-ALIMENTAIRE, ALIMENTATION, CUISINE)" } },
-                            { "text" => " ", "type" => "text" }
-                          ]
-                        }
-                      ]
+                            { "text" => " ", "type" => "text" },
+                          ],
+                        },
+                      ],
                   },
                   url: "https://api.apprentissage.beta.gouv.fr/api/certification/v1?identifiant.cfd={id}",
                   authentication_method: 'header_token',
                   authentication_data: {
                     header: "Authorization",
-                    value: "Bearer kthxbye"
+                    value: "Bearer kthxbye",
                   })
           end
 

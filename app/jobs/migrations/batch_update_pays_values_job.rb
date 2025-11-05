@@ -68,7 +68,7 @@ class Migrations::BatchUpdatePaysValuesJob < ApplicationJob
     "WALLIS-ET-FUTUNA" => "Wallis et Futuna",
     "YEMEN (REPUBLIQUE ARABE DU)" => "Yémen",
     "YEMEN DEMOCRATIQUE" => "Yémen",
-    "ZANZIBAR" => "Tanzanie"
+    "ZANZIBAR" => "Tanzanie",
   }
 
   private_constant :UNUSUAL_COUNTRY_NAME_MATCHER

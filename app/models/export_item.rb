@@ -50,10 +50,10 @@ class ExportItem
           type: "paragraph",
           content: [
             { text: "#{prefix}-", type: "text" },
-            { type: "mention", attrs: DOSSIER_ID_TAG.slice(:id, :label) }
-          ]
-        }
-      ]
+            { type: "mention", attrs: DOSSIER_ID_TAG.slice(:id, :label) },
+          ],
+        },
+      ],
     }
   end
 

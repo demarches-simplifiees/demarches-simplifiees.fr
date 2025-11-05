@@ -21,7 +21,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       export_pdf:,
       dossier_folder: item_params(text: "DOSSIER_"),
       attestation: item_params(text: "attestation"),
-      pjs: [pj_item_params(stable_id: 3, text: "avis-commission-"), pj_item_params(stable_id: 666, text: "evil-hack")]
+      pjs: [pj_item_params(stable_id: 3, text: "avis-commission-"), pj_item_params(stable_id: 666, text: "evil-hack")],
     }
   end
 
@@ -114,7 +114,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       let(:exported_columns) do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
-          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' }
+          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' },
         ].map(&:to_json)
       end
 
@@ -126,7 +126,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           export_pdf: item_params(text: "export"),
           dossier_folder: item_params(text: "dossier"),
           attestation: item_params(text: "attestation"),
-          exported_columns:
+          exported_columns:,
         }
       end
 
@@ -204,7 +204,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       let(:exported_columns) do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
-          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' }
+          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' },
         ].map(&:to_json)
       end
 
@@ -216,7 +216,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           export_pdf: item_params(text: "export"),
           dossier_folder: item_params(text: "dossier"),
           attestation: item_params(text: "attestation"),
-          exported_columns:
+          exported_columns:,
         }
       end
 
@@ -270,8 +270,8 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       "enabled" => enabled,
       "template" => {
         "type" => "doc",
-        "content" => content(text:)
-      }.to_json
+        "content" => content(text:),
+      }.to_json,
     }
   end
 
@@ -281,9 +281,9 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         "type" => "paragraph",
         "content" => [
           { "text" => text, "type" => "text" },
-          { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }
-        ]
-      }
+          { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } },
+        ],
+      },
     ]
   end
 end

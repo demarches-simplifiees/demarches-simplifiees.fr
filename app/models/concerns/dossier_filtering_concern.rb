@@ -9,7 +9,7 @@ module DossierFilteringConcern
       'depose_since' => 'depose_at',
       'en_construction_since' => 'en_construction_at',
       'en_instruction_since' => 'en_instruction_at',
-      'processed_since' => 'processed_at'
+      'processed_since' => 'processed_at',
     }
     scope :filter_by_datetimes, lambda { |column, dates|
       if dates.present?

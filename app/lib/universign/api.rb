@@ -32,7 +32,7 @@ class Universign::API
     {
       'hashAlgo': 'SHA256',
       'withCert': 'true',
-      'hashValue': data
+      'hashValue': data,
     }
   end
 

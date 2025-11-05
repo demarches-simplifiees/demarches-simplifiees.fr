@@ -13,7 +13,7 @@ if ENV['PRO_CONNECT_BASE_URL'].present?
     redirect_uri: ENV.fetch('PRO_CONNECT_REDIRECT'),
     secret: ENV.fetch('PRO_CONNECT_SECRET'),
     token_endpoint: discover.token_endpoint,
-    userinfo_endpoint: discover.userinfo_endpoint
+    userinfo_endpoint: discover.userinfo_endpoint,
   }
 
   if ENV['PRO_CONNECT_GOUV_ID'].present?

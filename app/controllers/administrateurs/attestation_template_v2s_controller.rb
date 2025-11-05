@@ -33,26 +33,26 @@ module Administrateurs
         [
           ['Gras', 'bold', 'bold'],
           ['Italic', 'italic', 'italic'],
-          ['Souligner', 'underline', 'underline']
+          ['Souligner', 'underline', 'underline'],
         ],
         [
           ['Titre', 'title', :hidden], # only for "title" section, without any action possible
           ['Sous titre', 'heading2', 'h-1'],
-          ['Titre de section', 'heading3', 'h-2']
+          ['Titre de section', 'heading3', 'h-2'],
         ],
         [
           ['Liste à puces', 'bulletList', 'list-unordered'],
-          ['Liste numérotée', 'orderedList', 'list-ordered']
+          ['Liste numérotée', 'orderedList', 'list-ordered'],
         ],
         [
           ['Aligner à gauche', 'left', 'align-left'],
           ['Aligner au centre', 'center', 'align-center'],
-          ['Aligner à droite', 'right', 'align-right']
+          ['Aligner à droite', 'right', 'align-right'],
         ],
         [
           ['Undo', 'undo', 'arrow-go-back-line'],
-          ['Redo', 'redo', 'arrow-go-forward-line']
-        ]
+          ['Redo', 'redo', 'arrow-go-forward-line'],
+        ],
       ]
 
       @attestation_template.validate

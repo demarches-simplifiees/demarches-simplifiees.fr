@@ -35,8 +35,8 @@ RSpec.describe Instructeurs::OCRViewerComponent, type: :component do
           'account_holder' => ['John Doe'],
           'iban' => 'FR7612345678901234567890123',
           'bic' => 'ABCD1234',
-          'bank_name' => 'Banque de Test'
-        }
+          'bank_name' => 'Banque de Test',
+        },
       }
     end
 

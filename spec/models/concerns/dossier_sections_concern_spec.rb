@@ -59,7 +59,7 @@ describe DossierSectionsConcern do
     let(:types_de_champ) do
       [
         { type: :header_section, libelle: "Infos" }, { type: :integer_number, stable_id: number_stable_id },
-        { type: :header_section, libelle: "Details", condition: ds_eq(champ_value(99), constant(5)) }, { type: :header_section, libelle: "Conclusion" }
+        { type: :header_section, libelle: "Details", condition: ds_eq(champ_value(99), constant(5)) }, { type: :header_section, libelle: "Conclusion" },
       ]
     end
 
