@@ -169,7 +169,7 @@ describe API::V2::GraphqlController do
           expect(columns.size).to eq(17)
 
           expect(columns[0]).to include(label: "label text", value: 'text')
-          expect(columns[1]).to include(label: "label integer_number", value: 42)
+          expect(columns[1]).to include(label: "label integer_number", value: "42")
           expect(columns[2]).to include(label: "label decimal_number", value: 42.1)
           expect(columns[3]).to include(label: "label checkbox", value: true)
           expect(columns[4][:value].first).to include(__typename: "File", filename: "toto.txt", contentType: "text/plain")
