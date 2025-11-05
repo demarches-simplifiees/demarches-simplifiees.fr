@@ -1,1 +1,7 @@
-= render Referentiels::StepperComponent.new(referentiel: @referentiel, type_de_champ: @type_de_champ, procedure: @procedure, step_component: Referentiels::ConfigurationErrorComponent)
+= render Referentiels::StepperComponent.new(
+  step_component: Referentiels::ConfigurationErrorComponent.new(
+    referentiel: @referentiel,
+    type_de_champ: @type_de_champ,
+    procedure: @procedure
+  )
+)

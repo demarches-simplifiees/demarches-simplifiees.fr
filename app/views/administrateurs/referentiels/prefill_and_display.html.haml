@@ -1,1 +1,7 @@
-= render Referentiels::StepperComponent.new(referentiel: @referentiel, type_de_champ: @type_de_champ, procedure: @procedure, step_component: Referentiels::PrefillAndDisplayComponent)
+= render Referentiels::StepperComponent.new(
+  step_component: Referentiels::PrefillAndDisplayComponent.new(
+    referentiel: @referentiel,
+    type_de_champ: @type_de_champ,
+    procedure: @procedure
+  )
+)

@@ -8,9 +8,9 @@
       = step_title
       %span.fr-stepper__state= step_state
 
-    .fr-stepper__steps{ data: { "fr-current-step" => current_step, "fr-steps" =>step_count } }
+    .fr-stepper__steps{ data: { "fr-current-step" => current_step, "fr-steps" => step_count } }
     %p.fr-stepper__details
       %span.fr-text--bold Étape suivante :
       = next_step_title
 
-  = render step_component.new(referentiel: , type_de_champ:, procedure:)
+  = render step_component
