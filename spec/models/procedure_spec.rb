@@ -1779,6 +1779,37 @@ describe Procedure do
     end
   end
 
+  describe '#enable_pro_connect_restriction!' do
+    let(:procedure) { create(:procedure, opendata: true, robots_indexable: true) }
+
+    context 'when setting to :none' do
+      it 'updates restriction level without changing opendata/robots_indexable' do
+        procedure.enable_pro_connect_restriction!(:none)
+        expect(procedure).to be_pro_connect_restriction_none
+        expect(procedure.opendata).to be true
+        expect(procedure.robots_indexable).to be true
+      end
+    end
+
+    context 'when setting to :instructeurs' do
+      it 'updates restriction level without changing opendata/robots_indexable' do
+        procedure.enable_pro_connect_restriction!(:instructeurs)
+        expect(procedure).to be_pro_connect_restriction_instructeurs
+        expect(procedure.opendata).to be true
+        expect(procedure.robots_indexable).to be true
+      end
+    end
+
+    context 'when setting to :all' do
+      it 'updates restriction level and disables opendata and robots_indexable' do
+        procedure.enable_pro_connect_restriction!(:all)
+        expect(procedure).to be_pro_connect_restriction_all
+        expect(procedure.opendata).to be false
+        expect(procedure.robots_indexable).to be false
+      end
+    end
+  end
+
   describe '#pro_connect_restricted= setter (dual-write during migration)' do
     let(:procedure) { create(:procedure) }
 
