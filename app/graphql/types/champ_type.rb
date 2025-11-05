@@ -104,11 +104,23 @@ module Types
         when ::Champs::EngagementJuridiqueChamp
           Types::Champs::EngagementJuridiqueChampType
         when ::Champs::HeaderSectionChamp
-          Types::Champs::HeaderSectionChampType
+          if context.has_fragment?(:HeaderSectionChamp)
+            Types::Champs::HeaderSectionChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::ExplicationChamp
-          Types::Champs::ExplicationChampType
+          if context.has_fragment?(:ExplicationChamp)
+            Types::Champs::ExplicationChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::DropDownListChamp
-          Types::Champs::DropDownListChampType
+          if context.has_fragment?(:DropDownListChamp)
+            Types::Champs::DropDownListChampType
+          else
+            Types::Champs::TextChampType
+          end
         else
           Types::Champs::TextChampType
         end

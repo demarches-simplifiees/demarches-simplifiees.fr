@@ -530,6 +530,7 @@ RSpec.describe Types::DossierType, type: :graphql do
         ... on HeaderSectionChamp {
           level
         }
+        ... on ExplicationChamp {}
       }
     }
   }
