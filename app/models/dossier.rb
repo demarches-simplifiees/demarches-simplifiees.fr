@@ -20,7 +20,7 @@ class Dossier < ApplicationRecord
     en_instruction:  'en_instruction',
     accepte:         'accepte',
     refuse:          'refuse',
-    sans_suite:      'sans_suite'
+    sans_suite:      'sans_suite',
   }
 
   EN_CONSTRUCTION_OU_INSTRUCTION = [states.fetch(:en_construction), states.fetch(:en_instruction)]
@@ -992,7 +992,7 @@ class Dossier < ApplicationRecord
       type: 'FeatureCollection',
       id: id,
       bbox: bounding_box,
-      features: geo_areas.map(&:to_feature)
+      features: geo_areas.map(&:to_feature),
     }
   end
 
@@ -1236,7 +1236,7 @@ class Dossier < ApplicationRecord
       user_id: Current.user&.id,
       controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
       caller: app_traces.first,
-      hidden_by_reason:
+      hidden_by_reason:,
     }
 
     logger = Lograge.logger || Rails.logger
@@ -1248,7 +1248,7 @@ class Dossier < ApplicationRecord
     Sentry.capture_message(
       "Assigned dossier without groupe_instructeur",
       extra: {
-        dossier_id: self.id
+        dossier_id: self.id,
       }
     )
   end

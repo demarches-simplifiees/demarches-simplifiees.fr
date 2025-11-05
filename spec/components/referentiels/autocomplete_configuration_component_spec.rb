@@ -36,8 +36,8 @@ RSpec.describe Referentiels::AutocompleteConfigurationComponent, type: :componen
         {
           body: {
             datasource_1: [{ id: 1, k1: :v1 }],
-            datasource_2: [{ id: 1, k2: :v2 }]
-          }
+            datasource_2: [{ id: 1, k2: :v2 }],
+          },
         }
       end
 

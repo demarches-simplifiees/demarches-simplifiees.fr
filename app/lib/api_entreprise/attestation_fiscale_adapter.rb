@@ -25,7 +25,7 @@ class APIEntreprise::AttestationFiscaleAdapter < APIEntreprise::Adapter
 
       if data && data[:document_url].present?
         {
-          entreprise_attestation_fiscale_url: data[:document_url]
+          entreprise_attestation_fiscale_url: data[:document_url],
         }
       else
         {}

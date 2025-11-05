@@ -24,7 +24,7 @@ class APIEntreprise::EffectifsAdapter < APIEntreprise::Adapter
         {
           entreprise_effectif_mensuel: effectifs[:value],
           entreprise_effectif_mois: effectifs[:mois],
-          entreprise_effectif_annee: effectifs[:annee]
+          entreprise_effectif_annee: effectifs[:annee],
         }
       else
         {}

@@ -321,7 +321,7 @@ end
 prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
-    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
   })
   pdf.font 'marianne'
   pdf.fallback_fonts = ['Helvetica']

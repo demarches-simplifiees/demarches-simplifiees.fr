@@ -18,7 +18,7 @@ describe Logic::Eq do
         operator_name: "Logic::Eq",
         right: constant(1),
         stable_id: nil,
-        type: :incompatible
+        type: :incompatible,
       }
       expect(ds_eq(constant(true), constant(1)).errors).to eq([expected])
     end
@@ -30,7 +30,7 @@ describe Logic::Eq do
       expected = {
         operator_name: "Logic::Eq",
         stable_id: multiple_drop_down.stable_id,
-        type: :required_include
+        type: :required_include,
       }
 
       expect(ds_eq(champ_value(multiple_drop_down.stable_id), constant(first_option)).errors([multiple_drop_down])).to eq([expected])

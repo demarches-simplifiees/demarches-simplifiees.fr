@@ -95,7 +95,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
-          emails: [new_instructeur_email]
+          emails: [new_instructeur_email],
         }
     end
 
@@ -183,7 +183,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_1.id,
-          instructeur: { id: instructeur.id }
+          instructeur: { id: instructeur.id },
         }
     end
 
@@ -222,8 +222,8 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
           procedure_id: procedure.id,
           id: gi_1_2.id,
           groupe_instructeur: {
-            signature: signature
-          }
+            signature: signature,
+          },
         }
     end
 

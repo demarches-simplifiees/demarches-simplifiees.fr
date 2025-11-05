@@ -22,8 +22,8 @@ describe OCRService do
             "rib": {
               "account_holder": "Mme Titulaire\n58 BD ROBERT\n13284 MARSEILLE CEDEX 07",
               "iban": "FR76 6666 6666 6666 6666 6666 780",
-              "bic": "BICUFRP1"
-            }
+              "bic": "BICUFRP1",
+            },
           }
         end
 

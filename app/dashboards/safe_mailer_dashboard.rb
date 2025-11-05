@@ -13,7 +13,7 @@ class SafeMailerDashboard < Administrate::BaseDashboard
     id: Field::Number,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    forced_delivery_method: Field::Enum
+    forced_delivery_method: Field::Enum,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

@@ -72,7 +72,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
         {
           "champ_#{sub_types_de_champ_repetition.first.to_typed_id_for_query}": text_repetition_value,
-          "champ_#{sub_types_de_champ_repetition.second.to_typed_id_for_query}": integer_repetition_value
+          "champ_#{sub_types_de_champ_repetition.second.to_typed_id_for_query}": integer_repetition_value,
         }
       ],
       "identite_prenom" => prenom_value,

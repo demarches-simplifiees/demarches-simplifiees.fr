@@ -13,7 +13,7 @@ class ExpertDashboard < Administrate::BaseDashboard
     id: Field::Number,
     user: Field::HasOne.with_options(searchable: true, searchable_fields: %w[email]),
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

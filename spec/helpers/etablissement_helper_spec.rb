@@ -15,7 +15,7 @@ RSpec.describe EtablissementHelper, type: :helper do
       entreprise_raison_sociale: raison_sociale,
       entreprise_etat_administratif: etat_administratif,
       entreprise_nom: nom,
-      entreprise_prenom: prenom
+      entreprise_prenom: prenom,
     }
   end
   let(:etablissement) { create(:etablissement, etablissement_params) }

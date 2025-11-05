@@ -46,7 +46,7 @@ module Types
         if object.effectif_mensuel?
           {
             periode: [object.effectif_mois, object.effectif_annee].join('/'),
-            nb: object.effectif_mensuel
+            nb: object.effectif_mensuel,
           }
         end
       end
@@ -55,7 +55,7 @@ module Types
         if object.effectif_annuel?
           {
             periode: object.effectif_annuel_annee,
-            nb: object.effectif_annuel
+            nb: object.effectif_annuel,
           }
         end
       end
@@ -138,7 +138,7 @@ module Types
           objet: object.association_objet,
           date_creation: object.association_date_creation,
           date_declaration: object.association_date_declaration,
-          date_publication: object.association_date_publication
+          date_publication: object.association_date_publication,
         }
       end
     end

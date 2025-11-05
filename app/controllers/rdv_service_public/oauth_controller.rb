@@ -9,7 +9,7 @@ class RdvServicePublic::OauthController < ApplicationController
     rdv_connection_attributes = {
       expires_at: Time.zone.at(user_info.credentials.expires_at),
       access_token: user_info.credentials.token,
-      refresh_token: user_info.credentials.refresh_token
+      refresh_token: user_info.credentials.refresh_token,
     }
 
     current_instructeur.rdv_connection&.update!(rdv_connection_attributes) || current_instructeur.create_rdv_connection!(rdv_connection_attributes)

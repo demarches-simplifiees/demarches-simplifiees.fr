@@ -56,7 +56,7 @@ describe Administrateurs::MailTemplatesController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: initiated_mail.class.const_get(:SLUG),
-          mails_initiated_mail: { subject: mail_subject, rich_body: mail_body }
+          mails_initiated_mail: { subject: mail_subject, rich_body: mail_body },
         }
     end
 

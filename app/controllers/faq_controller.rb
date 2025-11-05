@@ -20,7 +20,7 @@ class FAQController < ApplicationController
                           substitutions = {
                             application_base_url: Current.application_base_url,
                             application_name: Current.application_name,
-                            contact_email: Current.contact_email
+                            contact_email: Current.contact_email,
                           }.merge(dynamic_substitutions)
 
                           FAQsLoaderService.new(substitutions)

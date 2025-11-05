@@ -65,7 +65,7 @@ class ArchiveUploader
       key: namespaced_object_key,
       filename: filename,
       content_type: 'application/zip',
-      metadata: { analyzed: true, identified: true, virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      metadata: { analyzed: true, identified: true, virus_scan_result: ActiveStorage::VirusScanner::SAFE },
     }
   end
 

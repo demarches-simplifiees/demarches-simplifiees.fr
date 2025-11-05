@@ -15,8 +15,8 @@ describe RdvService do
           "rdv": nil,
           "updated_at": "2025-01-23 15:15:20 +0100",
           "url": "https://demo.rdv.anct.gouv.fr/agents/rdv_plans/10",
-          "user_id": 6425
-        }
+          "user_id": 6425,
+        },
       }
     }
 
@@ -26,10 +26,10 @@ describe RdvService do
           user: {
             first_name:,
             last_name:,
-            email:
+            email:,
           },
           return_url:,
-          dossier_url:
+          dossier_url:,
         })
         .to_return(body: rdv_plan_result.to_json)
     end
@@ -96,12 +96,12 @@ describe RdvService do
             "id": 10093,
             "status": "unknown",
             "starts_at": "2025-02-11 10:30:00 +0100",
-            "location_type": "phone"
+            "location_type": "phone",
           },
           "updated_at": "2025-01-23 15:15:20 +0100",
           "url": "https://demo.rdv.anct.gouv.fr/agents/rdv_plans/10",
-          "user_id": 6425
-        }
+          "user_id": 6425,
+        },
       }
     }
 
@@ -132,14 +132,14 @@ describe RdvService do
         "url_for_agents" => "https://rdv.anct.gouv.fr/rdvs/10093",
         "starts_at" => "2025-06-04 11:30:00 +0200",
         "motif" => { "location_type" => "phone" },
-        "agents" => [{ "id" => 1957, "email" => "tom@plop.fr", "first_name" => "Tom", "last_name" => "Plop" }]
+        "agents" => [{ "id" => 1957, "email" => "tom@plop.fr", "first_name" => "Tom", "last_name" => "Plop" }],
       }
     }
 
     before do
       stub_request(:get, described_class.list_rdvs_url(rdv_ids))
         .to_return(body: {
-          rdvs: [rdv]
+          rdvs: [rdv],
         }.to_json)
     end
 

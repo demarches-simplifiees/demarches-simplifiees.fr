@@ -393,7 +393,7 @@ RSpec.describe DossierNotification, type: :model do
           demande: true,
           annotations_privees: false,
           avis_externe: false,
-          messagerie: false
+          messagerie: false,
         })
       end
     end
@@ -412,7 +412,7 @@ RSpec.describe DossierNotification, type: :model do
         is_expected.to eq({
           a_suivre: false,
           suivis: true,
-          traites: true
+          traites: true,
         })
       end
     end
@@ -430,7 +430,7 @@ RSpec.describe DossierNotification, type: :model do
         is_expected.to eq({
           a_suivre: [],
           suivis: [procedure.id],
-          traites: [procedure.id]
+          traites: [procedure.id],
         })
       end
     end

@@ -36,9 +36,9 @@ class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           private: annotations? ? true : nil,
           parent_stable_id: @parent&.stable_id,
-          after_stable_id: @after_stable_id
-        }.compact
-      }
+          after_stable_id: @after_stable_id,
+        }.compact,
+      },
     }
   end
 

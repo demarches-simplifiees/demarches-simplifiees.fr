@@ -13,7 +13,7 @@ class Referentiels::APIReferentiel < Referentiel
 
   enum :mode, {
     exact_match: 'exact_match',
-    autocomplete: 'autocomplete'
+    autocomplete: 'autocomplete',
   }
 
   validates :mode, inclusion: { in: modes.values }

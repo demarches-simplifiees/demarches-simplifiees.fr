@@ -48,10 +48,10 @@ describe Users::DossiersController, type: :controller do
             champs_public_attributes: {
               last_champ.public_id => {
                 with_public_id: true,
-                value: true
-              }
-            }
-          }
+                value: true,
+              },
+            },
+          },
         }
       end
 

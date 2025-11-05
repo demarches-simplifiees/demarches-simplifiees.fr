@@ -81,7 +81,7 @@ class Champs::CarteChamp < Champ
       type: 'FeatureCollection',
       id: stable_id,
       bbox: bounding_box,
-      features: geo_areas.map(&:to_feature)
+      features: geo_areas.map(&:to_feature),
     }
   end
 
@@ -109,7 +109,7 @@ class Champs::CarteChamp < Champ
           selection_utilisateur.geometry['type'] == 'Polygon'
         end.map do |selection_utilisateur|
           selection_utilisateur.geometry['coordinates']
-        end
+        end,
       }
     else
       nil

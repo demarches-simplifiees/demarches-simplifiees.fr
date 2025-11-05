@@ -59,12 +59,12 @@ class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
       {
         libelle: "#{libelle} (Département)",
         path: :departement,
-        description: "#{description} (Département)"
+        description: "#{description} (Département)",
       },
       {
         libelle: "#{libelle} (Commune)",
         path: :commune,
-        description: "#{description} (Commune)"
+        description: "#{description} (Commune)",
       }
     )
     paths

@@ -12,7 +12,7 @@ describe 'fetch API Particulier Data', js: true do
         'adresse' => ['identite', 'complementIdentite', 'complementIdentiteGeo', 'numeroRue', 'lieuDit', 'codePostalVille', 'pays'],
         'allocataires' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
         'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
-        'quotient_familial' => ['quotientFamilial', 'annee', 'mois']
+        'quotient_familial' => ['quotientFamilial', 'annee', 'mois'],
       },
       'dgfip' =>
       {
@@ -21,21 +21,21 @@ describe 'fetch API Particulier Data', js: true do
         'echeance_avis' => ['dateEtablissement', 'dateRecouvrement'],
         'foyer_fiscal' => ['adresse', 'annee', 'nombreParts', 'nombrePersonnesCharge', 'situationFamille'],
         'agregats_fiscaux' => ['anneeImpots', 'anneeRevenus', 'impotRevenuNetAvantCorrections', 'montantImpot', 'revenuBrutGlobal', 'revenuFiscalReference', 'revenuImposable'],
-        'complements' => ['situationPartielle', 'erreurCorrectif']
+        'complements' => ['situationPartielle', 'erreurCorrectif'],
       },
       'pole_emploi' => {
         'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
         'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
         'contact' => ['email', 'telephone', 'telephone2'],
-        'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
+        'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription'],
       },
       'mesri' => {
         'identifiant' => ['ine'],
         'identite' => ['nom', 'prenom', 'dateNaissance'],
         'inscriptions' => ['statut', 'regime', 'dateDebutInscription', 'dateFinInscription', 'codeCommune'],
         'admissions' => ['statut', 'regime', 'dateDebutAdmission', 'dateFinAdmission', 'codeCommune'],
-        'etablissements' => ['uai', 'nom']
-      }
+        'etablissements' => ['uai', 'nom'],
+      },
     }
   end
 

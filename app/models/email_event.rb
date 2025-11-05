@@ -6,7 +6,7 @@ class EmailEvent < ApplicationRecord
   enum :status, {
     pending: 'pending',
     dispatched: 'dispatched',
-    dispatch_error: 'dispatch_error'
+    dispatch_error: 'dispatch_error',
   }
 
   scope :sendinblue, -> { where(method: 'sendinblue') }

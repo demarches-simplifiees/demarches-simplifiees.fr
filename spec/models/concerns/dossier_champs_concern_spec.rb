@@ -384,7 +384,7 @@ RSpec.describe DossierChampsConcern do
       {
         "99" => { value: "Hello" },
         "991" => { value: "World" },
-        "994-#{row_id}" => { value: "Greer" }
+        "994-#{row_id}" => { value: "Greer" },
       }
     end
 
@@ -533,7 +533,7 @@ RSpec.describe DossierChampsConcern do
   describe "#private_champ_for_update" do
     let(:attributes) do
       {
-        "995" => { value: "Hello" }
+        "995" => { value: "Hello" },
       }
     end
 
@@ -579,21 +579,21 @@ RSpec.describe DossierChampsConcern do
         {
           "99" => { value: "Hello" },
           "991" => { value: "World" },
-          "994-#{row_id}" => { value: "Greer" }
+          "994-#{row_id}" => { value: "Greer" },
         }
       end
 
       let(:new_attributes) do
         {
           "99" => { value: "Hello!!!" },
-          "994-#{row_id}" => { value: "Greer is the best, for sure !" }
+          "994-#{row_id}" => { value: "Greer is the best, for sure !" },
         }
       end
 
       let(:bad_attributes) do
         {
           "99" => { value: "bad" },
-          "994-#{row_id}" => { value: "bad" }
+          "994-#{row_id}" => { value: "bad" },
         }
       end
 

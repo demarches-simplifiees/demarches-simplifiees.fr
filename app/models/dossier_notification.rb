@@ -10,7 +10,7 @@ class DossierNotification < ApplicationRecord
     annotation_instructeur: 'annotation_instructeur',
     avis_externe: 'avis_externe',
     attente_correction: 'attente_correction',
-    attente_avis: 'attente_avis'
+    attente_avis: 'attente_avis',
   }
 
   belongs_to :instructeur
@@ -161,7 +161,7 @@ class DossierNotification < ApplicationRecord
     dossiers_with_news_notification_by_statut = {
       a_suivre: dossiers_with_news_notification.by_statut('a-suivre'),
       suivis: dossiers_with_news_notification.by_statut('suivis', instructeur:),
-      traites: dossiers_with_news_notification.by_statut('traites')
+      traites: dossiers_with_news_notification.by_statut('traites'),
     }
 
     dossiers_with_news_notification_by_statut.transform_values do |dossiers|
@@ -180,7 +180,7 @@ class DossierNotification < ApplicationRecord
     {
       a_suivre: dossiers_with_news_notification.by_statut('a-suivre').exists?,
       suivis: dossiers_with_news_notification.by_statut('suivis', instructeur:).exists?,
-      traites: dossiers_with_news_notification.by_statut('traites').exists?
+      traites: dossiers_with_news_notification.by_statut('traites').exists?,
     }
   end
 
@@ -189,7 +189,7 @@ class DossierNotification < ApplicationRecord
       demande: :dossier_modifie,
       annotations_privees: :annotation_instructeur,
       avis_externe: :avis_externe,
-      messagerie: :message
+      messagerie: :message,
     }
 
     return types.transform_values { false } if dossier.archived
@@ -234,7 +234,7 @@ class DossierNotification < ApplicationRecord
     dossier_ids_with_notifications_by_statut = {
       'a-suivre' => notifications.merge(Dossier.by_statut('a-suivre')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'suivis' => notifications.merge(Dossier.by_statut('suivis', instructeur:)).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
-      'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) }
+      'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
     }
 
     dossiers = Dossier

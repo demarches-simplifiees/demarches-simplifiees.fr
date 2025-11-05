@@ -18,7 +18,7 @@ module Maintenance
         value_json = {
           not_in_ban: 'true',
           street_address: champ.value,
-          label: champ.value
+          label: champ.value,
         }
         champ.update_column(:value_json, value_json)
       end

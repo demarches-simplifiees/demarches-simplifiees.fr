@@ -24,8 +24,8 @@ class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
         add_pin: t(".add_pin"),
         add_file: t(".add_file"),
         choose_file: t(".choose_file"),
-        delete_file: t(".delete_file")
-      }
+        delete_file: t(".delete_file"),
+      },
     }
   end
 

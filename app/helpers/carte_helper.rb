@@ -10,7 +10,7 @@ module CarteHelper
         departement: name_for_departement(departement),
         demarches: map_filter.nb_demarches_for_departement(departement),
         dossiers: map_filter.nb_dossiers_for_departement(departement),
-        action: "mouseenter->map-info#showInfo mouseout->map-info#hideInfo"
+        action: "mouseenter->map-info#showInfo mouseout->map-info#hideInfo",
       }
     )
   end

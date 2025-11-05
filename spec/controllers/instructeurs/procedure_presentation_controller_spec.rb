@@ -23,7 +23,7 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
           displayed_columns: [state_column.id],
           sorted_column: { order: 'asc', id: state_column.id },
           filters: [{ id: state_column.id, filter: 'en_construction' }],
-          statut: 'tous'
+          statut: 'tous',
         }
       end
 

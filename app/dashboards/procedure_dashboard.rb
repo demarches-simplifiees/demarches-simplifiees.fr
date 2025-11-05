@@ -58,7 +58,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     opendata: Field::Boolean,
     hide_instructeurs_email: Field::Boolean,
     dossiers_count: Field::Number,
-    no_gender: Field::Boolean
+    no_gender: Field::Boolean,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

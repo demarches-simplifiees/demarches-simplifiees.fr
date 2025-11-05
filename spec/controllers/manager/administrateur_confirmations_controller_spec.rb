@@ -17,7 +17,7 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
     subject(:new_request) do
       get :new, params: {
         procedure_id: procedure.id,
-        q: encrypt({ email: invited_administrateur.email, inviter_id: inviter_super_admin.id })
+        q: encrypt({ email: invited_administrateur.email, inviter_id: inviter_super_admin.id }),
       }
     end
 
@@ -84,7 +84,7 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
     subject(:create_request) do
       post :create, params: {
         procedure_id: procedure.id,
-        q: encrypt({ email: invited_administrateur.email, inviter_id: inviter_super_admin.id })
+        q: encrypt({ email: invited_administrateur.email, inviter_id: inviter_super_admin.id }),
       }
     end
 

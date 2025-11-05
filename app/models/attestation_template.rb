@@ -11,12 +11,12 @@ class AttestationTemplate < ApplicationRecord
 
   enum :state, {
     draft: 'draft',
-    published: 'published'
+    published: 'published',
   }
 
   enum :kind, {
     acceptation: 'acceptation',
-    refus: 'refus'
+    refus: 'refus',
   }
 
   validates :title, tags: true, if: -> { procedure.present? && version == 1 }
@@ -46,9 +46,9 @@ class AttestationTemplate < ApplicationRecord
                         {
                           "type" => "paragraph",
                           "attrs" => { "textAlign" => "left" },
-                          "content" => [{ "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } }]
+                          "content" => [{ "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } }],
                         }
-                      ]
+                      ],
           },
           {
             "type" => "headerColumn",
@@ -59,11 +59,11 @@ class AttestationTemplate < ApplicationRecord
                           "content" => [
                             { "text" => "Fait le ", "type" => "text" },
                             { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }
-                          ]
+                          ],
               }
-            ]
+            ],
           }
-        ]
+        ],
       },
       { "type" => "title", "attrs" => { "textAlign" => "center" }, "content" => [{ "text" => "Titre de l’attestation", "type" => "text" }] },
       {
@@ -72,11 +72,11 @@ class AttestationTemplate < ApplicationRecord
         "content" => [
           {
             "text" => "Vous pouvez éditer ce texte pour personnaliser votre attestation. Pour ajouter du contenu issu du dossier, utilisez les balises situées sous cette zone de saisie.",
-            "type" => "text"
+            "type" => "text",
           }
-        ]
+        ],
       }
-    ]
+    ],
   }.freeze
 
   def attestation_for(dossier)
@@ -124,7 +124,7 @@ class AttestationTemplate < ApplicationRecord
     base_attributes = {
       created_at: Time.current,
       footer: params.fetch(:footer, footer),
-      signature: signature_to_render(groupe_instructeur)
+      signature: signature_to_render(groupe_instructeur),
     }
 
     if version == 2

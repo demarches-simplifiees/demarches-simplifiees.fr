@@ -34,7 +34,7 @@ class SamlIdpController < ActionController::Base
     encode_response super_admin, encryption: {
       cert: saml_request.service_provider.cert,
       block_encryption: 'aes256-cbc',
-      key_transport: 'rsa-oaep-mgf1p'
+      key_transport: 'rsa-oaep-mgf1p',
     }
   end
 end

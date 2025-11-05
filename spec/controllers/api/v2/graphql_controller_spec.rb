@@ -31,7 +31,7 @@ describe API::V2::GraphqlController do
       checksum: compute_checksum_in_chunks(file),
       content_type: file.content_type,
       # we don't want to run virus scanner on this file
-      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE },
     }
   end
   let(:blob) do
@@ -217,19 +217,19 @@ describe API::V2::GraphqlController do
             groupeInstructeurs: [
               {
                 instructeurs: [{ email: instructeur.email }],
-                label: "défaut"
+                label: "défaut",
               }
             ],
             revisions: procedure.revisions.map { { id: _1.to_typed_id } },
             draftRevision: { id: procedure.draft_revision.to_typed_id },
             publishedRevision: {
               id: procedure.published_revision.to_typed_id,
-              champDescriptors: procedure.published_revision.types_de_champ_public.map { { __typename: format_type_champ(_1.type_champ) } }
+              champDescriptors: procedure.published_revision.types_de_champ_public.map { { __typename: format_type_champ(_1.type_champ) } },
             },
             service: {
               nom: procedure.service.nom,
               typeOrganisme: procedure.service.type_organisme,
-              organisme: procedure.service.organisme
+              organisme: procedure.service.organisme,
             },
             champDescriptors: procedure.active_revision.types_de_champ_public.map do |tdc|
               {
@@ -239,13 +239,13 @@ describe API::V2::GraphqlController do
                 description: tdc.description,
                 required: tdc.mandatory?,
                 champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { { id: _1.to_typed_id, __typename: format_type_champ(_1.type_champ) } } : nil,
-                options: tdc.any_drop_down_list? ? tdc.drop_down_options.reject(&:empty?) : nil
+                options: tdc.any_drop_down_list? ? tdc.drop_down_options.reject(&:empty?) : nil,
               }.compact
             end,
             dossiers: {
-              nodes: dossiers.map { { id: _1.to_typed_id } }
+              nodes: dossiers.map { { id: _1.to_typed_id } },
             },
-            labels: [{ id: label.to_typed_id, color: label.color, name: label.name }]
+            labels: [{ id: label.to_typed_id, color: label.color, name: label.name }],
           })
         end
       end
@@ -273,8 +273,8 @@ describe API::V2::GraphqlController do
             id: procedure.to_typed_id,
             number: procedure.id,
             dossiers: {
-              nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
-            }
+              nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }],
+            },
           })
         end
       end
@@ -304,8 +304,8 @@ describe API::V2::GraphqlController do
               id: procedure.to_typed_id,
               number: procedure.id,
               dossiers: {
-                nodes: [{ id: dossier2.to_typed_id }]
-              }
+                nodes: [{ id: dossier2.to_typed_id }],
+              },
             })
           end
         end
@@ -319,8 +319,8 @@ describe API::V2::GraphqlController do
               id: procedure.to_typed_id,
               number: procedure.id,
               dossiers: {
-                nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
-              }
+                nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }],
+              },
             })
           end
         end
@@ -349,8 +349,8 @@ describe API::V2::GraphqlController do
             dossiers: {
               nodes: procedure.dossiers.order(:created_at).map do |dossier|
                 { id: dossier.to_typed_id }
-              end
-            }
+              end,
+            },
           })
         end
       end
@@ -378,8 +378,8 @@ describe API::V2::GraphqlController do
             dossiers: {
               nodes: procedure.dossiers.order(:created_at).map do |dossier|
                 { id: dossier.to_typed_id }
-              end
-            }
+              end,
+            },
           })
         end
       end
@@ -501,37 +501,37 @@ describe API::V2::GraphqlController do
             demarche: {
               number: dossier.procedure.id,
               title: dossier.procedure.libelle,
-              state: 'publiee'
+              state: 'publiee',
             },
             usager: {
               id: dossier.user.to_typed_id,
-              email: dossier.user.email
+              email: dossier.user.email,
             },
             instructeurs: [
               {
                 id: instructeur.to_typed_id,
-                email: instructeur.email
+                email: instructeur.email,
               }
             ],
             groupeInstructeur: {
               id: dossier.groupe_instructeur.to_typed_id,
               number: dossier.groupe_instructeur.id,
-              label: dossier.groupe_instructeur.label
+              label: dossier.groupe_instructeur.label,
             },
             revision: {
               id: dossier.revision.to_typed_id,
               champDescriptors: dossier.types_de_champ_public.map do |tdc|
                 {
-                  type: tdc.type_champ
+                  type: tdc.type_champ,
                 }
-              end
+              end,
             },
             demandeur: {
               id: dossier.individual.to_typed_id,
               nom: dossier.individual.nom,
               prenom: dossier.individual.prenom,
               civilite: 'M',
-              dateDeNaissance: '1991-11-01'
+              dateDeNaissance: '1991-11-01',
             },
             avis: []
           )
@@ -540,7 +540,7 @@ describe API::V2::GraphqlController do
             {
               id: champ.to_typed_id,
               label: champ.libelle,
-              stringValue: champ.type_de_champ.champ_value_for_api(champ)
+              stringValue: champ.type_de_champ.champ_value_for_api(champ),
             }
           end
           expect(gql_data[:dossier][:champs]).to match_array(expected_champs)
@@ -552,17 +552,17 @@ describe API::V2::GraphqlController do
                 filename: commentaire.piece_jointe.first.filename.to_s,
                 contentType: commentaire.piece_jointe.first.content_type,
                 checksum: commentaire.piece_jointe.first.checksum,
-                byteSize: commentaire.piece_jointe.first.byte_size
+                byteSize: commentaire.piece_jointe.first.byte_size,
               },
               attachments: commentaire.piece_jointe.map do |pj|
                 {
                   filename: pj.filename.to_s,
                   contentType: pj.content_type,
                   checksum: pj.checksum,
-                  byteSize: pj.byte_size
+                  byteSize: pj.byte_size,
                 }
               end,
-              email: commentaire.email
+              email: commentaire.email,
             }
           end
           expect(gql_data[:dossier][:messages]).to match_array(expected_messages)
@@ -612,7 +612,7 @@ describe API::V2::GraphqlController do
               number: dossier.id,
               usager: {
                 id: dossier.user.to_typed_id,
-                email: dossier.user.email
+                email: dossier.user.email,
               },
               demandeur: {
                 id: dossier.etablissement.to_typed_id,
@@ -625,9 +625,9 @@ describe API::V2::GraphqlController do
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
                   codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s,
-                  numeroTvaIntracommunautaire: dossier.etablissement.entreprise_numero_tva_intracommunautaire
-                }
-              }
+                  numeroTvaIntracommunautaire: dossier.etablissement.entreprise_numero_tva_intracommunautaire,
+                },
+              },
             })
           end
         end
@@ -674,7 +674,7 @@ describe API::V2::GraphqlController do
               number: dossier.id,
               usager: {
                 id: dossier.user.to_typed_id,
-                email: dossier.user.email
+                email: dossier.user.email,
               },
               demandeur: {
                 id: dossier.etablissement.to_typed_id,
@@ -687,9 +687,9 @@ describe API::V2::GraphqlController do
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: '-1',
                   codeEffectifEntreprise: nil,
-                  numeroTvaIntracommunautaire: nil
-                }
-              }
+                  numeroTvaIntracommunautaire: nil,
+                },
+              },
             })
           end
         end
@@ -738,14 +738,14 @@ describe API::V2::GraphqlController do
                 {
                   id: champ_date.to_typed_id,
                   label: champ_date.libelle,
-                  value: '2019-07-10T00:00:00+02:00'
+                  value: '2019-07-10T00:00:00+02:00',
                 },
                 {
                   id: champ_datetime.to_typed_id,
                   label: champ_datetime.libelle,
-                  value: '1962-09-15T15:35:00+01:00'
+                  value: '1962-09-15T15:35:00+01:00',
                 }
-              ]
+              ],
             })
           end
         end
@@ -777,14 +777,14 @@ describe API::V2::GraphqlController do
                   id: champ_date.to_typed_id,
                   label: champ_date.libelle,
                   value: '2019-07-10T00:00:00+02:00',
-                  date: '2019-07-10'
+                  date: '2019-07-10',
                 },
                 {
                   id: champ_datetime.to_typed_id,
                   label: champ_datetime.libelle,
-                  datetime: '1962-09-15T15:35:00+01:00'
+                  datetime: '1962-09-15T15:35:00+01:00',
                 }
-              ]
+              ],
             })
           end
         end
@@ -821,10 +821,10 @@ describe API::V2::GraphqlController do
                 number: deleted_dossier.dossier_id,
                 state: deleted_dossier.state,
                 reason: deleted_dossier.reason,
-                dateSupression: deleted_dossier.deleted_at.iso8601
+                dateSupression: deleted_dossier.deleted_at.iso8601,
               }
-            ]
-          }
+            ],
+          },
         })
       end
     end
@@ -940,8 +940,8 @@ describe API::V2::GraphqlController do
           number: groupe_instructeur.id,
           label: groupe_instructeur.label,
           dossiers: {
-            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
-          }
+            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } },
+          },
         })
       end
     end
@@ -966,7 +966,7 @@ describe API::V2::GraphqlController do
             dossierId: dossier_id,
             instructeurId: instructeur_id,
             body: input_body,
-            attachment: attachment
+            attachment: attachment,
           }
         end
         let(:dossier_id) { dossier.to_typed_id }
@@ -982,9 +982,9 @@ describe API::V2::GraphqlController do
 
             expect(gql_data).to eq(dossierEnvoyerMessage: {
               message: {
-                body: "Bonjour"
+                body: "Bonjour",
               },
-              errors: nil
+              errors: nil,
             })
           end
         end
@@ -995,9 +995,9 @@ describe API::V2::GraphqlController do
           it 'should create a correction' do
             expect(gql_data).to eq(dossierEnvoyerMessage: {
               message: {
-                body: "Bonjour"
+                body: "Bonjour",
               },
-              errors: nil
+              errors: nil,
             })
 
             expect(dossier).to be_pending_correction
@@ -1010,7 +1010,7 @@ describe API::V2::GraphqlController do
           let(:input) do
             {
               dossierId: dossier_id,
-              instructeurId: instructeur_id
+              instructeurId: instructeur_id,
             }
           end
 
@@ -1040,7 +1040,7 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierEnvoyerMessage: {
               errors: [{ message: "Le champ « Votre message » ne peut être vide" }],
-              message: nil
+              message: nil,
             })
           end
         end
@@ -1052,7 +1052,7 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierEnvoyerMessage: {
               errors: [{ message: "L’identifiant du fichier téléversé est invalide" }],
-              message: nil
+              message: nil,
             })
           end
         end
@@ -1088,9 +1088,9 @@ describe API::V2::GraphqlController do
               dossier: {
                 id: dossier.to_typed_id,
                 state: "accepte",
-                motivation: "Parce que"
+                motivation: "Parce que",
               },
-              errors: nil
+              errors: nil,
             })
           end
         end
@@ -1121,9 +1121,9 @@ describe API::V2::GraphqlController do
               dossier: {
                 id: dossier.to_typed_id,
                 state: "accepte",
-                motivation: nil
+                motivation: nil,
               },
-              errors: nil
+              errors: nil,
             })
           end
         end
@@ -1135,7 +1135,7 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierAccepter: {
               errors: [{ message: "Le dossier est déjà refusé" }],
-              dossier: nil
+              dossier: nil,
             })
           end
         end
@@ -1199,7 +1199,7 @@ describe API::V2::GraphqlController do
           blob.service.upload blob.key, StringIO.new('toto')
           expect(attach_query_data).to eq(dossierEnvoyerMessage: {
             errors: [{ message: "Le hash du fichier téléversé est invalide" }],
-            message: nil
+            message: nil,
           })
         end
       end
@@ -1222,7 +1222,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to eq(nil)
 
           expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
-            errors: [{ message: "Le dossier est déjà avec le groupe instructeur: 'défaut'" }]
+            errors: [{ message: "Le dossier est déjà avec le groupe instructeur: 'défaut'" }],
           })
         end
 
@@ -1246,7 +1246,7 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
 
             expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
-              errors: nil
+              errors: nil,
             })
           end
         end
@@ -1284,9 +1284,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationText: {
                 annotation: {
-                  stringValue: 'hello'
+                  stringValue: 'hello',
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1321,9 +1321,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
                 annotation: {
-                  stringValue: 'true'
+                  stringValue: 'true',
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1336,9 +1336,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
                 annotation: {
-                  stringValue: 'false'
+                  stringValue: 'false',
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1372,9 +1372,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
                 annotation: {
-                  stringValue: 'true'
+                  stringValue: 'true',
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1387,9 +1387,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
                 annotation: {
-                  stringValue: 'false'
+                  stringValue: 'false',
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1422,9 +1422,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationDate: {
                 annotation: {
-                  stringValue: dossier.reload.project_champs_private.find { |c| c.type_champ == 'date' }.to_s
+                  stringValue: dossier.reload.project_champs_private.find { |c| c.type_champ == 'date' }.to_s,
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1458,9 +1458,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationDatetime: {
                 annotation: {
-                  stringValue: dossier.reload.project_champs_private.find { |c| c.type_champ == 'datetime' }.to_s
+                  stringValue: dossier.reload.project_champs_private.find { |c| c.type_champ == 'datetime' }.to_s,
                 },
-                errors: nil
+                errors: nil,
               })
               expect(dossier.champs.first.value).not_to be_nil
             end
@@ -1495,9 +1495,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationDropDownList: {
                 annotation: {
-                  stringValue: dossier.reload.project_champs_private.find { |c| c.type_champ == 'drop_down_list' }.to_s
+                  stringValue: dossier.reload.project_champs_private.find { |c| c.type_champ == 'drop_down_list' }.to_s,
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1508,7 +1508,7 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationDropDownList: {
                 annotation: nil,
-                errors: [{ message: "doit être dans les options proposées" }]
+                errors: [{ message: "doit être dans les options proposées" }],
               })
             end
           end
@@ -1540,9 +1540,9 @@ describe API::V2::GraphqlController do
 
               expect(gql_data).to eq(dossierModifierAnnotationIntegerNumber: {
                 annotation: {
-                  stringValue: '42'
+                  stringValue: '42',
                 },
-                errors: nil
+                errors: nil,
               })
             end
           end
@@ -1581,11 +1581,11 @@ describe API::V2::GraphqlController do
                 {
                   id: label.to_typed_id,
                   name: label.name,
-                  color: label.color
+                  color: label.color,
                 }
-              ]
+              ],
             },
-            errors: nil
+            errors: nil,
           })
 
           expect(dossier.labels).to match_array([label])
@@ -1598,7 +1598,7 @@ describe API::V2::GraphqlController do
             it "should return error" do
               expect(gql_data).to eq(dossierAjouterLabel: {
                 dossier: nil,
-                errors: [{ message: "Ce label n’appartient pas à la même démarche que le dossier" }]
+                errors: [{ message: "Ce label n’appartient pas à la même démarche que le dossier" }],
               })
             end
           end
@@ -1608,7 +1608,7 @@ describe API::V2::GraphqlController do
             it "should return an error" do
               expect(gql_data).to eq(dossierAjouterLabel: {
                 dossier: nil,
-                errors: [{ message: "Ce label est déjà associé au dossier" }]
+                errors: [{ message: "Ce label est déjà associé au dossier" }],
               })
             end
           end
@@ -1649,9 +1649,9 @@ describe API::V2::GraphqlController do
           expect(gql_data).to eq(dossierSupprimerLabel: {
             dossier: {
               id: dossier.to_typed_id,
-              labels: []
+              labels: [],
             },
-            errors: nil
+            errors: nil,
           })
         end
       end
@@ -1660,7 +1660,7 @@ describe API::V2::GraphqlController do
         it "should return an error" do
           expect(gql_data).to eq(dossierSupprimerLabel: {
             dossier: nil,
-            errors: [{ message: "Ce label n’est pas associé au dossier" }]
+            errors: [{ message: "Ce label n’est pas associé au dossier" }],
           })
         end
       end

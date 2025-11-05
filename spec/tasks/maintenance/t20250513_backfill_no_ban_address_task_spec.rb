@@ -26,7 +26,7 @@ module Maintenance
         expect(address_champ.value_json).to eq({
           street_address: '123 Main St',
           label: '123 Main St',
-          not_in_ban: 'true'
+          not_in_ban: 'true',
         }.stringify_keys)
       end
     end

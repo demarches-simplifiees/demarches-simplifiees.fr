@@ -116,7 +116,7 @@ RSpec.describe PrefillDescription, type: :model do
             { type: :text },
             { type: :integer_number },
             { type: :regions }
-          ]
+          ],
         }
       ])
     end
@@ -157,7 +157,7 @@ RSpec.describe PrefillDescription, type: :model do
             { type: :text },
             { type: :integer_number },
             { type: :regions }
-          ]
+          ],
         }
       ])
     end

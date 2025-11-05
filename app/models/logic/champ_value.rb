@@ -31,7 +31,7 @@ class Logic::ChampValue < Logic::Term
     address: :address,
     enums: :enums, # multiple choice from a dropdownlist (multipledropdownlist)
     empty: :empty,
-    unmanaged: :unmanaged
+    unmanaged: :unmanaged,
   }
 
   attr_reader :stable_id
@@ -67,12 +67,12 @@ class Logic::ChampValue < Logic::Term
     when "Champs::DepartementChamp"
       {
         value: targeted_champ.code,
-        code_region: targeted_champ.code_region
+        code_region: targeted_champ.code_region,
       }
     when "Champs::CommuneChamp", "Champs::EpciChamp", "Champs::AddressChamp"
       {
         code_departement: targeted_champ.code_departement,
-        code_region: targeted_champ.code_region
+        code_region: targeted_champ.code_region,
       }
     end
   end
@@ -115,7 +115,7 @@ class Logic::ChampValue < Logic::Term
   def to_h
     {
       "term" => self.class.name,
-      "stable_id" => @stable_id
+      "stable_id" => @stable_id,
     }
   end
 

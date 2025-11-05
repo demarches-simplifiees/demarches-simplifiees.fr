@@ -23,7 +23,7 @@ RSpec.describe PrefillChamps do
       let(:params) {
         {
           "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
-          "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2
+          "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2,
         }
       }
 

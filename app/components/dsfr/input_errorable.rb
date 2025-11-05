@@ -23,7 +23,7 @@ module Dsfr
 
         {
           "#{dsfr_group_classname}--error" => errors_on_attribute?,
-          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute? && object.try(attribute).present?
+          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute? && object.try(attribute).present?,
         }
       end
 
@@ -56,7 +56,7 @@ module Dsfr
           labelledby << @champ.error_id
 
           {
-            aria: { labelledby: labelledby.join(' ') }
+            aria: { labelledby: labelledby.join(' ') },
           }
         else
           {}
@@ -101,7 +101,7 @@ module Dsfr
 
       def input_error_class_names
         {
-          "#{dsfr_input_classname}--error": errors_on_attribute?
+          "#{dsfr_input_classname}--error": errors_on_attribute?,
         }
       end
 
@@ -115,7 +115,7 @@ module Dsfr
                                       .merge({
                                         'fr-password__input': password?,
                                              'fr-input': !react,
-                                             'fr-mb-0': true
+                                             'fr-mb-0': true,
                                       }.merge(input_error_class_names)))
 
         aria_describedby = []
@@ -137,7 +137,7 @@ module Dsfr
         if email?
           @opts.deep_merge!(data: {
             action: "blur->email-input#checkEmail",
-            'email-input-target': 'input'
+            'email-input-target': 'input',
           })
         end
 

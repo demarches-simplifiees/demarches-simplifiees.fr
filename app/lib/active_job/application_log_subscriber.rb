@@ -60,7 +60,7 @@ class ActiveJob::ApplicationLogSubscriber < ::ActiveJob::LogSubscriber
       job_id: event.payload[:job].job_id,
       queue_name: queue_name(event),
       job_class: event.payload[:job].class.to_s,
-      job_args: args_info(event.payload[:job])
+      job_args: args_info(event.payload[:job]),
     }
   end
 

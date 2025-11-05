@@ -19,8 +19,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         {
           "$.jsonpath" => {
             "prefill" => '1',
-            'type' => Referentiels::MappingFormComponent::TYPES[:string]
-          }
+            'type' => Referentiels::MappingFormComponent::TYPES[:string],
+          },
         }
       end
 
@@ -44,8 +44,8 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
         "$.jsonpath" => {
           "prefill" => '1',
           'type' => referentiel_mapping_type,
-          'prefill_stable_id' => prefill_stable_id
-        }
+          'prefill_stable_id' => prefill_stable_id,
+        },
       }
     end
 
@@ -194,7 +194,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
               { type: :text, libelle: 'position 1' },
               { type: :text, libelle: 'position 2' },
               { type: :text, libelle: 'position 3' }
-            ]
+            ],
           },
           { type: :referentiel, referentiel:, libelle: "referentiel" },
           { type: :text, libelle: 'text after referentiel' }
@@ -217,14 +217,14 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
               { type: :text, libelle: 'position 1' },
               { type: :text, libelle: 'position 2' },
               { type: :text, libelle: 'position 3' }
-            ]
+            ],
           },
           {
             type: :repetition, libelle: 'une autre', children: [
               { type: :text, libelle: 'autre repetition position 0' },
               { type: :text, libelle: 'autre repetition position 1' },
               { type: :text, libelle: 'autre repetition position 2' }
-            ]
+            ],
           },
           { type: :text, libelle: 'after repetition' }
 

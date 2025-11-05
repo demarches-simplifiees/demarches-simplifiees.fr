@@ -42,14 +42,14 @@ module Instructeurs
                 avis: avis,
                 batch_action: true,
                 procedure: @procedure,
-                dossier_ids: @ids
+                dossier_ids: @ids,
               })
           else
             render turbo_stream: turbo_stream.append(
               "contenu",
               partial: "shared/redirect_and_close_modal",
               locals: {
-                redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis')
+                redirect_url: instructeur_procedure_path(@procedure, statut: 'suivis'),
               }
             )
           end
@@ -162,7 +162,7 @@ module Instructeurs
           url: create_batch_commentaire_instructeur_batch_operations_path(procedure_id: @procedure.id),
           commentaire: commentaire,
           procedure: @procedure,
-          dossier_ids: @ids
+          dossier_ids: @ids,
         })
     end
   end

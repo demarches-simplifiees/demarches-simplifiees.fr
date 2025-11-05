@@ -64,7 +64,7 @@ describe Stat, type: :model do
         "brouillon" => 4,
         "en_construction" => 5,
         "en_instruction" => 6,
-        "termines" => 7
+        "termines" => 7,
       }
       allow(Stat).to receive(:dossiers_states).and_return(stats)
       allow(Stat).to receive(:deleted_dossiers_states).and_return(stats)
@@ -93,7 +93,7 @@ describe Stat, type: :model do
                         Stat.send(:cumulative_month_serie, [
                           [Dossier.state_not_brouillon, :depose_at],
                           [DeletedDossier.where.not(state: :brouillon), :deleted_at]
-                        ])
+                        ]),
       })
       s.save!
       s.reload
@@ -117,7 +117,7 @@ describe Stat, type: :model do
                                    Stat.send(:last_four_months_serie, [
                                      [Dossier.state_not_brouillon, :depose_at],
                                      [DeletedDossier.where.not(state: :brouillon), :deleted_at]
-                                   ])
+                                   ]),
         })
         s.save!
         s.reload

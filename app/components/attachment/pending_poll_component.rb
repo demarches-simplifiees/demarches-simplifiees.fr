@@ -27,7 +27,7 @@ class Attachment::PendingPollComponent < ApplicationComponent
   def poll_controller_options
     {
       controller: 'turbo-poll',
-      turbo_poll_url_value: @poll_url
+      turbo_poll_url_value: @poll_url,
     }
   end
 

@@ -148,7 +148,7 @@ class TypesDeChamp::TypeDeChampBase
         libelle:,
         path: :value,
         description:,
-        maybe_null: public? && !mandatory?
+        maybe_null: public? && !mandatory?,
       }
     ]
   end

@@ -955,7 +955,7 @@ describe Dossier, type: :model do
 
           {
             "type" => "mention",
-            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] }
+            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] },
           }
         end
 
@@ -2138,7 +2138,7 @@ describe Dossier, type: :model do
         Geocoder::Lookup::Test.add_stub(
           dossier.etablissement.geo_adresse, [
             {
-              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f]
+              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f],
             }
           ]
         )
@@ -2269,7 +2269,7 @@ describe Dossier, type: :model do
             type: 'Feature',
             geometry: {
               coordinates: [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
-              type: 'Polygon'
+              type: 'Polygon',
             },
             properties: {
               area: 103.6,
@@ -2278,10 +2278,10 @@ describe Dossier, type: :model do
               champ_private: false,
               dossier_id: dossier.id,
               id: geo_area.id,
-              source: 'selection_utilisateur'
-            }
+              source: 'selection_utilisateur',
+            },
           }
-        ]
+        ],
       })
     end
   end

@@ -15,7 +15,7 @@ module Maintenance
           {
             "not_in_ban" => "true",
             "country_code" => "CH",
-            "street_address" => "128 rue brancion, paris 75015"
+            "street_address" => "128 rue brancion, paris 75015",
           }
         end
         before { address_champ.update_columns(value: "123 Main St", value_json:) }
@@ -36,7 +36,7 @@ module Maintenance
             "postal_code" => "75015",
             "street_address" => "128 rue brancion, paris 75015",
             "department_code" => "99",
-            "department_name" => "Etranger"
+            "department_name" => "Etranger",
           }
         end
 
@@ -54,7 +54,7 @@ module Maintenance
            "country_name" => "France",
            "street_address" => "128 rue brancion, paris 75015",
            "department_code" => "75",
-           "department_name" => "Paris"
+           "department_name" => "Paris",
           })
         end
       end

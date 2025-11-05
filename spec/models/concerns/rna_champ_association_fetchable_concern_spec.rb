@@ -88,8 +88,8 @@ RSpec.describe RNAChampAssociationFetchableConcern do
           "distribution" => "dummy",
           "code_insee" => "75108",
           "code_postal" => "75009",
-          "commune" => "Paris"
-        }
+          "commune" => "Paris",
+        },
       }
     end
   end

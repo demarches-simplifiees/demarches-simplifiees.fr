@@ -13,12 +13,12 @@ class Export < ApplicationRecord
     ods: 'ods',
     xlsx: 'xlsx',
     zip: 'zip',
-    json: 'json'
+    json: 'json',
   }, prefix: true
 
   enum :time_span_type, {
     everything: 'everything',
-    monthly:    'monthly'
+    monthly:    'monthly',
   }
 
   enum :statut, {
@@ -28,7 +28,7 @@ class Export < ApplicationRecord
     tous: 'tous',
     supprimes: 'supprimes',
     archives: 'archives',
-    expirant: 'expirant'
+    expirant: 'expirant',
   }
 
   has_and_belongs_to_many :groupe_instructeurs
@@ -79,7 +79,7 @@ class Export < ApplicationRecord
       time_span_type:,
       statut:,
       include_archived:,
-      key: generate_cache_key(filtered_columns, sorted_column)
+      key: generate_cache_key(filtered_columns, sorted_column),
     }
 
     recent_export = pending

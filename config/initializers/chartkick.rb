@@ -9,17 +9,17 @@ Chartkick.options = {
     chart: { backgroundColor: 'var(--background-contrast-grey)' },
     xAxis: {
       lineColor: 'var(--border-action-high-grey)',
-      labels: { style: { color: "var(--text-default-grey)" } }
+      labels: { style: { color: "var(--text-default-grey)" } },
     },
     yAxis: {
       gridLineColor: 'var(--border-plain-grey)',
       lineColor: 'var(--border-action-high-grey)',
-      labels: { style: { color: "var(--text-default-grey)" } }
+      labels: { style: { color: "var(--text-default-grey)" } },
     },
     legend: {
       itemStyle: {
-        color: "var(--text-default-grey)"
-      }
+        color: "var(--text-default-grey)",
+      },
     },
     plotOptions: {
       pie: {
@@ -27,10 +27,10 @@ Chartkick.options = {
           color: "var(--text-default-grey)",
           enabled: true, format: '{point.name} : {point.percentage: .1f}%',
           style: {
-            textOutline: 'none'
-          }
-        }
-      }
-    }
-  }
+            textOutline: 'none',
+          },
+        },
+      },
+    },
+  },
 }

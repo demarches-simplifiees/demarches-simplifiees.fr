@@ -32,7 +32,7 @@ namespace :api_geo_data do
           code: result[:code],
           epci_code: result[:codeEpci],
           departement_code: result[:codeDepartement],
-          region_code: result[:codeRegion]
+          region_code: result[:codeRegion],
         }.compact
 
         if result[:codesPostaux].present?

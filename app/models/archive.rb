@@ -22,7 +22,7 @@ class Archive < ApplicationRecord
 
   enum :time_span_type, {
     everything: 'everything',
-    monthly:    'monthly'
+    monthly:    'monthly',
   }
 
   def filename(procedure)

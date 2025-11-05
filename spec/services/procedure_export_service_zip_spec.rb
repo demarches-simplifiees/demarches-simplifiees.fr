@@ -81,7 +81,7 @@ describe ProcedureExportService do
   def attach_file(attachable, safe = true)
     to_be_attached = {
       io: StringIO.new("toto"),
-      filename: "toto.png", content_type: "image/png"
+      filename: "toto.png", content_type: "image/png",
     }
 
     if safe

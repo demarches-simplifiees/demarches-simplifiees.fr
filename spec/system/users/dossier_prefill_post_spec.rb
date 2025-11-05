@@ -168,7 +168,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
         "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => [
           {
             "champ_#{sub_type_de_champs_repetition.first.to_typed_id_for_query}": text_repetition_value,
-            "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value
+            "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value,
           }
         ],
         "champ_#{type_de_champ_datetime.to_typed_id_for_query}" => datetime_value,
@@ -179,7 +179,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
         "champ_#{type_de_champ_address.to_typed_id_for_query}" => address_value,
         "identite_prenom" => prenom_value,
         "identite_nom" => nom_value,
-        "identite_genre" => genre_value
+        "identite_genre" => genre_value,
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end

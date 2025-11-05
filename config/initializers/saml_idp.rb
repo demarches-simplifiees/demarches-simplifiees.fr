@@ -13,12 +13,12 @@ if ENV['SAML_IDP_ENABLED'] == 'enabled'
 
     config.name_id.formats = {
       "1.1" => {
-        email_address: -> (principal) { principal.email }
+        email_address: -> (principal) { principal.email },
       },
       "2.0" => {
         transient: -> (principal) { principal.email },
-        persistent: -> (p) { p.id }
-      }
+        persistent: -> (p) { p.id },
+      },
     }
 
     service_providers = {}

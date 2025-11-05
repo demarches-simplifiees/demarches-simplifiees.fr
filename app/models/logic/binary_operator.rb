@@ -15,7 +15,7 @@ class Logic::BinaryOperator < Logic::Term
     {
       "term" => self.class.name,
       "left" => @left.to_h,
-      "right" => @right.to_h
+      "right" => @right.to_h,
     }
   end
 

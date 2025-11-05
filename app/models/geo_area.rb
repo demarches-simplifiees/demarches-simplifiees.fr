@@ -42,7 +42,7 @@ class GeoArea < ApplicationRecord
   enum :source, {
     cadastre: 'cadastre',
     selection_utilisateur: 'selection_utilisateur',
-    rpg: 'rpg'
+    rpg: 'rpg',
   }
 
   validates :geometry, geo_json: true, allow_nil: false
@@ -63,7 +63,7 @@ class GeoArea < ApplicationRecord
         champ_row: champ.row_id,
         champ_private: champ.private?,
         dossier_id: champ.dossier_id
-      ).compact
+      ).compact,
     }
   end
 
@@ -142,11 +142,11 @@ class GeoArea < ApplicationRecord
         section: section,
         prefixe: prefixe,
         commune: commune,
-        surface: surface
+        surface: surface,
       }
     elsif rpg?
       {
-        cid:
+        cid:,
       }
     else
       {}

@@ -30,9 +30,9 @@ FactoryBot.define do
                     { "text" => " (", "type" => "text" },
                     { "type" => "mention", "attrs" => { "id" => "$.ej_rs", "label" => "$.ej_rs (CENTRE MEDICAL REGINA)" } },
                     { "text" => ")", "type" => "text" }
-                  ]
+                  ],
                 }
-              ]
+              ],
           }
         end
       end
@@ -47,7 +47,7 @@ FactoryBot.define do
         last_response do
           {
             status: 200,
-            body: JSON.parse(File.read("spec/fixtures/files/api_referentiel_rnb.json"))
+            body: JSON.parse(File.read("spec/fixtures/files/api_referentiel_rnb.json")),
           }
         end
       end
@@ -55,7 +55,7 @@ FactoryBot.define do
         last_response do
           {
             status: 200,
-            body: JSON.parse(File.read("spec/fixtures/files/api_referentiel_finess.json"))
+            body: JSON.parse(File.read("spec/fixtures/files/api_referentiel_finess.json")),
           }
         end
       end

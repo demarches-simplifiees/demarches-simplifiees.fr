@@ -34,7 +34,7 @@ describe Gestionnaires::GroupeGestionnaireChildrenController, type: :controller 
       post :create,
         params: {
           groupe_gestionnaire_id: groupe_gestionnaire.id,
-          groupe_gestionnaire: { name: new_child_group_name }
+          groupe_gestionnaire: { name: new_child_group_name },
         },
         format: :turbo_stream
     end

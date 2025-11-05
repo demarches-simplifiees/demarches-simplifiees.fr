@@ -21,15 +21,15 @@ AllCops:
   SuggestExtensions: false
   NewCops: enable
   Include:
-    - "app/**/*.prawn"
+    - 'app/**/*.prawn'
   Exclude:
-    - "db/schema.rb"
-    - "db/migrate/20190730153555_recreate_structure.rb"
-    - "bin/*"
-    - "node_modules/**/*"
-    - "vendor/**/*"
-    - "storage/**/*"
-    - "tmp/**/*"
+    - 'db/schema.rb'
+    - 'db/migrate/20190730153555_recreate_structure.rb'
+    - 'bin/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'storage/**/*'
+    - 'tmp/**/*'
 
 DS/AddConcurrentIndex:
   Enabled: true
@@ -40,7 +40,7 @@ DS/ApplicationName:
     - './config/initializers/01_application_name.rb'
     - './lib/cops/application_name.rb'
     - './lib/linters/application_name_linter.rb'
-    - "./spec/**/*"
+    - './spec/**/*'
 
 DS/Unscoped:
   Enabled: true
@@ -127,7 +127,7 @@ Layout/EmptyLinesAroundAccessModifier:
   Enabled: true
   EnforcedStyle: around
   Exclude:
-    - "spec/factories/type_de_champ.rb"
+    - 'spec/factories/type_de_champ.rb'
 
 Layout/EmptyLinesAroundArguments:
   Enabled: true
@@ -161,7 +161,7 @@ Layout/EndOfLine:
 Layout/ExtraSpacing:
   Enabled: true
   Exclude:
-    - "Guardfile"
+    - 'Guardfile'
 
 Layout/FirstArrayElementLineBreak:
   Enabled: true
@@ -433,7 +433,7 @@ Lint/OrderedMagicComments:
 Lint/ParenthesesAsGroupedExpression:
   Enabled: true
   Exclude:
-    - "spec/**/*"
+    - 'spec/**/*'
 
 Lint/PercentStringArray:
   Enabled: false
@@ -525,7 +525,7 @@ Lint/UselessAccessModifier:
 Lint/UselessAssignment:
   Enabled: true
   Exclude:
-    - "spec/**/*"
+    - 'spec/**/*'
 
 Lint/BinaryOperatorWithIdenticalOperands:
   Enabled: true
@@ -626,7 +626,7 @@ Performance/CompareWithBlock:
 Performance/Count:
   Enabled: true
   Exclude:
-    - "app/services/administrateur_usage_statistics_service.rb"
+    - 'app/services/administrateur_usage_statistics_service.rb'
 
 Performance/Detect:
   Enabled: true
@@ -1060,7 +1060,7 @@ Style/BlockComments:
 Style/BlockDelimiters:
   Enabled: true
   Exclude:
-    - "spec/**/*"
+    - 'spec/**/*'
 
 Style/CaseEquality:
   Enabled: true
@@ -1469,6 +1469,7 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
 
 Style/TrailingMethodEndStatement:
   Enabled: true

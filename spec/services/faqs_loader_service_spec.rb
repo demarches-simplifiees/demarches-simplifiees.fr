@@ -67,7 +67,7 @@ RSpec.describe FAQsLoaderService do
       it 'returns all FAQs' do
         expect(service.all).to eq({
           "usager" => { "account" => [{ category: "usager", file_path: "path/to/faq1.md", slug: "faq1", subcategory: "account", title: "FAQ1" }] },
-          "admin" => { "general" => [{ category: "admin", file_path: "path/to/faq2.md", slug: "faq2", subcategory: "general", title: "FAQ2" }] }
+          "admin" => { "general" => [{ category: "admin", file_path: "path/to/faq2.md", slug: "faq2", subcategory: "general", title: "FAQ2" }] },
         })
       end
 
@@ -89,7 +89,7 @@ RSpec.describe FAQsLoaderService do
       it 'returns FAQs grouped by subcategory for a given category' do
         result = service.faqs_for_category('usager')
         expect(result).to eq({
-          'account' => [{ category: 'usager', subcategory: 'account', title: 'FAQ1', slug: 'faq1', file_path: 'path/to/faq1.md' }]
+          'account' => [{ category: 'usager', subcategory: 'account', title: 'FAQ1', slug: 'faq1', file_path: 'path/to/faq1.md' }],
         })
       end
     end

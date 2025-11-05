@@ -69,10 +69,10 @@ module Administrateurs
         .procedures
         .includes(
           published_revision: {
-            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
+            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } },
           },
           draft_revision: {
-            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
+            revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } },
           },
           attestation_acceptation_template: [],
           attestation_refus_template: [],
@@ -718,7 +718,7 @@ module Administrateurs
         clone_avis: options[:avis] == '1',
         clone_labels: options[:labels] == '1',
         clone_libelle: params.fetch(:procedure)[:libelle],
-        cloned_from_library: params[:from_new_from_existing]
+        cloned_from_library: params[:from_new_from_existing],
       }
     end
 

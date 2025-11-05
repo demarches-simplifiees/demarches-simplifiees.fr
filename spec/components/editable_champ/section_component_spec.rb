@@ -100,7 +100,7 @@ describe EditableChamp::SectionComponent, type: :component do
           children: [
             { type: :header_section, level: 1, libelle: 'child_1' },
             { type: :text, libelle: 'child_2' }
-          ]
+          ],
         }
       ]
     end

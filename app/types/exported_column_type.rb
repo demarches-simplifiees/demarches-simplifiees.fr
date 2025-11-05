@@ -31,7 +31,7 @@ class ExportedColumnType < ActiveRecord::Type::Value
     in ExportedColumn
       JSON.generate({
         id: value.column.h_id,
-        libelle: value.libelle
+        libelle: value.libelle,
       })
     else
       raise ArgumentError, "Invalid value for ExportedColumn serialization: #{value}"

@@ -59,7 +59,7 @@ module ProcedureStatsConcern
             name: state,
             data: chart_data .where(state: state) .group_by_week do |dossier|
               dossier.traitements.first.processed_at
-            end.map { |k, v| [k, v.count] }.to_h.transform_keys { |week| pretty_week(week) }
+            end.map { |k, v| [k, v.count] }.to_h.transform_keys { |week| pretty_week(week) },
           }
           # rubocop:enable Style/HashTransformValues
         end

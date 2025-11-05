@@ -23,7 +23,7 @@ module Maintenance
       "Sra." => 'Mme',
       "السيدة." => 'Mme',
       "م." => 'M.',
-      "Mrs." => 'Mme'
+      "Mrs." => 'Mme',
     }
 
     def collection

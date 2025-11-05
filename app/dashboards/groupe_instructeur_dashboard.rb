@@ -16,7 +16,7 @@ class GroupeInstructeurDashboard < Administrate::BaseDashboard
     instructeurs: Field::HasMany,
     humanized_routing_rule: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

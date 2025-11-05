@@ -42,7 +42,7 @@ class ContactController < ApplicationController
   def create_commentaire!
     attributes = {
       piece_jointe: contact_form_params[:piece_jointe],
-      body: "[#{contact_form_params[:subject]}]<br><br>#{contact_form_params[:text]}"
+      body: "[#{contact_form_params[:subject]}]<br><br>#{contact_form_params[:text]}",
     }
     CommentaireService.create!(current_user, dossier, attributes)
   end

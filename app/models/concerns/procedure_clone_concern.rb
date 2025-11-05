@@ -200,7 +200,7 @@ module ProcedureCloneConcern
       clone_dossier_submitted_message: true,
       clone_accuse_lecture: true,
       clone_mail_templates: true,
-      clone_labels: true
+      clone_labels: true,
     }
   end
 
@@ -259,8 +259,8 @@ module ProcedureCloneConcern
     associations = {
       draft_revision: {
         revision_types_de_champ: :type_de_champ,
-        dossier_submitted_message: []
-      }
+        dossier_submitted_message: [],
+      },
     }
 
     if options[:clone_attestation_acceptation_template]

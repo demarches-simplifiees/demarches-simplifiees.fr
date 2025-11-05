@@ -50,7 +50,7 @@ describe ChampConditionalConcern do
           {
             type: :repetition,
             children: [{ type: :yes_no }],
-            condition:
+            condition:,
           }
         ])
       end

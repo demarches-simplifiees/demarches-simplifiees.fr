@@ -30,7 +30,7 @@ class RecoveryService
         dossier_id: id,
         from: previous_user.email,
         from_support: false,
-        to: next_user.email
+        to: next_user.email,
       }
     end.then { |array| DossierTransferLog.create(array) }
 

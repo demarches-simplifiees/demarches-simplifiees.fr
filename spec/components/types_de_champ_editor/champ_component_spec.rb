@@ -55,9 +55,9 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
                 '$.jsonpath' => {
                   'prefill' => '1',
                   'type' => 'drop_down_list',
-                  'prefill_stable_id' => 2
-                }
-              }
+                  'prefill_stable_id' => 2,
+                },
+              },
             },
             { type: :drop_down_list, stable_id: 2, libelle: 'Votre ville', options: ['Paris', 'Lyon'] }
           ]

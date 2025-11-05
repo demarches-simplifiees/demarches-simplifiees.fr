@@ -335,7 +335,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
             children: [
               { type: :text, libelle: 'child_first_tdc' },
               { type: :text, libelle: 'child_second_tdc' }
-            ]
+            ],
           },
           { type: :text, libelle: 'root_thrid_tdc' }
         ]

@@ -26,7 +26,7 @@ module Manager
         resources: resources,
         page: page,
         show_search_bar: false,
-        search_term: nil
+        search_term: nil,
       }
     end
   end

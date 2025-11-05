@@ -16,7 +16,7 @@ RSpec.describe Instructeurs::RdvCardComponent, type: :component do
       "url_for_agents" => "https://rdv.anct.gouv.fr/rdvs/123456",
       "starts_at" => "2025-06-04 11:30:00 +0200",
       "motif" => { "location_type" => location_type },
-      "agents" => [{ "id" => 1957, "email" => current_instructeur.email, "first_name" => "Tom", "last_name" => "Plop" }]
+      "agents" => [{ "id" => 1957, "email" => current_instructeur.email, "first_name" => "Tom", "last_name" => "Plop" }],
     }
   }
   let(:starts_at) { Time.zone.parse(rdv["starts_at"]) }

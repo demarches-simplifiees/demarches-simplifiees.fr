@@ -10,7 +10,7 @@ class InstructeursProcedure < ApplicationRecord
     annotation_instructeur: 'followed',
     avis_externe: 'followed',
     attente_correction: 'followed',
-    attente_avis: 'followed'
+    attente_avis: 'followed',
   }.freeze
 
   NOTIFICATION_COLUMNS = {
@@ -20,7 +20,7 @@ class InstructeursProcedure < ApplicationRecord
     annotation_instructeur: 'display_annotation_instructeur_notifications',
     avis_externe: 'display_avis_externe_notifications',
     attente_correction: 'display_attente_correction_notifications',
-    attente_avis: 'display_attente_avis_notifications'
+    attente_avis: 'display_attente_avis_notifications',
   }.freeze
 
   belongs_to :instructeur

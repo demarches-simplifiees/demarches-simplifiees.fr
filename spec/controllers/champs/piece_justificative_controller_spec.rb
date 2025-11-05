@@ -14,7 +14,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       put :update, params: {
         dossier_id: champ.dossier_id,
         stable_id: champ.stable_id,
-        blob_signed_id: file
+        blob_signed_id: file,
       }.compact, format: :turbo_stream
     end
 
@@ -77,7 +77,7 @@ describe Champs::PieceJustificativeController, type: :controller do
     subject do
       get :template, params: {
         dossier_id: champ.dossier_id,
-        stable_id: champ.stable_id
+        stable_id: champ.stable_id,
       }
     end
 

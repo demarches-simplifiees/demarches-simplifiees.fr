@@ -23,7 +23,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     adresse: Field::String,
     siret: Field::String,
     etablissement_adresse: Field::String.with_options(searchable: false),
-    etablissement_latlng: GeopointField
+    etablissement_latlng: GeopointField,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

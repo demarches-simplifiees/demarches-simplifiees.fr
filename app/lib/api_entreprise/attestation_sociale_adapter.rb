@@ -24,7 +24,7 @@ class APIEntreprise::AttestationSocialeAdapter < APIEntreprise::Adapter
 
       if data && data[:document_url].present?
         {
-          entreprise_attestation_sociale_url: data[:document_url]
+          entreprise_attestation_sociale_url: data[:document_url],
         }
       else
         {}

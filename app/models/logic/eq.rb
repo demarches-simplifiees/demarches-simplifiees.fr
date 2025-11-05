@@ -14,26 +14,26 @@ class Logic::Eq < Logic::BinaryOperator
       errors << {
         type: :empty_options,
         stable_id: @left.stable_id,
-        right: @right
+        right: @right,
       }
     elsif !Logic.compatible_type?(@left, @right, type_de_champs)
       errors << {
         type: :incompatible,
         stable_id: @left.try(:stable_id),
         right: @right,
-        operator_name: self.class.name
+        operator_name: self.class.name,
       }
     elsif left_type == :enum && !@left.options(type_de_champs, self.class.name).map(&:second).include?(right.value)
       errors << {
         type: :not_included,
         stable_id: @left.stable_id,
-        right: @right
+        right: @right,
       }
     elsif left_type == :enums
       errors << {
         type: :required_include,
         stable_id: @left.try(:stable_id),
-        operator_name: self.class.name
+        operator_name: self.class.name,
       }
     end
 

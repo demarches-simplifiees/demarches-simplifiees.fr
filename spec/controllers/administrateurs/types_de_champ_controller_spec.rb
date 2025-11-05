@@ -35,8 +35,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         type_de_champ: {
           type_champ: type_champ,
           libelle: 'l1.5',
-          after_stable_id: first_coordinate.stable_id
-        }
+          after_stable_id: first_coordinate.stable_id,
+        },
       }
     end
 
@@ -75,8 +75,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         procedure_id: procedure.id,
         stable_id: second_coordinate.stable_id,
         type_de_champ: {
-          libelle: 'updated'
-        }
+          libelle: 'updated',
+        },
       }
     end
 
@@ -131,8 +131,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           referentiel_file:,
           name: referentiel_file.original_filename,
           type_de_champ: {
-            libelle: 'updated'
-          }
+            libelle: 'updated',
+          },
         }
       end
 
@@ -231,8 +231,8 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           referentiel_file:,
           name: referentiel_file.original_filename,
           type_de_champ: {
-            libelle: 'updated'
-          }
+            libelle: 'updated',
+          },
         }
       end
 

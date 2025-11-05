@@ -45,7 +45,7 @@ RSpec.describe InstructeursProcedure, type: :model do
         annotation_instructeur: 'followed',
         avis_externe: 'followed',
         attente_correction: 'followed',
-        attente_avis: 'followed'
+        attente_avis: 'followed',
       }
     }
     let(:new_preferences) {
@@ -56,7 +56,7 @@ RSpec.describe InstructeursProcedure, type: :model do
         annotation_instructeur: 'followed',
         avis_externe: 'followed',
         attente_correction: 'followed',
-        attente_avis: 'followed'
+        attente_avis: 'followed',
       }
     }
 

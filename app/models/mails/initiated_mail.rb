@@ -30,7 +30,7 @@ module Mails
     def attachment_for_dossier(dossier)
       {
         filename: I18n.t('users.dossiers.show.papertrail.filename', dossier_id: dossier.id),
-        content: deposit_receipt_for_dossier(dossier)
+        content: deposit_receipt_for_dossier(dossier),
       }
     end
 

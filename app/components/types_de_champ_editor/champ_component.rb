@@ -31,15 +31,15 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       data: {
         controller: 'type-de-champ-editor',
         type_de_champ_editor_move_up_url_value: move_up_admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
-        type_de_champ_editor_move_down_url_value: move_down_admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id)
-      }
+        type_de_champ_editor_move_down_url_value: move_down_admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
+      },
     }
   end
 
   def form_options
     {
       url: admin_procedure_type_de_champ_path(procedure, type_de_champ.stable_id),
-      html: { multipart: true, id: nil, class: 'form width-100' }
+      html: { multipart: true, id: nil, class: 'form width-100' },
     }
   end
 
@@ -47,7 +47,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     {
       type: 'button',
       data: { action: 'type-de-champ-editor#onMoveButtonClick', type_de_champ_editor_direction_param: direction },
-      title: direction == :up ? 'Déplacer le champ vers le haut' : 'Déplacer le champ vers le bas'
+      title: direction == :up ? 'Déplacer le champ vers le haut' : 'Déplacer le champ vers le bas',
     }
   end
 
@@ -95,7 +95,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     {
       attached_file: type_de_champ.piece_justificative_template,
       auto_attach_url: helpers.auto_attach_url(type_de_champ, procedure_id: procedure.id),
-      view_as: :download
+      view_as: :download,
     }
   end
 
@@ -103,7 +103,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     {
       attached_file: type_de_champ.notice_explicative,
       auto_attach_url: helpers.auto_attach_url(type_de_champ, procedure_id: procedure.id),
-      view_as: :download
+      view_as: :download,
     }
   end
 

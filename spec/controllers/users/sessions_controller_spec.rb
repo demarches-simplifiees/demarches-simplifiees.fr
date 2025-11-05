@@ -25,8 +25,8 @@ describe Users::SessionsController, type: :controller do
         user: {
           email: email,
           password: send_password,
-          remember_me: remember_me
-        }
+          remember_me: remember_me,
+        },
       }
     end
 

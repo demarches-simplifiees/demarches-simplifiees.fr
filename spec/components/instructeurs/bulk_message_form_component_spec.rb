@@ -14,7 +14,7 @@ describe Instructeurs::BulkMessageFormComponent, type: :component do
         {
           nil: 10,
           gi_1.id => 15,
-          gi_2.id => 20
+          gi_2.id => 20,
         }
       end
 
@@ -42,7 +42,7 @@ describe Instructeurs::BulkMessageFormComponent, type: :component do
       let(:dossiers_count_per_groupe_instructeur) do
         {
           nil: 10,
-          procedure.groupe_instructeurs.first.id => 15
+          procedure.groupe_instructeurs.first.id => 15,
         }
       end
       it 'counts all (including count for dossier without groupe instructeur)' do

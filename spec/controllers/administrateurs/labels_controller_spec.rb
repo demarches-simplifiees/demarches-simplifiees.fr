@@ -38,9 +38,9 @@ describe Administrateurs::LabelsController, type: :controller do
         {
           label: {
             name: 'Nouveau label',
-                    color: 'green-bourgeon'
+                    color: 'green-bourgeon',
           },
-        procedure_id: procedure.id
+        procedure_id: procedure.id,
         }
       end
 
@@ -74,9 +74,9 @@ describe Administrateurs::LabelsController, type: :controller do
         {
           label: {
             name: 'Nouveau label',
-            color: 'green-bourgeon'
+            color: 'green-bourgeon',
           },
-        procedure_id: procedure_2.id
+        procedure_id: procedure_2.id,
         }
       end
 

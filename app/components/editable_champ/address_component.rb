@@ -21,7 +21,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       loader: data_sources_data_source_adresse_path,
       minimum_input_length: 2,
       translations: {
-        search_error:
+        search_error:,
       },
       is_disabled: @champ.not_ban?)
   end
@@ -38,8 +38,8 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       limit: 20,
       minimum_input_length: 2,
       translations: {
-        search_error: t('.search_error')
-      }
+        search_error: t('.search_error'),
+      },
     }
   end
 

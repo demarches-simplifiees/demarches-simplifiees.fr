@@ -9,7 +9,7 @@ class API::Public::V1::StatsController < API::Public::V1::BaseController
       processed: @procedure.stats_termines_states.as_json,
       processed_by_week: @procedure.stats_termines_by_week.as_json,
       processing_time: @procedure.stats_usual_traitement_time.as_json,
-      processing_time_by_month: @procedure.stats_usual_traitement_time_by_month_in_days.as_json
+      processing_time_by_month: @procedure.stats_usual_traitement_time_by_month_in_days.as_json,
     }
   end
 

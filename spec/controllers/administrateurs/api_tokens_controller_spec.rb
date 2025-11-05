@@ -14,7 +14,7 @@ describe Administrateurs::APITokensController, type: :controller do
         name: 'Test',
         access: 'read_write',
         target: 'all',
-        lifetime: 'oneWeek'
+        lifetime: 'oneWeek',
       }
     end
     let(:token) { APIToken.last }

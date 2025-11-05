@@ -22,7 +22,7 @@ RSpec.describe Dossiers::AnnuaireEducationComponent, type: :component do
       'code_region' => '11',
       'telephone' => '0145123456',
       'mail' => 'contact@lycee-moulin.fr',
-      'web' => 'https://lycee-moulin.fr'
+      'web' => 'https://lycee-moulin.fr',
     }
   end
 

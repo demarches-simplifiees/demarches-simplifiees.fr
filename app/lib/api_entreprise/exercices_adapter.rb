@@ -20,7 +20,7 @@ class APIEntreprise::ExercicesAdapter < APIEntreprise::Adapter
         exercices_array = data.map do |exercice|
           {
             ca: exercice[:data][:chiffre_affaires].to_s,
-            date_fin_exercice: Date.parse(exercice[:data][:date_fin_exercice])
+            date_fin_exercice: Date.parse(exercice[:data][:date_fin_exercice]),
           }
         end
 

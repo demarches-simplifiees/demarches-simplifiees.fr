@@ -33,8 +33,8 @@ RSpec.describe Referentiels::ReferentielDisplayComponent, type: :component do
             "example_value" => "valeur",
             "libelle" => "Nom affiché",
             "display_usager" => "1",
-            "display_instructeur" => '1'
-          }
+            "display_instructeur" => '1',
+          },
         }
       end
 

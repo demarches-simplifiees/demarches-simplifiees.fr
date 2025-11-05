@@ -9,13 +9,13 @@ class Dossiers::BatchSelectMoreComponent < ApplicationComponent
   def not_selected_button_data
     {
       action: "batch-operation#onSelectMore",
-      dossiers: @filtered_sorted_ids.first(BatchOperation::BATCH_SELECTION_LIMIT).join(',')
+      dossiers: @filtered_sorted_ids.first(BatchOperation::BATCH_SELECTION_LIMIT).join(','),
     }
   end
 
   def selected_button_data
     {
-      action: "batch-operation#onDeleteSelection"
+      action: "batch-operation#onDeleteSelection",
     }
   end
 

@@ -33,7 +33,7 @@ FactoryBot.define do
             "type" => "header", "content" => [
               { "type" => "headerColumn", "attrs" => { "textAlign" => "left" }, "content" => [{ "type" => "paragraph", "attrs" => { "textAlign" => "left" } }] },
               { "type" => "headerColumn", "attrs" => { "textAlign" => "left" }, "content" => [{ "type" => "paragraph", "attrs" => { "textAlign" => "left" } }] }
-            ]
+            ],
           },
           { "type" => "title", "attrs" => { "textAlign" => "center" }, "content" => [{ "text" => "Mon titre pour ", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_procedure_libelle", "label" => "libellé démarche" } }] },
           { "type" => "paragraph", "attrs" => { "textAlign" => "left" }, "content" => [{ "text" => "Dossier: n° ", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] },
@@ -42,9 +42,9 @@ FactoryBot.define do
             "content" => [
               { "text" => "Nom: ", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "individual_last_name", "label" => "prénom" } }, { "text" => " ", "type" => "text" },
               { "type" => "mention", "attrs" => { "id" => "individual_first_name", "label" => "nom" } }, { "text" => " ", "type" => "text" }
-            ]
+            ],
           }
-        ]
+        ],
       }
     end
   end

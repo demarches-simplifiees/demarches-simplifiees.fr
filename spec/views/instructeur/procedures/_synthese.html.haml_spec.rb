@@ -14,7 +14,7 @@ describe 'instructeurs/procedures/_synthese', type: :view do
         "a-suivre" => 0,
         "suivis" => 0,
         "traites" => 1,
-        "tous" => 1
+        "tous" => 1,
       },
       procedures: [procedure, procedure2]
     }
@@ -34,7 +34,7 @@ describe 'instructeurs/procedures/_synthese', type: :view do
         "a-suivre" => 0,
         "suivis" => 0,
         "traites" => 1,
-        "tous" => 1
+        "tous" => 1,
       },
       procedures: [procedure]
     }

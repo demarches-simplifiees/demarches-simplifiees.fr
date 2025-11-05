@@ -16,7 +16,7 @@ describe Administrateurs::ConditionsController, type: :controller do
     let(:default_params) do
       {
         procedure_id: procedure.id,
-        stable_id: third_tdc.stable_id
+        stable_id: third_tdc.stable_id,
       }
     end
 
@@ -31,9 +31,9 @@ describe Administrateurs::ConditionsController, type: :controller do
             {
               targeted_champ: champ_value(first_tdc.stable_id).to_json,
               operator_name: Logic::Eq.name,
-              value: '2'
+              value: '2',
             }
-          ]
+          ],
         }
       end
 
@@ -65,9 +65,9 @@ describe Administrateurs::ConditionsController, type: :controller do
             {
               targeted_champ: champ_value(1).to_json,
               operator_name: Logic::Eq.name,
-              value: '2'
+              value: '2',
             }
-          ]
+          ],
         }
       end
 
@@ -105,9 +105,9 @@ describe Administrateurs::ConditionsController, type: :controller do
             {
               targeted_champ: champ_value(second_tdc.stable_id).to_json,
               operator_name: Logic::EmptyOperator.name,
-              value: empty.to_json
+              value: empty.to_json,
             }
-          ]
+          ],
         }
       end
 
@@ -129,7 +129,7 @@ describe Administrateurs::ConditionsController, type: :controller do
           children: [
             { type: :integer_number, libelle: 'child_1' },
             { type: :integer_number, libelle: 'child_2' }
-          ]
+          ],
         }
       ])
     end
@@ -142,7 +142,7 @@ describe Administrateurs::ConditionsController, type: :controller do
     let(:default_params) do
       {
         procedure_id: procedure.id,
-        stable_id: child_2.stable_id
+        stable_id: child_2.stable_id,
       }
     end
 

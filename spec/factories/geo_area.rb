@@ -34,7 +34,7 @@ FactoryBot.define do
               [2.4284291267395024, 46.538491597754714],
               [2.428439855575562, 46.538476837725796]
             ]
-          ]
+          ],
         }
       end
     end
@@ -53,7 +53,7 @@ FactoryBot.define do
               [2.428447247847828, 46.53820214757286],
               [2.4282997263522077, 46.53823812531846]
             ]
-          ]
+          ],
         }
       end
     end
@@ -69,7 +69,7 @@ FactoryBot.define do
               [1.91162645816803, 49.75818243044436],
               [1.9116157293319704, 49.758172033960115]
             ]
-          ]
+          ],
         }
       end
     end
@@ -89,7 +89,7 @@ FactoryBot.define do
               [2.4284291267395024, 46.538491597754714, 0],
               [2.428439855575562, 46.538476837725796, 0]
             ]
-          ]
+          ],
         }
       end
     end
@@ -103,7 +103,7 @@ FactoryBot.define do
             [2.42824137210846, 46.53847314771794],
             [2.428284287452698, 46.53847314771794],
             [2.4284291267395024, 46.538491597754714]
-          ]
+          ],
         }
       end
     end
@@ -112,7 +112,7 @@ FactoryBot.define do
       geometry do
         {
           "type": "Point",
-          "coordinates": [2.428439855575562, 46.538476837725796]
+          "coordinates": [2.428439855575562, 46.538476837725796],
         }
       end
     end
@@ -121,7 +121,7 @@ FactoryBot.define do
       geometry do
         {
           "type": "Point",
-          "coordinates": [2.428439855575562, 46.538476837725796, 42]
+          "coordinates": [2.428439855575562, 46.538476837725796, 42],
         }
       end
     end
@@ -130,7 +130,7 @@ FactoryBot.define do
       geometry do
         {
           "type": "Point",
-          "coordinates": [46.538476837725796]
+          "coordinates": [46.538476837725796],
         }
       end
     end
@@ -152,7 +152,7 @@ FactoryBot.define do
                 [2.428439855575562, 46.538476837725796]
               ]
             ]
-          ]
+          ],
         }
       end
     end
@@ -161,7 +161,7 @@ FactoryBot.define do
       geometry do
         {
           "type": "Point",
-          "coordinates": [200, 100] # longitude > 180, latitude > 90
+          "coordinates": [200, 100], # longitude > 180, latitude > 90
         }
       end
     end
@@ -173,7 +173,7 @@ FactoryBot.define do
           "coordinates": [
             [2.4282521009445195, 46.53841410755813],
             [181, 91] # invalid
-          ]
+          ],
         }
       end
     end
@@ -185,7 +185,7 @@ FactoryBot.define do
           "coordinates": [
             [2.4282521009445195, 46.53841410755813],
             [181, 91] # invalid
-          ]
+          ],
         }
       end
     end
@@ -201,7 +201,7 @@ FactoryBot.define do
               [200, 100], # invalid
               [2.428439855575562, 46.538476837725796]
             ]
-          ]
+          ],
         }
       end
     end
@@ -215,7 +215,7 @@ FactoryBot.define do
               [2.4282521009445195, 46.53841410755813],
               [181, 91] # invalid
             ]
-          ]
+          ],
         }
       end
     end
@@ -233,7 +233,7 @@ FactoryBot.define do
                 [2.428439855575562, 46.538476837725796]
               ]
             ]
-          ]
+          ],
         }
       end
     end
@@ -245,16 +245,16 @@ FactoryBot.define do
           "geometries": [
             {
               "type": "Point",
-              "coordinates": [200, 100] # invalid
+              "coordinates": [200, 100], # invalid
             },
             {
               "type": "LineString",
               "coordinates": [
                 [2.4282521009445195, 46.53841410755813],
                 [181, 91] # invalid
-              ]
+              ],
             }
-          ]
+          ],
         }
       end
     end

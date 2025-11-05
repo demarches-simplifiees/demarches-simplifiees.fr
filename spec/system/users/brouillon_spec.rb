@@ -477,7 +477,7 @@ describe 'The user', js: true do
             {
               type: :repetition, libelle: 'repetition', mandatory: repetition_mandatory, condition:, children: [
                 { type: :text, libelle: 'nom', mandatory: true }
-              ]
+              ],
             }
           ])
       end
@@ -523,7 +523,7 @@ describe 'The user', js: true do
               type: :repetition, libelle: 'repetition', mandatory: true, children: [
                 { type: :checkbox, libelle: 'champ_b', stable_id: b_stable_id },
                 { type: :text, libelle: 'champ_c', condition: }
-              ]
+              ],
             }
           ])
       end

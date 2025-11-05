@@ -9,7 +9,7 @@ if ENV.enabled?('MAILCATCHER')
     ActionMailer::Base.add_delivery_method :mailcatcher, Mailcatcher::SMTP
     ActionMailer::Base.mailcatcher_settings = {
       address: ENV.fetch("MAILCATCHER_HOST"),
-      port: ENV.fetch("MAILCATCHER_PORT")
+      port: ENV.fetch("MAILCATCHER_PORT"),
     }
   end
 end

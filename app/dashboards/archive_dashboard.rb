@@ -14,7 +14,7 @@ class ArchiveDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     job_status: Field::String,
-    file: AttachmentField
+    file: AttachmentField,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

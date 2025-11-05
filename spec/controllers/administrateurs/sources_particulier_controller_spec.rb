@@ -39,7 +39,7 @@ describe Administrateurs::SourcesParticulierController, type: :controller do
     context 'when a forbidden source is requested' do
       let(:requested_sources) do
         {
-          api_particulier_sources: { cnaf: { enfants: ['forbidden'] } }
+          api_particulier_sources: { cnaf: { enfants: ['forbidden'] } },
         }
       end
 
@@ -49,7 +49,7 @@ describe Administrateurs::SourcesParticulierController, type: :controller do
     context 'when an authorized source is requested' do
       let(:requested_sources) do
         {
-          api_particulier_sources: { cnaf: { enfants: ['nomPrenom'] } }
+          api_particulier_sources: { cnaf: { enfants: ['nomPrenom'] } },
         }
       end
 

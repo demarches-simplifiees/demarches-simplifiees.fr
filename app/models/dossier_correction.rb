@@ -11,7 +11,7 @@ class DossierCorrection < ApplicationRecord
   enum :reason, {
     incorrect: 'incorrect',
     incomplete: 'incomplete',
-    outdated: 'outdated'
+    outdated: 'outdated',
   }, prefix: :dossier
 
   def resolved?

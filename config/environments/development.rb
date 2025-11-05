@@ -36,7 +36,7 @@ Rails.application.configure do
       config.cache_store = :memory_store
     end
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      'Cache-Control' => "public, max-age=#{2.days.to_i}",
     }
   else
     config.action_controller.perform_caching = false
@@ -90,7 +90,7 @@ Rails.application.configure do
   ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
   config.action_mailer.balancer_settings = {
     helo: ENV['HELO_ENABLED'] == 'enabled' ? 100 : 0,
-    letter_opener_web: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100
+    letter_opener_web: ENV['HELO_ENABLED'] == 'enabled' ? 0 : 100,
   }
   config.action_mailer.delivery_method = :balancer
 
@@ -99,7 +99,7 @@ Rails.application.configure do
 
   Rails.application.routes.default_url_options = {
     host: ENV.fetch("APP_HOST"),
-    protocol: :http
+    protocol: :http,
   }
 
   Rails.application.config.after_initialize do # allow attachment.url with disk service

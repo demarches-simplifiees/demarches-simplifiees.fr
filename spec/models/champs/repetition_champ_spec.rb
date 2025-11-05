@@ -6,7 +6,7 @@ describe Champs::RepetitionChamp do
       types_de_champ_public: [
         {
           type: :repetition,
-          children: [{ type: :text, libelle: "Ext" }], libelle: "Languages"
+          children: [{ type: :text, libelle: "Ext" }], libelle: "Languages",
         }
       ])
   }

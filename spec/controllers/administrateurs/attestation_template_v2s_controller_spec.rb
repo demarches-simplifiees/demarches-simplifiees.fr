@@ -19,10 +19,10 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         content: [
           {
             type: :paragraph,
-            content: [{ text: "Yo from spec", type: :text }]
+            content: [{ text: "Yo from spec", type: :text }],
           }
-        ]
-      }.to_json
+        ],
+      }.to_json,
     }
   end
 

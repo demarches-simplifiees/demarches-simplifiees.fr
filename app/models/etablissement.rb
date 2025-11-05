@@ -16,7 +16,7 @@ class Etablissement < ApplicationRecord
 
   enum :entreprise_etat_administratif, {
     actif: "actif",
-    fermé: "fermé"
+    fermé: "fermé",
   }, prefix: true
 
   after_commit -> { dossier&.index_search_terms_later }
@@ -31,7 +31,7 @@ class Etablissement < ApplicationRecord
     "entreprise_nom_commercial" => { type: :text },
     "entreprise_forme_juridique" => { type: :text },
     "entreprise_date_creation" => { type: :date, filterable: false },
-    "libelle_naf" => { type: :text }
+    "libelle_naf" => { type: :text },
   }.freeze
 
   EXPORTABLE_COLUMNS = {
@@ -57,7 +57,7 @@ class Etablissement < ApplicationRecord
     "association_objet" => { type: :text },
     "association_date_creation" => { type: :text },
     "association_date_declaration" => { type: :text },
-    "association_date_publication" => { type: :text }
+    "association_date_publication" => { type: :text },
   }.freeze
 
   def entreprise_raison_sociale

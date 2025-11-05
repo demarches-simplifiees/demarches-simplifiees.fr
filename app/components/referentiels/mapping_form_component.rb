@@ -85,8 +85,8 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
       class: 'fr-input',
       data: {
         "referentiel-mapping-target": "input",
-        'referentiel-mapping-enabled-value': disabled?(jsonpath)
-      }
+        'referentiel-mapping-enabled-value': disabled?(jsonpath),
+      },
     }
   end
 end

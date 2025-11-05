@@ -20,8 +20,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.string" => { type: types[:string], display_usager: "1" }
-            }
+              "$.string" => { type: types[:string], display_usager: "1" },
+            },
           }
         ]
       end
@@ -40,8 +40,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.float" => { type: types[:decimal_number], display_usager: "1" }
-            }
+              "$.float" => { type: types[:decimal_number], display_usager: "1" },
+            },
           }
         ]
       end
@@ -60,8 +60,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.int" => { type: types[:integer_number], display_usager: "1" }
-            }
+              "$.int" => { type: types[:integer_number], display_usager: "1" },
+            },
           }
         ]
       end
@@ -80,8 +80,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.bool" => { type: types[:boolean], display_usager: "1" }
-            }
+              "$.bool" => { type: types[:boolean], display_usager: "1" },
+            },
           }
         ]
       end
@@ -112,8 +112,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.date" => { type: types[:date], display_usager: "1" }
-            }
+              "$.date" => { type: types[:date], display_usager: "1" },
+            },
           }
         ]
       end
@@ -132,8 +132,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.datetime" => { type: types[:datetime], display_usager: "1" }
-            }
+              "$.datetime" => { type: types[:datetime], display_usager: "1" },
+            },
           }
         ]
       end
@@ -152,8 +152,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.list" => { type: types[:array], display_usager: "1" }
-            }
+              "$.list" => { type: types[:array], display_usager: "1" },
+            },
           }
         ]
       end

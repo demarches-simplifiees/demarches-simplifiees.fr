@@ -13,22 +13,22 @@ class TagsButtonListComponentPreview < ViewComponent::Preview
           {
             id: 'tdc12',
             libelle: 'Votre avis',
-            description: 'Détaillez votre avis'
+            description: 'Détaillez votre avis',
           },
           {
             id: 'tdc13',
             libelle: 'Votre avis très ' + 'long ' * 12,
             description: 'Ce libellé a été tronqué',
-            maybe_null: true
+            maybe_null: true,
           }
         ],
 
         champ_private: [
           {
             id: 'tdc22',
-            libelle: 'Montant accordé'
+            libelle: 'Montant accordé',
           }
-        ]
+        ],
       }))
   end
 end

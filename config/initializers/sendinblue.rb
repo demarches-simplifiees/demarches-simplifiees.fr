@@ -15,7 +15,7 @@ if ENV.key?('SENDINBLUE_BALANCING_VALUE')
       address: ENV.fetch("SENDINBLUE_SMTP_ADDRESS", "smtp-relay.brevo.com"),
       domain: 'smtp-relay.brevo.com',
       port: ENV.fetch("SENDINBLUE_SMTP_PORT", "587"),
-      authentication: :cram_md5
+      authentication: :cram_md5,
     }
   end
 

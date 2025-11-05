@@ -14,9 +14,9 @@ RSpec.describe Crisp::WebhookProcessor do
         session_id:,
         from: "user",
         user: {
-          user_id: email
-        }
-      }
+          user_id: email,
+        },
+      },
     }
   end
   let(:processor) { described_class.new(params) }
@@ -44,8 +44,8 @@ RSpec.describe Crisp::WebhookProcessor do
         {
           event:,
           data: {
-            session_id:
-          }
+            session_id:,
+          },
         }
       end
 

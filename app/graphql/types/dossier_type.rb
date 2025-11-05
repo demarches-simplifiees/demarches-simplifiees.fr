@@ -190,7 +190,7 @@ module Types
         byte_size: 0,
         byte_size_big_int: '0',
         checksum: '',
-        created_at: Time.zone.now
+        created_at: Time.zone.now,
       }
     end
 
@@ -203,7 +203,7 @@ module Types
         byte_size: 0,
         byte_size_big_int: '0',
         checksum: '',
-        created_at: Time.zone.now
+        created_at: Time.zone.now,
       }
     end
 

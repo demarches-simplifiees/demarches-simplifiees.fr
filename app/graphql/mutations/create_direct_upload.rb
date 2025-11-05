@@ -35,8 +35,8 @@ module Mutations
           # NOTE: we pass headers as JSON since they have no schema
           headers: blob.service_headers_for_direct_upload.to_json,
           blob_id: blob.id,
-          signed_blob_id: blob.signed_id
-        }
+          signed_blob_id: blob.signed_id,
+        },
       }
     end
   end

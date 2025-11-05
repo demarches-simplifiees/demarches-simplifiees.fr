@@ -11,7 +11,7 @@ module Maintenance
           create(:service,
                  etablissement_infos: {
                    adresse: "70 rue du Louvre\n75002\nPARIS\nFRANCE",
-                   code_insee_localite: "75002"
+                   code_insee_localite: "75002",
                  })
         }
 
@@ -25,7 +25,7 @@ module Maintenance
         let(:service) {
           create(:service,
                  etablissement_infos: {
-                   adresse: "70 rue du Louvre\n75002\nPARIS\nFRANCE"
+                   adresse: "70 rue du Louvre\n75002\nPARIS\nFRANCE",
                  })
         }
         it 'does nothing if no code_insee_localite' do

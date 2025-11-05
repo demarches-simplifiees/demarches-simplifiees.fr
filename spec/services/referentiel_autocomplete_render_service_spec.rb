@@ -9,7 +9,7 @@ RSpec.describe ReferentielAutocompleteRenderService do
       'items' => [
         { 'finess' => 'Tango', 'ej_rs' => 'Charlie' },
         { 'finess' => 'Bob', 'ej_rs' => 'Delta' }
-      ]
+      ],
     }
   end
 
@@ -21,12 +21,12 @@ RSpec.describe ReferentielAutocompleteRenderService do
         {
           label: 'Tango (Charlie)',
           value: 'Tango (Charlie)',
-          data: anything
+          data: anything,
         },
         {
           label: 'Bob (Delta)',
           value: 'Bob (Delta)',
-          data: anything
+          data: anything,
         }
       ])
     end
@@ -36,7 +36,7 @@ RSpec.describe ReferentielAutocompleteRenderService do
     it 'generates plain text from the template and the object' do
       obj = {
         'finess' => 'Tango',
-        'ej_rs' => "Charlie"
+        'ej_rs' => "Charlie",
       }
       expect(
         subject.send(:render_template, referentiel.json_template, obj).join('')

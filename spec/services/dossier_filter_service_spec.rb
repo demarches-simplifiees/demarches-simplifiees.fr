@@ -966,7 +966,7 @@ describe DossierFilterService do
       it 'groups filters by column and operator and normalizes them' do
         expected = {
           [column1, "match"] => [{ operator: 'match', value: ['en_construction'] }],
-          [column2, "match"] => [{ operator: 'match', value: ['2025-01-01'] }]
+          [column2, "match"] => [{ operator: 'match', value: ['2025-01-01'] }],
         }
         expect(subject).to eq(expected)
       end
@@ -984,7 +984,7 @@ describe DossierFilterService do
         expected = {
           [column1, "match"] => [
             { operator: 'match', value: ['en_construction', 'en_instruction'] }
-          ]
+          ],
         }
         expect(subject).to eq(expected)
       end
@@ -1002,7 +1002,7 @@ describe DossierFilterService do
         expected = {
           [column1, "match"] => [
             { operator: 'match', value: ['a', 'b'] }
-          ]
+          ],
         }
 
         expect(subject).to eq(expected)
@@ -1019,7 +1019,7 @@ describe DossierFilterService do
 
       it 'groups filters by column and operator' do
         expected = {
-          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }]
+          [column1, "match"] => [{ operator: 'match', value: ['en_construction', 'en_instruction'] }],
         }
         expect(subject).to eq(expected)
       end
@@ -1036,7 +1036,7 @@ describe DossierFilterService do
       it 'groups filters by column and operator' do
         expected = {
           [column1, "match"] => [{ operator: 'match', value: ['a', 'b'] }],
-          [column1, "before"] => [{ operator: 'before', value: ['2025-01-01'] }]
+          [column1, "before"] => [{ operator: 'before', value: ['2025-01-01'] }],
         }
         expect(subject).to eq(expected)
       end
@@ -1058,7 +1058,7 @@ describe DossierFilterService do
         expected = [
           {
             operator: 'match',
-            value: ['Dessert', 'Fromage']
+            value: ['Dessert', 'Fromage'],
           }
         ]
         expect(subject).to eq(expected)

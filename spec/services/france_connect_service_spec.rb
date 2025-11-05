@@ -62,7 +62,7 @@ describe FranceConnectService do
         birthplace: birthplace,
         gender: gender,
         email_france_connect: email,
-        france_connect_particulier_id: france_connect_particulier_id
+        france_connect_particulier_id: france_connect_particulier_id,
       })
 
       expect(id_token).to eq('id_token')

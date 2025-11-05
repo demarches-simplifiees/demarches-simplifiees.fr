@@ -1492,7 +1492,7 @@ describe Procedure do
               { libelle: 'Nom', mandatory: true },
               { libelle: 'Prénom', mandatory: true },
               { libelle: 'Age', type: :integer_number, mandatory: false }
-            ]
+            ],
           }
         ]
       end

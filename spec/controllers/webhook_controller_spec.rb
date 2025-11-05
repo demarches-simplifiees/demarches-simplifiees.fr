@@ -19,8 +19,8 @@ describe WebhookController, type: :controller do
         "event" => "message:send",
         "data" => {
           "from" => "user",
-          "user" => { "user_id" => "default_user@user.com" }
-        }
+          "user" => { "user_id" => "default_user@user.com" },
+        },
       }
     end
 
@@ -40,7 +40,7 @@ describe WebhookController, type: :controller do
 
       request.headers.merge!({
         'X-Crisp-Request-Timestamp' => timestamp,
-        'X-Crisp-Signature' => expected_signature
+        'X-Crisp-Signature' => expected_signature,
       })
 
       post :crisp, params: body, as: :json
@@ -52,7 +52,7 @@ describe WebhookController, type: :controller do
 
       request.headers.merge!({
         'X-Crisp-Request-Timestamp' => timestamp,
-        'X-Crisp-Signature' => 'bad_signature'
+        'X-Crisp-Signature' => 'bad_signature',
       })
 
       post :crisp, params: body, as: :json

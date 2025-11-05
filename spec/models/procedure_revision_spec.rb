@@ -19,7 +19,7 @@ describe ProcedureRevision do
               {
                 type: :repetition, libelle: 'l2', children: [
                   { type: :text, libelle: 'l2' }
-                ]
+                ],
               }
             ],
             types_de_champ_private: [
@@ -137,7 +137,7 @@ describe ProcedureRevision do
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "second child",
           parent_stable_id: type_de_champ_repetition.stable_id,
-          after_stable_id: draft.reload.children_of(type_de_champ_repetition).last.stable_id
+          after_stable_id: draft.reload.children_of(type_de_champ_repetition).last.stable_id,
         })
       end
 
@@ -146,7 +146,7 @@ describe ProcedureRevision do
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "last child",
           parent_stable_id: type_de_champ_repetition.stable_id,
-          after_stable_id: draft.reload.children_of(type_de_champ_repetition).last.stable_id
+          after_stable_id: draft.reload.children_of(type_de_champ_repetition).last.stable_id,
         })
       end
 
@@ -208,7 +208,7 @@ describe ProcedureRevision do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "second child",
-            parent_stable_id: type_de_champ_repetition.stable_id
+            parent_stable_id: type_de_champ_repetition.stable_id,
           })
         end
 
@@ -216,7 +216,7 @@ describe ProcedureRevision do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
             libelle: "last child",
-            parent_stable_id: type_de_champ_repetition.stable_id
+            parent_stable_id: type_de_champ_repetition.stable_id,
           })
         end
 
@@ -373,7 +373,7 @@ describe ProcedureRevision do
                 op: :update,
                 private: false,
                 stable_id: second_tdc.stable_id,
-                to: "(l1 == 3)"
+                to: "(l1 == 3)",
               }
             ])
           end
@@ -397,7 +397,7 @@ describe ProcedureRevision do
                 op: :update,
                 private: false,
                 stable_id: second_tdc.stable_id,
-                to: nil
+                to: nil,
               }
             ])
           end
@@ -421,7 +421,7 @@ describe ProcedureRevision do
                 op: :update,
                 private: false,
                 stable_id: second_tdc.stable_id,
-                to: "(l1 == 3)"
+                to: "(l1 == 3)",
               }
             ])
           end
@@ -447,7 +447,7 @@ describe ProcedureRevision do
               label: "Un champ text",
               private: false,
               mandatory: false,
-              stable_id: new_tdc.stable_id
+              stable_id: new_tdc.stable_id,
             }
           ])
         end
@@ -472,7 +472,7 @@ describe ProcedureRevision do
                 private: false,
                 from: first_tdc.libelle,
                 to: "modifier le libelle",
-                stable_id: first_tdc.stable_id
+                stable_id: first_tdc.stable_id,
               },
               {
                 op: :update,
@@ -481,7 +481,7 @@ describe ProcedureRevision do
                 private: false,
                 from: first_tdc.description,
                 to: "une description",
-                stable_id: first_tdc.stable_id
+                stable_id: first_tdc.stable_id,
               },
               {
                 op: :update,
@@ -490,7 +490,7 @@ describe ProcedureRevision do
                 private: false,
                 from: true,
                 to: false,
-                stable_id: first_tdc.stable_id
+                stable_id: first_tdc.stable_id,
               }
             ])
           end
@@ -513,7 +513,7 @@ describe ProcedureRevision do
                 private: first_tdc.private?,
                 from: false,
                 to: true,
-                stable_id: first_tdc.stable_id
+                stable_id: first_tdc.stable_id,
               },
               {
                 op: :update,
@@ -522,7 +522,7 @@ describe ProcedureRevision do
                 private: first_tdc.private?,
                 from: nil,
                 to: 'afficher au clique',
-                stable_id: first_tdc.stable_id
+                stable_id: first_tdc.stable_id,
               }
             ])
           end
@@ -546,7 +546,7 @@ describe ProcedureRevision do
               private: false,
               from: "text",
               to: "textarea",
-              stable_id: first_tdc.stable_id
+              stable_id: first_tdc.stable_id,
             }
           ])
         end
@@ -571,7 +571,7 @@ describe ProcedureRevision do
               private: false,
               from: 2,
               to: 1,
-              stable_id: new_draft_third_tdc.stable_id
+              stable_id: new_draft_third_tdc.stable_id,
             },
             {
               op: :move,
@@ -579,7 +579,7 @@ describe ProcedureRevision do
               private: false,
               from: 1,
               to: 2,
-              stable_id: new_draft_second_tdc.stable_id
+              stable_id: new_draft_second_tdc.stable_id,
             }
           ])
         end
@@ -598,7 +598,7 @@ describe ProcedureRevision do
               op: :remove,
               label: first_tdc.libelle,
               private: false,
-              stable_id: first_tdc.stable_id
+              stable_id: first_tdc.stable_id,
             }
           ])
         end
@@ -621,7 +621,7 @@ describe ProcedureRevision do
               private: false,
               from: "text",
               to: "drop_down_list",
-              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
+              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id,
             },
             {
               op: :update,
@@ -630,7 +630,7 @@ describe ProcedureRevision do
               private: false,
               from: [],
               to: ["one", "two"],
-              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
+              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id,
             }
           ])
         end
@@ -653,7 +653,7 @@ describe ProcedureRevision do
               private: false,
               from: "text",
               to: "carte",
-              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
+              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id,
             },
             {
               op: :update,
@@ -662,7 +662,7 @@ describe ProcedureRevision do
               private: false,
               from: [],
               to: [:cadastres, :znieff],
-              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id
+              stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id,
             }
           ])
         end
@@ -697,7 +697,7 @@ describe ProcedureRevision do
               referentiel: referentiel_1,
               referentiel_mapping: { key: 'value1' },
               stable_id: 123,
-              libelle: 'libelle'
+              libelle: 'libelle',
             }
           ]
         end
@@ -715,7 +715,7 @@ describe ProcedureRevision do
             :op => :update,
             :private => false,
             :stable_id => 123,
-            :to => "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/v2"
+            :to => "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/v2",
           })
           is_expected.to include({
             :attribute => :referentiel_mode,
@@ -724,7 +724,7 @@ describe ProcedureRevision do
             :op => :update,
             :private => false,
             :stable_id => 123,
-            :to => "autocomplete"
+            :to => "autocomplete",
           })
           is_expected.to include({
             :attribute => :referentiel_hint,
@@ -733,7 +733,7 @@ describe ProcedureRevision do
             :op => :update,
             :private => false,
             :stable_id => 123,
-            :to => 'Saisissez le code de votre autre reference'
+            :to => 'Saisissez le code de votre autre reference',
           })
           is_expected.to include({
             :attribute => :referentiel_test_data,
@@ -742,7 +742,7 @@ describe ProcedureRevision do
             :op => :update,
             :private => false,
             :stable_id => 123,
-            :to => 'une autre'
+            :to => 'une autre',
           })
           is_expected.to include({
             :attribute => :referentiel_mapping,
@@ -751,7 +751,7 @@ describe ProcedureRevision do
             :op => :update,
             :private => false,
             :stable_id => 123,
-            :to => { "key" => "value2" }
+            :to => { "key" => "value2" },
           })
         end
       end
@@ -989,7 +989,7 @@ describe ProcedureRevision do
             children: [
               { mandatory: true, description: "word " * 10 },
               { type: :piece_justificative, position: 2, mandatory: true, description: nil }
-            ]
+            ],
           }
         ]
       end
@@ -1009,7 +1009,7 @@ describe ProcedureRevision do
         [
           {
             type: :explication,
-            description: "5 words description <strong>containing html</strong> " * 20
+            description: "5 words description <strong>containing html</strong> " * 20,
           },
           { mandatory: true, description: nil }
         ]

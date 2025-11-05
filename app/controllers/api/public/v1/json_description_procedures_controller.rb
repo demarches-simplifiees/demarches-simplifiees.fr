@@ -19,7 +19,7 @@ class API::Public::V1::JSONDescriptionProceduresController < API::Public::V1::Ba
     API::V2::Schema.execute(API::V2::StoredQuery.get('ds-query-v2'),
       variables: {
         demarche: { "number": @procedure.id },
-        includeRevision: true
+        includeRevision: true,
       },
       operation_name: "getDemarcheDescriptor")
       .to_h.dig("data", "demarcheDescriptor").to_json

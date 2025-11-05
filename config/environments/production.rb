@@ -82,7 +82,7 @@ Rails.application.configure do
       error_handler: -> (method:, returning:, exception:) {
         Sentry.capture_exception exception, level: 'warning',
           tags: { method: method, returning: returning }
-      }
+      },
     }
 
     redis_options[:ssl] = ENV['REDIS_CACHE_SSL'] == 'enabled'
@@ -119,19 +119,19 @@ Rails.application.configure do
       user_name:            ENV.fetch("SMTP_USER"),
       password:             ENV.fetch("SMTP_PASS"),
       authentication:       ENV.fetch("SMTP_AUTHENTICATION"),
-      enable_starttls_auto: ENV.fetch("SMTP_TLS").present?
+      enable_starttls_auto: ENV.fetch("SMTP_TLS").present?,
     }
   elsif ENV['SENDMAIL_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.sendmail_settings = {
       location: ENV.fetch("SENDMAIL_LOCATION"),
-      arguments: ENV.fetch("SENDMAIL_ARGUMENTS")
+      arguments: ENV.fetch("SENDMAIL_ARGUMENTS"),
     }
   else
     sendinblue_weigth = ENV.fetch('SENDINBLUE_BALANCING_VALUE') { 0 }.to_i
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
     config.action_mailer.balancer_settings = {
-      sendinblue: sendinblue_weigth
+      sendinblue: sendinblue_weigth,
     }
     config.action_mailer.delivery_method = :balancer
   end
@@ -139,7 +139,7 @@ Rails.application.configure do
   # Configure default root URL for generating URLs to routes
   config.action_mailer.default_url_options = {
     protocol: :https,
-    host: ENV['APP_HOST']
+    host: ENV['APP_HOST'],
   }
   # Configure default root URL for email assets
   config.action_mailer.asset_host = "https://" + ENV['APP_HOST']
@@ -194,7 +194,7 @@ Rails.application.configure do
 
   Rails.application.routes.default_url_options = {
     protocol: :https,
-    host: ENV['APP_HOST']
+    host: ENV['APP_HOST'],
   }
 
   # The Content-Security-Policy is NOT in Report-Only mode

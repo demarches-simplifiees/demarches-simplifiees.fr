@@ -17,7 +17,7 @@ module Crisp
       # https://docs.crisp.chat/references/rest-api/v1/#get-conversation-metas
       "get_conversation_meta" => '/v1/website/%{website_id}/conversation/%{session_id}/meta',
       # https://docs.crisp.chat/references/rest-api/v1/#update-conversation-metas
-      "update_conversation_meta" => '/v1/website/%{website_id}/conversation/%{session_id}/meta'
+      "update_conversation_meta" => '/v1/website/%{website_id}/conversation/%{session_id}/meta',
     }.freeze
 
     def update_people_data(email:, body:)
@@ -86,7 +86,7 @@ module Crisp
 
     def headers
       {
-        'X-Crisp-Tier' => 'plugin'
+        'X-Crisp-Tier' => 'plugin',
       }
     end
 

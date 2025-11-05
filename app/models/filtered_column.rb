@@ -14,7 +14,7 @@ class FilteredColumn
   validate :check_filter_max_length
   validate :check_filter_max_integer
   validates :filter, presence: {
-    message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" }
+    message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" },
   }
 
   def initialize(column:, filter:)

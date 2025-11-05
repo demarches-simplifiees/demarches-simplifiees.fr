@@ -32,7 +32,7 @@ describe Champs::AddressChamp do
         "street_number" => "33",
         "street_address" => "33 Rue Rébeval",
         "department_code" => "75",
-        "department_name" => "Paris"
+        "department_name" => "Paris",
       }
     end
 
@@ -55,7 +55,7 @@ describe Champs::AddressChamp do
         "postal_code" => "27700",
         "department_code" => "27",
         "department_name" => "Eure",
-        "street_address" => "Rue du Bois Charles"
+        "street_address" => "Rue du Bois Charles",
       }
     end
 
@@ -77,7 +77,7 @@ describe Champs::AddressChamp do
         "postal_code" => "",
         "department_code" => "988",
         "department_name" => "Nouvelle-Calédonie",
-        "street_address" => "15 Rue BAUDELAIRE Nouméa"
+        "street_address" => "15 Rue BAUDELAIRE Nouméa",
       }
     end
 
@@ -106,7 +106,7 @@ describe Champs::AddressChamp do
           "street_number" => "128",
           "street_address" => "128 Rue Brancion",
           "department_code" => "75",
-          "department_name" => "Paris"
+          "department_name" => "Paris",
         }
       end
 
@@ -131,7 +131,7 @@ describe Champs::AddressChamp do
           "country_code" => "CH",
           "street_address" => "18 rue de la gruyere",
           "department_code" => "99",
-          "department_name" => "Etranger"
+          "department_name" => "Etranger",
         }
       end
 
@@ -166,7 +166,7 @@ describe Champs::AddressChamp do
             "country_code" => "CH",
             "street_address" => '18 rue du gruyere',
             "department_code" => "99",
-            "department_name" => "Etranger"
+            "department_name" => "Etranger",
           })
           expect(champ.full_address?).to be_falsey
           expect(champ.to_s).to eq('')

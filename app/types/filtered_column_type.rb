@@ -30,7 +30,7 @@ class FilteredColumnType < ActiveRecord::Type::Value
     in FilteredColumn
       JSON.generate({
         id: value.column.h_id,
-        filter: value.filter
+        filter: value.filter,
       })
     else
       raise ArgumentError, "Invalid value for FilteredColumn serialization: #{value}"

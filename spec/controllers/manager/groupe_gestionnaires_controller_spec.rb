@@ -32,7 +32,7 @@ describe Manager::GroupeGestionnairesController, type: :controller do
       post :add_gestionnaire,
         params: {
           id: groupe_gestionnaire.id,
-          emails: new_gestionnaire_email
+          emails: new_gestionnaire_email,
         }
     end
 
@@ -59,7 +59,7 @@ describe Manager::GroupeGestionnairesController, type: :controller do
       delete :remove_gestionnaire,
         params: {
           id: groupe_gestionnaire.id,
-          gestionnaire: { id: gestionnaire.id }
+          gestionnaire: { id: gestionnaire.id },
         }
     end
 

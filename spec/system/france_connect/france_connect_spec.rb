@@ -20,7 +20,7 @@ describe 'France Connect Connexion' do
       birthdate: birthdate,
       birthplace: birthplace,
       gender: gender,
-      email_france_connect: fc_email
+      email_france_connect: fc_email,
     }
   end
 

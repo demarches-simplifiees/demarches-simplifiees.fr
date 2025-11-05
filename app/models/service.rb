@@ -17,7 +17,7 @@ class Service < ApplicationRecord
     etablissement_enseignement: 'etablissement_enseignement',
     operateur_d_etat: "operateur_d_etat",
     service_deconcentre_de_l_etat: 'service_deconcentre_de_l_etat',
-    autre: 'autre'
+    autre: 'autre',
   }
 
   validates :nom, presence: { message: 'doit être renseigné' }, allow_nil: false

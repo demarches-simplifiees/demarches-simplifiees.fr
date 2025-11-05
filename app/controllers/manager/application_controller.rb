@@ -8,7 +8,7 @@ module Manager
     def default_params
       request.query_parameters[resource_name] ||= {
         order: "id",
-        direction: "desc"
+        direction: "desc",
       }
     end
 
@@ -47,14 +47,14 @@ module Manager
       to_log = {
         user_agent: request.user_agent,
         user_id: current_user&.id,
-        user_email: current_user&.email
+        user_email: current_user&.email,
       }
 
       if browser.known?
         to_log.merge!({
           browser: browser.name,
           browser_version: browser.version.to_s,
-          platform: browser.platform.name
+          platform: browser.platform.name,
         })
       end
 

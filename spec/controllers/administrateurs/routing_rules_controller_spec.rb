@@ -11,7 +11,7 @@ describe Administrateurs::RoutingRulesController, type: :controller do
   let(:default_params) do
     {
       procedure_id: procedure.id,
-      groupe_instructeur_id: gi_2.id
+      groupe_instructeur_id: gi_2.id,
     }
   end
 
@@ -29,9 +29,9 @@ describe Administrateurs::RoutingRulesController, type: :controller do
           {
             targeted_champ: targeted_champ,
             operator_name: operator_name,
-            value: value
+            value: value,
           }
-        ]
+        ],
       }
     end
 
@@ -119,14 +119,14 @@ describe Administrateurs::RoutingRulesController, type: :controller do
           {
             targeted_champ: champ_value(drop_down_tdc.stable_id).to_json,
             operator_name: Logic::Eq.name,
-            value: constant('Lyon')
+            value: constant('Lyon'),
           },
           {
             targeted_champ: empty,
             operator_name: Logic::Eq.name,
-            value: empty
+            value: empty,
           }
-        ]
+        ],
       }
     end
 
@@ -141,7 +141,7 @@ describe Administrateurs::RoutingRulesController, type: :controller do
     let(:params) do
       {
         procedure_id: procedure.id,
-        defaut_groupe_instructeur_id: gi_2.id
+        defaut_groupe_instructeur_id: gi_2.id,
       }
     end
 

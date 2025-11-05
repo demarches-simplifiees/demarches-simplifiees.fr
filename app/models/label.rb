@@ -23,7 +23,7 @@ class Label < ApplicationRecord
     pink_macaron: "pink-macaron",
     yellow_tournesol: "yellow-tournesol",
     brown_cafe_creme: "brown-cafe-creme",
-    beige_gris_galet: "beige-gris-galet"
+    beige_gris_galet: "beige-gris-galet",
   }
 
   validates :name, :color, presence: true

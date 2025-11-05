@@ -311,7 +311,7 @@ describe Instructeur, type: :model do
             nb_accepted: 0,
             nb_notification: 0,
             procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle
+            procedure_libelle: procedure_to_assign.libelle,
           }
         ])
       end
@@ -330,7 +330,7 @@ describe Instructeur, type: :model do
             nb_accepted: 0,
             nb_notification: 1,
             procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle
+            procedure_libelle: procedure_to_assign.libelle,
           }
         ])
       end
@@ -355,7 +355,7 @@ describe Instructeur, type: :model do
             nb_accepted: 0,
             nb_notification: 0,
             procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle
+            procedure_libelle: procedure_to_assign.libelle,
           }
         ])
       end
@@ -395,7 +395,7 @@ describe Instructeur, type: :model do
             nb_accepted: 1,
             nb_notification: 0,
             procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle
+            procedure_libelle: procedure_to_assign.libelle,
           }
         ])
       end

@@ -51,7 +51,7 @@ class CreateAvisService
             dossier: dossier,
             confidentiel: confidentiel,
             experts_procedure: experts_procedure,
-            question_label: @params[:question_label]
+            question_label: @params[:question_label],
           }
         end
       end

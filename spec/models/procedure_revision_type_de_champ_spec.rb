@@ -11,7 +11,7 @@ describe ProcedureRevisionTypeDeChamp do
                    type: :repetition, children: [
                      { libelle: 'l2.1' },
                      { libelle: 'l2.2' }
-                   ]
+                   ],
                  }
                ])
       end
@@ -39,7 +39,7 @@ describe ProcedureRevisionTypeDeChamp do
                    type: :repetition, libelle: 'l2', children: [
                      { libelle: 'l2.1' },
                      { libelle: 'l2.2' }
-                   ]
+                   ],
                  }
                ])
       end

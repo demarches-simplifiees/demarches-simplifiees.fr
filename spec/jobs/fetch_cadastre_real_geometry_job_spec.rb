@@ -12,7 +12,7 @@ describe FetchCadastreRealGeometryJob, type: :job do
     context 'when cadastre lookup works' do
       let(:properties) do
         {
-          id: '54084000AC0001'
+          id: '54084000AC0001',
         }
       end
       it 'fetch geo areas from IGN for proper data', vcr: { cassette_name: :cadastre_ok } do
@@ -24,7 +24,7 @@ describe FetchCadastreRealGeometryJob, type: :job do
     context 'when cadastre lookup fails by not found', vcr: { cassette_name: :cadastre_ko } do
       let(:properties) do
         {
-          id: '666660000C0001'
+          id: '666660000C0001',
         }
       end
 
@@ -37,7 +37,7 @@ describe FetchCadastreRealGeometryJob, type: :job do
     context 'when cadastre lookup fails by argument error', vcr: { cassette_name: :cadastre_argument_error } do
       let(:properties) do
         {
-          id: ''
+          id: '',
         }
       end
 

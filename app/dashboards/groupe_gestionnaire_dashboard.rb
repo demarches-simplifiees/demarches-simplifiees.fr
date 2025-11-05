@@ -16,7 +16,7 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     gestionnaires: Field::HasMany,
     administrateurs: Field::HasMany,
-    parent_name: Field::String
+    parent_name: Field::String,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

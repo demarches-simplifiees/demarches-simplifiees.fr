@@ -89,7 +89,7 @@ module APIParticulier
           'mesri_inscription_etudiant' => ['mesri', 'inscriptions'],
           'mesri_inscription_autre' => ['mesri', 'inscriptions'],
           'mesri_admission' => ['mesri', 'admissions'],
-          'mesri_etablissements' => ['mesri', 'etablissements']
+          'mesri_etablissements' => ['mesri', 'etablissements'],
         }
       end
 
@@ -99,7 +99,7 @@ module APIParticulier
             'allocataires' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
             'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
             'adresse' => ['identite', 'complementIdentite', 'complementIdentiteGeo', 'numeroRue', 'lieuDit', 'codePostalVille', 'pays'],
-            'quotient_familial' => ['quotientFamilial', 'annee', 'mois']
+            'quotient_familial' => ['quotientFamilial', 'annee', 'mois'],
           },
           'dgfip' => {
             'declarant1_nom' => { 'declarant1' => ['nom'] },
@@ -125,21 +125,21 @@ module APIParticulier
             'annee_impot' => { 'agregats_fiscaux' => ['anneeImpots'] },
             'annee_revenus' => { 'agregats_fiscaux' => ['anneeRevenus'] },
             'erreur_correctif' => { 'complements' => ['erreurCorrectif'] },
-            'situation_partielle' => { 'complements' => ['situationPartielle'] }
+            'situation_partielle' => { 'complements' => ['situationPartielle'] },
           },
           'pole_emploi' => {
             'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
             'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
             'contact' => ['email', 'telephone', 'telephone2'],
-            'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription']
+            'inscription' => ['dateInscription', 'dateCessationInscription', 'codeCertificationCNAV', 'codeCategorieInscription', 'libelleCategorieInscription'],
           },
           'mesri' => {
             'identifiant' => ['ine'],
             'identite' => ['nom', 'prenom', 'dateNaissance'],
             'inscriptions' => ['statut', 'regime', 'dateDebutInscription', 'dateFinInscription', 'codeCommune'],
             'admissions' => ['statut', 'regime', 'dateDebutAdmission', 'dateFinAdmission', 'codeCommune'],
-            'etablissements' => ['uai', 'nom']
-          }
+            'etablissements' => ['uai', 'nom'],
+          },
         }
       end
     end

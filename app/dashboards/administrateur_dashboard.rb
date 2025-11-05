@@ -18,7 +18,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     groupe_gestionnaire: Field::BelongsTo,
     registration_state: Field::String.with_options(searchable: false),
     features: FeaturesField,
-    email: Field::Email.with_options(searchable: false)
+    email: Field::Email.with_options(searchable: false),
   }.freeze
 
   # COLLECTION_ATTRIBUTES

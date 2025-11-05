@@ -7,7 +7,7 @@ class COJOService
     result = API::Client.new.(url:,
       json: {
         accreditationNumber: accreditation_number.to_i,
-        birthdate: accreditation_birthdate&.strftime('%d/%m/%Y')
+        birthdate: accreditation_birthdate&.strftime('%d/%m/%Y'),
       },
       authorization_token:,
       schema:,
@@ -19,7 +19,7 @@ class COJOService
       Success({
         accreditation_success:,
         accreditation_first_name: accreditation_success ? body[:firstName] : nil,
-        accreditation_last_name: accreditation_success ? body[:lastName] : nil
+        accreditation_last_name: accreditation_success ? body[:lastName] : nil,
       })
     in Failure(code:, reason:) if code.in?(401..403)
       Failure(API::Client::Error[:unauthorized, code, false, reason])
@@ -46,7 +46,7 @@ class COJOService
     {
       iss: Current.application_name,
       iat: Time.zone.now.to_i,
-      exp: 1.hour.from_now.to_i
+      exp: 1.hour.from_now.to_i,
     }
   end
 

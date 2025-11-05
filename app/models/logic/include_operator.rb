@@ -12,7 +12,7 @@ class Logic::IncludeOperator < Logic::BinaryOperator
       result << {
         type: :not_included,
         stable_id: @left.stable_id,
-        right: @right
+        right: @right,
       }
     end
 

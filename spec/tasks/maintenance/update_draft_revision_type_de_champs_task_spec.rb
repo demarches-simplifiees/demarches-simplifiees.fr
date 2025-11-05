@@ -11,7 +11,7 @@ module Maintenance
           type: :repetition, libelle: "Bloc", stable_id: 13, children: [
             { type: :text, libelle: "RepText", stable_id: 131, description: "Remove me", mandatory: true },
             { type: :number, libelle: "RepNum", stable_id: 132 }
-          ]
+          ],
         }
       ]
     }

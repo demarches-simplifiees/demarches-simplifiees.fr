@@ -16,7 +16,7 @@ class InstructeurDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     dossiers: Field::HasMany,
     procedures: Field::HasMany,
-    bypass_email_login_token: Field::Boolean
+    bypass_email_login_token: Field::Boolean,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

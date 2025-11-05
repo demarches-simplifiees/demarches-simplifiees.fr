@@ -88,7 +88,7 @@ RSpec.describe Crisp::APIService do
           origin: 'email',
           content: 'Hey there! Need help?',
           fingerprint: 12345,
-          user: { type: 'participant' }
+          user: { type: 'participant' },
         }
       end
 
@@ -117,7 +117,7 @@ RSpec.describe Crisp::APIService do
           email: 'test@example.com',
           segments: ['lost'],
           ip: '82.12.34.45',
-          subject: 'the subject'
+          subject: 'the subject',
         }
       end
 
@@ -155,9 +155,9 @@ RSpec.describe Crisp::APIService do
                   "topic" => "Attestation issue",
                   "meta" => {
                     "email" => "test@example.com",
-                    "segments" => ["attestation"]
-                  }
-                }
+                    "segments" => ["attestation"],
+                  },
+                },
               }.to_json
             )
         end

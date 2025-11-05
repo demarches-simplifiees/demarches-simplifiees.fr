@@ -11,7 +11,7 @@ module Maintenance
         let(:tdc) {
           create(:type_de_champ_header_section,
                   options: {
-                    'header_section_level' => '1'
+                    'header_section_level' => '1',
                   })
         }
 
@@ -36,7 +36,7 @@ module Maintenance
           create(:type_de_champ_header_section,
                   options: {
                     'header_section_level' => '1',
-                    'key' => 'value'
+                    'key' => 'value',
                   })
         }
 
@@ -49,7 +49,7 @@ module Maintenance
         let(:tdc) {
           create(:type_de_champ_textarea,
                   options: {
-                    'character_limit' => '400'
+                    'character_limit' => '400',
                   })
         }
 
@@ -67,7 +67,7 @@ module Maintenance
           create(:type_de_champ_header_section,
                   options: {
                     'header_section_level' => '1',
-                    'key' => 'value'
+                    'key' => 'value',
                   })
         }
 
@@ -81,7 +81,7 @@ module Maintenance
         let(:tdc) {
           create(:type_de_champ_header_section,
                   options: {
-                    'key' => 'value'
+                    'key' => 'value',
                   })
         }
 

@@ -10,7 +10,7 @@ class BillSignatureDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     serialized: AttachmentField,
-    signature: AttachmentField
+    signature: AttachmentField,
   }.freeze
 
   COLLECTION_ATTRIBUTES = [

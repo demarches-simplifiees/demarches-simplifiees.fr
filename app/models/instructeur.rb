@@ -38,14 +38,14 @@ class Instructeur < ApplicationRecord
     includes(:assign_to)
       .where(assign_tos: {
         groupe_instructeur_id: groupe_instructeur.id,
-        instant_email_message_notifications_enabled: true
+        instant_email_message_notifications_enabled: true,
       })
   }
 
   scope :with_instant_expert_avis_email_notifications_enabled, -> (groupe_instructeur) {
     includes(:assign_to).where(assign_tos: {
       groupe_instructeur_id: groupe_instructeur.id,
-      instant_expert_avis_email_notifications_enabled: true
+      instant_expert_avis_email_notifications_enabled: true,
     })
   }
 
@@ -116,7 +116,7 @@ class Instructeur < ApplicationRecord
     else
       {
         start_date: start_date,
-        procedure_overviews: active_procedure_overviews
+        procedure_overviews: active_procedure_overviews,
       }
     end
   end
@@ -148,7 +148,7 @@ class Instructeur < ApplicationRecord
         nb_en_construction: groupe.dossiers.visible_by_administration.en_construction.count,
         nb_en_instruction: groupe.dossiers.visible_by_administration.en_instruction.count,
         nb_accepted: Traitement.where(dossier: groupe.dossiers.accepte, processed_at: Time.zone.yesterday.all_day).count,
-        nb_notification: nb_notification
+        nb_notification: nb_notification,
       }
 
       if h[:nb_en_construction] > 0 || h[:nb_notification] > 0

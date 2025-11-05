@@ -734,12 +734,12 @@ describe Users::DossiersController, type: :controller do
     let(:submit_payload) do
       {
         id: dossier.id,
-        dossier: { champs_public_attributes: }
+        dossier: { champs_public_attributes: },
       }
     end
     let(:champs_public_attributes) do
       {
-        first_champ.public_id => { value: value }
+        first_champ.public_id => { value: value },
       }
     end
     let(:payload) { submit_payload }
@@ -763,10 +763,10 @@ describe Users::DossiersController, type: :controller do
           dossier: {
             champs_public_attributes: {
               first_champ.public_id => {
-                value: value
-              }
-            }
-          }
+                value: value,
+              },
+            },
+          },
         }
       end
 
@@ -795,10 +795,10 @@ describe Users::DossiersController, type: :controller do
           dossier: {
             champs_public_attributes: {
               first_champ.public_id => {
-                value:
-              }
-            }
-          }
+                value:,
+              },
+            },
+          },
         }
       end
 
@@ -838,7 +838,7 @@ describe Users::DossiersController, type: :controller do
       context 'updates the pj' do
         let(:champs_public_attributes) do
           {
-            piece_justificative_champ.public_id => { piece_justificative_file: file }
+            piece_justificative_champ.public_id => { piece_justificative_file: file },
           }
         end
 
@@ -868,7 +868,7 @@ describe Users::DossiersController, type: :controller do
         # See https://github.com/rails/rails/issues/26726
         let(:champs_public_attributes) do
           {
-            piece_justificative_champ.public_id => { piece_justificative_file: file }
+            piece_justificative_champ.public_id => { piece_justificative_file: file },
           }
         end
 
@@ -884,7 +884,7 @@ describe Users::DossiersController, type: :controller do
         let(:types_de_champ_public) { [{ type: :siret }] }
         let(:champs_public_attributes) do
           {
-            first_champ.public_id => { external_id: }
+            first_champ.public_id => { external_id: },
           }
         end
 
@@ -921,7 +921,7 @@ describe Users::DossiersController, type: :controller do
         let(:types_de_champ_public) { [{ type: :rnf }] }
         let(:champs_public_attributes) do
           {
-            first_champ.public_id => { external_id: 'external_id' }
+            first_champ.public_id => { external_id: 'external_id' },
           }
         end
 
@@ -957,8 +957,8 @@ describe Users::DossiersController, type: :controller do
         {
           id: dossier.id,
           dossier: {
-            champs_public_attributes: { first_champ.public_id => { value: } }
-          }
+            champs_public_attributes: { first_champ.public_id => { value: } },
+          },
         }
       end
 
@@ -995,9 +995,9 @@ describe Users::DossiersController, type: :controller do
           validate:,
           dossier: {
             champs_public_attributes: {
-              number_champ.public_id => { value: }
-            }
-          }
+              number_champ.public_id => { value: },
+            },
+          },
         }
       end
       let(:must_be_greater_than) { 10 }
@@ -1059,16 +1059,16 @@ describe Users::DossiersController, type: :controller do
             stable_id: referentiel_stable_id,
             referentiel_mapping: {
               "$.data[0].finess" => { prefill: "1", prefill_stable_id: 2 },
-              "$.data[0].ej_rs" => { prefill: "1", prefill_stable_id: 3 }
-            }
+              "$.data[0].ej_rs" => { prefill: "1", prefill_stable_id: 3 },
+            },
           },
           {
             type: :text,
-            stable_id: 2
+            stable_id: 2,
           },
           {
             type: :text,
-            stable_id: 3
+            stable_id: 3,
           }
         ]
       end
@@ -1082,10 +1082,10 @@ describe Users::DossiersController, type: :controller do
             champs_public_attributes: {
               first_champ.public_id => {
                 value: suggestion_value,
-                data: message_encryptor_service.encrypt_and_sign(suggestion_data, purpose: :storage, expires_in: 1.hour)
-              }
-            }
-          }
+                data: message_encryptor_service.encrypt_and_sign(suggestion_data, purpose: :storage, expires_in: 1.hour),
+              },
+            },
+          },
         }
       end
 
@@ -1130,12 +1130,12 @@ describe Users::DossiersController, type: :controller do
     let(:submit_payload) do
       {
         id: dossier.id,
-        dossier: { champs_public_attributes: }
+        dossier: { champs_public_attributes: },
       }
     end
     let(:champs_public_attributes) do
       {
-        first_champ.public_id => { value: value }
+        first_champ.public_id => { value: value },
       }
     end
     let(:payload) { submit_payload }
@@ -1169,7 +1169,7 @@ describe Users::DossiersController, type: :controller do
       context 'updates the pj' do
         let(:champs_public_attributes) do
           {
-            piece_justificative_champ.public_id => { piece_justificative_file: file }
+            piece_justificative_champ.public_id => { piece_justificative_file: file },
           }
         end
 
@@ -1206,10 +1206,10 @@ describe Users::DossiersController, type: :controller do
             dossier: {
               champs_public_attributes: {
                 piece_justificative_champ.public_id => {
-                  piece_justificative_file: file
-                }
-              }
-            }
+                  piece_justificative_file: file,
+                },
+              },
+            },
           }
         end
 
@@ -1281,10 +1281,10 @@ describe Users::DossiersController, type: :controller do
           dossier: {
             champs_public_attributes: {
               first_champ.public_id => {
-                value: value
-              }
-            }
-          }
+                value: value,
+              },
+            },
+          },
         }
       end
 
@@ -1317,7 +1317,7 @@ describe Users::DossiersController, type: :controller do
           {
             type: :referentiel,
             referentiel: referentiel,
-            stable_id: referentiel_stable_id
+            stable_id: referentiel_stable_id,
           }
         ]
       end
@@ -1327,10 +1327,10 @@ describe Users::DossiersController, type: :controller do
           dossier: {
             champs_public_attributes: {
               first_champ.public_id => {
-                external_id:
-              }
-            }
-          }
+                external_id:,
+              },
+            },
+          },
         }
       end
 
@@ -1541,8 +1541,8 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         commentaire: {
           body: body,
-          piece_jointe: file
-        }
+          piece_jointe: file,
+        },
       }
     }
 
@@ -1984,18 +1984,18 @@ describe Users::DossiersController, type: :controller do
                 stable_id: referentiel_stable_id,
                 referentiel_mapping: {
                   "$.ok" => { prefill: "1", prefill_stable_id: 2 },
-                  "$.repetition[0].nom" => { prefill: "1", prefill_stable_id: 3 }
-                }
+                  "$.repetition[0].nom" => { prefill: "1", prefill_stable_id: 3 },
+                },
               },
               {
                 type: :text,
-                stable_id: 2 # mapped with "$.ok"
+                stable_id: 2, # mapped with "$.ok"
               },
               {
                 type: :repetition,
                 children: [
                   { type: :text, stable_id: 3 } # mapped with "$.repetition{0}.nom"
-                ]
+                ],
               }
             ]
           end

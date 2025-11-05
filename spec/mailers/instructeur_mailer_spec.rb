@@ -106,7 +106,7 @@ RSpec.describe InstructeurMailer, type: :mailer do
 
       {
         start_date: Time.zone.now,
-        procedure_overviews: [procedure_overview]
+        procedure_overviews: [procedure_overview],
       }
     end
 

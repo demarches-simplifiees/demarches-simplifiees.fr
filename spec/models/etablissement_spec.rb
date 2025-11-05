@@ -107,12 +107,12 @@ describe Etablissement do
       [
         {
           "total_passif": "1200",
-          "chiffre_affaires_ht": "40000"
+          "chiffre_affaires_ht": "40000",
         },
         {
           "total_passif": "0",
           "new_key": "50",
-          "evolution_total_dettes_stables": "30"
+          "evolution_total_dettes_stables": "30",
         }
       ]
     end
@@ -156,7 +156,7 @@ describe Etablissement do
         "street_number" => "6",
         "street_name" => "RAOUL NORDLING",
         "postal_code" => "92270",
-        "city_name" => "BOIS COLOMBES"
+        "city_name" => "BOIS COLOMBES",
       }
     end
 

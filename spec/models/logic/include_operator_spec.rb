@@ -22,7 +22,7 @@ describe Logic::IncludeOperator do
       expected = {
         right: constant('something else'),
         stable_id: champ.stable_id,
-        type: :not_included
+        type: :not_included,
       }
 
       expect(ds_include(champ_value(champ.stable_id), constant('something else')).errors([champ.type_de_champ])).to eq([expected])

@@ -22,7 +22,7 @@ body_width = page_width - left_margin - right_margin
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size) do |pdf|
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
-    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf')
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
   })
   pdf.font 'marianne'
   pdf.fallback_fonts = ['Helvetica']

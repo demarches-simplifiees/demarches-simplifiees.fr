@@ -73,7 +73,7 @@ module EtablissementHelper
       '42' => '1 000 à 1 999 salariés',
       '51' => '2 000 à 4 999 salariés',
       '52' => '5 000 à 9 999 salariés',
-      '53' => '10 000 salariés et plus'
+      '53' => '10 000 salariés et plus',
     }[etablissement.entreprise_code_effectif_entreprise]
   end
 

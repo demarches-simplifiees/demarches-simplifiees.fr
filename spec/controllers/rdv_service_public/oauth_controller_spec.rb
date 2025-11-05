@@ -11,8 +11,8 @@ RSpec.describe RdvServicePublic::OauthController, type: :controller do
         credentials: {
           token: 'access_token_123',
           refresh_token: 'refresh_token_456',
-          expires_at: 1.hour.from_now.to_i
-        }
+          expires_at: 1.hour.from_now.to_i,
+        },
       })
     end
 

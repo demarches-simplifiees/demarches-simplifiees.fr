@@ -24,7 +24,7 @@ class Dropdown::MenuComponent < ApplicationComponent
   def wrapper_options
     @wrapper_options.deep_merge({
       class: wrapper_class_names,
-      data: { controller: 'menu-button' }
+      data: { controller: 'menu-button' },
     })
   end
 

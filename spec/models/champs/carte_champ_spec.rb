@@ -9,7 +9,7 @@ describe Champs::CarteChamp do
   let(:geo_json) do
     {
       "type" => 'Polygon',
-      "coordinates" => coordinates
+      "coordinates" => coordinates,
     }
   end
 
@@ -21,7 +21,7 @@ describe Champs::CarteChamp do
         type: 'FeatureCollection',
         id: champ.stable_id,
         bbox: champ.bounding_box,
-        features: features
+        features: features,
       }
     }
 

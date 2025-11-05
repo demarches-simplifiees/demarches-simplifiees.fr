@@ -10,22 +10,22 @@ RSpec.describe TagsButtonListComponent, type: :component do
         {
           id: 'tdc12',
           libelle: 'Votre avis',
-          description: 'Détaillez votre avis'
+          description: 'Détaillez votre avis',
         },
         {
           id: 'tdc13',
           libelle: 'Un champ avec un nom très ' + 'long ' * 12,
           description: 'Ce libellé a été tronqué',
-          maybe_null:
+          maybe_null:,
         }
       ],
 
       champ_private: [
         {
           id: 'tdc22',
-          libelle: 'Montant accordé'
+          libelle: 'Montant accordé',
         }
-      ]
+      ],
     }
   end
   let(:maybe_null) { true }

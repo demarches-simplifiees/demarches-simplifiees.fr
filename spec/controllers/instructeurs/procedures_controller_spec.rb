@@ -912,7 +912,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             post :create_multiple_commentaire_for_brouillons,
               params: {
                 procedure_id: procedure.id,
-                bulk_message: { body: body }
+                bulk_message: { body: body },
               }
           end.to change { Commentaire.count }.from(0).to(4)
         [dossier, dossier_2, dossier_3, dossier_4].each do |any_dossier|
@@ -938,8 +938,8 @@ describe Instructeurs::ProceduresController, type: :controller do
                   procedure_id: procedure.id,
                   bulk_message: {
                     body: body,
-                    groupe_instructeur_ids: { gi_p1_1.id => true, gi_p1_2.id => false }
-                  }
+                    groupe_instructeur_ids: { gi_p1_1.id => true, gi_p1_2.id => false },
+                  },
                 }
         end
         it "creates a Bulk Message for given group_instructeur_ids" do
@@ -962,8 +962,8 @@ describe Instructeurs::ProceduresController, type: :controller do
             bulk_message: {
               body: body,
               groupe_instructeur_ids: {},
-              without_group: "1"
-            }
+              without_group: "1",
+            },
           }
         end
         it "creates a Bulk Message for dossier without group_instructeur_ids" do

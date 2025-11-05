@@ -21,8 +21,8 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel: referentiel,
             referentiel_mapping: {
-              "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
-            }
+              "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id },
+            },
           },
           { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
         ]
@@ -458,13 +458,13 @@ describe Champs::ReferentielChamp, type: :model do
             {
               type: :referentiel,
               referentiel: referentiel,
-              referentiel_mapping:
+              referentiel_mapping:,
             },
             {
               type: :repetition,
               children: [
                 { type: :text, stable_id: 1 }
-              ]
+              ],
             }
           ]
         end
@@ -472,7 +472,7 @@ describe Champs::ReferentielChamp, type: :model do
         context 'when mapping and data are arrays' do
           let(:referentiel_mapping) do
             {
-              "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 }
+              "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
             }
           end
           let(:data) { { ok: [{ nom: 'Jeanne', age: 120 }, { nom: "Bob", age: 12 }, {}] } }
@@ -487,7 +487,7 @@ describe Champs::ReferentielChamp, type: :model do
         context 'when mapping and data are not array' do
           let(:referentiel_mapping) do
             {
-              "$.nom" => { prefill: "1", prefill_stable_id: 1 }
+              "$.nom" => { prefill: "1", prefill_stable_id: 1 },
             }
           end
           let(:data) { { nom: 'Jeanne', age: 120 } }
@@ -509,10 +509,10 @@ describe Champs::ReferentielChamp, type: :model do
                 {
                   type: :referentiel,
                   referentiel_id: referentiel.id,
-                  referentiel_mapping:
+                  referentiel_mapping:,
                 },
                 { type: :text, stable_id: 1 }
-              ]
+              ],
             }
           ]
         end
@@ -522,7 +522,7 @@ describe Champs::ReferentielChamp, type: :model do
         context 'when mapping and data are arrays' do
           let(:referentiel_mapping) do
             {
-              "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 }
+              "$.ok[0].nom" => { prefill: "1", prefill_stable_id: 1 },
             }
           end
           let(:data) { { ok: [{ nom: 'Jeanne' }, {}] } }
@@ -537,7 +537,7 @@ describe Champs::ReferentielChamp, type: :model do
         context 'when mapping and data are not array' do
           let(:referentiel_mapping) do
             {
-              "$.nom" => { prefill: "1", prefill_stable_id: 1 }
+              "$.nom" => { prefill: "1", prefill_stable_id: 1 },
             }
           end
           let(:data) { { nom: 'Jeanne' } }
@@ -556,8 +556,8 @@ describe Champs::ReferentielChamp, type: :model do
               type: :referentiel,
               referentiel: referentiel,
               referentiel_mapping: {
-                "$.records[0].A" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
-              }
+                "$.records[0].A" => { prefill: "1", prefill_stable_id: prefillable_stable_id },
+              },
             },
             { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
           ]
@@ -581,8 +581,8 @@ describe Champs::ReferentielChamp, type: :model do
               type: :referentiel,
               referentiel: referentiel,
               referentiel_mapping: {
-                "$.records[0].fields.B" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
-              }
+                "$.records[0].fields.B" => { prefill: "1", prefill_stable_id: prefillable_stable_id },
+              },
             },
             { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
           ]
@@ -594,10 +594,10 @@ describe Champs::ReferentielChamp, type: :model do
               records: [
                 {
                   fields: {
-                    B: 'ok'
-                  }
+                    B: 'ok',
+                  },
                 }
-              ]
+              ],
             }
           end
           let(:prefilled_type_de_champ_type) { :text }
@@ -616,8 +616,8 @@ describe Champs::ReferentielChamp, type: :model do
               type: :referentiel,
               referentiel: referentiel,
               referentiel_mapping: {
-                "$.records[0].A[0].B" => { prefill: "1", prefill_stable_id: prefillable_stable_id }
-              }
+                "$.records[0].A[0].B" => { prefill: "1", prefill_stable_id: prefillable_stable_id },
+              },
             },
             { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
           ]
@@ -630,11 +630,11 @@ describe Champs::ReferentielChamp, type: :model do
                 {
                   A: [
                     {
-                      B: 'ok'
+                      B: 'ok',
                     }
-                  ]
+                  ],
                 }
-              ]
+              ],
             }
           end
           let(:prefilled_type_de_champ_type) { :text }

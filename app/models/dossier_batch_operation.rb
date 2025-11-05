@@ -8,7 +8,7 @@ class DossierBatchOperation < ApplicationRecord
   enum :state, {
     pending: 'pending',
     success: 'success',
-    error:   'error'
+    error:   'error',
   }
 
   include AASM

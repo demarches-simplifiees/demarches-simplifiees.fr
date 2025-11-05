@@ -30,7 +30,7 @@ module ApplicationHelper
       class: "fr-translate__language fr-nav__link",
       hreflang: locale,
       lang: locale,
-      "aria-current": I18n.locale == locale ? "true" : nil
+      "aria-current": I18n.locale == locale ? "true" : nil,
     }.compact do
       yield
     end

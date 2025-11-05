@@ -36,7 +36,7 @@ module Maintenance
             "region_name" => nil,
             "title" => "LA PRÉVENTION ROUTIERE",
             "country_name" => "France",
-            "country_code" => "FR"
+            "country_code" => "FR",
           })
       end
     end

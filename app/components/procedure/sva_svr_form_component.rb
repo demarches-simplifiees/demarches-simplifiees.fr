@@ -36,13 +36,13 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
         value: "continue",
         label: t("continue_label", scope: scope),
         hint: t("continue_hint", scope: scope),
-        disabled: form_disabled?
+        disabled: form_disabled?,
       },
       {
         value: "reset",
         label: t("reset_label", scope: scope),
         hint: t("reset_hint", scope: scope),
-        disabled: form_disabled?
+        disabled: form_disabled?,
       }
     ]
   end

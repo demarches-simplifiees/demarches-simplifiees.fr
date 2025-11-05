@@ -26,8 +26,8 @@ describe APIParticulier::Services::SourcesService do
         {
           'cnaf' => {
             'allocataires' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
-            'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe']
-          }
+            'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
+          },
         }
       end
 
@@ -41,8 +41,8 @@ describe APIParticulier::Services::SourcesService do
         {
           'dgfip' => {
             'declarant1' => ['nom', 'prenoms'],
-            'foyer_fiscal' => ['adresse']
-          }
+            'foyer_fiscal' => ['adresse'],
+          },
         }
       end
 
@@ -56,8 +56,8 @@ describe APIParticulier::Services::SourcesService do
         {
           'pole_emploi' => {
             'identite' => ['identifiant', 'civilite', 'nom', 'nomUsage', 'prenom', 'sexe', 'dateNaissance'],
-            'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom']
-          }
+            'adresse' => ['INSEECommune', 'codePostal', 'localite', 'ligneVoie', 'ligneComplementDestinataire', 'ligneComplementAdresse', 'ligneComplementDistribution', 'ligneNom'],
+          },
         }
       end
 
@@ -71,8 +71,8 @@ describe APIParticulier::Services::SourcesService do
         {
           'mesri' => {
             'identite' => ['nom', 'prenom', 'dateNaissance'],
-            'etablissements' => ['uai', 'nom']
-          }
+            'etablissements' => ['uai', 'nom'],
+          },
         }
       end
 
@@ -95,9 +95,9 @@ describe APIParticulier::Services::SourcesService do
         'cnaf' => {
           'allocataires' => ['nomPrenom', 'forbidden_sources', { 'weird_object' => 1 }],
           'forbidden_scope' => ['any_source'],
-          'adresse' => { 'weird_object' => 1 }
+          'adresse' => { 'weird_object' => 1 },
         },
-        'forbidden_provider' => { 'anything_scope' => ['any_source'] }
+        'forbidden_provider' => { 'anything_scope' => ['any_source'] },
       }
     end
 

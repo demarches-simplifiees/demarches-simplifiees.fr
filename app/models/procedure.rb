@@ -208,12 +208,12 @@ class Procedure < ApplicationRecord
 
   enum :declarative_with_state, {
     en_instruction:  'en_instruction',
-    accepte:         'accepte'
+    accepte:         'accepte',
   }
 
   enum :closing_reason, {
     internal_procedure: 'internal_procedure',
-    other: 'other'
+    other: 'other',
   }, prefix: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -252,13 +252,13 @@ class Procedure < ApplicationRecord
                                                   numericality: {
                                                     only_integer: true,
                                                     greater_than_or_equal_to: 1,
-                                                    less_than_or_equal_to: :max_duree_conservation_dossiers_dans_ds
+                                                    less_than_or_equal_to: :max_duree_conservation_dossiers_dans_ds,
                                                   }
   validates :max_duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {
                                                     only_integer: true,
                                                     greater_than_or_equal_to: 1,
-                                                    less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH
+                                                    less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH,
                                                   }
 
   validates_with MonAvisEmbedValidator, on: :publication

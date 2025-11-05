@@ -20,7 +20,7 @@ class UserDashboard < Administrate::BaseDashboard
     blocked_reason: Field::String,
     current_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
-    dossiers_invites: Field::HasMany
+    dossiers_invites: Field::HasMany,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

@@ -24,7 +24,7 @@ class CarteController < ApplicationController
       h.merge(
         v["departement"] => {
           'nb_demarches': v["nb_demarches"].presence || 0,
-          'nb_dossiers': v['nb_dossiers'].presence || 0
+          'nb_dossiers': v['nb_dossiers'].presence || 0,
         }
       )
     end

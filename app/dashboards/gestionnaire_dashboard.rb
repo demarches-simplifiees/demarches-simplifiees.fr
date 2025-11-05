@@ -16,7 +16,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     groupe_gestionnaires: Field::HasMany.with_options(limit: 20),
     registration_state: Field::String.with_options(searchable: false),
-    email: Field::Email.with_options(searchable: false)
+    email: Field::Email.with_options(searchable: false),
   }.freeze
 
   # COLLECTION_ATTRIBUTES

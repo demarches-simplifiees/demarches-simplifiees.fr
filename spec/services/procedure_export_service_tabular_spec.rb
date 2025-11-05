@@ -17,7 +17,7 @@ describe ProcedureExportService do
         [
           { type: 'text', libelle: 'child first champ', stable_id: 8 },
           { type: 'text', libelle: 'child second champ', stable_id: 9 }
-        ]
+        ],
       }
     ]
   end

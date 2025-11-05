@@ -66,7 +66,7 @@ class DossierSerializer < ActiveModel::Serializer
         created_at: champ.created_at&.in_time_zone('UTC'),
         type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],
         content_url: champ.type_de_champ.champ_value_for_api(champ, version: 1),
-        user: champ.dossier.user
+        user: champ.dossier.user,
       }
     end.flatten
   end

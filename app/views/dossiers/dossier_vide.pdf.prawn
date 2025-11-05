@@ -67,7 +67,7 @@ def add_page_numbering(pdf)
   string = '<page> / <total>'
   options = {
     at: [0, -15],
-    align: :right
+    align: :right,
   }
   pdf.number_pages string, options
 end
@@ -208,7 +208,7 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update('marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
-    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-thin.ttf')
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-thin.ttf'),
   })
   pdf.font 'marianne'
   pdf.fallback_fonts = ['Helvetica']

@@ -35,25 +35,25 @@ class ChampPresentations::RepetitionPresentation < ChampPresentations::BasePrese
                     content: [
                       {
                         type: 'text',
-                        text: champ.libelle
+                        text: champ.libelle,
                       }
-                    ]
+                    ],
                   }.compact,
                   {
                     type: 'descriptionDetails',
                     content: [
                       {
                         type: 'text',
-                        text: champ.to_s
+                        text: champ.to_s,
                       }
-                    ]
+                    ],
                   }
                 ]
-              end.flatten
+              end.flatten,
             }
-          ]
+          ],
         }
-      end
+      end,
     }
   end
 end

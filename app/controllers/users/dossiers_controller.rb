@@ -263,7 +263,7 @@ module Users
           Sentry.capture_message(
             "422: Dossier failed to pass en construction",
             extra: {
-              errors: @dossier.errors.full_messages
+              errors: @dossier.errors.full_messages,
             }
           )
           # Continue to render brouillon below
@@ -445,7 +445,7 @@ module Users
         'dossiers-invites' => dossiers_invites,
         'dossiers-supprimes' => dossiers_supprimes,
         'dossiers-transferes' => dossier_transferes,
-        'dossiers-expirant' => dossiers_close_to_expiration
+        'dossiers-expirant' => dossiers_close_to_expiration,
       }
 
       if tabs[params_statut]&.present?

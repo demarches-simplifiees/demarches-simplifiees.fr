@@ -68,7 +68,7 @@ describe 'Referentiel API:' do
             mandatory: false,
             children: [
               { type: :text, libelle: 'prefill with $.addresses[0].street', stable_id: prefill_repetition_children_stable_id }
-            ]
+            ],
           }
         ]
       end
@@ -334,7 +334,7 @@ describe 'Referentiel API:' do
             type: :referentiel,
             libelle: 'Numero de bâtiment public',
             stable_id: public_referentiel_stable_id,
-            referentiel: create(:api_referentiel, :exact_match, :with_exact_match_response, url: "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/")
+            referentiel: create(:api_referentiel, :exact_match, :with_exact_match_response, url: "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/"),
           }
         ]
       end
@@ -410,14 +410,14 @@ describe 'Referentiel API:' do
                 type: :referentiel,
                 referentiel_id: create(:api_referentiel, :exact_match, :with_exact_match_response, url: "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/").id,
                 libelle: 'Numero de bâtiment private inside repetition',
-                stable_id: private_referentiel_stable_id
+                stable_id: private_referentiel_stable_id,
               },
               {
                 type: :text,
                 libelle: '$.statut',
-                stable_id: prefill_by_private_referentiel_stable_id
+                stable_id: prefill_by_private_referentiel_stable_id,
               }
-            ]
+            ],
           }
         ]
       end
@@ -478,7 +478,7 @@ describe 'Referentiel API:' do
               { type: :referentiel, libelle: 'Numéro FINESS' },
               { type: :text, libelle: 'prefill with $.finess' },
               { type: :date, libelle: 'prefill with $.date_extract_finess' }
-            ]
+            ],
           }
         ]
       end

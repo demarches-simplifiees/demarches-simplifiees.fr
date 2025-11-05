@@ -18,7 +18,7 @@ class TeamAccountDashboard < Administrate::BaseDashboard
     last_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
     procedures: Field::HasMany,
-    procedures_count: Field::Number
+    procedures_count: Field::Number,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

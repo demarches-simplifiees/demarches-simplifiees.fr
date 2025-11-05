@@ -156,7 +156,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
         :followers_instructeurs,
         procedure: {
           groupe_instructeurs: { instructeurs: :user },
-          administrateurs: :user
+          administrateurs: :user,
         }
       )
       .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|

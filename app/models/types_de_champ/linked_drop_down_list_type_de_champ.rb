@@ -123,13 +123,13 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
       libelle: "#{libelle}/primaire",
       description: "#{description} (Primaire)",
       path: :primary,
-      maybe_null: public? && !mandatory?
+      maybe_null: public? && !mandatory?,
     })
     paths.push({
       libelle: "#{libelle}/secondaire",
       description: "#{description} (Secondaire)",
       path: :secondary,
-      maybe_null: public? && !mandatory?
+      maybe_null: public? && !mandatory?,
     })
     paths
   end

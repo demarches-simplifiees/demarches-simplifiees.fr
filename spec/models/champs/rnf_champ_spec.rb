@@ -88,10 +88,10 @@ describe Champs::RNFChamp, type: :model do
             departmentName: "Paris",
             departmentCode: "75",
             regionName: "Île-de-France",
-            regionCode: "11"
+            regionCode: "11",
           },
           status: nil,
-          persons: []
+          persons: [],
         })
       end
     end
@@ -171,7 +171,7 @@ describe Champs::RNFChamp, type: :model do
           region_name: "Île-de-France",
           title: "Fondation SFR",
           country_code: "FR",
-          country_name: "France"
+          country_name: "France",
         }
         expect(champ).to receive(:update!).with(data: anything, value_json:, fetch_external_data_exceptions: [])
         champ.update_external_data!(data: subject.value!)

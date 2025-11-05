@@ -11,7 +11,7 @@ class Champs::IntegerNumberChamp < Champ
     message: -> (object, _data) {
       # i18n-tasks-use t('errors.messages.not_an_integer')
       object.errors.generate_message(:value, :not_an_integer)
-    }
+    },
   }, if: :validate_champ_value?
 
   def format_value

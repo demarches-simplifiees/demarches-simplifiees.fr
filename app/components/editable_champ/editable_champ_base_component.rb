@@ -29,7 +29,7 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
 
       {
         aria: { labelledby: labelledby.join(' ') },
-        role: 'group'
+        role: 'group',
       }
     else
       {}

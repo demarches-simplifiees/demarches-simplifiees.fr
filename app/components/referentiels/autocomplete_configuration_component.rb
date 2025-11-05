@@ -37,7 +37,7 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
     properties = jsonpaths.map do |jsonpath, value|
       {
         libelle: "#{jsonpath} (#{value})",
-        id: jsonpath
+        id: jsonpath,
       }
     end
     { properties: }
@@ -49,9 +49,9 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
       data: {
         controller: "autosubmit",
         autosubmit_debounce_delay_value: 1000,
-        turbo: true
+        turbo: true,
       },
-      html: { novalidate: 'novalidate' }
+      html: { novalidate: 'novalidate' },
     }
   end
 
@@ -60,10 +60,10 @@ class Referentiels::AutocompleteConfigurationComponent < Referentiels::MappingFo
       method: :patch,
       data: {
         autosubmit_debounce_delay_value: 1000,
-        turbo: true
+        turbo: true,
 
       },
-      html: { novalidate: 'novalidate' }
+      html: { novalidate: 'novalidate' },
     }
   end
 

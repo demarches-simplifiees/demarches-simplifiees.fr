@@ -24,7 +24,7 @@ class Referentiels::NewFormComponent < Referentiels::MappingFormBase
   def form_options
     {
       data: { turbo: 'true', controller: 'referentiel-new-form' },
-      html: { novalidate: 'novalidate', id: }
+      html: { novalidate: 'novalidate', id: },
     }
   end
 
@@ -34,9 +34,9 @@ class Referentiels::NewFormComponent < Referentiels::MappingFormBase
         name: "referentiel[authentication_data][header]",
         value: authentication_data_header,
         data: {
-          'referentiel-new-form-target' => 'header'
-        }
-      }
+          'referentiel-new-form-target' => 'header',
+        },
+      },
     }
 
     options[:opts][:disabled] = true if authentication_by_header_token?
@@ -50,9 +50,9 @@ class Referentiels::NewFormComponent < Referentiels::MappingFormBase
         input_type: authentication_by_header_token? ? :password : :text,
         value: authentication_by_header_token? ? "C'est un secret" : '',
         data: {
-          'referentiel-new-form-target' => 'value'
-        }
-      }
+          'referentiel-new-form-target' => 'value',
+        },
+      },
     }
     options[:opts][:disabled] = true if authentication_by_header_token?
     options

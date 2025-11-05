@@ -109,7 +109,7 @@ class ApplicationController < ActionController::Base
       administrateur: current_administrateur,
       instructeur: current_instructeur,
       expert: current_expert,
-      user: current_user
+      user: current_user,
     }.compact
   end
 
@@ -211,7 +211,7 @@ class ApplicationController < ActionController::Base
     gon.autocomplete = {
       api_geo_url: API_GEO_URL,
       api_adresse_url: API_ADRESSE_URL,
-      api_education_url: API_EDUCATION_URL
+      api_education_url: API_EDUCATION_URL,
     }
   end
 
@@ -265,14 +265,14 @@ class ApplicationController < ActionController::Base
       user_id: current_user&.id,
       user_roles: current_user_roles,
       client_ip: request.headers['X-Forwarded-For'],
-      request_id: Current.request_id
+      request_id: Current.request_id,
     })
 
     if browser.known?
       logs.merge!({
         browser: browser.name,
         browser_version: browser.version.to_s,
-        platform: browser.platform.name
+        platform: browser.platform.name,
       })
     end
   end
@@ -350,7 +350,7 @@ class ApplicationController < ActionController::Base
       environment: ENV["SENTRY_CURRENT_ENV"],
       browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user,
-      release: ApplicationVersion.current
+      release: ApplicationVersion.current,
     }
   end
 
@@ -360,7 +360,7 @@ class ApplicationController < ActionController::Base
       domain: ENV['MATOMO_DOMAIN'],
       enabled: ENV.enabled?('MATOMO'),
       host: ENV['MATOMO_HOST'],
-      key: ENV['MATOMO_ID']
+      key: ENV['MATOMO_ID'],
     }.compact
   end
 
@@ -371,8 +371,8 @@ class ApplicationController < ActionController::Base
       enabled:,
       websiteId: enabled ? ENV.fetch("CRISP_WEBSITE_ID") : nil,
       administrateur: {
-        email: current_user&.email
-      }
+        email: current_user&.email,
+      },
     }
   end
 

@@ -37,8 +37,8 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
         checked: current_instructeur_in_groupe?(groupe_instructeur.id),
         data: {
           "checkbox-select-all-target": "checkbox",
-          **bulk_message_stimulus_data(dossier_count_for(groupe_instructeur))
-        }
+          **bulk_message_stimulus_data(dossier_count_for(groupe_instructeur)),
+        },
       },
       'true',
       'false'
@@ -64,7 +64,7 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
     {
       "bulk-message-target": "element",
       "action": "change->bulk-message#change",
-      "count": count
+      "count": count,
     }
   end
 

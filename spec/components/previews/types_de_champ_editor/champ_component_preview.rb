@@ -13,7 +13,7 @@ class TypesDeChampEditor::ChampComponentPreview < ViewComponent::Preview
     render_with_template(locals: {
       coordinate:,
       upper_coordinates:,
-      errors:
+      errors:,
     })
   end
 end

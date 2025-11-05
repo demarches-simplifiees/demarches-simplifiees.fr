@@ -34,13 +34,13 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
     if dossier.orphan?
       {
         dossier_url: commencer_url(@procedure.path, prefill_token: dossier.prefill_token),
-        state: :prefilled
+        state: :prefilled,
       }
     else
       {
         state: dossier.state,
         submitted_at: dossier.depose_at&.iso8601,
-        processed_at: dossier.processed_at&.iso8601
+        processed_at: dossier.processed_at&.iso8601,
       }
     end.merge(
       dossier_id: dossier.to_typed_id,

@@ -35,7 +35,7 @@ class API::V2::BaseController < ApplicationController
     {
       administrateur_id: current_administrateur.id,
       procedure_ids: current_administrateur.procedure_ids,
-      write_access: true
+      write_access: true,
     }
   end
 
@@ -43,7 +43,7 @@ class API::V2::BaseController < ApplicationController
     {
       administrateur_id: nil,
       procedure_ids: [],
-      write_access: false
+      write_access: false,
     }
   end
 
@@ -82,10 +82,10 @@ class API::V2::BaseController < ApplicationController
       errors: [
         {
           message:,
-          extensions: { code:, exception_id:, backtrace: }.compact
+          extensions: { code:, exception_id:, backtrace: }.compact,
         }
       ],
-      data: nil
+      data: nil,
     }
   end
 end

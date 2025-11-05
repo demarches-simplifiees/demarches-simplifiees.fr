@@ -10,7 +10,7 @@ module Manager
         redirect_to manager_administrateurs_path
       else
         render :new, locals: {
-          page: Administrate::Page::Form.new(dashboard, administrateur)
+          page: Administrate::Page::Form.new(dashboard, administrateur),
         }
       end
     end

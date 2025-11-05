@@ -13,9 +13,9 @@ describe Instructeurs::BatchOperationsController, type: :controller do
         procedure_id: procedure.id,
         batch_operation: {
           operation: BatchOperation.operations.fetch(:archiver),
-          dossier_ids: [dossier.id]
+          dossier_ids: [dossier.id],
         },
-        statut: 'a-suivre'
+        statut: 'a-suivre',
       }
     end
 
@@ -25,7 +25,7 @@ describe Instructeurs::BatchOperationsController, type: :controller do
       let(:params) do
         {
           procedure_id: create(:procedure).id,
-          statut: 'a-suivre'
+          statut: 'a-suivre',
         }
       end
 
@@ -68,12 +68,12 @@ describe Instructeurs::BatchOperationsController, type: :controller do
         procedure_id: procedure.id,
         batch_operation: {
           operation: BatchOperation.operations.fetch(:create_commentaire),
-          dossier_ids: [dossier.id]
+          dossier_ids: [dossier.id],
         },
         commentaire: {
           body: 'test',
-          piece_jointe: nil
-        }
+          piece_jointe: nil,
+        },
       }
     end
 

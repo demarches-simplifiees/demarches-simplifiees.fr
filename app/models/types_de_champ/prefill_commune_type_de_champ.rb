@@ -29,7 +29,7 @@ class TypesDeChamp::PrefillCommuneTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   def code_postal_attributes(champ, postal_code)
     {
       id: champ.id,
-      code_postal: postal_code
+      code_postal: postal_code,
     }
   end
 

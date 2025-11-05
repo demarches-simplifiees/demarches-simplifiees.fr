@@ -42,7 +42,7 @@ class Logic::Constant < Logic::Term
   def to_h
     {
       "term" => self.class.name,
-      "value" => @value
+      "value" => @value,
     }
   end
 

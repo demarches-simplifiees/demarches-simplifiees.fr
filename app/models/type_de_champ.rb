@@ -4,7 +4,7 @@ class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
     engagement_juridique: :engagement_juridique_type_de_champ,
-    cojo: :cojo_type_de_champ
+    cojo: :cojo_type_de_champ,
   }
 
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
@@ -61,7 +61,7 @@ class TypeDeChamp < ApplicationRecord
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
-    cojo: REFERENTIEL_EXTERNE
+    cojo: REFERENTIEL_EXTERNE,
   }
 
   enum :type_champ, {
@@ -105,7 +105,7 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri',
     epci: 'epci',
     cojo: 'cojo',
-    referentiel: 'referentiel'
+    referentiel: 'referentiel',
   }
 
   enum :nature, { RIB: 'RIB' }
@@ -207,7 +207,7 @@ class TypeDeChamp < ApplicationRecord
   validates :character_limit, numericality: {
     greater_than_or_equal_to: MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH,
     only_integer: true,
-    allow_blank: true
+    allow_blank: true,
   }
 
   after_initialize :set_dynamic_type
@@ -296,7 +296,7 @@ class TypeDeChamp < ApplicationRecord
       private: private?,
       type: champ_class.name,
       stable_id:,
-      stream: Champ::MAIN_STREAM
+      stream: Champ::MAIN_STREAM,
     }
   end
 
@@ -688,7 +688,7 @@ class TypeDeChamp < ApplicationRecord
       :min_character_length, :max_character_length,
       :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
     ],
-    type_champs.fetch(:referentiel) => [:referentiel_mapping]
+    type_champs.fetch(:referentiel) => [:referentiel_mapping],
   }
 
   def clean_options

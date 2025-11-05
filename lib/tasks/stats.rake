@@ -30,7 +30,7 @@ namespace :stats do
       percentage: percentage,
       sample_ids: sample_ids,
       total_dossiers: total_dossiers,
-      dossiers_percentage: dossiers_percentage
+      dossiers_percentage: dossiers_percentage,
     }
 
     rake_puts "#{feature_name}: #{count} démarches (#{percentage}%) - #{total_dossiers} dossiers (#{dossiers_percentage}%)"
@@ -54,7 +54,7 @@ namespace :stats do
       count: count,
       percentage: percentage,
       sample_ids: sample_ids,
-      total_instructeurs: total_instructeurs
+      total_instructeurs: total_instructeurs,
     }
   end
   desc <<~EOD
@@ -289,7 +289,7 @@ namespace :stats do
         nb_procedures: nb_procedures,
         nb_dossiers: nb_dossiers,
         percentage_procedures: percentage_procedures,
-        percentage_dossiers: percentage_dossiers
+        percentage_dossiers: percentage_dossiers,
       }
 
       rake_puts "#{type_champ}: #{nb_procedures} démarches (#{percentage_procedures}%) - #{nb_dossiers} dossiers (#{percentage_dossiers}%)"

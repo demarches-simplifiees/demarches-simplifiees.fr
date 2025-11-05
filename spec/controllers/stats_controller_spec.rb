@@ -25,7 +25,7 @@ describe StatsController, type: :controller do
           4.months.ago => 0,
           3.months.ago => 0,
           62.days.ago => 2,
-          31.days.ago => 1
+          31.days.ago => 1,
         }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
       end
     end
@@ -51,7 +51,7 @@ describe StatsController, type: :controller do
           3.months.ago => 0,
           45.days.ago => 1,
           1.month.ago => 0,
-          1.day.ago => 2
+          1.day.ago => 2,
         }.transform_keys { |date| I18n.l(date, format: '%B %Y') })
       end
     end
@@ -78,7 +78,7 @@ describe StatsController, type: :controller do
         expect(subject).to eq({
           Date.new(2016, 8, 1) => 2,
           Date.new(2016, 9, 1) => 4,
-          Date.new(2016, 10, 1) => 5
+          Date.new(2016, 10, 1) => 5,
         })
       end
     end
@@ -91,7 +91,7 @@ describe StatsController, type: :controller do
       it do
         expect(subject).to eq({
           Date.new(2016, 8, 1) => 2,
-          Date.new(2016, 9, 1) => 4
+          Date.new(2016, 9, 1) => 4,
         })
       end
     end

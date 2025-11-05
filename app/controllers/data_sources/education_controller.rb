@@ -36,7 +36,7 @@ class DataSources::EducationController < ApplicationController
       {
         label: "#{fields.fetch(:nom_etablissement)}#{commune} (#{value})",
         value:,
-        data: record
+        data: record,
       }
     end
   end

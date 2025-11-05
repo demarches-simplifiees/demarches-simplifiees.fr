@@ -3,7 +3,7 @@
 class Individual < ApplicationRecord
   enum :notification_method, {
     email: 'email',
-    no_notification: 'no_notification'
+    no_notification: 'no_notification',
   }
 
   belongs_to :dossier, optional: false

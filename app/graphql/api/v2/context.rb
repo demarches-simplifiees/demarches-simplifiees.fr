@@ -64,7 +64,7 @@ class API::V2::Context < GraphQL::Query::Context
       graphql_mutation: mutation?,
       graphql_null_error: errors.any? { _1.is_a? GraphQL::InvalidNullError }.presence,
       graphql_timeout_error: errors.any? { _1.is_a? GraphQL::Schema::Timeout::TimeoutError }.presence,
-      graphql_api_token_id: self[:api_token_id]
+      graphql_api_token_id: self[:api_token_id],
     }.compact
   end
 

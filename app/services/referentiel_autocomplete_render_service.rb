@@ -17,7 +17,7 @@ class ReferentielAutocompleteRenderService
       {
         label:,
         value: label,
-        data: message_encryptor_service.encrypt_and_sign(data, purpose: :storage, expires_in: 1.hour)
+        data: message_encryptor_service.encrypt_and_sign(data, purpose: :storage, expires_in: 1.hour),
       }
     end
   end
