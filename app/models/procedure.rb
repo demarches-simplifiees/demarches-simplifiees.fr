@@ -216,6 +216,12 @@ class Procedure < ApplicationRecord
     other: 'other',
   }, prefix: true
 
+  enum :pro_connect_restriction, {
+    none: 'none',
+    instructeurs: 'instructeurs',
+    all: 'all',
+  }, prefix: true
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
