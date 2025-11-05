@@ -1,19 +1,15 @@
 <% if blob.representable? %>
   <% representation = blob.representation(resize_to_limit: local_assigns[:in_gallery] ? [ 800, 600 ] : [ 1024, 768 ]) %>
-  <% if representation.image&.attached? || representation.key.present? %>
-    <figure class="attachment attachment--preview attachment--<%= blob.filename.extension %>">
-      <%= image_tag representation %>
-    <% else %>
-    <figure class="attachment attachment--file attachment--<%= blob.filename.extension %>">
-      <%= image_tag blob %>
-    <% end %>
-    </figure>
-      <figcaption class="attachment__caption">
-        <% if caption = blob.try(:caption) %>
-          <%= caption %>
-        <% else %>
-          <span class="attachment__name"><%= blob.filename %></span>
-          <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
-        <% end %>
-      </figcaption>
+  <% attachment_class, to_show = (representation.image&.attached? || representation.key.present?) ? [ "attachment--preview", representation ] : [ "attachment--file", blob ] %>
+  <figure class="attachment <%= attachment_class %> attachment--<%= blob.filename.extension %>">
+    <%= image_tag to_show %>
+    <figcaption class="attachment__caption">
+      <% if caption = blob.try(:caption) %>
+        <%= caption %>
+      <% else %>
+        <span class="attachment__name"><%= blob.filename %></span>
+        <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
+      <% end %>
+    </figcaption>
+  </figure>
 <% end %>

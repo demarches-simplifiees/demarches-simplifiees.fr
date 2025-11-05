@@ -1,9 +1,7 @@
 <% content_for(:title) { "Ajout d'un administrateur" } %>
 
 <header class="main-content__header">
-  <h1 class="main-content__page-title">
-    <%= content_for(:title) %>
-  </h1>
+  <h1 class="main-content__page-title"><%= content_for(:title) %></h1>
 
   <div>
     <%= link_to t("administrate.actions.back"), :back, class: "button" %>
@@ -12,15 +10,14 @@
 
 <section class="main-content__body">
   <p>
-    Veuillez partager ce lien avec un autre super admin pour que l'opération soit effectuée.
+    Veuillez partager ce lien avec un autre super admin pour que l'opération
+    soit effectuée.
   </p>
   <dl>
     <dt class="attribute-label">
       Lien
     </dt>
 
-    <dd class="attribute-data">
-      <%= @url %>
-    </dd>
+    <dd class="attribute-data"><%= @url %></dd>
   </dl>
 </section>
