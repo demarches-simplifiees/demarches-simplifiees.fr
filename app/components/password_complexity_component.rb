@@ -32,7 +32,7 @@ class PasswordComplexityComponent < ApplicationComponent
   def complexity_classes
     [
       "password-complexity fr-mt-2w fr-mb-1w",
-      filled? ? "complexity-#{@length < @min_length ? @score / 2 : @score}" : nil
+      filled? ? "complexity-#{@length < @min_length ? @score / 2 : @score}" : nil,
     ]
   end
 

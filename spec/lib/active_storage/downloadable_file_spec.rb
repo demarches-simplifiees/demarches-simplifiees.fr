@@ -61,7 +61,7 @@ describe ActiveStorage::DownloadableFile do
 
         list = [
           [instance_double(ActiveStorage::Attachment, blob: available_blob), 'filename.pdf'],
-          [instance_double(ActiveStorage::Attachment, blob: unavailable_blob), 'filename.pdf']
+          [instance_double(ActiveStorage::Attachment, blob: unavailable_blob), 'filename.pdf'],
         ]
 
         result = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(list)

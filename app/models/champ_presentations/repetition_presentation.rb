@@ -36,7 +36,7 @@ class ChampPresentations::RepetitionPresentation < ChampPresentations::BasePrese
                       {
                         type: 'text',
                         text: champ.libelle,
-                      }
+                      },
                     ],
                   }.compact,
                   {
@@ -45,12 +45,12 @@ class ChampPresentations::RepetitionPresentation < ChampPresentations::BasePrese
                       {
                         type: 'text',
                         text: champ.to_s,
-                      }
+                      },
                     ],
-                  }
+                  },
                 ]
               end.flatten,
-            }
+            },
           ],
         }
       end,

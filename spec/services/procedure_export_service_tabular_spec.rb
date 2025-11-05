@@ -16,9 +16,9 @@ describe ProcedureExportService do
         type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children:
         [
           { type: 'text', libelle: 'child first champ', stable_id: 8 },
-          { type: 'text', libelle: 'child second champ', stable_id: 9 }
+          { type: 'text', libelle: 'child second champ', stable_id: 9 },
         ],
-      }
+      },
     ]
   end
   let(:exported_columns) { [] }
@@ -58,7 +58,7 @@ describe ProcedureExportService do
             ExportedColumn.new(libelle: 'État du dossier', column: procedure.dossier_state_column),
             ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
             ExportedColumn.new(libelle: 'Commune', column: procedure.find_column(label: 'Commune')),
-            ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
+            ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ')),
           ]
         end
 
@@ -196,7 +196,7 @@ describe ProcedureExportService do
         [
           ExportedColumn.new(libelle: "N° dossier", column: procedure.find_column(label: "N° dossier")),
           ExportedColumn.new(libelle: "Demandeur", column: procedure.find_column(label: "Demandeur")),
-          ExportedColumn.new(libelle: "siret", column: procedure.find_column(label: "siret"))
+          ExportedColumn.new(libelle: "siret", column: procedure.find_column(label: "siret")),
         ]
       end
       let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
@@ -244,7 +244,7 @@ describe ProcedureExportService do
           "Association objet",
           "Association date de création",
           "Association date de déclaration",
-          "Association date de publication"
+          "Association date de publication",
         ])
       end
     end
@@ -263,7 +263,7 @@ describe ProcedureExportService do
           "Créé le",
           "Répondu le",
           "Instructeur",
-          "Expert"
+          "Expert",
         ])
         expect(avis_sheet.data.size).to eq(1)
       end
@@ -272,13 +272,13 @@ describe ProcedureExportService do
     describe 'Repetitions sheet' do
       let(:exported_columns) do
         [
-          ExportedColumn.new(libelle: "Champ répétable – child second champ", column: procedure.find_column(label: "Champ répétable – child second champ"))
+          ExportedColumn.new(libelle: "Champ répétable – child second champ", column: procedure.find_column(label: "Champ répétable – child second champ")),
         ]
       end
       let!(:dossiers) do
         [
           create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure),
-          create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure)
+          create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure),
         ]
       end
 
@@ -290,7 +290,7 @@ describe ProcedureExportService do
 
       it 'should have headers' do
         expect(repetition_sheet.headers).to eq([
-          "Dossier ID", "Ligne", "Champ répétable – child second champ"
+          "Dossier ID", "Ligne", "Champ répétable – child second champ",
         ])
       end
 

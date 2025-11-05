@@ -106,7 +106,7 @@ class Export < ApplicationRecord
     columns_key = ([sorted_column] + filtered_columns).compact.map(&:id).sort.join
 
     [
-      Digest::MD5.hexdigest(columns_key)
+      Digest::MD5.hexdigest(columns_key),
     ].join('--')
   end
 

@@ -27,7 +27,7 @@ class Instructeurs::OCRViewerComponent < ApplicationComponent
     tag.span class: 'fr-hint-text fr-text-default--warning font-weight-normal' do
       safe_join([
         dsfr_icon("fr-icon-warning-line", :sm, :mr),
-        t('.processing_error')
+        t('.processing_error'),
       ])
     end
   end

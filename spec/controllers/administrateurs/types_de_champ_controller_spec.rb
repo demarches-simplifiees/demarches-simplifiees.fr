@@ -6,10 +6,10 @@ describe Administrateurs::TypesDeChampController, type: :controller do
            types_de_champ_public: [
              { type: :integer_number, libelle: 'l1' },
              { type: :integer_number, libelle: 'l2' },
-             { type: :drop_down_list, libelle: 'l3' }
+             { type: :drop_down_list, libelle: 'l3' },
            ],
            types_de_champ_private: [
-             { type: :yes_no, libelle: 'bon dossier', private: true }
+             { type: :yes_no, libelle: 'bon dossier', private: true },
            ])
   end
 
@@ -215,7 +215,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       let(:procedure) do
         create(:procedure,
                types_de_champ_public: [
-                 { type: :multiple_drop_down_list, libelle: 'l1' }
+                 { type: :multiple_drop_down_list, libelle: 'l1' },
                ])
       end
       let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }

@@ -64,7 +64,7 @@ class DossierPreloader
     to_include << [
       piece_justificative_file_attachments: {
         blob: blob_include,
-      }
+      },
     ]
 
     all_champs = Champ

@@ -39,7 +39,7 @@ RSpec.describe Dossiers::AnnuaireEducationComponent, type: :component do
         expected_data = [
           ["Nom de l’établissement", "Lycée Jean Moulin"],
           ["L’identifiant de l’etablissement", "0123456A"],
-          ["SIREN/SIRET", "12345678901234"]
+          ["SIREN/SIRET", "12345678901234"],
         ]
 
         expected_details = [
@@ -51,7 +51,7 @@ RSpec.describe Dossiers::AnnuaireEducationComponent, type: :component do
           ["Adresse", "123 rue de la République<br>75001 Paris<br>Île-de-France (11)"],
           ["Téléphone", "0145123456"],
           ["Email", "contact@lycee-moulin.fr"],
-          ["Site internet", "https://lycee-moulin.fr"]
+          ["Site internet", "https://lycee-moulin.fr"],
         ]
 
         expected_source = "Annuaire de l’Éducation Nationale"

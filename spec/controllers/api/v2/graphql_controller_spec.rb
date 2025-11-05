@@ -218,7 +218,7 @@ describe API::V2::GraphqlController do
               {
                 instructeurs: [{ email: instructeur.email }],
                 label: "défaut",
-              }
+              },
             ],
             revisions: procedure.revisions.map { { id: _1.to_typed_id } },
             draftRevision: { id: procedure.draft_revision.to_typed_id },
@@ -511,7 +511,7 @@ describe API::V2::GraphqlController do
               {
                 id: instructeur.to_typed_id,
                 email: instructeur.email,
-              }
+              },
             ],
             groupeInstructeur: {
               id: dossier.groupe_instructeur.to_typed_id,
@@ -744,7 +744,7 @@ describe API::V2::GraphqlController do
                   id: champ_datetime.to_typed_id,
                   label: champ_datetime.libelle,
                   value: '1962-09-15T15:35:00+01:00',
-                }
+                },
               ],
             })
           end
@@ -783,7 +783,7 @@ describe API::V2::GraphqlController do
                   id: champ_datetime.to_typed_id,
                   label: champ_datetime.libelle,
                   datetime: '1962-09-15T15:35:00+01:00',
-                }
+                },
               ],
             })
           end
@@ -822,7 +822,7 @@ describe API::V2::GraphqlController do
                 state: deleted_dossier.state,
                 reason: deleted_dossier.reason,
                 dateSupression: deleted_dossier.deleted_at.iso8601,
-              }
+              },
             ],
           },
         })
@@ -1582,7 +1582,7 @@ describe API::V2::GraphqlController do
                   id: label.to_typed_id,
                   name: label.name,
                   color: label.color,
-                }
+                },
               ],
             },
             errors: nil,

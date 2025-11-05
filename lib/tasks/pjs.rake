@@ -44,7 +44,7 @@ namespace :pjs do
     # You must have these filenames in tmp/ to run this demo (download ID cards specimens)
     filenames = [
       "carte-identite-demo-1.jpg", "carte-identite-demo-2.jpg", "carte-identite-demo-3.png", "carte-identite-demo-4.jpg",
-      "carte-identite-demo-5.jpg", "passeport-1.jpg", "passeport-2.jpg"
+      "carte-identite-demo-5.jpg", "passeport-1.jpg", "passeport-2.jpg",
     ]
 
     filenames.each do |file|

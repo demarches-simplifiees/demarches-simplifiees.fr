@@ -47,7 +47,7 @@ module Types
 
     field :motivation, String, null: true
     field :motivation_attachment, Types::File, null: true, extensions: [
-      { Extensions::Attachment => { attachment: :justificatif_motivation } }
+      { Extensions::Attachment => { attachment: :justificatif_motivation } },
     ]
 
     field :pdf, Types::File, "L’URL du dossier au format PDF.", null: true

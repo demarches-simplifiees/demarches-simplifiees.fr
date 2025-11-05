@@ -21,7 +21,7 @@ describe Zone do
         {
           designated_on: start_last_government,
           name: "Ministère de l'Économie, des Finances et de la Souveraineté industrielle et numérique",
-        }
+        },
       ])
     end
 
@@ -53,7 +53,7 @@ describe Zone do
         {
           designated_on: start_futur_government,
           name: "Ministère des Territoires d'Outre-mer",
-        }
+        },
       ])
     end
 
@@ -84,7 +84,7 @@ describe Zone do
         {
           designated_on: start_futur_government,
           name: "Ministère des Territoires d'Outre-mer",
-        }
+        },
       ])
     end
 
@@ -93,7 +93,7 @@ describe Zone do
         {
           designated_on: start_previous_government,
           name: "Ministère de la Culture",
-        }
+        },
       ])
     end
 
@@ -110,7 +110,7 @@ describe Zone do
         {
           designated_on: start_futur_government,
           name: "Ministère des Territoires d'Outre-mer",
-        }
+        },
       ])
     end
 

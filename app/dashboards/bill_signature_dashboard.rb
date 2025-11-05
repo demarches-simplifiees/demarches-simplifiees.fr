@@ -19,7 +19,7 @@ class BillSignatureDashboard < Administrate::BaseDashboard
     :dossier_operation_logs,
     :digest,
     :serialized,
-    :signature
+    :signature,
   ].freeze
 
   # The show page is disabled, but administrate requires the constant

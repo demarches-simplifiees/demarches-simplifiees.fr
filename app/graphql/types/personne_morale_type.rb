@@ -31,10 +31,10 @@ module Types
       field :nom, String, null: true
       field :prenom, String, null: true
       field :attestation_sociale_attachment, Types::File, null: true, extensions: [
-        { Extensions::Attachment => { attachment: :entreprise_attestation_sociale, root: :etablissement } }
+        { Extensions::Attachment => { attachment: :entreprise_attestation_sociale, root: :etablissement } },
       ]
       field :attestation_fiscale_attachment, Types::File, null: true, extensions: [
-        { Extensions::Attachment => { attachment: :entreprise_attestation_fiscale, root: :etablissement } }
+        { Extensions::Attachment => { attachment: :entreprise_attestation_fiscale, root: :etablissement } },
       ]
       field :enseigne, String, null: true
 

@@ -12,7 +12,7 @@ describe 'linked dropdown lists', js: true do
       '--Primary 2--',
       'Secondary 2.1',
       'Secondary 2.2',
-      'Secondary 2.3'
+      'Secondary 2.3',
     ]
   end
 

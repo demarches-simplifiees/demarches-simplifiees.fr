@@ -59,7 +59,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
                 },
               },
             },
-            { type: :drop_down_list, stable_id: 2, libelle: 'Votre ville', options: ['Paris', 'Lyon'] }
+            { type: :drop_down_list, stable_id: 2, libelle: 'Votre ville', options: ['Paris', 'Lyon'] },
           ]
         end
         let(:coordinate) { procedure.draft_revision.coordinate_and_tdc(2).first }

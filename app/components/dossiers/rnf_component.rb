@@ -22,7 +22,7 @@ class Dossiers::RNFComponent < ApplicationComponent
   def data
     [
       [label(:rnf_id), champ.to_s],
-      *['title', 'email'].map { [label(it), champ.data[it]] }
+      *['title', 'email'].map { [label(it), champ.data[it]] },
     ]
   end
 
@@ -30,7 +30,7 @@ class Dossiers::RNFComponent < ApplicationComponent
     [
       *['phone', 'status'].map { [label(it), champ.data[it]] },
       *['createdAt', 'updatedAt', 'dissolvedAt'].map { [label(it), champ.data[it]&.to_date] },
-      *helpers.address_array(champ)
+      *helpers.address_array(champ),
     ]
   end
 

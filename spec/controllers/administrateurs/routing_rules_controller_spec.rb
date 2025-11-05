@@ -30,7 +30,7 @@ describe Administrateurs::RoutingRulesController, type: :controller do
             targeted_champ: targeted_champ,
             operator_name: operator_name,
             value: value,
-          }
+          },
         ],
       }
     end
@@ -125,7 +125,7 @@ describe Administrateurs::RoutingRulesController, type: :controller do
             targeted_champ: empty,
             operator_name: Logic::Eq.name,
             value: empty,
-          }
+          },
         ],
       }
     end

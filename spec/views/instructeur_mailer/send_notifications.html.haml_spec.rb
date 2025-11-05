@@ -21,7 +21,7 @@ describe 'instructeur_mailer/send_notifications', type: :view do
           nb_en_instruction: 0,
           nb_accepted: 0,
           nb_notification: 0,
-        }
+        },
       ]
     end
 
@@ -43,7 +43,7 @@ describe 'instructeur_mailer/send_notifications', type: :view do
           nb_en_instruction: 1,
           nb_accepted: 0,
           nb_notification: 0,
-        }
+        },
       ]
     end
 
@@ -67,7 +67,7 @@ describe 'instructeur_mailer/send_notifications', type: :view do
           nb_en_instruction: 0,
           nb_accepted: 1,
           nb_notification: 0,
-        }
+        },
       ]
     end
 
@@ -91,7 +91,7 @@ describe 'instructeur_mailer/send_notifications', type: :view do
           nb_en_instruction: 0,
           nb_accepted: 0,
           nb_notification: 1,
-        }
+        },
       ]
     end
 

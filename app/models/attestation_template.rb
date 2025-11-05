@@ -47,7 +47,7 @@ class AttestationTemplate < ApplicationRecord
                           "type" => "paragraph",
                           "attrs" => { "textAlign" => "left" },
                           "content" => [{ "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } }],
-                        }
+                        },
                       ],
           },
           {
@@ -58,11 +58,11 @@ class AttestationTemplate < ApplicationRecord
                           "attrs" => { "textAlign" => "left" },
                           "content" => [
                             { "text" => "Fait le ", "type" => "text" },
-                            { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }
+                            { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } },
                           ],
-              }
+              },
             ],
-          }
+          },
         ],
       },
       { "type" => "title", "attrs" => { "textAlign" => "center" }, "content" => [{ "text" => "Titre de l’attestation", "type" => "text" }] },
@@ -73,9 +73,9 @@ class AttestationTemplate < ApplicationRecord
           {
             "text" => "Vous pouvez éditer ce texte pour personnaliser votre attestation. Pour ajouter du contenu issu du dossier, utilisez les balises situées sous cette zone de saisie.",
             "type" => "text",
-          }
+          },
         ],
-      }
+      },
     ],
   }.freeze
 

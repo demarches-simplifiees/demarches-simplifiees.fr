@@ -173,7 +173,7 @@ describe Conditions::ChampsConditionsComponent, type: :component do
           ds_or([
             ds_eq(champ_value(upper_tdc.stable_id), constant(1)),
             ds_eq(champ_value(upper_tdc.stable_id), empty),
-            greater_than(champ_value(upper_tdc.stable_id), constant(3))
+            greater_than(champ_value(upper_tdc.stable_id), constant(3)),
           ])
         end
 
@@ -203,7 +203,7 @@ describe Conditions::ChampsConditionsComponent, type: :component do
       let(:expected) do
         [
           [empty, Logic::Eq.name, constant(1)],
-          [empty, Logic::Eq.name, empty]
+          [empty, Logic::Eq.name, empty],
         ]
       end
 
@@ -218,7 +218,7 @@ describe Conditions::ChampsConditionsComponent, type: :component do
         ds_or([
           ds_eq(champ_value(upper_tdc.stable_id), constant(1)),
           ds_eq(champ_value(upper_tdc.stable_id), empty),
-          greater_than(champ_value(upper_tdc.stable_id), constant(3))
+          greater_than(champ_value(upper_tdc.stable_id), constant(3)),
         ])
       end
 
@@ -226,7 +226,7 @@ describe Conditions::ChampsConditionsComponent, type: :component do
         [
           [champ_value(upper_tdc.stable_id), Logic::Eq.name, constant(1)],
           [champ_value(upper_tdc.stable_id), Logic::Eq.name, empty],
-          [champ_value(upper_tdc.stable_id), Logic::GreaterThan.name, constant(3)]
+          [champ_value(upper_tdc.stable_id), Logic::GreaterThan.name, constant(3)],
         ]
       end
 

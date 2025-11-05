@@ -83,7 +83,7 @@ class API::V2::BaseController < ApplicationController
         {
           message:,
           extensions: { code:, exception_id:, backtrace: }.compact,
-        }
+        },
       ],
       data: nil,
     }

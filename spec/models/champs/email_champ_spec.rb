@@ -20,7 +20,7 @@ describe Champs::EmailChamp do
           'username@mailserver',                                         # no extension
           "testing@example.com\u0022onmouseover=uzcc(96363)\u0022",      # pentest with quotes
           "testing@example.com<script>alert('ok')</script>",             # pentest with script
-          "testing@example.com?test"                                     # pentest with query
+          "testing@example.com?test", # pentest with query
         ]
 
         invalid_emails.each do |email|
@@ -38,7 +38,7 @@ describe Champs::EmailChamp do
           'username+alias@demarches-simplifiees-v2.fr',      # multiple dashes
           'tech@démarches.gouv.fr',                          # accents
           'prenom.nom@etu.univ-rouen.fr',                    # complex domain
-          'username@mailserver.domain'                       # classic format
+          'username@mailserver.domain', # classic format
         ]
 
         valid_emails.each do |email|

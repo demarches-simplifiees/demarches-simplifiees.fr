@@ -53,9 +53,9 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
         tag.span(class: 'fr-hint-text') do
           safe_join([
             t('.dossier_count_per_group', count: dossier_count_for(groupe_instructeur)),
-            text_belongs_to_group(groupe_instructeur)
+            text_belongs_to_group(groupe_instructeur),
           ])
-        end
+        end,
       ])
     end
   end
@@ -110,7 +110,7 @@ class Instructeurs::BulkMessageFormComponent < ApplicationComponent
         id: "tooltip-#{groupe_instructeur.id}",
         role: "tooltip",
         aria: { hidden: "true" }
-      )
+      ),
     ])
   end
 

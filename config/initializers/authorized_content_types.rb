@@ -4,7 +4,7 @@ AUTHORIZED_PDF_TYPES = [
   'application/pdf', # text x 4628654
   'application/x-pdf', # text x 30
   'image/pdf', # text x 23
-  'text/pdf' # text x 12
+  'text/pdf', # text x 12
 ]
 
 AUTHORIZED_IMAGE_TYPES = [
@@ -14,11 +14,11 @@ AUTHORIZED_IMAGE_TYPES = [
   'image/bmp', # multimedia x 3656
   'image/webp', # multimedia x 529
   'image/gif', # multimedia x 463
-  'image/vnd.dwg' # multimedia x 137 auto desk
+  'image/vnd.dwg', # multimedia x 137 auto desk
 ]
 
 RARE_IMAGE_TYPES = [
-  'image/tiff' # multimedia x 3985
+  'image/tiff', # multimedia x 3985
 ]
 
 PROCESSABLE_TYPES = AUTHORIZED_IMAGE_TYPES + AUTHORIZED_PDF_TYPES
@@ -30,7 +30,7 @@ AUTHORIZED_SPREADSHEET_TYPES = [
   'application/vnd.ms-excel.sheet.macroenabled.12',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
   'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-  'application/vnd.oasis.opendocument.spreadsheet-template'
+  'application/vnd.oasis.opendocument.spreadsheet-template',
 ]
 
 AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + AUTHORIZED_SPREADSHEET_TYPES + [
@@ -99,5 +99,5 @@ AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + AUTHORIZED_SPREADSHEET_TYPES + [
   'application/x-abiword', # text x 11
   'application/x-iwork-keynote-sffnumbers', # text x 11
   'application/x-iwork-keynote-sffkey', # text x 10
-  'application/vnd.sun.xml.writer' # text x 10
+  'application/vnd.sun.xml.writer', # text x 10
 ]

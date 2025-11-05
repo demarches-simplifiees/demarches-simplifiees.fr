@@ -22,7 +22,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.string" => { type: types[:string], display_usager: "1" },
             },
-          }
+          },
         ]
       end
       let(:data) { { string: "abc" } }
@@ -42,7 +42,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.float" => { type: types[:decimal_number], display_usager: "1" },
             },
-          }
+          },
         ]
       end
       let(:data) { { float: 3.14 } }
@@ -62,7 +62,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.int" => { type: types[:integer_number], display_usager: "1" },
             },
-          }
+          },
         ]
       end
       let(:data) { { int: 42 } }
@@ -82,7 +82,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.bool" => { type: types[:boolean], display_usager: "1" },
             },
-          }
+          },
         ]
       end
 
@@ -114,7 +114,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.date" => { type: types[:date], display_usager: "1" },
             },
-          }
+          },
         ]
       end
       let(:data) { { date: "2024-06-19" } }
@@ -134,7 +134,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.datetime" => { type: types[:datetime], display_usager: "1" },
             },
-          }
+          },
         ]
       end
       let(:data) { { datetime: "2024-06-19T15:30" } }
@@ -154,7 +154,7 @@ describe Champs::ReferentielChamp, type: :model do
             referentiel_mapping: {
               "$.list" => { type: types[:array], display_usager: "1" },
             },
-          }
+          },
         ]
       end
       let(:data) { { list: ["a", "b", "c"] } }

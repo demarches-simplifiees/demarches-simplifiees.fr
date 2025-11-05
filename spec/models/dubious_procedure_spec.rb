@@ -10,7 +10,7 @@ describe DubiousProcedure, type: :model do
       let(:forbidden_tdcs) do
         [
           { libelle: 'num de securite sociale, stp' },
-          { libelle: "t'aurais une carte bancaire ?" }
+          { libelle: "t'aurais une carte bancaire ?" },
         ]
       end
 

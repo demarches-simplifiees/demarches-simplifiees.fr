@@ -8,9 +8,9 @@ describe ChampPresentations::RepetitionPresentation do
         type: :repetition,
         children: [
           { type: :text, libelle: "nom" },
-          { type: :integer_number, libelle: "stars" }
+          { type: :integer_number, libelle: "stars" },
         ],
-      }
+      },
     ])
   }
 
@@ -70,9 +70,9 @@ describe ChampPresentations::RepetitionPresentation do
                   { content: [{ text: "nom", type: "text" }], type: "descriptionTerm" },
                   { content: [{ text: "ruby", type: "text" }], type: "descriptionDetails" },
                   { content: [{ text: "stars", type: "text" }], type: "descriptionTerm" },
-                  { content: [{ text: "5", type: "text" }], type: "descriptionDetails" }
+                  { content: [{ text: "5", type: "text" }], type: "descriptionDetails" },
                 ],
-              }
+              },
             ],
           },
           {
@@ -84,9 +84,9 @@ describe ChampPresentations::RepetitionPresentation do
                   { content: [{ text: "nom", type: "text" }], type: "descriptionTerm" },
                   { content: [{ text: "js", type: "text" }], type: "descriptionDetails" },
                   { content: [{ text: "stars", type: "text" }], type: "descriptionTerm", attrs: { class: "invisible" } },
-                  { content: [{ text: "", type: "text" }], type: "descriptionDetails" }
+                  { content: [{ text: "", type: "text" }], type: "descriptionDetails" },
                 ],
-              }
+              },
             ],
           },
           {
@@ -98,11 +98,11 @@ describe ChampPresentations::RepetitionPresentation do
                   { content: [{ text: "nom", type: "text" }], type: "descriptionTerm" },
                   { content: [{ text: "rust", type: "text" }], type: "descriptionDetails" },
                   { content: [{ text: "stars", type: "text" }], type: "descriptionTerm" },
-                  { content: [{ text: "4", type: "text" }], type: "descriptionDetails" }
+                  { content: [{ text: "4", type: "text" }], type: "descriptionDetails" },
                 ],
-              }
+              },
             ],
-          }
+          },
         ],
       }
 

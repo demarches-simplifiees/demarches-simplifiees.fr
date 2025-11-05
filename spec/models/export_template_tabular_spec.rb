@@ -11,7 +11,7 @@ describe ExportTemplate do
       { type: :text, libelle: "Ca va ?", mandatory: true, stable_id: 1 },
       { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 },
       { type: :siret, libelle: 'siret', stable_id: 20 },
-      { type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children: [{ type: 'text', libelle: 'Qqchose à rajouter?', stable_id: 8 }] }
+      { type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children: [{ type: 'text', libelle: 'Qqchose à rajouter?', stable_id: 8 }] },
     ]
   end
 
@@ -19,7 +19,7 @@ describe ExportTemplate do
     it 'is assignable/readable with ExportedColumn object' do
       expect do
         export_template.exported_columns = [
-          ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+          ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?")),
         ]
         export_template.save!
         export_template.exported_columns
@@ -27,7 +27,7 @@ describe ExportTemplate do
     end
     it 'create exported_column' do
       export_template.exported_columns = [
-        ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+        ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?")),
       ]
       export_template.save!
       expect(export_template.exported_columns.size).to eq 1
@@ -41,7 +41,7 @@ describe ExportTemplate do
         context 'with already column in export template' do
           before do
             export_template.exported_columns = [
-              ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+              ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?")),
             ]
             export_template.save!
 
@@ -68,7 +68,7 @@ describe ExportTemplate do
           procedure.publish_revision!(procedure.administrateurs.first)
 
           export_template.exported_columns = [
-            ExportedColumn.new(libelle: 'Ça roule ?', column: procedure.find_column(label: "Ca roule ?"))
+            ExportedColumn.new(libelle: 'Ça roule ?', column: procedure.find_column(label: "Ca roule ?")),
           ]
           export_template.save!
         end
@@ -94,7 +94,7 @@ describe ExportTemplate do
       before do
         export_template.exported_columns = [
           ExportedColumn.new(libelle: 'Colonne usager', column: procedure.find_column(label: "Adresse électronique")),
-          ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+          ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?")),
         ]
       end
       it 'returns all columns except tdc columns' do
@@ -113,7 +113,7 @@ describe ExportTemplate do
     context 'when procedure has a TypeDeChamp::Commune' do
       let(:types_de_champ_public) do
         [
-          { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 }
+          { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 },
         ]
       end
       it 'is able to resolve stable_id' do
@@ -123,7 +123,7 @@ describe ExportTemplate do
     context 'when procedure has a TypeDeChamp::Siret' do
       let(:types_de_champ_public) do
         [
-          { type: :siret, libelle: 'SIRET', stable_id: 20 }
+          { type: :siret, libelle: 'SIRET', stable_id: 20 },
         ]
       end
       it 'is able to resolve stable_id' do
@@ -142,7 +142,7 @@ describe ExportTemplate do
     context 'when procedure has a TypeDeChamp::Text' do
       let(:types_de_champ_public) do
         [
-          { type: :text, libelle: "Text", mandatory: true, stable_id: 15 }
+          { type: :text, libelle: "Text", mandatory: true, stable_id: 15 },
         ]
       end
       it 'is able to resolve stable_id' do

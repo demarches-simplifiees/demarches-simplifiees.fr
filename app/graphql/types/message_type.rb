@@ -8,10 +8,10 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :discarded_at, GraphQL::Types::ISO8601DateTime, null: true
     field :attachment, Types::File, null: true, deprecation_reason: "Utilisez le champ `attachments` à la place.", extensions: [
-      { Extensions::Attachment => { attachments: :piece_jointe, as: :single } }
+      { Extensions::Attachment => { attachments: :piece_jointe, as: :single } },
     ]
     field :attachments, [Types::File], null: false, extensions: [
-      { Extensions::Attachment => { attachments: :piece_jointe } }
+      { Extensions::Attachment => { attachments: :piece_jointe } },
     ]
     field :correction, CorrectionType, null: true
 

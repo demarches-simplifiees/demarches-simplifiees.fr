@@ -57,7 +57,7 @@ module Dossiers::FakeEtablissementConcern
                       ca: '87654321',
                       date_fin_exercice: "2013-12-30 23:00:00",
                       date_fin_exercice_timestamp: 1419980400
-                    )
+                    ),
         ]
       )
 

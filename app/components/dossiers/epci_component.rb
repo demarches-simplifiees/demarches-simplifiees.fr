@@ -17,7 +17,7 @@ class Dossiers::EpciComponent < ApplicationComponent
     [
       ['EPCI', name],
       ['Département', champ.departement_code_and_name],
-      ['Code région', champ.code_region]
+      ['Code région', champ.code_region],
     ]
   end
 

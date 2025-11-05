@@ -17,14 +17,14 @@ RSpec.describe TagsButtonListComponent, type: :component do
           libelle: 'Un champ avec un nom très ' + 'long ' * 12,
           description: 'Ce libellé a été tronqué',
           maybe_null:,
-        }
+        },
       ],
 
       champ_private: [
         {
           id: 'tdc22',
           libelle: 'Montant accordé',
-        }
+        },
       ],
     }
   end

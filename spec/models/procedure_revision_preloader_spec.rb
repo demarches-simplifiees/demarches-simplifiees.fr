@@ -6,11 +6,11 @@ describe ProcedureRevisionPreloader do
            types_de_champ_public: [
              { type: :piece_justificative },
              { type: :integer_number },
-             { type: :decimal_number }
+             { type: :decimal_number },
            ],
            types_de_champ_private: [
              { type: :text },
-             { type: :textarea }
+             { type: :textarea },
            ])
   end
 

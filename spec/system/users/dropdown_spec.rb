@@ -18,7 +18,7 @@ describe 'dropdown list with other option activated', js: true do
       [
         '--Primary 1--',
         'Secondary 1.1',
-        'Secondary 1.2'
+        'Secondary 1.2',
       ]
     end
 
@@ -54,7 +54,7 @@ describe 'dropdown list with other option activated', js: true do
         'Secondary 1.3',
         'Secondary 1.4',
         'Secondary 1.5',
-        'Secondary 1.6'
+        'Secondary 1.6',
       ]
     end
 

@@ -99,9 +99,9 @@ describe EditableChamp::SectionComponent, type: :component do
           libelle: 'repetition',
           children: [
             { type: :header_section, level: 1, libelle: 'child_1' },
-            { type: :text, libelle: 'child_2' }
+            { type: :text, libelle: 'child_2' },
           ],
-        }
+        },
       ]
     end
 
@@ -157,7 +157,7 @@ describe EditableChamp::SectionComponent, type: :component do
         { type: :header_section, level: 1 },
         { type: :text },
         { type: :header_section, level: 2 },
-        { type: :text }
+        { type: :text },
       ]
     }
 

@@ -28,7 +28,7 @@ module Logic
       InDepartementOperator,
       NotInDepartementOperator,
       InRegionOperator,
-      NotInRegionOperator
+      NotInRegionOperator,
     ].find { |c| c.name == name }
   end
 

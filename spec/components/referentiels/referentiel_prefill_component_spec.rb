@@ -58,7 +58,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 1, type: :text, libelle: 'text' },
             { stable_id: 2, type: :textarea, libelle: 'textarea' },
-            { stable_id: 6, type: :yes_no, libelle: 'yes_no' } # exclu (type non compatible)
+            { stable_id: 6, type: :yes_no, libelle: 'yes_no' }, # exclu (type non compatible)
           ]
         end
 
@@ -84,7 +84,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           [
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 1, type: :text, libelle: 'text' }, # exclu (type non compatible)
-            { stable_id: 3, type: :decimal_number, libelle: 'decimal' }
+            { stable_id: 3, type: :decimal_number, libelle: 'decimal' },
           ]
         end
         it 'shows only decimal_number' do
@@ -98,7 +98,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           [
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 3, type: :decimal_number, libelle: 'decimal' }, # exclu (type non compatible)
-            { stable_id: 4, type: :integer_number, libelle: 'integer' }
+            { stable_id: 4, type: :integer_number, libelle: 'integer' },
           ]
         end
         it 'shows only integer_number' do
@@ -113,7 +113,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 1, type: :text, libelle: 'text' }, # exclu (type non compatible)
             { stable_id: 5, type: :checkbox, libelle: 'checkbox' },
-            { stable_id: 6, type: :yes_no, libelle: 'yes_no' }
+            { stable_id: 6, type: :yes_no, libelle: 'yes_no' },
           ]
         end
         it 'shows only checkbox and yes_no' do
@@ -127,7 +127,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           [
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 7, type: :date, libelle: 'date' },
-            { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+            { stable_id: 8, type: :text, libelle: 'text' }, # exclu (type non compatible)
           ]
         end
         it 'shows only date' do
@@ -141,7 +141,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           [
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 9, type: :datetime, libelle: 'datetime' },
-            { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+            { stable_id: 8, type: :text, libelle: 'text' }, # exclu (type non compatible)
           ]
         end
         it 'shows only datetime' do
@@ -155,7 +155,7 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
           [
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 10, type: :multiple_drop_down_list, libelle: 'multiple' },
-            { stable_id: 8, type: :text, libelle: 'text' } # exclu (type non compatible)
+            { stable_id: 8, type: :text, libelle: 'text' }, # exclu (type non compatible)
           ]
         end
         it 'shows only multiple_drop_down_list' do
@@ -193,11 +193,11 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
               { type: :text, libelle: 'position 0' },
               { type: :text, libelle: 'position 1' },
               { type: :text, libelle: 'position 2' },
-              { type: :text, libelle: 'position 3' }
+              { type: :text, libelle: 'position 3' },
             ],
           },
           { type: :referentiel, referentiel:, libelle: "referentiel" },
-          { type: :text, libelle: 'text after referentiel' }
+          { type: :text, libelle: 'text after referentiel' },
         ]
       end
 
@@ -216,17 +216,17 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
               { type: :referentiel, referentiel:, libelle: "referentiel" },
               { type: :text, libelle: 'position 1' },
               { type: :text, libelle: 'position 2' },
-              { type: :text, libelle: 'position 3' }
+              { type: :text, libelle: 'position 3' },
             ],
           },
           {
             type: :repetition, libelle: 'une autre', children: [
               { type: :text, libelle: 'autre repetition position 0' },
               { type: :text, libelle: 'autre repetition position 1' },
-              { type: :text, libelle: 'autre repetition position 2' }
+              { type: :text, libelle: 'autre repetition position 2' },
             ],
           },
-          { type: :text, libelle: 'after repetition' }
+          { type: :text, libelle: 'after repetition' },
 
         ]
       end

@@ -218,7 +218,7 @@ describe API::V1::DossiersController do
               :effectif_annuel_annee,
               :date_creation,
               :nom,
-              :prenom
+              :prenom,
             ]
           }
           subject { super()[:entreprise] }
@@ -259,7 +259,7 @@ describe API::V1::DossiersController do
                   :libelle,
                   :description,
                   :order_place,
-                  :type
+                  :type,
                 ]
               }
               subject { super()[:type_de_champ] }
@@ -323,7 +323,7 @@ describe API::V1::DossiersController do
                   :libelle,
                   :description,
                   :order_place,
-                  :type
+                  :type,
                 ]
               }
               subject { super()[:type_de_champ] }
@@ -375,7 +375,7 @@ describe API::V1::DossiersController do
               :complement_adresse,
               :code_postal,
               :localite,
-              :code_insee_localite
+              :code_insee_localite,
             ]
           }
           subject { super()[:etablissement] }

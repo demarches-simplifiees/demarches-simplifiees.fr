@@ -1245,7 +1245,7 @@ describe Instructeurs::DossiersController, type: :controller do
         { type: :linked_drop_down_list },
         { type: :datetime },
         { type: :repetition, children: [{}] },
-        { type: :drop_down_list, options: [:a, :b, :other] }
+        { type: :drop_down_list, options: [:a, :b, :other] },
       ]
     end
     let(:types_de_champ_public) { [] }
@@ -1362,10 +1362,10 @@ describe Instructeurs::DossiersController, type: :controller do
                     {
                       type: :referentiel,
                       referentiel_id: referentiel.id,
-                    }
+                    },
                   ],
                 },
-                { type: :drop_down_list, options: [:a, :b, :other] }
+                { type: :drop_down_list, options: [:a, :b, :other] },
               ]
             end
             let(:champs_private_attributes) do
@@ -1456,7 +1456,7 @@ describe Instructeurs::DossiersController, type: :controller do
     context "with invalid champs_public (DecimalNumberChamp)" do
       let(:types_de_champ_public) do
         [
-          { type: :decimal_number }
+          { type: :decimal_number },
         ]
       end
 

@@ -66,7 +66,7 @@ describe Champs::ReferentielChamp, type: :model do
               "$.ok" => { prefill: "1", prefill_stable_id: prefillable_stable_id },
             },
           },
-          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options)
+          { type: prefilled_type_de_champ_type, stable_id: prefillable_stable_id }.merge(prefilled_type_de_champ_options),
         ]
       end
 
@@ -101,7 +101,7 @@ describe Champs::ReferentielChamp, type: :model do
             type: :referentiel,
             referentiel:,
             referentiel_mapping:,
-          }
+          },
         ]
       end
 

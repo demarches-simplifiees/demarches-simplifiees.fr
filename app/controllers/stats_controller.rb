@@ -41,7 +41,7 @@ class StatsController < ApplicationController
       'Etat du fichier',
       'Durée en brouillon',
       'Durée en construction',
-      'Durée en instruction'
+      'Durée en instruction',
     ]
 
     data = Dossier

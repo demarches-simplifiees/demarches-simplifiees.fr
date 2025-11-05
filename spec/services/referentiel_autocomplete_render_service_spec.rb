@@ -8,7 +8,7 @@ RSpec.describe ReferentielAutocompleteRenderService do
     {
       'items' => [
         { 'finess' => 'Tango', 'ej_rs' => 'Charlie' },
-        { 'finess' => 'Bob', 'ej_rs' => 'Delta' }
+        { 'finess' => 'Bob', 'ej_rs' => 'Delta' },
       ],
     }
   end
@@ -27,7 +27,7 @@ RSpec.describe ReferentielAutocompleteRenderService do
           label: 'Bob (Delta)',
           value: 'Bob (Delta)',
           data: anything,
-        }
+        },
       ])
     end
   end

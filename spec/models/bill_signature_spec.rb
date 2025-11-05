@@ -150,7 +150,7 @@ RSpec.describe BillSignature, type: :model do
       let(:dossier_operation_logs) do
         [
           build(:dossier_operation_log, id: '1234', digest: 'abcd'),
-          build(:dossier_operation_log, id: '5678', digest: 'dcba')
+          build(:dossier_operation_log, id: '5678', digest: 'dcba'),
         ]
       end
 

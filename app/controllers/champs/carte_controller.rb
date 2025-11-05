@@ -64,7 +64,7 @@ class Champs::CarteController < Champs::ChampController
       :numero,
       :prefixe,
       :section,
-      :updated
+      :updated,
     ]).tap do |feature|
       feature[:geometry] = params[:feature][:geometry]
     end

@@ -21,7 +21,7 @@ class TypesDeChampEditor::ConditionsComponentPreview < ViewComponent::Preview
     condition = ds_and([
       greater_than_eq(champ_value(surface.stable_id), constant(50)),
       ds_eq(champ_value(appartement.stable_id), constant(true)),
-      ds_eq(champ_value(type_appartement.stable_id), constant('T2'))
+      ds_eq(champ_value(type_appartement.stable_id), constant('T2')),
     ])
     tdc = TypeDeChamp.create(type_champ: :integer_number, condition: condition, libelle: 'nb de piece')
 
@@ -40,7 +40,7 @@ class TypesDeChampEditor::ConditionsComponentPreview < ViewComponent::Preview
     condition = ds_and([
       ds_eq(champ_value(address.stable_id), empty),
       greater_than_eq(champ_value(surface.stable_id), constant(50)),
-      ds_eq(champ_value(yes_non.stable_id), constant(5))
+      ds_eq(champ_value(yes_non.stable_id), constant(5)),
     ])
 
     tdc = TypeDeChamp.create(type_champ: :integer_number, condition: condition, libelle: 'nb de piece')

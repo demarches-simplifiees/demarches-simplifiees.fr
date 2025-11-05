@@ -29,14 +29,14 @@ describe ConditionForm, type: :model do
       let(:rows) do
         [
           { targeted_champ: champ_value(1).to_json, operator_name: Logic::Eq.name, value: '2' },
-          { targeted_champ: champ_value(3).to_json, operator_name: Logic::GreaterThan.name, value: '4' }
+          { targeted_champ: champ_value(3).to_json, operator_name: Logic::GreaterThan.name, value: '4' },
         ]
       end
 
       let(:expected) do
         ds_and([
           ds_eq(champ_value(1), constant(2)),
-          greater_than(champ_value(3), constant(4))
+          greater_than(champ_value(3), constant(4)),
         ])
       end
       it { is_expected.to eq(expected) }
@@ -48,7 +48,7 @@ describe ConditionForm, type: :model do
         [
           { targeted_champ: champ_value(1).to_json, operator_name: Logic::Eq.name, value: '2' },
           { targeted_champ: champ_value(3).to_json, operator_name: Logic::GreaterThan.name, value: '4' },
-          { targeted_champ: champ_value(5).to_json, operator_name: Logic::LessThan.name, value: '6' }
+          { targeted_champ: champ_value(5).to_json, operator_name: Logic::LessThan.name, value: '6' },
         ]
       end
 
@@ -56,7 +56,7 @@ describe ConditionForm, type: :model do
         ds_or([
           ds_eq(champ_value(1), constant(2)),
           greater_than(champ_value(3), constant(4)),
-          less_than(champ_value(5), constant(6))
+          less_than(champ_value(5), constant(6)),
         ])
       end
       it { is_expected.to eq(expected) }

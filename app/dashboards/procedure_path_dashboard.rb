@@ -24,7 +24,7 @@ class ProcedurePathDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :path,
-    :created_at
+    :created_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -34,7 +34,7 @@ class ProcedurePathDashboard < Administrate::BaseDashboard
     :path,
     :procedure,
     :created_at,
-    :updated_at
+    :updated_at,
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -42,7 +42,7 @@ class ProcedurePathDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :path,
-    :procedure
+    :procedure,
   ].freeze
 
   # COLLECTION_FILTERS

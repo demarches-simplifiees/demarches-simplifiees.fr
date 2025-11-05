@@ -18,7 +18,7 @@ module Maintenance
       targets = [
         "Champs::COJOChamp",
         "Champs::RNFChamp",
-        "Champs::ReferentielChamp"
+        "Champs::ReferentielChamp",
       ]
 
       # there are too many pjs to check them all,

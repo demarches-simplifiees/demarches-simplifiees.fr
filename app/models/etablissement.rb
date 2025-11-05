@@ -92,7 +92,7 @@ class Etablissement < ApplicationRecord
       code_postal,
       localite,
       code_insee_localite,
-      nom_pays
+      nom_pays,
     ]
   end
 
@@ -131,7 +131,7 @@ class Etablissement < ApplicationRecord
       ['Association objet', :association_objet],
       ['Association date de création', :association_date_creation],
       ['Association date de déclaration', :association_date_declaration],
-      ['Association date de publication', :association_date_publication]
+      ['Association date de publication', :association_date_publication],
     ]
   end
 
@@ -148,7 +148,7 @@ class Etablissement < ApplicationRecord
     [
       "#{numero_voie} #{type_voie} #{nom_voie}",
       complement_adresse,
-      "#{code_postal} #{localite}"
+      "#{code_postal} #{localite}",
     ].compact_blank.join(', ').squeeze(' ')
   end
 
@@ -304,7 +304,7 @@ class Etablissement < ApplicationRecord
       "dettes4_maturite_a_un_an_au_plus", "evolution_dettes4_maturite_a_un_an_au_plus",
       "emprunts_et_dettes_financieres_divers", "evolution_emprunts_et_dettes_financieres_divers",
       "total_dettes_stables", "evolution_total_dettes_stables", "groupes_et_associes",
-      "evolution_groupes_et_associes", "total_passif", "evolution_total_passif"
+      "evolution_groupes_et_associes", "total_passif", "evolution_total_passif",
     ]
   end
 end

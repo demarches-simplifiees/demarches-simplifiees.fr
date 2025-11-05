@@ -84,7 +84,7 @@ class Referentiels::APIReferentiel < Referentiel
     [
       authentication_method == 'header_token',
       authentication_data_header.present?,
-      authentication_header_token.present?
+      authentication_header_token.present?,
     ].all?
   end
 

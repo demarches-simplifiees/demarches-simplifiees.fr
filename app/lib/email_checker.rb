@@ -615,7 +615,7 @@ class EmailChecker
     'ac-horizon.fr',
     'ac-bordeaux.ft',
     'ac-toulouses.fr',
-    'ac-toulous.fr'
+    'ac-toulous.fr',
   ].freeze
 
   def self.check(email:)

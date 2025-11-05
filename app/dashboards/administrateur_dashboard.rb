@@ -32,7 +32,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :created_at,
     :procedures,
     :groupe_gestionnaire,
-    :registration_state
+    :registration_state,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -45,14 +45,14 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :registration_state,
     :features,
     :procedures,
-    :groupe_gestionnaire
+    :groupe_gestionnaire,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :email
+    :email,
   ].freeze
 
   # Overwrite this method to customize how procedures are displayed

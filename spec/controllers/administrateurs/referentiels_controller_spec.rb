@@ -354,7 +354,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
     let(:types_de_champ_public) do
       [
         { type: :referentiel, stable_id: stable_id, referentiel_mapping: },
-        { type: :text, stable_id: prefillable_stable_id }
+        { type: :text, stable_id: prefillable_stable_id },
       ]
     end
     let(:types_de_champ_private) { [] }
@@ -407,7 +407,7 @@ describe Administrateurs::ReferentielsController, type: :controller do
         let(:types_de_champ_private) do
           [
             { type: :referentiel, stable_id: stable_id, referentiel_mapping: },
-            { type: :text, stable_id: prefillable_stable_id }
+            { type: :text, stable_id: prefillable_stable_id },
           ]
         end
         let(:types_de_champ_public) { [] }

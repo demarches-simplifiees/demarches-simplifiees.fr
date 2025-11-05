@@ -275,7 +275,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
         [
           { type: :text, libelle: 'first_tdc' },
           { type: :text, libelle: 'middle_tdc' },
-          { type: :text, libelle: 'last_tdc' }
+          { type: :text, libelle: 'last_tdc' },
         ]
       end
       let(:initial_first_coordinate_selector) { "##{ActionView::RecordIdentifier.dom_id(initial_first_coordinate, :move_and_morph)}" }
@@ -334,10 +334,10 @@ describe 'As an administrateur I can edit types de champ', js: true do
             libelle: 'root_second_tdc',
             children: [
               { type: :text, libelle: 'child_first_tdc' },
-              { type: :text, libelle: 'child_second_tdc' }
+              { type: :text, libelle: 'child_second_tdc' },
             ],
           },
-          { type: :text, libelle: 'root_thrid_tdc' }
+          { type: :text, libelle: 'root_thrid_tdc' },
         ]
       end
       let(:children_coordinates) { procedure.draft_revision.revision_types_de_champ.filter { _1.parent.present? } }

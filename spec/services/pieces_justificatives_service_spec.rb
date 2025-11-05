@@ -505,7 +505,7 @@ describe PiecesJustificativesService do
     let(:types_de_champ_public) do
       [
         { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }] },
-        { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
+        { type: :repetition, mandatory: false, children: [{ type: :piece_justificative }, { type: :piece_justificative }] },
       ]
     end
 

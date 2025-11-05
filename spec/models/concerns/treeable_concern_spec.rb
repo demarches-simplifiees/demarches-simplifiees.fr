@@ -35,7 +35,7 @@ describe TreeableConcern do
     context 'without section' do
       let(:types_de_champ_public) do
         [
-          champ_text, champ_textarea
+          champ_text, champ_textarea,
         ]
       end
       it 'inlines champs at root level' do
@@ -51,7 +51,7 @@ describe TreeableConcern do
           champ_explication,
           champ_text,
           header_2,
-          champ_textarea
+          champ_textarea,
         ]
       end
 
@@ -59,7 +59,7 @@ describe TreeableConcern do
         expect(subject.size).to eq(2)
         expect(subject).to eq([
           [header_1_tdc, champ_explication_tdc, champ_text_tdc],
-          [header_2_tdc, champ_textarea_tdc]
+          [header_2_tdc, champ_textarea_tdc],
         ])
       end
     end
@@ -75,7 +75,7 @@ describe TreeableConcern do
           champ_explication,
           champ_communes,
           header_2,
-          champ_textarea_bis
+          champ_textarea_bis,
         ]
       end
       it 'chunk by uniq champs' do
@@ -84,7 +84,7 @@ describe TreeableConcern do
           champ_text_tdc,
           champ_textarea_tdc,
           [header_1_tdc, champ_explication_tdc, champ_communes_tdc],
-          [header_2_tdc, champ_textarea_bis_tdc]
+          [header_2_tdc, champ_textarea_bis_tdc],
         ])
       end
     end
@@ -97,14 +97,14 @@ describe TreeableConcern do
           header_1_2,
           champ_communes,
           header_2,
-          champ_textarea
+          champ_textarea,
         ]
       end
       it 'chunk by uniq champs' do
         expect(subject.size).to eq(2)
         expect(subject).to eq([
           [header_1_tdc, champ_explication_tdc, [header_1_2_tdc, champ_communes_tdc]],
-          [header_2_tdc, champ_textarea_tdc]
+          [header_2_tdc, champ_textarea_tdc],
         ])
       end
     end
@@ -126,7 +126,7 @@ describe TreeableConcern do
          header_1_2_2,
          champ_textarea,
          header_1_2_3,
-         champ_communes
+         champ_communes,
        ]
      end
       it 'chunk by uniq champs' do
@@ -136,8 +136,8 @@ describe TreeableConcern do
             header_1_tdc,
             [header_1_2_1_tdc, champ_text_tdc],
             [header_1_2_2_tdc, champ_textarea_tdc],
-            [header_1_2_3_tdc, champ_communes_tdc]
-          ]
+            [header_1_2_3_tdc, champ_communes_tdc],
+          ],
         ])
       end
     end
@@ -155,7 +155,7 @@ describe TreeableConcern do
           header_1_2_3,
           champ_text,
           header_2,
-          champ_textarea
+          champ_textarea,
         ]
       end
 
@@ -169,14 +169,14 @@ describe TreeableConcern do
               header_1_2_tdc,
               champ_communes_tdc,
               [
-                header_1_2_3_tdc, champ_text_tdc
-              ]
-            ]
+                header_1_2_3_tdc, champ_text_tdc,
+              ],
+            ],
           ],
           [
             header_2_tdc,
-            champ_textarea_tdc
-          ]
+            champ_textarea_tdc,
+          ],
         ])
       end
     end

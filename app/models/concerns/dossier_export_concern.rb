@@ -47,7 +47,7 @@ module DossierExportConcern
     columns = [
       ['ID', id.to_s],
       ['Email', user_email_for(:display)],
-      ['FranceConnect ?', user_from_france_connect?]
+      ['FranceConnect ?', user_from_france_connect?],
     ]
 
     if procedure.for_individual?
@@ -57,7 +57,7 @@ module DossierExportConcern
         ['Prénom', individual&.prenom],
         ['Dépôt pour un tiers', :for_tiers],
         ['Nom du mandataire', :mandataire_last_name],
-        ['Prénom du mandataire', :mandataire_first_name]
+        ['Prénom du mandataire', :mandataire_first_name],
       ]
       if procedure.ask_birthday
         columns += [['Date de naissance', individual&.birthdate]]
@@ -94,7 +94,7 @@ module DossierExportConcern
         ['Association objet', etablissement&.association_objet],
         ['Association date de création', etablissement&.association_date_creation],
         ['Association date de déclaration', etablissement&.association_date_declaration],
-        ['Association date de publication', etablissement&.association_date_publication]
+        ['Association date de publication', etablissement&.association_date_publication],
       ]
     else
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
@@ -103,7 +103,7 @@ module DossierExportConcern
       columns += [
         ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' }],
         ['Référentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation&.fetch("code") { '' }],
-        ['Centre De Coût', procedure.chorus_configuration.centre_de_cout&.fetch("code") { '' }]
+        ['Centre De Coût', procedure.chorus_configuration.centre_de_cout&.fetch("code") { '' }],
       ]
     end
     columns += [
@@ -116,7 +116,7 @@ module DossierExportConcern
       procedure.sva_svr_enabled? ? ["Date décision #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
-      ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
+      ['Instructeurs', followers_instructeurs.map(&:email).join(' ')],
     ].compact
 
     if procedure.routing_enabled?

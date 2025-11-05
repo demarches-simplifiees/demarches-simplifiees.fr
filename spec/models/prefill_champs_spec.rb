@@ -30,7 +30,7 @@ RSpec.describe PrefillChamps do
       it "builds an array of hash(id, value) matching all the given params" do
         expect(prefill_champs_array).to match_array([
           { id: champ_id_1, value: value_1 },
-          { id: champ_id_2, value: value_2 }
+          { id: champ_id_2, value: value_2 },
         ])
       end
     end

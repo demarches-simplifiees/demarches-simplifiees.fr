@@ -16,7 +16,7 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
             "--Primary 2--",
             "secondary 2.1",
             "secondary 2.2",
-            "secondary 2.3"
+            "secondary 2.3",
           ]
         end
 
@@ -52,7 +52,7 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
               "--Primary 2--",
               "secondary 2.1",
               "secondary 2.2",
-              "secondary 2.3"
+              "secondary 2.3",
             ]
           end
 
@@ -80,7 +80,7 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
           "--Primary 2--",
           "secondary 2.1",
           "secondary 2.2",
-          "secondary 2.3"
+          "secondary 2.3",
         ]
       end
 

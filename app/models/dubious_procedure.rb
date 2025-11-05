@@ -11,7 +11,7 @@ class DubiousProcedure
     'carte bancaire', 'carte bleue', 'sécurité sociale',
     'agdref', 'syndicat', 'syndical',
     'parti politique', 'opinion politique', 'bord politique', 'courant politique',
-    'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin'
+    'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin',
   ]
 
   def persisted?

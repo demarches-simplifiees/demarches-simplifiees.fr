@@ -71,7 +71,7 @@ describe 'Dossier Inéligibilité', js: true do
     let(:ineligibilite_rules) do
       ds_or([
         ds_eq(champ_value(first_tdc.stable_id), constant(true)),
-        ds_eq(champ_value(second_tdc.stable_id), constant('Paris'))
+        ds_eq(champ_value(second_tdc.stable_id), constant('Paris')),
       ])
     end
 
@@ -141,7 +141,7 @@ describe 'Dossier Inéligibilité', js: true do
     let(:ineligibilite_rules) do
       ds_and([
         ds_eq(champ_value(first_tdc.stable_id), constant(true)),
-        ds_eq(champ_value(second_tdc.stable_id), constant('Paris'))
+        ds_eq(champ_value(second_tdc.stable_id), constant('Paris')),
       ])
     end
 
@@ -187,7 +187,7 @@ describe 'Dossier Inéligibilité', js: true do
     let(:types_de_champ_public) do
       [
         { type: :yes_no, libelle: 'l1', stable_id: 1 },
-        { type: :yes_no, libelle: 'l2', stable_id: 2, condition: ds_eq(champ_value(1), constant(false)) }
+        { type: :yes_no, libelle: 'l2', stable_id: 2, condition: ds_eq(champ_value(1), constant(false)) },
       ]
     end
     let(:ineligibilite_rules) do

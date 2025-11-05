@@ -1466,6 +1466,7 @@ Style/TrailingCommaInArguments:
 
 Style/TrailingCommaInArrayLiteral:
   Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
 
 Style/TrailingCommaInHashLiteral:
   Enabled: true

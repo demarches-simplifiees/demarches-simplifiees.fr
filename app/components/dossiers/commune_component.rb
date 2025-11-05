@@ -17,7 +17,7 @@ class Dossiers::CommuneComponent < ApplicationComponent
     [
       ['Commune', champ.to_s],
       ['Code INSEE', champ.code],
-      ['Département', champ.departement_code_and_name]
+      ['Département', champ.departement_code_and_name],
     ]
   end
 

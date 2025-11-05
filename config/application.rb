@@ -127,7 +127,7 @@ module TPS
       'raster_columns',
       'raster_overviews',
       'spatial_ref_sys',
-      'topology'
+      'topology',
     ]
   end
 end

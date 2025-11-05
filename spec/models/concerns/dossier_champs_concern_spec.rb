@@ -7,12 +7,12 @@ RSpec.describe DossierChampsConcern do
       { type: :text, libelle: "Un champ text", stable_id: 99 },
       { type: :text, libelle: "Un autre champ text", stable_id: 991 },
       { type: :yes_no, libelle: "Un champ yes no", stable_id: 992 },
-      { type: :repetition, libelle: "Un champ répétable", stable_id: 993, mandatory: true, children: [{ type: :text, libelle: 'Nom', stable_id: 994 }] }
+      { type: :repetition, libelle: "Un champ répétable", stable_id: 993, mandatory: true, children: [{ type: :text, libelle: 'Nom', stable_id: 994 }] },
     ]
   end
   let(:types_de_champ_private) do
     [
-      { type: :text, libelle: "Une annotation", stable_id: 995 }
+      { type: :text, libelle: "Une annotation", stable_id: 995 },
     ]
   end
   let(:dossier) { create(:dossier, procedure:) }
@@ -164,7 +164,7 @@ RSpec.describe DossierChampsConcern do
         { type: :text, libelle: "Un autre champ text" },
         { type: :yes_no, libelle: "Un champ yes no" },
         { type: :repetition, libelle: "Un champ répétable", mandatory: true, children: [{ type: :text, libelle: 'Nom' }] },
-        { type: :explication }
+        { type: :explication },
       ]
     end
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
@@ -181,7 +181,7 @@ RSpec.describe DossierChampsConcern do
       [
         { type: :header_section },
         { type: :text, libelle: "Une annotation" },
-        { type: :explication }
+        { type: :explication },
       ]
     end
     subject { dossier.filled_champs_private }
@@ -707,7 +707,7 @@ RSpec.describe DossierChampsConcern do
         let(:types_de_champ_public) do
           [
             { type: :piece_justificative, libelle: "Un champ pj", stable_id: 98 },
-            { type: :titre_identite, libelle: "Un champ titre identite", stable_id: 99 }
+            { type: :titre_identite, libelle: "Un champ titre identite", stable_id: 99 },
           ]
         end
 
@@ -732,10 +732,10 @@ RSpec.describe DossierChampsConcern do
           expect(dossier.history.map(&:piece_justificative_file).map(&:attached?)).to eq([false, false])
           expect(dossier.history.map(&:data)).to match_array([
             [
-              { "checksum" => "6kFu0HWdRqjeWPY6WQd0mQ==", "filename" => "toto.txt" }
+              { "checksum" => "6kFu0HWdRqjeWPY6WQd0mQ==", "filename" => "toto.txt" },
             ], [
-              { "checksum" => "9x2+UmKKP4OnerSUgXUlxg==", "filename" => "toto.png" }
-            ]
+              { "checksum" => "9x2+UmKKP4OnerSUgXUlxg==", "filename" => "toto.png" },
+            ],
           ])
 
           dossier.clean_champs_after_instruction!

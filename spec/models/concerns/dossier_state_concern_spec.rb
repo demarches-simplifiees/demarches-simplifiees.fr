@@ -14,7 +14,7 @@ RSpec.describe DossierStateConcern do
       { type: :repetition, stable_id: 95, children: [{ type: :text, stable_id: 951 }] },
       { type: :repetition, stable_id: 96, children: [{ type: :text, stable_id: 961 }], condition: ds_eq(constant(true), constant(false)) },
       { type: :text, stable_id: 97, condition: ds_eq(constant(true), constant(false)) },
-      { type: :titre_identite, stable_id: 98 }
+      { type: :titre_identite, stable_id: 98 },
     ]
   end
   let(:auto_archive_on) { nil }

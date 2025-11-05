@@ -18,7 +18,7 @@ describe 'Referentiel API:' do
   context 'edges cases' do
     let(:types_de_champ_public) do
       [
-        { type: :referentiel, libelle: "qu'importe" }
+        { type: :referentiel, libelle: "qu'importe" },
       ]
     end
 
@@ -67,9 +67,9 @@ describe 'Referentiel API:' do
             libelle: "repetition",
             mandatory: false,
             children: [
-              { type: :text, libelle: 'prefill with $.addresses[0].street', stable_id: prefill_repetition_children_stable_id }
+              { type: :text, libelle: 'prefill with $.addresses[0].street', stable_id: prefill_repetition_children_stable_id },
             ],
-          }
+          },
         ]
       end
       scenario 'Setup as admin, fill in as user, view it as instructeur', js: true, vcr: true do
@@ -226,7 +226,7 @@ describe 'Referentiel API:' do
         [
           { type: :referentiel, libelle: 'Numéro FINESS', stable_id: referentiel_stable_id },
           { type: :text, libelle: 'prefill with $.finess', stable_id: prefill_text_stable_id },
-          { type: :date, libelle: 'prefill with $.date_extract_finess', stable_id: prefill_date_stable_id }
+          { type: :date, libelle: 'prefill with $.date_extract_finess', stable_id: prefill_date_stable_id },
         ]
       end
       let(:prefill_date_stable_id) { 84 }
@@ -335,12 +335,12 @@ describe 'Referentiel API:' do
             libelle: 'Numero de bâtiment public',
             stable_id: public_referentiel_stable_id,
             referentiel: create(:api_referentiel, :exact_match, :with_exact_match_response, url: "https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/"),
-          }
+          },
         ]
       end
       let(:types_de_champ_private) do
         [
-          { type: :text, libelle: 'prefilled by referentiel.public (with $.statut)', stable_id: prefill_by_public_referentiel_stable_id }
+          { type: :text, libelle: 'prefilled by referentiel.public (with $.statut)', stable_id: prefill_by_public_referentiel_stable_id },
         ]
       end
       let(:prefill_by_public_referentiel_stable_id) { 8 }
@@ -416,9 +416,9 @@ describe 'Referentiel API:' do
                 type: :text,
                 libelle: '$.statut',
                 stable_id: prefill_by_private_referentiel_stable_id,
-              }
+              },
             ],
-          }
+          },
         ]
       end
 
@@ -477,9 +477,9 @@ describe 'Referentiel API:' do
             children: [
               { type: :referentiel, libelle: 'Numéro FINESS' },
               { type: :text, libelle: 'prefill with $.finess' },
-              { type: :date, libelle: 'prefill with $.date_extract_finess' }
+              { type: :date, libelle: 'prefill with $.date_extract_finess' },
             ],
-          }
+          },
         ]
       end
 

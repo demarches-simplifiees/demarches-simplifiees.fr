@@ -909,7 +909,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let!(:procedure) do
         create(:procedure,
                types_de_champ_public: [
-                 { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }
+                 { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
                ],
                administrateurs: [admin])
       end
@@ -926,7 +926,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let!(:procedure) do
         create(:procedure,
                types_de_champ_public: [
-                 { type: :integer_number }
+                 { type: :integer_number },
                ],
                administrateurs: [admin])
       end
@@ -945,7 +945,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         create(:procedure,
                types_de_champ_public: [
                  { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
-                 { type: :text, libelle: 'Un champ texte' }
+                 { type: :text, libelle: 'Un champ texte' },
                ],
                administrateurs: [admin])
       end
@@ -1092,7 +1092,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       create(:procedure,
              types_de_champ_public: [
                { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
-               { type: :text, libelle: 'Un champ texte' }
+               { type: :text, libelle: 'Un champ texte' },
              ],
              administrateurs: [admin])
     end
@@ -1133,7 +1133,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       create(:procedure,
              types_de_champ_public: [
                { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] },
-               { type: :text, libelle: 'Un champ texte' }
+               { type: :text, libelle: 'Un champ texte' },
              ],
              administrateurs: [admin])
     end

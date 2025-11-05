@@ -10,7 +10,7 @@ module AddressHelper
       [t("city_code", scope:), address.city_code],
       [t("postal_code", scope:), address.postal_code],
       [t("department", scope:), address.departement_name],
-      [t("region", scope:), address.region_name]
+      [t("region", scope:), address.region_name],
     ]
   end
 
@@ -19,7 +19,7 @@ module AddressHelper
   def full_address(proxy)
     safe_join([
       proxy.street_address,
-      [proxy.city_name, proxy.postal_code].join(" ")
+      [proxy.city_name, proxy.postal_code].join(" "),
     ], tag.br)
   end
 end

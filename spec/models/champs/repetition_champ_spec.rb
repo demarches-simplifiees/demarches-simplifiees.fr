@@ -7,7 +7,7 @@ describe Champs::RepetitionChamp do
         {
           type: :repetition,
           children: [{ type: :text, libelle: "Ext" }], libelle: "Languages",
-        }
+        },
       ])
   }
   let(:dossier) { create(:dossier, procedure:) }

@@ -24,7 +24,7 @@ RSpec.describe InstructeursProcedure, type: :model do
         [procedures[1].id, 3],
         [procedures[2].id, 2],
         [procedures[3].id, 1],
-        [procedures[4].id, 0]
+        [procedures[4].id, 0],
       ])
     end
   end

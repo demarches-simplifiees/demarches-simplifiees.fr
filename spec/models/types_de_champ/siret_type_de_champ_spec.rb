@@ -20,7 +20,7 @@ describe TypesDeChamp::SiretTypeDeChamp do
     it "includes required jsonpaths" do
       expected_paths = [
         "$.entreprise_raison_sociale",
-        "$.entreprise_siren"
+        "$.entreprise_siren",
       ]
 
       json_columns = columns.filter { _1.is_a?(Columns::JSONPathColumn) }

@@ -733,7 +733,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           DossierLabel.create(dossier_id: dossier_2.id, label_id: dossier.procedure.labels.last.id)
 
           procedure_presentation.update(displayed_columns: [
-            label_id.id
+            label_id.id,
           ])
 
           subject

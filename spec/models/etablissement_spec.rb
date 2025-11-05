@@ -100,7 +100,7 @@ describe Etablissement do
         "dettes4_maturite_a_un_an_au_plus", "evolution_dettes4_maturite_a_un_an_au_plus",
         "emprunts_et_dettes_financieres_divers", "evolution_emprunts_et_dettes_financieres_divers",
         "total_dettes_stables", "evolution_total_dettes_stables", "groupes_et_associes",
-        "evolution_groupes_et_associes", "total_passif", "evolution_total_passif"
+        "evolution_groupes_et_associes", "total_passif", "evolution_total_passif",
       ]
     }
     let(:bilans) do
@@ -113,7 +113,7 @@ describe Etablissement do
           "total_passif": "0",
           "new_key": "50",
           "evolution_total_dettes_stables": "30",
-        }
+        },
       ]
     end
 

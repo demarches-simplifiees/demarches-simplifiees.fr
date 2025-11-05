@@ -19,7 +19,7 @@ class Dossiers::AnnuaireEducationComponent < ApplicationComponent
     [
       ['Nom de l’établissement', champ.data['nom_etablissement']],
       ['L’identifiant de l’etablissement', champ.data['identifiant_de_l_etablissement']],
-      ['SIREN/SIRET', champ.data['siren_siret']]
+      ['SIREN/SIRET', champ.data['siren_siret']],
     ]
   end
 
@@ -35,7 +35,7 @@ class Dossiers::AnnuaireEducationComponent < ApplicationComponent
       ['Adresse', adresse],
       ['Téléphone', champ.data['telephone']],
       ['Email', champ.data['mail']],
-      ['Site internet', champ.data['web']]
+      ['Site internet', champ.data['web']],
     ]
   end
 
@@ -59,7 +59,7 @@ class Dossiers::AnnuaireEducationComponent < ApplicationComponent
     safe_join([
       champ.data['adresse_1'],
       champ.data.values_at('code_postal', 'nom_commune').compact_blank.join(" "),
-      region_libelle_and_code(champ.data)
+      region_libelle_and_code(champ.data),
     ].compact, tag.br)
   end
 

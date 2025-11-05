@@ -83,7 +83,7 @@ module ProcedureCloneConcern
     'api_particulier_token',
     'no_gender',
     'pro_connect_restricted',
-    'robots_indexable'
+    'robots_indexable',
   ]
 
   NEW_MAX_DUREE_CONSERVATION = Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH

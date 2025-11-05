@@ -29,9 +29,9 @@ FactoryBot.define do
                     { "type" => "mention", "attrs" => { "id" => "$.finess", "label" => "$.finess (010002699)" } },
                     { "text" => " (", "type" => "text" },
                     { "type" => "mention", "attrs" => { "id" => "$.ej_rs", "label" => "$.ej_rs (CENTRE MEDICAL REGINA)" } },
-                    { "text" => ")", "type" => "text" }
+                    { "text" => ")", "type" => "text" },
                   ],
-                }
+                },
               ],
           }
         end

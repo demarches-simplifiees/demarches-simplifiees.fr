@@ -632,7 +632,7 @@ module Administrateurs
         :rdv_enabled,
         :pro_connect_restricted,
         :robots_indexable,
-        { zone_ids: [], procedure_tag_names: [] }
+        { zone_ids: [], procedure_tag_names: [] },
       ]
 
       editable_params << :piece_justificative_multiple if @procedure && !@procedure.piece_justificative_multiple?

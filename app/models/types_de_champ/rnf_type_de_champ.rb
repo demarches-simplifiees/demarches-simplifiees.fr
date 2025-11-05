@@ -48,7 +48,7 @@ class TypesDeChamp::RNFTypeDeChamp < TypesDeChamp::TextTypeDeChamp
           jsonpath: '$.title',
           displayable:,
           mandatory: mandatory?
-        )
+        ),
       ])
   end
 

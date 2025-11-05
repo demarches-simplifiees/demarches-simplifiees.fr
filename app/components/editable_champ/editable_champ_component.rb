@@ -17,7 +17,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
       TypeDeChamp.type_champs.fetch(:header_section),
       TypeDeChamp.type_champs.fetch(:explication),
       TypeDeChamp.type_champs.fetch(:repetition),
-      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list),
     ]
     !types_without_label.include?(@champ.type_champ)
   end

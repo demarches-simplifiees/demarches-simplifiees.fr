@@ -49,7 +49,7 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
           displayable:,
           type: :number,
           mandatory: mandatory?
-        )
+        ),
       ]
     )
   end

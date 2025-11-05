@@ -10,7 +10,7 @@ class Label < ApplicationRecord
     { name: 'À relancer', color: 'green_tilleul_verveine' },
     { name: 'Complet', color: 'green_emeraude' },
     { name: 'À signer', color: 'blue_ecume' },
-    { name: 'Urgent', color: 'pink_macaron' }
+    { name: 'Urgent', color: 'pink_macaron' },
   ]
 
   enum :color, {

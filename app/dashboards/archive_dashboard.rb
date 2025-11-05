@@ -27,7 +27,7 @@ class ArchiveDashboard < Administrate::BaseDashboard
     :created_at,
     :updated_at,
     :job_status,
-    :file
+    :file,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -36,6 +36,6 @@ class ArchiveDashboard < Administrate::BaseDashboard
     :id,
     :created_at,
     :updated_at,
-    :job_status
+    :job_status,
   ].freeze
 end

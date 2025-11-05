@@ -17,7 +17,7 @@ module Maintenance
         before do
           procedure_presentation.update!(
             suivis_filters: [
-              FilteredColumn.new(column: procedure.find_column(label: 'Demandeur'), filter: 'plop')
+              FilteredColumn.new(column: procedure.find_column(label: 'Demandeur'), filter: 'plop'),
             ]
           )
         end
@@ -32,7 +32,7 @@ module Maintenance
         before do
           procedure_presentation.update!(
             suivis_filters: [
-              FilteredColumn.new(column: procedure.find_column(label: 'Demandeur'), filter: { operator: 'match', value: ['plop'] })
+              FilteredColumn.new(column: procedure.find_column(label: 'Demandeur'), filter: { operator: 'match', value: ['plop'] }),
             ]
           )
         end

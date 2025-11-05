@@ -24,7 +24,7 @@ class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
           jsonpath: '$.title',
           displayable:,
           mandatory: mandatory?
-        )
+        ),
       ])
   end
 end

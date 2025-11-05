@@ -7,7 +7,7 @@ describe JSONPathUtil do
         'foo' => {
           'bar' => 1,
           'baz' => [
-            { 'qux' => 'valeur' }
+            { 'qux' => 'valeur' },
           ],
         },
         'simple' => 'ok',
@@ -59,14 +59,14 @@ describe JSONPathUtil do
         "$.addresses[0].city_zipcode",
         "$.addresses[0].street_number",
         "$.addresses[0].city_insee_code",
-        "$.is_active"
+        "$.is_active",
       ])
     end
 
     it 'handles an array of hashes' do
       array = [
         { 'key1' => 'value1' },
-        { 'key2' => 'value2' }
+        { 'key2' => 'value2' },
       ]
       result = described_class.hash_to_jsonpath(array)
       expect(result).to eq({
@@ -92,12 +92,12 @@ describe JSONPathUtil do
         {
           "foo" => [
             { "bar" => 1 },
-            { "bar" => 2 }
+            { "bar" => 2 },
           ],
           "baz" => {
             "qux" => [
               { "a" => "x" },
-              { "a" => "y" }
+              { "a" => "y" },
             ],
           },
           "simple" => "value",
@@ -120,7 +120,7 @@ describe JSONPathUtil do
       let(:array) do
         [
           { "key1" => "value1" },
-          { "key2" => "value2" }
+          { "key2" => "value2" },
         ]
       end
 

@@ -45,7 +45,7 @@ class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
       :siret,
       :siege_social,
       :enseigne,
-      :diffusable_commercialement
+      :diffusable_commercialement,
     ]
   end
 
@@ -54,7 +54,7 @@ class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
       :numero_voie,
       :type_voie,
       :complement_adresse,
-      :code_postal
+      :code_postal,
     ]
   end
 

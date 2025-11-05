@@ -24,9 +24,9 @@ class ChampPresentations::MultipleDropDownListPresentation < ChampPresentations:
                 {
                   type: 'text',
                   text: text,
-                }
+                },
               ],
-            }
+            },
           ],
         }
       end,

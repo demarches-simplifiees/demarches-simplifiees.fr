@@ -7,7 +7,7 @@ class Cron::SendAPITokenExpirationNoticeJob < Cron::CronJob
     windows = [
       1.day,
       1.week,
-      1.month
+      1.month,
     ]
 
     windows.each do |window|

@@ -68,7 +68,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       .to_h do |cat, tdc|
         [
           t(cat, scope: cat_scope),
-          tdc.map { [t(_1, scope: tdc_scope), _1, { disabled: !accepted_type_champs.include?(_1) }] }
+          tdc.map { [t(_1, scope: tdc_scope), _1, { disabled: !accepted_type_champs.include?(_1) }] },
         ]
       end
   end
@@ -108,7 +108,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   EXCLUDE_FROM_BLOCK = [
-    TypeDeChamp.type_champs.fetch(:repetition)
+    TypeDeChamp.type_champs.fetch(:repetition),
   ]
 
   def filter_block_type_champ(type_champ)
@@ -155,7 +155,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       [t('.character_limit.limit', limit: '400'), 400],
       [t('.character_limit.limit', limit: '1 000'), 1000],
       [t('.character_limit.limit', limit: '5 000'), 5000],
-      [t('.character_limit.limit', limit: '10 000'), 10000]
+      [t('.character_limit.limit', limit: '10 000'), 10000],
     ]
   end
 

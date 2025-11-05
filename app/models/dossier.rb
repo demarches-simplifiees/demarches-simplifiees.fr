@@ -486,7 +486,7 @@ class Dossier < ApplicationRecord
     [
       brouillon_close_to_expiration_notice_sent_at,
       en_construction_close_to_expiration_notice_sent_at,
-      termine_close_to_expiration_notice_sent_at
+      termine_close_to_expiration_notice_sent_at,
     ].any?(&:present?)
   end
 
@@ -610,7 +610,7 @@ class Dossier < ApplicationRecord
     [
       brouillon?,
       en_construction?,
-      termine? && procedure.procedure_expires_when_termine_enabled
+      termine? && procedure.procedure_expires_when_termine_enabled,
     ].any?
   end
 
@@ -735,7 +735,7 @@ class Dossier < ApplicationRecord
         "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation_name
+        procedure.organisation_name,
       ]
     else
       parts = [
@@ -744,7 +744,7 @@ class Dossier < ApplicationRecord
         " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation_name
+        procedure.organisation_name,
       ]
     end
 

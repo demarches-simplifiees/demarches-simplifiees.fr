@@ -344,7 +344,7 @@ class APIGeoService
         address_data['complement2'],
         address_data['service_distribution'],
         address_data['code_postal'],
-        address_data['nom_commune']
+        address_data['nom_commune'],
       ].compact_blank
 
       components.join(' ')

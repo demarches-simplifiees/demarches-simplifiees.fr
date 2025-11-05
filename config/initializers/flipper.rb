@@ -35,7 +35,7 @@ features = [
   :rdv,
   :referentiel_type_de_champ,
   :sva,
-  :switch_domain
+  :switch_domain,
 ]
 
 def database_exists?

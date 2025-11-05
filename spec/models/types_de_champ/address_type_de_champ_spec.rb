@@ -12,7 +12,7 @@ describe TypesDeChamp::AddressTypeDeChamp do
         "addr – Code postal (5 chiffres)",
         "addr – Commune",
         "addr – Département",
-        "addr – Région"
+        "addr – Région",
       ]
 
       expect(columns.map(&:label)).to match_array(expected_columns)

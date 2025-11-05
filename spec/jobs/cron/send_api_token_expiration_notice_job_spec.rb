@@ -76,7 +76,7 @@ RSpec.describe Cron::SendAPITokenExpirationNoticeJob, type: :job do
           expect(token.reload.expiration_notices_sent_at).to match_array([
             expires_at - 1.month,
             expires_at - 1.week,
-            expires_at - 1.day
+            expires_at - 1.day,
           ])
         end
       end

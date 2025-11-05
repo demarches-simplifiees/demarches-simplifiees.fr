@@ -240,7 +240,7 @@ module Administrateurs
           :reserves_naturelles,
           :natura_2000,
           :zones_humides,
-          :znieff
+          :znieff,
         ])
     end
 

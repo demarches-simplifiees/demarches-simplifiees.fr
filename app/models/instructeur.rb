@@ -221,7 +221,7 @@ class Instructeur < ApplicationRecord
       query,
       instructeur_id: id,
       groupe_instructeur_ids: groupe_instructeur_ids,
-      now: Time.current
+      now: Time.current,
     ])
 
     Dossier.connection.select_all(sanitized_query).first

@@ -285,7 +285,7 @@ class Procedure < ApplicationRecord
     "image/jpeg",
     "image/jpg",
     "image/png",
-    "text/plain"
+    "text/plain",
   ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
@@ -296,7 +296,7 @@ class Procedure < ApplicationRecord
     "image/jpeg",
     "image/jpg",
     "image/png",
-    "text/plain"
+    "text/plain",
   ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
   LOGO_MAX_SIZE = 5.megabytes
@@ -772,7 +772,7 @@ class Procedure < ApplicationRecord
       self.accepter_email_template,
       self.refuser_email_template,
       self.classer_sans_suite_email_template,
-      self.repasser_en_instruction_email_template
+      self.repasser_en_instruction_email_template,
     ]
   end
 

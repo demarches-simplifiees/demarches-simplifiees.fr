@@ -15,12 +15,12 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     when Dossier.states.fetch(:en_instruction)
       [
         BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser),
-        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:create_avis)
+        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction), BatchOperation.operations.fetch(:create_avis),
       ]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       [
         BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:desarchiver), BatchOperation.operations.fetch(:supprimer),
-        BatchOperation.operations.fetch(:restaurer), BatchOperation.operations.fetch(:repousser_expiration)
+        BatchOperation.operations.fetch(:restaurer), BatchOperation.operations.fetch(:repousser_expiration),
       ]
     else
       []
@@ -48,7 +48,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
               aria:  'modal-commentaire-batch',
-            }
+            },
           ],
       }
     when 'archives' then
@@ -58,7 +58,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.desarchiver"),
               operation: BatchOperation.operations.fetch(:desarchiver),
-            }
+            },
           ],
       }
     when 'traites' then
@@ -78,7 +78,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
               aria:  'modal-commentaire-batch',
-            }
+            },
           ],
       }
     when 'expirant' then
@@ -88,7 +88,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.repousser_expiration"),
               operation: BatchOperation.operations.fetch(:repousser_expiration),
-            }
+            },
           ],
       }
     when 'supprimes' then
@@ -98,7 +98,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.restaurer"),
               operation: BatchOperation.operations.fetch(:restaurer),
-            }
+            },
           ],
       }
     when 'suivis' then
@@ -139,7 +139,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
                                 operation_class_name: 'fr-icon-close-circle-fill fr-text-default--warning',
                                 placeholder: t(".placeholders.refuser"),
                                 instruction_operation: 'refuse',
-                              }
+                              },
                             ],
             },
             {
@@ -166,7 +166,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
               aria:  'modal-commentaire-batch',
 
-            }
+            },
           ],
       }
     when 'tous' then
@@ -178,7 +178,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
               operation: BatchOperation.operations.fetch(:create_commentaire),
               modal_data: { action: 'batch-operation#injectSelectedIdsIntoModal', 'fr-opened': "false", 'modal-type': 'commentaire' },
               aria:  'modal-commentaire-batch',
-            }
+            },
           ],
       }
     else

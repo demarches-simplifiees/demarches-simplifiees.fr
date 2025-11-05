@@ -71,7 +71,7 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
       :raison_sociale,
       :siret_siege_social,
       :tranche_effectif_salarie,
-      :date_creation
+      :date_creation,
     ]
   end
 

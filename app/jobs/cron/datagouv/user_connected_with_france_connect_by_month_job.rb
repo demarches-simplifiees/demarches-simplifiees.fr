@@ -15,7 +15,7 @@ class Cron::Datagouv::UserConnectedWithFranceConnectByMonthJob < Cron::Datagouv:
   def data_for(month:)
     [
       month.strftime(DATE_FORMAT),
-      User.where(created_at: month.all_month, loged_in_with_france_connect: "particulier").count
+      User.where(created_at: month.all_month, loged_in_with_france_connect: "particulier").count,
     ]
   end
 end

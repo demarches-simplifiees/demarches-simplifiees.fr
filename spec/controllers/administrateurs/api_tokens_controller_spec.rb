@@ -63,7 +63,7 @@ describe Administrateurs::APITokensController, type: :controller do
       it {
   expect(token.authorized_networks).to eq([
     IPAddr.new('192.168.1.23/32'),
-    IPAddr.new('2001:41d0:304:400::52f/128')
+    IPAddr.new('2001:41d0:304:400::52f/128'),
   ])
 }
     end

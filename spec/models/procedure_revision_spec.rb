@@ -18,12 +18,12 @@ describe ProcedureRevision do
               { type: :text, libelle: 'l1' },
               {
                 type: :repetition, libelle: 'l2', children: [
-                  { type: :text, libelle: 'l2' }
+                  { type: :text, libelle: 'l2' },
                 ],
-              }
+              },
             ],
             types_de_champ_private: [
-              { type: :text, libelle: 'l1 private' }
+              { type: :text, libelle: 'l1 private' },
             ])
     end
     let(:tdc_params) { text_params }
@@ -354,7 +354,7 @@ describe ProcedureRevision do
         let(:procedure) do
           create(:procedure, types_de_champ_public: [
             { type: :integer_number, libelle: 'l1' },
-            { type: :text, libelle: 'l2' }
+            { type: :text, libelle: 'l2' },
           ])
         end
 
@@ -374,7 +374,7 @@ describe ProcedureRevision do
                 private: false,
                 stable_id: second_tdc.stable_id,
                 to: "(l1 == 3)",
-              }
+              },
             ])
           end
         end
@@ -398,7 +398,7 @@ describe ProcedureRevision do
                 private: false,
                 stable_id: second_tdc.stable_id,
                 to: nil,
-              }
+              },
             ])
           end
         end
@@ -422,7 +422,7 @@ describe ProcedureRevision do
                 private: false,
                 stable_id: second_tdc.stable_id,
                 to: "(l1 == 3)",
-              }
+              },
             ])
           end
         end
@@ -448,7 +448,7 @@ describe ProcedureRevision do
               private: false,
               mandatory: false,
               stable_id: new_tdc.stable_id,
-            }
+            },
           ])
         end
       end
@@ -491,7 +491,7 @@ describe ProcedureRevision do
                 from: true,
                 to: false,
                 stable_id: first_tdc.stable_id,
-              }
+              },
             ])
           end
         end
@@ -523,7 +523,7 @@ describe ProcedureRevision do
                 from: nil,
                 to: 'afficher au clique',
                 stable_id: first_tdc.stable_id,
-              }
+              },
             ])
           end
         end
@@ -547,7 +547,7 @@ describe ProcedureRevision do
               from: "text",
               to: "textarea",
               stable_id: first_tdc.stable_id,
-            }
+            },
           ])
         end
       end
@@ -580,7 +580,7 @@ describe ProcedureRevision do
               from: 1,
               to: 2,
               stable_id: new_draft_second_tdc.stable_id,
-            }
+            },
           ])
         end
       end
@@ -599,7 +599,7 @@ describe ProcedureRevision do
               label: first_tdc.libelle,
               private: false,
               stable_id: first_tdc.stable_id,
-            }
+            },
           ])
         end
       end
@@ -631,7 +631,7 @@ describe ProcedureRevision do
               from: [],
               to: ["one", "two"],
               stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id,
-            }
+            },
           ])
         end
       end
@@ -663,7 +663,7 @@ describe ProcedureRevision do
               from: [],
               to: [:cadastres, :znieff],
               stable_id: new_draft.children_of(new_draft.types_de_champ_public.last).first.stable_id,
-            }
+            },
           ])
         end
       end
@@ -698,7 +698,7 @@ describe ProcedureRevision do
               referentiel_mapping: { key: 'value1' },
               stable_id: 123,
               libelle: 'libelle',
-            }
+            },
           ]
         end
 
@@ -793,7 +793,7 @@ describe ProcedureRevision do
           procedure.published_revision.update!(ineligibilite_rules: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))
           new_draft.update!(ineligibilite_rules: ds_and([
             ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)),
-            empty_operator(empty, empty)
+            empty_operator(empty, empty),
           ]))
         end
 
@@ -940,7 +940,7 @@ describe ProcedureRevision do
       [
         { mandatory: true, description: },
         { type: :siret, mandatory: true, description: },
-        { type: :piece_justificative, mandatory:, description: }
+        { type: :piece_justificative, mandatory:, description: },
       ]
     end
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ_public) }
@@ -988,9 +988,9 @@ describe ProcedureRevision do
             description:,
             children: [
               { mandatory: true, description: "word " * 10 },
-              { type: :piece_justificative, position: 2, mandatory: true, description: nil }
+              { type: :piece_justificative, position: 2, mandatory: true, description: nil },
             ],
-          }
+          },
         ]
       end
 
@@ -1011,7 +1011,7 @@ describe ProcedureRevision do
             type: :explication,
             description: "5 words description <strong>containing html</strong> " * 20,
           },
-          { mandatory: true, description: nil }
+          { mandatory: true, description: nil },
         ]
       end
 
@@ -1060,7 +1060,7 @@ describe ProcedureRevision do
     let(:types_de_champ_public) do
       [
         { type: :integer_number, libelle: 'l1' },
-        { type: :integer_number, libelle: 'l2' }
+        { type: :integer_number, libelle: 'l2' },
       ]
     end
     def first_champ = procedure.draft_revision.types_de_champ_public.first
@@ -1270,7 +1270,7 @@ describe ProcedureRevision do
         { type: :departements, libelle: 'l3' },
         { type: :regions, libelle: 'l4' },
         { type: :communes, libelle: 'l5' },
-        { type: :epci, libelle: 'l6' }
+        { type: :epci, libelle: 'l6' },
       ])
     end
 

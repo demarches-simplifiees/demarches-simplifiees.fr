@@ -247,7 +247,7 @@ module Administrateurs
         errors += [
           t('.wrong_address',
                     count: invalid_emails.size,
-                    emails: invalid_emails.join(', '))
+                    emails: invalid_emails.join(', ')),
         ]
       end
 

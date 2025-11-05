@@ -59,7 +59,7 @@ describe ProcedureExportService do
                 "export/dossier-#{dossier.id}/pj-#{dossier.id}-01.png",
                 "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-01-01.png",
                 "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-02-01.png",
-                "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-01-02.png"
+                "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-01-02.png",
               ]
 
               files = read_zip_entries(temp_file)

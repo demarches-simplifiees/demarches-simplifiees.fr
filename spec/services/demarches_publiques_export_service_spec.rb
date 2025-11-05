@@ -37,7 +37,7 @@ describe DemarchesPubliquesExportService do
               label: procedure.active_revision.types_de_champ_public.first.libelle,
               required: true,
               __typename: "TextChampDescriptor",
-            }
+            },
           ],
         },
       }

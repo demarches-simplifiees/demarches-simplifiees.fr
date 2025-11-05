@@ -13,7 +13,7 @@ class Procedure::GroupeInstructeurMenuComponent < ApplicationComponent
       { name: 'Dossiers affectés', url: '#dossiers-affectes' },
       { name: 'Règle(s) de routage', url: '#regles-routage' },
       { name: 'Affectation des instructeurs', url: '#affectation-instructeurs' },
-      { name: 'Informations de contact', url: '#informations-contact' }
+      { name: 'Informations de contact', url: '#informations-contact' },
     ]
     links.push({ name: 'Tampon de l’attestation', url: '#tampon-attestation' }) if @procedure.attestation_acceptation_template&.activated?
     links

@@ -41,7 +41,7 @@ describe Users::SessionsController, type: :controller do
 
         [
           FranceConnectController::ID_TOKEN_COOKIE_NAME,
-          FranceConnectController::STATE_COOKIE_NAME
+          FranceConnectController::STATE_COOKIE_NAME,
         ].map(&:to_s).each do |cookie_name|
           expect(response.cookies.keys).to include(cookie_name)
           expect(response.cookies[cookie_name]).to be_nil
@@ -163,7 +163,7 @@ describe Users::SessionsController, type: :controller do
 
         [
           FranceConnectController::ID_TOKEN_COOKIE_NAME,
-          FranceConnectController::STATE_COOKIE_NAME
+          FranceConnectController::STATE_COOKIE_NAME,
         ].map(&:to_s).each do |cookie_name|
           expect(response.cookies.keys).to include(cookie_name)
           expect(response.cookies[cookie_name]).to be_nil
@@ -333,7 +333,7 @@ describe Users::SessionsController, type: :controller do
     context 'when the email is evil' do
       [
         'Hello, I am an evil email',
-        'a@a%C2%A0evil%C2%A0text%C2%A0with%C2%A0spaces'
+        'a@a%C2%A0evil%C2%A0text%C2%A0with%C2%A0spaces',
       ].each do |evil_attempt|
         let(:link_email) { evil_attempt }
 

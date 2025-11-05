@@ -14,7 +14,7 @@ RSpec.describe SelectProcedureDropDownListComponent, type: :component do
       procedure_struct.new(1002, "Procedure facile"),
       procedure_struct.new(1003, "Procedure terminée"),
       procedure_struct.new(1004, "Procedure terminée 2"),
-      procedure_struct.new(1005, "Procedure terminée 3")
+      procedure_struct.new(1005, "Procedure terminée 3"),
     ]
   end
 
@@ -35,7 +35,7 @@ RSpec.describe SelectProcedureDropDownListComponent, type: :component do
       ["n°1002 - Procedure facile", 1002],
       ["n°1003 - Procedure terminée", 1003],
       ["n°1004 - Procedure terminée 2", 1004],
-      ["n°1005 - Procedure terminée 3", 1005]
+      ["n°1005 - Procedure terminée 3", 1005],
     ])
   end
 
@@ -54,7 +54,7 @@ RSpec.describe SelectProcedureDropDownListComponent, type: :component do
       [
         procedure_struct.new(1, "Procedure 1"),
         procedure_struct.new(2, "Procedure 2"),
-        procedure_struct.new(3, "Procedure 3")
+        procedure_struct.new(3, "Procedure 3"),
       ]
     end
 

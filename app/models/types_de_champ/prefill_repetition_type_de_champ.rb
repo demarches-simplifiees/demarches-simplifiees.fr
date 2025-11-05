@@ -7,7 +7,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
   def possible_values
     [
       I18n.t("views.prefill_descriptions.edit.possible_values.#{type_champ}_html"),
-      subchamps_all_possible_values
+      subchamps_all_possible_values,
     ].join("</br>").html_safe
   end
 

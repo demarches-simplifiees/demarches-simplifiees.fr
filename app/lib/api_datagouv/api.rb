@@ -76,7 +76,7 @@ class APIDatagouv::API
         API_URL,
         "datasets", dataset,
         "resources", resource,
-        ""
+        "",
       ].join('/')
     end
 
@@ -85,7 +85,7 @@ class APIDatagouv::API
         API_URL,
         "datasets", dataset,
         "resources", resource,
-        "upload", ""
+        "upload", "",
       ].join('/')
     end
 

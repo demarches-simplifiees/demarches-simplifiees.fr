@@ -95,7 +95,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         displayable: false,
         options_for_select: secondary_options.values.flatten.uniq.sort,
         mandatory: mandatory?
-      )
+      ),
     ]
   end
 

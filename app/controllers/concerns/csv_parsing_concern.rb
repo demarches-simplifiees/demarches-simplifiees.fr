@@ -7,7 +7,7 @@ module CsvParsingConcern
   CSV_MAX_LINES = 5_000
   CSV_ACCEPTED_CONTENT_TYPES = [
     "text/csv",
-    "application/vnd.ms-excel"
+    "application/vnd.ms-excel",
   ]
 
   included do

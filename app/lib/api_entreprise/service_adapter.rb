@@ -19,7 +19,7 @@ class APIEntreprise::ServiceAdapter < APIEntreprise::EtablissementAdapter
   def attr_to_fetch
     [
       :adresse,
-      :siret
+      :siret,
     ]
   end
 end

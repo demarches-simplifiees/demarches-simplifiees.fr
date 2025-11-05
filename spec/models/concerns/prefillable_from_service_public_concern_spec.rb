@@ -93,7 +93,7 @@ RSpec.describe PrefillableFromServicePublicConcern, type: :model do
                 "nom_jour_fin" => "Vendredi",
                 "valeur_heure_debut_1" => "09:00:00",
                 "valeur_heure_fin_1" => "17:00:00",
-        }
+        },
       ]
       expect(service.send(:denormalize_plage_ouverture, data)).to eq("Lundi au Vendredi : de 9:00 à 17:00")
     end
@@ -112,7 +112,7 @@ RSpec.describe PrefillableFromServicePublicConcern, type: :model do
         "nom_jour_fin" => "Vendredi",
         "valeur_heure_debut_1" => "08:00:00",
         "valeur_heure_fin_1" => "12:00:00",
-        }
+        },
       ]
       expect(service.send(:denormalize_plage_ouverture, data)).to eq("Lundi au Jeudi : de 8:00 à 12:00 et de 13:30 à 17:30\nVendredi : de 8:00 à 12:00")
     end
@@ -125,7 +125,7 @@ RSpec.describe PrefillableFromServicePublicConcern, type: :model do
                 "valeur_heure_debut_1" => "09:00:00",
                 "valeur_heure_fin_1" => "17:00:00",
                 "commentaire" => "Fermé les jours fériés",
-        }
+        },
       ]
       expect(service.send(:denormalize_plage_ouverture, data)).to eq("Lundi au Vendredi : de 9:00 à 17:00 (Fermé les jours fériés)")
     end

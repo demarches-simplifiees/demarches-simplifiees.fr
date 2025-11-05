@@ -68,7 +68,7 @@ describe AttestationTemplate, type: :model do
     let(:types_de_champ) do
       [
         { libelle: 'libelleA' },
-        { libelle: 'libelleB' }
+        { libelle: 'libelleB' },
       ]
     end
 

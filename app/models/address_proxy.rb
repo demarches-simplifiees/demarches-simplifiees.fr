@@ -9,7 +9,7 @@ class AddressProxy
     :departement_name,
     :departement_code,
     :region_name,
-    :region_code
+    :region_code,
   ]
 
   class ChampAddressPresenter

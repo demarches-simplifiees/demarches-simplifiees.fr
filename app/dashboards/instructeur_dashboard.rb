@@ -27,7 +27,7 @@ class InstructeurDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :user,
-    :created_at
+    :created_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -38,14 +38,14 @@ class InstructeurDashboard < Administrate::BaseDashboard
     :id,
     :user,
     :created_at,
-    :bypass_email_login_token
+    :bypass_email_login_token,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :bypass_email_login_token
+    :bypass_email_login_token,
   ].freeze
 
   # Overwrite this method to customize how users are displayed

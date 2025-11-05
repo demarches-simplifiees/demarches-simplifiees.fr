@@ -52,7 +52,7 @@ describe Instructeurs::RemoveFilterButtonsComponent, type: :component do
         [
           to_filter(['État du dossier', { operator: 'match', value: 'en_construction' }]),
           to_filter(['État du dossier', { operator: 'match', value: 'en_instruction' }]),
-          to_filter(['Date de création', { operator: 'match', value: '15/06/2023' }])
+          to_filter(['Date de création', { operator: 'match', value: '15/06/2023' }]),
         ]
       end
 

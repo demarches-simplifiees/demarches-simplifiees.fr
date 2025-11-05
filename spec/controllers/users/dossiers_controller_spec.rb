@@ -1069,7 +1069,7 @@ describe Users::DossiersController, type: :controller do
           {
             type: :text,
             stable_id: 3,
-          }
+          },
         ]
       end
       let(:suggestion_value) { 'osf' }
@@ -1318,7 +1318,7 @@ describe Users::DossiersController, type: :controller do
             type: :referentiel,
             referentiel: referentiel,
             stable_id: referentiel_stable_id,
-          }
+          },
         ]
       end
       let (:submit_payload) do
@@ -1625,7 +1625,7 @@ describe Users::DossiersController, type: :controller do
 
         expect(notifications.pluck(:instructeur_id)).to match_array([
           instructeur_with_instant_message.id,
-          instructeur_without_instant_message.id
+          instructeur_without_instant_message.id,
         ])
       end
     end
@@ -1994,9 +1994,9 @@ describe Users::DossiersController, type: :controller do
               {
                 type: :repetition,
                 children: [
-                  { type: :text, stable_id: 3 } # mapped with "$.repetition{0}.nom"
+                  { type: :text, stable_id: 3 }, # mapped with "$.repetition{0}.nom"
                 ],
-              }
+              },
             ]
           end
 

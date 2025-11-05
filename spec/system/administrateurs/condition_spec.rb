@@ -8,7 +8,7 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
     create(:procedure,
            types_de_champ_public: [
              { type: :integer_number, libelle: 'age' },
-             { type: :text, libelle: 'nom du parent' }
+             { type: :text, libelle: 'nom du parent' },
            ])
   end
 

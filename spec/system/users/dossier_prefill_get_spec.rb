@@ -14,7 +14,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       { type: :dossier_link },
       { type: :communes },
       { type: :address },
-      { type: :repetition, children: [{ type: :text }, { type: :decimal_number }] }
+      { type: :repetition, children: [{ type: :text }, { type: :decimal_number }] },
     ]
   end
   let(:procedure) { create(:procedure, :for_individual, :published, opendata: true, types_de_champ_public:) }
@@ -40,7 +40,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   let(:multiple_drop_down_list_values) {
     [
       type_de_champ_multiple_drop_down_list.drop_down_options.first,
-      type_de_champ_multiple_drop_down_list.drop_down_options.last
+      type_de_champ_multiple_drop_down_list.drop_down_options.last,
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
@@ -73,7 +73,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
         {
           "champ_#{sub_types_de_champ_repetition.first.to_typed_id_for_query}": text_repetition_value,
           "champ_#{sub_types_de_champ_repetition.second.to_typed_id_for_query}": integer_repetition_value,
-        }
+        },
       ],
       "identite_prenom" => prenom_value,
       "identite_nom" => nom_value,

@@ -10,7 +10,7 @@ class RechercheController < ApplicationController
   PROJECTIONS = [
     Column.new(procedure_id: 666, table: 'procedure', column: 'libelle'),
     Column.new(procedure_id: 666, table: 'user', column: 'email'),
-    Column.new(procedure_id: 666, table: 'procedure', column: 'procedure_id')
+    Column.new(procedure_id: 666, table: 'procedure', column: 'procedure_id'),
   ]
 
   def nav_bar_profile

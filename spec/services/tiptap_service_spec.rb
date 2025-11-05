@@ -15,7 +15,7 @@ RSpec.describe TiptapService do
             {
               type: 'headerColumn',
               content: [{ type: 'text', text: 'Right' }],
-            }
+            },
           ],
         },
         {
@@ -65,7 +65,7 @@ RSpec.describe TiptapService do
               type: 'text',
               text: '!',
               marks: [{ type: 'highlight' }],
-            }
+            },
           ],
         },
         {
@@ -84,9 +84,9 @@ RSpec.describe TiptapService do
                     {
                       type: 'text',
                       text: 'Item 1',
-                    }
+                    },
                   ],
-                }
+                },
               ],
             },
             {
@@ -98,11 +98,11 @@ RSpec.describe TiptapService do
                     {
                       type: 'text',
                       text: 'Item 2',
-                    }
+                    },
                   ],
-                }
+                },
               ],
-            }
+            },
           ],
         },
         {
@@ -117,9 +117,9 @@ RSpec.describe TiptapService do
                     {
                       type: 'text',
                       text: 'Item 1',
-                    }
+                    },
                   ],
-                }
+                },
               ],
             },
             {
@@ -131,11 +131,11 @@ RSpec.describe TiptapService do
                     {
                       type: 'text',
                       text: 'Item 2',
-                    }
+                    },
                   ],
-                }
+                },
               ],
-            }
+            },
           ],
         },
         {
@@ -148,13 +148,13 @@ RSpec.describe TiptapService do
             {
               type: 'mention',
               attrs: { id: 'languages', label: 'Langages' },
-            }
+            },
           ],
         },
         {
           type: 'footer',
           content: [{ type: 'text', text: 'Footer' }],
-        }
+        },
       ],
     }
   end
@@ -172,7 +172,7 @@ RSpec.describe TiptapService do
         '<ul><li><p>Item 1</p></li><li><p>Item 2</p></li></ul>',
         '<ol><li><p>Item 1</p></li><li><p>Item 2</p></li></ol>',
         '<p>Langages de prédilection:</p><ul><li><p>ruby</p></li><li><p>rust</p></li></ul>',
-        '<footer>Footer</footer>'
+        '<footer>Footer</footer>',
       ].join
     end
 
@@ -192,7 +192,7 @@ RSpec.describe TiptapService do
             {
               type: 'paragraph',
               content: [{ type: 'text', text: 'First paragraph' }],
-            }
+            },
           ],
         }
       end
@@ -220,13 +220,13 @@ RSpec.describe TiptapService do
                         {
                           type: 'text',
                           text: 'Item 1',
-                        }
+                        },
                       ],
-                    }
+                    },
                   ],
-                }
+                },
               ],
-            }
+            },
           ],
         }
       end
@@ -250,7 +250,7 @@ RSpec.describe TiptapService do
       let(:json) do
         {
           "content" => [
-            { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " .pdf", "type" => "text" }] }
+            { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " .pdf", "type" => "text" }] },
           ],
 
         }.deep_symbolize_keys

@@ -105,12 +105,12 @@ describe DossierRebaseConcern do
         { type: :text, mandatory: true, stable_id: 1 },
         {
           type: :repetition, stable_id: 101, mandatory: true, children: [
-            { type: :text, stable_id: 102 }
+            { type: :text, stable_id: 102 },
           ],
         },
         { type: :datetime, stable_id: 103 },
         { type: :yes_no, stable_id: 104 },
-        { type: :integer_number, stable_id: 105 }
+        { type: :integer_number, stable_id: 105 },
       ]
     end
     let(:types_de_champ_private) { [{ type: :text, stable_id: 11 }] }
@@ -497,9 +497,9 @@ describe DossierRebaseConcern do
             mandatory: true,
             children: [
               { type: :text, libelle: 'c1' },
-              { type: :text, libelle: 'c2' }
+              { type: :text, libelle: 'c2' },
             ],
-          }
+          },
         ])
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }

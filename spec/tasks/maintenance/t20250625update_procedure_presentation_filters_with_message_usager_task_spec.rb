@@ -25,7 +25,7 @@ module Maintenance
               FilteredColumn.new(
                 column: procedure.dossier_id_column,
                 filter: "1"
-              )
+              ),
             ]
           )
         end
@@ -43,7 +43,7 @@ module Maintenance
                 FilteredColumn.new(
                   column: procedure.dossier_notifications_column,
                   filter: "dossier_modifie"
-                )
+                ),
               ]
             )
           end
@@ -64,7 +64,7 @@ module Maintenance
                 FilteredColumn.new(
                   column: procedure.dossier_notifications_column,
                   filter: "message_usager"
-                )
+                ),
               ]
             )
           end

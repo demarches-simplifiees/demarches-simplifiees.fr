@@ -67,8 +67,8 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
               [
                 type: :repetition,
                 children: [
-                  { type: :text, libelle: 'child of repet text' }
-                ]
+                  { type: :text, libelle: 'child of repet text' },
+                ],
               ]
             end
             let(:prefilled_champs) { TypesDeChamp::PrefillTypeDeChamp.wrap(procedure.published_revision.types_de_champ, procedure.active_revision) }

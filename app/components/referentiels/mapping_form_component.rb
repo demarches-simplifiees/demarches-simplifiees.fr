@@ -30,7 +30,7 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
       safe_join([
         hidden_field_tag(attribute_name(jsonpath, "prefill"), "0"),
         check_box_tag(attribute_name(jsonpath, "prefill"), "1", lookup_existing_value(jsonpath, "prefill") == "1", class: "fr-checkbox", id: jsonpath.parameterize, data: { "action": "change->referentiel-mapping#onCheckboxChange" }, aria: { labelledby: label_check_prefill(jsonpath) }),
-        tag.label(for: jsonpath.parameterize, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") }
+        tag.label(for: jsonpath.parameterize, class: "fr-label", aria: { hidden: true }) { sanitize("&nbsp;") },
       ])
     end
   end
@@ -46,7 +46,7 @@ class Referentiels::MappingFormComponent < Referentiels::MappingFormBase
   def disabled_libelle_tag(jsonpath)
     safe_join([
       tag.p("Libellé du champ du formulaire"),
-      tag.p("(à définir à l'étape suivante)", class: 'fr-text--sm fr-text-action-high--blue-france')
+      tag.p("(à définir à l'étape suivante)", class: 'fr-text--sm fr-text-action-high--blue-france'),
     ])
   end
 

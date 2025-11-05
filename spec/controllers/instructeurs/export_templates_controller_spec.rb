@@ -114,7 +114,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       let(:exported_columns) do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
-          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' }
+          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' },
         ].map(&:to_json)
       end
 
@@ -204,7 +204,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       let(:exported_columns) do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
-          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' }
+          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' },
         ].map(&:to_json)
       end
 
@@ -281,9 +281,9 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         "type" => "paragraph",
         "content" => [
           { "text" => text, "type" => "text" },
-          { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }
+          { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } },
         ],
-      }
+      },
     ]
   end
 end

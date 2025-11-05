@@ -39,7 +39,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
             .from(empty_operator(empty, empty))
             .to(ds_and([
               empty_operator(empty, empty),
-              empty_operator(empty, empty)
+              empty_operator(empty, empty),
             ]))
         end
       end
@@ -59,14 +59,14 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
               targeted_champ: empty.to_json,
               operator_name:  Logic::EmptyOperator,
               value: empty.to_json,
-            }
+            },
           ],
         }
       end
       let(:initial_condition) do
         ds_and([
           empty_operator(empty, empty),
-          empty_operator(empty, empty)
+          empty_operator(empty, empty),
         ])
       end
 
@@ -94,7 +94,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
                 targeted_champ: targeted_champ,
                 operator_name:  Logic::Eq.name,
                 value: constant(true).to_json,
-              }
+              },
             ],
           }
         end
@@ -116,7 +116,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
                 targeted_champ: targeted_champ,
                 operator_name: operator_name,
                 value: value,
-              }
+              },
             ],
           }
         end
@@ -140,7 +140,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
               targeted_champ: targeted_champ,
               operator_name:  Logic::Eq.name,
               value: constant(true).to_json,
-            }
+            },
           ],
         }
       end
@@ -161,7 +161,7 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
                 targeted_champ: targeted_champ,
                 operator_name:  Logic::Eq.name,
                 value: constant(true).to_json,
-              }
+              },
             ],
           }
         end

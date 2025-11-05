@@ -30,7 +30,7 @@ class ChorusConfiguration
     [
       centre_de_cout,
       domaine_fonctionnel,
-      referentiel_de_programmation
+      referentiel_de_programmation,
     ].all?(&:present?)
   end
 end

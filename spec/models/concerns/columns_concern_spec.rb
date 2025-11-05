@@ -7,7 +7,7 @@ describe ColumnsConcern do
     let(:types_de_champ_public) do
       [
         { type: :linked_drop_down_list, libelle: 'linked' },
-        { type: :address, libelle: 'address' }
+        { type: :address, libelle: 'address' },
       ]
     end
     let(:procedure) { create(:procedure, types_de_champ_public:) }
@@ -108,7 +108,7 @@ describe ColumnsConcern do
           { label: tdc_1.libelle, table: 'type_de_champ', column: tdc_1.stable_id.to_s, displayable: true, type: :text, filterable: true },
           { label: tdc_2.libelle, table: 'type_de_champ', column: tdc_2.stable_id.to_s, displayable: true, type: :text, filterable: true },
           { label: tdc_private_1.libelle, table: 'type_de_champ', column: tdc_private_1.stable_id.to_s, displayable: true, type: :text, filterable: true },
-          { label: tdc_private_2.libelle, table: 'type_de_champ', column: tdc_private_2.stable_id.to_s, displayable: true, type: :text, filterable: true }
+          { label: tdc_private_2.libelle, table: 'type_de_champ', column: tdc_private_2.stable_id.to_s, displayable: true, type: :text, filterable: true },
         ].map { Column.new(**_1.merge(procedure_id:)) }
       }
 
@@ -191,7 +191,7 @@ describe ColumnsConcern do
         { type: :text, libelle: "Ca va ?", mandatory: true, stable_id: 1 },
         { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 },
         { type: :siret, libelle: 'siret', stable_id: 20 },
-        { type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children: [{ type: 'text', libelle: 'Qqchose à rajouter?', stable_id: 8 }] }
+        { type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children: [{ type: 'text', libelle: 'Qqchose à rajouter?', stable_id: 8 }] },
       ]
     end
 
@@ -209,7 +209,7 @@ describe ColumnsConcern do
             procedure.find_column(label: "Prénom"),
             procedure.find_column(label: "Dépôt pour un tiers"),
             procedure.find_column(label: "Nom du mandataire"),
-            procedure.find_column(label: "Prénom du mandataire")
+            procedure.find_column(label: "Prénom du mandataire"),
           ]
           actuals = procedure.usager_columns_for_export.map(&:h_id)
           expected.each do |expected_col|
@@ -246,7 +246,7 @@ describe ColumnsConcern do
             procedure.find_column(label: "Entreprise nom commercial"),
             procedure.find_column(label: "Entreprise raison sociale"),
             procedure.find_column(label: "Entreprise SIRET siège social"),
-            procedure.find_column(label: "Entreprise code effectif entreprise")
+            procedure.find_column(label: "Entreprise code effectif entreprise"),
           ]
           actuals = procedure.usager_columns_for_export
           expected.each do |expected_col|
@@ -264,7 +264,7 @@ describe ColumnsConcern do
           expected = [
             procedure.find_column(label: "Domaine Fonctionnel"),
             procedure.find_column(label: "Référentiel De Programmation"),
-            procedure.find_column(label: "Centre De Coût")
+            procedure.find_column(label: "Centre De Coût"),
           ]
           actuals = procedure.usager_columns_for_export.map(&:h_id)
           expected.each do |expected_col|
@@ -289,7 +289,7 @@ describe ColumnsConcern do
           procedure.find_column(label: "Motivation de la décision"),
           procedure.find_column(label: "Instructeurs"),
           procedure.find_column(label: "Groupe instructeur"),
-          procedure.find_column(label: "Labels")
+          procedure.find_column(label: "Labels"),
         ]
         actuals = procedure.dossier_columns_for_export.map(&:h_id)
         expected.each do |expected_col|

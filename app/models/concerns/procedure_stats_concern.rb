@@ -27,7 +27,7 @@ module ProcedureStatsConcern
         ['Tous (dont brouillon)', dossiers.visible_by_user_or_administration.count + nb_dossiers_termines_supprimes],
         ['Déposés', dossiers.visible_by_administration.count + nb_dossiers_termines_supprimes],
         ['Instruction débutée', dossiers.visible_by_administration.state_instruction_commencee.count + nb_dossiers_termines_supprimes],
-        ['Traités', nb_dossiers_termines]
+        ['Traités', nb_dossiers_termines],
       ]
     end
   end
@@ -37,7 +37,7 @@ module ProcedureStatsConcern
       [
         ['Acceptés', percentage(dossiers.visible_by_administration.state_accepte.count, nb_dossiers_termines)],
         ['Refusés', percentage(dossiers.visible_by_administration.state_refuse.count, nb_dossiers_termines)],
-        ['Classés sans suite', percentage(dossiers.visible_by_administration.state_sans_suite.count, nb_dossiers_termines)]
+        ['Classés sans suite', percentage(dossiers.visible_by_administration.state_sans_suite.count, nb_dossiers_termines)],
       ]
     end
   end

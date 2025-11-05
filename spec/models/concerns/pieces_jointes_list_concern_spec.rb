@@ -12,7 +12,7 @@ describe PiecesJointesListConcern do
           { type: :piece_justificative, libelle: "pj1", stable_id: 910 },
           { type: :piece_justificative, libelle: "pj-cond", stable_id: 911, condition: ds_eq(champ_value(900), constant(1)) },
           { type: :repetition, libelle: "Répétition", stable_id: 920, children: [{ type: :piece_justificative, libelle: "pj2", stable_id: 921 }] },
-          { type: :titre_identite, libelle: "pj3", stable_id: 930 }
+          { type: :titre_identite, libelle: "pj3", stable_id: 930 },
         ]
       end
 
@@ -21,7 +21,7 @@ describe PiecesJointesListConcern do
           { type: :integer_number, stable_id: 950 },
           { type: :piece_justificative, libelle: "pj5", stable_id: 960 },
           { type: :piece_justificative, libelle: "pj-cond2", stable_id: 961, condition: ds_eq(champ_value(900), constant(1)) },
-          { type: :repetition, libelle: "Répétition2", stable_id: 970, children: [{ type: :piece_justificative, libelle: "pj6", stable_id: 971 }] }
+          { type: :repetition, libelle: "Répétition2", stable_id: 970, children: [{ type: :piece_justificative, libelle: "pj6", stable_id: 971 }] },
         ]
       end
 
@@ -61,7 +61,7 @@ describe PiecesJointesListConcern do
     let(:types_de_champ_public) do
       [
         { type: :piece_justificative, libelle: "outdated", stable_id: 1 },
-        { type: :piece_justificative, libelle: "kept", stable_id: 2 }
+        { type: :piece_justificative, libelle: "kept", stable_id: 2 },
       ]
     end
 

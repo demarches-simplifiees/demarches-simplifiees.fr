@@ -6,7 +6,7 @@ describe APIEntrepriseService do
       APIEntreprise::EntrepriseJob, APIEntreprise::ExtraitKbisJob, APIEntreprise::TvaJob,
       APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
       APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
-      APIEntreprise::BilansBdfJob
+      APIEntreprise::BilansBdfJob,
     ].each do |job|
       it "should enqueue #{job.class.name}" do
         expect { subject }.to have_enqueued_job(job)

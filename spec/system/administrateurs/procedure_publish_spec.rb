@@ -166,7 +166,7 @@ describe 'Publishing a procedure', js: true do
     let(:dubious_champs) do
       [
         { libelle: 'NIR' },
-        { libelle: 'carte bancaire' }
+        { libelle: 'carte bancaire' },
       ]
     end
     let(:not_dubious_champs) do

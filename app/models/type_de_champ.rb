@@ -117,11 +117,11 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:regions),
     type_champs.fetch(:pays),
     type_champs.fetch(:epci),
-    type_champs.fetch(:address)
+    type_champs.fetch(:address),
   ]
 
   PRIVATE_ONLY_TYPES = [
-    type_champs.fetch(:engagement_juridique)
+    type_champs.fetch(:engagement_juridique),
   ]
 
   store_accessor :options,
@@ -373,7 +373,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:epci),
       TypeDeChamp.type_champs.fetch(:dossier_link),
-      TypeDeChamp.type_champs.fetch(:siret)
+      TypeDeChamp.type_champs.fetch(:siret),
     ])
   end
 
@@ -384,7 +384,7 @@ class TypeDeChamp < ApplicationRecord
   def non_fillable?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:header_section),
-      TypeDeChamp.type_champs.fetch(:explication)
+      TypeDeChamp.type_champs.fetch(:explication),
     ])
   end
 
@@ -393,7 +393,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:checkbox),
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:yes_no)
+      TypeDeChamp.type_champs.fetch(:yes_no),
     ])
   end
 
@@ -686,7 +686,7 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:formatted) => [
       :formatted_mode, :numbers_accepted, :letters_accepted, :special_characters_accepted,
       :min_character_length, :max_character_length,
-      :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message
+      :expression_reguliere, :expression_reguliere_indications, :expression_reguliere_exemple_text, :expression_reguliere_error_message,
     ],
     type_champs.fetch(:referentiel) => [:referentiel_mapping],
   }
@@ -777,7 +777,7 @@ class TypeDeChamp < ApplicationRecord
   def piece_justificative_or_titre_identite?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:piece_justificative),
-      TypeDeChamp.type_champs.fetch(:titre_identite)
+      TypeDeChamp.type_champs.fetch(:titre_identite),
     ])
   end
 
@@ -785,7 +785,7 @@ class TypeDeChamp < ApplicationRecord
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:drop_down_list),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list),
     ])
   end
 

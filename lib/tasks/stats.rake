@@ -210,7 +210,7 @@ namespace :stats do
       ["Email acceptation personnalisé", :closed_mail],
       ["Email refus personnalisé", :refused_mail],
       ["Email classé sans suite personnalisé", :without_continuation_mail],
-      ["Email ré-instruction personnalisé", :re_instructed_mail]
+      ["Email ré-instruction personnalisé", :re_instructed_mail],
     ]
 
     email_stats.each do |label, association|
@@ -349,7 +349,7 @@ namespace :stats do
           stat[:percentage],
           stat[:total_dossiers],
           stat[:dossiers_percentage],
-          stat[:sample_ids].join(', ')
+          stat[:sample_ids].join(', '),
         ]
       end
 
@@ -365,7 +365,7 @@ namespace :stats do
           result[:percentage_procedures],
           result[:nb_dossiers],
           result[:percentage_dossiers],
-          ''
+          '',
         ]
       end
 
@@ -390,7 +390,7 @@ namespace :stats do
         export_templates_stat[:percentage],
         export_templates_stat[:total_instructeurs],
         nil,
-        export_templates_stat[:sample_ids].join(', ')
+        export_templates_stat[:sample_ids].join(', '),
       ]
     end
 

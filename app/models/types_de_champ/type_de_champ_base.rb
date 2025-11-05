@@ -107,7 +107,7 @@ class TypesDeChamp::TypeDeChampBase
           displayable:,
           options_for_select:,
           mandatory: mandatory?
-        )
+        ),
       ]
     else
       []
@@ -149,7 +149,7 @@ class TypesDeChamp::TypeDeChampBase
         path: :value,
         description:,
         maybe_null: public? && !mandatory?,
-      }
+      },
     ]
   end
 end

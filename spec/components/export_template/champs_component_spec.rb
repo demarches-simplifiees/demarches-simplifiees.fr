@@ -10,7 +10,7 @@ describe ExportTemplate::ChampsComponent, type: :component do
       { type: :text, libelle: "Ca va ?", mandatory: true, stable_id: 1 },
       { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 },
       { type: :siret, libelle: 'Siret', stable_id: 20 },
-      { type: :repetition, mandatory: true, stable_id: 7, libelle: "Amis", children: [{ type: 'text', libelle: 'Prénom', stable_id: 8 }] }
+      { type: :repetition, mandatory: true, stable_id: 7, libelle: "Amis", children: [{ type: 'text', libelle: 'Prénom', stable_id: 8 }] },
     ]
   end
   let(:component) { described_class.new("Champs publics", export_template, procedure.all_revisions_types_de_champ(parent: nil, with_header_section: true)) }

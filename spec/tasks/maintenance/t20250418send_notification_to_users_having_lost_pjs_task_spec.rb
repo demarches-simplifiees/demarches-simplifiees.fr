@@ -12,7 +12,7 @@ module Maintenance
         let(:procedure) do
           create(:procedure_with_dossiers, types_de_champ_public: [
             { type: :piece_justificative, libelle: 'pj_1' },
-            { type: :piece_justificative, libelle: 'pj_2' }
+            { type: :piece_justificative, libelle: 'pj_2' },
           ])
         end
         let(:dossier) { procedure.dossiers.first }

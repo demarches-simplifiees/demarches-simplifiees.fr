@@ -5,7 +5,7 @@ describe DossierPreloader do
     [
       { type: :text },
       { type: :repetition, mandatory: true, children: [{ type: :text }] },
-      { type: :repetition, mandatory: false, children: [{ type: :text }] }
+      { type: :repetition, mandatory: false, children: [{ type: :text }] },
     ]
   end
   let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }

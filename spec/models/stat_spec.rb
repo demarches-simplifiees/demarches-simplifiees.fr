@@ -92,7 +92,7 @@ describe Stat, type: :model do
         dossiers_cumulative:
                         Stat.send(:cumulative_month_serie, [
                           [Dossier.state_not_brouillon, :depose_at],
-                          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+                          [DeletedDossier.where.not(state: :brouillon), :deleted_at],
                         ]),
       })
       s.save!
@@ -100,7 +100,7 @@ describe Stat, type: :model do
       # Use `Hash#to_a` to also test the key ordering
       expect(s.dossiers_cumulative.to_a).to eq([
         [formatted_n_months_ago(2), 2],
-        [formatted_n_months_ago(1), 4]
+        [formatted_n_months_ago(1), 4],
       ])
     end
   end
@@ -116,7 +116,7 @@ describe Stat, type: :model do
           dossiers_in_the_last_4_months:
                                    Stat.send(:last_four_months_serie, [
                                      [Dossier.state_not_brouillon, :depose_at],
-                                     [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+                                     [DeletedDossier.where.not(state: :brouillon), :deleted_at],
                                    ]),
         })
         s.save!
@@ -126,7 +126,7 @@ describe Stat, type: :model do
           ['2021-07-01', 2],
           ['2021-08-01', 2],
           ['2021-09-01', 2],
-          ['2021-10-01', 2]
+          ['2021-10-01', 2],
         ])
       end
     end

@@ -38,7 +38,7 @@ class InstructeurMailerPreview < ActionMailer::Preview
         nb_en_instruction: 2,
         nb_accepted: 5,
         nb_notification: 1,
-      }
+      },
     ]
     InstructeurMailer.send_notifications(instructeur, data)
   end

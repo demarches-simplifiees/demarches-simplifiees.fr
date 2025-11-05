@@ -232,7 +232,7 @@ class ApplicationController < ActionController::Base
         current_expert,
         current_administrateur,
         current_gestionnaire,
-        current_super_admin
+        current_super_admin,
       ].compact.map { |role| role.class.name }
 
       roles.any? ? roles.join(', ') : 'Guest'

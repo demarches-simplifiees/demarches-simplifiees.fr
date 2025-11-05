@@ -10,9 +10,9 @@ describe ProcedureRevisionTypeDeChamp do
                  {
                    type: :repetition, children: [
                      { libelle: 'l2.1' },
-                     { libelle: 'l2.2' }
+                     { libelle: 'l2.2' },
                    ],
-                 }
+                 },
                ])
       end
 
@@ -31,16 +31,16 @@ describe ProcedureRevisionTypeDeChamp do
         create(:procedure,
                types_de_champ_private: [
                  { libelle: 'a1' },
-                 { libelle: 'a2' }
+                 { libelle: 'a2' },
                ],
                types_de_champ_public: [
                  { libelle: 'l1' },
                  {
                    type: :repetition, libelle: 'l2', children: [
                      { libelle: 'l2.1' },
-                     { libelle: 'l2.2' }
+                     { libelle: 'l2.2' },
                    ],
-                 }
+                 },
                ])
       end
 

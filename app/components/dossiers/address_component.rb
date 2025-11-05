@@ -21,7 +21,7 @@ class Dossiers::AddressComponent < ApplicationComponent
     safe_join([
       tag.p(class: 'fr-mb-1w copy-zone', role: 'button') { champ.to_s },
       tag.p(class: 'champ-label') { 'Pays' },
-      tag.p(class: 'champ-content copy-zone') { champ.country_name }
+      tag.p(class: 'champ-content copy-zone') { champ.country_name },
     ])
   end
 
@@ -29,7 +29,7 @@ class Dossiers::AddressComponent < ApplicationComponent
     [
       ['Adresse', champ.to_s],
       ['Code INSEE', champ.city_code],
-      ['Département', champ.departement_code_and_name]
+      ['Département', champ.departement_code_and_name],
     ]
   end
 

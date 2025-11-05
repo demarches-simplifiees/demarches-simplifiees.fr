@@ -22,7 +22,7 @@ module Maintenance
 
           expect(TaskLog.pluck(:data)).to match_array([
             { "blob_key" => "another_key", "state" => "another state" },
-            { "blob_key" => "123", "state" => "not present in db", "another_key" => "another value" }
+            { "blob_key" => "123", "state" => "not present in db", "another_key" => "another value" },
           ])
         end
       end

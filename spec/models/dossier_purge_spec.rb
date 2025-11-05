@@ -6,7 +6,7 @@ describe Dossier, type: :model do
       [
         :en_brouillon_expired_to_delete,
         :en_construction_expired_to_delete,
-        :termine_expired_to_delete
+        :termine_expired_to_delete,
       ].each do |scope|
         dossier = double(purge_discarded: true)
         expect(dossier).to receive(:purge_discarded)

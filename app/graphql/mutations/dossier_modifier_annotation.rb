@@ -53,12 +53,12 @@ module Mutations
       when :text
         [
           TypeDeChamp.type_champs.fetch(:text),
-          TypeDeChamp.type_champs.fetch(:textarea)
+          TypeDeChamp.type_champs.fetch(:textarea),
         ]
       when :checkbox
         [
           TypeDeChamp.type_champs.fetch(:checkbox),
-          TypeDeChamp.type_champs.fetch(:yes_no)
+          TypeDeChamp.type_champs.fetch(:yes_no),
         ]
       when :date
         TypeDeChamp.type_champs.fetch(:date)

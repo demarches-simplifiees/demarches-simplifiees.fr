@@ -11,7 +11,7 @@ RSpec.describe ViewableChamp::HeaderSectionsSummaryComponent, type: :component d
       { type: :header_section, level: 2 },
       { type: :repetition, children: [{ type: :text }, { type: :header_section, level: 1 }] },
       { type: :header_section, level: 3 },
-      { type: :text }
+      { type: :text },
     ]
   end
   let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ) }

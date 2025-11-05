@@ -122,7 +122,7 @@ module TagsSubstitutionConcern
       description: 'Le nom du service de la démarche',
       lambda: -> (d) { d.procedure.organisation_name || '' },
       available_for_states: Dossier::SOUMIS,
-    }
+    },
   ].push(DOSSIER_ID_TAG)
 
   DOSSIER_TAGS_FOR_MAIL = [
@@ -155,7 +155,7 @@ module TagsSubstitutionConcern
       },
       available_for_states: Dossier::TERMINE,
       escapable: false,
-    }
+    },
   ]
 
   DOSSIER_SVA_SVR_DECISION_DATE_TAG = {
@@ -187,7 +187,7 @@ module TagsSubstitutionConcern
       description: "prénom de l'usager",
       lambda: -> (d) { d.individual&.prenom },
       available_for_states: Dossier::SOUMIS,
-    }
+    },
   ]
 
   ENTREPRISE_TAGS = [
@@ -225,7 +225,7 @@ module TagsSubstitutionConcern
       description: '',
       lambda: -> (d) { d.etablissement&.entreprise&.inline_adresse },
       available_for_states: Dossier::SOUMIS,
-    }
+    },
   ]
 
   ROUTAGE_TAGS = [
@@ -235,7 +235,7 @@ module TagsSubstitutionConcern
       description: 'Le groupe instructeur en charge du dossier',
       lambda: -> (d) { d.groupe_instructeur&.label },
       available_for_states: Dossier::SOUMIS,
-    }
+    },
   ]
 
   CONTACT_INFORMATION_NAME_TAG = {
@@ -497,7 +497,7 @@ module TagsSubstitutionConcern
       dossier_tags,
       ROUTAGE_TAGS,
       INDIVIDUAL_TAGS,
-      ENTREPRISE_TAGS
+      ENTREPRISE_TAGS,
     ]
   end
 
