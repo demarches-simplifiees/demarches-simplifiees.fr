@@ -9,11 +9,8 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
   let(:types_de_champ_private) { [{ type: :piece_justificative }] }
   let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, :en_construction, procedure:) }
   let(:filename) { attachment.blob.filename.to_s }
-  let(:gallery_demande) { false }
-  let(:seen_at) { nil }
-  let(:now) { Time.zone.now }
 
-  let(:component) { described_class.new(attachment: attachment, gallery_demande:, seen_at: seen_at) }
+  let(:component) { described_class.new(attachment:) }
 
   subject { render_inline(component).to_html }
 
@@ -32,7 +29,6 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       expect(subject).not_to have_text('Pièce jointe au message')
       expect(subject).to have_link(filename)
       expect(subject).to have_text('Dossier usager')
-      expect(component.title).to eq("#{libelle} -- #{filename}")
     end
 
     it "displays when gallery item has been added" do
@@ -47,14 +43,6 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
 
       it 'displays the right text' do
         expect(subject).to have_text('Modifiée le')
-      end
-    end
-
-    context "when gallery item is in page Demande" do
-      let(:gallery_demande) { true }
-
-      it "does not display libelle" do
-        expect(subject).not_to have_text(libelle)
       end
     end
   end
@@ -73,21 +61,12 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       expect(subject).to have_text(libelle)
       expect(subject).to have_link(filename)
       expect(subject).to have_text('Annotation privée')
-      expect(component.title).to eq("#{libelle} -- #{filename}")
     end
 
     it "displays when gallery item has been added" do
       expect(subject).to have_text('Ajoutée le')
       expect(subject).not_to have_css('.highlighted')
       expect(subject).to have_text(component.helpers.try_format_datetime(attachment.record.created_at, format: :veryshort))
-    end
-
-    context "when gallery item is in page Demande" do
-      let(:gallery_demande) { true }
-
-      it "does not display libelle" do
-        expect(subject).not_to have_text(libelle)
-      end
     end
   end
 
@@ -100,33 +79,6 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         expect(subject).to have_text('Pièce jointe au message')
         expect(subject).to have_link(filename)
         expect(subject).to have_text('Messagerie (usager)')
-        expect(component.title).to eq("Pièce jointe au message -- #{filename}")
-      end
-
-      context "when instructeur has not seen it yet" do
-        let(:seen_at) { now - 1.day }
-
-        before do
-          attachment.blob.update(created_at: now)
-        end
-
-        it 'displays datetime in the right style' do
-          # TODO: remove this test if we choose to remove the highlighting for new PJs
-          expect(subject).not_to have_css('.highlighted')
-        end
-      end
-
-      context "when instructeur has already seen it" do
-        let!(:seen_at) { now }
-
-        before do
-          freeze_time
-          attachment.blob.touch(:created_at)
-        end
-
-        it 'displays datetime in the right style' do
-          expect(subject).not_to have_css('.highlighted')
-        end
       end
     end
 
@@ -156,7 +108,6 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       expect(subject).to have_text('Justificatif de décision')
       expect(subject).to have_link(filename)
       expect(subject).to have_text('Pièce jointe à la décision')
-      expect(component.title).to eq("Pièce jointe à la décision -- #{filename}")
     end
   end
 
@@ -169,33 +120,6 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         expect(subject).to have_text('Pièce jointe à l’avis')
         expect(subject).to have_link(filename)
         expect(subject).to have_text('Avis externe (instructeur)')
-        expect(component.title).to eq("Pièce jointe à l’avis -- #{filename}")
-      end
-
-      context "when instructeur has not seen it yet" do
-        let(:seen_at) { now - 1.day }
-
-        before do
-          attachment.blob.update(created_at: now)
-        end
-
-        it 'displays datetime in the right style' do
-          # TODO: remove this test if we choose to remove the highlighting for new PJs
-          expect(subject).not_to have_css('.highlighted')
-        end
-      end
-
-      context "when instructeur has already seen it" do
-        let!(:seen_at) { now }
-
-        before do
-          freeze_time
-          attachment.blob.touch(:created_at)
-        end
-
-        it 'displays datetime in the right style' do
-          expect(subject).not_to have_css('.highlighted')
-        end
       end
     end
 

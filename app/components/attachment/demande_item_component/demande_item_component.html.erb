@@ -1,0 +1,4 @@
+<div class="fr-mt-2v fr-mb-4v flex flex-gap-2 align-center gallery-item">
+  <%= render Attachment::ThumbnailComponent.new(attachment:, small: true, top_classes: 'flex-no-shrink') %>
+  <%= render Attachment::ShowComponent.new(attachment:, truncate: false, new_tab: true) %>
+</div>

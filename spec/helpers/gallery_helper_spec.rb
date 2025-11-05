@@ -33,7 +33,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create variant when not processed" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("apercu-indisponible.png")
+        expect(subject).to be_nil
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create variant" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("apercu-indisponible.png")
+        expect(subject).to be_nil
       end
     end
   end
@@ -64,7 +64,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create preview when not processed" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("pdf-placeholder.png")
+        expect(subject).to be_nil
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe GalleryHelper, type: :helper do
 
       it "returns fallback image and doesn't create preview" do
         expect { subject }.not_to change { ActiveStorage::VariantRecord.count }
-        expect(subject).to eq("pdf-placeholder.png")
+        expect(subject).to be_nil
       end
     end
   end
@@ -84,13 +84,35 @@ RSpec.describe GalleryHelper, type: :helper do
     context "when attachment is an image with no variant" do
       let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
 
-      it { is_expected.to eq("apercu-indisponible.png") }
+      it { is_expected.to be_nil }
     end
 
     context "when attachment is a pdf with no preview" do
       let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
 
-      it { is_expected.to eq("pdf-placeholder.png") }
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe ".record_libelle" do
+    subject { record_libelle(record) }
+
+    context "when record is a Champ" do
+      let(:record) { champ_pj }
+
+      it { is_expected.to eq('Justificatif de domicile') }
+    end
+
+    context "when record is a Commentaire" do
+      let(:record) { create(:commentaire, dossier:) }
+
+      it { is_expected.to eq('Pièce jointe au message') }
+    end
+
+    context "when record is an Avis" do
+      let(:record) { create(:avis, dossier:) }
+
+      it { is_expected.to eq("Pièce jointe à l’avis") }
     end
   end
 end

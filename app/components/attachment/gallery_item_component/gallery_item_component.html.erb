@@ -1,0 +1,13 @@
+<div class="gallery-item">
+  <p class="fr-tag fr-tag--sm fr-mb-3v"><%= origin %></p>
+
+  <%= render Attachment::ThumbnailComponent.new(attachment:) %>
+
+  <div class="fr-text--sm fr-mt-2v fr-mb-1v"><%= libelle %></div>
+
+  <%= render Attachment::ShowComponent.new(attachment:, truncate: true) %>
+
+  <div class="fr-mt-2v fr-mb-2v fr-badge fr-badge--sm">
+    <%= t(updated? ? '.updated_at' : '.created_at', datetime: helpers.try_format_datetime(updated_at, format: :veryshort)) %>
+  </div>
+</div>

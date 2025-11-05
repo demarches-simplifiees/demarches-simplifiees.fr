@@ -1,52 +1,3 @@
-.gallery {
-  a {
-    background-image: none;
-  }
-
-  .champ-libelle {
-    margin-top: 0.5rem;
-  }
-
-  img {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-  }
-
-  .thumbnail {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid var(--border-default-grey);
-    background-color: var(--border-default-grey);
-
-    img {
-      position: relative;
-      z-index: 1;
-    }
-
-    .fr-btn {
-      position: absolute;
-      z-index: 10;
-      background-color: var(--background-default-grey);
-      color: var(--text-active-blue-france);
-      border: 1px solid var(--border-active-blue-france);
-      padding: 0.25rem 0.75rem;
-      display: none;
-    }
-  }
-
-  a.gallery-link:hover .fr-btn,
-  a.gallery-link:active .fr-btn {
-    display: flex;
-  }
-
-  a.gallery-link:active .fr-btn {
-    background-color: var(--hover-tint);
-  }
-}
-
 .gallery-pieces-jointes {
   display: flex;
   flex-wrap: wrap;
@@ -54,33 +5,15 @@
   .gallery-item {
     margin: 0 2rem 3rem 0;
 
-    .fr-download {
-      margin-bottom: 0;
-    }
-
     .fr-text--sm {
       margin-bottom: 0;
     }
   }
 }
 
-.gallery-demande {
-  .gallery-items-list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .gallery-item {
-    margin: 0.5rem 2rem 1rem 0;
-  }
-
+.gallery-item {
   .fr-download {
-    margin-bottom: 0.5rem;
-  }
-
-  .thumbnail {
-    width: fit-content;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 }
 

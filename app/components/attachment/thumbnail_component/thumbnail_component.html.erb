@@ -1,0 +1,19 @@
+<div class="thumbnail <%= size_class %> <%= top_classes %>">
+  <% if galleryable? %>
+    <%= gallery_link do %>
+      <% if thumbnail_url.present? %>
+        <%= image_tag(thumbnail_url, loading: :lazy) %>
+      <% else %>
+        <span class="fr-icon-file-line" aria-hidden="true"></span>
+      <% end %>
+      <div
+        class="fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-eye"
+        role="button"
+      >
+        <%= btn_text %>
+      </div>
+    <% end %>
+  <% else %>
+    <div aria-hidden="true"><%= t('.preview_unavailable') %></div>
+  <% end %>
+</div>
