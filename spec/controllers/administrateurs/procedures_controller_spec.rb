@@ -1887,7 +1887,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     subject { get :show, params: { id: procedure.id } }
 
     context 'when ProConnect is required' do
-      let(:procedure) { create(:procedure, pro_connect_restricted: true, administrateur: admin) }
+      let(:procedure) { create(:procedure, pro_connect_restriction: :instructeurs, administrateur: admin) }
       it 'redirects to pro_connect_path and sets a flash message' do
         subject
 

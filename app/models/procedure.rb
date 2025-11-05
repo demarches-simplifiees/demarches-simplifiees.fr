@@ -16,7 +16,7 @@ class Procedure < ApplicationRecord
   include Discard::Model
   self.discard_column = :hidden_at
 
-  self.ignored_columns += ["api_entreprise_token_expires_at"]
+  self.ignored_columns += ["api_entreprise_token_expires_at", "pro_connect_restricted"]
 
   default_scope -> { kept }
 
