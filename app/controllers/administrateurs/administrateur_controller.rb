@@ -44,10 +44,11 @@ module Administrateurs
     end
 
     def ensure_pro_connect_if_required!
-      if @procedure.pro_connect_restricted? && !logged_in_with_pro_connect?
-        flash.alert = "Vous devez vous connecter par ProConnect pour accéder à cette démarche"
-        redirect_to pro_connect_path
-      end
+      return if @procedure.pro_connect_restriction_none?
+      return if logged_in_with_pro_connect?
+
+      flash.alert = "Vous devez vous connecter par ProConnect pour accéder à cette démarche"
+      redirect_to pro_connect_path
     end
 
     private
