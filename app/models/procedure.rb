@@ -341,6 +341,13 @@ class Procedure < ApplicationRecord
     end
   end
 
+  # Dual-write: synchronize pro_connect_restricted (boolean) → pro_connect_restriction (enum)
+  # le temps de déployer le changement de colonne dans une autre PR.
+  def pro_connect_restricted=(value)
+    super(value)
+    self.pro_connect_restriction = pro_connect_restricted ? :instructeurs : :none
+  end
+
   def check_administrateur_minimal_presence(_object)
     if self.administrateurs.count <= 1
       raise ActiveRecord::RecordNotDestroyed.new("Cannot remove the last administrateur of procedure #{self.libelle} (#{self.id})")
