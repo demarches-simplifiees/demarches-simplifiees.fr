@@ -9,7 +9,7 @@ RSpec.describe Procedure::Card::ProConnectRestrictedComponent, type: :component 
 
   subject { render_inline(described_class.new(procedure:)) }
 
-  let(:procedure) { create(:procedure, pro_connect_restricted:) }
+  let(:procedure) { create(:procedure, pro_connect_restriction: restriction_level) }
 
   context "when no restriction" do
     let(:restriction_level) { :none }
