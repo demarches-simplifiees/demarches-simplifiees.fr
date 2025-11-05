@@ -276,8 +276,19 @@ module Administrateurs
     end
 
     def update_pro_connect_restricted
-      @procedure.update!(procedure_params)
-      flash.notice = @procedure.pro_connect_restricted? ? "La démarche est restreinte à ProConnect" : "La démarche n'est plus restreinte à ProConnect"
+      level = params.dig(:procedure, :pro_connect_restriction).to_sym
+
+      @procedure.enable_pro_connect_restriction!(level)
+
+      flash.notice = case level
+      when :none
+        "La démarche n'est plus restreinte à ProConnect"
+      when :instructeurs
+        "La démarche est restreinte à ProConnect pour les administrateurs et instructeurs"
+      when :all
+        "La démarche est restreinte à ProConnect pour les administrateurs, instructeurs et dépositaires de dossiers"
+      end
+
       redirect_to pro_connect_restricted_admin_procedure_path(@procedure)
     end
 
@@ -630,7 +641,7 @@ module Administrateurs
         :opendata,
         :procedure_expires_when_termine_enabled,
         :rdv_enabled,
-        :pro_connect_restricted,
+        :pro_connect_restriction,
         :robots_indexable,
         { zone_ids: [], procedure_tag_names: [] },
       ]
