@@ -348,6 +348,14 @@ class Procedure < ApplicationRecord
     self.pro_connect_restriction = pro_connect_restricted ? :instructeurs : :none
   end
 
+  def enable_pro_connect_restriction!(level)
+    update!(
+      pro_connect_restriction: level,
+      opendata: level == :all ? false : opendata,
+      robots_indexable: level == :all ? false : robots_indexable
+    )
+  end
+
   def check_administrateur_minimal_presence(_object)
     if self.administrateurs.count <= 1
       raise ActiveRecord::RecordNotDestroyed.new("Cannot remove the last administrateur of procedure #{self.libelle} (#{self.id})")
