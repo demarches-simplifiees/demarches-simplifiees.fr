@@ -23,6 +23,15 @@ class InstructeursProcedure < ApplicationRecord
     attente_avis: 'display_attente_avis_notifications'
   }.freeze
 
+  # TODO: remove when the transfer on instructeurs_procedures is done
+  EMAIL_COLUMNS = {
+    daily_email_summary: :daily_email_notifications_enabled,
+    weekly_email_summary: :weekly_email_notifications_enabled,
+    instant_email_new_dossier: :instant_email_dossier_notifications_enabled,
+    instant_email_new_message: :instant_email_message_notifications_enabled,
+    instant_email_new_expert_avis: :instant_expert_avis_email_notifications_enabled
+  }.freeze
+
   belongs_to :instructeur
   belongs_to :procedure
 

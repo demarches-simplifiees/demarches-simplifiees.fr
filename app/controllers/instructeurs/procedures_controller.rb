@@ -265,9 +265,13 @@ module Instructeurs
     end
 
     def update_email_notifications
+      # TODO: remove assign_tos update when the transfer on instructeurs_procedure is done
       assign_tos.each do |assign_to|
         assign_to.update!(assign_to_params)
       end
+      instructeur_procedure = InstructeursProcedure.find_by!(procedure_id:, instructeur: current_instructeur)
+      instructeur_procedure.update!(email_notification_params)
+
       flash.notice = t('instructeurs.procedures.email_preferences.flash_notice')
       redirect_to instructeur_procedure_path(procedure)
     end
@@ -399,8 +403,14 @@ module Instructeurs
     end
 
     def assign_to_params
+      # TODO: remove method when the transfer on instructeurs_procedure is done
       params.require(:assign_to)
         .permit(:instant_expert_avis_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
+    end
+
+    def email_notification_params
+      # TODO : take params of instructeurs_procedure from the form for the transfer
+      InstructeursProcedure::EMAIL_COLUMNS.transform_values { |column| assign_to_params[column] }
     end
 
     def assign_tos
