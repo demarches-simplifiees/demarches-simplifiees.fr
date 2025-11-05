@@ -624,7 +624,11 @@ module Instructeurs
 
         champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids + [justificatif_motivation_id]
       end
-      @gallery_attachments = ActiveStorage::Attachment.where(id: gallery_attachments_ids)
+
+      @gallery_attachments = ActiveStorage::Attachment
+        .with_all_variant_records
+        .includes(:record, :blob)
+        .where(id: gallery_attachments_ids)
     end
   end
 end
