@@ -353,6 +353,8 @@ module Users
 
         DossierNotification.create_notification(dossier, :message)
 
+        dossier.resolve_pending_response!
+
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)
       else
