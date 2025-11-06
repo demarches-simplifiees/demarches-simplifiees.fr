@@ -14,6 +14,7 @@ class DossierNotification < ApplicationRecord
     avis_externe: 'avis_externe',
     attente_correction: 'attente_correction',
     attente_avis: 'attente_avis',
+    attente_reponse: 'attente_reponse'
   }
 
   belongs_to :instructeur
@@ -238,6 +239,7 @@ class DossierNotification < ApplicationRecord
       annotations_privees: :annotation_instructeur,
       avis_externe: :avis_externe,
       messagerie: :message,
+      attente_reponse: :attente_reponse,
     }
 
     return types.transform_values { false } if dossier.archived
@@ -457,6 +459,12 @@ class DossierNotification < ApplicationRecord
         .joins(:avis)
         .merge(Avis.without_answer)
         .distinct
+    when :attente_reponse
+      dossiers
+        .select(:id)
+        .joins(:dossier_notifications)
+        .where(dossier_notifications: { notification_type: :attente_reponse })
+        .distinct
     end
   end
 
@@ -488,6 +496,8 @@ class DossierNotification < ApplicationRecord
       dossier.pending_correction? ? instructeur_ids : []
     when :attente_avis
       dossier.avis.without_answer.exists? ? instructeur_ids : []
+    when :attente_reponse
+      dossier.pending_response? ? instructeur_ids : []
     end
   end
 
