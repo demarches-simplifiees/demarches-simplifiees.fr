@@ -20,7 +20,7 @@
               .fr-hidden{ data: { 'hide-target-target': 'toHide' } }
                 .fr-grid-row
                   .fr-col-12.fr-col-offset-md-2.fr-col-md-8
-                    = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier }
+                    = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier, connected_user: connected_user }
           - else
             = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service, dossier: dossier }
 
