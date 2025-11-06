@@ -100,7 +100,7 @@
                               = label_tag dom_id(BatchOperation.new, "checkbox_#{dossier.id}"), "Sélectionner le dossier #{dossier.id}", class: 'fr-label'
 
                         %td.fr-cell--numeric
-                          - if dossier.hidden_by_administration_at.present?
+                          - if dossier.hidden_by_administration? || dossier.hidden_by_expired?
                             %span= dossier.id
                           - else
                             %a.fr-link.relative{ href: path }

@@ -10,6 +10,7 @@ describe ResetExpiringDossiersJob do
       expiring_dossier_brouillon = create(:dossier, :brouillon, procedure: procedure, brouillon_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago)
       expiring_dossier_en_construction = create(:dossier, :en_construction, procedure: procedure, en_construction_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago)
       expiring_dossier_en_termine = create(:dossier, :accepte, procedure: procedure, termine_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago)
+      automatic_expiring_dossier = create(:dossier, :accepte, procedure:, termine_close_to_expiration_notice_sent_at: 3.weeks.ago, hidden_by_expired_at: 1.week.ago)
 
       subject
 
@@ -19,6 +20,7 @@ describe ResetExpiringDossiersJob do
       expect(expiring_dossier_brouillon.expired_at).to be_within(1.hour).of(2.months.from_now)
       expect(expiring_dossier_en_construction.expired_at).to be_within(1.hour).of(2.months.from_now)
       expect(expiring_dossier_en_termine.expired_at).to be_within(1.hour).of(2.months.from_now)
+      expect(automatic_expiring_dossier.reload.hidden_by_expired_at).to eq(nil)
     end
   end
 end
