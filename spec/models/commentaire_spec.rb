@@ -133,4 +133,19 @@ describe Commentaire do
       expect(commentaire.body).to eq("ValidBody")
     end
   end
+
+  describe '#flagged_pending_response?' do
+    let(:dossier) { create(:dossier) }
+    let(:commentaire) { create(:commentaire, dossier: dossier) }
+
+    context 'when commentaire has no pending response' do
+      it { expect(commentaire.flagged_pending_response?).to be_falsey }
+    end
+
+    context 'when commentaire has a pending response' do
+      before { create(:dossier_pending_response, dossier: dossier, commentaire: commentaire) }
+
+      it { expect(commentaire.flagged_pending_response?).to be_truthy }
+    end
+  end
 end
