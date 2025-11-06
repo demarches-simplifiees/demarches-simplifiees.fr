@@ -27,6 +27,10 @@
               %br
               = pending_correction_badge(:for_user)
 
+            - if dossier.pending_response?
+              %br
+              = pending_response_badge(:for_user)
+
           %p.fr-icon--sm.fr-icon-user-line
             %span.visually-hidden= t('views.shared.dossiers.demande.requester_identity')
             = demandeur_dossier(dossier)
@@ -63,6 +67,10 @@
           - if dossier.pending_correction?
             %br
             = pending_correction_badge(:for_user)
+
+          - if dossier.pending_response?
+            %br
+            = pending_response_badge(:for_user)
 
       - if dossier.procedure.close?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
