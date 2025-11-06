@@ -28,6 +28,10 @@ fr:
         modified: "Dossier modifié"
         not_modified: "Dossier non modifié"
         discarded: "Demande de correction annulée"
+      attente_reponse:
+        for_user: "EN ATTENTE DE RÉPONSE"
+        for_instructeur: "en attente de réponse"
+        responded: "Répondu"
       traitement:
         state: "État"
       traitement/state:
