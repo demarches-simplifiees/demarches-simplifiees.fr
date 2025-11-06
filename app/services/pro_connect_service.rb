@@ -56,11 +56,11 @@ class ProConnectService
   # TODO: remove this block when migration to new domain is done
   def self.conf
     if Current.host.end_with?('demarches.numerique.gouv.fr')
-      h = PRO_CONNECT_GOUV.dup
+      h = PRO_CONNECT.dup
       h[:redirect_uri] = h[:redirect_uri].gsub('demarche.numerique', 'demarches.numerique')
       h
     elsif Current.host.end_with?('demarche.numerique.gouv.fr')
-      h = PRO_CONNECT_GOUV.dup
+      h = PRO_CONNECT.dup
       h[:redirect_uri] = h[:redirect_uri].gsub('demarches.numerique', 'demarche.numerique')
       h
     else
