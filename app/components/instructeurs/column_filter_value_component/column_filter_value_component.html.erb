@@ -1,0 +1,54 @@
+<div class="flex column justify-between" id="<%= id %>">
+  <%= operator_hidden_field %>
+  <% if boolean? %>
+    <%= render Dsfr::RadioButtonListComponent.new(form:,
+      target: "filter[filter][value][]",
+      buttons: radio_button_options) do %>
+      <%= label %>
+    <% end %>
+
+  <% elsif is_date? %>
+    <div class="flex flex-gap-2 flex-1">
+      <div class="flex column justify-between">
+        <%= form.label "filter[filter][operator]", filtered_column&.label, class: 'fr-label' %>
+        <%= form.select "filter[filter][operator]",
+          options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } } %>
+      </div>
+      <% if is_operator_with_value? %>
+        <div class="flex column justify-between">
+          <%= form.label input_id, t(".operators.#{operator}"), class: 'fr-label' %>
+          <div class="flex">
+            <%= form.text_field "filter[filter][value][]",
+              id: input_id,
+              class: 'fr-input',
+              type: 'date',
+              value:,
+              data: { no_autosubmit: true } %>
+            <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+  <% elsif selectable? %>
+    <%= form.label input_id, label, class: 'fr-label' %>
+    <react-fragment>
+      <%= render ReactComponent.new "ComboBox/MultiComboBox", **react_props %>
+    </react-fragment>
+
+  <% else %>
+    <%= form.label input_id, label, class: 'fr-label' %>
+    <div class="flex">
+      <%= form.text_field "filter[filter][value][]",
+        id: input_id,
+        class: 'fr-input',
+        type:,
+        value:,
+        disabled: column.nil?,
+        maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
+        data: { no_autosubmit: true } %>
+      <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+    </div>
+  <% end %>
+</div>
+
