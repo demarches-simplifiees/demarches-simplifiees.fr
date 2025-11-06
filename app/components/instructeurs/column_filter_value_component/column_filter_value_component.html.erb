@@ -3,7 +3,9 @@
   <% if boolean? %>
     <%= render Dsfr::RadioButtonListComponent.new(form:,
       target: "filter[filter][value][]",
-      buttons: radio_button_options) do %>
+      buttons: radio_button_options,
+      inline: true,
+    ) do %>
       <%= label %>
     <% end %>
 
