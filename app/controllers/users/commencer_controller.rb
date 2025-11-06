@@ -2,6 +2,8 @@
 
 module Users
   class CommencerController < ApplicationController
+    include ProConnectSessionConcern
+
     layout 'procedure_context'
 
     def commencer
