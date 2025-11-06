@@ -814,6 +814,19 @@ describe Dossier, type: :model do
           expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_depose)).to be_present
         end
       end
+
+      context "when dossier must have a non customisable notification" do
+        let!(:old_expirant_notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_expirant, display_at: 1.week.ago) }
+        let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [new_instructeur]) }
+
+        before { dossier.update(expired_at: 1.week.from_now) }
+
+        it "refreshes notifications for new instructeur" do
+          dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+          expect(DossierNotification.where(instructeur: instructeur, dossier:, notification_type: :dossier_expirant)).to be_empty
+          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_expirant)).to be_present
+        end
+      end
     end
   end
 

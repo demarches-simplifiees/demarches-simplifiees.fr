@@ -133,6 +133,8 @@ class DossierNotification < ApplicationRecord
       [notification_type, instructeur_ids_requesting_notifications]
     end.compact_blank!
 
+    NON_CUSTOMISABLE_TYPE.each { |type| instructeur_ids_requesting_notifications_by_type[type] = instructeur_ids }
+
     instructeur_ids_requesting_notifications_by_type.each do |notification_type, instructeur_ids|
       instructeur_ids_to_notify = instructeur_ids_to_notify_by_notification_type(dossier, notification_type, instructeur_ids)
 
@@ -316,7 +318,7 @@ class DossierNotification < ApplicationRecord
   private
 
   def self.create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids)
-    display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
+    display_at = display_at_by_notification_type(dossier, notification_type)
 
     missing_notifications = instructeur_ids.map do |instructeur_id|
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
@@ -327,16 +329,7 @@ class DossierNotification < ApplicationRecord
 
   def self.create_notifications_by_type_for_instructeur_dossiers(dossiers, notification_type, instructeur_id)
     missing_notifications = dossiers.map do |dossier|
-      display_at = case notification_type
-        when :dossier_depose
-          dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE
-        when :dossier_expirant
-          dossier.expired_at - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
-        when :dossier_suppression
-          [dossier.hidden_by_administration_at, dossier.hidden_by_expired_at].compact.min
-        else
-          Time.zone.now
-        end
+      display_at = display_at_by_notification_type(dossier, notification_type)
 
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
     end
@@ -453,6 +446,10 @@ class DossierNotification < ApplicationRecord
     case notification_type
     when :dossier_depose
       dossier.en_construction? && dossier.follows.empty? ? instructeur_ids : []
+    when :dossier_expirant
+      dossier.close_to_expiration? ? instructeur_ids : []
+    when :dossier_suppression
+      dossier.hidden_by_expired? || dossier.hidden_by_administration? ? instructeur_ids : []
     when :dossier_modifie
       dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at ? instructeur_ids : []
     when :message
@@ -473,6 +470,19 @@ class DossierNotification < ApplicationRecord
       dossier.pending_correction? ? instructeur_ids : []
     when :attente_avis
       dossier.avis.without_answer.exists? ? instructeur_ids : []
+    end
+  end
+
+  def self.display_at_by_notification_type(dossier, notification_type)
+    case notification_type
+    when :dossier_depose
+      dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE
+    when :dossier_expirant
+      dossier.expired_at - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    when :dossier_suppression
+      [dossier.hidden_by_administration_at, dossier.hidden_by_expired_at].compact.min
+    else
+      Time.zone.now
     end
   end
 end
