@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Follow < ApplicationRecord
-  self.ignored_columns += ["pieces_jointes_seen_at"]
-
   belongs_to :instructeur, optional: false
   belongs_to :dossier, optional: false, touch: true
 
