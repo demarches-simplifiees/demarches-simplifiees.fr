@@ -233,6 +233,30 @@ RSpec.describe DossierNotification, type: :model do
       end
     end
 
+    context "when notification_type is dossier_expirant" do
+      let(:notification_type) { :dossier_expirant }
+      let!(:dossier_to_notify) { create(:dossier, :accepte) }
+      let!(:dossier_to_notify_2) { create(:dossier, :en_construction) }
+      let!(:dossier_not_to_notify) { create(:dossier, :en_construction) }
+
+      before { [dossier_to_notify, dossier_to_notify_2].each { |d| d.update(expired_at: 2.weeks.from_now)} }
+
+      it "returns only dossiers termine or en_construction close to expiration" do
+        expect(subject).to contain_exactly(dossier_to_notify, dossier_to_notify_2)
+      end
+    end
+
+    context "when notification_type is dossier_suppression" do
+      let(:notification_type) { :dossier_suppression }
+      let!(:dossier_to_notify) { create(:dossier, :accepte, hidden_by_administration_at: Time.zone.yesterday) }
+      let!(:dossier_to_notify_2) { create(:dossier, :en_construction, hidden_by_expired_at: Time.zone.yesterday) }
+      let!(:dossier_not_to_notify) { create(:dossier, :en_construction, hidden_by_administration_at: nil, hidden_by_expired_at: nil) }
+
+      it "returns only dossiers expired or hidden by administration" do
+        expect(subject).to contain_exactly(dossier_to_notify, dossier_to_notify_2)
+      end
+    end
+
     context "when notification_type is dossier_modifie" do
       let(:notification_type) { :dossier_modifie }
       let!(:dossier_to_notify) { create(:dossier, depose_at: 2.days.ago, last_champ_updated_at: 1.day.ago) }
