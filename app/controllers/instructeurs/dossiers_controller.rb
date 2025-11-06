@@ -305,7 +305,9 @@ module Instructeurs
         @commentaire.dossier.touch(:last_commentaire_updated_at)
         current_instructeur.follow(dossier)
         DossierNotification.create_notification(dossier, :message, except_instructeur: current_instructeur)
-        flash.notice = "Message envoyé"
+
+        handle_pending_response_flag(@commentaire)
+
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier, statut: statut)
       else
         @commentaire.piece_jointe.purge.reload # only allowed here, sync action
@@ -449,6 +451,15 @@ module Instructeurs
     end
 
     private
+
+    def handle_pending_response_flag(commentaire)
+      if params[:mark_as_pending_response] == 'true'
+        dossier.flag_as_pending_response!(commentaire)
+        flash.notice = t('instructeurs.dossiers.message_sent_with_pending_response')
+      else
+        flash.notice = t('instructeurs.dossiers.message_sent')
+      end
+    end
 
     def avis_create_params
       params.require(:avis).permit(
