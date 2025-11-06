@@ -273,4 +273,16 @@ RSpec.describe DossierHelper, type: :helper do
       }
     end
   end
+
+  describe ".clean_string_for_pdf" do
+    subject { clean_string_for_pdf(input) }
+
+    context "when input contains multiple lines with various whitespace" do
+      let(:input) { "un\tdeux\ntrois\rquatre\u00A0cinq&nbsp;six" }
+
+      it "replaces all special whitespace with regular spaces" do
+        expect(subject).to eq("un deux\ntrois\nquatre cinq six")
+      end
+    end
+  end
 end
