@@ -37,25 +37,70 @@ RSpec.describe ErrorsController, type: :controller do
     end
   end
 
-  shared_examples 'specific action' do
-    subject { get action_name }
-
-    it do
-      is_expected.to have_http_status(status_code)
+  describe 'specific actions shortcuts' do
+    it 'renders 404' do
+      get :not_found
+      expect(response).to have_http_status(:not_found)
     end
 
-    context "404" do
-      let(:status_code) { 404 }
-      let(:action_name) { :not_found }
+    it 'renders 422' do
+      get :unprocessable_entity
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
 
-      it_behaves_like 'specific action'
+  describe 'GET #unprocessable_entity' do
+    context 'when user is not signed in' do
+      it 'renders the generic template' do
+        get :unprocessable_entity, format: :html
+
+        expect(response).to render_template('errors/unprocessable_entity')
+      end
     end
 
-    context "422" do
-      let(:status_code) { 422 }
-      let(:action_name) { :unprocessable_content }
+    context 'when user is signed' do
+      before { sign_in(create(:user)) }
+      context 'with HTML referer' do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/dossiers/123'
+        end
 
-      it_behaves_like 'specific action'
+        it 'redirects to the referer with csrf_retry flag' do
+          get :unprocessable_entity, format: :html
+
+          expect(response).to redirect_to('http://test.host/dossiers/123?csrf_retry=1')
+        end
+      end
+
+      context 'with referer already flagged' do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/dossiers/123?csrf_retry=1'
+        end
+
+        it 'falls back to the generic rendering' do
+          get :unprocessable_entity, format: :html
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to render_template('errors/unprocessable_entity')
+        end
+      end
+
+      context 'without InvalidAuthenticityToken' do
+        it 'renders the generic template' do
+          get :unprocessable_entity, format: :html
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to render_template('errors/unprocessable_entity')
+        end
+      end
+    end
+  end
+
+  describe 'csrf retry flash' do
+    it 'shows a message when csrf_retry parameter is present' do
+      get :show, params: { status: 404, csrf_retry: '1' }, format: :html
+
+      expect(flash.now[:alert]).to eq(I18n.t('errors.csrf_retry.message'))
     end
   end
 end

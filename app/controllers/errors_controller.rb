@@ -15,7 +15,16 @@ class ErrorsController < ApplicationController
   end
 
   def not_found = render_error 404
-  def unprocessable_entity = render_error 422
+
+  def unprocessable_entity
+    retry_url = csrf_retry_redirect_url
+
+    if retry_url
+      redirect_to retry_url
+    else
+      render_error 422
+    end
+  end
 
   def show # generic page for others errors
     @status = params[:status].to_i
@@ -45,5 +54,31 @@ class ErrorsController < ApplicationController
       format.html { render status: }
       format.json { render status:, json: { status:, name: Rack::Utils::HTTP_STATUS_CODES[status] } }
     end
+  end
+
+  # There's a subtle issue with using flash[:alert] here.
+  # ErrorsController is mounted via `config.exceptions_app = self.routes`.
+  # During the error-handling request flow the session and flash middlewares
+  # (e.g. ActionDispatch::Session::CookieStore and ActionDispatch::Flash) are
+  # bypassed, so the normal `flash` mechanism is not available. Do not rely on
+  # `flash` in this controller; use the csrf_retry parameter instead which is catched by application controller
+  def csrf_retry_redirect_url
+    return if !user_signed_in?
+    return if request.referer.blank?
+
+    referer_uri = URI.parse(request.referer)
+
+    return unless referer_uri.scheme == request.scheme
+    return unless referer_uri.host == request.host
+    return unless referer_uri.port == request.port
+
+    params = Rack::Utils.parse_nested_query(referer_uri.query)
+    return if params['csrf_retry'] == '1'
+
+    params['csrf_retry'] = '1'
+    referer_uri.query = params.to_query
+    referer_uri.to_s
+  rescue URI::InvalidURIError
+    nil
   end
 end
