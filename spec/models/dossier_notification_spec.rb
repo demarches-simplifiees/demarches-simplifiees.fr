@@ -2,15 +2,25 @@
 
 RSpec.describe DossierNotification, type: :model do
   describe '.to_display' do
-    let(:past_notification) { create(:dossier_notification) }
-    let(:future_notification) { create(:dossier_notification, display_at: 1.day.from_now) }
+    context "when there is a display deadline" do
+      let(:past_notification) { create(:dossier_notification) }
+      let(:future_notification) { create(:dossier_notification, display_at: 1.day.from_now) }
 
-    it 'includes notifications where display_at is in the past or now' do
-      expect(DossierNotification.to_display).to include(past_notification)
+      it 'includes notifications where display_at is in the past or now and excludes notifications where display_at is in the future' do
+        expect(DossierNotification.to_display).to include(past_notification)
+        expect(DossierNotification.to_display).not_to include(future_notification)
+      end
     end
 
-    it 'excludes notifications where display_at is in the future' do
-      expect(DossierNotification.to_display).not_to include(future_notification)
+    context "when the are notifications on achived dossier" do
+      let(:dossier_archived) { create(:dossier, :archived) }
+      let!(:expirant_notification) { create(:dossier_notification, dossier: dossier_archived, notification_type: :dossier_expirant) }
+      let!(:other_notification) { create(:dossier_notification, dossier: dossier_archived, notification_type: :message) }
+
+      it "only displays :dossier_expirant notification" do
+        expect(DossierNotification.to_display).to include(expirant_notification)
+        expect(DossierNotification.to_display).not_to include(other_notification)
+      end
     end
   end
 
