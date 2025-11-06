@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_23_121224) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_04_131811) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -853,6 +853,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_23_121224) do
 
   create_table "instructeurs_procedures", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "daily_email_summary", default: false, null: false
     t.string "display_annotation_instructeur_notifications", default: "followed", null: false
     t.string "display_attente_avis_notifications", default: "followed", null: false
     t.string "display_attente_correction_notifications", default: "followed", null: false
@@ -860,11 +861,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_23_121224) do
     t.string "display_dossier_depose_notifications", default: "all", null: false
     t.string "display_dossier_modifie_notifications", default: "followed", null: false
     t.string "display_message_notifications", default: "followed", null: false
+    t.boolean "instant_email_new_dossier", default: false, null: false
+    t.boolean "instant_email_new_expert_avis", default: false, null: false
+    t.boolean "instant_email_new_message", default: false, null: false
     t.bigint "instructeur_id", null: false
     t.bigint "last_revision_seen_id"
     t.integer "position", null: false
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
+    t.boolean "weekly_email_summary", default: false, null: false
     t.index ["instructeur_id", "procedure_id"], name: "index_instructeurs_procedures_on_instructeur_and_procedure", unique: true
     t.index ["instructeur_id"], name: "index_instructeurs_procedures_on_instructeur_id"
     t.index ["procedure_id"], name: "index_instructeurs_procedures_on_procedure_id"

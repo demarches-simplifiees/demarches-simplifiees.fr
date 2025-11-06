@@ -27,31 +27,23 @@ fr:
           followed: Oui, uniquement sur mes dossiers suivis
           never: Non, jamais
       email_preferences:
-        utils:
-          positive: Oui
-          negative: Non
         flash_notice: Vos préférences pour les notifications par email sont enregistrées.
         subtitle: Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
         for_each_file_submitted:
-          title: Recevoir une notification à chaque dossier déposé
-          notice_1: Cet email vous signale le dépôt d’un nouveau dossier.
-          notice_2: Il est envoyé à chaque fois qu’un usager dépose un dossier.
+          title: Recevoir un email à chaque dossier déposé
+          notice: Cet email vous signale le dépôt d’un nouveau dossier. Il est envoyé à chaque fois qu’un usager dépose un dossier.
         for_each_message_submitted:
-          title: Recevoir une notification à chaque message déposé
-          notice_1: Cet email vous signale le dépôt d’un nouveau message sur vos dossiers suivis.
-          notice_2: Il est envoyé à chaque fois qu’un usager dépose un message.
+          title: Recevoir un email à chaque message déposé
+          notice: Cet email vous signale le dépôt d’un nouveau message sur vos dossiers suivis. Il est envoyé à chaque fois qu’un usager dépose un message.
         daily_notifications:
-          title: Recevoir une notification quotidienne
-          notice_1: Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
-          notice_2: Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
+          title: Recevoir un récapitulatif quotidien
+          notice: Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis. Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
         hebdo_recap:
           title: Recevoir un récapitulatif hebdomadaire
-          notice_1: Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches.
-          notice_2: Il est envoyé chaque semaine le lundi matin.
+          notice: Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches. Il est envoyé chaque semaine le lundi matin.
         avis_notifications:
-          title: Recevoir une notification pour chaque avis rendu par un expert
-          notice_1: Cet email vous signale un nouvel avis posté par un expert que vous avez sollicité sur un dossier.
-          notice_2: Il est envoyé à chaque fois qu’un expert rend un avis.
+          title: Recevoir un email pour chaque avis rendu par un expert
+          notice: Cet email vous signale un nouvel avis posté par un expert que vous avez sollicité sur un dossier. Il est envoyé à chaque fois qu’un expert rend un avis.
       apercu:
         title_with_libelle: Prévisualisation de « %{libelle} »
         title: Prévisualisation de la démarche

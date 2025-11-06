@@ -853,12 +853,31 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       context 'when the instructeur update its preferences' do
         let(:assign_to) { instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure }) }
+        let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }
 
         before do
-          patch :update_email_notifications, params: { procedure_id: procedure.id, assign_to: { id: assign_to.id, daily_email_notifications_enabled: true } }
+          patch :update_email_notifications, params: {
+            procedure_id: procedure.id,
+            assign_to: {
+              id: assign_to.id,
+              daily_email_notifications_enabled: true,
+              weekly_email_notifications_enabled: false,
+              instant_email_dossier_notifications_enabled: false,
+              instant_email_message_notifications_enabled: false,
+              instant_expert_avis_email_notifications_enabled: false,
+            },
+          }
         end
 
-        it { expect(instructeur.groupe_instructeur_with_email_notifications).to eq([procedure.defaut_groupe_instructeur]) }
+        it do
+          expect(instructeur.groupe_instructeur_with_email_notifications).to eq([procedure.defaut_groupe_instructeur])
+          instructeur_procedure.reload
+          expect(instructeur_procedure.daily_email_summary).to eq(true)
+          expect(instructeur_procedure.weekly_email_summary).to eq(false)
+          expect(instructeur_procedure.instant_email_new_dossier).to eq(false)
+          expect(instructeur_procedure.instant_email_new_message).to eq(false)
+          expect(instructeur_procedure.instant_email_new_expert_avis).to eq(false)
+        end
       end
     end
   end
