@@ -1141,6 +1141,60 @@ describe API::V2::GraphqlController do
         end
       end
 
+      describe 'dossierRefuser' do
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
+        let(:query) do
+          "mutation {
+          dossierRefuser(input: {
+            dossierId: \"#{dossier.to_typed_id}\",
+            instructeurId: \"#{instructeur.to_typed_id}\",
+            motivation: \"Dossier incomplet\"
+          }) {
+            dossier {
+              id
+              state
+              attestation {
+                url
+                filename
+              }
+            }
+            errors {
+              message
+            }
+          }
+        }"
+        end
+
+        context 'when attestation refus template is activated' do
+          before do
+            dossier.procedure.attestation_refus_template = build(:attestation_template, :refus, activated: true)
+            dossier.procedure.save!
+          end
+
+          it 'should return the attestation' do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
+            expect(gql_data[:dossierRefuser][:dossier][:attestation]).not_to be_nil
+            expect(gql_data[:dossierRefuser][:dossier][:attestation][:url]).to be_present
+            expect(gql_data[:dossierRefuser][:errors]).to be_nil
+          end
+        end
+
+        context 'when attestation refus template is not activated' do
+          before do
+            dossier.procedure.attestation_refus_template = build(:attestation_template, :refus, activated: false)
+            dossier.procedure.save!
+          end
+
+          it 'should not return attestation' do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
+            expect(gql_data[:dossierRefuser][:dossier][:attestation]).to be_nil
+            expect(gql_data[:dossierRefuser][:errors]).to be_nil
+          end
+        end
+      end
+
       describe 'createDirectUpload' do
         let(:query) do
           "mutation {
