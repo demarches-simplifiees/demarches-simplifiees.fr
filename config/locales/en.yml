@@ -392,6 +392,9 @@ en:
         messages:
           form:
             send_message: "Send message"
+            send_message_and_mark: "Send and mark file as WAITING FOR RESPONSE"
+            more_options: "More options"
+            pending_response_badge: "WAITING FOR RESPONSE"
             message_label_mandatory: "Your message (mandatory)"
             write_message_placeholder: "Write your message here"
             write_message_to_administration_placeholder: "Write your message to the administration here"
@@ -976,6 +979,8 @@ en:
       deleted_by_instructeur: "The folder has been deleted"
       impossible_deletion: "Unable to delete : the folder is not processed"
       restore: "The folder has been restored"
+      message_sent: "Message sent"
+      message_sent_with_pending_response: "Message sent and file marked PENDING RESPONSE"
       labels:
         to_follow: to follow
         followed: followed by me

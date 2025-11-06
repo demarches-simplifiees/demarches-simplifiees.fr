@@ -397,9 +397,12 @@ fr:
         messages:
           form:
             send_message: "Envoyer le message"
+            send_message_and_mark: "Envoyer et marquer le dossier"
+            more_options: "Plus d'options"
+            pending_response_badge: "EN ATTENTE DE RÉPONSE"
             message_label_mandatory: "Votre message (obligatoire)"
             write_message_placeholder: "Écrivez votre message ici"
-            write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
+            write_message_to_administration_placeholder: "Écrivez votre message à l'administration ici"
         demande:
           history: "Historique du dossier"
           en_construction_notice: "Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier."
@@ -978,6 +981,8 @@ fr:
       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
       restore: "Le dossier a bien été restauré"
       reaffectation: "Le dossier n° %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+      message_sent: "Message envoyé"
+      message_sent_with_pending_response: "Message envoyé et dossier marqué EN ATTENTE DE RÉPONSE"
       existing_groupe:
         one: "%{count} groupe existe"
         other: "%{count} groupes existent"
