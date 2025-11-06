@@ -175,8 +175,11 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#passer_en_instruction' do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:batch_operation) {}
+    let(:notification) {}
+
     before do
       batch_operation
+      notification
       sign_in(instructeur.user)
       post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }, format: :turbo_stream
     end
@@ -217,6 +220,14 @@ describe Instructeurs::DossiersController, type: :controller do
       it do
         expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier))
         expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
+      end
+    end
+
+    context "when dossier is expirant with a notification" do
+      let(:notification) { create(:dossier_notification, dossier:, notification_type: :dossier_expirant) }
+
+      it 'destroys notification' do
+        expect(DossierNotification.count).to eq(0)
       end
     end
   end
@@ -261,11 +272,13 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#repasser_en_instruction' do
     let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
     let(:batch_operation) {}
+    let(:notification) {}
     let(:current_user) { instructeur.user }
 
     before do
       sign_in current_user
       batch_operation
+      notification
       post :repasser_en_instruction,
       params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' },
       format: :turbo_stream
@@ -313,6 +326,14 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq('refuse')
         expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier))
         expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
+      end
+    end
+
+    context "when dossier is expirant with a notification" do
+      let(:notification) { create(:dossier_notification, dossier:, notification_type: :dossier_expirant) }
+
+      it 'destroys notification' do
+        expect(DossierNotification.count).to eq(0)
       end
     end
   end

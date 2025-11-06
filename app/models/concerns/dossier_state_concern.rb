@@ -77,6 +77,8 @@ module DossierStateConcern
       NotificationMailer.send_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
+
+    DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_expirant)
   end
 
   def after_passer_automatiquement_en_instruction
@@ -356,6 +358,8 @@ module DossierStateConcern
       NotificationMailer.send_repasser_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self, repasser_en_instruction: true).deliver_later if self.for_tiers?
     end
+
+    DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_expirant)
 
     rebase_later
   end
