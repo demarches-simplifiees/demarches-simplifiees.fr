@@ -1,26 +1,38 @@
-%section.flex.column.fr-my-2w{ id: }
-  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle
-    .fr-col
-      %h6.fr-mb-0.fr-p-2w= t('.search_filter_dossiers')
-    .fr-col-auto
-      = button_to toggle_filters_expanded_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_expanded: !procedure_presentation.filters_expanded),
-          method: :post,
-          class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline',
-          form: { data: { turbo: true } },
-          aria: { expanded: procedure_presentation.filters_expanded.to_s } do
-        %span{ class: procedure_presentation.filters_expanded ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line', data: { 'expand-target': 'icon' } }
-        %span.fr-sr-only= t('.toggle_filters')
+%section{ id: }
+  .fr-background-alt--grey.flex.flex-gap-2.column.fr-my-2w.fr-p-2w
+    .flex.flex-gap-2
+      .flex.flex-1
+        %p.fr-h6.fr-mb-0= t('.search_filter_dossiers')
+      .flex
+        = button_to toggle_filters_expanded_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_expanded: !procedure_presentation.filters_expanded),
+            method: :post,
+            class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline',
+            form: { data: { turbo: true } },
+            aria: { expanded: procedure_presentation.filters_expanded.to_s } do
+          %span{ class: procedure_presentation.filters_expanded ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line', data: { 'expand-target': 'icon' } }
+          %span.fr-sr-only= t('.toggle_filters')
 
-  .fr-grid-row{ class: class_names({ "hidden": !procedure_presentation.filters_expanded }) }
-    - filters.each do |filter|
-      .fr-col-auto.fr-p-2w.flex.column
-        = form_with url: update_filter_instructeur_procedure_presentation_path(procedure_presentation),
-          method: :post,
-          class: 'editable-filter-form flex flex-1',
-          data: { turbo: true, controller: 'autosubmit' } do |form|
+    .flex.flex-gap-2{ class: class_names({ "hidden": !procedure_presentation.filters_expanded }) }
+      - filters.each do |filter|
+        .flex.column
+          = form_with url: update_filter_instructeur_procedure_presentation_path(procedure_presentation),
+            method: :post,
+            class: 'editable-filter-form flex flex-1',
+            data: { turbo: true, controller: 'autosubmit' } do |form|
 
-          = form.hidden_field "filter_key", value: filter.id
-          = form.hidden_field "filter[id]", value: filter.column.id
-          = form.hidden_field :statut, value: statut
+            = form.hidden_field "filter_key", value: filter.id
+            = form.hidden_field "filter[id]", value: filter.column.id
+            = form.hidden_field :statut, value: statut
 
-          = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:,instructeur_procedure:, edit_mode: true)
+            = render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, instructeur_procedure:)
+
+      - if filters.none?
+        .flex.align-center.fr-p-2w
+          = t('.no_filters')
+      .ml-auto.fr-p-2w.flex.align-end
+        = link_to t('.enable_filters_customization'),
+          customize_filters_instructeur_procedure_presentation_path(procedure_presentation, statut: statut),
+          class: 'fr-btn--icon-left fr-icon-settings-5-line fr-btn fr-btn--sm fr-btn--tertiary'
+
+  .flex.flex-gap-1
+    = render Instructeurs::ClearFilterButtonsComponent.new(filters:, procedure_presentation:, statut:)

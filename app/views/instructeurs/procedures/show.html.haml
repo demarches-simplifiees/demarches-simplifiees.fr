@@ -31,13 +31,7 @@
         statut_with_notifications: @statut_with_notifications }
 
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
-    .flex
-      - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-        = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure }
-
-    - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-      = render Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: @statut)
-      = render Instructeurs::RemoveFilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
+    = render Instructeurs::EditableFiltersComponent.new(procedure_presentation: @procedure_presentation, instructeur_procedure: @instructeur_procedure, statut: @statut)
 
     - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 

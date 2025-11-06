@@ -17,17 +17,25 @@ class FilteredColumn
     message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" },
   }
 
-  def initialize(column:, filter:)
+  def initialize(column:, filter: nil)
     @column = column
-    @filter = filter
+    @filter = filter || empty_filter
   end
 
   def ==(other)
     other&.column == column && other.filter_value == filter_value && other.filter_operator == filter_operator
   end
 
+  def empty_filter
+    { operator: 'match', value: [] }
+  end
+
+  def empty_filter?
+    filter_operator.in?(["match", "before", "after"]) && !filter_is_active?
+  end
+
   def id
-    column.h_id.merge(filter: filter.is_a?(Hash) ? filter.to_a.sort : filter).sort.to_json
+    column.h_id.merge(filter: { operator: filter_operator, value: filter_value }).sort.to_json
   end
 
   def filter_operator
@@ -36,6 +44,10 @@ class FilteredColumn
 
   def filter_value
     Array(filter.is_a?(String) ? filter : filter&.dig(:value))
+  end
+
+  def filter_is_active?
+    filter_value.any?(&:present?)
   end
 
   private

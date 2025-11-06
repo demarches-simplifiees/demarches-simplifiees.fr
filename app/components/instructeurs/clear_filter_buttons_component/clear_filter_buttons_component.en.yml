@@ -6,6 +6,3 @@ en:
     this_week: 'this week'
     this_month: 'this month'
     this_year: 'this year'
-  conjunctions:
-    and: ' and '
-    or: ' or '

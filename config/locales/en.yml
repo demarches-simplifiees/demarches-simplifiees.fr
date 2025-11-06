@@ -439,9 +439,6 @@ en:
           user_removed: The user has deleted his/her account
         acts_on_behalf: "acts for"
         restore: "Restore"
-        filters:
-          title: Select a filter
-          missing_column: Please select a column before adding a filter
         select_all: Select all
         batch_operation:
           enabled: "Add file %{dossier_id} to the selection for the bulk operation"
@@ -981,6 +978,12 @@ en:
         close_to_expiration: expiring
         to_archive: to archive
         trash: trash
+    procedure_presentation:
+      customize_filters:
+        exit_customization: "Exit customization"
+        title: "Customize search criteria / filters"
+        cancel: "Cancel"
+        validate: "Validate"
   france_connect:
     choose_email:
       intro_html: "Your FranceConnect account uses <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> as the contact email."

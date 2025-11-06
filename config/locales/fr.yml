@@ -439,9 +439,6 @@ fr:
         acts_on_behalf: "agit pour"
         restore: "Restaurer"
         restore_and_extend: "Restaurer et étendre la conservation"
-        filters:
-          title: Sélectionner un filtre
-          missing_column: Veuillez sélectionner une colonne avant d'ajouter un filtre
         select_all: Tout selectionner
         batch_operation:
           enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
@@ -986,6 +983,12 @@ fr:
         close_to_expiration: expirants
         to_archive: à archiver
         trash: corbeille
+    procedure_presentation:
+      customize_filters:
+        exit_customization: "Quitter la personnalisation"
+        title: "Personnaliser les critères de recherche / filtres"
+        cancel: "Annuler"
+        validate: "Valider"
   administrateurs:
     procedures_menu: "Mes démarches"
     preview_menu: "Démarche « %{libelle} »"

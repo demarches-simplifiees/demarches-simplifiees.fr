@@ -478,10 +478,10 @@ Rails.application.routes.draw do
 
     resources :procedure_presentation, only: [:update] do
       member do
-        post 'refresh_column_filter'
-        post 'add_filter'
+        get 'customize_filters'
         post 'update_filter'
-        delete 'remove_filter'
+        post 'refresh_filters'
+        post 'persist_filters'
         post 'toggle_filters_expanded'
       end
     end

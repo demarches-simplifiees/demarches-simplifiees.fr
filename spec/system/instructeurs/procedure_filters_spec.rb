@@ -76,9 +76,9 @@ describe "procedure filters" do
   end
 
   scenario "should be able to add and remove filter", js: true do
-    add_filter(type_de_champ.libelle, champ.value)
+    add_filter("formulaire-usager", type_de_champ.libelle)
 
-    expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
+    add_filter_value(type_de_champ.libelle, champ.value, type: :text)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -88,7 +88,7 @@ describe "procedure filters" do
       expect(page).not_to have_link(new_unfollow_dossier_2.user.email)
     end
 
-    remove_filter(champ.value)
+    clear_filter(champ.value)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
@@ -104,13 +104,16 @@ describe "procedure filters" do
 
     scenario "should be able to user custom fiters", js: true do
       # use date filter
-      add_filter("Date de passage en construction", "10/10/2010", type: :date)
+      add_filter("informations-dossier", "Date de passage en construction")
+      add_filter_value("Le", "2010-10-10", type: :date)
 
       # use statut dropdown filter
-      add_filter('État du dossier', 'En construction', type: :multi_select)
+      add_filter("informations-dossier", 'État du dossier')
+      add_filter_value('État du dossier', 'En construction', type: :multi_select)
 
       # use choice dropdown filter
-      add_filter('Choix unique', 'val1', type: :multi_select)
+      add_filter("formulaire-usager", 'Choix unique')
+      add_filter_value('Choix unique', 'val1', type: :multi_select)
     end
   end
 
@@ -118,7 +121,8 @@ describe "procedure filters" do
     let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Enfants', children: [{ libelle: 'Nom' }] }] }
 
     scenario "should be able to user custom fiters", js: true do
-      add_filter('Enfants – Nom', 'Greer')
+      add_filter("formulaire-usager", 'Enfants – Nom')
+      add_filter_value('Enfants – Nom', 'Greer')
     end
   end
 
@@ -131,7 +135,9 @@ describe "procedure filters" do
         departement_champ.reload
         champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
 
-        add_filter(departement_champ.libelle, champ_select_value, type: :multi_select)
+        add_filter("formulaire-usager", departement_champ.libelle)
+        add_filter_value(departement_champ.libelle, champ_select_value)
+
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end
@@ -158,7 +164,9 @@ describe "procedure filters" do
         rna_champ.reload
         champ_select_value = "37 – Indre-et-Loire"
 
-        add_filter("#{rna_champ.libelle} – Département", champ_select_value, type: :multi_select)
+        add_filter("formulaire-usager", rna_champ.libelle)
+        add_filter_value(rna_champ.libelle, champ_select_value)
+
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end
@@ -170,7 +178,8 @@ describe "procedure filters" do
         region_champ.update!(value: 'Bretagne', external_id: '53')
         region_champ.reload
 
-        add_filter(region_champ.libelle, region_champ.value, type: :multi_select)
+        add_filter("formulaire-usager", region_champ.libelle)
+        add_filter_value(region_champ.libelle, region_champ.value)
 
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
@@ -180,7 +189,8 @@ describe "procedure filters" do
   describe 'dossier labels' do
     scenario "should be able to filter by dossier labels", js: true do
       DossierLabel.create!(dossier_id: new_unfollow_dossier.id, label_id: procedure.labels.first.id)
-      add_filter('Labels', procedure.labels.first.name, type: :multi_select)
+      add_filter("informations-dossier", 'Labels')
+      add_filter_value('Labels', procedure.labels.first.name, type: :multi_select)
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
       expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
     end
@@ -192,14 +202,17 @@ describe "procedure filters" do
       DossierLabel.create!(dossier: new_unfollow_dossier, label: first_label)
       DossierLabel.create!(dossier: new_unfollow_dossier_2, label: second_label)
 
-      add_filter('Labels', first_label.name, type: :multi_select)
+      add_filter("informations-dossier", 'Labels')
+
+      add_filter_value('Labels', first_label.name, type: :multi_select)
 
       within ".dossiers-table" do
         expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
         expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       end
 
-      add_filter('Labels', second_label.name, type: :multi_select)
+      add_filter("informations-dossier", 'Labels')
+      add_filter_value('Labels', second_label.name, type: :multi_select)
 
       within ".dossiers-table" do
         expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
@@ -208,67 +221,40 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should be able to add and remove two filters for the same field", js: true do
-    add_filter(type_de_champ.libelle, champ.value)
-    add_filter(type_de_champ.libelle, champ_2.value)
-    add_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label, type: :multi_select)
-
-    within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
-      expect(page).to have_link(new_unfollow_dossier.user.email)
-
-      expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
-      expect(page).to have_link(new_unfollow_dossier_2.user.email)
-    end
-
-    remove_filter(champ.value)
-
-    within ".dossiers-table" do
-      expect(page).not_to have_link(new_unfollow_dossier.id.to_s, exact: true)
-      expect(page).not_to have_link(new_unfollow_dossier.user.email)
-
-      expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
-      expect(page).to have_link(new_unfollow_dossier_2.user.email)
-    end
-
-    remove_filter(champ_2.value)
-
-    within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
-      expect(page).to have_link(new_unfollow_dossier.user.email)
-      expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
-      expect(page).to have_link(new_unfollow_dossier_2.user.email)
+  def add_filter_value(column_name, filter_value, type: :text)
+    case type
+    when :text, :date
+      fill_in column_name, with: filter_value
+      find_field(column_name).send_keys(:enter)
+    when :multi_select
+      select_combobox(column_name, filter_value)
+    else
+      raise "invalid type: #{type}"
     end
   end
 
-  def add_filter(column_name, filter_value, type: :text)
-    click_on 'Sélectionner un filtre'
-    wait_until { all("#search-filter").size == 1 }
+  def add_filter(filter_select_category, column_name)
+    raise "invalid filter select category: #{filter_select_category}" unless filter_select_category.in?(['informations-dossier', 'informations-usager', 'formulaire-usager', 'private-annotations'])
 
-    fill_in 'search-filter', with: column_name
-    select_combobox('Colonne', column_name)
+    click_on 'Personnaliser'
 
-    within "#filter-component" do
-      case type
-      when :text
-        fill_in "Valeur", with: filter_value
-      when :date
-        find("input[type=date]", visible: true)
-        fill_in "Valeur", with: Date.parse(filter_value)
-      when :multi_select
-        # Wait for React component to be ready
-        find('.dom-ready') if page.has_css?('.dom-ready')
+    expect(page).to have_content("Personnaliser les critères de recherche / filtres ")
 
-        fill_in "Valeur", with: filter_value
+    within "#form-#{filter_select_category}" do
+      select column_name, from: "select-#{filter_select_category}"
+      click_button "Ajouter"
+    end
 
-        find("#column_filter_value_component input.fr-select", visible: true).send_keys(:down, :enter, :escape)
-      end
-      click_button "Ajouter le filtre"
-      expect(page).to have_no_css("#search-filter", visible: true)
+    within ".fr-col-5" do
+      expect(page).to have_content(column_name)
+    end
+
+    within ".padded-fixed-footer" do
+      click_button "Valider"
     end
   end
 
-  def remove_filter(filter_value)
+  def clear_filter(filter_value)
     click_button text: filter_value
   end
 
@@ -285,5 +271,63 @@ describe "procedure filters" do
       find('.fr-tag', text: column_name).find('button').click
     end
     click_button "Enregistrer"
+  end
+
+  scenario "should be able to access filter customization page", js: true do
+    # Click on the "Personnaliser" button for filters
+    click_on 'Personnaliser', match: :first
+
+    # Test that we are redirected to the customize_filters page
+    expect(page).to have_current_path(/\/procedure_presentation\/\d+\/customize_filters\?statut=a-suivre/)
+
+    # Verify we're on the customization page with the correct content
+    expect(page).to have_content("Personnaliser les critères de recherche / filtres")
+    expect(page).to have_content("Votre sélection de critères")
+
+    # Check that we have the 3 default filters listed on the page
+    within ".fr-col-5" do
+      expect(page).to have_content("N° dossier")
+      expect(page).to have_content("État du dossier")
+      expect(page).to have_content("Notifications sur le dossier")
+    end
+
+    # Delete the first filter
+    within ".fr-col-5" do
+      # Find the filter box containing "N° dossier" and click its delete button
+      within ".filter-box", text: "N° dossier" do
+        find('button.fr-icon-delete-line').click
+      end
+    end
+
+    # Check that the filter is deleted
+    within ".fr-col-5" do
+      expect(page).not_to have_content("N° dossier")
+    end
+
+    # Add a new filter
+    within "#form-informations-usager" do
+      select "Demandeur", from: "select-informations-usager"
+      click_button "Ajouter"
+    end
+
+    # Check that the filter is added
+    within ".fr-col-5" do
+      expect(page).to have_content("Demandeur")
+    end
+
+    # Click on the "Valider" button it should redirect to the procedure page
+    within ".padded-fixed-footer" do
+      click_button "Valider"
+    end
+
+    expect(page).to have_current_path(instructeur_procedure_path(procedure))
+
+    # Check that the filters are available in the editable-filters-component
+    within "#editable-filters-component" do
+      expect(page).to have_content("Demandeur")
+      expect(page).to have_content("État du dossier")
+      expect(page).to have_content("Notifications sur le dossier")
+      expect(page).not_to have_content("N° dossier")
+    end
   end
 end
