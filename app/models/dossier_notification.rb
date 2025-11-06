@@ -18,7 +18,11 @@ class DossierNotification < ApplicationRecord
   belongs_to :instructeur
   belongs_to :dossier
 
-  scope :to_display, -> { where(display_at: ..Time.current) }
+  scope :to_display, -> {
+    where(display_at: ..Time.current)
+    .joins(:dossier)
+    .where("NOT dossiers.archived OR (dossiers.archived AND dossier_notifications.notification_type = ?)", :dossier_expirant)
+  }
 
   scope :order_by_importance, -> {
     self.sort_by { |notif| notification_types.keys.index(notif.notification_type) }
@@ -205,7 +209,6 @@ class DossierNotification < ApplicationRecord
     dossiers = Dossier
       .where(groupe_instructeur_id: groupe_instructeur_ids)
       .visible_by_administration
-      .not_archived
 
     dossier_ids_by_procedure = dossiers
       .joins(:revision)
@@ -237,6 +240,7 @@ class DossierNotification < ApplicationRecord
       'a-suivre' => notifications.merge(Dossier.by_statut('a-suivre')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'suivis' => notifications.merge(Dossier.by_statut('suivis', instructeur:)).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
+      'archives' => notifications.merge(Dossier.by_statut('archives')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) }
     }
 
     dossiers = Dossier
@@ -259,8 +263,6 @@ class DossierNotification < ApplicationRecord
 
   def self.notifications_for_instructeur_dossiers(instructeur, dossier_ids)
     DossierNotification
-      .joins(:dossier)
-      .merge(Dossier.not_archived)
       .where(dossier_id: dossier_ids, instructeur_id: instructeur.id)
       .to_display
       .order_by_importance
@@ -268,8 +270,6 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_for_instructeur_dossier(instructeur, dossier)
-    return [] if dossier.archived
-
     DossierNotification
       .where(dossier:, instructeur:)
       .to_display
