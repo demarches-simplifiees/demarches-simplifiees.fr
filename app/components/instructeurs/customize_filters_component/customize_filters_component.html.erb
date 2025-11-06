@@ -10,7 +10,7 @@
                 <%= form.label "filters_columns[]", filter_select[:label], class: "fr-label", for: "select-#{filter_select[:label].parameterize}" %>
                 <%= form.select "filters_columns[]", filter_select[:items], { prompt: t('.select'), required: true, disabled: disabled_items, selected: "" }, class: 'fr-select width-100', id:  "select-#{filter_select[:label].parameterize}" %>
               </div>
-              <%= form.submit t('.add'), class: "fr-btn" %>
+              <%= form.submit t('.add'), class: "fr-btn", disabled: filter_select[:items].empty? %>
             </div>
           <% end %>
         </div>
