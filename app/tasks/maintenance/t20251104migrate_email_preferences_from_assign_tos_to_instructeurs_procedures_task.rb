@@ -19,7 +19,7 @@ module Maintenance
       daily_email_notifications_enabled: :daily_email_summary,
       instant_email_dossier_notifications_enabled: :instant_email_new_dossier,
       instant_email_message_notifications_enabled: :instant_email_new_message,
-      instant_expert_avis_email_notifications_enabled: :instant_email_new_expert_avis
+      instant_expert_avis_email_notifications_enabled: :instant_email_new_expert_avis,
     }.freeze
 
     def collection

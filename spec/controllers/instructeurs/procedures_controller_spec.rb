@@ -864,8 +864,8 @@ describe Instructeurs::ProceduresController, type: :controller do
               weekly_email_notifications_enabled: false,
               instant_email_dossier_notifications_enabled: false,
               instant_email_message_notifications_enabled: false,
-              instant_expert_avis_email_notifications_enabled: false
-            }
+              instant_expert_avis_email_notifications_enabled: false,
+            },
           }
         end
 

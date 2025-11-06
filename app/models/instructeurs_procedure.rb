@@ -29,7 +29,7 @@ class InstructeursProcedure < ApplicationRecord
     weekly_email_summary: :weekly_email_notifications_enabled,
     instant_email_new_dossier: :instant_email_dossier_notifications_enabled,
     instant_email_new_message: :instant_email_message_notifications_enabled,
-    instant_email_new_expert_avis: :instant_expert_avis_email_notifications_enabled
+    instant_email_new_expert_avis: :instant_expert_avis_email_notifications_enabled,
   }.freeze
 
   belongs_to :instructeur
