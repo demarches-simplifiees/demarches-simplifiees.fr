@@ -21,7 +21,17 @@ class DossierNotification < ApplicationRecord
   scope :to_display, -> {
     where(display_at: ..Time.current)
     .joins(:dossier)
-    .where("NOT dossiers.archived OR (dossiers.archived AND dossier_notifications.notification_type = ?)", :dossier_expirant)
+    .where(
+      "(NOT dossiers.archived
+        AND dossiers.hidden_by_expired_at IS NULL
+        AND dossiers.hidden_by_administration_at IS NULL)
+      OR (dossiers.archived
+        AND dossiers.hidden_by_expired_at IS NULL
+        AND dossiers.hidden_by_administration_at IS NULL
+        AND dossier_notifications.notification_type = 'dossier_expirant')
+      OR ((dossiers.hidden_by_expired_at IS NOT NULL OR dossiers.hidden_by_administration_at IS NOT NULL)
+       AND dossier_notifications.notification_type = 'dossier_suppression')"
+      )
   }
 
   scope :order_by_importance, -> {
@@ -206,9 +216,9 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
-    dossiers = Dossier
-      .where(groupe_instructeur_id: groupe_instructeur_ids)
-      .visible_by_administration
+    all_dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+
+    dossiers = all_dossiers.visible_by_administration.or(all_dossiers.by_statut('supprimes'))
 
     dossier_ids_by_procedure = dossiers
       .joins(:revision)
@@ -240,7 +250,8 @@ class DossierNotification < ApplicationRecord
       'a-suivre' => notifications.merge(Dossier.by_statut('a-suivre')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'suivis' => notifications.merge(Dossier.by_statut('suivis', instructeur:)).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
-      'archives' => notifications.merge(Dossier.by_statut('archives')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) }
+      'archives' => notifications.merge(Dossier.by_statut('archives')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
+      'supprimes' => notifications.merge(Dossier.by_statut('supprimes')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) }
     }
 
     dossiers = Dossier
