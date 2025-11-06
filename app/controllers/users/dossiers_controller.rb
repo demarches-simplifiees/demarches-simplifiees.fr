@@ -5,6 +5,7 @@ module Users
     include DossierHelper
     include TurboChampsConcern
     include LockableConcern
+    include ProConnectSessionConcern
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
@@ -18,6 +19,7 @@ module Users
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
+    before_action :ensure_pro_connect_for_procedure, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_editing_brouillon, only: [:brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :ensure_dossier_has_changes, only: [:submit_en_construction], if: :update_with_stream?
@@ -388,6 +390,8 @@ module Users
         return redirect_to dossiers_path
       end
 
+      return if ensure_pro_connect_for_procedure(procedure)
+
       dossier = Dossier.new(
         revision: params[:brouillon] ? procedure.draft_revision : procedure.active_revision,
         user: current_user,
@@ -499,6 +503,15 @@ module Users
       if !dossier.brouillon?
         redirect_to modifier_dossier_path(@dossier)
       end
+    end
+
+    def ensure_pro_connect_for_procedure(procedure = dossier.procedure)
+      return if procedure.blank?
+      return if procedure.pro_connect_restriction_none?
+      return if logged_in_with_pro_connect?
+
+      flash.alert = t('users.dossiers.pro_connect_restriction_required')
+      redirect_to pro_connect_path
     end
 
     def page
