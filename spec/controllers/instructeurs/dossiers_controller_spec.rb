@@ -819,6 +819,71 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe '#create_commentaire with pending_response flag' do
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:saved_commentaire) { dossier.commentaires.first }
+    let(:body) { "Please respond" }
+
+    before { sign_in(instructeur.user) }
+
+    context 'when mark_as_pending_response is true' do
+      subject do
+        post :create_commentaire, params: {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          commentaire: { body: body },
+          mark_as_pending_response: 'true'
+        }
+      end
+
+      it 'creates a commentaire' do
+        expect { subject }.to change { dossier.commentaires.count }.by(1)
+      end
+
+      it 'creates a pending response' do
+        expect { subject }.to change { DossierPendingResponse.count }.by(1)
+      end
+
+      it 'creates an attente_reponse notification' do
+        expect { subject }.to change { DossierNotification.where(notification_type: :attente_reponse).count }.by_at_least(1)
+      end
+
+      it 'links the pending response to the commentaire' do
+        subject
+        expect(DossierPendingResponse.last.commentaire).to eq(saved_commentaire)
+      end
+
+      it 'shows correct flash notice' do
+        subject
+        expect(flash.notice).to eq(I18n.t('instructeurs.dossiers.message_sent_with_pending_response'))
+      end
+    end
+
+    context 'when mark_as_pending_response is false' do
+      subject do
+        post :create_commentaire, params: {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          commentaire: { body: body },
+          mark_as_pending_response: 'false'
+        }
+      end
+
+      it 'creates a commentaire' do
+        expect { subject }.to change { dossier.commentaires.count }.by(1)
+      end
+
+      it 'does not create a pending response' do
+        expect { subject }.not_to change { DossierPendingResponse.count }
+      end
+
+      it 'shows correct flash notice' do
+        subject
+        expect(flash.notice).to eq(I18n.t('instructeurs.dossiers.message_sent'))
+      end
+    end
+  end
+
   describe '#messagerie' do
     before { expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie) }
     subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
@@ -849,6 +914,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
     let(:now) { DateTime.parse("12/02/2025 09:19") }
+    let(:mark_as_pending_response) { nil }
 
     subject {
       post :create_commentaire, params: {
@@ -858,7 +924,8 @@ describe Instructeurs::DossiersController, type: :controller do
           body: body,
           file: file,
         },
-        statut: 'a-suivre',
+        mark_as_pending_response: mark_as_pending_response,
+        statut: 'a-suivre'
       }
     }
 
@@ -875,6 +942,17 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(response).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
       expect(flash.notice).to be_present
       expect(dossier.reload.last_commentaire_updated_at).to eq(now)
+    end
+
+    context "when marking dossier as waiting for response" do
+      let(:mark_as_pending_response) { 'true' }
+
+      it "creates a commentaire and attente_reponse notification" do
+        expect { subject }.to change(Commentaire, :count).by(1)
+          .and change { DossierNotification.where(notification_type: :attente_reponse).count }.by_at_least(1)
+
+        expect(flash.notice).to include("EN ATTENTE DE RÉPONSE")
+      end
     end
 
     context "when the commentaire created with virus file" do
