@@ -22,6 +22,22 @@ RSpec.describe DossierNotification, type: :model do
         expect(DossierNotification.to_display).not_to include(other_notification)
       end
     end
+
+    context "when the are notifications on hidden dossier" do
+      let(:dossier_expired) { create(:dossier, :hidden_by_expired) }
+      let(:dossier_hidden) { create(:dossier, :hidden_by_administration) }
+      let!(:suppression_notification_for_expired) { create(:dossier_notification, dossier: dossier_expired, notification_type: :dossier_suppression) }
+      let!(:other_notification_for_expired) { create(:dossier_notification, dossier: dossier_expired, notification_type: :message) }
+      let!(:suppression_notification_for_hidden) { create(:dossier_notification, dossier: dossier_hidden, notification_type: :dossier_suppression) }
+      let!(:other_notification_for_hidden) { create(:dossier_notification, dossier: dossier_hidden, notification_type: :message) }
+
+      it "only displays :dossier_suppression notification" do
+        expect(DossierNotification.to_display).to include(suppression_notification_for_expired)
+        expect(DossierNotification.to_display).not_to include(other_notification_for_expired)
+        expect(DossierNotification.to_display).to include(suppression_notification_for_hidden)
+        expect(DossierNotification.to_display).not_to include(other_notification_for_hidden)
+      end
+    end
   end
 
   describe 'create_notification' do
