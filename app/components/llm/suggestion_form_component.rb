@@ -29,6 +29,10 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     helpers.admin_procedure_path(procedure)
   end
 
+  def suggestions_count
+    llm_rule_suggestion.llm_rule_suggestion_items.size
+  end
+
   private
 
   def render?
