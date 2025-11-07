@@ -5,4 +5,6 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Amélioration des champs']] }
 
-= render LLM::StepperComponent.new(step_component: LLM::SuggestionFormComponent.new(llm_rule_suggestion: @llm_rule_suggestion))
+= render LLM::StepperComponent.new(step_component: LLM::SuggestionFormComponent.new(llm_rule_suggestion: @llm_rule_suggestion)) do |stepper|
+  - stepper.with_header do
+    = render LLM::HeaderComponent.new(llm_rule_suggestion: @llm_rule_suggestion)

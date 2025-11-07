@@ -3,6 +3,8 @@
 class StepperBaseComponent < ViewComponent::Base
   attr_reader :step_component
 
+  renders_one :header
+
   def initialize(step_component:)
     @step_component = step_component
   end
