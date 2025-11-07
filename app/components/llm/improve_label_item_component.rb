@@ -4,6 +4,14 @@ class LLM::ImproveLabelItemComponent < LLM::SuggestionItemComponent
   ACCEPTED_VALUE = LLMRuleSuggestionItem.verify_statuses.fetch(:accepted)
   SKIPPED_VALUE = LLMRuleSuggestionItem.verify_statuses.fetch(:skipped)
 
+  def self.step_title
+    "Amélioration des libellés"
+  end
+
+  def self.step_summary
+    "Acceptez ou refusez les propositions de nouveaux libellés pour les champs de votre formulaire."
+  end
+
   def render?
     original_tdc.present?
   end
@@ -21,7 +29,7 @@ class LLM::ImproveLabelItemComponent < LLM::SuggestionItemComponent
   end
 
   def confidence_badge
-    return unless item.confidence.present?
+    return if item.confidence.blank?
 
     content_tag(:span, "confiance: #{item.confidence}", class: 'fr-badge')
   end

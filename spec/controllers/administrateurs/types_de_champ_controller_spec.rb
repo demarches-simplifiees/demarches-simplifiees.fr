@@ -441,41 +441,6 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     end
   end
 
-  describe '#simplify_index' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: 'Ancien', stable_id: 123 }]) }
-    let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }
-
-    it 'assigns completed suggestions with their item counts' do
-      suggestion = create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'completed', schema_hash:)
-      create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, stable_id: 123, op_kind: 'update', payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' })
-
-      get :simplify_index, params: { procedure_id: procedure.id }
-
-      expect(response).to have_http_status(:ok)
-      grouped = assigns(:llm_suggestions_by_state)
-      expect(grouped['completed'].map(&:id)).to eq([suggestion.id])
-      expect(grouped['completed'].first.items_count).to eq(1)
-      expect(grouped['queued']).to be_nil
-      expect(grouped['failed']).to be_nil
-    end
-
-    it 'marks ongoing analysis as pending' do
-      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'queued', schema_hash:)
-
-      get :simplify_index, params: { procedure_id: procedure.id }
-
-      expect(assigns(:llm_suggestions_by_state)['queued']).to be_present
-    end
-
-    it 'marks failed analysis' do
-      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: LLM::LabelImprover::TOOL_NAME, state: 'failed', schema_hash:)
-
-      get :simplify_index, params: { procedure_id: procedure.id }
-
-      expect(assigns(:llm_suggestions_by_state)['failed']).to be_present
-    end
-  end
-
   describe '#enqueue_simplify' do
     let(:procedure) { create(:procedure, :published) }
     let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }

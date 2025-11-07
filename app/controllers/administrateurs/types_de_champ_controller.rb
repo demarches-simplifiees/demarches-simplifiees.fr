@@ -168,16 +168,6 @@ module Administrateurs
       end
     end
 
-    def simplify_index
-      suggestions = llm_rule_suggestion_scope
-        .left_outer_joins(:llm_rule_suggestion_items)
-        .select('llm_rule_suggestions.*, COUNT(llm_rule_suggestion_items.id) AS items_count')
-        .group('llm_rule_suggestions.id')
-        .order(created_at: :desc)
-
-      @llm_suggestions_by_state = suggestions.group_by(&:state)
-    end
-
     def enqueue_simplify
       unless Flipper.enabled?(:llm_nightly_improve_procedure, @procedure)
         return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Fonctionnalité indisponible pour cette démarche.")

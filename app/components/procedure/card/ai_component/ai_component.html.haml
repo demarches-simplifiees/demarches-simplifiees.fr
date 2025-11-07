@@ -13,6 +13,6 @@
           .fr-tile-subtitle
             %p Appliquez nos suggestions d'amélioration
             %p.fr-hint-text.fr-mb-0.fr-mt-1v
-              Score du formulaire
+              %strong Score actuel du formulaire
             = render Procedure::SimplifyGaugeComponent.new(@procedure, @procedure.draft_revision)
         %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')

@@ -30,4 +30,15 @@ class LLMRuleSuggestion < ApplicationRecord
   def changes_to_apply
     llm_rule_suggestion_items.accepted.group_by(&:op_kind).transform_keys(&:to_sym)
   end
+
+  def view_component
+    case rule
+    when 'improve_label'
+      LLM::ImproveLabelItemComponent
+    when 'improve_structure'
+      LLM::ImproveStructureItemComponent
+    else
+      raise "Unknown LLM rule suggestion view component for rule: #{rule}"
+    end
+  end
 end
