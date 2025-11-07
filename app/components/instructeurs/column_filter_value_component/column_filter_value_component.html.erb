@@ -10,27 +10,28 @@
     <% end %>
 
   <% elsif is_date? %>
-    <div class="flex flex-gap-2 flex-1">
-      <div class="flex column justify-between">
-        <%= form.label "filter[filter][operator]", filtered_column&.label, class: 'fr-label' %>
-        <%= form.select "filter[filter][operator]",
-          options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } } %>
+    <fieldset class="fr-fieldset flex-1">
+      <legend class="fr-fieldset__legend"><%= filtered_column&.label %></legend>
+      <div class="fr-fieldset__element fr-fieldset__element--inline">
+        <div class="flex column justify-between">
+          <%= form.label "filter[filter][operator]", t(".operator"), class: 'fr-label' %>
+          <%= form.select "filter[filter][operator]",
+            options_for_select(date_filter_options, selected: operator), {}, { class: 'fr-select', data: { autosubmit_target: 'input', } } %>
+        </div>
       </div>
       <% if is_operator_with_value? %>
-        <div class="flex column justify-between">
-          <%= form.label input_id, t(".operators.#{operator}"), class: 'fr-label' %>
-          <div class="flex">
-            <%= form.text_field "filter[filter][value][]",
-              id: input_id,
-              class: 'fr-input',
-              type: 'date',
-              value:,
-              data: { no_autosubmit: true } %>
-            <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
-          </div>
+        <div class="fr-fieldset__element fr-fieldset__element--inline">
+          <%= render Dsfr::InputComponent.new(form:, attribute: "filter[filter][value][]", input_type: :date_field, required: false) do |c| %>
+            <% c.with_label do %>
+              <%= t(".operators.#{operator}") %>
+            <% end %>
+            <% c.with_button do %>
+              <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+            <% end %>
+          <% end %>
         </div>
       <% end %>
-    </div>
+    </fieldset>
 
   <% elsif selectable? %>
     <%= form.label input_id, label, class: 'fr-label' %>
