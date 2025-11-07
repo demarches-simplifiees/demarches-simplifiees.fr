@@ -26,20 +26,21 @@ RSpec.describe APIEntreprise::Job, type: :job do
     end
 
     context 'when error with an etablissement on a champ' do
-      let(:types_de_champ_public) do
-        [{ type: :siret }]
-      end
-
       let(:procedure) { create(:procedure, types_de_champ_public:) }
+      let(:types_de_champ_public) { [{ type: :siret }] }
       let(:dossier) { create(:dossier, procedure:) }
 
       it "retries 5 times" do
         champ = dossier.champs.first
+        champ.update!(value: '12345678901234')
+
         etablissement = create(:etablissement, champ:)
 
         assert_performed_jobs(5) do
           ErrorJob.perform_later(:service_unavailable, etablissement)
         end
+
+        expect(champ.reload.value).not_to be_nil
       end
     end
 
