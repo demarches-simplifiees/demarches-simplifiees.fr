@@ -450,6 +450,11 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     end
   end
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 28b8c7aad5 (feat(stepper): wire stepper for simpliscore)
   describe '#enqueue_simplify' do
     let(:procedure) { create(:procedure, :published) }
     let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }

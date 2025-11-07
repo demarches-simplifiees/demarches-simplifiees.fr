@@ -4,6 +4,14 @@ class LLM::ImproveStructureItemComponent < LLM::SuggestionItemComponent
   ACCEPTED_VALUE = LLMRuleSuggestionItem.verify_statuses.fetch(:accepted)
   SKIPPED_VALUE = LLMRuleSuggestionItem.verify_statuses.fetch(:skipped)
 
+  def self.step_title
+    "Amélioration de la structure"
+  end
+
+  def self.step_summary
+    "Acceptez ou refusez les propositions de modifications de la structure de votre formulaire."
+  end
+
   def original_tdc
     @original_tdc ||= tdc_for(item.stable_id)
   end
@@ -29,7 +37,7 @@ class LLM::ImproveStructureItemComponent < LLM::SuggestionItemComponent
   end
 
   def confidence_badge
-    return unless item.confidence.present?
+    return if item.confidence.blank?
 
     content_tag(:span, "confiance: #{item.confidence}", class: 'fr-badge fr-mr-1w')
   end

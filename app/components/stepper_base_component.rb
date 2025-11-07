@@ -34,4 +34,8 @@ class StepperBaseComponent < ViewComponent::Base
   def step_state
     "Étape #{current_step} sur #{step_count}"
   end
+
+  def subtitle
+    nil
+  end
 end
