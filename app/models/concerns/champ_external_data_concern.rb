@@ -114,7 +114,7 @@ module ChampExternalDataConcern
     def save_external_exception(exception, code)
       exceptions = fetch_external_data_exceptions || []
       exceptions << ExternalDataException.new(reason: exception.inspect, code:)
-      update_columns(fetch_external_data_exceptions: exceptions, data: nil, value_json: nil, value: nil)
+      update_columns(fetch_external_data_exceptions: exceptions)
     end
 
     def after_reset_external_data(opts = {})
