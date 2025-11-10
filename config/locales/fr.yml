@@ -383,7 +383,8 @@ fr:
       dossiers:
         form:
           submitted_at: "Déposé le %{datetime}"
-          updated_at: "Modifié le %{datetime}"
+          user_updated_at: "Modifié par l’usager le %{datetime}"
+          instructeur_updated_at: "Modifié par l’instructeur le %{datetime}"
           switched_to_instruction_at: "Passé en instruction le %{datetime}"
           revert_to_submitted_at: "Correction demandée le %{datetime}"
           acceptee_at: "Accepté le %{datetime}"

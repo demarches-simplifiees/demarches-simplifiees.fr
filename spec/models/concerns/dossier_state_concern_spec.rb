@@ -89,7 +89,7 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(4)
       expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) }.size).to eq(7)
 
-      dossier.submit_en_construction!
+      dossier.usager_submit_en_construction!
       dossier.reload
 
       expect(dossier.champs.size).to eq(4)
@@ -110,7 +110,7 @@ RSpec.describe DossierStateConcern do
       end
 
       it "create dossier_modifie notification only for instructeur wish to be notified" do
-        dossier.submit_en_construction!
+        dossier.usager_submit_en_construction!
 
         expect(DossierNotification.count).to eq(2)
 

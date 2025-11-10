@@ -3,8 +3,8 @@
 module DossierStateConcern
   extend ActiveSupport::Concern
 
-  def submit_en_construction!
-    self.traitements.submit_en_construction
+  def usager_submit_en_construction!
+    self.traitements.usager_submit_en_construction
     self.submitted_revision_id = revision_id
     save!
 
@@ -14,6 +14,13 @@ module DossierStateConcern
     process_sva_svr!
     clean_champs_after_submit!
     DossierNotification.create_notification(self, :dossier_modifie)
+  end
+
+  def instructeur_submit_en_construction!(instructeur:)
+    self.traitements.instructeur_submit_en_construction(instructeur:)
+    save!
+
+    RoutingEngine.compute(self)
   end
 
   def after_passer_en_construction
