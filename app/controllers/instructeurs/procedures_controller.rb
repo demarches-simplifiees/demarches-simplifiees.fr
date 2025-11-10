@@ -550,7 +550,8 @@ module Instructeurs
         :display_annotation_instructeur_notifications,
         :display_avis_externe_notifications,
         :display_attente_correction_notifications,
-        :display_attente_avis_notifications
+        :display_attente_avis_notifications,
+        :display_attente_reponse_notifications
       )
     end
   end

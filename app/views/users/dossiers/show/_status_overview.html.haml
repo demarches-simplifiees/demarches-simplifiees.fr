@@ -30,6 +30,14 @@
             .message.fr-background-alt--grey
               = render Dossiers::MessageComponent.new(commentaire: dossier.pending_correction.commentaire, connected_user: current_user)
 
+          - if dossier.awaiting_response.present?
+            = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+              - c.with_body do
+                %h4.card-title.fr-mb-1v= t('views.users.dossiers.dossiers_list.pending_response.title')
+                %p
+                  = t('views.users.dossiers.dossiers_list.pending_response.message')
+                  = link_to t('views.users.dossiers.show.header.mailbox_html'), messagerie_dossier_path(dossier), class: 'fr-link'
+
           %p{ role: 'status' }
             = t('views.users.dossiers.show.status_overview.en_construction_html')
 
@@ -39,6 +47,14 @@
 
       - elsif dossier.en_instruction?
         .en-instruction
+          - if dossier.awaiting_response.present?
+            = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+              - c.with_body do
+                %h4.card-title.fr-mb-1v= t('views.users.dossiers.dossiers_list.pending_response.title')
+                %p
+                  = t('views.users.dossiers.dossiers_list.pending_response.message')
+                  = link_to t('views.users.dossiers.show.header.mailbox_html'), messagerie_dossier_path(dossier), class: 'fr-link'
+
           %p{ role: 'status' }
             = t('views.users.dossiers.show.status_overview.admin_review')
 
