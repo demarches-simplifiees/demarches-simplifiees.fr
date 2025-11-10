@@ -21,9 +21,9 @@ module Maintenance
       end
     end
 
-    # we spread the fethes every 20 seconds per champ
+    # we spread the fethes every 10 seconds per champ
     def max_wait
-      count * 20
+      count * 10
     end
   end
 end
