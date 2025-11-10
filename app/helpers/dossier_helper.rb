@@ -244,6 +244,13 @@ module DossierHelper
     end
   end
 
+  def clean_string_for_pdf(str)
+    str
+      &.tr("\r", "\n")
+      &.gsub(/&nbsp;/, ' ')
+      &.lines&.map { _1.gsub(/[[:space:]]/, ' ').strip }&.join("\n") # replace non breaking space, which are invalid in pdf
+  end
+
   private
 
   def extract_notification_type(notification_or_type)

@@ -12,10 +12,6 @@ def maybe_start_new_page(pdf, size)
   end
 end
 
-def clean_string(str)
-  str&.each_line { _1.gsub(/[[:space:]]/, ' ') } # replace non breaking space, which are invalid in pdf
-end
-
 def text_box(pdf, text, x, width)
   box = ::Prawn::Text::Box.new(text.to_s,
     document: pdf,
@@ -164,11 +160,11 @@ def add_single_champ(pdf, champ)
 
       pdf.indent(default_margin) do
         champ.geo_areas.each do |area|
-          pdf.text "- #{clean_string(area.label)}"
+          pdf.text "- #{clean_string_for_pdf(area.label)}"
           if area.description.present?
             pdf.indent(8) do
               pdf.pad_bottom(4) do
-                pdf.text clean_string(area.description)
+                pdf.text clean_string_for_pdf(area.description)
               end
             end
           end
@@ -200,7 +196,7 @@ def add_single_champ(pdf, champ)
     format_in_2_lines(pdf, "Département :", champ.departement_code_and_name) if champ.departement?
   when 'Champs::TextareaChamp'
     value = champ.blank? ? 'Non communiqué' : champ.to_s
-    format_in_2_lines(pdf, tdc.libelle, clean_string(value))
+    format_in_2_lines(pdf, tdc.libelle, clean_string_for_pdf(value))
   else
     value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, value)
@@ -230,7 +226,7 @@ def add_message(pdf, message)
   end
 
   format_in_2_lines(pdf, "#{sender}, #{try_format_date(message.created_at)}",
-    ActionView::Base.full_sanitizer.sanitize(clean_string(message.body)))
+    ActionView::Base.full_sanitizer.sanitize(clean_string_for_pdf(message.body)))
 end
 
 def add_avis(pdf, avis)
@@ -266,14 +262,14 @@ def add_avis(pdf, avis)
     end
 
     pdf.font 'marianne', size: 12 do
-      pdf.text clean_string(message), color: "666666"
-      pdf.text clean_string(answer)
+      pdf.text clean_string_for_pdf(message), color: "666666"
+      pdf.text clean_string_for_pdf(answer)
     end
 
     if binary_question.present?
       pdf.pad_top(4) do
         pdf.font 'marianne', size: 12 do
-          pdf.text clean_string(binary_question), color: "666666"
+          pdf.text clean_string_for_pdf(binary_question), color: "666666"
           pdf.text binary_answer
         end
       end
@@ -284,7 +280,7 @@ end
 def add_etat_dossier(pdf, dossier)
   pdf.pad_bottom(default_margin) do
     pending_correction = dossier.pending_correction? ? " (en attente de correction)" : nil
-    pdf.text "Ce dossier est <b>#{clean_string(dossier_display_state(dossier, lower: true))}#{pending_correction}</b>.", inline_format: true
+    pdf.text "Ce dossier est <b>#{clean_string_for_pdf(dossier_display_state(dossier, lower: true))}#{pending_correction}</b>.", inline_format: true
   end
 end
 
@@ -338,7 +334,7 @@ prawn_document(page_size: "A4") do |pdf|
   add_etat_dossier(pdf, @dossier)
 
   if @dossier.motivation.present?
-    format_in_2_columns(pdf, "Motif de la décision", clean_string(@dossier.motivation))
+    format_in_2_columns(pdf, "Motif de la décision", clean_string_for_pdf(@dossier.motivation))
   end
   add_title(pdf, 'Historique')
   add_etats_dossier(pdf, @dossier)
