@@ -31,7 +31,7 @@ en:
       attente_reponse:
         for_user: "PENDING RESPONSE"
         for_instructeur: "pending response"
-        responded: "Responded"
+        responded: "Response given"
       traitement:
         state: "State"
       traitement/state:
