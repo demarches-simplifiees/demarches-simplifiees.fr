@@ -21,6 +21,6 @@ en:
         one: "Your previous file :"
         other: "Your last %{count} created files :" 
       already_created_details_html:
-        "N° %{id}, created %{created_at} ago and %{state}"
+        "N° %{id}, created %{created_at} ago, %{state}"
     closing_details:
       page_title: "Procedure %{libelle} is closed since %{closed_at}"
