@@ -69,13 +69,6 @@ module ChampExternalDataConcern
 
     def uses_external_data? = false
 
-    # TODO: move in private section after refactoring api entreprise jobs
-    def save_external_exception(exception, code)
-      exceptions = fetch_external_data_exceptions || []
-      exceptions << ExternalDataException.new(reason: exception.inspect, code:)
-      update_columns(fetch_external_data_exceptions: exceptions, data: nil, value_json: nil, value: nil)
-    end
-
     private
 
     def ready_for_external_call? = external_id.present?
@@ -116,6 +109,12 @@ module ChampExternalDataConcern
 
     def update_external_data!(data:)
       update!(data:, fetch_external_data_exceptions: [])
+    end
+
+    def save_external_exception(exception, code)
+      exceptions = fetch_external_data_exceptions || []
+      exceptions << ExternalDataException.new(reason: exception.inspect, code:)
+      update_columns(fetch_external_data_exceptions: exceptions)
     end
 
     def after_reset_external_data(opts = {})

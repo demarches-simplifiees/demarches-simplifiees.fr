@@ -51,6 +51,12 @@ class Champs::SiretChamp < Champ
     etablissement.present? ? etablissement.search_terms : [value]
   end
 
+  def save_additional_job_exception(exception, code)
+    exceptions = fetch_external_data_exceptions || []
+    exceptions << ExternalDataException.new(reason: exception.inspect, code:)
+    update_columns(fetch_external_data_exceptions: exceptions)
+  end
+
   private
 
   # We want to validate if SIRET really exists
