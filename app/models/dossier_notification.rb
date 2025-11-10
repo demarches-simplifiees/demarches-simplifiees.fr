@@ -2,6 +2,7 @@
 
 class DossierNotification < ApplicationRecord
   DELAY_DOSSIER_DEPOSE = 7.days
+  NON_CUSTOMISABLE_TYPE = [:dossier_expirant, :dossier_suppression].freeze
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
