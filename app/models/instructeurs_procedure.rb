@@ -11,7 +11,7 @@ class InstructeursProcedure < ApplicationRecord
     avis_externe: 'followed',
     attente_correction: 'followed',
     attente_avis: 'followed',
-    attente_reponse: 'followed'
+    attente_reponse: 'followed',
   }.freeze
 
   NOTIFICATION_COLUMNS = {

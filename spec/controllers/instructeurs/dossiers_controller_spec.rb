@@ -811,7 +811,7 @@ describe Instructeurs::DossiersController, type: :controller do
           procedure_id: procedure.id,
           dossier_id: dossier.id,
           commentaire: { body: body },
-          mark_as_pending_response: 'true'
+          mark_as_pending_response: 'true',
         }
       end
 
@@ -844,7 +844,7 @@ describe Instructeurs::DossiersController, type: :controller do
           procedure_id: procedure.id,
           dossier_id: dossier.id,
           commentaire: { body: body },
-          mark_as_pending_response: 'false'
+          mark_as_pending_response: 'false',
         }
       end
 
@@ -904,7 +904,7 @@ describe Instructeurs::DossiersController, type: :controller do
           file: file,
         },
         mark_as_pending_response: mark_as_pending_response,
-        statut: 'a-suivre'
+        statut: 'a-suivre',
       }
     }
 

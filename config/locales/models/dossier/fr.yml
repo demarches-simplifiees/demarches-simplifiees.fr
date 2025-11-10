@@ -31,7 +31,7 @@ fr:
       attente_reponse:
         for_user: "EN ATTENTE DE RÉPONSE"
         for_instructeur: "en attente de réponse"
-        responded: "Répondu"
+        responded: "Réponse donnée"
       traitement:
         state: "État"
       traitement/state:
