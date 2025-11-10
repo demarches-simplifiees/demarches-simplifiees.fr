@@ -21,17 +21,17 @@ class DossierNotification < ApplicationRecord
 
   scope :to_display, -> {
     where(display_at: ..Time.current)
-    .joins(:dossier)
-    .where(
-      "(NOT dossiers.archived
-        AND dossiers.hidden_by_expired_at IS NULL
-        AND dossiers.hidden_by_administration_at IS NULL)
-      OR (dossiers.archived
-        AND dossiers.hidden_by_expired_at IS NULL
-        AND dossiers.hidden_by_administration_at IS NULL
-        AND dossier_notifications.notification_type = 'dossier_expirant')
-      OR ((dossiers.hidden_by_expired_at IS NOT NULL OR dossiers.hidden_by_administration_at IS NOT NULL)
-       AND dossier_notifications.notification_type = 'dossier_suppression')"
+      .joins(:dossier)
+      .where(
+        "(NOT dossiers.archived
+          AND dossiers.hidden_by_expired_at IS NULL
+          AND dossiers.hidden_by_administration_at IS NULL)
+        OR (dossiers.archived
+          AND dossiers.hidden_by_expired_at IS NULL
+          AND dossiers.hidden_by_administration_at IS NULL
+          AND dossier_notifications.notification_type = 'dossier_expirant')
+        OR ((dossiers.hidden_by_expired_at IS NOT NULL OR dossiers.hidden_by_administration_at IS NOT NULL)
+        AND dossier_notifications.notification_type = 'dossier_suppression')"
       )
   }
 
@@ -53,10 +53,10 @@ class DossierNotification < ApplicationRecord
     return unless NON_CUSTOMISABLE_TYPE.include?(notification_type)
 
     instructeur_ids_by_dossier_id = Dossier
-        .where(id: dossiers)
-        .includes(groupe_instructeur: :instructeurs)
-        .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
-        .to_h
+      .where(id: dossiers)
+      .includes(groupe_instructeur: :instructeurs)
+      .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
+      .to_h
 
     create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
   end
@@ -268,7 +268,7 @@ class DossierNotification < ApplicationRecord
       'suivis' => notifications.merge(Dossier.by_statut('suivis', instructeur:)).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'archives' => notifications.merge(Dossier.by_statut('archives')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
-      'supprimes' => notifications.merge(Dossier.by_statut('supprimes')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) }
+      'supprimes' => notifications.merge(Dossier.by_statut('supprimes')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
     }
 
     dossiers = Dossier
