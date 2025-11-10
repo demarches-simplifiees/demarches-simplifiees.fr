@@ -93,6 +93,17 @@
           - c.with_body do
             = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id, class: 'fr-link')
 
+      - if dossier.awaiting_response.present?
+        = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+          - c.with_body do
+            %h4.card-title.fr-mb-1v= t('views.users.dossiers.dossiers_list.pending_response.title')
+            %p
+              = t('views.users.dossiers.dossiers_list.pending_response.message')
+              = link_to t('views.users.dossiers.show.header.mailbox_html'), messagerie_dossier_path(dossier), class: 'fr-link'
+              %span.visually-hidden
+                = t('views.users.dossiers.dossiers_list.n_dossier')
+                = number_with_html_delimiter(dossier.id)
+
       - if dossier.transfer.present?
         - if @statut == "dossiers-transferes"
           = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
