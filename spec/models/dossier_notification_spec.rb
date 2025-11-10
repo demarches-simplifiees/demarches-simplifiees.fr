@@ -239,7 +239,7 @@ RSpec.describe DossierNotification, type: :model do
       let!(:dossier_to_notify_2) { create(:dossier, :en_construction) }
       let!(:dossier_not_to_notify) { create(:dossier, :en_construction) }
 
-      before { [dossier_to_notify, dossier_to_notify_2].each { |d| d.update(expired_at: 2.weeks.from_now)} }
+      before { [dossier_to_notify, dossier_to_notify_2].each { |d| d.update(expired_at: 2.weeks.from_now) } }
 
       it "returns only dossiers termine or en_construction close to expiration" do
         expect(subject).to contain_exactly(dossier_to_notify, dossier_to_notify_2)
