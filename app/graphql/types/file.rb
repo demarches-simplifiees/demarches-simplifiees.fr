@@ -9,6 +9,7 @@ module Types
     field :checksum, String, null: false
     field :content_type, String, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, "Date de création du fichier.", null: false
+    field :virus_scan_result, String, null: false
 
     def url
       if object.is_a?(Hash)

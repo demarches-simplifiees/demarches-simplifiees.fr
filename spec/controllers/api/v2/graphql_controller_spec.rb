@@ -872,6 +872,25 @@ describe API::V2::GraphqlController do
         }
       end
 
+      context "virusScanResult" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              champs(id: \"#{champ.to_typed_id}\") {
+                ... on PieceJustificativeChamp {
+                  files { virusScanResult }
+                }
+              }
+            }
+          }"
+        end
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data).to eq(dossier: { champs: [{ files: [{ virusScanResult: 'safe' }] }] })
+        }
+      end
+
       context "when the file is really big" do
         before do
           champ.piece_justificative_file.first.blob.update(byte_size: byte_size)
