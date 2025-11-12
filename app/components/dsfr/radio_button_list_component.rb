@@ -23,4 +23,10 @@ class Dsfr::RadioButtonListComponent < ApplicationComponent
       yield(*button.values_at(:label, :value, :hint, :tooltip), **button.merge!(index:).except(:label, :value, :hint, :tooltip))
     end
   end
+
+  def label_options(button_options)
+    {
+      for: button_options[:id],
+    }.compact
+  end
 end
