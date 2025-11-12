@@ -24,18 +24,24 @@
         %button.fr-btn.fr-btn--tertiary.fr-mb-2w{ type: 'button', data: { 'hide-target-target': 'reveal'} } Annuler
       %li
         - if local_assigns[:connected_user]&.is_a?(Instructeur)
-          - menu_id = dom_id(commentaire, :send_message_menu)
-          .relative{ data: { controller: 'toggle' }, style: 'display: block;' }
-            .fr-hidden{ id: menu_id, data: { toggle_target: 'content' }, style: 'position: absolute; left: 0; bottom: 100%; margin-bottom: 0.5rem; z-index: 9999; background: white; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.1); min-width: 300px; height: auto; pointer-events: auto;' }
-              %ul.fr-menu.relative.fr-p-2v.fr-m-0{ role: 'menu', style: 'list-style: none; height: auto;' }
-                %li{ role: 'none' }
-                  %button.fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-m-0{ type: 'submit', name: 'mark_as_pending_response', value: 'true', role: 'menuitem', data: { disable: true }, style: 'width: 100%; text-align: left; justify-content: flex-start; white-space: nowrap; height: auto; min-height: 48px; line-height: normal; position: relative; padding: 0.75rem 1rem; pointer-events: auto;' }
-                    %span{ "aria-hidden" => "true" }
-                    = t('views.shared.dossiers.messages.form.send_message_and_mark')
-                    %span.fr-badge.fr-badge--sm.fr-ml-1w= t('views.shared.dossiers.messages.form.pending_response_badge')
+          - has_pending_response = local_assigns[:dossier]&.pending_response?
+          - if has_pending_response
+            = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
+          - else
+            - menu_id = dom_id(commentaire, :send_message_menu)
+            - menu_button_id = dom_id(commentaire, :send_message_toggle)
+            .relative{ data: { controller: 'toggle' }, style: 'display: block;' }
+              .fr-hidden{ id: menu_id, data: { toggle_target: 'content' }, style: 'position: absolute; left: 0; bottom: 100%; margin-bottom: 0.5rem; z-index: 9999; background: white; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.1); min-width: 300px; height: auto; pointer-events: auto;' }
+                %ul.fr-menu.relative.fr-p-2v.fr-m-0{ role: 'menu', aria: { labelledby: menu_button_id }, style: 'list-style: none; height: auto;' }
+                  %li{ role: 'none' }
+                    %button.fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-m-0{ type: 'submit', name: 'mark_as_pending_response', value: 'true', role: 'menuitem', tabindex: '-1', data: { disable: true }, style: 'width: 100%; text-align: left; justify-content: flex-start; white-space: nowrap; height: auto; min-height: 48px; line-height: normal; position: relative; padding: 0.75rem 1rem; pointer-events: auto;' }
+                      %span.fr-icon-draft-line{ "aria-hidden" => "true" }
+                      = t('views.shared.dossiers.messages.form.send_message_and_mark')
+                      %span.fr-badge.fr-badge--sm.fr-ml-1w= t('views.shared.dossiers.messages.form.pending_response_badge')
 
-            .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--split{ style: 'flex-wrap: nowrap;' }
-              = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn fr-mr-0', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
-              %button.fr-btn.fr-icon-arrow-down-s-line.fr-m-0{ type: 'button', title: t('views.shared.dossiers.messages.form.more_options'), 'aria-expanded' => 'false', 'aria-controls' => menu_id, style: 'border-left: 1px solid #fff', data: { action: 'click->toggle#toggle', toggle_target: 'button' } }
+              .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--split{ style: 'flex-wrap: nowrap;' }
+                = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn fr-mr-0', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
+                %button.fr-btn.fr-icon-arrow-down-s-line.fr-m-0{ id: menu_button_id, type: 'button', aria: { label: t('views.shared.dossiers.messages.form.more_options'), haspopup: 'menu', expanded: 'false', controls: menu_id }, style: 'border-left: 1px solid #fff;', data: { action: 'click->toggle#toggle', toggle_target: 'button' } }
+                  %span.fr-icon-arrow-down-s-line{ "aria-hidden" => "true" }
         - else
           = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
