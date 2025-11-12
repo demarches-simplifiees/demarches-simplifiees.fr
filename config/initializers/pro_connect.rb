@@ -14,5 +14,5 @@ if ENV['PRO_CONNECT_BASE_URL'].present?
     secret: ENV.fetch('PRO_CONNECT_SECRET'),
     token_endpoint: discover.token_endpoint,
     userinfo_endpoint: discover.userinfo_endpoint,
-  }
+  }.freeze
 end
