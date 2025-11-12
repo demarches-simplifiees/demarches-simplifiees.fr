@@ -465,4 +465,52 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_content("Informations complémentaires au champ Numéro Siret")
     end
   end
+
+  context "Commune and Address field modals" do
+    let(:procedure) do
+      create(:procedure, types_de_champ_public: [
+        { type: :communes, libelle: "Commune de résidence" },
+        { type: :address, libelle: "Adresse du domicile" },
+      ])
+    end
+
+    scenario "loads modal content only when clicked" do
+      visit champs_admin_procedure_path(procedure)
+
+      # Test Commune field
+      type_de_champ_elements = all('.type-de-champ')
+      within type_de_champ_elements.first do
+        expect(page).not_to have_content("Informations complémentaires au champ Commune")
+        click_button "Liste des informations remontées"
+      end
+
+      within "#api-champ-columns-modal" do
+        expect(page).to have_content("Informations complémentaires au champ Commune")
+        expect(page).to have_content("Commune")
+        expect(page).to have_content("Code INSEE")
+        expect(page).to have_content("Département")
+
+        click_button "Fermer"
+      end
+
+      expect(page).not_to have_selector("#api-champ-columns-modal[open]")
+
+      # Test Address field
+      within type_de_champ_elements.last do
+        expect(page).not_to have_content("Informations complémentaires au champ Adresse")
+        click_button "Liste des informations remontées"
+      end
+
+      within "#api-champ-columns-modal" do
+        expect(page).to have_content("Informations complémentaires au champ Adresse")
+        expect(page).to have_content("Adresse")
+        expect(page).to have_content("Code INSEE")
+        expect(page).to have_content("Département")
+
+        click_button "Fermer"
+      end
+
+      expect(page).not_to have_selector("#api-champ-columns-modal[open]")
+    end
+  end
 end

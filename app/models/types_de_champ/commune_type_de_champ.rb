@@ -54,6 +54,10 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
     )
   end
 
+  def info_columns(procedure:)
+    Dossiers::CommuneComponent.data_labels
+  end
+
   private
 
   def paths
