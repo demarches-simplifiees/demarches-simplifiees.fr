@@ -204,7 +204,7 @@
   z-index: 11;
   list-style: none;
 
-  a {
+  a:not(.fr-notice__link) {
     background-image: none; // remove DSFR underline
   }
 
