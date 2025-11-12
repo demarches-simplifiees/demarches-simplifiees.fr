@@ -16,14 +16,10 @@ class TypesDeChamp::SiretTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def info_columns(procedure:)
-    regex_prefix = /^#{Regexp.escape(libelle)}([^\p{L}]+SIRET)?[^\p{L}]+/
+    # Get base labels from columns (with libelle prefix removed automatically by parent)
+    column_labels = super(procedure:)
 
-    column_labels = super(procedure:).filter_map do |column|
-      # Remove tdc libelle prefix added in columns:
-      # Numéro SIRET - Entreprise SIREN => Entreprise SIREN
-      column.label.sub(regex_prefix, '')
-    end
-
+    # Add exportable columns that are not in the main columns
     column_labels.concat Etablissement::EXPORTABLE_COLUMNS.keys.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
 
     # Hardcode non columns data

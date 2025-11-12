@@ -115,7 +115,13 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def info_columns(procedure:)
-    columns(procedure:)
+    # Extract labels from columns, removing the libelle prefix automatically
+    # Example: "Commune - code postal" => "code postal"
+    regex_prefix = /^#{Regexp.escape(libelle)}[^\p{L}]+/
+
+    columns(procedure:).filter_map do |column|
+      column.label.sub(regex_prefix, '')
+    end
   end
 
   private
