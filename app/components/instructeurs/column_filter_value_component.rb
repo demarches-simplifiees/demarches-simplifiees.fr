@@ -53,7 +53,15 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def radio_button_options
-    column_filter_options.map { |opt_label, opt_value| { label: opt_label, value: opt_value, checked: opt_value.to_s.in?(value), data: { turbo_force: :server } } }
+    column_filter_options.map.with_index do |(opt_label, opt_value)|
+      {
+        label: opt_label,
+        value: opt_value,
+        checked: opt_value.to_s.in?(value),
+        id: input_id(value: opt_value),
+        data: { turbo_force: :server },
+      }
+    end
   end
 
   def date_filter_options
@@ -94,8 +102,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     }
   end
 
-  def input_id
-    "value_#{filtered_column&.id&.parameterize}"
+  def input_id(value: nil)
+    ["value", filtered_column&.id&.parameterize, value].compact.join('_')
   end
 
   private

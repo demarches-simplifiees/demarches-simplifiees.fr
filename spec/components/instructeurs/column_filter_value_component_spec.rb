@@ -47,8 +47,8 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
       let(:mandatory) { true }
       it do
         expect(page).to have_selector('input[name="filter[filter][value][]"][type="radio"]', count: 2)
-        expect(page).to have_selector('label[for="filter[filter][value][]_true"]', text: 'oui')
-        expect(page).to have_selector('label[for="filter[filter][value][]_false"]', text: 'non')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_true"]', text: 'oui')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_false"]', text: 'non')
       end
     end
 
@@ -57,9 +57,9 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
       it do
         expect(page).to have_selector('input[name="filter[filter][value][]"][type="radio"]', count: 3)
-        expect(page).to have_selector('label[for="filter[filter][value][]_true"]', text: 'oui')
-        expect(page).to have_selector('label[for="filter[filter][value][]_false"]', text: 'non')
-        expect(page).to have_selector('label[for="filter[filter][value][]_nil"]', text: 'Non renseigné')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_true"]', text: 'oui')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_false"]', text: 'non')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_nil"]', text: 'Non renseigné')
       end
     end
   end
@@ -72,8 +72,8 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
       it do
         expect(page).to have_selector('input[name="filter[filter][value][]"][type="radio"]', count: 2)
-        expect(page).to have_selector('label[for="filter[filter][value][]_true"]', text: 'coché')
-        expect(page).to have_selector('label[for="filter[filter][value][]_false"]', text: 'non coché')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_true"]', text: 'coché')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_false"]', text: 'non coché')
       end
     end
 
@@ -82,8 +82,8 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
       it do
         expect(page).to have_selector('input[name="filter[filter][value][]"][type="radio"]', count: 2)
-        expect(page).to have_selector('label[for="filter[filter][value][]_true"]', text: 'coché')
-        expect(page).to have_selector('label[for="filter[filter][value][]_false"]', text: 'non coché')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_true"]', text: 'coché')
+        expect(page).to have_selector('label[for="value_filter-operator-match-value-value_false"]', text: 'non coché')
       end
     end
   end

@@ -5,7 +5,7 @@
     .fr-fieldset__element{ class: ("fr-fieldset__element--inline" if @inline) }
       .fr-radio-group
         = @form.radio_button @target, value, **button_options.except(:index)
-        = @form.label @target, value: value, class: 'fr-label' do
+        = @form.label @target, value: value, class: 'fr-label', **label_options(button_options) do
           - capture do
             = label
 
