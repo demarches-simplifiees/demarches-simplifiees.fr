@@ -22,7 +22,6 @@ module Instructeurs
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
     after_action :mark_avis_as_read, only: [:avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
-    after_action :mark_pieces_jointes_as_read, only: [:pieces_jointes]
     after_action -> { destroy_notification(:dossier_modifie) }, only: [:show], if: -> { @notifications.any?(&:dossier_modifie?) }
     after_action -> { destroy_notification(:message) }, only: [:messagerie], if: -> { @notifications.any?(&:message?) }
     after_action -> { destroy_notification(:annotation_instructeur) }, only: [:annotations_privees], if: -> { @notifications.any?(&:annotation_instructeur?) }
@@ -560,10 +559,6 @@ module Instructeurs
 
     def mark_annotations_privees_as_read
       current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
-    end
-
-    def mark_pieces_jointes_as_read
-      current_instructeur.mark_tab_as_seen(dossier, :pieces_jointes)
     end
 
     def aasm_error_message(exception, target_state:)

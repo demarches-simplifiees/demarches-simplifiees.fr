@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_04_131811) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -732,7 +732,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_04_131811) do
     t.integer "dossier_id", null: false
     t.integer "instructeur_id", null: false
     t.datetime "messagerie_seen_at", precision: nil, null: false
-    t.datetime "pieces_jointes_seen_at"
     t.datetime "unfollowed_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["dossier_id"], name: "index_follows_on_dossier_id"
