@@ -40,17 +40,26 @@
     </react-fragment>
 
   <% else %>
-    <%= form.label input_id, label, class: 'fr-label' %>
-    <div class="flex">
-      <%= form.text_field "filter[filter][value][]",
-        id: input_id,
-        class: 'fr-input',
-        type:,
-        value:,
-        disabled: column.nil?,
-        maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
-        data: { no_autosubmit: true } %>
-      <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+    <div class="default-filter">
+      <%= render Dsfr::InputComponent.new(
+        form:,
+        attribute: "filter[filter][value][]",
+        required: false,
+        opts: {
+          id: input_id,
+          type: type,
+          value: Array(value).first,
+          maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
+          data: { no_autosubmit: true },
+        },
+      ) do |c| %>
+        <% c.with_label do %>
+          <%= label %>
+        <% end %>
+        <% c.with_button do %>
+          <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 </div>
