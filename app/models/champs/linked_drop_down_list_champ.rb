@@ -29,7 +29,7 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def secondary_value=(value)
-    new_secondary_value = secondary_options[primary_value].include?(value) ? value : ""
+    new_secondary_value = secondary_options[primary_value]&.include?(value) ? value : ""
     pack_value(primary_value, new_secondary_value)
   end
 

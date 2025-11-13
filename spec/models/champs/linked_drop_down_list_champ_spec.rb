@@ -54,6 +54,16 @@ describe Champs::LinkedDropDownListChamp do
       champ.secondary_value = '22'
       expect(champ.value).to eq('["1",""]')
     }
+
+    context "when an administrateur has deleted the primary value" do
+      let(:options) { ["--1--", "11", "0", "--2--", "22", "0"] }
+      let(:value) { '["3", "33"]' }
+
+      it {
+        champ.secondary_value = 'O'
+        expect(champ.value).to eq('["",""]')
+      }
+    end
   end
 
   describe '#to_s' do
