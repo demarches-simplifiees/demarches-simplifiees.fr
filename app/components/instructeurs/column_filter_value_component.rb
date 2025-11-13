@@ -53,7 +53,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def radio_button_options
-    column_filter_options.map.with_index do |(opt_label, opt_value)|
+    column_filter_options.map do |(opt_label, opt_value)|
       {
         label: opt_label,
         value: opt_value,
