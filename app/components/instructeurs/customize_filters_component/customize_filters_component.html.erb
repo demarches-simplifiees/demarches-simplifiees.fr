@@ -1,20 +1,22 @@
 <div id="<%= id %>">
   <div class="fr-grid-row">
-    <div class="fr-col-7 fr-pr-2w flex column flex-gap-2">
-      <% filters_selects.each do |filter_select| %>
-        <div class="fr-card fr-p-2w">
-          <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), data: { turbo: true }, id: "form-#{filter_select[:label].parameterize}" do |form| %>
-            <%= filters_in_hidden_inputs(form, filter_select[:label].parameterize) %>
-            <div class="flex align-end flex-gap-2">
-              <div class="flex flex-1 column">
-                <%= form.label "filters_columns[]", filter_select[:label], class: "fr-label", for: "select-#{filter_select[:label].parameterize}" %>
-                <%= form.select "filters_columns[]", filter_select[:items], { prompt: t('.select'), required: true, disabled: disabled_items, selected: "" }, class: 'fr-select width-100', id:  "select-#{filter_select[:label].parameterize}" %>
+    <div class="fr-col-7 fr-pr-2w">
+      <div class="flex column flex-gap-2">
+        <% filters_selects.each do |filter_select| %>
+          <div class="fr-card fr-p-2w">
+            <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), data: { turbo: true }, id: "form-#{filter_select[:label].parameterize}" do |form| %>
+              <%= filters_in_hidden_inputs(form, filter_select[:label].parameterize) %>
+              <div class="flex align-end flex-gap-2">
+                <div class="flex flex-1 column">
+                  <%= form.label "filters_columns[]", filter_select[:label], class: "fr-label", for: "select-#{filter_select[:label].parameterize}" %>
+                  <%= form.select "filters_columns[]", filter_select[:items], { prompt: t('.select'), required: true, disabled: disabled_items, selected: "" }, class: 'fr-select width-100', id:  "select-#{filter_select[:label].parameterize}" %>
+                </div>
+                <%= form.submit t('.add'), class: "fr-btn", disabled: filter_select[:items].empty? %>
               </div>
-              <%= form.submit t('.add'), class: "fr-btn", disabled: filter_select[:items].empty? %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
 
     <div class="fr-col-5">
