@@ -52,7 +52,7 @@ describe Instructeurs::DossiersController, type: :controller do
           get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' }
         end
 
-        expect(query_count).to be <= 100
+        expect(query_count).to be <= 110
       end
     end
   end

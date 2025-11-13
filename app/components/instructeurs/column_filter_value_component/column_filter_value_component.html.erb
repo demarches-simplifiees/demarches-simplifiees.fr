@@ -1,0 +1,66 @@
+<div class="flex column" id="<%= id %>">
+  <%= operator_hidden_field %>
+  <% if boolean? %>
+    <%= render Dsfr::RadioButtonListComponent.new(form:,
+      target: "filter[filter][value][]",
+      buttons: radio_button_options,
+      inline: true,
+    ) do %>
+      <%= label %>
+    <% end %>
+
+  <% elsif is_date? %>
+    <fieldset class="fr-fieldset flex-1">
+      <legend class="fr-fieldset__legend fr-fieldset__legend--regular "><%= filtered_column&.label %></legend>
+      <div class="fr-fieldset__element fr-fieldset__element--inline">
+        <div class="flex column">
+          <%= form.label "filter[filter][operator]", t(".operator"), class: 'fr-label', for: input_id(value: "operator") %>
+          <%= form.select "filter[filter][operator]",
+            options_for_select(date_filter_options, selected: operator), {}, { id: input_id(value: "operator"), class: 'fr-select', data: { autosubmit_target: 'input', } } %>
+        </div>
+      </div>
+      <% if is_operator_with_value? %>
+        <div class="fr-fieldset__element fr-fieldset__element--inline">
+          <%= render Dsfr::InputComponent.new(form:, attribute: "filter[filter][value][]", input_type: :date_field, required: false, opts: { id: input_id(value: "value") }) do |c| %>
+            <% c.with_label do %>
+              <%= t(".operators.#{operator}") %>
+            <% end %>
+            <% c.with_button do %>
+              <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </fieldset>
+
+  <% elsif selectable? %>
+    <%= form.label input_id, label, class: 'fr-label' %>
+    <react-fragment>
+      <%= render ReactComponent.new "ComboBox/MultiComboBox", **react_props %>
+    </react-fragment>
+
+  <% else %>
+    <div class="default-filter">
+      <%= render Dsfr::InputComponent.new(
+        form:,
+        attribute: "filter[filter][value][]",
+        required: false,
+        opts: {
+          id: input_id,
+          type: type,
+          value: Array(value).first,
+          maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
+          data: { no_autosubmit: true },
+        },
+      ) do |c| %>
+        <% c.with_label do %>
+          <%= label %>
+        <% end %>
+        <% c.with_button do %>
+          <%= form.button t('.update'), class: 'fr-btn fr-icon-search-line' %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
