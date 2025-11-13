@@ -343,33 +343,26 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#reset_link_sent' do
-    let(:instructeur) { create(:instructeur, user: user) }
-    before { sign_in(user) }
-    subject { post :reset_link_sent }
+    subject { post :reset_link_sent, params: params }
+    let(:params) { {} }
 
-    context 'when the instructeur is signed without trust_device_token' do
-      it 'send InstructeurMailer.send_login_token' do
-        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything, anything).and_return(double(deliver_later: true))
-        expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(1)
+    context 'when the instructeur is not signed in but provides a valid signed email' do
+      let(:instructeur) { create(:instructeur) }
+      let(:signed_email) do
+        controller.message_encryptor_service.encrypt_and_sign(instructeur.email, purpose: :reset_link)
       end
-    end
+      let(:params) { { email: signed_email } }
 
-    context 'when the instructeur is signed with an young trust_device_token' do
-      before { instructeur.create_trusted_device_token }
-      it 'doesnot send InstructeurMailer.send_login_token' do
-        expect(InstructeurMailer).not_to receive(:send_login_token)
-        expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(0)
-      end
-    end
-
-    context 'when the instructeur is signed with an old trust_device_token' do
-      let(:token) { instructeur.create_trusted_device_token }
       before do
-        travel_to 15.minutes.from_now
+        allow(controller).to receive(:signed_email_for_instructeur)
+          .with(instructeur)
+          .and_return('un-joli-jeton')
       end
-      it 'send InstructeurMailer.send_login_token' do
+
+      it 'sends the login token and redirects to link_sent' do
         expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything, anything).and_return(double(deliver_later: true))
         expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(1)
+        expect(response).to redirect_to(link_sent_path(email: 'un-joli-jeton'))
       end
     end
   end

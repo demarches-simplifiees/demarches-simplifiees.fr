@@ -30,12 +30,18 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def reset_link_sent
-    if send_login_token_or_bufferize(current_instructeur)
+    instructeur = instructeur_from_signed_email(params[:email])
+
+    if instructeur.nil?
+      redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated')
+      return
+    end
+
+    if send_login_token_or_bufferize(instructeur)
       flash[:notice] = "Nous venons de vous renvoyer un nouveau lien de connexion sécurisée à #{Current.application_name}"
     end
 
-    signed_email = message_encryptor_service.encrypt_and_sign(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
-    redirect_to link_sent_path(email: signed_email)
+    redirect_to link_sent_path(email: signed_email_for_instructeur(instructeur))
   end
 
   def link_sent
@@ -43,6 +49,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if StrictEmailValidator::REGEXP.match?(email)
       @email = email
+      @signed_email = params[:email]
     else
       redirect_to root_path
     end
@@ -109,8 +116,7 @@ class Users::SessionsController < Devise::SessionsController
       flash[:alert] = 'Votre lien est expiré, un nouveau vient de vous être envoyé.'
 
       send_login_token_or_bufferize(instructeur)
-      signed_email = message_encryptor_service.encrypt_and_sign(instructeur.email, purpose: :reset_link, expires_in: 1.hour)
-      redirect_to link_sent_path(email: signed_email)
+      redirect_to link_sent_path(email: signed_email_for_instructeur(instructeur))
     end
   end
 
@@ -137,6 +143,21 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
+
+  def signed_email_for_instructeur(instructeur)
+    message_encryptor_service.encrypt_and_sign(instructeur.email, purpose: :reset_link, expires_in: 1.hour)
+  end
+
+  def instructeur_from_signed_email(signed_email)
+    return if signed_email.blank?
+
+    email = message_encryptor_service.decrypt_and_verify(signed_email, purpose: :reset_link)
+    return if email.blank?
+
+    Instructeur.by_email(email)
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveSupport::MessageEncryptor::InvalidMessage
+    nil
+  end
 
   def user_email_params
     params.require(:user).permit(:email)
