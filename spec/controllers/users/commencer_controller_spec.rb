@@ -475,6 +475,7 @@ describe Users::CommencerController, type: :controller do
       it 'shows only ProConnect button for anonymous user' do
         subject
         assert_response :success
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: procedure.path))
         expect(response.body).to include("S’identifier avec ProConnect")
         expect(response.body).to include("Seuls les agents disposant d’un compte ProConnect peuvent y accéder")
         expect(response.body).not_to include('france_connect')
