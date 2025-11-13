@@ -11,7 +11,7 @@
 
   <% elsif is_date? %>
     <fieldset class="fr-fieldset flex-1">
-      <legend class="fr-fieldset__legend"><%= filtered_column&.label %></legend>
+      <legend class="fr-fieldset__legend fr-fieldset__legend--regular "><%= filtered_column&.label %></legend>
       <div class="fr-fieldset__element fr-fieldset__element--inline">
         <div class="flex column">
           <%= form.label "filter[filter][operator]", t(".operator"), class: 'fr-label', for: input_id(value: "operator") %>
