@@ -2057,6 +2057,47 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe 'pro_connect_restriction' do
+    let(:user) { create(:user) }
+    let(:procedure) { create(:procedure, :for_individual, :published, pro_connect_restriction: :all) }
+    let(:brouillon) { create(:dossier, :brouillon, user:, procedure:) }
+
+    before { sign_in user }
+
+    context 'when user is ProConnected' do
+      before do
+        cookies.encrypted[:pro_connect_session_info] = { user_id: user.id }.to_json
+      end
+
+      it 'allows creating a dossier' do
+        post :new, params: { procedure_id: procedure.id }
+        expect(response).to redirect_to(identite_dossier_path(Dossier.last))
+      end
+
+      it 'allows submitting' do
+        post :submit_brouillon, params: { id: brouillon.id, dossier: {} }
+        brouillon.reload
+        expect(brouillon).to be_en_construction
+      end
+    end
+
+    context 'when user is not ProConnected' do
+      it 'does not allow create new dossier and redirects to pro_connect' do
+        expect { post :new, params: { procedure_id: procedure.id } }.not_to change { Dossier.count }
+        expect(response).to redirect_to(pro_connect_path)
+        expect(flash[:alert]).to include("ProConnect")
+      end
+
+      it 'redirects to pro_connect' do
+        post :submit_brouillon, params: { id: brouillon.id, dossier: {} }
+        expect(response).to redirect_to(pro_connect_path)
+        expect(flash[:alert]).to include("ProConnect")
+        brouillon.reload
+        expect(brouillon).to be_brouillon
+      end
+    end
+  end
+
   private
 
   def find_champ_by_stable_id(dossier, stable_id)

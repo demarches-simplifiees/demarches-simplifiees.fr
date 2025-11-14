@@ -18,13 +18,7 @@
               .fr-fieldset__element
                 %p= t('.explanation')
 
-                .fr-connect-group.fr-my-2w
-                  = link_to(pro_connect_login_path, class: "fr-btn fr-connect") do
-                    %span.fr-connect__login
-                      = t('.signin_with')
-                    %span.fr-connect__brand ProConnect
-                  %p
-                    = link_to t('.whats_proconnect'), 'https://www.proconnect.gouv.fr/', target: '_blank', rel: "noopener"
+                = render ProConnectLoginComponent.new
 
             - if !params[:force_pro_connect]
               %p.fr-hr-or= t('views.shared.france_connect_login.separator')

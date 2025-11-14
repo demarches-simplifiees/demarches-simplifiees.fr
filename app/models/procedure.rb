@@ -16,7 +16,7 @@ class Procedure < ApplicationRecord
   include Discard::Model
   self.discard_column = :hidden_at
 
-  self.ignored_columns += ["api_entreprise_token_expires_at"]
+  self.ignored_columns += ["api_entreprise_token_expires_at", "pro_connect_restricted"]
 
   default_scope -> { kept }
 
@@ -216,6 +216,12 @@ class Procedure < ApplicationRecord
     other: 'other',
   }, prefix: true
 
+  enum :pro_connect_restriction, {
+    none: 'none',
+    instructeurs: 'instructeurs',
+    all: 'all',
+  }, prefix: true
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
@@ -333,6 +339,14 @@ class Procedure < ApplicationRecord
     event :unpublish, after: :after_unpublish do
       transitions from: :publiee, to: :depubliee
     end
+  end
+
+  def enable_pro_connect_restriction!(level)
+    update!(
+      pro_connect_restriction: level,
+      opendata: level == :all ? false : opendata,
+      robots_indexable: level == :all ? false : robots_indexable
+    )
   end
 
   def check_administrateur_minimal_presence(_object)

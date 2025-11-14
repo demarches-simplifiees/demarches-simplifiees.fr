@@ -7,7 +7,5 @@ fr:
       full_deploy_body: Tous les ministères et opérateurs peuvent l'utiliser à ce jour
       you_are_a_citizen: Vous êtes un particulier ?
       citizen_page: Se connecter sur votre espace
-      signin_with: "S'identifier avec"
-      whats_proconnect: 'Quʼest ce que ProConnect ?'
       whats_ds: '%{application_name}, la plateforme nationale de dématérialisation des démarches administratives'
       pro_email: Adresse électronique professionnelle
