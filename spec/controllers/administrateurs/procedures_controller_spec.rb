@@ -1810,6 +1810,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it do
           expect(procedure.reload.pro_connect_restricted).to be true
+          expect(procedure.pro_connect_restriction_instructeurs?).to be true
           expect(flash.notice).to eq("La démarche est restreinte à ProConnect")
           expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
         end
@@ -1822,6 +1823,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it do
           expect(procedure.reload.pro_connect_restricted).to be false
+          expect(procedure.pro_connect_restriction_none?).to be true
           expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect")
           expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
         end

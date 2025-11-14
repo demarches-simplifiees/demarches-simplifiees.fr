@@ -83,6 +83,7 @@ module ProcedureCloneConcern
     'api_particulier_token',
     'no_gender',
     'pro_connect_restricted',
+    'pro_connect_restriction',
     'robots_indexable',
   ]
 
@@ -182,6 +183,8 @@ module ProcedureCloneConcern
     procedure.template = false
     procedure.labels = labels.map(&:dup)
     procedure.routing_alert = false
+    procedure.pro_connect_restricted = false
+    procedure.pro_connect_restriction = :none
     procedure.robots_indexable = true
     procedure
   end

@@ -216,6 +216,12 @@ class Procedure < ApplicationRecord
     other: 'other',
   }, prefix: true
 
+  enum :pro_connect_restriction, {
+    none: 'none',
+    instructeurs: 'instructeurs',
+    all: 'all',
+  }, prefix: true
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
@@ -333,6 +339,13 @@ class Procedure < ApplicationRecord
     event :unpublish, after: :after_unpublish do
       transitions from: :publiee, to: :depubliee
     end
+  end
+
+  # Dual-write: synchronize pro_connect_restricted (boolean) → pro_connect_restriction (enum)
+  # le temps de déployer le changement de colonne dans une autre PR.
+  def pro_connect_restricted=(value)
+    super(value)
+    self.pro_connect_restriction = pro_connect_restricted ? :instructeurs : :none
   end
 
   def check_administrateur_minimal_presence(_object)
