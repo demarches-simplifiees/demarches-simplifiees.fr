@@ -153,6 +153,24 @@ class RdvService
     parsed_body["rdvs"]
   end
 
+  def get_account_info
+    refresh_token_if_expired!
+
+    response = Typhoeus.get(
+      "#{self.class.rdv_sp_host_url}/api/v1/agents/me",
+      headers:
+    )
+
+    if !response.success?
+      error_message = "RdvService#list_rdvs failed #{response.code} #{response.body}"
+      Rails.logger.error(error_message)
+      Sentry.capture_message(error_message)
+      return {}
+    end
+
+    JSON.parse(response.body)["agent"]
+  end
+
   def refresh_token_if_expired!
     return if !@rdv_connection.expired?
 
