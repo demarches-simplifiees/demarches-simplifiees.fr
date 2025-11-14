@@ -2,8 +2,10 @@
 
 class DataSources::AdresseController < ApplicationController
   def search
-    if params[:q].present? && params[:q].length > 3
-      response = fetch_results
+    query = clean_query(params[:q])
+
+    if query.present?
+      response = fetch_results(query)
 
       if response.success?
         results = JSON.parse(response.body, symbolize_names: true)
@@ -28,7 +30,21 @@ class DataSources::AdresseController < ApplicationController
 
   private
 
-  def fetch_results
-    Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: params[:q], limit: 10 }, timeout: 3)
+  def clean_query(query)
+    # this method prevents API errors :
+    # {"code":400,"message":"Failed parsing query","detail":["q: must contain between 3 and 200 chars and start with a number or a letter"]}
+
+    sanitized = query.to_s.strip
+    sanitized = sanitized.gsub(/\s+/, " ") # replace multiple spaces with a single space
+    sanitized = sanitized.sub(/\A[^[:alnum:]]+/, "") # remove leading non-alphanumeric characters
+
+    return nil if sanitized.length < 3
+    sanitized = sanitized[0...200] if sanitized.length > 200
+
+    sanitized
+  end
+
+  def fetch_results(query)
+    Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: query, limit: 10 }, timeout: 3)
   end
 end
