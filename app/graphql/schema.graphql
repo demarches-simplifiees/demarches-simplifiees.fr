@@ -1697,7 +1697,7 @@ type Dossier {
   traitements: [Traitement!]!
 
   """
-  Profile de l'usager déposant le dossier
+  Profil de l'usager déposant le dossier
   """
   usager: Profile!
 }

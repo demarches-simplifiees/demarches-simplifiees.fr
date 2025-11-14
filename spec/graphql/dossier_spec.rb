@@ -11,22 +11,55 @@ RSpec.describe Types::DossierType, type: :graphql do
   let(:errors) { subject['errors'] }
 
   describe 'dossier with attestation' do
-    let(:dossier) { create(:dossier, :accepte, :with_attestation_acceptation) }
-    let(:query) { DOSSIER_WITH_ATTESTATION_QUERY }
-    let(:variables) { { number: dossier.id } }
+    context 'when dossier is accepted' do
+      let(:dossier) { create(:dossier, :accepte, :with_attestation_acceptation) }
+      let(:query) { DOSSIER_WITH_ATTESTATION_QUERY }
+      let(:variables) { { number: dossier.id } }
 
-    it do
-      expect(data[:dossier][:attestation]).not_to be_nil
-      expect(data[:dossier][:traitements]).to eq([{ state: 'accepte' }])
-      expect(data[:dossier][:dateExpiration]).not_to be_nil
-    end
-
-    context 'when attestation is nil' do
-      before do
-        dossier.update(attestation: nil)
+      it do
+        expect(data[:dossier][:attestation]).not_to be_nil
+        expect(data[:dossier][:traitements]).to eq([{ state: 'accepte' }])
+        expect(data[:dossier][:dateExpiration]).not_to be_nil
       end
 
-      it { expect(data[:dossier][:attestation]).to be_nil }
+      context 'when attestation template is not activated' do
+        before { dossier.procedure.attestation_acceptation_template.update(activated: false) }
+
+        it { expect(data[:dossier][:attestation]).to be_nil }
+      end
+    end
+
+    context 'when dossier is refused' do
+      let(:dossier) { create(:dossier, :refuse, :with_attestation_refus) }
+      let(:query) { DOSSIER_WITH_ATTESTATION_QUERY }
+      let(:variables) { { number: dossier.id } }
+
+      it do
+        expect(data[:dossier][:attestation]).not_to be_nil
+        expect(data[:dossier][:traitements]).to eq([{ state: 'refuse' }])
+        expect(data[:dossier][:dateExpiration]).not_to be_nil
+      end
+
+      context 'when attestation template is not activated' do
+        before { dossier.procedure.attestation_refus_template.update(activated: false) }
+
+        it { expect(data[:dossier][:attestation]).to be_nil }
+      end
+    end
+
+    context 'when dossier is refused but only acceptation template is activated' do
+      let(:dossier) { create(:dossier, :refuse) }
+      let(:query) { DOSSIER_WITH_ATTESTATION_QUERY }
+      let(:variables) { { number: dossier.id } }
+
+      before do
+        dossier.procedure.attestation_acceptation_template = build(:attestation_template, activated: true)
+        dossier.procedure.save!
+      end
+
+      it 'should not return attestation for refused dossier when only acceptation template exists' do
+        expect(data[:dossier][:attestation]).to be_nil
+      end
     end
   end
 
