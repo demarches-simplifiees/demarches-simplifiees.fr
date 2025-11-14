@@ -351,7 +351,7 @@ describe Users::SessionsController, type: :controller do
       let(:signed_email) do
         controller.message_encryptor_service.encrypt_and_sign(instructeur.email, purpose: :reset_link)
       end
-      let(:params) { { email: signed_email } }
+      let(:params) { { signed_email: } }
 
       before do
         allow(controller).to receive(:signed_email_for_instructeur)

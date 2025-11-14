@@ -18,7 +18,7 @@
     %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
       = t('views.confirmation.new.email_missing')
 
-    = button_to instructeurs_reset_link_sent_path(email: @signed_email), class: 'fr-btn fr-btn--secondary', method: 'POST' do
+    = button_to instructeurs_reset_link_sent_path(signed_email: @signed_email), class: 'fr-btn fr-btn--secondary', method: 'POST' do
       = t('views.confirmation.new.resent')
 
     %p.fr-text--sm.fr-text-mention--grey.fr-mt-3w

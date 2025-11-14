@@ -30,7 +30,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def reset_link_sent
-    instructeur = instructeur_from_signed_email(params[:email])
+    instructeur = instructeur_from_signed_email(params[:signed_email])
 
     if instructeur.nil?
       redirect_to new_user_session_path, alert: t('devise.failure.unauthenticated')
