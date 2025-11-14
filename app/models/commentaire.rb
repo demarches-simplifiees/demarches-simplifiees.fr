@@ -6,6 +6,7 @@ class Commentaire < ApplicationRecord
   belongs_to :instructeur, inverse_of: :commentaires, optional: true
   belongs_to :expert, inverse_of: :commentaires, optional: true
   has_one :dossier_correction, inverse_of: :commentaire, dependent: :nullify
+  has_one :dossier_pending_response, inverse_of: :commentaire, dependent: :nullify
 
   validate :messagerie_available?, on: :create, unless: -> { dossier.brouillon? }
 
@@ -110,6 +111,10 @@ class Commentaire < ApplicationRecord
 
   def flagged_pending_correction?
     DossierCorrection.exists?(commentaire: self)
+  end
+
+  def flagged_pending_response?
+    DossierPendingResponse.exists?(commentaire: self)
   end
 
   private
