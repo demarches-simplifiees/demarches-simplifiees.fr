@@ -3,9 +3,7 @@
 module Instructeurs
   class RdvConnectionsController < InstructeurController
     def index
-      # respond_to do |format|
-      #   format.turbo_stream
-      # end
+      @rdv_email = RdvService.new(rdv_connection: current_instructeur.rdv_connection).get_account_info["email"]
     end
   end
 end
