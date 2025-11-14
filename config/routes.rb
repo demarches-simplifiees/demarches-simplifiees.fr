@@ -460,7 +460,7 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    resources :rdv_connections, only: [:index]
+    resource :rdv_connections, only: [:show, :destroy]
     resources :procedures, only: [] do
       resources :export_templates, only: [:new, :create, :edit, :update, :destroy] do
         collection do

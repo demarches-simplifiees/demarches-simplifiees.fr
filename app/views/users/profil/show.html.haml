@@ -85,3 +85,6 @@
               method: :delete,
               data: { confirm: t('.unlink_confirmation', full_name: fci.full_name) },
               class: 'fr-btn fr-btn--secondary fr-ml-2w'
+
+  - if instructeur_signed_in? && current_instructeur.rdv_connection
+    = turbo_frame_tag "rdv-connection-info", loading: :lazy, src: instructeur_rdv_connections_path
