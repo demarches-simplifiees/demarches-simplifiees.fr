@@ -455,12 +455,14 @@ describe API::V2::GraphqlController do
                   checksum
                   byteSize
                   contentType
+                  virusScanResult
                 }
                 attachments {
                   filename
                   checksum
                   byteSize
                   contentType
+                  virusScanResult
                 }
               }
               avis {
@@ -553,6 +555,7 @@ describe API::V2::GraphqlController do
                 contentType: commentaire.piece_jointe.first.content_type,
                 checksum: commentaire.piece_jointe.first.checksum,
                 byteSize: commentaire.piece_jointe.first.byte_size,
+                virusScanResult: commentaire.piece_jointe.first.virus_scan_result,
               },
               attachments: commentaire.piece_jointe.map do |pj|
                 {
@@ -560,6 +563,7 @@ describe API::V2::GraphqlController do
                   contentType: pj.content_type,
                   checksum: pj.checksum,
                   byteSize: pj.byte_size,
+                  virusScanResult: pj.virus_scan_result,
                 }
               end,
               email: commentaire.email,
@@ -870,6 +874,39 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to be_nil
           expect(gql_data).to eq(dossier: { champs: [{ files: [{ byteSize: 4 }] }] })
         }
+      end
+
+      context "virusScanResult" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              champs(id: \"#{champ.to_typed_id}\") {
+                ... on PieceJustificativeChamp {
+                  files { virusScanResult }
+                }
+              }
+            }
+          }"
+        end
+
+        context "when virus scan is safe" do
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data).to eq(dossier: { champs: [{ files: [{ virusScanResult: 'safe' }] }] })
+          }
+        end
+
+        context "when virus scan is pending" do
+          before do
+            champ.piece_justificative_file.first.blob.update(virus_scan_result: 'pending')
+            champ.piece_justificative_file.first.blob.metadata.delete(:virus_scan_result)
+          end
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data).to eq(dossier: { champs: [{ files: [{ virusScanResult: 'pending' }] }] })
+          }
+        end
       end
 
       context "when the file is really big" do

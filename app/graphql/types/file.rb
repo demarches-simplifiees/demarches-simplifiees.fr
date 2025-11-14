@@ -9,12 +9,21 @@ module Types
     field :checksum, String, null: false
     field :content_type, String, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, "Date de création du fichier.", null: false
+    field :virus_scan_result, String, null: false
 
     def url
       if object.is_a?(Hash)
         object[:url]
       else
         object.url
+      end
+    end
+
+    def virus_scan_result
+      if object.is_a?(Hash)
+        object[:virus_scan_result] || ActiveStorage::VirusScanner::PENDING
+      else
+        object.virus_scan_result || object.metadata[:virus_scan_result] || ActiveStorage::VirusScanner::PENDING
       end
     end
   end

@@ -3006,6 +3006,7 @@ type File {
   createdAt: ISO8601DateTime!
   filename: String!
   url: URL!
+  virusScanResult: String!
 }
 
 input FindDemarcheInput @oneOf {

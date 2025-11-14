@@ -336,6 +336,7 @@ class SerializerService
       checksum
       byteSize: byteSizeBigInt
       contentType
+      virusScanResult
     }
 
     fragment ChampDescriptorFragment on ChampDescriptor {
