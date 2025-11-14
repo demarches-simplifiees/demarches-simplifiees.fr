@@ -18,7 +18,8 @@ export default function MapEditor({
   adresseSource,
   options,
   champId,
-  translations
+  translations,
+  ariaLabelledbyPrefix
 }: {
   featureCollection: FeatureCollection;
   url: string;
@@ -26,6 +27,7 @@ export default function MapEditor({
   options: { layers: string[] };
   champId: string;
   translations: Record<string, string>;
+  ariaLabelledbyPrefix?: string;
 }) {
   const [parcellesEnabled, setParcellesEnabled] = useState(false);
 
@@ -39,7 +41,6 @@ export default function MapEditor({
   return (
     <>
       {error && <FlashMessage message={error} level="alert" fixed={true} />}
-
       <ImportFileInput
         featureCollection={featureCollection}
         translations={translations}
@@ -50,8 +51,8 @@ export default function MapEditor({
         champId={champId}
         featureCollection={featureCollection}
         translations={translations}
+        ariaLabelledbyPrefix={ariaLabelledbyPrefix}
       />
-
       <MapLibre layers={options.layers}>
         <DrawLayer
           featureCollection={featureCollection}
