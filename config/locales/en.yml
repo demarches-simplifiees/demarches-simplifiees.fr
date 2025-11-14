@@ -837,8 +837,6 @@ en:
       default: "%B %d %Y %R"
       long: "%d %B %y %H:%M"
       human: "%A %-d %B at %Hh%M"
-      long_date: "%A %d %B %Y"
-      long_datetime: "%A %d %B %Y at %H:%M"
       short_date: "%d/%m/%Y"
       short_datetime: "%b %d %Y %I:%M %p"
   dates:
