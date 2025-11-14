@@ -32,6 +32,7 @@ class Procedure < ApplicationRecord
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
+  has_many :llm_rule_suggestions, through: :revisions
 
   def draft_types_de_champ_public = draft_revision&.types_de_champ_public || []
   def draft_types_de_champ_private = draft_revision&.types_de_champ_private || []

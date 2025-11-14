@@ -1,0 +1,44 @@
+<div class="fr-card fr-card--sm fr-my-2w">
+  <div class="fr-card__body">
+    <div class="fr-card__title">
+      <% if op_kind == 'add' %>
+        <span class="fr-badge fr-badge--info fr-mr-1w">Ajout de section</span>
+        <%= payload['libelle'] %>
+      <% elsif op_kind == 'update' && original_tdc %>
+        <span class="fr-badge fr-badge--warning fr-mr-1w">Réorganisation</span>
+        <%= original_tdc.libelle %>
+      <% end %>
+    </div>
+
+    <div class="fr-card__desc">
+      <ul class="fr-pl-0">
+        <% if op_kind == 'update' %>
+          <li><strong>Nouvelle position :</strong> <%= position %></li>
+          <% if payload.key?('mandatory') %>
+            <li><strong>Champ obligatoire :</strong> <%= mandatory? ? 'Oui' : 'Non' %></li>
+          <% end %>
+        <% elsif op_kind == 'add' %>
+          <li><strong>Position :</strong> <%= position %></li>
+          <% if type_champ.present? %>
+            <li><strong>Type :</strong> <%= type_champ %></li>
+          <% end %>
+        <% end %>
+      </ul>
+
+      <% if item.justification.present? %>
+        <p class="fr-hint-text fr-mt-2w">
+          <%= confidence_badge %>
+          <%= item.justification %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="fr-card__footer">
+    <div class="fr-checkbox-group">
+      <%= checkbox do %>
+        Appliquer cette modification
+      <% end %>
+    </div>
+  </div>
+</div>
