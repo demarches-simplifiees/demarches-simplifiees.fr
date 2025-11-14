@@ -851,7 +851,7 @@ fr:
       long_date: "%A %-d %B %Y"
       long_datetime: "%A %-d %B %Y à %H:%M"
       short_date: "%d/%m/%Y"
-      short_datetime: "%d/%m/%Y %H:%M"
+      short_datetime: "Le %d/%m/%Y %H:%M"
   datetime:
     formats:
       long: "%d %B %y %H:%M"
