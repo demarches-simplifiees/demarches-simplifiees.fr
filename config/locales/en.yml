@@ -30,12 +30,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  time:
-    formats:
-      long_date: "%A %d %B %Y"
-      long_datetime: "%A %d %B %Y at %H:%M"
-      short_date: "%d/%m/%Y"
-      short_datetime: "%d/%m/%Y %H:%M"
   insee_down: INSEE is unavailable, company information will arrive within a few hours.
   invisible_captcha:
     sentence_for_humans: 'If you are a human, ignore this field'
@@ -841,6 +835,12 @@ en:
   time:
     formats:
       default: "%B %d %Y %R"
+      long: "%d %B %y %H:%M"
+      human: "%A %-d %B at %Hh%M"
+      long_date: "%A %d %B %Y"
+      long_datetime: "%A %d %B %Y at %H:%M"
+      short_date: "%d/%m/%Y"
+      short_datetime: "%b %d %Y %H:%M"
   dates:
     today: "Today"
     yesterday: "Yesterday"
