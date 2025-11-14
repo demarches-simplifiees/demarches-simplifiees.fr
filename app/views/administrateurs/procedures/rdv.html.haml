@@ -47,7 +47,5 @@
                 hint: "Les instructeurs pourront configurer le rendez-vous via le site de RDV Service Public : date et horaire, type de rendez-vous (téléphone, visioconférence, présentiel)",
                 opt: { "checked" => @procedure.rdv_enabled? })
 
-        = turbo_frame_tag "rdv-connection-info", loading: :lazy, src: instructeur_rdv_connections_path do
-          %p Hello world
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8' )
