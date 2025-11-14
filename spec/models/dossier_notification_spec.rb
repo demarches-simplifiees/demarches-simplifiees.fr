@@ -2,15 +2,41 @@
 
 RSpec.describe DossierNotification, type: :model do
   describe '.to_display' do
-    let(:past_notification) { create(:dossier_notification) }
-    let(:future_notification) { create(:dossier_notification, display_at: 1.day.from_now) }
+    context "when there is a display deadline" do
+      let(:past_notification) { create(:dossier_notification) }
+      let(:future_notification) { create(:dossier_notification, display_at: 1.day.from_now) }
 
-    it 'includes notifications where display_at is in the past or now' do
-      expect(DossierNotification.to_display).to include(past_notification)
+      it 'includes notifications where display_at is in the past or now and excludes notifications where display_at is in the future' do
+        expect(DossierNotification.to_display).to include(past_notification)
+        expect(DossierNotification.to_display).not_to include(future_notification)
+      end
     end
 
-    it 'excludes notifications where display_at is in the future' do
-      expect(DossierNotification.to_display).not_to include(future_notification)
+    context "when the are notifications on achived dossier" do
+      let(:dossier_archived) { create(:dossier, :archived) }
+      let!(:expirant_notification) { create(:dossier_notification, dossier: dossier_archived, notification_type: :dossier_expirant) }
+      let!(:other_notification) { create(:dossier_notification, dossier: dossier_archived, notification_type: :message) }
+
+      it "only displays :dossier_expirant notification" do
+        expect(DossierNotification.to_display).to include(expirant_notification)
+        expect(DossierNotification.to_display).not_to include(other_notification)
+      end
+    end
+
+    context "when the are notifications on hidden dossier" do
+      let(:dossier_expired) { create(:dossier, :hidden_by_expired) }
+      let(:dossier_hidden) { create(:dossier, :hidden_by_administration) }
+      let!(:suppression_notification_for_expired) { create(:dossier_notification, dossier: dossier_expired, notification_type: :dossier_suppression) }
+      let!(:other_notification_for_expired) { create(:dossier_notification, dossier: dossier_expired, notification_type: :message) }
+      let!(:suppression_notification_for_hidden) { create(:dossier_notification, dossier: dossier_hidden, notification_type: :dossier_suppression) }
+      let!(:other_notification_for_hidden) { create(:dossier_notification, dossier: dossier_hidden, notification_type: :message) }
+
+      it "only displays :dossier_suppression notification" do
+        expect(DossierNotification.to_display).to include(suppression_notification_for_expired)
+        expect(DossierNotification.to_display).not_to include(other_notification_for_expired)
+        expect(DossierNotification.to_display).to include(suppression_notification_for_hidden)
+        expect(DossierNotification.to_display).not_to include(other_notification_for_hidden)
+      end
     end
   end
 
@@ -204,6 +230,30 @@ RSpec.describe DossierNotification, type: :model do
 
       it "returns only dossiers en_construction without followers" do
         expect(subject).to contain_exactly(dossier_to_notify)
+      end
+    end
+
+    context "when notification_type is dossier_expirant" do
+      let(:notification_type) { :dossier_expirant }
+      let!(:dossier_to_notify) { create(:dossier, :accepte) }
+      let!(:dossier_to_notify_2) { create(:dossier, :en_construction) }
+      let!(:dossier_not_to_notify) { create(:dossier, :en_construction) }
+
+      before { [dossier_to_notify, dossier_to_notify_2].each { |d| d.update(expired_at: 2.weeks.from_now) } }
+
+      it "returns only dossiers termine or en_construction close to expiration" do
+        expect(subject).to contain_exactly(dossier_to_notify, dossier_to_notify_2)
+      end
+    end
+
+    context "when notification_type is dossier_suppression" do
+      let(:notification_type) { :dossier_suppression }
+      let!(:dossier_to_notify) { create(:dossier, :accepte, hidden_by_administration_at: Time.zone.yesterday) }
+      let!(:dossier_to_notify_2) { create(:dossier, :en_construction, hidden_by_expired_at: Time.zone.yesterday) }
+      let!(:dossier_not_to_notify) { create(:dossier, :en_construction, hidden_by_administration_at: nil, hidden_by_expired_at: nil) }
+
+      it "returns only dossiers expired or hidden by administration" do
+        expect(subject).to contain_exactly(dossier_to_notify, dossier_to_notify_2)
       end
     end
 

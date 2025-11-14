@@ -45,7 +45,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
 
     if column.column == 'notification_type'
       options.filter! do |_, type|
-        @instructeur_procedure&.notification_preference_for(type) != 'none'
+        DossierNotification::NON_CUSTOMISABLE_TYPE.include?(type) || @instructeur_procedure&.notification_preference_for(type) != 'none'
       end
     end
 

@@ -374,6 +374,53 @@ describe Expired::DossiersDeletionService do
     end
   end
 
+  describe "#update_notifications_dossiers_en_construction" do
+    subject { service.update_notifications_dossiers_en_construction }
+
+    context "when there is no notification yet for dossiers en construction close to expiration" do
+      let(:instructeur) { create(:instructeur) }
+      let(:other_instructeur) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur]) }
+      let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur:) }
+
+      before { dossier.update(expired_at: 2.weeks.from_now) }
+
+      it "creates :dossier_expirant notification for all instructeurs with the correct delay" do
+        expect { subject }.to change { DossierNotification.count }.from(0).to(2)
+
+        notifs = DossierNotification.where(notification_type: :dossier_expirant)
+        expect(notifs.pluck(:dossier_id).uniq).to eq([dossier.id])
+        expect(notifs.pluck(:instructeur_id)).to match_array([instructeur.id, other_instructeur.id])
+        expect(notifs.pluck(:display_at).map(&:to_date).uniq).to eq([Time.zone.today])
+      end
+    end
+
+    context "when the are :dossier_expirant notifications on expired dossiers" do
+      let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: 2.weeks.ago) }
+      let!(:notification_expirant) { create(:dossier_notification, dossier:, notification_type: :dossier_expirant) }
+
+      it "destroys :dossier_expirant notifications" do
+        expect { subject }.to change { DossierNotification.where(notification_type: :dossier_expirant).count }.from(1).to(0)
+      end
+    end
+
+    context "when the are new expired dossiers" do
+      let(:instructeur) { create(:instructeur) }
+      let(:other_instructeur) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur]) }
+      let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur:, en_construction_close_to_expiration_notice_sent_at: 2.weeks.ago) }
+
+      it "creates :dossier_suppression notification for all instructeurs with the correct delay" do
+        expect { subject }.to change { DossierNotification.where(notification_type: :dossier_suppression).count }.by(2)
+
+        notifs = DossierNotification.where(notification_type: :dossier_suppression)
+        expect(notifs.pluck(:dossier_id).uniq).to eq([dossier.id])
+        expect(notifs.pluck(:instructeur_id)).to match_array([instructeur.id, other_instructeur.id])
+        expect(notifs.pluck(:display_at).map(&:to_date).uniq).to eq([Time.zone.today])
+      end
+    end
+  end
+
   describe '#send_termine_expiration_notices' do
     before { travel_to(reference_date) }
     let(:procedure_opts) do
@@ -572,6 +619,53 @@ describe Expired::DossiersDeletionService do
         expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).once
         expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(match_array([dossier_2]), instructeur.email)
         expect(DossierMailer).not_to have_received(:notify_automatic_deletion_to_administration).with([dossier_2], dossier_2.procedure.administrateurs.first.email)
+      end
+    end
+  end
+
+  describe "#update_notifications_dossiers_termine" do
+    subject { service.update_notifications_dossiers_termine }
+
+    context "when there is no notification yet for dossiers termine close to expiration" do
+      let(:instructeur) { create(:instructeur) }
+      let(:other_instructeur) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur]) }
+      let!(:dossier) { create(:dossier, :accepte, groupe_instructeur:) }
+
+      before { dossier.update(expired_at: 2.weeks.from_now) }
+
+      it "creates :dossier_expirant notification for all instructeurs with the correct delay" do
+        expect { subject }.to change { DossierNotification.count }.from(0).to(2)
+
+        notifs = DossierNotification.where(notification_type: :dossier_expirant)
+        expect(notifs.pluck(:dossier_id).uniq).to eq([dossier.id])
+        expect(notifs.pluck(:instructeur_id)).to match_array([instructeur.id, other_instructeur.id])
+        expect(notifs.pluck(:display_at).map(&:to_date).uniq).to eq([Time.zone.today])
+      end
+    end
+
+    context "when the are :dossier_expirant notifications on expired dossiers" do
+      let(:dossier) { create(:dossier, :accepte, termine_close_to_expiration_notice_sent_at: 2.weeks.ago) }
+      let!(:notification_expirant) { create(:dossier_notification, dossier:, notification_type: :dossier_expirant) }
+
+      it "destroys :dossier_expirant notifications" do
+        expect { subject }.to change { DossierNotification.where(notification_type: :dossier_expirant).count }.from(1).to(0)
+      end
+    end
+
+    context "when the are new expired dossiers" do
+      let(:instructeur) { create(:instructeur) }
+      let(:other_instructeur) { create(:instructeur) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur, other_instructeur]) }
+      let!(:dossier) { create(:dossier, :accepte, groupe_instructeur:, termine_close_to_expiration_notice_sent_at: 2.weeks.ago) }
+
+      it "creates :dossier_suppression notification for all instructeurs with the correct delay" do
+        expect { subject }.to change { DossierNotification.where(notification_type: :dossier_suppression).count }.by(2)
+
+        notifs = DossierNotification.where(notification_type: :dossier_suppression)
+        expect(notifs.pluck(:dossier_id).uniq).to eq([dossier.id])
+        expect(notifs.pluck(:instructeur_id)).to match_array([instructeur.id, other_instructeur.id])
+        expect(notifs.pluck(:display_at).map(&:to_date).uniq).to eq([Time.zone.today])
       end
     end
   end
