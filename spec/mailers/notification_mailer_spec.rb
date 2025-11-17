@@ -141,7 +141,7 @@ RSpec.describe NotificationMailer, type: :mailer do
         expect(mail.body).to have_link(href: dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
       end
 
-      context "when user has preferred domain" do
+      context "when user has preferred domain", skip: true do
         let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
         it 'adjusts links and sender email for user preferred domain' do

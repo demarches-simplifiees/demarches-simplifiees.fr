@@ -30,7 +30,7 @@ RSpec.describe DossierMailer, type: :mailer do
 
     it_behaves_like 'a dossier notification'
 
-    context "when user prefers new domain" do
+    context "when user prefers new domain", skip: true do
       let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
       it 'includes the correct body content and sender email' do
@@ -367,7 +367,7 @@ RSpec.describe DossierMailer, type: :mailer do
       end
     end
 
-    context 'when recipient has preferred domain' do
+    context 'when recipient has preferred domain', skip: true do
       let(:dossier_transfer) { create(:dossier_transfer, email: create(:user, preferred_domain: :demarche_numerique_gouv_fr).email) }
       it 'includes a link with the preferred domain in the email body' do
         expect(subject.body).to include(dossiers_url(statut: "dossiers-transferes", host: 'demarche.numerique.gouv.fr'))

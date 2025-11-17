@@ -19,7 +19,7 @@ RSpec.describe UserMailer, type: :mailer do
 
       it { expect(subject.body).to have_link("Commencer la démarche « #{procedure.libelle} »", href: commencer_sign_in_url(path: procedure.path, host: ENV.fetch("APP_HOST_LEGACY"))) }
 
-      context "when user has preferred domain" do
+      context "when user has preferred domain", skip: true do
         let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
         it do

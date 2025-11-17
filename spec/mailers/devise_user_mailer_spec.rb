@@ -56,7 +56,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         end
       end
 
-      context "new domain" do
+      context "new domain", skip: true do
         let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
         it "respect preferred domain" do
@@ -79,7 +79,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         end
       end
 
-      context "new domain" do
+      context "new domain", skip: true do
         let(:user) { create(:user, preferred_domain: :demarche_numerique_gouv_fr) }
 
         it "respect preferred domain" do

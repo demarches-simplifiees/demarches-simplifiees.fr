@@ -30,15 +30,19 @@ module MailerDefaultsConfigurableConcern
     def configure_defaults_for_user(user, forced_domain = nil)
       return if !user.is_a?(User) # not for super-admins
 
-      if user.preferred_domain_demarche_numerique_gouv_fr?
-        set_currents_for_demarche_numerique_gouv_fr
-      elsif forced_domain == ApplicationHelper::APP_HOST
-        set_currents_for_demarche_numerique_gouv_fr
-      elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
-        set_currents_for_legacy
-      else
-        set_currents_for_legacy
-      end
+      # Temporaire avant migration: tous les emails partent par demarcehs-simplifiees.fr
+      # le temps de config brevo
+      set_currents_for_legacy
+
+      # if user.preferred_domain_demarche_numerique_gouv_fr?
+      #   set_currents_for_demarche_numerique_gouv_fr
+      # elsif forced_domain == ApplicationHelper::APP_HOST
+      #   set_currents_for_demarche_numerique_gouv_fr
+      # elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
+      #   set_currents_for_legacy
+      # else
+      #   set_currents_for_legacy
+      # end
 
       # Define mailer defaults
       from = derive_from_header
