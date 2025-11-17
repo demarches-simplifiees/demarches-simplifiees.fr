@@ -212,14 +212,6 @@ describe RdvService do
     end
   end
 
-  describe '.rdv_sp_rdv_agent_url' do
-    it 'returns the RDV agent URL' do
-      rdv_id = "789"
-      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/agents/rdvs/#{rdv_id}"
-      expect(described_class.rdv_sp_rdv_agent_url(rdv_id)).to eq(expected_url)
-    end
-  end
-
   describe '.list_rdvs_url' do
     it 'returns the list RDVs URL with query parameters' do
       rdv_ids = ["123", "456"]

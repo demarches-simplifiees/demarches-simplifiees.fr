@@ -33,10 +33,6 @@ class RdvService
     "#{rdv_sp_host_url}/users/rdvs/#{rdv_id}"
   end
 
-  def self.rdv_sp_rdv_agent_url(rdv_id)
-    "#{rdv_sp_host_url}/agents/rdvs/#{rdv_id}"
-  end
-
   def self.list_rdvs_url(rdv_ids)
     params = rdv_ids.map { |id| "id[]=#{id}" }.join('&')
     "#{rdv_sp_host_url}/api/v1/rdvs?#{params}"
