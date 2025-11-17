@@ -102,14 +102,14 @@ describe "procedure filters" do
   describe 'with dropdown' do
     let(:types_de_champ_public) { [{ type: :drop_down_list }] }
 
-    scenario "should be able to user custom fiters", js: true do
+    scenario "should be able to user custom filters", js: true do
       # use date filter
       add_filter("informations-dossier", "Date de passage en construction")
       add_filter_value("Le", "2010-10-10", type: :date)
 
       # use statut dropdown filter
-      add_filter("informations-dossier", 'État du dossier')
-      add_filter_value('État du dossier', 'En construction', type: :multi_select)
+      add_filter("informations-dossier", 'Labels')
+      add_filter_value('Labels', 'Complet', type: :multi_select)
 
       # use choice dropdown filter
       add_filter("formulaire-usager", 'Choix unique')
@@ -211,7 +211,6 @@ describe "procedure filters" do
         expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       end
 
-      add_filter("informations-dossier", 'Labels')
       add_filter_value('Labels', second_label.name, type: :multi_select)
 
       within ".dossiers-table" do
@@ -242,6 +241,7 @@ describe "procedure filters" do
 
     within "#form-#{filter_select_category}" do
       select column_name, from: "select-#{filter_select_category}"
+      expect(page).to have_button("Ajouter", disabled: false)
       click_button "Ajouter"
     end
 
@@ -284,14 +284,12 @@ describe "procedure filters" do
     expect(page).to have_content("Personnaliser les critères de recherche / filtres")
     expect(page).to have_content("Votre sélection de critères")
 
-    # Check that we have the 3 default filters listed on the page
+    # Check that we have the 3 default filters in the correct order listed on the page
     within ".fr-col-5" do
-      expect(page).to have_content("N° dossier")
-      expect(page).to have_content("État du dossier")
-      expect(page).to have_content("Notifications sur le dossier")
+      expect(page).to have_content(/(État du dossier).*(N° dossier).*(Notifications sur le dossier)/)
     end
 
-    # Delete the first filter
+    # Delete the "N° dossier" filter
     within ".fr-col-5" do
       # Find the filter box containing "N° dossier" and click its delete button
       within ".filter-box", text: "N° dossier" do
@@ -299,7 +297,7 @@ describe "procedure filters" do
       end
     end
 
-    # Check that the filter is deleted
+    # Check that the "N° dossier" filter is deleted
     within ".fr-col-5" do
       expect(page).not_to have_content("N° dossier")
     end
@@ -307,12 +305,35 @@ describe "procedure filters" do
     # Add a new filter
     within "#form-informations-usager" do
       select "Demandeur", from: "select-informations-usager"
+      expect(page).to have_button("Ajouter", disabled: false)
       click_button "Ajouter"
     end
 
     # Check that the filter is added
     within ".fr-col-5" do
-      expect(page).to have_content("Demandeur")
+      expect(page).to have_content(/(État du dossier).*(Notifications sur le dossier).*(Demandeur)/)
+    end
+
+    # Move up the Demandeur filter
+    within ".fr-col-5" do
+      within ".filter-box", text: "Demandeur" do
+        find('button.fr-icon-arrow-up-line').click
+      end
+    end
+
+    within ".fr-col-5" do
+      expect(page).to have_content(/(État du dossier).*(Demandeur).*(Notifications sur le dossier)/)
+    end
+
+    # Move down the État du dossier filter
+    within ".fr-col-5" do
+      within ".filter-box", text: "État du dossier" do
+        find('button.fr-icon-arrow-down-line').click
+      end
+    end
+
+    within ".fr-col-5" do
+      expect(page).to have_content(/(Demandeur).*(État du dossier).*(Notifications sur le dossier)/)
     end
 
     # Click on the "Valider" button it should redirect to the procedure page
@@ -324,9 +345,8 @@ describe "procedure filters" do
 
     # Check that the filters are available in the editable-filters-component
     within "#editable-filters-component" do
-      expect(page).to have_content("Demandeur")
-      expect(page).to have_content("État du dossier")
-      expect(page).to have_content("Notifications sur le dossier")
+      # Regex to check that the filters are displayed in the order they were added
+      expect(page).to have_content(/(Demandeur).*(État du dossier).*(Notifications sur le dossier)/)
       expect(page).not_to have_content("N° dossier")
     end
   end
