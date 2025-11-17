@@ -9,7 +9,7 @@
       %li N° #{d.id} (#{d.procedure.libelle})
 
 %p
-  = t('.footer', count: @hidden_dossiers.size)
+  = t('.footer', count: @hidden_dossiers.size, deletion_date: human_date(@deletion_date.to_date))
   = link_to("mes dossiers", dossiers_url)
   \.
 

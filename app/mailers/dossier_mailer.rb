@@ -110,6 +110,7 @@ class DossierMailer < ApplicationMailer
     I18n.with_locale(dossiers.first.user_locale) do
       @subject = default_i18n_subject(count: dossiers.size)
       @dossiers = dossiers
+      @expiration_date = Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
 
       mail(to: to_email, subject: @subject)
     end
@@ -149,6 +150,7 @@ class DossierMailer < ApplicationMailer
       @state = hidden_dossiers.first.state
       @subject = default_i18n_subject(count: hidden_dossiers.size)
       @hidden_dossiers = hidden_dossiers
+      @deletion_date = Time.zone.now + Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks
 
       mail(to: to_email, subject: @subject)
     end
@@ -159,6 +161,7 @@ class DossierMailer < ApplicationMailer
 
     @subject = default_i18n_subject(count: hidden_dossiers.size)
     @hidden_dossiers = hidden_dossiers
+    @deletion_date = Time.zone.now + Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks
 
     mail(to: to_email, subject: @subject)
   end
@@ -170,6 +173,7 @@ class DossierMailer < ApplicationMailer
       @state = dossiers.first.state
       @subject = default_i18n_subject(count: dossiers.size, state: @state)
       @dossiers = dossiers
+      @expiration_date = Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
 
       mail(to: to_email, subject: @subject)
     end
@@ -181,6 +185,7 @@ class DossierMailer < ApplicationMailer
     @state = dossiers.first.state
     @subject = default_i18n_subject(count: dossiers.size, state: @state)
     @dossiers = dossiers
+    @expiration_date = Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
 
     mail(to: to_email, subject: @subject)
   end
