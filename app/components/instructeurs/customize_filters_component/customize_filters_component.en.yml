@@ -4,6 +4,8 @@ en:
   add: Add
   clear_filter: Clear the filter « %{filter_label} »
   delete_filter: Delete the filter « %{filter_label} »
+  move_up_filter: Move the filter « %{filter_label} » up
+  move_down_filter: Move the filter « %{filter_label} » down
   file_information: File information
   user_information: User information
   user_form: User form

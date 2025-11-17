@@ -50,6 +50,64 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
     end
   end
 
+  def move_up_button(filter_column)
+    current_index = filters_columns.index(filter_column)
+    return nil if current_index.nil?
+
+    can_move_up = !current_index.zero?
+    reordered_columns = if can_move_up
+      columns = filters_columns.dup
+      columns[current_index], columns[current_index - 1] = columns[current_index - 1], columns[current_index]
+      columns
+    else
+      filters_columns
+    end
+
+    button_to(
+      refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation),
+      method: :post,
+      class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-up-line',
+      disabled: !can_move_up,
+      params: {
+        filters_columns: reordered_columns.map(&:id),
+        statut: @statut,
+      }.compact,
+      form: { data: { turbo: true, turbo_force: :server } },
+      form_class: 'inline'
+    ) do
+      t('.move_up_filter', filter_label: filter_column.label)
+    end
+  end
+
+  def move_down_button(filter_column)
+    current_index = filters_columns.index(filter_column)
+    return nil if current_index.nil?
+
+    can_move_down = current_index != filters_columns.length - 1
+    reordered_columns = if can_move_down
+      columns = filters_columns.dup
+      columns[current_index], columns[current_index + 1] = columns[current_index + 1], columns[current_index]
+      columns
+    else
+      filters_columns
+    end
+
+    button_to(
+      refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation),
+      method: :post,
+      class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-down-line',
+      disabled: !can_move_down,
+      params: {
+        filters_columns: reordered_columns.map(&:id),
+        statut: @statut,
+      }.compact,
+      form: { data: { turbo: true, turbo_force: :server } },
+      form_class: 'inline'
+    ) do
+      t('.move_down_filter', filter_label: filter_column.label)
+    end
+  end
+
   def procedure
     @procedure_presentation.procedure
   end
