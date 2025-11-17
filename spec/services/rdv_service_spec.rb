@@ -259,4 +259,32 @@ describe RdvService do
       end
     end
   end
+
+  describe "#get_account_info" do
+    let(:api_response) {
+      {
+        "agent":
+        {
+          id: 10,
+          first_name: "Francis",
+          last_name: "Factice",
+          email: "francis.factice@test.gouv.fr",
+        },
+      }
+    }
+
+    before do
+      stub_request(:get, "#{described_class.rdv_sp_host_url}/api/v1/agents/me")
+        .to_return(body: api_response.to_json)
+    end
+
+    it "returns the info for the logged in agent" do
+      expect(rdv_service.get_account_info).to match({
+        id: 10,
+        first_name: "Francis",
+        last_name: "Factice",
+        email: "francis.factice@test.gouv.fr",
+      })
+    end
+  end
 end

@@ -162,13 +162,13 @@ class RdvService
     )
 
     if !response.success?
-      error_message = "RdvService#list_rdvs failed #{response.code} #{response.body}"
+      error_message = "RdvService#get_account_info failed #{response.code} #{response.body}"
       Rails.logger.error(error_message)
       Sentry.capture_message(error_message)
       return {}
     end
 
-    JSON.parse(response.body)["agent"]
+    JSON.parse(response.body)["agent"].with_indifferent_access
   end
 
   def refresh_token_if_expired!
@@ -199,6 +199,8 @@ class RdvService
 
     raise e
   end
+
+  private
 
   def headers
     {
