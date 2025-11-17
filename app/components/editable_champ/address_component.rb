@@ -19,7 +19,7 @@ class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponen
       selected_key: @champ.selected_key,
       items: @champ.selected_items,
       loader: data_sources_data_source_adresse_path,
-      minimum_input_length: 2,
+      minimum_input_length: 3,
       translations: {
         search_error:,
       },
