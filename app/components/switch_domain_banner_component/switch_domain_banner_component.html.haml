@@ -20,7 +20,7 @@
   - c.with_title do
     = t(".message_new_domain")
     -# haml-lint:disable ApplicationNameLinter
-    = "#{helpers.link_to "demarches.numerique.gouv.fr", new_host_url}."
+    = "#{helpers.link_to "demarche.numerique.gouv.fr", new_host_url}."
     -# haml-lint:enable ApplicationNameLinter
 
     - if manual_switch?
@@ -28,7 +28,7 @@
     - elsif auto_switch?
       %span#banner_auto_switch_error.hidden= t(".detected_error")
 
-- if user && !user.preferred_domain_demarches_numerique_gouv_fr? && requested_from_new_domain?
+- if user && !user.preferred_domain_demarche_numerique_gouv_fr? && requested_from_new_domain?
   = form_tag(helpers.preferred_domain_path, method: :patch, remote: true, name: "update-preferred-domain") do
     :javascript
       document.addEventListener('noticeClosed', function(e) {

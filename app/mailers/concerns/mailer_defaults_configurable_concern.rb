@@ -30,15 +30,19 @@ module MailerDefaultsConfigurableConcern
     def configure_defaults_for_user(user, forced_domain = nil)
       return if !user.is_a?(User) # not for super-admins
 
-      if user.preferred_domain_demarches_numerique_gouv_fr?
-        set_currents_for_demarches_numerique_gouv_fr
-      elsif forced_domain == ApplicationHelper::APP_HOST
-        set_currents_for_demarches_numerique_gouv_fr
-      elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
-        set_currents_for_legacy
-      else
-        set_currents_for_legacy
-      end
+      # Temporaire avant migration: tous les emails partent par demarcehs-simplifiees.fr
+      # le temps de config brevo
+      set_currents_for_legacy
+
+      # if user.preferred_domain_demarche_numerique_gouv_fr?
+      #   set_currents_for_demarche_numerique_gouv_fr
+      # elsif forced_domain == ApplicationHelper::APP_HOST
+      #   set_currents_for_demarche_numerique_gouv_fr
+      # elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
+      #   set_currents_for_legacy
+      # else
+      #   set_currents_for_legacy
+      # end
 
       # Define mailer defaults
       from = derive_from_header
@@ -57,11 +61,11 @@ module MailerDefaultsConfigurableConcern
 
     private
 
-    def set_currents_for_demarches_numerique_gouv_fr
-      Current.application_name = "demarches.numerique.gouv.fr"
-      Current.host = "demarches.numerique.gouv.fr"
-      Current.contact_email = "contact@demarches.numerique.gouv.fr"
-      Current.no_reply_email = NO_REPLY_EMAIL.sub("demarches-simplifiees.fr", "demarches.numerique.gouv.fr") # rubocop:disable DS/ApplicationName
+    def set_currents_for_demarche_numerique_gouv_fr
+      Current.application_name = "demarche.numerique.gouv.fr"
+      Current.host = "demarche.numerique.gouv.fr"
+      Current.contact_email = "contact@demarche.numerique.gouv.fr"
+      Current.no_reply_email = "Démarche Numérique <ne-pas-repondre@demarche.numerique.gouv.fr>"
     end
 
     def set_currents_for_legacy

@@ -38,9 +38,9 @@ class ApplicationController < ActionController::Base
     Current.host = request.host_with_port
 
     if Current.host.include?(".gouv.fr")
-      Current.application_name = "demarches.numerique.gouv.fr"
-      Current.contact_email = "contact@demarches.numerique.gouv.fr"
-      Current.application_base_url = "https://demarches.numerique.gouv.fr"
+      Current.application_name = "demarche.numerique.gouv.fr"
+      Current.contact_email = "contact@demarche.numerique.gouv.fr"
+      Current.application_base_url = "https://demarche.numerique.gouv.fr"
     else
       Current.application_name = APPLICATION_NAME
       Current.contact_email = CONTACT_EMAIL
