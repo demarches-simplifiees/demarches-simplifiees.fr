@@ -106,6 +106,7 @@ module ColumnsConcern
     def dossier_filterable_columns
       dossier_columns
         .concat([dossier_labels_column])
+        .concat([dossier_notifications_column])
         .filter(&:filterable)
     end
 
