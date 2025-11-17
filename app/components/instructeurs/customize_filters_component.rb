@@ -38,7 +38,7 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
     button_to(
       refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation),
       method: :post,
-      class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-icon-delete-line',
+      class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line',
       params: {
         filters_columns: filters_columns.filter { _1.id != filter_column.id }.map(&:id),
         statut: @statut,
