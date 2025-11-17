@@ -14,7 +14,7 @@ if ENV['PRO_CONNECT_BASE_URL'].present?
     secret: ENV.fetch('PRO_CONNECT_SECRET'),
     token_endpoint: discover.token_endpoint,
     userinfo_endpoint: discover.userinfo_endpoint,
-  }
+  }.freeze
 
   if ENV['PRO_CONNECT_GOUV_ID'].present?
     gouv_conf = PRO_CONNECT.dup
@@ -24,6 +24,6 @@ if ENV['PRO_CONNECT_BASE_URL'].present?
     gouv_conf[:secret] = ENV.fetch('PRO_CONNECT_GOUV_SECRET')
     gouv_conf[:redirect_uri] = ENV.fetch('PRO_CONNECT_GOUV_REDIRECT')
 
-    PRO_CONNECT_GOUV = gouv_conf
+    PRO_CONNECT_GOUV = gouv_conf.freeze
   end
 end

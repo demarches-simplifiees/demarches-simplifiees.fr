@@ -2,6 +2,7 @@ en:
   commencer:
     show:
       start_procedure: Start the procedure
+      pro_connect_restriction_all_info_html: "This procedure requires <a href=\"%{path}\" title=\"Signin with ProConnect\">ProConnect authentication</a>. Only agents with a ProConnect account can access it."
       existing_dossiers: You already have files for this procedure
       show_dossiers: View my current files
       prefilled_draft: "You have a prefilled file"
@@ -20,6 +21,6 @@ en:
         one: "Your previous file :"
         other: "Your last %{count} created files :" 
       already_created_details_html:
-        "N° %{id}, created %{created_at} ago and %{state}"
+        "N° %{id}, created %{created_at} ago, %{state}"
     closing_details:
       page_title: "Procedure %{libelle} is closed since %{closed_at}"

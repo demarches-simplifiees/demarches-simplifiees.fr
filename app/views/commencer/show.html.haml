@@ -6,20 +6,32 @@
     = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
     = render Dsfr::CalloutComponent.new(title: t(".start_procedure"), heading_level: 'h2') do |c|
       - c.with_html_body do
-        = render partial: 'shared/france_connect_login', locals: { url: commencer_france_connect_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), heading_level: :h3 }
-        %ul.fr-btns-group.fr-btns-group--inline
-          %li
-            = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn' do
-              = t('views.shared.account.create')
-              %span.optional-on-small-screens.fr-ml-1v
-                #{Current.application_name}
-          %li= link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary'
+        - if @procedure.pro_connect_restriction_all?
+          - c.with_body do
+            = render ProConnectLoginComponent.new
+            .fr-alert.fr-alert--info
+              %p= t('.pro_connect_restriction_all_info_html', path: pro_connect_login_path)
+        - else
+          = render partial: 'shared/france_connect_login', locals: { url: commencer_france_connect_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), heading_level: :h3 }
+          %ul.fr-btns-group.fr-btns-group--inline
+            %li
+              = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn' do
+                = t('views.shared.account.create')
+                %span.optional-on-small-screens.fr-ml-1v
+                  #{Current.application_name}
+            %li= link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary'
 
 
   - else
     = render ProcedureDraftWarningComponent.new(revision: @revision, current_administrateur:, extra_class_names: "fr-mb-2w")
 
-    - if @prefilled_dossier
+    - if @procedure.pro_connect_restriction_all? && !logged_in_with_pro_connect?
+      .fr-alert.fr-alert--warning.fr-mb-2w
+        %p= t('.pro_connect_restriction_all_info_html', path: pro_connect_login_path)
+        .fr-mt-3w
+          = render ProConnectLoginComponent.new
+
+    - elsif @prefilled_dossier
       = render Dsfr::CalloutComponent.new(title: t(".prefilled_draft"), heading_level: 'h2') do |c|
         - c.with_body do
           %p= t('.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @procedure.libelle)

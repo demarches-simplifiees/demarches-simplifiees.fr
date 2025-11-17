@@ -7,7 +7,5 @@ en:
       full_deploy_body: All ministries and operators can use it today
       you_are_a_citizen: Are you a citizen?
       citizen_page: Connect to your space
-      signin_with: "Sign in with"
-      whats_proconnect: 'What is ProConnect?'
       whats_ds: '%{application_name}, the national platform for digitizing administrative procedures'
       pro_email: Professional email address

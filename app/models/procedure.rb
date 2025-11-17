@@ -16,7 +16,7 @@ class Procedure < ApplicationRecord
   include Discard::Model
   self.discard_column = :hidden_at
 
-  self.ignored_columns += ["api_entreprise_token_expires_at"]
+  self.ignored_columns += ["api_entreprise_token_expires_at", "pro_connect_restricted"]
 
   default_scope -> { kept }
 
@@ -341,11 +341,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  # Dual-write: synchronize pro_connect_restricted (boolean) → pro_connect_restriction (enum)
-  # le temps de déployer le changement de colonne dans une autre PR.
-  def pro_connect_restricted=(value)
-    super(value)
-    self.pro_connect_restriction = pro_connect_restricted ? :instructeurs : :none
+  def enable_pro_connect_restriction!(level)
+    update!(
+      pro_connect_restriction: level,
+      opendata: level == :all ? false : opendata,
+      robots_indexable: level == :all ? false : robots_indexable
+    )
   end
 
   def check_administrateur_minimal_presence(_object)
