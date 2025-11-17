@@ -47,14 +47,17 @@ class GroupeInstructeur < ApplicationRecord
     return if instructeur.nil?
     return if !in?(instructeur.groupe_instructeurs)
 
-    instructeur.groupe_instructeurs.destroy(self)
+    transaction do
+      instructeur.groupe_instructeurs.destroy(self)
+      InstructeursProcedure.find_by(procedure: self.procedure, instructeur:)&.delete if !instructeur.procedures.include?(self.procedure)
 
-    instructeur.follows
-      .joins(:dossier)
-      .where(dossiers: { groupe_instructeur: self })
-      .update_all(unfollowed_at: Time.zone.now)
+      instructeur.follows
+        .joins(:dossier)
+        .where(dossiers: { groupe_instructeur: self })
+        .update_all(unfollowed_at: Time.zone.now)
 
-    DossierNotification.destroy_notifications_instructeur_of_groupe_instructeur(self, instructeur)
+      DossierNotification.destroy_notifications_instructeur_of_groupe_instructeur(self, instructeur)
+    end
   end
 
   def add_instructeurs(ids: [], emails: [])

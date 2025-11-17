@@ -137,6 +137,30 @@ describe GroupeInstructeur, type: :model do
         ).to be_truthy
       end
     end
+
+    context "when there is an instructeurs_procedure" do
+      let(:procedure_to_remove) { procedure }
+      let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }
+
+      context "when the instructeur is only in one group" do
+        it "destroys the instructeurs_procedure" do
+          subject
+
+          expect(InstructeursProcedure.exists?(instructeur:, procedure:)).to be_falsey
+        end
+      end
+
+      context "when the instructeur is in many groups" do
+        let(:procedure_to_remove) { procedure }
+        let!(:another_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur]) }
+
+        it "does not destroy the instructeurs_procedure" do
+          subject
+
+          expect(InstructeursProcedure.exists?(instructeur:, procedure:)).to be_truthy
+        end
+      end
+    end
   end
 
   describe "active group validations" do
