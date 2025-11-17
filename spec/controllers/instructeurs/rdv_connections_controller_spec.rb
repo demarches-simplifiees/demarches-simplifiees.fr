@@ -23,4 +23,15 @@ describe Instructeurs::RdvConnectionsController, type: :controller do
       expect(response.body).to have_text(" est connecté au compte RDV Service Public avec l'adresse email francis.factice.rdv@test.gouv.fr.")
     end
   end
+
+  describe "#destroy" do
+    before { delete :destroy }
+
+    it do
+      expect { rdv_connection.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(flash.alert).to be_nil
+      expect(flash.notice).to eq("Votre compte Démarches Simplifiées n'est plus connecté à RDV Service Public.")
+      expect(response).to redirect_to(profil_path)
+    end
+  end
 end
