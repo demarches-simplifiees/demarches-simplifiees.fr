@@ -31,7 +31,7 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
         label: t('.private_annotations'),
         items: annotation_filter_items,
       },
-    ]
+    ].filter { _1[:items].any? }
   end
 
   def delete_button(filter_column)
