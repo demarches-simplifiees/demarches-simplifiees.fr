@@ -4,13 +4,18 @@
       <div class="flex flex-1">
         <p class="fr-h6 fr-mb-0"><%= t('.search_filter_dossiers') %></p>
       </div>
+
       <div class="flex">
         <%= button_to toggle_filters_expanded_instructeur_procedure_presentation_path(procedure_presentation, statut: statut, filters_expanded: !procedure_presentation.filters_expanded),
             method: :post,
             class: 'fr-btn fr-btn--sm fr-btn--tertiary-no-outline',
             form: { data: { turbo: true } },
             aria: { expanded: procedure_presentation.filters_expanded.to_s } do %>
-          <span class="<%= procedure_presentation.filters_expanded ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line' %>" data-expand-target="icon"></span>
+          <span
+            class="<%= procedure_presentation.filters_expanded ? 'fr-icon-arrow-up-s-line' : 'fr-icon-arrow-down-s-line' %>"
+            data-expand-target="icon"
+          ></span>
+
           <span class="fr-sr-only"><%= t('.toggle_filters') %></span>
         <% end %>
       </div>
@@ -23,22 +28,19 @@
             method: :post,
             class: 'flex flex-1',
             data: { turbo: true, controller: 'autosubmit' } do |form| %>
-
             <%= form.hidden_field "filter_key", value: filter.id %>
             <%= form.hidden_field "filter[id]", value: filter.column.id %>
             <%= form.hidden_field :statut, value: statut %>
 
             <%= render Instructeurs::ColumnFilterValueComponent.new(filtered_column: filter, form:, instructeur_procedure:) %>
-
           <% end %>
         </div>
       <% end %>
 
       <% if filters.none? %>
-        <div class="flex align-center fr-p-2w">
-          <%= t('.no_filters') %>
-        </div>
+        <div class="flex align-center fr-p-2w"><%= t('.no_filters') %></div>
       <% end %>
+
       <div class="ml-auto fr-p-2w flex align-end">
         <%= link_to t('.enable_filters_customization'),
           customize_filters_instructeur_procedure_presentation_path(procedure_presentation, statut: statut),
@@ -51,4 +53,3 @@
     <%= render Instructeurs::ClearFilterButtonsComponent.new(filters:, procedure_presentation:, statut:) %>
   </div>
 </section>
-
