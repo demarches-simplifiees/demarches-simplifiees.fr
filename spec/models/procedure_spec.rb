@@ -1779,6 +1779,20 @@ describe Procedure do
     end
   end
 
+  describe '#pro_connect_restricted= setter (dual-write during migration)' do
+    let(:procedure) { create(:procedure) }
+
+    it 'syncs pro_connect_restricted=true to pro_connect_restriction=:instructeurs' do
+      procedure.update!(pro_connect_restricted: true)
+      expect(procedure).to be_pro_connect_restriction_instructeurs
+    end
+
+    it 'syncs pro_connect_restricted=false to pro_connect_restriction=:none' do
+      procedure.update!(pro_connect_restricted: false)
+      expect(procedure).to be_pro_connect_restriction_none
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
