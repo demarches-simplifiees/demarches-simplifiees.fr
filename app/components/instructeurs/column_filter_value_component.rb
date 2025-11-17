@@ -53,7 +53,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def radio_button_options
-    column_filter_options.map.with_index do |(opt_label, opt_value)|
+    column_filter_options.map do |(opt_label, opt_value)|
       {
         label: opt_label,
         value: opt_value,
@@ -103,7 +103,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def input_id(value: nil)
-    ["value", filtered_column&.id&.parameterize, value].compact.join('_')
+    ["value", filtered_column&.id, value].compact.join('_').parameterize
   end
 
   private

@@ -4,7 +4,6 @@ class Dsfr::InputComponent < ApplicationComponent
   include Dsfr::InputErrorable
 
   delegate :object, to: :@form
-  delegate :errors, to: :object
 
   attr_reader :attribute
 
@@ -12,6 +11,7 @@ class Dsfr::InputComponent < ApplicationComponent
   # it uses aria-describedby on input and link it to yielded content
   renders_one :describedby
   renders_one :label
+  renders_one :button
 
   def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true, autoresize: true, label_opts: {})
     @form = form
@@ -21,6 +21,10 @@ class Dsfr::InputComponent < ApplicationComponent
     @required = required
     @autoresize = autoresize
     @label_opts = label_opts
+  end
+
+  def errors
+    object&.errors || {}
   end
 
   def dsfr_champ_container
