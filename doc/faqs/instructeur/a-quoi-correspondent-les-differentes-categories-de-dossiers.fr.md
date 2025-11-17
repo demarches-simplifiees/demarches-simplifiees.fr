@@ -26,6 +26,6 @@ Pour chaque démarche, les dossiers sont répartis dans plusieurs onglets :
 - L’onglet **« corbeille »** contient :
   - les dossiers dont le délai de conservation a expiré (la durée de conservation des dossiers est fixée par l'administrateur de la démarche).
   - les dossiers « traités » qui ont été mis à la corbeille par les instructeurs.
-  À partir de la date à laquelle les dossiers ont été mis dans la corbeille, vous disposez d’un délai de 7 jours pour les télécharger / restaurer / étendre leur durée de conservation d’un mois. Passé ce délai, ces dossiers seront supprimés définitivement.
+  À partir de la date à laquelle les dossiers ont été mis dans la corbeille, vous disposez d’un délai de 14 jours pour les télécharger / restaurer / étendre leur durée de conservation d’un mois. Passé ce délai, ces dossiers seront supprimés définitivement.
 
 ![Différents onglets répartissant les dossiers d’une démarche {aria-hidden="true"}](faq/instructeur-procedure-show.png)
