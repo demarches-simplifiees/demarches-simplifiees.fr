@@ -51,6 +51,10 @@ class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
       .concat(addressable_columns(procedure:, displayable:, prefix:))
   end
 
+  def info_columns(procedure:)
+    Dossiers::AddressComponent.data_labels
+  end
+
   private
 
   def paths

@@ -27,8 +27,39 @@ export default class LazyModalController extends ApplicationController {
           if (modalId) {
             const modal = document.getElementById(modalId);
             if (modal && window.dsfr) {
+              // Temporarily remove aria-controls from all OTHER trigger buttons
+              // This prevents DSFR from finding the first button instead of the clicked one
+              // and giving the focus to the first matching button
+              const allButtons = document.querySelectorAll(
+                `[aria-controls="${modalId}"]`
+              );
+              const otherButtonsAriaControls: Array<{
+                button: Element;
+                value: string;
+              }> = [];
+
+              allButtons.forEach((btn) => {
+                if (
+                  btn !== button &&
+                  btn !== modal.querySelector('.fr-btn--close')
+                ) {
+                  const value = btn.getAttribute('aria-controls');
+                  if (value) {
+                    otherButtonsAriaControls.push({ button: btn, value });
+                    btn.removeAttribute('aria-controls');
+                  }
+                }
+              });
+
               // @ts-expect-error type not enforced
               window.dsfr(modal).modal.disclose();
+
+              // Restore aria-controls on other buttons after modal is opened
+              requestAnimationFrame(() => {
+                otherButtonsAriaControls.forEach(({ button, value }) => {
+                  button.setAttribute('aria-controls', value);
+                });
+              });
             }
           }
         },

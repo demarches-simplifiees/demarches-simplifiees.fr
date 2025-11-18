@@ -5,7 +5,7 @@
   %p.fr-hint-text
     = t('.hint_html')
 
-  %ul.two-column-list.fr-mb-3w
+  %ul.fr-mb-3w{ class: class_names("two-column-list" => @column_labels.count >= 10) }
     - @column_labels.each do |label|
       %li= label.upcase_first
 

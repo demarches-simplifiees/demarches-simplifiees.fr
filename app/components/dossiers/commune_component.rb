@@ -11,13 +11,21 @@ class Dossiers::CommuneComponent < ApplicationComponent
     render Dossiers::ExternalChampComponent.new(data:, source:)
   end
 
+  def self.data_labels
+    [
+      t('.municipality'),
+      t('.insee_code'),
+      t('.department'),
+    ]
+  end
+
   private
 
   def data
     [
-      ['Commune', champ.to_s],
-      ['Code INSEE', champ.code],
-      ['Département', champ.departement_code_and_name],
+      [t('.municipality'), champ.to_s],
+      [t('.insee_code'), champ.code],
+      [t('.department'), champ.departement_code_and_name],
     ]
   end
 

@@ -2,7 +2,7 @@ en:
   administrateurs:
     procedures:
       api_champ_columns:
-        title: 'Informations complementary to the field %{type_de_champ}'
+        title: 'Informations complementary to the champ %{type_de_champ}'
         hint_html: |
           The following data is automatically retrieved via API and displayed in files or exports.
           <strong>No need to ask the user for this information in other fields!</strong>

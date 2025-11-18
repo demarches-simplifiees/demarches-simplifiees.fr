@@ -15,21 +15,29 @@ class Dossiers::AddressComponent < ApplicationComponent
     end
   end
 
+  def self.data_labels
+    [
+      t('.address'),
+      t('.insee_code'),
+      t('.department'),
+    ]
+  end
+
   private
 
   def no_ban_address
     safe_join([
       tag.p(class: 'fr-mb-1w copy-zone', role: 'button') { champ.to_s },
-      tag.p(class: 'champ-label') { 'Pays' },
+      tag.p(class: 'champ-label') { t('.country') },
       tag.p(class: 'champ-content copy-zone') { champ.country_name },
     ])
   end
 
   def data
     [
-      ['Adresse', champ.to_s],
-      ['Code INSEE', champ.city_code],
-      ['Département', champ.departement_code_and_name],
+      [t('.address'), champ.to_s],
+      [t('.insee_code'), champ.city_code],
+      [t('.department'), champ.departement_code_and_name],
     ]
   end
 
