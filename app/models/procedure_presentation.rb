@@ -66,6 +66,22 @@ class ProcedurePresentation < ApplicationRecord
     update!(filters_attr => replaced_filters)
   end
 
+  def replace_all_filters!(new_filters_columns)
+    updates = ALL_FILTERS.each_with_object({}) do |filters_attr, hash|
+      current_filters = send(filters_attr) || []
+
+      # if the filter is already present keep it, else add it
+      replaced_filters = new_filters_columns.map do |new_filter_column|
+        current_filters.find { |f| f.column.id == new_filter_column.id } ||
+          FilteredColumn.new(column: new_filter_column)
+      end
+
+      hash[filters_attr] = replaced_filters
+    end
+
+    update!(updates)
+  end
+
   def filters_name_for(statut) = statut.tr('-', '_').then { "#{_1}_filters" }
 
   def displayed_fields_for_headers
