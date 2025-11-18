@@ -4,14 +4,14 @@
       <div class="flex column flex-gap-2">
         <% filters_selects.each do |filter_select| %>
           <div class="fr-card fr-p-2w">
-            <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), data: { turbo: true }, id: "form-#{filter_select[:label].parameterize}" do |form| %>
+            <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), data: { turbo: true, controller: "enable-submit-if-form-changes", action: "change->enable-submit-if-form-changes#onFormChange" }, id: "form-#{filter_select[:label].parameterize}" do |form| %>
               <%= filters_in_hidden_inputs(form, filter_select[:label].parameterize) %>
               <div class="flex align-end flex-gap-2">
                 <div class="flex flex-1 column">
                   <%= form.label "filters_columns[]", filter_select[:label], class: "fr-label", for: "select-#{filter_select[:label].parameterize}" %>
                   <%= form.select "filters_columns[]", filter_select[:items], { prompt: t('.select'), required: true, disabled: disabled_items, selected: "" }, class: 'fr-select width-100', id:  "select-#{filter_select[:label].parameterize}" %>
                 </div>
-                <%= form.submit t('.add'), class: "fr-btn", disabled: filter_select[:items].empty? %>
+                <%= form.submit t('.add'), class: "fr-btn", disabled: true, data: { 'enable-submit-if-form-changes-target': 'submitButton' } %>
               </div>
             <% end %>
           </div>
@@ -19,13 +19,19 @@
       </div>
     </div>
 
-    <div class="fr-col-5">
+    <div id="selected-filters" class="fr-col-5">
       <div class="fr-background-alt--blue-france rounded-4 fr-p-2w">
         <h5><%= t('.selection_title') %></h5>
         <div class="flex column flex-gap-2">
           <% filters_columns.each do |filter_column| %>
             <div class="filter-box" id="<%= filter_column.id.parameterize %>">
-              <p class="fr-mb-0"><%= filter_column.label %></p>
+              <div class="flex flex-gap-1 align-center">
+                <div class="flex">
+                  <%= move_up_button(filter_column) %>
+                  <%= move_down_button(filter_column) %>
+                </div>
+                <p class="fr-mb-0"><%= filter_column.label %></p>
+              </div>
               <%= delete_button(filter_column) %>
             </div>
           <% end %>

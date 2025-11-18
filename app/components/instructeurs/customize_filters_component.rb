@@ -34,20 +34,74 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
     ].filter { _1[:items].any? }
   end
 
-  def delete_button(filter_column)
+  def filter_action_button(filter_column:, icon:, text:, filters_columns_array:, disabled: false)
     button_to(
       refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation),
       method: :post,
-      class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line',
+      class: "fr-btn fr-btn--tertiary-no-outline fr-icon-#{icon}",
+      disabled: disabled,
       params: {
-        filters_columns: filters_columns.filter { _1.id != filter_column.id }.map(&:id),
+        filters_columns: filters_columns_array.map(&:id),
         statut: @statut,
       }.compact,
       form: { data: { turbo: true, turbo_force: :server } },
       form_class: 'inline'
     ) do
-      t('.delete_filter', filter_label: filter_column.label)
+      text
     end
+  end
+
+  def delete_button(filter_column)
+    filter_action_button(
+      filter_column: filter_column,
+      icon: 'delete-line',
+      text: t('.delete_filter', filter_label: filter_column.label),
+      filters_columns_array: filters_columns.filter { _1.id != filter_column.id }
+    )
+  end
+
+  def move_up_button(filter_column)
+    current_index = filters_columns.index(filter_column)
+    return nil if current_index.nil?
+
+    can_move_up = !current_index.zero?
+    reordered_columns = if can_move_up
+      columns = filters_columns.dup
+      columns[current_index], columns[current_index - 1] = columns[current_index - 1], columns[current_index]
+      columns
+    else
+      filters_columns
+    end
+
+    filter_action_button(
+      filter_column: filter_column,
+      icon: 'arrow-up-line',
+      text: t('.move_up_filter', filter_label: filter_column.label),
+      filters_columns_array: reordered_columns,
+      disabled: !can_move_up
+    )
+  end
+
+  def move_down_button(filter_column)
+    current_index = filters_columns.index(filter_column)
+    return nil if current_index.nil?
+
+    can_move_down = current_index != filters_columns.length - 1
+    reordered_columns = if can_move_down
+      columns = filters_columns.dup
+      columns[current_index], columns[current_index + 1] = columns[current_index + 1], columns[current_index]
+      columns
+    else
+      filters_columns
+    end
+
+    filter_action_button(
+      filter_column: filter_column,
+      icon: 'arrow-down-line',
+      text: t('.move_down_filter', filter_label: filter_column.label),
+      filters_columns_array: reordered_columns,
+      disabled: !can_move_down
+    )
   end
 
   def procedure
