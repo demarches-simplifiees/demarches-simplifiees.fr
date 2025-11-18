@@ -6,4 +6,4 @@
 
     %p Si vous souhaitez connecter ce compte Démarches Simplifiées à un autre compte RDV Service Public, vous pouvez supprimer cette connexion.
 
-    = link_to('Supprimer la connexion', instructeur_rdv_connections_path, class: 'fr-btn fr-btn--sm fr-btn--secondary', method: :delete)
+    = link_to('Supprimer la connexion', instructeur_rdv_connections_path(redirect_path: params[:redirect_path]), class: 'fr-btn fr-btn--sm fr-btn--secondary', method: :delete)
