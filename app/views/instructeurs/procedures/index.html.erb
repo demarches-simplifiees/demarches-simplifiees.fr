@@ -22,7 +22,8 @@
     <div class="flex fr-mb-2v">
       <h1 class="fr-h3 fr-mb-0">Démarches</h1>
 
-      <%= render Instructeurs::ProceduresDossiersSyntheseButtonComponent.new(procedures: @all_procedures) %>
+      <%# Use .size to reuse the procedures array loaded for the view %>
+      <%= render Instructeurs::ProceduresDossiersSyntheseButtonComponent.new(procedures_count: @all_procedures.size) %>
     </div>
 
     <%= render SelectProcedureDropDownListComponent.new(procedures: @all_procedures, action_path: url_for([:select_procedure, :instructeur, :procedures]), form_class: 'width-66 fr-mb-3w') %>
