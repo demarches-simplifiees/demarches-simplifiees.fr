@@ -123,6 +123,7 @@ module Instructeurs
       rdv_service.update_pending_rdv_plan!(dossier:)
 
       @booked_rdvs = rdv_service.list_rdvs(dossier.rdvs.booked.pluck(:rdv_external_id))
+      @rdv_email = RdvService.new(rdv_connection: current_instructeur.rdv_connection).get_account_info["email"]
     end
 
     def rdv_connection

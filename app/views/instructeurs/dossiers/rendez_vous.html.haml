@@ -26,6 +26,10 @@
         - @booked_rdvs&.each do |rdv|
           = render Instructeurs::RdvCardComponent.new(rdv:)
 
-    .fr-btns-group.fr-btns-group--inline
-      = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)
-      = link_to "Gérer ma connexion à RDV Service Public", rendez_vous_connexion_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]), class: "fr-btn fr-btn--tertiary"
+    = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)
+    .fr-mt-6w
+      %p.fr-text--sm Votre compte Démarches Simplifiées est lié au compte RDV Service Public avec l'adresse email #{@rdv_email}.
+      .fr-btns-group.fr-btns-group--inline.fr-btns-group--sm
+        = link_to "Gérer ma connexion à RDV Service Public", rendez_vous_connexion_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]), class: "fr-btn fr-btn--tertiary fr-btn--sm"
+        = link_to "Ouvrir RDV Service Public", ENV["RDV_SERVICE_PUBLIC_URL"], class: "fr-btn fr-btn--tertiary fr-btn--sm", target: :_blank
+
