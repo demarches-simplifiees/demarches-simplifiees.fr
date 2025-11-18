@@ -245,7 +245,7 @@ describe "procedure filters" do
       click_button "Ajouter"
     end
 
-    within ".fr-col-5" do
+    within "#selected-filters" do
       expect(page).to have_content(column_name)
     end
 
@@ -285,20 +285,18 @@ describe "procedure filters" do
     expect(page).to have_content("Votre sélection de critères")
 
     # Check that we have the 3 default filters in the correct order listed on the page
-    within ".fr-col-5" do
+    within "#selected-filters" do
       expect(page).to have_content(/(État du dossier).*(N° dossier).*(Notifications sur le dossier)/)
     end
 
     # Delete the "N° dossier" filter
-    within ".fr-col-5" do
+    within "#selected-filters" do
       # Find the filter box containing "N° dossier" and click its delete button
       within ".filter-box", text: "N° dossier" do
         find('button.fr-icon-delete-line').click
       end
-    end
 
-    # Check that the "N° dossier" filter is deleted
-    within ".fr-col-5" do
+      # Check that the "N° dossier" filter is deleted
       expect(page).not_to have_content("N° dossier")
     end
 
@@ -310,29 +308,25 @@ describe "procedure filters" do
     end
 
     # Check that the filter is added
-    within ".fr-col-5" do
+    within "#selected-filters" do
       expect(page).to have_content(/(État du dossier).*(Notifications sur le dossier).*(Demandeur)/)
     end
 
     # Move up the Demandeur filter
-    within ".fr-col-5" do
-      within ".filter-box", text: "Demandeur" do
-        find('button.fr-icon-arrow-up-line').click
-      end
+    within ".filter-box", text: "Demandeur" do
+      find('button.fr-icon-arrow-up-line').click
     end
 
-    within ".fr-col-5" do
+    within "#selected-filters" do
       expect(page).to have_content(/(État du dossier).*(Demandeur).*(Notifications sur le dossier)/)
     end
 
     # Move down the État du dossier filter
-    within ".fr-col-5" do
-      within ".filter-box", text: "État du dossier" do
-        find('button.fr-icon-arrow-down-line').click
-      end
+    within ".filter-box", text: "État du dossier" do
+      find('button.fr-icon-arrow-down-line').click
     end
 
-    within ".fr-col-5" do
+    within "#selected-filters" do
       expect(page).to have_content(/(Demandeur).*(État du dossier).*(Notifications sur le dossier)/)
     end
 
