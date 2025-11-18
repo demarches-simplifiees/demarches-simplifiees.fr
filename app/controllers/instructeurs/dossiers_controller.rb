@@ -14,9 +14,9 @@ module Instructeurs
     before_action :redirect_on_dossier_not_found, only: :show
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     before_action :dossier_with_champs, only: [:show]
-    before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous]
-    before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
-    before_action :set_notifications, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :dossier_labels, :repasser_en_construction, :repasser_en_instruction, :create_avis, :create_commentaire]
+    before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous, :rdv_connection]
+    before_action :retrieve_procedure_presentation, only: [:annotations_privees, :avis_new, :avis, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :rdv_connection, :show, :dossier_labels, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :pending_correction, :create_avis, :create_commentaire]
+    before_action :set_notifications, only: [:show, :annotations_privees, :avis, :avis_new, :messagerie, :personnes_impliquees, :pieces_jointes, :reaffectation, :rendez_vous, :rdv_connection, :dossier_labels, :repasser_en_construction, :repasser_en_instruction, :create_avis, :create_commentaire]
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
@@ -123,6 +123,9 @@ module Instructeurs
       rdv_service.update_pending_rdv_plan!(dossier:)
 
       @booked_rdvs = rdv_service.list_rdvs(dossier.rdvs.booked.pluck(:rdv_external_id))
+    end
+
+    def rdv_connection
     end
 
     def send_to_instructeurs

@@ -26,4 +26,6 @@
         - @booked_rdvs&.each do |rdv|
           = render Instructeurs::RdvCardComponent.new(rdv:)
 
-    = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)
+    .fr-btns-group.fr-btns-group--inline
+      = render Instructeurs::ScheduleRdvButtonComponent.new(dossier: @dossier)
+      = link_to "Gérer ma connexion à RDV Service Public", rendez_vous_connexion_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]), class: "fr-btn fr-btn--tertiary"
