@@ -55,16 +55,18 @@ class ProConnectService
 
   # TODO: remove this block when migration to new domain is done
   def self.conf
+    # rubocop:disable DS/ApplicationName
     if Current.host.end_with?('demarches.numerique.gouv.fr')
       h = PRO_CONNECT.dup
-      h[:redirect_uri] = h[:redirect_uri].gsub('demarche.numerique', 'demarches.numerique')
+      h[:redirect_uri] = h[:redirect_uri].gsub('www.demarches-simplifiees.fr', 'demarches.numerique.gouv.fr')
       h
     elsif Current.host.end_with?('demarche.numerique.gouv.fr')
       h = PRO_CONNECT.dup
-      h[:redirect_uri] = h[:redirect_uri].gsub('demarches.numerique', 'demarche.numerique')
+      h[:redirect_uri] = h[:redirect_uri].gsub('www.demarches-simplifiees.fr', 'demarche.numerique.gouv.fr')
       h
     else
       PRO_CONNECT
     end
+    # rubocop:enable DS/ApplicationName
   end
 end
