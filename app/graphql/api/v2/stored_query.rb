@@ -866,6 +866,9 @@ class API::V2::StoredQuery
       dossier {
         id
         state
+        attestation {
+          url
+        }
       }
       errors {
         message

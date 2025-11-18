@@ -54,7 +54,7 @@ module Types
     field :geojson, Types::File, "L’URL du GeoJSON contenant les données cartographiques du dossier.", null: true
     field :attestation, Types::File, "L’URL de l’attestation au format PDF.", null: true
 
-    field :usager, Types::ProfileType, "Profile de l'usager déposant le dossier", null: false
+    field :usager, Types::ProfileType, "Profil de l'usager déposant le dossier", null: false
 
     field :groupe_instructeur, Types::GroupeInstructeurType, null: false
     field :revision, Types::RevisionType, null: false, deprecation_reason: 'Utilisez le champ `demarche.revision` à la place.'
@@ -208,7 +208,7 @@ module Types
     end
 
     def attestation
-      if object.termine? && object.attestation_acceptation_template&.activated?
+      if object.termine? && (object.attestation_acceptation_template&.activated? || object.attestation_refus_template&.activated?)
         Loaders::Association.for(object.class, attestation: { pdf_attachment: :blob })
           .load(object)
           .then { |attestation| attestation&.pdf }
