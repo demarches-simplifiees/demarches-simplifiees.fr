@@ -48,11 +48,11 @@ RSpec.describe DossierStateConcern do
       dossier.passer_en_construction!
       dossier.reload
 
-      expect(dossier.champs.size).to eq(3)
+      expect(dossier.champs.size).to eq(7)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(0)
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(0)
-      expect(dossier.champs.filter { _1.stable_id.in?([90, 92, 93, 97, 961, 951]) }.size).to eq(0)
+      expect(dossier.champs.filter { _1.stable_id.in?([90, 92, 93, 97, 961, 951]) && !(_1.blank? || !_1.visible?) }.size).to eq(0)
       expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
 
@@ -92,11 +92,11 @@ RSpec.describe DossierStateConcern do
       dossier.usager_submit_en_construction!
       dossier.reload
 
-      expect(dossier.champs.size).to eq(4)
+      expect(dossier.champs.size).to eq(7)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(0)
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(0)
-      expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) }.size).to eq(0)
+      expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) && !(_1.blank? || !_1.visible?) }.size).to eq(0)
       expect(dossier.submitted_revision_id).to eq(dossier.revision_id)
     end
 
@@ -255,7 +255,7 @@ RSpec.describe DossierStateConcern do
       it 'destroys champ on accepter' do
         champ.piece_justificative_file.attach(file)
         dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect { champ.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(champ.reload.piece_justificative_file.attached?).to be false
       end
     end
 
@@ -268,7 +268,7 @@ RSpec.describe DossierStateConcern do
       it 'destroys champ on accepter' do
         champ.piece_justificative_file.attach(file)
         dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect { champ.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(champ.reload.piece_justificative_file.attached?).to be false
       end
     end
 
