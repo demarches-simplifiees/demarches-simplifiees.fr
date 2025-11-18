@@ -1066,7 +1066,6 @@ describe Dossier, type: :model do
     let(:reason) { :user_request }
 
     before do
-      allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
       allow(DossierMailer).to receive(:notify_en_construction_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
@@ -1106,7 +1105,7 @@ describe Dossier, type: :model do
       context 'when dossier is brouillon' do
         let(:dossier) { create(:dossier) }
         it 'do not notifies the procedure administrateur' do
-          expect(DossierMailer).not_to have_received(:notify_deletion_to_administration)
+          expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration)
         end
       end
 

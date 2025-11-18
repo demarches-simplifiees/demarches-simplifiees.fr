@@ -99,17 +99,10 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.perform_deliveries).to be_falsy }
   end
 
-  def notify_deletion_to_administration(hidden_dossier, to_email)
-    @subject = default_i18n_subject(dossier_id: hidden_dossier.id)
-    @hidden_dossier = hidden_dossier
-
-    mail(to: to_email, subject: @subject)
-  end
-
-  describe '.notify_deletion_to_administration' do
+  describe '.notify_en_construction_deletion_to_administration' do
     let(:hidden_dossier) { build(:dossier) }
 
-    subject { described_class.notify_deletion_to_administration(hidden_dossier, to_email) }
+    subject { described_class.notify_en_construction_deletion_to_administration(hidden_dossier, to_email) }
 
     it 'verifies subject and body content for deletion notification' do
       expect(subject.subject).to eq("Le dossier n° #{hidden_dossier.id} a été supprimé à la demande de l’usager")

@@ -134,15 +134,6 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_deletion_to_administration(hidden_dossier, to_email)
-    configure_defaults_for_email(to_email)
-
-    @subject = default_i18n_subject(dossier_id: hidden_dossier.id)
-    @hidden_dossier = hidden_dossier
-
-    mail(to: to_email, subject: @subject)
-  end
-
   def notify_automatic_deletion_to_user(hidden_dossiers, to_email)
     configure_defaults_for_email(to_email)
 
