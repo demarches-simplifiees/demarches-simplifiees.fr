@@ -678,6 +678,7 @@ class API::V2::StoredQuery
     byteSize: byteSizeBigInt
     url
     createdAt
+    virusScanResult
   }
 
   fragment AddressFragment on Address {
