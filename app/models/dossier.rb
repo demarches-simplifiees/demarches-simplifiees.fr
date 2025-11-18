@@ -1091,7 +1091,7 @@ class Dossier < ApplicationRecord
   end
 
   def enqueue_fetch_external_data_jobs
-    project_champs_public_all.each do |champ|
+    project_champs.each do |champ|
       if champ.uses_external_data? && champ.may_fetch_later?
         champ.fetch_later!
       end

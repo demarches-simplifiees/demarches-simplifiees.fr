@@ -59,12 +59,13 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
             { stable_id: 1, type: :text, libelle: 'text' },
             { stable_id: 2, type: :textarea, libelle: 'textarea' },
             { stable_id: 6, type: :yes_no, libelle: 'yes_no' }, # exclu (type non compatible)
+            { stable_id: 7, type: :referentiel, libelle: 'another referentiel' },
           ]
         end
 
         context 'when not selected' do
           it 'shows public text and textarea as well as private text' do
-            expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['text', 'textarea', 'private text'])
+            expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['text', 'textarea', 'private text', 'another referentiel'])
             expect(subject).to have_selector('optgroup[label="Champs"]')
             expect(subject).to have_selector('optgroup[label="Annotations privées"]')
           end
@@ -99,10 +100,11 @@ RSpec.describe Referentiels::ReferentielPrefillComponent, type: :component do
             { type: :referentiel, referentiel: }, # exclu (champ courant)
             { stable_id: 3, type: :decimal_number, libelle: 'decimal' }, # exclu (type non compatible)
             { stable_id: 4, type: :integer_number, libelle: 'integer' },
+            { stable_id: 7, type: :referentiel, libelle: 'another referentiel' },
           ]
         end
         it 'shows only integer_number' do
-          expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['integer'])
+          expect(subject).to have_select('type_de_champ[referentiel_mapping][$.jsonpath][prefill_stable_id]', options: ['integer', 'another referentiel'])
         end
       end
 
