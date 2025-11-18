@@ -13,4 +13,8 @@
         Connecter RDV Service Public
         %span.fr-ml-1w.fr-icon-external-link-line{ "aria-hidden": "true" }
   - else
-    .fr-mt-6w= turbo_frame_tag "rdv-connection-info", loading: :lazy, src: instructeur_rdv_connections_path(redirect_path: rendez_vous_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]))
+    .fr-grid-row
+      .fr-col.fr-col-12.fr-col-md-3
+        = render partial: 'instructeurs/dossiers/rendez_vous/sidemenu'
+      .fr-col
+        = turbo_frame_tag "rdv-connection-info", loading: :lazy, src: instructeur_rdv_connections_path(redirect_path: rendez_vous_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]))
