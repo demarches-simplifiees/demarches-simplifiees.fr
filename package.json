@@ -70,8 +70,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
-    "@herb-tools/formatter": "^0.7.5",
-    "@herb-tools/linter": "^0.7.5",
+    "@herb-tools/formatter": "^0.8.1",
+    "@herb-tools/linter": "^0.8.1",
     "@magidoc/cli": "^6.2.0",
     "@react-aria/optimize-locales-plugin": "^1.1.5",
     "@types/debounce": "^1.2.4",
