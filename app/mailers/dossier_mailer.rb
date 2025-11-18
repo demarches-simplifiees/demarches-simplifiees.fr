@@ -110,6 +110,7 @@ class DossierMailer < ApplicationMailer
     I18n.with_locale(dossiers.first.user_locale) do
       @subject = default_i18n_subject(count: dossiers.size)
       @dossiers = dossiers
+      @expiration_date = Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now
 
       mail(to: to_email, subject: @subject)
     end
@@ -133,15 +134,6 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_deletion_to_administration(hidden_dossier, to_email)
-    configure_defaults_for_email(to_email)
-
-    @subject = default_i18n_subject(dossier_id: hidden_dossier.id)
-    @hidden_dossier = hidden_dossier
-
-    mail(to: to_email, subject: @subject)
-  end
-
   def notify_automatic_deletion_to_user(hidden_dossiers, to_email)
     configure_defaults_for_email(to_email)
 
@@ -149,6 +141,7 @@ class DossierMailer < ApplicationMailer
       @state = hidden_dossiers.first.state
       @subject = default_i18n_subject(count: hidden_dossiers.size)
       @hidden_dossiers = hidden_dossiers
+      @deletion_date = Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks.from_now
 
       mail(to: to_email, subject: @subject)
     end
@@ -159,6 +152,7 @@ class DossierMailer < ApplicationMailer
 
     @subject = default_i18n_subject(count: hidden_dossiers.size)
     @hidden_dossiers = hidden_dossiers
+    @deletion_date = Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks.from_now
 
     mail(to: to_email, subject: @subject)
   end
@@ -170,6 +164,7 @@ class DossierMailer < ApplicationMailer
       @state = dossiers.first.state
       @subject = default_i18n_subject(count: dossiers.size, state: @state)
       @dossiers = dossiers
+      @expiration_date = Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now
 
       mail(to: to_email, subject: @subject)
     end
@@ -181,6 +176,7 @@ class DossierMailer < ApplicationMailer
     @state = dossiers.first.state
     @subject = default_i18n_subject(count: dossiers.size, state: @state)
     @dossiers = dossiers
+    @expiration_date = Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now
 
     mail(to: to_email, subject: @subject)
   end

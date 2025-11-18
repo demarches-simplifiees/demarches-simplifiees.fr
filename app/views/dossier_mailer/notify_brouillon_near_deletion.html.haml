@@ -3,7 +3,7 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.header', count: @dossiers.size)
+  = t('.header', count: @dossiers.size, expiration_date: human_date(@expiration_date.to_date))
   %ul
     - @dossiers.each do |d|
       %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))

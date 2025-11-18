@@ -5,8 +5,8 @@ fr:
         one: Un dossier en brouillon va bientôt être supprimé
         other: Des dossiers en brouillon vont bientôt être supprimés
       header:
-        one: "Afin de limiter la conservation de vos données personnelles, ce dossier en brouillon sera bientôt supprimé :"
-        other: "Afin de limiter la conservation de vos données personnelles, ces dossiers en brouillon seront bientôt supprimés :"
+        one: "Afin de limiter la conservation de vos données personnelles, ce dossier en brouillon sera supprimé le %{expiration_date} :"
+        other: "Afin de limiter la conservation de vos données personnelles, ces dossiers en brouillon seront supprimés le %{expiration_date} :"
       account_active:
         one: Votre compte reste activé sur Démarches Simplifiées, seul le dossier sera supprimé.
         other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers seront supprimés.
