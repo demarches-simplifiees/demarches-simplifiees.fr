@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
-  attr_reader :procedure_presentation, :statut, :filters_columns
+  attr_reader :procedure_presentation, :statut, :filters_columns, :apply_to_all_tabs
 
-  def initialize(procedure_presentation:, statut:, filters_columns:)
+  def initialize(procedure_presentation:, statut:, filters_columns:, apply_to_all_tabs: false)
     @procedure_presentation = procedure_presentation
     @statut = statut
     @filters_columns = filters_columns
+    @apply_to_all_tabs = apply_to_all_tabs
   end
 
   def id
@@ -43,6 +44,7 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
       params: {
         filters_columns: filters_columns_array.map(&:id),
         statut: @statut,
+        apply_to_all_tabs: @apply_to_all_tabs ? '1' : '0',
       }.compact,
       form: { data: { turbo: true, turbo_force: :server } },
       form_class: 'inline'
@@ -119,12 +121,14 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
     @disabled_items ||= filters_columns.map(&:id)
   end
 
-  def filters_in_hidden_inputs(form, form_prefix)
+  def filters_in_hidden_inputs(form, form_prefix, include_apply_to_all_tabs: true)
     # form_prefix is used to avoid id conflicts with other forms on the page
-    safe_join([
+    inputs = [
       *filters_columns.map { |filter| form.hidden_field "filters_columns[]", value: filter.id, id: "#{form_prefix}-filter-#{filter.id.parameterize}" },
       form.hidden_field("statut", value: @statut, id: "#{form_prefix}-statut"),
-    ])
+    ]
+    inputs << form.hidden_field("apply_to_all_tabs", value: @apply_to_all_tabs ? '1' : '0', id: "#{form_prefix}-apply-to-all-tabs") if include_apply_to_all_tabs
+    safe_join(inputs)
   end
 
   def usager_filter_items

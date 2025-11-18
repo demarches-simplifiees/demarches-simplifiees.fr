@@ -13,7 +13,12 @@ module Instructeurs
 
     # updates the filters in customization without saving them
     def refresh_filters
-      customize_filters_component = Instructeurs::CustomizeFiltersComponent.new(procedure_presentation: @procedure_presentation, statut: params[:statut], filters_columns: filters_columns_from_params)
+      customize_filters_component = Instructeurs::CustomizeFiltersComponent.new(
+        procedure_presentation: @procedure_presentation,
+        statut: params[:statut],
+        filters_columns: filters_columns_from_params,
+        apply_to_all_tabs: params[:apply_to_all_tabs] == '1'
+      )
 
       render turbo_stream: turbo_stream.replace(customize_filters_component.id, customize_filters_component)
     end
@@ -45,6 +50,7 @@ module Instructeurs
     def customize_filters
       @procedure = @procedure_presentation.procedure
       @statut = params[:statut]
+      @apply_to_all_tabs = params[:apply_to_all_tabs] == '1'
       @filters_columns = @procedure_presentation.filters_for(@statut).map(&:column)
       render layout: "empty_layout"
     end

@@ -44,8 +44,13 @@
         </div>
       </div>
 
-      <%= form_with url: persist_filters_instructeur_procedure_presentation_path(@procedure_presentation), id: "toggle-apply-all-tabs-form", data: { turbo: true, turbo_force: :server } do |form| %>
-        <%= render Dsfr::ToggleComponent.new(form: form, target: :apply_to_all_tabs, title: "Appliquer cette personnalisation dans tous les onglets (à suivre, suivis par moi...)", extra_class_names: "fr-toggle--label-left fr-mt-2w") %>
+      <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), id: "toggle-apply-all-tabs-form", data: { turbo: true, turbo_force: :server, controller: 'autosubmit' } do |form| %>
+        <%= filters_in_hidden_inputs(form, "toggle-apply-all-tabs-form", include_apply_to_all_tabs: false) %>
+        <div class="fr-toggle fr-mt-2w">
+          <%= form.check_box :apply_to_all_tabs, class: 'fr-toggle__input', id: "toggle-apply-all-tabs-form-input", checked: @apply_to_all_tabs %>
+
+          <%= form.label :apply_to_all_tabs, "Appliquer cette personnalisation dans tous les onglets (à suivre, suivis par moi...)", class: 'fr-toggle__label', for: "toggle-apply-all-tabs-form-input" %>
+        </div>
       <% end %>
     </div>
   </div>
