@@ -285,6 +285,15 @@ class Champ < ApplicationRecord
     user_buffer_stream? || instructeur_buffer_stream?
   end
 
+  def clear
+    update_columns(value: nil, value_json: nil, external_id: nil, data: nil)
+    Champ.no_touching do
+      etablissement&.destroy
+      geo_areas.destroy_all
+      piece_justificative_file.purge_later
+    end
+  end
+
   def clone_value_from(champ)
     self.value = champ.value
     self.external_id = champ.external_id
