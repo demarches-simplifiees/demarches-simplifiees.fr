@@ -120,7 +120,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it 'checks email body for correct inclusions regarding brouillon nearing deletion' do
       expect(subject.body).to include("n° #{dossier.id} ")
       expect(subject.body).to include(dossier.procedure.libelle)
-      expect(subject.body).to include(I18n.l((Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks).to_date, format: :long).to_s)
+      expect(subject.body).to include(I18n.l(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now.to_date, format: :long).to_s)
     end
   end
 
@@ -148,7 +148,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.subject).to eq("Un dossier de votre compte a été mis à la corbeille")
         expect(subject.body).to include("N° #{hidden_dossier.id} ")
         expect(subject.body).to include(hidden_dossier.procedure.libelle)
-        expect(subject.body).to include(I18n.l((Time.zone.now + Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks).to_date, format: :long).to_s)
+        expect(subject.body).to include(I18n.l(Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks.from_now.to_date, format: :long).to_s)
       end
     end
 
@@ -162,7 +162,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.subject).to eq("Un dossier de votre compte a été mis à la corbeille")
         expect(subject.body).to include("N° #{hidden_dossier.id} ")
         expect(subject.body).to include(hidden_dossier.procedure.libelle)
-        expect(subject.body).to include(I18n.l((Time.zone.now + Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks).to_date, format: :long).to_s)
+        expect(subject.body).to include(I18n.l(Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks.from_now.to_date, format: :long).to_s)
       end
     end
   end
@@ -175,7 +175,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it 'verifies subject and body content for automatic deletion notification' do
       expect(subject.subject).to eq("Un dossier a été mis à la corbeille")
       expect(subject.body).to include("n° #{hidden_dossier.id} (#{hidden_dossier.procedure.libelle})")
-      expect(subject.body).to include(I18n.l((Time.zone.now + Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks).to_date, format: :long).to_s)
+      expect(subject.body).to include(I18n.l(Dossier::REMAINING_WEEKS_BEFORE_DELETION.weeks.from_now.to_date, format: :long).to_s)
     end
   end
 
@@ -190,7 +190,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.body).to include("N° #{dossier.id} ")
         expect(subject.body).to include(dossier.procedure.libelle)
         expect(subject.body).to include("PDF")
-        expect(subject.body).to include(I18n.l((Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks).to_date, format: :long).to_s)
+        expect(subject.body).to include(I18n.l(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now.to_date, format: :long).to_s)
       end
     end
 
@@ -203,7 +203,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.subject).to eq("Un dossier traité va bientôt être supprimé")
         expect(subject.body).to include("N° #{dossier.id} ")
         expect(subject.body).to include(dossier.procedure.libelle)
-        expect(subject.body).to include(I18n.l((Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks).to_date, format: :long).to_s)
+        expect(subject.body).to include(I18n.l(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now.to_date, format: :long).to_s)
       end
     end
   end
@@ -221,7 +221,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.body).to include(dossier.procedure.libelle)
         expect(subject.body).to include("Votre compte reste activé")
         expect(subject.body).to include("Depuis la page de votre dossier vous avez la possibilité de :<br>- prolonger la durée de conservation")
-        expect(subject.body).to include(I18n.l((Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks).to_date, format: :long).to_s)
+        expect(subject.body).to include(I18n.l(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now.to_date, format: :long).to_s)
       end
     end
 
@@ -237,7 +237,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.body).to include(dossier.procedure.libelle)
         expect(subject.body).to include("Votre compte reste activé")
         expect(subject.body).to include("PDF")
-        expect(subject.body).to include(I18n.l((Time.zone.now + Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks).to_date, format: :long).to_s)
+        expect(subject.body).to include(I18n.l(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.from_now.to_date, format: :long).to_s)
       end
     end
 
