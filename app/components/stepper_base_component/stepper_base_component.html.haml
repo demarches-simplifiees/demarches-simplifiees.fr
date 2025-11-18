@@ -1,0 +1,15 @@
+.fr-container.fr-mt-6w.fr-mb-15w
+  = back_link
+  %h3.fr-my-3w
+    = title
+
+  .fr-stepper
+    %h2.fr-stepper__title= step_title
+    %span.fr-stepper__state= step_state
+
+    .fr-stepper__steps{ data: { "fr-current-step" => current_step, "fr-steps" => step_count } }
+    %p.fr-stepper__details
+      %span.fr-text--bold Étape suivante :
+      = next_step_title
+
+  = render step_component
