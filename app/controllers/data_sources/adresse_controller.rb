@@ -14,8 +14,14 @@ class DataSources::AdresseController < ApplicationController
       elsif response.timed_out?
         return head :gateway_timeout
       else
-        Sentry.set_extras(body: response.body, code: response.code)
-        Sentry.capture_message("Adresse API failure: #{response.return_message}")
+        if response.code == 0
+          error_message = response.return_message
+        else
+          Sentry.set_extras(body: response.body, code: response.code)
+          error_message = JSON.parse(response.body, symbolize_names: true).dig(:message)
+        end
+
+        Sentry.capture_message("Adresse API failure: #{error_message}")
         return head :bad_gateway
       end
     end
