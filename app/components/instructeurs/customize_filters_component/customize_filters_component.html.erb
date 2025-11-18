@@ -19,9 +19,15 @@
       </div>
     </div>
 
-    <div id="selected-filters" class="fr-col-5">
-      <div class="fr-background-alt--blue-france rounded-4 fr-p-2w">
+    <div
+      class="
+        fr-col-5 fr-background-alt--blue-france rounded-4 fr-p-2w flex
+        column flex-gap-3 justify-between
+      "
+    >
+      <div id="selected-filters">
         <h5><%= t('.selection_title') %></h5>
+
         <div class="flex column flex-gap-2">
           <% filters_columns.each do |filter_column| %>
             <div class="filter-box" id="<%= filter_column.id.parameterize %>">
@@ -37,6 +43,10 @@
           <% end %>
         </div>
       </div>
+
+      <%= form_with url: persist_filters_instructeur_procedure_presentation_path(@procedure_presentation), id: "toggle-apply-all-tabs-form", data: { turbo: true, turbo_force: :server } do |form| %>
+        <%= render Dsfr::ToggleComponent.new(form: form, target: :apply_to_all_tabs, title: "Appliquer cette personnalisation dans tous les onglets (à suivre, suivis par moi...)", extra_class_names: "fr-toggle--label-left fr-mt-2w") %>
+      <% end %>
     </div>
   </div>
 
