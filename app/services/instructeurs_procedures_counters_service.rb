@@ -25,8 +25,8 @@ class InstructeursProceduresCountersService
       .pluck(GroupeInstructeur.arel_table[:id])
 
     dossiers = instructeur.dossiers
-      .joins(groupe_instructeur: :procedure)
-      .where(procedures: { hidden_at: nil })
+      .joins(:groupe_instructeur)
+      .where(groupe_instructeur_id: groupes_instructeurs_ids)
       .group('groupe_instructeurs.procedure_id')
       .reorder(nil)
 

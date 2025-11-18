@@ -4,7 +4,7 @@ describe InstructeursProceduresCountersService do
   let(:instructeur) { instructeurs(:default_instructeur_admin) }
 
   describe '#call' do
-    subject { described_class.new(instructeur:, procedures: instructeur.procedures).call }
+    subject { described_class.new(instructeur:, procedures: instructeur.procedures.kept).call }
 
     context "with dossiers" do
       let(:procedure) { create(:procedure, :published, :expirable) }
