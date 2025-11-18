@@ -16,19 +16,20 @@ module Maintenance
     end
 
     def process(batch)
-      Champs::SiretChamp
-        .includes(:etablissement)
-        .where(
-          id: batch.ids,
-          value: nil,
-          external_id: nil,
-          external_state: :fetched
-        )
-        .find_each do |champ|
-          champ.update_columns(
-            value: champ.etablissement.siret,
-            external_id: champ.etablissement.siret
-          )
+      with_statement_timeout("5min") do
+          errored_champs_from_batch = Champs::SiretChamp
+            .where(
+              id: batch.pluck(:id),
+              value: nil,
+              external_id: nil,
+              external_state: :fetched
+            )
+          errored_champs_from_batch.each do |champ|
+            champ.update_columns(
+              value: champ.etablissement.siret,
+              external_id: champ.etablissement.siret
+            )
+          end
         end
     end
 
