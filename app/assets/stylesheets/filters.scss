@@ -14,11 +14,15 @@
 #customize-filters-component {
   .filter-box {
     border: 2px dashed $blue-france-700;
-    padding: 1rem;
+    padding: 0.5rem;
     border-radius: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
   }
+}
+
+#toggle-apply-all-tabs-form {
+  border-top: 1px solid var(--border-contrast-grey);
 }
