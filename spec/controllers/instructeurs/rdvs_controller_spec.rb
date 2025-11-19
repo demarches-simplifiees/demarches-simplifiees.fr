@@ -14,26 +14,15 @@ describe Instructeurs::RdvsController, type: :controller do
   describe '#create' do
     subject { post :create, params: { dossier_id: dossier.id, procedure_id: dossier.procedure.id } }
 
-    context 'with a pending rdv' do
-      let!(:pending_rdv) { create(:rdv, dossier: dossier) }
+    let(:rdv_plan_result) { instance_double(Dry::Monads::Result::Success, success?: true, value!: create(:rdv, dossier: dossier, instructeur: instructeur)) }
 
-      it 'redirects to the pending rdv url' do
-        subject
-        expect(response).to redirect_to(pending_rdv.rdv_plan_url)
-      end
+    before do
+      allow_any_instance_of(RdvService).to receive(:create_rdv_plan).and_return(rdv_plan_result)
     end
 
-    context 'without pending rdv' do
-      let(:rdv_plan_result) { instance_double(Dry::Monads::Result::Success, success?: true, value!: create(:rdv, dossier: dossier, instructeur: instructeur)) }
-
-      before do
-        allow_any_instance_of(RdvService).to receive(:create_rdv_plan).and_return(rdv_plan_result)
-      end
-
-      it 'creates a new rdv and redirects to rdv plan url' do
-        subject
-        expect(response).to redirect_to(rdv_plan_result.value!.rdv_plan_url)
-      end
+    it 'creates a new rdv and redirects to rdv plan url' do
+      subject
+      expect(response).to redirect_to(rdv_plan_result.value!.rdv_plan_url)
     end
   end
 end

@@ -212,14 +212,6 @@ describe RdvService do
     end
   end
 
-  describe '.rdv_sp_rdv_agent_url' do
-    it 'returns the RDV agent URL' do
-      rdv_id = "789"
-      expected_url = "#{ENV['RDV_SERVICE_PUBLIC_URL']}/agents/rdvs/#{rdv_id}"
-      expect(described_class.rdv_sp_rdv_agent_url(rdv_id)).to eq(expected_url)
-    end
-  end
-
   describe '.list_rdvs_url' do
     it 'returns the list RDVs URL with query parameters' do
       rdv_ids = ["123", "456"]
@@ -257,6 +249,34 @@ describe RdvService do
           expect { rdv_connection.reload }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
+    end
+  end
+
+  describe "#get_account_info" do
+    let(:api_response) {
+      {
+        "agent":
+        {
+          id: 10,
+          first_name: "Francis",
+          last_name: "Factice",
+          email: "francis.factice@test.gouv.fr",
+        },
+      }
+    }
+
+    before do
+      stub_request(:get, "#{described_class.rdv_sp_host_url}/api/v1/agents/me")
+        .to_return(body: api_response.to_json)
+    end
+
+    it "returns the info for the logged in agent" do
+      expect(rdv_service.get_account_info).to match({
+        id: 10,
+        first_name: "Francis",
+        last_name: "Factice",
+        email: "francis.factice@test.gouv.fr",
+      })
     end
   end
 end

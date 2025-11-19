@@ -33,10 +33,6 @@ class RdvService
     "#{rdv_sp_host_url}/users/rdvs/#{rdv_id}"
   end
 
-  def self.rdv_sp_rdv_agent_url(rdv_id)
-    "#{rdv_sp_host_url}/agents/rdvs/#{rdv_id}"
-  end
-
   def self.list_rdvs_url(rdv_ids)
     params = rdv_ids.map { |id| "id[]=#{id}" }.join('&')
     "#{rdv_sp_host_url}/api/v1/rdvs?#{params}"
@@ -88,22 +84,16 @@ class RdvService
   end
 
   def update_pending_rdv_plan!(dossier:)
-    # To be replaced by the webhook
-
-    refresh_token_if_expired!
-
     pending_rdv_plan = dossier.rdvs.order(created_at: :desc).where(rdv_external_id: nil).first
 
     return if pending_rdv_plan.nil?
 
-    response = Typhoeus.get(
+    parsed_body = get_from_api(
       self.class.update_pending_rdv_plan_url(pending_rdv_plan.rdv_plan_external_id),
-      headers:
+      error_name: "RdvService#update_pending_rdv_plan failed"
     )
 
-    return if !response.success?
-
-    parsed_body = JSON.parse(response.body)
+    return if parsed_body.empty?
 
     # {
     #   "rdv_plan":
@@ -134,23 +124,21 @@ class RdvService
   def list_rdvs(rdv_ids)
     return [] if rdv_ids.blank?
 
-    refresh_token_if_expired!
-
-    response = Typhoeus.get(
+    parsed_body = get_from_api(
       self.class.list_rdvs_url(rdv_ids),
-      headers:
+      error_name: "RdvService#list_rdvs failed"
     )
 
-    if !response.success?
-      error_message = "RdvService#list_rdvs failed #{response.code} #{response.body}"
-      Rails.logger.error(error_message)
-      Sentry.capture_message(error_message)
-      return nil
-    end
-
-    parsed_body = JSON.parse(response.body)
-
     parsed_body["rdvs"]
+  end
+
+  def get_account_info
+    parsed_body = get_from_api(
+      "#{self.class.rdv_sp_host_url}/api/v1/agents/me",
+      error_name: "RdvService#get_account_info failed"
+    )
+
+    parsed_body["agent"].with_indifferent_access || {}
   end
 
   def refresh_token_if_expired!
@@ -180,6 +168,23 @@ class RdvService
     @rdv_connection.destroy!
 
     raise e
+  end
+
+  private
+
+  def get_from_api(url, error_name:)
+    refresh_token_if_expired!
+
+    response = Typhoeus.get(url, headers:)
+
+    if !response.success?
+      error_message = "#{error_name} #{response.code} #{response.body}"
+      Rails.logger.error(error_message)
+      Sentry.capture_message(error_message)
+      return {}
+    end
+
+    JSON.parse(response.body)
   end
 
   def headers

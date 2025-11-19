@@ -5,12 +5,6 @@ module Instructeurs
     before_action :set_dossier
 
     def create
-      pending_rdv = @dossier.rdvs.pending_for_instructeur(current_instructeur).first
-
-      if pending_rdv.present?
-        return redirect_to pending_rdv.rdv_plan_url, allow_other_host: true
-      end
-
       # TODO: remove this once ENV are fixed in dev env
       host = helpers.app_host_legacy?(request) ? ENV.fetch("APP_HOST_LEGACY") : ENV.fetch("APP_HOST")
 

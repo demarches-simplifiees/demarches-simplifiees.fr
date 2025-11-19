@@ -1,0 +1,6 @@
+<%= render(Dsfr::SidemenuComponent.new) do |component|
+  component.with_links([
+    { name: "Rendez-vous", url: rendez_vous_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]) },
+    { name: "Connexion à RDV Service Public", url: rendez_vous_connexion_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]) }
+  ])
+end %>

@@ -460,6 +460,7 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
+    resource :rdv_connections, only: [:show, :destroy]
     resources :procedures, only: [] do
       resources :export_templates, only: [:new, :create, :edit, :update, :destroy] do
         collection do
@@ -510,6 +511,7 @@ Rails.application.routes.draw do
               get 'avis_new'
               get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
               get 'rendez-vous' => 'dossiers#rendez_vous'
+              get 'rendez-vous/connexion' => 'dossiers#rdv_connection'
               patch 'follow'
               patch 'unfollow'
               patch 'archive'
