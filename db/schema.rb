@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_19_165725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -470,7 +470,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.datetime "updated_at", null: false
     t.index ["commentaire_id"], name: "index_dossier_pending_responses_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_pending_responses_on_dossier_id"
-    t.index ["responded_at"], name: "index_dossier_pending_responses_on_responded_at"
+    t.index ["responded_at"], name: "index_dossier_pending_responses_on_responded_at", where: "(responded_at IS NULL)"
   end
 
   create_table "dossier_submitted_messages", force: :cascade do |t|
@@ -1037,7 +1037,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
 
   create_table "procedure_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_procedure_tags_on_name", unique: true
@@ -1465,8 +1464,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
   add_foreign_key "champs", "dossiers"
-  add_foreign_key "champs", "etablissements"
-  add_foreign_key "champs", "types_de_champ"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"

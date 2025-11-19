@@ -566,7 +566,7 @@ en:
           pending_correction_html: '<h4 class="card-title fr-mb-1v">This file is waiting for your corrections</h4><p>Consult the changes to be made in the <a href="%{link}" class="fr-link">messaging system <span class="visually-hidden">of file number %{id}</span></a>.</p>'
           pending_response:
             title: "This file is waiting for your response"
-            message: "Consult the messaging system and respond to the administration"
+            message_html: 'Consult the <a href="%{link}" class="fr-link">messaging system<span class="visually-hidden"> of file number %{id}</span></a> and respond to the administration.'
           depose_at: First submission on %{date}
           created_at: Created at %{date}
           updated_at: updated at %{date}
