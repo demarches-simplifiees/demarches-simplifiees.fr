@@ -7,6 +7,7 @@ module Administrateurs
 
     before_action :retrieve_procedure
     before_action :reload_procedure_with_includes, only: [:destroy]
+    before_action :ensure_llm_calls_enabled, only: [:simplify, :accept_simplification]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
@@ -168,6 +169,12 @@ module Administrateurs
       @morphed = [champ_component_from(@coordinate)]
     end
 
+    def simplify
+    end
+
+    def accept_simplification
+    end
+
     private
 
     def changing_of_type?(type_de_champ)
@@ -258,6 +265,11 @@ module Administrateurs
 
     def marcel_content_type
       Marcel::MimeType.for(referentiel_file.read, name: referentiel_file.original_filename, declared_type: referentiel_file.content_type)
+    end
+
+    def ensure_llm_calls_enabled
+      return if @procedure.feature_enabled?(:llm_nightly_improve_procedure)
+      redirect_to admin_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
     end
   end
 end
