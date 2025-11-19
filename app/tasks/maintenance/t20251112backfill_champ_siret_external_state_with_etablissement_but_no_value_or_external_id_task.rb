@@ -16,21 +16,22 @@ module Maintenance
     end
 
     def process(batch)
-      with_statement_timeout("5min") do
-          errored_champs_from_batch = Champs::SiretChamp
-            .where(
-              id: batch.pluck(:id),
-              value: nil,
-              external_id: nil,
-              external_state: :fetched
-            )
-          errored_champs_from_batch.each do |champ|
-            champ.update_columns(
-              value: champ.etablissement.siret,
-              external_id: champ.etablissement.siret
-            )
-          end
-        end
+      # Use raw SQL with UPDATE ... FROM to reference joined table safely
+      conn = ApplicationRecord.connection
+
+      sql = <<~SQL.squish
+        UPDATE champs
+        SET value = etablissements.siret,
+            external_id = etablissements.siret
+        FROM etablissements
+        WHERE champs.etablissement_id = etablissements.id
+          AND champs.id IN (#{batch.ids.join(',')})
+          AND champs.value IS NULL
+          AND champs.external_id IS NULL
+          AND champs.external_state = '#{Champs::SiretChamp.external_states[:fetched]}'
+          AND champs.type = 'Champs::SiretChamp'
+      SQL
+      conn.execute(sql)
     end
 
     def count
