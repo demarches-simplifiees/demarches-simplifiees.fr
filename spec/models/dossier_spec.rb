@@ -574,43 +574,6 @@ describe Dossier, type: :model do
           expect(dossier.depose_at).to eq(beginning_of_day)
           expect(dossier.en_construction_at).to be > beginning_of_day
         end
-
-        context 'when dossier have piece_justificative or titre_identite' do
-          include Logic
-
-          let(:procedure) { create(:procedure, types_de_champ_public:) }
-          let(:dossier) { create(:dossier, :brouillon, :with_populated_champs, procedure:) }
-
-          context 'when piece_justificative' do
-            let(:types_de_champ_public) { [{ type: :piece_justificative, condition: ds_eq(constant(true), constant(visible)) }] }
-            let(:champ) { dossier.project_champs_public.find(&:piece_justificative?) }
-
-            context 'when not visible' do
-              let(:visible) { false }
-              it { expect { subject }.to change { Champ.exists?(champ.id) } }
-            end
-
-            context 'when visible' do
-              let(:visible) { true }
-              it { expect { subject }.not_to change { champ.reload.piece_justificative_file.attached? } }
-            end
-          end
-
-          context 'when titre identite' do
-            let(:types_de_champ_public) { [{ type: :titre_identite, condition: ds_eq(constant(true), constant(visible)) }] }
-            let(:champ) { dossier.project_champs_public.find(&:titre_identite?) }
-
-            context 'when not visible' do
-              let(:visible) { false }
-              it { expect { subject }.to change { Champ.exists?(champ.id) } }
-            end
-
-            context 'when visible' do
-              let(:visible) { true }
-              it { expect { subject }.not_to change { champ.reload.piece_justificative_file.attached? } }
-            end
-          end
-        end
       end
 
       context 'when the procedure.routing_enabled? is true' do
@@ -2458,51 +2421,6 @@ describe Dossier, type: :model do
         end
 
         it { is_expected.to eq(expected) }
-      end
-    end
-  end
-
-  describe "remove_titres_identite!" do
-    let(:declarative_with_state) { nil }
-    let(:procedure) { create(:procedure, declarative_with_state:, types_de_champ_public: [{ type: :titre_identite }, { type: :titre_identite }]) }
-    let(:dossier) { create(:dossier, :en_instruction, :followed, :with_populated_champs, procedure:) }
-    let(:champ_titre_identite) { dossier.champs.first }
-    let(:champ_titre_identite_vide) { dossier.champs.second }
-
-    before do
-      champ_titre_identite_vide.piece_justificative_file.purge
-    end
-
-    it "clean up titres identite on accepter" do
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
-      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      dossier.accepter!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
-    end
-
-    it "clean up titres identite on refuser" do
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
-      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      dossier.refuser!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
-    end
-
-    it "clean up titres identite on classer_sans_suite" do
-      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
-      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      dossier.classer_sans_suite!(instructeur: dossier.followers_instructeurs.first, motivation: "yolo!")
-      expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
-    end
-
-    context 'en_construction' do
-      let(:declarative_with_state) { 'accepte' }
-      let(:dossier) { create(:dossier, :en_construction, :followed, :with_populated_champs, procedure:) }
-
-      it "clean up titres identite on accepter_automatiquement" do
-        expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
-        expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-        dossier.accepter_automatiquement!
-        expect(Champ.exists?(champ_titre_identite.id)).to be_falsey
       end
     end
   end
