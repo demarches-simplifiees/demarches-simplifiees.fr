@@ -19,6 +19,6 @@ en:
   anonymisation_callout:
     title: Instructor Identity
     content_part_1: Any decision made by an administration includes the signature of its author as well as the first name, last name, and title of the person making the decision in legible characters.
-    content_part_2_html: To activate the option to <strong>not disclose the identity of instructors</strong> during email communications with users, contact us at contact@demarches-simplifiees.fr, stating your procedure number (%{id}).
+    content_part_2_html: To activate the option to <strong>not disclose the identity of instructors</strong> during email communications with users, contact us at %{contact_email}, stating your procedure number (%{id}).
     link_text: Text on LegiFrance
     link_url: https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000031366350/LEGISCTA000031367523/
