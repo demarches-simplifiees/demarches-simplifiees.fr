@@ -1,15 +1,14 @@
 %p
-  Bonjour,
+  = t('notification_mailer.default_templates.greeting')
 
 %p
-  Votre dossier n° --numéro du dossier--
-  %strong a été refusé
-  le --date de décision--.
+  = t('notification_mailer.default_templates.your_file_number', id: '--numéro du dossier--')
+  %strong= t('notification_mailer.default_templates.refused_mail.refused', date: '--date de décision--')
 
-<p>Le motif de refus est le suivant :</p>
-<blockquote>--motivation--</blockquote>
+%p= t('notification_mailer.default_templates.refused_mail.reason_title')
+%blockquote= t('notification_mailer.default_templates.refused_mail.reason_content', motivation: '--motivation--')
 
 %p
-  Pour en savoir plus sur le motif du refus, vous pouvez consulter votre dossier et les éventuels messages de l'administration à cette adresse : --lien dossier--
+  = t('notification_mailer.default_templates.refused_mail.more_info', link: '--lien dossier--')
 
 = render partial: "notification_mailer/default_templates/signature"

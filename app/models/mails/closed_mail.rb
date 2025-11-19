@@ -22,8 +22,8 @@ module Mails
     validates :body, tags: true
 
     SLUG = "closed_mail"
-    DISPLAYED_NAME = "Accusé d’acceptation"
-    DEFAULT_SUBJECT = 'Votre dossier n° --numéro du dossier-- a été accepté (--libellé démarche--)'
+    DISPLAYED_NAME = I18n.t('activerecord.models.mail.closed_mail.acceptance_acknowledgment')
+    DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.closed_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
     def self.default_template_name_for_procedure(procedure)

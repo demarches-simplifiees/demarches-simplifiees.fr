@@ -3,7 +3,7 @@
 class ExportItem
   include TagsSubstitutionConcern
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
-  FORMAT_DATE = "%Y-%m-%d".freeze
+  FORMAT_DATE = :dashed
 
   attr_reader :template, :enabled, :stable_id
 

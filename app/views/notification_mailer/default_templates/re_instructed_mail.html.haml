@@ -1,11 +1,11 @@
 %p
-  Bonjour,
+  = t('notification_mailer.default_templates.greeting')
 
 %p
-  Votre dossier n° --numéro du dossier--
-  va être réexaminé, la précédente décision sur ce dossier est caduque.
-  Vous pouvez retrouver le dossier que vous avez créé pour la démarche --libellé démarche-- à l’adresse suivante : --lien dossier--
+  = t('notification_mailer.default_templates.your_file_number', id: '--numéro du dossier--')
+  = t('notification_mailer.default_templates.re_instructed_mail.reexamined')
+  = t('notification_mailer.default_templates.re_instructed_mail.procedure_link', procedure: '--libellé démarche--', link: '--lien dossier--')
 
-  Pour obtenir le détail de cette modification de la décision, vous pouvez contacter le service : --nom du service--.
+  = t('notification_mailer.default_templates.re_instructed_mail.contact_service', service: '--nom du service--')
 
 = render partial: "notification_mailer/default_templates/signature"
