@@ -24,26 +24,11 @@ module MailerDefaultsConfigurableConcern
 
   included do
     before_action -> { self.class.save_original_defaults }
-    before_action :set_currents_for_legacy
+    # YOLO, envoie tous les liens vers le nouveau domaine
+    before_action :set_currents_for_demarche_numerique_gouv_fr
     after_action -> { self.class.reset_original_defaults }
 
-    def configure_defaults_for_user(user, forced_domain = nil)
-      return if !user.is_a?(User) # not for super-admins
-
-      # Temporaire avant migration: tous les emails partent par demarcehs-simplifiees.fr
-      # le temps de config brevo
-      set_currents_for_legacy
-
-      # if user.preferred_domain_demarche_numerique_gouv_fr?
-      #   set_currents_for_demarche_numerique_gouv_fr
-      # elsif forced_domain == ApplicationHelper::APP_HOST
-      #   set_currents_for_demarche_numerique_gouv_fr
-      # elsif forced_domain == ApplicationHelper::APP_HOST_LEGACY
-      #   set_currents_for_legacy
-      # else
-      #   set_currents_for_legacy
-      # end
-
+    def configure_defaults_for_user(_user, _forced_domain = nil)
       # Define mailer defaults
       from = derive_from_header
       self.class.default from: from, reply_to: from
@@ -54,25 +39,17 @@ module MailerDefaultsConfigurableConcern
       self.class.asset_host = "#{original_uri.scheme}://#{Current.host}"
     end
 
-    def configure_defaults_for_email(email)
-      user = User.find_by(email: email)
-      configure_defaults_for_user(user)
+    def configure_defaults_for_email(_email)
+      configure_defaults_for_user(nil)
     end
 
     private
 
     def set_currents_for_demarche_numerique_gouv_fr
       Current.application_name = "demarche.numerique.gouv.fr"
-      Current.host = "demarche.numerique.gouv.fr"
+      Current.host = ENV["APP_HOST"]
       Current.contact_email = "contact@demarche.numerique.gouv.fr"
       Current.no_reply_email = "Démarche Numérique <ne-pas-repondre@demarche.numerique.gouv.fr>"
-    end
-
-    def set_currents_for_legacy
-      Current.application_name = APPLICATION_NAME
-      Current.host = ENV["APP_HOST_LEGACY"] || ENV.fetch("APP_HOST") # APP_HOST_LEGACY is optional. Without it, we are in the situation withotu double domains
-      Current.contact_email = CONTACT_EMAIL
-      Current.no_reply_email = NO_REPLY_EMAIL
     end
 
     def derive_from_header
