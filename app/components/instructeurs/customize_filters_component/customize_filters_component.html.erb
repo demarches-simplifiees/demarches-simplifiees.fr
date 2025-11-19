@@ -6,11 +6,13 @@
           <div class="fr-card fr-p-2w">
             <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), data: { turbo: true, controller: "enable-submit-if-form-changes", action: "change->enable-submit-if-form-changes#onFormChange" }, id: "form-#{filter_select[:label].parameterize}" do |form| %>
               <%= filters_in_hidden_inputs(form, filter_select[:label].parameterize) %>
+
               <div class="flex align-end flex-gap-2">
                 <div class="flex flex-1 column">
                   <%= form.label "filters_columns[]", filter_select[:label], class: "fr-label", for: "select-#{filter_select[:label].parameterize}" %>
                   <%= form.select "filters_columns[]", filter_select[:items], { prompt: t('.select'), required: true, disabled: disabled_items, selected: "" }, class: 'fr-select width-100', id:  "select-#{filter_select[:label].parameterize}" %>
                 </div>
+
                 <%= form.submit t('.add'), class: "fr-btn", disabled: true, data: { 'enable-submit-if-form-changes-target': 'submitButton' } %>
               </div>
             <% end %>
@@ -36,8 +38,10 @@
                   <%= move_up_button(filter_column) %>
                   <%= move_down_button(filter_column) %>
                 </div>
+
                 <p class="fr-mb-0"><%= filter_column.label %></p>
               </div>
+
               <%= delete_button(filter_column) %>
             </div>
           <% end %>
@@ -46,10 +50,11 @@
 
       <%= form_with url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation), id: "toggle-apply-all-tabs-form", data: { turbo: true, turbo_force: :server, controller: 'autosubmit' } do |form| %>
         <%= filters_in_hidden_inputs(form, "toggle-apply-all-tabs-form", include_apply_to_all_tabs: false) %>
+
         <div class="fr-toggle fr-mt-2w">
           <%= form.check_box :apply_to_all_tabs, class: 'fr-toggle__input', id: "toggle-apply-all-tabs-form-input", checked: @apply_to_all_tabs %>
 
-          <%= form.label :apply_to_all_tabs, "Appliquer cette personnalisation dans tous les onglets (à suivre, suivis par moi...)", class: 'fr-toggle__label', for: "toggle-apply-all-tabs-form-input" %>
+          <%= form.label :apply_to_all_tabs, t('.apply_to_all_tabs_label'), class: 'fr-toggle__label', for: "toggle-apply-all-tabs-form-input" %>
         </div>
       <% end %>
     </div>
