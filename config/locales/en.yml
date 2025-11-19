@@ -937,7 +937,7 @@ en:
           get_papertrail: "Get a deposit receipt"
           filename: "deposit-receipt_file-%{dossier_id}.pdf"
       show_in_trash:
-        page_title: "File nº %{numero} - In trash"
+        page_title: "File n° %{numero} - In trash"
         title: "File n° %{numero} has been moved to trash"
         explanation_html: "You can find this file from the <a href=\"%{trash_link}\" class=\"fr-link\">trash</a> tab of your account.<br>It is not currently viewable."
         consult_trash: "View trash"
@@ -945,7 +945,7 @@ en:
         user_request_info: "If this file was moved to trash at your request:<br>You can still <strong>restore</strong> it."
         automatic_info: "If this file was moved to trash automatically because its maximum retention period has been reached:<br>We recommend <strong>downloading</strong> it as soon as possible before it is permanently deleted."
       show_deleted:
-        page_title: "File nº %{numero} - Permanently deleted"
+        page_title: "File n° %{numero} - Permanently deleted"
         title: "File n° %{numero} has been deleted"
         explanation: "You can no longer recover this file for one of the following reasons:"
         reason_user_request: "It was moved to trash at your request, then automatically deleted."

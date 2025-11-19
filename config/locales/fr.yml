@@ -952,7 +952,7 @@ fr:
           get_papertrail: "Obtenir une attestation de dépôt de dossier"
           filename: "attestation-depot_dossier-%{dossier_id}.pdf"
       show_in_trash:
-        page_title: "Dossier nº %{numero} - En corbeille"
+        page_title: "Dossier n° %{numero} - En corbeille"
         title: "Le dossier n° %{numero} a été mis à la corbeille"
         explanation_html: "Vous pouvez retrouver ce dossier depuis l'onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n'est pas consultable actuellement."
         consult_trash: "Consulter la corbeille"
@@ -960,7 +960,7 @@ fr:
         user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
         automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu'il ne soit supprimé définitivement."
       show_deleted:
-        page_title: "Dossier nº %{numero} - Supprimé définitivement"
+        page_title: "Dossier n° %{numero} - Supprimé définitivement"
         title: "Le dossier n° %{numero} a été supprimé"
         explanation: "Vous ne pouvez plus récupérer ce dossier pour une des raisons suivantes :"
         reason_user_request: "Il a été mis à la corbeille à votre demande, puis automatiquement supprimé."
