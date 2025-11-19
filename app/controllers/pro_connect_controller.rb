@@ -54,6 +54,7 @@ class ProConnectController < ApplicationController
     set_pro_connect_session_info_cookie(user.id)
 
     sign_in(:user, user)
+    user.update_preferred_domain(Current.host)
     redirect_to stored_location_for(:user) || root_path
 
   rescue Rack::OAuth2::Client::Error => e
