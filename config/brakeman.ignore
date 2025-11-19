@@ -93,6 +93,29 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "317cf1145a84f666b0bb0297ad0af6700717540a20b537d323416c95e2ef3fd1",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/tasks/maintenance/t20251112backfill_champ_siret_external_state_with_etablissement_but_no_value_or_external_id_task.rb",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ApplicationRecord.connection.execute(\"UPDATE champs\\nSET value = etablissements.siret,\\n    external_id = etablissements.siret\\nFROM etablissements\\nWHERE champs.etablissement_id = etablissements.id\\n  AND champs.id IN (#{batch.ids.join(\",\")})\\n  AND champs.value IS NULL\\n  AND champs.external_id IS NULL\\n  AND champs.external_state = '#{Champs::SiretChamp.external_states[:fetched]}'\\n  AND champs.type = 'Champs::SiretChamp'\\n\".squish)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Maintenance::T20251112backfillChampSiretExternalStateWithEtablissementButNoValueOrExternalIdTask",
+        "method": "process"
+      },
+      "user_input": "batch.ids.join(\",\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "737aa4f7931ece068cce98d7cc66057a1ec81b9be43e469c3569ff1be91bbf09",
       "check_name": "SQL",
       "message": "Possible SQL injection",
