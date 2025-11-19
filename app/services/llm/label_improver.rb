@@ -213,7 +213,7 @@ module LLM
           libelle = (update['libelle'] || args['libelle']).to_s.strip
           description = (update['description'] || args['description'])
           position = (update['position'] || args['position'])
-          next if stable_id.nil? || libelle.blank?
+          next if filter_invalid_llm_result(stable_id, libelle, description)
 
           {
             op_kind: 'update',
@@ -224,6 +224,29 @@ module LLM
           }
         end
         .compact
+    end
+
+    private
+
+    def sanitize_schema_for_prompt(schema)
+      return schema unless schema.is_a?(Array)
+
+      schema.map do |field|
+        field.transform_values do |value|
+          case value
+          when Array
+            Array(value).map { |choice| choice.is_a?(String) ? choice.gsub(DANGEROUS_CHARS, '').strip : choice }
+          when String
+            value.gsub(DANGEROUS_CHARS, '').strip
+          else
+            value
+          end
+        end
+      end
+    end
+
+    def filter_invalid_llm_result(stable_id, libelle, description)
+      stable_id.nil? || libelle.blank?
     end
   end
 end
