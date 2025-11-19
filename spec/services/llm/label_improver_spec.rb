@@ -26,8 +26,7 @@ RSpec.describe LLM::LabelImprover do
       runner = double()
       allow(runner).to receive(:call).with(anything).and_return(calls)
       service = described_class.new(runner: runner)
-
-      items = service.generate_for(revision)
+      items = service.generate_for(suggestion)
 
       expect(items.size).to eq(2)
       payloads = items.map { |i| i[:payload] }
