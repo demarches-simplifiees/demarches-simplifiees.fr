@@ -253,6 +253,11 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_for(scope: :public).filter(&:conditionable?)
   end
 
+  def apply_llm_rule_suggestion_items(changes)
+    transaction do
+    end
+  end
+
   private
 
   def compute_estimated_fill_duration

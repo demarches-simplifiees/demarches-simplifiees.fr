@@ -398,4 +398,14 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
     end
   end
+
+  describe '#simplify' do
+    let(:procedure) { create(:simple_procedure) }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:type_de_champ_publics) { [{ type: :text, stable_id: 123 }] }
+  end
+
+  describe '#accept_simplification' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'A' }, { type: :text, libelle: 'B' }]) }
+  end
 end
