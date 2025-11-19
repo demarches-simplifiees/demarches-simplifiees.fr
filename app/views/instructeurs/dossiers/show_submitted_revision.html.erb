@@ -1,0 +1,49 @@
+<div class="fr-container fr-my-4v">
+  <%= link_to t('instructeurs.dossiers.submitted_revision.back'), instructeur_dossier_path, class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left' %>
+
+  <div class="fr-my-2v">
+    <h1 class="fr-h3 fr-my-2v">
+      Dossier n° <%= @dossier.id %> – <%= demandeur_dossier(@dossier) %>
+    </h1>
+
+    <p class="fr-text--bold fr-mb-2v"><%= @dossier.procedure.libelle %></p>
+
+    <div class="flex justify-between align-center">
+      <span class="fr-badge fr-badge--sm fr-mb-4v">
+        <%= t('instructeurs.dossiers.submitted_revision.badge') %>
+      </span>
+
+      <%= link_to t('instructeurs.dossiers.submitted_revision.download'),
+        original_instructeur_dossier_path(format: :pdf),
+        target: "_blank",
+        rel: "noopener",
+        class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-download-line' %>
+    </div>
+  </div>
+
+  <div class="fr-grid-row fr-grid-row--center">
+    <% summary = ViewableChamp::HeaderSectionsSummaryComponent.new(dossier: @dossier, is_private: false) %>
+    <%= render summary %>
+
+    <div class="<%= class_names("fr-col-12", "fr-col-xl-9" => summary.render?, "fr-col-xl-8" => !summary.render?) %>">
+      <div
+        class="counter-start-header-section dossier-show dossier-show-instructeur"
+        data-controller="lightbox clipboard2"
+        data-clipboard2-copy-text-value="<%= t('clipboard.copy') %>"
+        data-clipboard2-copied-text-value="<%= t('clipboard.copied') %>"
+      >
+        <%= render ViewableChamp::SectionComponent.new(dossier: @dossier, types_de_champ: @dossier.revision.types_de_champ_public, demande_seen_at: @demande_seen_at, profile: 'instructeur') %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="padded-fixed-footer">
+  <div class="fixed-footer">
+    <div class="fr-container">
+      <div class="fr-grid-row fr-grid-row--center">
+        <%= link_to t('instructeurs.dossiers.submitted_revision.footer.back'), instructeur_dossier_path, class: 'fr-btn fr-mb-2w' %>
+      </div>
+    </div>
+  </div>
+</div>

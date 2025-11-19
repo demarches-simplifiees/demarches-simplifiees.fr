@@ -4,6 +4,12 @@ en:
       archive_pending_html: Archive creation pending<br>(requested %{created_period} ago)
       archive_ready_html: Download archive<br>(requested %{generated_period} ago)
     dossiers:
+      submitted_revision:
+        download: "Download the file (PDF)"
+        badge: "ORIGINAL VERSION FILED BY USER"
+        back: "Go back to file"
+        footer:
+          back: "Close and go back to file"
       filterable_state:
         en_construction: 'In progress'
         en_instruction: 'Processing'
