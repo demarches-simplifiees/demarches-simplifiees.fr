@@ -30,7 +30,7 @@ module Maintenance
         end
 
         it 'sends an email to the user' do
-          expect(BlankMailer).to receive(:send_template).with(to: dossier.user.email, subject: "[demarches-simplifiees.fr] Action requise : pièces jointes manquantes", title: "Pièces jointes manquantes", body: /#{dossier.id}.+pj_1.*pj_2/).and_return(double(deliver_later: true))
+          expect(BlankMailer).to receive(:send_template).with(to: dossier.user.email, subject: "[demarche.numerique.gouv.fr] Action requise : pièces jointes manquantes", title: "Pièces jointes manquantes", body: /#{dossier.id}.+pj_1.*pj_2/).and_return(double(deliver_later: true))
           subject
 
           expect(TaskLog.where("data->>'email' = ?", email).pluck(:data).map { |log| log['notified'] }).to all(eq('user'))
