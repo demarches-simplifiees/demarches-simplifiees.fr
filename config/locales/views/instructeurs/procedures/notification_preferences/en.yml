@@ -20,7 +20,7 @@ en:
           avis_externe: Be informed when an external opinion has been given on the file
           attente_correction: Be informed when a correction request has been sent to the user
           attente_avis: Be informed when an external opinion has been sent on the file
-          attente_reponse: Be informed when a response request has been sent to the user
+          attente_reponse: Be informed when a message has been sent to the user with the "pending response" option
         label:
           positive: Yes
           negative: No

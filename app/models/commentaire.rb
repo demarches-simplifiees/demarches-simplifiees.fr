@@ -103,6 +103,7 @@ class Commentaire < ApplicationRecord
     transaction do
       discard!
       dossier_correction&.resolve!
+      dossier_pending_response&.respond!
       update! body: ''
     end
 
