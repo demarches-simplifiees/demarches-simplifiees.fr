@@ -65,6 +65,12 @@
   %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
     .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
 
+  - if profile =="instructeur" && @dossier.revision_changed_since_submitted?
+    = render Dsfr::AlertComponent.new(state: '', size: :sm, extra_class_names: 'fr-icon-time-line fr-my-4v') do |c|
+      - c.with_body do
+        Il ne s’agit pas de la version d’origine déposée par l’usager :
+        = link_to "Afficher la version d’origine", original_instructeur_dossier_path, class: 'fr-link'
+
   - types_de_champ = dossier.revision.types_de_champ_public
   - if types_de_champ.any? || dossier.procedure.routing_enabled?
     = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
