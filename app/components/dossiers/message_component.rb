@@ -39,6 +39,9 @@ class Dossiers::MessageComponent < ApplicationComponent
     return if groupe_gestionnaire || commentaire.dossier_pending_response.nil?
 
     if commentaire.dossier_pending_response.responded?
+      # Don't show any badge if the message was deleted
+      return if commentaire.discarded?
+
       helpers.response_resolved_badge(:responded)
     else
       helpers.pending_response_badge(connected_user.is_a?(Instructeur) ? :for_instructeur : :for_user)
@@ -64,6 +67,8 @@ class Dossiers::MessageComponent < ApplicationComponent
   def delete_button_text
     if groupe_gestionnaire.nil? && commentaire.dossier_correction&.pending?
       t('.delete_with_correction_button')
+    elsif groupe_gestionnaire.nil? && commentaire.dossier_pending_response&.pending?
+      t('.delete_with_response_button')
     else
       t('.delete_button')
     end
