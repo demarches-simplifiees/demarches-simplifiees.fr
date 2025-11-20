@@ -48,6 +48,7 @@ class GroupeInstructeur < ApplicationRecord
     return if !in?(instructeur.groupe_instructeurs)
 
     instructeur.groupe_instructeurs.destroy(self)
+    InstructeursProcedure.find_by(procedure: self.procedure, instructeur:)&.delete if !instructeur.procedures.include?(self.procedure)
 
     instructeur.follows
       .joins(:dossier)
