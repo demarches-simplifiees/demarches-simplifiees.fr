@@ -131,4 +131,91 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
       end
     end
   end
+
+  describe '#persist_filters' do
+    subject { post :persist_filters, params: }
+
+    let(:procedure) { create(:procedure) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure_presentation) do
+      groupe_instructeur = procedure.defaut_groupe_instructeur
+      assign_to = create(:assign_to, instructeur:, groupe_instructeur:)
+      assign_to.procedure_presentation_or_default_and_errors.first
+    end
+    let(:state_column) { procedure.dossier_state_column }
+    let(:dossier_id_column) { procedure.dossier_id_column }
+    let(:notifications_column) { procedure.dossier_notifications_column }
+
+    before { sign_in(instructeur.user) }
+
+    context 'when apply_to_all_tabs is enabled' do
+      let(:params) do
+        {
+          id: procedure_presentation.id,
+          statut: 'tous',
+          filters_columns: [state_column.id, dossier_id_column.id],
+          apply_to_all_tabs: '1',
+        }
+      end
+
+      before do
+        # Set different filters for different statuses to verify they all get updated
+        procedure_presentation.update!(
+          a_suivre_filters: [FilteredColumn.new(column: notifications_column)],
+          suivis_filters: [FilteredColumn.new(column: state_column, filter: { operator: 'match', value: ['en_construction'] })],
+          traites_filters: [FilteredColumn.new(column: dossier_id_column)],
+          tous_filters: []
+        )
+      end
+
+      it 'replaces filters for all statuses with the same filters' do
+        subject
+
+        expect(response).to redirect_to(instructeur_procedure_path(procedure, statut: 'tous'))
+
+        procedure_presentation.reload
+
+        # All statuses should have the same filters (state_column and dossier_id_column)
+        expect(procedure_presentation.a_suivre_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.suivis_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.traites_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.tous_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.supprimes_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.supprimes_recemment_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.expirant_filters.map(&:column)).to eq([state_column, dossier_id_column])
+        expect(procedure_presentation.archives_filters.map(&:column)).to eq([state_column, dossier_id_column])
+      end
+    end
+
+    context 'when apply_to_all_tabs is disabled' do
+      let(:params) do
+        {
+          id: procedure_presentation.id,
+          statut: 'a-suivre',
+          filters_columns: [state_column.id],
+          apply_to_all_tabs: '0',
+        }
+      end
+
+      before do
+        procedure_presentation.update!(
+          a_suivre_filters: [FilteredColumn.new(column: notifications_column)],
+          suivis_filters: [FilteredColumn.new(column: dossier_id_column)]
+        )
+      end
+
+      it 'only replaces filters for the specified statut' do
+        subject
+
+        expect(response).to redirect_to(instructeur_procedure_path(procedure, statut: 'a-suivre'))
+
+        procedure_presentation.reload
+
+        # Only a_suivre_filters should be updated
+        expect(procedure_presentation.a_suivre_filters.map(&:column)).to eq([state_column])
+        # Other statuses should remain unchanged
+        expect(procedure_presentation.suivis_filters.map(&:column)).to eq([dossier_id_column])
+      end
+    end
+  end
 end

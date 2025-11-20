@@ -2,7 +2,7 @@
   <%= link_to " #{t('.exit_customization')}", instructeur_procedure_path(@procedure, statut: @statut), class: 'fr-link fr-icon-arrow-left-line fr-link--icon--left fr-icon--sm' %>
   <h3 class="fr-my-3w"><%= t('.title') %></h3>
 
-  <%= render Instructeurs::CustomizeFiltersComponent.new(procedure_presentation: @procedure_presentation, statut: @statut, filters_columns: @filters_columns) %>
+  <%= render Instructeurs::CustomizeFiltersComponent.new(procedure_presentation: @procedure_presentation, statut: @statut, filters_columns: @filters_columns, apply_to_all_tabs: @apply_to_all_tabs) %>
 </div>
 
 <div class="padded-fixed-footer">
