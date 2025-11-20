@@ -25,6 +25,8 @@ class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseCompone
       translations: {
         search_error: t('.search_error'),
       },
-      minimum_input_length: 2)
+      minimum_input_length: 2,
+      ariaLabelledbyPrefix: aria_labelledby_prefix,
+      labelId: input_label_id(@champ))
   end
 end

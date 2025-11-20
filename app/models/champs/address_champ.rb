@@ -186,6 +186,14 @@ class Champs::AddressChamp < Champs::TextChamp
     not_in_ban == 'true'
   end
 
+  def legend_label?
+    true
+  end
+
+  def html_label?
+    false
+  end
+
   private
 
   def format_label

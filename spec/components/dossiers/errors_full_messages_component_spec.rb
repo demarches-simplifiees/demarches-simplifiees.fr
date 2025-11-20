@@ -30,10 +30,23 @@ RSpec.describe Dossiers::ErrorsFullMessagesComponent, type: :component do
         let(:rows) { champ_repetition.rows }
         let(:champ_child) { rows.first.first }
 
-        let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
+        let(:types_de_champ_public) { [{ libelle: "Champ parent", type: :repetition, children: [{ libelle: "Champ enfant", type: :text }] }] }
 
         it 'focuses on focusable_input_id' do
           expect(subject).to have_link(champ_child.libelle, href: "##{champ_child.focusable_input_id}")
+        end
+
+        it "renders the model libelle with the parent libelle and the row number" do
+          expect(subject).to have_text("Champ parent - Champ enfant 1")
+        end
+
+        context "when there is more than one child" do
+          let(:types_de_champ_public) { [{ libelle: "Champ parent", type: :repetition, children: [{ libelle: "Premier champ", type: :text }, { libelle: "Second enfant", type: :text }] }] }
+
+          it do
+            expect(subject).to have_text("Champ parent 1 - Premier champ")
+            expect(subject).to have_text("Champ parent 1 - Second enfant")
+          end
         end
       end
 

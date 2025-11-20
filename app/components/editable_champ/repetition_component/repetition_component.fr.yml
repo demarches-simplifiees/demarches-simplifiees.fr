@@ -1,4 +1,4 @@
 ---
 fr:
-  add: "Ajouter un élément pour « %{libelle} »"
-  add_title: Ajouter un élément pour « %{libelle} »
+  add: "Ajouter un élément supplémentaire à « %{libelle} »"
+

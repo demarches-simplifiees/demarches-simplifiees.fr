@@ -3,7 +3,7 @@
 class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
   include EtablissementHelper
 
-  def initialize(form:, champ:, seen_at: nil, opts: {})
+  def initialize(form:, champ:, seen_at: nil, opts: {}, aria_labelledby_prefix: nil, row_number: nil)
     super
     @attribute = :external_id
   end

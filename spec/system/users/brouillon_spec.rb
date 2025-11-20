@@ -53,8 +53,9 @@ describe 'The user', js: true do
     find('.fr-menu__item', text: 'Brétigny (60400)').click
     wait_until { champ_value_for('communes') == "Brétigny" }
 
-    scroll_to(find_field('address'), align: :center)
-    fill_in('address', with: '78 Rue du Grés 30310 Vergè')
+    address_locator = "Saisissez une adresse, une voie, un lieu-dit ou une commune. Exemple : 11 rue Réaumur, Paris"
+    scroll_to(find_field(address_locator), align: :center)
+    fill_in(address_locator, with: '78 Rue du Grés 30310 Vergè')
     find('.fr-menu__item', text: '78 Rue du Grés 30310 Vergèze').click
     wait_until { champ_value_for('address') == '78 Rue du Grés 30310 Vergèze' }
     wait_until { champ_for('address').full_address? }
@@ -154,7 +155,7 @@ describe 'The user', js: true do
     expect(page).to have_selector(".repetition .champs-group", count: 1)
 
     # adding an element means we can ddestroy last item
-    click_on 'Ajouter un élément pour'
+    click_on 'Ajouter un élément supplémentaire à'
     expect(page).to have_selector(".repetition .champs-group:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
     expect(page).to have_selector(".repetition .champs-group", count: 2)
     expect(page).to have_selector(".repetition .champs-group:last-child .utils-repetition-required-destroy-button", count: 1, visible: true)
@@ -166,7 +167,7 @@ describe 'The user', js: true do
 
     expect do
       within '.repetition .champs-group:last-child' do
-        click_on 'Supprimer l’élément'
+        click_on 'Supprimer'
       end
       wait_until { page.all(".champs-group").size == 1 }
       # removing a repetition means one child only, thus its button destroy is not visible
@@ -185,7 +186,7 @@ describe 'The user', js: true do
 
     # errors in header section
     expect(page).to have_content('texte obligatoire doit être rempli')
-    expect(page).to have_content('sub type de champ doit être rempli')
+    expect(page).to have_content('repetition - sub type de champ 1 doit être rempli')
 
     # errors on champs
     expect(page).to have_content('« texte obligatoire » doit être rempli')
