@@ -8,6 +8,15 @@ class LLMRuleSuggestion < ApplicationRecord
   enum :state, { pending: 'pending', queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped' }
   enum :rule, { improve_label: 'improve_label' }
 
+  scope :last_for_procedure_revision, -> {
+    order(Arel.sql("
+      array_position(ARRAY['improve_label'], llm_rule_suggestions.rule) NULLS LAST,
+      CASE WHEN llm_rule_suggestions.state = 'accepted' THEN 1 ELSE 0 END DESC,
+      CASE WHEN llm_rule_suggestions.state = 'skipped' THEN 1 ELSE 0 END DESC,
+      CASE WHEN llm_rule_suggestions.state = 'completed' THEN 1 ELSE 0 END DESC,
+      llm_rule_suggestions.id DESC"))
+  }
+
   validates :schema_hash, presence: true
   validates :rule, presence: true
 
