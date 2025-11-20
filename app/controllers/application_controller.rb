@@ -48,6 +48,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :redirect_transitoire_domain
+
   def staging_authenticate
     # france connect sector identifier system does not support basic auth
     return if request.path == france_connect_redirect_uris_path
@@ -321,6 +323,14 @@ class ApplicationController < ActionController::Base
       send_login_token_or_bufferize(current_instructeur)
       signed_email = message_encryptor_service.encrypt_and_sign(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
       redirect_to link_sent_path(email: signed_email)
+    end
+  end
+
+  def redirect_transitoire_domain
+    if request.host.include?('demarches.numerique.gouv.fr')
+      gon.redirect_url = "https://#{ENV['APP_HOST']}#{request.fullpath}"
+      Current.application_name = ENV["APPLICATION_NAME"] # set new logo name
+      render 'application/transitoire_redirect', layout: 'application'
     end
   end
 
