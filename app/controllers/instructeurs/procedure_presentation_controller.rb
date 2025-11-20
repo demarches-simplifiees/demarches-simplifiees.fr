@@ -57,7 +57,11 @@ module Instructeurs
 
     def filtered_column_from_params
       params_hash = filter_params.to_h.deep_stringify_keys
-      params_hash['filter'] = ValueNormalizer.normalize(params_hash['filter']) if params_hash.key?('filter')
+
+      if params_hash.key?('filter')
+        params_hash['filter'] = ValueNormalizer.normalize(params_hash['filter'])
+        params_hash['filter']['value'] = params_hash['filter']['value']&.reject(&:empty?)
+      end
 
       FilteredColumnType.new.cast(params_hash)
     end
