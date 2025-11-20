@@ -255,6 +255,11 @@ class ProcedureRevision < ApplicationRecord
 
   def apply_changes(changes)
     transaction do
+      changes.fetch(:update, []).each do |llm_rule_suggestion_items|
+        type_champ, libelle, mandatory, description = llm_rule_suggestion_items.payload.with_indifferent_access.values_at(:type_champ, :libelle, :mandatory, :description)
+        tdc = find_and_ensure_exclusive_use(llm_rule_suggestion_items.stable_id)
+        tdc.update({ type_champ:, libelle:, mandatory:, description: }.compact)
+      end
     end
   end
 

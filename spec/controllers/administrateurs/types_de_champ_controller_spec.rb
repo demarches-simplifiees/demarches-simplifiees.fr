@@ -488,6 +488,42 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#accept_simplification' do
-    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'A' }, { type: :text, libelle: 'B' }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :text, libelle: 'A', stable_id: 123 },
+        { type: :text, libelle: 'B' },
+      ]
+    end
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    subject do
+      post :accept_simplification, params: {
+        procedure_id: procedure.id,
+        llm_suggestion_rule_id: suggestion.id,
+        llm_rule_suggestion: {
+          llm_rule_suggestion_items_attributes: {
+            "0" => { id: accepted_suggestion_item.id, verify_status: 'accepted' },
+            "1" => { id: skipped_suggestion_item.id, verify_status: 'skipped' },
+          },
+        },
+      }
+    end
+    let(:suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: 'improve_label', state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json)) }
+    let(:accepted_suggestion_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9) }
+    let(:skipped_suggestion_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, safety: 'safe', justification: 'clarity', confidence: 0.9) }
+
+    it 'applies only selected operations from posted changes_json' do
+      expect { subject }.to change { suggestion.reload.state }.from('completed').to('accepted')
+      expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_structure'))
+
+      libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
+      expect(libelles).to include('Nouveau')
+      expect(libelles).not_to include('A')
+
+      expect(accepted_suggestion_item.reload.verify_status).to eq('accepted')
+      expect(accepted_suggestion_item.applied_at).not_to be_nil
+      expect(skipped_suggestion_item.reload.verify_status).to eq('skipped')
+      expect(skipped_suggestion_item.reload.applied_at).to be_nil
+    end
   end
 end
