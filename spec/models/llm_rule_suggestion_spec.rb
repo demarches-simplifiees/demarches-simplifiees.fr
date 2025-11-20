@@ -10,7 +10,7 @@ RSpec.describe LLMRuleSuggestion, type: :model do
 
   it 'has enums' do
     expect(subject).to define_enum_for(:state).with_values(pending: 'pending', queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped').backed_by_column_of_type(:string)
-    expect(subject).to define_enum_for(:rule).with_values(improve_label: 'improve_label').backed_by_column_of_type(:string)
+    expect(subject).to define_enum_for(:rule).with_values(improve_label: 'improve_label', improve_structure: 'improve_structure').backed_by_column_of_type(:string)
   end
 
   it 'has validations' do
