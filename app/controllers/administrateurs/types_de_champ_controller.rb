@@ -179,6 +179,12 @@ module Administrateurs
     end
 
     def simplify
+      @llm_rule_suggestion = llm_rule_suggestion_scope
+        .includes(:llm_rule_suggestion_items)
+        .where(rule: rule)
+        .order(created_at: :desc)
+        .first
+      @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule: params[:rule])
     end
 
     def accept_simplification
@@ -282,6 +288,18 @@ module Administrateurs
     def ensure_llm_calls_enabled
       return if @procedure.feature_enabled?(:llm_nightly_improve_procedure)
       redirect_to admin_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
+    end
+
+    def rule
+      params[:rule]
+    end
+
+    def llm_rule_suggestion_scope
+      LLMRuleSuggestion.where(procedure_revision_id: draft.id, schema_hash: current_schema_hash)
+    end
+
+    def current_schema_hash
+      @current_schema_hash ||= Digest::SHA256.hexdigest(draft.schema_to_llm.to_json)
     end
   end
 end
