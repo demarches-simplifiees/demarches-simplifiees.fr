@@ -1,9 +1,20 @@
+-# haml-lint:disable ApplicationNameLinter
+- demarche_link = sign_in_by_link_url(@instructeur.id, jeton: @login_token, host: 'demarche.numerique.gouv.fr')
+- ds_link = sign_in_by_link_url(@instructeur.id, jeton: @login_token, host: 'www.demarches-simplifiees.fr')
+
 %p
   Bonjour,
 
 %p
   Veuillez cliquer sur le lien sécurisé suivant pour vous connecter à  #{Current.application_name} : 
-  = link_to(sign_in_by_link_url(@instructeur.id, jeton: @login_token), sign_in_by_link_url(@instructeur.id, jeton: @login_token))
+  - if ENV['APP_HOST'] == 'demarche.numerique.gouv.fr'
+    = link_to(demarche_link, demarche_link)
+
+    %p
+      En cas de difficulté, essayez l'ancienne adresse : 
+      = link_to(ds_link, ds_link)
+  - else
+    = link_to(sign_in_by_link_url(@instructeur.id, jeton: @login_token), sign_in_by_link_url(@instructeur.id, jeton: @login_token))
 
 %p
   Ce lien est
@@ -12,3 +23,4 @@
   %b plusieurs fois.
 
 = render partial: "layouts/mailers/signature"
+-# haml-lint:enable ApplicationNameLinter
