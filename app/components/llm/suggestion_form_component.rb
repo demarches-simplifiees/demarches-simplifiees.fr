@@ -25,6 +25,8 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     case rule
     when 'improve_label'
       LLM::ImproveLabelItemComponent
+    when 'improve_structure'
+      LLM::ImproveStructureItemComponent
     else
       raise "Unknown LLM rule suggestion view component for rule: #{rule}"
     end

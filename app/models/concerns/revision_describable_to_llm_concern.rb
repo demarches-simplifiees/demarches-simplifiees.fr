@@ -9,8 +9,9 @@ module RevisionDescribableToLLMConcern
         libelle: rtdc.libelle,
         mandatory: rtdc.mandatory?,
         description: rtdc.description,
-        choices: (rtdc.type_de_champ.drop_down_options if rtdc.type_de_champ.choice_type?)
-      }.compact
+        choices: (rtdc.type_de_champ.drop_down_options if rtdc.type_de_champ.choice_type?),
+        position: rtdc.position,
+      }
     end
   end
 end

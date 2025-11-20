@@ -18,7 +18,7 @@ class Procedure::Card::AiComponent < ApplicationComponent
       procedure.draft_revision
         .llm_rule_suggestions
         .order(Arel.sql("
-          array_position(ARRAY['improve_label'], llm_rule_suggestions.rule) NULLS LAST,
+          array_position(ARRAY['improve_label','improve_structure'], llm_rule_suggestions.rule) NULLS LAST,
           CASE WHEN llm_rule_suggestions.state = 'accepted' THEN 1 ELSE 0 END DESC,
           CASE WHEN llm_rule_suggestions.state = 'skipped' THEN 1 ELSE 0 END DESC,
           CASE WHEN llm_rule_suggestions.state = 'completed' THEN 1 ELSE 0 END DESC,

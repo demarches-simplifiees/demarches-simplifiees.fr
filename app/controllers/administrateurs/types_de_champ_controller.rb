@@ -201,7 +201,12 @@ module Administrateurs
       end
       @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
 
-      redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+      case @llm_rule_suggestion.rule
+      when 'improve_label'
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: 'improve_structure'), notice: "Parfait continuons"
+      else
+        redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+      end
     end
 
     private

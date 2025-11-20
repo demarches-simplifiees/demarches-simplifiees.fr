@@ -6,7 +6,7 @@ class LLMRuleSuggestion < ApplicationRecord
   has_many :llm_rule_suggestion_items, dependent: :destroy
 
   enum :state, { queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped' }
-  enum :rule, { improve_label: 'improve_label' }
+  enum :rule, { improve_label: 'improve_label', improve_structure: 'improve_structure' }
 
   validates :schema_hash, presence: true
   validates :rule, presence: true
