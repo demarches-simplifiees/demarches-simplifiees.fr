@@ -767,7 +767,7 @@ Rails.application.routes.draw do
         end
 
         collection do
-          get :simplify
+          get 'simplify/:rule', action: :simplify, as: :simplify, constraints: { rule: /#{LLMRuleSuggestion.rules.keys.join('|')}/ }
           post :accept_simplification
           post 'simplify/enqueue/:rule', action: :enqueue_simplify, as: :enqueue_simplify, constraints: { rule: /#{LLMRuleSuggestion.rules.keys.join('|')}/ }
         end
