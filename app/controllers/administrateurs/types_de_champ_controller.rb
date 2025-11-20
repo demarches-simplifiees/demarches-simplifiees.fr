@@ -198,7 +198,12 @@ module Administrateurs
         @llm_rule_suggestion.update_column(:state, 'accepted')
       end
 
-      redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+      case @llm_rule_suggestion.rule
+      when 'improve_label'
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: 'improve_structure'), notice: "Parfait continuons"
+      else
+        redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+      end
     end
 
     private

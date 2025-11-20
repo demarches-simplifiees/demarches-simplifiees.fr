@@ -1278,11 +1278,12 @@ describe ProcedureRevision do
   end
   describe "#apply_llm_rule_suggestion_items" do
     let(:procedure) { create(:procedure, types_de_champ_public:) }
-    let(:types_de_champ_public) { [{ type: :text, libelle: "A", stable_id: 1 }, { type: :text, libelle: "B", stable_id: 2 }] }
     let(:revision) { procedure.draft_revision }
     let(:schema_hash) { Digest::SHA256.hexdigest(revision.schema_to_llm.to_json) }
 
     context 'from LLM::LabelImprover' do
+      let(:types_de_champ_public) { [{ type: :text, libelle: "B", stable_id: 2 }] }
+
       it "can update libelle" do
         llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch('improve_label'), schema_hash:)
         create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 2, op_kind: 'update', payload: { 'stable_id' => 2, 'libelle' => 'B modifié' })
@@ -1290,6 +1291,19 @@ describe ProcedureRevision do
         expect { revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply) }.not_to raise_error
         libelles = revision.reload.types_de_champ_public.map(&:libelle)
         expect(libelles).to include("B modifié")
+      end
+    end
+
+    context 'from LLM::StructureImprover' do
+      let(:types_de_champ_public) { [] }
+
+      it "can add header section" do
+        llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch('improve_structure'), schema_hash:)
+        create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 2, op_kind: 'add', payload: { 'libelle' => 'Ajouté', type_champ: 'header_section' })
+
+        expect { revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply) }.not_to raise_error
+        libelles = revision.reload.types_de_champ_public.map(&:libelle)
+        expect(libelles).to include("Ajouté")
       end
     end
   end
