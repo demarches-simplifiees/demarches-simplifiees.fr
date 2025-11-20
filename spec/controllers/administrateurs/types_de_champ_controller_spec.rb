@@ -400,9 +400,50 @@ describe Administrateurs::TypesDeChampController, type: :controller do
   end
 
   describe '#simplify' do
-    let(:procedure) { create(:simple_procedure) }
     let(:procedure) { create(:procedure, types_de_champ_public:) }
-    let(:type_de_champ_publics) { [{ type: :text, stable_id: 123 }] }
+    let(:types_de_champ_public) { [{ type: :text, libelle: 'Ancien', stable_id: 123 }] }
+    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+    let(:procedure_revision) { procedure.draft_revision }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    subject { get :simplify, params: { procedure_id: procedure.id, rule: llm_rule_suggestion.rule } }
+
+    context 'with existing completed suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
+
+      it 'assigns label suggestions from stored LLMRuleSuggestion items' do
+        expect(subject).to have_http_status(:ok)
+        expect(assigns(:llm_rule_suggestion)).to eq(llm_rule_suggestion)
+      end
+    end
+
+    context 'with pending llm suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'running', rule: rule) }
+      it 'redirects to procedure admin page with alert' do
+        expect(subject).to have_http_status(:ok)
+      end
+    end
+
+    context 'without LLM Suggestion' do
+      let(:llm_rule_suggestion) { double(rule:) }
+      it 'builds a new LLMRuleSuggestion when none exists' do
+        expect(subject).to have_http_status(:ok)
+        expect(assigns(:llm_rule_suggestion)).to an_instance_of(LLMRuleSuggestion)
+      end
+    end
+    context 'with non completed suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'queued', rule: rule) }
+
+      it 'redirects when suggestion is not completed' do
+        expect(subject).to have_http_status(:ok)
+      end
+    end
+
+    it 'redirect on unknown llm_suggestion' do
+      get :simplify, params: { procedure_id: procedure.id, rule: 'unknown_rule' }
+      expect(response).to redirect_to(admin_procedure_path(procedure))
+      expect(flash[:alert]).to eq("Suggestion non trouvée")
+    end
   end
 
   describe '#enqueue_simplify' do
