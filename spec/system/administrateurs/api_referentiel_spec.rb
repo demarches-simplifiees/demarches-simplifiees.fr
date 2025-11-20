@@ -34,7 +34,7 @@ describe 'Referentiel API:' do
       find("#referentiel_url").fill_in(with: 'https://google.com')
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
 
-      expect(page).to have_content("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarches-simplifiees.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
+      expect(page).to have_content("doit être autorisée par notre équipe. Veuillez nous contacter par mail (contact@demarche.numerique.gouv.fr) et nous indiquer l'URL et la documentation de l'API que vous souhaitez intégrer.")
       find("#referentiel_url").fill_in(with: 'https://rnb-api.beta.gouv.fr/api/alpha/buildings/{id}/')
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
 

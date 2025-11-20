@@ -21,7 +21,7 @@ Pour chaque démarche, les dossiers sont répartis dans plusieurs onglets :
 
 - L’onglet **« expirant »** contient les dossiers dont le délai de conservation va bientôt expirer (la durée de conservation des dossiers est fixée par l'administrateur de la démarche).
 
-- L’onglet **« à archiver »** contient les dossiers qui étaient anciennement dans l’onglet « traités » (ils ont été déplacés par un instructeur dans cet onglet « à archiver »). La messagerie usager est automatiquement désactivée sur le dossier dès qu’il est « à archiver ». Ces dossiers seront supprimés lorsque leur délai de conservation dans demarches-simplifiees.fr sera expiré. Pour sauvegarder et archiver vos dossiers sur votre serveur, vous devez les télécharger.
+- L’onglet **« à archiver »** contient les dossiers qui étaient anciennement dans l’onglet « traités » (ils ont été déplacés par un instructeur dans cet onglet « à archiver »). La messagerie usager est automatiquement désactivée sur le dossier dès qu’il est « à archiver ». Ces dossiers seront supprimés lorsque leur délai de conservation dans demarche.numerique.gouv.fr sera expiré. Pour sauvegarder et archiver vos dossiers sur votre serveur, vous devez les télécharger.
 
 - L’onglet **« corbeille »** contient :
   - les dossiers dont le délai de conservation a expiré (la durée de conservation des dossiers est fixée par l'administrateur de la démarche).

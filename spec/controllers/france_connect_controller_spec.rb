@@ -222,7 +222,7 @@ describe FranceConnectController, type: :controller do
       it 'redirects to root_path with an alert' do
         subject
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.")
+        expect(flash[:alert]).to eq("Le délai pour fusionner les comptes FranceConnect et demarche.numerique.gouv.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.")
       end
     end
 
@@ -236,7 +236,7 @@ describe FranceConnectController, type: :controller do
         subject
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
+        expect(flash[:alert]).to eq('Le délai pour fusionner les comptes FranceConnect et demarche.numerique.gouv.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
       end
     end
   end
@@ -354,7 +354,7 @@ describe FranceConnectController, type: :controller do
   RSpec.shared_examples "a method that needs a valid merge token" do
     context 'when the merge token is invalid' do
       before do
-        allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
+        allow(Current).to receive(:application_name).and_return('demarche.numerique.gouv.fr')
         merge_token
         fci.update(merge_token_created_at: 2.years.ago)
       end
@@ -366,7 +366,7 @@ describe FranceConnectController, type: :controller do
         else
           expect(subject).to redirect_to root_path
         end
-        expect(flash.alert).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
+        expect(flash.alert).to eq('Le délai pour fusionner les comptes FranceConnect et demarche.numerique.gouv.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
       end
     end
   end
@@ -444,7 +444,7 @@ describe FranceConnectController, type: :controller do
       end
 
       before do
-        allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
+        allow(Current).to receive(:application_name).and_return('demarche.numerique.gouv.fr')
         fci.update!(requested_email: email.downcase)
       end
 

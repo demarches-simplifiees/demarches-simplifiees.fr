@@ -82,7 +82,7 @@ describe 'France Connect Connexion' do
 
               visit link
 
-              expect(page).to have_content('Les comptes FranceConnect et demarches-simplifiees.fr sont à présent fusionnés')
+              expect(page).to have_content('Les comptes FranceConnect et demarche.numerique.gouv.fr sont à présent fusionnés')
               expect(page).to have_content(alternative_email)
 
               expect(User.find_by(email: alternative_email).email_verified_at).to be_present

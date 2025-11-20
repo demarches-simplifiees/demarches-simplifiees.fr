@@ -9,24 +9,24 @@ describe MailTemplateConcern do
 
   shared_examples "can replace tokens in template" do
     describe 'with no token to replace' do
-      let(:template) { '[demarches-simplifiees.fr] rien à remplacer' }
+      let(:template) { '[demarche.numerique.gouv.fr] rien à remplacer' }
       it do
-        is_expected.to eq("[demarches-simplifiees.fr] rien à remplacer")
+        is_expected.to eq("[demarche.numerique.gouv.fr] rien à remplacer")
       end
     end
 
     describe 'with one token to replace' do
-      let(:template) { '[demarches-simplifiees.fr] Dossier : --numéro du dossier--' }
+      let(:template) { '[demarche.numerique.gouv.fr] Dossier : --numéro du dossier--' }
       it do
-        is_expected.to eq("[demarches-simplifiees.fr] Dossier : #{dossier.id}")
+        is_expected.to eq("[demarche.numerique.gouv.fr] Dossier : #{dossier.id}")
       end
     end
 
     describe 'with multiples tokens to replace' do
-      let(:template) { '[demarches-simplifiees.fr] --numéro du dossier-- --libellé démarche-- --lien dossier--' }
+      let(:template) { '[demarche.numerique.gouv.fr] --numéro du dossier-- --libellé démarche-- --lien dossier--' }
       it do
         expected =
-          "[demarches-simplifiees.fr] #{dossier.id} #{dossier.procedure.libelle} " +
+          "[demarche.numerique.gouv.fr] #{dossier.id} #{dossier.procedure.libelle} " +
           "<a target=\"_blank\" rel=\"noopener\" href=\"http://test.host/dossiers/#{dossier.id}\">http://test.host/dossiers/#{dossier.id}</a>"
 
         is_expected.to eq(expected)

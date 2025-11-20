@@ -79,7 +79,7 @@
         = t('.anonymisation_callout.content_part_1')
         = link_to t('.anonymisation_callout.link_text'), t('.anonymisation_callout.link_url'), title: helpers.new_tab_suffix(t('.anonymisation_callout.link_text')), **helpers.external_link_attributes
       %p
-        = t('.anonymisation_callout.content_part_2_html', id: @procedure.id)
+        = t('.anonymisation_callout.content_part_2_html', id: @procedure.id, contact_email: CONTACT_EMAIL)
 
   .padded-fixed-footer
     .fixed-footer

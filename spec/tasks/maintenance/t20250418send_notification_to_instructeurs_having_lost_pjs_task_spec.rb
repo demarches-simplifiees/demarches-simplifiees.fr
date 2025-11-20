@@ -38,7 +38,7 @@ module Maintenance
         end
 
         it 'sends an email to the instructeur' do
-          expect(BlankMailer).to receive(:send_template).with(to: dossier.followers_instructeurs.first.email, subject: "[demarches-simplifiees.fr] Action requise : pièces jointes manquantes", title: "Pièces jointes manquantes", body: /pj_1.*pj_2.*#{dossier.id}/).and_return(double(deliver_later: true))
+          expect(BlankMailer).to receive(:send_template).with(to: dossier.followers_instructeurs.first.email, subject: "[demarche.numerique.gouv.fr] Action requise : pièces jointes manquantes", title: "Pièces jointes manquantes", body: /pj_1.*pj_2.*#{dossier.id}/).and_return(double(deliver_later: true))
           subject
 
           expect(TaskLog.where("data->>'procedure_id' = ?", procedure_id.to_s).pluck(:data).map { |log| log['instructeur_notified'] }).to all(be_truthy)
