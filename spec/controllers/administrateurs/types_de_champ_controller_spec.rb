@@ -508,7 +508,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
     it 'applies only selected operations from posted changes_json' do
       expect { subject }.to change { suggestion.reload.state }.from('completed').to('accepted')
-      expect(response).to redirect_to(admin_procedure_path(procedure))
+      expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_structure'))
 
       libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
       expect(libelles).to include('Nouveau')
