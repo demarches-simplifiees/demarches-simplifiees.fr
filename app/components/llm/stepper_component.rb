@@ -26,12 +26,16 @@ module LLM
       case rule
       when 'improve_label'
         "Amélioration des libellés"
+      when 'improve_structure'
+        "Amélioration de la structure"
       end
     end
 
     def next_step_title
       case rule
       when 'improve_label'
+        "Amélioration de la structure"
+      when 'improve_structure'
         "À venir..."
       end
     end
@@ -40,6 +44,8 @@ module LLM
       case rule
       when 'improve_label'
         1
+      when 'improve_structure'
+        2
       end
     end
 
