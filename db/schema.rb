@@ -897,6 +897,38 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.index ["procedure_id"], name: "index_labels_on_procedure_id"
   end
 
+  create_table "llm_rule_suggestion_items", force: :cascade do |t|
+    t.datetime "applied_at"
+    t.float "confidence"
+    t.datetime "created_at", null: false
+    t.text "justification"
+    t.bigint "llm_rule_suggestion_id", null: false
+    t.string "model"
+    t.string "op_kind"
+    t.jsonb "payload", default: {}, null: false
+    t.string "safety", default: "safe", null: false
+    t.bigint "stable_id"
+    t.datetime "updated_at", null: false
+    t.string "verify_status", default: "pending", null: false
+    t.index ["llm_rule_suggestion_id"], name: "index_items_on_llm_rule_suggestion_id"
+    t.index ["op_kind"], name: "index_llm_rule_suggestion_items_on_op_kind"
+    t.index ["payload"], name: "index_llm_rule_suggestion_items_on_payload", using: :gin
+    t.index ["stable_id"], name: "index_llm_rule_suggestion_items_on_stable_id"
+  end
+
+  create_table "llm_rule_suggestions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "error"
+    t.bigint "procedure_revision_id", null: false
+    t.string "rule", null: false
+    t.string "schema_hash", null: false
+    t.string "state", default: "queued", null: false
+    t.jsonb "token_usage"
+    t.datetime "updated_at", null: false
+    t.index ["procedure_revision_id", "schema_hash"], name: "index_llm_rule_suggestions_on_revision_and_hash"
+    t.index ["procedure_revision_id"], name: "index_llm_rule_suggestions_on_procedure_revision_id"
+  end
+
   create_table "maintenance_tasks_runs", force: :cascade do |t|
     t.text "arguments"
     t.text "backtrace"
@@ -1466,6 +1498,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
   add_foreign_key "instructeurs_procedures", "instructeurs"
   add_foreign_key "instructeurs_procedures", "procedures"
   add_foreign_key "labels", "procedures"
+  add_foreign_key "llm_rule_suggestion_items", "llm_rule_suggestions"
+  add_foreign_key "llm_rule_suggestions", "procedure_revisions"
   add_foreign_key "merge_logs", "users"
   add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
