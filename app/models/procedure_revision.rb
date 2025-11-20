@@ -7,7 +7,7 @@ class ProcedureRevision < ApplicationRecord
   belongs_to :administrateur, optional: true
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
-
+  has_many :llm_rule_suggestions, dependent: :destroy, inverse_of: :procedure_revision
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
   has_many :revision_types_de_champ, -> { order(:position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
 
