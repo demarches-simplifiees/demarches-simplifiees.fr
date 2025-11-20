@@ -14,6 +14,7 @@ class ExpertDashboard < Administrate::BaseDashboard
     user: Field::HasOne.with_options(searchable: true, searchable_fields: %w[email]),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
+    dossiers: Field::HasMany,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -33,6 +34,7 @@ class ExpertDashboard < Administrate::BaseDashboard
     :id,
     :user,
     :created_at,
+    :dossiers,
   ].freeze
 
   # Overwrite this method to customize how users are displayed
