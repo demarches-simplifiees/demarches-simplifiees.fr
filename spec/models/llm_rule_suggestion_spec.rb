@@ -17,4 +17,68 @@ RSpec.describe LLMRuleSuggestion, type: :model do
     expect(subject).to validate_presence_of(:schema_hash)
     expect(subject).to validate_presence_of(:rule)
   end
+
+  describe '#llm_rule_suggestion_items_attributes=' do
+    let(:procedure) { create(:procedure) }
+    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision) }
+    let!(:item1) { create(:llm_rule_suggestion_item, llm_rule_suggestion:) }
+    let!(:item2) { create(:llm_rule_suggestion_item, llm_rule_suggestion:) }
+
+    context 'when verify_status is accepted' do
+      let(:attributes) do
+        {
+          '0' => { id: item1.id.to_s, verify_status: 'accepted' },
+          '1' => { id: item2.id.to_s, verify_status: 'skipped' },
+        }
+      end
+
+      it 'sets verify_status to accepted and applied_at to current time for accepted items' do
+        expect(llm_rule_suggestion.llm_rule_suggestion_items.count).to eq(2)
+        expect(item1.id).to be_present
+        expect(item2.id).to be_present
+
+        llm_rule_suggestion.llm_rule_suggestion_items_attributes = attributes
+
+        # item1.reload
+        expect(llm_rule_suggestion.llm_rule_suggestion_items.find { |it| it.id == item1.id }.verify_status).to eq('accepted')
+        expect(llm_rule_suggestion.llm_rule_suggestion_items.find { |it| it.id == item1.id }.applied_at).to be_present
+      end
+
+      it 'sets verify_status to skipped and applied_at to nil for skipped items' do
+        llm_rule_suggestion.llm_rule_suggestion_items_attributes = attributes
+
+        expect(llm_rule_suggestion.llm_rule_suggestion_items.find { |it| it.id == item2.id }.verify_status).to eq('skipped')
+        expect(llm_rule_suggestion.llm_rule_suggestion_items.find { |it| it.id == item2.id }.applied_at).to be_nil
+      end
+    end
+
+    context 'when item id does not match' do
+      let(:attributes) do
+        {
+          '0' => { 'id' => '999', 'verify_status' => 'accepted' },
+        }
+      end
+
+      it 'does not update any items' do
+        expect {
+          llm_rule_suggestion.llm_rule_suggestion_items_attributes = attributes
+        }.not_to change { item1.reload.verify_status }
+      end
+    end
+  end
+
+  describe '#changes_to_apply' do
+    let(:procedure) { create(:procedure) }
+    let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision) }
+    let!(:accepted_item1) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', op_kind: 'update') }
+    let!(:accepted_item2) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', op_kind: 'update') }
+    let!(:skipped_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'skipped', op_kind: 'add') }
+
+    it 'groups accepted items by op_kind' do
+      result = llm_rule_suggestion.changes_to_apply
+
+      expect(result[:update]).to contain_exactly(accepted_item1, accepted_item2)
+      expect(result).not_to have_key(:add)
+    end
+  end
 end
