@@ -852,6 +852,10 @@ fr:
       long_datetime: "%A %-d %B %Y à %H:%M"
       short_date: "%d/%m/%Y"
       short_datetime: "%d/%m/%Y %H:%M"
+      llm_stepper_last_refresh: "%-d %B %Y %Hh%M"
+  llm:
+    stepper_component:
+      last_refresh: "Dernière recherche d'améliorations effectuée le %{timestamp}"
   datetime:
     formats:
       long: "%d %B %y %H:%M"
