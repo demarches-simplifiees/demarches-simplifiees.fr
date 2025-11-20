@@ -120,5 +120,15 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
         expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'in', value: ['Marseille'] })])
       end
     end
+
+    context 'when the value of filter is an empty string' do
+      let(:params) { { id: procedure_presentation.id, statut: 'tous', filter_key: existing_filter.id, filter: { id: column.id, filter: { operator: 'in', value: [''] } } } }
+
+      it 'rejects the empty string' do
+        subject
+
+        expect(procedure_presentation.reload.tous_filters).to eq([FilteredColumn.new(column:, filter: { operator: 'in', value: [] })])
+      end
+    end
   end
 end

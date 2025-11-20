@@ -9,6 +9,13 @@ describe Columns::LinkedDropDownColumn do
 
     subject { column.filtered_ids(Dossier.all, { operator: 'match', value: search_terms }) }
 
+    context "when search_terms is an empty string" do
+      let(:column) { procedure.find_column(label: 'linked') }
+      let(:search_terms) { [''] }
+
+      it { expect { subject }.not_to raise_error }
+    end
+
     context 'when path is :value' do
       let(:column) { procedure.find_column(label: 'linked') }
 
