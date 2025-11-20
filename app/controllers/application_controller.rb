@@ -329,7 +329,7 @@ class ApplicationController < ActionController::Base
   def redirect_transitoire_domain
     if request.host.include?('demarches.numerique.gouv.fr')
       gon.redirect_url = "https://#{ENV['APP_HOST']}#{request.fullpath}"
-      Current.application_name = ENV["APPLICATION_NAME"] # set new logo name
+      Current.application_name = APPLICATION_NAME # set new logo name
       render 'application/transitoire_redirect', layout: 'application'
     end
   end
