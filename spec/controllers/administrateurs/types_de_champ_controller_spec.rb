@@ -405,6 +405,47 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     let(:type_de_champ_publics) { [{ type: :text, stable_id: 123 }] }
   end
 
+  describe '#enqueue_simplify' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }
+
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+    subject { post :enqueue_simplify, params: { procedure_id: procedure.id, rule: } }
+
+    it 'enqueues the improve procedure job when no analysis is running' do
+      expect(LLM::ImproveProcedureJob).to receive(:perform_now).with(procedure, [rule])
+
+      expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule:))
+      expect(flash[:notice]).to be_present
+    end
+
+    it 'does not enqueue when analysis already running' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule:, state: 'queued', schema_hash:)
+      expect(LLM::ImproveProcedureJob).not_to receive(:perform_now).with(procedure, [rule])
+
+      expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule:))
+      expect(flash[:notice]).to eq('Une recherche est déjà en cours pour cette règle.')
+    end
+
+    it 'does not enqueue when feature disabled' do
+      Flipper.disable_actor(:llm_nightly_improve_procedure, procedure)
+      expect(LLM::ImproveProcedureJob).not_to receive(:perform_now).with(procedure, [rule])
+
+      expect(subject).to redirect_to(admin_procedure_path(procedure))
+      expect(flash[:alert]).to eq('Les appels aux modèles de langage ne sont pas activés pour cette procédure.')
+    end
+
+    it 're-enqueues after a failure' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule:, state: 'failed', schema_hash:)
+      expect(LLM::ImproveProcedureJob).to receive(:perform_now).with(procedure, [rule])
+
+      subject
+
+      expect(flash[:notice]).to be_present
+    end
+  end
+
   describe '#accept_simplification' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'A' }, { type: :text, libelle: 'B' }]) }
   end
