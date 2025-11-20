@@ -25,6 +25,8 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
   def filtered_ids_for_values(dossiers, search_terms)
     relation = dossiers.with_type_de_champ(@stable_id)
 
+    search_terms = search_terms.compact.reject(&:empty?)
+
     case path
     when :value
       search_terms.flat_map do |search_term|
