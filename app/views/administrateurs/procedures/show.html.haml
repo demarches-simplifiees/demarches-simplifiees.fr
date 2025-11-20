@@ -94,6 +94,7 @@
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
     = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if Rails.application.config.ds_zonage_enabled
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
+    = render Procedure::Card::AiComponent.new(procedure: @procedure)
     = render Procedure::Card::IneligibiliteDossierComponent.new(procedure: @procedure)
     = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
     = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)
