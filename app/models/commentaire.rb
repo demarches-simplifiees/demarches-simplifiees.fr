@@ -114,10 +114,6 @@ class Commentaire < ApplicationRecord
     DossierCorrection.exists?(commentaire: self)
   end
 
-  def flagged_pending_response?
-    DossierPendingResponse.exists?(commentaire: self)
-  end
-
   private
 
   def notify

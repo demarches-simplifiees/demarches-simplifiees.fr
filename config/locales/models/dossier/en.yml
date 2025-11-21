@@ -32,7 +32,6 @@ en:
         for_user: "PENDING RESPONSE"
         for_instructeur: "pending response"
         responded: "Response given"
-        discarded: "Response request cancelled"
       traitement:
         state: "State"
       traitement/state:
