@@ -7,6 +7,7 @@ module Administrateurs
 
     before_action :retrieve_procedure
     before_action :reload_procedure_with_includes, only: [:destroy]
+    before_action :ensure_llm_calls_enabled, only: [:simplify, :accept_simplification, :enqueue_simplify]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
@@ -168,6 +169,41 @@ module Administrateurs
       @morphed = [champ_component_from(@coordinate)]
     end
 
+    def enqueue_simplify
+      if llm_rule_suggestion_scope.where(rule:).exists?(state: [:queued, :running])
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'Une recherche est déjà en cours pour cette règle.'
+      else
+        LLM::ImproveProcedureJob.perform_now(@procedure, [rule])
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'La recherche a été lancée. Vous serez notifié lorsque les suggestions seront prêtes.'
+      end
+    end
+
+    def simplify
+      if allowed_rule?(rule)
+        @llm_rule_suggestion = llm_rule_suggestion_scope.completed
+          .where(rule: rule)
+          .order(created_at: :desc)
+          .first
+        @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule: params[:rule])
+      else
+        redirect_to admin_procedure_path(@procedure), alert: "Suggestion non trouvée"
+      end
+    end
+
+    def accept_simplification
+      @llm_rule_suggestion = llm_rule_suggestion_scope.completed.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
+      return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée") unless @llm_rule_suggestion
+
+      @llm_rule_suggestion.transaction do
+        @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
+        @llm_rule_suggestion.state = 'accepted'
+        @llm_rule_suggestion.save!
+      end
+      @procedure.draft_revision.apply_changes(@llm_rule_suggestion.changes_to_apply)
+
+      redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+    end
+
     private
 
     def changing_of_type?(type_de_champ)
@@ -258,6 +294,32 @@ module Administrateurs
 
     def marcel_content_type
       Marcel::MimeType.for(referentiel_file.read, name: referentiel_file.original_filename, declared_type: referentiel_file.content_type)
+    end
+
+    def ensure_llm_calls_enabled
+      return if @procedure.feature_enabled?(:llm_nightly_improve_procedure)
+      redirect_to admin_procedure_path(@procedure), alert: "Les appels aux modèles de langage ne sont pas activés pour cette procédure."
+    end
+
+    def rule
+      params[:rule]
+    end
+
+    def allowed_rule?(rule)
+      rule.in?(LLMRuleSuggestion.rules.values)
+    end
+
+    def llm_rule_suggestion_scope
+      LLMRuleSuggestion.where(procedure_revision_id: draft.id, schema_hash: current_schema_hash)
+    end
+
+    def current_schema_hash
+      @current_schema_hash ||= Digest::SHA256.hexdigest(draft.schema_to_llm.to_json)
+    end
+
+    def llm_rule_suggestion_items_attributes
+      params.require(:llm_rule_suggestion)
+        .permit(llm_rule_suggestion_items_attributes: [:id, :verify_status])
     end
   end
 end

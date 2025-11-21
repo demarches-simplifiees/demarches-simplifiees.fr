@@ -1,0 +1,47 @@
+<% if llm_rule_suggestion.persisted? %>
+  <h2 class="fr-h3 mt-4"><%= step_title %></h2>
+  <%= render Dsfr::CalloutComponent.new(title: "À quoi sert cette règle ?", theme: :neutral) do |callout| %>
+    <% callout.with_body do %>
+      <p><%= step_summary %></p>
+    <% end %>
+  <% end %>
+  <div class="border-background-contrast-grey">
+    <p class="fr-badge">
+      <%= suggestions_count %>
+      <%= 'suggestion'.pluralize(suggestions_count) %>
+    </p>
+    <%= form_for llm_rule_suggestion,
+                    url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion),
+                    method: :post do |form| %>
+      <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
+        <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
+          <%= render item_component.new(form_builder: ff) %>
+        <% end %>
+      <% end %>
+
+      <ul class="fr-btns-group fr-btns-group--inline-md mt-4 flex justify-center">
+        <li>
+          <%= link_to("Annuler et revenir à l'écran de gestion", back_link, class: "fr-btn fr-btn--secondary") %>
+        </li>
+        <li>
+          <%= form.submit("Appliquer les suggestions et poursuivre", class: "fr-btn") %>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+<% else %>
+  <div class="fr-p-4w">
+    <p class="fr-mb-0">
+      Aucune suggestion n'est disponible pour la version actuelle du formulaire.
+    </p>
+
+    <p class="fr-text-bold">
+      Vous devez relancer la recherche pour générer de nouvelles suggestions
+      d'amélioration.
+    </p>
+
+    <p>
+      <%= button_to "Lancer la recherche de suggestions", enqueue_simplify_admin_procedure_types_de_champ_path(procedure, rule:), class: 'fr-btn' %>
+    </p>
+  </div>
+<% end %>
