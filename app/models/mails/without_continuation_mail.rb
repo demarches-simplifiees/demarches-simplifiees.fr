@@ -23,8 +23,8 @@ module Mails
 
     SLUG = "without_continuation"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/without_continuation_mail"
-    DISPLAYED_NAME = 'Accusé de classement sans suite'
-    DEFAULT_SUBJECT = 'Votre dossier n° --numéro du dossier-- a été classé sans suite (--libellé démarche--)'
+    DISPLAYED_NAME = I18n.t('activerecord.models.mail.without_continuation_mail.closure_acknowledgment')
+    DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.without_continuation_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:sans_suite)
   end
 end

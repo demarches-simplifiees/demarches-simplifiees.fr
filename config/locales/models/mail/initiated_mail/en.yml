@@ -3,5 +3,5 @@ en:
     models:
       mail:
         initiated_mail:
-          default_subject: Your file nº %{dossier_number} has been successfully submitted (%{procedure_libelle})
+          default_subject: Your file n° %{dossier_number} has been successfully submitted (%{procedure_libelle})
           proof_of_receipt: Acknowledgment of receipt

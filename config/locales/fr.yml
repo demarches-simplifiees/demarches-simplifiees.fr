@@ -848,13 +848,15 @@ fr:
       default: "%d %B %Y %R"
       long: "%d %B %y %H:%M"
       human: "%A %-d %B à %Hh%M"
-      long_date: "%A %-d %B %Y"
-      long_datetime: "%A %-d %B %Y à %H:%M"
+      short_datetime: "Le %d/%m/%Y %H:%M"
       short_date: "%d/%m/%Y"
-      short_datetime: "%d/%m/%Y %H:%M"
   datetime:
     formats:
       long: "%d %B %y %H:%M"
+  date:
+    formats:
+      short_date: "%d/%m/%Y"
+      dashed: "%Y-%m-%d"
   dates:
     today: "Aujourd’hui"
     yesterday: "Hier"
@@ -954,7 +956,7 @@ fr:
           get_papertrail: "Obtenir une attestation de dépôt de dossier"
           filename: "attestation-depot_dossier-%{dossier_id}.pdf"
       show_in_trash:
-        page_title: "Dossier nº %{numero} - En corbeille"
+        page_title: "Dossier n° %{numero} - En corbeille"
         title: "Le dossier n° %{numero} a été mis à la corbeille"
         explanation_html: "Vous pouvez retrouver ce dossier depuis l'onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n'est pas consultable actuellement."
         consult_trash: "Consulter la corbeille"
@@ -962,7 +964,7 @@ fr:
         user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
         automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu'il ne soit supprimé définitivement."
       show_deleted:
-        page_title: "Dossier nº %{numero} - Supprimé définitivement"
+        page_title: "Dossier n° %{numero} - Supprimé définitivement"
         title: "Le dossier n° %{numero} a été supprimé"
         explanation: "Vous ne pouvez plus récupérer ce dossier pour une des raisons suivantes :"
         reason_user_request: "Il a été mis à la corbeille à votre demande, puis automatiquement supprimé."
@@ -1090,6 +1092,42 @@ fr:
         groupe_gestionnaire_gestionnaire:
           create: "Les gestionnaires ont bien été affectés au groupe gestionnaire"
           destroy: "Le gestionnaire « %{email} » a été retiré du groupe gestionnaire."
+  notification_mailer:
+    default_templates:
+      greeting: Bonjour,
+      your_file_number: "Votre dossier n° %{id}"
+      closed_mail:
+        accepted: "a été accepté le %{date}"
+        consultation_info: "À tout moment, vous pouvez consulter votre dossier et les éventuels messages de l’administration à cette adresse : %{link}"
+      closed_mail_with_attestation:
+        accepted: "a été accepté le %{date}"
+        download_attestation: "Vous pouvez télécharger votre attestation à l’adresse suivante : %{link}"
+      initiated_mail:
+        deposited: a bien été déposé
+        can_modify: Si besoin est, vous pouvez encore y apporter des modifications.
+      received_mail:
+        received: a bien été reçu et
+        processed: pris en charge
+        examination: Il va maintenant être examiné par le service.
+      re_instructed_mail:
+        reexamined: va être réexaminé, la précédente décision sur ce dossier est caduque.
+        procedure_link: "Vous pouvez retrouver le dossier que vous avez créé pour la démarche %{procedure} à l’adresse suivante : %{link}"
+        contact_service: "Pour obtenir le détail de cette modification de la décision, vous pouvez contacter le service : %{service}."
+      refused_mail:
+        refused: "a été refusé le %{date}"
+        reason_title: "Le motif de refus est le suivant :"
+        reason_content: "%{motivation}"
+        more_info: "Pour en savoir plus sur le motif du refus, vous pouvez consulter votre dossier et les éventuels messages de l’administration à cette adresse : %{link}"
+      refused_mail_with_attestation:
+        refused: "a été refusé le %{date}"
+        reason_title: "Le motif de refus est le suivant :"
+        reason_content: "%{motivation}"
+        download_attestation: "Vous pouvez télécharger votre attestation à l’adresse suivante : %{link}"
+      without_continuation_mail:
+        closed_without_continuation: "a été classé sans suite le %{date}"
+        reason_title: "Le motif est le suivant :"
+        reason_content: "%{motivation}"
+        more_info: "Pour en savoir plus sur les raisons de ce classement sans suite, vous pouvez consulter votre dossier et les éventuels messages de l’administration à cette adresse : %{link}"
   shared:
     procedures:
       no_siret: "Vous n’avez pas renseigné le siret du service pour certaines de vos démarches. Merci de les modifier."

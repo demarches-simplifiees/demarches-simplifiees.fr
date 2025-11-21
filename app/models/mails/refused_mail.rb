@@ -22,8 +22,8 @@ module Mails
     validates :body, tags: true
 
     SLUG = "refused_mail"
-    DISPLAYED_NAME = 'Accusé de refus du dossier'
-    DEFAULT_SUBJECT = 'Votre dossier n° --numéro du dossier-- a été refusé (--libellé démarche--)'
+    DISPLAYED_NAME = I18n.t('activerecord.models.mail.refused_mail.refusal_acknowledgment')
+    DEFAULT_SUBJECT = I18n.t('activerecord.models.mail.refused_mail.default_subject', dossier_number: '--numéro du dossier--', procedure_libelle: '--libellé démarche--')
     DOSSIER_STATE = Dossier.states.fetch(:refuse)
 
     def actions_for_dossier(dossier)

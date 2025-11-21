@@ -1,10 +1,11 @@
 %p
-  Bonjour,
+  = t('notification_mailer.default_templates.greeting')
 
 %p
-  Votre dossier n° --numéro du dossier--
+  = t('notification_mailer.default_templates.your_file_number', id: '--numéro du dossier--')
+
   = succeed '.' do
-    %strong a bien été déposé
-  Si besoin est, vous pouvez encore y apporter des modifications.
+    %strong= t('notification_mailer.default_templates.initiated_mail.deposited')
+  = t('notification_mailer.default_templates.initiated_mail.can_modify')
 
 = render partial: "notification_mailer/default_templates/signature"

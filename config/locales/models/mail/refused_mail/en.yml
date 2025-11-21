@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      mail:
+        refused_mail:
+          default_subject: Your file n° %{dossier_number} has been refused (%{procedure_libelle})
+          refusal_acknowledgment: File refusal acknowledgment

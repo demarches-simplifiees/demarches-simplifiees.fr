@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      mail:
+        without_continuation_mail:
+          default_subject: Votre dossier n° %{dossier_number} a été classé sans suite (%{procedure_libelle})
+          closure_acknowledgment: Accusé de classement sans suite
