@@ -764,6 +764,12 @@ Rails.application.routes.draw do
           put :notice_explicative
           delete :nullify_referentiel
         end
+
+        collection do
+          get 'simplify/:rule', action: :simplify, as: :simplify
+          post 'simplify/enqueue/:rule', action: :enqueue_simplify, as: :enqueue_simplify
+          post 'accept_simplification/:llm_suggestion_rule_id', action: :accept_simplification, as: :accept_simplification
+        end
       end
 
       resources :mail_templates, only: [:index] do
