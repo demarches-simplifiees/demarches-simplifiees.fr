@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:search_terms, :private_search_terms, :editing_fork_origin_id]
+  self.ignored_columns += [:search_terms, :private_search_terms, :editing_fork_origin_id, :last_champ_piece_jointe_updated_at]
 
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -64,8 +64,16 @@ class Dossier < ApplicationRecord
         browser: Current.browser)
     end
 
-    def submit_en_construction(processed_at: Time.zone.now)
+    def usager_submit_en_construction(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_construction),
+        processed_at:,
+        revision_id: proxy_association.owner.revision_id,
+        browser: Current.browser)
+    end
+
+    def instructeur_submit_en_construction(instructeur:, processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_construction),
+        instructeur_email: instructeur.email,
         processed_at:,
         revision_id: proxy_association.owner.revision_id,
         browser: Current.browser)
@@ -329,7 +337,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, last_champ_piece_jointe_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where(created_at: ..2.weeks.ago) }
+  scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where(created_at: ..2.weeks.ago) }
   scope :brouillon_expired, -> do
     state_brouillon
       .visible_by_user
@@ -1076,12 +1084,14 @@ class Dossier < ApplicationRecord
     procedure.accuse_lecture? && termine?
   end
 
-  def update_champs_timestamps(changed_champs)
+  def update_champs_timestamps(changed_champs, stream)
     return if changed_champs.empty?
     updated_at = Time.zone.now
-    attributes = { updated_at:, last_champ_updated_at: updated_at }
-    if changed_champs.any?(&:piece_justificative_or_titre_identite?)
-      attributes[:last_champ_piece_jointe_updated_at] = updated_at
+    attributes = { updated_at: }
+    if stream == Champ::USER_BUFFER_STREAM
+      attributes[:last_champ_updated_at] = updated_at
+    elsif stream == Champ::INSTRUCTEUR_BUFFER_STREAM
+      attributes[:last_champ_instructeur_updated_at] = updated_at
     end
     update_columns(attributes)
   end

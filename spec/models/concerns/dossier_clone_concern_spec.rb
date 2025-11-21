@@ -42,7 +42,6 @@ RSpec.describe DossierCloneConcern do
       expect(new_dossier.last_avis_updated_at).to be_nil
       expect(new_dossier.last_champ_private_updated_at).to be_nil
       expect(new_dossier.last_champ_updated_at).to be_nil
-      expect(new_dossier.last_champ_piece_jointe_updated_at).to be_nil
       expect(new_dossier.last_commentaire_updated_at).to be_nil
       expect(new_dossier.last_commentaire_piece_jointe_updated_at).to be_nil
       expect(new_dossier.motivation).to be_nil

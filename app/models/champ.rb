@@ -252,7 +252,10 @@ class Champ < ApplicationRecord
 
   MAIN_STREAM = 'main'
   USER_BUFFER_STREAM = 'user:buffer'
+  INSTRUCTEUR_BUFFER_STREAM = 'instructeur:buffer'
   HISTORY_STREAM = 'history:'
+  USER_HISTORY_STREAM = 'user:history:'
+  INSTRUCTEUR_HISTORY_STREAM = 'instructeur:history:'
 
   def main_stream?
     stream == MAIN_STREAM
@@ -262,8 +265,29 @@ class Champ < ApplicationRecord
     stream == USER_BUFFER_STREAM
   end
 
+  def instructeur_buffer_stream?
+    stream == INSTRUCTEUR_BUFFER_STREAM
+  end
+
   def history_stream?
-    stream.start_with?(HISTORY_STREAM)
+    stream.start_with?(HISTORY_STREAM, USER_HISTORY_STREAM, INSTRUCTEUR_HISTORY_STREAM)
+  end
+
+  def user_history_stream?
+    stream.start_with?(HISTORY_STREAM, USER_HISTORY_STREAM)
+  end
+
+  def created_with_instructeur_buffer_stream?
+    created_with_stream == INSTRUCTEUR_BUFFER_STREAM
+  end
+
+  def clear
+    update_columns(value: nil, value_json: nil, external_id: nil, data: nil)
+    Champ.no_touching do
+      etablissement&.destroy
+      geo_areas.destroy_all
+      piece_justificative_file.purge_later
+    end
   end
 
   def clone_value_from(champ)
@@ -290,10 +314,6 @@ class Champ < ApplicationRecord
     updated_at = Time.zone.now
     attributes = { updated_at: }
     update_columns(attributes) if persisted?
-
-    if piece_justificative_or_titre_identite?
-      attributes[:last_champ_piece_jointe_updated_at] = updated_at
-    end
 
     if private?
       attributes[:last_champ_private_updated_at] = updated_at
