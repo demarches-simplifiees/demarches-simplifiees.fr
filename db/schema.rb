@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_19_165725) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_21_091000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1037,6 +1037,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_19_165725) do
 
   create_table "procedure_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_procedure_tags_on_name", unique: true
@@ -1464,6 +1465,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_19_165725) do
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
   add_foreign_key "champs", "dossiers"
+  add_foreign_key "champs", "etablissements"
+  add_foreign_key "champs", "types_de_champ"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
@@ -1480,6 +1483,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_19_165725) do
   add_foreign_key "dossier_notifications", "dossiers"
   add_foreign_key "dossier_notifications", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
+  add_foreign_key "dossier_pending_responses", "commentaires"
+  add_foreign_key "dossier_pending_responses", "dossiers"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"
   add_foreign_key "dossiers", "dossier_transfers"
