@@ -12,26 +12,18 @@ module Maintenance
     # run_on_first_deploy
 
     def collection
-      Champs::SiretChamp.in_batches
+      Champs::SiretChamp.all
     end
 
-    def process(batch)
-      # Use raw SQL with UPDATE ... FROM to reference joined table safely
-      conn = ApplicationRecord.connection
+    def process(champ)
+      return if champ.value.present? || champ.external_id.present?
+      return if champ.external_state != Champs::SiretChamp.external_states[:fetched]
+      return if champ.etablissement.nil?
 
-      sql = <<~SQL.squish
-        UPDATE champs
-        SET value = etablissements.siret,
-            external_id = etablissements.siret
-        FROM etablissements
-        WHERE champs.etablissement_id = etablissements.id
-          AND champs.id IN (#{batch.ids.join(',')})
-          AND champs.value IS NULL
-          AND champs.external_id IS NULL
-          AND champs.external_state = '#{Champs::SiretChamp.external_states[:fetched]}'
-          AND champs.type = 'Champs::SiretChamp'
-      SQL
-      conn.execute(sql)
+      champ.update_columns(
+        value: champ.etablissement.siret,
+        external_id: champ.etablissement.siret
+      )
     end
 
     def count
