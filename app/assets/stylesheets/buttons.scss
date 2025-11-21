@@ -409,6 +409,52 @@ ul.dropdown-items {
   line-height: 1.75rem;
 }
 
+// Split button with dropdown menu
+.split-button-wrapper {
+  position: relative;
+  display: block;
+
+  .split-button-menu {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    margin-bottom: 0.5rem;
+    z-index: 9999;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    height: auto;
+    pointer-events: auto;
+
+    .fr-menu {
+      list-style: none;
+      height: auto;
+
+      [role='menuitem'] {
+        width: 100%;
+        text-align: left;
+        justify-content: flex-start;
+        white-space: nowrap;
+        height: auto;
+        min-height: 48px;
+        line-height: normal;
+        position: relative;
+        padding: 0.75rem 1rem;
+        pointer-events: auto;
+      }
+    }
+  }
+
+  .fr-btns-group--split {
+    flex-wrap: nowrap;
+
+    .split-button-toggle {
+      border-left: 1px solid #fff;
+    }
+  }
+}
+
 .copy-zone {
   cursor: pointer;
 

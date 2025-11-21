@@ -13,7 +13,7 @@ class CreateDossierPendingResponses < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :dossier_pending_responses, :responded_at, algorithm: :concurrently
+    add_index :dossier_pending_responses, :responded_at, where: "responded_at IS NULL", algorithm: :concurrently, name: "index_dossier_pending_responses_on_responded_at"
 
     add_foreign_key :dossier_pending_responses, :dossiers, column: :dossier_id, validate: false
     validate_foreign_key :dossier_pending_responses, :dossiers
