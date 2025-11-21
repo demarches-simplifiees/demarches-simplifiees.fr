@@ -12,6 +12,8 @@ fr:
         sans_suite: "Classé sans suite"
       filterable_notification:
         dossier_depose: 'Déposé depuis longtemps'
+        dossier_expirant: 'Expire bientôt'
+        dossier_suppression: 'Bientôt supprimé'
         dossier_modifie: 'Dossier modifié'
         message: 'Message'
         # TODO: switch to ’Annotation instructeur’ during global renaming
