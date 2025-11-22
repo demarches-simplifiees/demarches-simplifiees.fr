@@ -1,7 +1,5 @@
 import {
   addClass,
-  disable,
-  enable,
   getConfig,
   hasClass,
   removeClass,
@@ -20,10 +18,6 @@ const AUTOSAVE_STATUS_VISIBLE_DURATION = status_visible_duration;
 // decides to retry after an error.
 //
 export class AutosaveStatusController extends ApplicationController {
-  static targets = ['retryButton'];
-
-  declare readonly retryButtonTarget: HTMLButtonElement;
-
   connect(): void {
     this.onGlobal('autosave:enqueue', () => this.didEnqueue());
     this.onGlobal('autosave:end', () => this.didSucceed());
@@ -47,16 +41,9 @@ export class AutosaveStatusController extends ApplicationController {
     removeClass(autosave, 'debounced-added');
   }
 
-  onClickRetryButton() {
-    this.globalDispatch('autosave:retry');
-  }
-
-  private didEnqueue() {
-    disable(this.retryButtonTarget);
-  }
+  private didEnqueue() {}
 
   private didSucceed() {
-    enable(this.retryButtonTarget);
     this.setState('succeeded');
     this.debounce(this.hideSucceededStatus, AUTOSAVE_STATUS_VISIBLE_DURATION);
   }
@@ -71,7 +58,6 @@ export class AutosaveStatusController extends ApplicationController {
       return;
     }
 
-    enable(this.retryButtonTarget);
     this.setState('failed');
 
     const shouldLogError = !error.response || error.response.status != 0; // ignore timeout errors
