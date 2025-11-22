@@ -107,7 +107,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           before { subject }
 
           it "assign values" do
-            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil)
+            expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(0)
             expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil)
             expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil)
             expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil)
@@ -170,7 +170,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(2)
 
             expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3)
-            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil)
+            expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(0)
             expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1)
             expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1)
 

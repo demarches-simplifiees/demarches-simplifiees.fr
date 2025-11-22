@@ -12,10 +12,25 @@
 .sub-header
   .fr-container
     .flex.fr-mb-2v
-      %h1.fr-h3.fr-mb-0 Démarches
+      %h1.fr-h3.fr-mb-0
+        Démarches
+
+        %span#synthese-button-wrapper{ data: { controller: "lazy-modal" } }
+          %button.fr-btn.fr-btn--secondary{
+            type: "button",
+            aria: { controls: "synthese-modal-dialog" },
+            data: { "fr-opened" => "false", "turbo-frame" => "synthese-modal", action: "lazy-modal#load" },
+            src: synthese_instructeur_procedures_path,
+          }
+            = dsfr_icon('fr-icon-information-line', :sm, :mr)
+            = "Synthèse des démarches"
+
+          = turbo_frame_tag "synthese-modal", data: { "lazy-modal-target": "frame" } do
+            %dialog.fr-modal#synthese-modal-dialog
+
+
       = render Instructeurs::TabsExplanationsComponent.new
 
-    = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
     = render SelectProcedureDropDownListComponent.new(procedures: @procedures, action_path: url_for([:select_procedure, :instructeur, :procedures]), form_class: 'width-66 fr-mb-3w')
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.instructeurs.procedures_menu') }
