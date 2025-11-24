@@ -9,7 +9,7 @@ class Cron::LLMEnqueueNightlyImproveProcedureJob < Cron::CronJob
       .find_each(batch_size: 200) do |procedure|
         next unless Flipper.enabled?(:llm_nightly_improve_procedure, procedure)
 
-        LLM::ImproveProcedureJob.perform_later(procedure, LLMRuleSuggestion.rules.fetch(:improve_label))
+        LLM::ImproveProcedureJob.perform_later(procedure, LLMRuleSuggestion.rules.fetch(:improve_label), action: "nightly")
       end
   end
 end

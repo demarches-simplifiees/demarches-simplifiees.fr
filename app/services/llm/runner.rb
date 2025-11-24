@@ -14,32 +14,49 @@ module LLM
       @logger = logger
     end
 
+    def with_logging(payload, &block)
+      ActiveSupport::Notifications.instrument("llm.call", payload.merge(model: @model)) { yield(it) }
+    end
+
     # Returns an array of tool call events.
     # Each event is a Hash: { name:, arguments: Hash }
-    def call(messages:, tools: [])
-      params = {
-        messages: messages,
-        tools: tools,
-        tool_choice: 'auto',
-        temperature: 0,
-      }
-      params[:model] = @model if @model
+    def call(messages:, tools: [], procedure_id: nil, rule: nil, action: nil, user_id: nil)
+      returned_value, raised_error = nil, nil
 
-      response = @client.chat(params)
-      raw = response.respond_to?(:raw_response) ? response.raw_response : response
-      msg = raw.dig('choices', 0, 'message') || {}
-      raw_calls = msg['tool_calls'] || []
-      raw_calls.map do |tc|
-        fn = tc['function'] || {}
-        {
-          name: fn['name'],
-          arguments: parse_args(fn['arguments']),
+      with_logging(procedure_id:, rule:, action:, user_id:) do |payload|
+        response = @client.chat({
+          messages: messages,
+          tools: tools,
+          tool_choice: 'auto',
+          temperature: 0,
           model: @model,
-        }
+        })
+        raw = response.respond_to?(:raw_response) ? response.raw_response : response
+        msg = raw.dig('choices', 0, 'message') || {}
+        raw_calls = msg['tool_calls'] || []
+
+        payload[:prompt_tokens] = raw.dig('usage', 'prompt_tokens')
+        payload[:completion_tokens] = raw.dig('usage', 'completion_tokens')
+        payload[:status] = raw['status'] || 200
+
+        returned_value = raw_calls.map do |tc|
+          fn = tc['function'] || {}
+          {
+            name: fn['name'],
+            arguments: parse_args(fn['arguments']),
+            model: @model,
+          }
+        end
+      rescue => e
+        raised_error = e
+        payload[:exception] = e
       end
-    rescue => e
-      @logger.warn("[LLM::Runner] request failed: #{e.class}: #{e.message}")
-      []
+
+      if raised_error
+        raise raised_error
+      else
+        returned_value
+      end
     end
 
     private

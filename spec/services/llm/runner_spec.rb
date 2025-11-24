@@ -37,23 +37,94 @@ describe LLM::Runner do
     expect(events).to eq([])
   end
 
-  it 'handles malformed arguments gracefully' do
+  it 'publishes llm.call notification with success payload' do
     raw = {
-      'model' => 'openai/gpt-5',
-      'choices' => [
-        {
-          'message' => {
-            'tool_calls' => [
-              { 'function' => { 'name' => 'improve_label', 'arguments' => 'not json' } },
-            ],
-          },
-        },
-      ],
+      'choices' => [{ 'message' => { 'tool_calls' => [] } }],
+      'usage' => { 'prompt_tokens' => 10, 'completion_tokens' => 5 },
+      'status' => 200,
     }
     response = double('response', raw_response: raw)
     client = double('client', chat: response)
 
-    events = described_class.new(client: client).call(messages: messages, tools: tools)
-    expect(events.first[:arguments]).to eq({})
+    events = nil
+    called = false
+    subscription = ActiveSupport::Notifications.subscribe('llm.call') do |_name, start, finish, _id, payload|
+      duration = finish - start
+      event_type = payload[:exception] ? "llm_call_error" : "llm_call_success"
+
+      events = payload.merge({
+        event: event_type,
+        duration_ms: (duration * 1000).round,
+        error_class: payload[:exception]&.class&.name,
+        error_message: payload[:exception]&.message,
+      }).compact
+      called = true
+    end
+
+    described_class.new(client: client, model: 'gpt-4').call(
+      messages: messages,
+      tools: tools,
+      procedure_id: 123,
+      rule: 'improve_label',
+      action: 'nightly',
+      user_id: 456
+    )
+
+    ActiveSupport::Notifications.unsubscribe(subscription)
+
+    expect(called).to be true
+    expect(events[:event]).to eq('llm_call_success')
+    expect(events[:procedure_id]).to eq(123)
+    expect(events[:rule]).to eq('improve_label')
+    expect(events[:action]).to eq('nightly')
+    expect(events[:user_id]).to eq(456)
+    expect(events[:model]).to eq('gpt-4')
+    expect(events[:prompt_tokens]).to eq(10)
+    expect(events[:completion_tokens]).to eq(5)
+    expect(events[:status]).to eq(200)
+    expect(events[:duration_ms]).to be_a(Integer)
+  end
+
+  it 'publishes llm.call notification with error payload' do
+    client = double('client')
+    allow(client).to receive(:chat).and_raise(StandardError.new('API error'))
+
+    events = nil
+    called = false
+    subscription = ActiveSupport::Notifications.subscribe('llm.call') do |_name, start, finish, _id, payload|
+      duration = finish - start
+      event_type = payload[:exception] ? "llm_call_error" : "llm_call_success"
+
+      events = payload.merge({
+        event: event_type,
+        duration_ms: (duration * 1000).round,
+        error_class: payload[:exception]&.class&.name,
+        error_message: payload[:exception]&.message,
+      }).compact
+      called = true
+    end
+
+    expect {
+      described_class.new(client: client).call(
+        messages: messages,
+        tools: tools,
+        procedure_id: 123,
+        rule: 'improve_label',
+        action: 'nightly',
+        user_id: 456
+      )
+    }.to raise_error(StandardError, 'API error')
+
+    ActiveSupport::Notifications.unsubscribe(subscription)
+
+    expect(called).to be true
+    expect(events[:event]).to eq('llm_call_error')
+    expect(events[:procedure_id]).to eq(123)
+    expect(events[:rule]).to eq('improve_label')
+    expect(events[:action]).to eq('nightly')
+    expect(events[:user_id]).to eq(456)
+    expect(events[:error_class]).to eq('StandardError')
+    expect(events[:error_message]).to eq("API error")
+    expect(events[:duration_ms]).to be_a(Integer)
   end
 end

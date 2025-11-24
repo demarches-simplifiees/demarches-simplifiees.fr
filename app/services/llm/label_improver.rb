@@ -35,21 +35,21 @@ module LLM
     end
 
     # Returns an array of hashes suitable for LlmRuleSuggestionItem creation
-    # [{ rule:, op_kind:, stable_id:, payload:, safety:, justification:, confidence: }]
-    def generate_for(suggestion)
+    # [{ rule:, op_kind:, stable_id:, payload:, justification: }]
+    def generate_for(suggestion, action: nil, user_id: nil)
       messages = propose_messages(suggestion)
 
-      calls = run_tools(messages: messages, tools: [TOOL_DEFINITION])
+      calls = run_tools(messages: messages, tools: [TOOL_DEFINITION], procedure_id: suggestion.procedure_revision.procedure_id, rule: suggestion.rule, action:, user_id:)
 
       aggregate_calls(calls)
     end
 
     private
 
-    def run_tools(messages:, tools:)
+    def run_tools(messages:, tools:, procedure_id: nil, rule: nil, action: nil, user_id: nil)
       return [] unless @runner
 
-      @runner.call(messages: messages, tools: tools) || []
+      @runner.call(messages: messages, tools: tools, procedure_id:, rule:, action:, user_id:) || []
     end
 
     def propose_messages(suggestion)
