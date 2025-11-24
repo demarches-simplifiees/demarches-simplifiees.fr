@@ -8,6 +8,16 @@
 
   .default-filter {
     max-width: 300px;
+
+    // Hide the up and down arrows for number input
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
   }
 }
 
