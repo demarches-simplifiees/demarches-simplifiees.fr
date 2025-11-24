@@ -7,9 +7,9 @@ class LLM::GenerateRuleSuggestionJob < ApplicationJob
     Sentry.capture_exception(exception, level: :error)
   end
 
-  def perform(suggestion)
+  def perform(suggestion, action:, user_id: nil)
     suggestion.update!(state: :running)
-    items = service(suggestion).generate_for(suggestion)
+    items = service(suggestion).generate_for(suggestion, action:, user_id:)
     if items.any?
       LLMRuleSuggestionItem.transaction do
         suggestion.llm_rule_suggestion_items.delete_all

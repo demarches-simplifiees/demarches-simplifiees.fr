@@ -6,7 +6,7 @@ RSpec.describe LLM::GenerateRuleSuggestionJob, type: :job do
   let!(:procedure) { create(:procedure, :published) }
   let(:suggestion) { create(:llm_rule_suggestion, :queued, procedure_revision: procedure.published_revision, schema_hash: 'cafebabe') }
 
-  subject { described_class.perform_now(suggestion) }
+  subject { described_class.perform_now(suggestion, action: "nightly") }
 
   it 'transitions queued -> completed when the service succeeds' do
     allow_any_instance_of(LLM::LabelImprover).to receive(:generate_for).and_return([])

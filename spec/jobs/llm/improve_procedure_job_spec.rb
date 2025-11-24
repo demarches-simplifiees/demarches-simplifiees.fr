@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe LLM::ImproveProcedureJob, type: :job do
-  subject(:perform) { described_class.perform_now(procedure, rule) }
+  subject(:perform) { described_class.perform_now(procedure, rule, action: "nightly") }
   let(:rule) { LLMRuleSuggestion.rules.values.first }
   let(:procedure) { create(:procedure, :published) }
 
@@ -27,7 +27,7 @@ describe LLM::ImproveProcedureJob, type: :job do
     LLMRuleSuggestion.update_all(state: :failed)
     clear_enqueued_jobs
 
-    described_class.perform_now(procedure, rule)
+    described_class.perform_now(procedure, rule, action: "nightly")
 
     expect(LLMRuleSuggestion.pluck(:state)).to all(eq('queued'))
     expect(LLM::GenerateRuleSuggestionJob).to have_been_enqueued.exactly(:once)

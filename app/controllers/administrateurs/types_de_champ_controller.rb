@@ -173,7 +173,7 @@ module Administrateurs
       if llm_rule_suggestion_scope.where(rule:).exists?(state: [:queued, :running])
         redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'Une recherche est déjà en cours pour cette règle.'
       else
-        LLM::ImproveProcedureJob.perform_now(@procedure, rule) # this job only enqueue another job, no external api call so we can perform_now
+        LLM::ImproveProcedureJob.perform_now(@procedure, rule, action: action_name, user_id: current_administrateur.user.id) # nothing async, the job re-enqueues a GenerateRuleSuggestionJob
         redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'La recherche a été lancée. Vous serez notifié lorsque les suggestions seront prêtes.'
       end
     end

@@ -16,28 +16,53 @@ module LLM
 
     # Returns an array of tool call events.
     # Each event is a Hash: { name:, arguments: Hash }
-    def call(messages:, tools: [])
-      params = {
-        messages: messages,
-        tools: tools,
-        tool_choice: 'auto',
-        temperature: 0,
-      }
-      params[:model] = @model if @model
-
-      response = @client.chat(params)
-      raw = response.respond_to?(:raw_response) ? response.raw_response : response
-      msg = raw.dig('choices', 0, 'message') || {}
-      raw_calls = msg['tool_calls'] || []
-      raw_calls.map do |tc|
-        fn = tc['function'] || {}
-        {
-          name: fn['name'],
-          arguments: parse_args(fn['arguments']),
-          model: @model,
+    def call(messages:, tools: [], procedure_id: nil, rule: nil, action: nil, user_id: nil)
+      ActiveSupport::Notifications.instrument("llm.call",
+        procedure_id:,
+        rule:,
+        action:,
+        user_id:,
+        messages_count: messages.size) do |payload|
+        params = {
+          messages: messages,
+          tools: tools,
+          tool_choice: 'auto',
+          temperature: 0,
         }
+        params[:model] = @model if @model
+
+        response = @client.chat(params)
+        raw = response.respond_to?(:raw_response) ? response.raw_response : response
+        msg = raw.dig('choices', 0, 'message') || {}
+        raw_calls = msg['tool_calls'] || []
+
+        # Enrichir le payload avec les détails de la réponse
+        payload[:model] = @model
+        payload[:prompt_tokens] = raw.dig('usage', 'prompt_tokens')
+        payload[:completion_tokens] = raw.dig('usage', 'completion_tokens')
+        payload[:status] = raw['status'] || 200
+
+        raw_calls.map do |tc|
+          fn = tc['function'] || {}
+          {
+            name: fn['name'],
+            arguments: parse_args(fn['arguments']),
+            model: @model,
+          }
+        end
       end
     rescue => e
+      # Enrichir le payload avec l'erreur
+      ActiveSupport::Notifications.instrument("llm.call",
+        procedure_id:,
+        rule:,
+        action:,
+        user_id:,
+        messages_count: messages.size,
+        exception: e) do |payload|
+        payload[:error_class] = e.class.name
+        payload[:error_message] = e.message
+      end
       @logger.warn("[LLM::Runner] request failed: #{e.class}: #{e.message}")
       []
     end

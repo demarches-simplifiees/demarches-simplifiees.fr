@@ -11,7 +11,7 @@ RSpec.describe LLM::LabelImprover do
     ]
   end
 
-  let(:revision) { double('revision', schema_to_llm: schema) }
+  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 123) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch(:improve_label)) }
 
   describe '#generate_for' do
