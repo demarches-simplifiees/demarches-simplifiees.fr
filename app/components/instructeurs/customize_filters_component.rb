@@ -36,20 +36,18 @@ class Instructeurs::CustomizeFiltersComponent < ApplicationComponent
   end
 
   def filter_action_button(filter_column:, icon:, text:, filters_columns_array:, disabled: false)
-    button_to(
-      refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation),
+    form_with(
+      url: refresh_filters_instructeur_procedure_presentation_path(@procedure_presentation),
       method: :post,
-      class: "fr-btn fr-btn--tertiary-no-outline fr-icon-#{icon}",
-      disabled: disabled,
-      params: {
-        filters_columns: filters_columns_array.map(&:id),
-        statut: @statut,
-        apply_to_all_tabs: @apply_to_all_tabs ? '1' : '0',
-      }.compact,
-      form: { data: { turbo: true, turbo_force: :server } },
-      form_class: 'inline'
-    ) do
-      text
+      data: { turbo: true, turbo_force: :server },
+      class: 'inline'
+    ) do |form|
+      safe_join([
+        *filters_columns_array.map { |filter| form.hidden_field "filters_columns[]", value: filter.id },
+        form.hidden_field("statut", value: @statut),
+        form.hidden_field("apply_to_all_tabs", value: @apply_to_all_tabs ? '1' : '0'),
+        form.button(text, type: :submit, class: "fr-btn fr-btn--tertiary-no-outline fr-icon-#{icon}", disabled: disabled),
+      ])
     end
   end
 
