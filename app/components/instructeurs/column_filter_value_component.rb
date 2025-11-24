@@ -99,6 +99,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       items: column_filter_options,
       value_separator: false,
       selected_keys: filtered_column&.filter_value,
+      placeholder: t('.multi_select_placeholder'),
     }
   end
 

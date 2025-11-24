@@ -1,5 +1,5 @@
 <section id="<%= id %>">
-  <div class="fr-background-alt--grey flex flex-gap-2 column fr-my-2w fr-p-2w">
+  <div class="fr-background-alt--grey flex flex-gap-2 column fr-my-2w fr-p-3w">
     <div class="flex flex-gap-2">
       <div class="flex flex-1">
         <p class="fr-h6 fr-mb-0"><%= t('.search_filter_dossiers') %></p>
@@ -41,7 +41,7 @@
         <div class="flex align-center fr-p-2w"><%= t('.no_filters') %></div>
       <% end %>
 
-      <div class="ml-auto fr-p-2w flex align-end">
+      <div class="ml-auto fr-pl-2w fr-pt-2w flex align-end">
         <%= link_to t('.enable_filters_customization'),
           customize_filters_instructeur_procedure_presentation_path(procedure_presentation, statut: statut),
           class: 'fr-btn--icon-left fr-icon-settings-5-line fr-btn fr-btn--sm fr-btn--tertiary' %>

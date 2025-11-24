@@ -9,3 +9,5 @@ en:
     this_month: This month
     this_year: This year
   update: Update
+  multi_select_placeholder: Select
+  search_placeholder: Search
