@@ -16,6 +16,6 @@ en:
       go_to_FAQ: 'read FAQ'
       url_FAQ: '/faq#accordion-administrateur-2'
       faq: Frequently Asked Questions
-      show_dossier: 'File nº %{dossier_id} – %{owner_name}'
+      show_dossier: 'File n° %{dossier_id} – %{owner_name}'
       show_procedure: '%{libelle} – Files'
       edit_path: Edit procedure link

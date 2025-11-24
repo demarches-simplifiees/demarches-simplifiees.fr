@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      mail:
+        without_continuation_mail:
+          default_subject: Your file n° %{dossier_number} has been closed without follow-up (%{procedure_libelle})
+          closure_acknowledgment: Closure without follow-up acknowledgment

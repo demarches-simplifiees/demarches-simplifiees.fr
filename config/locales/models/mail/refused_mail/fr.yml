@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      mail:
+        refused_mail:
+          default_subject: Votre dossier n° %{dossier_number} a été refusé (%{procedure_libelle})
+          refusal_acknowledgment: Accusé de refus du dossier

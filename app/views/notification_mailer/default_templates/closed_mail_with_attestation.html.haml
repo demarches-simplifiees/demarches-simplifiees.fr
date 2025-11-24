@@ -1,12 +1,11 @@
 %p
-  Bonjour,
+  = t('notification_mailer.default_templates.greeting')
 
 %p
-  Votre dossier n° --numéro du dossier--
-  %strong a été accepté
-  le --date de décision--.
+  = t('notification_mailer.default_templates.your_file_number', id: '--numéro du dossier--')
+  %strong= t('notification_mailer.default_templates.closed_mail_with_attestation.accepted', date: '--date de décision--')
 
 %p
-  Vous pouvez télécharger votre attestation à l'adresse suivante : --lien attestation--
+  = t('notification_mailer.default_templates.closed_mail_with_attestation.download_attestation', link: '--lien attestation--')
 
 = render partial: "notification_mailer/default_templates/signature"
