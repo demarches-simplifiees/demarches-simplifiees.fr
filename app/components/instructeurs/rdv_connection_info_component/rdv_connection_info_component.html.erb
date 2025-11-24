@@ -8,6 +8,6 @@
 
     <p><%= t('.disconnect_info') %></p>
 
-    <%= link_to(t('.delete_connection'), instructeur_rdv_connections_path(redirect_path: redirect_path), class: 'fr-btn fr-btn--sm fr-btn--secondary', method: :delete) %>
+    <%= link_to(t('.disconnect_button'), instructeur_rdv_connections_path(redirect_path: redirect_path), class: 'fr-btn fr-btn--sm fr-btn--secondary', method: :delete) %>
   </div>
 <% end %>
