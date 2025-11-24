@@ -2,6 +2,5 @@
 fr:
   title: Compte RDV Service Public
   connection_message_html: "Votre compte Démarches Simplifiées avec l'adresse email <b>%{ds_email}</b> est connecté au compte RDV Service Public avec l'adresse email <b>%{rdv_email}</b>."
-  disconnect_info: "Si vous souhaitez connecter ce compte Démarches Simplifiées à un autre compte RDV Service Public, vous pouvez supprimer cette connexion."
-  delete_connection: Supprimer la connexion
-
+  disconnect_info: Si vous souhaitez connecter ce compte Démarches Simplifiées à un autre compte RDV Service Public, vous pouvez déconnecter ce compte.
+  disconnect_button: Déconnecter le compte
