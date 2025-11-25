@@ -23,8 +23,7 @@
     <p>
       Cet historique contient les 30 derniers jours. Pour un recherche plus
       fine, il faut fouiller les
-      <a href="https://app-smtp.sendinblue.com/log">logs de SendInblue</a>
-      .
+      <a href="https://app-smtp.sendinblue.com/log">logs de SendInblue</a>.
     </p>
     <table>
       <thead>
@@ -37,6 +36,7 @@
           >
             Émetteur
           </th>
+
           <th
             class="cell-label cell-label--string cell-label--false"
             scope="col"
@@ -45,6 +45,7 @@
           >
             Objet
           </th>
+
           <th
             class="cell-label cell-label--string cell-label--false"
             scope="col"
@@ -53,6 +54,7 @@
           >
             Date
           </th>
+
           <th
             class="cell-label cell-label--string cell-label--false"
             scope="col"
@@ -61,6 +63,7 @@
           >
             Statut
           </th>
+
           <th
             class="cell-label cell-label--string cell-label--false"
             scope="col"
@@ -71,21 +74,26 @@
           </th>
         </tr>
       </thead>
+
       <tbody>
         <% @sent_mails.each do |email| %>
           <tr class="<%= status_color_code(email.status) %>">
             <td class="cell-data cell-data--string" style="">
               <%= email.from %>
             </td>
+
             <td class="cell-data cell-data--string" style="">
               <%= email.subject %>
             </td>
+
             <td class="cell-data cell-data--string" style="text-align: center;">
               <%= l(email.delivered_at, format: :long) %>
             </td>
+
             <td class="cell-data cell-data--string" style="text-align: center;">
               <%= email.status %>
             </td>
+
             <td class="cell-data cell-data--string" style="">
               <%= link_to email.service_name, email.external_url, style: 'text-decoration: underline' %>
             </td>
@@ -95,11 +103,10 @@
     </table>
   <% else %>
     <p>
-      Historique indisponible. Cette adresse email n’existe pas chez nos
-      prestataires d’envoi, ou nous n’avons pas réussi à en charger des données.
-      Vous pouvez éventuellement fouiller les
-      <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a>
-      .
+      Historique indisponible. Cette adresse électronique n'existe pas chez nos
+      prestataires d’envoi, ou nous n’avons pas réussi à en charger des
+      données. Vous pouvez éventuellement fouiller les
+      <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a>.
     </p>
   <% end %>
 
@@ -156,14 +163,17 @@ Cordialement</pre>
   <% end %>
 
   <p>
-    <strong>Mot de passe perdu ?</strong>
-    Vous pouvez
+    <strong>Mot de passe perdu ?</strong> Vous pouvez
     <%= link_to('renvoyer l’email de réinitialisation', [:resend_reset_password_instructions, namespace, :user], method: :post, class: 'button') %>
+    
     <small>Attention au téléscopage: cet email invalide les liens des emails similaires précédents.</small>
   </p>
 
   <p>
-    <strong>Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez Sendinblue ?</strong>
+    <strong>
+      Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez
+      Sendinblue?
+    </strong>
     Vous pouvez le
     <%= link_to('débloquer', manager_user_unblock_email_path(@user), method: :put, class: 'button') %>
     puis lui envoyer

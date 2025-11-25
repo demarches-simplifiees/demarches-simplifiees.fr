@@ -47,6 +47,7 @@ DS/AdresseElectronique:
   Enabled: true
   Exclude:
     - './lib/cops/adresse_electronique.rb'
+    - './lib/tasks/adresse_electronique_lint.rake'
 
 DS/Unscoped:
   Enabled: true

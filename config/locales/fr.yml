@@ -1053,7 +1053,7 @@ fr:
       choose_email_contact: Choisissez votre adresse électronique de contact pour finaliser votre connexion
       alternative_email: Veuillez nous fournir l’adresse électronique à utiliser pour vous contacter
       keep_fc_email_html: "<span>Oui, utiliser <b>%{email}</b> comme adresse électronique de contact</span>"
-      use_another_email: Non, utiliser une autre adresse
+      use_another_email: Non, utiliser une autre adresse électronique
       email_suggest:
         wanna_say: 'Voulez-vous dire ?'
     merge:

@@ -12,4 +12,5 @@ task :lint do
   sh "bun lint:js"
   sh "bun lint:types"
   sh "bun lint:css"
+  sh "bundle exec rake lint:adresse_electronique"
 end
