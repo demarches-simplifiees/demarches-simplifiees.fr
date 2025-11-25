@@ -16,6 +16,20 @@ describe Columns::LinkedDropDownColumn do
       it { expect { subject }.not_to raise_error }
     end
 
+    context "when filter value is nil" do
+      let(:column) { procedure.find_column(label: 'linked') }
+      let(:search_terms) { nil }
+
+      it { expect { subject }.not_to raise_error }
+    end
+
+    context "when filter value is missing" do
+      let(:column) { procedure.find_column(label: 'linked') }
+      subject { column.filtered_ids(Dossier.all, { operator: 'match' }) }
+
+      it { expect { subject }.not_to raise_error }
+    end
+
     context 'when path is :value' do
       let(:column) { procedure.find_column(label: 'linked') }
 
@@ -37,6 +51,11 @@ describe Columns::LinkedDropDownColumn do
         let(:search_terms) { ['section 1  /  option A'] }
 
         it { is_expected.to match_array([kept_dossier.id]) }
+      end
+      describe 'when value is malformed' do
+        let(:search_terms) { ['section 1  /'] }
+
+        it { expect { subject }.not_to raise_error }
       end
 
       describe 'when looking for the aggregated value or a common value' do
