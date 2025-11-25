@@ -6,9 +6,7 @@ namespace :lint do
     require 'fileutils'
 
     patterns = [
-      /adresse\s+email/i,
-      /adresse\s+mail/i,
-      /adresse\s+e-mail/i,
+      /adresse(s)?\s+(email|mail|e-mail)/i,
     ]
 
     extensions = %w[.haml .erb .html .yml .yaml]
