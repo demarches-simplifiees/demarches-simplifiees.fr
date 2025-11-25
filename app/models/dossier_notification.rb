@@ -19,20 +19,35 @@ class DossierNotification < ApplicationRecord
   belongs_to :instructeur
   belongs_to :dossier
 
-  scope :to_display, -> {
-    where(display_at: ..Time.current)
-      .joins(:dossier)
+  scope :base_for_display, -> { where(display_at: ..Time.current).joins(:dossier) }
+
+  scope :for_visible_not_archived_dossiers, -> {
+    base_for_display
       .where(
-        "(NOT dossiers.archived
-          AND dossiers.hidden_by_expired_at IS NULL
-          AND dossiers.hidden_by_administration_at IS NULL)
-        OR (dossiers.archived
-          AND dossiers.hidden_by_expired_at IS NULL
-          AND dossiers.hidden_by_administration_at IS NULL
-          AND dossier_notifications.notification_type = 'dossier_expirant')
-        OR ((dossiers.hidden_by_expired_at IS NOT NULL OR dossiers.hidden_by_administration_at IS NOT NULL)
-        AND dossier_notifications.notification_type = 'dossier_suppression')"
+        dossiers: {
+          archived: false,
+          hidden_by_expired_at: nil,
+          hidden_by_administration_at: nil,
+        }
       )
+  }
+
+  scope :for_archived_dossiers, -> {
+    base_for_display
+      .where(dossiers: { archived: true, hidden_by_expired_at: nil, hidden_by_administration_at: nil })
+      .where(notification_type: 'dossier_expirant')
+  }
+
+  scope :for_hidden_dossiers, -> {
+    base_for_display
+      .where("dossiers.hidden_by_expired_at IS NOT NULL OR dossiers.hidden_by_administration_at IS NOT NULL")
+      .where(notification_type: 'dossier_suppression')
+  }
+
+  scope :to_display, -> {
+    for_visible_not_archived_dossiers
+      .or(for_archived_dossiers)
+      .or(for_hidden_dossiers)
   }
 
   scope :order_by_importance, -> {
