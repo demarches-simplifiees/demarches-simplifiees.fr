@@ -17,7 +17,7 @@
         <% sticky = defined?(sticky) ? sticky : false %>
         <% fixed = defined?(fixed) ? fixed : false %>
         <div
-          class="alert <%= flash_class(key, sticky: sticky, fixed: fixed) %>"
+          class="alert <%= flash_class(key, sticky: sticky, fixed: fixed) %> fr-p-2w"
           role="<%= flash_role(key) %>"
         >
           <% if value.class == Array %>

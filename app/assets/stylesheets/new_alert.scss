@@ -1,7 +1,9 @@
 .alert {
-  padding: 15px;
   &:before {
     margin-right: 3px;
+  }
+  a {
+    color: inherit;
   }
 }
 
