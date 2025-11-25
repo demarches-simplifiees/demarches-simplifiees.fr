@@ -10,10 +10,17 @@ class ContactForm < ApplicationRecord
   before_validation :sanitize_email
   before_save :add_default_tags
 
+  PG_BIGINT_MAX = (2**63) - 1
+  PG_BIGINT_MIN = -(2**63)
+
   validates :email, presence: true, strict_email: true, if: :require_email?
   validates :subject, presence: true
   validates :text, presence: true
-  validates :dossier_id, numericality: { only_integer: true }, allow_nil: true
+  validates :dossier_id, numericality: {
+    only_integer: true,
+    greater_than_or_equal_to: PG_BIGINT_MIN,
+    less_than_or_equal_to: PG_BIGINT_MAX,
+  }, allow_nil: true
   validates :question_type, presence: true
 
   has_one_attached :piece_jointe
