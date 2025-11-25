@@ -3,6 +3,12 @@
 module LLM
   # Orchestrates improve_label generation using tool-calling.
   class LabelImprover
+    # Characters that could potentially interfere with LLM prompts or cause security issues
+    DANGEROUS_CHARS = /
+      [<>{}\[\]]     # Markup characters that could be used for injections
+      | [\x00-\x1F]  # Control characters (null, tab, line feed, etc.)
+      | \x7F         # Delete character
+    /x.freeze
     TOOL_DEFINITION = {
       type: 'function',
       function: {
@@ -57,9 +63,10 @@ module LLM
     end
 
     def propose_messages_for_schema(schema)
+      safe_schema = sanitize_schema_for_prompt(schema)
       [
         { role: 'system', content: system_prompt },
-        { role: 'user', content: format(schema_prompt, schema: JSON.dump(schema)) },
+        { role: 'user', content: format(schema_prompt, schema: JSON.dump(safe_schema)) },
         { role: 'user', content: rules_prompt },
       ]
     end
@@ -227,6 +234,23 @@ module LLM
     end
 
     private
+
+    def sanitize_schema_for_prompt(schema)
+      return schema unless schema.is_a?(Array)
+
+      schema.map do |field|
+        field.transform_values do |value|
+          case value
+          when Array
+            Array(value).map { |choice| choice.is_a?(String) ? choice.gsub(DANGEROUS_CHARS, '').strip : choice }
+          when String
+            value.gsub(DANGEROUS_CHARS, '').strip
+          else
+            value
+          end
+        end
+      end
+    end
 
     def filter_invalid_llm_result(stable_id, libelle, description)
       stable_id.nil? || libelle.blank?
