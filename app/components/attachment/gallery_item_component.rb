@@ -28,6 +28,8 @@ class Attachment::GalleryItemComponent < ApplicationComponent
       'Avis externe (instructeur)'
     in Avis if attachment.name == 'piece_justificative_file'
       'Avis externe (expert)'
+    in Attestation
+      'Attestation de décision'
     else
       if attachment.name == 'justificatif_motivation'
         'Justificatif de décision'

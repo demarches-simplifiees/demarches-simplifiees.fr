@@ -7,7 +7,7 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
   let(:types_de_champ_public) { [{ type: :piece_justificative }] }
   let(:types_de_champ_private) { [{ type: :piece_justificative }] }
-  let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, :en_construction, procedure:) }
+  let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, :with_attestation_acceptation, :accepte, procedure:) }
   let(:filename) { attachment.blob.filename.to_s }
 
   let(:component) { described_class.new(attachment:) }
@@ -108,6 +108,30 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       expect(subject).to have_text('Justificatif de décision')
       expect(subject).to have_link(filename)
       expect(subject).to have_text('Pièce jointe à la décision')
+    end
+  end
+
+  context "when attachment is from an acceptation attestation" do
+    let(:attestation_pdf) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+    let(:attachment) { dossier.attestation.pdf }
+
+    it "displays a generic libelle, link, tag and renders title" do
+      expect(subject).to have_text('Attestation d’acceptation')
+      expect(subject).to have_link(filename)
+      expect(subject).to have_text('Attestation de décision')
+    end
+  end
+
+  context "when attachment is from an refus attestation" do
+    let(:attestation_pdf) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+    let(:attachment) { dossier.attestation.pdf }
+
+    before { dossier.update!(state: :refuse) }
+
+    it "displays a generic libelle, link, tag and renders title" do
+      expect(subject).to have_text('Attestation de refus')
+      expect(subject).to have_link(filename)
+      expect(subject).to have_text('Attestation de décision')
     end
   end
 
