@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
-RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
+RSpec.describe Mutations::DossierModifierAnnotations, type: :graphql do
   let(:admin) { administrateurs(:default_admin) }
-  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_private: [{ type: :repetition, children: [{ libelle: 'Nom' }, { type: :integer_number, libelle: 'Age' }, { type: :decimal_number, libelle: 'Montant' }] }, { type: :decimal_number, libelle: 'Montant' }, {}], administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_private:, administrateurs: [admin]) }
+  let(:types_de_champ_private) do
+    [
+      {
+        type: :repetition,
+        children: [
+          { libelle: 'Nom' },
+          { type: :integer_number, libelle: 'Age' },
+          { type: :decimal_number, libelle: 'Montant' },
+        ],
+      },
+      { type: :decimal_number, libelle: 'Montant' },
+      {},
+      { type: :email },
+    ]
+  end
   let(:dossiers) { [] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
   let(:champs_private) { dossier.project_champs_private }
@@ -14,7 +29,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
   subject { API::V2::Schema.execute(query, variables: variables, context: context) }
 
   let(:data) { subject['data'].deep_symbolize_keys }
-  let(:errors) { subject['errors'].deep_symbolize_keys }
+  let(:errors) { subject['errors'] }
 
   before do
     instructeur.assign_to_procedure(procedure)
@@ -64,7 +79,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:dossiers) { [dossier] }
 
-    let(:annotation) { champs_private.last }
+    let(:annotation) { champs_private.find(&:text?) }
     let(:query) { DOSSIER_MODIFIER_ANNOTATION_TEXT_MUTATION }
     let(:variables) do
       {
@@ -170,6 +185,143 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     end
   end
 
+  describe 'dossierModifierAnnotations' do
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
+    let(:dossiers) { [dossier] }
+
+    let(:annotation) { champs_private.find(&:decimal_number?) }
+    let(:query) { DOSSIER_MODIFIER_ANNOTATIONS_MUTATION }
+    let(:variables) do
+      {
+        input: {
+          dossierId: dossier.to_typed_id,
+          instructeurId: instructeur.to_typed_id,
+          annotations:,
+        },
+      }
+    end
+    let(:annotations) { [{ id: annotation.to_typed_id, value: }] }
+    let(:value) { { decimalNumber: 12.34 } }
+
+    it 'update annotation' do
+      expect(data).to eq(dossierModifierAnnotations: {
+        annotations: [{ id: annotation.to_typed_id }],
+        errors: nil,
+      })
+      expect(annotation.reload.value).to eq('12.34')
+    end
+
+    context 'with not found annotation' do
+      let(:annotation_id) { GraphQL::Schema::UniqueWithinType.encode('Champ', 123) }
+      let(:annotations) { [{ id: annotation_id, value: { text: '' } }] }
+
+      it 'returns error' do
+        expect(data).to eq(dossierModifierAnnotations: {
+          annotations: [],
+          errors: [{ message: "L‘annotation \"#{annotation_id}\" n’existe pas" }],
+        })
+      end
+    end
+
+    context 'with wrong type annotation' do
+      let(:value) { { text: "hello" } }
+
+      it 'returns error' do
+        expect(data).to eq(dossierModifierAnnotations: {
+          annotations: [],
+          errors: [{ message: "L‘annotation \"#{annotation.to_typed_id}\" n’est pas de type attendu" }],
+        })
+      end
+    end
+
+    context 'with invalid annotation' do
+      let(:annotation) { champs_private.find(&:email?) }
+      let(:value) { { email: "test" } }
+
+      it 'returns error' do
+        expect(data).to eq(dossierModifierAnnotations: {
+          annotations: [],
+          errors: [{ message: "est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com" }],
+        })
+      end
+    end
+
+    context 'with rows' do
+      let(:annotation) { champs_private.find(&:repetition?).rows.first.find(&:decimal_number?) }
+      let(:other_annotation) { champs_private.find(&:repetition?).rows.second.find(&:decimal_number?) }
+
+      it 'update annotation' do
+        expect(data).to eq(dossierModifierAnnotations: {
+          annotations: [{ id: annotation.to_typed_id }],
+          errors: nil,
+        })
+        expect(annotation.reload.value).to eq('12.34')
+        expect(other_annotation.reload.value).not_to eq('12.34')
+      end
+    end
+
+    context 'with repetition annotation' do
+      let(:annotation) { champs_private.find(&:repetition?) }
+      let(:value) { { repetition: 2 } }
+
+      it 'add rows' do
+        expect(data).to eq(dossierModifierAnnotations: {
+          annotations: [{ id: annotation.to_typed_id }],
+          errors: nil,
+        })
+        expect(annotation.rows.size).to eq(2)
+      end
+    end
+
+    context 'with multiple annotations' do
+      let(:types_de_champ_private) do
+        [
+          {},
+          { type: :integer_number },
+          { type: :decimal_number },
+          { type: :checkbox },
+          { type: :yes_no },
+          { type: :date },
+          { type: :datetime },
+          { type: :drop_down_list, options: ['option1', 'option2', 'option3'] },
+          { type: :multiple_drop_down_list, options: ['option1', 'option2', 'option3'] },
+        ]
+      end
+
+      let(:text_annotation) { champs_private.find(&:text?) }
+      let(:integer_number_annotation) { champs_private.find(&:integer_number?) }
+      let(:decimal_number_annotation) { champs_private.find(&:decimal_number?) }
+      let(:checkbox_annotation) { champs_private.find(&:checkbox?) }
+      let(:yes_no_annotation) { champs_private.find(&:yes_no?) }
+      let(:date_annotation) { champs_private.find(&:date?) }
+      let(:datetime_annotation) { champs_private.find(&:datetime?) }
+      let(:drop_down_list_annotation) { champs_private.find(&:drop_down_list?) }
+      let(:multiple_drop_down_list_annotation) { champs_private.find(&:multiple_drop_down_list?) }
+
+      let(:annotations) { [text_annotation, integer_number_annotation, decimal_number_annotation, checkbox_annotation, yes_no_annotation, date_annotation, datetime_annotation, drop_down_list_annotation, multiple_drop_down_list_annotation] }
+      let(:types) { [:text, :integerNumber, :decimalNumber, :checkbox, :yesNo, :date, :datetime, :dropDownList, :multipleDropDownList] }
+      let(:values) { ['hello', 42, 42.3, true, false, 1.day.from_now.to_date.iso8601, 1.day.from_now.iso8601, 'option1', ['option1', 'option2']] }
+
+      let(:variables) do
+        {
+          input: {
+            dossierId: dossier.to_typed_id,
+            instructeurId: instructeur.to_typed_id,
+            annotations: annotations.zip(types, values).map { |(annotation, type, value)| { id: annotation.to_typed_id, value: { type => value } } },
+          },
+        }
+      end
+
+      it 'update annotations' do
+        expect(data).to eq(dossierModifierAnnotations: {
+          annotations: annotations.map { { id: _1.to_typed_id } },
+          errors: nil,
+        })
+        expect(annotations.map { _1.reload.value }).to eq(values.map { _1.class == Array ? _1.to_json : _1.to_s })
+      end
+    end
+  end
+
   DOSSIER_MODIFIER_ANNOTATION_AJOUTER_LIGNE_MUTATION = <<-GRAPHQL
   mutation($input: DossierModifierAnnotationAjouterLigneInput!) {
     dossierModifierAnnotationAjouterLigne(input: $input) {
@@ -192,6 +344,15 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
   mutation($input: DossierModifierAnnotationDecimalNumberInput!) {
     dossierModifierAnnotationDecimalNumber(input: $input) {
       annotation { id }
+      errors { message }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_MODIFIER_ANNOTATIONS_MUTATION = <<-GRAPHQL
+  mutation($input: DossierModifierAnnotationsInput!) {
+    dossierModifierAnnotations(input: $input) {
+      annotations { id }
       errors { message }
     }
   }
