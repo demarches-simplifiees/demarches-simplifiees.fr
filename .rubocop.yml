@@ -8,6 +8,7 @@ plugins:
 require:
   - ./lib/cops/add_concurrent_index.rb
   - ./lib/cops/application_name.rb
+  - ./lib/cops/adresse_electronique.rb
   - ./lib/cops/unscoped.rb
   - ./lib/cops/rspec/consecutive_it_blocks.rb
 
@@ -41,6 +42,11 @@ DS/ApplicationName:
     - './lib/cops/application_name.rb'
     - './lib/linters/application_name_linter.rb'
     - './spec/**/*'
+
+DS/AdresseElectronique:
+  Enabled: true
+  Exclude:
+    - './lib/cops/adresse_electronique.rb'
 
 DS/Unscoped:
   Enabled: true

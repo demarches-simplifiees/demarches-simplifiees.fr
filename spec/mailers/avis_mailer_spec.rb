@@ -40,7 +40,7 @@ RSpec.describe AvisMailer, type: :mailer do
       end
       it do
         expect { subject.body }.to change { TargetedUserLink.where(target_model: avis).count }.from(0).to(1)
-        expect(subject.body).to have_text("Confirmez votre adresse email pour donner votre avis")
+        expect(subject.body).to have_text("Confirmez votre adresse électronique pour donner votre avis")
       end
     end
     context 'when expert is inactive' do

@@ -20,7 +20,7 @@ class AvisMailer < ApplicationMailer
       if !@avis.expert.user.active?
         @call_to_action = "Inscrivez-vous pour donner votre avis"
       elsif @avis.expert.user.unverified_email?
-        @call_to_action = 'Confirmez votre adresse email pour donner votre avis'
+        @call_to_action = 'Confirmez votre adresse électronique pour donner votre avis'
       else
         @call_to_action = 'Donnez votre avis'
       end
