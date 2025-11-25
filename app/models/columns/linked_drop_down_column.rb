@@ -25,7 +25,7 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
   def filtered_ids_for_values(dossiers, search_terms)
     relation = dossiers.with_type_de_champ(@stable_id)
 
-    search_terms = search_terms.compact.reject(&:empty?)
+    search_terms = Array(search_terms).compact.reject(&:empty?)
 
     case path
     when :value
@@ -33,7 +33,7 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
         # when looking for "section 1 / option A",
         # the value must contain both "section 1" and "option A"
         primary, *secondary = search_term.split(%r{[[:space:]]*/[[:space:]]*})
-        safe_terms = [primary, *secondary].map { "%#{safe_like(_1)}%" }
+        safe_terms = [primary, *secondary].compact.reject(&:empty?).map { "%#{safe_like(_1)}%" }
 
         relation.where("champs.value ILIKE ALL (ARRAY[?])", safe_terms).ids
       end.uniq
