@@ -7,6 +7,7 @@ namespace :lint do
 
     patterns = [
       /adresse(s)?\s+(email|mail|e-mail)/i,
+      /votre\s+(email|mail|e-mail)/i,
     ]
 
     extensions = %w[.haml .erb .html .yml .yaml]

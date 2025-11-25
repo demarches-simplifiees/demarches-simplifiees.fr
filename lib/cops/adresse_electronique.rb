@@ -9,6 +9,7 @@ if defined?(RuboCop)
 
           def on_str(node)
             return unless node.source.match?(/adresse(s)?\s+(email|mail|e-mail)/i)
+            return unless node.source.match?(/votre\s+(email|mail|e-mail)/i)
 
             add_offense(node, message: MSG)
           end

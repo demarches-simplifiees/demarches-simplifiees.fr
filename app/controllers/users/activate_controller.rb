@@ -35,10 +35,10 @@ class Users::ActivateController < ApplicationController
   def confirm_email
     user = User.find_by(confirmation_token: params[:token])
     if user && user.email_verified_at
-      flash[:notice] = "Votre email est déjà vérifié"
+      flash[:notice] = "Votre adresse électronique est déjà vérifié"
     elsif user && user.confirmation_sent_at >= 2.days.ago
       user.update!(email_verified_at: Time.zone.now)
-      flash[:notice] = 'Votre email a bien été vérifié'
+      flash[:notice] = 'Votre adresse électronique a bien été vérifié'
     else
       if user.present?
         flash[:alert] = "Ce lien n'est plus valable, un nouveau lien a été envoyé à l'adresse #{user.email}"
@@ -58,7 +58,7 @@ class Users::ActivateController < ApplicationController
       user.resend_confirmation_email!
       flash[:notice] = "Un nouvel email de vérification a été envoyé à l'adresse #{user.email}."
     else
-      flash[:alert] = "Votre email est déjà vérifié ou vous n'êtes pas connecté."
+      flash[:alert] = "Votre adresse électronique est déjà vérifié ou vous n'êtes pas connecté."
     end
     redirect_to root_path(user)
   end
