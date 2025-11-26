@@ -11,13 +11,13 @@
     <% end %>
   <% elsif is_date? %>
     <fieldset class="fr-fieldset flex-1">
-      <legend class="fr-fieldset__legend fr-fieldset__legend--regular">
+      <legend class="fr-fieldset__legend fr-fieldset__legend--regular fr-pb-0">
         <%= filtered_column&.label %>
       </legend>
 
       <div class="fr-fieldset__element fr-fieldset__element--inline">
         <div class="flex column">
-          <%= form.label "filter[filter][operator]", t(".operator"), class: 'fr-label', for: input_id(value: "operator") %>
+          <%= form.label "filter[filter][operator]", t(".operator"), class: 'fr-label fr-sr-only', for: input_id(value: "operator") %>
 
           <%= form.select "filter[filter][operator]",
             options_for_select(date_filter_options, selected: operator), {}, { id: input_id(value: "operator"), class: 'fr-select', data: { autosubmit_target: 'input', } } %>
@@ -26,7 +26,7 @@
 
       <% if is_operator_with_value? %>
         <div class="fr-fieldset__element fr-fieldset__element--inline">
-          <%= render Dsfr::InputComponent.new(form:, attribute: "filter[filter][value][]", input_type: :date_field, required: false, opts: { id: input_id(value: "value") }) do |c| %>
+          <%= render Dsfr::InputComponent.new(form:, attribute: "filter[filter][value][]", input_type: :date_field, required: false, opts: { id: input_id(value: "value") }, label_opts: { class: 'fr-sr-only' }) do |c| %>
             <% c.with_label do %>
               <%= t(".operators.#{operator}") %>
             <% end %>
