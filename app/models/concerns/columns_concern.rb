@@ -181,7 +181,8 @@ module ColumnsConcern
       columns.concat([dossier_accuse_lecture_agreement_at_column]) if accuse_lecture?
       columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
       columns.concat(dossier_non_displayable_dates_columns)
-      columns.concat([Columns::ReadAgreementColumn.new(procedure_id: id)])
+      columns.concat([Columns::ReadAgreementColumn.new(procedure_id: id)]) if accuse_lecture?
+      columns
     end
 
     def standard_columns
