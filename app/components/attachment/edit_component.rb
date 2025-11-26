@@ -91,8 +91,8 @@ class Attachment::EditComponent < ApplicationComponent
       data: {
         auto_attach_url:,
         turbo_force: :server,
-        'enable-submit-if-uploaded-target': 'input'
-      }.merge(max_file_size.present? ? { max_file_size: max_file_size } : {})
+        'enable-submit-if-uploaded-target': 'input',
+      }.merge(max_file_size.present? ? { max_file_size: max_file_size } : {}),
     }
 
     describedby = []

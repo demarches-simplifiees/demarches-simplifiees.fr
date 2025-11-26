@@ -73,7 +73,9 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       end
   end
 
-  ACCEPTED_TYPES = Columns::ChampColumn::CAST.keys.group_by { |(from)| from.to_s }.transform_values { |(_, to)| to.map(&:to_s) }
+  ACCEPTED_TYPES = Columns::ChampColumn::CAST.keys
+    .group_by { |(from)| from.to_s }
+    .transform_values { |pairs| pairs.map { |(_, to)| to.to_s } }
 
   def accepted_type_champs
     @accepted_type_champs ||= if published_type_champ.present?
@@ -156,7 +158,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       [
         key,
         I18n.t("activerecord.attributes.type_de_champ.format_families.#{key}", default: key.to_s.humanize),
-        (defined?(FORMAT_FAMILY_EXAMPLES) && FORMAT_FAMILY_EXAMPLES[key])
+        (defined?(FORMAT_FAMILY_EXAMPLES) && FORMAT_FAMILY_EXAMPLES[key]),
       ]
     end
   end

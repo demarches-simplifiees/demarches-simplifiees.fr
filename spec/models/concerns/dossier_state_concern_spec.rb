@@ -252,10 +252,10 @@ RSpec.describe DossierStateConcern do
       let(:instructeur) { dossier.followers_instructeurs.first }
       let(:champ) { dossier.champs.first }
 
-      it 'purges attachments on accepter' do
+      it 'destroys champ on accepter' do
         champ.piece_justificative_file.attach(file)
         dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect(champ.reload.piece_justificative_file.attached?).to be false
+        expect { champ.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -265,10 +265,10 @@ RSpec.describe DossierStateConcern do
       let(:instructeur) { dossier.followers_instructeurs.first }
       let(:champ) { dossier.champs.first }
 
-      it 'purges attachments on accepter' do
+      it 'destroys champ on accepter' do
         champ.piece_justificative_file.attach(file)
         dossier.accepter!(instructeur: instructeur, motivation: 'ok')
-        expect(champ.reload.piece_justificative_file.attached?).to be false
+        expect { champ.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 

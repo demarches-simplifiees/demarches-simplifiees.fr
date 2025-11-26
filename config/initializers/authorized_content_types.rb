@@ -109,23 +109,23 @@ FORMAT_FAMILIES = {
     'application/msword',
     'text/plain',
     'application/rtf',
-    'application/vnd.apple.pages'
+    'application/vnd.apple.pages',
   ],
   tableur: AUTHORIZED_SPREADSHEET_TYPES + ['text/csv'],
   presentation: [
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'application/vnd.ms-powerpoint',
-    'application/vnd.oasis.opendocument.presentation'
+    'application/vnd.oasis.opendocument.presentation',
   ],
   donnees: [
     'application/json', 'application/xml', 'text/xml',
     'application/vnd.google-earth.kml+xml', 'application/gpx+xml',
-    'text/tab-separated-values', 'text/csv', 'application/x-dbf'
+    'text/tab-separated-values', 'text/csv', 'application/x-dbf',
   ],
   image_scan: ['image/jpeg', 'image/png'],
   audio: ['audio/mpeg', 'audio/mp4', 'audio/x-m4a', 'audio/aac', 'audio/x-wav'],
   video: ['video/mp4', 'video/quicktime', 'video/3gpp', 'video/x-ms-wm'],
-  archive: ['application/zip', 'application/x-zip-compressed', 'application/x-7z-compressed', 'application/vnd.rar', 'application/x-rar', 'application/gzip']
+  archive: ['application/zip', 'application/x-zip-compressed', 'application/x-7z-compressed', 'application/vnd.rar', 'application/x-rar', 'application/gzip'],
 }.freeze
 
 FORMAT_FAMILY_EXAMPLES = {
@@ -136,5 +136,5 @@ FORMAT_FAMILY_EXAMPLES = {
   image_scan: '.jpg, .jpeg, .png',
   audio: '.mp3, .wav, .aac, .m4a',
   video: '.mp4, .mov, .avi, .wmv',
-  archive: '.zip, .rar, .7z, .gz'
+  archive: '.zip, .rar, .7z, .gz',
 }.freeze

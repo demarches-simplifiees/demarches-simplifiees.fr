@@ -112,7 +112,7 @@ class TypeDeChamp < ApplicationRecord
   enum :nature, {
     NON_SPECIFIE: 'NON_SPECIFIE',
     TITRE_IDENTITE: 'TITRE_IDENTITE',
-    RIB: 'RIB'
+    RIB: 'RIB',
   }
 
   def titre_identite_nature?
@@ -704,7 +704,7 @@ class TypeDeChamp < ApplicationRecord
       :skip_content_type_pj_validation,
       :pj_limit_formats,
       :pj_format_families,
-      :pj_auto_purge
+      :pj_auto_purge,
     ],
     type_champs.fetch(:titre_identite) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
     type_champs.fetch(:formatted) => [

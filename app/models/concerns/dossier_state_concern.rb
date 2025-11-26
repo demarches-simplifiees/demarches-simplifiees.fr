@@ -364,9 +364,7 @@ module DossierStateConcern
     remove_discarded_rows!
     remove_not_visible_rows!
     remove_not_visible_or_empty_champs!
-    # TODO remove when all forks are gone
-    editing_forks.each(&:destroy_editing_fork!)
- end
+  end
 
   def clean_champs_after_instruction!
     remove_discarded_rows!
@@ -421,14 +419,10 @@ module DossierStateConcern
   end
 
   def remove_auto_purged_piece_justificatives!
-    champs_to_purge = filled_champs.filter do |champ|
-      champ.piece_justificative? && champ.pj_auto_purge?
-    end
+    champ_to_remove_ids = filled_champs.filter { |c| c.piece_justificative? && c.pj_auto_purge? }.map(&:id)
 
-    return if champs_to_purge.empty?
+    return if champ_to_remove_ids.empty?
 
-    champs_to_purge.each do |champ|
-      champ.piece_justificative_file.purge_later
-    end
+    champs.where(id: champ_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
   end
 end
