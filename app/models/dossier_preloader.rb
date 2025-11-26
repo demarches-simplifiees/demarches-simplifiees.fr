@@ -108,6 +108,19 @@ class DossierPreloader
 
     champs.each do |champ|
       champ.association(:dossier).target = dossier
+
+      # assign dossier to attachment records to avoid N+1 in BlobImageProcessorConcern
+      if champ.respond_to?(:piece_justificative_file) && champ.piece_justificative_file.attached?
+        champ.piece_justificative_file.attachments.each do |attachment|
+          if attachment.blob.attachments.loaded?
+            attachment.blob.attachments.each do |blob_attachment|
+              if blob_attachment.record.is_a?(Champ)
+                blob_attachment.record.association(:dossier).target = dossier
+              end
+            end
+          end
+        end
+      end
     end
 
     # We need to do this because of the check on `Etablissement#champ` in
