@@ -158,7 +158,7 @@ module ColumnsConcern
 
     def dossier_non_displayable_dates_columns
       ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
-        .map { |column| dossier_col(table: 'self', column:, type: :date, displayable: false) }
+        .map { |column| dossier_col(table: 'self', column:, type: :date, displayable: false, filterable: false) }
     end
 
     def dossier_dates_columns
