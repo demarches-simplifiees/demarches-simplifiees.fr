@@ -620,7 +620,12 @@ module Instructeurs
           &.attachment
           &.id
 
-        champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids + [justificatif_motivation_id]
+        attestation_id = dossier
+          .attestation
+          &.pdf
+          &.id
+
+        champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids + [justificatif_motivation_id] + [attestation_id]
       end
 
       @gallery_attachments = ActiveStorage::Attachment

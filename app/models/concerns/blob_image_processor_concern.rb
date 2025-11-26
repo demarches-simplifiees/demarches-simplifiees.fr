@@ -13,7 +13,7 @@ module BlobImageProcessorConcern
     end
 
     def representation_required?
-      from_champ? || from_messagerie? || logo? || from_action_text? || from_avis? || from_justificatif_motivation?
+      from_champ? || from_messagerie? || logo? || from_action_text? || from_avis? || from_justificatif_motivation? || from_attestation?
     end
 
     private
@@ -44,6 +44,10 @@ module BlobImageProcessorConcern
 
     def from_justificatif_motivation?
       attachments.any? { _1.name == 'justificatif_motivation' }
+    end
+
+    def from_attestation?
+      attachments.any? { _1.record.class == Attestation }
     end
   end
 end

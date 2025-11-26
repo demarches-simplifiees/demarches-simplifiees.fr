@@ -9,6 +9,10 @@ module GalleryHelper
       'Pièce jointe au message'
     in Avis
       'Pièce jointe à l’avis'
+    in Attestation if record.dossier.accepte?
+      'Attestation d’acceptation'
+    in Attestation if record.dossier.refuse?
+      'Attestation de refus'
     else
       if attachment.name == 'justificatif_motivation'
         'Pièce jointe à la décision'
