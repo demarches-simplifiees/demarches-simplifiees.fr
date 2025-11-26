@@ -5233,7 +5233,7 @@ enum TypeDeChamp {
   phone
 
   """
-  Pièce justificative
+  Pièce à joindre
   """
   piece_justificative
 

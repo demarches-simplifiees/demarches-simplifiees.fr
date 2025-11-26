@@ -134,6 +134,59 @@ describe TypeDeChamp do
     end
   end
 
+  describe 'piece_justificative nature and options' do
+    describe '#allowed_content_types' do
+      it 'returns jpeg/png for titre_identite' do
+        tdc = create(:type_de_champ_piece_justificative, nature: 'TITRE_IDENTITE')
+        expect(tdc.allowed_content_types).to match_array(['image/jpeg', 'image/png'])
+      end
+
+      it 'includes doc and image types for RIB' do
+        tdc = create(:type_de_champ_piece_justificative, nature: 'RIB')
+        expect(tdc.allowed_content_types).to include('application/pdf').or include('application/msword')
+        expect(tdc.allowed_content_types).to include('image/jpeg').or include('image/png')
+      end
+
+      it 'restricts to selected families when pj_limit_formats enabled' do
+        tdc = create(:type_de_champ_piece_justificative, pj_limit_formats: '1', pj_format_families: ['document_texte'])
+        expect(tdc.allowed_content_types).to include('application/pdf')
+        expect(tdc.allowed_content_types).not_to include('application/zip')
+      end
+
+      it 'does not restrict when pj_limit_formats enabled but families empty' do
+        tdc = create(:type_de_champ_piece_justificative, pj_limit_formats: '1', pj_format_families: [])
+        expect(tdc.allowed_content_types).to include('application/pdf')
+        expect(tdc.allowed_content_types).to include('application/zip')
+      end
+    end
+
+    describe '#max_file_size_bytes' do
+      it 'is 20MB for titre_identite' do
+        tdc = create(:type_de_champ_piece_justificative, nature: 'TITRE_IDENTITE')
+        expect(tdc.max_file_size_bytes).to eq(20.megabytes)
+      end
+
+      it 'is 200MB by default' do
+        tdc = create(:type_de_champ_piece_justificative)
+        expect(tdc.max_file_size_bytes).to eq(TypeDeChamp::FILE_MAX_SIZE)
+      end
+    end
+
+    describe '#pj_auto_purge?' do
+      it 'is true for titre_identite' do
+        tdc = create(:type_de_champ_piece_justificative, nature: 'TITRE_IDENTITE')
+        expect(tdc.pj_auto_purge?).to be true
+      end
+
+      it 'reflects the option otherwise' do
+        tdc = create(:type_de_champ_piece_justificative, pj_auto_purge: '1')
+        expect(tdc.pj_auto_purge?).to be true
+        tdc2 = create(:type_de_champ_piece_justificative, pj_auto_purge: '0')
+        expect(tdc2.pj_auto_purge?).to be false
+      end
+    end
+  end
+
   describe "linked_drop_down_list" do
     let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list) }
 

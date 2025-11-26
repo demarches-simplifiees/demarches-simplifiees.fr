@@ -38,8 +38,20 @@ module BlobImageProcessorConcern
       attachments.any? { _1.record.class == Avis }
     end
 
+    def from_justificatif_motivation?
+      attachments.any? { _1.name == 'justificatif_motivation' }
+    end
+
     def watermark_required?
-      attachments.any? { _1.record.class == Champs::TitreIdentiteChamp }
+      attachments.any? do |attachment|
+        record = attachment.record
+        next true if record.is_a?(Champs::TitreIdentiteChamp)
+        next if !record.is_a?(Champs::PieceJustificativeChamp)
+
+        # dossier's preloaded revision to avoid N+1 queries
+        type_de_champ = record.dossier.revision.types_de_champ.find { _1.stable_id == record.stable_id }
+        type_de_champ&.titre_identite_nature?
+      end
     end
 
     def from_justificatif_motivation?

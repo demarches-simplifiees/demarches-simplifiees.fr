@@ -369,6 +369,7 @@ module DossierStateConcern
   def clean_champs_after_instruction!
     remove_discarded_rows!
     remove_titres_identite!
+    remove_auto_purged_piece_justificatives!
   end
 
   private
@@ -415,5 +416,13 @@ module DossierStateConcern
 
   def remove_attente_avis_notification
     DossierNotification.destroy_notifications_by_dossier_and_type(self, :attente_avis)
+  end
+
+  def remove_auto_purged_piece_justificatives!
+    champ_to_remove_ids = filled_champs.filter { |c| c.piece_justificative? && c.pj_auto_purge? }.map(&:id)
+
+    return if champ_to_remove_ids.empty?
+
+    champs.where(id: champ_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
   end
 end

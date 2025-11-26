@@ -58,18 +58,88 @@
                 = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
                 = render Attachment::EditComponent.new(**notice_explicative_options)
 
-            - if type_de_champ.piece_justificative? && procedure.feature_enabled?(:ocr)
+            - if type_de_champ.piece_justificative?
               .cell.fr-mt-1w
+                .fr-hr.fr-mt-1w
                 = form.label :nature, "Nature de la pièce", for: dom_id(type_de_champ, :nature)
+                - natures = TypeDeChamp.natures.keys.map { |k| [t("activerecord.attributes.type_de_champ.natures.#{k}", default: k.to_s.humanize), k] }
                 = form.select :nature,
-                  TypeDeChamp.natures.to_a + [["Générique", nil]],
+                  natures,
                   { },
                   class: 'fr-select small-margin small inline width-100',
                   id: dom_id(type_de_champ, :nature)
+              - nature_dom_id = dom_id(type_de_champ, :nature)
+              - if type_de_champ.titre_identite_nature?
+                .cell.fr-mt-2w
+                  = render Dsfr::NoticeComponent.new(state: 'info') do |c|
+                    - c.with_title do
+                      = t('.identity_notice.title')
+                    - c.with_desc do
+                      = t('.identity_notice.desc_html')
+
+                .fr-hr.fr-mt-2w
+                .cell
+                  = form.label :formats_accepted, t('.identity_formats.title'), for: nature_dom_id, class: 'fake-label'
+                  %p.fr-mb-0= t('.identity_formats.desc_html')
+                  %p.fr-mt-0= t('.identity_formats.rule_html')
+                .fr-hr.fr-mt-1w
+                .cell
+                  = form.label :deletion_title, t('.identity_deletion.title'), for: nature_dom_id, class: 'fake-label'
+                  %p.fr-mb-0= t('.identity_deletion.desc_html')
+                  %p.fr-mt-0= t('.identity_deletion.note_html')
+              - elsif type_de_champ.rib_nature?
+                .cell.fr-mt-2w
+                  = render Dsfr::NoticeComponent.new(state: 'info') do |c|
+                    - c.with_title do
+                      = t('.identity_notice.title')
+                    - c.with_desc do
+                      = t('.rib_notice.desc_html')
+                .fr-hr.fr-mt-2w
+                .cell
+                  = form.label :formats_accepted, t('.rib_formats.title'), for: nature_dom_id, class: 'fake-label'
+                  %p.fr-mb-0= t('.rib_formats.desc_html')
+              - else
+                .fr-hr.fr-mt-2w
+                .cell{ data: { controller: 'hide-target' } }
+                  .fr-toggle{ class: class_names('fr-mb-2w': form.object.pj_limit_formats?) }
+                    = form.check_box :pj_limit_formats,
+                      id: dom_id(type_de_champ, :pj_limit_formats),
+                      class: 'fr-toggle__input',
+                      data: { 'hide-target-target': 'source' },
+                      checked: form.object.pj_limit_formats?
+                    = form.label :pj_limit_formats, t('.limit_formats_label'), for: dom_id(type_de_champ, :pj_limit_formats), class: 'fr-toggle__label fr-label'
+
+                  - families = format_families_for_select
+                  - grid_hidden_class = form.object.pj_limit_formats? ? nil : 'fr-hidden'
+                  .cell{ class: grid_hidden_class, data: { 'hide-target-target': 'toHide' } }
+                    %fieldset.fr-fieldset.fr-mx-0.fr-px-0
+                      %legend.fr-fieldset__legend.fr-fieldset__legend--regular.fr-mx-0.fr-pl-0.fr-mb-1w
+                        = t('.families_legend')
+
+                      - prechecked = Array.wrap(form.object.pj_format_families).map(&:to_s)
+                      - families.each do |(value, label, examples)|
+                        .fr-fieldset__element.fr-fieldset__element--inline.fr-pl-0
+                          .fr-checkbox-group
+                            - checked_opt = prechecked.include?(value.to_s)
+                            = form.check_box :pj_format_families, { multiple: true, id: dom_id(type_de_champ, "pj_format_#{value}"), checked: checked_opt }, value, nil
+                            - if examples.present?
+                              - tip_id = "#{dom_id(type_de_champ, "pj_format_#{value}")}-tip"
+                              = form.label "pj_format_families_#{value}", label, for: dom_id(type_de_champ, "pj_format_#{value}"), class: 'fr-label', tabindex: 0, 'aria-describedby': tip_id
+                              %span.fr-tooltip.fr-placement{ id: tip_id, role: 'tooltip', 'aria-hidden': 'true' }= t('.tooltip_examples', examples: examples)
+                            - else
+                              = form.label "pj_format_families_#{value}", label, for: dom_id(type_de_champ, "pj_format_#{value}"), class: 'fr-label'
+
+              - if !type_de_champ.titre_identite_nature?
+                .fr-hr.fr-mt-1w
+                .cell
+                  .fr-toggle
+                    = form.check_box :pj_auto_purge, id: dom_id(type_de_champ, :pj_auto_purge), class: 'fr-toggle__input'
+                    = form.label :pj_auto_purge, t('.auto_purge_label'), for: dom_id(type_de_champ, :pj_auto_purge), class: 'fr-toggle__label fr-label'
 
             - if type_de_champ.piece_justificative_or_titre_identite?
               .cell.fr-mt-1w
-                = form.label :piece_justificative_template, "Modèle", for: dom_id(type_de_champ, :piece_justificative_template)
+                .fr-hr.fr-mt-1w
+                = form.label :piece_justificative_template, t('.template_label'), for: dom_id(type_de_champ, :piece_justificative_template)
                 = render Attachment::EditComponent.new(**piece_justificative_template_options)
 
               - if type_de_champ.titre_identite?

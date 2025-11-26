@@ -101,3 +101,40 @@ AUTHORIZED_CONTENT_TYPES = PROCESSABLE_TYPES + AUTHORIZED_SPREADSHEET_TYPES + [
   'application/x-iwork-keynote-sffkey', # text x 10
   'application/vnd.sun.xml.writer', # text x 10
 ]
+
+FORMAT_FAMILIES = {
+  document_texte: AUTHORIZED_PDF_TYPES + [
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.oasis.opendocument.text',
+    'application/msword',
+    'text/plain',
+    'application/rtf',
+    'application/vnd.apple.pages',
+  ],
+  tableur: AUTHORIZED_SPREADSHEET_TYPES + ['text/csv'],
+  presentation: [
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.oasis.opendocument.presentation',
+  ],
+  donnees: [
+    'application/json', 'application/xml', 'text/xml',
+    'application/vnd.google-earth.kml+xml', 'application/gpx+xml',
+    'text/tab-separated-values', 'text/csv', 'application/x-dbf',
+  ],
+  image_scan: ['image/jpeg', 'image/png'],
+  audio: ['audio/mpeg', 'audio/mp4', 'audio/x-m4a', 'audio/aac', 'audio/x-wav'],
+  video: ['video/mp4', 'video/quicktime', 'video/3gpp', 'video/x-ms-wm'],
+  archive: ['application/zip', 'application/x-zip-compressed', 'application/x-7z-compressed', 'application/vnd.rar', 'application/x-rar', 'application/gzip'],
+}.freeze
+
+FORMAT_FAMILY_EXAMPLES = {
+  document_texte: '.pdf, .doc, .docx, .odt, .txt',
+  tableur: '.xls, .xlsx, .ods, .csv',
+  presentation: '.ppt, .pptx, .odp',
+  donnees: '.xml, .json, .kml, .sql, .csv',
+  image_scan: '.jpg, .jpeg, .png',
+  audio: '.mp3, .wav, .aac, .m4a',
+  video: '.mp4, .mov, .avi, .wmv',
+  archive: '.zip, .rar, .7z, .gz',
+}.freeze
