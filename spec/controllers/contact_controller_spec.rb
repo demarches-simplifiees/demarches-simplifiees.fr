@@ -8,7 +8,7 @@ describe ContactController, question_type: :controller do
       sign_in user
     end
 
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_email_verified) }
 
     it 'should not have email field' do
       get :index
