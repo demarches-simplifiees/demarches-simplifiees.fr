@@ -158,7 +158,7 @@ module ColumnsConcern
 
     def dossier_non_displayable_dates_columns
       ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
-        .map { |column| dossier_col(table: 'self', column:, type: :date, displayable: false) }
+        .map { |column| dossier_col(table: 'self', column:, type: :date, displayable: false, filterable: false) }
     end
 
     def dossier_dates_columns
@@ -181,7 +181,8 @@ module ColumnsConcern
       columns.concat([dossier_accuse_lecture_agreement_at_column]) if accuse_lecture?
       columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
       columns.concat(dossier_non_displayable_dates_columns)
-      columns.concat([Columns::ReadAgreementColumn.new(procedure_id: id)])
+      columns.concat([Columns::ReadAgreementColumn.new(procedure_id: id)]) if accuse_lecture?
+      columns
     end
 
     def standard_columns

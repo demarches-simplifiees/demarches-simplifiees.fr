@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation, only: [:update, :refresh_filters, :update_filter, :persist_filters, :toggle_filters_expanded, :customize_filters]
+    before_action :set_procedure_presentation, only: [:update, :refresh_filters, :update_filter, :persist_filters, :toggle_filters_expanded, :customize_filters, :clear_all_filters]
 
     # updates the value of a filter
     def update_filter
@@ -57,6 +57,12 @@ module Instructeurs
       @apply_to_all_tabs = apply_to_all_tabs_from_params
       @filters_columns = @procedure_presentation.filters_for(@statut).map(&:column)
       render layout: "empty_layout"
+    end
+
+    def clear_all_filters
+      @procedure_presentation.clear_filters_values_for_statut!(params[:statut])
+
+      render turbo_stream: turbo_stream.refresh
     end
 
     private

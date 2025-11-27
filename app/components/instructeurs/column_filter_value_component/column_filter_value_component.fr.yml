@@ -9,3 +9,5 @@ fr:
     this_month: Ce mois
     this_year: Cette année
   update: Mettre à jour
+  multi_select_placeholder: Sélectionner
+  search_placeholder: Rechercher
