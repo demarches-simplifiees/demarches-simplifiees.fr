@@ -221,7 +221,7 @@ prawn_document(page_size: "A4") do |pdf|
 
   add_title(pdf, "Identité du demandeur")
 
-  format_in_2_columns(pdf, "Email")
+  format_in_2_columns(pdf, "Adresse électronique")
 
   if @procedure.for_individual?
     add_identite_individual(pdf)

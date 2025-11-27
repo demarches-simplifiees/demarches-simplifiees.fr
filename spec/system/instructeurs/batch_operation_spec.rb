@@ -200,11 +200,11 @@ describe 'BatchOperation a dossier:', js: true do
 
       click_on "Envoyer la demande d’avis"
 
-      expect(page).to have_content("Le champ « Email » doit être rempli")
+      expect(page).to have_content("Le champ « Adresse électronique » doit être rempli")
 
       fill_in('avis_emails', with: 'mljkzmljz')
       click_on "Envoyer la demande d’avis"
-      expect(page).to have_content("Le champ « Email » est invalide : mljkzmljz")
+      expect(page).to have_content("Le champ « Adresse électronique » est invalide : mljkzmljz")
 
       fill_in('avis_emails', with: 'test@test.com')
       within('form#new_avis') { click_on "Annuler" }

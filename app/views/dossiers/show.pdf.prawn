@@ -345,7 +345,7 @@ prawn_document(page_size: "A4") do |pdf|
     format_in_2_columns(pdf, 'Informations FranceConnect', france_connect_informations(@dossier.user.france_connect_informations.first))
   end
 
-  format_in_2_columns(pdf, "Email", @dossier.user_email_for(:display))
+  format_in_2_columns(pdf, "Adresse électronique", @dossier.user_email_for(:display))
 
   if @dossier.individual.present?
     add_identite_individual(pdf, @dossier.individual)

@@ -34,7 +34,7 @@ class Dossiers::AnnuaireEducationComponent < ApplicationComponent
       ['Nombre d’élèves', champ.data['nombre_d_eleves']],
       ['Adresse', adresse],
       ['Téléphone', champ.data['telephone']],
-      ['Email', champ.data['mail']],
+      ['Adresse électronique', champ.data['mail']],
       ['Site internet', champ.data['web']],
     ]
   end

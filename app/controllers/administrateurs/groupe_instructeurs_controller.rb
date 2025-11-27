@@ -372,7 +372,7 @@ module Administrateurs
       groupe_instructeurs = procedure.groupe_instructeurs
 
       data = CSV.generate(headers: true) do |csv|
-        column_names = ["Groupe", "Email"]
+        column_names = ["Groupe", "Adresse électronique"]
         csv << column_names
         groupe_instructeurs.each do |gi|
           gi.instructeurs.each do |instructeur|
@@ -485,7 +485,7 @@ module Administrateurs
       if result.blank?
         flash[:notice] = "La liste des instructeurs a été importée avec succès"
       else
-        flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{result.join(', ')}"
+        flash[:alert] = "Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte: #{result.join(', ')}"
       end
     end
 

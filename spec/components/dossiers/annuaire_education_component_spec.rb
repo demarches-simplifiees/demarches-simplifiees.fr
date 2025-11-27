@@ -50,7 +50,7 @@ RSpec.describe Dossiers::AnnuaireEducationComponent, type: :component do
           ["Nombre d’élèves", "450"],
           ["Adresse", "123 rue de la République<br>75001 Paris<br>Île-de-France (11)"],
           ["Téléphone", "0145123456"],
-          ["Email", "contact@lycee-moulin.fr"],
+          ["Adresse électronique", "contact@lycee-moulin.fr"],
           ["Site internet", "https://lycee-moulin.fr"],
         ]
 

@@ -15,7 +15,7 @@
   %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
-    Pour confirmer votre changement d'adresse électronique, veuillez cliquer sur le lien suivant :
+    Pour confirmer votre changement d’adresse électronique, veuillez cliquer sur le lien suivant :
     = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
 
 = render partial: "layouts/mailers/signature"

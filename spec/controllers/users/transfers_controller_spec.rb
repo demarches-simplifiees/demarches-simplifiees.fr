@@ -97,7 +97,7 @@ describe Users::TransfersController, type: :controller do
     context "when email is empty" do
       let(:email) { "" }
       it_behaves_like 'email error' do
-        let(:expected_error) { 'L’adresse électronique doit être rempli' }
+        let(:expected_error) { 'L’adresse électronique doit être remplie' }
       end
     end
 

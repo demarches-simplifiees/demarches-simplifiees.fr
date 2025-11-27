@@ -22,7 +22,7 @@ fr:
           <b class="bold">%{application_name}</b> doit s’assurer que votre compte est utilisé dans un cadre professionnel.
           <br>
           <br>
-          Nous pouvons autoriser automatiquement les changements d’email vers les domaines suivants :
+          Nous pouvons autoriser automatiquement les changements d’adresse électronique vers les domaines suivants :
           <br>
           %{legit_admin_domains}
           <br>

@@ -964,7 +964,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
         it do
           expect(response).to render_template :avis_new
-          expect(flash.alert).to eq("emaila.com : Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com")
+          expect(flash.alert).to eq("emaila.com : Le champ « Adresse électronique » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com")
           expect { subject }.not_to change(Avis, :count)
           expect(dossier.last_avis_updated_at).to eq(nil)
         end
@@ -977,7 +977,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
         it do
           expect(response).to render_template :avis_new
-          expect(flash.alert).to eq("Le champ « Email » doit être rempli")
+          expect(flash.alert).to eq("Le champ « Adresse électronique » doit être rempli")
           expect { subject }.not_to change(Avis, :count)
           expect(dossier.last_avis_updated_at).to eq(nil)
         end
@@ -991,7 +991,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
           it do
             expect(response).to render_template :avis_new
-            expect(flash.alert).to eq("toto.fr : Le champ « Email » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com")
+            expect(flash.alert).to eq("toto.fr : Le champ « Adresse électronique » est invalide. Saisissez une adresse électronique valide. Exemple : adresse@mail.com")
             expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com")
             expect(Avis.count).to eq(old_avis_count + 1)
             expect(saved_avis.expert.email).to eq("titi@titimail.com")

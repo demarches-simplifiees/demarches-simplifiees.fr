@@ -144,7 +144,7 @@ describe Users::ProfilController, type: :controller do
 
       it "should not transfer to an empty email" do
         expect { subject }.not_to change { DossierTransfer.count }
-        expect(flash.alert).to eq(["L’adresse électronique doit être rempli"])
+        expect(flash.alert).to eq(["L’adresse électronique doit être remplie"])
       end
     end
   end
