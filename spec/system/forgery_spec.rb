@@ -26,7 +26,8 @@ describe 'Protecting against request forgeries:', :allow_forgery_protection, :sh
       scenario 'the user sees an error page' do
         fill_sign_in_form
         click_on 'Se connecter'
-        expect(page).to have_text('L’action demandée a été rejetée')
+        expect(page).to have_http_status(:forbidden)
+        expect(page).to have_text("L’action demandée a été rejetée")
       end
     end
   end
