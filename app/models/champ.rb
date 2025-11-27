@@ -104,6 +104,12 @@ class Champ < ApplicationRecord
     row_id.present? && !is_type?(TypeDeChamp.type_champs.fetch(:repetition))
   end
 
+  def parent
+    return nil if row_id.blank?
+
+    dossier.revision.parent_of(type_de_champ)
+  end
+
   def row?
     row_id.present? && is_type?(TypeDeChamp.type_champs.fetch(:repetition))
   end
@@ -203,10 +209,6 @@ class Champ < ApplicationRecord
     else
       "dossier[champs_public_attributes][#{public_id}]"
     end
-  end
-
-  def labelledby_id
-    "#{html_id}-label"
   end
 
   def describedby_id

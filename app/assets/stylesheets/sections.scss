@@ -24,15 +24,6 @@
     content: counter(h2) '.' counter(h3) '.' counter(h4) '. ';
   }
 
-  .repetition {
-    counter-reset: repetition;
-
-    .block-id::after {
-      counter-increment: repetition;
-      content: counter(repetition);
-    }
-  }
-
   // Repeat block
   .repetition {
     .fr-fieldset,

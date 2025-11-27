@@ -610,4 +610,15 @@ describe Champ do
       it { expect(subject.piece_justificative_file).not_to be_attached }
     end
   end
+
+  describe "#parent" do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, mandatory: false, children: [{ type: :text }] }]) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+
+    let(:champ) { dossier.champs.where(type: "Champs::TextChamp").first }
+
+    it "returns the parent" do
+      expect(champ.parent).to eq(TypeDeChamp.find_by(type_champ: "repetition"))
+    end
+  end
 end

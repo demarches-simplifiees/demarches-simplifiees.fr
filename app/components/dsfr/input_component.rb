@@ -61,6 +61,7 @@ class Dsfr::InputComponent < ApplicationComponent
         'fr-password__label': password?,
         @label_opts[:class] => @label_opts[:class].present?
       ),
+      id: @label_opts[:id],
     }.merge(@opts[:id].present? ? { for: @opts[:id] } : {})
   end
 

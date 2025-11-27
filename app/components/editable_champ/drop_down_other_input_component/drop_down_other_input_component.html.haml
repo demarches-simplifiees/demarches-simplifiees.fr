@@ -1,5 +1,5 @@
 .drop_down_other.fr-mt-2w
   .fr-input-group
-    %label.fr-label{ for: dom_id(@champ, :value_other) }
+    %label.fr-label{ for: dom_id(@champ, :value_other), id: input_label_id(@champ, :value_other) }
       = t('shared.champs.drop_down_list.other_label')
-    = @form.text_field :value_other, maxlength: 200, size: nil, id: dom_id(@champ, :value_other), class: 'fr-input'
+    = @form.text_field :value_other, maxlength: 200, size: nil, id: dom_id(@champ, :value_other), class: 'fr-input', aria: { labelledby: labelledby_id(input_label_id(@champ, :value_other)) }

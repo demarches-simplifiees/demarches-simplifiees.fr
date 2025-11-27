@@ -24,7 +24,7 @@ class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampB
   end
 
   def dsfr_champ_container
-    :fieldset
+    :div
   end
 
   def render?

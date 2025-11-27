@@ -59,4 +59,50 @@ describe EditableChamp::EditableChampComponent, type: :component do
       end
     end
   end
+
+  describe "#row_number_if_in_repetition" do
+    subject { component.row_number_if_in_repetition }
+
+    context "when champ is not a child" do
+      let(:types_de_champ_public) { [{ type: :text }] }
+
+      it "returns nil" do
+        expect(subject).to be_nil
+      end
+    end
+
+    context "when champ is a child but has more than 1 siblings" do
+      let(:types_de_champ_public) do
+        [{ type: :repetition, children: [{ type: :text }, { type: :text }] }]
+      end
+
+      let(:champ) { dossier.project_champs_public.find(&:repetition?).rows.first.first }
+
+      it "returns nil (because the number of the row is on the fieldset legend)" do
+        expect(subject).to be_nil
+      end
+    end
+
+    context "when champ is a child and alone in the repetition" do
+      let(:types_de_champ_public) do
+        [{ type: :repetition, children: [{ type: :text }] }]
+      end
+
+      context "on the first row" do
+        let(:champ) { dossier.project_champs_public.find(&:repetition?).rows.first.first }
+
+        it do
+          expect(component.row_number_if_in_repetition).to eq(1)
+        end
+      end
+
+      context "when the champ is in the second row" do
+        let(:champ) { dossier.project_champs_public.find(&:repetition?).rows.last.first }
+
+        it do
+          expect(component.row_number_if_in_repetition).to eq(2)
+        end
+      end
+    end
+  end
 end
