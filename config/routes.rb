@@ -484,6 +484,7 @@ Rails.application.routes.draw do
         post 'refresh_filters'
         post 'persist_filters'
         post 'toggle_filters_expanded'
+        post 'clear_all_filters'
       end
     end
 

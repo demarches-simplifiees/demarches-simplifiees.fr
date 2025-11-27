@@ -67,6 +67,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def replace_all_filters!(new_filters_columns)
+    # this method is used to replace all filters for all statuses
     updates = ALL_FILTERS.each_with_object({}) do |filters_attr, hash|
       current_filters = send(filters_attr) || []
 
@@ -80,6 +81,13 @@ class ProcedurePresentation < ApplicationRecord
     end
 
     update!(updates)
+  end
+
+  def clear_filters_values_for_statut!(statut)
+    filters_attr = filters_name_for(statut)
+    current_filters = send(filters_attr) || []
+    reset_filters = current_filters.map { |f| FilteredColumn.new(column: f.column) }
+    update!(filters_attr => reset_filters)
   end
 
   def filters_name_for(statut) = statut.tr('-', '_').then { "#{_1}_filters" }

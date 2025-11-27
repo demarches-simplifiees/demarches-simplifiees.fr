@@ -8,7 +8,9 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
   end
 
   def call
-    safe_join(filters_by_family)
+    items = filters_by_family
+    items << clear_all_filters_link if filters_by_family.count > 2
+    safe_join(items)
   end
 
   private
@@ -20,6 +22,20 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
       .values
       .map { |group| group.map { |f| filter_form(f) } }
       .map { |group| safe_join(group, ", ") }
+  end
+
+  def clear_all_filters_link
+    button_to(
+      clear_all_filters_instructeur_procedure_presentation_path(@procedure_presentation),
+      class: 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm',
+      params: {
+        statut: @statut,
+      },
+      form: { data: { turbo: true } },
+      form_class: 'inline'
+    ) do
+      t('.clear_all_filters')
+    end
   end
 
   def filter_form(filter)

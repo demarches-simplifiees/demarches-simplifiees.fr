@@ -1,5 +1,6 @@
 ---
 fr:
+  clear_all_filters: 'Tout supprimer'
   operators:
     before: 'avant le'
     after: 'après le'

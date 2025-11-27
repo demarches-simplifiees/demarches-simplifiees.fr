@@ -1,5 +1,6 @@
 ---
 en:
+  clear_all_filters: 'Clear all filters'
   operators:
     before: 'before'
     after: 'after'
