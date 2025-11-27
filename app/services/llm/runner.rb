@@ -6,6 +6,7 @@ require 'uri'
 module LLM
   class Runner
     DEFAULT_TIMEOUT = 30
+    attr_reader :model
 
     def initialize(client: nil, model: ENV['LLM_MODEL_NAME'], timeout: DEFAULT_TIMEOUT, logger: Rails.logger)
       @client = client || (defined?(::LLM::OpenAIClient) ? ::LLM::OpenAIClient.instance : nil)
@@ -32,14 +33,12 @@ module LLM
           model: @model,
         })
         raw = response.respond_to?(:raw_response) ? response.raw_response : response
-        msg = raw.dig('choices', 0, 'message') || {}
-        raw_calls = msg['tool_calls'] || []
 
         payload[:prompt_tokens] = raw.dig('usage', 'prompt_tokens')
         payload[:completion_tokens] = raw.dig('usage', 'completion_tokens')
         payload[:status] = raw['status'] || 200
 
-        returned_value = raw_calls.map do |tc|
+        serilalized_tool_calls = (raw.dig('choices', 0, 'message', 'tool_calls') || {}).map do |tc|
           fn = tc['function'] || {}
           {
             name: fn['name'],
@@ -47,6 +46,7 @@ module LLM
             model: @model,
           }
         end
+        returned_value = serilalized_tool_calls, raw.dig('usage')
       rescue => e
         raised_error = e
         payload[:exception] = e

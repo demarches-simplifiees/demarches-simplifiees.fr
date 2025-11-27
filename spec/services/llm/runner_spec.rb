@@ -21,11 +21,11 @@ describe LLM::Runner do
     response = double('response', raw_response: raw)
     client = double('client', chat: response)
 
-    events = described_class.new(client: client, model: 'openai/gpt-5').call(messages: messages, tools: tools)
+    tool_calls, usage = described_class.new(client: client, model: 'openai/gpt-5').call(messages: messages, tools: tools)
 
-    expect(events.size).to eq(1)
-    expect(events.first).to include(name: 'improve_label')
-    expect(events.first[:arguments]).to eq({ 'update' => { 'stable_id' => 1, 'libelle' => 'Libellé' } })
+    expect(tool_calls.size).to eq(1)
+    expect(tool_calls.first).to include(name: 'improve_label')
+    expect(tool_calls.first[:arguments]).to eq({ 'update' => { 'stable_id' => 1, 'libelle' => 'Libellé' } })
   end
 
   it 'returns empty when no tool_calls are present' do
@@ -33,8 +33,8 @@ describe LLM::Runner do
     response = double('response', raw_response: raw)
     client = double('client', chat: response)
 
-    events = described_class.new(client: client).call(messages: messages, tools: tools)
-    expect(events).to eq([])
+    tool_calls, usage = described_class.new(client: client).call(messages: messages, tools: tools)
+    expect(tool_calls).to eq([])
   end
 
   it 'publishes llm.call notification with success payload' do

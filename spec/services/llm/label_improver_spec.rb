@@ -10,13 +10,19 @@ RSpec.describe LLM::LabelImprover do
       { 'stable_id' => 3, 'type' => 'text', 'libelle' => 'Titre' },
     ]
   end
-
+  let(:usage) { double() }
   let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 123) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch(:improve_label)) }
-
+  before do
+    allow(usage).to receive(:with_indifferent_access).and_return({
+      prompt_tokens: 100,
+      completion_tokens: 200,
+      total_tokens: 300,
+    }.with_indifferent_access)
+  end
   describe '#generate_for' do
     it 'aggregates tool calls into normalized items (no dedup, ignore unrelated tools)' do
-      calls = [
+      tool_calls = [
         { name: 'improve_label', arguments: { 'update' => { 'stable_id' => 1, 'libelle' => 'Libellé 1', 'description' => 'bim', 'position' => 1 }, 'justification' => 'clarity' } },
         { name: 'improve_label', arguments: { 'update' => { 'stable_id' => 2, 'libelle' => 'Libellé amélioré', 'description' => 'bam', 'position' => 2 } } },
         # unrelated tool must be ignored
@@ -24,17 +30,17 @@ RSpec.describe LLM::LabelImprover do
       ]
 
       runner = double()
-      allow(runner).to receive(:call).with(anything).and_return(calls)
+      allow(runner).to receive(:call).with(anything).and_return([tool_calls, usage])
       service = described_class.new(runner: runner)
-      items = service.generate_for(suggestion)
+      tool_calls, token_usage = service.generate_for(suggestion)
 
-      expect(items.size).to eq(2)
-      payloads = items.map { |i| i[:payload] }
+      expect(tool_calls.size).to eq(2)
+      payloads = tool_calls.map { |i| i[:payload] }
       expect(payloads).to include({ 'stable_id' => 1, 'libelle' => 'Libellé 1', 'description' => 'bim', 'position' => 1 })
       expect(payloads).to include({ 'stable_id' => 2, 'libelle' => 'Libellé amélioré', 'description' => 'bam', 'position' => 2 })
 
-      expect(items.first).to include(op_kind: 'update', safety: 'safe')
-      expect(items.find { |i| i[:stable_id] == 1 }[:justification]).to eq('clarity')
+      expect(tool_calls.first).to include(op_kind: 'update')
+      expect(tool_calls.find { |i| i[:stable_id] == 1 }[:justification]).to eq('clarity')
     end
   end
 

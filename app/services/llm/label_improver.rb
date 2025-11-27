@@ -45,9 +45,8 @@ module LLM
     def generate_for(suggestion, action: nil, user_id: nil)
       messages = propose_messages(suggestion)
 
-      calls = run_tools(messages: messages, tools: [TOOL_DEFINITION], procedure_id: suggestion.procedure_revision.procedure_id, rule: suggestion.rule, action:, user_id:)
-
-      aggregate_calls(calls)
+      tool_calls, token_usage = run_tools(messages: messages, tools: [TOOL_DEFINITION], procedure_id: suggestion.procedure_revision.procedure_id, rule: suggestion.rule, action:, user_id:)
+      [aggregate_calls(tool_calls), token_usage.with_indifferent_access]
     end
 
     private
