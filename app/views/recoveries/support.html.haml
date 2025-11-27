@@ -15,13 +15,7 @@
   - when 'must_use_pro_connect'
     %p Vous devez utiliser le portail ProConnect pour récupérer vos dossiers.
 
-    = link_to pro_connect_login_path, class: "fr-btn fr-connect" do
-      %span.fr-connect__login
-        = t('pro_connect.index.signin_with')
-      %span.fr-connect__brand ProConnect
-
-    %p Vous n'avez pas encore de compte ProConnect ? Vous pouvez en créer un en utilisant MonComptePro.
-    = link_to 'MonComptePro', 'https://moncomptepro.beta.gouv.fr', class: 'fr-btn'
+    = render ProConnectLoginComponent.new
 
   - when 'no_dossier'
     %p Lʼadresse électronique « #{cookies[:retrieve_email]} » que vous avez renseignée nʼa pas de dossier concernant votre organisation.

@@ -1,6 +1,7 @@
 ---
 fr:
   title: Connexion ProConnect
-  subtitle: Obliger les administrateurs et instructeurs à se connecter via ProConnect pour accéder à la démarche
-  enabled: Activée
-  disabled: Désactivée
+  subtitle: Contrôler l'accès à la démarche par authentification ProConnect
+  none: Aucune restriction
+  instructeurs: Administrateurs et instructeurs
+  all: Tous les utilisateurs

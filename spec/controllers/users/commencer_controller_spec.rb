@@ -464,4 +464,56 @@ describe Users::CommencerController, type: :controller do
       end
     end
   end
+
+  describe '#commencer with pro_connect_restriction' do
+    render_views
+    let(:procedure) { create(:procedure, :for_individual, :published, pro_connect_restriction: :all) }
+
+    context 'when procedure has pro_connect restriction and user is not signed in' do
+      subject { get :commencer, params: { path: procedure.path } }
+
+      it 'shows only ProConnect button for anonymous user' do
+        subject
+        assert_response :success
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: procedure.path))
+        expect(response.body).to include("S’identifier avec ProConnect")
+        expect(response.body).to include("Seuls les agents disposant d’un compte ProConnect peuvent y accéder")
+        expect(response.body).not_to include('france_connect')
+      end
+    end
+
+    context 'when user is signed in with ProConnect' do
+      let(:user) { create(:user) }
+
+      before do
+        sign_in user
+        cookies.encrypted[:pro_connect_session_info] = { user_id: user.id }.to_json
+      end
+
+      subject { get :commencer, params: { path: procedure.path } }
+
+      it 'does not show warning alert' do
+        subject
+        assert_response :success
+        expect(response.body).to include("Commencer")
+        expect(response.body).not_to include("S’identifier avec ProConnect")
+        expect(response.body).not_to include("Seuls les agents disposant d’un compte ProConnect peuvent y accéder")
+      end
+    end
+
+    context 'when user is signed in without ProConnect' do
+      let(:user) { create(:user) }
+
+      before { sign_in user }
+
+      subject { get :commencer, params: { path: procedure.path } }
+
+      it 'shows warning alert' do
+        subject
+        assert_response :success
+        expect(response.body).not_to include("Commencer")
+        expect(response.body).to include("Seuls les agents disposant d’un compte ProConnect peuvent y accéder")
+      end
+    end
+  end
 end

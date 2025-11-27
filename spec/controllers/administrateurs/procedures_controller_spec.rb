@@ -1795,7 +1795,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     subject do
       patch :update_pro_connect_restricted, params: {
         id: procedure.id,
-        procedure: { pro_connect_restricted: pro_connect_restricted },
+        procedure: { pro_connect_restriction: restriction_level },
       }
     end
 
@@ -1805,26 +1805,36 @@ describe Administrateurs::ProceduresController, type: :controller do
         subject
       end
 
-      context 'when enabling pro_connect_restricted' do
-        let(:pro_connect_restricted) { true }
+      context 'when setting to :none' do
+        let(:restriction_level) { 'none' }
 
         it do
-          expect(procedure.reload.pro_connect_restricted).to be true
-          expect(procedure.pro_connect_restriction_instructeurs?).to be true
-          expect(flash.notice).to eq("La démarche est restreinte à ProConnect")
+          expect(procedure.reload.pro_connect_restriction_none?).to be true
+          expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect")
           expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
         end
       end
 
-      context 'when disabling pro_connect_restricted' do
-        let(:procedure) { create(:procedure, pro_connect_restricted: true, administrateurs: [admin]) }
-
-        let(:pro_connect_restricted) { false }
+      context 'when setting to :instructeurs' do
+        let(:restriction_level) { 'instructeurs' }
 
         it do
-          expect(procedure.reload.pro_connect_restricted).to be false
-          expect(procedure.pro_connect_restriction_none?).to be true
-          expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect")
+          expect(procedure.reload.pro_connect_restriction_instructeurs?).to be true
+          expect(flash.notice).to eq("La démarche est restreinte à ProConnect pour les administrateurs et instructeurs")
+          expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
+        end
+      end
+
+      context 'when setting to :all' do
+        let(:procedure) { create(:procedure, opendata: true, robots_indexable: true, administrateurs: [admin]) }
+        let(:restriction_level) { 'all' }
+
+        it do
+          procedure.reload
+          expect(procedure.pro_connect_restriction_all?).to be true
+          expect(procedure.opendata).to be false
+          expect(procedure.robots_indexable).to be false
+          expect(flash.notice).to eq("La démarche est restreinte à ProConnect pour les administrateurs, instructeurs et dépositaires de dossiers")
           expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
         end
       end
@@ -1877,7 +1887,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     subject { get :show, params: { id: procedure.id } }
 
     context 'when ProConnect is required' do
-      let(:procedure) { create(:procedure, pro_connect_restricted: true, administrateur: admin) }
+      let(:procedure) { create(:procedure, pro_connect_restriction: :instructeurs, administrateur: admin) }
       it 'redirects to pro_connect_path and sets a flash message' do
         subject
 

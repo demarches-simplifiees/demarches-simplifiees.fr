@@ -750,7 +750,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       context 'when ProConnect is required' do
         before do
-          procedure.update!(pro_connect_restricted: true)
+          procedure.update!(pro_connect_restriction: :instructeurs)
         end
 
         it 'redirects to pro_connect_path and sets a flash message' do

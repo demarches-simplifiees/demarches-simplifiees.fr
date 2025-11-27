@@ -1163,7 +1163,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "when procedure has pro_connect restriction" do
       before do
-        procedure.update!(pro_connect_restricted: true)
+        procedure.update!(pro_connect_restriction: :instructeurs)
       end
 
       it "redirects to pro_connect_restricted page" do

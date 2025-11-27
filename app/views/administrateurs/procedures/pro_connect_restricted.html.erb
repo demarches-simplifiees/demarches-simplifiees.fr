@@ -1,0 +1,81 @@
+<%= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['ProConnect']] } %>
+
+<div class="fr-container">
+  <div class="fr-grid-row">
+    <div class="fr-col-12 fr-col-offset-md-2 fr-col-md-8">
+      <h1 class="fr-h2">Connexion ProConnect</h1>
+
+      <%= render Dsfr::CalloutComponent.new(title: nil) do |c| %>
+        <% c.with_body do %>
+          <p>
+            Cette option permet de limiter l'accès à la démarche selon le niveau de restriction choisi.
+            Les utilisateurs concernés pourront accéder à la démarche
+            <strong>uniquement en se connectant via ProConnect.</strong>
+          </p>
+        <% end %>
+      <% end %>
+
+      <% unless @logged_in_with_pro_connect %>
+        <%= render Dsfr::AlertComponent.new(title: nil, state: :warning, extra_class_names: 'fr-my-2w') do |c| %>
+          <% c.with_body do %>
+            <p>
+              Pour activer cette fonctionnalité, vous devez commencer par
+              <%= link_to "vous connecter avec ProConnect", pro_connect_path %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%= form_for(@procedure,
+        method: :patch,
+        url: pro_connect_restricted_admin_procedure_path(@procedure)) do |f| %>
+
+        <%= tag.fieldset(class: "fr-fieldset", disabled: !@logged_in_with_pro_connect) do %>
+          <%= tag.legend("Niveau de restriction", class: "fr-fieldset__legend") %>
+
+          <div class="fr-fieldset__element">
+            <div class="fr-radio-group">
+              <%= f.radio_button :pro_connect_restriction, 'none', class: 'fr-radio' %>
+              <%= f.label :pro_connect_restriction_none, class: 'fr-label' do %>
+                Aucune restriction
+                <p class="fr-hint-text">Les instructeurs et usagers peuvent accéder à cette démarche, qu'ils soient connectés à ProConnect ou non.</p>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="fr-fieldset__element">
+            <div class="fr-radio-group">
+              <%= f.radio_button :pro_connect_restriction, 'instructeurs', class: 'fr-radio' %>
+              <%= f.label :pro_connect_restriction_instructeurs, class: 'fr-label' do %>
+                Administrateurs et instructeurs
+                <p class="fr-hint-text">Seuls les administrateurs et instructeurs authentifiés via ProConnect peuvent accéder à la démarche. Les usagers peuvent toujours y accéder normalement.</p>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="fr-fieldset__element">
+            <div class="fr-radio-group">
+              <%= f.radio_button :pro_connect_restriction, 'all', class: 'fr-radio' %>
+              <%= f.label :pro_connect_restriction_all, class: 'fr-label' do %>
+                Tous les utilisateurs
+                <p class="fr-hint-text">Seuls les usagers authentifiés via ProConnect pourront déposer de nouveaux dossiers. Administrateurs et instructeurs doivent aussi s'authentifier via ProConnect.</p>
+              <% end %>
+            </div>
+            <% if @logged_in_with_pro_connect && @procedure.publiee? && @procedure.robots_indexable? %>
+              <%= render Dsfr::AlertComponent.new(title: nil, state: :warning, extra_class_names: 'fr-mt-2w') do |c| %>
+                <% c.with_body do %>
+                  <p>Avec l'option « Tous les utilisateurs », l'indexation par les moteurs de recherche sera automatiquement désactivée.</p>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%= render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f, is_form_disabled: !@logged_in_with_pro_connect, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8') %>
+      <% end %>
+    </div>
+  </div>
+</div>

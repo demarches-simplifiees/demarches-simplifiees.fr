@@ -1,0 +1,7 @@
+---
+en:
+  title: ProConnect Login
+  subtitle: Control access to the procedure via ProConnect authentication
+  none: No restriction
+  instructeurs: Administrators and Instructors
+  all: All users
