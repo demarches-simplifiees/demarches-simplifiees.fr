@@ -260,9 +260,8 @@ class Champ < ApplicationRecord
   MAIN_STREAM = 'main'
   USER_BUFFER_STREAM = 'user:buffer'
   INSTRUCTEUR_BUFFER_STREAM = 'instructeur:buffer'
+  USER_HISTORY_STREAM = 'user:history'
   HISTORY_STREAM = 'history:'
-  USER_HISTORY_STREAM = 'user:history:'
-  INSTRUCTEUR_HISTORY_STREAM = 'instructeur:history:'
 
   def main_stream?
     stream == MAIN_STREAM
@@ -277,15 +276,11 @@ class Champ < ApplicationRecord
   end
 
   def history_stream?
-    stream.start_with?(HISTORY_STREAM, USER_HISTORY_STREAM, INSTRUCTEUR_HISTORY_STREAM)
+    stream.start_with?(HISTORY_STREAM)
   end
 
-  def user_history_stream?
-    stream.start_with?(HISTORY_STREAM, USER_HISTORY_STREAM)
-  end
-
-  def created_with_instructeur_buffer_stream?
-    created_with_stream == INSTRUCTEUR_BUFFER_STREAM
+  def buffer_stream?
+    user_buffer_stream? || instructeur_buffer_stream?
   end
 
   def clear

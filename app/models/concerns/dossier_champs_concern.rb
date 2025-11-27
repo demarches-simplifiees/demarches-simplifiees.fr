@@ -183,7 +183,7 @@ module DossierChampsConcern
   end
 
   def merge_instructeur_buffer_stream!
-    buffer_ids, changed_ids = changed_champ_ids_for_merge(Champ::INSTRUCTEUR_BUFFER_STREAM, overwrite_main: false)
+    buffer_ids, changed_ids = changed_champ_ids_for_merge(Champ::INSTRUCTEUR_BUFFER_STREAM)
 
     return if buffer_ids.blank?
 
@@ -249,34 +249,27 @@ module DossierChampsConcern
   end
 
   def history
-    champs_in_revision.filter(&:history_stream?)
+    champs.filter(&:history_stream?)
   end
 
   private
 
-  def changed_champ_ids_for_merge(stream, overwrite_main: true)
+  def changed_champ_ids_for_merge(stream)
     buffer_h = champs.where(stream:, stable_id: revision_stable_ids)
-      .pluck(:stable_id, :row_id, :id, :updated_at)
-      .to_h { |(stable_id, row_id, id, updated_at)| [TypeDeChamp.public_id(stable_id, row_id), [id, updated_at]] }
+      .pluck(:stable_id, :row_id, :id)
+      .to_h { |(stable_id, row_id, id)| [TypeDeChamp.public_id(stable_id, row_id), id] }
 
     return [] if buffer_h.empty?
 
     main_h = champs.where(stream: Champ::MAIN_STREAM, stable_id: revision_stable_ids)
-      .pluck(:stable_id, :row_id, :id, :updated_at)
-      .to_h { |(stable_id, row_id, id, updated_at)| [TypeDeChamp.public_id(stable_id, row_id), [id, updated_at]] }
+      .pluck(:stable_id, :row_id, :id)
+      .to_h { |(stable_id, row_id, id)| [TypeDeChamp.public_id(stable_id, row_id), id] }
 
     main_public_ids = main_h.keys
     buffer_public_ids = buffer_h.keys
-    changed_public_ids = main_public_ids.intersection(buffer_public_ids)
 
-    if !overwrite_main
-      more_recent_public_ids = changed_public_ids.filter { main_h[it][1] > buffer_h[it][1] }
-      changed_public_ids = changed_public_ids - more_recent_public_ids
-      buffer_public_ids = buffer_public_ids - more_recent_public_ids
-    end
-
-    changed_ids = changed_public_ids.map { main_h[it][0] }
-    buffer_ids = buffer_public_ids.map { buffer_h[it][0] }
+    changed_ids = main_public_ids.intersection(buffer_public_ids).map { main_h[it] }
+    buffer_ids = buffer_public_ids.map { buffer_h[it] }
 
     # mark champs in discarded rows as changed
     discarded_row_ids = champs.where(stream:, stable_id: revision_stable_ids)
@@ -293,15 +286,19 @@ module DossierChampsConcern
 
   def merge_buffer_champs(buffer_ids, changed_ids, stream)
     now = Time.zone.now
-    user_history_stream = "#{Champ::USER_HISTORY_STREAM}#{now}"
-    instructeur_history_stream = "#{Champ::INSTRUCTEUR_HISTORY_STREAM}#{now}"
+    history_stream = "#{Champ::HISTORY_STREAM}#{now}"
     changed_champs = champs.filter { buffer_ids.member?(it.id) }
 
     transaction do
-      # move champs with changes and created by "instructeur" from "main" to "instructeur history" stream
-      champs.where(id: changed_ids, stream: Champ::MAIN_STREAM, created_with_stream: Champ::INSTRUCTEUR_BUFFER_STREAM).update_all(stream: instructeur_history_stream)
-      # move champs with changes and created by "user" from "main" to "user history" stream
-      champs.where(id: changed_ids, stream: Champ::MAIN_STREAM).update_all(stream: user_history_stream)
+      # if merging user buffer, discard any instructeur made changes
+      if stream == Champ::USER_BUFFER_STREAM
+        champs.where(id: buffer_ids, stream:).pluck(:stable_id, :row_id).each do |(stable_id, row_id)|
+          champs.where(stream: Champ::INSTRUCTEUR_BUFFER_STREAM, stable_id:, row_id:).destroy_all
+        end
+      end
+
+      # move champs with changes from "main" to "history" stream
+      champs.where(id: changed_ids, stream: Champ::MAIN_STREAM).update_all(stream: history_stream)
       # move champs from "buffer" to "main"
       champs.where(id: buffer_ids, stream:).update_all(stream: Champ::MAIN_STREAM, updated_at: now)
       update_champs_timestamps(changed_champs, stream)
@@ -310,11 +307,7 @@ module DossierChampsConcern
     # update loaded champ instances
     champs.each do |champ|
       if champ.id.in?(changed_ids)
-        if champ.created_with_instructeur_buffer_stream?
-          champ.stream = instructeur_history_stream
-        else
-          champ.stream = user_history_stream
-        end
+        champ.stream = history_stream
       elsif champ.id.in?(buffer_ids)
         champ.stream = Champ::MAIN_STREAM
       end
@@ -354,10 +347,15 @@ module DossierChampsConcern
     when Champ::INSTRUCTEUR_BUFFER_STREAM
       (champs_on_instructeur_buffer_stream + champs_on_main_stream).uniq(&:public_id)
     when Champ::USER_HISTORY_STREAM
-      instructeur_updated_champs, user_updated_champs = champs_on_main_stream.partition(&:created_with_instructeur_buffer_stream?)
-      instructeur_updated_champ_ids = instructeur_updated_champs.to_set(&:public_id)
-      champs_on_user_history_stream
-        .filter { instructeur_updated_champ_ids.member?(_1.public_id) } + user_updated_champs
+      champs
+        # only "main" and "history"
+        .reject(&:buffer_stream?)
+        # only updates made before last submission
+        .filter { _1.updated_at <= en_construction_at }
+        # take last change
+        .sort_by(&:updated_at).reverse
+        # compact
+        .uniq(&:public_id)
     else
       champs_on_main_stream
     end
@@ -384,15 +382,7 @@ module DossierChampsConcern
   end
 
   def champs_on_instructeur_buffer_stream
-    main_updated_at = champs_on_main_stream.index_by(&:public_id).transform_values(&:updated_at)
-    champs_in_revision.filter(&:instructeur_buffer_stream?).filter do |champ|
-      updated_at = main_updated_at[champ.public_id]
-      updated_at.present? ? champ.updated_at > updated_at : true
-    end
-  end
-
-  def champs_on_user_history_stream
-    champs.filter(&:user_history_stream?).sort_by(&:updated_at).reverse.uniq(&:public_id)
+    champs_in_revision.filter(&:instructeur_buffer_stream?)
   end
 
   def filled_champ(type_de_champ, row_id: nil, with_discarded: false)
@@ -425,15 +415,9 @@ module DossierChampsConcern
     champ = champs.find { _1.stream == stream && _1.public_id == type_de_champ.public_id(row_id) }
 
     if champ.nil?
-      create_with_attributes = if stream != Champ::MAIN_STREAM
-        type_de_champ.params_for_champ.merge(created_with_stream: stream)
-      else
-        type_de_champ.params_for_champ
-      end
-
       champ = Dossier.no_touching do
         champs
-          .create_with(**create_with_attributes)
+          .create_with(**type_de_champ.params_for_champ)
           .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id:, stream:)
       end
     end

@@ -932,6 +932,7 @@ RSpec.describe DossierChampsConcern do
           expect(user_draft_champ_99.value).to eq("Hello???")
 
           dossier.merge_user_buffer_stream!
+          dossier.touch(:en_construction_at)
           dossier.champs.reload
         end
 
@@ -974,8 +975,8 @@ RSpec.describe DossierChampsConcern do
         expect(main_champ_994.value).to eq("Greer is the best, for sure !")
 
         expect(user_history_champ_99.value).to eq("Hello???")
-        expect(user_history_champ_991.value).to eq("Au revoir")
-        expect(user_history_champ_994.value).to eq(nil)
+        expect(user_history_champ_991.value).to eq("World")
+        expect(user_history_champ_994.value).to eq('Greer')
       }
     end
   end
