@@ -53,8 +53,8 @@ DS/AdresseElectronique:
 DS/FrenchApostrophe:
   Enabled: true
   Exclude:
-    - 'lib/cops/**/*'
-    - 'spec/fixtures/**/*'
+    - 'lib/cops/*.rb'
+    - 'spec/**/*'
 
 DS/Unscoped:
   Enabled: true
