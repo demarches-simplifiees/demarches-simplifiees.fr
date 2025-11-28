@@ -85,6 +85,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_transfer(transfer)
   end
 
+  def notify_new_commentaire_to_instructeur
+    DossierMailer.notify_new_commentaire_to_instructeur(dossier, administration_email)
+  end
+
   private
 
   def usager_email
