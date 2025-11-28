@@ -406,6 +406,19 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
+      context 'when data is mapped to referentiel' do
+        let(:prefilled_type_de_champ_type) { :referentiel }
+        let(:prefilled_type_de_champ_options) { { referentiel: create(:api_referentiel, :exact_match) } }
+        let(:data) { { ok: 'champdapi' } }
+        it 'casts and updates the siret champ' do
+          expect { subject }
+            .to change { dossier.reload.project_champs.reverse.find(&:referentiel?).external_id }.from(nil).to('champdapi')
+        end
+        it 'enqueue job' do
+          expect { subject }.to have_enqueued_job(ChampFetchExternalDataJob).with(dossier.reload.project_champs.reverse.find(&:referentiel?), 'champdapi')
+        end
+      end
+
       context 'when data is mapped to multiple_drop_down_list' do
         let(:prefilled_type_de_champ_type) { :multiple_drop_down_list }
         let(:prefilled_type_de_champ_options) { { options: ['valid', 'valid_one', 'valid_two'] } }
