@@ -275,15 +275,17 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_count_for_email_data(groupe_instructeur_ids, instructeur)
-    Dossier
-      .where(groupe_instructeur_id: groupe_instructeur_ids)
-      .visible_by_administration
-      .not_archived
-      .joins(:dossier_notifications)
-      .merge(DossierNotification.type_news)
-      .where(dossier_notifications: { instructeur: })
-      .distinct
-      .count
+    notifications = DossierNotification
+      .type_news
+      .where(instructeur:)
+      .joins(:dossier)
+      .merge(Dossier.visible_by_administration.not_archived)
+      .where(dossiers: { groupe_instructeur_id: groupe_instructeur_ids })
+
+    nb_dossiers = notifications.distinct.count(:dossier_id)
+    nb_by_type = notifications.group(:notification_type).count
+
+    [nb_dossiers, nb_by_type]
   end
 
   private

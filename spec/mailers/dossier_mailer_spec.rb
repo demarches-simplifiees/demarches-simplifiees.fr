@@ -254,9 +254,9 @@ RSpec.describe DossierMailer, type: :mailer do
 
     it 'verifies subject and body content for groupe instructeur change notification' do
       expect(subject.subject).to eq("Le dossier n° #{dossier.id} a changé de groupe d’instructeurs")
-      expect(subject.body).to include("n° #{dossier.id}")
+      expect(subject.body).to include("n° #{dossier.id}")
       expect(subject.body).to include(dossier.procedure.libelle)
-      expect(subject.body).to include("Suite à cette modification, vous ne suivez plus ce dossier.")
+      expect(subject.body).to include("plus accès à ce dossier.")
     end
   end
 
