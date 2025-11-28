@@ -17,14 +17,16 @@ module Types
     field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
     field :dossier_bascule_suivi, mutation: Mutations::DossierBasculeSuivi
 
-    field :dossier_modifier_annotation_text, mutation: Mutations::DossierModifierAnnotationText
-    field :dossier_modifier_annotation_checkbox, mutation: Mutations::DossierModifierAnnotationCheckbox
-    field :dossier_modifier_annotation_date, mutation: Mutations::DossierModifierAnnotationDate
-    field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime
-    field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
-    field :dossier_modifier_annotation_decimal_number, mutation: Mutations::DossierModifierAnnotationDecimalNumber
-    field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
-    field :dossier_modifier_annotation_drop_down_list, mutation: Mutations::DossierModifierAnnotationDropDownList
+    field :dossier_modifier_annotations, mutation: Mutations::DossierModifierAnnotations
+
+    field :dossier_modifier_annotation_text, mutation: Mutations::DossierModifierAnnotationText, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_checkbox, mutation: Mutations::DossierModifierAnnotationCheckbox, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_date, mutation: Mutations::DossierModifierAnnotationDate, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_decimal_number, mutation: Mutations::DossierModifierAnnotationDecimalNumber, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
+    field :dossier_modifier_annotation_drop_down_list, mutation: Mutations::DossierModifierAnnotationDropDownList, deprecation_reason: "Utilisez la mutation `dossierModifierAnnotations` à la place."
 
     field :dossier_ajouter_label, mutation: Mutations::DossierAjouterLabel
     field :dossier_supprimer_label, mutation: Mutations::DossierSupprimerLabel
