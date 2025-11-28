@@ -3,8 +3,8 @@
 module DossierStateConcern
   extend ActiveSupport::Concern
 
-  def submit_en_construction!
-    self.traitements.submit_en_construction
+  def usager_submit_en_construction!
+    self.traitements.usager_submit_en_construction
     self.submitted_revision_id = revision_id
     save!
 
@@ -14,6 +14,13 @@ module DossierStateConcern
     process_sva_svr!
     clean_champs_after_submit!
     DossierNotification.create_notification(self, :dossier_modifie)
+  end
+
+  def instructeur_submit_en_construction!(instructeur:)
+    self.traitements.instructeur_submit_en_construction(instructeur:)
+    save!
+
+    RoutingEngine.compute(self)
   end
 
   def after_passer_en_construction
@@ -62,6 +69,7 @@ module DossierStateConcern
     save!
 
     reset_user_buffer_stream!
+    reset_instructeur_buffer_stream!
     with_champs
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
@@ -361,18 +369,23 @@ module DossierStateConcern
   end
 
   def clean_champs_after_submit!
+    remove_not_in_revision_champs!
     remove_discarded_rows!
-    remove_not_visible_rows!
-    remove_not_visible_or_empty_champs!
+    remove_not_visible_or_empty_repetitions!
+    clear_not_visible_or_empty_champs!
   end
 
   def clean_champs_after_instruction!
     remove_discarded_rows!
-    remove_titres_identite!
-    remove_auto_purged_piece_justificatives!
+    clear_titres_identite!
+    clear_auto_purged_piece_justificatives!
   end
 
   private
+
+  def remove_not_in_revision_champs!
+    champs.where.not(stable_id: revision_stable_ids).where(stream: Champ::MAIN_STREAM).destroy_all
+  end
 
   def remove_discarded_rows!
     row_to_remove_ids = champs.filter { _1.row? && _1.discarded? }.map(&:row_id)
@@ -381,37 +394,38 @@ module DossierStateConcern
     champs.where(row_id: row_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
   end
 
-  def remove_not_visible_or_empty_champs!
-    repetition_to_keep_stable_ids, champ_to_keep_public_ids = project_champs_public_all
-      .reject { _1.blank? || !_1.visible? }
-      .partition(&:repetition?)
-      .then { |(repetitions, champs)| [repetitions.to_set(&:stable_id), champs.to_set(&:public_id)] }
-
-    rows_public, champs_public = champs
-      .filter(&:public?)
-      .partition(&:row?)
-
-    champs_to_remove = champs_public.reject { champ_to_keep_public_ids.member?(_1.public_id) }
-    champs_to_remove += rows_public.reject { repetition_to_keep_stable_ids.member?(_1.stable_id) }
-
-    return if champs_to_remove.empty?
-    champs.where(id: champs_to_remove, stream: Champ::MAIN_STREAM).destroy_all
-  end
-
-  def remove_not_visible_rows!
+  def remove_not_visible_or_empty_repetitions!
     row_to_remove_ids = project_champs_public
-      .filter { _1.repetition? && !_1.visible? }
+      .filter { _1.repetition? && (_1.blank? || !_1.visible?) }
       .flat_map(&:row_ids)
 
     return if row_to_remove_ids.empty?
     champs.where(row_id: row_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
   end
 
-  def remove_titres_identite!
-    champ_to_remove_ids = filled_champs.filter(&:titre_identite?).map(&:id)
+  def clear_not_visible_or_empty_champs!
+    champs_to_clear = project_champs_public_all
+      .reject(&:repetition?)
+      .filter { _1.blank? || !_1.visible? }
 
-    return if champ_to_remove_ids.empty?
-    champs.where(id: champ_to_remove_ids, stream: Champ::MAIN_STREAM).destroy_all
+    champs.where(id: champs_to_clear, stream: Champ::MAIN_STREAM).find_each(&:clear)
+  end
+
+  def clear_titres_identite!
+    champ_to_clear_stable_ids = champs.filter { _1.class == Champs::TitreIdentiteChamp }.to_set(&:stable_id)
+    champs.where(stable_id: champ_to_clear_stable_ids).find_each(&:clear)
+  end
+
+  def clear_auto_purged_piece_justificatives!
+    revision_ids = revision.draft? ? [procedure.draft_revision_id] : (procedure.revisions.ids - [procedure.draft_revision_id])
+    champ_to_clear_stable_ids = TypeDeChamp.joins(:revision_types_de_champ)
+      .where(procedure_revision_types_de_champ: { revision_id: revision_ids }, type_champ: 'piece_justificative')
+      .order(updated_at: :desc)
+      .uniq(&:stable_id)
+      .filter(&:pj_auto_purge?)
+      .map(&:stable_id)
+
+    champs.where(stable_id: champ_to_clear_stable_ids).find_each(&:clear)
   end
 
   def remove_attente_avis_notification
