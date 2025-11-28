@@ -49,12 +49,8 @@ describe NotificationService do
         end
       end
 
-      context 'when a declarative dossier in instruction exists on this procedure' do
-        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        before do
-          procedure.update(declarative_with_state: "en_instruction")
-          dossier.process_declarative!
-        end
+      context 'when a dossier en instruction exists on this procedure' do
+        let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         it do
           subject
@@ -62,13 +58,8 @@ describe NotificationService do
         end
       end
 
-      context 'when a declarative dossier in accepte on yesterday exists on this procedure' do
-        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        before do
-          procedure.update(declarative_with_state: "accepte")
-          dossier.process_declarative!
-          dossier.traitements.last.update!(processed_at: Time.zone.yesterday.beginning_of_day)
-        end
+      context 'when a dossier accepte exists on this procedure' do
+        let!(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
         it do
           subject
@@ -76,16 +67,21 @@ describe NotificationService do
         end
       end
 
-      context 'when a declarative dossier in accepte on today exists on this procedure' do
-        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        before do
-          procedure.update(declarative_with_state: "accepte")
-          dossier.process_declarative!
-        end
+      context 'when a dossier refuse exists on this procedure' do
+        let!(:dossier) { create(:dossier, :refuse, procedure: procedure) }
 
         it do
           subject
-          expect(InstructeurMailer).not_to have_received(:send_notifications)
+          expect(InstructeurMailer).to have_received(:send_notifications)
+        end
+      end
+
+      context 'when a dossier classé sans suite exists on this procedure' do
+        let!(:dossier) { create(:dossier, :sans_suite, procedure: procedure) }
+
+        it do
+          subject
+          expect(InstructeurMailer).to have_received(:send_notifications)
         end
       end
 
