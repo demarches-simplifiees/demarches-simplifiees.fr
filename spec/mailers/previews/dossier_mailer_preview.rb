@@ -93,6 +93,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_new_avis_to_instructeur(avis, administration_email)
   end
 
+  def notify_groupe_instructeur_changed
+    DossierMailer.notify_groupe_instructeur_changed(instructeur, dossier)
+  end
+
   private
 
   def usager_email
@@ -105,6 +109,11 @@ class DossierMailerPreview < ActionMailer::Preview
 
   def user
     User.new(email: "usager@example.com", locale: I18n.locale)
+  end
+
+  def instructeur
+    user = User.new(email: "administration@example.com", locale: I18n.locale)
+    Instructeur.new(user:)
   end
 
   def deleted_dossier
