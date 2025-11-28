@@ -6,7 +6,7 @@
     = f.label :email, class: "fr-label" do
       Ajouter un administrateur
       %span.fr-hint-text
-        = "Renseignez l’email d’un administrateur pour lui permettre de gérer le groupe « #{groupe_gestionnaire.name} ». Exemple : marie.dupont@exemple.fr"
+        = "Renseignez l’adresse électronique d’un administrateur pour lui permettre de gérer le groupe « #{groupe_gestionnaire.name} ». Exemple : marie.dupont@exemple.fr"
 
     = f.email_field :email, required: true, class: "fr-input", autofocus: true
 

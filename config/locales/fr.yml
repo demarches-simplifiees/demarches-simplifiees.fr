@@ -1047,7 +1047,7 @@ fr:
     ministeres: Ministères
   france_connect:
     choose_email:
-      intro_html: "Votre compte FranceConnect utilise <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> comme email de contact."
+      intro_html: "Votre compte FranceConnect utilise <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> comme adresse électronique de contact."
       use_email_for_notifications: Souhaitez-vous l’utiliser pour recevoir les notifications concernant l’avancement de vos dossiers ?
       confirm: Valider
       choose_email_contact: Choisissez votre adresse électronique de contact pour finaliser votre connexion

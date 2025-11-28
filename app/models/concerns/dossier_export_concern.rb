@@ -46,7 +46,7 @@ module DossierExportConcern
 
     columns = [
       ['ID', id.to_s],
-      ['Email', user_email_for(:display)],
+      ['Adresse électronique', user_email_for(:display)],
       ['FranceConnect ?', user_from_france_connect?],
     ]
 

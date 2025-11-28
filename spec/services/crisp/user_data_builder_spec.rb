@@ -15,7 +15,7 @@ RSpec.describe Crisp::UserDataBuilder do
 
         expect(data["ManagerUser"]).to include("Utilisateur ##{user.id}")
         expect(data["ManagerUser"]).to include("manager/users/#{user.id}")
-        expect(data["Compte"]).to include("Email non vérifié")
+        expect(data["Compte"]).to include("Adresse électronique non vérifiée")
       end
     end
 

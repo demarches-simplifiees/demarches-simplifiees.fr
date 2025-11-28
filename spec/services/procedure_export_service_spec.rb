@@ -51,7 +51,7 @@ describe ProcedureExportService do
         let(:nominal_headers) do
           [
             "ID",
-            "Email",
+            "Adresse électronique",
             "FranceConnect ?",
             "Civilité",
             "Nom",
@@ -221,7 +221,7 @@ describe ProcedureExportService do
       let(:nominal_headers) do
         [
           "ID",
-          "Email",
+          "Adresse électronique",
           "FranceConnect ?",
           "Entreprise raison sociale",
           "À archiver",
@@ -247,7 +247,7 @@ describe ProcedureExportService do
         let(:nominal_headers) do
           [
             "ID",
-            "Email",
+            "Adresse électronique",
             "FranceConnect ?",
             "Établissement SIRET",
             "Établissement siège social",
