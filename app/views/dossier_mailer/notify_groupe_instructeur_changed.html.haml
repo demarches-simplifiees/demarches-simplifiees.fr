@@ -2,10 +2,7 @@
 
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
-%p
-  = "Vous suiviez jusqu'à maintenant le dossier n° #{@dossier.id} de la démarche #{@dossier.procedure.libelle}."
-  L’usager a modifié le groupe de routage. Son dossier appartient maintenant à un groupe instructeur dont vous ne faites pas partie.
-%p
-  Suite à cette modification, vous ne suivez plus ce dossier.
+%p= t('.body_html', dossier_id: @dossier.id, libelle_demarche: @dossier.procedure.libelle)
+%p= t('.footer')
 
 = render partial: "layouts/mailers/signature"
