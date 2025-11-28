@@ -1,4 +1,4 @@
-- if procedure.api_entreprise_token.expires_at.present?
+- if procedure.api_entreprise_token.valid? && procedure.api_entreprise_token.expires_at.present?
   - if procedure.api_entreprise_token.expired?
     = render Dsfr::AlertComponent.new(state: :error, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do
