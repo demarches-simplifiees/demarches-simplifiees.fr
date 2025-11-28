@@ -139,32 +139,29 @@ class Instructeur < ApplicationRecord
 
   def email_notification_data
     groupe_instructeur_with_email_notifications
-      .reduce([]) do |acc, groupe|
-      procedure = groupe.procedure
-
-      nb_notification = DossierNotification.notifications_count_for_email_data([groupe.id], self)
+      .includes(:procedure)
+      .group_by(&:procedure_id)
+      .reduce([]) do |acc, (_, groupe_instructeurs)|
+      procedure = groupe_instructeurs.first.procedure
 
       h = {
-        nb_en_construction: groupe.dossiers.visible_by_administration.en_construction.count,
-        nb_en_instruction: groupe.dossiers.visible_by_administration.en_instruction.count,
-        nb_accepted: Traitement.where(dossier: groupe.dossiers.accepte, processed_at: Time.zone.yesterday.all_day).count,
-        nb_notification: nb_notification,
+        nb_en_construction: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.en_construction.count,
+        nb_en_instruction: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.en_instruction.count,
+        nb_accepted: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.accepte.count,
+        nb_refused: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.refuse.count,
+        nb_closed_without_continuation: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.sans_suite.count,
       }
 
-      if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
+      if h.values.any?(&:positive?)
         h[:procedure_id] = procedure.id
         h[:procedure_libelle] = procedure.libelle
-        acc << h
-      end
+        h[:nb_processed] = h[:nb_accepted] + h[:nb_refused] + h[:nb_closed_without_continuation]
 
-      if h[:nb_en_instruction] > 0 || h[:nb_accepted] > 0
-        [["en_instruction", h[:nb_en_instruction]], ["accepte", h[:nb_accepted]]].each do |state, count|
-          if procedure&.declarative_with_state == state && count > 0
-            h[:procedure_id] = procedure.id
-            h[:procedure_libelle] = procedure.libelle
-            acc << h
-          end
-        end
+        notifications_data = DossierNotification.notifications_count_for_email_data(groupe_instructeurs.map(&:id), self)
+        h[:nb_dossiers_with_notifications] = notifications_data.first
+        h[:nb_notifications] = notifications_data.second
+
+        acc << h
       end
 
       acc
