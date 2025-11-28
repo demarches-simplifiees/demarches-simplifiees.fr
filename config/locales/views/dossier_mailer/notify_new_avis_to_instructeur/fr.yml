@@ -1,5 +1,5 @@
 fr:
   dossier_mailer:
     notify_new_avis_to_instructeur:
-      subject: Nouvel avis déposé sur le dossier n°%{dossier_id}
-      body: Un nouvel avis a été déposé par un expert sur le dossier n° %{dossier_id} de la démarche %{libelle_demarche}.
+      subject: Nouvel avis rendu sur le dossier n°%{dossier_id}
+      body: Un nouvel avis a été rendu par un expert sur le dossier n° %{dossier_id} de la démarche %{libelle_demarche}.

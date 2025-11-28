@@ -89,6 +89,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_new_commentaire_to_instructeur(dossier, administration_email)
   end
 
+  def notify_new_avis_to_instructeur
+    DossierMailer.notify_new_avis_to_instructeur(avis, administration_email)
+  end
+
   private
 
   def usager_email
@@ -152,5 +156,9 @@ class DossierMailerPreview < ActionMailer::Preview
   def commentaire(on:)
     dossier = on
     Commentaire.new(id: 7726, body: "Bonjour, Vous avez commencé le dépôt d’un dossier pour une subvention DETR /DSIL. Dans le cas où votre opération n’aurait pas connu un commencement d’exécution, vous êtes encouragé(e) à redéposer un nouveau dossier sur le formulaire de cette année.\nLa DDT", dossier: dossier)
+  end
+
+  def avis
+    Avis.new(dossier:, procedure:)
   end
 end
