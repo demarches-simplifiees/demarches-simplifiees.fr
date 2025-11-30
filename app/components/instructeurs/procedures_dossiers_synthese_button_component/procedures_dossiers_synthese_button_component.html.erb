@@ -1,0 +1,46 @@
+<button
+  class="
+    fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-btn--icon-left
+    fr-icon-information-line
+  "
+  aria-controls="synthese-modal"
+  data-fr-opened="false"
+  turbo-frame="synthese-modal"
+  data-action="lazy-modal#load"
+  src="<%= synthese_instructeur_procedures_path %>"
+>
+  <%= t('.title') %>
+</button>
+
+<dialog
+  id="synthese-modal"
+  class="fr-modal"
+  role="dialog"
+  aria-labelledby="synthese-modal-title"
+>
+  <div class="fr-container fr-container--fluid fr-container-md">
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-10 fr-col-lg-8">
+        <div class="fr-modal__body">
+          <div class="fr-modal__header">
+            <button
+              class="fr-btn--close fr-btn"
+              aria-controls="synthese-modal"
+              title="<%= t('utils.modal_close_alt') %>"
+            >
+              <%= t('utils.modal_close') %>
+            </button>
+          </div>
+
+          <div class="fr-modal__content">
+            <h1 id="synthese-modal-title" class="fr-modal__title">
+              <%= t('.title') %>
+            </h1>
+
+            <turbo-frame id="synthese-content" data-lazy-modal-target="frame"></turbo-frame>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>

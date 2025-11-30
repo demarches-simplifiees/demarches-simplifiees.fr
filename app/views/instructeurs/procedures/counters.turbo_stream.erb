@@ -1,0 +1,6 @@
+<%= render(Instructeurs::ProcedureCountersComponent.with_collection(
+            @procedures,
+            counters: @counters,
+            notifications_counts_per_procedure: @notifications_counts_per_procedure,
+            procedure_ids_with_notifications: @procedure_ids_with_notifications,
+          )) %>
