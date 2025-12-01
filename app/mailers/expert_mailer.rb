@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ExpertMailer < ApplicationMailer
-  helper MailerHelper
   layout 'mailers/layout'
 
   # TODO: replace with v2 after MEP

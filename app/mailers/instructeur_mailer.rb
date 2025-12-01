@@ -2,8 +2,6 @@
 
 # Preview all emails at http://localhost:3000/rails/mailers/instructeur_mailer
 class InstructeurMailer < ApplicationMailer
-  helper MailerHelper
-
   layout 'mailers/layout'
 
   def user_to_instructeur(email)

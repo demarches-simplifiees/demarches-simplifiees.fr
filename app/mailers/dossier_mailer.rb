@@ -5,7 +5,6 @@ class DossierMailer < ApplicationMailer
   class AbortDeliveryError < StandardError; end
 
   helper ServiceHelper
-  helper MailerHelper
   helper ProcedureHelper
 
   layout 'mailers/layout'

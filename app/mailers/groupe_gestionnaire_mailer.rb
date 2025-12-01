@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GroupeGestionnaireMailer < ApplicationMailer
-  helper MailerHelper
   layout 'mailers/layout'
 
   def notify_removed_gestionnaire(groupe_gestionnaire, removed_gestionnaire_email, current_super_admin_email)

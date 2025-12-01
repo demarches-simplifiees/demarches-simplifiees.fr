@@ -2,8 +2,6 @@
 
 # Preview all emails at http://localhost:3000/rails/mailers/avis_mailer
 class AvisMailer < ApplicationMailer
-  helper MailerHelper
-
   layout 'mailers/layout'
 
   def avis_invitation_and_confirm_email(user, token, avis, targeted_user_link = nil) # ensure re-entrance if existing AvisMailer.avis_invitation in queue
