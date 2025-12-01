@@ -19,6 +19,6 @@ du dépôt de votre dossier sur %{application_name}. L’adresse électronique a
 votre dossier est mentionnée dans l’entête de ces emails.
 - Consultez le corps de l’attestation de dépôt du dossier, où l’adresse électronique
 utilisée est également indiquée.
-- Contactez le service instructeur de la démarche pour qu'il vous aide dans la
+- Contactez le service instructeur de la démarche pour qu’il vous aide dans la
 procédure de transfert de votre dossier. Les coordonnées de ce service sont
 disponibles en bas de la page de présentation de la démarche.

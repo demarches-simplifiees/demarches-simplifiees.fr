@@ -971,7 +971,7 @@ fr:
         consult_trash: "Consulter la corbeille"
         user_request_info_without_if: "Ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
         user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
-        automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu'il ne soit supprimé définitivement."
+        automatic_info: "Si ce dossier a été mis à la corbeille automatiquement car son délai maximal de conservation a été atteint :<br>Nous vous invitons à le <strong>télécharger</strong> au plus vite avant qu’il ne soit supprimé définitivement."
       show_deleted:
         page_title: "Dossier n° %{numero} - Supprimé définitivement"
         title: "Le dossier n° %{numero} a été supprimé"

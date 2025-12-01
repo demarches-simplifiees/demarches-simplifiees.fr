@@ -18,7 +18,7 @@ describe 'Referentiel API:' do
   context 'edges cases' do
     let(:types_de_champ_public) do
       [
-        { type: :referentiel, libelle: "qu'importe" },
+        { type: :referentiel, libelle: "qu’importe" },
       ]
     end
 

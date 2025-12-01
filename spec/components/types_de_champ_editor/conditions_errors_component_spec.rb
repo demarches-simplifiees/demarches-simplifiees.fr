@@ -55,7 +55,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
       let(:source_tdcs) { [tdc] }
       let(:conditions) { [ds_include(champ_value(tdc.stable_id), constant('a text'))] }
 
-      it { expect(page).to have_content("Lʼopérateur « inclus » ne s’applique qu'au choix simple ou multiple.") }
+      it { expect(page).to have_content("Lʼopérateur « inclus » ne s’applique qu’au choix simple ou multiple.") }
     end
 
     context 'when a choice is not in a drop_down' do

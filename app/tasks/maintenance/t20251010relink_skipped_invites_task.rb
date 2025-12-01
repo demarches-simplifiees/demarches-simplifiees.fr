@@ -3,7 +3,7 @@
 module Maintenance
   class T20251010relinkSkippedInvitesTask < MaintenanceTasks::Task
     # En théorie apres avoir confirmé un compte, on lie les invitations envoyées à une adresse électronique d’un compte utilisateur non existant
-    # sauf qu'on a pas fait ça pr les comptes crées via agent connect
+    # sauf qu’on a pas fait ça pr les comptes crées via agent connect
 
     include RunnableOnDeployConcern
     include StatementsHelpersConcern
