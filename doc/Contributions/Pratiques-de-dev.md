@@ -38,7 +38,7 @@ Afin d’éviter de trop alourdir les contrôleurs et les modèles, déjà bien 
 - Toute injection de dépendance doit être utilisée (sinon ne pas la coder)
 - Il est demandé d’éviter l’injection de dépendance dans les constructeurs.
   (Une exception pourrait être prise en compte si deux implémentations différentes, hors tests, sont injectées.)
-- On mock directement les dépendances concernées (parce que ruby, c'est magique)
+- On mock directement les dépendances concernées (parce que ruby, c’est magique)
 
 ```ruby
 # Non
@@ -95,7 +95,7 @@ En date du 2021-10-19, voici une PR servant d’exemple :
 
 **Attention** : Ne **pas utiliser le bouton "Update branch"** de GitHub.
 
-Ce bouton merge `main` dans la feature branch – ce qui casse l’historique semi-linéraire. (Nous, ce qu'on voudrait, c'est rebaser).
+Ce bouton merge `main` dans la feature branch – ce qui casse l’historique semi-linéraire. (Nous, ce qu'on voudrait, c’est rebaser).
 À la place, rebaser manuellement la feature-branch sur `main` (ou mettre un commentaire "/rebase" dans la PR).
 
 ## Bonnes pratiques : sur les commits

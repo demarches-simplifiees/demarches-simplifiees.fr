@@ -12,7 +12,7 @@ contact service instructeur"
 
 Il se peut que vous ayez déposé votre dossier en utilisant une autre adresse électronique.
 
-Si c'est le cas, vous avez 3 solutions pour le retrouver :
+Si c’est le cas, vous avez 3 solutions pour le retrouver :
 
 - Recherchez parmi les emails reçus lors de la création de votre compte ou lors
 du dépôt de votre dossier sur %{application_name}. L’adresse électronique associée à
