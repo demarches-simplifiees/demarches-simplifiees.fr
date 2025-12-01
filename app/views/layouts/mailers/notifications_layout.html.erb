@@ -46,6 +46,7 @@
 -->
     <style type="text/css">  @media only screen and (min-width:480px) {    .mj-column-per-66 { width:66.66666666666666%!important; }.mj-column-per-33 { width:33.33333333333333%!important; }.mj-column-per-100 { width:100%!important; }  }</style>
   </head>
+
   <body style="background: #F4F4F4;">
     <div style="background-color:#F4F4F4;">
       <!--
@@ -96,6 +97,7 @@
                     </tbody>
                   </table>
                 </div>
+
                 <!--
   [if mso | IE]>
   </td>
@@ -157,6 +159,7 @@
                   >
                     <tbody>
                       <%= yield(:procedure_logo) %>
+
                       <tr>
                         <td
                           style="word-wrap:break-word;font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-bottom:0px;"
@@ -169,6 +172,7 @@
                           </div>
                         </td>
                       </tr>
+
                       <% if content_for?(:footer) %>
                         <tr>
                           <td
@@ -178,6 +182,7 @@
                             <p style="font-size:13px;text-align:left;">
                               —
                             </p>
+
                             <p
                               style="cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:22px;text-align:left;"
                             >
@@ -189,6 +194,7 @@
                     </tbody>
                   </table>
                 </div>
+
                 <!--
   [if mso | IE]>
   </td>
@@ -257,12 +263,12 @@
                           <div
                             style="cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:center;"
                           >
-                            <%= "#{Current.application_name}" %>
-                            est un service fourni par
-                            <%= t("links.provider.provided_by") %>
+                            <%= "#{APPLICATION_NAME}" %> est un service fourni
+                            par <%= t("links.provider.provided_by") %>
                           </div>
                         </td>
                       </tr>
+
                       <tr>
                         <td
                           style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;padding-top:0px;padding-bottom:0px;"
@@ -278,6 +284,7 @@
                     </tbody>
                   </table>
                 </div>
+
                 <!--
   [if mso | IE]>
   </td>

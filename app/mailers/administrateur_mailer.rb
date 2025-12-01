@@ -12,7 +12,6 @@ class AdministrateurMailer < ApplicationMailer
 
     bypass_unverified_mail_protection!
 
-    configure_defaults_for_user(user)
     mail(to: user.email,
       subject: @subject,
       reply_to: CONTACT_EMAIL)
@@ -22,7 +21,6 @@ class AdministrateurMailer < ApplicationMailer
     @procedure = procedure
     @subject = "La suppression automatique des dossiers a été activée sur la démarche #{procedure.libelle}"
 
-    configure_defaults_for_email(user_email)
     mail(to: user_email,
       subject: @subject,
       reply_to: CONTACT_EMAIL)
@@ -31,7 +29,6 @@ class AdministrateurMailer < ApplicationMailer
   def notify_service_without_siret(user_email)
     @subject = "Siret manquant sur un de vos services"
 
-    configure_defaults_for_email(user_email)
     mail(to: user_email,
       subject: @subject,
       reply_to: CONTACT_EMAIL)
@@ -41,7 +38,6 @@ class AdministrateurMailer < ApplicationMailer
     @subject = "Renouvellement de jeton d'API nécessaire"
     @tokens = tokens
 
-    configure_defaults_for_user(user)
     mail(to: user.email,
       subject: @subject,
       reply_to: CONTACT_EMAIL)

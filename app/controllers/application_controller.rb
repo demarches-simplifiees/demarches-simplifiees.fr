@@ -37,15 +37,9 @@ class ApplicationController < ActionController::Base
     # TODO: remove this block when migration to new domain is done
     Current.host = request.host_with_port
 
-    if Current.host.include?(".gouv.fr")
-      Current.application_name = "demarche.numerique.gouv.fr"
-      Current.contact_email = "contact@demarche.numerique.gouv.fr"
-      Current.application_base_url = "https://demarche.numerique.gouv.fr"
-    else
-      Current.application_name = APPLICATION_NAME
-      Current.contact_email = CONTACT_EMAIL
-      Current.application_base_url = APPLICATION_BASE_URL
-    end
+    Current.application_name = APPLICATION_NAME
+    Current.contact_email = CONTACT_EMAIL
+    Current.application_base_url = APPLICATION_BASE_URL
   end
 
   before_action :redirect_transitoire_domain
