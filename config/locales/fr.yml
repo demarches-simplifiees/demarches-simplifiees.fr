@@ -850,6 +850,7 @@ fr:
       human: "%A %-d %B à %Hh%M"
       short_datetime: "Le %d/%m/%Y %H:%M"
       short_date: "%d/%m/%Y"
+      dashed: "%Y-%m-%d"
   datetime:
     formats:
       long: "%d %B %y %H:%M"

@@ -839,6 +839,7 @@ en:
       human: "%A %-d %B at %Hh%M"
       short_datetime: "%b %d %Y %I:%M %p"
       short_date: "%d/%m/%Y"
+      dashed: "%Y-%m-%d"
   date:
     formats:
       short_date: "%d/%m/%Y"
