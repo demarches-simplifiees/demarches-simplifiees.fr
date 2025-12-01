@@ -34,11 +34,11 @@ class Instructeur < ApplicationRecord
 
   validates :user_id, uniqueness: true
 
-  scope :with_instant_email_message_notifications, -> (groupe_instructeur) {
-    includes(:assign_to)
-      .where(assign_tos: {
-        groupe_instructeur_id: groupe_instructeur.id,
-        instant_email_message_notifications_enabled: true,
+  scope :with_instant_email_new_message, -> (procedure) {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        procedure:,
+        instant_email_new_message: true,
       })
   }
 
