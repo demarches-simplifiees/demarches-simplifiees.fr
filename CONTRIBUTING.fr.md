@@ -52,7 +52,7 @@ Toutefois, certains acteurs (le ministère des armées, l’administration auton
 
 ## Bonnes pratiques de code
 
-Votre contribution sera plus rapidement traitée si elle s'appuie sur nos habitudes de développement.
+Votre contribution sera plus rapidement traitée si elle s’appuie sur nos habitudes de développement.
 
 Nous travaillons à rendre explicite un maximum de nos pratiques de dev, aussi il est chaudement recommandé
 de prendre connaissance des [bonnes pratiques de code](doc/Contributions/Pratiques-de-dev.md).
