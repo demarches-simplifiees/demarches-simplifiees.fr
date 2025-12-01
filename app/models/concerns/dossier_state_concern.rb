@@ -47,7 +47,7 @@ module DossierStateConcern
   def after_commit_passer_en_construction
     NotificationMailer.send_en_construction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
-    groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
+    groupe_instructeur.instructeurs.with_instant_email_new_dossier(self.procedure).each do |instructeur|
       DossierMailer.notify_new_dossier_depose_to_instructeur(self, instructeur.email).deliver_later
     end
     DossierNotification.create_notification(self, :dossier_depose) if !procedure.declarative? && !procedure.sva_svr_enabled?

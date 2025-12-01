@@ -49,8 +49,12 @@ class Instructeur < ApplicationRecord
     })
   }
 
-  scope :with_instant_email_dossier_notifications, -> {
-    includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
+  scope :with_instant_email_new_dossier, -> (procedure) {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        procedure:,
+        instant_email_new_dossier: true,
+      })
   }
 
   default_scope { eager_load(:user) }
