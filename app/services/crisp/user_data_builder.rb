@@ -124,6 +124,6 @@ module Crisp
       data.transform_values { it.truncate(MAX_VALUE_LENGTH, omission: "…", separator: /\s+/) }
     end
 
-    def host = ENV["APP_HOST_LEGACY"] || ENV["APP_HOST"] # dont link to numerique.gouv yet
+    def host = ENV["APP_HOST"]
   end
 end

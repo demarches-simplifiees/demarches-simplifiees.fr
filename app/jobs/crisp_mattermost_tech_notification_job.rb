@@ -95,5 +95,5 @@ class CrispMattermostTechNotificationJob < ApplicationJob
     "https://app.crisp.chat/website/#{ENV.fetch("CRISP_WEBSITE_ID")}/inbox/#{session_id}/"
   end
 
-  def host = ENV["APP_HOST_LEGACY"] || ENV["APP_HOST"] # dont link to numerique.gouv yet
+  def host = ENV["APP_HOST"]
 end
