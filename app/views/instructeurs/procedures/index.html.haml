@@ -1,7 +1,7 @@
 - if current_instructeur.feature_enabled?(:notification)
   = render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-notice-name" => "instr-recapitulatif-notifications" }) do |c|
     - c.with_title do
-      Un récapitulatif des badges de notifications est maintenant affiché dès la liste de vos démarches : qu'en pensez-vous ?
+      Un récapitulatif des badges de notifications est maintenant affiché dès la liste de vos démarches : qu’en pensez-vous ?
     - c.with_desc do
       %br
     - c.with_link do

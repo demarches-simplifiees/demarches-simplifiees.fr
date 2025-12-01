@@ -29,7 +29,7 @@ module Manager
     end
 
     def redirect_unallowed
-      flash[:alert] = "Veuillez partager ce lien avec un autre super administrateur pour qu'il confirme votre action"
+      flash[:alert] = "Veuillez partager ce lien avec un autre super administrateur pour qu’il confirme votre action"
       redirect_to manager_procedure_path(@procedure)
     end
 

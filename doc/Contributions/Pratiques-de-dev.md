@@ -2,7 +2,7 @@
 
 ## Branches du projet
 
-- `main`, branche qui contient le code du site tel qu'il est [en intégration](https://dev.demarches-simplifiees.fr/)
+- `main`, branche qui contient le code du site tel qu’il est [en intégration](https://dev.demarches-simplifiees.fr/)
 - les [releases](https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases) pointent sur la branche `main` (historiquement sur la branche `production`)
 
 ## Cycle de développement
@@ -95,14 +95,14 @@ En date du 2021-10-19, voici une PR servant d’exemple :
 
 **Attention** : Ne **pas utiliser le bouton "Update branch"** de GitHub.
 
-Ce bouton merge `main` dans la feature branch – ce qui casse l’historique semi-linéraire. (Nous, ce qu'on voudrait, c’est rebaser).
+Ce bouton merge `main` dans la feature branch – ce qui casse l’historique semi-linéraire. (Nous, ce qu’on voudrait, c’est rebaser).
 À la place, rebaser manuellement la feature-branch sur `main` (ou mettre un commentaire "/rebase" dans la PR).
 
 ## Bonnes pratiques : sur les commits
 
 - Les messages de commit sont écrits en anglais
 - Faire des petits commits, les plus unitaires possible, homogènes et en essayant de ne pas mélanger les sujets.
-- Les commits correctifs sont à "fixup-er" dans les commits qu'ils corrigent
+- Les commits correctifs sont à "fixup-er" dans les commits qu’ils corrigent
 - Séparer les modifications relatives à du nettoyage dans un commit séparé, voire une PR séparée
 - Dans le cas où un commit corrige un bug ou implémente une feature, mentionner dans le message de commit le numéro de l’issue avec `Closes #XXXX` ou `Ref #XXXX`
 
