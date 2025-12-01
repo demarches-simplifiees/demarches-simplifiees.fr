@@ -11,12 +11,12 @@
 
 %p
   - if @user.present?
-    = t('.transfer_text', app_name: Current.application_name)
+    = t('.transfer_text', app_name: APPLICATION_NAME)
     %br
     = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
   - else
     = t('.no_user_transfer_text')
     %br
-    = link_to t('.no_user_transfer_link', app_name: Current.application_name), new_user_registration_url
+    = link_to t('.no_user_transfer_link', app_name: APPLICATION_NAME), new_user_registration_url
 
 = render partial: "layouts/mailers/signature"

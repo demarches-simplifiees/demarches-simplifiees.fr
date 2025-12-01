@@ -5,7 +5,6 @@ class DeviseUserMailer < Devise::Mailer
   helper :application # gives access to all helpers defined within `application_helper`.
   helper MailerHelper
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
-  include MailerDefaultsConfigurableConcern
   include MailerMonitoringConcern
   include PriorityDeliveryConcern
 
@@ -16,21 +15,9 @@ class DeviseUserMailer < Devise::Mailer
     ['devise_mailer']
   end
 
-  # Note: this devise hook (like any callback) is called *after* the action,
-  # because we use mailers with Mailer.action_name() syntax
-  # instead of parameterized Mailer.with().action_name.
-  # So any action using Current must manually call `configure_defaults_for_user`
-  def initialize_from_record(record)
-    configure_defaults_for_user(record)
-
-    super
-  end
-
   def confirmation_instructions(record, token, opts = {})
-    configure_defaults_for_user(record)
-
-    opts[:from] = Current.no_reply_email
-    opts[:reply_to] = Current.no_reply_email
+    opts[:from] = NO_REPLY_EMAIL
+    opts[:reply_to] = NO_REPLY_EMAIL
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
 

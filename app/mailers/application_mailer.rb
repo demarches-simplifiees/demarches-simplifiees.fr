@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationMailer < ActionMailer::Base
-  include MailerDefaultsConfigurableConcern
   include MailerMonitoringConcern
   include PriorityDeliveryConcern
 
