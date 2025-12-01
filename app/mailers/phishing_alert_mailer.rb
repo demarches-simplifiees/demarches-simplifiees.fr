@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PhishingAlertMailer < ApplicationMailer
-  helper MailerHelper
-
   layout 'mailers/layout'
 
   def notify(user)

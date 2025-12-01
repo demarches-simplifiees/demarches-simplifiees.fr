@@ -2,8 +2,6 @@
 
 # Preview all emails at http://localhost:3000/rails/mailers/user_mailer
 class UserMailer < ApplicationMailer
-  helper MailerHelper
-
   layout 'mailers/layout'
 
   def new_account_warning(user, procedure = nil)

@@ -4,6 +4,8 @@ class ApplicationMailer < ActionMailer::Base
   include MailerMonitoringConcern
   include PriorityDeliveryConcern
 
+  helper MailerHelper
+
   helper :application # gives access to all helpers defined within `application_helper`.
   default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'

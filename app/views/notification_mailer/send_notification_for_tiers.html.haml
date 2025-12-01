@@ -28,4 +28,4 @@
   = t(:best_regards, scope: [:views, :shared, :greetings])
   %br
     = t('layouts.mailers.signature.team')
-    #{Current.application_name.gsub(".","&#8288;.").html_safe}
+    = application_name_without_link

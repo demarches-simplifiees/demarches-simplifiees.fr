@@ -13,7 +13,6 @@ class NotificationMailer < ApplicationMailer
   before_action :set_jdma, only: :send_notification
 
   helper ServiceHelper
-  helper MailerHelper
 
   layout 'mailers/notifications_layout'
   default from: NO_REPLY_EMAIL
