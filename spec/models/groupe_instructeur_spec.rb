@@ -60,17 +60,6 @@ describe GroupeInstructeur, type: :model do
       expect(another_groupe_instructeur.reload.instructeurs).to include(instructeur)
     end
 
-    context 'when joining another groupe instructeur on the same procedure' do
-      before do
-        procedure_assign.update(daily_email_notifications_enabled: true)
-        subject
-      end
-
-      it 'copies notifications settings from a previous group' do
-        expect(instructeur.assign_to.last.daily_email_notifications_enabled).to be_truthy
-      end
-    end
-
     context "when the new instructeur has 'all' preferences for notifications" do
       let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, display_dossier_modifie_notifications: 'all') }
       let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: another_groupe_instructeur, procedure:, last_champ_updated_at: Time.zone.now, depose_at: Time.zone.yesterday) }

@@ -93,15 +93,6 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  NOTIFICATION_SETTINGS = [:daily_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :weekly_email_notifications_enabled, :instant_expert_avis_email_notifications_enabled]
-
-  def notification_settings(procedure_id)
-    assign_to
-      .joins(:groupe_instructeur)
-      .find_by(groupe_instructeurs: { procedure_id: procedure_id })
-      &.slice(*NOTIFICATION_SETTINGS) || {}
-  end
-
   def last_week_overview
     start_date = Time.zone.now.beginning_of_week
 
