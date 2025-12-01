@@ -210,17 +210,17 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has a type de champ with double dash (--)' do
       let(:types_de_champ_public) do
         [
-          { libelle: "bon pote -- c'est top" },
+          { libelle: "bon pote -- c’est top" },
         ]
       end
 
       context 'and they are used in the template' do
-        let(:template) { "--bon pote __ c'est top--" }
+        let(:template) { "--bon pote __ c’est top--" }
 
         context 'and their value in the dossier are not nil' do
           before do
             dossier.project_champs_public
-              .find { |champ| champ.libelle == "bon pote -- c'est top" }
+              .find { |champ| champ.libelle == "bon pote -- c’est top" }
               .update(value: 'ceci est mon évènement')
           end
 
