@@ -42,11 +42,12 @@ class Instructeur < ApplicationRecord
       })
   }
 
-  scope :with_instant_expert_avis_email_notifications_enabled, -> (groupe_instructeur) {
-    includes(:assign_to).where(assign_tos: {
-      groupe_instructeur_id: groupe_instructeur.id,
-      instant_expert_avis_email_notifications_enabled: true,
-    })
+  scope :with_instant_email_new_expert_avis, -> (procedure) {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        procedure:,
+        instant_email_new_expert_avis: true,
+      })
   }
 
   scope :with_instant_email_new_dossier, -> (procedure) {
