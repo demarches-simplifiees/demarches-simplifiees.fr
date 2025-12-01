@@ -138,7 +138,8 @@ class RdvService
       error_name: "RdvService#get_account_info failed"
     )
 
-    parsed_body["agent"].with_indifferent_access || {}
+    account_info = parsed_body["agent"] || {}
+    account_info.with_indifferent_access
   end
 
   def refresh_token_if_expired!
