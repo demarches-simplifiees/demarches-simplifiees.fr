@@ -11,7 +11,7 @@
 
 %p
   Dans le respect du règlement général sur la protection des données, nous allons
-  %strong supprimer votre compte d'ici #{distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)}.
+  %strong supprimer votre compte d’ici #{distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)}.
 
 - if @user.dossiers.not_brouillon.count > 0
   %p

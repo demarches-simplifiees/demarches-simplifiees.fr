@@ -76,7 +76,7 @@ describe Procedure::ErrorsSummary, type: :component do
       expect(page).to have_content("a une logique conditionnelle invalide")
 
       expect(page).to have_selector("a", text: "header sections must have consistent order")
-      expect(page).to have_content("devrait être précédé d'un titre de niveau 1")
+      expect(page).to have_content("devrait être précédé d’un titre de niveau 1")
 
       expect(page).to have_selector("a", text: "regexp invalid")
       expect(page).to have_content("est invalide, veuillez la corriger")

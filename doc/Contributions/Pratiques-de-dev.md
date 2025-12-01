@@ -33,10 +33,10 @@ pour vous faire la main sur le processus.
 ### Injection de dépendance
 
 D'une manière générale, nous préférons avoir des controlleurs verbeux mais explicites.
-Afin d'éviter de trop alourdir les contrôleurs et les modèles, déjà bien chargés, nous mettons parfois en place des services pour centraliser une partie cohérente des traitements (voir [DossierProjectionService](https://github.com/betagouv/demarches-simplifiees.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/dossier_projection_service.rb), [PieceJustificativeService](https://github.com/betagouv/demarches-simplifiees.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/pieces_justificatives_service.rb))
+Afin d’éviter de trop alourdir les contrôleurs et les modèles, déjà bien chargés, nous mettons parfois en place des services pour centraliser une partie cohérente des traitements (voir [DossierProjectionService](https://github.com/betagouv/demarches-simplifiees.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/dossier_projection_service.rb), [PieceJustificativeService](https://github.com/betagouv/demarches-simplifiees.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/pieces_justificatives_service.rb))
 
 - Toute injection de dépendance doit être utilisée (sinon ne pas la coder)
-- Il est demandé d'éviter l'injection de dépendance dans les constructeurs.
+- Il est demandé d’éviter l'injection de dépendance dans les constructeurs.
   (Une exception pourrait être prise en compte si deux implémentations différentes, hors tests, sont injectées.)
 - On mock directement les dépendances concernées (parce que ruby, c'est magique)
 
@@ -76,17 +76,17 @@ Autrement dit, le LLM n’est qu’un outil, et il convient d’être tout aussi
 ## Bonnes pratiques : sur les PR
 
 - Toujours mettre un message décrivant l'objet de la PR
-- Si la PR concerne des changements visuels, mettre une capture d'écran
+- Si la PR concerne des changements visuels, mettre une capture d’écran
 - Faites de petites PR. Si la PR est trop grosse (> 400 lignes), découpez-la en plusieurs PR. Chaque petite PR doit
-  essayer d'apporter de la valeur au client, d'apporter une petite fonctionnalité.
-- Le relecteur d'une PR peut prendre la main (après l'avoir demandé) pour faire les modifs de formes
+  essayer d’apporter de la valeur au client, d’apporter une petite fonctionnalité.
+- Le relecteur d’une PR peut prendre la main (après l'avoir demandé) pour faire les modifs de formes
 - Les modifications de formes non détectées automatiquement sont optionnelles
 - Néanmoins, les commits de nettoyage sont autorisés au sein de ces petites PRs
 - Les remarques sur l’amélioration du code ne concernant pas directement la PR sont optionnelles
 
-En date du 2021-10-19, voici une PR servant d'exemple :
+En date du 2021-10-19, voici une PR servant d’exemple :
 
-* [#6519 ETQ Super Admin je veux changer l’adresse électronique d'un instructeur](https://github.com/betagouv/demarches-simplifiees.fr/pull/6519)
+* [#6519 ETQ Super Admin je veux changer l’adresse électronique d’un instructeur](https://github.com/betagouv/demarches-simplifiees.fr/pull/6519)
 
 ## Bonnes pratiques : sur les branches
 
@@ -106,7 +106,7 @@ Ce bouton merge `main` dans la feature branch – ce qui casse l'historique semi
 - Séparer les modifications relatives à du nettoyage dans un commit séparé, voire une PR séparée
 - Dans le cas où un commit corrige un bug ou implémente une feature, mentionner dans le message de commit le numéro de l'issue avec `Closes #XXXX` ou `Ref #XXXX`
 
-Exemple d'une série de commits :
+Exemple d’une série de commits :
 
 - un commit pour du renommage,
 - un commit pour un ajout de méthode + test,

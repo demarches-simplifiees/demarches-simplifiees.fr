@@ -5,9 +5,9 @@
 
 %p
   - if @tokens.one?
-    <b>Votre jeton d'API « #{@tokens.first.prefix} » expirera le 1er juillet 2023</b>.
+    <b>Votre jeton d’API « #{@tokens.first.prefix} » expirera le 1er juillet 2023</b>.
   - else
-    <b>Vos jetons d'API « #{@tokens.map(&:prefix).join(', ')} » expireront le 1er juillet 2023</b>.
+    <b>Vos jetons d’API « #{@tokens.map(&:prefix).join(', ')} » expireront le 1er juillet 2023</b>.
   Passée cette date, vos interconnexions utilisant ce jeton ne marcheront plus.
 
 %p

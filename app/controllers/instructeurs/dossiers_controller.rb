@@ -604,7 +604,7 @@ module Instructeurs
                            current_instructeur.dossiers.find(params[:dossier_id])
       end
       if dossier_in_batch.batch_operation.present?
-        flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
+        flash.alert = "Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse."
         redirect_back(fallback_location: instructeur_dossier_path(procedure, dossier_in_batch))
       end
     end

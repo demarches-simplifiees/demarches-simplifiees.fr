@@ -8,7 +8,7 @@
   %h1.fr-h1
     Cadre budgétaire
 
-  = render Dsfr::CalloutComponent.new(title: "Cas d'usage") do |c|
+  = render Dsfr::CalloutComponent.new(title: "Cas d’usage") do |c|
     - c.with_body do
       %p Ajouter un champs Engagement Juridique aux annotations privées afin de renseigner l'EJ directement dans DS
       %p L'EJ sera automatiquement ajouté aux exports des dossiers

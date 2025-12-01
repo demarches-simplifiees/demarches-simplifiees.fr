@@ -214,7 +214,7 @@ module Administrateurs
         user_ids = @procedure.dossiers.not_archived.state_brouillon.pluck(:user_id).uniq
         content = params[:email_content_brouillon]
         SendClosingNotificationJob.perform_later(user_ids, content, @procedure)
-        flash.notice = "Les emails sont en cours d'envoi"
+        flash.notice = "Les emails sont en cours d’envoi"
       end
 
       if @procedure.closing_notification_en_cours?

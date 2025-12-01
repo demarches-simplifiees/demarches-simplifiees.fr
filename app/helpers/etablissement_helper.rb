@@ -19,7 +19,7 @@ module EtablissementHelper
   end
 
   # trouver la declaration 2051, et prendre la premiere valeur du bilan identifié par le code code_nref: 300476
-  # autrement connu comme le resultat d'un exercice dans un bilan comptable "funky magic accountant lingo"
+  # autrement connu comme le resultat d’un exercice dans un bilan comptable "funky magic accountant lingo"
   def extract_resultat_exercice(bilan)
     declaration_2051 = bilan.dig('declarations').find { _1["numero_imprime"] == "2051" }
     return nil if declaration_2051.nil?

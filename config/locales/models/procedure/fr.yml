@@ -16,7 +16,7 @@ fr:
           cadre_juridique: "Exemple: https://www.legifrance.gouv.fr/circulaire/id/34464"
           old_procedure: Cette démarche remplace une close ? Si oui, veuillez indiquer le n° de la démarche remplacée
           procedure_path: "Personnalisez si besoin la suite de l’URL, pour faciliter l'accès à la démarche. De 3 à 200 caractères :  minuscules, chiffres et tiret seulement"
-          closing_details: Donnez le plus d'explication possible aux usagers sur la raison de la fermeture de la démarche
+          closing_details: Donnez le plus d’explication possible aux usagers sur la raison de la fermeture de la démarche
           closing_details_placeholder: "Cette démarche a été remplacée par la page…\n\nLe guide de la nouvelle démarche est disponible ici\n\nPour toute information complémentaire, contactez…\n\nCordialement,"
         path: Lien public
         organisation: Organisme
@@ -28,12 +28,12 @@ fr:
         description: Quel est l’objet de la démarche ?
         description_target_audience: À qui s’adresse la démarche ?
         description_pj: Liste des pièces jointes demandées
-        description_pj_placeholder: Si vous ne renseignez pas ce champ et que votre formulaire contient des pièces jointes, une liste générée automatiquement s'affichera dans la page d'accueil de votre démarche.
+        description_pj_placeholder: Si vous ne renseignez pas ce champ et que votre formulaire contient des pièces jointes, une liste générée automatiquement s'affichera dans la page d’accueil de votre démarche.
         lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
         old_procedure: Numéro de la démarche remplacée
         new_procedure: Numéro de la nouvelle démarche
         replaced_by_procedure_id: Nouvelle démarche
-        closing_details: Message d'information remplaçant la démarche
+        closing_details: Message d’information remplaçant la démarche
         closing_reason: Raison de la clôture
         closing_reasons:
           other: Autre
@@ -134,7 +134,7 @@ fr:
               format: 'Le code MonAvis %{message}'
               invalid_format: "n'est pas au bon format"
               single_link_required: "doit comporter un lien"
-              forbidden_scheme: "contient un lien avec un schéma d'URL non autorisé"
+              forbidden_scheme: "contient un lien avec un schéma d’URL non autorisé"
               bad_domain_link: "contient un lien pointant vers un domaine invalide"
               single_image_required: "doit comporter une image"
               bad_domain_image: "contient une image pointont vers un domaine invalide"

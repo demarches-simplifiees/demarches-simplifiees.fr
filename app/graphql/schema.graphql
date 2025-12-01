@@ -3246,7 +3246,7 @@ type GroupeInstructeurAjouterInstructeursPayload {
 }
 
 """
-Attributs pour l’ajout d'un groupe instructeur.
+Attributs pour l’ajout d’un groupe instructeur.
 """
 input GroupeInstructeurAttributes {
   """
@@ -4037,7 +4037,7 @@ type Mutation {
   ): DossierModifierAnnotationDecimalNumberPayload @deprecated(reason: "Utilisez la mutation `dossierModifierAnnotations` à la place.")
 
   """
-  Modifier l’annotation d'un champs de type dropdown list.
+  Modifier l’annotation d’un champs de type dropdown list.
   """
   dossierModifierAnnotationDropDownList(
     """
@@ -4117,7 +4117,7 @@ type Mutation {
   ): DossierRepasserEnInstructionPayload
 
   """
-  Supprimer un label d'un dossier
+  Supprimer un label d’un dossier
   """
   dossierSupprimerLabel(
     """
@@ -4494,7 +4494,7 @@ type PoleEmploiChampDescriptor implements ChampDescriptor {
 }
 
 """
-Profil d'un usager connecté (déposant un dossier, instruisant un dossier...)
+Profil d’un usager connecté (déposant un dossier, instruisant un dossier...)
 """
 type Profile {
   """
@@ -4896,7 +4896,7 @@ type Service {
   siret: String
 
   """
-  type d'organisme qui met en oeuvre la démarche
+  type d’organisme qui met en oeuvre la démarche
   """
   typeOrganisme: TypeOrganisme!
 }

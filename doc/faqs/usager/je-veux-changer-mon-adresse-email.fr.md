@@ -37,7 +37,7 @@ La nouvelle adresse électronique ne doit pas être déjà utilisée par un comp
 
 Dans ce cas, revenez sur la page _« Profil »_, et choisissez une autre adresse électronique disponible.
 
-## Par ailleurs, si le changement d'adresse électronique depuis votre profil ne fonctionne pas, vous avez également la possibilité de transférer vos dossiers vers votre nouvelle adresse.
+## Par ailleurs, si le changement d’adresse électronique depuis votre profil ne fonctionne pas, vous avez également la possibilité de transférer vos dossiers vers votre nouvelle adresse.
 Pour savoir comment transférer des dossiers, nous vous invitons à consulter la page suivante : %{application_base_url}/faq/usager/mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder
 
 
