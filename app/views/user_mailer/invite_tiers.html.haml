@@ -1,4 +1,4 @@
-- content_for(:title, "Vérification de votre adresse électronique sur #{Current.application_name}")
+- content_for(:title, "Vérification de votre adresse électronique sur #{APPLICATION_NAME}")
 
 %p
   Bonjour,
@@ -7,7 +7,7 @@
     - if @dossier.present?
       Un dossier sur la démarche : #{@dossier.procedure.libelle} a été démarré en votre nom par #{@dossier.user.email}.
     - else
-      Un dossier a été démarré en votre nom sur #{Current.application_name}"
+      Un dossier a été démarré en votre nom sur #{APPLICATION_NAME}"
 
   %p
     Pour continuer à recevoir les mails concernant votre dossier, vous devez confirmer votre adresse électronique en cliquant sur ce bouton :

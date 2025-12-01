@@ -10,8 +10,6 @@ class InstructeurMailer < ApplicationMailer
     @email = email
     subject = "Vous avez été nommé instructeur"
 
-    configure_defaults_for_email(@email)
-
     mail(to: @email, subject: subject)
   end
 
@@ -21,8 +19,7 @@ class InstructeurMailer < ApplicationMailer
     @overview = instructeur.last_week_overview
 
     if @overview.present?
-      configure_defaults_for_user(instructeur.user)
-      mail(to: email, subject: @subject, from: Current.no_reply_email, reply_to: Current.no_reply_email)
+      mail(to: email, subject: @subject, from: NO_REPLY_EMAIL, reply_to: NO_REPLY_EMAIL)
     end
   end
 
@@ -31,18 +28,16 @@ class InstructeurMailer < ApplicationMailer
     @dossier = dossier
     subject = "#{sender.email} vous a envoyé le dossier n° #{dossier.id}"
 
-    configure_defaults_for_email(recipient.email)
     mail(to: recipient.email, subject: subject)
   end
 
   def send_login_token(instructeur, login_token, host = nil)
     @instructeur = instructeur
     @login_token = login_token
-    subject = "Connexion sécurisée à #{Current.application_name}"
+    subject = "Connexion sécurisée à #{APPLICATION_NAME}"
 
     bypass_unverified_mail_protection!
 
-    configure_defaults_for_user(instructeur.user, host)
     mail(to: instructeur.email, subject: subject)
   end
 
@@ -50,9 +45,8 @@ class InstructeurMailer < ApplicationMailer
     @instructeur = instructeur
     @renewal_token = renewal_token
     @valid_until = valid_until
-    subject = "Renouvellement de la connexion sécurisée à #{Current.application_name}"
+    subject = "Renouvellement de la connexion sécurisée à #{APPLICATION_NAME}"
 
-    configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
   end
 
@@ -60,7 +54,6 @@ class InstructeurMailer < ApplicationMailer
     @data = data
     subject = "Votre récapitualtif quotidien"
 
-    configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
   end
 
@@ -82,7 +75,6 @@ class InstructeurMailer < ApplicationMailer
 
     bypass_unverified_mail_protection!
 
-    configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
   end
 end

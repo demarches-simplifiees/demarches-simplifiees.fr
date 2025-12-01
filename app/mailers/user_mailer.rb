@@ -11,8 +11,6 @@ class UserMailer < ApplicationMailer
     @subject = "Demande de création de compte"
     @procedure = procedure
 
-    configure_defaults_for_user(user)
-
     mail(to: user.email, subject: @subject, procedure: @procedure)
   end
 
@@ -20,8 +18,6 @@ class UserMailer < ApplicationMailer
     @user = user
     @requested_email = requested_email
     @subject = "Fusion de compte"
-
-    configure_defaults_for_email(requested_email)
 
     mail(to: requested_email, subject: @subject)
   end
@@ -31,14 +27,11 @@ class UserMailer < ApplicationMailer
     @email_merge_token_created_at = email_merge_token_created_at
     @subject = "Veuillez confirmer la fusion de compte"
 
-    configure_defaults_for_email(email)
-
     mail(to: email, subject: @subject)
   end
 
   def custom_confirmation_instructions(user, token)
     @user = user
-    configure_defaults_for_user(@user)
 
     @token = token
     mail(to: @user.email, subject: 'Confirmez votre adresse électronique')
@@ -49,13 +42,11 @@ class UserMailer < ApplicationMailer
     @user = user
     subject = "Activez votre compte instructeur"
 
-    configure_defaults_for_user(user)
-
     bypass_unverified_mail_protection!
 
     mail(to: user.email,
       subject: subject,
-      reply_to: Current.contact_email)
+      reply_to: CONTACT_EMAIL)
   end
 
   def invite_tiers(user, token, dossier)
@@ -64,13 +55,11 @@ class UserMailer < ApplicationMailer
     @dossier = dossier
     subject = "Vérification de votre adresse électronique"
 
-    configure_defaults_for_user(user)
-
     bypass_unverified_mail_protection!
 
     mail(to: user.email,
       subject: subject,
-      reply_to: Current.contact_email)
+      reply_to: CONTACT_EMAIL)
   end
 
   def resend_confirmation_email(user, token)
@@ -78,13 +67,11 @@ class UserMailer < ApplicationMailer
     @user = user
     subject = "Vérification de votre adresse électronique"
 
-    configure_defaults_for_user(user)
-
     bypass_unverified_mail_protection!
 
     mail(to: user.email,
       subject: subject,
-      reply_to: Current.contact_email)
+      reply_to: CONTACT_EMAIL)
   end
 
   def invite_gestionnaire(user, reset_password_token, groupe_gestionnaire)
@@ -93,18 +80,14 @@ class UserMailer < ApplicationMailer
     @groupe_gestionnaire = groupe_gestionnaire
     subject = "Activez votre compte gestionnaire"
 
-    configure_defaults_for_user(user)
-
     bypass_unverified_mail_protection!
 
     mail(to: user.email,
       subject: subject,
-      reply_to: Current.contact_email)
+      reply_to: CONTACT_EMAIL)
   end
 
   def send_archive(administrateur_or_instructeur, procedure, archive)
-    configure_defaults_for_user(administrateur_or_instructeur.user)
-
     @archive = archive
     @procedure = procedure
     @archive_url = case administrateur_or_instructeur
@@ -126,18 +109,14 @@ class UserMailer < ApplicationMailer
     @user = user
     @subject = "Votre compte sera supprimé dans #{Expired::REMAINING_WEEKS_BEFORE_EXPIRATION} semaines"
 
-    configure_defaults_for_user(user)
-
     mail(to: user.email, subject: @subject)
   end
 
   def notify_after_closing(user, content, procedure = nil)
     @user = user
-    @subject = "Clôture d'une démarche sur #{Current.application_name}"
+    @subject = "Clôture d'une démarche sur #{APPLICATION_NAME}"
     @procedure = procedure
     @content = content
-
-    configure_defaults_for_user(user)
 
     mail(to: user.email, subject: @subject, content: @content, procedure: @procedure)
   end

@@ -37,8 +37,6 @@ class NotificationMailer < ApplicationMailer
       return
     end
 
-    configure_defaults_for_user(@dossier.user)
-
     @subject = "Votre dossier rempli par le mandataire #{@dossier.mandataire_first_name} #{@dossier.mandataire_last_name} a été mis à jour"
     @email = @dossier.individual.email
     @logo_url = procedure_logo_url(@dossier.procedure)
@@ -53,8 +51,6 @@ class NotificationMailer < ApplicationMailer
     @email = @dossier.user_email_for(:notification)
 
     @logo_url = procedure_logo_url(@dossier.procedure)
-
-    configure_defaults_for_email(@email)
 
     mail(subject: @subject, to: @email, template_name: 'send_accuse_lecture_notification')
   end
@@ -104,7 +100,6 @@ class NotificationMailer < ApplicationMailer
   def set_dossier
     @dossier = params[:dossier]
     @dossier.with_revision
-    configure_defaults_for_user(@dossier.user)
 
     if @dossier.skip_user_notification_email?
       mail.perform_deliveries = false

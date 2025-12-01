@@ -28,7 +28,6 @@ class AvisMailer < ApplicationMailer
 
       bypass_unverified_mail_protection!
 
-      configure_defaults_for_user(user)
       mail(to: email, subject: subject)
     end
   end
@@ -40,7 +39,6 @@ class AvisMailer < ApplicationMailer
       @avis = avis
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
-      configure_defaults_for_user(expert.user)
       mail(to: expert.email, subject: @subject)
     end
   end
