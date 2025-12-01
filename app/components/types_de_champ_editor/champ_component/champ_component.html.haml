@@ -70,13 +70,6 @@
                   id: dom_id(type_de_champ, :nature)
               - nature_dom_id = dom_id(type_de_champ, :nature)
               - if type_de_champ.titre_identite_nature?
-                .cell.fr-mt-2w
-                  = render Dsfr::NoticeComponent.new(state: 'info') do |c|
-                    - c.with_title do
-                      = t('.identity_notice.title')
-                    - c.with_desc do
-                      = t('.identity_notice.desc_html')
-
                 .fr-hr.fr-mt-2w
                 .cell
                   = form.label :formats_accepted, t('.identity_formats.title'), for: nature_dom_id, class: 'fake-label'
