@@ -24,7 +24,7 @@ module InitiationProcedureConcern
 
       service = Service.create(
         nom: 'Un très bon service',
-        organisme: "d'un excellent organisme",
+        organisme: "d’un excellent organisme",
         type_organisme: Service.type_organismes.fetch(:autre),
         email: 'contactez@moi.fr',
         telephone: '1234',

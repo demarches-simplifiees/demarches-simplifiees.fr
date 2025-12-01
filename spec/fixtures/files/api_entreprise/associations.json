@@ -42,7 +42,7 @@
       "commune": "Paris"
     },
     "alsace_moselle": {
-      "tribunal_instance": "Tribunal d'instance de Strasbourg",
+      "tribunal_instance": "Tribunal d’instance de Strasbourg",
       "volume": "122",
       "folio": "082",
       "date_publication_registre_association": "2019-01-01"
@@ -151,7 +151,7 @@
             "annee": "2019",
             "commisaire_aux_comptes": true,
             "montant_dons": 1000,
-            "cause_subventions": "Subventions d'investissement",
+            "cause_subventions": "Subventions d’investissement",
             "montant_subventions": 1200,
             "montant_aides_sur_3ans": 1230,
             "total_charges": 1234,

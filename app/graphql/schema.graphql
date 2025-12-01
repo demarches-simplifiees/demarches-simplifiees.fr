@@ -3134,7 +3134,7 @@ type GroupeInstructeurAjouterInstructeursPayload {
 }
 
 """
-Attributs pour l’ajout d'un groupe instructeur.
+Attributs pour l’ajout d’un groupe instructeur.
 """
 input GroupeInstructeurAttributes {
   """
@@ -3925,7 +3925,7 @@ type Mutation {
   ): DossierModifierAnnotationDecimalNumberPayload
 
   """
-  Modifier l’annotation d'un champs de type dropdown list.
+  Modifier l’annotation d’un champs de type dropdown list.
   """
   dossierModifierAnnotationDropDownList(
     """
@@ -3995,7 +3995,7 @@ type Mutation {
   ): DossierRepasserEnInstructionPayload
 
   """
-  Supprimer un label d'un dossier
+  Supprimer un label d’un dossier
   """
   dossierSupprimerLabel(
     """
@@ -4238,8 +4238,8 @@ type PersonnePhysique implements Demandeur {
   dateDeNaissance: ISO8601Date
 
   """
-  Email du bénéficiaire (dans le cas d'un dossier déposé par et pour l'usager
-  connecté, l'email est celui de l'usager connecté. Dans le cas d'un dossier
+  Email du bénéficiaire (dans le cas d’un dossier déposé par et pour l'usager
+  connecté, l'email est celui de l'usager connecté. Dans le cas d’un dossier
   déposé pour un bénéficiaire, l'email est celui du bénéficiaire, s'il a été renseigné)
   """
   email: String
@@ -4371,7 +4371,7 @@ type PoleEmploiChampDescriptor implements ChampDescriptor {
 }
 
 """
-Profil d'un usager connecté (déposant un dossier, instruisant un dossier...)
+Profil d’un usager connecté (déposant un dossier, instruisant un dossier...)
 """
 type Profile {
   """
@@ -4773,7 +4773,7 @@ type Service {
   siret: String
 
   """
-  type d'organisme qui met en oeuvre la démarche
+  type d’organisme qui met en oeuvre la démarche
   """
   typeOrganisme: TypeOrganisme!
 }

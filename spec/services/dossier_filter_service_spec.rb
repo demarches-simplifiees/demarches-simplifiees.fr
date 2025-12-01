@@ -847,7 +847,7 @@ describe DossierFilterService do
     end
 
     context 'for traitements table' do
-      let(:filter) { ["Adresse électronique d'un des agents ayant pris part a l'instruction du dossier", 'keepmail'] }
+      let(:filter) { ["Adresse électronique d’un des agents ayant pris part a l'instruction du dossier", 'keepmail'] }
 
       let!(:kept_dossier) { create(:dossier, procedure:) }
       let!(:discarded_dossier) { create(:dossier, procedure:) }
@@ -860,7 +860,7 @@ describe DossierFilterService do
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
       context 'with multiple search values' do
-        let(:filters) { [["Adresse électronique d'un des agents ayant pris part a l'instruction du dossier", 'keepmail'], ["Adresse électronique d'un des agents ayant pris part a l'instruction du dossier", 'beta.gouv.fr']] }
+        let(:filters) { [["Adresse électronique d’un des agents ayant pris part a l'instruction du dossier", 'keepmail'], ["Adresse électronique d’un des agents ayant pris part a l'instruction du dossier", 'beta.gouv.fr']] }
 
         let!(:other_kept_dossier) { create(:dossier, procedure:) }
 

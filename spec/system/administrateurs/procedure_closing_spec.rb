@@ -62,7 +62,7 @@ describe 'Closing a procedure', js: true do
 
       select('Autre')
 
-      fill_in("Message d'information remplaçant la démarche", with: "Bonjour,\nLa démarche est maintenant sur www.autre-site.fr\nCordialement")
+      fill_in("Message d’information remplaçant la démarche", with: "Bonjour,\nLa démarche est maintenant sur www.autre-site.fr\nCordialement")
 
       accept_alert do
         within('form') { click_on 'Clore la démarche' }

@@ -30,7 +30,7 @@ describe 'Referentiel API:' do
       find("#referentiel_url").fill_in(with: 'google.com')
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
 
-      expect(page).to have_content("n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
+      expect(page).to have_content("n'est pas au format d’une URL, saisissez une URL valide ex https://api_1.ext/")
       find("#referentiel_url").fill_in(with: 'https://google.com')
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
 
@@ -47,7 +47,7 @@ describe 'Referentiel API:' do
       expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
       find("#referentiel_url").fill_in(with: 'google.com')
       fill_in("Indications à fournir à l’usager concernant le format de saisie attendu", with: "focusout")
-      expect(page).to have_content("Le champ « URL de l'API » n'est pas au format d'une URL, saisissez une URL valide ex https://api_1.ext/")
+      expect(page).to have_content("Le champ « URL de l'API » n'est pas au format d’une URL, saisissez une URL valide ex https://api_1.ext/")
       expect(page).to have_unchecked_field("Ajouter une méthode d’authentification")
     end
   end

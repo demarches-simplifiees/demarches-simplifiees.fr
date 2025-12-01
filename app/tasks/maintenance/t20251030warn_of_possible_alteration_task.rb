@@ -2,7 +2,7 @@
 
 module Maintenance
   class T20251030warnOfPossibleAlterationTask < MaintenanceTasks::Task
-    # Tache pour notifier les instructeurs d'une altération des dossiers entre le 22 et 31 octobre 2025
+    # Tache pour notifier les instructeurs d’une altération des dossiers entre le 22 et 31 octobre 2025
 
     include RunnableOnDeployConcern
     include StatementsHelpersConcern

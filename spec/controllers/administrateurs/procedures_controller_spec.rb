@@ -330,7 +330,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     context 'with libelle search' do
       let!(:procedure1) { create(:procedure, :published, libelle: 'Demande de subvention') }
-      let!(:procedure2) { create(:procedure, :published, libelle: "Fonds d'aide public « Prime Entrepreneurs des Quartiers »") }
+      let!(:procedure2) { create(:procedure, :published, libelle: "Fonds d’aide public « Prime Entrepreneurs des Quartiers »") }
       let!(:procedure3) { create(:procedure, :published, libelle: "Hackaton pour entrepreneurs en résidence") }
 
       it 'returns procedures with specific terms in libelle' do
@@ -1135,7 +1135,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
     it 'redirects to admin procedures' do
       expect { subject }.to have_enqueued_job(SendClosingNotificationJob).with(user_ids, email_content, procedure_closed)
-      expect(flash.notice).to eq("Les emails sont en cours d'envoi")
+      expect(flash.notice).to eq("Les emails sont en cours d’envoi")
       expect(response).to redirect_to :admin_procedures
     end
   end

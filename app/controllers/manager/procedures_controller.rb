@@ -83,7 +83,7 @@ module Manager
           end
         end
         if procedure.groupe_instructeurs.many?
-          notices.push "L'instructeur #{instructeur.email} a été ajouté aux #{procedure.groupe_instructeurs.count} groupes d'instructeurs."
+          notices.push "L'instructeur #{instructeur.email} a été ajouté aux #{procedure.groupe_instructeurs.count} groupes d’instructeurs."
         else
           notices.push "L'instructeur #{instructeur.email} a été ajouté à la démarche."
         end

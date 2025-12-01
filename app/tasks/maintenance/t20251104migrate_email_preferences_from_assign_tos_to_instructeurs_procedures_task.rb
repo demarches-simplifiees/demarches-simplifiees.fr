@@ -2,7 +2,7 @@
 
 module Maintenance
   class T20251104migrateEmailPreferencesFromAssignTosToInstructeursProceduresTask < MaintenanceTasks::Task
-    # Documentation: cette tâche permet d'injecter dans la table instructeurs_procedures
+    # Documentation: cette tâche permet d’injecter dans la table instructeurs_procedures
     # les préférences email des instructeurs depuis la table assign_tos.
     # On s'intéresse ici uniquement aux emails dont la valeur par défaut est false,
     # c'est à dire tous sauf le récapitualtif hebdo car on vient dans cette PR#

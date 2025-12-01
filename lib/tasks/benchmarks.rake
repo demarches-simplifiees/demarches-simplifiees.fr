@@ -73,14 +73,14 @@ namespace :benchmarks do
   #
   #    rake benchmarks:action[Instructeurs::ProceduresController,index,index_main]
   #
-  # 4b. Pour comparer l'implémentation d'une même action sur 2 branches,
-  #     exécuter sur chacune d'entre elle :
+  # 4b. Pour comparer l'implémentation d’une même action sur 2 branches,
+  #     exécuter sur chacune d’entre elle :
   #
   #     rake benchmarks:action[Instructeurs::ProceduresController,index,index]
   #
   #     Attention : penser à refaire les étapes 1 et 2 sur la seconde branche !
   #
-  # 5.  Pour passer des paramètres d'urls, utiliser la variable d'environnement `PARAMS`
+  # 5.  Pour passer des paramètres d’urls, utiliser la variable d’environnement `PARAMS`
   #     sous forme key=value, séparables par des virgules :
   #
   #     rake benchmarks:action[Users::CommencerController,commencer,commencer] PARAMS=path=my-demarche,other=value

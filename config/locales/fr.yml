@@ -146,25 +146,25 @@ fr:
           <ul>
             <li>Sur la combinaison Chrome / TalkBack, le focus n'est pas capturé dans les modales.
               <br><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
-            <li>Sur le formulaire d'une démarche, l'intitulé du bouton permettant d'afficher la suite des erreurs n'est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
-            <li>Le bouton d'action de la combobox <em>Adresse postale</em> n'a pas d'étiquette.</li>
-            <li>Le bouton d'action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d'attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
+            <li>Sur le formulaire d’une démarche, l'intitulé du bouton permettant d’afficher la suite des erreurs n'est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
+            <li>Le bouton d’action de la combobox <em>Adresse postale</em> n'a pas d’étiquette.</li>
+            <li>Le bouton d’action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d’attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
           </ul>
           <h4>Certains messages de statut ne sont pas correctement restitués par les technologies d’assistance</h4>
           <ul>
-            <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l'erreur ne soit restituée aux technologies d'assistance.</li>
-            <li>Sur le formulaire d'une démarche, la progression du téléversement d'une pièce jointe (et le message d'échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
-            <li>Sur le formulaire d'une démarche, le message d'échec de l'enregistrement automatique n'est pas restitué aux technologies d’assistance.</li>
+            <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l'erreur ne soit restituée aux technologies d’assistance.</li>
+            <li>Sur le formulaire d’une démarche, la progression du téléversement d’une pièce jointe (et le message d’échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
+            <li>Sur le formulaire d’une démarche, le message d’échec de l'enregistrement automatique n'est pas restitué aux technologies d’assistance.</li>
           </ul>
           <h4>Certaines prises de focus sont altérées</h4>
           <ul>
             <li>Sur la FAQ, la visibilité de la prise de focus est altérée sur les boutons du sommaire.
             <br><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
-            <li>En version mobile, sur les pages d'une démarche, la visibilité de la prise de focus du lien de retour aux dossiers (ou à la page d'accueil) est altérée.</li>
-            <li>En version mobile, sur le formulaire d'une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
+            <li>En version mobile, sur les pages d’une démarche, la visibilité de la prise de focus du lien de retour aux dossiers (ou à la page d’accueil) est altérée.</li>
+            <li>En version mobile, sur le formulaire d’une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
           </ul>
           <h4>Certains documents PDF ne sont pas accessibles</h4>
-          <p>Sur les pages d'une démarche, le document PDF de dématérialisation de la démarche n'est pas accessible.</p>"
+          <p>Sur les pages d’une démarche, le document PDF de dématérialisation de la démarche n'est pas accessible.</p>"
         subtitle_two: "Contenus exemptés"
         exemption_html: "<p class=\"fr-mb-2w\">Les documents PDF, accessibles via le lien <em>Texte cadrant la demande d’information</em> présent dans le pied de pages de chaque démarche, sont fournis par l'administration en charge de la démarche.</p>"
         subtitle_three: "Remarques complémentaires"
@@ -207,9 +207,9 @@ fr:
         page_nine: "Authentification"
         page_ten: "Mot de passe oublié"
         page_ten_url: "/users/password/new"
-        page_eleven: "Création d'un dossier - Identité"
-        page_twelve: "Création d'un dossier - Brouillon"
-        page_thirteen: "Création d'un dossier - Confirmation d'envoi"
+        page_eleven: "Création d’un dossier - Identité"
+        page_twelve: "Création d’un dossier - Brouillon"
+        page_thirteen: "Création d’un dossier - Confirmation d’envoi"
         page_note_html: "La démarche <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l'audit."
       contact:
         title: "Retour d’information et contact"
@@ -341,7 +341,7 @@ fr:
       create:
         success: "Une invitation a été envoyée à %{email}. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
       destroy:
-        success: "L'autorisation de %{email} vient d'être révoquée. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
+        success: "L'autorisation de %{email} vient d’être révoquée. Vous pouvez <a href=\"#\" class=\"fr-link fr-text--sm\" aria-controls=\"dossier-invites-modal-dialog\" data-fr-opened=\"false\" data-fr-js-modal-button=\"true\">inviter une autre personne</a>."
         error: "Vous ne pouvez pas révoquer cette autorisation"
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier

@@ -9,11 +9,11 @@ fr:
     other: "%{count} dossiers en cours de traitement portent ce champ. Les <strong>données</strong> associées avec ce champ seront <strong>supprimées</strong>."
   add_option: "ajoutés : %{items}"
   remove_option: "supprimés : %{items}"
-  invalid_routing_rules_alert: "Certains groupes d'instructeurs ont une règle de routage invalide. Veuillez mettre à jour la configuration des groupes d'instructeurs après avoir publié les modifications."
+  invalid_routing_rules_alert: "Certains groupes d’instructeurs ont une règle de routage invalide. Veuillez mettre à jour la configuration des groupes d’instructeurs après avoir publié les modifications."
 
   update_referentiel: &update_referentiel
     referentiel_url: "L'URL de l'API du champ « %{label} » a été modifiée. La nouvelle URL est « %{to} »."
-    referentiel_mode: "Le mode d'intérogation du référentiel du champ « %{label} » a été modifié. Le nouveau mode est « %{to} »."
+    referentiel_mode: "Le mode d’intérogation du référentiel du champ « %{label} » a été modifié. Le nouveau mode est « %{to} »."
     referentiel_hint: "L'indication à fournir à l'usager concernant le format de saisie attendu du champ « %{label} » a été modifiée. La nouvelle indication est « %{to} »."
     referentiel_test_data: "L'exemple de saisie valide du champ « %{label} » a été modifié. Le nouvel exemple est « %{to} »."
     referentiel_mapping: "Le mapping des données entre le champ et l'API du champ « %{label} » a été modifié."
@@ -35,7 +35,7 @@ fr:
     update_nature: La nature de pièce justificative « %{label} » a été modifiée en « %{to} ».
     update_notice_explicative: La notice explicative du champ « %{label} » a été modifiée.
     update_drop_down_options: "Les options de sélection du champ « %{label} » ont été modifiées :"
-    update_drop_down_options_alert: "Le champ « %{label} » est utilisé pour le routage des dossiers. Veuillez mettre à jour la configuration des groupes d'instructeurs après avoir publié les modifications."
+    update_drop_down_options_alert: "Le champ « %{label} » est utilisé pour le routage des dossiers. Veuillez mettre à jour la configuration des groupes d’instructeurs après avoir publié les modifications."
     enable_mandatory: Le champ « %{label} » est maintenant obligatoire.
     disable_mandatory: Le champ « %{label} » n’est plus obligatoire.
     enable_drop_down_other: Le champ « %{label} » comporte maintenant un choix « Autre ».

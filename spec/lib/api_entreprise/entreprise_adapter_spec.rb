@@ -27,7 +27,7 @@ describe APIEntreprise::EntrepriseAdapter do
       end
 
       it 'L\'entreprise contient bien une forme_juridique' do
-        expect(subject[:entreprise_forme_juridique]).to eq("Service central d'un ministère")
+        expect(subject[:entreprise_forme_juridique]).to eq("Service central d’un ministère")
       end
 
       it 'L\'entreprise contient bien un forme_juridique_code' do

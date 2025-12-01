@@ -9,7 +9,7 @@ fr:
         demande_revoquee_le: "Demande d’avis révoquée le %{date}"
         relance_effectuee_le: "Relance effectuée le %{date}"
         reponse_donnee_le: "Réponse donnée le %{date}"
-        en_attente: "En attente d'avis"
+        en_attente: "En attente d’avis"
         avis_non_rendu: "Avis non rendu"
       france_connect_login:
         title: 'Se créer un compte avec FranceConnect'

@@ -7,7 +7,7 @@ class PhishingAlertMailer < ApplicationMailer
 
   def notify(user)
     @user = user
-    @subject = "Détection d'une possible usurpation de votre compte"
+    @subject = "Détection d’une possible usurpation de votre compte"
 
     configure_defaults_for_user(user)
 
