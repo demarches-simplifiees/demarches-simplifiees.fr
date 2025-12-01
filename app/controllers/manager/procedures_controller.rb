@@ -173,7 +173,7 @@ module Manager
         end
       end
       message =  "Import des tags terminé."
-      message += " Ces démarches n'existent pas : #{invalid_ids.to_sentence}" if invalid_ids.any?
+      message += " Ces démarches n’existent pas : #{invalid_ids.to_sentence}" if invalid_ids.any?
       flash.notice = message
       redirect_to manager_administrateurs_path
     end

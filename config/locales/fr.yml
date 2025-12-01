@@ -144,17 +144,17 @@ fr:
         examples_html: "
           <h4>Certains scripts ne sont pas compatibles avec les technologies d’assistance</h4>
           <ul>
-            <li>Sur la combinaison Chrome / TalkBack, le focus n'est pas capturé dans les modales.
+            <li>Sur la combinaison Chrome / TalkBack, le focus n’est pas capturé dans les modales.
               <br><a href=\"https://github.com/GouvernementFR/dsfr/issues/967\">Un ticket a été ouvert à ce sujet auprès du DSFR</a>.</li>
-            <li>Sur le formulaire d’une démarche, l’intitulé du bouton permettant d’afficher la suite des erreurs n'est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
-            <li>Le bouton d’action de la combobox <em>Adresse postale</em> n'a pas d’étiquette.</li>
+            <li>Sur le formulaire d’une démarche, l’intitulé du bouton permettant d’afficher la suite des erreurs n’est pas pertinent. De plus, une fois activé, le focus reste sur le bouton.</li>
+            <li>Le bouton d’action de la combobox <em>Adresse postale</em> n’a pas d’étiquette.</li>
             <li>Le bouton d’action des panneaux <em>Inviter une personne à modifier ce dossier</em> et <em>Identité du demandeur</em> sont dotés d’attributs conflictuels (<code>aria-expanded</code> et <code>aria-haspopup</code>).</li>
           </ul>
           <h4>Certains messages de statut ne sont pas correctement restitués par les technologies d’assistance</h4>
           <ul>
             <li>Sur la page de création de compte, lorsque le formulaire soumis est en erreur, la page se recharge sans que l’erreur ne soit restituée aux technologies d’assistance.</li>
             <li>Sur le formulaire d’une démarche, la progression du téléversement d’une pièce jointe (et le message d’échec, le cas échéant) ne sont pas restitués aux technologies d’assistance.</li>
-            <li>Sur le formulaire d’une démarche, le message d’échec de l’enregistrement automatique n'est pas restitué aux technologies d’assistance.</li>
+            <li>Sur le formulaire d’une démarche, le message d’échec de l’enregistrement automatique n’est pas restitué aux technologies d’assistance.</li>
           </ul>
           <h4>Certaines prises de focus sont altérées</h4>
           <ul>
@@ -164,7 +164,7 @@ fr:
             <li>En version mobile, sur le formulaire d’une démarche, lorsque le panneau <em>Inviter une personne à modifier ce dossier</em> est ouvert, il masque la prise de focus des champs suivants.</li>
           </ul>
           <h4>Certains documents PDF ne sont pas accessibles</h4>
-          <p>Sur les pages d’une démarche, le document PDF de dématérialisation de la démarche n'est pas accessible.</p>"
+          <p>Sur les pages d’une démarche, le document PDF de dématérialisation de la démarche n’est pas accessible.</p>"
         subtitle_two: "Contenus exemptés"
         exemption_html: "<p class=\"fr-mb-2w\">Les documents PDF, accessibles via le lien <em>Texte cadrant la demande d’information</em> présent dans le pied de pages de chaque démarche, sont fournis par l’administration en charge de la démarche.</p>"
         subtitle_three: "Remarques complémentaires"
@@ -811,7 +811,7 @@ fr:
     messages:
       saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
-      # dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
+      # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
       procedure_not_found: "La démarche n’existe pas"
       pro_connect:
@@ -967,7 +967,7 @@ fr:
       show_in_trash:
         page_title: "Dossier n° %{numero} - En corbeille"
         title: "Le dossier n° %{numero} a été mis à la corbeille"
-        explanation_html: "Vous pouvez retrouver ce dossier depuis l’onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n'est pas consultable actuellement."
+        explanation_html: "Vous pouvez retrouver ce dossier depuis l’onglet <a href=\"%{trash_link}\" class=\"fr-link\">corbeille</a> de votre compte.<br>Il n’est pas consultable actuellement."
         consult_trash: "Consulter la corbeille"
         user_request_info_without_if: "Ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."
         user_request_info: "Si ce dossier a été mis à la corbeille à votre demande :<br>Vous pouvez encore le <strong>restaurer</strong>."

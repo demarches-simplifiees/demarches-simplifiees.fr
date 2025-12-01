@@ -30,7 +30,7 @@ describe Instructeurs::RdvConnectionsController, type: :controller do
     it do
       expect { rdv_connection.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect(flash.alert).to be_nil
-      expect(flash.notice).to eq("Votre compte Démarches Simplifiées n'est plus connecté à RDV Service Public.")
+      expect(flash.notice).to eq("Votre compte Démarches Simplifiées n’est plus connecté à RDV Service Public.")
       expect(response).to redirect_to(profil_path)
     end
   end

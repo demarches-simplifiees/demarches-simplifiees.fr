@@ -41,7 +41,7 @@ class Users::ActivateController < ApplicationController
       flash[:notice] = 'Votre adresse électronique a bien été vérifié'
     else
       if user.present?
-        flash[:alert] = "Ce lien n'est plus valable, un nouveau lien a été envoyé à l’adresse #{user.email}"
+        flash[:alert] = "Ce lien n’est plus valable, un nouveau lien a été envoyé à l’adresse #{user.email}"
         user.resend_confirmation_email!
       else
         flash[:alert] = "Un problème est survenu, vous pouvez nous contacter sur #{Current.contact_email}"

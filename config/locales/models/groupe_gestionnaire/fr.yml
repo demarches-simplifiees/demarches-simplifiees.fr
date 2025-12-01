@@ -18,5 +18,5 @@ fr:
       one: "%{emails} n’est pas une adresse électronique valide"
       other: "%{emails} ne sont pas des adresses électroniques valides"
     not_found:
-      one: "%{emails} n'a pas encore de compte."
-      other: "%{emails} n'ont pas encore de compte."
+      one: "%{emails} n’a pas encore de compte."
+      other: "%{emails} n’ont pas encore de compte."

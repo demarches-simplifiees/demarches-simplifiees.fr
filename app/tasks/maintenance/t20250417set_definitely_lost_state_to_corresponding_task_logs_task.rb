@@ -3,7 +3,7 @@
 module Maintenance
   class T20250417setDefinitelyLostStateToCorrespondingTaskLogsTask < MaintenanceTasks::Task
     # Ce script est utilisé pour mettre à jour l’état des TaskLogs
-    # correspondant aux blobs qui ont été supprimés et qui n'ont pas pu être récupérés
+    # correspondant aux blobs qui ont été supprimés et qui n’ont pas pu être récupérés
     # depuis le backup.
 
     csv_collection(headers: ['blob_key'])

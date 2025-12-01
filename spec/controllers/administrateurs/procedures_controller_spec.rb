@@ -1379,7 +1379,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         it 'fails to update the path' do
           perform_request
           expect(response).to redirect_to(admin_procedure_path_path(procedure))
-          expect(flash[:alert]).to eq("Cette URL de démarche n'est pas disponible")
+          expect(flash[:alert]).to eq("Cette URL de démarche n’est pas disponible")
           expect(procedure.reload.path).not_to eq(path)
         end
       end
@@ -1516,7 +1516,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it {
           expect { perform_request }.not_to change { procedure.reload.updated_at }
-          expect(flash[:alert]).to have_content "Le champ « Lien public » n'est pas valide"
+          expect(flash[:alert]).to have_content "Le champ « Lien public » n’est pas valide"
         }
       end
 
@@ -1752,7 +1752,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it do
           expect(procedure.reload.pro_connect_restriction_none?).to be true
-          expect(flash.notice).to eq("La démarche n'est plus restreinte à ProConnect")
+          expect(flash.notice).to eq("La démarche n’est plus restreinte à ProConnect")
           expect(response).to redirect_to(pro_connect_restricted_admin_procedure_path(procedure))
         end
       end

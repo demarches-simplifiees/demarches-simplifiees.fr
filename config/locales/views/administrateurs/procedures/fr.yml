@@ -68,7 +68,7 @@ fr:
         dpd_title: Avant de publier
         dpd_part_1: Avez-vous bien pensé à informer votre Délégué à la Protection des Données personnelles (DPD).
         dpd_part_2: Si votre démarche propose de collecter des données personnelles, vous devez informer votre DPD. Chaque organisme en a un.
-        dpd_part_3: "Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger sur les données collectées, et sur la pertinence de ces dernières. N'oubliez pas : toutes les démarches qui contiennent des données personnelles doivent être consignées dans un registre des traitements :"
+        dpd_part_3: "Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger sur les données collectées, et sur la pertinence de ces dernières. N’oubliez pas : toutes les démarches qui contiennent des données personnelles doivent être consignées dans un registre des traitements :"
         dpd_part_4: Comment faire ? Vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
         back_to_procedure: 'Annuler et revenir à la page de la démarche'
         submit: Publier

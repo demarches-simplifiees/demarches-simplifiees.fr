@@ -92,7 +92,7 @@ fr:
   unfollow:
     finish:
       text_success:
-        one: "%{success_count}/1 dossier n'est plus suivi"
+        one: "%{success_count}/1 dossier n’est plus suivi"
         other: "%{success_count}/%{count} dossiers ne sont plus suivis"
     in_progress:
       text_success:

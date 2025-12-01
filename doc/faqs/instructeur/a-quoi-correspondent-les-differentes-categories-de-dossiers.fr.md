@@ -13,7 +13,7 @@ Pour chaque démarche, les dossiers sont répartis dans plusieurs onglets :
 
 - L’onglet **« à suivre »** contient l’ensemble des dossiers qui ne sont suivis par aucun instructeur. Pour s’affecter le dossier, il suffit de cliquer sur « Suivre » le dossier.
 
-- L’onglet **« suivis par moi »** contient les dossiers que vous suivez. Lorsque vous (ou un autre instructeur) suivez un dossier, ce dossier n'apparaît plus dans les dossiers « à suivre ». Vous pouvez échanger avec le demandeur jusqu’à pouvoir accepter, refuser classer sans suite son dossier.
+- L’onglet **« suivis par moi »** contient les dossiers que vous suivez. Lorsque vous (ou un autre instructeur) suivez un dossier, ce dossier n’apparaît plus dans les dossiers « à suivre ». Vous pouvez échanger avec le demandeur jusqu’à pouvoir accepter, refuser classer sans suite son dossier.
 
 - L’onglet **« traités »** contient les dossiers sur lesquels un ou plusieurs instructeurs ont statué et apporté une décision (accepté, refusé ou classé sans suite).
 

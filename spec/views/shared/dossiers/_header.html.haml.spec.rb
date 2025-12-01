@@ -45,7 +45,7 @@ describe 'dossiers/show/header', type: :view do
         create(:invite, user: user, dossier: dossier)
       end
 
-      it "n'affiche pas de banner" do
+      it "n’affiche pas de banner" do
         expect(rendered).not_to have_text("La démarche liée à votre dossier est close")
       end
 

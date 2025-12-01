@@ -363,7 +363,7 @@ module Instructeurs
       if errors.empty?
         flash[:notice] = "Tous les messages ont été envoyés avec succès"
       else
-        flash[:alert] = "Envoi terminé. Cependant #{errors.count} messages n'ont pas été envoyés"
+        flash[:alert] = "Envoi terminé. Cependant #{errors.count} messages n’ont pas été envoyés"
       end
       redirect_to instructeur_procedure_path(@procedure)
     end
