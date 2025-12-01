@@ -140,7 +140,7 @@ describe 'Instructing a dossier:', js: true do
     click_on "Télécharger un dossier"
     within(:css, '#tabpanel-standard1-panel') do
       choose "Fichier csv", allow_label_click: true
-      click_on "Demander l'export"
+      click_on "Demander l’export"
     end
 
     expect(page).to have_text('Nous générons cet export.')

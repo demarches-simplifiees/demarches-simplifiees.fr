@@ -2,7 +2,7 @@
 
 module Maintenance
   class T20250415removeMisplacedAutodestructionHeaderTask < MaintenanceTasks::Task
-    # Un bug s'est glissé dans le DelayedPurgeJob : il supprime les fichiers sur le storage
+    # Un bug s’est glissé dans le DelayedPurgeJob : il supprime les fichiers sur le storage
     # OpenStack même si le blob est toujours attaché à un enregistrement.
     # C'est le cas par exemple des fichiers partagés entre dossiers ou procédures clonés.
     #

@@ -103,7 +103,7 @@ module Instructeurs
 
     def update_order_positions
       InstructeursProcedure.update_instructeur_procedures_positions(current_instructeur, ordered_procedure_ids_params)
-      redirect_to instructeur_procedures_path, notice: "L'ordre des démarches a été mis à jour."
+      redirect_to instructeur_procedures_path, notice: "L’ordre des démarches a été mis à jour."
     end
 
     def select_procedure

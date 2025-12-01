@@ -15,7 +15,7 @@ module ApplicationController::MigrateCsrfToken
       legacy_token = cookies.signed[:_csrf_token]
       return if legacy_token.blank?
 
-      # Réutilise l'ancien token dans le nouveau format Rails 7.1
+      # Réutilise l’ancien token dans le nouveau format Rails 7.1
       self.csrf_token_storage_strategy.store(request, legacy_token)
     end
   end

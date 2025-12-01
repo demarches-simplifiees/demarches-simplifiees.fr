@@ -105,7 +105,7 @@ module Instructeurs
     end
 
     def personnes_impliquees
-      # sort following_instructeurs (last follower on top) for the API of Agence de l'Eau Loire-Bretagne
+      # sort following_instructeurs (last follower on top) for the API of Agence de l’Eau Loire-Bretagne
       @following_instructeurs_emails = dossier.followers_instructeurs.joins(:follows).merge(Follow.order(id: :desc)).map(&:email)
       previous_followers = dossier.previous_followers_instructeurs - dossier.followers_instructeurs
       @previous_following_instructeurs_emails = previous_followers.map(&:email)

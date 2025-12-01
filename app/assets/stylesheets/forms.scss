@@ -229,9 +229,9 @@
   .fr-label .fr-hint-text,
   .fr-label + .fr-hint-text {
     clear: right;
-    // Évite (en version mobile) que les premiers mots de l'aide
-    // ne remontent en vis à vis de l'encart
-    // "champ actualisé par l'administration", lorsqu'il est présent
+    // Évite (en version mobile) que les premiers mots de l’aide
+    // ne remontent en vis à vis de l’encart
+    // "champ actualisé par l’administration", lorsqu'il est présent
   }
 
   .fr-label + .fr-hint-text > *,
@@ -445,7 +445,7 @@
       color: var(--text-disabled-grey);
     }
     .address-ban .fr-ds-combobox .fr-autocomplete {
-      opacity: 0.5; // Réduit l'opacité de l'icône droite en background. L'input étant autant disabled, cette opacité s'ajoute à celle du disabled
+      opacity: 0.5; // Réduit l’opacité de l’icône droite en background. L’input étant autant disabled, cette opacité s’ajoute à celle du disabled
     }
   }
 

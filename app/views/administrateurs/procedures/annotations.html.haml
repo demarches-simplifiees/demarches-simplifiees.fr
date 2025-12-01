@@ -7,7 +7,7 @@
   .flex.justify-between.align-center.fr-mb-3w
     %h1.fr-h2 Annotations privées
     - if @procedure.revised?
-      = link_to "Voir l'historique des modifications des annotations", modifications_admin_procedure_path(@procedure), class: 'fr-link'
+      = link_to "Voir l’historique des modifications des annotations", modifications_admin_procedure_path(@procedure), class: 'fr-link'
 
   = render  NestedForms::FormOwnerComponent.new
   .fr-grid-row

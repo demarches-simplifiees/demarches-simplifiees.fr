@@ -34,7 +34,7 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
   end
 
   def destroy_button
-    button_to "Révoquer l'accès administrateur",
+    button_to "Révoquer l’accès administrateur",
       gestionnaire_groupe_gestionnaire_administrateur_path(@groupe_gestionnaire, @administrateur),
       method: :delete,
       disabled: !@administrateur.can_be_deleted?,

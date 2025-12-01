@@ -14,7 +14,7 @@ describe 'dossiers/show/header', type: :view do
   context "when the procedure is discarded with a dossier en brouillon" do
     it 'affiche que la démarche est supprimée' do
       expect(rendered).to have_text("La démarche liée à votre dossier est supprimée")
-      expect(rendered).to have_text("Vous pouvez toujours consulter votre dossier, mais il ne sera pas traité par l'administration")
+      expect(rendered).to have_text("Vous pouvez toujours consulter votre dossier, mais il ne sera pas traité par l’administration")
     end
 
     it 'cannot download the dossier' do
@@ -27,7 +27,7 @@ describe 'dossiers/show/header', type: :view do
 
     it 'affiche que la démarche est close' do
       expect(rendered).to have_text("La démarche liée à votre dossier est close")
-      expect(rendered).to have_text("Vous pouvez toujours consulter votre dossier, mais il ne sera pas traité par l'administration")
+      expect(rendered).to have_text("Vous pouvez toujours consulter votre dossier, mais il ne sera pas traité par l’administration")
     end
 
     it 'cannot download the dossier' do

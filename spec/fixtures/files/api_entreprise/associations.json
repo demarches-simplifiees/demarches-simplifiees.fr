@@ -54,7 +54,7 @@
         "siret": "12345678901234",
         "telephone": "0123456789",
         "courriel": "reseau@association.fr",
-        "objet": "Promouvoir l'engagement des parents d'élèves dans l'éducation de leurs enfants",
+        "objet": "Promouvoir l’engagement des parents d'élèves dans l'éducation de leurs enfants",
         "adresse": {
           "complement": "",
           "numero_voie": "33",
@@ -74,12 +74,12 @@
         "date_attribution": "2018-11-05",
         "type": "Formation",
         "niveau": "local",
-        "attributeur": "Ministère de l'Education nationale",
+        "attributeur": "Ministère de l’Education nationale",
         "url": "https://associations.api.gouv.fr/agrements/05.11.2018.pdf"
       }
     ],
     "activites": {
-      "objet": "L'association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.",
+      "objet": "L’association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.",
       "objet_social1": {
         "code": "017055",
         "libelle": "accompagnement, aide aux malades"
