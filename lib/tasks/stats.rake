@@ -138,7 +138,7 @@ namespace :stats do
     declarative_accepte_procedures = base_scope.where(declarative_with_state: 'accepte')
     add_procedure_stat(stats, "Démarches déclaratives (accepté)", declarative_accepte_procedures, total_procedures, total_dossiers_all_procedures)
 
-    # 13. Date de clôture renseignée à l'avance
+    # 13. Date de clôture renseignée à l’avance
     auto_archive_procedures = base_scope.where.not(auto_archive_on: nil)
     add_procedure_stat(stats, "Date de clôture programmée", auto_archive_procedures, total_procedures, total_dossiers_all_procedures)
 

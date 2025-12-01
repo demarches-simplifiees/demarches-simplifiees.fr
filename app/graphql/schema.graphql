@@ -84,7 +84,7 @@ type AddressChamp implements Champ {
   address: Address
 
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -283,7 +283,7 @@ type COJOChampDescriptor implements ChampDescriptor {
 
 type CarteChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -343,7 +343,7 @@ type CarteChampDescriptor implements ChampDescriptor {
 
 interface Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -402,7 +402,7 @@ interface ChampDescriptor {
 
 type CheckboxChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -491,7 +491,7 @@ enum Civilite {
 
 type CiviliteChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -610,7 +610,7 @@ type Commune {
 
 type CommuneChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -761,7 +761,7 @@ type CreateDirectUploadPayload {
 
 type DateChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -860,7 +860,7 @@ type DateTimeColumn implements Column {
 
 type DatetimeChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -939,7 +939,7 @@ type DecimalColumn implements Column {
 
 type DecimalNumberChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -1461,7 +1461,7 @@ type Departement {
 
 type DepartementChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -1697,7 +1697,7 @@ type Dossier {
   traitements: [Traitement!]!
 
   """
-  Profil de l'usager déposant le dossier
+  Profil de l’usager déposant le dossier
   """
   usager: Profile!
 }
@@ -2024,7 +2024,7 @@ type DossierEnvoyerMessagePayload {
 
 type DossierLinkChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -2621,7 +2621,7 @@ type DossierSupprimerMessagePayload {
 
 type DropDownListChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -2729,7 +2729,7 @@ type EngagementJuridique {
 
 type EngagementJuridiqueChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -2741,7 +2741,7 @@ type EngagementJuridiqueChamp implements Champ {
   columns: [Column!]!
 
   """
-  Montant engagé et payé de l'EJ.
+  Montant engagé et payé de l’EJ.
   """
   engagementJuridique: EngagementJuridique
   id: ID!
@@ -2827,12 +2827,12 @@ type Entreprise {
 
 enum EntrepriseEtatAdministratif {
   """
-  L'entreprise est en activité
+  L’entreprise est en activité
   """
   Actif
 
   """
-  L'entreprise a cessé son activité
+  L’entreprise a cessé son activité
   """
   Ferme
 }
@@ -2874,7 +2874,7 @@ type Epci {
 
 type EpciChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -2935,7 +2935,7 @@ type EpciChampDescriptor implements ChampDescriptor {
 
 type ExplicationChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -3414,7 +3414,7 @@ type GroupeInstructeurWithDossiers {
 
 type HeaderSectionChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -3528,7 +3528,7 @@ type IntegerColumn implements Column {
 
 type IntegerNumberChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -3613,7 +3613,7 @@ enum LabelColorEnum {
 
 type LinkedDropDownListChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -3718,7 +3718,7 @@ type Message {
 
 type MultipleDropDownListChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -3869,7 +3869,7 @@ type Mutation {
   ): DossierDesarchiverPayload
 
   """
-  Envoyer un message à l'usager du dossier.
+  Envoyer un message à l’usager du dossier.
   """
   dossierEnvoyerMessage(
     """
@@ -4146,7 +4146,7 @@ type Pays {
 
 type PaysChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4238,9 +4238,9 @@ type PersonnePhysique implements Demandeur {
   dateDeNaissance: ISO8601Date
 
   """
-  Email du bénéficiaire (dans le cas d’un dossier déposé par et pour l'usager
-  connecté, l'email est celui de l'usager connecté. Dans le cas d’un dossier
-  déposé pour un bénéficiaire, l'email est celui du bénéficiaire, s'il a été renseigné)
+  Email du bénéficiaire (dans le cas d’un dossier déposé par et pour l’usager
+  connecté, l’email est celui de l’usager connecté. Dans le cas d’un dossier
+  déposé pour un bénéficiaire, l’email est celui du bénéficiaire, s’il a été renseigné)
   """
   email: String
   id: ID!
@@ -4278,7 +4278,7 @@ type PhoneChampDescriptor implements ChampDescriptor {
 
 type PieceJustificativeChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4375,7 +4375,7 @@ Profil d’un usager connecté (déposant un dossier, instruisant un dossier...)
 """
 type Profile {
   """
-  Email de l'usager
+  Email de l’usager
   """
   email: String!
   id: ID!
@@ -4439,7 +4439,7 @@ type RNA {
 
 type RNAChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4507,7 +4507,7 @@ type RNF {
 
 type RNFChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4602,7 +4602,7 @@ type Region {
 
 type RegionChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4667,7 +4667,7 @@ type RegionChampDescriptor implements ChampDescriptor {
 
 type RepetitionChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
   champs: [Champ!]! @deprecated(reason: "Utilisez le champ `rows` à la place.")
@@ -4763,7 +4763,7 @@ type Service {
   nom: String!
 
   """
-  nom de l'organisme qui met en oeuvre la démarche
+  nom de l’organisme qui met en oeuvre la démarche
   """
   organisme: String!
 
@@ -4780,7 +4780,7 @@ type Service {
 
 type SiretChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4840,7 +4840,7 @@ type SiretChampDescriptor implements ChampDescriptor {
 
 type TextChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -4943,7 +4943,7 @@ type TextareaChampDescriptor implements ChampDescriptor {
 
 type TitreIdentiteChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 
@@ -5357,7 +5357,7 @@ type WarningMessage {
 
 type YesNoChamp implements Champ {
   """
-  L'identifiant du champDescriptor de ce champ
+  L’identifiant du champDescriptor de ce champ
   """
   champDescriptorId: String!
 

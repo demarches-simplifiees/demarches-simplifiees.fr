@@ -8,7 +8,7 @@ fr:
         file_messagerie: messagerie du dossier
         procedure_management: "Cette démarche est gérée par :"
         ask_question: "Une question sur votre dossier ?"
-        email_sent_to: "Cet email a été envoyé à l'adresse :"
+        email_sent_to: "Cet email a été envoyé à l’adresse :"
         by_messagerie: "Messagerie du dossier :"
         by_messagerie_link: envoyez directement un message à l’instructeur
         by_contact_link: "Page de contact :"

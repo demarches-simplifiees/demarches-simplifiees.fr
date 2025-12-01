@@ -19,7 +19,7 @@ title: "Comment trouver ma démarche ?"
 
 > Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
 
-> Par exemple s’il s’agit d’une démarche relative à un titre de séjour, vous trouverez l’information sur le site de la préfécture dont vous dépendez. S’il s'agit d’une demande de Pass Culture, vous trouverez les liens utiles sur le site du Pass Culture, etc…
+> Par exemple s’il s’agit d’une démarche relative à un titre de séjour, vous trouverez l’information sur le site de la préfécture dont vous dépendez. S’il s’agit d’une demande de Pass Culture, vous trouverez les liens utiles sur le site du Pass Culture, etc…
 
 ## 1. Trouver le lien de votre démarche
 
@@ -53,7 +53,7 @@ Vous trouverez ci-dessous la liste des démarches les plus courantes dématéria
 *   [Faire son recensement citoyen obligatoire](https://dai.ly/x902jsa)
 *   [Participer à la journée défense et citoyenneté](https://dai.ly/x902k20)
 *   [Demander un extrait de casier judiciaire (bulletin n°3)](https://dai.ly/x902hh0)
-*   [Demander l'aide juridictionnelle](https://dai.ly/x902j5m)
+*   [Demander l’aide juridictionnelle](https://dai.ly/x902j5m)
 *   [Demander un logement en cité universitaire](https://dai.ly/x902iva)
 
 

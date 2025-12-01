@@ -30,7 +30,7 @@ module Administrateurs
 
     def update_autocomplete_configuration
       if @referentiel.update(autocomplete_configuration_params) && params[:commit].present?
-        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration de l'autocomplete a bien été enregistrée" }
+        redirect_to mapping_type_de_champ_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { notice: "La configuration de l’autocomplete a bien été enregistrée" }
       else
         @referentiel.validate
         component = Referentiels::AutocompleteConfigurationComponent.new(referentiel: @referentiel, type_de_champ: @type_de_champ, procedure: @procedure)

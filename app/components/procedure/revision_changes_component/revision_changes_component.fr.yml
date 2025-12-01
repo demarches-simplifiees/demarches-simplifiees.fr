@@ -12,11 +12,11 @@ fr:
   invalid_routing_rules_alert: "Certains groupes d’instructeurs ont une règle de routage invalide. Veuillez mettre à jour la configuration des groupes d’instructeurs après avoir publié les modifications."
 
   update_referentiel: &update_referentiel
-    referentiel_url: "L'URL de l'API du champ « %{label} » a été modifiée. La nouvelle URL est « %{to} »."
+    referentiel_url: "L'URL de l’API du champ « %{label} » a été modifiée. La nouvelle URL est « %{to} »."
     referentiel_mode: "Le mode d’intérogation du référentiel du champ « %{label} » a été modifié. Le nouveau mode est « %{to} »."
-    referentiel_hint: "L'indication à fournir à l'usager concernant le format de saisie attendu du champ « %{label} » a été modifiée. La nouvelle indication est « %{to} »."
-    referentiel_test_data: "L'exemple de saisie valide du champ « %{label} » a été modifié. Le nouvel exemple est « %{to} »."
-    referentiel_mapping: "Le mapping des données entre le champ et l'API du champ « %{label} » a été modifié."
+    referentiel_hint: "L’indication à fournir à l’usager concernant le format de saisie attendu du champ « %{label} » a été modifiée. La nouvelle indication est « %{to} »."
+    referentiel_test_data: "L’exemple de saisie valide du champ « %{label} » a été modifié. Le nouvel exemple est « %{to} »."
+    referentiel_mapping: "Le mapping des données entre le champ et l’API du champ « %{label} » a été modifié."
 
   public:
     add: Le champ « %{label} » a été ajouté.
@@ -51,9 +51,9 @@ fr:
     update_character_limit: La limite de caractères du champ texte « %{label} » a été modifiée. La nouvelle limite est « %{to} ».
     remove_character_limit: La limite de caractères du champ texte « %{label} » a été supprimée.
     update_formatted_mode: Le mode du champ formaté « %{label} » a été modifié. Le nouveau mode est « %{to} ».
-    update_letters_acceptance: L'acceptation des lettres pour le champ « %{label} » a été modifiée. Les lettres sont désormais %{to}.
-    update_numbers_acceptance: L'acceptation des chiffres pour le champ « %{label} » a été modifiée. Les chiffres sont désormais %{to}.
-    update_special_characters_acceptance: L'acceptation des caractères spéciaux pour le champ « %{label} » a été modifiée. Les caractères spéciaux sont désormais %{to}.
+    update_letters_acceptance: L’acceptation des lettres pour le champ « %{label} » a été modifiée. Les lettres sont désormais %{to}.
+    update_numbers_acceptance: L’acceptation des chiffres pour le champ « %{label} » a été modifiée. Les chiffres sont désormais %{to}.
+    update_special_characters_acceptance: L’acceptation des caractères spéciaux pour le champ « %{label} » a été modifiée. Les caractères spéciaux sont désormais %{to}.
     remove_min_character_length: Le nombre de caractères minimum pour le champ « %{label} » a été supprimé.
     update_min_character_length: Le nombre de caractères minimum pour le champ « %{label} » a été modifié. Le minimum est désormais %{to}.
     remove_max_character_length: Le nombre de caractères maxium pour le champ « %{label} » a été supprimé.

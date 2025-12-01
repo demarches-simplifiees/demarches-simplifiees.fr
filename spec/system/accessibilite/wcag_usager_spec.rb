@@ -147,7 +147,7 @@ describe 'wcag rules for usager', chrome: true do
       visit commencer_path(path: procedure.reload.path)
     end
 
-    scenario "écran identification de l'entreprise" do
+    scenario "écran identification de l’entreprise" do
       click_on 'Commencer la démarche'
       expect(page).to be_axe_clean
     end
