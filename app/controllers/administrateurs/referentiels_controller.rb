@@ -68,7 +68,7 @@ module Administrateurs
 
     def reachable_referentiel?
       if !ReferentielService.new(referentiel: @referentiel).validate_referentiel
-        redirect_to configuration_error_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { alert: "Le référentiel n'est pas accessible" }
+        redirect_to configuration_error_admin_procedure_referentiel_path(@procedure, @type_de_champ.stable_id, @referentiel), flash: { alert: "Le référentiel n’est pas accessible" }
       end
     end
 

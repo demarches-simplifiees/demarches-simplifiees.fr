@@ -56,7 +56,7 @@ describe Referentiel do
 
             it 'adds an invalid URL error' do
               referentiel.validate
-              expect(referentiel.errors[:url]).to include("n'est pas au format d’une URL, saisissez une URL valide ex https://api_1.ext/")
+              expect(referentiel.errors[:url]).to include("n’est pas au format d’une URL, saisissez une URL valide ex https://api_1.ext/")
             end
           end
 

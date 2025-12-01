@@ -10,7 +10,7 @@
     - etablissement = @dossier.etablissement
 
     - if etablissement.as_degraded_mode?
-      = render Dsfr::CalloutComponent.new(title: "Nous n'avons pas pu vérifier votre SIRET", theme: :warning, icon: "fr-icon-feedback-fill") do |c|
+      = render Dsfr::CalloutComponent.new(title: "Nous n’avons pas pu vérifier votre SIRET", theme: :warning, icon: "fr-icon-feedback-fill") do |c|
         - c.with_body do
           %p
             L’annuaire INSEE est indisponible, nous ne pouvons pas vérifier votre SIRET.

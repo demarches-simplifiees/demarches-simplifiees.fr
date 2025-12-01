@@ -17,7 +17,7 @@ module Maintenance
     # - vérifier si le blob est toujours marqué pour autodestruction
     # - si le blob est marqué pour autodestruction et toujours attaché,
     # on va le "sauver" retirant le flag
-    # - on va par ailleurs logger dans la table TaskLog les blobs qui n'existent plus
+    # - on va par ailleurs logger dans la table TaskLog les blobs qui n’existent plus
     # sur le storage afin de de prévenir les utilisateurs
 
     csv_collection(headers: ['blob_key'])

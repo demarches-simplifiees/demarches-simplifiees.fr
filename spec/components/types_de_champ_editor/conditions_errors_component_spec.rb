@@ -19,7 +19,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
 
       it do
         expect(page).to have_css('.errors-summary')
-        expect(page).to have_content("Un champ cible n'est plus disponible")
+        expect(page).to have_content("Un champ cible n’est plus disponible")
       end
     end
 
@@ -97,7 +97,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
       let(:source_tdcs) { [tdc] }
       let(:conditions) { [ds_eq(empty, constant('a text'))] }
 
-      it { expect(page).to have_content("Un champ cible n'est plus disponible") }
+      it { expect(page).to have_content("Un champ cible n’est plus disponible") }
     end
   end
 end
