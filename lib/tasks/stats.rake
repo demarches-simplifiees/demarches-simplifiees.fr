@@ -340,7 +340,7 @@ namespace :stats do
     filepath = Rails.root.join("tmp", filename)
 
     CSV.open(filepath, 'wb', headers: true) do |csv|
-      csv << ['Fonctionnalité', 'Nombre de démarches', 'Pourcentage démarches', 'Total dossiers', 'Pourcentage dossiers', 'Exemples d\'IDs']
+      csv << ['Fonctionnalité', 'Nombre de démarches', 'Pourcentage démarches', 'Total dossiers', 'Pourcentage dossiers', 'Exemples d’IDs']
 
       stats.each do |stat|
         csv << [
@@ -376,14 +376,14 @@ namespace :stats do
       dossiers_percentage_usager = total_dossiers_all_procedures > 0 ? ((dossiers_with_usager_messages.to_f / total_dossiers_all_procedures) * 100).round(2) : 0
       dossiers_percentage_labels = total_dossiers_all_procedures > 0 ? ((dossiers_with_labels.to_f / total_dossiers_all_procedures) * 100).round(2) : 0
 
-      csv << ['Dossiers avec messages d\'instructeurs', dossiers_with_instructeur_messages, dossiers_percentage_instructeur, '', '', '']
-      csv << ['Dossiers avec messages d\'usagers', dossiers_with_usager_messages, dossiers_percentage_usager, '', '', '']
+      csv << ['Dossiers avec messages d’instructeurs', dossiers_with_instructeur_messages, dossiers_percentage_instructeur, '', '', '']
+      csv << ['Dossiers avec messages d’usagers', dossiers_with_usager_messages, dossiers_percentage_usager, '', '', '']
       csv << ['Dossiers avec labels', dossiers_with_labels, dossiers_percentage_labels, '', '', '']
 
       # Ajouter les statistiques export_templates séparément
       csv << []
       csv << ['=== STATISTIQUES INSTRUCTEURS ===']
-      csv << ['Fonctionnalité', 'Nombre de démarches', 'Pourcentage démarches', 'Nombre d\'instructeurs', '', 'Exemples d\'IDs']
+      csv << ['Fonctionnalité', 'Nombre de démarches', 'Pourcentage démarches', 'Nombre d’instructeurs', '', 'Exemples d’IDs']
       csv << [
         export_templates_stat[:feature],
         export_templates_stat[:count],
