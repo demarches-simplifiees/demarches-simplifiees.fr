@@ -50,11 +50,15 @@ class ImageProcessorJob < ApplicationJob
     add_ocr_data(blob)
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
     uninterlace(blob) if blob.content_type == "image/png"
-    create_representations(blob) if blob.representation_required?
+    create_representations(blob) if blob.representation_required? && mime_type_authorized_by_policy?(blob)
     add_watermark(blob) if blob.watermark_pending?
   end
 
   private
+
+  def mime_type_authorized_by_policy?(blob)
+    blob.content_type.in?(AUTHORIZED_CONTENT_TYPES_IN_POLICY_XML)
+  end
 
   def auto_rotate(blob)
     blob.open do |file|
