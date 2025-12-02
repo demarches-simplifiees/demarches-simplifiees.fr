@@ -5,11 +5,12 @@ module Dsfr
     include EtablissementHelper
     delegate :type_de_champ, to: :@champ
     delegate :prefilled?, to: :@champ
-    def initialize(errors_on_attribute:, error_full_messages:, champ:)
+    def initialize(errors_on_attribute:, error_full_messages:, champ:, row_number: nil)
       @errors_on_attribute = errors_on_attribute
       @error_full_messages = error_full_messages
       @error_id = champ.error_id
       @champ = champ
+      @row_number = row_number
     end
 
     def statutable?

@@ -5,5 +5,5 @@
 
     = render champ_component
 
-    = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, champ: @champ)
+    = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, champ: @champ, row_number: row_number_if_in_repetition)
     = render EditableChamp::ReferentielDisplayComponent.new(champ: @champ)
