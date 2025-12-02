@@ -86,7 +86,7 @@ Autrement dit, le LLM n’est qu’un outil, et il convient d’être tout aussi
 
 En date du 2021-10-19, voici une PR servant d'exemple :
 
-* [#6519 ETQ Super Admin je veux changer le mail d'un instructeur](https://github.com/betagouv/demarches-simplifiees.fr/pull/6519)
+* [#6519 ETQ Super Admin je veux changer l’adresse électronique d'un instructeur](https://github.com/betagouv/demarches-simplifiees.fr/pull/6519)
 
 ## Bonnes pratiques : sur les branches
 

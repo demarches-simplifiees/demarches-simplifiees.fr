@@ -1378,7 +1378,7 @@ type DemarcheDescriptor {
   description: String!
 
   """
-  URL ou email pour contacter le Délégué à la Protection des Données (DPO)
+  URL ou adresse électronique pour contacter le Délégué à la Protection des Données (DPO)
   """
   dpoURL: String
   dpoUrl: String @deprecated(reason: "Utilisez le champ `dpoURL` à la place.")
@@ -4238,9 +4238,10 @@ type PersonnePhysique implements Demandeur {
   dateDeNaissance: ISO8601Date
 
   """
-  Email du bénéficiaire (dans le cas d'un dossier déposé par et pour l'usager
-  connecté, l'email est celui de l'usager connecté. Dans le cas d'un dossier
-  déposé pour un bénéficiaire, l'email est celui du bénéficiaire, s'il a été renseigné)
+  Adresse électronique du bénéficiaire (dans le cas d’un dossier déposé par et
+  pour l’usager connecté, l’adresse électronique est celle de l’usager connecté.
+  Dans le cas d’un dossier déposé pour un bénéficiaire, l’adresse électronique
+  est celle du bénéficiaire, si elle a été renseignée)
   """
   email: String
   id: ID!
@@ -4375,7 +4376,7 @@ Profil d'un usager connecté (déposant un dossier, instruisant un dossier...)
 """
 type Profile {
   """
-  Email de l'usager
+  Adresse électronique de l’usager
   """
   email: String!
   id: ID!

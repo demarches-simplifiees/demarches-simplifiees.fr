@@ -2,7 +2,7 @@
 
 module Maintenance
   class T20250418sendNotificationToInstructeursHavingLostPjsTask < MaintenanceTasks::Task
-    # Documentation: informe par email les instructeurs dont des PJ
+    # Documentation: informe par adresse électronique les instructeurs dont des PJ
     # ont été perdues suite à un bug introduit dans la release 2025-03-11-01
     # avec le storage OpenStack.
 
