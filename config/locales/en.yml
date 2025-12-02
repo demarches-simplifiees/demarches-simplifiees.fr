@@ -521,7 +521,6 @@ en:
             justificatif: "Justification of decision :"
             acceptee: "Your file had been accepted"
             accepte_motivation: "Reason"
-            accepte_attestation: "Download the attestation"
             refuse: "Your file had been rejected"
             refuse_motivation: "Reason"
             refuse_reply: "Send a message to the administration"

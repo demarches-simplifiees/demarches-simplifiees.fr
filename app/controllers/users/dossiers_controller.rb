@@ -121,8 +121,26 @@ module Users
       if dossier.attestation&.pdf&.attached?
         redirect_to dossier.attestation.pdf.url, allow_other_host: true
       else
-        flash.notice = t('.no_longer_available')
-        redirect_to dossier_path(dossier)
+        # Generate synchronously if attestation doesn't exist yet
+        template = if dossier.accepte?
+          dossier.procedure.attestation_acceptation_template
+        elsif dossier.refuse?
+          dossier.procedure.attestation_refus_template
+        end
+
+        if template&.activated?
+          begin
+            template.generate_attestation_for(dossier)
+            redirect_to dossier.attestation.pdf.url, allow_other_host: true
+          rescue StandardError => e
+            Sentry.capture_exception(e)
+            flash.alert = t('.generation_failed')
+            redirect_to dossier_path(dossier)
+          end
+        else
+          flash.notice = t('.no_longer_available')
+          redirect_to dossier_path(dossier)
+        end
       end
     end
 
