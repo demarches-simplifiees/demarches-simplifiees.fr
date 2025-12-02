@@ -89,13 +89,10 @@ RSpec.describe InstructeurMailer, type: :mailer do
         old_dossiers_en_instruction: [dossier],
         dossiers_en_instruction_description: 'desc')
 
-      {
-        start_date: Time.zone.now,
-        procedure_overviews: [procedure_overview],
-      }
+      [procedure_overview]
     end
 
-    before { allow(instructeur).to receive(:last_week_overview).and_return(last_week_overview) }
+    before { allow(instructeur).to receive(:weekly_email_summary_data).and_return(last_week_overview) }
 
     subject { described_class.last_week_overview(instructeur) }
 

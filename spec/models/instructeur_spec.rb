@@ -171,61 +171,69 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe 'last_week_overview' do
-    let!(:instructeur2) { create(:instructeur) }
-    subject { instructeur2.last_week_overview }
-    let(:friday) { Time.zone.local(2017, 5, 12) }
-    let(:monday) { Time.zone.now.beginning_of_week }
+  describe 'weekly_email_summary_data' do
+    subject { instructeur2.weekly_email_summary_data }
 
-    before { travel_to(friday) }
+    let(:instructeur2) { create(:instructeur) }
+    let!(:groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur2]) }
+    let!(:instructeur2_procedure) { create(:instructeurs_procedure, instructeur: instructeur2, procedure:) }
+    let(:monday) { Time.zone.local(2025, 12, 1) }
 
-    context 'when no procedure published was active last week' do
+    before { travel_to(monday) }
+
+    context 'when a procedure published was active' do
+      let(:procedure) { create(:procedure, :published, libelle: 'procedure') }
+      let!(:dossier) { create(:dossier, :en_instruction, procedure:, en_instruction_at: 1.day.ago, groupe_instructeur:) }
+
+      context 'when the instructeur has not weekly summary email' do
+        it { is_expected.to eq(nil) }
+      end
+
+      context 'when the instructeur has weekly summary email' do
+        before { instructeur2_procedure.update!(weekly_email_summary: true) }
+
+        it { is_expected.not_to eq(nil) }
+      end
+    end
+
+    context 'when a procedure not published was active with email' do
+      let!(:procedure) { create(:procedure, libelle: 'procedure') }
+      let!(:dossier) { create(:dossier, :en_instruction, procedure:, en_instruction_at: 1.day.ago, groupe_instructeur:) }
+
+      before { instructeur2_procedure.update!(weekly_email_summary: true) }
+
+      it { is_expected.to eq(nil) }
+    end
+
+    context 'when a procedure published was not active with email' do
       let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
 
-      before { instructeur2.assign_to_procedure(procedure) }
+      before { instructeur2_procedure.update!(weekly_email_summary: true) }
 
-      context 'when the instructeur has no notifications' do
+      context "when there is a dossier in brouillon" do
+        let!(:dossier) { create(:dossier, :brouillon, procedure:, created_at: 1.day.ago, groupe_instructeur:) }
+
         it { is_expected.to eq(nil) }
       end
     end
 
-    context 'when a procedure published was active' do
-      let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
-      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
+    context "when a procedure routee was active with email" do
+      let(:procedure) { create(:procedure, :published, libelle: 'procedure') }
+      let!(:other_groupe_instructeur) { create(:groupe_instructeur, procedure:) }
 
-      before :each do
-        instructeur2.assign_to_procedure(procedure)
-        expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
+      before { instructeur2_procedure.update!(weekly_email_summary: true) }
+
+      context "when activites are in groupe instructeur" do
+        let!(:dossier) { create(:dossier, :en_instruction, procedure:, en_instruction_at: 1.day.ago, groupe_instructeur:) }
+
+        it { is_expected.not_to eq(nil) }
       end
 
-      it { expect(instructeur2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
-    end
+      context "when activites are in other groupe instructeur" do
+        let!(:dossier) { create(:dossier, :en_instruction, procedure:, en_instruction_at: 1.day.ago, groupe_instructeur: other_groupe_instructeur) }
 
-    context 'when a procedure published was active and weekly notifications is disable' do
-      let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
-      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
-
-      before :each do
-        instructeur2.assign_to_procedure(procedure)
-        AssignTo
-          .where(instructeur: instructeur2, groupe_instructeur: procedure.groupe_instructeurs.first)
-          .update(weekly_email_notifications_enabled: false)
-        allow_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
+        it { is_expected.to eq(nil) }
       end
-
-      it { expect(instructeur2.last_week_overview).to be_nil }
-    end
-
-    context 'when a procedure not published was active with no notifications' do
-      let!(:procedure) { create(:procedure, libelle: 'procedure') }
-      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
-
-      before :each do
-        instructeur2.assign_to_procedure(procedure)
-        allow_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
-      end
-
-      it { is_expected.to eq(nil) }
     end
   end
 
@@ -294,14 +302,12 @@ describe Instructeur, type: :model do
 
   describe '#daily_email_summary_data' do
     let(:instructeur) { create(:instructeur) }
-    let(:procedure_to_assign) { create(:procedure) }
-
-    before do
-      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, daily_email_notifications_enabled: true)
-    end
+    let!(:groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published) }
+    let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:, daily_email_summary: true) }
 
     context 'when a dossier in construction exists' do
-      let!(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
+      let!(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur:) }
 
       it do
         expect(instructeur.daily_email_summary_data).to eq([
@@ -314,15 +320,15 @@ describe Instructeur, type: :model do
             nb_closed_without_continuation: 0,
             nb_dossiers_with_notifications: 0,
             nb_notifications: {},
-            procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle,
+            procedure_id: procedure.id,
+            procedure_libelle: procedure.libelle,
           },
         ])
       end
     end
 
     context 'when a notification exists' do
-      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur:) }
       let!(:notification_to_count) { create(:dossier_notification, instructeur:, dossier:, notification_type: :dossier_modifie) }
       let!(:notification_not_count) { create(:dossier_notification, instructeur:, dossier:) }
 
@@ -337,15 +343,15 @@ describe Instructeur, type: :model do
             nb_closed_without_continuation: 0,
             nb_dossiers_with_notifications: 1,
             nb_notifications: { 'dossier_modifie' => 1 },
-            procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle,
+            procedure_id: procedure.id,
+            procedure_libelle: procedure.libelle,
           },
         ])
       end
     end
 
     context 'when a dossier in instruction exists' do
-      let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure_to_assign) }
+      let!(:dossier) { create(:dossier, :en_instruction, procedure:, groupe_instructeur:) }
 
       it do
         expect(instructeur.daily_email_summary_data).to eq([
@@ -358,17 +364,17 @@ describe Instructeur, type: :model do
             nb_closed_without_continuation: 0,
             nb_dossiers_with_notifications: 0,
             nb_notifications: {},
-            procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle,
+            procedure_id: procedure.id,
+            procedure_libelle: procedure.libelle,
           },
         ])
       end
     end
 
     context 'when a dossier accepte, refuse and sans suite exists' do
-      let!(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure_to_assign) }
-      let!(:dossier_refuse) { create(:dossier, :refuse, procedure: procedure_to_assign) }
-      let!(:dossier_sans_suite) { create(:dossier, :sans_suite, procedure: procedure_to_assign) }
+      let!(:dossier_accepte) { create(:dossier, :accepte, procedure:, groupe_instructeur:) }
+      let!(:dossier_refuse) { create(:dossier, :refuse, procedure:, groupe_instructeur:) }
+      let!(:dossier_sans_suite) { create(:dossier, :sans_suite, procedure:, groupe_instructeur:) }
 
       it do
         expect(instructeur.daily_email_summary_data).to eq([
@@ -381,8 +387,8 @@ describe Instructeur, type: :model do
             nb_closed_without_continuation: 1,
             nb_dossiers_with_notifications: 0,
             nb_notifications: {},
-            procedure_id: procedure_to_assign.id,
-            procedure_libelle: procedure_to_assign.libelle,
+            procedure_id: procedure.id,
+            procedure_libelle: procedure.libelle,
           },
         ])
       end
