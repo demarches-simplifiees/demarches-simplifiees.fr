@@ -41,9 +41,9 @@ class ProcedureOverview
     when 0
       nil
     when 1
-      'dossier suivi en construction'
+      'dossier en construction'
     else
-      'dossiers suivis en construction'
+      'dossiers en construction'
     end
   end
 
