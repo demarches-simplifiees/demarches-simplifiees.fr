@@ -292,7 +292,7 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe '#email_notification_data' do
+  describe '#daily_email_summary_data' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure_to_assign) { create(:procedure) }
 
@@ -304,7 +304,7 @@ describe Instructeur, type: :model do
       let!(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
 
       it do
-        expect(instructeur.email_notification_data).to eq([
+        expect(instructeur.daily_email_summary_data).to eq([
           {
             nb_en_construction: 1,
             nb_en_instruction: 0,
@@ -327,7 +327,7 @@ describe Instructeur, type: :model do
       let!(:notification_not_count) { create(:dossier_notification, instructeur:, dossier:) }
 
       it do
-        expect(instructeur.email_notification_data).to eq([
+        expect(instructeur.daily_email_summary_data).to eq([
           {
             nb_en_construction: 1,
             nb_en_instruction: 0,
@@ -348,7 +348,7 @@ describe Instructeur, type: :model do
       let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure_to_assign) }
 
       it do
-        expect(instructeur.email_notification_data).to eq([
+        expect(instructeur.daily_email_summary_data).to eq([
           {
             nb_en_construction: 0,
             nb_en_instruction: 1,
@@ -371,7 +371,7 @@ describe Instructeur, type: :model do
       let!(:dossier_sans_suite) { create(:dossier, :sans_suite, procedure: procedure_to_assign) }
 
       it do
-        expect(instructeur.email_notification_data).to eq([
+        expect(instructeur.daily_email_summary_data).to eq([
           {
             nb_en_construction: 0,
             nb_en_instruction: 0,
@@ -389,7 +389,7 @@ describe Instructeur, type: :model do
     end
 
     context 'otherwise' do
-      it { expect(instructeur.email_notification_data).to eq([]) }
+      it { expect(instructeur.daily_email_summary_data).to eq([]) }
     end
   end
 
