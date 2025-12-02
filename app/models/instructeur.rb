@@ -157,8 +157,6 @@ class Instructeur < ApplicationRecord
   end
 
   def weekly_email_summary_data
-    start_date = Time.zone.now.beginning_of_week
-
     active_procedure_overviews = procedures
       .joins(:instructeurs_procedures)
       .where(instructeurs_procedures: {
@@ -166,14 +164,13 @@ class Instructeur < ApplicationRecord
         weekly_email_summary: true,
       })
       .publiees
-      .map { |procedure| procedure.procedure_overview(start_date, groupe_instructeurs) }
+      .map { |procedure| procedure.procedure_overview(groupe_instructeurs) }
       .filter(&:had_some_activities?)
 
     if active_procedure_overviews.empty?
       nil
     else
       {
-        start_date: start_date,
         procedure_overviews: active_procedure_overviews,
       }
     end
