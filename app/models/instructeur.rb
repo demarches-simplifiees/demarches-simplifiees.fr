@@ -127,6 +127,7 @@ class Instructeur < ApplicationRecord
         instructeur: self,
         daily_email_summary: true,
       })
+      .merge(Procedure.publiee)
       .group_by(&:procedure_id)
       .reduce([]) do |acc, (_, groupe_instructeurs)|
       procedure = groupe_instructeurs.first.procedure
