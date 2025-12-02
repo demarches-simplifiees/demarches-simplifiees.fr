@@ -8,8 +8,8 @@ class ProcedureOverview
     :dossiers_en_construction_count,
     :old_dossiers_en_construction
 
-  def initialize(procedure, start_date, groups)
-    @start_date = start_date
+  def initialize(procedure, groups)
+    @start_date = 1.week.ago.beginning_of_week
     @procedure = procedure
 
     dossiers = procedure.dossiers.where(groupe_instructeur: groups).visible_by_administration
@@ -25,7 +25,7 @@ class ProcedureOverview
       .where(depose_at: ...1.week.ago)
 
     @created_dossiers_count = dossiers
-      .where(created_at: start_date..Time.zone.now)
+      .where(created_at: @start_date..Time.zone.now)
       .count
   end
 
