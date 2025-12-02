@@ -15,89 +15,103 @@ describe 'instructeur_mailer/send_notifications', type: :view do
     let(:data) do
       [
         {
-          procedure_libelle: 'une superbe démarche',
-          procedure_id: 213,
           nb_en_construction: 1,
           nb_en_instruction: 0,
+          nb_processed: 0,
           nb_accepted: 0,
-          nb_notification: 0,
+          nb_refused: 0,
+          nb_closed_without_continuation: 0,
+          nb_dossiers_with_notifications: 0,
+          nb_notifications: {},
+          procedure_id: 213,
+          procedure_libelle: 'une superbe démarche',
         },
       ]
     end
 
     it do
       expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213))
-      expect(rendered).to have_text('une superbe démarche')
       expect(rendered).to have_text('1 dossier en construction')
       expect(rendered).not_to have_text('notification')
     end
   end
 
-  context 'when there is one declarated dossier in instruction' do
+  context 'when there is one dossier in instruction' do
     let(:data) do
       [
         {
-          procedure_libelle: 'une superbe démarche',
-          procedure_id: 213,
           nb_en_construction: 0,
           nb_en_instruction: 1,
+          nb_processed: 0,
           nb_accepted: 0,
-          nb_notification: 0,
+          nb_refused: 0,
+          nb_closed_without_continuation: 0,
+          nb_dossiers_with_notifications: 0,
+          nb_notifications: {},
+          procedure_id: 213,
+          procedure_libelle: 'une superbe démarche',
         },
       ]
     end
 
     it do
       expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213))
-      expect(rendered).to have_text('une superbe démarche')
-      expect(rendered).to have_text('1 dossier')
+      expect(rendered).to have_text('1 dossier en instruction')
       expect(rendered).not_to have_text('notification')
       expect(rendered).not_to have_text('construction')
-      expect(rendered).not_to have_text('accepte')
+      expect(rendered).not_to have_text('traité')
     end
   end
 
-  context 'when there is one declarated dossier in accepte' do
+  context 'when there are three dossiers processed' do
     let(:data) do
       [
         {
-          procedure_libelle: 'une superbe démarche',
-          procedure_id: 213,
           nb_en_construction: 0,
           nb_en_instruction: 0,
+          nb_processed: 3,
           nb_accepted: 1,
-          nb_notification: 0,
+          nb_refused: 1,
+          nb_closed_without_continuation: 1,
+          nb_dossiers_with_notifications: 0,
+          nb_notifications: {},
+          procedure_id: 213,
+          procedure_libelle: 'une superbe démarche',
         },
       ]
     end
 
     it do
       expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213))
-      expect(rendered).to have_text('une superbe démarche')
-      expect(rendered).to have_text('1 dossier')
+      expect(rendered).to have_text('3 dossiers')
+      expect(rendered).to have_text('(1 accepté, 1 refusé, 1 classé sans suite)')
       expect(rendered).not_to have_text('notification')
       expect(rendered).not_to have_text('construction')
       expect(rendered).not_to have_text('instruction')
     end
   end
 
-  context 'when there is one notification' do
+  context 'when there is notifications' do
     let(:data) do
       [
         {
-          procedure_libelle: 'une superbe démarche',
-          procedure_id: 213,
-          nb_en_construction: 0,
+          nb_en_construction: 1,
           nb_en_instruction: 0,
+          nb_processed: 0,
           nb_accepted: 0,
-          nb_notification: 1,
+          nb_refused: 0,
+          nb_closed_without_continuation: 0,
+          nb_dossiers_with_notifications: 1,
+          nb_notifications: { 'dossier_modifie' => 1 },
+          procedure_id: 213,
+          procedure_libelle: 'une superbe démarche',
         },
       ]
     end
 
     it do
-      expect(rendered).not_to have_text('en construction')
       expect(rendered).to have_text("1 dossier avec des notifications \"nouveautés\"")
+      expect(rendered).to have_text("1 \"DOSSIER MODIFIÉ\"")
     end
   end
 end

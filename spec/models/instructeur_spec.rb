@@ -308,8 +308,12 @@ describe Instructeur, type: :model do
           {
             nb_en_construction: 1,
             nb_en_instruction: 0,
+            nb_processed: 0,
             nb_accepted: 0,
-            nb_notification: 0,
+            nb_refused: 0,
+            nb_closed_without_continuation: 0,
+            nb_dossiers_with_notifications: 0,
+            nb_notifications: {},
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle,
           },
@@ -327,8 +331,12 @@ describe Instructeur, type: :model do
           {
             nb_en_construction: 1,
             nb_en_instruction: 0,
+            nb_processed: 0,
             nb_accepted: 0,
-            nb_notification: 1,
+            nb_refused: 0,
+            nb_closed_without_continuation: 0,
+            nb_dossiers_with_notifications: 1,
+            nb_notifications: { 'dossier_modifie' => 1 },
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle,
           },
@@ -336,24 +344,20 @@ describe Instructeur, type: :model do
       end
     end
 
-    context 'when a declarated dossier in instruction exists' do
-      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
-
-      before do
-        procedure_to_assign.update!(declarative_with_state: "en_instruction")
-        dossier.process_declarative!
-      end
+    context 'when a dossier in instruction exists' do
+      let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure_to_assign) }
 
       it do
-        expect(procedure_to_assign.declarative_with_state).to eq("en_instruction")
-        expect(dossier.state).to eq("en_instruction")
-
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,
             nb_en_instruction: 1,
+            nb_processed: 0,
             nb_accepted: 0,
-            nb_notification: 0,
+            nb_refused: 0,
+            nb_closed_without_continuation: 0,
+            nb_dossiers_with_notifications: 0,
+            nb_notifications: {},
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle,
           },
@@ -361,39 +365,22 @@ describe Instructeur, type: :model do
       end
     end
 
-    context 'when a declarated dossier in accepte processed at today exists' do
-      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
-
-      before do
-        procedure_to_assign.update(declarative_with_state: "accepte")
-        dossier.process_declarative!
-      end
+    context 'when a dossier accepte, refuse and sans suite exists' do
+      let!(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure_to_assign) }
+      let!(:dossier_refuse) { create(:dossier, :refuse, procedure: procedure_to_assign) }
+      let!(:dossier_sans_suite) { create(:dossier, :sans_suite, procedure: procedure_to_assign) }
 
       it do
-        expect(procedure_to_assign.declarative_with_state).to eq("accepte")
-        expect(dossier.state).to eq("accepte")
-        expect(instructeur.email_notification_data).to eq([])
-      end
-    end
-
-    context 'when a declarated dossier in accepte processed at yesterday exists' do
-      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_to_assign) }
-
-      before do
-        procedure_to_assign.update(declarative_with_state: "accepte")
-        dossier.process_declarative!
-        dossier.traitements.last.update(processed_at: Time.zone.yesterday.beginning_of_day)
-      end
-
-      it do
-        expect(procedure_to_assign.declarative_with_state).to eq("accepte")
-        expect(dossier.state).to eq("accepte")
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,
             nb_en_instruction: 0,
+            nb_processed: 3,
             nb_accepted: 1,
-            nb_notification: 0,
+            nb_refused: 1,
+            nb_closed_without_continuation: 1,
+            nb_dossiers_with_notifications: 0,
+            nb_notifications: {},
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle,
           },
