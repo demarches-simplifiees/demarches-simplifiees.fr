@@ -138,3 +138,13 @@ FORMAT_FAMILY_EXAMPLES = {
   video: '.mp4, .mov, .avi, .wmv',
   archive: '.zip, .rar, .7z, .gz',
 }.freeze
+
+# look for policy.xml in ImageMagick-7/policy.xml
+AUTHORIZED_CONTENT_TYPES_IN_POLICY_XML = [
+  'image/jpeg',
+  'image/jpg',
+  'image/bmp',
+  'image/png',
+  'image/tiff',
+  'image/webp',
+].freeze
