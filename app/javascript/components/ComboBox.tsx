@@ -234,15 +234,18 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
             <Tag
               key={item.value}
               id={item.value}
-              textValue={`Retirer ${item.label}`}
+              textValue={`Supprimer ${item.label}`}
               className="fr-tag fr-tag--sm fr-tag--dismiss"
             >
               {item.label}
               <Button
+                aria-labelledby=""
                 aria-label=""
                 slot="remove"
                 className="fr-tag--dismiss"
-              ></Button>
+              >
+                <span className="sr-only">Supprimer {item.label}</span>
+              </Button>
             </Tag>
           ))}
         </TagList>
