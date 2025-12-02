@@ -157,23 +157,28 @@ class Instructeur < ApplicationRecord
   end
 
   def weekly_email_summary_data
-    active_procedure_overviews = procedures
+    procedures = self.procedures
       .joins(:instructeurs_procedures)
       .where(instructeurs_procedures: {
         instructeur: self,
         weekly_email_summary: true,
       })
       .publiees
-      .map { |procedure| procedure.procedure_overview(groupe_instructeurs) }
-      .filter(&:had_some_activities?)
+      .includes(dossiers: :groupe_instructeur)
 
-    if active_procedure_overviews.empty?
-      nil
-    else
-      {
-        procedure_overviews: active_procedure_overviews,
-      }
+    gi_ids = groupe_instructeurs.ids
+
+    procedure_overviews = procedures.map do |procedure|
+      dossiers = procedure
+        .dossiers
+        .filter { |d| gi_ids.include?(d.groupe_instructeur_id) && d.visible_by_administration? }
+
+      ProcedureOverview.new(procedure, dossiers)
     end
+
+    active_procedure_overviews = procedure_overviews.filter(&:had_some_activities?)
+
+    active_procedure_overviews.empty? ? nil : active_procedure_overviews
   end
 
   def create_trusted_device_token
