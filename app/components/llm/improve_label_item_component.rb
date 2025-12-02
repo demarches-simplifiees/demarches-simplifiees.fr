@@ -23,7 +23,7 @@ class LLM::ImproveLabelItemComponent < LLM::SuggestionItemComponent
 
   def checkbox
     safe_join([
-      form_builder.check_box(:verify_status, {}, ACCEPTED_VALUE, SKIPPED_VALUE),
+      form_builder.check_box(:verify_status, { data: { action: "click->enable-submit-if-checked#click" } }, ACCEPTED_VALUE, SKIPPED_VALUE),
       form_builder.label(:verify_status, class: 'fr-label') do
         capture { yield if block_given? }
       end,

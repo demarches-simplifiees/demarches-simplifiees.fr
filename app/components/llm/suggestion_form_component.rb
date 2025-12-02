@@ -54,6 +54,10 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     t(".buttons.#{llm_rule_suggestion.state}")
   end
 
+  def at_least_one_accepted?
+    ordered_llm_rule_suggestion_items.any? { |item| item.verify_status == 'accepted' }
+  end
+
   def button_options
     {
       class: class_names(

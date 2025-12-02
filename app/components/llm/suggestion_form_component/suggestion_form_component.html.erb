@@ -13,7 +13,8 @@
 
     <%= form_for llm_rule_suggestion,
                     url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion),
-                    method: :post do |form| %>
+                    method: :post,
+                    data: { controller: "enable-submit-if-checked" } do |form| %>
       <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
         <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
           <%= render item_component.new(form_builder: ff) %>
@@ -26,7 +27,7 @@
         </li>
 
         <li>
-          <%= form.submit("Appliquer les suggestions et poursuivre", class: "fr-btn") %>
+          <%= form.submit("Appliquer les suggestions et poursuivre", class: "fr-btn", data: { 'enable-submit-if-checked-target': 'submit' }, disabled: !at_least_one_accepted?) %>
         </li>
       </ul>
     <% end %>

@@ -42,6 +42,20 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
         expect(subject.text).to include(LLM::ImproveLabelItemComponent.step_summary)
         expect(subject).not_to have_css("button[value='Lancer la recherche de suggestions']")
       end
+
+      it 'disables submit button when no suggestions are accepted' do
+        expect(subject).to have_css("input[type='submit'][disabled]")
+      end
+
+      context 'when at least one suggestion is accepted' do
+        before do
+          llm_rule_suggestion.llm_rule_suggestion_items.first.update(verify_status: 'accepted')
+        end
+
+        it 'enables submit button' do
+          expect(subject).not_to have_css("input[type='submit'][disabled]")
+        end
+      end
     end
     context 'when state is failed' do
       let(:state) { 'failed' }
