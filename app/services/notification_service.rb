@@ -6,11 +6,11 @@ class NotificationService
 
     def send_instructeur_email_notification
       instructeurs = Instructeur
-        .includes(assign_to: [:procedure])
-        .where(assign_tos: { daily_email_notifications_enabled: true })
+        .with_daily_email_summary
+        .select(:id, :user_id, :email)
 
       instructeurs.in_batches.each_record do |instructeur|
-        data = instructeur.email_notification_data
+        data = instructeur.daily_email_summary_data
 
         next if data.empty?
 
