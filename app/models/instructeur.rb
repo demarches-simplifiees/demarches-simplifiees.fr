@@ -12,8 +12,6 @@ class Instructeur < ApplicationRecord
   has_many :procedures, -> { distinct }, through: :unordered_groupe_instructeurs
   has_many :deleted_dossiers, through: :procedures
   has_many :batch_operations, dependent: :nullify
-  has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
-  has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
   has_many :export_templates, through: :groupe_instructeurs
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
@@ -56,6 +54,14 @@ class Instructeur < ApplicationRecord
         procedure:,
         instant_email_new_dossier: true,
       })
+  }
+
+  scope :with_daily_email_summary, -> {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        daily_email_summary: true,
+      })
+      .distinct
   }
 
   default_scope { eager_load(:user) }
@@ -133,19 +139,24 @@ class Instructeur < ApplicationRecord
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
   end
 
-  def email_notification_data
-    groupe_instructeur_with_email_notifications
-      .includes(:procedure)
+  def daily_email_summary_data
+    groupe_instructeurs
+      .joins(procedure: :instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        instructeur: self,
+        daily_email_summary: true,
+      })
       .group_by(&:procedure_id)
       .reduce([]) do |acc, (_, groupe_instructeurs)|
       procedure = groupe_instructeurs.first.procedure
+      dossiers_count = self.dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.group(:state).count
 
       h = {
-        nb_en_construction: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.en_construction.count,
-        nb_en_instruction: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.en_instruction.count,
-        nb_accepted: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.accepte.count,
-        nb_refused: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.refuse.count,
-        nb_closed_without_continuation: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.sans_suite.count,
+        nb_en_construction: dossiers_count['en_construction'] || 0,
+        nb_en_instruction: dossiers_count['en_instruction'] || 0,
+        nb_accepted: dossiers_count['accepte'] || 0,
+        nb_refused: dossiers_count['refuse'] || 0,
+        nb_closed_without_continuation: dossiers_count['sans_suite'] || 0,
       }
 
       if h.values.any?(&:positive?)
