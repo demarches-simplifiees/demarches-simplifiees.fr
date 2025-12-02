@@ -1048,6 +1048,19 @@ class API::V2::StoredQuery
     }
   }
 
+  mutation dossierModifierAnnotations(
+    $input: DossierModifierAnnotationsInput!
+  ) {
+    dossierModifierAnnotations(input: $input) {
+      annotations {
+        id
+      }
+      errors {
+        message
+      }
+    }
+  }
+
   mutation createDirectUpload($input: CreateDirectUploadInput!) {
     createDirectUpload(input: $input) {
       directUpload {
