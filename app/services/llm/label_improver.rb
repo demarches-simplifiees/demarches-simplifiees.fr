@@ -7,7 +7,7 @@ module LLM
       type: 'function',
       function: {
         name: LLMRuleSuggestion.rules.fetch('improve_label'),
-        description: "Améliore les libéllés du formulaire en respectant les bonne pratique de conception d'un formulaire administratif français.",
+        description: "Améliore les libellés & descriptions du formulaire en respectant les bonnes pratiques de conception d'un formulaire administratif français.",
         parameters: {
           type: 'object',
           properties: {
@@ -213,7 +213,8 @@ module LLM
           description = (update['description'] || args['description'])
           position = (update['position'] || args['position'])
           parent_id = (update['parent_id'] || args['parent_id'])
-          next if stable_id.nil? || libelle.blank?
+
+          next if filter_invalid_llm_result(stable_id, libelle, description)
 
           {
             op_kind: 'update',
@@ -223,6 +224,12 @@ module LLM
           }
         end
         .compact
+    end
+
+    private
+
+    def filter_invalid_llm_result(stable_id, libelle, description)
+      stable_id.nil? || libelle.blank?
     end
   end
 end
