@@ -69,10 +69,14 @@ module Crisp
 
       return [enabled, disabled] if instructeur.blank?
 
-      per_proc = instructeur.assign_to.group_by { it.groupe_instructeur.procedure_id }
-      per_proc.each do |procedure_id, assign_tos|
-        first_assign_to = assign_tos.first
-        if notifications_disabled?(first_assign_to)
+      ips_by_procedure_id = InstructeursProcedure
+        .where(instructeur:)
+        .index_by(&:procedure_id)
+
+      instructeur.procedure_ids.each do |procedure_id|
+        ip = ips_by_procedure_id[procedure_id]
+
+        if notifications_disabled?(ip)
           disabled << procedure_id
         else
           enabled << procedure_id
@@ -82,10 +86,10 @@ module Crisp
       [enabled.sort, disabled.sort]
     end
 
-    def notifications_disabled?(assign_to)
-      !assign_to.instant_email_dossier_notifications_enabled ||
-        !assign_to.instant_email_message_notifications_enabled ||
-        !assign_to.instant_expert_avis_email_notifications_enabled
+    def notifications_disabled?(ip)
+      !ip&.instant_email_new_dossier ||
+        !ip&.instant_email_new_message ||
+        !ip&.instant_email_new_expert_avis
     end
 
     def user_link
