@@ -8,7 +8,7 @@
       = turbo_stream.replace champ.input_group_id do
         = render EditableChamp::EditableChampComponent.new champ:, form:
     - else
-      = turbo_stream.update champ.labelledby_id do
+      = turbo_stream.update input_label_id(champ) do
         = render EditableChamp::ChampLabelContentComponent.new champ:, form:
 
 = turbo_stream.remove_all(".editable-champ + .spinner-removable")
