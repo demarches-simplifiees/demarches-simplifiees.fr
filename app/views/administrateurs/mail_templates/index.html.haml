@@ -1,12 +1,12 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
                     ["#{@procedure.libelle.truncate_words(10)}", admin_procedure_path(@procedure)],
-                    ["Configuration des emails"]] }
+                    ["Modèles d’email"]] }
 
 .fr-container
   .fr-grid-row.fr-grid-row--gutters
     .fr-col-12
-      %h1.fr-h2 Configuration des emails
+      %h1.fr-h2 Modèles d’email
       - if @procedure.accuse_lecture?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
           - c.with_body do
