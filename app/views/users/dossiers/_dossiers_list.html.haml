@@ -27,6 +27,10 @@
               %br
               = pending_correction_badge(:for_user)
 
+            - if dossier.pending_response?
+              %br
+              = pending_response_badge(:for_user)
+
           %p.fr-icon--sm.fr-icon-user-line
             %span.visually-hidden= t('views.shared.dossiers.demande.requester_identity')
             = demandeur_dossier(dossier)
@@ -64,6 +68,10 @@
             %br
             = pending_correction_badge(:for_user)
 
+          - if dossier.pending_response?
+            %br
+            = pending_response_badge(:for_user)
+
       - if dossier.procedure.close?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
@@ -84,6 +92,12 @@
         = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
             = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id, class: 'fr-link')
+
+      - if dossier.awaiting_response.present?
+        = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+          - c.with_body do
+            %h4.card-title.fr-mb-1v= t('views.users.dossiers.dossiers_list.pending_response.title')
+            %p= t('views.users.dossiers.dossiers_list.pending_response.message_html', link: messagerie_dossier_path(dossier), id: number_with_html_delimiter(dossier.id)).html_safe
 
       - if dossier.transfer.present?
         - if @statut == "dossiers-transferes"

@@ -183,25 +183,6 @@
       "note": ""
     },
     {
-      "warning_type": "Unmaintained Dependency",
-      "warning_code": 122,
-      "fingerprint": "98b26f60d776fd41ee6f088c833725145be9aac2d7c5b33780241c273622db42",
-      "check_name": "EOLRails",
-      "message": "Support for Rails 7.1.5.2 ends on 2025-10-01",
-      "file": "Gemfile.lock",
-      "line": 642,
-      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
-      "code": null,
-      "render_path": null,
-      "location": null,
-      "user_input": null,
-      "confidence": "Medium",
-      "cwe_id": [
-        1104
-      ],
-      "note": ""
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "a7d18cc3434b4428a884f1217791f9a9db67839e73fb499f1ccd0f686f08eccc",
@@ -369,6 +350,138 @@
         89
       ],
       "note": "The table and column are escaped, which should make this safe"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "6f6580a9edec3be50ad94957d0add8fec4ebd9934ffdb1b4a420666f6dc3ad85",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/shared/dossiers/messages/_form.html.haml",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "::Haml::AttributeBuilder.build_id(true, dom_id(CommentaireGroupeGestionnaire.new, :send_message_menu))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Administrateurs::GroupeGestionnaireController",
+          "method": "commentaires",
+          "line": 21,
+          "file": "app/controllers/administrateurs/groupe_gestionnaire_controller.rb",
+          "rendered": {
+            "name": "administrateurs/groupe_gestionnaire/commentaires",
+            "file": "app/views/administrateurs/groupe_gestionnaire/commentaires.html.haml"
+          }
+        },
+        {
+          "type": "template",
+          "name": "administrateurs/groupe_gestionnaire/commentaires",
+          "line": 21,
+          "file": "app/views/administrateurs/groupe_gestionnaire/commentaires.html.haml",
+          "rendered": {
+            "name": "shared/dossiers/messages/_form",
+            "file": "app/views/shared/dossiers/messages/_form.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/dossiers/messages/_form"
+      },
+      "user_input": "CommentaireGroupeGestionnaire.new",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "dom_id is a safe Rails helper that generates HTML-safe IDs"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "dea57f9e45e6742c10f09b2be7e6d82d2f6fb7bb19362e8c2e8db16111877182",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/shared/dossiers/messages/_form.html.haml",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "::Haml::AttributeBuilder.build_aria(true, \"'\", :labelledby => dom_id(CommentaireGroupeGestionnaire.new, :send_message_toggle))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Administrateurs::GroupeGestionnaireController",
+          "method": "commentaires",
+          "line": 21,
+          "file": "app/controllers/administrateurs/groupe_gestionnaire_controller.rb",
+          "rendered": {
+            "name": "administrateurs/groupe_gestionnaire/commentaires",
+            "file": "app/views/administrateurs/groupe_gestionnaire/commentaires.html.haml"
+          }
+        },
+        {
+          "type": "template",
+          "name": "administrateurs/groupe_gestionnaire/commentaires",
+          "line": 21,
+          "file": "app/views/administrateurs/groupe_gestionnaire/commentaires.html.haml",
+          "rendered": {
+            "name": "shared/dossiers/messages/_form",
+            "file": "app/views/shared/dossiers/messages/_form.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/dossiers/messages/_form"
+      },
+      "user_input": "CommentaireGroupeGestionnaire.new",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "dom_id is a safe Rails helper that generates HTML-safe IDs. Used for ARIA labelledby attribute in accessible menu."
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "8e26252c1ba97328ffef41edeb5ceed45abb7255700679ac46c862779a72d5d4",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/shared/dossiers/messages/_form.html.haml",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "::Haml::AttributeBuilder.build_aria(true, \"'\", :label => t(\"views.shared.dossiers.messages.form.more_options\"), :haspopup => \"menu\", :expanded => \"false\", :controls => dom_id(CommentaireGroupeGestionnaire.new, :send_message_menu))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Administrateurs::GroupeGestionnaireController",
+          "method": "commentaires",
+          "line": 21,
+          "file": "app/controllers/administrateurs/groupe_gestionnaire_controller.rb",
+          "rendered": {
+            "name": "administrateurs/groupe_gestionnaire/commentaires",
+            "file": "app/views/administrateurs/groupe_gestionnaire/commentaires.html.haml"
+          }
+        },
+        {
+          "type": "template",
+          "name": "administrateurs/groupe_gestionnaire/commentaires",
+          "line": 21,
+          "file": "app/views/administrateurs/groupe_gestionnaire/commentaires.html.haml",
+          "rendered": {
+            "name": "shared/dossiers/messages/_form",
+            "file": "app/views/shared/dossiers/messages/_form.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/dossiers/messages/_form"
+      },
+      "user_input": "CommentaireGroupeGestionnaire.new",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "dom_id is a safe Rails helper that generates HTML-safe IDs. Used for ARIA controls attribute in accessible menu button."
     }
   ],
   "brakeman_version": "7.1.0"
