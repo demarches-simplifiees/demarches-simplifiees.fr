@@ -30,14 +30,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def item_component
-    case rule
-    when 'improve_label'
-      LLM::ImproveLabelItemComponent
-    when 'improve_structure'
-      LLM::ImproveStructureItemComponent
-    else
-      raise "Unknown LLM rule suggestion view component for rule: #{rule}"
-    end
+    LLMRuleSuggestion.item_component_class_for(rule)
   end
 
   def prtdcs
