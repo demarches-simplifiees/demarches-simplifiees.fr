@@ -184,7 +184,19 @@ module Administrateurs
         .where(rule: rule)
         .order(created_at: :desc)
         .first
-      @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule: params[:rule])
+
+      rule = params[:rule]
+      if @llm_rule_suggestion&.finished?
+        next_rule = LLMRuleSuggestion.next_rule(params[:rule])
+
+        if next_rule
+          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule)
+        else
+          # NOOP, a message will be shown
+        end
+      end
+
+      @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule:)
     end
 
     def accept_simplification
