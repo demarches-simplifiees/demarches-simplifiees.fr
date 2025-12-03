@@ -993,6 +993,7 @@ en:
         close_to_expiration: expiring
         to_archive: to archive
         trash: trash
+      aasm_error_annotations: The private annotations are not filled in correctly; it is not possible to change the file to %{state}. <a href="%{url}">Edit annotations</a>.
     procedure_presentation:
       customize_filters:
         exit_customization: "Exit customization"

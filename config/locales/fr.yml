@@ -998,6 +998,7 @@ fr:
         close_to_expiration: expirants
         to_archive: à archiver
         trash: corbeille
+      aasm_error_annotations: Les annotations privées ne sont pas remplis correctement, il n’est pas possible de passer le dossier en %{state}. <a href="%{url}">Modifier les annotations</a>.
     procedure_presentation:
       customize_filters:
         exit_customization: "Quitter la personnalisation"
