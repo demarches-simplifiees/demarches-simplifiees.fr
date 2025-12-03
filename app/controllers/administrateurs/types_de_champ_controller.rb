@@ -192,10 +192,14 @@ module Administrateurs
       return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée") unless @llm_rule_suggestion
 
       ActiveRecord::Base.transaction do
-        @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
-        @llm_rule_suggestion.save!
-        @procedure.draft_revision.apply_llm_rule_suggestion_items(@llm_rule_suggestion.changes_to_apply)
-        @llm_rule_suggestion.update_column(:state, 'accepted')
+        if @llm_rule_suggestion.llm_rule_suggestion_items.empty?
+          @llm_rule_suggestion.skipped!
+        else
+          @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
+          @llm_rule_suggestion.save!
+          @procedure.draft_revision.apply_llm_rule_suggestion_items(@llm_rule_suggestion.changes_to_apply)
+          @llm_rule_suggestion.accepted!
+        end
       end
 
       next_rule = LLMRuleSuggestion.next_rule(@llm_rule_suggestion.rule)
