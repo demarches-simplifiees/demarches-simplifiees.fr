@@ -2,7 +2,7 @@
 
 module RevisionDescribableToLLMConcern
   def schema_to_llm
-    revision_types_de_champ
+    revision_types_de_champ.includes(:parent)
       .filter(&:public?).map do |rtdc|
         {
           stable_id: rtdc.stable_id,
