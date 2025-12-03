@@ -16,7 +16,7 @@ RSpec.describe LLM::StepperComponent, type: :component do
   context 'with the label improvement rule' do
     let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
     it 'shows the first step and the correct next step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 4')
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 2')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration des libellés")
       expect(rendered_component.css('.fr-stepper__details').text).to include("Amélioration de la structure")
       expect(rendered_component).to have_link('Annuler et revenir à l\'écran de gestion', href: Rails.application.routes.url_helpers.admin_procedure_path(procedure))
@@ -26,7 +26,7 @@ RSpec.describe LLM::StepperComponent, type: :component do
   context 'with the structure rule' do
     let(:rule) { LLMRuleSuggestion.rules.fetch('improve_structure') }
     it 'marks the second step and shows no further step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 4')
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 2')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration de la structure")
       expect(rendered_component.css('.fr-stepper__details').text).to include("À venir...")
       expect(rendered_component).to have_link('Annuler et revenir à l\'écran de gestion', href: Rails.application.routes.url_helpers.admin_procedure_path(procedure))

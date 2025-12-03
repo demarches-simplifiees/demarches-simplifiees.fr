@@ -8,6 +8,19 @@ class LLMRuleSuggestion < ApplicationRecord
   enum :state, { pending: 'pending', queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped' }
   enum :rule, { improve_label: 'improve_label', improve_structure: 'improve_structure' }
 
+  RULE_SEQUENCE = %w[improve_label improve_structure].freeze
+
+  RULE_CONFIG = {
+    'improve_label' => {
+      item_component_class: 'LLM::ImproveLabelItemComponent',
+      service_class: 'LLM::LabelImprover',
+    },
+    'improve_structure' => {
+      item_component_class: 'LLM::ImproveStructureItemComponent',
+      service_class: 'LLM::StructureImprover',
+    },
+  }.freeze
+
   scope :last_for_procedure_revision, -> {
     order(Arel.sql("
       array_position(ARRAY['improve_label'], llm_rule_suggestions.rule) NULLS LAST,
@@ -21,6 +34,35 @@ class LLMRuleSuggestion < ApplicationRecord
   validates :rule, presence: true
 
   accepts_nested_attributes_for :llm_rule_suggestion_items
+
+  class << self
+    def next_rule(current_rule)
+      current_index = RULE_SEQUENCE.index(current_rule)
+      return if current_index == RULE_SEQUENCE.length - 1
+
+      RULE_SEQUENCE[current_index + 1]
+    end
+
+    def last_rule?(rule)
+      next_rule(rule).nil?
+    end
+
+    def position_for(rule)
+      RULE_SEQUENCE.index(rule)&.next
+    end
+
+    def item_component_class_for(rule)
+      RULE_CONFIG.dig(rule, :item_component_class).constantize
+    end
+
+    def service_class_for(rule)
+      RULE_CONFIG.dig(rule, :service_class).constantize
+    end
+  end
+
+  def finished?
+    accepted? || skipped?
+  end
 
   def llm_rule_suggestion_items_attributes=(attributes)
     attributes.each do |(_idx, llm_rule_suggestion_items_attribute)|
