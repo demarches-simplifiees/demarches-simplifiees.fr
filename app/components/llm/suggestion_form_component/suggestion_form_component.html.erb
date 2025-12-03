@@ -52,6 +52,20 @@
       <% end %>
     </div>
   <% end %>
+<% elsif stepper_finished? %>
+  <%= render Dsfr::AlertComponent.new(state: :success) do |component| %>
+    <% component.with_body do %>
+      <p>
+        <strong>Ce parcours d’amélioration de la qualité du formulaire est terminé.</strong>
+        Vous pourrez obtenir de nouvelles suggestions une fois que vous aurez
+        modifié le formulaire.
+      </p>
+
+      <p class="fr-mt-1w">
+        <%= link_to("Revenir à l'écran de gestion", back_link, class: "fr-btn") %>
+      </p>
+    <% end %>
+  <% end %>
 <% else %>
   <div>
     <%= display_message %>
