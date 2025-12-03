@@ -22,12 +22,7 @@ class LLMRuleSuggestion < ApplicationRecord
   }.freeze
 
   scope :last_for_procedure_revision, -> {
-    order(Arel.sql("
-      array_position(ARRAY['improve_label'], llm_rule_suggestions.rule) NULLS LAST,
-      CASE WHEN llm_rule_suggestions.state = 'accepted' THEN 1 ELSE 0 END DESC,
-      CASE WHEN llm_rule_suggestions.state = 'skipped' THEN 1 ELSE 0 END DESC,
-      CASE WHEN llm_rule_suggestions.state = 'completed' THEN 1 ELSE 0 END DESC,
-      llm_rule_suggestions.id DESC"))
+    order(created_at: :desc).first
   }
 
   validates :schema_hash, presence: true
