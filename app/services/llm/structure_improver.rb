@@ -124,9 +124,8 @@ module LLM
         op_kind: 'add',
         stable_id: nil,
         payload: payload,
-        safety: 'review',
+        verify_status: 'review',
         justification: args['justification'].to_s.presence,
-        confidence: args['confidence'],
       }
     end
 
@@ -139,9 +138,8 @@ module LLM
         op_kind: 'update',
         stable_id: stable_id,
         payload: payload,
-        safety: 'review',
+        verify_status: 'review',
         justification: args['justification'].to_s.presence,
-        confidence: args['confidence'],
       }
     end
   end
