@@ -146,4 +146,57 @@ describe JSONPathUtil do
       expect(JSONPathUtil.extract_array_name('array[42]')).to eq('array')
     end
   end
+
+  describe '.on_safe' do
+    subject { described_class.on_safe(json, jsonpath).first }
+
+    context 'when accessing a simple key' do
+      let(:json) { { 'key' => 'value' } }
+      let(:jsonpath) { 'key' }
+
+      it { is_expected.to eq('value') }
+    end
+
+    context 'when accessing a nested key' do
+      let(:json) { { 'deep' => { 'nested' => 'value' } } }
+      let(:jsonpath) { 'deep.nested' }
+
+      it { is_expected.to eq('value') }
+    end
+
+    context 'when handling keys with spaces by sanitizing them' do
+      let(:json) { { 'key with space' => 'value' } }
+      let(:jsonpath) { 'key with space' }
+
+      it { is_expected.to eq('value') }
+    end
+
+    context 'when handling nested keys with spaces' do
+      let(:json) { { 'deep' => { 'nested key' => 'value' } } }
+      let(:jsonpath) { 'deep.nested key' }
+
+      it { is_expected.to eq('value') }
+    end
+
+    context 'when handling arrays with indices' do
+      let(:json) { { 'array' => ['first', 'second'] } }
+      let(:jsonpath) { 'array[0]' }
+
+      it { is_expected.to eq('first') }
+    end
+
+    context 'when handling keys with spaces in arrays' do
+      let(:json) { { 'items' => [{ 'key with space' => 'value' }] } }
+      let(:jsonpath) { 'items[0].key with space' }
+
+      it { is_expected.to eq('value') }
+    end
+
+    context 'when path does not exist' do
+      let(:json) { { 'key' => 'value' } }
+      let(:jsonpath) { 'missing' }
+
+      it { is_expected.to be_nil }
+    end
+  end
 end

@@ -31,7 +31,7 @@ class ReferentielAutocompleteRenderService
   def render_template(template, obj, interpolations = [])
     case template["type"]
     when "mention"
-      interpolations << JsonPath.on(obj.transform_keys(&:parameterize), template["attrs"]["id"].parameterize).first
+      interpolations << JSONPathUtil.on_safe(obj, template["attrs"]["id"]).first
     when "text"
       interpolations << template["text"]
     when "doc", 'paragraph'
