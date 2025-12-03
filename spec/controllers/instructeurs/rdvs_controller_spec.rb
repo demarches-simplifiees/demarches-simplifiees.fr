@@ -24,5 +24,14 @@ describe Instructeurs::RdvsController, type: :controller do
       subject
       expect(response).to redirect_to(rdv_plan_result.value!.rdv_plan_url)
     end
+
+    context 'when the dossier has no individual and no France Connect information' do
+      let(:dossier) { create(:dossier, :en_instruction, individual: nil, user: create(:user, france_connect_informations: [])) }
+
+      it 'creates a new rdv with default names and does not raise an error' do
+        expect { subject }.not_to raise_error
+        expect(response).to redirect_to(rdv_plan_result.value!.rdv_plan_url)
+      end
+    end
   end
 end

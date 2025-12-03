@@ -8,10 +8,13 @@ module Instructeurs
       # TODO: remove this once ENV are fixed in dev env
       host = helpers.app_host_legacy?(request) ? ENV.fetch("APP_HOST_LEGACY") : ENV.fetch("APP_HOST")
 
+      first_name = @dossier.individual&.prenom || @dossier.user.france_connect_informations.first&.given_name || "Usager"
+      last_name = @dossier.individual&.nom || @dossier.user.france_connect_informations.first&.family_name || "Démarche Numérique"
+
       @rdv_plan_result = RdvService.new(rdv_connection: current_instructeur.rdv_connection).create_rdv_plan(
         dossier: @dossier,
-        first_name: @dossier.individual&.prenom,
-        last_name: @dossier.individual&.nom,
+        first_name:,
+        last_name:,
         email: @dossier.user_email_for(:notification),
         dossier_url: instructeur_dossier_url(@dossier.procedure, @dossier, host:),
         return_url: rendez_vous_instructeur_dossier_url(@dossier.procedure, @dossier, host:)
