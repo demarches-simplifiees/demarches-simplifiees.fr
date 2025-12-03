@@ -77,7 +77,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
       let(:state) { 'skipped' }
 
       it "si skipé, dire que ca a ete fait mais on peut relancer?" do
-        expect(subject).to have_content("Vous avez déjà ignorer des suggestions, souhaitez-vous en regénérer ?")
+        expect(subject).to have_content("Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?")
         expect(subject).to have_button("Régénérer les suggestions")
       end
     end
