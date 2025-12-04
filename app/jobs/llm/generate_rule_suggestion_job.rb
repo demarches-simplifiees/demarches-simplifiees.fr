@@ -39,7 +39,9 @@ class LLM::GenerateRuleSuggestionJob < ApplicationJob
     @service ||= begin
       case suggestion.rule
       when 'improve_label'
-        LLM::LabelImprover.new(runner: @runner)
+        return LLM::LabelImprover.new(runner: @runner)
+      when 'improve_structure'
+        return LLM::StructureImprover.new(runner: @runner)
       else
         raise "Unknown rule: #{suggestion.rule}"
       end

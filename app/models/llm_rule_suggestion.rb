@@ -6,7 +6,7 @@ class LLMRuleSuggestion < ApplicationRecord
   has_many :llm_rule_suggestion_items, dependent: :destroy
 
   enum :state, { pending: 'pending', queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped' }
-  enum :rule, { improve_label: 'improve_label' }
+  enum :rule, { improve_label: 'improve_label', improve_structure: 'improve_structure' }
 
   scope :last_for_procedure_revision, -> {
     order(Arel.sql("
