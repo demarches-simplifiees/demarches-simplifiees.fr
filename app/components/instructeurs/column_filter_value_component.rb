@@ -39,8 +39,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   def column_filter_options
     options = column.options_for_select
 
-    if tdc_type == "yes_no" && !column.mandatory
-      options.unshift(Column.not_filled_option)
+    if tdc_type.in?(["yes_no", "civilite"]) && !column.mandatory
+      options << Column.not_filled_option
     end
 
     if column.column == 'notification_type'
