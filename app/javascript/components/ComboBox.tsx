@@ -191,7 +191,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     valueSeparator,
     className,
     focusOnSelect,
-    tagsBelow = false,
+    hideTags = false,
     ...props
   } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
 
@@ -224,11 +224,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
 
   const tagGroup =
     selectedItems.length > 0 ? (
-      <TagGroup
-        onRemove={onRemove}
-        aria-label={props['aria-label']}
-        className={tagsBelow ? 'fr-mt-1w' : undefined}
-      >
+      <TagGroup onRemove={onRemove} aria-label={props['aria-label']}>
         <TagList items={selectedItems} className="fr-tag-list">
           {selectedItems.map((item) => (
             <Tag
@@ -254,7 +250,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
 
   return (
     <div className={`fr-ds-combobox__multiple ${className ? className : ''}`}>
-      {!tagsBelow ? tagGroup : null}
+      {hideTags ? null : tagGroup}
       <ComboBox
         allowsCustomValue={allowsCustomValue}
         inputRef={inputRef}
@@ -265,7 +261,6 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
       >
         {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
       </ComboBox>
-      {tagsBelow ? tagGroup : null}
       {name ? (
         <span ref={ref}>
           {hiddenInputValues.length == 0 ? (
