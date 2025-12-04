@@ -22,8 +22,8 @@ module LLM
       "Amélioration de la qualité du formulaire « #{procedure.libelle} »"
     end
 
-    def step_title
-      case rule
+    def step_title(rule_name = rule)
+      case rule_name
       when 'improve_label'
         "Amélioration des libellés"
       when 'improve_structure'
@@ -32,25 +32,16 @@ module LLM
     end
 
     def next_step_title
-      case rule
-      when 'improve_label'
-        "Amélioration de la structure"
-      when 'improve_structure'
-        "À venir..."
-      end
+      next_rule = LLMRuleSuggestion.next_rule(rule)
+      step_title(next_rule)
     end
 
     def current_step
-      case rule
-      when 'improve_label'
-        1
-      when 'improve_structure'
-        2
-      end
+      LLMRuleSuggestion.position_for(rule)
     end
 
     def step_count
-      4
+      LLMRuleSuggestion::RULE_SEQUENCE.count
     end
   end
 end

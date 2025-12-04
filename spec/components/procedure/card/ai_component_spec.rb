@@ -51,4 +51,31 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       expect(subject.send(:last_llm_rule_suggestion)).to eq(accepted_suggestion)
     end
   end
+
+  describe 'rendered component' do
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+
+    context 'avec amélioration' do
+      before do
+        draft_revision.update!(updated_at: 2.days.ago)
+      end
+
+      it 'affiche le badge Amélioré' do
+        create(:llm_rule_suggestion,
+               procedure_revision: draft_revision,
+               state: :accepted,
+               updated_at: 1.day.ago)
+
+        render_inline(subject)
+        expect(page).to have_css('.fr-badge--success', text: 'Amélioré')
+      end
+    end
+
+    context 'sans amélioration' do
+      it 'affiche le badge À faire' do
+        render_inline(subject)
+        expect(page).to have_css('.fr-badge--warning', text: 'À faire')
+      end
+    end
+  end
 end

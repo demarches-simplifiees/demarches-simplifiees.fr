@@ -15,20 +15,19 @@ module LLM
               description: 'Mise à jour d’un champ existant.',
               properties: {
                 stable_id: { type: 'integer', description: 'Identifiant du champ à modifier.' },
-                position: { type: ['integer'], description: 'Position du champ' },
+                after_stable_id: { type: ['integer'], description: 'Identifiant du champ après lequel ce champ doit être déplacé.' },
               },
-              required: %w[position stable_id],
+              required: %w[stable_id],
             },
             add: {
               type: 'object',
               description: 'Ajout d’une nouvelle section.',
               properties: {
                 after_stable_id: { type: ['integer', 'null'], description: 'Identifiant du champ après lequel le champ à ajouter doit être positionné. Utiliser null UNIQUEMENT si le champ à ajouter doit être positionné en premier.' },
-                position: { type: ['integer'], description: 'Position du champ' },
                 libelle: { type: 'string', description: 'Libellé de la section (<= 80 chars, plain language)' },
                 header_section_level: { type: 'integer', description: "Le niveau de la section (1 pour la plus haute hiérarchie, jusqu\'à 3)" },
               },
-              required: %w[after_stable_id libelle header_section_level position],
+              required: %w[after_stable_id libelle header_section_level],
             },
             justification: { type: 'string' },
           },
@@ -94,13 +93,12 @@ module LLM
         Règles :
         - Positionne les champs essentiels en premier
         - Positionne les champs dans un ordre logique pour l’usager
-        - Si tu modifie la position d’un champ existant ou si tu ajoutes une nouvelle section, tu dois changer la position de tous les champs
-        - Deux champs ne peuvent pas avoir la même position
         - Afin de structurer le formulaire, tu peux ajouter des sections (type `header_section`)
           - Tu dois utiliser un `libelle` clairs et concis (<= 80 caractères).
           - Tu dois utiliser un `header_section_level` pour indiquer le niveau de la section (1 à 3).
         - Utilise `add` pour créer une nouvelle section.
           - Quand tu ajoutes un champ, positionne-le en utilisant `after_stable_id` qui est l'identifiant du champ qui le précède.
+          - Si tu ajoutes plusieurs champs consécutifs, (avec le même `after_stable_id`), réponds dans l’ordre dans lequel ils doivent être ajoutés.
         - Utilise `update` pour repositionner un champ existant.
         - Fournis toujours une justification courte et une confiance 0..1.
       TXT
@@ -124,9 +122,8 @@ module LLM
         op_kind: 'add',
         stable_id: nil,
         payload: payload,
-        safety: 'review',
+        verify_status: 'review',
         justification: args['justification'].to_s.presence,
-        confidence: args['confidence'],
       }
     end
 
@@ -139,9 +136,8 @@ module LLM
         op_kind: 'update',
         stable_id: stable_id,
         payload: payload,
-        safety: 'review',
+        verify_status: 'review',
         justification: args['justification'].to_s.presence,
-        confidence: args['confidence'],
       }
     end
   end

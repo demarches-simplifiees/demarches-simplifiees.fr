@@ -5,37 +5,91 @@
       <p><%= step_summary %></p>
     <% end %>
   <% end %>
-  <div class="border-background-contrast-grey">
-    <p class="fr-badge fr-badge--info">
-      <%= suggestions_count %>
-      <%= 'suggestion'.pluralize(suggestions_count) %>
-    </p>
+  <% if suggestions_count.zero? %>
+    <%= render Dsfr::AlertComponent.new(state: :success) do |component| %>
+      <% component.with_body do %>
+        <p>
+          🎉 <strong>Félicitations</strong>, nous n’avons aucune suggestion
+          pertinente à proposer sur ce thème, ce qui signifie probablement que
+          votre formulaire est déjà de qualité!
+        </p>
 
-    <%= form_for llm_rule_suggestion,
+        <%= form_for llm_rule_suggestion,
+                      url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion),
+                      method: :post do |form| %>
+          <p class="fr-mt-1w">
+            <%= form.submit("Passer à la suite", class: "fr-btn") %>
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <div class="border-background-contrast-grey fr-p-2w">
+      <p class="fr-badge fr-badge--info fr-mb-3w">
+        <%= suggestions_count %>
+        <%= 'suggestion'.pluralize(suggestions_count) %>
+      </p>
+
+      <%= form_for llm_rule_suggestion,
                     url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion),
                     method: :post,
                     data: { controller: "enable-submit-if-checked" } do |form| %>
-      <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
-        <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
-          <%= render item_component.new(form_builder: ff) %>
-        <% end %>
+        <fieldset
+          class="fr-fieldset"
+          data-action="click->enable-submit-if-checked#click"
+        >
+          <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
+            <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
+              <%= render item_component.new(form_builder: ff) %>
+            <% end %>
+          <% end %>
+        </fieldset>
+
+        <ul class="fr-btns-group fr-btns-group--inline-md mt-4 flex justify-center">
+          <li>
+            <% if last_rule? %>
+              <%= link_to("Ignorer et revenir à l’écran de gestion", back_link, class: "fr-btn fr-btn--secondary") %>
+            <% else %>
+              <%= form.submit("Ignorer et poursuivre", class: "fr-btn fr-btn--secondary") %>
+            <% end %>
+          </li>
+
+          <li>
+            <%= form.submit("Appliquer les suggestions et poursuivre", class: "fr-btn", data: { 'enable-submit-if-checked-target': 'submit' }, disabled: !at_least_one_accepted?) %>
+          </li>
+        </ul>
       <% end %>
+    </div>
+  <% end %>
+<% elsif stepper_finished? %>
+  <%= render Dsfr::AlertComponent.new(state: :success) do |component| %>
+    <% component.with_body do %>
+      <p>
+        <strong>Ce parcours d’amélioration de la qualité du formulaire est terminé.</strong>
+        Vous pourrez obtenir de nouvelles suggestions une fois que vous aurez
+        modifié le formulaire.
+      </p>
 
-      <ul class="fr-btns-group fr-btns-group--inline-md mt-4 flex justify-center">
-        <li>
-          <%= link_to("Annuler et revenir à l'écran de gestion", back_link, class: "fr-btn fr-btn--secondary") %>
-        </li>
-
-        <li>
-          <%= form.submit("Appliquer les suggestions et poursuivre", class: "fr-btn", data: { 'enable-submit-if-checked-target': 'submit' }, disabled: !at_least_one_accepted?) %>
-        </li>
-      </ul>
+      <p class="fr-mt-1w">
+        <%= link_to("Revenir à l'écran de gestion", back_link, class: "fr-btn") %>
+      </p>
     <% end %>
-  </div>
+  <% end %>
 <% else %>
-  <div>
+  <div
+    data-controller="<%= poll_controller_data %>"
+    data-turbo-poll-url-value="<%= poll_url if should_poll? %>"
+    data-turbo-poll-interval-value="3000"
+  >
     <%= display_message %>
 
-    <p><%= button %></p>
+    <% if llm_rule_suggestion.state.in?(['running', 'queued']) %>
+      <span class="fr-btn fr-btn--tertiary llm-job-progress">
+        <span class="llm-job-progress__bar"></span>
+        <span class="llm-job-progress__label"><%= enqueue_button_text %></span>
+      </span>
+    <% else %>
+      <p><%= button %></p>
+    <% end %>
   </div>
 <% end %>
