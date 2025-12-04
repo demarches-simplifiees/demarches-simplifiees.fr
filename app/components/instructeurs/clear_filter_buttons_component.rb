@@ -57,6 +57,7 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
 
     button_to(
       update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
+      id: "clear-filter-button-#{filter.id}-#{value}".parameterize,
       class: 'fr-tag fr-tag--dismiss fr-tag--sm',
       params: {
         filter_key: filter.id,
