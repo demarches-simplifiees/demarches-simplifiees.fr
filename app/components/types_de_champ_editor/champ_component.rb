@@ -168,13 +168,13 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def options_for_character_limit
-    [
-      [t('.character_limit.unlimited'), nil],
-      [t('.character_limit.limit', limit: '400'), 400],
-      [t('.character_limit.limit', limit: '1 000'), 1000],
-      [t('.character_limit.limit', limit: '5 000'), 5000],
-      [t('.character_limit.limit', limit: '10 000'), 10000],
-    ]
+    options = [[t('.character_limit.unlimited'), nil]]
+
+    (400..900).step(100).to_a.concat((1000..10000).step(1000).to_a).each do |limit|
+      options << [t('.character_limit.limit', limit: limit.to_fs(:delimited)), limit]
+    end
+
+    options
   end
 
   def turbo_confirm
