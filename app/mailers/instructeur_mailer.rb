@@ -50,7 +50,7 @@ class InstructeurMailer < ApplicationMailer
 
   def send_notifications(instructeur, data)
     @data = data
-    subject = "Votre récapitualtif quotidien"
+    subject = "Votre récapitulatif quotidien"
 
     mail(to: instructeur.email, subject: subject)
   end
