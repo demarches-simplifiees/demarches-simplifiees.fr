@@ -66,7 +66,7 @@
 %fieldset.fr-fieldset
   .fr-fieldset__element
     = render Dsfr::InputComponent.new(form: f, attribute: :lien_dpo, input_type: :text_field, opts: {}, required: false) do |c|
-      - c.with_hint_content("Pour certaines démarches, veuillez indiquer soit le mail de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations")
+      - c.with_hint_content("Pour certaines démarches, veuillez indiquer soit l’adresse électronique de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations")
 
   - if Rails.application.config.ds_opendata_enabled
     .fr-fieldset__element

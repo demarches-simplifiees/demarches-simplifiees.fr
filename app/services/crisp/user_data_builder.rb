@@ -53,9 +53,9 @@ module Crisp
     def build_properties
       text = []
       text << if user.email_verified_at?
-        "**Email vérifié**"
+        "**Adresse électronique vérifiée**"
       else
-        "⚠️ **Email non vérifié**"
+        "⚠️ **Adresse électronique non vérifiée**"
       end
 
       text << "❌ Compte bloqué depuis le #{I18n.l(user.blocked_at, format: :short)}" if user.blocked_at.present?

@@ -586,7 +586,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(response.status).to eq(302)
           expect(procedure.groupe_instructeurs.first.label).to eq("Afrique")
           expect(flash.alert).to be_present
-          expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara")
+          expect(flash.alert).to eq("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte : kara")
         end
       end
 
@@ -718,7 +718,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
         it 'handles imports with closed procedures' do
           expect(procedure.groupe_instructeurs.first.label).to eq("Afrique")
-          expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara")
+          expect(flash.alert).to eq("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte : kara")
         end
       end
 
@@ -733,7 +733,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         end
 
         it 'manages CSV with invalid emails and checks for mailer action' do
-          expect(flash.alert).to include("Import terminé. Cependant les emails suivants ne sont pas pris en compte:")
+          expect(flash.alert).to include("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte :")
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
         end
       end
@@ -761,7 +761,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(response.status).to eq(302)
           expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"])
           expect(flash.alert).to be_present
-          expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: eric")
+          expect(flash.alert).to eq("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte : eric")
           expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(3).times
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
         end
@@ -775,7 +775,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         it 'confirms multiple column CSV import, response, and routing changes' do
           expect(response.status).to eq(302)
           expect(flash.alert).to be_present
-          expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara")
+          expect(flash.alert).to eq("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte : kara")
           expect(procedure_non_routee.reload.routing_enabled?).to be_truthy
         end
       end
@@ -827,7 +827,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         end
 
         it 'verifies email validity in CSV imports and checks for mailer not being called' do
-          expect(flash.alert).to include("Import terminé. Cependant les emails suivants ne sont pas pris en compte:")
+          expect(flash.alert).to include("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte :")
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
         end
       end

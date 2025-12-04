@@ -12,7 +12,7 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ["Configuration des emails", admin_procedure_mail_templates_path(@procedure)],
+                    ["Modèles d’email", admin_procedure_mail_templates_path(@procedure)],
                     [@mail_template.class.const_get(:DISPLAYED_NAME)]] }
 
 .procedure-form

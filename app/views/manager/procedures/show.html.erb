@@ -77,7 +77,7 @@
             <%= render_field attribute, page: page %>
             <% if attribute.name == 'administrateurs' %>
               <%= form_tag(add_administrateur_with_confirmation_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
-                <%= email_field_tag(:email, '', placeholder: 'Email', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
+                <%= email_field_tag(:email, '', placeholder: 'Adresse électronique', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
                 <button>Ajouter un administrateur (pour toujours)</button>
 
                 <p>

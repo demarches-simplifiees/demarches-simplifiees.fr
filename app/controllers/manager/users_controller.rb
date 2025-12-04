@@ -11,7 +11,7 @@ module Manager
         user.update(email: targeted_email)
 
         if (user.valid?)
-          flash[:notice] = "L'email a été modifié en « #{targeted_email} » sans notification ni validation par email."
+          flash[:notice] = "L’adresse électronique a été modifiée en « #{targeted_email} » sans notification ni validation par email."
         else
           flash[:error] = user.errors.full_messages.to_sentence
         end

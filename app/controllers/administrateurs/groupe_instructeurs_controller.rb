@@ -485,7 +485,7 @@ module Administrateurs
       if result.blank?
         flash[:notice] = "La liste des instructeurs a été importée avec succès"
       else
-        flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{result.join(', ')}"
+        flash[:alert] = "Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte : #{result.join(', ')}"
       end
     end
 
