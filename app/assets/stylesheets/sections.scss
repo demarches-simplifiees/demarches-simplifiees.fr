@@ -23,25 +23,4 @@
     counter-increment: h4;
     content: counter(h2) '.' counter(h3) '.' counter(h4) '. ';
   }
-
-  // Repeat block
-  .repetition {
-    .fr-fieldset,
-    .fr-fieldset__legend {
-      margin-right: 0;
-      margin-left: 0;
-    }
-    .fr-fieldset__element,
-    .fr-fieldset__legend {
-      padding-left: 0;
-    }
-    // Remove padding right on .fr-fieldset__element that are not inline
-    .fr-fieldset__element:not(.fr-fieldset__element--inline),
-    .fr-fieldset__legend {
-      padding-right: 0;
-    }
-    .fr-fieldset__legend {
-      padding-bottom: 0;
-    }
-  }
 }
