@@ -56,7 +56,7 @@ describe Instructeurs::ClearFilterButtonsComponent, type: :component do
       end
 
       it 'should display all filters' do
-        text = "État du dossier : En construction, En instructionDate de création : 15 juin 2023"
+        text = "État du dossier : En constructionÉtat du dossier : En instructionDate de création : 15 juin 2023"
         expect(page).to have_text(text)
       end
     end
