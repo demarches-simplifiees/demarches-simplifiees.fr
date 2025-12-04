@@ -34,15 +34,24 @@
                     url: accept_simplification_admin_procedure_types_de_champ_path(procedure, llm_rule_suggestion),
                     method: :post,
                     data: { controller: "enable-submit-if-checked" } do |form| %>
-        <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
-          <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
-            <%= render item_component.new(form_builder: ff) %>
+        <fieldset
+          class="fr-fieldset"
+          data-action="click->enable-submit-if-checked#click"
+        >
+          <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
+            <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
+              <%= render item_component.new(form_builder: ff) %>
+            <% end %>
           <% end %>
-        <% end %>
+        </fieldset>
 
         <ul class="fr-btns-group fr-btns-group--inline-md mt-4 flex justify-center">
           <li>
-            <%= link_to("Annuler et revenir à l'écran de gestion", back_link, class: "fr-btn fr-btn--secondary") %>
+            <% if last_rule? %>
+              <%= link_to("Ignorer et revenir à l’écran de gestion", back_link, class: "fr-btn fr-btn--secondary") %>
+            <% else %>
+              <%= form.submit("Ignorer et poursuivre", class: "fr-btn fr-btn--secondary") %>
+            <% end %>
           </li>
 
           <li>

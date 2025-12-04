@@ -84,8 +84,12 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     ])
   end
 
+  def last_rule?
+    LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
+  end
+
   def stepper_finished?
-    llm_rule_suggestion.finished? && LLMRuleSuggestion.next_rule(llm_rule_suggestion.rule).nil?
+    llm_rule_suggestion.finished? && last_rule?
   end
 
   private
