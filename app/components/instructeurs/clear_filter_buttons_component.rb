@@ -18,10 +18,13 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
   def filters_by_family
     @filters
       .reject(&:empty_filter?)
-      .group_by { _1.column.id }
-      .values
-      .map { |group| group.map { |f| filter_form(f) } }
-      .map { |group| safe_join(group, ", ") }
+      .flat_map do |filter|
+        if filter.filter_value.empty?
+          [filter_form(filter, nil)]
+        else
+          filter.filter_value.map { |value| filter_form(filter, value) }
+        end
+      end
   end
 
   def clear_all_filters_link
@@ -38,33 +41,50 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
     end
   end
 
-  def filter_form(filter)
+  def filter_form(filter, value)
+    # Create new filter with the specific value removed
+    new_filter = if value.nil?
+      # If value is nil, clear the entire filter
+      filter.empty_filter
+    else
+      new_filter_values = filter.filter_value - [value]
+      if new_filter_values.empty?
+        filter.empty_filter
+      else
+        { operator: filter.filter_operator, value: new_filter_values }
+      end
+    end
+
     button_to(
       update_filter_instructeur_procedure_presentation_path(@procedure_presentation),
       class: 'fr-tag fr-tag--dismiss fr-tag--sm',
       params: {
         filter_key: filter.id,
-        filter: { id: filter.column.id, filter: filter.empty_filter },
+        filter: { id: filter.column.id, filter: new_filter },
         statut: @statut,
       }.compact,
       form: { data: { turbo: true } },
       form_class: 'inline'
     ) do
-      button_content(filter)
+      button_content(filter, value)
     end
   end
 
-  def button_content(filter)
-    "#{filter.label.truncate(50)} : #{human_value(filter)}"
+  def button_content(filter, value)
+    if value.nil?
+      "#{filter.label.truncate(50)} : #{human_operator(filter.filter_operator)}"
+    else
+      "#{filter.label.truncate(50)} : #{human_value(filter, value)}"
+    end
   end
 
-  def human_value(filter_column)
+  def human_value(filter_column, value)
     column_type = filter_column.column.type
 
     processed_value = if column_type == :date || column_type == :datetime
-      filter_column.filter_value.map { helpers.try_parse_format_date(it) }.join(", ")
+      helpers.try_parse_format_date(value)
     else
-      filter_column.filter_value.map { filter_column.column.label_for_value(it) }.join(", ")
+      filter_column.column.label_for_value(value)
     end
 
     [human_operator(filter_column.filter_operator), processed_value].compact_blank.join(' ')
