@@ -92,6 +92,18 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     llm_rule_suggestion.finished? && last_rule?
   end
 
+  def should_poll?
+    llm_rule_suggestion.state.in?(['running', 'queued'])
+  end
+
+  def poll_controller_data
+    should_poll? ? 'turbo-poll' : ''
+  end
+
+  def poll_url
+    helpers.poll_simplify_admin_procedure_types_de_champ_path(procedure, rule: rule)
+  end
+
   private
 
   def render?

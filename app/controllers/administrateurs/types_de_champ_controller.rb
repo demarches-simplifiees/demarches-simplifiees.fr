@@ -199,6 +199,19 @@ module Administrateurs
       @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule:)
     end
 
+    def poll_simplify
+      @llm_rule_suggestion = llm_rule_suggestion_scope
+        .where(rule: rule)
+        .order(created_at: :desc)
+        .first
+
+      if @llm_rule_suggestion&.state&.in?(['completed', 'failed'])
+        render turbo_stream: turbo_stream.refresh
+      else
+        head :no_content
+      end
+    end
+
     def accept_simplification
       @llm_rule_suggestion = llm_rule_suggestion_scope.completed.includes(:llm_rule_suggestion_items).where(id: params[:llm_suggestion_rule_id]).first
       return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée") unless @llm_rule_suggestion

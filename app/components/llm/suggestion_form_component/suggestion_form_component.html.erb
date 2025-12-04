@@ -76,9 +76,19 @@
     <% end %>
   <% end %>
 <% else %>
-  <div>
+  <div data-controller="<%= poll_controller_data %>"
+       data-turbo-poll-url-value="<%= poll_url if should_poll? %>"
+       data-turbo-poll-interval-value="3000">
+
     <%= display_message %>
 
-    <p><%= button %></p>
+    <% if llm_rule_suggestion.state.in?(['running', 'queued']) %>
+      <span class="fr-btn fr-btn--tertiary llm-job-progress">
+        <span class="llm-job-progress__bar"></span>
+        <span class="llm-job-progress__label"><%= enqueue_button_text %></span>
+      </span>
+    <% else %>
+      <p><%= button %></p>
+    <% end %>
   </div>
 <% end %>
