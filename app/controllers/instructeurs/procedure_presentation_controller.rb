@@ -80,7 +80,7 @@ module Instructeurs
 
       if params_hash.key?('filter')
         params_hash['filter'] = ValueNormalizer.normalize(params_hash['filter'])
-        params_hash['filter']['value'] = params_hash['filter']['value']&.reject(&:empty?)
+        params_hash['filter']['value'] = params_hash['filter']['value']&.reject(&:empty?)&.uniq
       end
 
       FilteredColumnType.new.cast(params_hash)
