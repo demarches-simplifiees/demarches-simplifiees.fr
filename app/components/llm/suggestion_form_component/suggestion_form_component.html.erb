@@ -25,7 +25,7 @@
     <% end %>
   <% else %>
     <div class="border-background-contrast-grey fr-p-2w">
-      <p class="fr-badge fr-badge--info">
+      <p class="fr-badge fr-badge--info fr-mb-3w">
         <%= suggestions_count %>
         <%= 'suggestion'.pluralize(suggestions_count) %>
       </p>
@@ -76,10 +76,11 @@
     <% end %>
   <% end %>
 <% else %>
-  <div data-controller="<%= poll_controller_data %>"
-       data-turbo-poll-url-value="<%= poll_url if should_poll? %>"
-       data-turbo-poll-interval-value="3000">
-
+  <div
+    data-controller="<%= poll_controller_data %>"
+    data-turbo-poll-url-value="<%= poll_url if should_poll? %>"
+    data-turbo-poll-interval-value="3000"
+  >
     <%= display_message %>
 
     <% if llm_rule_suggestion.state.in?(['running', 'queued']) %>
