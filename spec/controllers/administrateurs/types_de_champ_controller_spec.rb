@@ -398,4 +398,126 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       end
     end
   end
+
+  describe '#simplify' do
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text, libelle: 'Ancien', stable_id: 123 }] }
+    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+    let(:procedure_revision) { procedure.draft_revision }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json) }
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    subject { get :simplify, params: { procedure_id: procedure.id, rule: llm_rule_suggestion.rule } }
+
+    context 'with existing completed suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
+
+      it 'assigns label suggestions from stored LLMRuleSuggestion items' do
+        expect(subject).to have_http_status(:ok)
+        expect(assigns(:llm_rule_suggestion)).to eq(llm_rule_suggestion)
+      end
+    end
+
+    context 'with pending llm suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'running', rule: rule) }
+      it 'redirects to procedure admin page with alert' do
+        expect(subject).to have_http_status(:ok)
+      end
+    end
+
+    context 'without LLM Suggestion' do
+      let(:llm_rule_suggestion) { double(rule:) }
+      it 'builds a new LLMRuleSuggestion when none exists' do
+        expect(subject).to have_http_status(:ok)
+        expect(assigns(:llm_rule_suggestion)).to an_instance_of(LLMRuleSuggestion)
+      end
+    end
+    context 'with non completed suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'queued', rule: rule) }
+
+      it 'redirects when suggestion is not completed' do
+        expect(subject).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe '#enqueue_simplify' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:schema_hash) { Digest::SHA256.hexdigest(procedure.draft_revision.schema_to_llm.to_json) }
+
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+    subject { post :enqueue_simplify, params: { procedure_id: procedure.id, rule: } }
+
+    it 'enqueues the improve procedure job when no analysis is running' do
+      expect(LLM::ImproveProcedureJob).to receive(:perform_now).with(procedure, rule, action: 'enqueue_simplify', user_id: procedure.administrateurs.first.user.id)
+
+      expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule:))
+      expect(flash[:notice]).to be_present
+    end
+
+    it 'does not enqueue when analysis already running' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule:, state: 'queued', schema_hash:)
+      expect(LLM::ImproveProcedureJob).not_to receive(:perform_now).with(procedure, rule, action: 'enqueue_simplify', user_id: procedure.administrateurs.first.user.id)
+
+      expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule:))
+      expect(flash[:notice]).to eq('Une recherche est déjà en cours pour cette règle.')
+    end
+
+    it 'does not enqueue when feature disabled' do
+      Flipper.disable_actor(:llm_nightly_improve_procedure, procedure)
+      expect(LLM::ImproveProcedureJob).not_to receive(:perform_now).with(procedure, rule, action: 'enqueue_simplify', user_id: procedure.administrateurs.first.user.id)
+
+      expect(subject).to redirect_to(admin_procedure_path(procedure))
+      expect(flash[:alert]).to eq('Les appels aux modèles de langage ne sont pas activés pour cette procédure.')
+    end
+
+    it 're-enqueues after a failure' do
+      create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule:, state: 'failed', schema_hash:)
+      expect(LLM::ImproveProcedureJob).to receive(:perform_now).with(procedure, rule, action: 'enqueue_simplify', user_id: procedure.administrateurs.first.user.id)
+
+      subject
+
+      expect(flash[:notice]).to be_present
+    end
+  end
+
+  describe '#accept_simplification' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :text, libelle: 'A', stable_id: 123 },
+        { type: :text, libelle: 'B' },
+      ]
+    end
+    before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
+    subject do
+      post :accept_simplification, params: {
+        procedure_id: procedure.id,
+        llm_suggestion_rule_id: suggestion.id,
+        llm_rule_suggestion: {
+          llm_rule_suggestion_items_attributes: {
+            "0" => { id: accepted_suggestion_item.id, verify_status: 'accepted' },
+            "1" => { id: skipped_suggestion_item.id, verify_status: 'skipped' },
+          },
+        },
+      }
+    end
+    let(:suggestion) { create(:llm_rule_suggestion, procedure_revision: procedure.draft_revision, rule: 'improve_label', state: 'completed', schema_hash: Digest::SHA256.hexdigest(procedure.published_revision.schema_to_llm.to_json)) }
+    let(:accepted_suggestion_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, justification: 'clarity') }
+    let(:skipped_suggestion_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion: suggestion, op_kind: 'update', stable_id: 123, payload: { 'stable_id' => 123, 'libelle' => 'Nouveau' }, justification: 'clarity') }
+
+    it 'applies only selected operations from posted changes_json' do
+      expect { subject }.to change { suggestion.reload.state }.from('completed').to('accepted')
+      expect(response).to redirect_to(admin_procedure_path(procedure))
+
+      libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
+      expect(libelles).to include('Nouveau')
+      expect(libelles).not_to include('A')
+
+      expect(accepted_suggestion_item.reload.verify_status).to eq('accepted')
+      expect(accepted_suggestion_item.applied_at).not_to be_nil
+      expect(skipped_suggestion_item.reload.verify_status).to eq('skipped')
+      expect(skipped_suggestion_item.reload.applied_at).to be_nil
+    end
+  end
 end

@@ -2,11 +2,12 @@
 
 class ProcedureRevision < ApplicationRecord
   include Logic
+  include RevisionDescribableToLLMConcern
   self.implicit_order_column = :created_at
   belongs_to :administrateur, optional: true
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
-
+  has_many :llm_rule_suggestions, dependent: :destroy, inverse_of: :procedure_revision
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
   has_many :revision_types_de_champ, -> { order(:position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
 
@@ -250,6 +251,16 @@ class ProcedureRevision < ApplicationRecord
 
   def conditionable_types_de_champ
     types_de_champ_for(scope: :public).filter(&:conditionable?)
+  end
+
+  def apply_llm_rule_suggestion_items(changes)
+    transaction do
+      changes.fetch(:update, []).each do |llm_rule_suggestion_items|
+        libelle, description = llm_rule_suggestion_items.payload.with_indifferent_access.values_at(:libelle, :description)
+        tdc = find_and_ensure_exclusive_use(llm_rule_suggestion_items.stable_id)
+        tdc.update({ libelle:, description: }.compact)
+      end
+    end
   end
 
   private

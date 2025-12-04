@@ -1,0 +1,30 @@
+<div class="fr-checkbox-group fr-my-1v fr-my-2w">
+  <%= checkbox do %>
+    <span style="width: 100%;  display: block;">
+      <span class="fr-badge fr-mr-1w"> Libellé </span>
+
+      <%= original_tdc.libelle %>
+
+      <% if libelle_changed? %>
+        <span class="fr-ml-1w">→ <%= payload['libelle'] %></span>
+      <% end %>
+    </span>
+
+    <% if description_changed? %>
+      <br>
+      <span class="fr-mt-1w" style="width: 100%;  display: block;">
+        <span class="fr-badge fr-mr-1w"> Description </span>
+
+        <%= original_tdc.description %>
+
+        <% if description_changed? %>
+          <span class="fr-ml-1w">→ <%= payload['description'] %></span>
+        <% end %>
+
+        <% if item.justification.present? %>
+          <span class="fr-hint-text"><%= item.justification %></span>
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
+</div>
