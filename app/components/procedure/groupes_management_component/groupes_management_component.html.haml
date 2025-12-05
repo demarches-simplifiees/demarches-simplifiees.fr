@@ -6,10 +6,11 @@
 = link_to ajout_admin_procedure_groupe_instructeurs_path(@procedure), class: 'fr-btn fr-btn--primary fr-icon-add-line fr-btn--icon-left fr-mb-3w' do
   Ajouter un groupe
 
-= render Procedure::GroupesSearchComponent.new(procedure: @procedure,
-  query: @query,
-  to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count,
-  to_configure_filter: @to_configure_filter)
+- if @procedure.groupe_instructeurs.size < GroupeInstructeur::CRITICAL_SIZE
+  = render Procedure::GroupesSearchComponent.new(procedure: @procedure,
+    query: @query,
+    to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count,
+    to_configure_filter: nil)
 
 .flex.justify-between.align-baseline
   .title.font-weight-bold= table_header
