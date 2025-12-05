@@ -357,6 +357,13 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
+  scope :without_dossier_expirant_notification, -> do
+    where.not(
+      id: DossierNotification.where(notification_type: :dossier_expirant)
+                            .select(:dossier_id)
+    )
+  end
+
   scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
   scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
   scope :deleted_by_automatic_expired, -> { where(dossiers: { hidden_by_expired_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
@@ -694,6 +701,7 @@ class Dossier < ApplicationRecord
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
     update_expired_at
+    DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_expirant)
   end
 
   def extend_conservation_and_restore(conservation_extension, author)
@@ -876,6 +884,7 @@ class Dossier < ApplicationRecord
       if is_administration?(author) && can_be_deleted_by_administration?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
+        DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression)
       elsif is_user?(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
@@ -904,6 +913,7 @@ class Dossier < ApplicationRecord
     transaction do
       if is_administration?(author)
         update(hidden_by_administration_at: nil)
+        DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_suppression)
       elsif is_user?(author)
         update(hidden_by_user_at: nil)
       end
