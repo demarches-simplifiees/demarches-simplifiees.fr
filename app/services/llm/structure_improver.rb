@@ -15,7 +15,7 @@ module LLM
               description: 'Mise à jour d’un champ existant.',
               properties: {
                 stable_id: { type: 'integer', description: 'Identifiant du champ à modifier.' },
-                after_stable_id: { type: ['integer'], description: 'Identifiant du champ après lequel ce champ doit être déplacé.' },
+                after_stable_id: { type: ['integer', 'null'], description: 'Identifiant du champ après lequel ce champ doit être déplacé. Utiliser null UNIQUEMENT si le champ doit être positionné en premier.' },
               },
               required: %w[stable_id],
             },
@@ -88,19 +88,70 @@ module LLM
     # important: la position des champ existant est connue
     # quand on ajoute un champ, notre API interne le position en fonction du champ qui le prédède
     # il y a donc un non alignment dans nos interface a ce moment la
+    # https://www.modernisation.gouv.fr/files/2021-06/avec_logique_linformation_tu_organiseras_com.pdf
+    # https://www.modernisation.gouv.fr/files/Campus-de-la-transformation/Guide-kit-formulaire.pdf
+    # https://www.modernisation.gouv.fr/campus-de-la-transformation-publique/catalogue-de-ressources/outil/simplifier-les-documents
+    #  - https://www.modernisation.gouv.fr/files/2021-06/aller_a_lessentiel_com.pdf
+    #  - https://www.modernisation.gouv.fr/files/2021-06/des_mots_simples_tu_utiliseras_com.pdf
+    #  - https://www.modernisation.gouv.fr/files/2021-06/avec_logique_linformation_tu_organiseras_com.pdf
+    #  - https://www.modernisation.gouv.fr/files/2021-06/lusager_tu_considereras_com.pdf
+    #  - https://www.modernisation.gouv.fr/files/2021-06/la_presentation_tu_soigneras_com.pdf
     def rules_prompt
       <<~TXT
-        Règles :
-        - Positionne les champs essentiels en premier
-        - Positionne les champs dans un ordre logique pour l’usager
-        - Afin de structurer le formulaire, tu peux ajouter des sections (type `header_section`)
-          - Tu dois utiliser un `libelle` clairs et concis (<= 80 caractères).
-          - Tu dois utiliser un `header_section_level` pour indiquer le niveau de la section (1 à 3).
-        - Utilise `add` pour créer une nouvelle section.
-          - Quand tu ajoutes un champ, positionne-le en utilisant `after_stable_id` qui est l'identifiant du champ qui le précède.
-          - Si tu ajoutes plusieurs champs consécutifs, (avec le même `after_stable_id`), réponds dans l’ordre dans lequel ils doivent être ajoutés.
-        - Utilise `update` pour repositionner un champ existant.
-        - Fournis toujours une justification courte et une confiance 0..1.
+        Tu dois respecter strictement les règles suivantes pour améliorer la structure des formulaires administratifs français.
+
+        ---
+
+        ## 1. Organisation logique de l'information
+
+        * Structure le formulaire de manière hiérarchique : commence par les informations générales, puis spécifiques.
+        * Groupe les champs similaires ensemble (ex. : toutes les informations personnelles dans une section).
+        * Utilise une progression logique : du général au particulier, en évitant les sauts brusques.
+        * Respecte la pyramide inversée : place les éléments essentiels en haut.
+
+        ---
+
+        ## 2. Aller à l'essentiel
+
+        * Priorise les données indispensables à la démarche administrative.
+        * Évite les digressions : chaque section doit avoir un objectif clair.
+
+        ---
+
+        ## 3. Considération de l'usager
+
+        * Adapte la structure au parcours usager : pense à l'ordre dans lequel l'usager remplit naturellement le formulaire.
+        * Réduis la charge cognitive : limite le nombre de champs par section (idéalement 5-7 max).
+        * Facilite la navigation : utilise des sections pour guider étape par étape.
+
+        ---
+
+        ## 4. Présentation visuelle et lisibilité
+
+        * Ajoute des sections (header_section) pour aérer le formulaire et améliorer la lisibilité.
+        * Utilise des niveaux de hiérarchie (1 à 3) pour structurer : niveau 1 pour les grandes parties, niveaux inférieurs pour les sous-sections.
+        * Soigne l'espacement : évite les blocs denses de champs sans séparation.
+
+        ---
+
+        ## 5. Ordre et priorisation des champs
+
+        * Place les champs obligatoires et essentiels en premier.
+        * Ordonne logiquement : informations personnelles, puis contextuelles, puis justificatifs.
+        * Utilise `update` pour repositionner les champs existants si nécessaire.
+        * Utilise `add` pour introduire de nouvelles sections, en positionnant avec `after_stable_id`.
+
+        ---
+
+        ## 6. Vérification avant réponse
+
+        Avant de proposer des changements, vérifie que :
+        * La structure facilite le remplissage pour un usager non-expert.
+        * Les sections sont pertinentes et non redondantes.
+        * L'ordre respecte une logique administrative claire.
+        * Les libellés de section sont concis (<= 80 caractères) et en langage simple.
+
+        Utilise l’outil #{TOOL_DEFINITION.dig(:function, :name)} pour chaque amélioration structurelle (ajout de section ou repositionnement).
       TXT
     end
 
