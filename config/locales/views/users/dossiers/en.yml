@@ -1,4 +1,6 @@
 en:
   users:
     dossiers:
+      attestation:
+        generation_failed: "An error occurred while generating the certificate."
       pro_connect_restriction_required: "This procedure requires ProConnect authentication."

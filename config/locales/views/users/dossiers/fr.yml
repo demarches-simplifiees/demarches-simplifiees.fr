@@ -1,4 +1,6 @@
 fr:
   users:
     dossiers:
+      attestation:
+        generation_failed: "Une erreur est survenue lors de la préparation de l'attestation."
       pro_connect_restriction_required: "Cette démarche nécessite une authentification via ProConnect."

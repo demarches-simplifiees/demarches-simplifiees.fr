@@ -409,13 +409,12 @@ describe Instructeurs::DossiersController, type: :controller do
           }, format: :turbo_stream
         end
 
-        before do
-          expect_any_instance_of(AttestationTemplate)
-            .to receive(:attestation_for)
+        it 'enqueues attestation generation job' do
+          expect {
+            subject
+          }.to have_enqueued_job(AttestationPdfGenerationJob)
             .with(have_attributes(motivation: "Non"))
         end
-
-        it { subject }
       end
 
       context 'with dossier in batch_operation' do
@@ -623,13 +622,12 @@ describe Instructeurs::DossiersController, type: :controller do
           }, format: :turbo_stream
         end
 
-        before do
-          expect_any_instance_of(AttestationTemplate)
-            .to receive(:attestation_for)
+        it 'enqueues attestation generation job' do
+          expect {
+            subject
+          }.to have_enqueued_job(AttestationPdfGenerationJob)
             .with(have_attributes(motivation: "Yallah"))
         end
-
-        it { subject }
       end
 
       context 'with an attachment' do

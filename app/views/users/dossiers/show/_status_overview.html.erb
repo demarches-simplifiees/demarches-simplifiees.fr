@@ -1,0 +1,165 @@
+<div class="fr-mb-4w">
+  <% if !dossier.termine? %>
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-md-8 text-center">
+        <ol class="status-timeline fr-mb-4w">
+          <% if dossier.brouillon? %>
+            <li
+              class="brouillon"
+              aria-current="<%= dossier.brouillon? ? 'true' : nil %>"
+            >
+              <%= t('views.users.dossiers.show.status_overview.status_draft') %>
+            </li>
+          <% end %>
+
+          <li
+            class="en-construction"
+            aria-current="<%= dossier.en_construction? ? 'true' : nil %>"
+          >
+            <%= t('views.users.dossiers.show.status_overview.status_in_progress') %>
+
+            <% if dossier.pending_correction.present? %>
+              <%= "(#{Dossier.human_attribute_name("pending_correction.for_user")})" %>
+            <% end %>
+          </li>
+
+          <li
+            class="en-instruction"
+            aria-current="<%= dossier.en_instruction? ? 'true' : nil %>"
+          >
+            <%= t('views.users.dossiers.show.status_overview.status_review') %>
+          </li>
+
+          <li
+            class="termine"
+            aria-current="<%= dossier.termine? ? 'true' : nil %>"
+          >
+            <%= t('views.users.dossiers.show.status_overview.status_completed') %>
+          </li>
+        </ol>
+      </div>
+    </div>
+  <% end %>
+
+  <% if dossier.en_construction? %>
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-md-10 fr-col-lg-9">
+        <%= render Dossiers::EnConstructionNotSubmittedComponent.new(dossier: dossier, user: current_user) %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="fr-grid-row fr-grid-row--center">
+    <div class="fr-col-md-10 fr-col-lg-9 status-explanation">
+      <%# brouillon does not occure %>
+      <% if dossier.en_construction? %>
+        <div class="en-construction">
+          <% if dossier.pending_correction.present? %>
+            <div class="message fr-background-alt--grey">
+              <%= render Dossiers::MessageComponent.new(commentaire: dossier.pending_correction.commentaire, connected_user: current_user) %>
+            </div>
+          <% end %>
+
+          <p role="status">
+            <%= t('views.users.dossiers.show.status_overview.en_construction_html') %>
+          </p>
+
+          <%= render Procedure::EstimatedDelayComponent.new(procedure: dossier.procedure) %>
+
+          <p>
+            <%= t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier)) %>
+          </p>
+        </div>
+      <% elsif dossier.en_instruction? %>
+        <div class="en-instruction">
+          <p role="status">
+            <%= t('views.users.dossiers.show.status_overview.admin_review') %>
+          </p>
+
+          <% if dossier.sva_svr_decision_on.present? %>
+            <%# i18n-tasks-use t('views.users.dossiers.show.status_overview.delay_title.sva'), t('views.users.dossiers.show.status_overview.delay_title.svr') %>
+            <%= render Dsfr::CalloutComponent.new(title: t(dossier.procedure.sva_svr_configuration.decision, scope: "views.users.dossiers.show.status_overview.delay_title")) do |c| %>
+              <% c.with_body do %>
+                <p>
+                  <%= t('views.users.dossiers.show.status_overview.delay_text_sva_svr', date: l(dossier.sva_svr_decision_on, format: :long)) %>
+                </p>
+              <% end %>
+            <% end %>
+          <% end %>
+
+          <%= render Procedure::EstimatedDelayComponent.new(procedure: dossier.procedure) %>
+
+          <p>
+            <%= t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier)) %>
+          </p>
+        </div>
+      <% elsif dossier.termine? %>
+        <% if dossier.hide_info_with_accuse_lecture? %>
+          <%= render Dossiers::AccuseLectureComponent.new(dossier: dossier) %>
+        <% elsif dossier.accepte? %>
+          <div class="accepte">
+            <h2 class="fr-h6 fr-my-6w">
+              <%= dsfr_icon('fr-icon-checkbox-circle-fill fr-text-default--success') %>
+              <%= t('views.users.dossiers.show.status_overview.acceptee') %>
+            </h2>
+
+            <% if dossier.motivation.present? %>
+              <p class="fr-h6 fr-mb-1w">
+                <%= t('views.users.dossiers.show.status_overview.accepte_motivation') %>
+              </p>
+              <blockquote class="fr-mx-0 fr-mt-0 fr-mb-2w">
+                <%= format_text_value(dossier.motivation) %>
+              </blockquote>
+            <% end %>
+
+            <%= render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier } %>
+
+            <%= render Dossiers::AttestationStatusComponent.new(dossier:) %>
+          </div>
+        <% elsif dossier.refuse? %>
+          <div class="refuse">
+            <h2 class="fr-h6 fr-my-6w">
+              <%= dsfr_icon('fr-icon-close-circle-fill fr-text-default--error') %>
+              <%= t('views.users.dossiers.show.status_overview.refuse') %>
+            </h2>
+
+            <% if dossier.motivation.present? %>
+              <p class="fr-h6 fr-mb-1w">
+                <%= t('views.users.dossiers.show.status_overview.refuse_motivation') %>
+              </p>
+              <blockquote class="fr-mx-0 fr-mt-0 fr-mb-2w">
+                <%= format_text_value(dossier.motivation) %>
+              </blockquote>
+            <% end %>
+
+            <%= render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier } %>
+
+            <%= render Dossiers::AttestationStatusComponent.new(dossier:) %>
+
+            <div class="action">
+              <%= link_to t('views.users.dossiers.show.status_overview.refuse_reply'), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'fr-link' %>
+            </div>
+          </div>
+        <% elsif dossier.sans_suite? %>
+          <div class="sans-suite">
+            <h2 class="fr-h6 fr-my-6w">
+              <%= dsfr_icon('fr-icon-intermediate-circle-fill') %>
+              <%= t('views.users.dossiers.show.status_overview.sans_suite') %>
+            </h2>
+
+            <% if dossier.motivation.present? %>
+              <p class="fr-h6 fr-mb-1w">
+                <%= t('views.users.dossiers.show.status_overview.sans_suite_motivation') %>
+              </p>
+              <blockquote class="fr-mx-0 fr-mt-0 fr-mb-2w">
+                <%= format_text_value(dossier.motivation) %>
+              </blockquote>
+            <% end %>
+
+            <%= render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier } %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -150,10 +150,6 @@ module DossierStateConcern
       self.justificatif_motivation.attach(justificatif)
     end
 
-    if attestation.nil?
-      self.attestation = build_attestation_acceptation
-    end
-
     save!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
@@ -162,6 +158,8 @@ module DossierStateConcern
   end
 
   def after_commit_accepter(h)
+    enqueue_attestation_generation
+
     disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
@@ -191,18 +189,14 @@ module DossierStateConcern
 
     save!
 
-    if attestation.nil?
-      self.attestation = build_attestation_acceptation
-    end
-
-    save!
-
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
 
     log_automatic_dossier_operation(:accepter, self)
   end
 
   def after_commit_accepter_automatiquement
+    enqueue_attestation_generation
+
     if procedure.accuse_lecture?
       NotificationMailer.send_accuse_lecture_notification(self).deliver_later
     else
@@ -230,10 +224,6 @@ module DossierStateConcern
       self.justificatif_motivation.attach(justificatif)
     end
 
-    if attestation.nil?
-      self.attestation = build_attestation_refus
-    end
-
     save!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
@@ -242,6 +232,8 @@ module DossierStateConcern
   end
 
   def after_commit_refuser(h)
+    enqueue_attestation_generation
+
     disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
@@ -270,16 +262,14 @@ module DossierStateConcern
 
     save!
 
-    if attestation.nil?
-      self.attestation = build_attestation_refus
-    end
-
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
 
     log_automatic_dossier_operation(:refuser, self)
   end
 
   def after_commit_refuser_automatiquement
+    enqueue_attestation_generation
+
     if procedure.accuse_lecture?
       NotificationMailer.send_accuse_lecture_notification(self).deliver_later
     else
