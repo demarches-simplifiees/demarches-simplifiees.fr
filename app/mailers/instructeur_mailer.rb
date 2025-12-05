@@ -18,9 +18,9 @@ class InstructeurMailer < ApplicationMailer
   def last_week_overview(instructeur)
     email = instructeur.email
     @subject = 'Votre activité hebdomadaire'
-    @overview = instructeur.last_week_overview
+    @overviews = instructeur.weekly_email_summary_data
 
-    if @overview.present?
+    if @overviews.present?
       configure_defaults_for_user(instructeur.user)
       mail(to: email, subject: @subject, from: Current.no_reply_email, reply_to: Current.no_reply_email)
     end
@@ -58,7 +58,7 @@ class InstructeurMailer < ApplicationMailer
 
   def send_notifications(instructeur, data)
     @data = data
-    subject = "Votre récapitualtif quotidien"
+    subject = "Votre récapitulatif quotidien"
 
     configure_defaults_for_user(instructeur.user)
     mail(to: instructeur.email, subject: subject)
