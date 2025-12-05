@@ -18,6 +18,6 @@ fr:
         annotation_instructeur: 'Annotation privée'
         avis_externe: 'Avis externe'
         attente_correction: 'En attente de correction'
-        attente_avis: "En attente d'avis externe"
+        attente_avis: "En attente d’avis externe"
       archived_block:
         archived: 'Ce dossier a été déplacé dans « à archiver » le %{date} par %{email}'
