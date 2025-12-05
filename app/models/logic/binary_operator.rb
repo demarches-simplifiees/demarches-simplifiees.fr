@@ -51,4 +51,10 @@ class Logic::BinaryOperator < Logic::Term
       @left == other.left &&
       @right == other.right
   end
+
+  def hash
+    term = self.class.name
+    sorted_operands = [@left, @right].sort_by(&:hash)
+    [term, *sorted_operands].hash
+  end
 end
