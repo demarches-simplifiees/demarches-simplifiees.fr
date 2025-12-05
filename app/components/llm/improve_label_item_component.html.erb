@@ -21,10 +21,12 @@
           <% if description_changed? %>
             <span class="fr-ml-1w">→ <%= payload['description'] %></span>
           <% end %>
+        </span>
+      <% end %>
 
-          <% if item.justification.present? %>
-            <span class="fr-hint-text"><%= item.justification %></span>
-          <% end %>
+      <% if item.justification.present? %>
+        <span style="width: 100%;  display: block;">
+          <span class="fr-hint-text"><%= item.justification %></span>
         </span>
       <% end %>
     <% end %>
