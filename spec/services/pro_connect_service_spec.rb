@@ -54,5 +54,14 @@ describe ProConnectService do
         expect(uri).to include('consistency-checked-2fa')
       end
     end
+
+    describe 'with login_hint' do
+      let(:login_hint) { 'toto@a.com' }
+
+      it 'includes the login_hint in the authorization uri' do
+        uri, _state, _nonce = subject
+        expect(uri).to include('login_hint=toto%40a.com')
+      end
+    end
   end
 end
