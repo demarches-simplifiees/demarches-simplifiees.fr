@@ -34,14 +34,23 @@ module LLM
     end
 
     def propose_messages(suggestion)
-      propose_messages_for_schema(suggestion.procedure_revision.schema_to_llm)
+      propose_messages_for_procedure(suggestion.procedure_revision)
     end
 
-    def propose_messages_for_schema(schema)
-      safe_schema = sanitize_schema_for_prompt(schema)
+    def propose_messages_for_procedure(procedure_revision)
+      safe_schema = sanitize_schema_for_prompt(procedure_revision.schema_to_llm)
+
       [
         { role: 'system', content: system_prompt },
-        { role: 'user', content: format(schema_prompt, schema: JSON.dump(safe_schema)) },
+        {
+          role: 'user',
+          content: format(
+            procedure_prompt,
+            schema: JSON.dump(safe_schema),
+            procedure_description: procedure_revision.procedure.description,
+            procedure_libelle: procedure_revision.procedure.libelle
+          ),
+        },
         { role: 'user', content: rules_prompt },
       ]
     end
@@ -58,8 +67,18 @@ module LLM
 
     private
 
-    def schema_prompt
+    def procedure_prompt
       <<~PROMPT
+        Le formulaire se nomme :
+        <procedure_libelle>
+          %<procedure_libelle>s
+        </procedure_libelle>
+
+        Il s'adresse à :
+        <procedure_description>
+          %<procedure_description>s
+        </procedure_description>
+
         Voici le schéma des champs (publics) du formulaire en JSON. Chaque entrée contient :
           - stable_id : l'identifiant du champ
           - type : le type de champ
@@ -108,14 +127,18 @@ module LLM
         field.transform_values do |value|
           case value
           when Array
-            Array(value).map { |choice| choice.is_a?(String) ? choice.gsub(DANGEROUS_CHARS, '').strip : choice }
+            Array(value).map { |choice| choice.is_a?(String) ? sanitize_input_to_llm(choice) : choice }
           when String
-            value.gsub(DANGEROUS_CHARS, '').strip
+            sanitize_input_to_llm(value)
           else
             value
           end
         end
       end
+    end
+
+    def sanitize_input_to_llm(input)
+      input.gsub(DANGEROUS_CHARS, '').strip
     end
   end
 end
