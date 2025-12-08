@@ -7,7 +7,7 @@ class ProConnectService
     ENV['PRO_CONNECT_BASE_URL'].present?
   end
 
-  def self.authorization_uri(force_mfa: false)
+  def self.authorization_uri(force_mfa: false, login_hint: nil)
     client = OpenIDConnect::Client.new(conf)
 
     state = SecureRandom.hex(16)
@@ -44,6 +44,7 @@ class ProConnectService
       state:,
       nonce:,
       claims: claims.to_json,
+      login_hint:,
       prompt: :login
     )
 
