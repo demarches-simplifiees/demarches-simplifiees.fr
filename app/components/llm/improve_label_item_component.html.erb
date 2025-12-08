@@ -7,7 +7,8 @@
         <%= original_tdc.libelle %>
 
         <% if libelle_changed? %>
-          <span class="fr-ml-1w">→ <%= payload['libelle'] %></span>
+          <span class="fr-icon-arrow-right-line fr-icon--sm fr-mx-1w" aria-hidden="true"></span>
+          <%= payload['libelle'] %>
         <% end %>
       </span>
 
@@ -16,10 +17,20 @@
         <span class="fr-mt-1w" style="width: 100%;  display: block;">
           <span class="fr-badge fr-mr-1w"> Description </span>
 
+          <% if original_tdc.description.lines.many? %>
+            <%= simple_format(original_tdc.description) %>
+          <% elsif original_tdc.description.present? %>
           <%= original_tdc.description %>
+          <% end %>
 
           <% if description_changed? %>
-            <span class="fr-ml-1w">→ <%= payload['description'] %></span>
+            <% if payload['description'].lines.one? %>
+              <span class="fr-icon-arrow-right-line fr-icon--sm" aria-hidden="true"></span>
+              <%= payload['description'] %>
+            <% else %>
+              <span class="fr-icon-arrow-down-line fr-icon--sm" aria-hidden="true"></span>
+              <%= simple_format(payload['description'], class: "fr-mt-1w") %>
+            <% end %>
           <% end %>
 
           <% if item.justification.present? %>
