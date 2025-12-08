@@ -15,20 +15,6 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     t(".summary.#{rule}_html")
   end
 
-  def ordered_llm_rule_suggestion_items
-    root_tdcs, children_tdcs = llm_rule_suggestion
-      .llm_rule_suggestion_items
-      .partition { |item| item.payload['parent_id'].nil? }
-    children_by_parent_id = children_tdcs.group_by { |item| item.payload['parent_id'] }
-
-    root_tdcs
-      .sort_by { |item| item.payload['position'] }
-      .flat_map do |root_item|
-        [root_item] +
-          (children_by_parent_id[root_item.payload['stable_id']] || []).sort_by { |item| item.payload['position'] }
-      end
-  end
-
   def item_component
     LLMRuleSuggestion.item_component_class_for(rule)
   end
@@ -45,12 +31,25 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     llm_rule_suggestion.llm_rule_suggestion_items.size
   end
 
+  def ordered_llm_rule_suggestion_items
+    case rule
+    when LLMRuleSuggestion.rules.fetch('improve_structure')
+      LLM::SuggestionOrderingService.ordered_structure_suggestions(llm_rule_suggestion)
+    when LLMRuleSuggestion.rules.fetch('improve_label')
+      LLM::SuggestionOrderingService.ordered_label_suggestions(llm_rule_suggestion)
+    else
+      raise "Unknown rule: #{rule}"
+    end
+  end
+
   def enqueue_button_text
     t(".buttons.#{llm_rule_suggestion.state}")
   end
 
   def at_least_one_accepted?
-    ordered_llm_rule_suggestion_items.any? { |item| item.verify_status == 'accepted' }
+    ordered_llm_rule_suggestion_items
+      .filter { it.is_a?(LLMRuleSuggestionItem) }
+      .any? { |item| item&.verify_status == 'accepted' }
   end
 
   def button_options
