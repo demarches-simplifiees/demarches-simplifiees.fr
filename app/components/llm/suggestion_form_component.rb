@@ -3,16 +3,16 @@
 class LLM::SuggestionFormComponent < ApplicationComponent
   attr_reader :llm_rule_suggestion
 
-  delegate :rule, :procedure_revision, to: :llm_rule_suggestion
+  delegate :rule, :procedure_revision, :state, to: :llm_rule_suggestion
   delegate :procedure, to: :procedure_revision
-  delegate :step_title, :step_summary, to: :item_component
+  delegate :step_title, to: :item_component
 
   def initialize(llm_rule_suggestion:)
     @llm_rule_suggestion = llm_rule_suggestion
   end
 
-  def step_rule
-    rule
+  def step_summary
+    t(".summary.#{rule}_html")
   end
 
   def ordered_llm_rule_suggestion_items
@@ -78,9 +78,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
 
   def display_message
     safe_join([
-      tag.p(class: 'fr-mb-0') { t('.not_completed.message1') },
-      tag.p(class: 'fr-text--bold') { t('.not_completed.message2') },
-      llm_rule_suggestion.state.in?(['failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
+      llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
     ])
   end
 

@@ -1,11 +1,9 @@
 ---
 fr:
-  not_completed:
-    message1: "Aucune suggestion n'est disponible pour la version actuelle du formulaire."
-    message2: "Vous devez relancer la recherche pour générer de nouvelles suggestions d'amélioration."
   states:
+    pending: 'Lancez la recheche pour obtenir des suggestions d’amélioration.'
     failed: 'La génération des suggestions a echoué, veuillez ré-essayer'
-    accepted: 'Vous avez déjà accepté des suggestions, vous pouvez les regénérer'
+    accepted: 'Vous avez déjà accepté des suggestions, vous pouvez les regénérer.'
     skipped: 'Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?'
   buttons:
     pending: 'Lancer la recherche de suggestions'
@@ -14,3 +12,13 @@ fr:
     failed: 'Regénérer les suggestions'
     accepted: 'Regénérer les suggestions'
     skipped: 'Regénérer les suggestions'
+  summary:
+    title: À quoi servent ces suggestions ?
+    improve_label_html: |
+      <p>Cette étape propose une mise à jour des libellés de champs détectés comme <strong>trop longs</strong>, en <strong>majuscules</strong>
+      ou <strong>difficiles à comprendre</strong>.</p>
+      <p>Les suggestions visent à rendre chaque champ plus clair pour l’usager.</p>
+
+    improve_structure_html: |
+      <p>Cette étape propose des suggestions <strong>d’amélioration de la structure du formulaire
+      (réorganisation des champs, ajout de sections)</strong> pour le rendre plus clair et lisible pour l’usager.</p>

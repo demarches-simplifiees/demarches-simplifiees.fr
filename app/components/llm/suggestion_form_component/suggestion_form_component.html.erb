@@ -1,8 +1,7 @@
-<% if llm_rule_suggestion.state == 'completed' %>
-  <h2 class="fr-h3 mt-4"><%= step_title %></h2>
-  <%= render Dsfr::CalloutComponent.new(title: "À quoi sert cette règle ?", theme: :neutral) do |callout| %>
-    <% callout.with_body do %>
-      <p><%= step_summary %></p>
+<% if llm_rule_suggestion.completed? %>
+  <%= render Dsfr::CalloutComponent.new(title: t('.summary.title'), theme: :info) do |callout| %>
+    <% callout.with_html_body do %>
+      <%= t(".summary.#{rule}_html") %>
     <% end %>
   <% end %>
   <% if suggestions_count.zero? %>
@@ -71,7 +70,7 @@
       </p>
 
       <p class="fr-mt-1w">
-        <%= link_to("Revenir à l'écran de gestion", back_link, class: "fr-btn") %>
+        <%= link_to("Revenir à l’écran de gestion", back_link, class: "fr-btn") %>
       </p>
     <% end %>
   <% end %>

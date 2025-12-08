@@ -5,10 +5,6 @@ class LLM::ImproveLabelItemComponent < LLM::SuggestionItemComponent
     "Amélioration des libellés"
   end
 
-  def self.step_summary
-    "Acceptez ou refusez les propositions de nouveaux libellés pour les champs de votre formulaire."
-  end
-
   def render?
     original_tdc.present?
   end
