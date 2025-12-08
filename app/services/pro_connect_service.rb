@@ -7,7 +7,7 @@ class ProConnectService
     ENV['PRO_CONNECT_BASE_URL'].present?
   end
 
-  def self.authorization_uri
+  def self.authorization_uri(force_mfa: false)
     client = OpenIDConnect::Client.new(conf)
 
     state = SecureRandom.hex(16)
@@ -24,6 +24,20 @@ class ProConnectService
         amr: { essential: true },
       },
     }
+
+    if force_mfa
+      # acr (Authentication Context Class Reference) force the level of security
+      # https://partenaires.proconnect.gouv.fr/docs/fournisseur-service/double_authentification
+      claims[:id_token][:acr] = {
+        essential: true,
+        values: [
+          "eidas2", # login / pwd + 2FA
+          "eidas3", # physical card with PIN + certificates
+          "https://proconnect.gouv.fr/assurance/self-asserted-2fa", # declarative identity + 2FA
+          "https://proconnect.gouv.fr/assurance/consistency-checked-2fa", # verified identity + 2FA
+        ],
+      }
+    end
 
     uri = client.authorization_uri(
       scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
