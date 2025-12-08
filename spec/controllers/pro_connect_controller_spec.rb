@@ -119,7 +119,7 @@ describe ProConnectController, type: :controller do
             expect(instructeur.user.preferred_domain_demarche_numerique_gouv_fr?).to be_truthy
 
             # sets the pro_connect_session_info cookie
-            expect(cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to eq({ user_id: instructeur.user.id }.to_json)
+            expect(cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to eq({ user_id: instructeur.user.id, mfa: false }.to_json)
           end
         end
       end
