@@ -16,7 +16,25 @@ module Maintenance
     end
 
     def process(dossier)
-      dossier.champs.where(row_id: Champ::NULL_ROW_ID).update_all(row_id: nil)
+      with_nil_row_id, with_null_row_id = dossier.champs
+        .where(row_id: [nil, Champ::NULL_ROW_ID])
+        .pluck(:row_id, :stream, :stable_id, :id, :updated_at)
+        .partition { _1.first == nil }
+        .map { _1.index_by { |(_, stream, stable_id)| [stream, stable_id] } }
+
+      with_null_row_id.values.each do |(_, stream, stable_id, id, updated_at)|
+        if with_nil_row_id[[stream, stable_id]].present?
+          with_nil_updated_at, with_nil_id = with_nil_row_id[[stream, stable_id]].reverse
+          if with_nil_updated_at > updated_at
+            dossier.champs.where(id: id).destroy_all
+          else
+            dossier.champs.where(id: with_nil_id).destroy_all
+            dossier.champs.where(id:).update_all(row_id: nil)
+          end
+        else
+          dossier.champs.where(id:).update_all(row_id: nil)
+        end
+      end
     end
 
     def count
