@@ -74,7 +74,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
 
       it "echouer, afficher l'erreur et pouvoir relancer" do
         expect(subject).to have_content("La génération des suggestions a echoué, veuillez ré-essayer")
-        expect(subject).to have_button("Régénérer les suggestions")
+        expect(subject).to have_button("Regénérer les suggestions")
       end
     end
     context 'when state is accepted' do
@@ -82,7 +82,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
 
       it "si accepté, dire que ca a ete fait mais on peut relancer?" do
         expect(subject).to have_content("Vous avez déjà accepté des suggestions, vous pouvez les regénérer")
-        expect(subject).to have_button("Régénérer les suggestions")
+        expect(subject).to have_button("Regénérer les suggestions")
       end
     end
     context 'when state is skipped' do
@@ -90,7 +90,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
 
       it "si skipé, dire que ca a ete fait mais on peut relancer?" do
         expect(subject).to have_content("Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?")
-        expect(subject).to have_button("Régénérer les suggestions")
+        expect(subject).to have_button("Regénérer les suggestions")
       end
     end
   end
