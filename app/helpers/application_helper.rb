@@ -3,8 +3,6 @@
 module ApplicationHelper
   APP_HOST = ENV['APP_HOST']
   APP_HOST_LEGACY = ENV['APP_HOST_LEGACY']
-  REGEXP_REPLACE_TRAILING_EXTENSION = /(\.\w+)+$/.freeze
-  REGEXP_REPLACE_WORD_SEPARATOR = /[\s_-]+/.freeze
 
   def app_host_legacy?(request)
     return false if APP_HOST_LEGACY.blank?
@@ -165,8 +163,9 @@ module ApplicationHelper
   end
 
   def acronymize(str)
-    str.gsub(REGEXP_REPLACE_TRAILING_EXTENSION, '')
-      .split(REGEXP_REPLACE_WORD_SEPARATOR)
+    str.gsub(/\.(?:gouv\.fr|\w+)$/, '')
+      .split(/[\s_.-]+/)
+      .reject(&:empty?)
       .map { |word| word[0].upcase }
       .join
   end
