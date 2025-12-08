@@ -1201,6 +1201,24 @@ describe Dossier, type: :model do
             expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), admin_only.email)
           end
         end
+
+        context "when an instructeur follower does not want to be notified" do
+          let(:procedure) { create(:procedure) }
+          let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [follower])}
+          let(:dossier) { create(:dossier, :en_construction, groupe_instructeur:, procedure:) }
+          let(:follower) { create(:instructeur) }
+          let!(:ip_follower) { create(:instructeurs_procedure, instructeur: follower, procedure: procedure, instant_email_dossier_deletion: false) }
+
+          before do
+            dossier.followers_instructeurs << follower
+          end
+
+          it "does not notify the instructeur" do
+            dossier.hide_and_keep_track!(dossier.user, :user_request)
+
+            expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), follower.email)
+          end
+        end
       end
     end
 
