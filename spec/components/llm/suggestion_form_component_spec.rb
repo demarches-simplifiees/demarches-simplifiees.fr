@@ -40,9 +40,9 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
         end
 
         it 'shows the configured title' do
-          expect(subject.css('h2').text).to include(LLM::ImproveLabelItemComponent.step_title)
-          expect(subject.text).to include(LLM::ImproveLabelItemComponent.step_summary)
+          expect(subject.text).to include("Cette étape propose une mise à jour des libellés")
           expect(subject).not_to have_css("button[value='Lancer la recherche de suggestions']")
+          expect(subject.text).to have_content(/1\s+suggestion/)
         end
 
         it 'disables submit button when no suggestions are accepted' do

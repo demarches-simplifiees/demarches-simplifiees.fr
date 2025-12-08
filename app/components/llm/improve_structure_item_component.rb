@@ -5,10 +5,6 @@ class LLM::ImproveStructureItemComponent < LLM::SuggestionItemComponent
     "Amélioration de la structure"
   end
 
-  def self.step_summary
-    "Acceptez ou refusez les propositions de modifications de la structure de votre formulaire."
-  end
-
   def op_kind
     item.op_kind
   end
