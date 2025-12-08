@@ -4,13 +4,13 @@ fr:
     message1: "Aucune suggestion n'est disponible pour la version actuelle du formulaire."
     message2: "Vous devez relancer la recherche pour générer de nouvelles suggestions d'amélioration."
   states:
-    failed: "La génération des suggestions a echoué, veuillez ré-essayer"
-    accepted: "Vous avez déjà accepté des suggestions, vous pouvez les regénérer"
-    skipped: "Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?"
+    failed: 'La génération des suggestions a echoué, veuillez ré-essayer'
+    accepted: 'Vous avez déjà accepté des suggestions, vous pouvez les regénérer'
+    skipped: 'Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?'
   buttons:
-    pending: "Lancer la recherche de suggestions"
-    queued: "Recherche en cours"
-    running: "Recherche en cours"
-    failed: "Régénérer les suggestions"
-    accepted: "Régénérer les suggestions"
-    skipped: "Régénérer les suggestions"
+    pending: 'Lancer la recherche de suggestions'
+    queued: 'Recherche en cours'
+    running: 'Recherche en cours'
+    failed: 'Regénérer les suggestions'
+    accepted: 'Regénérer les suggestions'
+    skipped: 'Regénérer les suggestions'
