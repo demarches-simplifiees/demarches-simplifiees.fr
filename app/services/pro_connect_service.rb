@@ -17,7 +17,6 @@ class ProConnectService
       scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
       state:,
       nonce:,
-      acr_values: 'eidas1',
       claims: { id_token: { amr: { essential: true } } }.to_json,
       prompt: :login
     )
