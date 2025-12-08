@@ -2,9 +2,12 @@
 
 class DossierNotification < ApplicationRecord
   DELAY_DOSSIER_DEPOSE = 7.days
+  NON_CUSTOMISABLE_TYPE = [:dossier_expirant, :dossier_suppression].freeze
 
   enum :notification_type, {
     dossier_depose: 'dossier_depose',
+    dossier_expirant: 'dossier_expirant',
+    dossier_suppression: 'dossier_suppression',
     dossier_modifie: 'dossier_modifie',
     message: 'message',
     annotation_instructeur: 'annotation_instructeur',
@@ -16,7 +19,36 @@ class DossierNotification < ApplicationRecord
   belongs_to :instructeur
   belongs_to :dossier
 
-  scope :to_display, -> { where(display_at: ..Time.current) }
+  scope :base_for_display, -> { where(display_at: ..Time.current).joins(:dossier) }
+
+  scope :for_visible_not_archived_dossiers, -> {
+    base_for_display
+      .where(
+        dossiers: {
+          archived: false,
+          hidden_by_expired_at: nil,
+          hidden_by_administration_at: nil,
+        }
+      )
+  }
+
+  scope :for_archived_dossiers, -> {
+    base_for_display
+      .where(dossiers: { archived: true, hidden_by_expired_at: nil, hidden_by_administration_at: nil })
+      .where(notification_type: 'dossier_expirant')
+  }
+
+  scope :for_hidden_dossiers, -> {
+    base_for_display
+      .where("dossiers.hidden_by_expired_at IS NOT NULL OR dossiers.hidden_by_administration_at IS NOT NULL")
+      .where(notification_type: 'dossier_suppression')
+  }
+
+  scope :to_display, -> {
+    for_visible_not_archived_dossiers
+      .or(for_archived_dossiers)
+      .or(for_hidden_dossiers)
+  }
 
   scope :order_by_importance, -> {
     self.sort_by { |notif| notification_types.keys.index(notif.notification_type) }
@@ -25,9 +57,23 @@ class DossierNotification < ApplicationRecord
   scope :type_news, -> { where(notification_type: [:dossier_modifie, :message, :annotation_instructeur, :avis_externe]) }
 
   def self.create_notification(dossier, notification_type, except_instructeur: nil)
+    return if NON_CUSTOMISABLE_TYPE.include?(notification_type)
+
     instructeur_ids = instructeur_to_notify_ids(dossier, notification_type, except_instructeur)
 
     create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids) if instructeur_ids.any?
+  end
+
+  def self.create_notifications_for_non_customisable_type(dossiers, notification_type)
+    return unless NON_CUSTOMISABLE_TYPE.include?(notification_type)
+
+    instructeur_ids_by_dossier_id = Dossier
+      .where(id: dossiers)
+      .includes(groupe_instructeur: :instructeurs)
+      .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
+      .to_h
+
+    create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
   end
 
   def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
@@ -79,7 +125,7 @@ class DossierNotification < ApplicationRecord
       instructeur_preferences[notification_type] == 'all'
     end
 
-    return if notification_types_to_refresh.empty?
+    notification_types_to_refresh.concat(NON_CUSTOMISABLE_TYPE)
 
     dossiers = groupe_instructeur.dossiers.state_not_brouillon
 
@@ -102,6 +148,8 @@ class DossierNotification < ApplicationRecord
       end
       [notification_type, instructeur_ids_requesting_notifications]
     end.compact_blank!
+
+    NON_CUSTOMISABLE_TYPE.each { |type| instructeur_ids_requesting_notifications_by_type[type] = instructeur_ids }
 
     instructeur_ids_requesting_notifications_by_type.each do |notification_type, instructeur_ids|
       instructeur_ids_to_notify = instructeur_ids_to_notify_by_notification_type(dossier, notification_type, instructeur_ids)
@@ -200,10 +248,9 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_counts_for_instructeur_procedures(groupe_instructeur_ids, instructeur)
-    dossiers = Dossier
-      .where(groupe_instructeur_id: groupe_instructeur_ids)
-      .visible_by_administration
-      .not_archived
+    all_dossiers = Dossier.where(groupe_instructeur_id: groupe_instructeur_ids)
+
+    dossiers = all_dossiers.visible_by_administration.or(all_dossiers.by_statut('supprimes'))
 
     dossier_ids_by_procedure = dossiers
       .joins(:revision)
@@ -235,6 +282,8 @@ class DossierNotification < ApplicationRecord
       'a-suivre' => notifications.merge(Dossier.by_statut('a-suivre')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'suivis' => notifications.merge(Dossier.by_statut('suivis', instructeur:)).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
       'traites' => notifications.merge(Dossier.by_statut('traites')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
+      'archives' => notifications.merge(Dossier.by_statut('archives')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
+      'supprimes' => notifications.merge(Dossier.by_statut('supprimes')).group_by(&:notification_type).transform_values { |notifs| notifs.first(10).pluck(:dossier_id) },
     }
 
     dossiers = Dossier
@@ -257,8 +306,6 @@ class DossierNotification < ApplicationRecord
 
   def self.notifications_for_instructeur_dossiers(instructeur, dossier_ids)
     DossierNotification
-      .joins(:dossier)
-      .merge(Dossier.not_archived)
       .where(dossier_id: dossier_ids, instructeur_id: instructeur.id)
       .to_display
       .order_by_importance
@@ -266,8 +313,6 @@ class DossierNotification < ApplicationRecord
   end
 
   def self.notifications_for_instructeur_dossier(instructeur, dossier)
-    return [] if dossier.archived
-
     DossierNotification
       .where(dossier:, instructeur:)
       .to_display
@@ -291,7 +336,7 @@ class DossierNotification < ApplicationRecord
   private
 
   def self.create_notifications_by_type_for_dossier_instructeurs(dossier, notification_type, instructeur_ids)
-    display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
+    display_at = display_at_by_notification_type(dossier, notification_type)
 
     missing_notifications = instructeur_ids.map do |instructeur_id|
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
@@ -302,7 +347,8 @@ class DossierNotification < ApplicationRecord
 
   def self.create_notifications_by_type_for_instructeur_dossiers(dossiers, notification_type, instructeur_id)
     missing_notifications = dossiers.map do |dossier|
-      display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
+      display_at = display_at_by_notification_type(dossier, notification_type)
+
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
     end
 
@@ -313,6 +359,16 @@ class DossierNotification < ApplicationRecord
     missing_notifications = notification_types.map do |notification_type|
       display_at = notification_type == :dossier_depose ? (dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE) : Time.zone.now
       { dossier_id: dossier.id, instructeur_id:, notification_type:, display_at: }
+    end
+
+    DossierNotification.insert_all(missing_notifications)
+  end
+
+  def self.create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
+    missing_notifications = instructeur_ids_by_dossier_id.flat_map do |dossier_id, instructeur_ids|
+      instructeur_ids.map do |instructeur_id|
+        { dossier_id:, instructeur_id:, notification_type:, display_at: Time.zone.now }
+      end
     end
 
     DossierNotification.insert_all(missing_notifications)
@@ -361,6 +417,15 @@ class DossierNotification < ApplicationRecord
         .select(:id, :state, :depose_at)
         .where(state: :en_construction)
         .without_followers
+    when :dossier_expirant
+      dossiers
+        .select(:id, :revision_id, :expired_at)
+        .termine_or_en_construction_close_to_expiration
+    when :dossier_suppression
+      dossiers
+        .select(:id, :hidden_by_administration_at, :hidden_by_expired_at)
+        .hidden_by_administration
+        .or(dossiers.hidden_by_expired)
     when :dossier_modifie
       dossiers
         .select(:id, :last_champ_updated_at, :depose_at)
@@ -399,6 +464,10 @@ class DossierNotification < ApplicationRecord
     case notification_type
     when :dossier_depose
       dossier.en_construction? && dossier.follows.empty? ? instructeur_ids : []
+    when :dossier_expirant
+      dossier.close_to_expiration? ? instructeur_ids : []
+    when :dossier_suppression
+      dossier.hidden_by_expired? || dossier.hidden_by_administration? ? instructeur_ids : []
     when :dossier_modifie
       dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at ? instructeur_ids : []
     when :message
@@ -419,6 +488,19 @@ class DossierNotification < ApplicationRecord
       dossier.pending_correction? ? instructeur_ids : []
     when :attente_avis
       dossier.avis.without_answer.exists? ? instructeur_ids : []
+    end
+  end
+
+  def self.display_at_by_notification_type(dossier, notification_type)
+    case notification_type
+    when :dossier_depose
+      dossier.depose_at + DossierNotification::DELAY_DOSSIER_DEPOSE
+    when :dossier_expirant
+      dossier.expired_at - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    when :dossier_suppression
+      [dossier.hidden_by_administration_at, dossier.hidden_by_expired_at].compact.min
+    else
+      Time.zone.now
     end
   end
 end

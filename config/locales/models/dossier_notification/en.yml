@@ -1,0 +1,20 @@
+en:
+  activerecord:
+    attributes:
+      notification:
+        dossier_depose:
+          generic: Filed a long time ago
+          specific: "Filed since %{days} D."
+        dossier_expirant:
+          generic: Expires soon
+          specific: "Expires in %{days} D."
+        dossier_suppression:
+          generic: Soon to be removed
+          specific: "Deletion in %{days} D."
+        dossier_modifie: Modified file
+        attente_correction: Awaiting correction
+        attente_avis: Awaiting external opinion
+        message: Message
+        # TODO: switch to ’Annotation instructeur’ during global renaming
+        annotation_instructeur: Private annotation
+        avis_externe: External opinion

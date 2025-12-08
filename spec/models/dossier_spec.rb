@@ -327,6 +327,40 @@ describe Dossier, type: :model do
     end
   end
 
+  describe "#extend_conservation" do
+    subject { dossier.extend_conservation(1.month) }
+
+    let(:dossier) { create(:dossier, :en_construction) }
+
+    context "when the dossier has a dossier_expirant notification" do
+      let!(:notification_expirant) { create(:dossier_notification, dossier:, notification_type: :dossier_expirant) }
+
+      it "destroys dossier_expirant notification" do
+        subject
+        expect(DossierNotification.count).to eq(0)
+      end
+    end
+  end
+
+  describe "#restore" do
+    subject { dossier.restore(author) }
+
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, hidden_by_administration_at: 1.hour.ago) }
+
+    context "when an instructeur restore the dossier" do
+      let(:author) { create(:instructeur) }
+
+      context "when there is a dossier_suppression notification" do
+        let!(:notification_suppression) { create(:dossier_notification, dossier:, notification_type: :dossier_suppression) }
+
+        it "destroys the notification" do
+          subject
+          expect(DossierNotification.count).to eq(0)
+        end
+      end
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
     let(:etablissement) { dossier.etablissement }
@@ -777,6 +811,19 @@ describe Dossier, type: :model do
           expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_depose)).to be_present
         end
       end
+
+      context "when dossier must have a non customisable notification" do
+        let!(:old_expirant_notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_expirant, display_at: 1.week.ago) }
+        let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [new_instructeur]) }
+
+        before { dossier.update(expired_at: 1.week.from_now) }
+
+        it "refreshes notifications for new instructeur" do
+          dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+          expect(DossierNotification.where(instructeur: instructeur, dossier:, notification_type: :dossier_expirant)).to be_empty
+          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_expirant)).to be_present
+        end
+      end
     end
   end
 
@@ -1137,6 +1184,24 @@ describe Dossier, type: :model do
 
       it 'affect the right deletion reason to the dossier' do
         expect(dossier.hidden_by_reason).to eq("user_request")
+      end
+
+      context "when the instructeur hide the dossier" do
+        let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [create(:instructeur)]) }
+        let(:dossier) { create(:dossier, state: "accepte", groupe_instructeur:) }
+        let(:user) { create(:instructeur) }
+        let(:reason) { :instructeur_request }
+
+        it "creates dossier_suppression notification with correct delay" do
+          subject
+          expect(DossierNotification.count).to eq(1)
+
+          notification = DossierNotification.last
+          expect(notification.dossier_id).to eq(dossier.id)
+          expect(notification.instructeur_id).to eq(groupe_instructeur.instructeur_ids.first)
+          expect(notification.notification_type).to eq("dossier_suppression")
+          expect(notification.display_at.to_date).to eq(Time.zone.now.to_date)
+        end
       end
     end
   end

@@ -102,6 +102,10 @@
                         %td.fr-cell--numeric
                           - if dossier.hidden_by_administration? || dossier.hidden_by_expired?
                             %span= dossier.id
+                            - if @notifications[dossier.id].present?
+                              - @notifications[dossier.id].each do |notif|
+                                .fr-mt-1v
+                                  = tag_notification(notif)
                           - else
                             %a.fr-link.relative{ href: path }
                               = dossier.id
