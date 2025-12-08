@@ -37,6 +37,7 @@
           class="fr-fieldset"
           data-action="click->enable-submit-if-checked#click"
         >
+          <legend class="fr-fieldset__legend">Sélectionnez les suggestions que vous souhaitez appliquer pour améliorer votre formulaire :</legend>
           <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
             <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
               <%= render item_component.new(form_builder: ff) %>
