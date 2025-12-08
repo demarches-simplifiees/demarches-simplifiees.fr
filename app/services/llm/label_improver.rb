@@ -106,6 +106,7 @@ module LLM
 
         * L’aération des sections (paragraphes courts, espaces).
         * Des formulations plus courtes et adaptées aux interfaces.
+        * Le libelle des section (header_section) ne doivent JAMAIS être préfixé par un numéro car le système les gère automatiquement.
 
         ---
 
