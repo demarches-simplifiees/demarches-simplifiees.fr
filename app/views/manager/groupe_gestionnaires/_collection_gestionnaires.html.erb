@@ -79,6 +79,6 @@
 <% end %>
 
 <%= form_tag(add_gestionnaire_manager_groupe_gestionnaire_path(page.resource), style: 'margin-top: 1rem;') do %>
-  <%= email_field_tag(:emails, '', placeholder: 'Emails', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
+  <%= email_field_tag(:emails, '', placeholder: 'Adresses électroniques', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
   <button>Ajouter un gestionnaire</button>
 <% end %>

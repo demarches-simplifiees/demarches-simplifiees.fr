@@ -35,7 +35,7 @@ Cela évite l’accès récursif aux dossiers."
 
     field :demarcheURL, Types::URL, "URL pour commencer la démarche", null: true, camelize: false
     field :siteWebURL, String, "URL où les usagers trouvent le lien vers la démarche", null: true, camelize: false
-    field :dpoURL, String, "URL ou email pour contacter le Délégué à la Protection des Données (DPO)", null: true, camelize: false
+    field :dpoURL, String, "URL ou adresse électronique pour contacter le Délégué à la Protection des Données (DPO)", null: true, camelize: false
     field :noticeURL, Types::URL, null: true, camelize: false
     field :cadreJuridiqueURL, String, "URL du cadre juridique qui justifie le droit de collecter les données demandées dans la démarche", null: true, camelize: false
 

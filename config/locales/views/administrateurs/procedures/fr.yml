@@ -122,7 +122,7 @@ fr:
         accuse_lecture_hint: Activé
         api_entreprise_token: Jeton API entreprise
         api_entreprise_token_hint: Jeton configuré
-        mail_templates: Configuration des emails
+        mail_templates: Modèles d’email
         mail_templates_hint: Contenu des emails automatiques
         sva_svr: Silence Vaut Accord ou Rejet
         sva_svr_hint:
