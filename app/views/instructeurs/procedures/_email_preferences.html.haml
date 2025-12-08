@@ -13,42 +13,71 @@
             title: t(".instant_email_new_dossier.title"),
             hint: t('.instant_email_new_dossier.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
+
         %li
           = render Dsfr::ToggleComponent.new(form:,
             target: :instant_email_new_message,
             title: t(".instant_email_new_message.title"),
             hint: t('.instant_email_new_message.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
+
         %li
           = render Dsfr::ToggleComponent.new(form:,
             target: :instant_email_new_expert_avis,
             title: t(".instant_email_new_expert_avis.title"),
             hint: t('.instant_email_new_expert_avis.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
-        %li
-          = render Dsfr::ToggleComponent.new(form:,
-            target: :instant_email_dossier_expiration,
-            title: t(".instant_email_dossier_expiration.title"),
-            hint: t('.instant_email_dossier_expiration.notice'),
-            extra_class_names: 'fr-toggle--border-bottom')
-        %li
-          = render Dsfr::ToggleComponent.new(form:,
-            target: :instant_email_dossier_expired,
-            title: t(".instant_email_dossier_expired.title"),
-            hint: t('.instant_email_dossier_expired.notice'),
-            extra_class_names: 'fr-toggle--border-bottom')
+
+        %li{ data: { controller: "hide-target" } }
+          - instant_email_dossier_expiration = instructeur_procedure.instant_email_dossier_expiration?
+
+          .fr-toggle--border-bottom
+            = render Dsfr::ToggleComponent.new(form:,
+              target: :instant_email_dossier_expiration,
+              title: t(".instant_email_dossier_expiration.title"),
+              hint: t('.instant_email_dossier_expiration.notice'),
+              extra_class_names: 'fr-toggle',
+              opt: { "hide-target_target": "source" })
+
+            .fr-notice.fr-notice--warning.fr-mt-1w{ class: (instant_email_dossier_expiration ? "fr-hidden" : nil), data: { "hide-target_target": "toHide" } }
+              .fr-container
+                .fr-notice__body
+                  %p
+                    %span.fr-notice__title.fr-text--sm= t('.warning_notice.title')
+                    %span.fr-notice__desc.fr-text--sm= t('.warning_notice.desc_expiration')
+
+        %li{ data: { controller: "hide-target" } }
+          - instant_email_dossier_expired = instructeur_procedure.instant_email_dossier_expired?
+
+          .fr-toggle--border-bottom
+            = render Dsfr::ToggleComponent.new(form:,
+              target: :instant_email_dossier_expired,
+              title: t(".instant_email_dossier_expired.title"),
+              hint: t('.instant_email_dossier_expired.notice'),
+              extra_class_names: 'fr-toggle',
+              opt: { "hide-target_target": "source" })
+
+            .fr-notice.fr-notice--warning.fr-mt-1w{ class: (instant_email_dossier_expired ? "fr-hidden" : nil), data: { "hide-target_target": "toHide" } }
+              .fr-container
+                .fr-notice__body
+                  %p
+                    %span.fr-notice__title.fr-text--sm= t('.warning_notice.title')
+                    %span.fr-notice__desc.fr-text--sm= t('.warning_notice.desc_expired')
+
         %li
           = render Dsfr::ToggleComponent.new(form:,
             target: :instant_email_dossier_deletion,
             title: t(".instant_email_dossier_deletion.title"),
             hint: t('.instant_email_dossier_deletion.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
+
         %li
           = render Dsfr::ToggleComponent.new(form:,
             target: :daily_email_summary,
             title: t(".daily_email_summary.title"),
             hint: t('.daily_email_summary.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
+
         %li
           = render Dsfr::ToggleComponent.new(form:,
             target: :weekly_email_summary,
