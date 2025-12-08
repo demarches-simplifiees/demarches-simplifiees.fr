@@ -1,21 +1,29 @@
 <div class="fr-fieldset__element">
-  <div class="fr-checkbox-group fr-my-1v">
-    <%= checkbox do %>
-      <% if op_kind == 'add' %>
-        <span class="fr-badge fr-badge--green-menthe fr-mr-1w">
-          <span class="fr-icon-add-line fr-icon--sm fr-mr-1v"></span>
-          Ajout de section
-        </span>
-        <%= payload['libelle'] %>
-      <% elsif op_kind == 'update' && original_tdc %>
-        <span class="fr-badge fr-badge--green-bourgeon fr-mr-1w">
-          <span class="fr-icon-arrow-up-down-line fr-icon--sm fr-mr-1v"></span>
-          Réorganisation
-        </span>
-        <%= original_tdc.libelle %>
-      <% end %>
+  <% if item.is_a?(LLMRuleSuggestionItem) %>
+    <div class="fr-checkbox-group fr-my-1v">
+      <%= checkbox do %>
+        <% if op_kind == 'add' %>
+          <span class="fr-badge fr-badge--green-menthe fr-mr-1w">
+            <span class="fr-icon-add-line fr-icon--sm fr-mr-1v"></span>
+            Ajout de section
+          </span>
+          <%= payload['libelle'] %>
+        <% elsif op_kind == 'update' && original_tdc %>
+          <span class="fr-badge fr-badge--green-bourgeon fr-mr-1w">
+            <span class="fr-icon-arrow-up-down-line fr-icon--sm fr-mr-1v"></span>
+            Réorganisation
+          </span>
+          <%= original_tdc.libelle %>
+        <% end %>
 
-      <span class="fr-hint-text fr-mt-1w"><%= item.justification %></span>
-    <% end %>
-  </div>
+        <span class="fr-hint-text fr-mt-1w"><%= item.justification %></span>
+      <% end %>
+    </div>
+    <hr />
+  <% else %>
+    <p>
+      <%= item.position %> tdc#[<%= item.type_de_champ.stable_id %>]:
+      (<%= item.type_de_champ.libelle %>)
+    </p>
+  <% end %>
 </div>

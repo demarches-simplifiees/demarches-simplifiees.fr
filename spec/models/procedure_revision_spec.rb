@@ -1306,5 +1306,67 @@ describe ProcedureRevision do
         expect(libelles).to include("Ajouté")
       end
     end
+
+    describe '#apply_llm_rule_suggestion_items for structure improver' do
+      let(:procedure) do
+        create(:procedure,
+               types_de_champ_public: [
+                 { type: :text, stable_id: 1, libelle: 'nom' },
+                 { type: :text, stable_id: 2, libelle: 'prenom' },
+                 { type: :explication, stable_id: 3, libelle: 'explication a la fin' },
+               ])
+      end
+      let(:revision) { procedure.draft_revision }
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch('improve_structure')) }
+
+      context 'add_section_at_start' do
+        let!(:item) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: :accepted, op_kind: 'add', payload: { 'generated_stable_id' => -1, 'libelle' => 'Nouveau titre de section', 'header_section_level' => 1, 'after_stable_id' => nil }) }
+
+        it 'adds a header section at the start' do
+          expect { revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply) }.to change { revision.types_de_champ_public.size }.by(1)
+          expect(revision.types_de_champ_public.first.libelle).to eq('Nouveau titre de section')
+          expect(revision.types_de_champ_public.first.type_champ).to eq('header_section')
+        end
+      end
+
+      context 'move_field_under_new_section' do
+        let!(:add_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: :accepted, op_kind: 'add', payload: { 'generated_stable_id' => -1, 'libelle' => 'Nouveau titre', 'header_section_level' => 1, 'after_stable_id' => 1 }) }
+        let!(:update_item) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: :accepted, op_kind: 'update', payload: { 'stable_id' => 2, 'after_stable_id' => -1 }) }
+
+        it 'adds section and moves field after it' do
+          expect { revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply) }.to change { revision.types_de_champ_public.size }.by(1)
+          revision.reload
+          nom_coord = revision.coordinate_for(revision.types_de_champ_public.find { |tdc| tdc.libelle == 'nom' })
+          prenom_coord = revision.coordinate_for(revision.types_de_champ_public.find { |tdc| tdc.libelle == 'prenom' })
+          nouveau_coord = revision.coordinate_for(revision.types_de_champ_public.find { |tdc| tdc.libelle == 'Nouveau titre' })
+          expect(prenom_coord.position).to be > nouveau_coord.position
+          expect(nouveau_coord.position).to be > nom_coord.position
+        end
+      end
+
+      context 'add_section_after_field' do
+        let!(:item) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: :accepted, op_kind: 'add', payload: { 'generated_stable_id' => -2, 'libelle' => 'Nouveau titre après nom', 'header_section_level' => 1, 'after_stable_id' => 1 }) }
+
+        it 'adds a header section after the specified field' do
+          expect { revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply) }.to change { revision.types_de_champ_public.size }.by(1)
+          noms = revision.reload.types_de_champ_public.map(&:libelle)
+          nom_index = noms.index('nom')
+          nouveau_index = noms.index('Nouveau titre après nom')
+          expect(nouveau_index).to eq(nom_index + 1)
+        end
+      end
+
+      context 'move_field_under_existing' do
+        let!(:item) { create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: :accepted, op_kind: 'update', payload: { 'stable_id' => 3, 'after_stable_id' => 2 }) }
+
+        it 'moves the field after the specified existing field' do
+          revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply)
+          revision.reload
+          prenom_coord = revision.coordinate_for(revision.types_de_champ_public.find { |tdc| tdc.libelle == 'prenom' })
+          explication_coord = revision.coordinate_for(revision.types_de_champ_public.find { |tdc| tdc.libelle == 'explication a la fin' })
+          expect(explication_coord.position).to be > prenom_coord.position
+        end
+      end
+    end
   end
 end

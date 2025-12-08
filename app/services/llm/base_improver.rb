@@ -73,7 +73,7 @@ module LLM
 
           Les type de champ possibles sont :
           - header_section : pour structurer le formulaire en sections (aucune saisie attendue, uniquement un libelle).
-          - repetition : pour des blocs répétables de champs enfants ; l’usager peut répéter le bloc autant de fois qu’il le souhaite.
+          - repetition : pour des blocs répétables de champs enfants ; l’usager peut répéter le bloc autant de fois qu’il le souhaite. Les champs enfants sont définis par leur parent_id.
           - explication : pour fournir du contexte ou des consignes (aucune saisie attendue).
           - civilite : pour choisir « Madame » ou « Monsieur » ; l’administration connaît déjà cette information.
           - email : pour les adresses électroniques ; l’administration connaît déjà l’email de l’usager.
