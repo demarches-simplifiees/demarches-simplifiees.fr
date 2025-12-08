@@ -53,6 +53,15 @@ class Instructeur < ApplicationRecord
     includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
   }
 
+  scope :with_instant_email_dossier_deletion, -> (procedure) {
+    where.not(
+        id: InstructeursProcedure
+              .select(:instructeur_id)
+              .where(procedure:)
+              .where(instant_email_dossier_deletion: false)
+    )
+  }
+
   default_scope { eager_load(:user) }
 
   def email
