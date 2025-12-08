@@ -24,9 +24,13 @@
     <% end %>
   <% else %>
     <div class="border-background-contrast-grey fr-p-2w">
-      <p class="fr-badge fr-badge--info fr-mb-3w">
-        <%= suggestions_count %>
-        <%= 'suggestion'.pluralize(suggestions_count) %>
+      <p class="fr-mb-3w flex align-center">
+        <span class="fr-badge fr-badge--info fr-mr-1w">
+          <%= suggestions_count %>
+          <%= 'suggestion'.pluralize(suggestions_count) %>
+        </span>
+
+        <span class="fr-hint-text">Ces suggestions utilisent l’IA. Vérifiez toujours ce qui est proposé.</span>
       </p>
 
       <%= form_for llm_rule_suggestion,
