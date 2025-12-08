@@ -2096,6 +2096,14 @@ describe Users::DossiersController, type: :controller do
         expect(brouillon).to be_brouillon
       end
     end
+
+    context 'when restriction is admin only and user is not ProConnected' do
+      let(:procedure) { create(:procedure, :for_individual, :published, pro_connect_restriction: :instructeurs) }
+      it 'allows creating a dossier' do
+        post :new, params: { procedure_id: procedure.id }
+        expect(response).to redirect_to(identite_dossier_path(Dossier.last))
+      end
+    end
   end
 
   private
