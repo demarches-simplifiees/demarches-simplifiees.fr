@@ -54,6 +54,10 @@ en:
         instant_email_dossier_deletion:
           title: Receive an email informing me that a user has deleted their file
           notice: This email informs you that a file « en construction » that you were following has been deleted at the user's request. You will therefore no longer have access to it.
+        warning_notice:
+          title: Caution
+          desc_expiration: When this option is disabled, you will no longer receive alerts about files expiring before they are automatically moved to the trash.
+          desc_expired: When this option is disabled, you will no longer receive alerts about the upcoming permanent deletion of files. Be sure to download them or extend their retention period before they are permanently deleted.
       apercu:
         title_with_libelle: Preview of « %{libelle} »
         title: Procedure preview
