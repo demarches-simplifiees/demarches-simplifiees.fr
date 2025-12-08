@@ -15,19 +15,22 @@ module LLM
               description: 'Mise à jour d’un champ existant.',
               properties: {
                 stable_id: { type: 'integer', description: 'Identifiant du champ à modifier.' },
-                after_stable_id: { type: ['integer', 'null'], description: 'Identifiant du champ après lequel ce champ doit être déplacé. Utiliser null UNIQUEMENT si le champ doit être positionné en premier.' },
+                after_stable_id: { type: ['integer', 'null'], description: "Identifiant du champ après lequel ce champ doit être déplacé. Utiliser null UNIQUEMENT si le champ doit être positionné en premier, ou si c'est le premier champ d'une repetition. Si le champ est déplacé après un champ ajouté, utilise le generated_stable_id du champ ajouté précédement" },
+                parent_id: { type: ['integer', 'null'], description: 'Identifiant de la repetition auquel le champ appartient. Utiliser null s’il n’appartient pas a une répétition' },
               },
-              required: %w[stable_id],
+              required: %w[stable_id after_stable_id],
             },
             add: {
               type: 'object',
               description: 'Ajout d’une nouvelle section.',
               properties: {
-                after_stable_id: { type: ['integer', 'null'], description: 'Identifiant du champ après lequel le champ à ajouter doit être positionné. Utiliser null UNIQUEMENT si le champ à ajouter doit être positionné en premier.' },
+                generated_stable_id: { type: 'integer', description: "Identifiant stable unique du nouveau champ (section) à ajouter. Génère en entier negatif auto-décrémenté en partant de -1" },
+                after_stable_id: { type: ['integer', 'null'], description: "Identifiant du champ après lequel ce champ doit être déplacé. Utiliser null UNIQUEMENT si le champ doit être positionné en premier, ou si c'est le premier champ d'une repetition." },
                 libelle: { type: 'string', description: 'Libellé de la section (<= 80 chars, plain language)' },
                 header_section_level: { type: 'integer', description: "Le niveau de la section (1 pour la plus haute hiérarchie, jusqu\'à 3)" },
+                parent_id: { type: ['integer', 'null'], description: 'Identifiant de la repetition auquel le champ appartient. Utiliser null s’il n’appartient pas a une répétition' },
               },
-              required: %w[after_stable_id libelle header_section_level],
+              required: %w[generated_stable_id after_stable_id libelle header_section_level],
             },
             justification: { type: 'string' },
           },
@@ -39,49 +42,7 @@ module LLM
     def system_prompt
       <<~TXT
         Tu es un assistant chargé d’améliorer la structure d’un formulaire administratif français.
-        Tu peux ajouter des sections, réordonner des champs.
-      TXT
-    end
-
-    def schema_prompt
-      <<~TXT
-        Voici le schéma des champs (publics) du formulaire en JSON. Chaque entrée contient :
-        - stable_id : l'identifiant du champ
-        - type : le type de champ
-        - libellé : le libellé du champ
-        - mandatory : indique si le champ est obligatoire ou non
-        - description : la description du champ (optionnel)
-        - choices : les options disponibles pour les champs de type liste déroulante (drop_down_list ou multiple_drop_down_list)
-        - position : la position du champ dans le formulaire
-        - et éventuellement une description.
-
-        Les type de champ possibles sont :
-        - header_section : pour structurer le formulaire en sections (aucune saisie attendue, uniquement un libelle).
-        - repetition : pour des blocs répétables de champs enfants ; l’usager peut répéter le bloc autant de fois qu’il le souhaite.
-        - explication : pour fournir du contexte ou des consignes (aucune saisie attendue).
-        - civilite : pour choisir « Madame » ou « Monsieur » ; l’administration connaît déjà cette information.
-        - email : pour les adresses électroniques ; l’administration connaît déjà l’email de l’usager.
-        - phone : pour les numéros de téléphone.
-        - address : pour les adresses postales (auto-complétées avec commune, codes postaux, département, etc.).
-        - communes : pour sélectionner des communes françaises (auto-complétées avec code, code postal, département, etc.).
-        - departments : pour sélectionner des départements français.
-        - text : pour des champs texte courts.
-        - textarea : pour des champs texte longs.
-        - integer_number : pour des nombres entiers.
-        - decimal_number : pour des nombres décimaux.
-        - date : pour sélectionner une date.
-        - piece_justificative : pour téléverser des pièces justificatives (inutile de l’enfermer dans une répétition : plusieurs fichiers sont déjà possibles).
-        - titre_identite : pour téléverser un titre d’identité de manière sécurisée.
-        - checkbox : pour une case à cocher unique.
-        - yes_no : pour une question à réponse « oui »/« non ».
-        - drop_down_list : pour un choix unique dans une liste déroulante (options configurées ailleurs par l’administration).
-        - multiple_drop_down_list : pour un choix multiple dans une liste déroulante (options configurées ailleurs par l’administration).
-
-        Ce qui délimite les sections, c'est la position des champs "header_section" suivis des champs qui les suivent jusqu'à la prochaine "header_section".
-
-        <schema>
-        %<schema>s
-        </schema>
+        Tu peux ajouter des sections et réordonner des champs.
       TXT
     end
 
@@ -151,6 +112,18 @@ module LLM
         * L'ordre respecte une logique administrative claire.
         * Les libellés de section sont concis (<= 80 caractères) et en langage simple.
 
+
+        ---
+
+        ## 7. Contraintes techniques
+
+        * Ne deplace JAMAIS un champ en dehors de sa répétition.
+        * Dans une répétition, la position des champs repart à 0 et est bornée dans celle ci.
+        # Assures toi qu'un seul champ est a la position 0 dans une répétition.
+        # Assures toi qu'un seul cahmp est a la position 0 hors répétition.
+
+        ---
+
         Utilise l’outil #{TOOL_DEFINITION.dig(:function, :name)} pour chaque amélioration structurelle (ajout de section ou repositionnement).
       TXT
     end
@@ -166,7 +139,6 @@ module LLM
     def build_add_item(args)
       data = args['add'].is_a?(Hash) ? args['add'].dup : {}
       payload = data.compact
-      payload['after_stable_id'] = payload['after_stable_id'].to_i
       payload['type_champ'] = 'header_section'
 
       {
