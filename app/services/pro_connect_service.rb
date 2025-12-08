@@ -3,8 +3,6 @@
 class ProConnectService
   include OpenIDConnect
 
-  MANDATORY_EMAIL_DOMAINS = []
-
   def self.enabled?
     ENV['PRO_CONNECT_BASE_URL'].present?
   end
@@ -45,10 +43,6 @@ class ProConnectService
     app_logout = Rails.application.routes.url_helpers.logout_url(host: host_with_port)
     h = { id_token_hint: id_token, post_logout_redirect_uri: app_logout }
     "#{PRO_CONNECT[:end_session_endpoint]}?#{h.to_query}"
-  end
-
-  def self.email_domain_is_in_mandatory_list?(email)
-    email.strip.split('@').last.in?(MANDATORY_EMAIL_DOMAINS)
   end
 
   private
