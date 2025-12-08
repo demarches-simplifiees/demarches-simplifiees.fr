@@ -13,11 +13,23 @@ class ProConnectService
     state = SecureRandom.hex(16)
     nonce = SecureRandom.hex(16)
 
+    claims = {
+      id_token: {
+        # amr (Authentication Methods References) aka tell me how the user authenticated
+        # pwd Password authentication, either by the user or the service if a client secret is used
+        # mail confirmation by mail
+        # totp Time-based One-Time Password
+        # poph Proof of possession
+        # mfa Multiple factor authentication
+        amr: { essential: true },
+      },
+    }
+
     uri = client.authorization_uri(
       scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
       state:,
       nonce:,
-      claims: { id_token: { amr: { essential: true } } }.to_json,
+      claims: claims.to_json,
       prompt: :login
     )
 
