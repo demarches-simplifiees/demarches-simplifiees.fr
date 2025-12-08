@@ -28,32 +28,44 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
 
     context 'when state is completed' do
       let(:state) { 'completed' }
-      before do
-        revision_coordinate = procedure.draft_revision.revision_types_de_champ_public.first
 
-        create(:llm_rule_suggestion_item,
-          llm_rule_suggestion:,
-          stable_id: revision_coordinate.stable_id,
-          payload: { 'stable_id' => revision_coordinate.stable_id, 'libelle' => 'Nom simplifié' })
-      end
-
-      it 'shows the configured title' do
-        expect(subject.css('h2').text).to include(LLM::ImproveLabelItemComponent.step_title)
-        expect(subject.text).to include(LLM::ImproveLabelItemComponent.step_summary)
-        expect(subject).not_to have_css("button[value='Lancer la recherche de suggestions']")
-      end
-
-      it 'disables submit button when no suggestions are accepted' do
-        expect(subject).to have_css("input[type='submit'][disabled]")
-      end
-
-      context 'when at least one suggestion is accepted' do
+      context 'when there are suggestions' do
         before do
-          llm_rule_suggestion.llm_rule_suggestion_items.first.update(verify_status: 'accepted')
+          revision_coordinate = procedure.draft_revision.revision_types_de_champ_public.first
+
+          create(:llm_rule_suggestion_item,
+            llm_rule_suggestion:,
+            stable_id: revision_coordinate.stable_id,
+            payload: { 'stable_id' => revision_coordinate.stable_id, 'libelle' => 'Nom simplifié' })
         end
 
-        it 'enables submit button' do
-          expect(subject).not_to have_css("input[type='submit'][disabled]")
+        it 'shows the configured title' do
+          expect(subject.css('h2').text).to include(LLM::ImproveLabelItemComponent.step_title)
+          expect(subject.text).to include(LLM::ImproveLabelItemComponent.step_summary)
+          expect(subject).not_to have_css("button[value='Lancer la recherche de suggestions']")
+        end
+
+        it 'disables submit button when no suggestions are accepted' do
+          expect(subject).to have_css("input[type='submit'][disabled]")
+        end
+
+        context 'when at least one suggestion is accepted' do
+          before do
+            llm_rule_suggestion.llm_rule_suggestion_items.first.update(verify_status: 'accepted')
+          end
+
+          it 'enables submit button' do
+            expect(subject).not_to have_css("input[type='submit'][disabled]")
+          end
+        end
+      end
+
+      context 'when there are no suggestions' do
+        it 'shows "Passer à la suite" button' do
+          expect(subject).to have_button("Passer à la suite")
+
+          expect(subject).not_to have_css(".fr-badge", text: "suggestion")
+          expect(subject).not_to have_button("Appliquer les suggestions et poursuivre")
         end
       end
     end
@@ -77,7 +89,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
       let(:state) { 'skipped' }
 
       it "si skipé, dire que ca a ete fait mais on peut relancer?" do
-        expect(subject).to have_content("Vous avez déjà ignorer des suggestions, souhaitez-vous en regénérer ?")
+        expect(subject).to have_content("Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?")
         expect(subject).to have_button("Régénérer les suggestions")
       end
     end

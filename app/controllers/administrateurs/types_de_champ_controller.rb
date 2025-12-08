@@ -174,7 +174,7 @@ module Administrateurs
         redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'Une recherche est déjà en cours pour cette règle.'
       else
         LLM::ImproveProcedureJob.perform_now(@procedure, rule, action: action_name, user_id: current_administrateur.user.id) # nothing async, the job re-enqueues a GenerateRuleSuggestionJob
-        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'La recherche a été lancée. Vous serez notifié lorsque les suggestions seront prêtes.'
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), notice: 'La recherche a été lancée. Vous serez prévenu(e) lorsque les suggestions seront prêtes.'
       end
     end
 
@@ -184,7 +184,32 @@ module Administrateurs
         .where(rule: rule)
         .order(created_at: :desc)
         .first
-      @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule: params[:rule])
+
+      rule = params[:rule]
+      if @llm_rule_suggestion&.finished?
+        next_rule = LLMRuleSuggestion.next_rule(params[:rule])
+
+        if next_rule
+          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule)
+        else
+          # NOOP, a message will be shown
+        end
+      end
+
+      @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule:)
+    end
+
+    def poll_simplify
+      @llm_rule_suggestion = llm_rule_suggestion_scope
+        .where(rule: rule)
+        .order(created_at: :desc)
+        .first
+
+      if @llm_rule_suggestion&.state&.in?(['completed', 'failed'])
+        render turbo_stream: turbo_stream.refresh
+      else
+        head :no_content
+      end
     end
 
     def accept_simplification
@@ -192,15 +217,20 @@ module Administrateurs
       return redirect_to(simplify_index_admin_procedure_types_de_champ_path(@procedure), alert: "Suggestion non trouvée") unless @llm_rule_suggestion
 
       ActiveRecord::Base.transaction do
-        @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
-        @llm_rule_suggestion.save!
-        @procedure.draft_revision.apply_llm_rule_suggestion_items(@llm_rule_suggestion.changes_to_apply)
-        @llm_rule_suggestion.update_column(:state, 'accepted')
+        if @llm_rule_suggestion.llm_rule_suggestion_items.empty?
+          @llm_rule_suggestion.skipped!
+        else
+          @llm_rule_suggestion.assign_attributes(llm_rule_suggestion_items_attributes)
+          @llm_rule_suggestion.save!
+          @procedure.draft_revision.apply_llm_rule_suggestion_items(@llm_rule_suggestion.changes_to_apply)
+          @llm_rule_suggestion.accepted!
+        end
       end
 
-      case @llm_rule_suggestion.rule
-      when 'improve_label'
-        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: 'improve_structure'), notice: "Parfait continuons"
+      next_rule = LLMRuleSuggestion.next_rule(@llm_rule_suggestion.rule)
+
+      if next_rule
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule), notice: "Parfait, continuons"
       else
         redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
       end

@@ -6,7 +6,7 @@ fr:
   states:
     failed: "La génération des suggestions a echoué, veuillez ré-essayer"
     accepted: "Vous avez déjà accepté des suggestions, vous pouvez les regénérer"
-    skipped: "Vous avez déjà ignorer des suggestions, souhaitez-vous en regénérer ?"
+    skipped: "Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?"
   buttons:
     pending: "Lancer la recherche de suggestions"
     queued: "Recherche en cours"

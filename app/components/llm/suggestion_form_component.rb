@@ -30,14 +30,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def item_component
-    case rule
-    when 'improve_label'
-      LLM::ImproveLabelItemComponent
-    when 'improve_structure'
-      LLM::ImproveStructureItemComponent
-    else
-      raise "Unknown LLM rule suggestion view component for rule: #{rule}"
-    end
+    LLMRuleSuggestion.item_component_class_for(rule)
   end
 
   def prtdcs
@@ -89,6 +82,26 @@ class LLM::SuggestionFormComponent < ApplicationComponent
       tag.p(class: 'fr-text--bold') { t('.not_completed.message2') },
       llm_rule_suggestion.state.in?(['failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
     ])
+  end
+
+  def last_rule?
+    LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
+  end
+
+  def stepper_finished?
+    llm_rule_suggestion.finished? && last_rule?
+  end
+
+  def should_poll?
+    llm_rule_suggestion.state.in?(['running', 'queued'])
+  end
+
+  def poll_controller_data
+    should_poll? ? 'turbo-poll' : ''
+  end
+
+  def poll_url
+    helpers.poll_simplify_admin_procedure_types_de_champ_path(procedure, rule: rule)
   end
 
   private
