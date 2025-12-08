@@ -1158,65 +1158,46 @@ describe Dossier, type: :model do
       end
 
       context 'notifications to administration (en_construction)' do
-        context 'with followers' do
-          let(:admin_only_user) { create(:user) }
-          let!(:admin_only) { create(:administrateur, user: admin_only_user) }
+        let(:procedure) { create(:procedure) }
+        let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur]) }
+        let(:dossier) { create(:dossier, :en_construction, groupe_instructeur:, procedure:) }
+        let(:instructeur) { create(:instructeur) }
 
-          let(:both_roles_user) { create(:user) }
-          let!(:admin_and_instructeur) { create(:administrateur, user: both_roles_user) }
+        context 'when the instructeur is not follower' do
+          let!(:ip) { create(:instructeurs_procedure, instructeur:, procedure:, instant_email_dossier_deletion: true) }
 
-          it 'notifies followers and admins who are also instructeurs, not admins-only' do
-            dossier = create(:dossier, :en_construction, :followed)
-            follower_email = dossier.followers_instructeurs.first.email
-
-            dossier.procedure.administrateurs << admin_only
-            dossier.procedure.administrateurs << admin_and_instructeur
-            dossier.procedure.defaut_groupe_instructeur.instructeurs << admin_and_instructeur.instructeur
-
+          it "does not notify the instructeur" do
             dossier.hide_and_keep_track!(dossier.user, :user_request)
 
-            expect(DossierMailer).to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), follower_email)
-            expect(DossierMailer).to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), both_roles_user.email)
-            expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), admin_only.email)
+            expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), instructeur.email)
           end
         end
 
-        context 'without followers' do
-          let(:admin_only_user) { create(:user) }
-          let!(:admin_only) { create(:administrateur, user: admin_only_user) }
+        context 'when the instructeur is follower and want to be notified' do
+          let!(:ip) { create(:instructeurs_procedure, instructeur:, procedure:, instant_email_dossier_deletion: true) }
 
-          let(:both_roles_user) { create(:user) }
-          let!(:admin_and_instructeur) { create(:administrateur, user: both_roles_user) }
+          before do
+            dossier.followers_instructeurs << instructeur
+          end
 
-          it 'notifies only admins who are also instructeurs' do
-            dossier = create(:dossier, :en_construction)
-
-            dossier.procedure.administrateurs << admin_only
-            dossier.procedure.administrateurs << admin_and_instructeur
-            dossier.procedure.defaut_groupe_instructeur.instructeurs << admin_and_instructeur.instructeur
-
+          it "notify the instructeur" do
             dossier.hide_and_keep_track!(dossier.user, :user_request)
 
-            expect(DossierMailer).to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), both_roles_user.email)
-            expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), admin_only.email)
+            expect(DossierMailer).to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), instructeur.email)
           end
         end
 
         context "when an instructeur follower does not want to be notified" do
-          let(:procedure) { create(:procedure) }
-          let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [follower])}
-          let(:dossier) { create(:dossier, :en_construction, groupe_instructeur:, procedure:) }
-          let(:follower) { create(:instructeur) }
-          let!(:ip_follower) { create(:instructeurs_procedure, instructeur: follower, procedure: procedure, instant_email_dossier_deletion: false) }
+          let!(:ip) { create(:instructeurs_procedure, instructeur:, procedure:, instant_email_dossier_deletion: false) }
 
           before do
-            dossier.followers_instructeurs << follower
+            dossier.followers_instructeurs << instructeur
           end
 
           it "does not notify the instructeur" do
             dossier.hide_and_keep_track!(dossier.user, :user_request)
 
-            expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), follower.email)
+            expect(DossierMailer).not_to have_received(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), instructeur.email)
           end
         end
       end

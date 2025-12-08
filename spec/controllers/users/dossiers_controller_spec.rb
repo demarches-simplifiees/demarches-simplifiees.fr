@@ -1694,17 +1694,17 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when dossier is owned by signed in user' do
-      let(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
-      let(:common_user) { create(:user) }
-      let!(:admin_and_instructeur_admin) { create(:administrateur, user: common_user) }
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, :en_construction, groupe_instructeur:, user:, autorisation_donnees: true) }
+      let(:groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur]) }
+      let(:instructeur) { create(:instructeur) }
 
       before do
-        dossier.procedure.administrateurs << admin_and_instructeur_admin
-        dossier.procedure.defaut_groupe_instructeur.instructeurs << admin_and_instructeur_admin.user.instructeur
+        instructeur.followed_dossiers << dossier
       end
 
-      it "notifies the user and the admin of the deletion" do
-        expect(DossierMailer).to receive(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), common_user.email).and_return(double(deliver_later: nil))
+      it "notifies the instructeur of the deletion" do
+        expect(DossierMailer).to receive(:notify_en_construction_deletion_to_administration).with(kind_of(Dossier), instructeur.email).and_return(double(deliver_later: nil))
         subject
       end
 
