@@ -899,10 +899,10 @@ class Dossier < ApplicationRecord
     end
 
     if en_construction? && !hidden_by_administration?
-      followers_emails = followers_instructeurs.map(&:email)
-      admin_emails = procedure.administrateurs.map(&:email)
-      instructeurs_emails = procedure.groupe_instructeurs.flat_map { |g| g.instructeurs.map(&:email) }
-      admin_instructeur_emails = admin_emails.filter { |email| instructeurs_emails.include?(email) }
+      followers_emails = followers_instructeurs.with_instant_email_dossier_deletion(procedure).pluck(:email)
+      admin_emails = procedure.administrateurs.pluck(:email)
+      instructeurs_emails = procedure.instructeurs.with_instant_email_dossier_deletion(procedure).pluck(:email)
+      admin_instructeur_emails = admin_emails & instructeurs_emails
       emails = (followers_emails + admin_instructeur_emails).uniq
 
       emails.each do |email|

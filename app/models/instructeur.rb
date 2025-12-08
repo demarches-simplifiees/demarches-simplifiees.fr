@@ -64,6 +64,15 @@ class Instructeur < ApplicationRecord
       .distinct
   }
 
+  scope :with_instant_email_dossier_deletion, -> (procedure) {
+    where.not(
+      id: InstructeursProcedure
+            .select(:instructeur_id)
+            .where(procedure:)
+            .where(instant_email_dossier_deletion: false)
+    )
+  }
+
   default_scope { eager_load(:user) }
 
   def email
