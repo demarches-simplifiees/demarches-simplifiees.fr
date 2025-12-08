@@ -44,7 +44,7 @@
     <% if procedure.hidden_as_template? %>
       <%= link_to 'Autoriser l\'affichage dans les modèles', unhide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% else %>
-      <%= link_to 'Masquer l\'affichage dans les modèles', hide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
+      <%= link_to 'Masquer l\'affichage dans la liste de "Toutes les démarches"', hide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
 
     <% if procedure.can_be_deleted_by_manager? %>
