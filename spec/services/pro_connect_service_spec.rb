@@ -16,28 +16,4 @@ describe ProConnectService do
       expect(subject).to eq("https://www.proconnect.gouv.fr/logout?id_token_hint=id_token&post_logout_redirect_uri=http%3A%2F%2Ftest.host%2Flogout")
     end
   end
-
-  xdescribe '.email_domain_is_in_mandatory_list?' do
-    subject { described_class.email_domain_is_in_mandatory_list?(email) }
-
-    context 'when email domain is beta.gouv.fr' do
-      let(:email) { 'user@beta.gouv.fr' }
-      it { is_expected.to be true }
-    end
-
-    context 'when email domain is modernisation.gouv.fr' do
-      let(:email) { 'user@modernisation.gouv.fr' }
-      it { is_expected.to be true }
-    end
-
-    context 'when email domain is not in the mandatory list' do
-      let(:email) { 'user@example.com' }
-      it { is_expected.to be false }
-    end
-
-    context 'when email contains whitespace' do
-      let(:email) { ' user@beta.gouv.fr ' }
-      it { is_expected.to be true }
-    end
-  end
 end
