@@ -59,7 +59,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
         'fr-btn' => true,
         'fr-btn--tertiary' => llm_rule_suggestion.state.in?(['running', 'queued']),
         'fr-btn--spin' => llm_rule_suggestion.state.in?(['running', 'queued']),
-        'fr-icon-search-line fr-btn--icon-left' => llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped'])
+        'fr-icon-search-ai-line fr-btn--icon-left' => llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped'])
       ),
     }
   end
