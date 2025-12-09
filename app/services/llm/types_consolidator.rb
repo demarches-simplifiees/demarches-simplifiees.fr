@@ -34,6 +34,25 @@ module LLM
       },
     }.freeze
 
+    def propose_messages(suggestion)
+      revision = suggestion.procedure_revision
+      safe_schema = sanitize_schema_for_prompt(revision.schema_to_llm)
+
+      [
+        {
+          role: 'system',
+          content: format(
+            system_prompt,
+            libelle: revision.procedure.libelle,
+            description: revision.procedure.description,
+            before_schema: before_schema(revision.procedure)
+          ),
+        },
+        { role: 'user', content: format(schema_prompt, schema: JSON.dump(safe_schema)) },
+        { role: 'user', content: rules_prompt },
+      ]
+    end
+
     def system_prompt
       <<~TXT
         Tu es un assistant chargé d'améliorer les types de champs d'un formulaire administratif français.
@@ -44,8 +63,8 @@ module LLM
 
         Principe "Dites-le-nous une fois" (DLNUF) : l'administration ne doit pas redemander des informations déjà collectées.
 
-        Champs collectés à l'entrée de la démarche :
-        %{champs_entree}
+        Données déjà collectées à l'entrée de la démarche :
+        %{before_schema}
       TXT
     end
 
