@@ -44,7 +44,7 @@ module Dsfr
         # because validation adds errors to champ instances that may differ from the form object
         # or directly on the champ object
         if object.is_a?(Champ) && object.dossier.present?
-          dossier_errors_for_champ + errors.full_messages_for(attribute_or_rich_body)
+          (dossier_errors_for_champ + errors.full_messages_for(attribute_or_rich_body)).uniq
         else
           errors.full_messages_for(attribute_or_rich_body)
         end
