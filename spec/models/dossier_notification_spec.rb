@@ -248,9 +248,10 @@ RSpec.describe DossierNotification, type: :model do
 
     context "when notification_type is dossier_suppression" do
       let(:notification_type) { :dossier_suppression }
-      let!(:dossier_to_notify) { create(:dossier, :accepte, hidden_by_administration_at: Time.zone.yesterday) }
+      let!(:dossier_to_notify) { create(:dossier, :accepte, hidden_by_administration_at: Time.zone.yesterday, hidden_by_user_at: Time.zone.yesterday) }
       let!(:dossier_to_notify_2) { create(:dossier, :en_construction, hidden_by_expired_at: Time.zone.yesterday) }
       let!(:dossier_not_to_notify) { create(:dossier, :en_construction, hidden_by_administration_at: nil, hidden_by_expired_at: nil) }
+      let!(:dossier_not_to_notify_2) { create(:dossier, :accepte, hidden_by_administration_at: Time.zone.yesterday) }
 
       it "returns only dossiers expired or hidden by administration" do
         expect(subject).to contain_exactly(dossier_to_notify, dossier_to_notify_2)

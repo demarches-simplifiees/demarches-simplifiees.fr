@@ -424,8 +424,8 @@ class DossierNotification < ApplicationRecord
     when :dossier_suppression
       dossiers
         .select(:id, :hidden_by_administration_at, :hidden_by_expired_at)
-        .hidden_by_administration
-        .or(dossiers.hidden_by_expired)
+        .hidden_by_expired
+        .or(dossiers.hidden_by_administration.hidden_by_user)
     when :dossier_modifie
       dossiers
         .select(:id, :last_champ_updated_at, :depose_at)
@@ -498,7 +498,7 @@ class DossierNotification < ApplicationRecord
     when :dossier_expirant
       dossier.expired_at - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
     when :dossier_suppression
-      [dossier.hidden_by_administration_at, dossier.hidden_by_expired_at].compact.min
+      dossier.hidden_by_expired_at || [dossier.hidden_by_administration_at, dossier.hidden_by_user_at].max
     else
       Time.zone.now
     end
