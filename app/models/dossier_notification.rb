@@ -467,7 +467,7 @@ class DossierNotification < ApplicationRecord
     when :dossier_expirant
       dossier.close_to_expiration? ? instructeur_ids : []
     when :dossier_suppression
-      dossier.hidden_by_expired? || dossier.hidden_by_administration? ? instructeur_ids : []
+      (dossier.hidden_by_expired? || (dossier.hidden_by_administration? && dossier.hidden_by_user?)) ? instructeur_ids : []
     when :dossier_modifie
       dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at ? instructeur_ids : []
     when :message

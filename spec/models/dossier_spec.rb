@@ -813,15 +813,41 @@ describe Dossier, type: :model do
       end
 
       context "when dossier must have a non customisable notification" do
-        let!(:old_expirant_notification) { create(:dossier_notification, dossier:, instructeur:, notification_type: :dossier_expirant, display_at: 1.week.ago) }
         let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [new_instructeur]) }
 
-        before { dossier.update(expired_at: 1.week.from_now) }
+        context "when notification is dossier_expirant" do
+          before { dossier.update(expired_at: 1.week.from_now) }
 
-        it "refreshes notifications for new instructeur" do
-          dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
-          expect(DossierNotification.where(instructeur: instructeur, dossier:, notification_type: :dossier_expirant)).to be_empty
-          expect(DossierNotification.where(instructeur: new_instructeur, dossier:, notification_type: :dossier_expirant)).to be_present
+          it "refreshes notifications for new instructeur" do
+            dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+
+            notification = DossierNotification.find_by!(instructeur: new_instructeur, dossier:, notification_type: :dossier_expirant)
+            expect(notification.display_at.to_date).to eq(1.week.ago.to_date)
+          end
+        end
+
+        context "when notification is dossier_suppression" do
+          context "when dossier is expired" do
+            before { dossier.update(hidden_by_expired_at: Time.zone.yesterday) }
+
+            it "refreshes notifications for new instructeur" do
+              dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+
+              notification = DossierNotification.find_by!(instructeur: new_instructeur, dossier:, notification_type: :dossier_suppression)
+              expect(notification.display_at.to_date).to eq(Time.zone.yesterday.to_date)
+            end
+          end
+
+          context "when dossier is hidden by administration and by user" do
+            before { dossier.update(hidden_by_administration_at: Time.zone.yesterday, hidden_by_user_at: 1.week.ago) }
+
+            it "refreshes notifications for new instructeur" do
+              dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+
+              notification = DossierNotification.find_by!(instructeur: new_instructeur, dossier:, notification_type: :dossier_suppression)
+              expect(notification.display_at.to_date).to eq(Time.zone.yesterday.to_date)
+            end
+          end
         end
       end
     end
