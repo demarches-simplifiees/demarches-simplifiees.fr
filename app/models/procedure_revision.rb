@@ -294,6 +294,11 @@ class ProcedureRevision < ApplicationRecord
             end
           end
         end
+      elsif payload.key?(:type_champ) # TypesImprover: type change
+        stable_id, type_champ = payload.values_at(:stable_id, :type_champ)
+
+        tdc = find_and_ensure_exclusive_use(stable_id)
+        tdc.update(type_champ:)
       else # LabelImprover: mise à jour contenu
         stable_id, libelle, description = payload.values_at(:stable_id, :libelle, :description)
 
@@ -301,7 +306,11 @@ class ProcedureRevision < ApplicationRecord
         tdc.update({ libelle:, description: }.compact)
       end
     end
-    # end
+
+    changes.fetch(:destroy, []).each do |llm_rule_suggestion_items|
+      # TODO: verify conditional rules before
+      remove_type_de_champ(llm_rule_suggestion_items.stable_id)
+    end
   end
 
   private
