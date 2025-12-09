@@ -13,15 +13,8 @@ RSpec.describe LLM::TypesConsolidator do
   end
   let(:rule) { 'consolidate_types' }
   let(:usage) { double() }
-  let(:procedure_context) do
-    {
-      libelle: 'Test Procedure',
-      description: 'Test description',
-      for_individual: false,
-      champs_entree: '- SIRET de l\'ENTREPRISE (fournit automatiquement ~20 informations : raison sociale, adresse, forme juridique, NAF, etc.)'
-    }
-  end
-  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, procedure_context_to_llm: procedure_context) }
+  let(:procedure) { double('procedure', libelle: 'Test Procedure', description: 'Test description', for_individual: false) }
+  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, procedure:) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule:) }
 
   before do

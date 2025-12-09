@@ -109,7 +109,8 @@ module LLM
             schema: safe_schema.to_json,
             procedure_description: procedure_revision.procedure.description,
             procedure_libelle: procedure_revision.procedure.libelle,
-            field_types: field_types_description
+            field_types: field_types_description,
+            before_schema: before_schema(procedure_revision.procedure)
           ),
         },
         { role: 'user', content: rules_prompt },
@@ -140,6 +141,11 @@ module LLM
           %<procedure_description>s
         </procedure_description>
 
+        Avant de remplir le formulaire, l'usager a déjà fourni les informations suivantes :
+        <before_schema>
+          %<before_schema>s
+        </before_schema>
+
         Voici le schéma des champs (publics) du formulaire en JSON. Chaque entrée contient :
           - stable_id : l'identifiant du champ
           - type : le type de champ (voir liste plus bas)
@@ -161,8 +167,6 @@ module LLM
 
           Sections existantes : Liste des libellés des sections (champs de type 'header_section') pour référence. Utilise-les pour réorganiser les champs au lieu d'en créer de nouvelles.
 
-
-
           <schema>
           %<schema>s
           </schema>
@@ -183,6 +187,35 @@ module LLM
         end
         lines.join("\n")
       end.compact.join("\n\n")
+    end
+
+    def before_schema(procedure)
+      if procedure.for_individual
+        <<~TEXT.strip
+          - Civilité (Madame/Monsieur)
+          - Nom de famille
+          - Prénom(s)
+          - Adresse email
+        TEXT
+      else
+        <<~TEXT.strip
+          - Adresse email
+          - Numéro SIRET
+
+          Ce qui a permis de récupérer automatiquement ces informations associées :
+          - Raison sociale
+          - Adresse normalisée du siège social et de l'établissement
+          - SIREN
+          - Nom commercial
+          - Forme juridique (code et libellé)
+          - Code NAF et libellé d'activité
+          - N° TVA intracommunautaire
+          - Capital social
+          - Date de création
+          - État administratif (actif/fermé)
+          - Effectif (tranche et année de référence)
+        TEXT
+      end
     end
 
     def sanitize_schema_for_prompt(schema)
