@@ -1188,19 +1188,57 @@ describe Dossier, type: :model do
 
       context "when the instructeur hide the dossier" do
         let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [create(:instructeur)]) }
-        let(:dossier) { create(:dossier, state: "accepte", groupe_instructeur:) }
         let(:user) { create(:instructeur) }
         let(:reason) { :instructeur_request }
 
-        it "creates dossier_suppression notification with correct delay" do
-          subject
-          expect(DossierNotification.count).to eq(1)
+        context "when the dossier is already hidden by user" do
+          let(:dossier) { create(:dossier, state: "accepte", groupe_instructeur:, hidden_by_user_at: Time.zone.yesterday) }
 
-          notification = DossierNotification.last
-          expect(notification.dossier_id).to eq(dossier.id)
-          expect(notification.instructeur_id).to eq(groupe_instructeur.instructeur_ids.first)
-          expect(notification.notification_type).to eq("dossier_suppression")
-          expect(notification.display_at.to_date).to eq(Time.zone.now.to_date)
+          it "creates dossier_suppression notification with correct delay" do
+            subject
+            expect(DossierNotification.count).to eq(1)
+
+            notification = DossierNotification.last
+            expect(notification.dossier_id).to eq(dossier.id)
+            expect(notification.instructeur_id).to eq(groupe_instructeur.instructeur_ids.first)
+            expect(notification.notification_type).to eq("dossier_suppression")
+            expect(notification.display_at.to_date).to eq(Time.zone.now.to_date)
+          end
+        end
+
+        context "when the dossier is not hidden by user" do
+          let(:dossier) { create(:dossier, state: "accepte", groupe_instructeur:) }
+
+          it "does not create dossier_suppression notification" do
+            expect { subject }.not_to change { DossierNotification.count }
+          end
+        end
+      end
+
+      context "when the user hide the dossier" do
+        let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [create(:instructeur)]) }
+
+        context "when the dossier is already hidden by administration" do
+          let(:dossier) { create(:dossier, state: "accepte", groupe_instructeur:, hidden_by_administration_at: Time.zone.yesterday) }
+
+          it "creates dossier_suppression notification with correct delay" do
+            subject
+            expect(DossierNotification.count).to eq(1)
+
+            notification = DossierNotification.last
+            expect(notification.dossier_id).to eq(dossier.id)
+            expect(notification.instructeur_id).to eq(groupe_instructeur.instructeur_ids.first)
+            expect(notification.notification_type).to eq("dossier_suppression")
+            expect(notification.display_at.to_date).to eq(Time.zone.now.to_date)
+          end
+        end
+
+        context "when the dossier is not hidden by administration" do
+          let(:dossier) { create(:dossier, state: "accepte", groupe_instructeur:) }
+
+          it "does not create dossier_suppression notification" do
+            expect { subject }.not_to change { DossierNotification.count }
+          end
         end
       end
     end
