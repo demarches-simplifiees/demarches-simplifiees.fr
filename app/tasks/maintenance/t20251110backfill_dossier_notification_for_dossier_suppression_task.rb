@@ -14,8 +14,8 @@ module Maintenance
 
     def collection
       Dossier
-        .hidden_by_administration
-        .or(Dossier.hidden_by_expired)
+        .hidden_by_expired
+        .or(Dossier.hidden_by_administration.hidden_by_user)
         .includes(groupe_instructeur: :instructeurs)
     end
 
@@ -26,7 +26,7 @@ module Maintenance
           notification_type: :dossier_suppression,
           instructeur_id: instructeur_id
         ) do |notification|
-          notification.display_at = [dossier.hidden_by_administration_at, dossier.hidden_by_expired_at].compact.min
+          notification.display_at = dossier.hidden_by_expired_at || [dossier.hidden_by_administration_at, dossier.hidden_by_user_at].max
         end
       end
     end
