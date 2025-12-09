@@ -56,6 +56,27 @@ describe Columns::JSONPathColumn do
         it { is_expected.to eq([]) }
       end
     end
+
+    context 'with blank filter values' do
+      let(:jsonpath) { '$.postal_code' }
+      let(:dossier1) { create(:dossier, procedure:) }
+      let(:dossier2) { create(:dossier, procedure:) }
+      let(:dossier3) { create(:dossier, procedure:) }
+      let(:dossiers) { Dossier.where(id: [dossier1.id, dossier2.id, dossier3.id]) }
+
+      before do
+        dossier1.champs.first.update(value_json: { postal_code: '60580' })
+        dossier2.champs.first.update(value_json: { postal_code: '75001' })
+      end
+
+      context 'when filter value contains only blank strings' do
+        subject { column.filtered_ids(dossiers, { operator: 'match', value: ['', '  ', nil] }) }
+
+        it 'returns all dossiers without filtering' do
+          is_expected.to contain_exactly(dossier1.id, dossier2.id, dossier3.id)
+        end
+      end
+    end
   end
 
   describe '#initializer' do
