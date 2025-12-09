@@ -994,6 +994,8 @@ en:
         to_archive: to archive
         trash: trash
       aasm_error_annotations: The private annotations are not filled in correctly; it is not possible to change the file to %{state}. <a href="%{url}">Edit annotations</a>.
+      alert_error_annotations: The private annotations were not filled out correctly and are necessary to make a decision on the file.
+      alert_error_annotations_link: Complete the private annotations
     procedure_presentation:
       customize_filters:
         exit_customization: "Exit customization"

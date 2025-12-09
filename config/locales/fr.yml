@@ -999,6 +999,8 @@ fr:
         to_archive: à archiver
         trash: corbeille
       aasm_error_annotations: Les annotations privées ne sont pas remplis correctement, il n’est pas possible de passer le dossier en %{state}. <a href="%{url}">Modifier les annotations</a>.
+      alert_error_annotations: Les annotations privées n'ont pas été renseignées correctement et sont nécessaire pour apporter une décision sur le dossier.
+      alert_error_annotations_link: Compléter les annotations privées
     procedure_presentation:
       customize_filters:
         exit_customization: "Quitter la personnalisation"
