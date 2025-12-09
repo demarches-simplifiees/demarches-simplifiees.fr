@@ -179,12 +179,14 @@ module Administrateurs
     end
 
     def simplify
+      rule = params[:rule]
+
       @llm_rule_suggestion = llm_rule_suggestion_scope
         .includes(:llm_rule_suggestion_items)
+        .where(rule:)
         .order(created_at: :desc)
         .first
 
-      rule = params[:rule]
       if @llm_rule_suggestion&.finished?
         next_rule = LLMRuleSuggestion.next_rule(params[:rule])
 
