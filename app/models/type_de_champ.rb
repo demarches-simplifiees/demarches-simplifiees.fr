@@ -721,7 +721,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def pj_limit_formats?
-    options[:pj_limit_formats].present?
+    [true, '1'].include?(options[:pj_limit_formats])
   end
 
   def pj_format_families
