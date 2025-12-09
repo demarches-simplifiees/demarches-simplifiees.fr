@@ -39,6 +39,12 @@ yarn-debug.log*
 # Local Netlify folder
 .netlify
 
+/.claude/*.local.json
+/AGENTS.md
+/CLAUDE.md
+/.claude/*
+/worktree
+
 # Custom locales
 /config/custom_locales/*
 !/config/custom_locales/.keep

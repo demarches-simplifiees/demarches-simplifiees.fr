@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_09_131913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "postgis"
-  disable_extension "postgis_tiger_geocoder"
   enable_extension "sslinfo"
   enable_extension "unaccent"
 
@@ -471,7 +470,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
   create_table "dossier_transfer_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
-    t.string "from", null: false
+    t.string "from", default: "", null: false
     t.boolean "from_support", default: false, null: false
     t.string "to", null: false
     t.datetime "updated_at", null: false
@@ -518,6 +517,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.datetime "identity_updated_at", precision: nil
     t.datetime "last_avis_piece_jointe_updated_at"
     t.datetime "last_avis_updated_at", precision: nil
+    t.datetime "last_champ_instructeur_updated_at"
     t.datetime "last_champ_piece_jointe_updated_at"
     t.datetime "last_champ_private_updated_at", precision: nil
     t.datetime "last_champ_updated_at", precision: nil
@@ -525,6 +525,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.datetime "last_commentaire_updated_at", precision: nil
     t.string "mandataire_first_name"
     t.string "mandataire_last_name"
+    t.datetime "messagerie_seen_by_user_at"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
@@ -980,11 +981,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.integer "assign_to_id"
     t.datetime "created_at", precision: nil
     t.jsonb "displayed_columns", default: [], null: false, array: true
-    t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
+    t.jsonb "displayed_fields", default: [{"label" => "Demandeur", "table" => "user", "column" => "email"}], null: false
     t.jsonb "expirant_filters", default: [], null: false, array: true
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
+    t.jsonb "filters", default: {"tous" => [], "suivis" => [], "traites" => [], "a-suivre" => [], "archives" => [], "expirant" => [], "supprimes" => []}, null: false
     t.boolean "filters_expanded", default: true, null: false
-    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "sort", default: {"order" => "desc", "table" => "notifications", "column" => "notifications"}, null: false
     t.jsonb "sorted_column"
     t.jsonb "suivis_filters", default: [], null: false, array: true
     t.jsonb "supprimes_filters", default: [], null: false, array: true
@@ -1094,7 +1095,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.bigint "parent_procedure_id"
     t.string "path"
     t.boolean "piece_justificative_multiple", default: true, null: false
-    t.boolean "pro_connect_restricted", default: false, null: false
+    t.boolean "pro_connect_restricted"
     t.string "pro_connect_restriction", default: "none", null: false
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at", precision: nil
@@ -1477,6 +1478,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
