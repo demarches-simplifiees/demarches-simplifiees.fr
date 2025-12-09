@@ -24,9 +24,13 @@ class Columns::JSONPathColumn < Columns::ChampColumn
   end
 
   def filtered_ids_for_values(dossiers, search_terms)
+    search_terms = Array(search_terms).compact_blank
+
+    return dossiers.ids if search_terms.empty?
+
     value = quote_string(search_terms.join('|'))
 
-    condition = %{champs.value_json @? '#{jsonpath} ? (@ like_regex "#{value}" flag "i")'}
+    condition = sanitize_sql(%{champs.value_json @? '#{jsonpath} ? (@ like_regex "#{value}" flag "i")'})
 
     dossiers.with_type_de_champ(stable_id)
       .where(condition)
@@ -50,4 +54,6 @@ class Columns::JSONPathColumn < Columns::ChampColumn
   end
 
   def quote_string(string) = ActiveRecord::Base.connection.quote_string(string)
+
+  def sanitize_sql(sql) = ActiveRecord::Base.sanitize_sql(sql)
 end
