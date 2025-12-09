@@ -23,6 +23,16 @@ module Maintenance
       it 'nullify row_id' do
         expect { process }. to change { null_row_id_counts }.from([0, 1]).to([1, 0])
       end
+
+      context 'deal with conflicts' do
+        before do
+          attributes = dossier.champs.where(row_id: Champ::NULL_ROW_ID).first.attributes
+          dossier.champs.create(attributes.merge(row_id: nil, id: nil))
+        end
+        it 'nullify row_id' do
+          expect { process }. to change { null_row_id_counts }.from([1, 1]).to([1, 0])
+        end
+      end
     end
   end
 end
