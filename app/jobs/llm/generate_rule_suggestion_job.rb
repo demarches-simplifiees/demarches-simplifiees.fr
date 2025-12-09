@@ -18,7 +18,8 @@ class LLM::GenerateRuleSuggestionJob < ApplicationJob
     end
     suggestion.update!(state: :completed, error: nil, token_usage: enhance_token_usage_with_cost(token_usage:))
   rescue StandardError => e
-    suggestion.update!(state: :failed, error: e.message)
+    error_details = "#{e.class}: #{e.message}\n#{e.backtrace.first(10).join("\n")}"
+    suggestion.update!(state: :failed, error: error_details)
     raise e
   end
 
