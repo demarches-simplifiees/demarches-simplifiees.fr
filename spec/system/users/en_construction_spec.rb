@@ -47,7 +47,7 @@ describe "Dossier en_construction", js: true do
       visit_dossier(dossier)
 
       expect(page).to have_button("Supprimer le fichier toto.png")
-      click_on "Supprimer le fichier toto.png"
+      find('button', text: 'Supprimer le fichier toto.png').click
       expect(page).to have_text("La pièce jointe (toto.png) a bien été supprimée. Vous pouvez en ajouter une autre.")
 
       input_selector = "##{champ.focusable_input_id}"
