@@ -16,7 +16,7 @@ RSpec.describe LLM::StepperComponent, type: :component do
   context 'with the label improvement rule' do
     let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
     it 'shows the first step and the correct next step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 2')
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 3')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration des libellés")
       expect(rendered_component.css('.fr-stepper__details').text).to include("Amélioration de la structure")
     end
@@ -24,9 +24,18 @@ RSpec.describe LLM::StepperComponent, type: :component do
 
   context 'with the structure rule' do
     let(:rule) { LLMRuleSuggestion.rules.fetch('improve_structure') }
-    it 'marks the second step and shows no further step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 2')
+    it 'shows the second step and the correct next step' do
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 3')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration de la structure")
+      expect(rendered_component.css('.fr-stepper__details').text).to include("Consolidation des types de champs")
+    end
+  end
+
+  context 'with the types consolidation rule' do
+    let(:rule) { 'consolidate_types' }
+    it 'marks the third step and shows no further step' do
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 3 sur 3')
+      expect(rendered_component.css('.fr-stepper__title').text).to include("Consolidation des types de champs")
     end
   end
 end
