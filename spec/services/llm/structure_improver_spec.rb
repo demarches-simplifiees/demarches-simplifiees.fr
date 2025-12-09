@@ -12,7 +12,15 @@ RSpec.describe LLM::StructureImprover do
   end
   let(:rule) { LLMRuleSuggestion.rules.fetch('improve_structure') }
   let(:usage) { double() }
-  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1) }
+  let(:procedure_context) do
+    {
+      libelle: 'Test Procedure',
+      description: 'Test description',
+      for_individual: false,
+      champs_entree: '- SIRET de l\'ENTREPRISE (fournit automatiquement ~20 informations : raison sociale, adresse, forme juridique, NAF, etc.)'
+    }
+  end
+  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, procedure_context_to_llm: procedure_context) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule:) }
   before do
    allow(usage).to receive(:with_indifferent_access).and_return({
