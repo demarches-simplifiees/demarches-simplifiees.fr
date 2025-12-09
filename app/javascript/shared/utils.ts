@@ -209,7 +209,7 @@ export function httpRequest(
   const request = async (
     init: RequestInit,
     accept?: string
-  ): Promise<Response> => {
+  ): Promise<Response | null> => {
     if (accept && init.headers instanceof Headers) {
       init.headers.set('accept', accept);
     }
@@ -226,15 +226,19 @@ export function httpRequest(
       return response;
     } else if (response.status == 401 || response.status == 403) {
       location.reload(); // reload whole page so Devise will redirect to sign-in
+      return null;
+    } else {
+      const errors = await getResponseErrors(response);
+      throw new ResponseError(response, errors);
     }
-
-    const errors = await getResponseErrors(response);
-    throw new ResponseError(response, errors);
   };
 
   return {
     async json<T>(): Promise<T | null> {
       const response = await request(init, 'application/json');
+      if (!response) {
+        return null;
+      }
       if (response.status == 204) {
         return null;
       }
@@ -242,7 +246,7 @@ export function httpRequest(
     },
     async turbo(): Promise<void> {
       const response = await request(init, 'text/vnd.turbo-stream.html');
-      if (response.status != 204) {
+      if (response && response.status != 204) {
         const stream = await response.text();
         session.renderStreamMessage(stream);
       }
