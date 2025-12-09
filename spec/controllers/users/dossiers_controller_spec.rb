@@ -633,6 +633,7 @@ describe Users::DossiersController, type: :controller do
         it do
           expect(response).to render_template(:modifier)
           expect(response.body).to have_content("doit être rempli")
+          expect(response.body).not_to have_content("et doit être rempli")
           expect(response.body).to have_link(empty_champ.libelle, href: "##{empty_champ.focusable_input_id}")
         end
       end
