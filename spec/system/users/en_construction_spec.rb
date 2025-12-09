@@ -16,7 +16,7 @@ describe "Dossier en_construction", js: true do
     visit_dossier(dossier)
 
     expect(page).not_to have_button("Remplacer")
-    click_on "Supprimer le fichier toto.txt"
+    find("button", text: "Supprimer le fichier toto.txt").click
 
     wait_until { user_buffer_champ.blank? }
     expect(page).to have_text("La pièce jointe (toto.txt) a bien été supprimée. Vous pouvez en ajouter une autre.")
@@ -28,7 +28,7 @@ describe "Dossier en_construction", js: true do
     scenario 'remplace a mandatory piece justificative' do
       visit_dossier(dossier)
 
-      click_on "Supprimer le fichier toto.txt"
+      find("button", text: "Supprimer le fichier toto.txt").click
       expect(page).to have_text("La pièce jointe (toto.txt) a bien été supprimée. Vous pouvez en ajouter une autre.")
 
       input_selector = "#attachment-multiple-empty-#{champ.public_id}"
@@ -47,7 +47,7 @@ describe "Dossier en_construction", js: true do
       visit_dossier(dossier)
 
       expect(page).to have_button("Supprimer le fichier toto.png")
-      click_on "Supprimer le fichier toto.png"
+      find("button", text: "Supprimer le fichier toto.png").click
       expect(page).to have_text("La pièce jointe (toto.png) a bien été supprimée. Vous pouvez en ajouter une autre.")
 
       input_selector = "##{champ.focusable_input_id}"
