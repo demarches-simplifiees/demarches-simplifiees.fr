@@ -179,9 +179,12 @@ module Administrateurs
     end
 
     def simplify
+      rule = params[:rule]
+
       @llm_rule_suggestion = llm_rule_suggestion_scope
         .where(rule:)
         .includes(:llm_rule_suggestion_items)
+        .where(rule:)
         .order(created_at: :desc)
         .first
 
