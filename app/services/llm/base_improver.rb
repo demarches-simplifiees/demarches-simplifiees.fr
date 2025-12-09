@@ -34,13 +34,17 @@ module LLM
     end
 
     def propose_messages(suggestion)
-      propose_messages_for_schema(suggestion.procedure_revision.schema_to_llm)
+      revision = suggestion.procedure_revision
+      propose_messages_for_schema(
+        revision.schema_to_llm,
+        revision.procedure_context_to_llm
+      )
     end
 
-    def propose_messages_for_schema(schema)
+    def propose_messages_for_schema(schema, procedure_context)
       safe_schema = sanitize_schema_for_prompt(schema)
       [
-        { role: 'system', content: system_prompt },
+        { role: 'system', content: format(system_prompt, procedure_context) },
         { role: 'user', content: format(schema_prompt, schema: JSON.dump(safe_schema)) },
         { role: 'user', content: rules_prompt },
       ]

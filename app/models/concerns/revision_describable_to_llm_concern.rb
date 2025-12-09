@@ -16,4 +16,19 @@ module RevisionDescribableToLLMConcern
         }.compact
       end
   end
+
+  def procedure_context_to_llm
+    champs_entree = if procedure.for_individual
+      "- Civilité, nom et prénom du DEMANDEUR"
+    else
+      "- SIRET de l'ETABLISSEMENT (fournit automatiquement ~20 informations : raison sociale, adresse, forme juridique, NAF, etc.)"
+    end
+
+    {
+      libelle: procedure.libelle,
+      description: procedure.description,
+      for_individual: procedure.for_individual,
+      champs_entree:,
+    }
+  end
 end
