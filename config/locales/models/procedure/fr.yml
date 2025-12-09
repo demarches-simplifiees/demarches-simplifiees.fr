@@ -145,3 +145,11 @@ fr:
       procedure:
         routing_champs: Champ(s) de routage
         dossiers_count: Nombre de dossiers
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+        # these translations seem not used but they are !
+        # they overload action model and action view translations
+        # in order to have the right apostrophe character in french text
+        one: "moins d’une minute"
+        other: "moins de %{count} minutes"
