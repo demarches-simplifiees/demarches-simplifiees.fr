@@ -996,6 +996,7 @@ en:
       aasm_error_annotations: The private annotations are not filled in correctly; it is not possible to change the file to %{state}. <a href="%{url}">Edit annotations</a>.
       alert_error_annotations: The private annotations were not filled out correctly and are necessary to make a decision on the file.
       alert_error_annotations_link: Complete the private annotations
+      alert_unspecified_attestation_champs: 'Please note, the following values have not been entered but are necessary to send a valid certificate:'
     procedure_presentation:
       customize_filters:
         exit_customization: "Exit customization"
