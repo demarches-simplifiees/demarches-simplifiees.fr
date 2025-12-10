@@ -19,10 +19,10 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
     @filters
       .reject(&:empty_filter?)
       .flat_map do |filter|
-        if filter.filter_value.empty?
+        if filter.filter_values.empty?
           [filter_form(filter, nil)]
         else
-          filter.filter_value.map { |value| filter_form(filter, value) }
+          filter.filter_values.map { |value| filter_form(filter, value) }
         end
       end
   end
@@ -47,7 +47,7 @@ class Instructeurs::ClearFilterButtonsComponent < ApplicationComponent
       # If value is nil, clear the entire filter
       filter.empty_filter
     else
-      new_filter_values = filter.filter_value - [value]
+      new_filter_values = filter.filter_values - [value]
       if new_filter_values.empty?
         filter.empty_filter
       else

@@ -29,7 +29,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   end
 
   def value
-    filtered_column&.filter_value
+    filtered_column&.filter_values
   end
 
   def operator
@@ -98,7 +98,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       name: 'filter[filter][value][]',
       items: column_filter_options,
       value_separator: false,
-      selected_keys: filtered_column&.filter_value,
+      selected_keys: filtered_column&.filter_values,
       placeholder: t('.multi_select_placeholder'),
       tags_below: true,
     }
