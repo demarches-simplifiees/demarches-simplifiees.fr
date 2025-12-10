@@ -103,15 +103,15 @@ module LLM
         Nombres et dates :
         - decimal_number : Nombre décimal avec validation (min/max configurables)
         - integer_number : Nombre entier avec validation (min/max configurables)
-        - formatted : Texte court avec contraintes de format. Options : letters_accepted, numbers_accepted, special_characters_accepted
+        - formatted : Texte court avec contraintes de format, par exemple que des lettres ou chiffres. Options : letters_accepted, numbers_accepted, special_characters_accepted
         - date : Date seule avec sélecteur calendrier
-        - datetime : Date et heure avec sélecteur
+        - datetime : Date et heure avec sélecteur calendrier et sélecteur d'heure
 
         Choix :
         - checkbox : Case à cocher unique (acceptation de conditions, CGU...)
-        - yes_no : Question à réponse binaire Oui/Non avec interface dédiée
-        - drop_down_list : Choix unique dans une liste déroulante
-        - multiple_drop_down_list : Choix multiples dans une liste
+        - yes_no : Boutons radio pour répondre à une question par Oui ou Non
+        - drop_down_list : Choix unique dans une liste déroulante ou des boutons radio (suivant la quantité de choix)
+        - multiple_drop_down_list : Choix multiples dans une liste sous forme de checkbox ou combobox (suivant la quantité de choix)
       TXT
     end
 
@@ -120,7 +120,7 @@ module LLM
         ## Règles :
         - Utilise `update` pour modifier le type du champ (avec stable_id et type_champ)
         - Utilise `destroy` pour supprimer un champ afin de respecter le DLNUF
-        - Fournis toujours une justification courte, sans mentionner le libellé du champ ni de détails trop techniques
+        - Ignore les champs qui sont à garder tels quels
 
         ## Justification:
         - Quand un champ doit être modifié, fournis une courte justification courte qui sera affichée à l'administrateur pour lui expliquer les raisons pratiques du changement ou de la suppression.
@@ -142,17 +142,17 @@ module LLM
       TXT
     end
 
-    def build_item(args)
+    def build_item(args, tdc_index: {})
       if args['destroy']
         build_destroy_item(args)
       elsif args['update']
-        build_update_item(args)
+        build_update_item(args, tdc_index)
       end
     end
 
     private
 
-    def build_update_item(args)
+    def build_update_item(args, tdc_index)
       data = args['update']
       return unless data.is_a?(Hash)
 
@@ -162,15 +162,16 @@ module LLM
       return if stable_id.nil? || type_champ.blank?
       return unless valid_type_champ?(type_champ)
 
-      result = {
+      original_tdc = tdc_index[stable_id]
+      return if original_tdc && original_tdc.type_champ == type_champ
+
+      {
         op_kind: 'update',
         stable_id:,
         payload: { 'stable_id' => stable_id, 'type_champ' => type_champ },
         verify_status: 'pending',
         justification: args['justification'].presence,
       }
-
-      result
     end
 
     def build_destroy_item(args)

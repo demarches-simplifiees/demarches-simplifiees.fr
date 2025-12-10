@@ -14,7 +14,15 @@ RSpec.describe LLM::TypesConsolidator do
   let(:rule) { 'consolidate_types' }
   let(:usage) { double() }
   let(:procedure) { double('procedure', libelle: 'Test Procedure', description: 'Test description', for_individual: false) }
-  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, procedure:) }
+  let(:types_de_champ) do
+    [
+      double('tdc1', stable_id: 1, type_champ: 'text'),
+      double('tdc2', stable_id: 2, type_champ: 'text'),
+      double('tdc3', stable_id: 3, type_champ: 'text'),
+      double('tdc4', stable_id: 4, type_champ: 'communes'),
+    ]
+  end
+  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, types_de_champ:, procedure:) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule:) }
 
   before do
@@ -85,6 +93,26 @@ RSpec.describe LLM::TypesConsolidator do
       expect(tool_calls.first).to include(op_kind: 'update', stable_id: 3)
       expect(tool_calls.first[:payload]).to include('type_champ' => 'address')
       expect(tool_calls.second).to include(op_kind: 'destroy', stable_id: 4)
+    end
+
+    it 'filters update when type_champ unchanged' do
+      calls = [
+        {
+          name: rule,
+          arguments: {
+            'update' => { 'stable_id' => 1, 'type_champ' => 'text' }, # same as original
+            'justification' => 'Test',
+          },
+        },
+      ]
+
+      runner = double()
+      allow(runner).to receive(:call).with(anything).and_return([calls, usage])
+      service = described_class.new(runner:)
+
+      tool_calls, _token_usage = service.generate_for(suggestion)
+
+      expect(tool_calls).to be_empty
     end
 
     it 'filters invalid type_champ values' do
