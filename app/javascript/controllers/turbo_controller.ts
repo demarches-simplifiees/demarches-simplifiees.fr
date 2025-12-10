@@ -1,9 +1,10 @@
 import { Actions } from '@coldwired/actions';
+import { createReactPlugin, createRoot, type Root } from '@coldwired/react';
 import { parseTurboStream } from '@coldwired/turbo-stream';
-import { createRoot, createReactPlugin, type Root } from '@coldwired/react';
-import invariant from 'tiny-invariant';
 import { session as TurboSession, type StreamElement } from '@hotwired/turbo';
+import { makeRetriable } from 'p-retry';
 import type { ComponentType } from 'react';
+import invariant from 'tiny-invariant';
 
 import { ApplicationController } from './application_controller';
 
@@ -116,7 +117,9 @@ export class TurboController extends ApplicationController {
 
 type Loader = (exportName: string) => Promise<ComponentType<unknown>>;
 const componentsRegistry: Record<string, Loader> = {};
-const components = import.meta.glob('../components/*.tsx');
+const components = import.meta.glob<Record<string, ComponentType<unknown>>>(
+  '../components/*.tsx'
+);
 
 const loader: Loader = (name) => {
   const [moduleName, exportName] = name.split('/');
@@ -129,8 +132,7 @@ for (const [path, loader] of Object.entries(components)) {
   const [filename] = path.split('/').reverse();
   const componentClassName = filename.replace(/\.(ts|tsx)$/, '');
   console.debug(`Registered lazy export for "${componentClassName}" component`);
+  const retriableLoader = makeRetriable(loader);
   componentsRegistry[componentClassName] = (exportName) =>
-    loader().then(
-      (m) => (m as Record<string, ComponentType<unknown>>)[exportName]
-    );
+    retriableLoader().then((mod) => mod[exportName]);
 }
