@@ -7,7 +7,7 @@
           Suppression
         </span>
         <%= original_tdc.libelle %>
-      <% elsif op_kind == 'update' && type_champ_changed? %>
+      <% elsif op_kind == 'update' %>
         <span class="fr-badge fr-badge--sm"><%= original_type_champ_label %></span>
         <span class="fr-icon-arrow-right-line fr-icon--sm fr-mx-1v" aria-hidden="true"></span>
         <span class="fr-badge fr-badge--sm fr-badge--green-emeraude fr-mr-1w"><%= new_type_champ_label %></span>

@@ -51,11 +51,13 @@ module LLM
     end
 
     def aggregate_calls(tool_calls, suggestion)
+      tdc_index = suggestion.procedure_revision.types_de_champ.index_by(&:stable_id)
+
       tool_calls
         .filter { |call| call[:name] == suggestion.rule }
         .map do |call|
           args = call[:arguments] || {}
-          build_item(args)
+          build_item(args, tdc_index:)
         end
         .compact
     end

@@ -20,7 +20,7 @@ RSpec.describe LLM::StructureImprover do
       champs_entree: '- SIRET de l\'ENTREPRISE (fournit automatiquement ~20 informations : raison sociale, adresse, forme juridique, NAF, etc.)'
     }
   end
-  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, procedure_context_to_llm: procedure_context) }
+  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, procedure_context_to_llm: procedure_context, types_de_champ: []) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule:) }
   before do
    allow(usage).to receive(:with_indifferent_access).and_return({

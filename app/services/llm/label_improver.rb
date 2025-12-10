@@ -121,11 +121,11 @@ module LLM
 
         ---
 
-        Utiliser l’outil #{TOOL_DEFINITION.dig(:function, :name)} pour chaque champ à améliorer (un appel par champ).
+        Utiliser l’outil #{TOOL_DEFINITION.dig(:function, :name)} pour chaque champ à améliorer (un appel par champ). Ignore les champs pour lesquels l'amélioration n'est pas significative pour ne pas ennuyer l'administrateur.
       TXT
     end
 
-    def build_item(args)
+    def build_item(args, tdc_index: {})
       update = args['update'].is_a?(Hash) ? args['update'] : {}
       stable_id = update['stable_id'] || args['stable_id']
       libelle = (update['libelle'] || args['libelle']).to_s.strip
