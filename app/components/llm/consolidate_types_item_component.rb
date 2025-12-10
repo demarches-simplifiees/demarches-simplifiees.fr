@@ -13,10 +13,6 @@ class LLM::ConsolidateTypesItemComponent < LLM::SuggestionItemComponent
     item.op_kind
   end
 
-  def type_champ_changed?
-    op_kind == 'update' && payload['type_champ'].present? && payload['type_champ'] != original_tdc&.type_champ
-  end
-
   def type_champ_label(type_champ)
     I18n.t(type_champ, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])
   end
