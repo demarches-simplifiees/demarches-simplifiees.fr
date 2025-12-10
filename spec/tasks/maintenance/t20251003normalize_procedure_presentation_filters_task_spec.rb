@@ -40,7 +40,7 @@ module Maintenance
 
           normalized_filter = procedure_presentation.reload.tous_filters.first
 
-          expect(normalized_filter.filter_value).to eq(["Valeur avec retour\n"])
+          expect(normalized_filter.filter_values).to eq(["Valeur avec retour\n"])
           expect(normalized_filter.filter_operator).to eq("match")
         end
 
@@ -48,7 +48,7 @@ module Maintenance
           process
           expect {
             described_class.process(procedure_presentation.reload)
-          }.not_to change { procedure_presentation.reload.tous_filters.map(&:filter_value) }
+          }.not_to change { procedure_presentation.reload.tous_filters.map(&:filter_values) }
         end
       end
 
