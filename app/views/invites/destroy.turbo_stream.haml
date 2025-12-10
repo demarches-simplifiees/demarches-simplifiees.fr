@@ -1,8 +1,10 @@
 - if @dossier.present?
   = turbo_stream.append "dossier-invites-button-wrapper" do
     :javascript
-      const element = document.getElementById("dossier-invites-modal-dialog");
-      if (element && dsfr) {
-        dsfr(element).modal.conceal();
+      {
+        const element = document.getElementById("dossier-invites-modal-dialog");
+        if (element && dsfr) {
+          dsfr(element).modal.conceal();
+        }
       }
   = turbo_stream.update 'dossier-invites-button-wrapper', partial: 'invites/button', locals: { dossier: @dossier }
