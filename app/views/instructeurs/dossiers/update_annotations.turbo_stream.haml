@@ -1,1 +1,6 @@
 = render partial: 'shared/dossiers/update_champs', locals: { to_show: @to_show, to_hide: @to_hide, to_update: @to_update, dossier: nil }
+
+- if @dossier.any_annotations_privees_with_errors?
+  = turbo_stream.show("alert-error-annotation")
+- else
+  = turbo_stream.hide("alert-error-annotation")
