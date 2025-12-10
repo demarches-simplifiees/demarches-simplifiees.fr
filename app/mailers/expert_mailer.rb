@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ExpertMailer < ApplicationMailer
-  helper MailerHelper
   layout 'mailers/layout'
 
   # TODO: replace with v2 after MEP
@@ -12,7 +11,6 @@ class ExpertMailer < ApplicationMailer
     @decision = decision_dossier(@dossier)
     subject = "Dossier n° #{@dossier.id} a été #{@decision} - #{@dossier.procedure.libelle}"
 
-    configure_defaults_for_user(@avis.expert.user)
     mail(to: email, subject: subject)
   end
 
@@ -23,7 +21,6 @@ class ExpertMailer < ApplicationMailer
     @decision = decision_dossier(@dossier)
     subject = "Dossier n° #{@dossier.id} a été #{@decision} - #{@dossier.procedure.libelle}"
 
-    configure_defaults_for_user(@avis.expert.user)
     mail(template_name: 'send_dossier_decision', to: email, subject: subject)
   end
 

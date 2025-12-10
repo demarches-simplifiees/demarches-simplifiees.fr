@@ -4,6 +4,5 @@
   - if defined?(service) && service && service.nom.present?
     = service.nom
   - else
-    -# The WORD JOINER unicode entity (&#8288;) prevents email clients from auto-linking the signature
     = t('.team')
-    #{Current.application_name.gsub(".","&#8288;.").html_safe}
+    = application_name_without_link

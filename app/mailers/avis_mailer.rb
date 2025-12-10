@@ -2,8 +2,6 @@
 
 # Preview all emails at http://localhost:3000/rails/mailers/avis_mailer
 class AvisMailer < ApplicationMailer
-  helper MailerHelper
-
   layout 'mailers/layout'
 
   def avis_invitation_and_confirm_email(user, token, avis, targeted_user_link = nil) # ensure re-entrance if existing AvisMailer.avis_invitation in queue
@@ -28,7 +26,6 @@ class AvisMailer < ApplicationMailer
 
       bypass_unverified_mail_protection!
 
-      configure_defaults_for_user(user)
       mail(to: email, subject: subject)
     end
   end
@@ -40,7 +37,6 @@ class AvisMailer < ApplicationMailer
       @avis = avis
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
-      configure_defaults_for_user(expert.user)
       mail(to: expert.email, subject: @subject)
     end
   end
