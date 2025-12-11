@@ -630,7 +630,7 @@ module Users
 
     def submit_dossier_and_compute_errors
       dossier.validate(:champs_public_value)
-      dossier.check_mandatory_and_visible_champs
+      dossier.check_mandatory_and_visible_champs_public
     end
 
     def ensure_ownership!
