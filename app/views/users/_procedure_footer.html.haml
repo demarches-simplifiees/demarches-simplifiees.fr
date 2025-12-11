@@ -19,9 +19,9 @@
                 %li
                   = link_to url_for(procedure.deliberation), rel: 'noopener', class: 'fr-footer__link' do
                     = I18n.t("users.procedure_footer.legals.terms")
-              - else
+              - elsif procedure.cadre_juridique.starts_with?("http")
                 %li
-                  = link_to I18n.t("users.procedure_footer.legals.terms"), procedure.cadre_juridique, rel: 'noopener', class: 'fr-footer__link'
+                  = link_to I18n.t("users.procedure_footer.legals.terms"), procedure.cadre_juridique, class: 'fr-footer__link', **external_link_attributes
 
               - if procedure.lien_dpo.present?
                 %li
