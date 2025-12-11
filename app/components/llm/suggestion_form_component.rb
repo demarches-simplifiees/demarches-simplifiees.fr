@@ -35,7 +35,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     case rule
     when LLMRuleSuggestion.rules.fetch('improve_structure')
       LLM::SuggestionOrderingService.ordered_structure_suggestions(llm_rule_suggestion)
-    when LLMRuleSuggestion.rules.fetch('improve_label')
+    when LLMRuleSuggestion.rules.fetch('improve_label'), LLMRuleSuggestion.rules.fetch('improve_types'), LLMRuleSuggestion.rules.fetch('cleaner')
       LLM::SuggestionOrderingService.ordered_label_suggestions(llm_rule_suggestion)
     else
       raise "Unknown rule: #{rule}"

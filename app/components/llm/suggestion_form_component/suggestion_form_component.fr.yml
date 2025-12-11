@@ -23,8 +23,14 @@ fr:
       <p>Cette étape propose des suggestions <strong>d’amélioration de la structure du formulaire
       (réorganisation des champs, ajout de sections)</strong> pour le rendre plus clair et lisible pour l’usager.</p>
 
-    consolidate_types_html: |
+    improve_types_html: |
       <p>Cette étape permet d’<strong>utiliser les types de champs appropriés</strong> (email, adresse, etc.)
-      et de <strong>consolider les champs redondants</strong> selon le principe du <strong>« Dites-le-nous une fois »</strong>.</p>
-      <p>Les champs spécialisés permettent un affichage optimisé pour l’usager ou de récupérer automatiquement des données complémentaires.
+      pour un affichage optimisé et une validation automatique.</p>
+      <p>Les champs spécialisés permettent de récupérer automatiquement des données complémentaires
       (ex: le champ adresse fournit directement la commune, département, etc…).</p>
+
+    cleaner_html: |
+      <p>Cette étape applique le principe <strong>« Dites-le nous une fois »</strong> :
+      l’administration ne doit pas redemander des informations déjà collectées ou connues par ailleurs.</p>
+      <p>Nous proposons la suppression des champs qui demandent une information déjà disponible
+      via un autre champ du formulaire (ex: un champ « Commune » quand un champ « Adresse » existe).</p>

@@ -28,8 +28,10 @@ module LLM
         "Amélioration des libellés"
       when 'improve_structure'
         "Amélioration de la structure"
-      when 'consolidate_types'
-        "Consolidation des types de champs"
+      when 'improve_types'
+        "Amélioration des types de champs"
+      when 'cleaner'
+        "Nettoyage des champs redondants"
       end
     end
 

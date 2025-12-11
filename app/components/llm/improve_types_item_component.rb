@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-class LLM::ConsolidateTypesItemComponent < LLM::SuggestionItemComponent
+class LLM::ImproveTypesItemComponent < LLM::SuggestionItemComponent
   def self.step_title
-    "Consolidation des types de champs"
+    "Amélioration des types de champs"
   end
 
   def render?
     original_tdc.present?
-  end
-
-  def op_kind
-    item.op_kind
   end
 
   def type_champ_label(type_champ)
