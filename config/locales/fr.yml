@@ -398,7 +398,6 @@ fr:
           form:
             send_message: "Envoyer le message"
             send_message_and_mark: "Envoyer et marquer le dossier"
-            more_options: "Plus d'options"
             pending_response_badge: "EN ATTENTE DE RÉPONSE"
             message_label_mandatory: "Votre message (obligatoire)"
             write_message_placeholder: "Écrivez votre message ici"

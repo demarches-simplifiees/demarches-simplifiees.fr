@@ -15,7 +15,6 @@ class DossierNotification < ApplicationRecord
     attente_correction: 'attente_correction',
     attente_reponse: 'attente_reponse',
     attente_avis: 'attente_avis',
-
   }
 
   belongs_to :instructeur
