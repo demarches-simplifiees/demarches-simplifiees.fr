@@ -1,0 +1,7 @@
+<div class="action">
+  <%= link_to attestation_dossier_path(dossier),
+      class: "fr-btn fr-icon-download-line fr-btn--icon-left",
+      **helpers.external_link_attributes do %>
+    <%= t('.download') %>
+  <% end %>
+</div>

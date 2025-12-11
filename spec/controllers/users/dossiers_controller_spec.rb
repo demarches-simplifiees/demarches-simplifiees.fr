@@ -2107,6 +2107,66 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#attestation' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :accepte, user: user, procedure: procedure) }
+
+    subject { get :attestation, params: { id: dossier.id } }
+
+    before do
+      create(:attestation_template, procedure: procedure, state: :published)
+      sign_in(user)
+    end
+
+    context 'when attestation PDF is attached' do
+      before do
+        create(:attestation, :with_pdf, dossier: dossier)
+      end
+
+      it 'redirects to PDF URL' do
+        expect { subject }.not_to change(Attestation, :count)
+
+        expect(response).to have_http_status(:redirect)
+        expect(response.location).to match(/rails\/active_storage/)
+      end
+    end
+
+    context 'when attestation does not exist and template is activated' do
+      it 'generates attestation and redirects to PDF' do
+        expect { subject }.to change(Attestation, :count).by(1)
+
+        expect(response).to have_http_status(:redirect)
+        expect(response.location).to match(/rails\/active_storage/)
+      end
+    end
+
+    context 'when template is not configured' do
+      before do
+        procedure.attestation_acceptation_template.destroy
+      end
+
+      it 'redirects with notice' do
+        subject
+
+        expect(flash[:notice]).to be_present
+        expect(response).to redirect_to(dossier_path(dossier))
+      end
+    end
+
+    context 'when template is not activated anymore' do
+      before do
+        procedure.attestation_acceptation_template.update!(activated: false)
+      end
+
+      it 'redirects with notice' do
+        expect { subject }.not_to change(Attestation, :count)
+
+        expect(flash[:notice]).to be_present
+        expect(response).to redirect_to(dossier_path(dossier))
+      end
+    end
+  end
+
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
