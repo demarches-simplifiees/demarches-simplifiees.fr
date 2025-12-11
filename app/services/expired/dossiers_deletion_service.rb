@@ -101,7 +101,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
 
   def send_expiration_notices(dossiers_close_to_expiration, close_to_expiration_flag)
     user_notifications = group_by_user_email(dossiers_close_to_expiration)
-    administration_notifications = group_by_fonctionnaire_email(dossiers_close_to_expiration)
+    administration_notifications = group_by_administration_email(dossiers_close_to_expiration, preference: :instant_email_dossier_expiration)
 
     dossier_ids = dossiers_close_to_expiration.pluck(:id)
 
@@ -123,7 +123,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   def delete_expired_and_notify(dossiers_to_remove, notify_on_closed_procedures_to_user: false)
     user_notifications = group_by_user_email(dossiers_to_remove, notify_on_closed_procedures_to_user: notify_on_closed_procedures_to_user)
       .map { |(email, dossiers)| [email, dossiers.map(&:id)] }
-    administration_notifications = group_by_fonctionnaire_email(dossiers_to_remove)
+    administration_notifications = group_by_administration_email(dossiers_to_remove, preference: :instant_email_dossier_expired)
       .map { |(email, dossiers)| [email, dossiers.map(&:id)] }
 
     hidden_dossier_ids = []
@@ -162,8 +162,8 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
       .map { |(user, dossiers)| [user.email, dossiers] }
   end
 
-  def group_by_fonctionnaire_email(dossiers)
-    dossiers
+  def group_by_administration_email(dossiers, preference:)
+    dossiers = dossiers
       .visible_by_administration
       .with_notifiable_procedure(notify_on_closed: true)
       .includes(
@@ -173,20 +173,33 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
           administrateurs: :user,
         }
       )
-      .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
-        dossier.followers_instructeurs.each do |instructeur|
+
+    all_procedure_ids = dossiers.pluck('procedures.id').uniq
+    all_instructeur_ids = dossiers.pluck('instructeurs.id').uniq
+    instructeur_ids_by_procedure_id_not_requesting_email = InstructeursProcedure
+      .where(procedure_id: all_procedure_ids, instructeur_id: all_instructeur_ids, preference => false)
+      .pluck(:procedure_id, :instructeur_id)
+      .group_by(&:first)
+      .transform_values { |v| v.map(&:last) }
+
+    dossiers.each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
+      instructeur_ids_not_requesting_email = instructeur_ids_by_procedure_id_not_requesting_email.fetch(dossier.procedure.id, [])
+
+      dossier.followers_instructeurs.each do |instructeur|
+        if instructeur_ids_not_requesting_email.exclude?(instructeur.id)
           h[instructeur.email] << dossier
         end
+      end
 
-        admin_emails = dossier.procedure.administrateurs.map(&:email)
-        dossier.procedure.groupe_instructeurs.each do |groupe|
-          groupe.instructeurs.each do |instructeur|
-            if admin_emails.include?(instructeur.email)
-              h[instructeur.email] << dossier
-            end
+      admin_emails = dossier.procedure.administrateurs.map(&:email)
+      dossier.procedure.groupe_instructeurs.each do |groupe|
+        groupe.instructeurs.each do |instructeur|
+          if admin_emails.include?(instructeur.email) && instructeur_ids_not_requesting_email.exclude?(instructeur.id)
+            h[instructeur.email] << dossier
           end
         end
-      end.transform_values(&:to_a)
+      end
+    end.transform_values(&:to_a)
   end
 
   def all_user_dossiers_brouillon_close_to_expiration(user)
