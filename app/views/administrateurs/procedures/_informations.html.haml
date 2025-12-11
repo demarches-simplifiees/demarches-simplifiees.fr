@@ -56,7 +56,7 @@
         %p Vous pouvez saisir un lien web vers ce texte, ou l’importer depuis un fichier.
 
   .fr-fieldset__element
-    = render Dsfr::InputComponent.new(form: f, attribute: :cadre_juridique, input_type: :text_field, opts: {})
+    = render Dsfr::InputComponent.new(form: f, attribute: :cadre_juridique, input_type: :text_field, required: false, opts: {})
 
   .fr-fieldset__element
     .fr-input-group
