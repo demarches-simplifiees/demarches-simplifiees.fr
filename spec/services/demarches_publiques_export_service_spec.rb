@@ -18,7 +18,7 @@ describe DemarchesPubliquesExportService do
           organisme: "organisme",
           typeOrganisme: "association",
         },
-        cadreJuridiqueUrl: "un cadre juridique important",
+        cadreJuridiqueUrl: "https://www.legifrance.gouv.fr",
         demarcheUrl: Rails.application.routes.url_helpers.commencer_url(path: procedure.path),
         dpoUrl: nil,
         noticeUrl: nil,

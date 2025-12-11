@@ -420,5 +420,30 @@ describe ProcedureCloneConcern, type: :model do
         end
       end
     end
+
+    describe 'cadre_juridique with legacy non-URL data' do
+      let(:deliberation) { fixture_file_upload('spec/fixtures/files/file.pdf', 'application/pdf') }
+      let(:procedure) do
+        create(:procedure, deliberation:).tap do |p|
+          p.update_column(:cadre_juridique, 'Décret n° 2019-1088')
+        end
+      end
+
+      it 'sets cadre_juridique to nil when cloning procedure with invalid URL' do
+        cloned = procedure.clone(admin: administrateur)
+        expect(cloned.cadre_juridique).to be_nil
+      end
+
+      context 'when cadre_juridique is a valid URL' do
+        let(:procedure) do
+          create(:procedure, cadre_juridique: 'https://www.legifrance.gouv.fr')
+        end
+
+        it 'preserves valid URL when cloning' do
+          cloned = procedure.clone(admin: administrateur)
+          expect(cloned.cadre_juridique).to eq('https://www.legifrance.gouv.fr')
+        end
+      end
+    end
   end
 end
