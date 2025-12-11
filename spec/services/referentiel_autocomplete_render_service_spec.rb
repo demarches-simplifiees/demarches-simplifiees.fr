@@ -42,5 +42,29 @@ RSpec.describe ReferentielAutocompleteRenderService do
         subject.send(:render_template, referentiel.json_template, obj).join('')
       ).to include('Tango (Charlie)')
     end
+
+    context 'with incompatible keys with passwed to JsonPath' do
+      it 'works' do
+        obj = {
+          "Prénom d'exercice" => "SOPHIE",
+        }
+        referentiel.json_template = {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+                "content" =>
+                [
+                  { "type" => "mention", "attrs" => { "id" => "$.Prénom d'exercice", "label" => "$.Prénom d'exercice (SOPHIE)" } },
+                  { "text" => "  ", "type" => "text" },
+                ],
+            },
+          ],
+        }
+        expect(
+          subject.send(:render_template, referentiel.json_template, obj).join('')
+        ).to include('SOPHIE')
+      end
+    end
   end
 end
